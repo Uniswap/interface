@@ -77,5 +77,5 @@ export const appRatingPromptedMsSelector = (state: WalletState): number | undefi
 export const appRatingFeedbackProvidedMsSelector = (state: WalletState): number | undefined =>
   state.wallet.appRatingFeedbackProvidedMs
 
-export const selectHasBalanceOrActivityForAddress = (state: WalletState, address: Address): boolean | undefined =>
-  state.wallet.accounts[address]?.hasBalanceOrActivity
+export const selectHasBalanceOrActivityForAddress = (state: WalletState, address: Address): boolean =>
+  state.wallet.accounts[address]?.hasBalanceOrActivity ?? false

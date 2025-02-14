@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { breakpoints } from 'ui/src/theme'
-import type { WindowSize } from 'uniswap/src/hooks/useWindowSize'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
 
 const isClient = typeof window === 'object'
+
+interface WindowSize {
+  width: number | undefined
+  height: number | undefined
+}
 
 function getWindowSize(): WindowSize {
   return {
@@ -58,5 +62,5 @@ export function useWindowSize(): WindowSize {
  */
 export function useIsExtraLargeScreen(): boolean {
   const { width } = useWindowSize()
-  return !!width && width >= breakpoints.xl
+  return useMemo(() => !!width && width >= breakpoints.xl, [width])
 }

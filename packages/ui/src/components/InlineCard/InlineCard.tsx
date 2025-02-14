@@ -13,7 +13,6 @@ type InlineCardProps = {
   iconBackgroundColor?: ColorTokens
   heading?: string | JSX.Element
   CtaButtonIcon?: GeneratedIcon | ((props: IconProps) => JSX.Element)
-  CtaButtonIconColor?: ColorTokens
   onPressCtaButton?: () => void
 }
 
@@ -26,7 +25,6 @@ export function InlineCard({
   heading,
   description,
   CtaButtonIcon,
-  CtaButtonIconColor = '$neutral3',
   onPressCtaButton,
 }: InlineCardProps): JSX.Element {
   const icon = <Icon color={iconColor ?? color} size="$icon.20" />
@@ -66,7 +64,7 @@ export function InlineCard({
         </Flex>
         {CtaButtonIcon && (
           <TouchableArea onPress={onPressCtaButton}>
-            <CtaButtonIcon color={CtaButtonIconColor} size="$icon.20" />
+            <CtaButtonIcon color="$neutral3" size="$icon.20" />
           </TouchableArea>
         )}
       </Flex>

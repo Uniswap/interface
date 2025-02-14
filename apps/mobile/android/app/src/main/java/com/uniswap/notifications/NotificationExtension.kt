@@ -76,8 +76,8 @@ class NotificationExtension : OSRemoteNotificationReceivedHandler {
       "https://gating.android.wallet.gateway.uniswap.org/v1/statsig-proxy"
     private const val STATSIG_ENVIRONMENT_KEY_TIER = "tier"
 
-    private const val FEATURE_GATE_UNFUNDED_WALLET = "notification_unfunded_wallet_android"
-    private const val FEATURE_GATE_PRICE_ALERT = "notification_price_alerts_android"
+    private const val FEATURE_GATE_UNFUNDED_WALLET = "notification_unfunded_wallet"
+    private const val FEATURE_GATE_PRICE_ALERT = "notification_price_alerts"
 
     private const val FIELD_NOTIFICATION_TYPE = "notification_type"
     private const val TYPE_UNFUNDED_WALLET_REMINDER = "unfunded_wallet_reminder"

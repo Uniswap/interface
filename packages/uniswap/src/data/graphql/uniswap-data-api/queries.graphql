@@ -830,9 +830,8 @@ query SearchTokens($searchQuery: String!, $chains: [Chain!]!) {
 query ExploreSearch(
   $searchQuery: String!
   $nftCollectionsFilter: NftCollectionsFilterInput!
-  $chains: [Chain!]
 ) {
-  searchTokens(searchQuery: $searchQuery, chains: $chains) {
+  searchTokens(searchQuery: $searchQuery) {
     chain
     address
     decimals

@@ -17,7 +17,7 @@ import { getScantasticUrl } from 'src/app/features/onboarding/scan/utils'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import UAParser from 'ua-parser-js'
-import { Flex, Image, Square, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Image, Square, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { DOT_GRID, UNISWAP_LOGO } from 'ui/src/assets'
 import { FileListLock, Mobile, RotatableChevron, Wifi } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -56,6 +56,7 @@ function useDocumentVisibility(): boolean {
 export function ScanToOnboard(): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
+  const isDarkMode = useIsDarkMode()
 
   const { goToNextStep } = useOnboardingSteps()
   const isDocumentVisible = useDocumentVisibility()
@@ -304,7 +305,7 @@ export function ScanToOnboard(): JSX.Element {
                   >
                     <QRCode
                       bgColor="transparent"
-                      fgColor={colors.black.val}
+                      fgColor={isDarkMode ? colors.white.val : colors.black.val}
                       size={QR_CODE_SIZE}
                       value={scantasticValue}
                     />

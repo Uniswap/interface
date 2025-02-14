@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react'
+import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
@@ -14,8 +14,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { NotificationToggleLoggingType } from 'uniswap/src/features/telemetry/types'
-import { isIOS } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountsList } from 'wallet/src/features/wallet/hooks'
 
@@ -24,26 +22,13 @@ export function SettingsNotificationsScreen(): JSX.Element {
 
   const accounts = useAccountsList()
 
-  const priceAlertsToggleEnabled = useFeatureFlag(
-    isIOS ? FeatureFlags.NotificationPriceAlertsIOS : FeatureFlags.NotificationPriceAlertsAndroid,
-  )
-
-  const onGeneralUpdatesToggle = useCallback(
-    (enabled: boolean) => onPermissionChanged(enabled, NotifSettingType.GeneralUpdates),
-    [],
-  )
-  const onPriceAlertsToggle = useCallback(
-    (enabled: boolean) => onPermissionChanged(enabled, NotifSettingType.PriceAlerts),
-    [],
-  )
+  const priceAlertsToggleEnabled = useFeatureFlag(FeatureFlags.NotificationPriceAlerts)
 
   const { isEnabled: updatesNotifEnabled, toggle: toggleUpdatesNotif } = useSettingNotificationToggle({
     type: NotifSettingType.GeneralUpdates,
-    onToggle: onGeneralUpdatesToggle,
   })
   const { isEnabled: priceAlertsNotifEnabled, toggle: togglePriceAlertsNotif } = useSettingNotificationToggle({
     type: NotifSettingType.PriceAlerts,
-    onToggle: onPriceAlertsToggle,
   })
 
   return (
@@ -132,14 +117,14 @@ function NotificationSettingRow({
   )
 }
 
-function onPermissionChanged(enabled: boolean, type: NotificationToggleLoggingType): void {
-  sendAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled, type })
+function onPermissionChanged(enabled: boolean): void {
+  sendAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled })
 }
 
 function _AddressNotificationsSwitch({ address }: { address: string }): JSX.Element {
   const { isEnabled, isPending, toggle } = useAddressNotificationToggle({
     address,
-    onToggle: (enabled) => onPermissionChanged(enabled, 'wallet_activity'),
+    onToggle: onPermissionChanged,
   })
 
   return <Switch checked={isEnabled} disabled={isPending} variant="branded" onCheckedChange={toggle} />

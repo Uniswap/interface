@@ -136,7 +136,7 @@ const slice = createSlice({
     },
     resetWallet: () => initialWalletState,
     restoreMnemonicComplete: (state) => state,
-    setHasBalanceOrActivity: (state, action: PayloadAction<{ address: Address; hasBalanceOrActivity?: boolean }>) => {
+    setHasBalanceOrActivity: (state, action: PayloadAction<{ address: Address; hasBalanceOrActivity: boolean }>) => {
       const { address, hasBalanceOrActivity } = action.payload
       const id = getValidAddress(address, true)
       if (!id) {

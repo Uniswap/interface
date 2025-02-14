@@ -41,7 +41,6 @@ export const uniswapUrls = {
     limitsInfo: `${helpUrl}/sections/24372644881293`,
     limitsNetworkSupport: `${helpUrl}/articles/24470251716237-What-networks-do-limits-support`,
     fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
-    fiatOffRampHelp: `${helpUrl}/articles/34006552258957`,
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,

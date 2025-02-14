@@ -656,7 +656,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           {contentHeader}
         </Animated.View>
 
-        {isTabsDataLoaded && isLayoutReady && (
+        {isTabsDataLoaded && (
           <TraceTabView
             lazy
             initialLayout={{
