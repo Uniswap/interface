@@ -77,7 +77,6 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
           <Flex style={{ position: 'relative' }}>
             <Input
               ref={inputRef}
-              keyboardType="decimal-pad"
               backgroundColor={backgroundColor}
               color={inputValueTextColor}
               editable={true}

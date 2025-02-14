@@ -104,10 +104,11 @@ export function NetworkOption({
     <AnimateInOrder
       index={showUnichainAnimation ? 1 : 0}
       delayMs={showUnichainAnimation ? (isInterface ? 250 : 750) : 0}
-      animation="125ms"
-      enterStyle={showUnichainAnimation ? { height: 0 } : null}
-      // fixed height is necessary to allow for smooth animation
+      animation={showUnichainAnimation ? '125ms' : null}
+      enterStyle={showUnichainAnimation ? { height: 0, width: 200 } : null}
+      // defined height & width are necessary to allow for smooth animation
       height={44}
+      width="auto"
     >
       <Flex
         row

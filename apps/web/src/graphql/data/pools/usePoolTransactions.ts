@@ -30,11 +30,11 @@ export interface PoolTableTransaction {
   transaction: string
   pool: {
     token0: {
-      id: string | null
+      id: string
       symbol: string
     }
     token1: {
-      id: string | null
+      id: string
       symbol: string
     }
   }
@@ -189,11 +189,11 @@ export function usePoolTransactions(
           transaction: tx.hash,
           pool: {
             token0: {
-              id: tx.token0.address ?? null,
+              id: tx.token0.address ?? '',
               symbol: tx.token0.symbol ?? '',
             },
             token1: {
-              id: tx.token1.address ?? null,
+              id: tx.token1.address ?? '',
               symbol: tx.token1.symbol ?? '',
             },
           },

@@ -830,8 +830,9 @@ query SearchTokens($searchQuery: String!, $chains: [Chain!]!) {
 query ExploreSearch(
   $searchQuery: String!
   $nftCollectionsFilter: NftCollectionsFilterInput!
+  $chains: [Chain!]
 ) {
-  searchTokens(searchQuery: $searchQuery) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains) {
     chain
     address
     decimals
@@ -1011,6 +1012,61 @@ fragment TopTokenParts on Token {
         value
       }
     }
+  }
+}
+
+query ExploreTokensTab($topTokensOrderBy: TokenSortableField!, $chain: Chain!, $pageSize: Int!) {
+  topTokens(
+    chain: $chain
+    page: 1
+    pageSize: $pageSize
+    orderBy: $topTokensOrderBy
+  ) {
+    ...TopTokenParts
+  }
+  # `topTokens` returns WETH rather than ETH
+  # here we retrieve ETH information to swap out in the UI
+  eth: token(address: null, chain: $chain) {
+    ...TopTokenParts
+  }
+}
+
+fragment AITopTokenParts on Token {
+  symbol
+  chain
+  address
+  market {
+    totalValueLocked {
+      value
+    }
+    volume(duration: DAY) {
+      value
+    }
+  }
+  name
+  project {
+    markets(currencies: [USD]) {
+      price {
+        value
+      }
+      pricePercentChange24h {
+        value
+      }
+      marketCap {
+        value
+      }
+    }
+  }
+}
+
+query AITopTokens($topTokensOrderBy: TokenSortableField!, $chain: Chain!, $pageSize: Int!) {
+  topTokens(
+    chain: $chain
+    page: 1
+    pageSize: $pageSize
+    orderBy: $topTokensOrderBy
+  ) {
+    ...AITopTokenParts
   }
 }
 

@@ -1,4 +1,3 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { TradeType } from '@uniswap/sdk-core'
 import { VoteOption } from 'state/governance/types'
 import {
@@ -282,5 +281,3 @@ export interface ConfirmedTransactionDetails extends BaseTransactionDetails {
 }
 
 export type TransactionDetails = PendingTransactionDetails | ConfirmedTransactionDetails
-
-export type VitalTxFields = Pick<TransactionResponse, 'hash' | 'nonce' | 'data'>

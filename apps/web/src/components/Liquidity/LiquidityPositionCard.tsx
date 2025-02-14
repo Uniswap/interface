@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   LiquidityPositionRangeChart,
   LiquidityPositionRangeChartLoader,
@@ -74,146 +74,6 @@ export function LiquidityPositionCardLoader() {
   )
 }
 
-function useDropdownOptions(
-  liquidityPosition: PositionInfo,
-  showVisibilityOption?: boolean,
-  isVisible?: boolean,
-): MenuOptionItem[] {
-  const { t } = useTranslation()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
-  const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
-
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-  const account = useAccount()
-  const switchChain = useSwitchChain()
-
-  return useMemo(() => {
-    const chainInfo = getChainInfo(liquidityPosition.chainId)
-
-    const addLiquidityOption = {
-      onPress: () => {
-        dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: liquidityPosition }))
-      },
-      label: t('common.addLiquidity'),
-      Icon: Plus,
-    }
-
-    const removeLiquidityOption: MenuOptionItem | undefined = isOpenLiquidityPosition
-      ? {
-          onPress: () => {
-            dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: liquidityPosition }))
-          },
-          label: t('pool.removeLiquidity'),
-          Icon: Minus,
-        }
-      : undefined
-
-    const poolInfoOption = {
-      onPress: () => {
-        if (!liquidityPosition.poolId) {
-          return
-        }
-
-        navigate(getPoolDetailsURL(liquidityPosition.poolId, toGraphQLChain(liquidityPosition.chainId)))
-      },
-      label: t('pool.info'),
-      Icon: InfoCircleFilled,
-    }
-
-    const hideOption: MenuOptionItem | undefined = showVisibilityOption
-      ? {
-          onPress: () => {
-            dispatch(
-              togglePositionVisibility({
-                poolId: liquidityPosition.poolId,
-                tokenId: liquidityPosition.tokenId,
-                chainId: liquidityPosition.chainId,
-              }),
-            )
-          },
-          label: isVisible ? t('common.hide.button') : t('common.unhide'),
-          Icon: isVisible ? EyeOff : Eye,
-          showDivider: true,
-        }
-      : undefined
-
-    if (liquidityPosition.version === ProtocolVersion.V2) {
-      const migrateV2Option = isOpenLiquidityPosition
-        ? {
-            onPress: async () => {
-              if (chainInfo.id !== account.chainId) {
-                await switchChain(chainInfo.id)
-              }
-              navigate(`/migrate/v2/${liquidityPosition.liquidityToken?.address ?? ''}`)
-            },
-            label: t('pool.migrateLiquidity'),
-            Icon: RightArrow,
-          }
-        : undefined
-
-      return [
-        isOpenLiquidityPosition ? addLiquidityOption : undefined, // closed v2 positions cannot re-add liquidity since the erc20 liquidity token is permanently burned when closed. whereas v3 positions can be re-opened
-        removeLiquidityOption,
-        migrateV2Option,
-        poolInfoOption,
-        hideOption,
-      ].filter((o): o is MenuOptionItem => o !== undefined)
-    }
-
-    const collectFeesOption: MenuOptionItem | undefined = isOpenLiquidityPosition
-      ? {
-          onPress: () => {
-            dispatch(
-              setOpenModal({
-                name: ModalName.ClaimFee,
-                initialState: { ...liquidityPosition, collectAsWeth: false },
-              }),
-            )
-          },
-          label: t('pool.collectFees'),
-          Icon: Dollar,
-        }
-      : undefined
-
-    const migrateV3Option: MenuOptionItem | undefined =
-      isOpenLiquidityPosition &&
-      isV4DataEnabled &&
-      isMigrateToV4Enabled &&
-      !isV4UnsupportedChain(liquidityPosition.chainId)
-        ? {
-            onPress: () => {
-              navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
-            },
-            label: t('pool.migrateLiquidity'),
-            Icon: RightArrow,
-          }
-        : undefined
-
-    return [
-      collectFeesOption,
-      addLiquidityOption,
-      removeLiquidityOption,
-      migrateV3Option,
-      poolInfoOption,
-      hideOption,
-    ].filter((o): o is MenuOptionItem => o !== undefined)
-  }, [
-    account.chainId,
-    dispatch,
-    isMigrateToV4Enabled,
-    isOpenLiquidityPosition,
-    isV4DataEnabled,
-    isVisible,
-    liquidityPosition,
-    navigate,
-    showVisibilityOption,
-    switchChain,
-    t,
-  ])
-}
-
 export function LiquidityPositionCard({
   liquidityPosition,
   isMiniVersion,
@@ -228,9 +88,16 @@ export function LiquidityPositionCard({
   isVisible?: boolean
 }) {
   const { formatCurrencyAmount } = useLocalizationContext()
+  const { t } = useTranslation()
   const isTouchDevice = useIsTouchDevice()
+  const isV4Enabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isMigrateEnabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
   const [pricesInverted, setPricesInverted] = useState(false)
 
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const account = useAccount()
+  const switchChain = useSwitchChain()
   const { fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, apr } =
     useV3OrV4PositionDerivedInfo(liquidityPosition)
 
@@ -257,7 +124,112 @@ export function LiquidityPositionCard({
         })
       : undefined
 
-  const dropdownOptions = useDropdownOptions(liquidityPosition, showVisibilityOption, isVisible)
+  const dropdownOptions = useMemo(() => {
+    const hideOption = [
+      {
+        key: 'position-card-hide-liquidity',
+        onPress: () => {
+          dispatch(
+            togglePositionVisibility({
+              poolId: liquidityPosition.poolId,
+              tokenId: liquidityPosition.tokenId,
+              chainId: liquidityPosition.chainId,
+            }),
+          )
+        },
+        label: isVisible ? t('common.hide.button') : t('common.unhide'),
+        Icon: isVisible ? EyeOff : Eye,
+        showDivider: true,
+      },
+    ]
+
+    const v2Options = [
+      {
+        key: 'position-card-add-liquidity',
+        onPress: () => {
+          dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: liquidityPosition }))
+        },
+        label: t('common.addLiquidity'),
+        Icon: Plus,
+      },
+      {
+        key: 'position-card-remove-liquidity',
+        onPress: () => {
+          dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: liquidityPosition }))
+        },
+        label: t('pool.removeLiquidity'),
+        Icon: Minus,
+      },
+    ]
+
+    const chainInfo = getChainInfo(liquidityPosition.chainId)
+
+    const migrateV2Option = {
+      key: 'position-card-migrate',
+      onPress: async () => {
+        if (chainInfo.id !== account.chainId) {
+          await switchChain(chainInfo.id)
+        }
+        navigate(`/migrate/v2/${liquidityPosition.liquidityToken?.address ?? ''}`)
+      },
+      label: t('pool.migrateLiquidity'),
+      Icon: RightArrow,
+    }
+
+    if (liquidityPosition.version === ProtocolVersion.V2) {
+      return [...v2Options, migrateV2Option, ...(showVisibilityOption ? hideOption : [])]
+    }
+
+    const migrateV3Option = isV4UnsupportedChain(liquidityPosition.chainId)
+      ? undefined
+      : {
+          key: 'position-card-migrate',
+          onPress: () => {
+            navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
+          },
+          label: t('pool.migrateLiquidity'),
+          Icon: RightArrow,
+        }
+
+    return [
+      {
+        key: 'position-card-collect-fees',
+        onPress: () => {
+          dispatch(
+            setOpenModal({ name: ModalName.ClaimFee, initialState: { ...liquidityPosition, collectAsWeth: false } }),
+          )
+        },
+        label: t('pool.collectFees'),
+        Icon: Dollar,
+      },
+      ...v2Options,
+      ...(isV4Enabled && isMigrateEnabled && migrateV3Option ? [migrateV3Option] : []),
+      {
+        key: 'position-card-pool-info',
+        onPress: () => {
+          if (!liquidityPosition.poolId) {
+            return
+          }
+
+          navigate(getPoolDetailsURL(liquidityPosition.poolId, toGraphQLChain(liquidityPosition.chainId)))
+        },
+        label: t('pool.info'),
+        Icon: InfoCircleFilled,
+      },
+      ...(showVisibilityOption ? hideOption : []),
+    ]
+  }, [
+    showVisibilityOption,
+    liquidityPosition,
+    isMigrateEnabled,
+    isV4Enabled,
+    dispatch,
+    isVisible,
+    t,
+    account.chainId,
+    navigate,
+    switchChain,
+  ])
 
   const priceOrderingForChart = useMemo(() => {
     if (
@@ -440,10 +412,9 @@ function MiniPositionCard({
 
 const PositionPopoverMoreMenu = ({ menuOptions }: { menuOptions: MenuOptionItem[] }) => {
   const colors = useSporeColors()
-  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <Popover open={isOpen} placement="bottom-end" allowFlip offset={{ crossAxis: 6 }}>
+    <Popover placement="bottom-end" allowFlip offset={{ crossAxis: 6 }}>
       <TouchableArea
         position="absolute"
         top="$spacing16"
@@ -455,7 +426,6 @@ const PositionPopoverMoreMenu = ({ menuOptions }: { menuOptions: MenuOptionItem[
         onPress={(event) => {
           event.preventDefault()
           event.stopPropagation()
-          setIsOpen(true)
         }}
       >
         <Popover.Trigger p="$spacing8">
@@ -471,7 +441,7 @@ const PositionPopoverMoreMenu = ({ menuOptions }: { menuOptions: MenuOptionItem[
         }}
         backgroundColor="transparent"
       >
-        <MenuContent items={menuOptions} onItemClick={() => setIsOpen(false)} />
+        <MenuContent items={menuOptions} />
       </Popover.Content>
     </Popover>
   )

@@ -358,6 +358,11 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   currencyInfo1Decimals: number
 }
 
+export type NotificationToggleLoggingType =
+  | 'settings_general_updates_enabled'
+  | 'settings_price_alerts_enabled'
+  | 'wallet_activity'
+
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
   [ExtensionEventName.OnboardingLoad]: undefined
@@ -590,6 +595,7 @@ export type UniverseEventProperties = {
   [MobileEventName.FiatOnRampQuickActionButtonPressed]: ITraceContext
   [MobileEventName.NotificationsToggled]: ITraceContext & {
     enabled: boolean
+    type: NotificationToggleLoggingType
   }
   [MobileEventName.OnboardingCompleted]: OnboardingCompletedProps & ITraceContext
   [MobileEventName.PerformanceReport]: RenderPassReport

@@ -1,20 +1,10 @@
-import type { TFunction } from 'i18next'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  AdaptiveWebPopoverContent,
-  DeprecatedButton,
-  Flex,
-  isWeb,
-  Text,
-  TouchableArea,
-  useMedia,
-  useSporeColors,
-} from 'ui/src'
+import { DeprecatedButton, Flex, Popover, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SLIPPAGE_CRITICAL_TOLERANCE, WARNING_DEADLINE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
@@ -22,10 +12,10 @@ import {
   useTransactionSettingsContext,
 } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { SwapFormContext, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { SwapSettingConfig, SwapSettingId } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import { SwapSettingRow } from 'uniswap/src/features/transactions/swap/settings/SwapSettingsRow'
+import { SwapSettingConfig, SwapSettingId } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/settings/useSlippageSettings'
-import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
+import { isExtension, isInterface, isMobileWeb } from 'utilities/src/platform'
 
 const POPOVER_WIDTH = 320
 
@@ -44,29 +34,58 @@ const TransactionSettingsModalContent = ({
   onClose,
 }: Omit<TransactionSettingsModalProps, 'isOpen'>): JSX.Element => {
   const { t } = useTranslation()
-  const media = useMedia()
+  const { customSlippageTolerance, customDeadline } = useTransactionSettingsContext()
+  const { autoSlippageTolerance } = useSlippageSettings()
 
-  const [SelectedSetting, setSelectedSetting] = useState<SwapSettingConfig | undefined>(initialSelectedSetting)
+  const isCriticalSlippage = customSlippageTolerance && customSlippageTolerance >= SLIPPAGE_CRITICAL_TOLERANCE
+
+  const [SelectedSetting, setSelectedSetting] = useState<SwapSettingConfig>()
+
+  const rowWarningContent: Record<SwapSettingId, { condition: boolean; render: () => JSX.Element | undefined }> = {
+    [SwapSettingId.SLIPPAGE]: {
+      condition: !!customSlippageTolerance && customSlippageTolerance > autoSlippageTolerance,
+      render: () => (
+        <WarningMessage
+          warningMessage={isCriticalSlippage ? t('swap.settings.slippage.warning') : t('swap.settings.slippage.alert')}
+          tooltipText={isWeb && !isMobileWeb ? t('swap.settings.slippage.warning.hover') : undefined}
+          color={isCriticalSlippage ? '$statusCritical' : '$statusWarning'}
+        />
+      ),
+    },
+    [SwapSettingId.DEADLINE]: {
+      condition: !!customDeadline && customDeadline >= WARNING_DEADLINE_TOLERANCE,
+      render: () => <WarningMessage warningMessage={t('swap.settings.deadline.warning')} color="$statusWarning" />,
+    },
+  }
+
+  const getSettingsRowWarning = (settingId: SwapSettingId): JSX.Element | undefined => {
+    const warning = rowWarningContent[settingId]
+    return warning?.condition ? warning.render() : undefined
+  }
 
   const title = SelectedSetting ? SelectedSetting.renderTitle(t) : defaultTitle ?? t('swap.settings.title')
   const screen = SelectedSetting?.Screen ? (
     <SelectedSetting.Screen />
   ) : (
-    <TopLevelSettings settings={settings} setSelectedSetting={setSelectedSetting} />
+    <Flex gap="$spacing8" py="$spacing12">
+      {settings.map((setting, index) => {
+        const warning = setting.settingId ? getSettingsRowWarning(setting.settingId) : undefined
+        return (
+          <SwapSettingRow
+            key={`swap-setting-${index}`}
+            setSelectedSetting={setSelectedSetting}
+            setting={setting}
+            warning={warning}
+          />
+        )
+      })}
+    </Flex>
   )
-
-  // For selected settings, show title on all platforms unless it is explicitly hidden via hideTitle.
-  // For top level settings (not selected), show title on mobile + small screen web only.
-  const isWebSmallScreen = media.sm && isInterface
-  const shouldShowTitle = SelectedSetting ? !SelectedSetting.hideTitle : isMobileApp || isWebSmallScreen
-
-  // Hide close button on desktop web and extension unless there is custom button text
-  const shouldShowCloseButton = isMobileApp || isWebSmallScreen || Boolean(SelectedSetting?.renderCloseButtonText)
 
   return (
     <Flex gap="$spacing16" px={isWeb ? '$spacing4' : '$spacing24'} py={isWeb ? '$spacing4' : '$spacing12'} width="100%">
-      {shouldShowTitle && (
-        <Flex row justifyContent="space-between" pt={isWeb ? '$spacing8' : 0}>
+      {!SelectedSetting?.hideTitle && (
+        <Flex row justifyContent="space-between">
           <TouchableArea onPress={(): void => setSelectedSetting(undefined)}>
             <RotatableChevron
               color={
@@ -85,92 +104,13 @@ const TransactionSettingsModalContent = ({
         </Flex>
       )}
       {screen}
-      {shouldShowCloseButton && (
-        <Flex centered row pb={isWebSmallScreen ? '$spacing24' : '$spacing8'}>
-          <DeprecatedButton fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
-            {SelectedSetting?.renderCloseButtonText
-              ? SelectedSetting.renderCloseButtonText(t)
-              : t('common.button.save')}
-          </DeprecatedButton>
-        </Flex>
-      )}
+      <Flex centered row>
+        <DeprecatedButton fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
+          {SelectedSetting?.renderCloseButtonText ? SelectedSetting.renderCloseButtonText(t) : t('common.button.close')}
+        </DeprecatedButton>
+      </Flex>
     </Flex>
   )
-}
-
-const TopLevelSettings = ({
-  settings,
-  setSelectedSetting,
-}: {
-  settings: SwapSettingConfig[]
-  setSelectedSetting: React.Dispatch<React.SetStateAction<SwapSettingConfig | undefined>>
-}): JSX.Element => {
-  const { t } = useTranslation()
-  const { customSlippageTolerance, customDeadline } = useTransactionSettingsContext()
-  const { autoSlippageTolerance } = useSlippageSettings()
-
-  const rowWarningContent = useMemo(
-    () =>
-      createRowWarningContent({
-        t,
-        customSlippageTolerance,
-        autoSlippageTolerance,
-        customDeadline,
-      }),
-    [t, customSlippageTolerance, autoSlippageTolerance, customDeadline],
-  )
-
-  const getSettingsRowWarning = (settingId: SwapSettingId): JSX.Element | undefined => {
-    const warning = rowWarningContent[settingId]
-    return warning?.condition ? warning.render() : undefined
-  }
-
-  return (
-    <Flex gap={isWeb ? '$spacing4' : '$spacing8'} py={isWeb ? '$spacing8' : '$spacing12'}>
-      {settings.map((setting, index) => {
-        const warning = setting.settingId ? getSettingsRowWarning(setting.settingId) : undefined
-        return (
-          <SwapSettingRow
-            key={`swap-setting-${index}`}
-            setSelectedSetting={setSelectedSetting}
-            setting={setting}
-            warning={warning}
-          />
-        )
-      })}
-    </Flex>
-  )
-}
-
-function createRowWarningContent({
-  t,
-  autoSlippageTolerance,
-  customSlippageTolerance,
-  customDeadline,
-}: {
-  t: TFunction
-  autoSlippageTolerance: number
-  customSlippageTolerance?: number
-  customDeadline?: number
-}): Record<SwapSettingId, { condition: boolean; render: () => JSX.Element | undefined }> {
-  const isCriticalSlippage = Boolean(customSlippageTolerance && customSlippageTolerance >= SLIPPAGE_CRITICAL_TOLERANCE)
-
-  return {
-    [SwapSettingId.SLIPPAGE]: {
-      condition: !!customSlippageTolerance && customSlippageTolerance > autoSlippageTolerance,
-      render: () => (
-        <WarningMessage
-          warningMessage={isCriticalSlippage ? t('swap.settings.slippage.warning') : t('swap.settings.slippage.alert')}
-          tooltipText={isWeb && !isMobileWeb ? t('swap.settings.slippage.warning.hover') : undefined}
-          color={isCriticalSlippage ? '$statusCritical' : '$statusWarning'}
-        />
-      ),
-    },
-    [SwapSettingId.DEADLINE]: {
-      condition: !!customDeadline && customDeadline >= WARNING_DEADLINE_TOLERANCE,
-      render: () => <WarningMessage warningMessage={t('swap.settings.deadline.warning')} color="$statusWarning" />,
-    },
-  }
 }
 
 function TransactionSettingsModalInterface({
@@ -178,10 +118,9 @@ function TransactionSettingsModalInterface({
   defaultTitle,
   initialSelectedSetting,
   onClose,
-  isOpen,
 }: TransactionSettingsModalProps): JSX.Element {
   return (
-    <AdaptiveWebPopoverContent
+    <Popover.Content
       animation={[
         'quick',
         {
@@ -195,14 +134,11 @@ function TransactionSettingsModalInterface({
       borderWidth="$spacing1"
       enterStyle={{ y: -10, opacity: 0 }}
       exitStyle={{ y: -10, opacity: 0 }}
-      px="$spacing12"
-      py="$spacing4"
+      p="$spacing12"
       shadowColor="$shadowColor"
       shadowOpacity={0.06}
       shadowRadius={6}
       width={POPOVER_WIDTH}
-      isOpen={isOpen}
-      webBottomSheetProps={{ px: '$padding16' }}
     >
       <TransactionSettingsModalContent
         defaultTitle={defaultTitle}
@@ -210,7 +146,7 @@ function TransactionSettingsModalInterface({
         settings={settings}
         onClose={onClose}
       />
-    </AdaptiveWebPopoverContent>
+    </Popover.Content>
   )
 }
 

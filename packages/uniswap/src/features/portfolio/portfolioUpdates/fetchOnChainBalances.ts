@@ -7,7 +7,7 @@ import {
   TokenDocument,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { IndicativeQuoteResponse, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
+import { IndicativeQuoteRequest, IndicativeQuoteResponse, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
@@ -183,31 +183,14 @@ async function getDenominatedValue({
     return undefined
   }
 
-  const indicativeQuoteParams = {
+  const indicativeQuote = await fetchIndicativeQuote({
     type: TradeType.EXACT_INPUT,
     amount: onchainQuantityCurrencyAmount.quotient.toString(),
     tokenInChainId: chainId,
     tokenOutChainId: chainId,
     tokenIn: tokenAddress,
     tokenOut: stablecoinCurrency.address,
-  }
-
-  let indicativeQuote: IndicativeQuoteResponse | undefined
-
-  try {
-    indicativeQuote = await fetchTradingApiIndicativeQuoteIgnoring404({ params: indicativeQuoteParams })
-  } catch (error) {
-    // We log any other errors, but we don't want to throw and instead just continue with an "N/A" value.
-    logger.error(error, {
-      tags: {
-        file: 'fetchOnChainBalances.ts',
-        function: 'getDenominatedValue',
-      },
-      extra: {
-        indicativeQuoteParams,
-      },
-    })
-  }
+  })
 
   const amountOut = indicativeQuote?.output.amount
 
@@ -254,4 +237,22 @@ function getInferredCachedDenominatedValue({
   }
 
   return undefined
+}
+
+async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Promise<IndicativeQuoteResponse | undefined> {
+  try {
+    return await fetchTradingApiIndicativeQuoteIgnoring404({ params })
+  } catch (error) {
+    // We log any other errors, but we don't want to throw and instead just continue with an "N/A" value.
+    logger.error(error, {
+      tags: {
+        file: 'fetchOnChainBalances.ts',
+        function: 'getIndicativeQuote',
+      },
+      extra: {
+        params,
+      },
+    })
+    return undefined
+  }
 }

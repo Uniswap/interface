@@ -29,6 +29,10 @@ export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): 
   return openUri(serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl)
 }
 
+export async function openOfframpPendingSupportLink(): Promise<void> {
+  return openUri(uniswapUrls.helpArticleUrls.fiatOffRampHelp)
+}
+
 export async function openSettings(): Promise<void> {
   await Linking.openSettings()
 }

@@ -1,5 +1,5 @@
-import { PermissionStatus, scanFromURLAsync } from 'expo-barcode-scanner'
-import { BarCodeScanningResult, CameraType } from 'expo-camera'
+import { BarCodeScanner, PermissionStatus } from 'expo-barcode-scanner'
+import { BarCodeScanningResult, CameraType } from 'expo-camera/build/Camera.types'
 import { CameraProps, CameraView, useCameraPermissions } from 'expo-camera/next'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -59,7 +59,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
   const [bottomLayout, setBottomLayout] = useState<LayoutRectangle | null>()
 
-  const handleBarcodeScanned = useCallback(
+  const handleBarCodeScanned = useCallback(
     (result: BarCodeScanningResult): void => {
       if (shouldFreezeCamera) {
         return
@@ -90,7 +90,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       return
     }
 
-    const result = (await scanFromURLAsync(uri, [BarcodeType.QR]))[0]
+    const result = (await BarCodeScanner.scanFromURLAsync(uri, [BarCodeScanner.Constants.BarCodeType.qr]))[0]
 
     if (!result) {
       Alert.alert(t('qrScanner.error.none'))
@@ -98,8 +98,8 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       return
     }
 
-    handleBarcodeScanned(result)
-  }, [handleBarcodeScanned, isReadingImageFile, t])
+    handleBarCodeScanned(result)
+  }, [handleBarCodeScanned, isReadingImageFile, t])
 
   useEffect(() => {
     const handlePermissionStatus = async (): Promise<void> => {
@@ -146,7 +146,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               }}
               facing={CameraType.back}
               style={StyleSheet.absoluteFillObject}
-              onBarcodeScanned={handleBarcodeScanned}
+              onBarcodeScanned={handleBarCodeScanned}
             />
           )}
         </Flex>

@@ -159,7 +159,7 @@ export function TransactionDetails({
       {showWarning && warning && onShowWarning && (
         <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
       )}
-      {!isInterface && isSwap && (
+      {isSwap && (
         <TransactionSettingsModal
           settings={[SlippageUpdate]}
           initialSelectedSetting={SlippageUpdate}

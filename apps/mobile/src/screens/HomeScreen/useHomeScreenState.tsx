@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -25,6 +25,14 @@ export function useHomeScreenState(): {
   )
   const { gqlChains } = useEnabledChains()
 
+  const neverCached = hasUsedWalletFromCache === undefined
+
+  // There's a race condition during onboarding where the editAccountSaga is
+  // editing the account in redux in an unconventional way that causes the
+  // hasUsedWalletFromCache to reset after being set by this hook. This ref
+  // is a work around to only trigger the loading state once.
+  const dataLoadedRef = useRef(false)
+
   const { data: balancesById, loading: areBalancesLoading } = usePortfolioBalances({
     address,
     skip: hasUsedWalletFromCache,
@@ -48,24 +56,27 @@ export function useHomeScreenState(): {
   })
 
   const hasNft = !!nftData?.nftBalances?.edges.length
-  const hasTokenBalance = !!Object.entries(balancesById || {}).length
+  const hasTokenBalance = balancesById ? Object.keys(balancesById).length > 0 : false
   const hasUsedWalletFromRemote = hasTokenBalance || hasNft || hasActivity
   const dataIsLoading = areBalancesLoading || areNFTsLoading || isActivityLoading
 
-  // Note: This is to prevent loading the empty wallet state for an active
-  // wallet loading tabs for the first time.
-  const isTabsDataLoaded = !(dataIsLoading && hasUsedWalletFromCache)
-
+  const isTabsDataLoaded = neverCached ? !dataIsLoading : true
   const hasUsedWallet = hasUsedWalletFromCache || hasUsedWalletFromRemote
 
+  const shouldUpdateCache = neverCached && isTabsDataLoaded
+  const addressIsNowUsed = hasUsedWalletFromCache === false && hasUsedWalletFromRemote
   useEffect(() => {
-    if (hasUsedWallet && !hasUsedWalletFromCache) {
-      dispatch(setHasBalanceOrActivity({ address, hasBalanceOrActivity: true }))
+    if (shouldUpdateCache || addressIsNowUsed) {
+      dispatch(setHasBalanceOrActivity({ address, hasBalanceOrActivity: hasUsedWallet }))
     }
-  }, [hasUsedWallet, dispatch, address, hasUsedWalletFromCache])
+  }, [hasUsedWallet, dispatch, address, shouldUpdateCache, addressIsNowUsed])
+
+  if (!dataLoadedRef.current && isTabsDataLoaded) {
+    dataLoadedRef.current = true
+  }
 
   return {
     showEmptyWalletState: !hasUsedWallet,
-    isTabsDataLoaded,
+    isTabsDataLoaded: dataLoadedRef.current || isTabsDataLoaded,
   }
 }

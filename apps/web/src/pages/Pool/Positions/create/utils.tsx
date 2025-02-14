@@ -395,11 +395,22 @@ function createMockV4Pool({
   return pool
 }
 
-function createMockPair(price?: Price<Currency, Currency>) {
-  if (price) {
+function createMockPair({
+  baseCurrency,
+  quoteCurrency,
+  price,
+}: {
+  baseCurrency?: Currency
+  quoteCurrency?: Currency
+  price?: Price<Currency, Currency>
+}) {
+  const baseToken = baseCurrency?.wrapped
+  const quoteToken = quoteCurrency?.wrapped
+
+  if (baseToken && quoteToken && price) {
     return new Pair(
-      CurrencyAmount.fromRawAmount(price.quoteCurrency.wrapped, price.numerator),
-      CurrencyAmount.fromRawAmount(price.baseCurrency.wrapped, price.denominator),
+      CurrencyAmount.fromRawAmount(baseToken, price.numerator),
+      CurrencyAmount.fromRawAmount(quoteToken, price.denominator),
     )
   } else {
     return undefined
@@ -519,27 +530,25 @@ export function getV2PriceRangeInfo({
   const { currencies } = derivedPositionInfo
   const [baseCurrency] = getInvertedTuple(currencies, state.priceInverted)
 
-  const baseToken = getCurrencyWithWrap(baseCurrency, ProtocolVersion.V2)
-  const sortedTokens = getSortedCurrenciesTuple(
-    getCurrencyWithWrap(currencies[0], ProtocolVersion.V2),
-    getCurrencyWithWrap(currencies[1], ProtocolVersion.V2),
-  )
-
   const price = getInitialPrice({
-    baseCurrency: baseToken,
-    sortedCurrencies: sortedTokens,
+    baseCurrency: getCurrencyWithWrap(baseCurrency, ProtocolVersion.V2),
+    sortedCurrencies: getSortedCurrenciesTuple(
+      getCurrencyWithWrap(currencies[0], ProtocolVersion.V2),
+      getCurrencyWithWrap(currencies[1], ProtocolVersion.V2),
+    ),
     initialPrice: state.initialPrice,
   })
-
-  const invertPrice = Boolean(baseToken && sortedTokens[0] && !baseToken.equals(sortedTokens[0]))
 
   return {
     protocolVersion: ProtocolVersion.V2,
     price,
-    mockPair: createMockPair(price),
+    mockPair: createMockPair({
+      baseCurrency: currencies[0],
+      quoteCurrency: currencies[1],
+      price,
+    }),
     deposit0Disabled: false,
     deposit1Disabled: false,
-    invertPrice,
   } satisfies V2PriceRangeInfo
 }
 

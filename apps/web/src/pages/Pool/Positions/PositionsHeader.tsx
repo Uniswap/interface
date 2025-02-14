@@ -3,6 +3,7 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pool
 import { DropdownSelector } from 'components/DropdownSelector'
 import { lpStatusConfig } from 'components/Liquidity/constants'
 import { getProtocolStatusLabel, getProtocolVersionLabel } from 'components/Liquidity/utils'
+import { useAccount } from 'hooks/useAccount'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -49,6 +50,7 @@ export function PositionsHeader({
   onStatusChange,
 }: PositionsHeaderProps) {
   const { t } = useTranslation()
+  const { isConnected } = useAccount()
   const { chains } = useEnabledChains()
   const navigate = useNavigate()
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
@@ -137,107 +139,109 @@ export function PositionsHeader({
   return (
     <Flex gap={16}>
       <Text variant="heading3">{t('pool.positions.title')}</Text>
-      <Flex gap="$gap8" row $sm={{ flexDirection: 'column' }}>
-        <Flex gap="$spacing1" row>
-          <Flex
-            row
-            gap="$gap8"
-            px="$padding16"
-            backgroundColor="$neutral1"
-            borderTopLeftRadius="$rounded16"
-            borderBottomLeftRadius="$rounded16"
-            alignItems="center"
-            $sm={{ justifyContent: 'center' }}
-            justifyContent="flex-start"
-            flex={1}
-            {...ClickableTamaguiStyle}
-            onPress={() => {
-              navigate(`/positions/create/${isV4DataEnabled ? 'v4' : 'v3'}`)
-            }}
-          >
-            <Plus size={20} color="$surface1" />
-            <Text color="$surface1" variant="buttonLabel3">
-              {t('common.new')}
-            </Text>
-          </Flex>
-          <DropdownSelector
-            containerStyle={{ width: 'auto' }}
-            menuLabel={
-              <Flex
-                borderTopRightRadius="$rounded16"
-                borderBottomRightRadius="$rounded16"
-                backgroundColor="$neutral1"
-                justifyContent="center"
-                alignItems="center"
-                p="$padding8"
-                {...ClickableTamaguiStyle}
-              >
-                <RotatableChevron direction="down" height={20} width={20} color="$surface1" />
-              </Flex>
-            }
-            buttonStyle={{
-              borderWidth: 0,
-              p: 0,
-            }}
-            dropdownStyle={{
-              width: 160,
-            }}
-            internalMenuItems={<>{createOptions}</>}
-            hideChevron={true}
-            isOpen={createDropdownOpen}
-            toggleOpen={() => {
-              setCreateDropdownOpen((prev) => !prev)
-            }}
-          />
-        </Flex>
-        {showFilters && (
-          <Flex row alignItems="center" shrink height="100%" gap="$gap4">
-            <DropdownSelector
-              isOpen={protocolDropdownOpen}
-              toggleOpen={() => {
-                setProtocolDropdownOpen((prev) => !prev)
+      {isConnected && (
+        <Flex gap="$gap8" row $sm={{ flexDirection: 'column' }}>
+          <Flex gap="$spacing1" row>
+            <Flex
+              row
+              gap="$gap8"
+              px="$padding16"
+              backgroundColor="$neutral1"
+              borderTopLeftRadius="$rounded16"
+              borderBottomLeftRadius="$rounded16"
+              alignItems="center"
+              $sm={{ justifyContent: 'center' }}
+              justifyContent="flex-start"
+              flex={1}
+              {...ClickableTamaguiStyle}
+              onPress={() => {
+                navigate(`/positions/create/${isV4DataEnabled ? 'v4' : 'v3'}`)
               }}
-              menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
-              internalMenuItems={<>{statusFilterOptions}</>}
-              dropdownStyle={{
-                width: 240,
-                className: 'scrollbar-hidden',
-              }}
-              buttonStyle={StyledDropdownButton}
-            />
+            >
+              <Plus size={20} color="$surface1" />
+              <Text color="$surface1" variant="buttonLabel3">
+                {t('common.new')}
+              </Text>
+            </Flex>
             <DropdownSelector
-              isOpen={statusDropdownOpen}
-              toggleOpen={() => setStatusDropdownOpen((prev) => !prev)}
-              menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
-              internalMenuItems={<>{versionFilterOptions}</>}
+              containerStyle={{ width: 'auto' }}
+              menuLabel={
+                <Flex
+                  borderTopRightRadius="$rounded16"
+                  borderBottomRightRadius="$rounded16"
+                  backgroundColor="$neutral1"
+                  justifyContent="center"
+                  alignItems="center"
+                  p="$padding8"
+                  {...ClickableTamaguiStyle}
+                >
+                  <RotatableChevron direction="down" height={20} width={20} color="$surface1" />
+                </Flex>
+              }
+              buttonStyle={{
+                borderWidth: 0,
+                p: 0,
+              }}
               dropdownStyle={{
                 width: 160,
-                className: 'scrollbar-hidden',
               }}
-              buttonStyle={StyledDropdownButton}
+              internalMenuItems={<>{createOptions}</>}
+              hideChevron={true}
+              isOpen={createDropdownOpen}
+              toggleOpen={() => {
+                setCreateDropdownOpen((prev) => !prev)
+              }}
             />
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              backgroundColor="$surface3"
-              borderRadius="$rounded16"
-              px="$padding12"
-              height="100%"
-              {...ClickableTamaguiStyle}
-            >
-              <NetworkFilter
-                includeAllNetworks
-                selectedChain={selectedChain}
-                onPressChain={onChainChange}
-                chainIds={chains}
-                styles={{
-                  buttonPaddingY: '$spacing8',
-                }}
-              />
-            </Flex>
           </Flex>
-        )}
-      </Flex>
+          {showFilters && (
+            <Flex row alignItems="center" shrink height="100%" gap="$gap4">
+              <DropdownSelector
+                isOpen={protocolDropdownOpen}
+                toggleOpen={() => {
+                  setProtocolDropdownOpen((prev) => !prev)
+                }}
+                menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
+                internalMenuItems={<>{statusFilterOptions}</>}
+                dropdownStyle={{
+                  width: 240,
+                  className: 'scrollbar-hidden',
+                }}
+                buttonStyle={StyledDropdownButton}
+              />
+              <DropdownSelector
+                isOpen={statusDropdownOpen}
+                toggleOpen={() => setStatusDropdownOpen((prev) => !prev)}
+                menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
+                internalMenuItems={<>{versionFilterOptions}</>}
+                dropdownStyle={{
+                  width: 160,
+                  className: 'scrollbar-hidden',
+                }}
+                buttonStyle={StyledDropdownButton}
+              />
+              <Flex
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor="$surface3"
+                borderRadius="$rounded16"
+                px="$padding12"
+                height="100%"
+                {...ClickableTamaguiStyle}
+              >
+                <NetworkFilter
+                  includeAllNetworks
+                  selectedChain={selectedChain}
+                  onPressChain={onChainChange}
+                  chainIds={chains}
+                  styles={{
+                    buttonPaddingY: '$spacing8',
+                  }}
+                />
+              </Flex>
+            </Flex>
+          )}
+        </Flex>
+      )}
     </Flex>
   )
 }

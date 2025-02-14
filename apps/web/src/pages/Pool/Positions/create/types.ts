@@ -108,7 +108,6 @@ type BasePriceRangeInfo = {
   deposit0Disabled: boolean
   deposit1Disabled: boolean
   price?: Price<Currency, Currency>
-  invertPrice: boolean
 }
 
 export type OptionalCurrencyPrice = Price<Currency, Currency> | undefined
@@ -118,6 +117,7 @@ type BasePoolPriceRangeInfo = {
   ticksAtLimit: [boolean, boolean]
   tickSpaceLimits: [OptionalNumber, OptionalNumber]
   isSorted: boolean
+  invertPrice: boolean
   invalidPrice: boolean
   invalidRange: boolean
   outOfRange: boolean

@@ -1,23 +1,12 @@
-IPFS hash of the deployment:
-- CIDv0: `QmeqY4kue58BB4LG4rseGWe5sav5XjAt2CNKhwpmpCmaKF`
-- CIDv1: `bafybeihvefjgw6woi34lg7b5oxbc77nqluqp66eeg2kfqq7tn32rcjcdgy`
+# We are back an exciting new update!
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Introducing Unichain: Faster swaps. Lower fees. Unichain is optimized to be the home for cross‑chain liquidity.
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+- Swap instantly.
+- Save up to 95% on fees compared to Ethereum.
+- Lower costs for creating pools and managing positions.
 
-IPFS gateways:
-- https://bafybeihvefjgw6woi34lg7b5oxbc77nqluqp66eeg2kfqq7tn32rcjcdgy.ipfs.dweb.link/
-- [ipfs://QmeqY4kue58BB4LG4rseGWe5sav5XjAt2CNKhwpmpCmaKF/](ipfs://QmeqY4kue58BB4LG4rseGWe5sav5XjAt2CNKhwpmpCmaKF/)
+Other changes: 
 
-## 5.71.0 (2025-02-11)
-
-
-### Features
-
-* **web:** remove unichain beta toggle - prod (#16168) 6fcd098
-
-
+- Improved warnings for send transactions to smart contract addresses
+- Various bug fixes and performance improvements

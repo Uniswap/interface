@@ -54,9 +54,9 @@ const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {
 function comparePoolTokens(tokenA: PoolTableTransaction['pool']['token0'], tokenB?: Token) {
   if (tokenB?.address === NATIVE_CHAIN_ID) {
     const chainId = supportedChainIdFromGQLChain(tokenB.chain)
-    return chainId && tokenA.id?.toLowerCase() === WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+    return chainId && tokenA.id.toLowerCase() === WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
   }
-  return tokenA.id?.toLowerCase() === tokenB?.address?.toLowerCase()
+  return tokenA.id.toLowerCase() === tokenB?.address?.toLowerCase()
 }
 
 export function PoolDetailsTransactionsTable({

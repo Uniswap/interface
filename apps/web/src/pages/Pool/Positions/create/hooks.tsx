@@ -54,7 +54,6 @@ import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -356,8 +355,6 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
 
   const { balance: token0Balance } = useOnChainCurrencyBalance(token0, address)
   const { balance: token1Balance } = useOnChainCurrencyBalance(token1, address)
-  const token0MaxAmount = useMaxAmountSpend({ currencyAmount: token0Balance })
-  const token1MaxAmount = useMaxAmountSpend({ currencyAmount: token1Balance })
 
   const [independentToken, dependentToken] = exactField === PositionField.TOKEN0 ? [token0, token1] : [token1, token0]
   const independentAmount = tryParseCurrencyAmount(exactAmounts[exactField], independentToken)
@@ -432,8 +429,8 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       return t('common.noAmount.error')
     }
 
-    const insufficientToken0Balance = currency0Amount && token0MaxAmount?.lessThan(currency0Amount)
-    const insufficientToken1Balance = currency1Amount && token1MaxAmount?.lessThan(currency1Amount)
+    const insufficientToken0Balance = currency0Amount && token0Balance?.lessThan(currency0Amount)
+    const insufficientToken1Balance = currency1Amount && token1Balance?.lessThan(currency1Amount)
 
     if (insufficientToken0Balance && insufficientToken1Balance) {
       return <Trans i18nKey="common.insufficientBalance.error" />
@@ -468,9 +465,9 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
     deposit0Disabled,
     deposit1Disabled,
     currency0Amount,
-    token0MaxAmount,
+    token0Balance,
     currency1Amount,
-    token1MaxAmount,
+    token1Balance,
     t,
     token0?.symbol,
     token1?.symbol,

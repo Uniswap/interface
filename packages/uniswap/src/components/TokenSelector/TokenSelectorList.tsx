@@ -12,12 +12,7 @@ import {
   TokenSectionBaseList,
   TokenSectionBaseListRef,
 } from 'uniswap/src/components/TokenSelector/lists/TokenSectionBaseList/TokenSectionBaseList'
-import {
-  OnSelectCurrency,
-  TokenOption,
-  TokenOptionSection,
-  TokenSection,
-} from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -181,7 +176,7 @@ function _TokenSelectorList({
           isKeyboardOpen={isKeyboardOpen}
           section={section}
           showTokenAddress={showTokenAddress}
-          showWarnings={section.sectionKey === TokenOptionSection.BridgingTokens ? false : showTokenWarnings}
+          showWarnings={showTokenWarnings}
           tokenOption={item}
           onSelectCurrency={onSelectCurrency}
         />

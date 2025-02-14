@@ -1,28 +1,3 @@
-fragment TokenPrice on Token {
-  id  
-  project {
-    id
-    markets(currencies: [USD]) {
-      id
-      price {
-        id
-        value
-      }
-    }
-    logo {
-      id
-      url
-    }
-  }
-  market(currency: USD) {
-    id
-    price {
-      id
-      value
-    }
-  }
-}
-
 query V3Pool($chain: Chain!, $address: String!) {
   v3Pool(chain: $chain, address: $address) {
     id
@@ -31,12 +6,38 @@ query V3Pool($chain: Chain!, $address: String!) {
     feeTier
     token0 {
       ...SimpleTokenDetails
-      ...TokenPrice
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
     }
     token0Supply
     token1 {
       ...SimpleTokenDetails
-      ...TokenPrice
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
     }
     token1Supply
     txCount
@@ -68,12 +69,38 @@ query V4Pool($chain: Chain!, $poolId: String!) {
     }
     token0 {
       ...SimpleTokenDetails
-      ...TokenPrice
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
     }
     token0Supply
     token1 {
       ...SimpleTokenDetails
-      ...TokenPrice
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
     }
     token1Supply
     txCount
@@ -163,12 +190,38 @@ query V2Pair($chain: Chain!, $address: String!) {
     address
     token0 {
       ...SimpleTokenDetails
-      ...TokenPrice
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
     }
     token0Supply
     token1 {
       ...SimpleTokenDetails
-      ...TokenPrice
+      project {
+    id
+    markets(currencies: [USD]) {
+      id
+      price {
+        id
+        value
+      }
+    }
+    logo {
+      id
+      url
+    }
+  }
     }
     token1Supply
     txCount

@@ -29,7 +29,6 @@ import { DeprecatedButton, Flex, Main, Switch, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
@@ -120,7 +119,6 @@ function PositionPage() {
   const chainId = useChainIdFromUrlParam()
   const chainInfo = chainId ? getChainInfo(chainId) : undefined
   const account = useAccount()
-  const supportedAccountChainId = useSupportedChainId(account.chainId)
   const { pathname } = useLocation()
   const {
     data,
@@ -134,7 +132,7 @@ function PositionPage() {
         ? ProtocolVersion.V4
         : ProtocolVersion.UNSPECIFIED,
     tokenId: tokenIdFromUrl,
-    chainId: chainId ?? supportedAccountChainId,
+    chainId: chainId ?? account.chainId,
   })
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
@@ -146,7 +144,7 @@ function PositionPage() {
 
   const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
+  const isMigrateEnabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
@@ -257,7 +255,7 @@ function PositionPage() {
                 {positionInfo.version === ProtocolVersion.V3 &&
                   status !== PositionStatus.CLOSED &&
                   isV4DataEnabled &&
-                  isMigrateToV4Enabled && (
+                  isMigrateEnabled && (
                     <MouseoverTooltip
                       text={t('pool.migrateLiquidityDisabledTooltip')}
                       disabled={!showV4UnsupportedTooltip}

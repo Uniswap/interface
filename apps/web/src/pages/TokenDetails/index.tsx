@@ -21,7 +21,6 @@ import { ThemeProvider } from 'theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isAddress } from 'utilities/src/addresses'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
@@ -160,7 +159,6 @@ export default function TokenDetailsPage() {
   const pageChainId = account.chainId ?? UniverseChainId.Mainnet
   const contextValue = useCreateTDPContext()
   const { tokenColor, address, currency, currencyChain, currencyChainId, tokenQuery } = contextValue
-  const isSupportedChain = useIsSupportedChainId(currencyChainId)
 
   const tokenQueryData = tokenQuery.data?.token
   const metatagProperties = useMemo(() => {
@@ -187,7 +185,7 @@ export default function TokenDetailsPage() {
         ))}
       </Helmet>
       {(() => {
-        if (currency && isSupportedChain) {
+        if (currency) {
           return (
             <TDPProvider contextValue={contextValue}>
               <TokenDetails />

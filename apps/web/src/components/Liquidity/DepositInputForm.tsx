@@ -65,7 +65,7 @@ export function DepositInputForm({
   const handleOnSetMax = (field: PositionField) => {
     return (amount: string) => {
       setFocusedInputField(field)
-      onSetMax(field, amount)
+      onSetMax(field, amount) // TODO(WEB-4978): update this to account for gas
     }
   }
 

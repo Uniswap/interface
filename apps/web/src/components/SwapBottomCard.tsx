@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
-import { ClickableTamaguiStyle, ExternalLink } from 'theme/components'
+import { ClickableTamaguiStyle, ExternalLink, HideSmall } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
 import { UNICHAIN_BANNER_COLD, UNICHAIN_BANNER_WARM } from 'ui/src/assets'
@@ -269,16 +269,15 @@ function CardInner({
             textProps={{ color: textColor ?? '$neutral1', variant: 'subheading2' }}
             element={isNew ? <NewTag /> : undefined}
           />
-          <Flex $md={{ display: 'none' }}>
+          <HideSmall>
             <Text variant="body4" color={textColor ?? '$neutral2'}>
               {subtitle}
             </Text>
-          </Flex>
+          </HideSmall>
         </Flex>
         {onDismiss ? (
           <TouchableArea
             alignSelf="flex-start"
-            $md={{ alignSelf: 'center' }}
             hitSlop={ICON_SIZE}
             onPress={(e: TouchableAreaEvent) => {
               e.stopPropagation()
@@ -288,9 +287,7 @@ function CardInner({
             <X color="$neutral3" size={ICON_SIZE} />
           </TouchableArea>
         ) : (
-          <TouchableArea alignSelf="flex-start" $md={{ alignSelf: 'center' }}>
-            <ArrowUpRight width={ICON_SIZE_PX} height={ICON_SIZE_PX} color={textColor} />
-          </TouchableArea>
+          <ArrowUpRight width={ICON_SIZE_PX} height={ICON_SIZE_PX} color={textColor} />
         )}
       </Flex>
     </Flex>

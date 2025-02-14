@@ -86,7 +86,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const { value: lpRedesignEnabled, isLoading: isLPRedesignGateLoading } = useFeatureFlagWithLoading(
     FeatureFlags.LPRedesign,
   )
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
+  const isMigrateEnabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
@@ -113,7 +113,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
     return <Navigate to="/pools" replace />
   }
 
-  if (!isMigrateToV4Enabled || !isSameAddress(account?.address, owner)) {
+  if (!isMigrateEnabled || !isSameAddress(account?.address, owner)) {
     navigate('/positions')
   }
 

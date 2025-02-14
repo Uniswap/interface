@@ -23,7 +23,6 @@ import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks
 import { usePairAdder } from 'state/user/hooks'
 import { Circle, DeprecatedButton, Flex, Main, Shine, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -80,7 +79,6 @@ function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
-  const supportedAccountChainId = useSupportedChainId(account.chainId)
 
   const {
     data,
@@ -90,7 +88,7 @@ function V2PositionPage() {
     owner: account?.address ?? ZERO_ADDRESS,
     protocolVersion: ProtocolVersion.V2,
     pairAddress,
-    chainId: chainId ?? supportedAccountChainId,
+    chainId: chainId ?? account.chainId,
   })
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])

@@ -247,7 +247,7 @@ export function SelectTokensStep({
     hook: hook ?? ZERO_ADDRESS,
   })
 
-  const feeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion, t })
+  const feeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, t })
   const [defaultFeeTierSelected, setDefaultFeeTierSelected] = useState(false)
   const mostUsedFeeTier = useMemo(() => {
     if (hasExistingFeeTiers && feeTierData && Object.keys(feeTierData).length > 0) {

@@ -24,8 +24,5 @@ export const selectHasSeenUnichainPromotionNetworkSelectorTooltip = (state: Unis
 export const selectHasSeenUnichainPromotionBridgingTooltip = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.unichainPromotion?.bridgingTooltipSeen === true
 
-export const selectHasSeenUnichainPromotionBridgingAnimation = (state: UniswapState): boolean =>
-  state.uniswapBehaviorHistory.unichainPromotion?.bridgingAnimationSeen === true
-
 export const selectIsFirstUnichainBridgeSelection = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.unichainPromotion?.isFirstUnichainBridgeSelection === true

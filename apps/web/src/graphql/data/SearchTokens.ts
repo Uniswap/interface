@@ -4,7 +4,6 @@ import {
   Token,
   useSearchTokensWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isBackendSupportedChain } from 'uniswap/src/features/chains/utils'
 
 // Filters out results that are undefined, or where the token's chain is not supported in explore.
@@ -13,12 +12,7 @@ function isExploreSupportedToken(token: GqlSearchToken | undefined): token is To
 }
 
 export function useSearchTokens(searchQuery: string = '') {
-  const { gqlChains: chains } = useEnabledChains()
-
-  const { data, loading, error } = useSearchTokensWebQuery({
-    variables: { searchQuery, chains },
-    skip: searchQuery === '',
-  })
+  const { data, loading, error } = useSearchTokensWebQuery({ variables: { searchQuery }, skip: searchQuery === '' })
 
   return useMemo(() => {
     const sortedTokens = data?.searchTokens?.filter(isExploreSupportedToken) ?? []

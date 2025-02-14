@@ -42,7 +42,7 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
 
   return (
     <Flex>
-      <ContextMenu closeOnClick itemId={itemId} menuOptions={menuOptions} onLeftClick>
+      <ContextMenu itemId={itemId} menuOptions={menuOptions} onLeftClick>
         <NftView {...props} />
       </ContextMenu>
     </Flex>

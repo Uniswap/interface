@@ -1,6 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useState } from 'react'
-import { Flex, GeneratedIcon, InlineCard, LabeledCheckbox, Text } from 'ui/src'
+import { Flex, InlineCard, LabeledCheckbox, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { getWarningIcon, getWarningIconColors } from 'uniswap/src/components/warnings/utils'
@@ -21,7 +21,6 @@ type InlineWarningCardProps = {
   headingTestId?: string
   descriptionTestId?: string
   analyticsProperties?: Record<string, unknown>
-  Icon?: GeneratedIcon
 }
 
 export function InlineWarningCard({
@@ -37,7 +36,6 @@ export function InlineWarningCard({
   headingTestId,
   descriptionTestId,
   analyticsProperties,
-  Icon,
 }: InlineWarningCardProps): JSX.Element | null {
   const [checkedFallback, setCheckedFallback] = useState(false)
   const { color, textColor, backgroundColor } = getWarningIconColors(severity)
@@ -83,7 +81,7 @@ export function InlineWarningCard({
   return (
     <InlineCard
       CtaButtonIcon={shouldShowCtaIcon ? InfoCircleFilled : undefined}
-      Icon={Icon ?? WarningIcon}
+      Icon={WarningIcon}
       color={textColor}
       description={
         <Flex gap="$spacing8">

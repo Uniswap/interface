@@ -30,6 +30,10 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
 
   const [showPopularInfo, setShowPopularInfo] = useState(false)
 
+  // Popular NFT collections data is only available on Mainnet
+  // TODO(WALL-5876): Update this once we have a way to fetch NFT collections for all chains
+  const showPopularNftCollections = !selectedChain || selectedChain === UniverseChainId.Mainnet
+
   const onPressClearSearchHistory = (): void => {
     dispatch(clearSearchHistory())
   }
@@ -79,10 +83,12 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
           />
           <SearchPopularTokens selectedChain={selectedChain} />
         </Flex>
-        <Flex gap="$spacing4">
-          <SectionHeaderText icon={TrendUpIcon} title={t('explore.search.section.popularNFT')} />
-          <SearchPopularNFTCollections />
-        </Flex>
+        {showPopularNftCollections && (
+          <Flex gap="$spacing4">
+            <SectionHeaderText icon={TrendUpIcon} title={t('explore.search.section.popularNFT')} />
+            <SearchPopularNFTCollections />
+          </Flex>
+        )}
       </AnimatedFlex>
       <WarningModal
         backgroundIconColor={colors.surface3.get()}

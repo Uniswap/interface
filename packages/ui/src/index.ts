@@ -70,7 +70,6 @@ export type { GeneratedIcon, IconProps } from './components/factories/createIcon
 export * from './components/input/utils'
 export { Flex, Inset, Separator, flexStyles, type FlexProps } from './components/layout'
 export { ModalCloseIcon, WebBottomSheet } from './components/modal/AdaptiveWebModal'
-export { AdaptiveWebPopoverContent } from './components/popover/AdaptiveWebPopoverContent'
 export * from './components/radio/Radio'
 export { ClickableWithinGesture } from './components/swipeablecards/ClickableWithinGesture'
 export { SwipeableCardStack } from './components/swipeablecards/SwipeableCardStack'

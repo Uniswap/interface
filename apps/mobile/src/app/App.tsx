@@ -256,8 +256,8 @@ function AppOuter(): JSX.Element | null {
 
     // Used in case we aren't able to resolve notification filtering issues on iOS
     if (isIOS) {
-      const notificationsPriceAlertsEnabled = getFeatureFlag(FeatureFlags.NotificationPriceAlerts)
-      const notificationsUnfundedWalletEnabled = getFeatureFlag(FeatureFlags.NotificationUnfundedWallets)
+      const notificationsPriceAlertsEnabled = getFeatureFlag(FeatureFlags.NotificationPriceAlertsIOS)
+      const notificationsUnfundedWalletEnabled = getFeatureFlag(FeatureFlags.NotificationUnfundedWalletsIOS)
 
       OneSignal.sendTags({
         [OneSignalUserTagField.GatingPriceAlertsEnabled]: notificationsPriceAlertsEnabled ? 'true' : 'false',

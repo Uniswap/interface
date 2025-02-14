@@ -827,7 +827,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
-      [RPCType.Default]: { http: ['https://mainnet.unichain.org'] },
+      [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
       [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
     },
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN, 10_000e6),

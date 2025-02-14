@@ -491,17 +491,10 @@ export function mergeFeeTiers(
 }
 
 function getDefaultFeeTiersForChain(
-  chainId: UniverseChainId | undefined,
-  protocolVersion: ProtocolVersion,
+  chainId?: UniverseChainId,
 ): Record<FeeAmount, { feeAmount: FeeAmount; tickSpacing: number }> {
   const feeData = Object.values(defaultFeeTiers)
-    .filter((feeTier) => {
-      // Only filter by chain support if we're on V3
-      if (protocolVersion === ProtocolVersion.V3) {
-        return !feeTier.supportedChainIds || (chainId && feeTier.supportedChainIds.includes(chainId))
-      }
-      return !feeTier.supportedChainIds
-    })
+    .filter((feeTier) => !feeTier.supportedChainIds || (chainId && feeTier.supportedChainIds.includes(chainId)))
     .map((feeTier) => feeTier.feeData)
 
   return feeData.reduce(
@@ -516,32 +509,27 @@ function getDefaultFeeTiersForChain(
 export function getDefaultFeeTiersForChainWithDynamicFeeTier({
   chainId,
   dynamicFeeTierEnabled,
-  protocolVersion,
 }: {
   chainId?: UniverseChainId
   dynamicFeeTierEnabled: boolean
-  protocolVersion: ProtocolVersion
 }) {
-  const feeTiers = getDefaultFeeTiersForChain(chainId, protocolVersion)
   if (!dynamicFeeTierEnabled) {
-    return feeTiers
+    return getDefaultFeeTiersForChain(chainId)
   }
 
-  return { ...feeTiers, [DYNAMIC_FEE_DATA.feeAmount]: DYNAMIC_FEE_DATA }
+  return { ...getDefaultFeeTiersForChain(chainId), [DYNAMIC_FEE_DATA.feeAmount]: DYNAMIC_FEE_DATA }
 }
 
 export function getDefaultFeeTiersWithData({
   chainId,
   feeTierData,
-  protocolVersion,
   t,
 }: {
   chainId?: UniverseChainId
   feeTierData: Record<number, FeeTierData>
-  protocolVersion: ProtocolVersion
   t: AppTFunction
 }) {
-  const defaultFeeTiersForChain = getDefaultFeeTiersForChain(chainId, protocolVersion)
+  const defaultFeeTiersForChain = getDefaultFeeTiersForChain(chainId)
 
   const feeTiers = [
     {
@@ -595,9 +583,7 @@ export function getDefaultFeeTiersWithData({
     },
   ] as const
 
-  return feeTiers.filter(
-    (feeTier) => feeTier.value !== undefined && Object.keys(feeTierData).includes(feeTier.tier.toString()),
-  )
+  return feeTiers.filter((feeTier) => Object.keys(feeTierData).includes(feeTier.tier.toString()))
 }
 
 export function isDynamicFeeTier(feeData: FeeData): feeData is DynamicFeeData {

@@ -262,11 +262,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   }
 
   const actualGasFee = createCalldata?.gasFee
-  const needsApprovals = !!(approvalCalldata?.token0Approval || approvalCalldata?.token1Approval)
-  const { value: calculatedGasFee } = useTransactionGasFee(
-    createCalldata?.create,
-    !!actualGasFee || needsApprovals /* skip */,
-  )
+  const { value: calculatedGasFee } = useTransactionGasFee(createCalldata?.create, !!actualGasFee)
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
     createCalldata?.create?.chainId,
     actualGasFee || calculatedGasFee,

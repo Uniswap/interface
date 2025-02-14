@@ -14,7 +14,6 @@ export interface UniswapBehaviorHistoryState {
     networkSelectorAnimationSeen?: boolean
     networkSelectorTooltipSeen?: boolean
     bridgingTooltipSeen?: boolean
-    bridgingAnimationSeen?: boolean
     isFirstUnichainBridgeSelection?: boolean
   }
 }
@@ -29,7 +28,6 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
     networkSelectorAnimationSeen: false,
     networkSelectorTooltipSeen: false,
     bridgingTooltipSeen: false,
-    bridgingAnimationSeen: false,
     isFirstUnichainBridgeSelection: true,
   },
 }
@@ -71,10 +69,6 @@ const slice = createSlice({
       state.unichainPromotion ??= {}
       state.unichainPromotion.isFirstUnichainBridgeSelection = action.payload
     },
-    setHasSeenBridgingAnimation: (state, action: PayloadAction<boolean>) => {
-      state.unichainPromotion ??= {}
-      state.unichainPromotion.bridgingAnimationSeen = action.payload
-    },
     // Should only be used for testing
     resetUniswapBehaviorHistory: (_state, _action: PayloadAction) => {
       return initialUniswapBehaviorHistoryState
@@ -92,7 +86,6 @@ export const {
   setHasSeenNetworkSelectorTooltip,
   setHasSeenBridgingTooltip,
   setIsFirstUnichainBridgeSelection,
-  setHasSeenBridgingAnimation,
   resetUniswapBehaviorHistory,
 } = slice.actions
 
