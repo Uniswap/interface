@@ -321,7 +321,6 @@ export function useV3Farms(): TableFarm[] {
   return farms
 }
 
-// React Hook "useV3Farms" cannot be called inside a callback.
 // React Hooks must be called in a React function component or a custom React Hook function  react-hooks/rules-of-hooks
 const getV3Farms = useV3Farms
 
@@ -357,9 +356,7 @@ export function useActiveFarms(sortState: FarmTableSortState, chainId?: ChainId)
         return {
           ...fetchedFarm,
           hash: `fetchedFarm.poolAddress-v${fetchedFarm.protocolVersion}`,
-          // NOTE Not needed since v2 farms are inactive
           farmAddress: '',
-          // Copied from above
           token0: tokens[fetchedFarm.token0],
           token1: tokens[fetchedFarm.token1],
           apr: new Percent(Math.round(fetchedFarm.apr * 1_000_000), 100 * 1_000_000),
