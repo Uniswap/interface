@@ -16,7 +16,6 @@ import { useIncentiveContractInfo } from 'pages/FarmV3/farm-actions'
 import { useEffect, useMemo, useState } from 'react'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress } from 'utilities/src/addresses'
-
 export function sortFarms(pools: TableFarm[], sortState: FarmTableSortState) {
   return pools.sort((a, b) => {
     switch (sortState.sortBy) {
@@ -28,7 +27,6 @@ export function sortFarms(pools: TableFarm[], sortState: FarmTableSortState) {
             return 1
           }
         }
-
         return sortState.sortDirection === OrderDirection.Desc
           ? b.apr.greaterThan(a.apr)
             ? 1
@@ -43,9 +41,7 @@ export function sortFarms(pools: TableFarm[], sortState: FarmTableSortState) {
     }
   })
 }
-
 export const V2_BIPS = 3000
-
 export interface TableFarm {
   hash: string
   farmAddress: string
@@ -61,21 +57,28 @@ export interface TableFarm {
   incentiveIds: string[]
 }
 
+export interface FetchedFarm {
+  contractAddress: string
+  poolAddress: string
+  token0: string
+  token1: string
+  apr: number
+  tvl: number
+  protocolVersion: number
+  rewardTokens: string[]
+}
+
 export enum FarmSortFields {
   TVL = 'TVL',
   APR = 'APR',
 }
-
 export type FarmTableSortState = {
   sortBy: FarmSortFields
   sortDirection: OrderDirection
 }
-
 function useFilteredFarms(pools: TableFarm[]) {
   const filterString = useAtomValue(exploreSearchStringAtom)
-
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
-
   return useMemo(
     () =>
       pools.filter((pool) => {
@@ -98,13 +101,11 @@ function useFilteredFarms(pools: TableFarm[]) {
     [lowercaseFilterString, pools]
   )
 }
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainId) {
   const farms = useFarmRegistry()
   const tokens = useDefaultActiveTokens(ChainId.CELO)
   const loading = farms.length == 0
-
   const unfilteredPools = useMemo(() => {
     const fff: TableFarm[] =
       farms
@@ -136,15 +137,12 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
           return []
         })
         .flat() ?? []
-
     const rt = sortFarms([...fff], sortState)
     return rt
   }, [farms, tokens, sortState])
-
   const filteredFarms = useFilteredFarms(unfilteredPools).slice(0, 100)
   return { farms: filteredFarms, loading }
 }
-
 interface Metadata {
   platform: string
   farmContract: string
@@ -164,7 +162,6 @@ interface Metadata {
   totalShares: string
   dataFile: string
 }
-
 async function fetchMetadata(incentiveId: string, _ipfsHash: string): Promise<Metadata | undefined> {
   if (!_ipfsHash) {
     return
@@ -197,7 +194,6 @@ async function fetchMetadata(incentiveId: string, _ipfsHash: string): Promise<Me
   }
   return data
 }
-
 export function useV3IncentiveMetadata(incentiveId: string): Metadata | undefined {
   const incentiveInfo = useIncentiveContractInfo(incentiveId)
   const { data: metadata } = useQuery({
@@ -206,10 +202,8 @@ export function useV3IncentiveMetadata(incentiveId: string): Metadata | undefine
     enabled: !!incentiveInfo,
     staleTime: 1000_0000,
   })
-
   return metadata
 }
-
 export interface IncentiveDataItem {
   tokenId: BigNumber
   accumulatedRewards: BigNumber
@@ -222,7 +216,6 @@ export interface IncentiveDataItem {
   isStaked: boolean
   isActive: boolean
 }
-
 async function fetchIncentiveFullData(
   incentiveId: string,
   _ipfsHash: string
@@ -247,7 +240,6 @@ async function fetchIncentiveFullData(
   }
   return result
 }
-
 export function useV3IncentiveFullData(incentiveId: string): IncentiveDataItem[] | undefined {
   const incentiveInfo = useIncentiveContractInfo(incentiveId)
   const { data } = useQuery({
@@ -256,10 +248,8 @@ export function useV3IncentiveFullData(incentiveId: string): IncentiveDataItem[]
     enabled: !!incentiveInfo,
     staleTime: 1000_0000,
   })
-
   return data
 }
-
 function getV3FarmNumbers(metadata: Metadata, nativePrice: number, ubePrice: number): { apr: Percent; tvl: number } {
   const activeTvlNative = parseFloat(formatEther(BigNumber.from(metadata.activeTvlNative)))
   const inactiveTvlNative = parseFloat(formatEther(BigNumber.from(metadata.inactiveTvlNative)))
@@ -276,13 +266,11 @@ function getV3FarmNumbers(metadata: Metadata, nativePrice: number, ubePrice: num
   if (activeTvlNative * nativePrice > 0) {
     apr = new Percent(Math.round(ubeYearlyRewardUsd * 1_000_000), Math.round(activeTvlNative * nativePrice * 1_000_000))
   }
-
   return {
     apr,
     tvl: (activeTvlNative + inactiveTvlNative) * nativePrice,
   }
 }
-
 export function useV3Farms(): TableFarm[] {
   const tokens = useDefaultActiveTokens(ChainId.CELO)
   const [farms, setFarms] = useState<TableFarm[]>([])
@@ -290,7 +278,6 @@ export function useV3Farms(): TableFarm[] {
   const ubePrice = useUSDPrice(CurrencyAmount.fromRawAmount(UBE[ChainId.CELO], 1e18)).data
   const metadataUbe = useV3IncentiveMetadata('0xeec6459eb0d7379623c6b1d8b323cc64dea67f43e6ca85e8909a27424d21e812')
   const metadataGlo = useV3IncentiveMetadata('0x82774b5b1443759f20679a61497abf11115a4d0e2076caedf9d700a8c53f286f')
-
   useEffect(() => {
     if (metadataUbe && metadataGlo && nativePrice && ubePrice) {
       try {
@@ -331,19 +318,73 @@ export function useV3Farms(): TableFarm[] {
       }
     }
   }, [tokens, metadataUbe, metadataGlo, nativePrice, ubePrice])
-
   return farms
 }
 
+// React Hook "useV3Farms" cannot be called inside a callback.
+// React Hooks must be called in a React function component or a custom React Hook function  react-hooks/rules-of-hooks
+const getV3Farms = useV3Farms
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useActiveFarms(sortState: FarmTableSortState, chainId?: ChainId) {
-  const v3Farms = useV3Farms()
-  const loading = v3Farms.length == 0
+  const [v3Farms, setV3Farms] = useState<TableFarm[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const url = 'https://interface-gateway.ubeswap.org/v1/graphql'
+  const tokens = useDefaultActiveTokens(ChainId.CELO)
+
+  const body = {
+    operationName: 'Farms',
+    query: '',
+    variables: {},
+  }
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+    .then((resp) => {
+      if (!resp.ok) {
+        throw new Error(`HTTP error! Status: ${resp.status}`)
+      }
+      return resp.json()
+    })
+    .then((data: FetchedFarm[]) => {
+      const farms = data.map((fetchedFarm) => {
+        return {
+          ...fetchedFarm,
+          hash: `fetchedFarm.poolAddress-v${fetchedFarm.protocolVersion}`,
+          // NOTE Not needed since v2 farms are inactive
+          farmAddress: '',
+          // Copied from above
+          token0: tokens[fetchedFarm.token0],
+          token1: tokens[fetchedFarm.token1],
+          apr: new Percent(Math.round(fetchedFarm.apr * 1_000_000), 100 * 1_000_000),
+          feeTier: 100,
+          incentiveIds: ['0x82774b5b1443759f20679a61497abf11115a4d0e2076caedf9d700a8c53f286f'],
+          token0Amount: new Fraction(0),
+          token1Amount: new Fraction(0),
+          protocolVersion: fetchedFarm.protocolVersion === 3 ? ProtocolVersion.V3 : ProtocolVersion.V2,
+        }
+      })
+      setV3Farms(farms)
+    })
+    .catch((error) => {
+      console.error('Error:', error)
+      setV3Farms(getV3Farms())
+    })
+    .finally(() => {
+      setLoading(false)
+    })
 
   const unfilteredPools = useMemo(() => {
     return sortFarms(v3Farms, sortState)
   }, [sortState, v3Farms])
 
   const filteredFarms = useFilteredFarms(unfilteredPools).slice(0, 100)
+
   return { farms: filteredFarms, loading }
 }
