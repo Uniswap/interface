@@ -24,7 +24,7 @@
     "https://buy.moonpay.com/",
     "https://verify.walletconnect.com/",
     "https://verify.walletconnect.org/",
-    "https://k9wetv0ke9.execute-api.eu-central-1.amazonaws.com/prod"
+    "https://iz72myarki.execute-api.eu-central-1.amazonaws.com/prod"
   ],
   "connectSrc": [
     "'self'",
@@ -38,7 +38,7 @@
     "https://unitags.interface.gateway.uniswap.org/v2/unitags/",
     "https://rpc.mainnet.taraxa.io/",
     "https://rpc.testnet.taraxa.io/",
-    "https://k9wetv0ke9.execute-api.eu-central-1.amazonaws.com/prod/",
+    "https://iz72myarki.execute-api.eu-central-1.amazonaws.com/prod/",
     "https://verify.walletconnect.com/",
     "https://verify.walletconnect.org/",
     "https://*.alchemy.com",

@@ -252,7 +252,7 @@ interface SwapCurrencyInputPanelProps {
   pair?: Pair | null;
   hideInput?: boolean;
   otherCurrency?: Currency | null;
-  fiatValue?: { data?: number; isLoading: boolean };
+  fiatValue?: { data?: number | null; isLoading: boolean };
   priceImpact?: Percent;
   id: string;
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode;

@@ -383,8 +383,8 @@ export function SwapForm({
   );
   const swapFiatValues = useMemo(() => {
     return {
-      amountIn: fiatValueTradeInput.data,
-      amountOut: fiatValueTradeOutput.data,
+      amountIn: fiatValueTradeInput.data ?? undefined,
+      amountOut: fiatValueTradeOutput.data ?? undefined,
       feeUsd: outputFeeFiatValue,
     };
   }, [fiatValueTradeInput.data, fiatValueTradeOutput.data, outputFeeFiatValue]);

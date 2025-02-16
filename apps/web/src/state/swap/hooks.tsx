@@ -323,7 +323,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
       trade,
       autoSlippage,
       allowedSlippage,
-      outputFeeFiatValue,
+      outputFeeFiatValue: outputFeeFiatValue ?? undefined,
       inputTax,
       outputTax,
     }),

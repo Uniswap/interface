@@ -29,7 +29,7 @@ import { getNativeTokenDBAddress } from "utils/nativeTokens";
 
 import useIsWindowVisible from "./useIsWindowVisible";
 import useStablecoinPrice from "./useStablecoinPrice";
-import { useTokenEthPrice } from "./useTokenUsdPrice";
+import { useTokenEthPrice, useTokenUsdPrice } from "./useTokenUsdPrice";
 
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -95,10 +95,13 @@ export function useUSDPrice(
   currencyAmount?: CurrencyAmount<Currency>,
   prefetchCurrency?: Currency
 ): {
-  data?: number;
+  data: number | null;
   isLoading: boolean;
 } {
   const [ethPrice, setEthPrice] = useState<number | null>(null);
+  const [tokenUsdPrice, setTokenUsdPrice] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const currency = currencyAmount?.currency ?? prefetchCurrency;
   const chainId = useSupportedChainId(currency?.chainId);
   const chain = chainIdToBackendChain({ chainId });
@@ -110,61 +113,37 @@ export function useUSDPrice(
   const { data: tokenEthPrice, isLoading: isTokenEthPriceLoading } =
     useETHPrice(currency);
   const isTokenEthPriced = Boolean(tokenEthPrice || isTokenEthPriceLoading);
-  // Get the USD price of the reward token
 
   useEffect(() => {
-    useTokenEthPrice(currency?.wrapped?.address ?? "").then(({ ethPrice }) => {
+    if (!currency || !isWindowVisible) return;
+
+    const fetchEthPrice = async () => {
+      const { ethPrice } = await useTokenEthPrice(
+        currency.wrapped?.address ?? ""
+      );
       setEthPrice(ethPrice);
-    });
-  }, [currency]);
+    };
 
-  const { data, networkStatus } = useTokenSpotPriceQuery({
-    variables: {
-      chain: chain ?? Chain.Ethereum,
-      address: getNativeTokenDBAddress(chain ?? Chain.Ethereum),
-    },
-    skip: !isTokenEthPriced || !isWindowVisible,
-    pollInterval: PollingInterval.Normal,
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: "cache-first",
-  });
+    fetchEthPrice();
+  }, [currency, isWindowVisible]);
 
-  // Use USDC-based pricing for chains not yet supported by backend (for ETH-based pricing).
-  const stablecoinPrice = useStablecoinPrice(
-    isTokenEthPriced ? undefined : currency
-  );
+  useEffect(() => {
+    if (!currency || !isWindowVisible) return;
 
-  return useMemo(() => {
-    if (!currencyAmount) {
-      return { data: undefined, isLoading: false };
-    } else if (stablecoinPrice) {
-      return {
-        data: parseFloat(stablecoinPrice.quote(currencyAmount).toSignificant()),
-        isLoading: false,
-      };
-    } else {
-      // Otherwise, get the price of the token in ETH, and then multiply by the price of ETH.
-      if (ethPrice && tokenEthPrice) {
-        return {
-          data:
-            parseFloat(tokenEthPrice.quote(currencyAmount).toExact()) *
-            ethPrice,
-          isLoading: false,
-        };
-      } else {
-        return {
-          data: undefined,
-          isLoading:
-            isTokenEthPriceLoading || networkStatus === NetworkStatus.loading,
-        };
-      }
-    }
-  }, [
-    currencyAmount,
-    data?.token?.project?.markets,
-    tokenEthPrice,
-    isTokenEthPriceLoading,
-    networkStatus,
-    stablecoinPrice,
-  ]);
+    const fetchUsdPrice = async () => {
+      setIsLoading(true);
+      const { usdPrice } = await useTokenUsdPrice(
+        currency.wrapped?.address ?? ""
+      );
+      setTokenUsdPrice(usdPrice);
+      setIsLoading(false);
+    };
+
+    fetchUsdPrice();
+  }, [currency, isWindowVisible]);
+
+  return {
+    data: tokenUsdPrice,
+    isLoading: isLoading || isTokenEthPriceLoading,
+  };
 }

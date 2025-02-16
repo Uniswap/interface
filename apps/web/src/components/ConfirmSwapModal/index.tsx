@@ -74,8 +74,8 @@ export function ConfirmSwapModal({
   inputCurrency?: Currency;
   allowance: Allowance;
   allowedSlippage: Percent;
-  fiatValueInput: { data?: number; isLoading: boolean };
-  fiatValueOutput: { data?: number; isLoading: boolean };
+  fiatValueInput: { data?: number | null; isLoading: boolean };
+  fiatValueOutput: { data?: number | null; isLoading: boolean };
   swapResult?: SwapResult;
   swapError?: Error;
   priceImpact?: Percent;
