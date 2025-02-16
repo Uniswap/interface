@@ -72,7 +72,7 @@ export function uniswapWalletConnect() {
       id: "uniswapWalletConnect",
       type: "uniswapWalletConnect",
       name: "Uniswap Wallet",
-      icon: "https://app.uniswap.org/favicon.png",
+      icon: "https://taraswap.app/favicon.png",
     };
   });
 }

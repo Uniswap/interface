@@ -44,28 +44,28 @@ export const useMenuContent = (): MenuSection[] => {
     items: [
       {
         label: t("common.whitepaper"),
-        href: "https://whitepaper.taraswap.org/",
+        href: "https://docs.taraswap.info/docs",
       },
-      { label: t("common.blog"), href: "https://blog.taraswap.org/" },
+      // { label: t("common.blog"), href: "https://docs.taraswap.info/docs" },
     ],
   };
   const protocolLinks = {
     title: t("common.protocol"),
     key: "Protocol",
     items: [
-      ...(!isLegacyNav
-        ? [
-            {
-              label: t("common.vote"),
-              href: "https://vote.taraswap.org/",
-            },
-          ]
-        : [
-            {
-              label: t("common.vote"),
-              href: "https://vote.taraswap.org/",
-            },
-          ]),
+      // ...(!isLegacyNav
+      //   ? [
+      //       {
+      //         label: t("common.vote"),
+      //         href: "https://vote.taraswap.org/",
+      //       },
+      //     ]
+      //   : [
+      //       {
+      //         label: t("common.vote"),
+      //         href: "https://vote.taraswap.org/",
+      //       },
+      //     ]),
     ],
   };
   // const helpLinks = {

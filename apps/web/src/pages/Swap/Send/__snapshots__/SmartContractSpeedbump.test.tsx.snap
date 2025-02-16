@@ -462,7 +462,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
               >
                 <a
                   class="c7 c8"
-                  href="https://support.uniswap.org/hc/en-us"
+                  href="https://taraswap.info"
                   rel="noopener noreferrer"
                   target="_blank"
                 >

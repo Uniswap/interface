@@ -1,18 +1,17 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import Column from 'components/Column'
-import { MobileAppLogo } from 'components/Icons/MobileAppLogo'
-import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
-import Row from 'components/Row'
-import { Trans } from 'i18n'
-import { Text } from 'rebass'
-import { useOpenModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
-import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
-import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
-import { APP_DOWNLOAD_LINKS, openDownloadApp } from 'utils/openDownloadApp'
+import { InterfaceElementName } from "@uniswap/analytics-events";
+import Column from "components/Column";
+import { MobileAppLogo } from "components/Icons/MobileAppLogo";
+import { NAV_BREAKPOINT } from "components/NavBar/ScreenSizes";
+import Row from "components/Row";
+import { Trans } from "i18n";
+import { Text } from "rebass";
+import { useOpenModal } from "state/application/hooks";
+import { ApplicationModal } from "state/application/reducer";
+import styled from "styled-components";
+import { ThemedText } from "theme/components";
+import { isWebAndroid, isWebIOS } from "utilities/src/platform";
 
-const DOWNLOAD_PADDING_X = 8
+const DOWNLOAD_PADDING_X = 8;
 const DownloadCTA = styled(Row)`
   cursor: pointer;
   padding: 12px ${DOWNLOAD_PADDING_X}px;
@@ -28,22 +27,30 @@ const DownloadCTA = styled(Row)`
     transform: none;
     box-sizing: border-box;
   }
-`
+`;
 export function DownloadApp({ onClick }: { onClick?: () => void }) {
-  const openGetTheAppModal = useOpenModal(ApplicationModal.GET_THE_APP)
+  const openGetTheAppModal = useOpenModal(ApplicationModal.GET_THE_APP);
 
   return (
     <DownloadCTA
-      href={APP_DOWNLOAD_LINKS[InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON]}
+      href={
+        // APP_DOWNLOAD_LINKS[
+        //   InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON
+        // ]
+        "https://taraswap.app/"
+      }
       gap="md"
       onClick={() => {
         if (onClick) {
-          onClick()
+          onClick();
         }
         if (isWebIOS || isWebAndroid) {
-          openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON })
+          // openDownloadApp({
+          //   element:
+          //     InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON,
+          // });
         } else {
-          openGetTheAppModal()
+          openGetTheAppModal();
         }
       }}
     >
@@ -57,5 +64,5 @@ export function DownloadApp({ onClick }: { onClick?: () => void }) {
         </ThemedText.LabelMicro>
       </Column>
     </DownloadCTA>
-  )
+  );
 }

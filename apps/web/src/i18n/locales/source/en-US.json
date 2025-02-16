@@ -880,7 +880,7 @@
   "position.noLiquidity": "Liquidity data not available.",
   "position.noLiquidityData": "There is no liquidity data.",
   "position.your": "Your position",
-  "privacy.anonymizedLogs": "The app logs anonymized usage statistics in order to improve over time.",
+  "privacy.anonymizedLogs": "The app does not log any usage statistics in order to improve over time.",
   "privacy.autoRouter": "The app fetches the optimal trade route from a Taraswap Labs server.",
   "privacy.infura": "The app fetches on-chain data and constructs contract calls with an Infura API.",
   "privacy.thirdPartyApis": "This app uses the following third-party APIs:",

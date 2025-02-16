@@ -894,7 +894,7 @@ function SwapNotice() {
             i18nKey="swap.form.pocketUniverseExtension.warning"
             components={{
               termsLink: (
-                <ExternalLink href="https://uniswap.org/terms-of-service">
+                <ExternalLink href="https://docs.taraswap.info">
                   <Trans i18nKey="common.termsOfService" />
                 </ExternalLink>
               ),

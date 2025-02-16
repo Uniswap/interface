@@ -1,24 +1,27 @@
-import { SharedEventName } from '@uniswap/analytics-events'
-import Card, { DarkGrayCard } from 'components/Card'
-import Row, { AutoRow, RowBetween } from 'components/Row'
-import { Trans } from 'i18n'
-import { useEffect, useRef } from 'react'
-import { ArrowDown, Info, X } from 'react-feather'
-import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isMobile } from 'utilities/src/platform'
-import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
+import { SharedEventName } from "@uniswap/analytics-events";
+import Card, { DarkGrayCard } from "components/Card";
+import Row, { AutoRow, RowBetween } from "components/Row";
+import { Trans } from "i18n";
+import { useEffect, useRef } from "react";
+import { ArrowDown, Info, X } from "react-feather";
+import styled from "styled-components";
+import { ExternalLink, ThemedText } from "theme/components";
+import { ModalName } from "uniswap/src/features/telemetry/constants";
+import { sendAnalyticsEvent } from "uniswap/src/features/telemetry/send";
+import { isMobile } from "utilities/src/platform";
+import {
+  useModalIsOpen,
+  useTogglePrivacyPolicy,
+} from "../../state/application/hooks";
+import { ApplicationModal } from "../../state/application/reducer";
+import { AutoColumn } from "../Column";
+import Modal from "../Modal";
 
 const Wrapper = styled.div`
   max-height: 70vh;
   overflow: auto;
   padding: 0 1rem;
-`
+`;
 
 const StyledExternalCard = styled(Card)`
   background-color: ${({ theme }) => theme.accent2};
@@ -30,7 +33,7 @@ const StyledExternalCard = styled(Card)`
   :active {
     background-color: ${({ theme }) => theme.neutral3};
   }
-`
+`;
 
 const HoverText = styled.div`
   text-decoration: none;
@@ -41,52 +44,33 @@ const HoverText = styled.div`
   :hover {
     cursor: pointer;
   }
-`
+`;
 
 const StyledLinkOut = styled(ArrowDown)`
   transform: rotate(230deg);
-`
+`;
 
 const EXTERNAL_APIS = [
   {
-    name: 'Auto Router',
-    description: <Trans i18nKey="privacy.autoRouter" />,
-  },
-  {
-    name: 'Infura',
-    description: <Trans i18nKey="privacy.infura" />,
-  },
-  {
-    name: 'TRM Labs',
-    description: (
-      <>
-        <Trans i18nKey="privacy.trm" />{' '}
-        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8671777747597-Address-Screening-Guide">
-          <Trans i18nKey="common.learnMore.link" />
-        </ExternalLink>
-      </>
-    ),
-  },
-  {
-    name: 'Google Analytics & Amplitude',
+    name: "Google Analytics & Amplitude",
     description: <Trans i18nKey="privacy.anonymizedLogs" />,
   },
-]
+];
 
 export function PrivacyPolicyModal() {
-  const node = useRef<HTMLDivElement>()
-  const open = useModalIsOpen(ApplicationModal.PRIVACY_POLICY)
-  const toggle = useTogglePrivacyPolicy()
+  const node = useRef<HTMLDivElement>();
+  const open = useModalIsOpen(ApplicationModal.PRIVACY_POLICY);
+  const toggle = useTogglePrivacyPolicy();
 
   useEffect(() => {
     if (!open) {
-      return
+      return;
     }
 
     sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
       modal: ModalName.Legal,
-    })
-  }, [open])
+    });
+  }, [open]);
 
   return (
     <Modal isOpen={open} onDismiss={() => toggle()}>
@@ -102,7 +86,7 @@ export function PrivacyPolicyModal() {
         <PrivacyPolicy />
       </AutoColumn>
     </Modal>
-  )
+  );
 }
 
 function PrivacyPolicy() {
@@ -112,14 +96,14 @@ function PrivacyPolicy() {
       onTouchMove={(e) => {
         // prevent modal gesture handler from dismissing modal when content is scrolling
         if (isMobile) {
-          e.stopPropagation()
+          e.stopPropagation();
         }
       }}
     >
       <AutoColumn gap="16px">
-        <AutoColumn gap="sm" style={{ width: '100%' }}>
+        <AutoColumn gap="sm" style={{ width: "100%" }}>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/terms-of-service">
+            <ExternalLink href="https://docs.taraswap.info/docs">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
@@ -132,7 +116,7 @@ function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/privacy-policy/">
+            <ExternalLink href="https://docs.taraswap.info/docs">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
@@ -158,13 +142,15 @@ function PrivacyPolicy() {
                     {name}
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
-                <ThemedText.DeprecatedMain fontSize={14}>{description}</ThemedText.DeprecatedMain>
+                <ThemedText.DeprecatedMain fontSize={14}>
+                  {description}
+                </ThemedText.DeprecatedMain>
               </AutoColumn>
             </DarkGrayCard>
           ))}
           <ThemedText.DeprecatedBody fontSize={12}>
             <Row justify="center" marginBottom="1rem">
-              <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
+              <ExternalLink href="https://docs.taraswap.info/docs">
                 <Trans i18nKey="common.learnMore.link" />
               </ExternalLink>
             </Row>
@@ -172,5 +158,5 @@ function PrivacyPolicy() {
         </AutoColumn>
       </AutoColumn>
     </Wrapper>
-  )
+  );
 }

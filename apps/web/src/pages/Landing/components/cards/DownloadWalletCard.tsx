@@ -1,11 +1,11 @@
-import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
-import { t } from 'i18n'
-import styled, { useTheme } from 'styled-components'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { Alignment, Fit, Layout, useRive } from "@rive-app/react-canvas";
+import { t } from "i18n";
+import styled, { useTheme } from "styled-components";
+import { useIsDarkMode } from "theme/components/ThemeToggle";
 
-import { Wallet } from '../Icons'
-import { PillButton } from './PillButton'
-import ValuePropCard from './ValuePropCard'
+import { Wallet } from "../Icons";
+import { PillButton } from "./PillButton";
+import ValuePropCard from "./ValuePropCard";
 
 const Contents = styled.div`
   width: 100%;
@@ -18,25 +18,25 @@ const Contents = styled.div`
     width: 125%;
     transform: translateX(-10.25%);
   }
-`
+`;
 
 export function DownloadWalletCard() {
-  const theme = useTheme()
-  const isDarkMode = useIsDarkMode()
+  const theme = useTheme();
+  const isDarkMode = useIsDarkMode();
 
   const { rive: lightAnimation, RiveComponent: LightAnimation } = useRive({
-    src: '/rive/landing-page.riv',
-    artboard: 'Mobile-Light',
-    stateMachines: 'Animation',
+    src: "/rive/landing-page.riv",
+    artboard: "Mobile-Light",
+    stateMachines: "Animation",
     layout: new Layout({ fit: Fit.Contain, alignment: Alignment.BottomCenter }),
-  })
+  });
 
   const { rive: darkAnimation, RiveComponent: DarkAnimation } = useRive({
-    src: '/rive/landing-page.riv',
-    artboard: 'Mobile-Dark',
-    stateMachines: 'Animation',
+    src: "/rive/landing-page.riv",
+    artboard: "Mobile-Dark",
+    stateMachines: "Animation",
     layout: new Layout({ fit: Fit.Contain, alignment: Alignment.BottomCenter }),
-  })
+  });
 
   return (
     <ValuePropCard
@@ -44,15 +44,18 @@ export function DownloadWalletCard() {
       minHeight="500px"
       isDarkMode={isDarkMode}
       textColor={theme.accent1}
-      backgroundColor={{ dark: 'rgba(252, 114, 255, 0.12)', light: 'rgba(252, 114, 255, 0.12)' }}
+      backgroundColor={{
+        dark: "rgba(252, 114, 255, 0.12)",
+        light: "rgba(252, 114, 255, 0.12)",
+      }}
       button={
         <PillButton
           color={theme.accent1}
-          label={t('common.uniswapWallet')}
+          label={t("common.uniswapWallet")}
           icon={<Wallet size="24px" fill={theme.accent1} />}
         />
       }
-      titleText={t('common.walletForSwapping')}
+      titleText={t("common.walletForSwapping")}
     >
       <Contents>
         {isDarkMode ? (
@@ -62,5 +65,5 @@ export function DownloadWalletCard() {
         )}
       </Contents>
     </ValuePropCard>
-  )
+  );
 }

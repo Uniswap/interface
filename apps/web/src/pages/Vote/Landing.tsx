@@ -1,51 +1,67 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
-import { CurrencyAmount, Token } from '@taraswap/sdk-core'
-import { ButtonPrimary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
-import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
-import Loader from 'components/Icons/LoadingSpinner'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import Toggle from 'components/Toggle'
-import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
-import DelegateModal from 'components/vote/DelegateModal'
-import ProposalEmptyState from 'components/vote/ProposalEmptyState'
-import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
-import JSBI from 'jsbi'
-import { darken } from 'polished'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button } from 'rebass/styled-components'
-import { useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
-import { useTokenBalance } from 'state/connection/hooks'
-import { ProposalData, ProposalState, useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
-import styled, { useTheme } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { shortenAddress } from 'utilities/src/addresses'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import { ZERO_ADDRESS } from '../../constants/misc'
-import { UNI } from '../../constants/tokens'
-import { ProposalStatus } from './styled'
+import { InterfacePageName } from "@uniswap/analytics-events";
+import { CurrencyAmount, Token } from "@taraswap/sdk-core";
+import { ButtonPrimary } from "components/Button";
+import { AutoColumn } from "components/Column";
+import FormattedCurrencyAmount from "components/FormattedCurrencyAmount";
+import Loader from "components/Icons/LoadingSpinner";
+import { AutoRow, RowBetween, RowFixed } from "components/Row";
+import { SwitchLocaleLink } from "components/SwitchLocaleLink";
+import Toggle from "components/Toggle";
+import {
+  CardBGImage,
+  CardNoise,
+  CardSection,
+  DataCard,
+} from "components/earn/styled";
+import DelegateModal from "components/vote/DelegateModal";
+import ProposalEmptyState from "components/vote/ProposalEmptyState";
+import { useAccount } from "hooks/useAccount";
+import { Trans } from "i18n";
+import JSBI from "jsbi";
+import { darken } from "polished";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "rebass/styled-components";
+import {
+  useModalIsOpen,
+  useToggleDelegateModal,
+} from "state/application/hooks";
+import { ApplicationModal } from "state/application/reducer";
+import { useTokenBalance } from "state/connection/hooks";
+import {
+  ProposalData,
+  ProposalState,
+  useAllProposalData,
+  useUserDelegatee,
+  useUserVotes,
+} from "state/governance/hooks";
+import styled, { useTheme } from "styled-components";
+import { ExternalLink, ThemedText } from "theme/components";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { shortenAddress } from "utilities/src/addresses";
+import { ExplorerDataType, getExplorerLink } from "utils/getExplorerLink";
+import { ZERO_ADDRESS } from "../../constants/misc";
+import { UNI } from "../../constants/tokens";
+import { ProposalStatus } from "./styled";
 
 const PageWrapper = styled(AutoColumn)`
   padding-top: 68px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) =>
+      `${theme.breakpoint.md}px`}) {
     padding: 48px 8px 0px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) =>
+      `${theme.breakpoint.sm}px`}) {
     padding-top: 20px;
   }
-`
+`;
 
 const TopSection = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
-`
+`;
 
 const Proposal = styled(Button)`
   padding: 0.75rem 1rem;
@@ -67,12 +83,12 @@ const Proposal = styled(Button)`
   &:hover {
     background-color: ${({ theme }) => theme.surface3};
   }
-`
+`;
 
 const ProposalNumber = styled.span`
   opacity: ${({ theme }) => theme.opacity.hover};
   flex: 0 0 40px;
-`
+`;
 
 const ProposalTitle = styled.span`
   font-weight: 535;
@@ -81,19 +97,23 @@ const ProposalTitle = styled.span`
   white-space: initial;
   word-wrap: break-word;
   padding-right: 10px;
-`
+`;
 
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  background: radial-gradient(
+    76.02% 75.41% at 1.84% 0%,
+    #27ae60 0%,
+    #000000 100%
+  );
   overflow: hidden;
-`
+`;
 
 const WrapSmall = styled(RowBetween)`
   margin-bottom: 1rem;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-wrap: wrap;
   `};
-`
+`;
 
 const TextButton = styled(ThemedText.DeprecatedMain)`
   color: ${({ theme }) => theme.accent1};
@@ -101,7 +121,7 @@ const TextButton = styled(ThemedText.DeprecatedMain)`
     cursor: pointer;
     text-decoration: underline;
   }
-`
+`;
 
 const AddressButton = styled.div`
   padding: 2px 4px;
@@ -110,44 +130,48 @@ const AddressButton = styled.div`
   justify-content: center;
   align-items: center;
   color: ${({ theme }) => theme.accent1};
-`
+`;
 
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral1};
-`
+`;
 
 const Header = styled(ThemedText.H1Small)`
   color: white;
   font-weight: 535;
   font-size: inherit;
   line-height: inherit;
-`
+`;
 
 export default function Landing() {
-  const theme = useTheme()
-  const account = useAccount()
+  const theme = useTheme();
+  const account = useAccount();
 
-  const [hideCancelled, setHideCancelled] = useState(true)
+  const [hideCancelled, setHideCancelled] = useState(true);
 
   // toggle for showing delegation modal
-  const showDelegateModal = useModalIsOpen(ApplicationModal.DELEGATE)
-  const toggleDelegateModal = useToggleDelegateModal()
+  const showDelegateModal = useModalIsOpen(ApplicationModal.DELEGATE);
+  const toggleDelegateModal = useToggleDelegateModal();
 
   // get data to list all proposals
-  const { data: allProposals, loading: loadingProposals } = useAllProposalData()
+  const { data: allProposals, loading: loadingProposals } =
+    useAllProposalData();
 
   // user data
-  const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
+  const { loading: loadingAvailableVotes, votes: availableVotes } =
+    useUserVotes();
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account.address,
     account.chainId ? UNI[account.chainId] : undefined
-  )
-  const userDelegatee: string | undefined = useUserDelegatee()
+  );
+  const userDelegatee: string | undefined = useUserDelegatee();
 
   // show delegation option if they have have a balance, but have not delegated
   const showUnlockVoting = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
-  )
+    uniBalance &&
+      JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) &&
+      userDelegatee === ZERO_ADDRESS
+  );
   return (
     <>
       <Trace logImpression page={InterfacePageName.VOTE_PAGE}>
@@ -182,9 +206,9 @@ export default function Landing() {
                   <ExternalLink
                     style={{
                       color: theme.white,
-                      textDecoration: 'underline',
+                      textDecoration: "underline",
                     }}
-                    href="https://uniswap.org/blog/uni"
+                    href="https://taraswap.info"
                     target="_blank"
                   >
                     <ThemedText.DeprecatedWhite fontSize={14}>
@@ -199,26 +223,33 @@ export default function Landing() {
           </TopSection>
           <TopSection gap="2px">
             <WrapSmall>
-              <ThemedText.DeprecatedMediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
+              <ThemedText.DeprecatedMediumHeader
+                style={{ margin: "0.5rem 0.5rem 0.5rem 0", flexShrink: 0 }}
+              >
                 <Trans i18nKey="vote.landing.proposals" />
               </ThemedText.DeprecatedMediumHeader>
               <AutoRow gap="6px" justify="flex-end">
                 {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
                 {showUnlockVoting ? (
                   <ButtonPrimary
-                    style={{ width: 'fit-content', height: '40px' }}
+                    style={{ width: "fit-content", height: "40px" }}
                     padding="8px"
                     $borderRadius="8px"
                     onClick={toggleDelegateModal}
                   >
                     <Trans i18nKey="vote.landing.unlockVoting" />
                   </ButtonPrimary>
-                ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
+                ) : availableVotes &&
+                  JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
                   <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
                     <Trans
                       i18nKey="vote.landing.voteAmount"
                       values={{
-                        amount: <FormattedCurrencyAmount currencyAmount={availableVotes} />,
+                        amount: (
+                          <FormattedCurrencyAmount
+                            currencyAmount={availableVotes}
+                          />
+                        ),
                       }}
                     />
                   </ThemedText.DeprecatedBody>
@@ -230,17 +261,25 @@ export default function Landing() {
                     <Trans
                       i18nKey="vote.landing.voteAmount"
                       values={{
-                        amount: <FormattedCurrencyAmount currencyAmount={uniBalance} />,
+                        amount: (
+                          <FormattedCurrencyAmount
+                            currencyAmount={uniBalance}
+                          />
+                        ),
                       }}
                     />
                   </ThemedText.DeprecatedBody>
                 ) : (
-                  ''
+                  ""
                 )}
                 <ButtonPrimary
                   as={Link}
                   to="/create-proposal"
-                  style={{ width: 'fit-content', borderRadius: '8px', height: '40px' }}
+                  style={{
+                    width: "fit-content",
+                    borderRadius: "8px",
+                    height: "40px",
+                  }}
                   padding="8px"
                 >
                   <Trans i18nKey="vote.landing.createProposal" />
@@ -257,8 +296,12 @@ export default function Landing() {
                     </ThemedText.DeprecatedBody>
                     <AddressButton>
                       <StyledExternalLink
-                        href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
-                        style={{ margin: '0 4px' }}
+                        href={getExplorerLink(
+                          1,
+                          userDelegatee,
+                          ExplorerDataType.ADDRESS
+                        )}
+                        style={{ margin: "0 4px" }}
                       >
                         {userDelegatee === account.address ? (
                           <Trans i18nKey="vote.landing.self" />
@@ -266,13 +309,16 @@ export default function Landing() {
                           shortenAddress(userDelegatee)
                         )}
                       </StyledExternalLink>
-                      <TextButton onClick={toggleDelegateModal} style={{ marginLeft: '4px' }}>
+                      <TextButton
+                        onClick={toggleDelegateModal}
+                        style={{ marginLeft: "4px" }}
+                      >
                         <Trans i18nKey="vote.landing.edit" />
                       </TextButton>
                     </AddressButton>
                   </RowFixed>
                 ) : (
-                  ''
+                  ""
                 )}
               </RowBetween>
             )}
@@ -288,7 +334,9 @@ export default function Landing() {
                   </ThemedText.DeprecatedMain>
                   <Toggle
                     isActive={!hideCancelled}
-                    toggle={() => setHideCancelled((hideCancelled) => !hideCancelled)}
+                    toggle={() =>
+                      setHideCancelled((hideCancelled) => !hideCancelled)
+                    }
                   />
                 </RowBetween>
               </AutoColumn>
@@ -297,17 +345,23 @@ export default function Landing() {
             {allProposals
               ?.slice(0)
               ?.reverse()
-              ?.filter((p: ProposalData) => (hideCancelled ? p.status !== ProposalState.CANCELED : true))
+              ?.filter((p: ProposalData) =>
+                hideCancelled ? p.status !== ProposalState.CANCELED : true
+              )
               ?.map((p: ProposalData) => {
                 return (
-                  <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
+                  <Proposal
+                    as={Link}
+                    to={`/vote/${p.governorIndex}/${p.id}`}
+                    key={`${p.governorIndex}${p.id}`}
+                  >
                     <ProposalNumber>
                       {p.governorIndex}.{p.id}
                     </ProposalNumber>
                     <ProposalTitle>{p.title}</ProposalTitle>
                     <ProposalStatus status={p.status} />
                   </Proposal>
-                )
+                );
               })}
           </TopSection>
 
@@ -318,5 +372,5 @@ export default function Landing() {
       </Trace>
       <SwitchLocaleLink />
     </>
-  )
+  );
 }

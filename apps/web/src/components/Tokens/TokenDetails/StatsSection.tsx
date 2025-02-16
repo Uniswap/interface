@@ -1,17 +1,17 @@
-import { ChainId } from '@taraswap/sdk-core'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { TokenQueryData } from 'graphql/data/Token'
-import { Trans } from 'i18n'
-import { ReactNode } from 'react'
-import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { textFadeIn } from 'theme/styles'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { ChainId } from "@taraswap/sdk-core";
+import { MouseoverTooltip } from "components/Tooltip";
+import { TokenQueryData } from "graphql/data/Token";
+import { Trans } from "i18n";
+import { ReactNode } from "react";
+import styled from "styled-components";
+import { ExternalLink, ThemedText } from "theme/components";
+import { textFadeIn } from "theme/styles";
+import { NumberType, useFormatter } from "utils/formatNumbers";
 
-import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
-import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
-import { TokenSortMethod } from '../state'
+import { HEADER_DESCRIPTIONS } from "components/Tokens/TokenTable";
+import { CHAIN_INFO, useIsSupportedChainId } from "constants/chains";
+import { UNSUPPORTED_METADATA_CHAINS } from "../constants";
+import { TokenSortMethod } from "../state";
 
 export const StatWrapper = styled.div`
   color: ${({ theme }) => theme.neutral2};
@@ -24,37 +24,37 @@ export const StatWrapper = styled.div`
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
     min-width: 168px;
   }
-`
+`;
 const TokenStatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
-`
+`;
 export const StatPair = styled.div`
   display: flex;
   flex: 1;
   flex-wrap: wrap;
-`
+`;
 
 const Header = styled(ThemedText.MediumHeader)`
   font-size: 28px !important;
   padding-top: 40px;
-`
+`;
 
 const StatPrice = styled.div`
   margin-top: 4px;
   font-size: 28px;
   color: ${({ theme }) => theme.neutral1};
-`
+`;
 const NoData = styled.div`
   color: ${({ theme }) => theme.neutral3};
   padding-top: 40px;
-`
+`;
 export const StatsWrapper = styled.div`
   gap: 16px;
   ${textFadeIn}
-`
+`;
 
-type NumericStat = number | undefined | null
+type NumericStat = number | undefined | null;
 
 function Stat({
   dataCy,
@@ -62,12 +62,12 @@ function Stat({
   title,
   description,
 }: {
-  dataCy: string
-  value: NumericStat
-  title: ReactNode
-  description?: ReactNode
+  dataCy: string;
+  value: NumericStat;
+  title: ReactNode;
+  description?: ReactNode;
 }) {
-  const { formatNumber } = useFormatter()
+  const { formatNumber } = useFormatter();
 
   return (
     <StatWrapper data-cy={`${dataCy}`}>
@@ -81,28 +81,30 @@ function Stat({
         })}
       </StatPrice>
     </StatWrapper>
-  )
+  );
 }
 
 type StatsSectionProps = {
-  chainId: ChainId
-  address: string
-  tokenQueryData: TokenQueryData
-}
+  chainId: ChainId;
+  address: string;
+  tokenQueryData: TokenQueryData;
+};
 export default function StatsSection(props: StatsSectionProps) {
-  const { chainId, address, tokenQueryData } = props
-  const isSupportedChain = useIsSupportedChainId(chainId)
-  const { label, infoLink } = isSupportedChain ? CHAIN_INFO[chainId] : { label: undefined, infoLink: undefined }
+  const { chainId, address, tokenQueryData } = props;
+  const isSupportedChain = useIsSupportedChainId(chainId);
+  const { label, infoLink } = isSupportedChain
+    ? CHAIN_INFO[chainId]
+    : { label: undefined, infoLink: undefined };
 
-  const tokenMarketInfo = tokenQueryData?.market
-  const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0] // aggregated market price from CoinGecko
+  const tokenMarketInfo = tokenQueryData?.market;
+  const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0]; // aggregated market price from CoinGecko
 
-  const FDV = tokenProjectMarketInfo?.fullyDilutedValuation?.value
-  const marketCap = tokenProjectMarketInfo?.marketCap?.value
-  const TVL = tokenMarketInfo?.totalValueLocked?.value
-  const volume24H = tokenMarketInfo?.volume24H?.value
+  const FDV = tokenProjectMarketInfo?.fullyDilutedValuation?.value;
+  const marketCap = tokenProjectMarketInfo?.marketCap?.value;
+  const TVL = tokenMarketInfo?.totalValueLocked?.value;
+  const volume24H = tokenMarketInfo?.volume24H?.value;
 
-  const hasStats = TVL || FDV || marketCap || volume24H
+  const hasStats = TVL || FDV || marketCap || volume24H;
 
   if (hasStats) {
     return (
@@ -115,7 +117,9 @@ export default function StatsSection(props: StatsSectionProps) {
             <Stat
               dataCy="tvl"
               value={TVL}
-              description={<Trans i18nKey="common.totalValueLocked.description" />}
+              description={
+                <Trans i18nKey="common.totalValueLocked.description" />
+              }
               title={<Trans i18nKey="common.totalValueLocked" />}
             />
             <Stat
@@ -129,7 +133,9 @@ export default function StatsSection(props: StatsSectionProps) {
             <Stat
               dataCy="fdv"
               value={FDV}
-              description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
+              description={
+                HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]
+              }
               title={<Trans i18nKey="stats.fdv" />}
             />
             <Stat
@@ -141,7 +147,7 @@ export default function StatsSection(props: StatsSectionProps) {
           </StatPair>
         </TokenStatsSection>
       </StatsWrapper>
-    )
+    );
   } else {
     return UNSUPPORTED_METADATA_CHAINS.includes(chainId) ? (
       <>
@@ -154,8 +160,11 @@ export default function StatsSection(props: StatsSectionProps) {
             values={{
               chain: label,
               infoLink: (
-                <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
-                  info.uniswap.org
+                <ExternalLink
+                  color="currentColor"
+                  href={`${infoLink}tokens/${address}`}
+                >
+                  taraswap.info
                 </ExternalLink>
               ),
             }}
@@ -164,6 +173,6 @@ export default function StatsSection(props: StatsSectionProps) {
       </>
     ) : (
       <NoData data-cy="token-details-no-stats-data">No stats available</NoData>
-    )
+    );
   }
 }

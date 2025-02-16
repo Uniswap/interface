@@ -119,7 +119,7 @@ export function useUSDPrice(
 
     const fetchEthPrice = async () => {
       const { ethPrice } = await useTokenEthPrice(
-        currency.wrapped?.address ?? ""
+        (currency.wrapped?.address ?? "").toLowerCase()
       );
       setEthPrice(ethPrice);
     };
@@ -133,7 +133,7 @@ export function useUSDPrice(
     const fetchUsdPrice = async () => {
       setIsLoading(true);
       const { usdPrice } = await useTokenUsdPrice(
-        currency.wrapped?.address ?? ""
+        (currency.wrapped?.address ?? "").toLowerCase()
       );
       setTokenUsdPrice(usdPrice);
       setIsLoading(false);
