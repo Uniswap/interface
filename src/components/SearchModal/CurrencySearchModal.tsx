@@ -107,6 +107,7 @@ export default function CurrencySearchModal({
           setImportToken={setImportToken}
           setImportList={setImportList}
           setListUrl={setListUrl}
+          onCurrencySelect={onCurrencySelect}
         />
       ) : (
         ''

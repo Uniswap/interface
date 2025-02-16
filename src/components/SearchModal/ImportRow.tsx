@@ -47,12 +47,14 @@ export default function ImportRow({
   dim,
   showImportView,
   setImportToken,
+  onTokenSelect,
 }: {
   token: Token
   style?: CSSProperties
   dim?: boolean
   showImportView: () => void
   setImportToken: (token: Token) => void
+  onTokenSelect: (token: Token) => void
 }) {
   const theme = useTheme()
 
@@ -63,7 +65,12 @@ export default function ImportRow({
   const list = token instanceof WrappedTokenInfo ? token.list : undefined
 
   return (
-    <TokenSection style={style}>
+    <TokenSection
+      style={style}
+      onClick={() => {
+        if (isActive || isAdded) onTokenSelect(token)
+      }}
+    >
       <CurrencyLogo currency={token} size={'24px'} style={{ opacity: dim ? '0.6' : '1' }} />
       <AutoColumn gap="4px" style={{ opacity: dim ? '0.6' : '1' }}>
         <AutoRow>
