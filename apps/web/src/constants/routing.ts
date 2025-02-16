@@ -17,6 +17,7 @@ import {
   nativeOnChain,
   OP,
   PORTAL_ETH_CELO,
+  STTARA_TARAXA,
   TSWAP_TARAXA,
   USDC_ARBITRUM,
   USDC_ARBITRUM_GOERLI,
@@ -218,6 +219,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_TARAXA,
     USDM_TARAXA,
     TSWAP_TARAXA,
+    STTARA_TARAXA,
   ].map(buildCurrencyInfo),
 };
 
