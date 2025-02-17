@@ -101,6 +101,7 @@ export function useUSDPrice(
   const [ethPrice, setEthPrice] = useState<number | null>(null);
   const [tokenUsdPrice, setTokenUsdPrice] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [fiatValue, setFiatValue] = useState<number | null>(null);
 
   const currency = currencyAmount?.currency ?? prefetchCurrency;
   const chainId = useSupportedChainId(currency?.chainId);
@@ -136,6 +137,9 @@ export function useUSDPrice(
         (currency.wrapped?.address ?? "").toLowerCase()
       );
       setTokenUsdPrice(usdPrice);
+      if (currencyAmount && usdPrice) {
+        setFiatValue(usdPrice * parseFloat(currencyAmount.toExact()));
+      }
       setIsLoading(false);
     };
 
@@ -143,7 +147,7 @@ export function useUSDPrice(
   }, [currency, isWindowVisible]);
 
   return {
-    data: tokenUsdPrice,
+    data: fiatValue,
     isLoading: isLoading || isTokenEthPriceLoading,
   };
 }

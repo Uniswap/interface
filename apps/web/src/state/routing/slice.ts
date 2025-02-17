@@ -43,10 +43,10 @@ if (UNISWAP_GATEWAY_DNS_URL === undefined) {
 const TARAXA_ROUTING_API_URL = process.env.REACT_APP_TARAXA_ROUTING_API || "";
 
 const CLIENT_PARAMS = {
-  protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
+  protocols: [Protocol.V3],
 };
 
-const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED];
+const protocols: Protocol[] = [Protocol.V3];
 
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const DEFAULT_QUERY_PARAMS = {
@@ -275,7 +275,6 @@ export const routingApi = createApi({
                       };
                       const taraxaUrl = constructGetUrlForTaraxa(args);
                       const returnData = await fetch(taraxaUrl.toString());
-                      console.log("404 return data", returnData);
                       if (!returnData.error) {
                         const quoteResult: URAQuoteResponse = {
                           routing: URAQuoteType.CLASSIC,
@@ -285,7 +284,7 @@ export const routingApi = createApi({
                         const trade = await transformTaraQuoteToTrade(
                           args,
                           quoteResult,
-                          QuoteMethod.CLIENT_SIDE_FALLBACK
+                          QuoteMethod.ROUTING_API
                         );
                         return {
                           data: { ...trade, latencyMs: trace.now() },
