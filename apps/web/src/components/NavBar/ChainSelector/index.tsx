@@ -1,20 +1,21 @@
-import { CHAIN_IDS_TO_NAMES, useIsSupportedChainIdCallback } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useCallback, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { Flex, Popover } from 'ui/src'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type ChainSelectorProps = {
   hideArrow?: boolean
 }
 export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
   const account = useAccount()
-  const { chainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
+  const { chainId, setSelectedChainId } = useMultichainContext()
 
   const popoverRef = useRef<Popover>(null)
   const isSupportedChain = useIsSupportedChainIdCallback()
@@ -25,7 +26,7 @@ export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
 
   const onSelectChain = useCallback(
     async (targetChainId: UniverseChainId | null) => {
-      if (multichainUXEnabled || !targetChainId) {
+      if (!targetChainId) {
         setSelectedChainId(targetChainId)
       } else {
         await selectChain(targetChainId)
@@ -34,12 +35,12 @@ export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
       searchParams.delete('outputCurrency')
       searchParams.delete('value')
       searchParams.delete('field')
-      targetChainId && searchParams.set('chain', CHAIN_IDS_TO_NAMES[targetChainId])
+      targetChainId && searchParams.set('chain', getChainInfo(targetChainId).interfaceName)
       setSearchParams(searchParams)
 
       popoverRef.current?.close()
     },
-    [multichainUXEnabled, setSelectedChainId, selectChain, searchParams, setSearchParams],
+    [setSelectedChainId, selectChain, searchParams, setSearchParams],
   )
 
   const isUnsupportedConnectedChain = account.isConnected && !isSupportedChain(account.chainId)

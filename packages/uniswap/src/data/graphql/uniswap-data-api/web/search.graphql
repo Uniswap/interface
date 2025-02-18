@@ -1,13 +1,6 @@
-query TrendingTokens($chain: Chain!) {
-  topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: VOLUME) {
+query SearchTrendingTokensWeb($chain: Chain!) {
+  topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: POPULARITY) {
     ...SimpleTokenDetails
-    id
-    decimals
-    name
-    chain
-    standard
-    address
-    symbol
     market(currency: USD) {
       id
       price {
@@ -24,11 +17,6 @@ query TrendingTokens($chain: Chain!) {
         value
         currency
       }
-    }
-    project {
-      id
-      logoUrl
-      safetyLevel
     }
   }
 }
@@ -70,79 +58,6 @@ query SearchTokensWeb($searchQuery: String!, $chains: [Chain!]) {
       safetyLevel
       logoUrl
       isSpam
-    }
-  }
-}
-
-query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
-  topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
-    ...SimpleTokenDetails
-    project {
-      id
-      name
-      logo {
-        id
-        url
-      }
-      safetyLevel
-      logoUrl
-      isSpam
-      markets(currencies: [USD]) {
-        id
-        fullyDilutedValuation {
-          id
-          value
-          currency
-        }
-      }
-    }
-    market(currency: USD) {
-      id
-      totalValueLocked {
-        id
-        value
-        currency
-      }
-      price {
-        id
-        value
-        currency
-      }
-      pricePercentChange(duration: $duration) {
-        id
-        currency
-        value
-      }
-      pricePercentChange1Hour: pricePercentChange(duration: HOUR) {
-        id
-        currency
-        value
-      }
-      pricePercentChange1Day: pricePercentChange(duration: DAY) {
-        id
-        currency
-        value
-      }
-      volume(duration: $duration) {
-        id
-        value
-        currency
-      }
-    }
-  }
-}
-
-# We separately query sparkline data so that the large download time does not block Token Explore rendering
-query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
-  topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
-    ...SimpleTokenDetails
-    market(currency: USD) {
-      id
-      priceHistory(duration: $duration) {
-        id
-        timestamp
-        value
-      }
     }
   }
 }

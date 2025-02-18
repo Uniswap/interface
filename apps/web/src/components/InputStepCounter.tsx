@@ -1,14 +1,14 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button/buttons'
 import { OutlineCard } from 'components/Card/cards'
-import { AutoColumn } from 'components/deprecated/Column'
 import { Input as NumericalInput } from 'components/NumericalInput'
+import { AutoColumn } from 'components/deprecated/Column'
 import styled, { keyframes } from 'lib/styled-components'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { styled as tamaguiStyled, Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
+import { Text, styled as tamaguiStyled } from 'ui/src'
 
 const pulse = (color: string) => keyframes`
   0% {

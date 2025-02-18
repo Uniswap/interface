@@ -12,8 +12,8 @@ import { isPendingTx } from 'state/transactions/utils'
 import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
 const MIN_BRIDGE_WAIT_TIME = ms('2s')

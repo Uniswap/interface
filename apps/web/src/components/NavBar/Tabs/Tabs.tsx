@@ -1,6 +1,6 @@
 import { NavDropdown, NavDropdownTabWrapper } from 'components/NavBar/NavDropdown/index'
 import { TabsItem, TabsSection, useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import { useKeyPress } from 'hooks/useKeyPress'
+import { useKeyDown } from 'hooks/useKeyPress'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
@@ -17,6 +17,7 @@ const ItemContainer = styled.div`
   border-radius: 12px;
   background: ${({ theme }) => theme.surface2};
   cursor: pointer;
+  height: 48px;
   :hover {
     background: ${({ theme }) => theme.surface3};
   }
@@ -128,7 +129,7 @@ const Tab = ({
     [items, navigate, closeMenu, isOpen],
   )
 
-  useKeyPress({
+  useKeyDown({
     callback: handleKeyDown,
     keys: items?.map((i) => i.quickKey.toLowerCase()),
     disabled: !navHotkeysEnabled || !isOpen,

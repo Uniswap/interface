@@ -9,7 +9,6 @@ export type CustomVolumeChartModelParams = {
   colors: string[]
   headerHeight: number
   useThinCrosshair?: boolean
-  isMultichainExploreEnabled?: boolean
   background?: string
 }
 
@@ -17,7 +16,7 @@ export type CustomVolumeChartModelParams = {
 // Extensible to other volume charts (i.e. see VolumeChartModel for single-histogram volume chart implementation)
 export class CustomVolumeChartModel<TDataType extends CustomHistogramData> extends ChartModel<TDataType> {
   protected series: ISeriesApi<'Custom'>
-  private highlightBarPrimitive: CrosshairHighlightPrimitive
+  private highlightBarPrimitive?: CrosshairHighlightPrimitive
   private hoveredXPos: number | undefined
 
   constructor(chartDiv: HTMLDivElement, params: ChartModelParams<TDataType> & CustomVolumeChartModelParams) {
@@ -26,7 +25,6 @@ export class CustomVolumeChartModel<TDataType extends CustomHistogramData> exten
     this.series = this.api.addCustomSeries(
       new CustomHistogramSeries({
         colors: params.colors,
-        isMultichainExploreEnabled: params.isMultichainExploreEnabled,
         background: params.background,
       }),
     )

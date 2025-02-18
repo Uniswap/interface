@@ -2,7 +2,7 @@ import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { NetworkChangedNotification as NetworkChangedNotificationType } from 'uniswap/src/features/notifications/types'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
@@ -31,7 +31,7 @@ function getTitle({
 }: {
   t: TFunction
 } & Pick<NetworkChangedNotificationType, 'flow' | 'chainId'>): string {
-  const network = UNIVERSE_CHAIN_INFO[chainId].label
+  const network = getChainLabel(chainId)
 
   switch (flow) {
     case 'send':

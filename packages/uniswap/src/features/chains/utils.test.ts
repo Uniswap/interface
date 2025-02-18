@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SUPPORTED_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   chainIdToHexadecimalString,
   fromGraphQLChain,
@@ -11,7 +12,6 @@ import {
   toSupportedChainId,
   toUniswapWebAppLink,
 } from 'uniswap/src/features/chains/utils'
-import { SUPPORTED_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 
 describe(toSupportedChainId, () => {
   it('handles undefined input', () => {
@@ -116,11 +116,10 @@ describe('hexadecimalStringToInt', () => {
 
 describe('getEnabledChains', () => {
   it('returns all mainnet chains', () => {
-    const featureFlaggedChainIds = SUPPORTED_CHAIN_IDS.filter((chainId) => chainId !== UniverseChainId.WorldChain)
-
-    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds })).toEqual({
+    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds: SUPPORTED_CHAIN_IDS })).toEqual({
       chains: [
         UniverseChainId.Mainnet,
+        UniverseChainId.Unichain,
         UniverseChainId.Polygon,
         UniverseChainId.ArbitrumOne,
         UniverseChainId.Optimism,
@@ -129,6 +128,7 @@ describe('getEnabledChains', () => {
         UniverseChainId.Blast,
         UniverseChainId.Avalanche,
         UniverseChainId.Celo,
+        UniverseChainId.WorldChain,
         UniverseChainId.Zora,
         UniverseChainId.Zksync,
       ],
@@ -136,8 +136,10 @@ describe('getEnabledChains', () => {
         Chain.Ethereum,
         Chain.Optimism,
         Chain.Bnb,
+        Chain.Unichain,
         Chain.Polygon,
         Chain.Zksync,
+        Chain.Worldchain,
         Chain.Base,
         Chain.Arbitrum,
         Chain.Celo,
@@ -169,8 +171,8 @@ describe('getEnabledChains', () => {
         featureFlaggedChainIds: SUPPORTED_TESTNET_CHAIN_IDS,
       }),
     ).toEqual({
-      chains: [UniverseChainId.Sepolia, UniverseChainId.AstrochainSepolia],
-      gqlChains: [Chain.AstrochainSepolia, Chain.EthereumSepolia],
+      chains: [UniverseChainId.Sepolia, UniverseChainId.UnichainSepolia, UniverseChainId.MonadTestnet],
+      gqlChains: [Chain.AstrochainSepolia, Chain.MonadTestnet, Chain.EthereumSepolia],
       defaultChainId: UniverseChainId.Sepolia,
       isTestnetModeEnabled: true,
     })

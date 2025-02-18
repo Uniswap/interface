@@ -1,8 +1,10 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { FORTransaction, FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORTransaction, FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import {
+  OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransactionInfo,
   OnRampTransferInfo,
@@ -13,14 +15,16 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import parseGraphQLOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
 import { remoteTxStatusToLocalTxStatus } from 'wallet/src/features/transactions/history/utils'
 
-function parseOnRampTransaction(transaction: FORTransaction): OnRampPurchaseInfo | OnRampTransferInfo {
+function parseFORTransaction(
+  transaction: FORTransaction,
+  isOffRamp: boolean,
+): OnRampPurchaseInfo | OnRampTransferInfo | OffRampSaleInfo {
   const transactionInfo: OnRampTransactionInfo = {
-    type: TransactionType.OnRampPurchase,
+    type: isOffRamp ? TransactionType.OffRampSale : TransactionType.OnRampPurchase,
     id: transaction.externalSessionId,
     destinationTokenSymbol: transaction.destinationCurrencyCode,
     destinationTokenAddress: transaction.destinationContractAddress,
@@ -36,9 +40,10 @@ function parseOnRampTransaction(transaction: FORTransaction): OnRampPurchaseInfo
     networkFee: transaction.cryptoDetails.networkFee,
     transactionFee: transaction.cryptoDetails.transactionFee,
     totalFee: transaction.cryptoDetails.totalFee,
+    providerTransactionId: transaction.id,
   }
 
-  const typeInfo: OnRampPurchaseInfo | OnRampTransferInfo =
+  const typeInfo: OnRampPurchaseInfo | OnRampTransferInfo | OffRampSaleInfo =
     transaction.sourceCurrencyCode === transaction.destinationCurrencyCode
       ? {
           ...transactionInfo,
@@ -46,7 +51,7 @@ function parseOnRampTransaction(transaction: FORTransaction): OnRampPurchaseInfo
         }
       : {
           ...transactionInfo,
-          type: TransactionType.OnRampPurchase,
+          type: isOffRamp ? TransactionType.OffRampSale : TransactionType.OnRampPurchase,
           sourceCurrency: transaction.sourceCurrencyCode,
           sourceAmount: transaction.sourceAmount,
         }
@@ -66,29 +71,31 @@ function statusToTransactionInfoStatus(status: FORTransaction['status']): Transa
   }
 }
 
-export function extractFiatOnRampTransactionDetails(
+export function extractFORTransactionDetails(
   transaction: FORTransaction,
-): FiatOnRampTransactionDetails | undefined {
+  isOffRamp: boolean,
+  activeAccountAddress: Address | null,
+): FORTransactionDetails | undefined {
   try {
     const chainId = toSupportedChainId(transaction.cryptoDetails.chainId)
     if (!chainId) {
       throw new Error('Unable to parse chain id ' + transaction.cryptoDetails.chainId)
     }
 
-    const typeInfo = parseOnRampTransaction(transaction)
+    const typeInfo = parseFORTransaction(transaction, isOffRamp)
 
     return {
       routing: Routing.CLASSIC,
       id: transaction.externalSessionId,
       chainId,
-      hash: transaction.cryptoDetails.blockchainTransactionId || '',
+      hash: isOffRamp ? '' : transaction.cryptoDetails.blockchainTransactionId || '', // Don't merge offramp transactions
       addedTime: new Date(transaction.createdAt).getTime(),
       status: statusToTransactionInfoStatus(transaction.status),
-      from: transaction.cryptoDetails.walletAddress,
+      from: isOffRamp ? activeAccountAddress : transaction.cryptoDetails.walletAddress,
       typeInfo,
       options: { request: {} },
       transactionOriginType: TransactionOriginType.Internal,
-    }
+    } as FORTransactionDetails
   } catch (error) {
     logger.error(error, {
       tags: {
@@ -100,6 +107,7 @@ export function extractFiatOnRampTransactionDetails(
   }
 }
 
+// TODO: WALL-5532 - Add support for offramp transactions on the graphql service
 export function extractOnRampTransactionDetails(transaction: TransactionListQueryResponse): TransactionDetails | null {
   if (transaction?.details.__typename !== TransactionDetailsType.OnRamp) {
     return null

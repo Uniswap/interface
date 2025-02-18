@@ -138,11 +138,15 @@ export const networkColors = {
     light: '#222222',
     dark: '#FCFF52',
   },
+  monad: {
+    light: '#836EF9',
+    dark: '#836EF9',
+  },
   worldchain: {
     light: '#222222',
     dark: '#FFFFFF',
   },
-  astrochain: {
+  unichain: {
     light: '#fc0fa4',
     dark: '#fc0fa4',
   },
@@ -290,6 +294,7 @@ export const colorsLight = {
   statusCritical2: sporeLight.statusCritical2,
   statusCritical2Hovered: sporeLight.statusCritical2Hovered,
   statusWarning: sporeLight.statusWarning,
+  statusWarning2: sporeLight.statusWarning2,
 
   DEP_backgroundBranded: '#FCF7FF',
   DEP_backgroundOverlay: opacifyRaw(60, colors.white),
@@ -309,6 +314,7 @@ export const colorsLight = {
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
   chain_1: sporeLight.neutral1,
+  chain_130: networkColors.unichain.light,
   chain_10: networkColors.optimism.light,
   chain_137: networkColors.polygon.light,
   chain_42161: networkColors.arbitrum.light,
@@ -324,7 +330,10 @@ export const colorsLight = {
 
   // Testnets
   chain_11155111: networkColors.ethereum.light,
-  chain_1301: networkColors.astrochain.light,
+  chain_1301: networkColors.unichain.light,
+  chain_10143: networkColors.monad.light,
+
+  pinkThemed: colors.pinkLight,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -371,6 +380,7 @@ export const colorsDark = {
   statusCritical2: sporeDark.statusCritical2,
   statusCritical2Hovered: sporeDark.statusCritical2Hovered,
   statusWarning: sporeDark.statusWarning,
+  statusWarning2: sporeDark.statusWarning2,
 
   DEP_backgroundBranded: '#100D1C',
   DEP_backgroundOverlay: opacifyRaw(10, colors.white),
@@ -391,6 +401,7 @@ export const colorsDark = {
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
   chain_1: sporeDark.neutral1,
+  chain_130: networkColors.unichain.dark,
   chain_10: networkColors.optimism.dark,
   chain_137: networkColors.polygon.dark,
   chain_42161: networkColors.arbitrum.dark,
@@ -406,5 +417,8 @@ export const colorsDark = {
 
   // Testnets
   chain_11155111: networkColors.ethereum.dark,
-  chain_1301: networkColors.astrochain.dark,
+  chain_1301: networkColors.unichain.dark,
+  chain_10143: networkColors.monad.dark,
+
+  pinkThemed: colors.pinkDark,
 }

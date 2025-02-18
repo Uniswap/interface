@@ -1,25 +1,30 @@
-// eslint-disable-next-line no-restricted-imports
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useGetPoolTokenPercentage, usePositionCurrentPrice } from 'components/Liquidity/hooks'
+import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { Button, Flex, Separator, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Separator, Text } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
@@ -27,43 +32,85 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
   const account = useAccountMeta()
+  const trace = useTrace()
 
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
-  const { derivedIncreaseLiquidityInfo, increaseLiquidityState } = useIncreaseLiquidityContext()
-  const { txInfo, gasFeeEstimateUSD } = useIncreaseLiquidityTxContext()
+  const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep, setCurrentTransactionStep } =
+    useIncreaseLiquidityContext()
+  const { txInfo, gasFeeEstimateUSD, dependentAmount } = useIncreaseLiquidityTxContext()
 
-  const { currencyAmounts, currencyAmountsUSDValue } = derivedIncreaseLiquidityInfo
+  const { exactField } = increaseLiquidityState
+  const { currencyAmounts, currencyAmountsUSDValue, deposit0Disabled, deposit1Disabled } = derivedIncreaseLiquidityInfo
+
+  const { updatedCurrencyAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
+    token0: currencyAmounts?.TOKEN0?.currency,
+    token1: currencyAmounts?.TOKEN1?.currency,
+    dependentAmount,
+    exactField,
+    currencyAmounts,
+    currencyAmountsUSDValue,
+    deposit0Disabled: deposit0Disabled || false,
+    deposit1Disabled: deposit1Disabled || false,
+  })
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
-  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
 
   if (!increaseLiquidityState.position) {
     throw new Error('a position must be defined')
   }
 
-  const { currency0Amount, currency1Amount } = increaseLiquidityState.position
+  const { version, poolId, currency0Amount, currency1Amount, feeTier, chainId } = increaseLiquidityState.position
 
   const currentPrice = usePositionCurrentPrice(increaseLiquidityState.position)
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
 
   const newToken0Amount = useMemo(() => {
-    return currencyAmounts?.TOKEN0?.add(currency0Amount)
-  }, [currency0Amount, currencyAmounts?.TOKEN0])
+    if (!updatedCurrencyAmounts?.TOKEN0) {
+      return undefined
+    }
+
+    const additionalToken0Amount = CurrencyAmount.fromRawAmount(
+      updatedCurrencyAmounts?.TOKEN0?.currency,
+      currency0Amount.quotient,
+    )
+    return updatedCurrencyAmounts?.TOKEN0?.add(additionalToken0Amount)
+  }, [currency0Amount, updatedCurrencyAmounts?.TOKEN0])
   const newToken0AmountUSD = useUSDCValue(newToken0Amount)
 
   const newToken1Amount = useMemo(() => {
-    return currencyAmounts?.TOKEN1?.add(currency1Amount)
-  }, [currency1Amount, currencyAmounts?.TOKEN1])
+    if (!updatedCurrencyAmounts?.TOKEN1) {
+      return undefined
+    }
+
+    const additionalToken1Amount = CurrencyAmount.fromRawAmount(
+      updatedCurrencyAmounts?.TOKEN1?.currency,
+      currency1Amount.quotient,
+    )
+    return updatedCurrencyAmounts?.TOKEN1?.add(additionalToken1Amount)
+  }, [currency1Amount, updatedCurrencyAmounts?.TOKEN1])
   const newToken1AmountUSD = useUSDCValue(newToken1Amount)
 
   const onFailure = () => {
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
+  }
+
+  const onSuccess = () => {
+    setSteps([])
+    setCurrentTransactionStep(undefined)
+    onClose()
   }
 
   const onIncreaseLiquidity = () => {
     const isValidTx = isValidLiquidityTxContext(txInfo)
-    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+    if (
+      !account ||
+      account?.type !== AccountType.SignerMnemonic ||
+      !isValidTx ||
+      !increaseLiquidityState.position ||
+      !currencyAmounts?.TOKEN0 ||
+      !currencyAmounts.TOKEN1
+    ) {
       return
     }
 
@@ -73,29 +120,44 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
         startChainId,
         account,
         liquidityTxContext: txInfo,
-        setCurrentStep,
+        setCurrentStep: setCurrentTransactionStep,
         setSteps,
-        onSuccess: onClose,
+        onSuccess,
         onFailure,
+        analytics: {
+          ...getLPBaseAnalyticsProperties({
+            trace,
+            fee: feeTier,
+            version,
+            poolId,
+            currency0: currencyAmounts?.TOKEN0?.currency,
+            currency1: currencyAmounts?.TOKEN1?.currency,
+            currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
+            currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
+          }),
+          expectedAmountBaseRaw: currencyAmounts?.TOKEN0.quotient?.toString() ?? '-',
+          expectedAmountQuoteRaw: currencyAmounts?.TOKEN1.quotient?.toString() ?? '-',
+          createPosition: false,
+        },
       }),
     )
   }
 
   return (
-    <Flex gap="$gap16">
-      <Flex gap="$gap16" px="$padding16">
-        <TokenInfo currencyAmount={currencyAmounts?.TOKEN0} currencyUSDAmount={currencyAmountsUSDValue?.TOKEN0} />
+    <Flex gap="$gap12">
+      <Flex gap="$gap16" px="$padding16" pt="$padding12">
+        <TokenInfo currencyAmount={updatedCurrencyAmounts?.TOKEN0} currencyUSDAmount={updatedUSDAmounts?.TOKEN0} />
         <Text variant="body3" color="$neutral2">
           {t('common.and')}
         </Text>
-        <TokenInfo currencyAmount={currencyAmounts?.TOKEN1} currencyUSDAmount={currencyAmountsUSDValue?.TOKEN1} />
+        <TokenInfo currencyAmount={updatedCurrencyAmounts?.TOKEN1} currencyUSDAmount={updatedUSDAmounts?.TOKEN1} />
       </Flex>
-      {currentStep ? (
-        <ProgressIndicator currentStep={currentStep} steps={steps} />
+      {currentTransactionStep ? (
+        <ProgressIndicator currentStep={currentTransactionStep} steps={steps} />
       ) : (
         <>
           <Separator mx="$padding16" />
-          <Flex gap="$gap8" px="$padding16">
+          <Flex gap="$gap8" px="$padding16" pb="$padding12">
             <DetailLineItem
               LineItem={{
                 Label: () => (
@@ -174,14 +236,19 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
                   </Text>
                 ),
                 Value: () => (
-                  <Text variant="body3">
-                    {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
-                  </Text>
+                  <Flex row gap="$gap4" alignItems="center">
+                    <NetworkLogo chainId={chainId} size={iconSizes.icon16} shape="square" />
+                    <Text variant="body3">
+                      {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
+                    </Text>
+                  </Flex>
                 ),
               }}
             />
           </Flex>
-          <Button onPress={onIncreaseLiquidity}>{t('common.confirm')}</Button>
+          <DeprecatedButton size="large" onPress={onIncreaseLiquidity}>
+            {t('common.confirm')}
+          </DeprecatedButton>
         </>
       )}
     </Flex>

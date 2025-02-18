@@ -1,25 +1,26 @@
 import { NetworkLogo, TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { render } from 'uniswap/src/test/test-utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
-jest.mock('uniswap/src/constants/chains', () => {
-  const actualChains = jest.requireActual('uniswap/src/constants/chains')
-
-  const mockedChainInfo = {
-    ...actualChains.UNIVERSE_CHAIN_INFO,
-    ['chainWithoutLogo']: {
-      logo: undefined, // no logo - for testing
-    },
-  }
+jest.mock('uniswap/src/features/chains/chainInfo', () => {
+  const actualChains = jest.requireActual('uniswap/src/features/chains/chainInfo')
 
   return {
     ...actualChains,
-    UNIVERSE_CHAIN_INFO: mockedChainInfo,
+    getChainInfo: (chainId: unknown): unknown => {
+      if (chainId === 'chainWithoutLogo') {
+        return {
+          logo: undefined, // no logo - for testing
+        }
+      } else {
+        return actualChains.UNIVERSE_CHAIN_INFO[chainId as UniverseChainId]
+      }
+    },
   }
 })
 
 describe('NetworkLogo', () => {
-  const ACTUAL_CHAIN_INFO = jest.requireActual('uniswap/src/constants/chains').UNIVERSE_CHAIN_INFO
+  const ACTUAL_CHAIN_INFO = jest.requireActual('uniswap/src/features/chains/chainInfo').UNIVERSE_CHAIN_INFO
 
   it('renders without error', () => {
     const tree = render(<NetworkLogo chainId={UniverseChainId.Base} />)

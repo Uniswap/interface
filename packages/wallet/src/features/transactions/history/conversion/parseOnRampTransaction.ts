@@ -9,6 +9,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getAddressFromAsset } from 'wallet/src/features/transactions/history/utils'
 
+// TODO: WALL-5532 - Add support for offramp transactions on the graphql service
 export default function parseOnRampTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,
 ): OnRampPurchaseInfo | OnRampTransferInfo | undefined {

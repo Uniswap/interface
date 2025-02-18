@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useExtractedColors, useSporeColors } from 'ui/src'
 import { GlobalColorNames, colors as GlobalColors, GlobalPalette, colorsLight, opacify } from 'ui/src/theme'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { assert } from 'utilities/src/errors'
 import { hex } from 'wcag-contrast'
 
@@ -53,7 +53,7 @@ export function useNearestThemeColorFromImageUri(uri: string | undefined): {
   colorLight: string | undefined
 } {
   // extract color from image
-  const { colors: extractedImageColor } = useExtractedColors(uri)
+  const { colors: extractedImageColor } = useExtractedColors(uri, { colorStrategy: 'muted', fallback: 'accent1' })
 
   // find nearest theme color and convert to darkest version from theme
   return useMemo(() => {

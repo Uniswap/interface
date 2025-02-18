@@ -1,0 +1,16 @@
+diff --git a/.gradle/vcs-1/gc.properties b/.gradle/vcs-1/gc.properties
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/settings-plugin/src/main/kotlin/com/facebook/react/ReactSettingsExtension.kt b/settings-plugin/src/main/kotlin/com/facebook/react/ReactSettingsExtension.kt
+index be26a2233799ef738c8b77bd3a4363ff363eb9e0..9e7abdb30cfa28eb0a8eac08a5188808c31c1d9b 100644
+--- a/settings-plugin/src/main/kotlin/com/facebook/react/ReactSettingsExtension.kt
++++ b/settings-plugin/src/main/kotlin/com/facebook/react/ReactSettingsExtension.kt
+@@ -28,7 +28,7 @@ abstract class ReactSettingsExtension @Inject constructor(val settings: Settings
+       settings.layout.rootDirectory.file("build/generated/autolinking/").asFile
+ 
+   private val defaultConfigCommand: List<String> =
+-      windowsAwareCommandLine(listOf("npx", "@react-native-community/cli", "config")).map {
++      windowsAwareCommandLine(listOf("node", "../../node_modules/@react-native-community/cli/build/bin.js", "config")).map {
+         it.toString()
+       }
+ 

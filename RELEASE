@@ -1,21 +1,23 @@
-### Lots of new updates! 
+IPFS hash of the deployment:
+- CIDv0: `QmUpezmR69HSSepjRJJh3q8JQFPgeG1i4JKw8FmVgUtqwd`
+- CIDv1: `bafybeidakk2ybrz27ok75u3dqidlp2pauhixudav4xr7lx4tmmjkxax6fa`
 
- ### Bridging
- 
- You can now swap your ETH, USDC, and more across 8+ networks! Try it by pressing the banner on your homepage.  
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-### Claim usernames
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-You can now claim a free uni.eth for your wallet address, a readable username that makess it easy to identify your wallet and receive crypto. 
+IPFS gateways:
+- https://bafybeidakk2ybrz27ok75u3dqidlp2pauhixudav4xr7lx4tmmjkxax6fa.ipfs.dweb.link/
+- [ipfs://QmUpezmR69HSSepjRJJh3q8JQFPgeG1i4JKw8FmVgUtqwd/](ipfs://QmUpezmR69HSSepjRJJh3q8JQFPgeG1i4JKw8FmVgUtqwd/)
 
-### Multichain Explore
+### 5.72.1 (2025-02-15)
 
-Users can now see all 12 chains we support on the Explore page, and can also filter by a specific chain. 
 
-### Worldchain
+### Bug Fixes
 
-Users now have access to all ur regular features for this new chain.
+* **web:** regression affecting Android keyboard opening (#16405) 12ac4db
 
-### Other changes: 
 
-- Various bug fixes and performance improvements

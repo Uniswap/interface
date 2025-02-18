@@ -5,16 +5,16 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 
 const NOT_APPLICABLE = { wrapType: WrapType.NotApplicable }
@@ -28,7 +28,7 @@ enum WrapInputError {
 }
 
 export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
   const native = useNativeCurrency(chainId)
   const wrapped = native?.wrapped
 
@@ -58,7 +58,8 @@ export default function useWrapCallback(
   outputCurrency: Currency | undefined | null,
   typedValue: string | undefined,
 ): { wrapType: WrapType; execute?: () => Promise<string | undefined>; inputError?: WrapInputError } {
-  const { chainId } = useSwapAndLimitContext()
+  const account = useAccount()
+  const { chainId } = useMultichainContext()
 
   const wethContract = useWETHContract(true, chainId)
   const wethContractRef = useRef(wethContract)

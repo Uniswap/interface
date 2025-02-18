@@ -1,4 +1,4 @@
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export type SerializedTokenMap = {
   [chainId: number]: {

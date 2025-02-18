@@ -1,8 +1,8 @@
 import { useContract } from 'hooks/useContract'
-import useENSAddress from 'hooks/useENSAddress'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+import { useAddressFromEns } from 'uniswap/src/features/ens/api'
 
 const CHAIN_DATA_ABI = [
   {
@@ -18,7 +18,7 @@ const CHAIN_DATA_ABI = [
  * Returns the price of 1 gas in WEI for the currently selected network using the chainlink fast gas price oracle
  */
 export default function useGasPrice(skip = false): JSBI | undefined {
-  const { address } = useENSAddress('fast-gas-gwei.data.eth')
+  const { data: address } = useAddressFromEns('fast-gas-gwei.data.eth')
   const contract = useContract(address ?? undefined, CHAIN_DATA_ABI, false)
 
   const resultStr = useSingleCallResult(skip ? undefined : contract, 'latestAnswer').result?.[0]?.toString()

@@ -4,7 +4,7 @@ import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import type { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet'
 import type { ViewStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export enum TransactionScreen {
@@ -26,12 +26,17 @@ export type SwapRedirectFn = ({
   chainId: UniverseChainId
 }) => void
 
+export type BiometricsIconProps = {
+  color?: string
+}
+
 export type TransactionModalContextState = {
   bottomSheetViewStyles: StyleProp<ViewStyle>
   openWalletRestoreModal?: () => void
   walletNeedsRestore?: boolean
   onClose: () => void
-  BiometricsIcon?: JSX.Element | null
+  onCurrencyChange?: (selected: { inputCurrency?: Currency; outputCurrency?: Currency }, isBridgePair?: boolean) => void
+  renderBiometricsIcon?: (({ color }: BiometricsIconProps) => JSX.Element) | null
   authTrigger?: AuthTrigger
   screen: TransactionScreen
   setScreen: (newScreen: TransactionScreen) => void
@@ -42,10 +47,11 @@ export const TransactionModalContext = createContext<TransactionModalContextStat
 
 export function TransactionModalContextProvider({
   children,
-  BiometricsIcon,
+  renderBiometricsIcon,
   authTrigger,
   bottomSheetViewStyles,
   onClose,
+  onCurrencyChange,
   openWalletRestoreModal,
   walletNeedsRestore,
   screen,
@@ -54,10 +60,11 @@ export function TransactionModalContextProvider({
 }: PropsWithChildren<TransactionModalContextState>): JSX.Element {
   const state = useMemo<TransactionModalContextState>(
     (): TransactionModalContextState => ({
-      BiometricsIcon,
+      renderBiometricsIcon,
       authTrigger,
       bottomSheetViewStyles,
       onClose,
+      onCurrencyChange,
       openWalletRestoreModal,
       screen,
       setScreen,
@@ -65,10 +72,11 @@ export function TransactionModalContextProvider({
       walletNeedsRestore,
     }),
     [
-      BiometricsIcon,
+      renderBiometricsIcon,
       authTrigger,
       bottomSheetViewStyles,
       onClose,
+      onCurrencyChange,
       openWalletRestoreModal,
       screen,
       setScreen,

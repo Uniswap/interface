@@ -1,4 +1,5 @@
 import { BigNumber, providers } from 'ethers'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isBridge, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionStatus,
@@ -7,7 +8,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
@@ -85,6 +85,14 @@ export function isOnRampTransaction(tx: TransactionDetails): boolean {
     tx.typeInfo.type === TransactionType.OnRampPurchase ||
     tx.typeInfo.type === TransactionType.OnRampTransfer
   )
+}
+
+export function isOffRampTransaction(tx: TransactionDetails): boolean {
+  return tx.typeInfo.type === TransactionType.LocalOffRamp || tx.typeInfo.type === TransactionType.OffRampSale
+}
+
+export function isFORTransaction(tx: TransactionDetails): boolean {
+  return isOnRampTransaction(tx) || isOffRampTransaction(tx)
 }
 
 export function getDiff(value1: number | string | undefined, value2: number | undefined): number | undefined {

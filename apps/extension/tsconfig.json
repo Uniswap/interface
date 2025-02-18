@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Web App",
-  "extends": "tsconfig/nextjs.json",
+  "extends": "../../config/tsconfig/nextjs.json",
   "include": [
     "**/*.ts",
     "**/*.tsx",

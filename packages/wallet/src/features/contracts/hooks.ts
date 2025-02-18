@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
 import { useProvider } from 'wallet/src/features/wallet/context'

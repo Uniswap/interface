@@ -1,24 +1,24 @@
-import { TextStyle } from '@tamagui/core'
+import { isTouchable, TextStyle } from '@tamagui/core'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled, { css, keyframes } from 'lib/styled-components'
 import React, {
+  forwardRef,
   HTMLProps,
   PropsWithChildren,
   ReactNode,
-  forwardRef,
   useCallback,
   useImperativeHandle,
   useRef,
   useState,
 } from 'react'
-import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feather'
+import { AlertTriangle, CheckCircle, Copy, Icon } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
 import { FlexProps, TextProps } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
 import { anonymizeLink } from 'utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
@@ -91,17 +91,12 @@ export const ClickableTamaguiStyle = {
 export const TamaguiClickableStyle = {
   textDecorationLine: 'none',
   cursor: 'pointer',
-  animation: '100ms',
+  // Tamagui bug. Animation property breaks theme value transition, must use style instead
+  style: { transition: '100ms' },
   hoverStyle: {
     opacity: 0.6,
   },
 } satisfies TextProps
-
-export const CloseIcon = styled(X)<{ onClick: () => void; $color?: string }>`
-  color: ${({ theme, $color }) => $color ?? theme.neutral1};
-  cursor: pointer;
-  ${ClickableStyle}
-`
 
 const LinkStyle = css`
   color: ${({ theme }) => theme.accent1};
@@ -323,7 +318,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
 
     // Copy-helpers w/ left icon always show icon & display "Copied!" in copied state
     // Copy-helpers w/ right icon show icon on hover & do not change text
-    const showIcon = Boolean(iconPosition === 'left' || isHover || isCopied)
+    const showIcon = Boolean(iconPosition === 'left' || isHover || isTouchable || isCopied)
     const Icon = isCopied ? CopiedIcon : showIcon ? InitialIcon : null
     const offset = showIcon ? gap + iconSize : 0
     return (
@@ -368,18 +363,6 @@ export const SpinnerSVG = styled.svg`
   ${SpinnerCss}
 `
 
-const BackArrowIcon = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.neutral1};
-`
-
-export function BackArrowLink({ to }: { to: string }) {
-  return (
-    <StyledInternalLink to={to}>
-      <BackArrowIcon />
-    </StyledInternalLink>
-  )
-}
-
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
@@ -406,7 +389,7 @@ export const SmallOnly = styled.span`
 
 export const MediumOnly = styled.span`
   display: none;
-  @media (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+  @media (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
     display: block;
   }
 `

@@ -1,10 +1,9 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonLight } from 'components/Button/buttons'
+import { LoaderButton } from 'components/Button/LoaderButton'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
-import { Button, Flex, SpinningLoader, Text, WidthAnimator } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
-import { useTranslation } from 'uniswap/src/i18n'
+import { useTranslation } from 'react-i18next'
+import { DeprecatedButton, Text } from 'ui/src'
 import { useAccount } from 'wagmi'
 
 interface BuyFormButtonProps {
@@ -17,54 +16,64 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
   const { t } = useTranslation()
 
   const { buyFormState, derivedBuyFormInfo, setBuyFormState } = useBuyFormContext()
-  const { inputAmount } = buyFormState
+  const { inputAmount, quoteCurrency } = buyFormState
   const { notAvailableInThisRegion, quotes, fetchingQuotes, error } = derivedBuyFormInfo
 
   if (!account.isConnected) {
     return (
-      <ButtonLight onClick={accountDrawer.open}>
-        <ConnectWalletButtonText />
-      </ButtonLight>
+      <DeprecatedButton
+        animation="fast"
+        size="large"
+        borderRadius="$rounded16"
+        width="100%"
+        pressStyle={{ scale: 0.98 }}
+        opacity={1}
+        onPress={accountDrawer.open}
+        backgroundColor="$accent2"
+        hoverStyle={{
+          backgroundColor: '$accent2Hovered',
+        }}
+      >
+        <Text variant="buttonLabel1" color="$accent1">
+          <ConnectWalletButtonText />
+        </Text>
+      </DeprecatedButton>
     )
   }
 
-  if (!inputAmount || forceDisabled || notAvailableInThisRegion) {
+  if (!inputAmount || forceDisabled || notAvailableInThisRegion || !quoteCurrency) {
     return (
-      <Button
+      <DeprecatedButton
         key="BuyFormButton"
-        disabled
+        isDisabled
         size="large"
-        disabledStyle={{
-          backgroundColor: '$surface3',
-        }}
+        borderRadius="$rounded16"
+        opacity={1}
+        backgroundColor="surface2"
       >
-        <Text variant="buttonLabel1">
-          {notAvailableInThisRegion ? t('common.notAvailableInRegion.error') : t('common.noAmount.error')}
+        <Text variant="buttonLabel1" color="$neutral2">
+          {notAvailableInThisRegion
+            ? t('common.notAvailableInRegion.error')
+            : quoteCurrency
+              ? t('common.noAmount.error')
+              : t('common.selectToken.label')}
         </Text>
-      </Button>
+      </DeprecatedButton>
     )
   }
 
   return (
-    <Button
-      key="BuyFormButton-animation"
-      size="large"
-      animation="fastHeavy"
-      disabled={Boolean(fetchingQuotes || !quotes || !quotes.quotes || quotes.quotes.length === 0 || error)}
+    <LoaderButton
+      buttonKey="BuyFormButton"
+      isDisabled={Boolean(fetchingQuotes || !quotes || !quotes.quotes || quotes.quotes.length === 0 || error)}
       onPress={() => {
         setBuyFormState((prev) => ({ ...prev, providerModalOpen: true }))
       }}
+      loading={fetchingQuotes}
     >
-      <Flex row alignItems="center" gap="$spacing8">
-        <WidthAnimator open={fetchingQuotes} height={iconSizes.icon24}>
-          <Flex justifyContent="center" alignItems="center" width={iconSizes.icon24}>
-            <SpinningLoader color="$white" />
-          </Flex>
-        </WidthAnimator>
-        <Text variant="buttonLabel1" color="$white" animation="fastHeavy">
-          {t('common.button.continue')}
-        </Text>
-      </Flex>
-    </Button>
+      <Text variant="buttonLabel1" color="$white">
+        {t('common.button.continue')}
+      </Text>
+    </LoaderButton>
   )
 }

@@ -7,7 +7,7 @@ import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft
 import { useMemo, useState } from 'react'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useFormatterLocales } from 'utils/formatNumbers'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 
 const timeOptions: { label: string; value: TimePeriod }[] = [
   { label: '1D', value: TimePeriod.OneDay },
@@ -31,7 +31,7 @@ const StyledHeader = styled.h1`
   font-weight: 535;
   margin: 0;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     font-size: 20px;
     line-height: 28px;
   }
@@ -43,7 +43,7 @@ const FiltersRow = styled.div`
   margin-top: 36px;
   margin-bottom: 20px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     margin-bottom: 16px;
     margin-top: 16px;
   }
@@ -85,7 +85,7 @@ function convertTimePeriodToHistoryDuration(timePeriod: TimePeriod): HistoryDura
 }
 
 const TrendingCollections = () => {
-  const { formatterLocalCurrency } = useFormatterLocales()
+  const currentCurrency = useAppFiatCurrency()
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.OneDay)
   const [isEthToggled, setEthToggled] = useState(true)
 
@@ -155,7 +155,7 @@ const TrendingCollections = () => {
           </Selector>
           <Selector active={!isEthToggled}>
             <StyledSelectorText lineHeight="20px" active={!isEthToggled}>
-              {formatterLocalCurrency}
+              {currentCurrency}
             </StyledSelectorText>
           </Selector>
         </Filter>

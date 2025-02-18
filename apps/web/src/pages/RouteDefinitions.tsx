@@ -2,9 +2,8 @@ import { useAtom } from 'jotai'
 import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 import { ReactNode, Suspense, lazy, useMemo } from 'react'
-import { Navigate, matchPath, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
 import { shouldDisableExploreRoutesAtom, shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import { SpinnerSVG } from 'theme/components'
 import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
@@ -13,12 +12,14 @@ import CreatePool from 'pages/CreatePool'
 import { CreatePosition } from 'pages/Pool/Positions/create/CreatePosition'
 import Stake from 'pages/Stake'
 import Swap from 'pages/Swap'
+import i18n from 'uniswap/src/i18n'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
+const CreatePosition = lazy(() => import('pages/Pool/Positions/create/CreatePosition'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
-const AddLiquidityWithTokenRedirects = lazy(() => import('pages/AddLiquidity/redirects'))
+const AddLiquidityV3WithTokenRedirects = lazy(() => import('pages/AddLiquidityV3/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
@@ -26,12 +27,22 @@ const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const MigrateV3 = lazy(() => import('pages/MigrateV3'))
 const NotFound = lazy(() => import('pages/NotFound'))
 const Pool = lazy(() => import('pages/Pool'))
-const LegacyPool = lazy(() => import('pages/LegacyPool'))
-const LegacyPositionPage = lazy(() => import('pages/LegacyPool/PositionPage'))
+const LegacyPoolRedirects = lazy(() =>
+  import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPoolRedirects })),
+)
+const PoolFinderRedirects = lazy(() =>
+  import('pages/LegacyPool/redirects').then((module) => ({ default: module.PoolFinderRedirects })),
+)
+const LegacyPoolV2Redirects = lazy(() =>
+  import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPoolV2Redirects })),
+)
+const LegacyPositionPageRedirects = lazy(() =>
+  import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPositionPageRedirects })),
+)
 const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
-const LegacyPoolV2 = lazy(() => import('pages/LegacyPool/v2'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
+const RemoveLiquidityV2 = lazy(() => import('pages/RemoveLiquidity/V2'))
 const PoolFinder = lazy(() => import('pages/PoolFinder'))
 const PoolPositionPage = lazy(() => import('pages/CreatePool/PoolPositionPage'))
 const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
@@ -83,18 +94,18 @@ export function useRouterConfig(): RouterConfig {
 // SEO titles and descriptions sourced from https://docs.google.com/spreadsheets/d/1_6vSxGgmsx6QGEZ4mdHppv1VkuiJEro3Y_IopxUHGB4/edit#gid=0
 // getTitle and getDescription are used as static metatags for SEO. Dynamic metatags should be set in the page component itself
 const StaticTitlesAndDescriptions = {
-  RigoblockTitle: t('title.rigoblockTradeCrypto'),
-  SwapTitle: t('title.buySellTradeEthereum'),
-  SwapDescription: t('title.swappingMadeSimple'),
-  DetailsPageBaseTitle: t('common.buyAndSell'),
-  TDPDescription: t('title.realTime'),
-  PDPDescription: t('title.tradeTokens'),
-  NFTTitle: t('title.explore'),
-  MigrateTitle: t('title.migratev2'),
-  MigrateTitleV3: t('title.migratev3'),
-  MigrateDescription: t('title.easilyRemove'),
-  MigrateDescriptionV4: t('title.easilyRemoveV4'),
-  AddLiquidityDescription: t('title.earnFees'),
+  RigoblockTitle: i18n.t('title.rigoblockTradeCrypto'),
+  SwapTitle: i18n.t('title.buySellTradeEthereum'),
+  SwapDescription: i18n.t('title.swappingMadeSimple'),
+  DetailsPageBaseTitle: i18n.t('common.buyAndSell'),
+  TDPDescription: i18n.t('title.realTime'),
+  PDPDescription: i18n.t('title.tradeTokens'),
+  NFTTitle: i18n.t('title.explore'),
+  MigrateTitle: i18n.t('title.migratev2'),
+  MigrateTitleV3: i18n.t('title.migratev3'),
+  MigrateDescription: i18n.t('title.easilyRemove'),
+  MigrateDescriptionV4: i18n.t('title.easilyRemoveV4'),
+  AddLiquidityDescription: i18n.t('title.earnFees'),
 }
 
 export interface RouteDefinition {
@@ -144,7 +155,7 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
     enabled: (args) => !args.shouldDisableExploreRoutes,
-    getTitle: () => t('common.buyAndSell'),
+    getTitle: () => i18n.t('common.buyAndSell'),
     getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
     getElement: () => <TokenDetails />,
   }),
@@ -179,9 +190,9 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/vote/*',
-    getTitle: () => t('title.voteOnGov'),
-    getDescription: () => t('title.uniToken'),
-    getElement: () => (
+    getTitle: () => i18n.t('title.voteOnGov'),
+    getDescription: () => i18n.t('title.uniToken'),
+    getElement: () => {
       <Suspense fallback={<LazyLoadSpinner />}>
         <Vote />
       </Suspense>
@@ -189,8 +200,8 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/create-proposal',
-    getTitle: () => t('title.createGovernanceOn'),
-    getDescription: () => t('title.createGovernanceTo'),
+    getTitle: () => i18n.t('title.createGovernanceOn'),
+    getDescription: () => i18n.t('title.createGovernanceTo'),
     getElement: () => <Navigate to="/vote/create-proposal" replace />,
   }),
   createRouteDefinition({
@@ -201,7 +212,7 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/send',
     getElement: () => <Swap />,
-    getTitle: () => t('title.sendTokens'),
+    getTitle: () => i18n.t('title.sendTokens'),
   }),
   //createRouteDefinition({
   //  path: '/limits',
@@ -229,12 +240,7 @@ export const routes: RouteDefinition[] = [
     getElement: () => <CreatePosition />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
-  }),
-  createRouteDefinition({
-    path: '/positions/create/:protocolVersion',
-    getElement: () => <CreatePosition />,
-    getTitle: getPositionPageTitle,
-    getDescription: getPositionPageDescription,
+    nestedPaths: [':protocolVersion'],
   }),
   createRouteDefinition({
     path: '/positions',
@@ -269,49 +275,49 @@ export const routes: RouteDefinition[] = [
   // Legacy pool routes
   createRouteDefinition({
     path: '/pool',
-    getElement: () => <LegacyPool />,
+    getElement: () => <LegacyPoolRedirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pool/v2/find',
-    getElement: () => <PoolFinder />,
-    getTitle: () => t('title.importLiquidityv2'),
-    getDescription: () => t('title.useImportTool'),
+    getElement: () => <PoolFinderRedirects />,
+    getTitle: getPositionPageDescription,
+    getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pool/v2',
-    getElement: () => <LegacyPoolV2 />,
+    getElement: () => <LegacyPoolV2Redirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pool/:tokenId',
-    getElement: () => <LegacyPositionPage />,
+    getElement: () => <LegacyPositionPageRedirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pools/v2/find',
-    getElement: () => <PoolFinder />,
-    getTitle: () => t('title.importLiquidityv2'),
-    getDescription: () => t('title.useImportTool'),
+    getElement: () => <PoolFinderRedirects />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pools/v2',
-    getElement: () => <LegacyPoolV2 />,
+    getElement: () => <LegacyPoolV2Redirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pools',
-    getElement: () => <LegacyPool />,
+    getElement: () => <LegacyPoolRedirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pools/:tokenId',
-    getElement: () => <LegacyPositionPage />,
+    getElement: () => <LegacyPositionPageRedirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
@@ -330,21 +336,21 @@ export const routes: RouteDefinition[] = [
       ':currencyIdA/:currencyIdB/:feeAmount',
       ':currencyIdA/:currencyIdB/:feeAmount/:tokenId',
     ],
-    getElement: () => <AddLiquidityWithTokenRedirects />,
+    getElement: () => <AddLiquidityV3WithTokenRedirects />,
     getTitle: getAddLiquidityPageTitle,
     getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,
   }),
   createRouteDefinition({
     path: '/remove/v2/:currencyIdA/:currencyIdB',
-    getElement: () => <RemoveLiquidity />,
-    getTitle: () => t('title.removeLiquidityv2'),
-    getDescription: () => t('title.removeTokensv2'),
+    getElement: () => <RemoveLiquidityV2 />,
+    getTitle: () => i18n.t('title.removeLiquidityv2'),
+    getDescription: () => i18n.t('title.removeTokensv2'),
   }),
   createRouteDefinition({
     path: '/remove/:tokenId',
     getElement: () => <RemoveLiquidityV3 />,
-    getTitle: () => t('title.removePoolLiquidity'),
-    getDescription: () => t('title.removev3Liquidity'),
+    getTitle: () => i18n.t('title.removePoolLiquidity'),
+    getDescription: () => i18n.t('title.removev3Liquidity'),
   }),
   createRouteDefinition({
     path: '/migrate/v2',
@@ -366,8 +372,8 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
-    getTitle: () => t('title.exploreNFTs'),
-    getDescription: () => t('title.betterPricesMoreListings'),
+    getTitle: () => i18n.t('title.exploreNFTs'),
+    getDescription: () => i18n.t('title.betterPricesMoreListings'),
   }),
   createRouteDefinition({
     path: '/nfts/asset/:contractAddress/:tokenId',
@@ -388,7 +394,7 @@ export const routes: RouteDefinition[] = [
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
     getTitle: () => StaticTitlesAndDescriptions.NFTTitle,
-    getDescription: () => t('title.manageNFT'),
+    getDescription: () => i18n.t('title.manageNFT'),
   }),
   createRouteDefinition({
     path: '/nfts/collection/:contractAddress',

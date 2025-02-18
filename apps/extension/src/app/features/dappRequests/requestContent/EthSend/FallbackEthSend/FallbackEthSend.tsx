@@ -1,9 +1,9 @@
-import { BigNumber } from 'ethers'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
+import { isNonZeroBigNumber } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
@@ -55,6 +55,7 @@ export function FallbackEthSendRequestContent({
   )
   const { parsedTransactionData } = useNoYoloParser(dappRequest.transaction, chainId)
   const transactionCurrencies = useTransactionCurrencies({ chainId, to: toAddress, parsedTransactionData })
+  const showSpendingEthDetails = isNonZeroBigNumber(sending) && chainId
 
   return (
     <DappRequestContent
@@ -69,14 +70,12 @@ export function FallbackEthSendRequestContent({
         backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded16"
-        borderWidth={1}
+        borderWidth="$spacing1"
         gap="$spacing12"
         p="$spacing16"
         width="100%"
       >
-        {sending && !BigNumber.from(sending).eq(0) && chainId && (
-          <SpendingEthDetails chainId={chainId} value={sending} />
-        )}
+        {showSpendingEthDetails && <SpendingEthDetails chainId={chainId} value={sending} />}
         {transactionCurrencies?.map((currencyInfo, i) => (
           <SpendingDetails
             key={currencyInfo.currencyId}
@@ -101,7 +100,7 @@ export function FallbackEthSendRequestContent({
           <Text
             borderColor="$surface3"
             borderRadius="$rounded8"
-            borderWidth={1}
+            borderWidth="$spacing1"
             color="$neutral1"
             // fontFamily="SF Mono"
             px="$spacing8"

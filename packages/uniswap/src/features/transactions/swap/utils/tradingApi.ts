@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
@@ -5,12 +6,12 @@ import { FeeAmount, Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
+  AutoSlippage,
   BridgeQuote,
   ClassicQuote,
+  ProtocolItems,
   Quote,
   QuoteRequest,
   QuoteResponse,
@@ -24,6 +25,11 @@ import {
   Urgency,
   V4PoolInRoute,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
@@ -32,13 +38,13 @@ import {
   PriorityOrderTrade,
   Trade,
   UniswapXV2Trade,
+  UniswapXV3Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   DEFAULT_PROTOCOL_OPTIONS,
   FrontendSupportedProtocol,
   useProtocolsForChain,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -53,12 +59,11 @@ interface TradingApiResponseToTradeArgs {
   currencyOut: Currency
   tradeType: TradeType
   deadline: number | undefined
-  slippageTolerance: number | undefined
   data: DiscriminatedQuoteResponse | undefined
 }
 
 export function transformTradingApiResponseToTrade(params: TradingApiResponseToTradeArgs): Trade | null {
-  const { currencyIn, currencyOut, tradeType, deadline, slippageTolerance, data } = params
+  const { currencyIn, currencyOut, tradeType, deadline, data } = params
 
   switch (data?.routing) {
     case Routing.CLASSIC: {
@@ -71,7 +76,6 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
       return new ClassicTrade({
         quote: data,
         deadline,
-        slippageTolerance: slippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE,
         v2Routes: routes?.flatMap((r) => (r?.routev2 ? { ...r, routev2: r.routev2 } : [])) ?? [],
         v3Routes: routes?.flatMap((r) => (r?.routev3 ? { ...r, routev3: r.routev3 } : [])) ?? [],
         v4Routes: routes?.flatMap((r) => (r?.routev4 ? { ...r, routev4: r.routev4 } : [])) ?? [],
@@ -80,6 +84,7 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
       })
     }
     case Routing.PRIORITY:
+    case Routing.DUTCH_V3:
     case Routing.DUTCH_V2: {
       const { quote } = data
       // UniswapX backend response does not include decimals; local currencies must be passed to UniswapXTrade rather than tokens parsed from the api response.
@@ -94,8 +99,10 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
       const isPriority = data.routing === Routing.PRIORITY
       if (isPriority) {
         return new PriorityOrderTrade({ quote: data, currencyIn, currencyOut, tradeType })
-      } else {
+      } else if (data.routing === Routing.DUTCH_V2) {
         return new UniswapXV2Trade({ quote: data, currencyIn, currencyOut, tradeType })
+      } else {
+        return new UniswapXV3Trade({ quote: data, currencyIn, currencyOut, tradeType })
       }
     }
     case Routing.BRIDGE: {
@@ -197,6 +204,15 @@ export function computeRoutes(
       }
     })
   } catch (e) {
+    logger.error(e, {
+      tags: { file: 'tradingApi.ts', function: 'computeRoutes' },
+      extra: {
+        input: parsedCurrencyIn.address,
+        output: parsedCurrencyOut.address,
+        inputChainId: parsedCurrencyIn.chainId,
+        outputChainId: parsedCurrencyOut.chainId,
+      },
+    })
     return undefined
   }
 }
@@ -206,6 +222,11 @@ function parseTokenApi(token: TradingApiTokenInRoute): Token {
   if (!chainId || !address || !decimals || !symbol) {
     throw new Error('Expected token to have chainId, address, decimals, and symbol')
   }
+
+  if (address === NATIVE_ADDRESS_FOR_TRADING_API) {
+    throw new Error('Cannot parse native currency as an erc20 Token')
+  }
+
   return new Token(
     chainId,
     address,
@@ -228,8 +249,16 @@ function parseV4PoolApi({
   tokenIn,
   tokenOut,
 }: TradingApiV4PoolInRoute): V4Pool {
-  const currencyIn = parseTokenApi(tokenIn)
-  const currencyOut = parseTokenApi(tokenOut)
+  if (!tokenIn.address || !tokenOut.address || !tokenIn.chainId || !tokenOut.chainId) {
+    throw new Error('Expected V4 route to have defined addresses and chainIds')
+  }
+
+  const inputIsNative = tokenIn.address === NATIVE_ADDRESS_FOR_TRADING_API
+  const outputIsNative = tokenOut.address === NATIVE_ADDRESS_FOR_TRADING_API
+
+  // Unlike lower protocol versions, v4 routes can involve unwrapped native tokens.
+  const currencyIn = inputIsNative ? NativeCurrency.onChain(tokenIn.chainId) : parseTokenApi(tokenIn)
+  const currencyOut = outputIsNative ? NativeCurrency.onChain(tokenOut.chainId) : parseTokenApi(tokenOut)
 
   return new V4Pool(
     currencyIn,
@@ -275,25 +304,44 @@ function parseV2PairApi({ reserve0, reserve1 }: TradingApiV2PoolInRoute): Pair {
 }
 
 type ClassicPoolInRoute = TradingApiV2PoolInRoute | TradingApiV3PoolInRoute | TradingApiV4PoolInRoute
-function parseMixedRouteApi(pool: ClassicPoolInRoute): Pair | V3Pool {
-  return pool.type === 'v2-pool' ? parseV2PairApi(pool) : parseV3PoolApi(pool)
+function parseMixedRouteApi(pool: ClassicPoolInRoute): Pair | V3Pool | V4Pool {
+  if (isV2Pool(pool)) {
+    return parseV2PairApi(pool)
+  } else if (isV3Pool(pool)) {
+    return parseV3PoolApi(pool)
+  } else if (isV4Pool(pool)) {
+    return parseV4PoolApi(pool)
+  }
+  throw new Error('Invalid pool type')
+}
+
+function isV2Pool(pool: ClassicPoolInRoute): pool is TradingApiV2PoolInRoute {
+  return pool.type === 'v2-pool'
+}
+
+function isV3Pool(pool: ClassicPoolInRoute): pool is TradingApiV3PoolInRoute {
+  return pool.type === 'v3-pool'
+}
+
+function isV4Pool(pool: ClassicPoolInRoute): pool is TradingApiV4PoolInRoute {
+  return pool.type === 'v4-pool'
 }
 
 function isV2OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
-  return route.every((pool) => pool.type === 'v2-pool')
+  return route.every(isV2Pool)
 }
 
 function isV3OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
-  return route.every((pool) => pool.type === 'v3-pool')
+  return route.every(isV3Pool)
 }
 
 function isV4OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
-  return route.every((pool) => pool.type === 'v4-pool')
+  return route.every(isV4Pool)
 }
 
 export function getTokenAddressFromChainForTradingApi(address: Address, chainId: UniverseChainId): string {
   // For native currencies, we need to map to 0x0000000000000000000000000000000000000000
-  if (address === UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address) {
+  if (address === getChainInfo(chainId).nativeCurrency.address) {
     return NATIVE_ADDRESS_FOR_TRADING_API
   }
   return address
@@ -391,18 +439,27 @@ export function validateTrade({
   return trade
 }
 
-export function useQuoteRoutingParams(
-  selectedProtocols: FrontendSupportedProtocol[] | undefined,
-  tokenInChainId: UniverseChainId | undefined,
-  tokenOutChainId: UniverseChainId | undefined,
-  isUSDQuote?: boolean,
-): Pick<QuoteRequest, 'routingPreference' | 'protocols'> {
+type UseQuoteRoutingParamsArgs = {
+  selectedProtocols: FrontendSupportedProtocol[] | undefined
+  tokenInChainId: UniverseChainId | undefined
+  tokenOutChainId: UniverseChainId | undefined
+  isUSDQuote?: boolean
+}
+
+export function useQuoteRoutingParams({
+  selectedProtocols,
+  tokenInChainId,
+  tokenOutChainId,
+  isUSDQuote,
+}: UseQuoteRoutingParamsArgs): Pick<QuoteRequest, 'routingPreference' | 'protocols'> {
   const protocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
 
   return useMemo(() => {
     // for USD quotes, we avoid routing through UniswapX
     if (isUSDQuote) {
-      return { routingPreference: RoutingPreference.CLASSIC }
+      return {
+        protocols: [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4],
+      }
     }
 
     // for bridging, we want to only return BEST_PRICE
@@ -413,4 +470,46 @@ export function useQuoteRoutingParams(
     // For normal quotes, we only need to specify protocols
     return { protocols }
   }, [isUSDQuote, tokenInChainId, tokenOutChainId, protocols])
+}
+
+type UseQuoteSlippageParamsArgs = {
+  customSlippageTolerance: number | undefined
+  tokenInChainId: UniverseChainId | undefined
+  tokenOutChainId: UniverseChainId | undefined
+  isUSDQuote?: boolean
+}
+
+// Used if dynamic config value fails to resolve
+const DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE = 2.5
+
+export function useQuoteSlippageParams({
+  customSlippageTolerance,
+  tokenInChainId,
+  tokenOutChainId,
+  isUSDQuote,
+}: UseQuoteSlippageParamsArgs): Pick<QuoteRequest, 'autoSlippage' | 'slippageTolerance'> | undefined {
+  const minAutoSlippageToleranceL2 = useDynamicConfigValue(
+    DynamicConfigs.Swap,
+    SwapConfigKey.MinAutoSlippageToleranceL2,
+    DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
+  )
+
+  return useMemo(() => {
+    if (customSlippageTolerance) {
+      return { slippageTolerance: customSlippageTolerance }
+    }
+
+    // For bridging or USD quotes, we do not apply any slippage settings
+    if (tokenInChainId !== tokenOutChainId || isUSDQuote) {
+      return undefined
+    }
+
+    // L2 chains should use the minimum slippage tolerance defined in the dynamic config
+    if (isL2ChainId(tokenInChainId)) {
+      return { slippageTolerance: minAutoSlippageToleranceL2 }
+    }
+
+    // Otherwise, use an auto slippage tolerance calculated on the backend
+    return { autoSlippage: AutoSlippage.DEFAULT }
+  }, [customSlippageTolerance, isUSDQuote, minAutoSlippageToleranceL2, tokenInChainId, tokenOutChainId])
 }

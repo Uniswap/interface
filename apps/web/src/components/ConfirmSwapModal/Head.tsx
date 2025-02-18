@@ -1,6 +1,6 @@
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 
 export function SwapHead({
   onDismiss,

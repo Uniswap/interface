@@ -4,18 +4,18 @@ import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { removeDappConnection, saveDappChain } from 'src/app/features/dapp/actions'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { PopupName, closePopup } from 'src/app/features/popups/slice'
-import { Anchor, Button, Flex, Popover, Separator, Text, getTokenValue } from 'ui/src'
+import { Anchor, DeprecatedButton, Flex, Popover, Separator, Text, getTokenValue } from 'ui/src'
 import { Check, Power } from 'ui/src/components/icons'
 import { usePreventOverflowBelowFold } from 'ui/src/hooks/usePreventOverflowBelowFold'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { extractUrlHost } from 'utilities/src/format/urls'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -72,11 +72,11 @@ export function SwitchNetworksModal(): JSX.Element {
 
       <Separator mb="$spacing4" mt="$spacing8" />
 
-      <Flex shrink overflow="scroll">
+      <Flex shrink $platform-web={{ overflow: 'auto' }}>
         {enabledChains.map((chain: UniverseChainId) => {
           return (
             <Popover.Close asChild>
-              <Button
+              <DeprecatedButton
                 key={chain}
                 borderRadius="$rounded12"
                 justifyContent="space-between"
@@ -89,7 +89,7 @@ export function SwitchNetworksModal(): JSX.Element {
                   <Flex grow row alignItems="center" gap="$spacing8">
                     <NetworkLogo chainId={chain} size={iconSizes.icon20} />
                     <Text color="$neutral1" variant="subheading2">
-                      {UNIVERSE_CHAIN_INFO[chain]?.label}
+                      {getChainLabel(chain)}
                     </Text>
                   </Flex>
                   {activeChain === chain ? (
@@ -98,14 +98,14 @@ export function SwitchNetworksModal(): JSX.Element {
                     </Flex>
                   ) : null}
                 </Flex>
-              </Button>
+              </DeprecatedButton>
             </Popover.Close>
           )
         })}
       </Flex>
 
       <Popover.Close asChild>
-        <Button mt="$spacing8" size="small" theme="tertiary" onPress={onDisconnect}>
+        <DeprecatedButton mt="$spacing8" size="small" theme="tertiary" onPress={onDisconnect}>
           <Flex centered row gap="$spacing8">
             <Power color="$neutral1" size={getTokenValue('$icon.16')} />
             {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}{' '}
@@ -113,7 +113,7 @@ export function SwitchNetworksModal(): JSX.Element {
               {t('common.button.disconnect')}
             </Text>
           </Flex>
-        </Button>
+        </DeprecatedButton>
       </Popover.Close>
     </Flex>
   )

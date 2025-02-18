@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areCurrencyIdsEqual, buildWrappedNativeCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 
 export function getWrapType(

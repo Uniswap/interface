@@ -13,7 +13,6 @@ function expectedOutput(l: Locale): string {
     case 'sw-TZ':
     case 'zh-Hans':
     case 'ur-PK':
-    case 'th-TH':
     case 'es-US':
     case 'es-419':
     case 'ms-MY':

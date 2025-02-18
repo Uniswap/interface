@@ -1,6 +1,8 @@
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
+  LocalOffRampTransactionInfo,
   LocalOnRampTransactionInfo,
+  OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   TransactionDetails,
@@ -14,6 +16,12 @@ export type FiatOnRampTransactionDetails = TransactionDetails & {
   typeInfo: LocalOnRampTransactionInfo | OnRampPurchaseInfo | OnRampTransferInfo
 }
 
+export type FiatOffRampTransactionDetails = TransactionDetails & {
+  typeInfo: LocalOffRampTransactionInfo | OffRampSaleInfo
+}
+
+export type FORTransactionDetails = FiatOnRampTransactionDetails | FiatOffRampTransactionDetails
+
 export type FORCountry = {
   countryCode: string
   displayName: string
@@ -25,6 +33,10 @@ export type FORCountry = {
 export type FORGetCountryResponse = FORCountry
 
 // /supported-countries
+
+export type FORSupportedCountriesRequest = {
+  rampDirection?: RampDirection
+}
 
 export type FORSupportedCountriesResponse = {
   supportedCountries: FORCountry[]
@@ -39,6 +51,7 @@ export type FORQuoteRequest = {
   sourceCurrencyCode: string
   walletAddress?: string
   state?: string
+  rampDirection?: RampDirection
 }
 
 export type FORQuote = {
@@ -83,6 +96,7 @@ export type FORServiceProvidersResponse = {
 export type FORSupportedTokensRequest = {
   fiatCurrency: string
   countryCode: string
+  rampDirection?: RampDirection
 }
 
 export type FORSupportedToken = {
@@ -102,6 +116,7 @@ export type FORSupportedTokensResponse = {
 
 export type FORSupportedFiatCurrenciesRequest = {
   countryCode: string
+  rampDirection?: RampDirection
 }
 
 export type FORSupportedFiatCurrency = {
@@ -114,7 +129,7 @@ export type FORSupportedFiatCurrenciesResponse = {
   fiatCurrencies: FORSupportedFiatCurrency[]
 }
 
-// /widget-url
+// /widget-url and /offramp-widget-url
 
 export type FORWidgetUrlRequest = {
   sourceAmount: number
@@ -132,6 +147,21 @@ export type FORWidgetUrlResponse = {
   widgetUrl: string
 }
 
+export type OffRampWidgetUrlRequest = {
+  sourceAmount: number
+  baseCurrencyCode: string
+  refundWalletAddress: string
+  countryCode: string
+  quoteCurrencyCode: string
+  serviceProvider: string
+  externalSessionId: string
+  lockAmount?: string
+  requestSource?: string
+  externalTransactionId?: string
+  externalCustomerId?: string
+  redirectUrl?: string
+}
+
 // /transfer-widget-url
 
 export type FORTransferWidgetUrlRequest = {
@@ -139,6 +169,42 @@ export type FORTransferWidgetUrlRequest = {
   walletAddress: string
   externalSessionId: string
   redirectUrl: string
+}
+
+// /offramp-transfer-details
+
+export type OffRampTransferDetailsRequest = MoonpayOffRampTransferDetailsRequest | MeldOffRampTransferDetailsRequest
+
+// TODO: verify that this is needed and BE cannot also use a sessionId
+type MoonpayOffRampTransferDetailsRequest = {
+  moonpayDetails: {
+    baseCurrencyCode: string
+    baseCurrencyAmount: number
+    depositWalletAddress: string
+    depositWalletAddressTag?: string
+  }
+}
+
+type MeldOffRampTransferDetailsRequest = {
+  meldDetails: {
+    sessionId: string
+  }
+}
+
+export type OffRampTransferDetailsResponse = {
+  chainId: string
+  provider: string
+  tokenAddress: string
+  baseCurrencyCode: string
+  baseCurrencyAmount: number
+  depositWalletAddress: string
+  logos: {
+    darkLogo: string
+    lightLogo: string
+    darkFullLogo: string
+    lightFullLogo: string
+  }
+  depositWalletAddressTag?: string
 }
 
 // /transactions
@@ -182,6 +248,14 @@ export type FiatOnRampCurrency = {
   meldCurrencyCode?: string
 }
 
+export interface FiatOffRampMetaData {
+  name: string
+  logoUrl: string
+  onSubmitCallback: (amountUSD?: number) => void
+  meldCurrencyCode?: string
+  moonpayCurrencyCode?: string
+}
+
 export enum InitialQuoteSelection {
   MostRecent,
   Best,
@@ -198,4 +272,9 @@ export type FORCurrencyOrBalance = FiatOnRampCurrency | PortfolioBalance
 export enum RampToggle {
   BUY = 'BUY',
   SELL = 'SELL',
+}
+
+export enum RampDirection {
+  ONRAMP = 0,
+  OFFRAMP = 1,
 }

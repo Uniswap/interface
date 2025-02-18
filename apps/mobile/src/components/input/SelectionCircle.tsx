@@ -20,7 +20,7 @@ export function SelectionCircle({
       centered
       borderColor={selected ? selectedColor : unselectedColor}
       borderRadius="$roundedFull"
-      borderWidth={1}
+      borderWidth="$spacing1"
       height={iconSizes[size]}
       width={iconSizes[size]}
     >

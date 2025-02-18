@@ -3,10 +3,10 @@ import { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow } from 'components/deprecated/Row'
 import { ONE_BIPS } from 'constants/misc'
 import { useTheme } from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { Text } from 'rebass'
 import { Field } from 'state/mint/actions'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 export function PoolPriceBar({
   currencies,

@@ -28,6 +28,10 @@
         <% const cspDevConfig = require('./vercel-csp.json'); %>
         <% Object.entries(cspDevConfig).forEach(([key, value]) => cspConfig[key] = cspConfig[key].concat(value)) %>
       <% } %>
+      <% if (process.env.NODE_ENV === 'development') { %>
+        <% const cspDevConfig = require('./dev-csp.json'); %>
+        <% Object.entries(cspDevConfig).forEach(([key, value]) => cspConfig[key] = cspConfig[key].concat(value)) %>
+      <% } %>
       <meta
         http-equiv="Content-Security-Policy" 
         content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.concat(['nonce-'+cspStyleNonce]).join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
@@ -85,6 +89,17 @@
         padding: 0;
       }
 
+      /* Only apply overflow-x: hidden on desktop */
+      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
+      /* We need to set it on html element specifically because otherwise we break */
+      /* sticky positioning of some child elements. */
+      /* Applying this on mobile breaks tamagui/remove-scroll. */
+      @media (min-width: 768px) {
+        html {
+          overflow-x: hidden;
+        }
+      }
+
       button {
         user-select: none;
       }
@@ -98,19 +113,6 @@
         -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      }
-
-      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
-      #background-radial-gradient {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        width: 200vw;
-        height: 200vh;
-        transform: translate(-50vw, -100vh);
-        z-index: -1;
       }
 
       html,

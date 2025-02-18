@@ -4,8 +4,8 @@ import styled, { css } from 'lib/styled-components'
 import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
+import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const FeeWrap = styled(Row)`

@@ -1,5 +1,5 @@
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Connector } from 'wagmi'
 
 export interface WalletConnectConnector extends Connector {

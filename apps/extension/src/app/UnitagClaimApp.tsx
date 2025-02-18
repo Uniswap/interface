@@ -3,12 +3,13 @@ import 'src/app/Global.css'
 
 import { PropsWithChildren, useEffect } from 'react'
 import { I18nextProvider } from 'react-i18next'
-import { Outlet, RouterProvider, useSearchParams } from 'react-router-dom'
+import { Outlet, RouterProvider, createHashRouter, useSearchParams } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ExtensionStatsigProvider } from 'src/app/StatsigProvider'
 import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
+import { DatadogAppNameTag } from 'src/app/datadog'
 import {
   ClaimUnitagSteps,
   OnboardingStepsProvider,
@@ -23,15 +24,14 @@ import { UnitagCreateUsernameScreen } from 'src/app/features/unitags/UnitagCreat
 import { UnitagIntroScreen } from 'src/app/features/unitags/UnitagIntroScreen'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
-import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
 import { Flex } from 'ui/src'
+import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import i18n from 'uniswap/src/i18n/i18n'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
@@ -39,17 +39,7 @@ import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testne
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
-getUniqueId()
-  .then((userId) => {
-    initializeSentry(SentryAppNameTag.UnitagClaim, userId)
-  })
-  .catch((error) => {
-    logger.error(error, {
-      tags: { file: 'UnitagClaimApp.tsx', function: 'getUniqueId' },
-    })
-  })
-
-const router = sentryCreateHashRouter([
+const router = createHashRouter([
   {
     path: '',
     element: <UnitagAppInner />,
@@ -161,17 +151,19 @@ export default function UnitagClaimApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={getReduxPersistor()}>
-        <ExtensionStatsigProvider appName={SentryAppNameTag.UnitagClaim}>
+        <ExtensionStatsigProvider appName={DatadogAppNameTag.UnitagClaim}>
           <I18nextProvider i18n={i18n}>
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
-                  <LocalizationContextProvider>
-                    <UnitagUpdaterContextProvider>
-                      <TraceUserProperties />
-                      <RouterProvider router={router} />
-                    </UnitagUpdaterContextProvider>
-                  </LocalizationContextProvider>
+                  <BlankUrlProvider>
+                    <LocalizationContextProvider>
+                      <UnitagUpdaterContextProvider>
+                        <TraceUserProperties />
+                        <RouterProvider router={router} />
+                      </UnitagUpdaterContextProvider>
+                    </LocalizationContextProvider>
+                  </BlankUrlProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
             </SharedWalletProvider>

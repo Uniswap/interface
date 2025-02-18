@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { ScrollView as NativeScrollView } from 'react-native'
 import { Message, OpenAIContext } from 'src/features/openai/OpenAIContext'
-import { Button, Flex, Input, ScrollView, SpinningLoader, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Input, ScrollView, SpinningLoader, Text } from 'ui/src'
 import { ArrowUpCircle, UniswapLogo } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -69,9 +69,9 @@ export function AIAssistantScreen(): JSX.Element {
                     </Flex>
                     <Flex row flexWrap="wrap" gap="$spacing4">
                       {message.buttons.map((button, buttonIndex) => (
-                        <Button key={buttonIndex} theme="tertiary" onPress={(): void => {}}>
+                        <DeprecatedButton key={buttonIndex} theme="tertiary" onPress={(): void => {}}>
                           <Text variant="body3">{button.text}</Text>
-                        </Button>
+                        </DeprecatedButton>
                       ))}
                     </Flex>
                   </Flex>
@@ -82,7 +82,7 @@ export function AIAssistantScreen(): JSX.Element {
               backgroundColor="$surface1"
               borderColor="$surface3"
               borderRadius="$rounded20"
-              borderWidth={1}
+              borderWidth="$spacing1"
               mx="$spacing16"
             >
               <Input

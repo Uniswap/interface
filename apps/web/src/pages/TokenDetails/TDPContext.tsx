@@ -1,19 +1,17 @@
 import { QueryResult } from '@apollo/client'
 import { Currency } from '@uniswap/sdk-core'
 import { TDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
-import { InterfaceGqlChain } from 'constants/chains'
-import { Warning } from 'constants/deprecatedTokenSafety'
 import { PortfolioBalance } from 'graphql/data/portfolios'
 import { PropsWithChildren, createContext, useContext } from 'react'
 import { Chain, Exact, TokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export type MultiChainMap = {
   [chain in Chain]?: { address?: string; balance?: PortfolioBalance } | undefined
 }
 
 type BaseTDPContext = {
-  currencyChain: InterfaceGqlChain
+  currencyChain: GqlChainId
   /** Equivalent to `currency.chainId`, typed as `ChainId` instead of `number` */
   currencyChainId: UniverseChainId
 
@@ -29,7 +27,6 @@ type BaseTDPContext = {
   multiChainMap: MultiChainMap
 
   tokenColor?: string
-  warning?: Warning
 }
 /** Token details context with an unresolved currency field */
 export type PendingTDPContext = BaseTDPContext & { currency: undefined }

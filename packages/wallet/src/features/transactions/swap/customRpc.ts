@@ -1,6 +1,6 @@
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'

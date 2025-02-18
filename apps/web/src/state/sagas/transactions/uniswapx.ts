@@ -13,14 +13,14 @@ import { call, put } from 'typed-redux-saga'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { percentFromFloat } from 'utilities/src/format/percent'
+import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 
 interface HandleUniswapXSignatureStepParams extends HandleSignatureStepParams<UniswapXSignatureStep> {
   trade: UniswapXTrade
@@ -35,13 +35,14 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
 
   const analyticsParams: Parameters<typeof formatSwapSignedAnalyticsEventProperties>[0] = {
     trade,
-    allowedSlippage: percentFromFloat(trade.slippageTolerance),
+    allowedSlippage: slippageToleranceToPercent(trade.slippageTolerance),
     fiatValues: {
       amountIn: analytics.token_in_amount_usd,
       amountOut: analytics.token_out_amount_usd,
       feeUsd: analytics.fee_usd,
     },
     portfolioBalanceUsd: analytics.total_balances_usd,
+    trace: { ...analytics },
   }
 
   sendAnalyticsEvent(
@@ -60,13 +61,14 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
     SwapEventName.SWAP_SIGNED,
     formatSwapSignedAnalyticsEventProperties({
       trade,
-      allowedSlippage: percentFromFloat(trade.slippageTolerance),
+      allowedSlippage: slippageToleranceToPercent(trade.slippageTolerance),
       fiatValues: {
         amountIn: analytics.token_in_amount_usd,
         amountOut: analytics.token_out_amount_usd,
         feeUsd: analytics.fee_usd,
       },
       portfolioBalanceUsd: analytics.total_balances_usd,
+      trace: { ...analytics },
     }),
   )
 
@@ -90,8 +92,11 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   yield* put(addPopup({ content: { type: PopupType.Order, orderHash }, key: orderHash }))
 }
 
-const ROUTING_TO_SIGNATURE_TYPE_MAP: { [key in Routing.DUTCH_V2 | Routing.PRIORITY]: SignatureType } = {
+const ROUTING_TO_SIGNATURE_TYPE_MAP: {
+  [key in Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY]: SignatureType
+} = {
   [Routing.DUTCH_V2]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
+  [Routing.DUTCH_V3]: SignatureType.SIGN_UNISWAPX_V3_ORDER,
   [Routing.PRIORITY]: SignatureType.SIGN_PRIORITY_ORDER,
   // [Routing.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
 }
@@ -100,7 +105,7 @@ function getUniswapXSignatureInfo(
   step: UniswapXSignatureStep,
   trade: UniswapXTrade,
   chainId: UniverseChainId,
-  routing: Routing.DUTCH_V2 | Routing.PRIORITY,
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY,
 ): UnfilledUniswapXOrderDetails {
   const swapInfo = getSwapTransactionInfo(trade)
 

@@ -22,7 +22,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-ios/.xcode.env.local
+**/.xcode.env.local
 ios/GoogleService-Info.plist
 
 # Android/IntelliJ
@@ -50,9 +50,12 @@ buck-out/
 !debug.keystore
 
 # Yarn
-.yarn/cache
-.yarn/versions
-.yarn/install-state.gz
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # fastlane
 #
@@ -81,7 +84,10 @@ ui-debug.log
 artifacts/
 
 # CocoaPods
-/ios/Pods/
+**/Pods/
+
+# Android jsbundle
+*.android.bundle
 
 # ccache
 .ccache
@@ -111,7 +117,5 @@ ios/WidgetsCore/MobileSchema/*
 
 # Swift env
 ios/WidgetsCore/Env.swift
+ios/OneSignalNotificationServiceExtension/Env.swift
 
-# Sentry
-ios/sentry.properties
-android/sentry.properties

@@ -2,10 +2,10 @@ import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button/buttons'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
+import { Trans } from 'react-i18next'
 import { Text } from 'rebass'
 import { Field } from 'state/mint/actions'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 export function ConfirmAddModalBottom({
   noLiquidity,

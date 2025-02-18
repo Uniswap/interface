@@ -55,7 +55,9 @@ export function uniswapWalletConnect() {
       if (type === 'display_uri') {
         // Emits custom wallet connect code, parseable by the Uniswap Wallet
         const uniswapWalletUri = `https://uniswap.org/app/wc?uri=${data}`
-        config.emitter.emit('message', { type: 'display_uniswap_uri', data: uniswapWalletUri })
+
+        // Emits custom event to display the Uniswap Wallet URI
+        window.dispatchEvent(new MessageEvent('display_uniswap_uri', { data: uniswapWalletUri }))
 
         // Opens deeplink to Uniswap Wallet if on mobile
         if (isWebIOS || isWebAndroid) {

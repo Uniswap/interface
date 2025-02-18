@@ -18,6 +18,8 @@ describe('PoolProgressIndicator', () => {
   })
 
   it('should throw an error if no steps are provided', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+
     try {
       render(<PoolProgressIndicator steps={[]} />)
     } catch (error) {

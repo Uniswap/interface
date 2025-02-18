@@ -1,10 +1,10 @@
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import ENSAvatarIcon from 'components/Identicon/ENSAvatarIcon'
 import { UnitagProfilePicture } from 'components/UnitagProfilePicture'
-import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'lib/styled-components'
 import { fadeInAnimation } from 'theme/components/FadePresence'
 import { Unicon } from 'ui/src'
+import { useENSAvatar } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
 export enum IdenticonType {
@@ -16,7 +16,7 @@ export enum IdenticonType {
 
 export function useIdenticonType(account?: string) {
   const { unitag, loading: unitagLoading } = useUnitagByAddress(account)
-  const { avatar, loading: ensAvatarLoading } = useENSAvatar(account)
+  const { data: avatar, isLoading: ensAvatarLoading } = useENSAvatar(account)
 
   if (!account) {
     return undefined

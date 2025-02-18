@@ -1,37 +1,22 @@
 import { Placement } from '@popperjs/core'
 import { MouseoverTooltip } from 'components/Tooltip'
-import styled from 'lib/styled-components'
 import { ReactNode, useCallback, useState } from 'react'
+import { Flex, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 
-const QuestionWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0px;
-  width: 18px;
-  height: 18px;
-  border: none;
-  background: none;
-  outline: none;
-  cursor: default;
-  border-radius: 36px;
-  font-size: 12px;
-  border-radius: 12px;
-
-  :hover,
-  :focus {
-    opacity: 0.7;
-  }
-`
-
-const QuestionMark = styled.span`
-  font-size: 14px;
-  margin-left: 8px;
-  align-items: center;
-  color: ${({ theme }) => theme.neutral2};
-  margin-top: 2.5px;
-`
+const InfoIconWrapper = styled(Flex, {
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '$rounded12',
+  width: 18,
+  height: 18,
+  outlineWidth: 0,
+  borderWidth: 0,
+  cursor: 'default',
+  hoverStyle: {
+    opacity: 0.7,
+  },
+})
 
 export default function QuestionHelper({
   text,
@@ -47,14 +32,12 @@ export default function QuestionHelper({
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
   return (
-    <span style={{ marginLeft: 4, display: 'flex', alignItems: 'center' }}>
+    <Flex ml="$spacing4" alignItems="center">
       <MouseoverTooltip text={text} forceShow={show} placement={placement}>
-        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <QuestionMark>
-            <InfoCircleFilled size={size} color="$neutral3" />
-          </QuestionMark>
-        </QuestionWrapper>
+        <InfoIconWrapper onPress={open} onMouseEnter={open} onMouseLeave={close}>
+          <InfoCircleFilled size={size} color="$neutral3" />
+        </InfoIconWrapper>
       </MouseoverTooltip>
-    </span>
+    </Flex>
   )
 }

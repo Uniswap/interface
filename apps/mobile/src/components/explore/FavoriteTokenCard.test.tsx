@@ -11,6 +11,7 @@ import {
   ethToken,
   tokenMarket,
   tokenProject,
+  tokenProjectMarket,
 } from 'uniswap/src/test/fixtures'
 import { queryResolvers } from 'uniswap/src/test/utils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -31,7 +32,16 @@ jest.mock('@react-navigation/native', () => {
 const mockStore = configureMockStore()
 
 const favoriteToken = ethToken({
-  project: tokenProject(),
+  project: {
+    ...tokenProject(),
+    markets: [
+      {
+        ...tokenProjectMarket(),
+        price: amount({ value: 76543.21 }),
+        pricePercentChange24h: amount({ value: 6.54 }),
+      },
+    ],
+  },
   market: tokenMarket({
     price: amount({ value: 12345.67 }),
     pricePercentChange: amount({ value: 4.56 }),
@@ -64,12 +74,12 @@ describe('FavoriteTokenCard', () => {
     it('renders loader', async () => {
       const { queryByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
-      const loader = queryByTestId('loader/favorite')
+      const loaderPrice = queryByTestId('loader/favorite/price')
+      const loaderPriceChange = queryByTestId('loader/favorite/priceChange')
 
-      // loading
-      expect(loader).toBeTruthy()
+      expect(loaderPrice).toBeTruthy()
+      expect(loaderPriceChange).toBeTruthy()
 
-      // loading finished
       await waitFor(() => {
         expect(queryByTestId(touchableId)).toBeTruthy()
       })
@@ -79,8 +89,8 @@ describe('FavoriteTokenCard', () => {
   describe('when token data is available', () => {
     const cases = [
       { test: 'symbol', value: getSymbolDisplayText(favoriteToken.symbol)! },
-      { test: 'price', value: '$12,345.67' },
-      { test: 'relative price change', value: '4.56%' },
+      { test: 'price', value: '$76,543.21' },
+      { test: 'relative price change', value: '6.54%' },
     ]
 
     it.each(cases)('renders correct $test', async ({ value }) => {
@@ -88,6 +98,22 @@ describe('FavoriteTokenCard', () => {
 
       await waitFor(() => {
         expect(queryByText(value)).toBeTruthy()
+      })
+    })
+
+    it('falls back to token price if token project price is not available', async () => {
+      const { resolvers: modifiedResolvers } = queryResolvers({
+        token: () => ({
+          ...favoriteToken,
+          project: { ...favoriteToken.project, markets: [] },
+        }),
+      })
+
+      const { queryByText } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers: modifiedResolvers })
+
+      await waitFor(() => {
+        expect(queryByText('$12,345.67')).toBeTruthy()
+        expect(queryByText('4.56%')).toBeTruthy()
       })
     })
 
@@ -140,7 +166,7 @@ describe('FavoriteTokenCard', () => {
       })
 
       const removeButton = await findByTestId('explore/remove-button')
-      await act(() => {
+      act(() => {
         fireEvent.press(removeButton, ON_PRESS_EVENT_PAYLOAD)
       })
 

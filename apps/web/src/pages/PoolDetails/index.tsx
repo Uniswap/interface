@@ -7,9 +7,8 @@ import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetail
 import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { useChainFromUrlParam } from 'constants/chains'
 import { PoolData, usePoolData } from 'graphql/data/pools/usePoolData'
-import { getSupportedGraphQlChain, gqlToCurrency, unwrapToken } from 'graphql/data/util'
+import { gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { useColor } from 'hooks/useColor'
 import styled, { useTheme } from 'lib/styled-components'
 import NotFound from 'pages/NotFound'
@@ -17,30 +16,30 @@ import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo, useReducer } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { Trans, useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import { BREAKPOINTS, ThemeProvider } from 'theme'
+import { ThemeProvider } from 'theme'
+import { breakpoints } from 'ui/src/theme'
+import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
-import { isAddress } from 'utilities/src/addresses'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
-  padding: 0 16px 52px;
+  padding: 0 20px 52px;
   justify-content: center;
   width: 100%;
-  gap: 40px;
+  gap: 80px;
   align-items: flex-start;
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    padding: 48px 20px;
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    padding: 48px 40px;
   }
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xl}px) {
     flex-direction: column;
     align-items: center;
     gap: 0px;
-  }
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
-    gap: 60px;
   }
 `
 
@@ -49,9 +48,9 @@ const LeftColumn = styled(Column)`
   max-width: 780px;
   overflow: hidden;
   justify-content: flex-start;
+  width: 100%;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
-    width: 100%;
+  @media (max-width: ${breakpoints.xl}px) {
     max-width: unset;
   }
 `
@@ -65,7 +64,7 @@ const RightColumn = styled(Column)`
   gap: 24px;
   width: 360px;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     margin: 44px 0px;
     width: 100%;
     min-width: unset;
@@ -79,13 +78,13 @@ const TokenDetailsWrapper = styled(Column)`
   gap: 24px;
   padding: 20px;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) and (min-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.md}px) {
     flex-direction: row;
     flex-wrap: wrap;
     padding: unset;
   }
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${breakpoints.md}px) {
     padding: unset;
   }
 `
@@ -109,8 +108,10 @@ function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number) {
 }
 
 export default function PoolDetailsPage() {
+  const { t } = useTranslation()
   const { poolAddress } = useParams<{ poolAddress: string }>()
-  const chainInfo = getSupportedGraphQlChain(useChainFromUrlParam())
+  const urlChain = useChainIdFromUrlParam()
+  const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
   const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id)
@@ -126,7 +127,7 @@ export default function PoolDetailsPage() {
     darkMode,
   })
 
-  const isInvalidPool = !poolAddress || !chainInfo || !isAddress(poolAddress)
+  const isInvalidPool = !poolAddress || !chainInfo
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
   const metatagProperties = useMemo(() => {
@@ -148,7 +149,7 @@ export default function PoolDetailsPage() {
   return (
     <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
       <Helmet>
-        <title>{getPoolDetailPageTitle(poolData)}</title>
+        <title>{getPoolDetailPageTitle(t, poolData)}</title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}
@@ -185,6 +186,7 @@ export default function PoolDetailsPage() {
                   token0={token0}
                   token1={token1}
                   feeTier={poolData?.feeTier}
+                  hookAddress={poolData?.hookAddress}
                   protocolVersion={poolData?.protocolVersion}
                   toggleReversed={toggleReversed}
                   loading={loading}
@@ -211,6 +213,7 @@ export default function PoolDetailsPage() {
               token0={token0}
               token1={token1}
               feeTier={poolData?.feeTier}
+              protocolVersion={poolData?.protocolVersion}
               loading={loading}
             />
             <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainInfo?.id} loading={loading} />
@@ -219,12 +222,14 @@ export default function PoolDetailsPage() {
                 <Trans i18nKey="common.links" />
               </TokenDetailsHeader>
               <LinksContainer>
-                <PoolDetailsLink
-                  address={poolAddress}
-                  chainId={chainInfo?.id}
-                  tokens={[token0, token1]}
-                  loading={loading}
-                />
+                {poolData?.protocolVersion !== ProtocolVersion.V4 && (
+                  <PoolDetailsLink
+                    address={poolAddress}
+                    chainId={chainInfo?.id}
+                    tokens={[token0, token1]}
+                    loading={loading}
+                  />
+                )}
                 <PoolDetailsLink
                   address={token0?.address}
                   chainId={chainInfo?.id}

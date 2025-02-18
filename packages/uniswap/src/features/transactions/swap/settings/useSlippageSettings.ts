@@ -3,15 +3,18 @@ import { useTranslation } from 'react-i18next'
 // eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { StyleProp, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useHapticFeedback } from 'ui/src'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
-import { PlusMinusButtonType } from 'ui/src/components/button/PlusMinusButton'
-import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { PlusMinusButtonType } from 'ui/src/components/buttons/PlusMinusButton'
+import {
+  MAX_AUTO_SLIPPAGE_TOLERANCE,
+  MAX_CUSTOM_SLIPPAGE_TOLERANCE,
+  SLIPPAGE_CRITICAL_TOLERANCE,
+} from 'uniswap/src/constants/transactions'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 
 const SLIPPAGE_INCREMENT = 0.1
 
-export function useSlippageSettings(): {
+export function useSlippageSettings(saveOnBlur?: boolean): {
   isEditingSlippage: boolean
   autoSlippageEnabled: boolean
   showSlippageWarning: boolean
@@ -28,8 +31,11 @@ export function useSlippageSettings(): {
 } {
   const { t } = useTranslation()
 
-  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
-  const { customSlippageTolerance, autoSlippageTolerance: derivedAutoSlippageTolerance } = derivedSwapInfo
+  const {
+    customSlippageTolerance,
+    autoSlippageTolerance: derivedAutoSlippageTolerance,
+    updateTransactionSettings,
+  } = useTransactionSettingsContext()
 
   const [isEditingSlippage, setIsEditingSlippage] = useState<boolean>(false)
   const [autoSlippageEnabled, setAutoSlippageEnabled] = useState<boolean>(!customSlippageTolerance)
@@ -37,7 +43,6 @@ export function useSlippageSettings(): {
     customSlippageTolerance?.toFixed(2)?.toString() ?? '',
   )
   const [inputWarning, setInputWarning] = useState<string | undefined>()
-  const { hapticFeedback } = useHapticFeedback()
 
   // Fall back to default slippage if there is no trade specified.
   // Separate from inputSlippageTolerance since autoSlippage updates when the trade quote updates
@@ -65,8 +70,34 @@ export function useSlippageSettings(): {
     setAutoSlippageEnabled(true)
     setInputWarning(undefined)
     setInputSlippageTolerance('')
-    updateSwapForm({ customSlippageTolerance: undefined })
+    updateTransactionSettings({ customSlippageTolerance: undefined })
   }
+
+  const updateInputWarning = useCallback(
+    (parsedValue: number) => {
+      const overMaxTolerance = parsedValue > MAX_CUSTOM_SLIPPAGE_TOLERANCE
+      const overWarningTolerance = parsedValue > autoSlippageTolerance
+      const overCriticalTolerance = parsedValue >= SLIPPAGE_CRITICAL_TOLERANCE
+      const isZero = parsedValue === 0
+
+      if (isZero) {
+        return setInputWarning(t('swap.settings.slippage.warning.min'))
+      } else if (overMaxTolerance) {
+        return setInputWarning(
+          t('swap.settings.slippage.warning.max', {
+            maxSlippageTolerance: MAX_CUSTOM_SLIPPAGE_TOLERANCE,
+          }),
+        )
+      } else if (overCriticalTolerance) {
+        return setInputWarning(t('swap.settings.slippage.warning'))
+      } else if (overWarningTolerance) {
+        return setInputWarning(t('swap.settings.slippage.alert'))
+      }
+
+      return setInputWarning(undefined)
+    },
+    [autoSlippageTolerance, t],
+  )
 
   const onChangeSlippageInput = useCallback(
     async (value: string): Promise<void> => {
@@ -92,19 +123,7 @@ export function useSlippageSettings(): {
       const moreThanTwoDecimals = decimalParts?.[1] && decimalParts?.[1].length > 2
       const isZero = parsedValue === 0
 
-      if (isZero) {
-        setInputSlippageTolerance('')
-        setInputWarning(t('swap.settings.slippage.warning.min'))
-      }
-
-      if (overMaxTolerance) {
-        setInputWarning(
-          t('swap.settings.slippage.warning.max', {
-            maxSlippageTolerance: MAX_CUSTOM_SLIPPAGE_TOLERANCE,
-          }),
-        )
-        setInputSlippageTolerance('')
-      }
+      updateInputWarning(parsedValue)
 
       /* Prevent invalid updates to input value with animation and haptic
        * isZero is intentionally left out here because the user should be able to type "0"
@@ -112,14 +131,16 @@ export function useSlippageSettings(): {
        */
       if (isZero || isInvalidNumber || overMaxTolerance || moreThanOneDecimalSymbol || moreThanTwoDecimals) {
         inputShakeX.value = errorShakeAnimation(inputShakeX)
-        await hapticFeedback.impact()
         return
       }
 
       setInputSlippageTolerance(value)
-      updateSwapForm({ customSlippageTolerance: parsedValue })
+
+      if (!saveOnBlur) {
+        updateTransactionSettings({ customSlippageTolerance: parsedValue })
+      }
     },
-    [hapticFeedback, inputShakeX, updateSwapForm, t],
+    [updateInputWarning, saveOnBlur, inputShakeX, updateTransactionSettings],
   )
 
   const onFocusSlippageInput = useCallback((): void => {
@@ -138,12 +159,15 @@ export function useSlippageSettings(): {
     // Set autoSlippageEnabled to true if input is invalid (ex. '' or '.')
     if (isNaN(parsedInputSlippageTolerance)) {
       setAutoSlippageEnabled(true)
-      updateSwapForm({ customSlippageTolerance: undefined })
+      updateTransactionSettings({ customSlippageTolerance: undefined })
       return
     }
 
     setInputSlippageTolerance(parsedInputSlippageTolerance.toFixed(2))
-  }, [parsedInputSlippageTolerance, updateSwapForm])
+    if (saveOnBlur) {
+      updateTransactionSettings({ customSlippageTolerance: parsedInputSlippageTolerance })
+    }
+  }, [parsedInputSlippageTolerance, updateTransactionSettings, saveOnBlur])
 
   const onPressPlusMinusButton = useCallback(
     (type: PlusMinusButtonType): void => {
@@ -158,16 +182,12 @@ export function useSlippageSettings(): {
           ? Math.min(newSlippage, MAX_CUSTOM_SLIPPAGE_TOLERANCE)
           : Math.max(newSlippage, 0)
 
-      if (constrainedNewSlippage === 0) {
-        setInputWarning(t('swap.settings.slippage.warning.min'))
-      } else {
-        setInputWarning(undefined)
-      }
+      updateInputWarning(constrainedNewSlippage)
 
       setInputSlippageTolerance(constrainedNewSlippage.toFixed(2).toString())
-      updateSwapForm({ customSlippageTolerance: constrainedNewSlippage })
+      updateTransactionSettings({ customSlippageTolerance: constrainedNewSlippage })
     },
-    [autoSlippageEnabled, currentSlippageToleranceNum, updateSwapForm, t],
+    [autoSlippageEnabled, currentSlippageToleranceNum, updateInputWarning, updateTransactionSettings],
   )
 
   return {

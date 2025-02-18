@@ -15,11 +15,12 @@ import {
 import { iconSizes } from 'ui/src/theme'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
+import { CustomRankingType, RankingType } from 'uniswap/src/data/types'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
-import { CustomRankingType, ExploreOrderBy, RankingType } from 'wallet/src/features/wallet/types'
+import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 
 const MIN_MENU_ITEM_WIDTH = 220
 
@@ -119,7 +120,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         pr="$spacing8"
         py="$spacing8"
       >
-        <Text ellipse color="$neutral1" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
+        <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
           {getTokensOrderBySelectedLabel(orderBy, t)}
         </Text>
         <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />

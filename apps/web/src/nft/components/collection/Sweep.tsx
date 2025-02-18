@@ -9,8 +9,8 @@ import { GenieAsset, Markets, isPooledMarket } from 'nft/types'
 import { calcPoolPrice, isInSameSudoSwapPool } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const SweepContainer = styled.div`
@@ -29,7 +29,7 @@ const SweepContainer = styled.div`
 
 const StyledSlider = styled(Slider)`
   cursor: pointer;
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     display: none;
   }
 `
@@ -47,13 +47,13 @@ const SweepRightmostContainer = styled.div`
   align-items: center;
   gap: 8px;
   min-width: 160px;
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     display: none;
   }
 `
 
 const SweepHeaderContainer = styled.div`
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     display: none;
   }
 `
@@ -76,7 +76,7 @@ const InputContainer = styled.input`
   font-weight: 485;
   line-height: 20px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     width: 100%;
   }
 

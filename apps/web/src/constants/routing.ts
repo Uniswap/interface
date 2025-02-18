@@ -16,7 +16,7 @@ import {
   WETH_AVALANCHE,
   WRAPPED_NATIVE_CURRENCY,
 } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]

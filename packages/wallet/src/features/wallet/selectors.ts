@@ -1,8 +1,9 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
+import { RankingType } from 'uniswap/src/data/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Account, ReadOnlyAccount, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { ExploreOrderBy, RankingType } from 'wallet/src/features/wallet/types'
+import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
 const DEFAULT_TOKENS_ORDER_BY = RankingType.Volume
@@ -70,3 +71,11 @@ export const selectAnyAddressHasNotificationsEnabled = createSelector(selectAcco
 
 export const selectWalletSwapProtectionSetting = (state: WalletState): SwapProtectionSetting =>
   state.wallet.settings.swapProtection
+
+export const appRatingProvidedMsSelector = (state: WalletState): number | undefined => state.wallet.appRatingProvidedMs
+export const appRatingPromptedMsSelector = (state: WalletState): number | undefined => state.wallet.appRatingPromptedMs
+export const appRatingFeedbackProvidedMsSelector = (state: WalletState): number | undefined =>
+  state.wallet.appRatingFeedbackProvidedMs
+
+export const selectHasBalanceOrActivityForAddress = (state: WalletState, address: Address): boolean | undefined =>
+  state.wallet.accounts[address]?.hasBalanceOrActivity

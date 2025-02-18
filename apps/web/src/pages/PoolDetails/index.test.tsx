@@ -85,15 +85,6 @@ describe('PoolDetailsPage', () => {
     })
   })
 
-  it('not found page displayed when given invalid pool address', () => {
-    jest.spyOn(Router, 'useParams').mockReturnValue({ poolAddress: '0xFakeAddress', chainName: validParams.chainName })
-    render(<PoolDetails />)
-
-    waitFor(() => {
-      expect(screen.getByText(/not found/i)).toBeInTheDocument()
-    })
-  })
-
   it('not found page displayed when no data is received from backend', () => {
     mocked(usePoolData).mockReturnValue({
       data: undefined,

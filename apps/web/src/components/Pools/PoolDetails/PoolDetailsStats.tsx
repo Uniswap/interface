@@ -5,29 +5,30 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { useMedia } from 'ui/src'
+import { breakpoints } from 'ui/src/theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HeaderText = styled(Text)`
   font-weight: 485;
   font-size: 24px;
   line-height: 36px;
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     width: 100%;
   }
 `
@@ -41,7 +42,7 @@ const StatsWrapper = styled(Column)<{ loaded?: boolean }>`
   z-index: 1;
   margin-top: ${({ loaded }) => loaded && '-24px'};
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     flex-direction: row;
     background: transparent;
     flex-wrap: wrap;
@@ -56,7 +57,7 @@ const StatItemColumn = styled(Column)`
   flex: 1;
   min-width: 180px;
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${breakpoints.md}px) {
     min-width: 150px;
   }
 `
@@ -64,7 +65,7 @@ const StatItemColumn = styled(Column)`
 const PoolBalanceSymbols = styled(Row)`
   justify-content: space-between;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     flex-direction: column;
   }
 `
@@ -75,7 +76,7 @@ const PoolBalanceTokenNamesContainer = styled(Row)`
   line-height: 24px;
   width: max-content;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     font-size: 20px;
     line-height: 28px;
     width: 100%;
@@ -127,15 +128,16 @@ type TokenFullData = Token & {
 }
 
 const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: UniverseChainId }) => {
-  const isScreenSize = useScreenSize()
-  const screenIsNotLarge = isScreenSize['lg']
+  const media = useMedia()
+  const isLargeScreen = !media.xl
   const { formatNumber } = useFormatter()
   const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
   const isNative = unwrappedToken?.address === NATIVE_CHAIN_ID
   const currency = isNative && chainId ? nativeOnChain(chainId) : token.currency
+  const { defaultChainId } = useEnabledChains()
   return (
     <PoolBalanceTokenNamesContainer>
-      {!screenIsNotLarge && <CurrencyLogo currency={currency} size={20} style={{ marginRight: '8px' }} />}
+      {!isLargeScreen && <CurrencyLogo currency={currency} size={20} style={{ marginRight: '8px' }} />}
       {formatNumber({
         input: token.tvl,
         type: NumberType.TokenQuantityStats,
@@ -144,12 +146,9 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
       <StyledLink
         to={getTokenDetailsURL({
           address: unwrappedToken.address,
-          chain: chainIdToBackendChain({ chainId, withFallback: true }),
+          chain: toGraphQLChain(chainId ?? defaultChainId),
         })}
       >
-        {screenIsNotLarge && (
-          <CurrencyLogo currency={currency} size={16} style={{ marginRight: '4px', marginLeft: '4px' }} />
-        )}
         {unwrappedToken.symbol}
       </StyledLink>
     </PoolBalanceTokenNamesContainer>
@@ -164,8 +163,8 @@ interface PoolDetailsStatsProps {
 }
 
 export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: PoolDetailsStatsProps) {
-  const isScreenSize = useScreenSize()
-  const screenIsNotLarge = isScreenSize['lg']
+  const media = useMedia()
+  const isLargeScreen = !media.xl
   const theme = useTheme()
 
   const currency0 = useCurrency(poolData?.token0?.address, chainId)
@@ -223,7 +222,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
           <PoolBalanceTokenNames token={token0} chainId={chainId} />
           <PoolBalanceTokenNames token={token1} chainId={chainId} />
         </PoolBalanceSymbols>
-        {screenIsNotLarge && (
+        {isLargeScreen && (
           <Row data-testid="pool-balance-chart">
             <BalanceChartSide percent={token0.percent} $color={theme.token0} isLeft={true} />
             <BalanceChartSide percent={token1.percent} $color={theme.token1} isLeft={false} />
@@ -259,7 +258,7 @@ const StatsTextContainer = styled(Row)`
   width: 100%;
   align-items: flex-end;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     flex-direction: column;
     gap: 0px;
     align-items: flex-start;
@@ -272,7 +271,7 @@ const StatItemText = styled(Text)`
   font-weight: 485;
   line-height: 44px;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     font-size: 20px;
     line-height: 28px;
   }

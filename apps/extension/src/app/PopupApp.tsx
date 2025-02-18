@@ -4,43 +4,32 @@ import 'src/app/Global.css'
 import { useEffect } from 'react'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { RouterProvider } from 'react-router-dom'
+import { RouterProvider, createHashRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ExtensionStatsigProvider } from 'src/app/StatsigProvider'
 import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
+import { DatadogAppNameTag } from 'src/app/datadog'
 import { DappContextProvider } from 'src/app/features/dapp/DappContext'
-import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
-import { Button, Flex, Image, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Image, Text } from 'ui/src'
 import { CHROME_LOGO, UNISWAP_LOGO } from 'ui/src/assets'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
-import { logger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
-getUniqueId()
-  .then((userId) => {
-    initializeSentry(SentryAppNameTag.Popup, userId)
-  })
-  .catch((error) => {
-    logger.error(error, {
-      tags: { file: 'PopupApp.tsx', function: 'getUniqueId' },
-    })
-  })
-
-const router = sentryCreateHashRouter([
+const router = createHashRouter([
   {
     path: '',
     element: <PopupContent />,
@@ -74,7 +63,7 @@ function PopupContent(): JSX.Element {
               backgroundColor="$surface1"
               borderColor="$surface3"
               borderRadius={6}
-              borderWidth={1}
+              borderWidth="$spacing1"
               bottom={-spacing.spacing4}
               p="$spacing2"
               position="absolute"
@@ -97,7 +86,7 @@ function PopupContent(): JSX.Element {
         <Flex fill />
 
         <Trace logPress element={ElementName.ExtensionPopupOpenButton}>
-          <Button
+          <DeprecatedButton
             theme="primary"
             width="100%"
             onPress={async () => {
@@ -109,7 +98,7 @@ function PopupContent(): JSX.Element {
             }}
           >
             {t('extension.popup.chrome.button')}
-          </Button>
+          </DeprecatedButton>
         </Trace>
       </Flex>
     </Trace>
@@ -127,19 +116,21 @@ export default function PopupApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={getReduxPersistor()}>
-        <ExtensionStatsigProvider appName={SentryAppNameTag.Popup}>
+        <ExtensionStatsigProvider appName={DatadogAppNameTag.Popup}>
           <I18nextProvider i18n={i18n}>
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
-                  <LocalizationContextProvider>
-                    <UnitagUpdaterContextProvider>
-                      <TraceUserProperties />
-                      <DappContextProvider>
-                        <RouterProvider router={router} />
-                      </DappContextProvider>
-                    </UnitagUpdaterContextProvider>
-                  </LocalizationContextProvider>
+                  <BlankUrlProvider>
+                    <LocalizationContextProvider>
+                      <UnitagUpdaterContextProvider>
+                        <TraceUserProperties />
+                        <DappContextProvider>
+                          <RouterProvider router={router} />
+                        </DappContextProvider>
+                      </UnitagUpdaterContextProvider>
+                    </LocalizationContextProvider>
+                  </BlankUrlProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
             </SharedWalletProvider>

@@ -11,9 +11,11 @@ import {
   PriorityOrderTrade,
   UniswapXTrade,
   UniswapXV2Trade,
+  UniswapXV3Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
@@ -73,6 +75,7 @@ export function formatCommonPropertiesForTrade(
   const isUniversalSwapFlow =
     trade instanceof ClassicTrade ||
     trade instanceof UniswapXV2Trade ||
+    trade instanceof UniswapXV3Trade ||
     trade instanceof PriorityOrderTrade ||
     trade instanceof BridgeTrade
 
@@ -135,6 +138,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   txHash,
   timeToSignSinceRequestMs,
   portfolioBalanceUsd,
+  trace,
 }: {
   trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade
   allowedSlippage: Percent
@@ -142,7 +146,9 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   txHash?: string
   timeToSignSinceRequestMs?: number
   portfolioBalanceUsd?: number
+  trace: ITraceContext
 }) => ({
+  ...trace,
   total_balances_usd: portfolioBalanceUsd,
   transaction_hash: txHash,
   token_in_amount_usd: fiatValues.amountIn,

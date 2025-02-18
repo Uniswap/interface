@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`parseRemote parseRemoteActivities should parse NFT Mint 1`] = `
-Object {
+{
   "chainId": 1,
   "descriptor": "1 SomeCollectionName",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "imageUrl",
   ],
   "nonce": 12345,
@@ -19,13 +19,13 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse NFT approval 1`] = `
-Object {
+{
   "chainId": 1,
   "descriptor": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [],
+  "logos": [],
   "nonce": 12345,
   "status": "CONFIRMED",
   "timestamp": 10000,
@@ -35,13 +35,13 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse NFT approval for all 1`] = `
-Object {
+{
   "chainId": 1,
   "descriptor": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [],
+  "logos": [],
   "nonce": 12345,
   "status": "CONFIRMED",
   "timestamp": 10000,
@@ -51,14 +51,14 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse NFT receive 1`] = `
-Object {
+{
   "chainId": 1,
   "currencies": undefined,
   "descriptor": "1 SomeCollectionName from 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "imageUrl",
   ],
   "nonce": 12345,
@@ -71,9 +71,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse eth wrap 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     ExtendedEther {
       "chainId": 1,
       "decimals": 18,
@@ -98,7 +98,7 @@ Object {
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "https://token-icons.s3.amazonaws.com/eth.png",
     "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
   ],
@@ -111,9 +111,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse expired UniswapX order 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     Token {
       "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       "buyFeeBps": undefined,
@@ -140,11 +140,11 @@ Object {
   "descriptor": "100 DAI for 200 WETH",
   "from": "someOfferer",
   "hash": "someHash",
-  "logos": Array [
+  "logos": [
     "someUrl",
     "someUrl",
   ],
-  "offchainOrderDetails": Object {
+  "offchainOrderDetails": {
     "addedTime": 10000,
     "chainId": 1,
     "encodedOrder": undefined,
@@ -153,7 +153,7 @@ Object {
     "offerer": "someOfferer",
     "orderHash": "someHash",
     "status": "expired",
-    "swapInfo": Object {
+    "swapInfo": {
       "expectedOutputCurrencyAmountRaw": "200000000000000000000",
       "inputCurrencyAmountRaw": "100000000000000000000",
       "inputCurrencyId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -175,9 +175,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse filledUniswapX order 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     Token {
       "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       "buyFeeBps": undefined,
@@ -204,11 +204,11 @@ Object {
   "descriptor": "100 DAI for 200 WETH",
   "from": "someOfferer",
   "hash": "someHash",
-  "logos": Array [
+  "logos": [
     "someUrl",
     "someUrl",
   ],
-  "offchainOrderDetails": Object {
+  "offchainOrderDetails": {
     "addedTime": 10000,
     "chainId": 1,
     "encodedOrder": undefined,
@@ -217,7 +217,7 @@ Object {
     "offerer": "someOfferer",
     "orderHash": "someHash",
     "status": "filled",
-    "swapInfo": Object {
+    "swapInfo": {
       "expectedOutputCurrencyAmountRaw": "200000000000000000000",
       "inputCurrencyAmountRaw": "100000000000000000000",
       "inputCurrencyId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -239,9 +239,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse moonpay purchase 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     Token {
       "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       "buyFeeBps": undefined,
@@ -258,7 +258,7 @@ Object {
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "moonpay.svg",
   ],
   "nonce": 12345,
@@ -270,13 +270,13 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse nft purchase 1`] = `
-Object {
+{
   "chainId": 1,
   "descriptor": "1 SomeCollectionName",
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "imageUrl",
   ],
   "nonce": 12345,
@@ -288,9 +288,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse receive 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     Token {
       "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       "buyFeeBps": undefined,
@@ -307,7 +307,7 @@ Object {
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "logoUrl",
   ],
   "nonce": 12345,
@@ -320,9 +320,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse remove liquidity 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     Token {
       "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
       "buyFeeBps": undefined,
@@ -350,7 +350,7 @@ Object {
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "logoUrl",
     "logoUrl",
   ],
@@ -363,9 +363,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse send 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     Token {
       "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       "buyFeeBps": undefined,
@@ -382,7 +382,7 @@ Object {
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "logoUrl",
   ],
   "nonce": 12345,
@@ -395,9 +395,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse swap 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     Token {
       "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       "buyFeeBps": undefined,
@@ -425,7 +425,7 @@ Object {
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "logoUrl",
   ],
   "nonce": 12345,
@@ -437,9 +437,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse swap order 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     Token {
       "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       "buyFeeBps": undefined,
@@ -467,18 +467,18 @@ Object {
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "logoUrl",
   ],
   "nonce": 12345,
-  "offchainOrderDetails": Object {
+  "offchainOrderDetails": {
     "addedTime": 10000,
     "chainId": 1,
     "id": "transactionId",
     "offerer": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
     "orderHash": "someHash",
     "status": "filled",
-    "swapInfo": Object {
+    "swapInfo": {
       "expectedOutputCurrencyAmountRaw": "100000000000000000000",
       "inputCurrencyAmountRaw": "100000000000000000000",
       "inputCurrencyId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -500,9 +500,9 @@ Object {
 `;
 
 exports[`parseRemote parseRemoteActivities should parse token approval 1`] = `
-Object {
+{
   "chainId": 1,
-  "currencies": Array [
+  "currencies": [
     Token {
       "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       "buyFeeBps": undefined,
@@ -519,7 +519,7 @@ Object {
   "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
   "hash": "someHash",
   "isSpam": false,
-  "logos": Array [
+  "logos": [
     "logoUrl",
   ],
   "nonce": 12345,

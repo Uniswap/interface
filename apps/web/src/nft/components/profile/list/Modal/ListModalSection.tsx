@@ -9,10 +9,10 @@ import { useSellAsset } from 'nft/hooks'
 import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
 import { useMemo } from 'react'
 import { Info } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 const SectionHeader = styled(Row)`
   justify-content: space-between;

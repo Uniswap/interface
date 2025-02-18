@@ -16,6 +16,7 @@ import {
   toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
   useQuoteRoutingParams,
+  useQuoteSlippageParams,
   validateTrade,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -36,13 +37,6 @@ export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
 const UNCONNECTED_ADDRESS = '0xAAAA44272dc658575Ba38f43C438447dDED45358'
 
 const DEFAULT_SWAP_VALIDITY_TIME_MINS = 30
-
-export class NoRoutesError extends Error {
-  constructor(message: string = 'No routes found') {
-    super(message)
-    this.name = 'NoRoutesError'
-  }
-}
 
 export function useTrade({
   account,
@@ -72,10 +66,23 @@ export function useTrade({
   const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
   const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
 
-  const routingParams = useQuoteRoutingParams(selectedProtocols, currencyIn?.chainId, currencyOut?.chainId, isUSDQuote)
+  const routingParams = useQuoteRoutingParams({
+    selectedProtocols,
+    tokenInChainId: currencyIn?.chainId,
+    tokenOutChainId: currencyOut?.chainId,
+    isUSDQuote,
+  })
+  const slippageParams = useQuoteSlippageParams({
+    customSlippageTolerance,
+    tokenInChainId: currencyIn?.chainId,
+    tokenOutChainId: currencyOut?.chainId,
+    isUSDQuote,
+  })
 
   const requestTradeType =
     tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.EXACT_INPUT : TradingApiTradeType.EXACT_OUTPUT
+
+  const isZeroAmount = amount?.quotient.toString() === '0'
 
   const skipQuery =
     skip ||
@@ -84,6 +91,7 @@ export function useTrade({
     !tokenInChainId ||
     !tokenOutChainId ||
     !amount ||
+    isZeroAmount ||
     currencyInEqualsCurrencyOut
 
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
@@ -93,35 +101,35 @@ export function useTrade({
       return undefined
     }
     return {
-      type: requestTradeType,
       amount: amount.quotient.toString(),
-      swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
-      tokenInChainId,
-      tokenOutChainId,
-      tokenIn: tokenInAddress,
-      tokenOut: tokenOutAddress,
-      slippageTolerance: customSlippageTolerance,
       gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
-      v4Enabled,
       isUSDQuote,
+      swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
+      tokenIn: tokenInAddress,
+      tokenInChainId,
+      tokenOut: tokenOutAddress,
+      tokenOutChainId,
+      type: requestTradeType,
       urgency: SWAP_GAS_URGENCY_OVERRIDE,
+      v4Enabled,
       ...routingParams,
+      ...slippageParams,
     }
   }, [
     activeAccountAddress,
-    amount,
-    customSlippageTolerance,
     activeGasStrategy,
-    shadowGasStrategies,
+    amount,
+    isUSDQuote,
     requestTradeType,
     routingParams,
+    shadowGasStrategies,
     skipQuery,
+    slippageParams,
     tokenInAddress,
     tokenInChainId,
     tokenOutAddress,
     tokenOutChainId,
     v4Enabled,
-    isUSDQuote,
   ])
 
   /***** Fetch quote from trading API  ******/
@@ -137,6 +145,9 @@ export function useTrade({
     // If the user loses internet connection (or leaves the app and comes back) for longer than this,
     // then we clear stale data and show a big loading spinner in the swap review screen.
     immediateGcTime: internalPollInterval + ONE_SECOND_MS * 15,
+    // We want to retry once, rather than the default, in order to populate response.error / Error UI sooner.
+    // The query will still poll after failed retries, due to staleness.
+    retry: 1,
   })
 
   const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt } = response
@@ -158,7 +169,6 @@ export function useTrade({
     quoteRequestArgs,
     currencyIn,
     currencyOut,
-    customSlippageTolerance,
     skip: !indicativeQuotesEnabled || isUSDQuote,
   })
 
@@ -168,7 +178,7 @@ export function useTrade({
     // Error logging
     // We use DataDog to catch network errors on Mobile
     if (error && (!isMobileApp || !(error instanceof FetchError)) && !isUSDQuote) {
-      logger.error(error, { tags: { file: 'useTrade', function: 'quote' } })
+      logger.error(error, { tags: { file: 'useTrade', function: 'quote' }, extra: { ...quoteRequestArgs } })
     }
 
     if (data && !data.quote) {
@@ -200,7 +210,7 @@ export function useTrade({
         isFetching,
         trade: null,
         indicativeTrade: isLoading ? indicative.trade : undefined,
-        isIndicativeLoading: isDebouncing || indicative.isLoading,
+        isIndicativeLoading: indicative.isLoading,
         error: errorRef.current,
         gasEstimates,
       }
@@ -211,7 +221,6 @@ export function useTrade({
       currencyOut,
       tradeType,
       deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS), // TODO(MOB-3050): set deadline as `quoteRequestArgs.deadline`
-      slippageTolerance: customSlippageTolerance,
       data,
     })
 
@@ -233,7 +242,7 @@ export function useTrade({
         trade: null,
         indicativeTrade: undefined, // We don't want to show the indicative trade if there is no completable trade
         isIndicativeLoading: false,
-        error: new NoRoutesError(),
+        error: new Error('Unable to validate trade'),
         gasEstimates,
       }
     }
@@ -243,7 +252,7 @@ export function useTrade({
       isFetching,
       trade,
       indicativeTrade: indicative.trade,
-      isIndicativeLoading: isDebouncing || indicative.isLoading,
+      isIndicativeLoading: indicative.isLoading,
       error,
       gasEstimates,
     }
@@ -252,7 +261,6 @@ export function useTrade({
     amount,
     currencyIn,
     currencyOut,
-    customSlippageTolerance,
     data,
     error,
     isDebouncing,

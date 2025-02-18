@@ -1,3 +1,4 @@
+import { config } from 'uniswap/src/config'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
@@ -31,7 +32,7 @@ export const uniswapUrls = {
     acrossRoutingInfo: `${helpUrl}/articles/30677918339341`,
     approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
     cexTransferKorea: `${helpUrl}/articles/29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea`,
-    extensionHelp: `${helpUrl}/categories/25219141467405`,
+    extensionHelp: `${helpUrl}/articles/24458735271181`,
     extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,
     howToSwapTokens: `${helpUrl}/articles/8370549680909-How-to-swap-tokens-`,
@@ -39,16 +40,18 @@ export const uniswapUrls = {
     hiddenNFTInfo: `${helpUrl}/articles/14185028445837-How-to-hide-and-unhide-NFTs-in-the-Uniswap-Wallet`,
     impermanentLoss: `${helpUrl}/articles/20904453751693-What-is-Impermanent-Loss`,
     limitsFailure: `${helpUrl}/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute`,
-    limitsInfo: `${helpUrl}/sections/24372644881293`,
+    limitsInfo: `${helpUrl}/articles/24470337797005`,
     limitsNetworkSupport: `${helpUrl}/articles/24470251716237-What-networks-do-limits-support`,
-    lpCollectFees: `${helpUrl}/articles/20901267003789-How-to-collect-fees-from-a-liquidity-pool-on-Uniswap-v3`,
     fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
+    fiatOffRampHelp: `${helpUrl}/articles/34006552258957`,
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
+    mobileWalletHelp: `${helpUrl}/articles/20317941356429`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
-    positionsLearnMore: `${helpUrl}/sections/30998264709645`,
+    poolOutOfSync: `${helpUrl}/articles/25845512413069`,
+    positionsLearnMore: `${helpUrl}/articles/8829880740109`,
     priceImpact: `${helpUrl}/articles/8671539602317-What-is-Price-Impact`,
-    providingLiquidityInfo: `${helpUrl}/articles/30998269400333`,
+    providingLiquidityInfo: `${helpUrl}/sections/20982919867021`,
     recoveryPhraseHowToImport: `${helpUrl}/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
     recoveryPhraseHowToFind: `${helpUrl}/articles/11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet`,
     recoveryPhraseForgotten: `${helpUrl}/articles/11306367118349`,
@@ -59,12 +62,12 @@ export const uniswapUrls = {
     swapSlippage: `${helpUrl}/articles/8643879653261-What-is-Price-Slippage-`,
     tokenWarning: `${helpUrl}/articles/8723118437133-What-are-token-warnings-`,
     transactionFailure: `${helpUrl}/articles/8643975058829-Why-did-my-transaction-fail-`,
-    uniswapXInfo: `${helpUrl}/articles/17515415311501`,
+    uniswapXInfo: `${helpUrl}/articles/17544708791821`,
     uniswapXFailure: `${helpUrl}/articles/17515489874189-Why-can-my-swap-not-be-filled-`,
-    unitagClaimPeriod: `${helpUrl}/articles/24009960408589`,
     unsupportedTokenPolicy: `${helpUrl}/articles/18783694078989-Unsupported-Token-Policy`,
+    addingV4Hooks: `${helpUrl}/articles/32402040565133`,
+    routingSettings: `${helpUrl}/articles/27362707722637`,
     v4HooksInfo: `${helpUrl}/articles/30998263256717`,
-    walletHelp: `${helpUrl}/categories/11301970439565-Uniswap-Wallet`,
     walletSecurityMeasures: `${helpUrl}/articles/28278904584077-Uniswap-Wallet-Security-Measures`,
     wethExplainer: `${helpUrl}/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH`,
   },
@@ -74,19 +77,27 @@ export const uniswapUrls = {
 
   // Core API Urls
   apiOrigin: 'https://api.rigoblock.com',
-  apiBaseUrl: getRbCloudflareApiBaseUrl(),
-  apiBaseUrlV2: `${getRbCloudflareApiBaseUrl()}/v2`,
-  graphQLUrl: `${getRbCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
+  apiBaseUrl: config.apiBaseUrlOverride || getRbCloudflareApiBaseUrl(),
+  apiBaseUrlV2: config.apiBaseUrlV2Override || `${getRbCloudflareApiBaseUrl()}/v2`,
+  graphQLUrl: config.graphUrlOverride || `${getRbCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
 
   // Proxies
-  amplitudeProxyUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,
-  statsigProxyUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Gating)}/v1/statsig-proxy`,
+  amplitudeProxyUrl:
+    config.amplitudeProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,
+  statsigProxyUrl: config.statsigProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Gating)}/v1/statsig-proxy`,
 
   // Feature service URL's
-  unitagsApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
-  scantasticApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
-  fiatOnRampApiUrl: `${getRbCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
-  tradingApiUrl: getRbCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+  unitagsApiUrl: config.apiBaseUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
+  scantasticApiUrl:
+    config.scantasticApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
+  forApiUrl: config.forApiUrlOverride || `${getRbCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
+  tradingApiUrl: config.tradingApiUrlOverride || getRbCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+
+  // Embedded Wallet URL's
+  // Totally fine that these are public
+  evervaultDevUrl: 'https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com',
+  evervaultStagingUrl: 'https://embedded-wallet-staging.app-907329d19a06.enclave.evervault.com',
+  evervaultProductionUrl: 'https://embedded-wallet.app-907329d19a06.enclave.evervault.com',
 
   // API Paths
   trmPath: '/v1/screen',
@@ -120,6 +131,10 @@ export const uniswapUrls = {
   webInterfaceNftItemUrl: `${UNISWAP_WEB_URL}/nfts/asset`,
   webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,
   webInterfaceBuyUrl: `${UNISWAP_WEB_URL}/buy`,
+
+  // Feedback Links
+  walletFeedbackForm:
+    'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform',
 }
 
 function getCloudflarePrefix(flow?: TrafficFlows): string {

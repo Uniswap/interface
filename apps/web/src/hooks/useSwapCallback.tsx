@@ -1,7 +1,6 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import { useSupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useAccount } from 'hooks/useAccount'
 import { PermitSignature } from 'hooks/usePermitAllowance'
@@ -9,18 +8,20 @@ import useSelectChain from 'hooks/useSelectChain'
 import { useUniswapXSwapCallback } from 'hooks/useUniswapXSwapCallback'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useCallback } from 'react'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useAddOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { useTransactionAdder } from 'state/transactions/hooks'
+import { useTransaction, useTransactionAdder } from 'state/transactions/hooks'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'state/transactions/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { currencyId } from 'utils/currencyId'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
@@ -55,7 +56,7 @@ export function useSwapCallback(
   const addOrder = useAddOrder()
   const account = useAccount()
   const supportedConnectedChainId = useSupportedChainId(account.chainId)
-  const { chainId: swapChainId } = useSwapAndLimitContext()
+  const { chainId: swapChainId } = useMultichainContext()
 
   // TODO: use smart router or add universal router protocol support
   const uniswapXSwapCallback = useUniswapXSwapCallback({
@@ -143,4 +144,12 @@ export function useSwapCallback(
     swapChainId,
     trade,
   ])
+}
+
+export function useSwapTransactionStatus(swapResult: SwapResult | undefined): TransactionStatus | undefined {
+  const transaction = useTransaction(swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined)
+  if (!transaction) {
+    return undefined
+  }
+  return transaction.status
 }

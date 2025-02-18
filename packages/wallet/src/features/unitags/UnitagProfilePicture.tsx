@@ -23,7 +23,7 @@ export function UnitagProfilePicture({
       backgroundColor="$surface1"
       borderColor="$surface1"
       borderRadius="$roundedFull"
-      borderWidth={2}
+      borderWidth="$spacing2"
       height={size}
       overflow="hidden"
       shadowColor="$neutral3"

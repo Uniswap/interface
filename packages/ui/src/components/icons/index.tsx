@@ -1,5 +1,6 @@
 export { BackArrow } from './BackArrow'
 export { AnimatedCaretChange, Caret } from './Caret'
+export { CloseIconWithHover } from './CloseIconWithHover'
 export { HeartWithFill } from './HeartWithFill'
 export { OSDynamicCloudIcon } from './OSDynamicCloudIcon'
 export { OnboardingUnicon } from './OnboardingUnicon'

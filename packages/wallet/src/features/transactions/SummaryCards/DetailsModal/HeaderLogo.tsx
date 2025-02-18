@@ -15,6 +15,7 @@ import {
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
+  OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   ReceiveTokenTransactionInfo,
@@ -30,10 +31,12 @@ import {
   SwapTypeTransactionInfo,
   isApproveTransactionInfo,
   isBridgeTransactionInfo,
+  isLocalOffRampTransactionInfo,
   isLocalOnRampTransactionInfo,
   isNFTApproveTransactionInfo,
   isNFTMintTransactionInfo,
   isNFTTradeTransactionInfo,
+  isOffRampSaleTransactionInfo,
   isOnRampPurchaseTransactionInfo,
   isOnRampTransferTransactionInfo,
   isReceiveTokenTransactionInfo,
@@ -103,8 +106,10 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
       return <WrapHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isOnRampPurchaseTransactionInfo(typeInfo) || isOnRampTransferTransactionInfo(typeInfo)) {
       return <OnRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isLocalOnRampTransactionInfo(typeInfo)) {
-      return null // LocalOnRamp transactions are never visible
+    } else if (isOffRampSaleTransactionInfo(typeInfo)) {
+      return <OffRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    } else if (isLocalOnRampTransactionInfo(typeInfo) || isLocalOffRampTransactionInfo(typeInfo)) {
+      return null // Local FOR transactions are never visible
     } else {
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     }
@@ -185,6 +190,15 @@ function OnRampHeaderLogo({
   transactionDetails,
   typeInfo,
 }: SpecificHeaderLogoProps<OnRampPurchaseInfo | OnRampTransferInfo>): JSX.Element {
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(transactionDetails.chainId, typeInfo.destinationTokenAddress))
+  return getLogoWithTxStatus({
+    assetType: AssetType.Currency,
+    currencyInfo,
+    transactionDetails,
+  })
+}
+
+function OffRampHeaderLogo({ transactionDetails, typeInfo }: SpecificHeaderLogoProps<OffRampSaleInfo>): JSX.Element {
   const currencyInfo = useCurrencyInfo(buildCurrencyId(transactionDetails.chainId, typeInfo.destinationTokenAddress))
   return getLogoWithTxStatus({
     assetType: AssetType.Currency,

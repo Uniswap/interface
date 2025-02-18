@@ -62,7 +62,7 @@ const TooltipWarning = (): JSX.Element => {
           backgroundColor="$surface3"
           borderColor="$surface3"
           borderRadius="$rounded16"
-          borderWidth={1}
+          borderWidth="$spacing1"
           p="$spacing12"
         >
           <Text variant="body4">{t('dapp.request.warning.notActive.title')}</Text>

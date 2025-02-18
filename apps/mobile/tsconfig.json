@@ -1,7 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Mobile App",
-  "extends": "tsconfig/expo.json",
+  "extends": "../../config/tsconfig/expo.json",
+  "exclude": [".storybook/storybook.requires.ts"],
   "references": [
     {
       "path": "../../packages/ui"
@@ -18,5 +19,6 @@
   ],
   "compilerOptions": {
     "baseUrl": "./",
+    "types": ["jest"]
   }
 }

@@ -3,12 +3,12 @@ import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { SwapHeaderTabButton } from 'components/swap/styled'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect } from 'react'
+import { Trans } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isIFramed } from 'utils/isIFramed'
 
@@ -34,7 +34,8 @@ export const PathnameToTab: { [key: string]: SwapTab } = {
 }
 
 export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean; syncTabToUrl: boolean }) {
-  const { initialChainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
+  const { initialChainId } = useMultichainContext()
+  const { currentTab, setCurrentTab } = useSwapAndLimitContext()
   const {
     derivedSwapInfo: { trade, autoSlippage },
   } = useSwapContext()

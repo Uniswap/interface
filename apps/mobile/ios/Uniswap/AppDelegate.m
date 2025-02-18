@@ -8,7 +8,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <ReactNativePerformance/ReactNativePerformance.h>
 #import <RCTAppSetupUtils.h>
-#import "RNSplashScreen.h"
+#import <RNBootSplash.h>
 
 @implementation AppDelegate
 
@@ -48,14 +48,18 @@
   
   [super application:application didFinishLaunchingWithOptions:newLaunchOptions];
   
-  [RNSplashScreen show];
-  
   [[RCTI18nUtil sharedInstance] allowRTL:NO];
+  [RNBootSplash initWithStoryboard:@"SplashScreen" rootView:self.window.rootViewController.view];
 
   return YES;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+  return [self bundleURL];
+}
+
+- (NSURL *)bundleURL
 {
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];

@@ -231,11 +231,11 @@ exports[`renders wallet preview card 1`] = `
             },
           ]
         }
-        tintColor="#FC72FF"
         vbHeight={48}
         vbWidth={48}
       >
         <RNSVGGroup
+          color="#FC72FF"
           fill={null}
           propList={
             [

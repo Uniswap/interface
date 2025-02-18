@@ -8,10 +8,12 @@ type InlineCardProps = {
   Icon: GeneratedIcon | ((props: IconProps) => JSX.Element)
   iconColor?: ColorTokens
   color: ColorTokens
+  backgroundColor?: ColorTokens
   description: string | JSX.Element
   iconBackgroundColor?: ColorTokens
-  heading?: string
+  heading?: string | JSX.Element
   CtaButtonIcon?: GeneratedIcon | ((props: IconProps) => JSX.Element)
+  CtaButtonIconColor?: ColorTokens
   onPressCtaButton?: () => void
 }
 
@@ -19,10 +21,12 @@ export function InlineCard({
   Icon,
   iconColor,
   color,
+  backgroundColor = '$surface2',
   iconBackgroundColor,
   heading,
   description,
   CtaButtonIcon,
+  CtaButtonIconColor = '$neutral3',
   onPressCtaButton,
 }: InlineCardProps): JSX.Element {
   const icon = <Icon color={iconColor ?? color} size="$icon.20" />
@@ -43,14 +47,17 @@ export function InlineCard({
       description
     )
 
-  const headingElement = heading ? (
-    <Text color={color} variant="body3">
-      {heading}
-    </Text>
-  ) : null
+  const headingElement =
+    typeof heading === 'string' ? (
+      <Text color={color} variant="body3">
+        {heading}
+      </Text>
+    ) : (
+      heading
+    )
 
   return (
-    <Flex row backgroundColor="$surface3" borderRadius="$rounded16" gap="$spacing12" p="$spacing12">
+    <Flex row backgroundColor={backgroundColor} borderRadius="$rounded16" gap="$spacing12" p="$spacing12">
       <Flex>{iconElement}</Flex>
       <Flex fill grow row gap="$spacing4" justifyContent="space-between">
         <Flex fill grow gap="$spacing2">
@@ -59,7 +66,7 @@ export function InlineCard({
         </Flex>
         {CtaButtonIcon && (
           <TouchableArea onPress={onPressCtaButton}>
-            <CtaButtonIcon color="$neutral3" size="$icon.20" />
+            <CtaButtonIcon color={CtaButtonIconColor} size="$icon.20" />
           </TouchableArea>
         )}
       </Flex>

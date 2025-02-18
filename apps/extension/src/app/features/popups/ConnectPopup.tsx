@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { saveDappConnection } from 'src/app/features/dapp/actions'
-import { Anchor, Button, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
+import { Anchor, DeprecatedButton, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
@@ -56,14 +56,14 @@ export function ConnectPopupContent({
         {showConnectButton ? (
           asPopover ? (
             <Popover.Close onPress={onConnect}>
-              <Button mt="$spacing8" size="small" theme="tertiary">
+              <DeprecatedButton mt="$spacing8" size="small" theme="tertiary">
                 {t('common.button.connect')}
-              </Button>
+              </DeprecatedButton>
             </Popover.Close>
           ) : (
-            <Button mt="$spacing8" size="small" theme="tertiary" onPress={onConnect}>
+            <DeprecatedButton mt="$spacing8" size="small" theme="tertiary" onPress={onConnect}>
               {t('common.button.connect')}
-            </Button>
+            </DeprecatedButton>
           )
         ) : (
           <Link

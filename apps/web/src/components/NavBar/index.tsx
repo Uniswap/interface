@@ -11,24 +11,18 @@ import TestnetModeTooltip from 'components/NavBar/TestnetMode/TestnetModeTooltip
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import Web3Status from 'components/Web3Status'
 import Row from 'components/deprecated/Row'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
-import { useIsExplorePage } from 'hooks/useIsExplorePage'
-import { useIsLandingPage } from 'hooks/useIsLandingPage'
-import { useIsLimitPage } from 'hooks/useIsLimitPage'
-import { useIsNftPage } from 'hooks/useIsNftPage'
-import { useIsSendPage } from 'hooks/useIsSendPage'
-import { useIsSwapPage } from 'hooks/useIsSwapPage'
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import styled, { css } from 'lib/styled-components'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { useOperatedPools } from 'state/pool/hooks'
-import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { useMedia } from 'ui/src'
+import { INTERFACE_NAV_HEIGHT, breakpoints } from 'ui/src/theme'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const Nav = styled.nav`
   padding: 0px 12px;
@@ -42,7 +36,7 @@ const Nav = styled.nav`
 
 const NavItems = css`
   gap: 12px;
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     gap: 4px;
   }
 `
@@ -88,47 +82,52 @@ const NavContents = styled.div`
 `
 
 function useShouldHideChainSelector() {
-  const isNftPage = useIsNftPage()
-  const isLandingPage = useIsLandingPage()
-  const isSendPage = useIsSendPage()
-  const isSwapPage = useIsSwapPage()
-  const isLimitPage = useIsLimitPage()
-  const isExplorePage = useIsExplorePage()
-  const { value: multichainExploreFlagEnabled, isLoading: isMultichainExploreFlagLoading } = useFeatureFlagWithLoading(
-    FeatureFlags.MultichainExplore,
-  )
+  const isNFTPage = useIsPage(PageType.NFTS)
+  const isLandingPage = useIsPage(PageType.LANDING)
+  const isSendPage = useIsPage(PageType.SEND)
+  const isSwapPage = useIsPage(PageType.SWAP)
+  const isLimitPage = useIsPage(PageType.LIMIT)
+  const isExplorePage = useIsPage(PageType.EXPLORE)
+  const isPositionsPage = useIsPage(PageType.POSITIONS)
+  const isMigrateV3Page = useIsPage(PageType.MIGRATE_V3)
+  const isBuyPage = useIsPage(PageType.BUY)
 
-  const baseHiddenPages = isNftPage
-  const multichainHiddenPages = isLandingPage || isSendPage || isSwapPage || isLimitPage || baseHiddenPages
-  const multichainExploreHiddenPages = multichainHiddenPages || isExplorePage
+  const baseHiddenPages = isNFTPage
+  const multichainHiddenPages =
+    isLandingPage ||
+    isSendPage ||
+    isSwapPage ||
+    isLimitPage ||
+    baseHiddenPages ||
+    isExplorePage ||
+    isPositionsPage ||
+    isMigrateV3Page ||
+    isBuyPage
 
-  const hideChainSelector =
-    multichainExploreFlagEnabled || isMultichainExploreFlagLoading
-      ? multichainExploreHiddenPages
-      : multichainHiddenPages
-
-  return hideChainSelector
+  return multichainHiddenPages
 }
 
 export default function Navbar() {
-  const isNftPage = useIsNftPage()
-  const isLandingPage = useIsLandingPage()
+  const isNFTPage = useIsPage(PageType.NFTS)
+  const isLandingPage = useIsPage(PageType.LANDING)
 
   const sellPageState = useProfilePageState((state) => state.state)
-  const isSmallScreen = !useScreenSize()['sm']
-  const isMediumScreen = !useScreenSize()['md']
+  const media = useMedia()
+  const isSmallScreen = media.md
+  const isMediumScreen = media.lg
   const areTabsVisible = useTabsVisible()
-  const collapseSearchBar = !useScreenSize()['lg']
+  const collapseSearchBar = media.xl
   const account = useAccount()
   const NAV_SEARCH_MAX_HEIGHT = 'calc(100vh - 30px)'
 
   const hideChainSelector = useShouldHideChainSelector()
 
   const { isTestnetModeEnabled } = useEnabledChains()
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
-  const { isControl: isSignInExperimentControl, isLoading: isSignInExperimentControlLoading } =
-    useIsAccountCTAExperimentControl()
+  const { isControl, isLoading: isSignInExperimentControlLoading } = useIsAccountCTAExperimentControl()
 
+  const isSignInExperimentControl = !isEmbeddedWalletEnabled && isControl
   const shouldDisplayCreateAccountButton = false
   const operatedPools = useOperatedPools()
   const userIsOperator = operatedPools && operatedPools?.length > 0
@@ -150,7 +149,7 @@ export default function Navbar() {
 
         <Right>
           {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
-          {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
+          {isNFTPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
           {shouldDisplayCreateAccountButton && isSignInExperimentControl && !isSignInExperimentControlLoading && isLandingPage && !isSmallScreen && (
             <NewUserCTAButton />
           )}

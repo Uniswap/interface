@@ -25,6 +25,3 @@ dist-ssr
 *.sw?
 
 .tamagui
-
-# Sentry Config File
-.env.sentry-build-plugin

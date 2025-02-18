@@ -1,74 +1,93 @@
-/* eslint-disable-next-line no-restricted-imports */
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { PositionInfo } from 'components/Liquidity/types'
+import { CurrencyAmount } from '@uniswap/sdk-core'
+import { LoaderButton } from 'components/Button/LoaderButton'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
+import { useModalLiquidityInitialState, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
-import { useEthersSigner } from 'hooks/useEthersSigner'
-import { useMemo } from 'react'
-import { PopupType, addPopup } from 'state/application/reducer'
+import useSelectChain from 'hooks/useSelectChain'
+import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
+import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useCloseModal } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionType } from 'state/transactions/types'
-import { Button, Flex, Text } from 'ui/src'
+import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useClaimLpFeesCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useClaimLpFeesCalldataQuery'
 import { ClaimLPFeesRequest } from 'uniswap/src/data/tradingApi/__generated__'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
+import {
+  CollectFeesTxAndGasInfo,
+  LiquidityTransactionType,
+  isValidLiquidityTxContext,
+} from 'uniswap/src/features/transactions/liquidity/types'
+import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { NumberType } from 'utilities/src/format/types'
-import { currencyId } from 'utils/currencyId'
+import { logger } from 'utilities/src/logger/logger'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
-type ClaimFeeModalProps = {
-  positionInfo: PositionInfo
-  isOpen: boolean
-  onClose: () => void
-  token0Fees?: CurrencyAmount<Currency>
-  token1Fees?: CurrencyAmount<Currency>
-  token0FeesUsd?: CurrencyAmount<Currency>
-  token1FeesUsd?: CurrencyAmount<Currency>
-  collectAsWETH: boolean
-}
-
-export function ClaimFeeModal({
-  positionInfo,
-  onClose,
-  isOpen,
-  token0Fees,
-  token1Fees,
-  token0FeesUsd,
-  token1FeesUsd,
-  collectAsWETH,
-}: ClaimFeeModalProps) {
+// eslint-disable-next-line import/no-unused-modules
+export function ClaimFeeModal() {
   const { t } = useTranslation()
+  const trace = useTrace()
   const { formatCurrencyAmount } = useLocalizationContext()
-  const currencyInfo0 = useCurrencyInfo(token0Fees?.currency)
-  const currencyInfo1 = useCurrencyInfo(token1Fees?.currency)
-  const account = useAccount()
-  const dispatch = useAppDispatch()
-  const addTransaction = useTransactionAdder()
+  const positionInfo = useModalLiquidityInitialState()
+  const account = useAccountMeta()
+  const [currentTransactionStep, setCurrentTransactionStep] = useState<
+    { step: TransactionStep; accepted: boolean } | undefined
+  >()
 
-  const claimLpFeesParams = useMemo((): ClaimLPFeesRequest => {
+  const onClose = useCloseModal(ModalName.ClaimFee)
+  const {
+    feeValue0: token0Fees,
+    feeValue1: token1Fees,
+    fiatFeeValue0: token0FeesUsd,
+    fiatFeeValue1: token1FeesUsd,
+  } = useV3OrV4PositionDerivedInfo(positionInfo)
+
+  const chainId = positionInfo?.currency0Amount.currency.chainId
+
+  const currencyInfo0 = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: token0Fees?.currency,
+    shouldUnwrap: !positionInfo?.collectAsWeth && positionInfo?.version !== ProtocolVersion.V4,
+  })
+  const currencyInfo1 = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: token1Fees?.currency,
+    shouldUnwrap: !positionInfo?.collectAsWeth && positionInfo?.version !== ProtocolVersion.V4,
+  })
+  const dispatch = useAppDispatch()
+
+  const selectChain = useSelectChain()
+  const startChainId = useAccount().chainId
+
+  const claimLpFeesParams = useMemo(() => {
+    if (!positionInfo || !currencyInfo0 || !currencyInfo1) {
+      return undefined
+    }
+
     return {
+      simulateTransaction: true,
       protocol: getProtocolItems(positionInfo.version),
       tokenId: positionInfo.tokenId ? Number(positionInfo.tokenId) : undefined,
-      walletAddress: account.address,
-      chainId: positionInfo.currency0Amount.currency.chainId,
+      walletAddress: account?.address,
+      chainId,
       position: {
         pool: {
-          token0: positionInfo.currency0Amount.currency.isNative
-            ? ZERO_ADDRESS
-            : positionInfo.currency0Amount.currency.address,
-          token1: positionInfo.currency1Amount.currency.isNative
-            ? ZERO_ADDRESS
-            : positionInfo.currency1Amount.currency.address,
+          token0: currencyInfo0.currency.isNative ? ZERO_ADDRESS : currencyInfo0.currency.address,
+          token1: currencyInfo1.currency.isNative ? ZERO_ADDRESS : currencyInfo1.currency.address,
           fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
           tickSpacing: positionInfo?.tickSpacing ? Number(positionInfo?.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
@@ -80,19 +99,65 @@ export function ClaimFeeModal({
         positionInfo.version !== ProtocolVersion.V4 ? token0Fees?.quotient.toString() : undefined,
       expectedTokenOwed1RawAmount:
         positionInfo.version !== ProtocolVersion.V4 ? token1Fees?.quotient.toString() : undefined,
-      collectAsWETH: positionInfo.version !== ProtocolVersion.V4 ? collectAsWETH : undefined,
+      collectAsWETH: positionInfo.version !== ProtocolVersion.V4 ? positionInfo.collectAsWeth : undefined,
+    } satisfies ClaimLPFeesRequest
+  }, [
+    account?.address,
+    chainId,
+    currencyInfo0,
+    currencyInfo1,
+    positionInfo,
+    token0Fees?.quotient,
+    token1Fees?.quotient,
+  ])
+
+  const {
+    data,
+    isLoading: calldataLoading,
+    error,
+    refetch,
+  } = useClaimLpFeesCalldataQuery({
+    params: claimLpFeesParams,
+    enabled: Boolean(claimLpFeesParams),
+  })
+
+  // prevent logging of the empty error object for now since those are burying signals
+  if (error && Object.keys(error).length > 0) {
+    logger.info(
+      'ClaimFeeModal',
+      'ClaimFeeModal',
+      parseErrorMessageTitle(error, { defaultTitle: 'unknown ClaimLPFeesCalldataQuery' }),
+      {
+        error: JSON.stringify(error),
+        claimLpFeesParams: JSON.stringify(claimLpFeesParams),
+      },
+    )
+  }
+
+  const txInfo = useMemo((): CollectFeesTxAndGasInfo | undefined => {
+    const validatedTxRequest = validateTransactionRequest(data?.claim)
+
+    if (!positionInfo || !validatedTxRequest) {
+      return undefined
     }
-  }, [account.address, positionInfo, token0Fees, token1Fees, collectAsWETH])
 
-  const { data } = useClaimLpFeesCalldataQuery({ params: claimLpFeesParams, enabled: isOpen })
-
-  const signer = useEthersSigner()
+    return {
+      type: LiquidityTransactionType.Collect,
+      protocolVersion: positionInfo?.version,
+      action: {
+        type: LiquidityTransactionType.Collect,
+        currency0Amount: token0Fees || CurrencyAmount.fromRawAmount(positionInfo.currency0Amount.currency, 0),
+        currency1Amount: token1Fees || CurrencyAmount.fromRawAmount(positionInfo.currency1Amount.currency, 0),
+      },
+      txRequest: validatedTxRequest,
+    }
+  }, [data?.claim, token0Fees, token1Fees, positionInfo])
 
   return (
-    <Modal name={ModalName.FeeClaim} onClose={onClose} isDismissible isModalOpen={isOpen}>
+    <Modal name={ModalName.ClaimFee} onClose={onClose} isDismissible>
       <Flex gap="$gap16">
         <GetHelpHeader
-          link={uniswapUrls.helpArticleUrls.lpCollectFees}
+          link={uniswapUrls.helpRequestUrl}
           title={t('pool.collectFees')}
           closeModal={onClose}
           closeDataTestId="ClaimFeeModal-close-icon"
@@ -103,7 +168,7 @@ export function ClaimFeeModal({
               <Flex row gap="$gap8" alignItems="center">
                 <CurrencyLogo currencyInfo={currencyInfo0} size={iconSizes.icon24} />
                 <Text variant="body1" color="neutral1">
-                  {token0Fees.currency.symbol}
+                  {currencyInfo0?.currency.symbol}
                 </Text>
               </Flex>
               <Flex row gap="$gap8" alignItems="center">
@@ -121,7 +186,7 @@ export function ClaimFeeModal({
               <Flex row gap="$gap8" alignItems="center">
                 <CurrencyLogo currencyInfo={currencyInfo1} size={iconSizes.icon24} />
                 <Text variant="body1" color="neutral1">
-                  {token1Fees.currency.symbol}
+                  {currencyInfo1?.currency.symbol}
                 </Text>
               </Flex>
               <Flex row gap="$gap8" alignItems="center">
@@ -137,35 +202,53 @@ export function ClaimFeeModal({
             </Flex>
           </Flex>
         )}
-        <Button
-          disabled={!data?.claim}
+        <TradingAPIError errorMessage={getErrorMessageToDisplay({ calldataError: error })} refetch={refetch} />
+        <LoaderButton
+          buttonKey="ClaimFeeModal-button"
+          isDisabled={!data?.claim || Boolean(currentTransactionStep)}
+          loading={calldataLoading || Boolean(currentTransactionStep)}
           onPress={async () => {
-            if (signer && data?.claim) {
-              const response = await signer.sendTransaction(data?.claim)
-
-              addTransaction(response, {
-                type: TransactionType.COLLECT_FEES,
-                currencyId0: currencyId(token0Fees?.currency),
-                currencyId1: currencyId(token1Fees?.currency),
-                expectedCurrencyOwed0: token0Fees?.quotient.toString() || '',
-                expectedCurrencyOwed1: token1Fees?.quotient.toString() || '',
-              })
-
-              onClose()
-              dispatch(
-                addPopup({
-                  content: {
-                    type: PopupType.Transaction,
-                    hash: response.hash,
-                  },
-                  key: response.hash,
-                }),
-              )
+            const isValidTx = isValidLiquidityTxContext(txInfo)
+            if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+              return
             }
+
+            dispatch(
+              liquiditySaga.actions.trigger({
+                selectChain,
+                startChainId,
+                account,
+                liquidityTxContext: txInfo,
+                setCurrentStep: setCurrentTransactionStep,
+                setSteps: () => undefined,
+                onSuccess: () => {
+                  onClose()
+                },
+                onFailure: () => {
+                  setCurrentTransactionStep(undefined)
+                },
+                analytics:
+                  positionInfo && token0Fees?.currency && token1Fees?.currency
+                    ? {
+                        ...getLPBaseAnalyticsProperties({
+                          trace,
+                          poolId: positionInfo.poolId,
+                          currency0: token0Fees?.currency,
+                          currency1: token1Fees?.currency,
+                          currency0AmountUsd: token0FeesUsd,
+                          currency1AmountUsd: token1FeesUsd,
+                          version: positionInfo?.version,
+                        }),
+                      }
+                    : undefined,
+              }),
+            )
           }}
         >
-          <Text variant="buttonLabel2">{t('common.collect.button')}</Text>
-        </Button>
+          <Text variant="buttonLabel1" color="$neutralContrast">
+            {currentTransactionStep ? t('common.confirmWallet') : t('common.collect.button')}
+          </Text>
+        </LoaderButton>
       </Flex>
     </Modal>
   )

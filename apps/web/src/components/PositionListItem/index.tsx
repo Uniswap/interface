@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, Percent, Price } from '@uniswap/sdk-core'
-import { Position as V3Position } from '@uniswap/v3-sdk'
+import { FeeAmount, TICK_SPACINGS, Position as V3Position } from '@uniswap/v3-sdk'
 import { Position as V4Position } from '@uniswap/v4-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import HoverInlineText from 'components/HoverInlineText'
@@ -12,12 +12,12 @@ import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
 import styled from 'lib/styled-components'
 import { useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { MEDIA_WIDTHS } from 'theme'
 import { HideSmall, SmallOnly, ThemedText } from 'theme/components'
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -194,7 +194,7 @@ export default function PositionListItem({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+  const tickAtLimit = useIsTickAtLimit(TICK_SPACINGS[feeAmount as FeeAmount], tickLower, tickUpper)
 
   // prices
   const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { AdaptiveWebModal } from 'ui/src'
-import { WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
+// eslint-disable-next-line no-restricted-imports
+import { AdaptiveWebModal, WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
+import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { isExtension, isInterface } from 'utilities/src/platform'
 
 const ANIMATION_MS = 200
@@ -18,8 +18,17 @@ export function Modal({
   alignment = 'center',
   maxWidth,
   maxHeight,
-  padding = '$spacing12',
+  height,
+  padding,
   bottomAttachment,
+  gap,
+  paddingX,
+  paddingY,
+  analyticsProperties,
+  skipLogImpression,
+  flex,
+  zIndex,
+  isDismissible = true,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -42,46 +51,47 @@ export function Modal({
     return undefined
   }, [isModalOpen])
 
-  const isTopAligned = alignment === 'top'
-  const justifyContent = isTopAligned ? 'flex-start' : undefined
-
   const ModalComponent = bottomAttachment ? WebModalWithBottomAttachment : AdaptiveWebModal
 
   return (
-    <Trace logImpression={isModalOpen} modal={name}>
-      <ModalComponent
-        bottomAttachment={bottomAttachment}
-        shadowOpacity={isExtension ? 0 : undefined}
-        borderWidth={isExtension ? 0 : undefined}
-        adaptToSheet={isInterface}
-        alignment={alignment}
-        backgroundColor={backgroundColor}
-        height={fullScreen ? '100%' : undefined}
-        isOpen={isModalOpen}
-        justifyContent={justifyContent}
-        m="$none"
-        maxWidth={maxWidth}
-        maxHeight={maxHeight}
-        $sm={
-          isInterface
-            ? {
-                '$platform-web': {
-                  height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
-                },
-              }
-            : undefined
-        }
-        p={padding}
-        position={isTopAligned ? 'absolute' : undefined}
-        top={isTopAligned ? '$spacing16' : undefined}
-        onClose={onClose}
-      >
-        {/*
+    <Trace logImpression={skipLogImpression ? false : isModalOpen} modal={name} properties={analyticsProperties}>
+      {(isModalOpen || !fullyClosed) && (
+        <ModalComponent
+          bottomAttachment={bottomAttachment}
+          shadowOpacity={isExtension ? 0 : undefined}
+          borderWidth={isExtension ? 0 : undefined}
+          adaptToSheet={isInterface}
+          alignment={alignment}
+          backgroundColor={backgroundColor}
+          height={height ?? (fullScreen ? '100%' : undefined)}
+          isOpen={isModalOpen}
+          m="$none"
+          maxWidth={maxWidth}
+          maxHeight={maxHeight}
+          gap={gap}
+          zIndex={zIndex}
+          $sm={{
+            p: padding ?? '$spacing12',
+            ...(isInterface && {
+              '$platform-web': {
+                height: height ?? 'max-content',
+                maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
+              },
+            }),
+          }}
+          p={padding ?? '$spacing24'}
+          px={paddingX}
+          py={paddingY}
+          flex={flex}
+          onClose={isDismissible ? onClose : undefined}
+        >
+          {/*
             To keep this consistent with how the `Modal` works on native mobile, we only mount the children when the modal is open.
             It is critical for the modal to work this way or else it breaks existing assumptions throughout our codebase about when components are mounted / unmounted.
           */}
-        {fullyClosed ? null : children}
-      </ModalComponent>
+          {fullyClosed ? null : children}
+        </ModalComponent>
+      )}
     </Trace>
   )
 }

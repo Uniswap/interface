@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
+import { RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // modified from https://usehooks.com/usePrevious/
 export function usePrevious<T>(value: T): T | undefined {
@@ -145,4 +145,23 @@ export function useOnClickOutside<T extends HTMLElement>(
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [node, ignoredNodes])
+}
+
+/**
+ * Hook that returns a stable callback function which always invokes the latest version of the provided callback.
+ * This eliminates the need for a dependency array and helps prevent memory leaks caused by stale closures.
+ *
+ * @typeParam T - A tuple representing the argument types of the callback function.
+ * @typeParam U - The return type of the callback function.
+ * @param {(...args: T) => U} callback - The callback function to be stabilized.
+ * @returns {(...args: T) => U} A stable callback function that always calls the latest version of the provided callback.
+ *
+ * @see {@link https://www.schiener.io/2024-03-03/react-closures}
+ * @see {@link https://github.com/facebook/react/issues/14099}
+ * @see {@link https://github.com/stutrek/use-callback-stable
+ */
+export function useEvent<T extends unknown[], U>(callback: (...args: T) => U): (...args: T) => U {
+  const callbackRef = useRef(callback)
+  callbackRef.current = callback
+  return useCallback((...args: T) => callbackRef.current(...args), [])
 }

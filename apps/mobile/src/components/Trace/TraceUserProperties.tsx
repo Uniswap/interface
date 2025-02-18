@@ -1,23 +1,24 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { NativeModules } from 'react-native'
+import OneSignal from 'react-native-onesignal'
 import { useSelector } from 'react-redux'
-import { useBiometricAppSettings, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
+import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
 import { useIsDarkMode } from 'ui/src'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { isAndroid } from 'utilities/src/platform'
-import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
+import { useAccountBalances } from 'wallet/src/features/accounts/useAccountListData'
 import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userPropertyHooks'
+import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
@@ -41,6 +42,12 @@ export function TraceUserProperties(): null {
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
   const { isTestnetModeEnabled } = useEnabledChains()
+
+  const signerAccountAddresses = useMemo(() => signerAccounts.map((account) => account.address), [signerAccounts])
+  const { totalBalance: signerAccountsTotalBalance } = useAccountBalances({
+    addresses: signerAccountAddresses,
+    fetchPolicy: 'cache-first',
+  })
 
   // Effects must check this and ensure they are setting properties for when analytics is reenabled
   const allowAnalytics = useSelector(selectAllowAnalytics)
@@ -73,12 +80,9 @@ export function TraceUserProperties(): null {
   }, [allowAnalytics, isDarkMode])
 
   useEffect(() => {
-    setUserProperty(MobileUserPropertyName.WalletSignerCount, signerAccounts.length)
-    setUserProperty(
-      MobileUserPropertyName.WalletSignerAccounts,
-      signerAccounts.map((account) => account.address),
-    )
-  }, [allowAnalytics, signerAccounts])
+    setUserProperty(MobileUserPropertyName.WalletSignerCount, signerAccountAddresses.length)
+    setUserProperty(MobileUserPropertyName.WalletSignerAccounts, signerAccountAddresses)
+  }, [allowAnalytics, signerAccountAddresses])
 
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.WalletViewOnlyCount, viewOnlyAccounts.length)
@@ -119,6 +123,10 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.TestnetModeEnabled, isTestnetModeEnabled)
   }, [allowAnalytics, isTestnetModeEnabled])
+
+  useEffect(() => {
+    OneSignal.sendTag(OneSignalUserTagField.AccountIsUnfunded, signerAccountsTotalBalance === 0 ? 'true' : 'false')
+  }, [signerAccountsTotalBalance])
 
   return null
 }

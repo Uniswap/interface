@@ -5,15 +5,15 @@ import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/IndicativeLoadingWrapper'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   useFormattedUniswapXGasFeeInfo,
-  useGasFeeFormattedAmounts,
+  useGasFeeFormattedDisplayAmounts,
   useGasFeeHighRelativeToValue,
 } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isInterface } from 'utilities/src/platform'
 
 export function NetworkFee({
@@ -31,7 +31,7 @@ export function NetworkFee({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const { gasFeeFormatted, gasFeeUSD } = useGasFeeFormattedAmounts({
+  const { gasFeeFormatted, gasFeeUSD } = useGasFeeFormattedDisplayAmounts({
     gasFee,
     chainId,
     placeholder: '-',
@@ -44,7 +44,11 @@ export function NetworkFee({
 
   return (
     <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-      <NetworkFeeWarning gasFeeHighRelativeToValue={gasFeeHighRelativeToValue} uniswapXGasFeeInfo={uniswapXGasFeeInfo}>
+      <NetworkFeeWarning
+        gasFeeHighRelativeToValue={gasFeeHighRelativeToValue}
+        uniswapXGasFeeInfo={uniswapXGasFeeInfo}
+        chainId={chainId}
+      >
         <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body3">
           {t('transaction.networkCost.label')}
         </Text>

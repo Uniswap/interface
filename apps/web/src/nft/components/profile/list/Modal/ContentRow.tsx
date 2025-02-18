@@ -7,9 +7,9 @@ import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { useEffect, useRef } from 'react'
 import { Check, XOctagon } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
-import { Trans } from 'uniswap/src/i18n'
 
 const ContentColumn = styled(Column)<{ failed: boolean }>`
   background-color: ${({ theme, failed }) => failed && opacify(12, theme.critical)};

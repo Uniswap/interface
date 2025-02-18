@@ -1,7 +1,7 @@
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import Tooltip from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import styled from 'lib/styled-components'
 import { ReactNode, useReducer } from 'react'
 import { Info } from 'react-feather'
@@ -107,7 +107,7 @@ export function ActionTile({
       {error && (
         <ErrorContainer>
           <ErrorText>{errorMessage}</ErrorText>
-          <Tooltip show={showTooltip} text={errorTooltip}>
+          <MouseoverTooltip forceShow={showTooltip} text={errorTooltip} disabled>
             <ErrorLink
               onMouseEnter={toggleTooltip}
               onMouseLeave={toggleTooltip}
@@ -116,7 +116,7 @@ export function ActionTile({
             >
               <StyledInfoIcon />
             </ErrorLink>
-          </Tooltip>
+          </MouseoverTooltip>
         </ErrorContainer>
       )}
     </Container>

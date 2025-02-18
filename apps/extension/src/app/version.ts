@@ -14,16 +14,6 @@ export function getStatsigEnvironmentTier(): StatsigEnvironmentTier {
   return StatsigEnvironmentTier.PROD
 }
 
-export function getSentryEnvironment(): SentryEnvironment {
-  if (isDevEnv()) {
-    return SentryEnvironment.DEV
-  }
-  if (isBetaEnv()) {
-    return SentryEnvironment.BETA
-  }
-  return SentryEnvironment.PROD
-}
-
 export function getDatadogEnvironment(): DatadogEnvironment {
   if (isDevEnv()) {
     return DatadogEnvironment.DEV
@@ -38,10 +28,4 @@ enum DatadogEnvironment {
   DEV = 'dev',
   BETA = 'beta',
   PROD = 'prod',
-}
-
-enum SentryEnvironment {
-  DEV = 'development',
-  BETA = 'beta',
-  PROD = 'production',
 }

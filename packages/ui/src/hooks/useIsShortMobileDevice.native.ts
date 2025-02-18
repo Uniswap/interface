@@ -1,14 +1,17 @@
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
-import { isWeb } from 'tamagui'
-import { DEFAULT_BOTTOM_INSET } from 'ui/src/hooks/constants'
+import { DEFAULT_BOTTOM_INSET, MobileDeviceHeight } from 'ui/src/hooks/constants'
 // eslint-disable-next-line no-restricted-imports
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
 
-const IPHONE_MINI_SAFE_AREA_HEIGHT = 812 - DEFAULT_BOTTOM_INSET
-
-// Returns true if the device is smaller or equal than an iPhone SE 2nd/3rd Gen or iPhone 12/13 Mini.
-export const useIsShortMobileDevice = (): boolean => {
+/**
+ * @param deviceHeight - The type of device to check the height against. Defaults to MobileDeviceHeight.iPhone12 (812 height). @default MobileDeviceHeight.iPhone12
+ * @returns true if run on the mobile app and the device height is smaller or equal to the height of the given device type minus the bottom inset.
+ */
+export const useIsShortMobileDevice = (deviceHeight: MobileDeviceHeight = MobileDeviceHeight.iPhone12): boolean => {
   const { height } = useSafeAreaFrame()
   const insets = useDeviceInsets()
-  return !isWeb && height - insets.bottom <= IPHONE_MINI_SAFE_AREA_HEIGHT
+
+  const heightWithoutBottomInsets = deviceHeight - DEFAULT_BOTTOM_INSET
+
+  return height - insets.bottom <= heightWithoutBottomInsets
 }

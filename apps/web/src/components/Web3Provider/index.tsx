@@ -1,10 +1,9 @@
 import { Web3Provider as EthersWeb3Provider, ExternalProvider } from '@ethersproject/providers'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
-import { recentConnectorIdAtom } from 'components/Web3Provider/constants'
+import { UNISWAP_EXTENSION_CONNECTOR_NAME, recentConnectorIdAtom } from 'components/Web3Provider/constants'
 import { queryClient, wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
-import { useIsSupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useAccount } from 'hooks/useAccount'
 import { ConnectionProvider } from 'hooks/useConnect'
@@ -14,6 +13,9 @@ import { useUpdateAtom } from 'jotai/utils'
 import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
+import { CONVERSION_EVENTS } from 'uniswap/src/data/rest/conversionTracking/constants'
+import { useConversionTracking } from 'uniswap/src/data/rest/conversionTracking/useConversionTracking'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -22,23 +24,20 @@ import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { WalletType, getWalletMeta } from 'utils/walletMeta'
-import { WagmiProvider } from 'wagmi'
+import { WagmiProvider, useAccount as useAccountWagmi } from 'wagmi'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <ConnectionProvider>
-          <Updater />
-          {children}
-        </ConnectionProvider>
+        <ConnectionProvider>{children}</ConnectionProvider>
       </QueryClientProvider>
     </WagmiProvider>
   )
 }
 
 /** A component to run hooks under the Web3ReactProvider context. */
-function Updater() {
+export function Web3ProviderUpdater() {
   const account = useAccount()
   const provider = useEthersWeb3Provider()
 
@@ -48,6 +47,7 @@ function Updater() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
   const networkProvider = isSupportedChain && account.chainId ? RPC_PROVIDERS[account.chainId] : undefined
+  const { trackConversions } = useConversionTracking()
 
   const updateRecentConnectorId = useUpdateAtom(recentConnectorIdAtom)
   useEffect(() => {
@@ -71,25 +71,34 @@ function Updater() {
     }
   }, [analyticsContext, networkProvider, provider, shouldTrace])
 
-  const previousConnectedChainId = usePrevious(account.chainId)
+  const accountWagmiChainId = useAccountWagmi().chainId // Direct using wagmi's account hook so we can log analytics for the user's wallet's chainId even if user is connected to unsupported chain
+  const previousConnectedChainId = usePrevious(account.isConnected ? accountWagmiChainId : undefined)
   useEffect(() => {
-    const chainChanged = previousConnectedChainId && previousConnectedChainId !== account.chainId
+    const chainChanged = previousConnectedChainId && previousConnectedChainId !== accountWagmiChainId
     if (chainChanged) {
+      if (account.address && accountWagmiChainId) {
+        // Should also update user property for chain_id when user switches chains
+        setUserProperty(CustomUserProperties.CHAIN_ID, accountWagmiChainId)
+        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, accountWagmiChainId, true)
+      }
+
       sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account.address,
         wallet_type: connector?.name ?? 'Network',
-        chain_id: account.chainId,
+        chain_id: accountWagmiChainId,
         previousConnectedChainId,
         page: currentPage,
       })
     }
-  }, [account.address, account.chainId, connector, currentPage, previousConnectedChainId])
+  }, [account.address, accountWagmiChainId, connector?.name, currentPage, previousConnectedChainId])
 
   // Send analytics events when the active account changes.
   const previousAccount = usePrevious(account.address)
   const [connectedWallets, addConnectedWallet] = useConnectedWallets()
   useEffect(() => {
+    // User properties *must* be set before sending corresponding event properties,
+    // so that the event contains the correct and up-to-date user properties.
     if (account.address && account.address !== previousAccount) {
       const walletName = connector?.name ?? 'Network'
       const amplitudeWalletType = walletTypeToAmplitudeWalletType(connector?.type)
@@ -108,17 +117,15 @@ function Updater() {
           logger.warn('Web3Provider', 'Updater', 'Failed to get client version', error)
         })
 
-      // User properties *must* be set before sending corresponding event properties,
-      // so that the event contains the correct and up-to-date user properties.
+      if (accountWagmiChainId) {
+        setUserProperty(CustomUserProperties.CHAIN_ID, accountWagmiChainId)
+        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, accountWagmiChainId, true)
+      }
+
       setUserProperty(CustomUserProperties.WALLET_ADDRESS, account.address)
       setUserProperty(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account.address, true)
 
       setUserProperty(CustomUserProperties.WALLET_TYPE, amplitudeWalletType)
-
-      if (account.chainId) {
-        setUserProperty(CustomUserProperties.CHAIN_ID, account.chainId)
-        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, account.chainId, true)
-      }
 
       const walletConnectedProperties = {
         result: WalletConnectionResult.SUCCEEDED,
@@ -157,17 +164,24 @@ function Updater() {
         sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, walletConnectedProperties)
       }
 
+      if (walletName === UNISWAP_EXTENSION_CONNECTOR_NAME) {
+        trackConversions(CONVERSION_EVENTS.Extension.Downloaded)
+      }
+
+      trackConversions(CONVERSION_EVENTS.Web.WalletConnected)
+
       addConnectedWallet({ account: account.address, walletName })
     }
   }, [
     account.address,
+    accountWagmiChainId,
     addConnectedWallet,
-    currentPage,
-    account.chainId,
     connectedWallets,
     connector,
+    currentPage,
     previousAccount,
     provider,
+    trackConversions,
   ])
 
   return null

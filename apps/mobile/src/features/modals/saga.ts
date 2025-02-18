@@ -1,8 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { setTag } from '@sentry/react-native'
 import { closeModal, CloseModalParams, openModal, OpenModalParams } from 'src/features/modals/modalSlice'
 import { takeEvery } from 'typed-redux-saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { setAttributesToDatadog } from 'utilities/src/logger/Datadog'
 
 export function* modalWatcher() {
   yield* takeEvery(openModal, handleOpenModalAction)
@@ -11,12 +11,12 @@ export function* modalWatcher() {
 
 function handleOpenModalAction(action: PayloadAction<OpenModalParams>) {
   if (action.payload.name === ModalName.Swap) {
-    setTag('in_swap', true)
+    setAttributesToDatadog({ in_swap: true }).catch(() => undefined)
   }
 }
 
 function handleCloseModalAction(action: PayloadAction<CloseModalParams>) {
   if (action.payload.name === ModalName.Swap) {
-    setTag('in_swap', false)
+    setAttributesToDatadog({ in_swap: false }).catch(() => undefined)
   }
 }

@@ -6,11 +6,23 @@ import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 
 export type FeeData = {
   feeAmount: number
   tickSpacing: number
 }
+
+const DYNAMIC_FEE_AMOUNT = 8388608
+
+export type DynamicFeeData = FeeData & {
+  feeAmount: typeof DYNAMIC_FEE_AMOUNT
+}
+
+export const DYNAMIC_FEE_DATA = {
+  feeAmount: DYNAMIC_FEE_AMOUNT,
+  tickSpacing: 60,
+} as const satisfies DynamicFeeData
 
 export enum PositionFlowStep {
   SELECT_TOKENS_AND_FEE_TIER,
@@ -23,12 +35,14 @@ export interface PositionState {
   currencyInputs: { [field in PositionField]?: Currency }
   fee: FeeData
   hook?: string
+  userApprovedHook?: string // address of approved hook. If different from `hook`, user needs to reapprove the new hook
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
   currencyInputs: {},
   fee: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] },
   hook: undefined,
+  userApprovedHook: undefined,
   protocolVersion: ProtocolVersion.V4,
 }
 
@@ -37,6 +51,10 @@ type BaseCreatePositionInfo = {
   protocolVersion: ProtocolVersion
   currencies: [OptionalCurrency, OptionalCurrency]
   creatingPoolOrPair?: boolean
+  poolId?: string
+  poolOrPairLoading?: boolean
+  isPoolOutOfSync: boolean
+  refetchPoolData: () => void
 }
 
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {
@@ -56,7 +74,13 @@ export type CreateV2PositionInfo = BaseCreatePositionInfo & {
 
 export type CreatePositionInfo = CreateV4PositionInfo | CreateV3PositionInfo | CreateV2PositionInfo
 
+export interface DynamicFeeTierSpeedbumpData {
+  open: boolean
+  wishFeeData: FeeData
+}
+
 export type CreatePositionContextType = {
+  reset: () => void
   step: PositionFlowStep
   setStep: Dispatch<SetStateAction<PositionFlowStep>>
   positionState: PositionState
@@ -64,8 +88,10 @@ export type CreatePositionContextType = {
   derivedPositionInfo: CreatePositionInfo
   feeTierSearchModalOpen: boolean
   setFeeTierSearchModalOpen: Dispatch<SetStateAction<boolean>>
-  createPoolInfoDismissed: boolean
-  setCreatePoolInfoDismissed: Dispatch<SetStateAction<boolean>>
+  dynamicFeeTierSpeedbumpData: DynamicFeeTierSpeedbumpData
+  setDynamicFeeTierSpeedbumpData: Dispatch<SetStateAction<DynamicFeeTierSpeedbumpData>>
+  currentTransactionStep?: { step: TransactionStep; accepted: boolean }
+  setCurrentTransactionStep: Dispatch<SetStateAction<{ step: TransactionStep; accepted: boolean } | undefined>>
 }
 
 export interface PriceRangeState {
@@ -74,7 +100,6 @@ export interface PriceRangeState {
   // When these are undefined, LiquidityChartRangeInput will calculate and set reasonable default values.
   minPrice?: string
   maxPrice?: string
-  initialPriceInverted: boolean
   initialPrice: string
 }
 
@@ -83,6 +108,7 @@ type BasePriceRangeInfo = {
   deposit0Disabled: boolean
   deposit1Disabled: boolean
   price?: Price<Currency, Currency>
+  invertPrice: boolean
 }
 
 export type OptionalCurrencyPrice = Price<Currency, Currency> | undefined
@@ -92,7 +118,6 @@ type BasePoolPriceRangeInfo = {
   ticksAtLimit: [boolean, boolean]
   tickSpaceLimits: [OptionalNumber, OptionalNumber]
   isSorted: boolean
-  invertPrice: boolean
   invalidPrice: boolean
   invalidRange: boolean
   outOfRange: boolean
@@ -111,7 +136,6 @@ export type V3PriceRangeInfo = BasePriceRangeInfo &
   BasePoolPriceRangeInfo & {
     protocolVersion: ProtocolVersion.V3
     mockPool?: V3Pool
-    isTaxed?: boolean
   }
 
 export type V2PriceRangeInfo = BasePriceRangeInfo & {
@@ -122,6 +146,7 @@ export type V2PriceRangeInfo = BasePriceRangeInfo & {
 export type PriceRangeInfo = V4PriceRangeInfo | V3PriceRangeInfo | V2PriceRangeInfo
 
 export type PriceRangeContextType = {
+  reset: () => void
   priceRangeState: PriceRangeState
   setPriceRangeState: Dispatch<SetStateAction<PriceRangeState>>
   derivedPriceRangeInfo: PriceRangeInfo

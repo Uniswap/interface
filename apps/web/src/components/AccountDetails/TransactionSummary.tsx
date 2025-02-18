@@ -1,8 +1,8 @@
 import { Fraction, TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useCurrency, useToken } from 'hooks/Tokens'
-import useENSName from 'hooks/useENSName'
 import JSBI from 'jsbi'
+import { Trans } from 'react-i18next'
 import { VoteOption } from 'state/governance/types'
 import {
   AddLiquidityV2PoolTransactionInfo,
@@ -27,7 +27,7 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { Trans } from 'uniswap/src/i18n'
+import { useENSName } from 'uniswap/src/features/ens/api'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
   return new Fraction(amountRaw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(sigFigs)
@@ -72,7 +72,7 @@ function FormattedCurrencyAmountManaged({
 }
 
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
-  const { ENSName } = useENSName()
+  const { data: ENSName } = useENSName()
   const username = ENSName ?? recipient
   return typeof uniAmountRaw === 'string' ? (
     <Trans
@@ -141,7 +141,7 @@ function ExecuteSummary({ info }: { info: ExecuteTransactionInfo }) {
 }
 
 function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInfo }) {
-  const { ENSName } = useENSName(delegatee)
+  const { data: ENSName } = useENSName(delegatee)
   const username = ENSName ?? delegatee
   return <Trans i18nKey="account.transactionSummary.delegateSummary" values={{ username }} />
 }
@@ -236,9 +236,9 @@ function CreateV3PoolSummary({ info: { quoteCurrencyId, baseCurrencyId } }: { in
   )
 }
 
-function CollectFeesSummary({ info: { currencyId0, currencyId1 } }: { info: CollectFeesTransactionInfo }) {
-  const currency0 = useCurrency(currencyId0)
-  const currency1 = useCurrency(currencyId1)
+function CollectFeesSummary({ info: { token0CurrencyId, token1CurrencyId } }: { info: CollectFeesTransactionInfo }) {
+  const currency0 = useCurrency(token0CurrencyId)
+  const currency1 = useCurrency(token1CurrencyId)
 
   return (
     <Trans
@@ -438,6 +438,7 @@ function DecreaseLiquiditySummary({ info }: { info: DecreaseLiquidityTransaction
   )
 }
 
+/** @deprecated this is only used in the legacy LP flows. */
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
@@ -473,7 +474,7 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
     case TransactionType.CREATE_V3_POOL:
       return <CreateV3PoolSummary info={info} />
 
-    case TransactionType.MIGRATE_LIQUIDITY_V3:
+    case TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3:
       return <MigrateLiquidityToV3Summary info={info} />
 
     case TransactionType.COLLECT_FEES:
@@ -500,6 +501,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
     case TransactionType.DECREASE_LIQUIDITY:
       return <DecreaseLiquiditySummary info={info} />
 
+    case TransactionType.CREATE_POSITION:
+    case TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4:
     case TransactionType.BUY:
       return <BuySmartPoolSummary />
 
@@ -516,6 +519,6 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
       return <SetSmartPoolValueSummary />
 
     case TransactionType.BRIDGE:
-      return <></> // Bridging was launched after this code became deprecated
+      return <></> // These features were launched after this code became deprecated
   }
 }

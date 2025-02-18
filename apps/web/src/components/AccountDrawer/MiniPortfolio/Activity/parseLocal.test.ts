@@ -26,7 +26,7 @@ import {
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useFormatter } from 'utils/formatNumbers'
 
 function mockSwapInfo(
@@ -211,16 +211,16 @@ jest.mock('../../../../state/transactions/hooks', () => {
         ...mockMultiStatus(
           {
             type: MockTxType.COLLECT_FEES,
-            currencyId0: MockUSDC_MAINNET.address,
-            currencyId1: MockDAI.address,
-            expectedCurrencyOwed0: mockCurrencyAmountRawUSDC,
-            expectedCurrencyOwed1: mockCurrencyAmountRaw,
+            token0CurrencyId: MockUSDC_MAINNET.address,
+            token1CurrencyId: MockDAI.address,
+            token0CurrencyAmountRaw: mockCurrencyAmountRawUSDC,
+            token1CurrencyAmountRaw: mockCurrencyAmountRaw,
           },
           '0xcollect_fees',
         ),
         ...mockMultiStatus(
           {
-            type: MockTxType.MIGRATE_LIQUIDITY_V3,
+            type: MockTxType.MIGRATE_LIQUIDITY_V2_TO_V3,
             baseCurrencyId: MockUSDC_MAINNET.address,
             quoteCurrencyId: MockDAI.address,
             isFork: false,

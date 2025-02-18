@@ -5,6 +5,7 @@ export interface UniversalImageStyle {
   backgroundColor?: string
   borderRadius?: number
   verticalAlign?: FlexProps['verticalAlign']
+  zIndex?: number
 }
 
 export enum UniversalImageResizeMode {

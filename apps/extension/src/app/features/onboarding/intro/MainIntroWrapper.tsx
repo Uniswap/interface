@@ -17,7 +17,7 @@ export function MainIntroWrapper({
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderRadius="$rounded32"
-        borderWidth={1}
+        borderWidth="$spacing1"
         overflow="hidden"
         shadowColor="$shadowColor"
         shadowOpacity={0.1}

@@ -6,11 +6,11 @@ import { useDispatch } from 'react-redux'
 import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { WalletConnectSession, removeSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -74,12 +74,19 @@ export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNet
           </Text>
         </Flex>
         <Flex row>
-          <Flex grow borderColor="$surface3" borderRadius="$rounded12" borderWidth={1} gap="$spacing16" p="$spacing16">
+          <Flex
+            grow
+            borderColor="$surface3"
+            borderRadius="$rounded12"
+            borderWidth="$spacing1"
+            gap="$spacing16"
+            p="$spacing16"
+          >
             {session.chains.map((chainId) => (
               <Flex key={chainId} row alignItems="center" justifyContent="space-between">
                 <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
                 <Text color="$neutral1" numberOfLines={1} variant="body1">
-                  {UNIVERSE_CHAIN_INFO[chainId].label}
+                  {getChainLabel(chainId)}
                 </Text>
                 <Flex centered height={iconSizes.icon24} width={iconSizes.icon24}>
                   <Flex
@@ -94,12 +101,12 @@ export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNet
           </Flex>
         </Flex>
         <Flex centered row gap="$spacing16">
-          <Button fill theme="secondary" onPress={onClose}>
+          <DeprecatedButton fill theme="secondary" onPress={onClose}>
             {t('common.button.close')}
-          </Button>
-          <Button fill theme="detrimental" onPress={onDisconnect}>
+          </DeprecatedButton>
+          <DeprecatedButton fill theme="detrimental" onPress={onDisconnect}>
             {t('common.button.disconnect')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

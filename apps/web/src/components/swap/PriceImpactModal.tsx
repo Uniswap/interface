@@ -1,9 +1,10 @@
 import { Percent } from '@uniswap/sdk-core'
-import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { Button, Flex, Text } from 'ui/src'
+import { Trans } from 'react-i18next'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { Trans } from 'uniswap/src/i18n'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useFormatter } from 'utils/formatNumbers'
 
 interface PriceImpactModalProps {
@@ -17,7 +18,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
   const impact = `${formatPercent(priceImpact)}`
 
   return (
-    <Modal isOpen onDismiss={onDismiss}>
+    <Modal name={ModalName.PriceImpact} isModalOpen onClose={onDismiss} padding={0}>
       <Flex width="100%" px="$spacing24" py="$spacing16" rowGap="$spacing24" backgroundColor="$surface1">
         <GetHelpHeader closeModal={onDismiss} />
         <Flex rowGap="$spacing16" alignItems="center">
@@ -26,7 +27,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
           </Flex>
           <Flex alignItems="center" rowGap="$spacing8">
             <Text variant="heading3">
-              <Trans i18nKey="token.safetyLevel.strong.header" />
+              <Trans i18nKey="common.warning" />
             </Text>
             <Text variant="body1" color="$neutral2" textAlign="center">
               <Trans
@@ -43,7 +44,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
           </Flex>
         </Flex>
         <Flex row columnGap="$spacing8">
-          <Button // TODO: Replace with spore version when spore variant of secondary buttton is implemented
+          <DeprecatedButton // TODO: Replace with spore version when spore variant of secondary buttton is implemented
             flex={1}
             px={12}
             py={8}
@@ -62,8 +63,8 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
             <Text variant="buttonLabel2">
               <Trans i18nKey="common.button.cancel" />
             </Text>
-          </Button>
-          <Button // TODO: Replace with spore version when spore variant of critical buttton is implemented
+          </DeprecatedButton>
+          <DeprecatedButton // TODO: Replace with spore version when spore variant of critical buttton is implemented
             flex={1}
             px={12}
             py={8}
@@ -76,7 +77,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
             <Text variant="buttonLabel2">
               <Trans i18nKey="common.button.continue" />
             </Text>
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

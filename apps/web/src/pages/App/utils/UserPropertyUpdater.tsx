@@ -3,12 +3,14 @@ import { useEffect } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { useRouterPreference } from 'state/user/hooks'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { Metric, getCLS, getFCP, getFID, getLCP } from 'web-vitals'
 
 export function UserPropertyUpdater() {
   const isDarkMode = useIsDarkMode()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const [routerPreference] = useRouterPreference()
   const rehydrated = useAppSelector((state) => state._persist.rehydrated)
@@ -62,5 +64,10 @@ export function UserPropertyUpdater() {
     }
     setUserProperty(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
   }, [routerPreference, rehydrated])
+
+  useEffect(() => {
+    setUserProperty(CustomUserProperties.TESTNET_MODE_ENABLED, isTestnetModeEnabled)
+  }, [isTestnetModeEnabled])
+
   return null
 }

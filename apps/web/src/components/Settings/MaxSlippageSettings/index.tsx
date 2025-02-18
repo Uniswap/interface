@@ -5,11 +5,11 @@ import { Input, InputContainer } from 'components/Settings/Input'
 import Row, { RowBetween } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
+import { Trans } from 'react-i18next'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { CautionTriangle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 enum SlippageError {

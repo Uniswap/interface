@@ -1,12 +1,13 @@
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
+import { useTranslation } from 'react-i18next'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { Button, Text, styled } from 'ui/src'
+import { DeprecatedButton, Text, styled } from 'ui/src'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
-import { useTranslation } from 'uniswap/src/i18n'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useExperimentGroupName, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-const StyledButton = styled(Button, {
+const StyledButton = styled(DeprecatedButton, {
   height: '40px',
   borderRadius: '$rounded20',
   borderWidth: '$spacing1',
@@ -38,9 +39,13 @@ export function NewUserCTAButton() {
   const openModal = useOpenModal({ name: ApplicationModal.GET_THE_APP })
 
   const { isControl: isSignInExperimentControl } = useIsAccountCTAExperimentControl()
-  const isSignUp = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isSignUp =
+    useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp ||
+    isEmbeddedWalletEnabled
   const isCreateAccount =
-    useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount
+    useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount &&
+    !isEmbeddedWalletEnabled
 
   return (
     <StyledButton isSignInExperimentControl={isSignInExperimentControl} onPress={openModal}>

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { AnimatePresence, Button, Flex, FlexProps, Input, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatePresence, DeprecatedButton, Flex, FlexProps, Input, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
@@ -12,6 +12,7 @@ import { fonts, imageSizes, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   OnboardingScreens,
@@ -19,14 +20,13 @@ import {
   UnitagEntryPoint,
   UnitagScreens,
 } from 'uniswap/src/types/screens/mobile'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { UnitagInfoModal } from 'wallet/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
 import { getYourNameString } from 'wallet/src/features/unitags/utils'
 
@@ -74,6 +74,7 @@ export function ClaimUnitagContent({
   const [shouldBlockContinue, setShouldBlockContinue] = useState(false)
   const [unitagToCheck, setUnitagToCheck] = useState<string | undefined>(undefined)
   const [unitagNameinputMinWidth, setUnitagNameInputMinWidth] = useState<number | undefined>(undefined)
+  const [addressError, setAddressError] = useState<string>()
 
   const addressViewOpacity = useSharedValue(1)
   const unitagInputContainerTranslateY = useSharedValue(0)
@@ -145,7 +146,7 @@ export function ClaimUnitagContent({
         onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
-      setUnitagInputValue(text?.trim().toLocaleLowerCase())
+      setUnitagInputValue(text?.trim())
     },
     [inputPlaceholder, onSetFontSize],
   )
@@ -157,14 +158,6 @@ export function ClaimUnitagContent({
 
   const navigateWithAnimation = useCallback(
     (unitag: string) => {
-      if (entryPoint === OnboardingScreens.Landing && !unitagAddress) {
-        const err = new Error('unitagAddress should always be defined')
-        logger.error(err, {
-          tags: { file: 'ClaimUnitagScreen', function: 'navigateWithAnimation' },
-        })
-        throw err
-      }
-
       // Log claim display and action taken
       sendAnalyticsEvent(UnitagEventName.UnitagClaimAvailabilityDisplayed, {
         result: 'available',
@@ -208,8 +201,16 @@ export function ClaimUnitagContent({
   useEffect(() => {
     if (isCheckingUnitag && !!unitagToCheck && !loadingUnitagErrorCheck) {
       setIsCheckingUnitag(false)
-      // If unitagError is defined, it's rendered in UI
-      if (!canClaimUnitagNameError) {
+      // If unitagError or addressError is defined, it's rendered in UI
+      if (entryPoint === OnboardingScreens.Landing && !unitagAddress) {
+        const err = new Error('unitagAddress should always be defined')
+        logger.error(err, {
+          tags: { file: 'ClaimUnitagScreen', function: 'navigateWithAnimation' },
+        })
+        setAddressError(t('unitags.claim.error.default'))
+        setShouldBlockContinue(true)
+        return
+      } else if (!canClaimUnitagNameError) {
         navigateWithAnimation(unitagToCheck)
       } else {
         sendAnalyticsEvent(UnitagEventName.UnitagClaimAvailabilityDisplayed, {
@@ -218,7 +219,16 @@ export function ClaimUnitagContent({
         setShouldBlockContinue(true)
       }
     }
-  }, [canClaimUnitagNameError, loadingUnitagErrorCheck, unitagToCheck, isCheckingUnitag, navigateWithAnimation])
+  }, [
+    canClaimUnitagNameError,
+    loadingUnitagErrorCheck,
+    unitagToCheck,
+    isCheckingUnitag,
+    navigateWithAnimation,
+    entryPoint,
+    unitagAddress,
+    t,
+  ])
 
   const onPressContinue = (): void => {
     if (unitagInputValue !== unitagToCheck) {
@@ -291,7 +301,7 @@ export function ClaimUnitagContent({
                   blurOnSubmit={!isExtension}
                   autoCapitalize="none"
                   autoCorrect={false}
-                  borderWidth={0}
+                  borderWidth="$none"
                   borderRadius={isExtension ? 0 : undefined}
                   fontFamily="$heading"
                   fontSize={isExtension ? fonts.subheading1.fontSize : fontSize}
@@ -351,19 +361,19 @@ export function ClaimUnitagContent({
 
         <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight} mt={unitagAddress ? undefined : '$spacing24'}>
           <Text color="$statusCritical" textAlign="center" variant="body2">
-            {canClaimUnitagNameError}
+            {canClaimUnitagNameError || addressError}
           </Text>
         </Flex>
       </Flex>
       <Flex gap="$spacing24" justifyContent="flex-end">
-        <Button
-          disabled={
+        <DeprecatedButton
+          isDisabled={
             (entryPoint === OnboardingScreens.Landing && !unitagAddress) ||
             !unitagInputValue ||
             isCheckingUnitag ||
             shouldBlockContinue
           }
-          size="medium"
+          size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
           testID={TestID.Continue}
           theme="primary"
           onPress={onPressContinue}
@@ -375,7 +385,7 @@ export function ClaimUnitagContent({
           ) : (
             t('common.button.continue')
           )}
-        </Button>
+        </DeprecatedButton>
       </Flex>
       <UnitagInfoModal
         isOpen={showInfoModal}

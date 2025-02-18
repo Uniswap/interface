@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 export type CurrencyKey = string
 
@@ -20,7 +20,7 @@ export function currencyKeyFromGraphQL(contract: {
   chain: Chain
   standard?: TokenStandard
 }): CurrencyKey {
-  const chainId = supportedChainIdFromGQLChain(contract.chain)
+  const chainId = fromGraphQLChain(contract.chain)
   const address = contract.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : contract.address
   if (!address) {
     throw new Error('Non-native token missing address')

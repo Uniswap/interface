@@ -244,6 +244,9 @@ exports[`EmptyWalletContent.tsx matches base snapshot 1`] = `
             </button>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

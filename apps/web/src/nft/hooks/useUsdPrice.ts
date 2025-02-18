@@ -3,7 +3,7 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { GenieAsset } from 'nft/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export const useNativeUsdPrice = (chainId: number = UniverseChainId.Mainnet): number => {
   const nativeCurrency = useNativeCurrency(chainId)

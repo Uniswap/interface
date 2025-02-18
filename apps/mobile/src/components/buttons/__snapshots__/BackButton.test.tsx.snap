@@ -2,18 +2,16 @@
 
 exports[`BackButton renders without error 1`] = `
 <View
-  cancelable={true}
-  disabled={false}
-  focusable={true}
-  hitSlop={[Function]}
-  minPressDuration={0}
+  hitSlop={24}
   onBlur={[Function]}
+  onClick={[Function]}
   onFocus={[Function]}
-  onMouseEnter={[Function]}
-  onMouseLeave={[Function]}
-  onPress={[Function]}
-  onPressIn={[Function]}
-  onPressOut={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
       "alignItems": "center",
@@ -83,11 +81,11 @@ exports[`BackButton renders without error 1`] = `
             },
           ]
         }
-        tintColor="#7D7D7D"
         vbHeight={24}
         vbWidth={24}
       >
         <RNSVGGroup
+          color="#7D7D7D"
           fill={null}
           propList={
             [
@@ -121,7 +119,12 @@ exports[`BackButton renders without error 1`] = `
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "color": "#7D7D7D",
+          "color": {
+            "dynamic": {
+              "dark": "#9B9B9B",
+              "light": "#7D7D7D",
+            },
+          },
           "fontFamily": "Basel Grotesk",
           "fontSize": 19,
           "fontWeight": "400",

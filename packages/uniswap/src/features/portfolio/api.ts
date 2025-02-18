@@ -3,11 +3,11 @@ import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from 
 import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
 const ONCHAIN_BALANCES_CACHE_KEY = 'OnchainBalances'

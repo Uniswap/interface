@@ -7,8 +7,8 @@ import { useContract } from 'hooks/useContract'
 import { useEffect, useState } from 'react'
 import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
 // TODO(WEB-4058): Move all of these contract addresses into the top-level wagmi config

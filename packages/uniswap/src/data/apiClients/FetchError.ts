@@ -22,3 +22,7 @@ export function isRateLimitFetchError(error: unknown): boolean {
     error.response.status <= 429
   )
 }
+
+export function is404Error(error: unknown): boolean {
+  return error instanceof FetchError && !!error.response?.status && error.response.status === 404
+}

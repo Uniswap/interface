@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react-hooks'
 import { providers } from 'ethers/lib/ethers'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/hooks/usePermit2Signature'
@@ -10,7 +11,6 @@ import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swa
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { createMockDerivedSwapInfo, createMockTokenApprovalInfo } from 'uniswap/src/test/fixtures/transactions/swap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery')
 jest.mock('uniswap/src/features/transactions/swap/hooks/usePermit2Signature')

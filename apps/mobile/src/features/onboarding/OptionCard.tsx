@@ -14,7 +14,6 @@ export function OptionCard({
   disabled,
   opacity,
   badgeText,
-  hapticFeedback,
   testID,
 }: {
   title: string
@@ -26,7 +25,6 @@ export function OptionCard({
   disabled?: boolean
   opacity?: number
   badgeText?: string | undefined
-  hapticFeedback?: boolean | undefined
 }): JSX.Element {
   const isDarkMode = useIsDarkMode()
 
@@ -36,9 +34,8 @@ export function OptionCard({
         backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
         borderColor="$surface3"
         borderRadius="$rounded20"
-        borderWidth={1}
+        borderWidth="$spacing1"
         disabled={disabled}
-        hapticFeedback={hapticFeedback}
         opacity={disabled ? 0.5 : opacity}
         p="$spacing16"
         testID={testID}

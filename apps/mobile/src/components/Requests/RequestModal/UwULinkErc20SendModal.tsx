@@ -8,7 +8,7 @@ import { Flex, SpinningLoader, Text, useIsDarkMode } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -133,7 +133,7 @@ function UwULinkErc20SendModalContent({
           <Text color="red">
             {t('uwulink.error.insufficientTokens', {
               tokenSymbol: symbol,
-              chain: UNIVERSE_CHAIN_INFO[chainId].label,
+              chain: getChainLabel(chainId),
             })}
           </Text>
         )}

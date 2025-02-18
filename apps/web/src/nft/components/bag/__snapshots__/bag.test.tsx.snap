@@ -11,7 +11,11 @@ exports[`Bag.tsx matches base snapshot 1`] = `
     >
       <span
         class=" t_light _dsp_contents is_Theme"
-      />
+      >
+        <div
+          style="display: contents;"
+        />
+      </span>
     </span>
   </span>
 </DocumentFragment>

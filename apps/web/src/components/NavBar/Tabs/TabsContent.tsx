@@ -3,12 +3,11 @@ import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Send } from 'components/Icons/Send'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
-import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { useTheme } from 'lib/styled-components'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useTranslation } from 'uniswap/src/i18n'
 
 export type TabsSection = {
   title: string
@@ -23,13 +22,11 @@ export type TabsItem = MenuItem & {
   quickKey: string
 }
 
-export const useTabsContent = (props?: { includeNftsLink?: boolean; userIsOperator?: boolean }): TabsSection[] => {
+export const useTabsContent = (props?: { userIsOperator?: boolean }): TabsSection[] => {
   const { t } = useTranslation()
-  //const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
-  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const { pathname } = useLocation()
   const theme = useTheme()
-  const areTabsVisible = useTabsVisible()
 
   return [
     {
@@ -90,34 +87,29 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean; userIsOperat
     //      href: `/explore/transactions${isMultichainExploreEnabled ? '/ethereum' : ''}`,
     //      internal: true,
     //    },
-    //    { label: t('common.nfts'), quickKey: 'N', href: '/nfts', internal: true },
     //  ],
     //},
     ...(props?.userIsOperator ? [{
       title: t('common.pool'),
-      href: '/pool',
+      href: isLPRedesignEnabled ? '/positions' : '/pool',
       isActive: pathname.startsWith('/pool'),
       items: [
         {
-          label: t('nav.tabs.viewPosition'),
+          label: t('nav.tabs.viewPositions'),
           quickKey: 'V',
-          href: isV4EverywhereEnabled ? '/positions' : '/pool',
+          href: isLPRedesignEnabled ? '/positions' : '/pool',
           internal: true,
         },
         {
           label: t('nav.tabs.createPosition'),
           quickKey: 'V',
-          href: isV4EverywhereEnabled ? '/positions/create' : '/add',
+          href: isLPRedesignEnabled ? '/positions/create' : '/add',
           internal: true,
         },
       ],
     }] : []),
-    ...(!areTabsVisible || props?.includeNftsLink
+    ...(!areTabsVisible
       ? [
-          //{
-          //  title: t('common.nfts'),
-          //  href: '/nfts',
-          //},
           {
             title: t('common.stake'),
             href: '/stake',

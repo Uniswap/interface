@@ -3,13 +3,13 @@ import { StatCard } from 'pages/Landing/components/StatCard'
 import { useInView } from 'pages/Landing/sections/useInView'
 import { useMemo } from 'react'
 import { ArrowRightCircle } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink } from 'theme/components'
 import { Flex, Text, styled, useSporeColors } from 'ui/src'
 import {
   ProtocolVersion,
   useDailyProtocolVolumeQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Container = styled(Flex, {
@@ -91,14 +91,12 @@ const Layout = styled(Flex, {
 
   $md: {
     '$platform-web': {
-      // @ts-expect-error TODO i guess we need one more type fix
       gridTemplateRows: 'repeat(2, 160px)',
     },
   },
 
   $lg: {
     '$platform-web': {
-      // @ts-expect-error TODO i guess we need one more type fix
       gridTemplateRows: 'repeat(2, 200px)',
     },
   },
@@ -209,6 +207,7 @@ const RightBottom = styled(Flex, {
 })
 
 function Cards({ inView }: { inView: boolean }) {
+  const { t } = useTranslation()
   const { formatNumber } = useFormatter()
   const dailyV2VolumeQuery = useDailyProtocolVolumeQuery({
     variables: {

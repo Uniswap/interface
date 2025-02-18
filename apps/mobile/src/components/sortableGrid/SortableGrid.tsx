@@ -22,7 +22,6 @@ type SortableGridProps<I> = AutoScrollProps &
     numColumns?: number
     editable?: boolean
     animateContainerHeight?: boolean
-    hapticFeedback?: boolean
     keyExtractor?: (item: I, index: number) => string
     onChange?: (e: SortableGridChangeEvent<I>) => void
     onDragStart?: (e: SortableGridDragStartEvent<I>) => void
@@ -33,7 +32,6 @@ export function SortableGrid<I>({
   data,
   renderItem,
   numColumns = 1,
-  hapticFeedback,
   keyExtractor = defaultKeyExtractor,
   containerRef,
   ...rest
@@ -43,7 +41,6 @@ export function SortableGrid<I>({
   const sharedProps = {
     data,
     numColumns,
-    hapticFeedback,
     keyExtractor: stableKeyExtractor,
   }
 
@@ -56,7 +53,7 @@ export function SortableGrid<I>({
 
 type SortableGridInnerProps<I> = Pick<
   SortableGridProps<I>,
-  'data' | 'renderItem' | 'numColumns' | 'keyExtractor' | 'hapticFeedback' | 'containerRef'
+  'data' | 'renderItem' | 'numColumns' | 'keyExtractor' | 'containerRef'
 >
 
 function SortableGridInner<I>({
@@ -64,13 +61,12 @@ function SortableGridInner<I>({
   renderItem,
   containerRef,
   numColumns = 1,
-  hapticFeedback = true,
   keyExtractor = defaultKeyExtractor,
 }: SortableGridInnerProps<I>): JSX.Element {
   const { containerHeight, containerWidth, appliedContainerHeight } = useLayoutContext()
   const { gridContainerRef, containerStartOffset } = useAutoScrollContext()
 
-  useItemOrderUpdater(numColumns, hapticFeedback)
+  useItemOrderUpdater(numColumns)
 
   const handleGridMeasurement = ({
     nativeEvent: {

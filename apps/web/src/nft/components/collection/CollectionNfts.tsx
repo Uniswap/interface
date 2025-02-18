@@ -3,10 +3,9 @@ import { parseEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common/styles'
-import { AnimatedBox, Box } from 'components/deprecated/Box'
+import { Box } from 'components/deprecated/Box'
 import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import styled, { css } from 'lib/styled-components'
@@ -57,6 +56,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
+import { useMedia } from 'ui/src'
 import {
   NftAssetTraitInput,
   NftMarketplace,
@@ -74,13 +74,13 @@ const rarityStatusCache = new Map<string, boolean>()
 
 const InfiniteScrollWrapperCss = css`
   margin: 0 16px;
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     margin: 0 20px;
   }
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     margin: 0 26px;
   }
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
     margin: 0 48px;
   }
 `
@@ -99,7 +99,7 @@ const ActionsSubContainer = styled.div`
   gap: 12px;
   flex: 1;
   min-width: 0px;
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     gap: 10px;
   }
 `
@@ -107,10 +107,10 @@ const ActionsSubContainer = styled.div`
 const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
   width: max-content;
   height: 44px;
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xl}px`}) {
     ${({ isFiltersExpanded }) => isFiltersExpanded && `display: none;`}
   }
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     display: none;
   }
 `
@@ -149,13 +149,13 @@ const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
     }) => `${duration.fast} background-color ${timing.in}`};
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     padding: 12px 12px 12px 12px;
   }
 `
 
 const SweepText = styled(ThemedText.BodyPrimary)`
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     display: none;
   }
 `
@@ -358,7 +358,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const oldStateRef = useRef<CollectionFilters | null>(null)
   const isMobile = useIsMobile()
-  const screenSize = useScreenSize()
+  const media = useMedia()
 
   useEffect(() => {
     setIsCollectionNftsLoading(loading)
@@ -489,7 +489,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   return (
     <>
-      <AnimatedBox
+      <Box
         backgroundColor="surface1"
         position="sticky"
         top="72"
@@ -513,7 +513,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 isFiltersExpanded={isFiltersExpanded}
                 collectionCount={collectionAssets?.[0]?.totalCount ?? 0}
                 onClick={() => {
-                  if (bagExpanded && !screenSize['xl']) {
+                  if (bagExpanded && media.xxl) {
                     toggleBag()
                   }
                   setFiltersExpanded(!isFiltersExpanded)
@@ -594,7 +594,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             )}
           </Row>
         </InfiniteScrollWrapper>
-      </AnimatedBox>
+      </Box>
       <InfiniteScrollWrapper>
         {loading ? (
           <CollectionNftsLoading height={renderedHeight} />

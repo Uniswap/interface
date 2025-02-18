@@ -1,14 +1,14 @@
 import { Currency } from '@uniswap/sdk-core'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
-import Tooltip, { TooltipSize } from 'components/Tooltip'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { Copy } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ClickableStyle } from 'theme/components'
-import { t, Trans } from 'uniswap/src/i18n'
+import { useMedia } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
 
 export const BreadcrumbNavContainer = styled.nav`
@@ -69,8 +69,8 @@ export const CurrentPageBreadcrumb = ({
   currency?: Currency
   poolName?: string
 }) => {
+  const { t } = useTranslation()
   const { neutral2 } = useTheme()
-  const screenSize = useScreenSize()
   const [hover, setHover] = useState(false)
 
   const [isCopied, setCopied] = useCopyClipboard()
@@ -79,9 +79,10 @@ export const CurrentPageBreadcrumb = ({
   }, [address, setCopied])
 
   const isNative = currency?.isNative
-  const tokenSymbolName = currency?.symbol ?? <Trans i18nKey="tdp.symbolNotFound" />
+  const tokenSymbolName = currency?.symbol ?? t('tdp.symbolNotFound')
 
-  const shouldEnableCopy = screenSize['sm']
+  const media = useMedia()
+  const shouldEnableCopy = !media.md
   const shouldShowActions = shouldEnableCopy && hover && !isCopied
 
   return (
@@ -98,9 +99,15 @@ export const CurrentPageBreadcrumb = ({
           isDisabled={!shouldEnableCopy}
           onClick={shouldEnableCopy ? copy : undefined}
         >
-          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
+          <MouseoverTooltip
+            placement="bottom"
+            size={TooltipSize.Max}
+            forceShow={isCopied}
+            text={t('common.copied')}
+            disabled
+          >
             {shortenAddress(address)}
-          </Tooltip>
+          </MouseoverTooltip>
           {shouldShowActions && (
             <CopyIcon data-testid="breadcrumb-hover-copy" width={16} height={16} color={neutral2} />
           )}

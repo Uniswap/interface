@@ -12,10 +12,10 @@ import useWrapCallback from 'hooks/useWrapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { useIsWhitelistedToken } from 'state/swap/hooks'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -50,7 +50,7 @@ export function useConfirmModalState({
   onSwap: () => void
   allowance?: Allowance
   selectedPool?: Currency | null
-  onCurrencySelection: (field: CurrencyField, currency: Currency) => void
+  onCurrencySelection: (field: CurrencyField, currency: Currency, isResettingWETHAfterWrap?: boolean) => void
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
@@ -60,7 +60,7 @@ export function useConfirmModalState({
 
     // TODO: check where this hook is using account and for what
   const account = useAccount()
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
 
   const isWhitelistedToken: boolean | undefined = useIsWhitelistedToken(
     selectedPool?.isToken ? selectedPool?.address : undefined,
@@ -144,7 +144,7 @@ export function useConfirmModalState({
               setWrapTxHash(wrapTxHash)
               // After the wrap has succeeded, reset the input currency to be WETH
               // because the trade will be on WETH -> token
-              onCurrencySelection(CurrencyField.INPUT, trade.inputAmount.currency)
+              onCurrencySelection(CurrencyField.INPUT, trade.inputAmount.currency, /*isResettingWETHAfterWrap=*/ true)
               sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                 chain_id: chainId,
                 token_symbol: maximumAmountIn?.currency.symbol,

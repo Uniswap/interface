@@ -7,7 +7,7 @@ import { PoolSortFields } from 'graphql/data/pools/useTopPools'
 import { OrderDirection } from 'graphql/data/util'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect, useMemo } from 'react'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const HIDDEN_COLUMNS = [PoolSortFields.VolOverTvl]
 

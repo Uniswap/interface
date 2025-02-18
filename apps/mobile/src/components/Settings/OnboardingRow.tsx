@@ -6,7 +6,6 @@ import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { setCreatedOnboardingRedesignAccount } from 'wallet/src/features/behaviorHistory/slice'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
@@ -23,7 +22,6 @@ export function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Eleme
       .then(() => {
         navigation.goBack()
         dispatch(resetWallet())
-        dispatch(setCreatedOnboardingRedesignAccount(false))
         dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       })
       .catch((error) => {

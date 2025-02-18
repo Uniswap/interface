@@ -3,16 +3,17 @@ import { Currency } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { ReactNode, createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { WarningAction } from 'uniswap/src/components/modals/WarningModal/types'
+import { ParsedWarnings, WarningAction } from 'uniswap/src/components/modals/WarningModal/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee, useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { useFormattedWarnings } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
-import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { useDerivedSendInfo } from 'wallet/src/features/transactions/send/hooks/useDerivedSendInfo'
@@ -35,6 +36,7 @@ export const getDefaultSendState = (defaultChainId: UniverseChainId): Readonly<T
   selectingCurrencyField: undefined,
   showRecipientSelector: true,
   customSlippageTolerance: undefined,
+  isMax: false,
 })
 
 type SendContextState = {
@@ -62,15 +64,37 @@ export function SendContextProvider({
 
   // state
   const [sendForm, setSendForm] = useState<TransactionState>(prefilledTransactionState || defaultSendState)
-  const updateSendForm = useCallback(
-    (newState: Parameters<SendContextState['updateSendForm']>[0]): void => {
-      setSendForm((prevState) => ({ ...prevState, ...newState }))
-    },
-    [setSendForm],
-  )
 
   // derived info based on transfer state
   const derivedSendInfo = useDerivedSendInfo(sendForm)
+  const maxInputAmount = useMaxAmountSpend({
+    currencyAmount: derivedSendInfo.currencyBalances[CurrencyField.INPUT],
+    txType: TransactionType.Send,
+    isExtraTx: true,
+  })?.toExact()
+
+  const updateSendForm = useCallback(
+    (passedNewState: Parameters<SendContextState['updateSendForm']>[0]): void => {
+      const newState = { ...passedNewState }
+      const isAmountSet = (newState.isFiatInput ? newState.exactAmountFiat : newState.exactAmountToken) !== undefined
+
+      if (isAmountSet) {
+        // for explicit "max" actions (eg max button clicked)
+        const isExplicitMax = !!newState.isMax
+
+        const isMaxTokenAmount =
+          maxInputAmount && newState.exactAmountToken
+            ? parseFloat(maxInputAmount) <= parseFloat(newState.exactAmountToken)
+            : isExplicitMax
+
+        newState.isMax = isMaxTokenAmount
+      }
+
+      setSendForm((prevState) => ({ ...prevState, ...newState }))
+    },
+    [setSendForm, maxInputAmount],
+  )
+
   const warnings = useSendWarnings(t, derivedSendInfo)
   const txRequest = useSendTransactionRequest(derivedSendInfo)
   const gasFee = useTransactionGasFee(
@@ -84,7 +108,7 @@ export function SendContextProvider({
   const gasWarning = useTransactionGasWarning({
     account,
     derivedInfo: derivedSendInfo,
-    gasFee: gasFee?.value,
+    gasFee: gasFee.value,
   })
   const allSendWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]
@@ -121,33 +145,37 @@ export function SendContextProvider({
       exactAmountFiat: sendForm.exactAmountFiat,
       exactCurrencyField: sendForm.exactCurrencyField,
       focusOnCurrencyField: sendForm.focusOnCurrencyField,
+      isMax: sendForm.isMax,
       recipient: sendForm.recipient,
       isFiatInput: sendForm.isFiatInput,
       selectingCurrencyField: sendForm.selectingCurrencyField,
       showRecipientSelector: sendForm.showRecipientSelector,
       selectedProtocols: sendForm.selectedProtocols,
       customSlippageTolerance: sendForm.customSlippageTolerance,
+      fiatOffRampMetaData: sendForm.fiatOffRampMetaData,
     }
   }, [
     derivedSendInfo,
     gasFee,
     parsedSendWarnings,
-    sendForm.customSlippageTolerance,
-    sendForm.exactAmountFiat,
-    sendForm.exactAmountToken,
-    sendForm.exactCurrencyField,
-    sendForm.focusOnCurrencyField,
-    sendForm.input,
-    sendForm.isFiatInput,
-    sendForm.output,
-    sendForm.recipient,
-    sendForm.selectingCurrencyField,
-    sendForm.showRecipientSelector,
-    sendForm.selectedProtocols,
-    sendForm.txId,
     txRequestWithGasSettings,
     onSelectCurrency,
     updateSendForm,
+    sendForm.txId,
+    sendForm.input,
+    sendForm.output,
+    sendForm.exactAmountToken,
+    sendForm.exactAmountFiat,
+    sendForm.exactCurrencyField,
+    sendForm.focusOnCurrencyField,
+    sendForm.recipient,
+    sendForm.isFiatInput,
+    sendForm.isMax,
+    sendForm.selectingCurrencyField,
+    sendForm.showRecipientSelector,
+    sendForm.customSlippageTolerance,
+    sendForm.selectedProtocols,
+    sendForm.fiatOffRampMetaData,
   ])
   return <SendContext.Provider value={state}>{children}</SendContext.Provider>
 }

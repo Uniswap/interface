@@ -12,5 +12,4 @@
         <item name="android:navigationBarColor">@color/background_material_light</item>
         <item name="android:editTextBackground">@android:color/transparent</item>
     </style>
-
 </resources>

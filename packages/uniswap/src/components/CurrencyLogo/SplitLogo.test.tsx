@@ -1,7 +1,7 @@
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DAI_CURRENCY_INFO, ETH_CURRENCY_INFO, daiCurrencyInfo, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { render, within } from 'uniswap/src/test/test-utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('ui/src/components/UniversalImage/internal/PlainImage', () => ({
   ...jest.requireActual('ui/src/components/UniversalImage/internal/PlainImage.web'),

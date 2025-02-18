@@ -1,12 +1,11 @@
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
-//import styled from 'lib/styled-components'
-import { Button, Flex, Image, Text, useIsDarkMode } from 'ui/src'
+import { Trans } from 'react-i18next'
+import { DeprecatedButton, Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { RIGOBLOCK_LOGO_LARGE } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
-import { Trans } from 'uniswap/src/i18n'
 
 interface ProviderConnectionErrorProps {
   onBack: () => void
@@ -42,7 +41,7 @@ export function ProviderConnectionError({ onBack, closeModal, selectedServicePro
             />
           </Text>
         </Flex>
-        <Button
+        <DeprecatedButton
           size="medium"
           backgroundColor="$accent3"
           color="$primary"
@@ -53,7 +52,7 @@ export function ProviderConnectionError({ onBack, closeModal, selectedServicePro
           onPress={onBack}
         >
           <Trans i18nKey="common.tryAgain.error" />
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </ConnectingViewWrapper>
   )

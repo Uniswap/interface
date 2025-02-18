@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { initializeDatadog } from 'src/app/datadog'
 import { getStatsigEnvironmentTier } from 'src/app/version'
 import Statsig from 'statsig-js' // Use JS package for browser
+import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
+import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -55,14 +56,14 @@ export function ExtensionStatsigProvider({
   }
 
   return (
-    <StatsigProvider options={options} sdkKey={DUMMY_STATSIG_SDK_KEY} user={user} waitForInitialization={false}>
+    <StatsigProvider options={options} sdkKey={config.statsigApiKey} user={user} waitForInitialization={false}>
       {children}
     </StatsigProvider>
   )
 }
 
 export async function initStatSigForBrowserScripts(): Promise<void> {
-  await Statsig.initialize(DUMMY_STATSIG_SDK_KEY, await getStatsigUser(), {
+  await Statsig.initialize(config.statsigApiKey, await getStatsigUser(), {
     api: uniswapUrls.statsigProxyUrl,
     environment: {
       tier: getStatsigEnvironmentTier(),

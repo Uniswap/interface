@@ -5,9 +5,9 @@ import Row from 'components/deprecated/Row'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import ms from 'ms'
 import { useState } from 'react'
+import { Trans } from 'react-i18next'
 import { useUserTransactionTTL } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 enum DeadlineError {
   InvalidInput = 'InvalidInput',

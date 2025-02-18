@@ -1,18 +1,15 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useIsUniswapXSupportedChain } from 'constants/chains'
+import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import { useMemo } from 'react'
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, URAQuoteType } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
-import {
-  ArbitrumXV2ExperimentGroup,
-  ArbitrumXV2OpenOrderProperties,
-  Experiments,
-} from 'uniswap/src/features/gating/experiments'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ArbitrumXV2SamplingProperties, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useExperimentGroupName, useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useUniswapXPriorityOrderFlag } from 'uniswap/src/features/transactions/swap/utils/protocols'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -37,38 +34,33 @@ export function useRoutingAPIArguments({
   protocolPreferences?: Protocol[]
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useFeatureFlag(FeatureFlags.UniswapXSyntheticQuote)
-  const isPriorityOrdersEnabled = useFeatureFlag(FeatureFlags.UniswapXPriorityOrders)
+  const isPriorityOrdersEnabled = useUniswapXPriorityOrderFlag(tokenIn?.chainId)
   const isXv2 = useFeatureFlag(FeatureFlags.UniswapXv2)
-  const xv2ArbitrumEnabled =
-    useExperimentGroupName(Experiments.ArbitrumXV2OpenOrders) === ArbitrumXV2ExperimentGroup.Test
-  const isXv2Arbitrum = tokenIn?.chainId === UniverseChainId.ArbitrumOne && xv2ArbitrumEnabled
-  const priceImprovementBps = useExperimentValue(
-    Experiments.ArbitrumXV2OpenOrders,
-    ArbitrumXV2OpenOrderProperties.PriceImprovementBps,
-    0,
-  )
-  const forceOpenOrders = useExperimentValue(
-    Experiments.ArbitrumXV2OpenOrders,
-    ArbitrumXV2OpenOrderProperties.ForceOpenOrders,
-    false,
-  )
-  const deadlineBufferSecs = useExperimentValue(
-    Experiments.ArbitrumXV2OpenOrders,
-    ArbitrumXV2OpenOrderProperties.DeadlineBufferSecs,
-    30,
-  )
-  const arbitrumXV2SlippageTolerance = useExperimentValue(
-    Experiments.ArbitrumXV2OpenOrders,
-    ArbitrumXV2OpenOrderProperties.SlippageTolerance,
-    '0.5',
-  )
+  const xv2ArbitrumRoutingType = useExperimentValue<
+    Experiments.ArbitrumXV2Sampling,
+    ArbitrumXV2SamplingProperties.RoutingType,
+    'CLASSIC' | 'DUTCH_V2' | 'DUTCH_V3'
+  >(Experiments.ArbitrumXV2Sampling, ArbitrumXV2SamplingProperties.RoutingType, 'CLASSIC')
+
   // Don't enable fee logic if this is a quote for pricing
   const sendPortionEnabled = routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
 
   const chainId = tokenIn?.chainId
   const isUniswapXSupportedChain = useIsUniswapXSupportedChain(chainId)
-  const isPriorityOrder =
-    routerPreference === RouterPreference.X && isPriorityOrdersEnabled && chainId === UniverseChainId.Base // UniswapX priority orders are only available on Base for now
+  const isPriorityOrder = routerPreference === RouterPreference.X && isPriorityOrdersEnabled
+  const isArbitrum = tokenIn?.chainId === UniverseChainId.ArbitrumOne
+
+  const routingType = isUniswapXSupportedChain
+    ? isPriorityOrder
+      ? URAQuoteType.PRIORITY
+      : isArbitrum
+        ? xv2ArbitrumRoutingType === 'DUTCH_V2'
+          ? URAQuoteType.DUTCH_V2
+          : URAQuoteType.DUTCH_V3
+        : isXv2
+          ? URAQuoteType.DUTCH_V2
+          : URAQuoteType.DUTCH_V1
+    : URAQuoteType.CLASSIC
 
   return useMemo(
     () =>
@@ -91,14 +83,7 @@ export function useRoutingAPIArguments({
             needsWrapIfUniswapX: tokenIn.isNative,
             uniswapXForceSyntheticQuotes,
             sendPortionEnabled,
-            isXv2,
-            isXv2Arbitrum,
-            priceImprovementBps,
-            forceOpenOrders,
-            deadlineBufferSecs,
-            arbitrumXV2SlippageTolerance,
-            isPriorityOrder,
-            isUniswapXSupportedChain,
+            routingType,
           },
     [
       tokenIn,
@@ -110,14 +95,7 @@ export function useRoutingAPIArguments({
       tradeType,
       uniswapXForceSyntheticQuotes,
       sendPortionEnabled,
-      isXv2,
-      isXv2Arbitrum,
-      priceImprovementBps,
-      forceOpenOrders,
-      deadlineBufferSecs,
-      arbitrumXV2SlippageTolerance,
-      isPriorityOrder,
-      isUniswapXSupportedChain,
+      routingType,
     ],
   )
 }

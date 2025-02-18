@@ -5,8 +5,6 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Person } from 'ui/src/components/icons'
-import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
-import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -41,16 +39,10 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   }
 
   const onPressSkip = (): void => {
-    const onboardingExperimentEnabled = getExperimentValue(
-      Experiments.OnboardingRedesignRecoveryBackup,
-      OnboardingRedesignRecoveryBackupProperties.Enabled,
-      false,
-    )
-
     sendAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'later' })
     // Navigate to next screen if in onboarding
     navigate(MobileScreens.OnboardingStack, {
-      screen: onboardingExperimentEnabled ? OnboardingScreens.Notifications : OnboardingScreens.WelcomeWallet,
+      screen: OnboardingScreens.Notifications,
       params: {
         importType: ImportType.CreateNew,
         entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,

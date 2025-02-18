@@ -1,14 +1,11 @@
 import { MaxUint256, UNI_ADDRESSES } from '@uniswap/sdk-core'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const UNI_MAINNET = UNI_ADDRESSES[UniverseChainId.Mainnet]
 
 describe('Remove Liquidity', () => {
   it('loads the token pair in v2', () => {
-    cy.visit(`/remove/v2/ETH/${UNI_MAINNET}`, {
-      featureFlags: [{ flag: FeatureFlags.V2Everywhere, value: true }],
-    })
+    cy.visit(`/remove/v2/ETH/${UNI_MAINNET}`)
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'ETH')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'UNI')
   })

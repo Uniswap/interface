@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { LockPreviewImage } from 'src/features/onboarding/LockPreviewImage'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -60,7 +60,7 @@ export function BackupReminderModal(): JSX.Element {
         </Flex>
         <Flex row gap="$spacing8">
           <Trace logPress element={ElementName.MaybeLaterButton} modal={ModalName.BackupReminder}>
-            <Button
+            <DeprecatedButton
               alignSelf="center"
               color="$neutral2"
               flex={1}
@@ -69,12 +69,12 @@ export function BackupReminderModal(): JSX.Element {
               onPress={onPressMaybeLater}
             >
               {t('common.button.later')}
-            </Button>
+            </DeprecatedButton>
           </Trace>
           <Trace logPress element={ElementName.Continue} modal={ModalName.BackupReminder}>
-            <Button alignSelf="center" flex={1} size="medium" theme="primary" onPress={onPressBackup}>
+            <DeprecatedButton alignSelf="center" flex={1} size="medium" theme="primary" onPress={onPressBackup}>
               {t('common.button.continue')}
-            </Button>
+            </DeprecatedButton>
           </Trace>
         </Flex>
       </Flex>

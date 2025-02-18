@@ -5,8 +5,8 @@ import { ReactNode } from 'react'
 import { Check } from 'react-feather'
 import type { To } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 
 const InternalLinkMenuItem = styled(Link)`
   ${ClickableStyle}
@@ -22,7 +22,7 @@ const InternalLinkMenuItem = styled(Link)`
 `
 
 export const MenuColumn = styled(Column)`
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     padding-bottom: 14px;
   }
 `
@@ -54,7 +54,7 @@ export function MenuItem({
         {logo && logo}
         <ThemedText.BodySmall data-testid={testId}>{label}</ThemedText.BodySmall>
       </Row>
-      {isActive && <Check color={theme.accent1} opacity={1} size={20} />}
+      {isActive && <Check color={theme.accent1} opacity={1} size={20} style={{ marginRight: '12px' }} />}
     </InternalLinkMenuItem>
   )
 }

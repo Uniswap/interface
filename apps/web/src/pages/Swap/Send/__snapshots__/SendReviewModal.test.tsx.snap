@@ -1,46 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
-.c19 {
+.c16 {
   height: 36px;
   width: 36px;
 }
 
-.c19 path {
+.c16 path {
   stroke: #CECECE;
   background: #7D7D7D;
   fill: #CECECE;
 }
 
-.c20 {
+.c17 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
-.c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c17 img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-.c18 {
-  width: 18px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-.c16 {
+.c15 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -60,14 +37,14 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   min-width: 0;
 }
 
-.c22 {
+.c19 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
   width: 100%;
 }
 
-.c23 {
+.c20 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -76,7 +53,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   width: min-content;
 }
 
-.c25 {
+.c22 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -99,62 +76,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   border-radius: 4px;
 }
 
-.c7 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c24 {
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c14 {
+.c13 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -162,30 +84,12 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c15 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: #222222;
-  cursor: pointer;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c8:hover {
-  opacity: 0.6;
-}
-
-.c8:active {
-  opacity: 0.4;
 }
 
 .c4 {
@@ -207,13 +111,13 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   opacity: 0.4;
 }
 
-.c21 {
+.c18 {
   width: 100%;
   height: 1px;
   background-color: #22222212;
 }
 
-.c26 {
+.c23 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -252,25 +156,25 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c26:disabled {
+.c23:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c26 > * {
+.c23 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c26 > a {
+.c23 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c27 {
+.c24 {
   background-color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
@@ -278,27 +182,82 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   color: #FFFFFF;
 }
 
-.c27:focus {
+.c24:focus {
   box-shadow: 0 0 0 1pt #fb58ff;
   background-color: #fb58ff;
 }
 
-.c27:hover {
+.c24:hover {
   background-color: #fb58ff;
 }
 
-.c27:active {
+.c24:active {
   box-shadow: 0 0 0 1pt #fb3fff;
   background-color: #fb3fff;
 }
 
-.c27:disabled {
+.c24:disabled {
   background-color: #22222212;
   color: #7D7D7D;
   cursor: auto;
   box-shadow: none;
   border: 1px solid transparent;
   outline: none;
+}
+
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c21 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c5 {
@@ -340,7 +299,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   gap: 12px;
 }
 
-.c9 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -354,7 +313,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c11 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -369,7 +328,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   gap: 24px;
 }
 
-.c13 {
+.c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -394,8 +353,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
 
 .c2 {
   background-color: #FFFFFF;
-  border-radius: 20px;
-  outline: 1px solid #22222212;
+  border-radius: 16px;
   width: 100%;
   padding: 8px;
 }
@@ -404,22 +362,10 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   padding: 8px 12px 4px;
 }
 
-.c10 {
+.c9 {
   width: 100%;
   padding: 12px 16px;
   gap: 16px;
-}
-
-@media screen and (max-width:640px) {
-
-}
-
-@media screen and (max-width:768px) {
-
-}
-
-@media screen and (max-width:640px) {
-
 }
 
 <div
@@ -427,13 +373,13 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   data-testid="send-review-modal"
 >
   <div
-    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037 c3"
+    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
   >
     <div
       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
       <span
-        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
         data-disable-theme="true"
       >
         Review send
@@ -466,57 +412,51 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
           Get help
         </div>
       </a>
-      <svg
-        class="c8"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
       >
-        <line
-          x1="18"
-          x2="6"
-          y1="6"
-          y2="18"
-        />
-        <line
-          x1="6"
-          x2="18"
-          y1="6"
-          y2="18"
-        />
-      </svg>
+        <div
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+        >
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
   <div
-    class="c9 c10"
+    class="c8 c9"
   >
     <div
-      class="c11"
+      class="c10"
     >
       <div
-        class="c6 c12"
+        class="c6 c11"
       >
         <div
-          class="c13"
+          class="c12"
         >
           <div
-            class="c14 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             You’re sending
           </div>
           <div
-            class="c15 css-15popx1"
+            class="c14 css-15popx1"
           >
             $1,000.00
           </div>
           <div
-            class="c14 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             100.00 DAI
           </div>
@@ -525,52 +465,60 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
           style="height: 36px;"
         >
           <div
-            class="c16"
+            class="c15"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
             >
               <div
-                class="c17"
-                size="36"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
               >
-                 
-                <img
-                  class="c18"
-                  size="36"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
                 />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c6 c12"
+        class="c6 c11"
       >
         <div
-          class="c13"
+          class="c12"
         >
           <div
-            class="c14 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             To
           </div>
           <div
-            class="c15 css-15popx1"
+            class="c14 css-15popx1"
           >
             <div
               class="c6 c7"
             >
               <div
-                class="c15 css-15popx1"
+                class="c14 css-15popx1"
               >
                 hayden.eth
               </div>
             </div>
           </div>
           <div
-            class="c14 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             0x9984...9103
           </div>
@@ -579,7 +527,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
           style="height: 36px;"
         >
           <svg
-            class="c19 c20"
+            class="c16 c17"
             data-testid="IdenticonLoader"
             fill="#CECECE"
             stroke="#CECECE"
@@ -600,19 +548,19 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
       </div>
     </div>
     <div
-      class="c21"
+      class="c18"
     />
     <div
-      class="c22 c12"
+      class="c19 c11"
       width="100%"
     >
       <div
-        class="c14 css-1a4qi6e"
+        class="c13 css-1a4qi6e"
       >
         Network cost
       </div>
       <div
-        class="c23 c24"
+        class="c20 c21"
         width="min-content"
       >
         <img
@@ -624,7 +572,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
           width="16px"
         />
         <div
-          class="c15 css-142zc9n"
+          class="c14 css-142zc9n"
         >
           -
         </div>
@@ -632,7 +580,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
     </div>
   </div>
   <button
-    class="c25 c26 c27"
+    class="c22 c23 c24"
   >
     Confirm send
   </button>
@@ -640,46 +588,23 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform should render input in token amount correctly 1`] = `
-.c19 {
+.c16 {
   height: 36px;
   width: 36px;
 }
 
-.c19 path {
+.c16 path {
   stroke: #CECECE;
   background: #7D7D7D;
   fill: #CECECE;
 }
 
-.c20 {
+.c17 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
-.c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c17 img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-.c18 {
-  width: 18px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-.c16 {
+.c15 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -699,14 +624,14 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   min-width: 0;
 }
 
-.c22 {
+.c19 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
   width: 100%;
 }
 
-.c23 {
+.c20 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -715,7 +640,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   width: min-content;
 }
 
-.c25 {
+.c22 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -738,62 +663,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   border-radius: 4px;
 }
 
-.c7 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c24 {
-  width: -webkit-min-content;
-  width: -moz-min-content;
-  width: min-content;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c14 {
+.c13 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -801,30 +671,12 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   letter-spacing: -0.01em;
 }
 
-.c15 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: #222222;
-  cursor: pointer;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c8:hover {
-  opacity: 0.6;
-}
-
-.c8:active {
-  opacity: 0.4;
 }
 
 .c4 {
@@ -846,13 +698,13 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   opacity: 0.4;
 }
 
-.c21 {
+.c18 {
   width: 100%;
   height: 1px;
   background-color: #22222212;
 }
 
-.c26 {
+.c23 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -891,25 +743,25 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   transform: perspective(1px) translateZ(0);
 }
 
-.c26:disabled {
+.c23:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c26 > * {
+.c23 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c26 > a {
+.c23 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c27 {
+.c24 {
   background-color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
@@ -917,27 +769,82 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   color: #FFFFFF;
 }
 
-.c27:focus {
+.c24:focus {
   box-shadow: 0 0 0 1pt #fb58ff;
   background-color: #fb58ff;
 }
 
-.c27:hover {
+.c24:hover {
   background-color: #fb58ff;
 }
 
-.c27:active {
+.c24:active {
   box-shadow: 0 0 0 1pt #fb3fff;
   background-color: #fb3fff;
 }
 
-.c27:disabled {
+.c24:disabled {
   background-color: #22222212;
   color: #7D7D7D;
   cursor: auto;
   box-shadow: none;
   border: 1px solid transparent;
   outline: none;
+}
+
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c21 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c5 {
@@ -979,7 +886,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   gap: 12px;
 }
 
-.c9 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -993,7 +900,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   justify-content: flex-start;
 }
 
-.c11 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1008,7 +915,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   gap: 24px;
 }
 
-.c13 {
+.c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1033,8 +940,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
 
 .c2 {
   background-color: #FFFFFF;
-  border-radius: 20px;
-  outline: 1px solid #22222212;
+  border-radius: 16px;
   width: 100%;
   padding: 8px;
 }
@@ -1043,22 +949,10 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   padding: 8px 12px 4px;
 }
 
-.c10 {
+.c9 {
   width: 100%;
   padding: 12px 16px;
   gap: 16px;
-}
-
-@media screen and (max-width:640px) {
-
-}
-
-@media screen and (max-width:768px) {
-
-}
-
-@media screen and (max-width:640px) {
-
 }
 
 <div
@@ -1066,13 +960,13 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   data-testid="send-review-modal"
 >
   <div
-    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037 c3"
+    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
   >
     <div
       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
       <span
-        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
         data-disable-theme="true"
       >
         Review send
@@ -1105,57 +999,51 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
           Get help
         </div>
       </a>
-      <svg
-        class="c8"
-        fill="none"
-        height="24"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
       >
-        <line
-          x1="18"
-          x2="6"
-          y1="6"
-          y2="18"
-        />
-        <line
-          x1="6"
-          x2="18"
-          y1="6"
-          y2="18"
-        />
-      </svg>
+        <div
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+        >
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
   <div
-    class="c9 c10"
+    class="c8 c9"
   >
     <div
-      class="c11"
+      class="c10"
     >
       <div
-        class="c6 c12"
+        class="c6 c11"
       >
         <div
-          class="c13"
+          class="c12"
         >
           <div
-            class="c14 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             You’re sending
           </div>
           <div
-            class="c15 css-15popx1"
+            class="c14 css-15popx1"
           >
             1.00 DAI
           </div>
           <div
-            class="c14 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             $100.00
           </div>
@@ -1164,52 +1052,60 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
           style="height: 36px;"
         >
           <div
-            class="c16"
+            class="c15"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
             >
               <div
-                class="c17"
-                size="36"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
               >
-                 
-                <img
-                  class="c18"
-                  size="36"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
                 />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c6 c12"
+        class="c6 c11"
       >
         <div
-          class="c13"
+          class="c12"
         >
           <div
-            class="c14 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             To
           </div>
           <div
-            class="c15 css-15popx1"
+            class="c14 css-15popx1"
           >
             <div
               class="c6 c7"
             >
               <div
-                class="c15 css-15popx1"
+                class="c14 css-15popx1"
               >
                 hayden.eth
               </div>
             </div>
           </div>
           <div
-            class="c14 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             0x9984...9103
           </div>
@@ -1218,7 +1114,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
           style="height: 36px;"
         >
           <svg
-            class="c19 c20"
+            class="c16 c17"
             data-testid="IdenticonLoader"
             fill="#CECECE"
             stroke="#CECECE"
@@ -1239,19 +1135,19 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
       </div>
     </div>
     <div
-      class="c21"
+      class="c18"
     />
     <div
-      class="c22 c12"
+      class="c19 c11"
       width="100%"
     >
       <div
-        class="c14 css-1a4qi6e"
+        class="c13 css-1a4qi6e"
       >
         Network cost
       </div>
       <div
-        class="c23 c24"
+        class="c20 c21"
         width="min-content"
       >
         <img
@@ -1263,7 +1159,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
           width="16px"
         />
         <div
-          class="c15 css-142zc9n"
+          class="c14 css-142zc9n"
         >
           -
         </div>
@@ -1271,7 +1167,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
     </div>
   </div>
   <button
-    class="c25 c26 c27"
+    class="c22 c23 c24"
   >
     Confirm send
   </button>

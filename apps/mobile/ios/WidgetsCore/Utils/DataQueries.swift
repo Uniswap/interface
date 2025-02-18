@@ -16,7 +16,7 @@ public class DataQueries {
   public static func fetchTokensData(tokenInputs: [TokenInput]) async throws -> [TokenResponse] {
     return try await withCheckedThrowingContinuation { continuation in
       let contractInputs = tokenInputs.map {MobileSchema.ContractInput(chain: GraphQLEnum(rawValue: $0.chain), address: $0.address == nil ? GraphQLNullable.null: GraphQLNullable(stringLiteral: $0.address!))}
-      Network.shared.apollo.fetch(query: MobileSchema.TokensQuery(contracts: contractInputs)) { result in
+      Network.shared.apollo.fetch(query: MobileSchema.WidgetTokensQuery(contracts: contractInputs)) { result in
         switch result {
         case .success(let graphQLResult):
           let tokens = graphQLResult.data?.tokens ?? []

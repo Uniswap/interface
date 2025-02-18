@@ -4,8 +4,8 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Check, Info } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { FlexProps } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const StyledDropdownButton = {
@@ -18,6 +18,7 @@ const StyledMenuFlyout = {
   minWidth: 130,
   borderRadius: '$rounded16',
   right: 0,
+  zIndex: '$popover',
 } satisfies FlexProps
 
 interface ChartTypeSelectorOption<T extends ChartType | PriceChartType> {
@@ -67,6 +68,8 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
                 key={chartType}
                 text={disabled && <Trans i18nKey="chart.settings.unavailable.label" />}
                 placement={!isMobileWeb ? 'right' : undefined}
+                // disable tooltip if option is not disabled, therefore tooltip is not shown
+                disabled={!disabled}
               >
                 <InternalMenuItem
                   onPress={() => {
