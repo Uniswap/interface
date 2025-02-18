@@ -52,7 +52,7 @@ const StyledLinkOut = styled(ArrowDown)`
 
 const EXTERNAL_APIS = [
   {
-    name: "Google Analytics & Amplitude",
+    name: "Google Analytics",
     description: <Trans i18nKey="privacy.anonymizedLogs" />,
   },
 ];
@@ -103,12 +103,12 @@ function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="sm" style={{ width: "100%" }}>
           <StyledExternalCard>
-            <ExternalLink href="https://docs.taraswap.info/docs">
+            <ExternalLink href="https://docs.taraswap.info/docs/terms-of-service">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
                   <ThemedText.DeprecatedMain fontSize={14} color="accent1">
-                    <Trans i18nKey="privacy.uniswaptos" />
+                    <Trans i18nKey="privacy.taraswaptos" />
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
                 <StyledLinkOut size={20} />
@@ -116,7 +116,7 @@ function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
           <StyledExternalCard>
-            <ExternalLink href="https://docs.taraswap.info/docs">
+            <ExternalLink href="https://docs.taraswap.info/docs/privacy-policy">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />

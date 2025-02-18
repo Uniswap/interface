@@ -75,6 +75,7 @@ import { computeRealizedPriceImpact, warningSeverity } from "utils/prices";
 import { didUserReject } from "utils/swapErrorToUserReadableMessage";
 import { getIsReviewableQuote } from ".";
 import { OutputTaxTooltipBody } from "./TaxTooltipBody";
+import { SwapDisclaimer } from "components/swap/SwapDisclaimer";
 
 const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
   showCommonBases: true,
@@ -862,6 +863,7 @@ export function SwapForm({
           )}
           {isUsingBlockedExtension && <SwapNotice />}
         </div>
+        <SwapDisclaimer />
       </AutoColumn>
     </>
   );

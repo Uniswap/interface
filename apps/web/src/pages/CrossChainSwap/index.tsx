@@ -12,6 +12,7 @@ import { AwaitingDepositPage } from "./AwaitingDepositPage";
 import { ButtonLight } from "components/Button";
 import { Box, H1, H2, H3 } from "pages/Landing/components/Generics";
 import styled from "styled-components";
+import { SwapDisclaimer } from "components/swap/SwapDisclaimer";
 
 const StyledH2 = styled(H2)`
   @media (max-width: 768px) {
@@ -146,6 +147,7 @@ export default function CrossChainSwapPage() {
             Back
           </ButtonLight>
         )}
+        <SwapDisclaimer />
       </PageWrapper>
       {location.pathname === "/cross-chain-swap" && <SwitchLocaleLink />}
     </Trace>
