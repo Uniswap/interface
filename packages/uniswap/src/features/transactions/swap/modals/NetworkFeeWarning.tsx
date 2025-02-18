@@ -3,12 +3,14 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, UniswapXText, isWeb, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Gas } from 'ui/src/components/icons/Gas'
+import { NATIVE_LINE_HEIGHT_SCALE, fonts } from 'ui/src/theme'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FormattedUniswapXGasFeeInfo } from 'uniswap/src/features/gas/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
@@ -19,11 +21,13 @@ export function NetworkFeeWarning({
   tooltipTrigger,
   placement = 'top',
   uniswapXGasFeeInfo,
+  chainId,
 }: PropsWithChildren<{
   gasFeeHighRelativeToValue?: boolean
   tooltipTrigger?: InfoTooltipProps['trigger']
   placement?: InfoTooltipProps['placement']
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
+  chainId: UniverseChainId
 }>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -42,7 +46,11 @@ export function NetworkFeeWarning({
       modalProps={{
         backgroundIconColor: showHighGasFeeUI ? colors.statusCritical2.get() : colors.surface2.get(),
         captionComponent: (
-          <NetworkFeeText showHighGasFeeUI={showHighGasFeeUI} uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
+          <NetworkFeeText
+            showHighGasFeeUI={showHighGasFeeUI}
+            uniswapXGasFeeInfo={uniswapXGasFeeInfo}
+            chainId={chainId}
+          />
         ),
         rejectText: t('common.button.close'),
         icon: showHighGasFeeUI ? (
@@ -55,7 +63,13 @@ export function NetworkFeeWarning({
         title: showHighGasFeeUI ? t('transaction.networkCost.veryHigh.label') : t('transaction.networkCost.label'),
       }}
       tooltipProps={{
-        text: <NetworkFeeText showHighGasFeeUI={showHighGasFeeUI} uniswapXGasFeeInfo={uniswapXGasFeeInfo} />,
+        text: (
+          <NetworkFeeText
+            showHighGasFeeUI={showHighGasFeeUI}
+            uniswapXGasFeeInfo={uniswapXGasFeeInfo}
+            chainId={chainId}
+          />
+        ),
         placement,
         icon: null,
       }}
@@ -69,27 +83,43 @@ export function NetworkFeeWarning({
 function NetworkFeeText({
   showHighGasFeeUI,
   uniswapXGasFeeInfo,
+  chainId,
 }: {
   showHighGasFeeUI?: boolean
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
+  chainId: UniverseChainId
 }): JSX.Element {
   const { t } = useTranslation()
 
+  const variant: keyof typeof fonts = isWeb ? 'body4' : 'body2'
+  // we need to remove `NATIVE_LINE_HEIGHT_SCALE` if we switch to a button label font
+  const lineHeight = fonts[variant].lineHeight / (isWeb ? 1 : NATIVE_LINE_HEIGHT_SCALE)
+
   if (uniswapXGasFeeInfo) {
+    // TODO(WEB-4313): Remove need to manually adjust the height of the UniswapXText component for mobile.
+    const components = { gradient: <UniswapXText height={lineHeight} variant={variant} /> }
+
     return (
-      <Text color="$neutral2" textAlign="center" variant={isWeb ? 'body4' : 'body2'}>
-        <Trans
-          // TODO(WEB-4313): Remove need to manually adjust the height of the UniswapXText component for mobile.
-          components={{ gradient: <UniswapXText height={17} variant={isWeb ? 'body4' : 'body2'} /> }}
-          i18nKey="swap.warning.networkFee.message.uniswapX"
-        />
+      <Text color="$neutral2" textAlign="center" variant={variant}>
+        {/* TODO(WALL-5311): Investigate Trans component vertical alignment on android */}
+        {chainId === UniverseChainId.Unichain ? (
+          <Trans components={components} i18nKey="swap.warning.networkFee.message.uniswapX.unichain" />
+        ) : (
+          <Trans components={components} i18nKey="swap.warning.networkFee.message.uniswapX" />
+        )}
       </Text>
     )
   }
 
   return (
-    <Text color="$neutral2" textAlign="center" variant={isWeb ? 'body4' : 'body2'}>
-      {showHighGasFeeUI ? t('swap.warning.networkFee.highRelativeToValue') : t('swap.warning.networkFee.message')}
+    <Text color="$neutral2" textAlign="center" variant={variant}>
+      {showHighGasFeeUI
+        ? chainId === UniverseChainId.Unichain
+          ? t('swap.warning.networkFee.highRelativeToValue.unichain')
+          : t('swap.warning.networkFee.highRelativeToValue')
+        : chainId === UniverseChainId.Unichain
+          ? t('swap.warning.networkFee.message.unichain')
+          : t('swap.warning.networkFee.message')}
     </Text>
   )
 }
@@ -115,7 +145,8 @@ function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: Format
       {approvalFeeFormatted && (
         <Flex row justifyContent="space-between" width="100%">
           <Text color="$neutral2" variant="body4">
-            {t('swap.warning.networkFee.allow', { inputTokenSymbol })}
+            {/* FIXME: Verify WALL-5906 */}
+            {t('swap.warning.networkFee.allow', { inputTokenSymbol: inputTokenSymbol ?? '' })}
           </Text>
           <Text variant="body4">{approvalFeeFormatted}</Text>
         </Flex>

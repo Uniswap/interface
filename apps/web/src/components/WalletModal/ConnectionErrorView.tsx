@@ -1,12 +1,13 @@
 import { ButtonEmpty, ButtonPrimary } from 'components/Button/buttons'
-import Modal from 'components/Modal'
 import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Trans } from 'uniswap/src/i18n'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const Wrapper = styled.div`
   ${flexColumnNoWrap};
@@ -38,8 +39,13 @@ export default function ConnectionErrorView() {
     connection?.connect({ connector })
   }, [connection])
 
-  return (
-    <Modal isOpen={Boolean(connection?.error)} onDismiss={connection?.reset}>
+  return connection?.error ? (
+    <Modal
+      name={ModalName.ConnectionError}
+      isModalOpen={Boolean(connection?.error)}
+      onClose={connection?.reset}
+      padding={0}
+    >
       <Wrapper>
         <AlertTriangleIcon />
         <ThemedText.HeadlineSmall marginBottom="8px">
@@ -58,5 +64,5 @@ export default function ConnectionErrorView() {
         </ButtonEmpty>
       </Wrapper>
     </Modal>
-  )
+  ) : null
 }

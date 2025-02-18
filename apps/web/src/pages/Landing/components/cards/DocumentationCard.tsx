@@ -3,12 +3,13 @@ import { CodeBrackets } from 'pages/Landing/components/Icons'
 import { CardContents } from 'pages/Landing/components/cards/CardContents'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
+import { useTranslation } from 'react-i18next'
 import { validColor } from 'ui/src/theme'
-import { t } from 'uniswap/src/i18n'
 
 const primary = '#00C3A0'
 
 export function DocumentationCard() {
+  const { t } = useTranslation()
   const { rive, RiveComponent } = useRive({
     src: '/rive/landing-page.riv',
     artboard: 'Dev',

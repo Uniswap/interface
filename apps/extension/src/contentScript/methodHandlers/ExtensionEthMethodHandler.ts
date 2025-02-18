@@ -37,8 +37,8 @@ import { ExtensionEthMethods } from 'src/contentScript/methodHandlers/requestMet
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
 import { getPendingResponseInfo, postUnauthorizedError } from 'src/contentScript/methodHandlers/utils'
 import { WindowEthereumRequest } from 'src/contentScript/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 

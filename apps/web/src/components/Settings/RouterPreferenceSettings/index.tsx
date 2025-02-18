@@ -2,11 +2,11 @@ import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import Column from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { Switch } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 
 const InlineLink = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.accent1};

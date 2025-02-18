@@ -12,6 +12,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS, UNITAG_VALID_REGEX } from 'uniswap/src/features/unitags/constants'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import {
   UnitagClaim,
@@ -19,7 +20,6 @@ import {
   UnitagErrorCodes,
   UnitagGetAvatarUploadUrlResponse,
 } from 'uniswap/src/features/unitags/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -28,7 +28,6 @@ import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck/appCheck'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { claimUnitag, getUnitagAvatarUploadUrl } from 'wallet/src/features/unitags/api'
 import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'wallet/src/features/unitags/avatars'
-import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS, UNITAG_VALID_REGEX } from 'wallet/src/features/unitags/constants'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
@@ -123,6 +122,8 @@ export const getUnitagFormatError = (unitag: string, t: TFunction): string | und
     return t('unitags.username.error.max', {
       number: MAX_UNITAG_LENGTH,
     })
+  } else if (unitag !== unitag.toLowerCase()) {
+    return t('unitags.username.error.uppercase')
   } else if (!UNITAG_VALID_REGEX.test(unitag)) {
     return t('unitags.username.error.chars')
   }
@@ -141,7 +142,7 @@ export const useCanClaimUnitagName = (unitag: string | undefined): { error: stri
     params: unitagToSearch ? { username: unitagToSearch } : undefined,
     staleTime: 2 * ONE_MINUTE_MS,
   })
-  const { loading: ensLoading } = useENS(UniverseChainId.Mainnet, unitagToSearch, true)
+  const { loading: ensLoading } = useENS({ nameOrAddress: unitagToSearch, autocompleteDomain: true })
   const loading = unitagLoading || ensLoading
 
   // Check for availability

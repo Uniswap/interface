@@ -2,10 +2,14 @@
 
 exports[`RestoreCloudBackupScreen renders correctly 1`] = `
 <View
-  sentry-label="Screen"
   style={
     {
-      "backgroundColor": "#FFFFFF",
+      "backgroundColor": {
+        "dynamic": {
+          "dark": "#131313",
+          "light": "#FFFFFF",
+        },
+      },
       "flex": 1,
       "flexDirection": "column",
       "paddingLeft": undefined,
@@ -37,11 +41,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       collapsable={false}
       entering={[Function]}
       exiting={[Function]}
-      jestAnimatedStyle={
-        {
-          "value": {},
-        }
-      }
       style={
         {
           "flexDirection": "column",
@@ -81,7 +80,12 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
             style={
               {
                 "alignItems": "center",
-                "backgroundColor": "rgba(34,34,34,0.05)",
+                "backgroundColor": {
+                  "dynamic": {
+                    "dark": "rgba(255,255,255,0.12)",
+                    "light": "rgba(34,34,34,0.05)",
+                  },
+                },
                 "borderBottomLeftRadius": 8,
                 "borderBottomRightRadius": 8,
                 "borderTopLeftRadius": 8,
@@ -123,11 +127,11 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                   },
                 ]
               }
-              tintColor="#222222"
               vbHeight={18}
               vbWidth={19}
             >
               <RNSVGGroup
+                color="#222222"
                 fill={null}
                 propList={
                   [
@@ -159,7 +163,12 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": "#222222",
+              "color": {
+                "dynamic": {
+                  "dark": "#FFFFFF",
+                  "light": "#222222",
+                },
+              },
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
@@ -177,7 +186,12 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": "#7D7D7D",
+              "color": {
+                "dynamic": {
+                  "dark": "#9B9B9B",
+                  "light": "#7D7D7D",
+                },
+              },
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",

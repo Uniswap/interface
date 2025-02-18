@@ -7,6 +7,7 @@ module.exports = {
   ...preset,
   preset: 'jest-expo',
   displayName: 'Wallet Package',
+  testTimeout: 15000,
   collectCoverageFrom: [
     'src/**/*.{js,ts,tsx}',
     '!src/**/*.stories.**',

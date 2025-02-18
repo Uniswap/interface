@@ -1,9 +1,9 @@
 /* eslint-disable complexity */
-import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import {
   Flex,
+  FlexProps,
   Loader,
   Text,
   TouchableArea,
@@ -12,10 +12,9 @@ import {
   UniversalImageResizeMode,
   useIsDarkMode,
 } from 'ui/src'
-import { CopyAlt, ExternalLink, UniswapX, Unitag } from 'ui/src/components/icons'
+import { CopyAlt, ExternalLink, UniswapX } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
@@ -24,17 +23,18 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   BridgeTransactionInfo,
+  OffRampSaleInfo,
+  OnRampPurchaseInfo,
+  OnRampTransferInfo,
   TransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { isMobileApp } from 'utilities/src/platform'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { InfoRow } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/InfoRow'
+import { TransactionParticipantRow } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionParticipantRow'
 import { useNetworkFee } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/hooks'
 import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import {
@@ -42,9 +42,7 @@ import {
   hasInterfaceFees,
   shortenHash,
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
-import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { openTransactionLink } from 'wallet/src/utils/linking'
 
 const UNISWAP_FEE = 0.0025
@@ -52,16 +50,18 @@ const UNISWAP_FEE = 0.0025
 export function TransactionDetailsInfoRows({
   transactionDetails,
   isShowingMore,
+  pt,
   onClose,
 }: {
   transactionDetails: TransactionDetails
   isShowingMore: boolean
+  pt?: FlexProps['pt']
   onClose: () => void
 }): JSX.Element {
   const rows = useTransactionDetailsInfoRows(transactionDetails, isShowingMore, onClose)
 
   return (
-    <Flex gap="$spacing8" px="$spacing8">
+    <Flex gap="$spacing8" px="$spacing8" pt={pt}>
       {rows}
     </Flex>
   )
@@ -118,24 +118,18 @@ export function useTransactionDetailsInfoRows(
       break
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
+      specificRows.push(<FORProviderRow key="forProvider" isDarkMode={isDarkMode} typeInfo={typeInfo} />)
+      break
+    case TransactionType.OffRampSale:
+      specificRows.push(<FORProviderRow key="forProvider" isDarkMode={isDarkMode} typeInfo={typeInfo} />)
       specificRows.push(
-        <InfoRow key="onRampSender" label={t('transaction.details.from')}>
-          <UniversalImage
-            size={{
-              width: iconSizes.icon16,
-              height: iconSizes.icon16,
-              resizeMode: UniversalImageResizeMode.Contain,
-            }}
-            style={{
-              image: {
-                borderRadius: borderRadii.rounded4,
-              },
-            }}
-            uri={isDarkMode ? typeInfo.serviceProvider.logoDarkUrl : typeInfo.serviceProvider.logoLightUrl}
-          />
-          <Text variant="body3">{typeInfo.serviceProvider.name}</Text>
+        <InfoRow key="forFee" label={t('transaction.details.providerFee')}>
+          <Text variant="body3">
+            {typeInfo.transactionFee} {typeInfo.destinationTokenSymbol}
+          </Text>
         </InfoRow>,
       )
+      specificRows.push(<TransactionOfframpRow transactionId={typeInfo.providerTransactionId} />)
       break
     case TransactionType.Bridge:
       if (isShowingMore) {
@@ -183,22 +177,21 @@ export function useTransactionDetailsInfoRows(
             />,
           )
         }
-        specificRows.push(
-          <InfoRow key="contract" label={t('common.text.contract')}>
-            <Text variant="body3">{shortenAddress(typeInfo.dappInfo.address)}</Text>
-            <TouchableArea
-              onPress={async (): Promise<void> => {
-                if (typeInfo.dappInfo?.address) {
-                  await openUri(
-                    getExplorerLink(transactionDetails.chainId, typeInfo.dappInfo.address, ExplorerDataType.ADDRESS),
-                  )
-                }
-              }}
-            >
-              <ExternalLink color="$neutral3" size="$icon.16" />
-            </TouchableArea>
-          </InfoRow>,
-        )
+        const address = typeInfo.dappInfo?.address
+        if (address) {
+          specificRows.push(
+            <InfoRow key="contract" label={t('common.text.contract')}>
+              <Text variant="body3">{shortenAddress(address)}</Text>
+              <TouchableArea
+                onPress={async (): Promise<void> => {
+                  await openUri(getExplorerLink(transactionDetails.chainId, address, ExplorerDataType.ADDRESS))
+                }}
+              >
+                <ExternalLink color="$neutral3" size="$icon.16" />
+              </TouchableArea>
+            </InfoRow>,
+          )
+        }
       }
       break
     default:
@@ -233,7 +226,7 @@ function TransactionHashRow({ transactionDetails }: { transactionDetails: Transa
   const { hash, chainId } = transactionDetails
   const { t } = useTranslation()
 
-  if (!hash && isUniswapX(transactionDetails)) {
+  if (!hash) {
     return null
   }
 
@@ -253,18 +246,35 @@ function TransactionHashRow({ transactionDetails }: { transactionDetails: Transa
   )
 }
 
-function InfoRow({
-  label,
-  children,
-}: PropsWithChildren & {
-  label: string
-}): JSX.Element {
+function TransactionOfframpRow({ transactionId }: { transactionId?: string }): JSX.Element | null {
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
+
+  if (!transactionId) {
+    return null
+  }
+
   return (
-    <ContentRow label={label} variant="body3">
-      <Flex centered row gap="$spacing4">
-        {children}
-      </Flex>
-    </ContentRow>
+    <InfoRow key="forTransactionId" label={t('common.transactionId')}>
+      <TouchableArea
+        alignItems="center"
+        flexDirection="row"
+        gap="$spacing6"
+        justifyContent="center"
+        onPress={async (): Promise<void> => {
+          await setClipboard(transactionId)
+          dispatch(
+            pushNotification({
+              type: AppNotificationType.Copied,
+              copyType: CopyNotificationType.TransactionId,
+            }),
+          )
+        }}
+      >
+        <Text variant="body3">{shortenHash(transactionId)}</Text>
+        <CopyAlt color="$neutral3" size="$icon.16" />
+      </TouchableArea>
+    </InfoRow>
   )
 }
 
@@ -287,56 +297,6 @@ function DappInfoRow({ label, name, iconUrl }: { label: string; name: string; ic
         />
       )}
       <Text variant="body3">{name}</Text>
-    </InfoRow>
-  )
-}
-
-function TransactionParticipantRow({
-  onClose,
-  address,
-  isSend = false,
-}: {
-  onClose: () => void
-  address: string
-  isSend?: boolean
-}): JSX.Element {
-  const { t } = useTranslation()
-  const dispatch = useDispatch()
-  const { navigateToExternalProfile } = useWalletNavigation()
-  const { name: ensName } = useENS(UniverseChainId.Mainnet, address, true)
-  const { unitag } = useUnitagByAddress(address)
-  const personDisplayName = unitag?.username ?? ensName ?? shortenAddress(address)
-
-  const onPressParticipant = async (): Promise<void> => {
-    if (isMobileApp) {
-      // On mobile we navigate to external profile screen
-      navigateToExternalProfile({ address })
-      onClose()
-    } else {
-      // On extension we copy to clipboard either the address or the unitag (including the ".uni.eth" part)
-      await setClipboard(unitag?.username ? unitag.username + UNITAG_SUFFIX : address)
-      dispatch(
-        pushNotification({
-          type: AppNotificationType.Copied,
-          copyType: unitag?.username ? CopyNotificationType.Unitag : CopyNotificationType.Address,
-        }),
-      )
-    }
-  }
-
-  return (
-    <InfoRow label={isSend ? t('common.text.recipient') : t('common.text.sender')}>
-      <TouchableArea
-        alignItems="center"
-        flexDirection="row"
-        gap="$spacing4"
-        justifyContent="center"
-        onPress={onPressParticipant}
-      >
-        <Text variant="body3">{personDisplayName}</Text>
-        {unitag?.username && <Unitag size="$icon.16" />}
-        {!isMobileApp && <CopyAlt color="$neutral3" size="$icon.16" />}
-      </TouchableArea>
     </InfoRow>
   )
 }
@@ -395,6 +355,35 @@ function UniswapFeeRow({ typeInfo }: { typeInfo: SwapTypeTransactionInfo }): JSX
   return (
     <InfoRow label={t('transaction.details.uniswapFee', { feePercent: UNISWAP_FEE * 100 })}>
       <Text variant="body3">{formattedApproximateFee}</Text>
+    </InfoRow>
+  )
+}
+
+function FORProviderRow({
+  isDarkMode,
+  typeInfo,
+}: {
+  isDarkMode: boolean
+  typeInfo: OnRampPurchaseInfo | OnRampTransferInfo | OffRampSaleInfo
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  return (
+    <InfoRow key="forProvider" label={t('transaction.details.from')}>
+      <UniversalImage
+        size={{
+          width: iconSizes.icon16,
+          height: iconSizes.icon16,
+          resizeMode: UniversalImageResizeMode.Contain,
+        }}
+        style={{
+          image: {
+            borderRadius: borderRadii.rounded4,
+          },
+        }}
+        uri={isDarkMode ? typeInfo.serviceProvider.logoDarkUrl : typeInfo.serviceProvider.logoLightUrl}
+      />
+      <Text variant="body3">{typeInfo.serviceProvider.name}</Text>
     </InfoRow>
   )
 }

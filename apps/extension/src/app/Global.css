@@ -2,6 +2,8 @@ body,
 html {
   height: 100%;
   max-width: 100vw;
+  font-feature-settings: 'liga' 0;
+  font-variant-ligatures: no-contextual;
 }
 
 #root {

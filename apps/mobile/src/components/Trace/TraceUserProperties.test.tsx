@@ -2,7 +2,8 @@ import React from 'react'
 import { useColorScheme } from 'react-native'
 import renderer, { act } from 'react-test-renderer'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
-import * as biometricHooks from 'src/features/biometrics/hooks'
+import * as biometricAppSettingsHooks from 'src/features/biometrics/useBiometricAppSettings'
+import * as deviceBiometricHooks from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import { AuthMethod } from 'src/features/telemetry/utils'
 import * as versionUtils from 'src/utils/version'
 import * as useIsDarkModeFile from 'ui/src/hooks/useIsDarkMode'
@@ -14,7 +15,7 @@ import * as userSettingsHooks from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
-import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import * as walletHooks from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
@@ -31,6 +32,11 @@ jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => {
     Keyring: {
       getMnemonicIds: (): Promise<string[]> => Promise.resolve([]),
     },
+  }
+})
+jest.mock('wallet/src/features/accounts/useAccountListData', () => {
+  return {
+    useAccountBalances: jest.fn().mockReturnValue({ totalBalance: 0 }),
   }
 })
 
@@ -51,19 +57,28 @@ const signerAccount1 = {
   type: AccountType.SignerMnemonic,
   address: address1,
   timeImportedMs: 100000,
-}
+  pushNotificationsEnabled: true,
+  mnemonicId: '111',
+  derivationIndex: 0,
+} satisfies SignerMnemonicAccount
 
 const signerAccount2 = {
   type: AccountType.SignerMnemonic,
   address: address2,
   timeImportedMs: 100000,
-}
+  pushNotificationsEnabled: true,
+  mnemonicId: '222',
+  derivationIndex: 1,
+} satisfies SignerMnemonicAccount
 
 const signerAccount3 = {
   type: AccountType.SignerMnemonic,
   address: address3,
   timeImportedMs: 100000,
-}
+  pushNotificationsEnabled: true,
+  mnemonicId: '333',
+  derivationIndex: 2,
+} satisfies SignerMnemonicAccount
 
 describe('TraceUserProperties', () => {
   afterEach(() => {
@@ -86,11 +101,11 @@ describe('TraceUserProperties', () => {
     mockFn(walletHooks, 'useSignerAccounts', [signerAccount1, signerAccount2, signerAccount3])
     mockFn(userSettingsHooks, 'useHideSpamTokensSetting', true)
     mockFn(userSettingsHooks, 'useHideSmallBalancesSetting', false)
-    mockFn(biometricHooks, 'useBiometricAppSettings', {
+    mockFn(biometricAppSettingsHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: true,
       requiredForTransactions: true,
     })
-    mockFn(biometricHooks, 'useDeviceSupportsBiometricAuth', {
+    mockFn(deviceBiometricHooks, 'useDeviceSupportsBiometricAuth', {
       touchId: false,
       faceId: true,
     })
@@ -132,7 +147,6 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TransactionAuthMethod, AuthMethod.FaceId, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Language, 'English', undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Currency, 'USD', undefined)
-    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TestnetModeEnabled, false, undefined)
 
     expect(mocked).toHaveBeenCalledTimes(18)
   })
@@ -146,11 +160,11 @@ describe('TraceUserProperties', () => {
     mockFn(walletHooks, 'useViewOnlyAccounts', [])
     mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.On)
     mockFn(walletHooks, 'useSignerAccounts', [])
-    mockFn(biometricHooks, 'useBiometricAppSettings', {
+    mockFn(biometricAppSettingsHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: false,
       requiredForTransactions: false,
     })
-    mockFn(biometricHooks, 'useDeviceSupportsBiometricAuth', {
+    mockFn(deviceBiometricHooks, 'useDeviceSupportsBiometricAuth', {
       touchId: false,
       faceId: false,
     })
@@ -173,7 +187,6 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.WalletSignerCount, 0, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.AppOpenAuthMethod, AuthMethod.None, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TransactionAuthMethod, AuthMethod.None, undefined)
-    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TestnetModeEnabled, false, undefined)
 
     expect(mocked).toHaveBeenCalledTimes(12)
   })

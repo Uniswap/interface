@@ -1,7 +1,7 @@
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import {
   NATIVE_ANALYTICS_ADDRESS_VALUE,
   areCurrencyIdsEqual,

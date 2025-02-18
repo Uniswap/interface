@@ -1,17 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import {
-  InterfaceElementName,
-  InterfaceEventName,
-  LiquidityEventName,
-  LiquiditySource,
-} from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Percent, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { BlueCard, LightCard } from 'components/Card/cards'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
@@ -39,6 +38,7 @@ import AppBody from 'pages/App/AppBody'
 import { Dots, Wrapper } from 'pages/LegacyPool/styled'
 import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Field } from 'state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from 'state/mint/hooks'
@@ -50,7 +50,7 @@ import { Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -123,6 +123,8 @@ export default function AddLiquidity() {
     [independentField]: typedValue,
     [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
+  const addedCurrency0AmountUsd = useUSDCValue(parsedAmounts[Field.CURRENCY_A])
+  const addedCurrency1AmountUsd = useUSDCValue(parsedAmounts[Field.CURRENCY_B])
 
   // get the max amounts user can add
   const maxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -226,16 +228,23 @@ export default function AddLiquidity() {
           setTxHash(response.hash)
 
           sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
-            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
-            ...trace,
             ...transactionInfo,
-            type: LiquiditySource.V2,
-            transaction_hash: response.hash,
-            pool_address: computePairAddress({
-              factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],
-              tokenA: currencyA.wrapped,
-              tokenB: currencyB.wrapped,
+            ...getLPBaseAnalyticsProperties({
+              trace,
+              fee: FeeAmount.MEDIUM,
+              version: ProtocolVersion.V2,
+              poolId: computePairAddress({
+                factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],
+                tokenA: currencyA.wrapped,
+                tokenB: currencyB.wrapped,
+              }),
+              currency0: currencyA,
+              currency1: currencyB,
+              currency0AmountUsd: addedCurrency0AmountUsd,
+              currency1AmountUsd: addedCurrency1AmountUsd,
             }),
+            createPosition: false,
+            transaction_hash: response.hash,
           })
         }),
       )

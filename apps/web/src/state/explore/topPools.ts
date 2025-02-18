@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
-import { PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import {
   PoolSortFields,
@@ -13,9 +15,12 @@ import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'
 import { PoolStat } from 'state/explore/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 function useFilteredPools(pools?: PoolStat[]) {
   const filterString = useAtomValue(exploreSearchStringAtom)
+  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
@@ -30,15 +35,16 @@ function useFilteredPools(pools?: PoolStat[]) {
         const poolName = `${pool.token0?.symbol}/${pool.token1?.symbol}`.toLowerCase()
         const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
         return (
-          token0IncludesFilterString ||
-          token1IncludesFilterString ||
-          addressIncludesFilterString ||
-          token0HashIncludesFilterString ||
-          token1HashIncludesFilterString ||
-          poolNameIncludesFilterString
+          (token0IncludesFilterString ||
+            token1IncludesFilterString ||
+            addressIncludesFilterString ||
+            token0HashIncludesFilterString ||
+            token1HashIncludesFilterString ||
+            poolNameIncludesFilterString) &&
+          (pool.protocolVersion?.toLowerCase() !== 'v4' || isV4DataEnabled)
         )
       }),
-    [lowercaseFilterString, pools],
+    [isV4DataEnabled, lowercaseFilterString, pools],
   )
 }
 
@@ -53,10 +59,10 @@ function sortPools(sortState: PoolTableSortState, pools?: PoolStat[]) {
         return sortState.sortDirection === OrderDirection.Desc
           ? giveExploreStatDefaultValue(b?.volume1Day?.value) - giveExploreStatDefaultValue(a?.volume1Day?.value)
           : giveExploreStatDefaultValue(a?.volume1Day?.value) - giveExploreStatDefaultValue(b?.volume1Day?.value)
-      case PoolSortFields.VolumeWeek:
+      case PoolSortFields.Volume30D:
         return sortState.sortDirection === OrderDirection.Desc
-          ? giveExploreStatDefaultValue(b.volume1Week?.value) - giveExploreStatDefaultValue(a.volume1Week?.value)
-          : giveExploreStatDefaultValue(a.volume1Week?.value) - giveExploreStatDefaultValue(b.volume1Week?.value)
+          ? giveExploreStatDefaultValue(b.volume30Day?.value) - giveExploreStatDefaultValue(a.volume30Day?.value)
+          : giveExploreStatDefaultValue(a.volume30Day?.value) - giveExploreStatDefaultValue(b.volume30Day?.value)
       case PoolSortFields.Apr:
         return sortState.sortDirection === OrderDirection.Desc
           ? b.apr.greaterThan(a.apr)
@@ -85,17 +91,46 @@ function convertPoolStatsToPoolStat(poolStats: PoolStats): PoolStat {
     ),
     feeTier: poolStats.feeTier ?? V2_BIPS,
     volOverTvl: calculate1DVolOverTvl(poolStats.volume1Day?.value, poolStats.totalLiquidity?.value),
+    hookAddress: poolStats.hook?.address,
   }
 }
 
-export function useTopPools(sortState: PoolTableSortState) {
+function getPoolDataByProtocol(
+  data: ExploreStatsResponse | undefined,
+  protocol?: ProtocolVersion,
+): PoolStats[] | undefined {
+  switch (protocol) {
+    case ProtocolVersion.V2:
+      return data?.stats?.poolStatsV2
+    case ProtocolVersion.V3:
+      return data?.stats?.poolStatsV3
+    case ProtocolVersion.V4:
+      return data?.stats?.poolStatsV4
+    default:
+      return data?.stats?.poolStats
+  }
+}
+
+interface TopPoolData {
+  data?: ExploreStatsResponse
+  isLoading: boolean
+  isError: boolean
+}
+
+export function useExploreContextTopPools(sortState: PoolTableSortState, protocol?: ProtocolVersion) {
   const {
     exploreStats: { data, isLoading, error: isError },
   } = useContext(ExploreContext)
+  return useTopPools({ data, isLoading, isError }, sortState, protocol)
+}
+
+export function useTopPools(topPoolData: TopPoolData, sortState: PoolTableSortState, protocol?: ProtocolVersion) {
+  const { data, isLoading, isError } = topPoolData
+  const poolStatsByProtocol = getPoolDataByProtocol(data, protocol)
   const sortedPoolStats = useMemo(() => {
-    const poolStats = data?.stats?.poolStats?.map((poolStat: PoolStats) => convertPoolStatsToPoolStat(poolStat))
+    const poolStats = poolStatsByProtocol?.map((poolStat: PoolStats) => convertPoolStatsToPoolStat(poolStat))
     return sortPools(sortState, poolStats)
-  }, [data?.stats?.poolStats, sortState])
+  }, [poolStatsByProtocol, sortState])
   const filteredPoolStats = useFilteredPools(sortedPoolStats)
 
   return { topPools: filteredPoolStats, isLoading, isError }

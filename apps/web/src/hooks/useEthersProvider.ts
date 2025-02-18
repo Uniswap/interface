@@ -1,7 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
-import { UniverseChainInfo } from 'uniswap/src/types/chains'
+import { UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import type { Client, Transport } from 'viem'
 import { useClient, useConnectorClient } from 'wagmi'
 
@@ -13,7 +13,7 @@ export function clientToProvider(client?: Client<Transport, UniverseChainInfo>, 
   }
   const { chain, transport } = client
 
-  const ensAddress = chain.contracts?.ensRegistry?.address
+  const ensAddress = chain?.contracts?.ensRegistry?.address
   const network = chain
     ? {
         chainId: chain.id,

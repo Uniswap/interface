@@ -9,6 +9,7 @@ export enum FeeType {
 
 export interface GasStrategy {
   limitInflationFactor: number
+  displayLimitInflationFactor: number
   priceInflationFactor: number
   percentileThresholdFor1559Fee: number
   minPriorityFeeGwei?: number | null

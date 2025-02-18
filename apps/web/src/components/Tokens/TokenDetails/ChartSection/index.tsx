@@ -20,13 +20,12 @@ import {
   getTimePeriodFromDisplay,
 } from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAtomValue } from 'jotai/utils'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo, useState } from 'react'
-import { Flex, SegmentedControl, SegmentedControlOption, styled } from 'ui/src'
+import { Trans } from 'react-i18next'
+import { Flex, SegmentedControl, SegmentedControlOption, styled, useMedia } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Trans } from 'uniswap/src/i18n'
 
 export const TDP_CHART_HEIGHT_PX = 356
 const TDP_CHART_SELECTOR_OPTIONS = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL] as const
@@ -157,7 +156,8 @@ function ChartControls() {
     disableCandlestickUI,
   } = useTDPContext().chartState
   const refitChartContent = useAtomValue(refitChartContentAtom)
-  const isMediumScreen = !useScreenSize()['md']
+  const media = useMedia()
+  const isMediumScreen = media.lg
 
   return (
     <ChartActionsContainer>

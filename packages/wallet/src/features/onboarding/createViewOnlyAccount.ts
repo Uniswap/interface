@@ -13,6 +13,7 @@ export const createViewOnlyAccount = (address: string): ReadOnlyAccount => {
     type: AccountType.Readonly,
     address: formattedAddress,
     timeImportedMs: dayjs().valueOf(),
+    pushNotificationsEnabled: true,
   }
   return account
 }

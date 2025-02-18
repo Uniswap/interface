@@ -6,13 +6,13 @@ import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context
 import { useDispatch } from 'react-redux'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, TouchableArea, useHapticFeedback } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
@@ -33,21 +33,20 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { unitag } = useUnitagByAddress(address)
-  const { hapticFeedback } = useHapticFeedback()
   const { defaultChainId } = useEnabledChains()
 
   const onPressCopyAddress = useCallback(async () => {
     if (!address) {
       return
     }
-    await hapticFeedback.impact()
+
     await setClipboard(address)
     dispatch(pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address }))
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.CopyAddress,
       screen: MobileScreens.ExternalProfile,
     })
-  }, [address, dispatch, hapticFeedback])
+  }, [address, dispatch])
 
   const openExplorerLink = useCallback(async () => {
     await openUri(getExplorerLink(defaultChainId, address, ExplorerDataType.ADDRESS))
@@ -85,7 +84,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     const options: MenuAction[] = [
       {
         title: t('account.wallet.action.viewExplorer', {
-          blockExplorerName: UNIVERSE_CHAIN_INFO[defaultChainId].explorer.name,
+          blockExplorerName: getChainInfo(defaultChainId).explorer.name,
         }),
         action: openExplorerLink,
         systemIcon: 'link',

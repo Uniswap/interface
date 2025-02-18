@@ -6,14 +6,14 @@ import { call, put, select, takeLatest } from 'typed-redux-saga'
 import {
   Language,
   Locale,
-  WALLET_SUPPORTED_LANGUAGES,
+  PLATFORM_SUPPORTED_LANGUAGES,
   mapDeviceLanguageToLanguage,
   mapLocaleToLanguage,
 } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/hooks'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { setCurrentLanguage, updateLanguage } from 'uniswap/src/features/settings/slice'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { getDeviceLocales } from 'utilities/src/device/locales'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
@@ -61,7 +61,7 @@ function getDeviceLanguage(): Language {
     // Prefer languageTag as it's more specific, falls back to languageCode
     const mappedLanguage = mappedLanguageFromTag || mappedLanguageFromCode
 
-    if (mappedLanguage && WALLET_SUPPORTED_LANGUAGES.includes(mappedLanguage)) {
+    if (mappedLanguage && PLATFORM_SUPPORTED_LANGUAGES.includes(mappedLanguage)) {
       return mappedLanguage
     }
   }

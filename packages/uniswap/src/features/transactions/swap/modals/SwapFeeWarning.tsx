@@ -31,7 +31,11 @@ export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: b
       modalProps={{
         icon: <AlertCircleFilled color="$neutral1" size={iconSizes.icon20} />,
         backgroundIconColor: colors.surface2.get(),
-        caption,
+        captionComponent: (
+          <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'body4' : 'body2'}>
+            {caption}
+          </Text>
+        ),
         rejectText: t('common.button.close'),
         modalName: ModalName.NetworkFeeInfo,
         severity: WarningSeverity.None,

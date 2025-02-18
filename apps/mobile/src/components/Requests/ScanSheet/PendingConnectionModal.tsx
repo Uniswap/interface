@@ -58,7 +58,7 @@ const SitePermissions = (): JSX.Element => {
       backgroundColor="$surface2"
       borderColor="$surface3"
       borderRadius="$rounded16"
-      borderWidth={1}
+      borderWidth="$spacing1"
       minHeight={44}
       p="$spacing12"
     >

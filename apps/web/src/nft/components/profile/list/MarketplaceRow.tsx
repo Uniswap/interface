@@ -13,9 +13,9 @@ import { useNativeUsdPrice } from 'nft/hooks/useUsdPrice'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
-import { BREAKPOINTS } from 'theme'
+import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { t } from 'uniswap/src/i18n'
+import { breakpoints } from 'ui/src/theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const LastPriceInfo = styled(Column)`
@@ -23,7 +23,7 @@ const LastPriceInfo = styled(Column)`
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+  @media screen and (min-width: ${breakpoints.xl}px) {
     display: flex;
   }
 `
@@ -33,7 +33,7 @@ const FloorPriceInfo = styled(Column)`
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     display: flex;
   }
 `
@@ -50,7 +50,7 @@ const MarketIconsWrapper = styled(Row)`
   width: 44px;
   justify-content: flex-end;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     display: none;
   }
 `
@@ -74,7 +74,7 @@ const ExpandMarketIconWrapper = styled.div`
   margin-left: 4px;
   height: 28px;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     display: none;
   }
 `
@@ -84,7 +84,7 @@ const FeeColumnWrapper = styled(Column)`
   align-items: flex-end;
   display: none;
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     display: flex;
   }
 `
@@ -98,7 +98,7 @@ const ReturnColumn = styled(Column)`
   flex: 1.5;
   display: none;
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     display: flex;
   }
 `
@@ -126,6 +126,7 @@ export const MarketplaceRow = ({
   toggleExpandMarketplaceRows,
   rowHovered,
 }: MarketplaceRowProps) => {
+  const { t } = useTranslation()
   const { formatNumberOrString, formatDelta } = useFormatter()
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { RankingType } from 'uniswap/src/data/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
@@ -9,7 +10,6 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { RankingType } from 'wallet/src/features/wallet/types'
 
 // Mobile: 63
 // Extension: 0
@@ -324,4 +324,49 @@ export function updateExploreOrderByType(state: any): any {
       },
     },
   }
+}
+
+// Mobile: 81
+// Extension: 17
+export function removeCreatedOnboardingRedesignAccountBehaviorHistory(state: any): any {
+  const newState = {
+    ...state,
+    behaviorHistory: {
+      ...state.behaviorHistory,
+      createdOnboardingRedesignAccount: undefined,
+    },
+  }
+
+  delete newState.behaviorHistory.createdOnboardingRedesignAccount
+  return newState
+}
+
+// Mobile: 84
+// Extension: 18
+export function deleteWelcomeWalletCardBehaviorHistory(state: any): any {
+  const newState = { ...state }
+  delete newState.behaviorHistory?.hasViewedWelcomeWalletCard
+  return newState
+}
+
+// Mobile: 85
+// Extension: 19
+export function moveTokenAndNFTVisibility(state: any): any {
+  const newState = {
+    ...state,
+    visibility: {
+      ...state.visibility,
+      positions: {},
+      tokens: state.favorites.tokensVisibility,
+      nfts: state.favorites.nftsVisibility,
+    },
+    favorites: {
+      ...state.favorites,
+      tokensVisibility: undefined,
+      nftsVisibility: undefined,
+    },
+  }
+  delete newState.favorites.tokensVisibility
+  delete newState.favorites.nftsVisibility
+  return newState
 }

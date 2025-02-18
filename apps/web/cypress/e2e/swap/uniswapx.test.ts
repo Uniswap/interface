@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getTestSelector, setupHardhat } from '../../utils'
 import { stubNonPriceQuoteWith, stubSwapTxReceipt } from '../../utils/uniswapx-swap'
@@ -37,7 +37,7 @@ describe('UniswapX v1', () => {
     after(() => cy.hardhat({ automine: true }))
 
     setupHardhat(async (hardhat) => {
-      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 2e18))
+      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 5e18))
       await hardhat.mine()
     })
 

@@ -17,12 +17,13 @@ import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { t } from 'uniswap/src/i18n'
+import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -34,7 +35,7 @@ import { getWalletMeta } from 'utils/walletMeta'
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
 class GasEstimationError extends Error {
   constructor() {
-    super(t('swap.error.expectedToFail'))
+    super(i18n.t('swap.error.expectedToFail'))
   }
 }
 
@@ -44,7 +45,7 @@ class GasEstimationError extends Error {
  */
 class ModifiedSwapError extends Error {
   constructor() {
-    super(t('swap.error.modifiedByWallet'))
+    super(i18n.t('swap.error.modifiedByWallet'))
   }
 }
 
@@ -60,11 +61,12 @@ export function useUniversalRouterSwapCallback(
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
   options: SwapOptions,
 ) {
+  const { t } = useTranslation()
   const account = useAccount()
   const accountRef = useRef(account)
   accountRef.current = account
 
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
   const provider = useEthersWeb3Provider({ chainId })
   const providerRef = useRef(provider)
   providerRef.current = provider
@@ -143,7 +145,7 @@ export function useUniversalRouterSwapCallback(
               } catch (error) {
                 if (didUserReject(error)) {
                   walletTrace.setStatus('cancelled')
-                  throw new UserRejectedRequestError(swapErrorToUserReadableMessage(error))
+                  throw new UserRejectedRequestError(swapErrorToUserReadableMessage(t, error))
                 } else {
                   throw error
                 }
@@ -158,8 +160,8 @@ export function useUniversalRouterSwapCallback(
               fiatValues,
               txHash: response.hash,
               portfolioBalanceUsd,
+              trace: analyticsContext,
             }),
-            ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
             [CustomUserProperties.WALLET_ADDRESS]: account.address,
             [CustomUserProperties.WALLET_TYPE]: account.connector.name,
@@ -188,12 +190,13 @@ export function useUniversalRouterSwapCallback(
             throw error
           } else {
             trace.setError(error)
-            throw Error(swapErrorToUserReadableMessage(error))
+            throw Error(swapErrorToUserReadableMessage(t, error))
           }
         }
       }),
     [
       trade,
+      t,
       chainId,
       getDeadline,
       options.slippageTolerance,

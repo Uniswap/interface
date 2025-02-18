@@ -8,19 +8,20 @@ import { StatPair, StatWrapper, StatsWrapper } from 'components/Tokens/TokenDeta
 import { Hr } from 'components/Tokens/TokenDetails/shared'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
-import { useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { getSupportedGraphQlChain } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import deprecatedStyled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { capitalize } from 'tsafe'
 import { Anchor, Flex, Text, TextProps, styled } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const SWAP_COMPONENT_WIDTH = 360
 
@@ -28,21 +29,21 @@ export const TokenDetailsLayout = styled(Flex, {
   row: true,
   justifyContent: 'center',
   width: '100%',
-  gap: 40,
+  gap: 80,
   py: '$spacing48',
-  px: '$padding20',
+  px: '$spacing40',
 
+  $sm: {
+    gap: 0,
+  },
   $lg: {
     pt: 0,
-    px: '$padding16',
+    px: '$padding20',
     pb: 52,
   },
   $xl: {
     flexDirection: 'column',
     alignItems: 'center',
-  },
-  $xxl: {
-    gap: 60,
   },
 })
 
@@ -65,7 +66,7 @@ export const RightPanel = styled(Flex, {
   },
 })
 
-export const TokenInfoContainer = styled(Flex, {
+const TokenInfoContainer = styled(Flex, {
   row: true,
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -76,7 +77,7 @@ export const TokenInfoContainer = styled(Flex, {
   zIndex: '$default',
 })
 
-export const TokenNameCell = styled(Flex, {
+const TokenNameCell = styled(Flex, {
   row: true,
   gap: '$gap12',
   alignItems: 'center',
@@ -268,17 +269,17 @@ function LoadingStats() {
 
 /* Loading State: row component with loading bubbles */
 function TokenDetailsSkeleton() {
-  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
+  const { id: chainId, urlParam } = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const token = useCurrency(tokenAddress === NATIVE_CHAIN_ID ? 'ETH' : tokenAddress, chain.id)
+  const token = useCurrency(tokenAddress === NATIVE_CHAIN_ID ? 'ETH' : tokenAddress, chainId)
 
   return (
     <LeftPanel>
       <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-        <BreadcrumbNavLink to={`/explore/${chain.urlParam}`}>
+        <BreadcrumbNavLink to={`/explore/${urlParam}`}>
           <Trans i18nKey="common.explore" /> <ChevronRight size={14} />
         </BreadcrumbNavLink>
-        <BreadcrumbNavLink to={`/explore/tokens/${chain.urlParam}`}>
+        <BreadcrumbNavLink to={`/explore/tokens/${urlParam}`}>
           <Trans i18nKey="common.tokens" /> <ChevronRight size={14} />
         </BreadcrumbNavLink>
         <NavBubble />
@@ -313,7 +314,7 @@ function TokenDetailsSkeleton() {
       {tokenAddress && (
         <LoadingFooterHeaderContainer gap="xs">
           <Trans i18nKey="common.loading" />
-          <LoadingFooterHeader>{getLoadingTitle(token, tokenAddress, chain.id, chain.urlParam)}</LoadingFooterHeader>
+          <LoadingFooterHeader>{getLoadingTitle(token, tokenAddress, chainId, urlParam)}</LoadingFooterHeader>
         </LoadingFooterHeaderContainer>
       )}
     </LeftPanel>

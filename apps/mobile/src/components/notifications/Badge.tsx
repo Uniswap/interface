@@ -17,7 +17,7 @@ function _NotificationBadge({ children, address }: Props): JSX.Element {
           backgroundColor="$accent1"
           borderColor="$surface2"
           borderRadius="$roundedFull"
-          borderWidth={2}
+          borderWidth="$spacing2"
           height={NOTIFICATION_DOT_SIZE}
           position="absolute"
           right={-NOTIFICATION_DOT_SIZE / 4}

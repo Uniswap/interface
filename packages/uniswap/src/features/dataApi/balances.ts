@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
+import { NetworkStatus, QueryHookOptions, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
 import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -8,24 +8,23 @@ import {
   IAmount,
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
+  PortfolioBalancesQueryVariables,
   PortfolioValueModifier,
   usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult, SpamCode } from 'uniswap/src/data/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
   buildCurrency,
   buildCurrencyInfo,
   currencyIdToContractInput,
+  getCurrencySafetyInfo,
   sortByName,
   usePersistedError,
 } from 'uniswap/src/features/dataApi/utils'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -48,31 +47,26 @@ export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: Portfol
 /**
  * Returns all balances indexed by checksummed currencyId for a given address
  * @param address
- * @param pollInterval optional `PollingInterval` representing polling frequency.
+ * @param queryOptions.pollInterval optional `PollingInterval` representing polling frequency.
  *  If undefined, will query once and not poll.
  * NOTE:
  *  on TokenDetails, useBalances relies rely on usePortfolioBalances but don't need polling versions of it.
  *  Including polling was causing multiple polling intervals to be kicked off with usePortfolioBalances.
  *  Same with on Token Selector's TokenSearchResultList, since the home screen has a usePortfolioBalances polling hook,
  *  we don't need to duplicate the polling interval when token selector is open
- * @param onCompleted
- * @param fetchPolicy
- * @returns
+ * @param queryOptions - QueryHookOptions type for usePortfolioBalancesQuery to be set if not already set internally.
  */
 export function usePortfolioBalances({
   address,
-  pollInterval,
-  onCompleted,
-  fetchPolicy,
+  ...queryOptions
 }: {
   address?: Address
-  pollInterval?: PollingInterval
-  onCompleted?: () => void
-  fetchPolicy?: WatchQueryFetchPolicy
-}): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
+} & QueryHookOptions<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>): GqlResult<
+  Record<CurrencyId, PortfolioBalance>
+> & { networkStatus: NetworkStatus } {
   const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
-    fetchPolicy,
-    pollInterval,
+    fetchPolicy: queryOptions?.fetchPolicy,
+    pollInterval: queryOptions?.pollInterval,
   })
 
   const valueModifiers = usePortfolioValueModifiers(address)
@@ -85,12 +79,12 @@ export function usePortfolioBalances({
     refetch,
     error,
   } = usePortfolioBalancesQuery({
+    ...queryOptions,
     fetchPolicy: internalFetchPolicy,
     notifyOnNetworkStatusChange: true,
-    onCompleted,
     pollInterval: internalPollInterval,
     variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
-    skip: !address,
+    skip: !address || queryOptions?.skip,
   })
 
   const persistedError = usePersistedError(loading, error)
@@ -103,6 +97,10 @@ export function usePortfolioBalances({
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
     balancesForAddress.forEach((balance) => {
+      if (!balance) {
+        return
+      }
+
       const {
         __typename: tokenBalanceType,
         id: tokenBalanceId,
@@ -111,15 +109,16 @@ export function usePortfolioBalances({
         tokenProjectMarket,
         quantity,
         isHidden,
-      } = balance || {}
-      const { name, address: tokenAddress, chain, decimals, symbol, project } = token || {}
-      const { logoUrl, isSpam, safetyLevel, spamCode } = project || {}
-      const chainId = fromGraphQLChain(chain)
+      } = balance
 
       // require all of these fields to be defined
-      if (!balance || !quantity || !token) {
+      if (!quantity || !token) {
         return
       }
+
+      const { name, address: tokenAddress, chain, decimals, symbol, project, feeData, protectionInfo } = token
+      const { logoUrl, isSpam, safetyLevel, spamCode } = project || {}
+      const chainId = fromGraphQLChain(chain)
 
       const currency = buildCurrency({
         chainId,
@@ -127,6 +126,8 @@ export function usePortfolioBalances({
         decimals,
         symbol,
         name,
+        buyFeeBps: feeData?.buyFeeBps,
+        sellFeeBps: feeData?.sellFeeBps,
       })
 
       if (!currency) {
@@ -137,14 +138,16 @@ export function usePortfolioBalances({
 
       const currencyInfo = buildCurrencyInfo({
         currency,
-        currencyId: currencyId(currency),
+        currencyId: id,
         logoUrl,
         isSpam,
         safetyLevel,
+        safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
         spamCode,
       })
 
       const portfolioBalance = buildPortfolioBalance({
+        id: tokenBalanceId,
         cacheId: `${tokenBalanceType}:${tokenBalanceId}`,
         quantity,
         balanceUSD: denominatedValue?.value,
@@ -266,23 +269,23 @@ export function usePortfolioValueModifiers(addresses?: Address | Address[]): Por
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
 
-  const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(
-    (acc: TokenOverrides, [key, tokenVisibility]) => {
-      const contractInput = currencyIdToContractInput(key)
-      if (tokenVisibility.isVisible) {
-        acc.tokenIncludeOverrides.push(contractInput)
-      } else {
-        acc.tokenExcludeOverrides.push(contractInput)
-      }
-      return acc
-    },
-    {
-      tokenIncludeOverrides: [],
-      tokenExcludeOverrides: [],
-    },
-  )
-
   const modifiers = useMemo<PortfolioValueModifier[]>(() => {
+    const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(
+      (acc: TokenOverrides, [key, tokenVisibility]) => {
+        const contractInput = currencyIdToContractInput(key)
+        if (tokenVisibility.isVisible) {
+          acc.tokenIncludeOverrides.push(contractInput)
+        } else {
+          acc.tokenExcludeOverrides.push(contractInput)
+        }
+        return acc
+      },
+      {
+        tokenIncludeOverrides: [],
+        tokenExcludeOverrides: [],
+      },
+    )
+
     return addressArray.map((addr) => ({
       ownerAddress: addr,
       tokenIncludeOverrides,
@@ -290,7 +293,7 @@ export function usePortfolioValueModifiers(addresses?: Address | Address[]): Por
       includeSmallBalances: !hideSmallBalances,
       includeSpamTokens: !hideSpamTokens,
     }))
-  }, [addressArray, tokenIncludeOverrides, tokenExcludeOverrides, hideSmallBalances, hideSpamTokens])
+  }, [addressArray, currencyIdToTokenVisibility, hideSmallBalances, hideSpamTokens])
 
   return modifiers.length > 0 ? modifiers : undefined
 }
@@ -373,7 +376,7 @@ export function useSortedPortfolioBalances({
   pollInterval,
   onCompleted,
 }: {
-  address: Address
+  address?: Address
   pollInterval?: PollingInterval
   onCompleted?: () => void
 }): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {

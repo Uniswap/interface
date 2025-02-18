@@ -1,4 +1,3 @@
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
   TESTNET_MODE_BANNER_HEIGHT,
   useHideSpamTokensSetting,
@@ -8,8 +7,9 @@ import { selectIsTestnetModeEnabled, selectWalletHideSpamTokensSetting } from 'u
 
 import { renderHook } from 'uniswap/src/test/test-utils'
 
+const UserAgentMock = jest.requireMock('utilities/src/platform')
 jest.mock('utilities/src/platform', () => ({
-  isMobileApp: jest.fn(),
+  ...jest.requireActual('utilities/src/platform'),
 }))
 
 jest.mock('uniswap/src/features/gating/hooks', () => ({
@@ -22,9 +22,8 @@ jest.mock('uniswap/src/features/settings/selectors', () => ({
   selectWalletHideSpamTokensSetting: jest.fn(),
 }))
 
-const mockedSelectIsTestnetModeEnabled = selectIsTestnetModeEnabled as jest.Mock
 const mockedSelectWalletHideSpamTokensSetting = selectWalletHideSpamTokensSetting as jest.Mock
-const mockedUseFeatureFlag = useFeatureFlag as jest.Mock
+const mockedSelectIsTestnetModeEnabled = selectIsTestnetModeEnabled as jest.Mock
 
 describe('useHideSpamTokensSetting', () => {
   it('should return true when hideSpamTokens is true', () => {
@@ -44,10 +43,13 @@ describe('useHideSpamTokensSetting', () => {
   })
 
   describe('useTestnetModeBannerHeight', () => {
-    it('should return TESTNET_MODE_BANNER_HEIGHT when isTestnetModeEnabled is true and isMobileApp is true', () => {
-      mockedSelectIsTestnetModeEnabled.mockReturnValue(true)
-      mockedUseFeatureFlag.mockReturnValue(true)
+    beforeEach(() => {
+      UserAgentMock.isMobileApp = false
+    })
 
+    it('should return TESTNET_MODE_BANNER_HEIGHT when isTestnetModeEnabled is true and isMobileApp is true', () => {
+      UserAgentMock.isMobileApp = true
+      mockedSelectIsTestnetModeEnabled.mockReturnValue(true)
       const { result } = renderHook(() => useTestnetModeBannerHeight())
 
       expect(result.current).toBe(TESTNET_MODE_BANNER_HEIGHT)
@@ -55,17 +57,6 @@ describe('useHideSpamTokensSetting', () => {
 
     it('should return 0 when isTestnetModeEnabled is true and isMobileApp is false', () => {
       mockedSelectIsTestnetModeEnabled.mockReturnValue(true)
-      mockedUseFeatureFlag.mockReturnValue(false)
-
-      const { result } = renderHook(() => useTestnetModeBannerHeight())
-
-      expect(result.current).toBe(0)
-    })
-
-    it('should return 0 when isTestnetModeEnabled is false', () => {
-      mockedSelectIsTestnetModeEnabled.mockReturnValue(false)
-      mockedUseFeatureFlag.mockReturnValue(false)
-
       const { result } = renderHook(() => useTestnetModeBannerHeight())
 
       expect(result.current).toBe(0)

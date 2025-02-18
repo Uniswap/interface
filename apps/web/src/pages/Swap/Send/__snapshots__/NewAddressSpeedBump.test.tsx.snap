@@ -1,67 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NewAddressSpeedBumpModal should not render identicon if account has no ENS avatar/unitag pp 1`] = `
-.c8 {
+.c6 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c9 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c20 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.c21 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.c14 {
+.c11 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -69,7 +15,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   letter-spacing: -0.01em;
 }
 
-.c16 {
+.c13 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -77,25 +23,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   letter-spacing: -0.01em;
 }
 
-.c10 {
-  color: #222222;
-  cursor: pointer;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c10:hover {
-  opacity: 0.6;
-}
-
-.c10:active {
-  opacity: 0.4;
-}
-
-.c6 {
+.c4 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -106,15 +34,15 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   font-weight: 500;
 }
 
-.c6:hover {
+.c4:hover {
   opacity: 0.6;
 }
 
-.c6:active {
+.c4:active {
   opacity: 0.4;
 }
 
-.c25 {
+.c19 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -128,7 +56,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   width: 100%;
 }
 
-.c22 {
+.c16 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -163,73 +91,66 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   user-select: none;
 }
 
-.c22:active .c24 {
+.c16:active .c18 {
   background-color: #B8C0DC3d;
 }
 
-.c22:focus .c24 {
+.c16:focus .c18 {
   background-color: #B8C0DC3d;
 }
 
-.c22:hover .c24 {
+.c16:hover .c18 {
   background-color: #98A1C014;
 }
 
-.c22:disabled {
+.c16:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c22:disabled:active .c24,
-.c22:disabled:focus .c24,
-.c22:disabled:hover .c24 {
+.c16:disabled:active .c18,
+.c16:disabled:focus .c18,
+.c16:disabled:hover .c18 {
   background-color: transparent;
 }
 
-.c0 {
-  will-change: transform,opacity;
-}
-
-.c0[data-reach-dialog-overlay] {
-  z-index: 1040;
-  background-color: transparent;
-  overflow: hidden;
+.c7 {
+  width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  padding: 0;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  overflow-y: scroll;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  background-color: rgba(0,0,0,0.60);
+  gap: 12px;
 }
 
-.c1 {
-  overflow-y: auto;
-}
-
-.c1[data-reach-dialog-content] {
-  margin: auto;
-  background-color: #F9F9F9;
-  border: 1px solid #22222212;
-  box-shadow: 8px 12px 20px rgba(51,53,72,0.04),4px 6px 12px rgba(51,53,72,0.02),4px 4px 8px rgba(51,53,72,0.04);
-  padding: 0px;
-  width: 50vw;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 90vh;
-  max-width: 420px;
-  display: inline-table;
-  border-radius: 20px;
-}
-
-.c7 {
+.c5 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -243,17 +164,17 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   stroke: none;
 }
 
-.c7:hover {
+.c5:hover {
   background: #22222212;
   color: #222222;
   opacity: unset;
 }
 
-.c7:hover path {
+.c5:hover path {
   fill: #222222;
 }
 
-.c2 {
+.c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -268,7 +189,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   gap: 24px;
 }
 
-.c11 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -283,7 +204,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   gap: 16px;
 }
 
-.c13 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -298,21 +219,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   gap: 8px;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c3 {
+.c1 {
   width: 100%;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -320,15 +227,14 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   align-items: center;
 }
 
-.c4 {
+.c2 {
   background-color: #FFFFFF;
-  outline: 1px solid #22222212;
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 16px 24px 24px 24px;
   width: 100%;
 }
 
-.c12 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -347,14 +253,14 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   border-radius: 12px;
 }
 
-.c15 {
+.c12 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c17 {
+.c14 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -365,7 +271,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   text-align: center;
 }
 
-.c23 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -378,47 +284,16 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   border-radius: 12px;
 }
 
-.c5 {
+.c3 {
   padding: 4px 0px;
 }
 
-.c19 {
-  padding: 20px 16px;
-  border: 1px solid #22222212;
-  gap: 8px;
-  border-radius: 20px;
-}
-
-@media screen and (max-width:640px) {
-  .c0[data-reach-dialog-overlay] {
-    -webkit-align-items: flex-end;
-    -webkit-box-align: flex-end;
-    -ms-flex-align: flex-end;
-    align-items: flex-end;
-  }
-}
-
-@media screen and (max-width:768px) {
-  .c1[data-reach-dialog-content] {
-    width: 65vw;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c1[data-reach-dialog-content] {
-    margin: 0;
-    width: 100vw;
-    border-radius: 20px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-}
-
 <body
-  data-scroll-locked=""
+  style="pointer-events: none;"
 >
   <div
     aria-hidden="true"
+    data-aria-hidden="true"
   >
     <span
       class=""
@@ -430,178 +305,192 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
         <span
           class=" t_light _dsp_contents is_Theme"
         >
+          <span
+            class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+          >
+            <h2
+              class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
+              data-disable-theme="true"
+              id="title-:r1:"
+              role="heading"
+            />
+          </span>
           <div
-            tabindex="0"
+            style="display: contents;"
           />
         </span>
       </span>
     </span>
   </div>
-  <reach-portal>
-    <div
-      data-focus-guard="true"
-      style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"
-      tabindex="0"
-    />
-    <div
-      data-focus-lock-disabled="false"
+  <div
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _contain-strict _position-fixed _top-0px _left-0px _right-0px _bottom-0px _maxWidth-100vw _maxHeight-100vh _pointerEvents-none _zIndex-1060"
+  >
+    <span
+      class=" _dsp_contents"
     >
-      <div>
+      <span
+        class="t_sub_theme t_light _dsp_contents is_Theme"
+      >
         <div
-          class="c0"
-          data-reach-dialog-overlay=""
-          style="opacity: 0;"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-fixed _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _top-0px _left-0px _right-0px _bottom-0px _zIndex-1060 _maxHeight-100vh _pointerEvents-auto"
         >
           <div
-            aria-label="dialog"
-            aria-modal="true"
-            class="c1"
-            data-reach-dialog-content=""
-            role="dialog"
-            tabindex="-1"
+            aria-hidden="true"
+            class=" is_DialogOverlay  is_DialogOverlay "
+            data-aria-hidden="true"
+            data-state="open"
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: absolute; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); z-index: 1040; pointer-events: auto; opacity: 0;"
+          />
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-calc100vh-32087695319 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
           >
             <div
-              class="c2 c3 c4"
+              class="_dsp_contents"
+              data-remove-scroll-container="true"
             >
               <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037 c5"
+                style="display: contents; pointer-events: auto;"
               >
-                <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
-                >
-                  <a
-                    class="c6 c7"
-                    href="https://support.uniswap.org/hc/en-us"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    <div
-                      class="c8 c9"
-                    >
-                      <svg
-                        fill="none"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        width="16"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                          fill="#9B9B9B"
-                        />
-                      </svg>
-                      Get help
-                    </div>
-                  </a>
-                  <svg
-                    class="c10"
-                    data-testid="Dialog-closeButton"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <line
-                      x1="18"
-                      x2="6"
-                      y1="6"
-                      y2="18"
-                    />
-                    <line
-                      x1="6"
-                      x2="18"
-                      y1="6"
-                      y2="18"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div
-                class="c2 c3"
-              >
-                <div
-                  class="c11 c3"
+                <dialog
+                  aria-describedby="description-:r1:"
+                  aria-labelledby="title-:r1:"
+                  class=" is_DialogContent "
+                  data-state="open"
+                  id="content-:r1:"
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 0px 0px 0px 0px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: auto; overflow-y: auto; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
+                  tabindex="-1"
                 >
                   <div
-                    class="c12"
-                  >
-                    <svg
-                      fill="none"
-                      height="28"
-                      viewBox="0 0 28 28"
-                      width="28"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M20.5625 3.5H7.4375C4.8125 3.5 3.5 4.8125 3.5 7.4375V20.5625C3.5 23.1875 4.8125 24.5 7.4375 24.5H20.5625C23.1875 24.5 24.5 23.1875 24.5 20.5625V7.4375C24.5 4.8125 23.1875 3.5 20.5625 3.5ZM14.0094 8.16667C15.9426 8.16667 17.5094 9.7335 17.5094 11.6667C17.5094 13.5998 15.9426 15.1667 14.0094 15.1667C12.0762 15.1667 10.5094 13.5998 10.5094 11.6667C10.5094 9.7335 12.0762 8.16667 14.0094 8.16667ZM20.5567 22.75H7.44334C7.29167 22.75 7.15168 22.75 7.01168 22.7383C7.16334 20.755 8.28338 18.1649 12.005 18.1649H15.995C19.705 18.1649 20.8367 20.7783 20.9883 22.7383C20.8483 22.75 20.7083 22.75 20.5567 22.75Z"
-                        fill="#7D7D7D"
-                      />
-                    </svg>
-                  </div>
-                  <div
-                    class="c13 c3"
+                    class="c0 c1 c2"
                   >
                     <div
-                      class="c14 c15 css-4kpdx7"
-                    >
-                      New address
-                    </div>
-                    <div
-                      class="c16 c17 css-1urox24"
-                    >
-                      You haven’t transacted with this address before. Make sure it’s the correct address before continuing.
-                    </div>
-                    <div
-                      class="c18 c3 c19"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
                     >
                       <div
-                        class="c8 c20"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
                       >
-                        <div
-                          class="c14 css-n8z49y"
+                        <a
+                          class="c4 c5"
+                          href="https://support.uniswap.org/hc/en-us"
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
-                          0x9984b4b4E408e8D618A879e5315BD30952c89103
+                          <div
+                            class="c6 c7"
+                          >
+                            <svg
+                              fill="none"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
+                                fill="#9B9B9B"
+                              />
+                            </svg>
+                            Get help
+                          </div>
+                        </a>
+                        <div
+                          class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+                          data-testid="Dialog-closeButton"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <div
+                      class="c0 c1"
+                    >
+                      <div
+                        class="c8 c1"
+                      >
+                        <div
+                          class="c9"
+                        >
+                          <svg
+                            fill="none"
+                            height="28"
+                            viewBox="0 0 28 28"
+                            width="28"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M20.5625 3.5H7.4375C4.8125 3.5 3.5 4.8125 3.5 7.4375V20.5625C3.5 23.1875 4.8125 24.5 7.4375 24.5H20.5625C23.1875 24.5 24.5 23.1875 24.5 20.5625V7.4375C24.5 4.8125 23.1875 3.5 20.5625 3.5ZM14.0094 8.16667C15.9426 8.16667 17.5094 9.7335 17.5094 11.6667C17.5094 13.5998 15.9426 15.1667 14.0094 15.1667C12.0762 15.1667 10.5094 13.5998 10.5094 11.6667C10.5094 9.7335 12.0762 8.16667 14.0094 8.16667ZM20.5567 22.75H7.44334C7.29167 22.75 7.15168 22.75 7.01168 22.7383C7.16334 20.755 8.28338 18.1649 12.005 18.1649H15.995C19.705 18.1649 20.8367 20.7783 20.9883 22.7383C20.8483 22.75 20.7083 22.75 20.5567 22.75Z"
+                              fill="#7D7D7D"
+                            />
+                          </svg>
+                        </div>
+                        <div
+                          class="c10 c1"
+                        >
+                          <div
+                            class="c11 c12 css-4kpdx7"
+                          >
+                            New address
+                          </div>
+                          <div
+                            class="c13 c14 css-1urox24"
+                          >
+                            You haven’t transacted with this address before. Make sure it’s the correct address before continuing.
+                          </div>
+                          <div
+                            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _pt-t-space-pad1331704900 _pb-t-space-pad1331704900 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                          >
+                            <span
+                              class="font_body _fontFamily-_sm_f-family _fontSize-_sm_f-size-micr111 _lineHeight-_sm_f-lineHeigh1263414315 _fontWeight-_sm_f-weight-bo3548 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                              data-disable-theme="true"
+                            >
+                              0x9984b4b4E408e8D618A879e5315BD30952c89103
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="c6 c15"
+                      >
+                        <button
+                          class="c16 c17"
+                        >
+                          <div
+                            class="c18 c19"
+                          />
+                          Cancel
+                        </button>
+                        <button
+                          class="c16 c17"
+                        >
+                          <div
+                            class="c18 c19"
+                          />
+                          Continue
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div
-                  class="c8 c21"
-                >
-                  <button
-                    class="c22 c23"
-                  >
-                    <div
-                      class="c24 c25"
-                    />
-                    Cancel
-                  </button>
-                  <button
-                    class="c22 c23"
-                  >
-                    <div
-                      class="c24 c25"
-                    />
-                    Continue
-                  </button>
-                </div>
+                </dialog>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      data-focus-guard="true"
-      style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"
-      tabindex="0"
-    />
-  </reach-portal>
+      </span>
+    </span>
+  </div>
 </body>
 `;

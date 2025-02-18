@@ -125,6 +125,7 @@ export type TextProps = TextFrameProps & {
   allowFontScaling?: boolean
   loading?: boolean | 'no-shimmer'
   loadingPlaceholderText?: string
+  title?: string
 }
 
 // Use this text component throughout the app instead of

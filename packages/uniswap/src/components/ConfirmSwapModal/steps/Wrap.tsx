@@ -9,7 +9,8 @@ export function WrapTransactionStepRow({ step, status }: StepRowProps<WrapTransa
 
   const { amount } = step
   const { currency } = amount
-  const { symbol } = currency
+  // FIXME: Verify WALL-5906
+  const symbol = currency.symbol ?? ''
 
   const title = {
     [StepStatus.Active]: t('common.wrapIn', { symbol }),
@@ -24,7 +25,7 @@ export function WrapTransactionStepRow({ step, status }: StepRowProps<WrapTransa
       currency={currency}
       learnMore={{
         url: uniswapUrls.helpArticleUrls.wethExplainer,
-        text: t('common.whyWrap', { symbol: currency.symbol }),
+        text: t('common.whyWrap', { symbol }),
       }}
       status={status}
     />

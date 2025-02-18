@@ -5,24 +5,26 @@ import { TransactionSummary } from 'components/AccountDetails/TransactionSummary
 import Badge from 'components/Badge/Badge'
 import { ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import Modal from 'components/Modal'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import Row, { RowBetween, RowFixed } from 'components/deprecated/Row'
-import { useIsSupportedChainId } from 'constants/chains'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { useTransaction } from 'state/transactions/hooks'
 import { isConfirmedTx } from 'state/transactions/utils'
-import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { ModalCloseIcon } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const Wrapper = styled.div`
@@ -55,13 +57,14 @@ function ConfirmationPendingContent({
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
+  const { t } = useTranslation()
   return (
     <Wrapper>
       <AutoColumn gap="md">
         {!inline && (
           <RowBetween>
             <div />
-            <CloseIcon onClick={onDismiss} />
+            <ModalCloseIcon onClose={onDismiss} />
           </RowBetween>
         )}
         <ConfirmedIcon inline={inline}>
@@ -69,13 +72,13 @@ function ConfirmationPendingContent({
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
           <ThemedText.SubHeaderLarge color="neutral1" textAlign="center">
-            <Trans i18nKey="transaction.confirmation.waiting" />
+            {t('transaction.confirmation.waiting')}
           </ThemedText.SubHeaderLarge>
           <ThemedText.SubHeader color="neutral1" textAlign="center">
             {pendingText}
           </ThemedText.SubHeader>
           <ThemedText.SubHeaderSmall color="neutral2" textAlign="center" marginBottom="12px">
-            <Trans i18nKey="common.confirmTransaction.button" />
+            {t('common.confirmTransaction.button')}
           </ThemedText.SubHeaderSmall>
         </AutoColumn>
       </AutoColumn>
@@ -96,6 +99,7 @@ function TransactionSubmittedContent({
   inline?: boolean // not in modal
 }) {
   const theme = useTheme()
+  const { t } = useTranslation()
 
   const { connector } = useWeb3React()
 
@@ -120,11 +124,7 @@ function TransactionSubmittedContent({
   }, [connector, logoURL, token])
 
   const explorerText =
-    chainId === UniverseChainId.Mainnet ? (
-      <Trans i18nKey="common.etherscan.link" />
-    ) : (
-      <Trans i18nKey="common.viewOnBlockExplorer" />
-    )
+    chainId === UniverseChainId.Mainnet ? t('common.etherscan.link') : t('common.viewOnBlockExplorer')
 
   return (
     <Wrapper>
@@ -132,16 +132,14 @@ function TransactionSubmittedContent({
         {!inline && (
           <RowBetween>
             <div />
-            <CloseIcon onClick={onDismiss} />
+            <ModalCloseIcon onClose={onDismiss} />
           </RowBetween>
         )}
         <ConfirmedIcon inline={inline}>
           <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accent1} />
         </ConfirmedIcon>
         <ConfirmationModalContentWrapper gap="md" justify="center">
-          <ThemedText.MediumHeader textAlign="center">
-            <Trans i18nKey="common.transactionSubmitted" />
-          </ThemedText.MediumHeader>
+          <ThemedText.MediumHeader textAlign="center">{t('common.transactionSubmitted')}</ThemedText.MediumHeader>
           {currencyToAdd && connector?.watchAsset && (
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
@@ -164,7 +162,7 @@ function TransactionSubmittedContent({
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} data-testid="dismiss-tx-confirmation">
             <ThemedText.HeadlineSmall color={theme.deprecated_accentTextLightPrimary}>
-              {inline ? <Trans i18nKey="common.return.label" /> : <Trans i18nKey="common.close" />}
+              {inline ? t('common.return.label') : t('common.close')}
             </ThemedText.HeadlineSmall>
           </ButtonPrimary>
           {chainId && hash && (
@@ -199,7 +197,7 @@ export function ConfirmationModalContent({
           <Row justify="center" marginLeft="24px">
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
           </Row>
-          <CloseIcon onClick={onDismiss} data-testid="confirmation-close-icon" />
+          <ModalCloseIcon onClose={onDismiss} testId="confirmation-close-icon" />
         </Row>
         {topContent()}
       </AutoColumn>
@@ -227,6 +225,7 @@ function L2Content({
   inline?: boolean // not in modal
 }) {
   const theme = useTheme()
+  const { t } = useTranslation()
 
   const transaction = useTransaction(hash)
   const confirmed = transaction && isConfirmedTx(transaction)
@@ -236,7 +235,7 @@ function L2Content({
   const secondsToConfirm =
     confirmed && transaction.confirmedTime ? (transaction.confirmedTime - transaction.addedTime) / 1000 : undefined
 
-  const info = UNIVERSE_CHAIN_INFO[chainId]
+  const info = getChainInfo(chainId)
 
   return (
     <Wrapper>
@@ -249,13 +248,12 @@ function L2Content({
                 <ThemedText.SubHeaderSmall>{info.label}</ThemedText.SubHeaderSmall>
               </RowFixed>
             </StyledL2Badge>
-            <CloseIcon onClick={onDismiss} />
+            <ModalCloseIcon onClose={onDismiss} />
           </RowBetween>
         )}
         <ConfirmedIcon inline={inline}>
           {confirmed ? (
             transactionSuccess ? (
-              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.success} />
               <AnimatedConfirmation />
             ) : (
               <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.critical} />
@@ -266,24 +264,20 @@ function L2Content({
         </ConfirmedIcon>
         <AutoColumn gap="md" justify="center">
           <ThemedText.SubHeaderLarge textAlign="center">
-            {!hash ? (
-              <Trans i18nKey="transaction.confirmation.pending.wallet" />
-            ) : !confirmed ? (
-              <Trans i18nKey="common.transactionSubmitted" />
-            ) : transactionSuccess ? (
-              <Trans i18nKey="common.success" />
-            ) : (
-              <Trans i18nKey="common.error.label" />
-            )}
+            {!hash
+              ? t('transaction.confirmation.pending.wallet')
+              : !confirmed
+                ? t('common.transactionSubmitted')
+                : transactionSuccess
+                  ? t('common.success')
+                  : t('common.error.label')}
           </ThemedText.SubHeaderLarge>
           <ThemedText.BodySecondary textAlign="center">
             {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
           </ThemedText.BodySecondary>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              <ThemedText.SubHeaderSmall color={theme.accent1}>
-                <Trans i18nKey="common.viewOnExplorer" />
-              </ThemedText.SubHeaderSmall>
+              <ThemedText.SubHeaderSmall color={theme.accent1}>{t('common.viewOnExplorer')}</ThemedText.SubHeaderSmall>
             </ExternalLink>
           ) : (
             <div style={{ height: '17px' }} />
@@ -304,7 +298,7 @@ function L2Content({
             )}
           </ThemedText.SubHeaderSmall>
           <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>
-            {inline ? <Trans i18nKey="common.return.label" /> : <Trans i18nKey="common.close" />}
+            {inline ? t('common.return.label') : t('common.close')}
           </ButtonPrimary>
         </AutoColumn>
       </AutoColumn>
@@ -340,7 +334,13 @@ export default function TransactionConfirmationModal({
 
   // confirmation screen
   return (
-    <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight="90vh">
+    <Modal
+      name={ModalName.TransactionConfirmation}
+      isModalOpen={isOpen}
+      onClose={onDismiss}
+      maxHeight={700}
+      padding={0}
+    >
       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (

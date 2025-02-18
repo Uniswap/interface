@@ -1,16 +1,18 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { Pair, computePairAddress } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
-import { getPairFromRest, getPoolFromRest } from 'components/Liquidity/utils'
+import { getPoolFromRest } from 'components/Liquidity/utils'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
-import { useCurrencyInfo } from 'hooks/Tokens'
+import { ZERO_ADDRESS } from 'constants/misc'
+import { checkIsNative, useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
-import { useSwapTaxes } from 'hooks/useSwapTaxes'
-import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
+import { PoolState, usePool } from 'hooks/usePools'
+import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import {
@@ -37,75 +39,108 @@ import {
   getV4PriceRangeInfo,
   pairEnabledProtocolVersion,
   poolEnabledProtocolVersion,
-  protocolShouldCalculateTaxes,
   validateCurrencyInput,
 } from 'pages/Pool/Positions/create/utils'
+import { ParsedQs } from 'qs'
 import { useMemo } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { PositionField } from 'types/position'
-import { useGetPair } from 'uniswap/src/data/rest/getPair'
+import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
+import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { getParsedChainId } from 'utils/chainParams'
 
 /**
  * @param state user-defined state for a position being created or migrated
  * @returns derived position information such as existing Pools
  */
 export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo {
-  const { chainId } = useAccount()
+  const { chainId } = useMultichainContext()
   const {
     currencyInputs: { TOKEN0: token0Input, TOKEN1: token1Input },
     protocolVersion,
   } = state
 
-  const inputCurrencyInfo = useCurrencyInfo(token0Input)
-  const outputCurrencyInfo = useCurrencyInfo(token1Input)
-  const TOKEN0 = inputCurrencyInfo?.currency
-  const TOKEN1 = outputCurrencyInfo?.currency
+  const TOKEN0 = token0Input
+  const TOKEN1 = token1Input
 
   const sortedCurrencies = getSortedCurrenciesTuple(TOKEN0, TOKEN1)
   const validCurrencyInput = validateCurrencyInput(sortedCurrencies)
+  const sortedTokens = getSortedCurrenciesTuple(
+    getCurrencyWithWrap(sortedCurrencies[0], protocolVersion),
+    getCurrencyWithWrap(sortedCurrencies[1], protocolVersion),
+  )
+
   const poolsQueryEnabled = poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
-  const { data: poolData } = useGetPoolsByTokens(
+  const {
+    data: poolData,
+    isLoading: poolIsLoading,
+    refetch: refetchPoolData,
+  } = useGetPoolsByTokens(
     {
       fee: state.fee.feeAmount,
       chainId,
       protocolVersions: [protocolVersion],
       token0: getCurrencyAddressWithWrap(sortedCurrencies?.[0], protocolVersion),
       token1: getCurrencyAddressWithWrap(sortedCurrencies?.[1], protocolVersion),
+      hooks: state.hook?.toLowerCase() ?? ZERO_ADDRESS, // BE does not accept checksummed addresses
     },
     poolsQueryEnabled,
   )
 
   const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
 
-  const pairsQueryEnabled = pairEnabledProtocolVersion(protocolVersion) && validCurrencyInput
-  const pairAddress = useMemo(() => {
-    return pairsQueryEnabled && validCurrencyInput
-      ? computePairAddress({
-          factoryAddress: V2_FACTORY_ADDRESSES[sortedCurrencies[0].chainId],
-          tokenA: getCurrencyWithWrap(sortedCurrencies[0], protocolVersion),
-          tokenB: getCurrencyWithWrap(sortedCurrencies[1], protocolVersion),
-        })
-      : undefined
-  }, [pairsQueryEnabled, protocolVersion, sortedCurrencies, validCurrencyInput])
+  const { pairsQueryEnabled } = useMemo(() => {
+    if (!pairEnabledProtocolVersion(protocolVersion)) {
+      return {
+        pairsQueryEnabled: false,
+      } as const
+    }
 
-  const { data: pairData, isFetched: pairIsFetched } = useGetPair(
-    {
-      chainId: chainId ?? (UniverseChainId.Mainnet as number),
-      pairAddress,
-    },
-    pairsQueryEnabled,
-  )
+    if (!validateCurrencyInput(sortedTokens)) {
+      return {
+        pairsQueryEnabled: false,
+      } as const
+    }
 
-  const pair = pairsQueryEnabled
-    ? getPairFromRest({
-        pair: pairData?.pair,
-        token0: getCurrencyWithWrap(sortedCurrencies[0], protocolVersion),
-        token1: getCurrencyWithWrap(sortedCurrencies[1], protocolVersion),
-      })
-    : undefined
+    return {
+      pairsQueryEnabled: true,
+    } as const
+  }, [protocolVersion, sortedTokens])
+
+  const pairResult = useV2Pair(sortedTokens?.[0], sortedTokens?.[1])
+  const pairIsLoading = pairResult[0] === PairState.LOADING
+
+  const pair = pairsQueryEnabled ? pairResult[1] || undefined : undefined
+
+  const v3PoolResult = usePool(sortedTokens?.[0], sortedTokens?.[1], state.fee.feeAmount)
+  const v3Pool = protocolVersion === ProtocolVersion.V3 ? v3PoolResult[1] ?? undefined : undefined
+  const v3Price = v3Pool?.token0Price
+
+  const { v4Pool, v4Price } = useMemo(() => {
+    const v4Pool =
+      protocolVersion === ProtocolVersion.V4
+        ? getPoolFromRest({
+            pool,
+            token0: sortedCurrencies?.[0],
+            token1: sortedCurrencies?.[1],
+            protocolVersion,
+            hooks: pool?.hooks?.address || '',
+          })
+        : undefined
+
+    return { v4Pool, v4Price: v4Pool?.token0Price }
+  }, [pool, protocolVersion, sortedCurrencies])
+
+  const isPoolOutOfSync = useIsPoolOutOfSync(v4Price || v3Price)
 
   const creatingPoolOrPair = useMemo(() => {
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
@@ -113,15 +148,15 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     }
 
     if (protocolVersion === ProtocolVersion.V2) {
-      if (!pairData && pairIsFetched) {
-        return true
-      }
+      return pairResult[0] === PairState.NOT_EXISTS
+    }
 
-      return false
+    if (protocolVersion === ProtocolVersion.V3) {
+      return v3PoolResult[0] === PoolState.NOT_EXISTS
     }
 
     return poolData?.pools && poolData.pools.length === 0
-  }, [protocolVersion, poolData?.pools, pairData, pairIsFetched])
+  }, [protocolVersion, poolData?.pools, pairResult, v3PoolResult])
 
   return useMemo(() => {
     const currencies: [OptionalCurrency, OptionalCurrency] = [TOKEN0, TOKEN1]
@@ -129,6 +164,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       return {
         currencies,
         protocolVersion: ProtocolVersion.V4,
+        isPoolOutOfSync: false,
+        refetchPoolData: () => undefined,
       }
     }
 
@@ -138,6 +175,9 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         protocolVersion,
         pair,
         creatingPoolOrPair,
+        poolOrPairLoading: pairIsLoading,
+        isPoolOutOfSync,
+        refetchPoolData,
       } satisfies CreateV2PositionInfo
     }
 
@@ -145,45 +185,43 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       return {
         currencies,
         protocolVersion,
-        pool: getPoolFromRest({
-          pool: poolData?.pools?.[0],
-          token0: getCurrencyWithWrap(sortedCurrencies?.[0], protocolVersion),
-          token1: getCurrencyWithWrap(sortedCurrencies?.[1], protocolVersion),
-          protocolVersion,
-        }),
+        pool: v3Pool,
         creatingPoolOrPair,
+        poolOrPairLoading: poolIsLoading,
+        isPoolOutOfSync,
+        poolId: pool?.poolId,
+        refetchPoolData,
       } satisfies CreateV3PositionInfo
     }
 
     return {
       currencies,
       protocolVersion, // V4
-      pool: getPoolFromRest({
-        pool,
-        token0: sortedCurrencies?.[0],
-        token1: sortedCurrencies?.[1],
-        protocolVersion,
-        hooks: pool?.hooks?.address || '',
-      }),
+      pool: v4Pool,
       creatingPoolOrPair,
+      poolOrPairLoading: poolIsLoading,
+      isPoolOutOfSync,
+      poolId: pool?.poolId,
+      refetchPoolData,
     } satisfies CreateV4PositionInfo
-  }, [TOKEN0, TOKEN1, protocolVersion, pool, sortedCurrencies, creatingPoolOrPair, pair, poolData?.pools])
+  }, [
+    TOKEN0,
+    TOKEN1,
+    protocolVersion,
+    v4Pool,
+    creatingPoolOrPair,
+    poolIsLoading,
+    isPoolOutOfSync,
+    pool?.poolId,
+    pair,
+    pairIsLoading,
+    v3Pool,
+    refetchPoolData,
+  ])
 }
 
 export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo {
   const { positionState, derivedPositionInfo } = useCreatePositionContext()
-  const account = useAccount()
-
-  const shouldUseTaxes = protocolShouldCalculateTaxes(derivedPositionInfo.protocolVersion)
-  const { inputTax: currencyATax, outputTax: currencyBTax } = useSwapTaxes(
-    shouldUseTaxes
-      ? getCurrencyAddressWithWrap(derivedPositionInfo.currencies[0], derivedPositionInfo.protocolVersion)
-      : undefined,
-    shouldUseTaxes
-      ? getCurrencyAddressWithWrap(derivedPositionInfo.currencies[1], derivedPositionInfo.protocolVersion)
-      : undefined,
-    account.chainId,
-  )
 
   const priceRangeInfo = useMemo(() => {
     if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
@@ -191,12 +229,11 @@ export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo
     }
 
     if (derivedPositionInfo.protocolVersion === ProtocolVersion.V3) {
-      const isTaxed = currencyATax.greaterThan(0) || currencyBTax.greaterThan(0)
-      return getV3PriceRangeInfo({ state, positionState, derivedPositionInfo, isTaxed })
+      return getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })
     }
 
     return getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })
-  }, [derivedPositionInfo, state, positionState, currencyATax, currencyBTax])
+  }, [derivedPositionInfo, state, positionState])
 
   return priceRangeInfo
 }
@@ -207,7 +244,9 @@ export type UseDepositInfoProps = {
   token0?: Currency
   token1?: Currency
   exactField: PositionField
-  exactAmount?: string
+  exactAmounts: {
+    [field in PositionField]?: string
+  }
   skipDependentAmount?: boolean
   deposit0Disabled?: boolean
   deposit1Disabled?: boolean
@@ -237,7 +276,7 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
   const account = useAccount()
   const { derivedPositionInfo } = useCreatePositionContext()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
-  const { exactAmount, exactField } = state
+  const { exactAmounts, exactField } = state
   const { protocolVersion } = derivedPriceRangeInfo
 
   const depositInfoProps: UseDepositInfoProps = useMemo(() => {
@@ -249,7 +288,7 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
         token0: derivedPositionInfo.currencies[0],
         token1: derivedPositionInfo.currencies[1],
         exactField,
-        exactAmount,
+        exactAmounts,
       } satisfies UseDepositInfoProps
     }
 
@@ -267,7 +306,7 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
         token0: derivedPositionInfo.currencies[0],
         token1: derivedPositionInfo.currencies[1],
         exactField,
-        exactAmount,
+        exactAmounts,
         skipDependentAmount: outOfRange || invalidRange,
         deposit0Disabled,
         deposit1Disabled,
@@ -283,25 +322,32 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
       token0: derivedPositionInfo.currencies[0],
       token1: derivedPositionInfo.currencies[1],
       exactField,
-      exactAmount,
+      exactAmounts,
       skipDependentAmount: outOfRange || invalidRange,
       deposit0Disabled,
       deposit1Disabled,
     } satisfies UseDepositInfoProps
-  }, [account.address, derivedPositionInfo, derivedPriceRangeInfo, exactAmount, exactField, protocolVersion])
+  }, [account.address, derivedPositionInfo, derivedPriceRangeInfo, exactAmounts, exactField, protocolVersion])
 
   return useDepositInfo(depositInfoProps)
 }
 
 export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   const account = useAccount()
-  const { protocolVersion, address, token0, token1, exactField, exactAmount, deposit0Disabled, deposit1Disabled } =
+  const { protocolVersion, address, token0, token1, exactField, exactAmounts, deposit0Disabled, deposit1Disabled } =
     state
 
-  const [token0Balance, token1Balance] = useCurrencyBalances(address, [token0, token1])
+  const { balance: token0Balance } = useOnChainCurrencyBalance(token0, address)
+  const { balance: token1Balance } = useOnChainCurrencyBalance(token1, address)
+  const token0MaxAmount = useMaxAmountSpend({ currencyAmount: token0Balance })
+  const token1MaxAmount = useMaxAmountSpend({ currencyAmount: token1Balance })
 
   const [independentToken, dependentToken] = exactField === PositionField.TOKEN0 ? [token0, token1] : [token1, token0]
-  const independentAmount = tryParseCurrencyAmount(exactAmount, independentToken)
+  const independentAmount = tryParseCurrencyAmount(exactAmounts[exactField], independentToken)
+  const otherAmount = tryParseCurrencyAmount(
+    exactAmounts[exactField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0],
+    dependentToken,
+  )
 
   const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
     const shouldSkip = state.skipDependentAmount || protocolVersion === ProtocolVersion.UNSPECIFIED
@@ -312,6 +358,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
     if (protocolVersion === ProtocolVersion.V2) {
       return getDependentAmountFromV2Pair({
         independentAmount,
+        otherAmount,
         pair: state.pair,
         exactField,
         token0,
@@ -340,7 +387,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
             tickUpper,
           })
     return dependentToken && CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
-  }, [state, protocolVersion, independentAmount, dependentToken, exactField, token0, token1])
+  }, [state, protocolVersion, independentAmount, otherAmount, dependentToken, exactField, token0, token1])
 
   const independentTokenUSDValue = useUSDCValue(independentAmount) || undefined
   const dependentTokenUSDValue = useUSDCValue(dependentAmount) || undefined
@@ -368,7 +415,14 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       return t('common.noAmount.error')
     }
 
-    if (currency0Amount && token0Balance?.lessThan(currency0Amount)) {
+    const insufficientToken0Balance = currency0Amount && token0MaxAmount?.lessThan(currency0Amount)
+    const insufficientToken1Balance = currency1Amount && token1MaxAmount?.lessThan(currency1Amount)
+
+    if (insufficientToken0Balance && insufficientToken1Balance) {
+      return <Trans i18nKey="common.insufficientBalance.error" />
+    }
+
+    if (insufficientToken0Balance) {
       return (
         <Trans
           i18nKey="common.insufficientTokenBalance.error"
@@ -379,7 +433,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       )
     }
 
-    if (currency1Amount && token1Balance?.lessThan(currency1Amount)) {
+    if (insufficientToken1Balance) {
       return (
         <Trans
           i18nKey="common.insufficientTokenBalance.error"
@@ -397,9 +451,9 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
     deposit0Disabled,
     deposit1Disabled,
     currency0Amount,
-    token0Balance,
+    token0MaxAmount,
     currency1Amount,
-    token1Balance,
+    token1MaxAmount,
     t,
     token0?.symbol,
     token1?.symbol,
@@ -408,7 +462,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   return useMemo(
     () => ({
       currencyBalances: { [PositionField.TOKEN0]: token0Balance, [PositionField.TOKEN1]: token1Balance },
-      formattedAmounts: { [exactField]: exactAmount, [dependentField]: dependentAmount?.toExact() },
+      formattedAmounts: { [exactField]: exactAmounts[exactField], [dependentField]: dependentAmount?.toExact() },
       currencyAmounts: { [exactField]: independentAmount, [dependentField]: dependentAmount },
       currencyAmountsUSDValue: { [exactField]: independentTokenUSDValue, [dependentField]: dependentTokenUSDValue },
       error,
@@ -417,7 +471,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       token0Balance,
       token1Balance,
       exactField,
-      exactAmount,
+      exactAmounts,
       dependentField,
       dependentAmount,
       independentAmount,
@@ -426,4 +480,53 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       error,
     ],
   )
+}
+
+function getParsedHookAddrParam(params: ParsedQs): string | undefined {
+  const hookAddr = params?.hook
+  if (!hookAddr || typeof hookAddr !== 'string') {
+    return undefined
+  }
+  const validAddress = getValidAddress(hookAddr)
+  return validAddress || undefined
+}
+
+// Prefill currency inputs from URL search params ?currencyA=ETH&currencyB=0x123...&chain=base
+export function useInitialPoolInputs() {
+  const { defaultChainId } = useEnabledChains()
+  const defaultInitialToken = nativeOnChain(defaultChainId)
+
+  const { useParsedQueryString } = useUrlContext()
+  const parsedQs = useParsedQueryString()
+  const hookAddress = getParsedHookAddrParam(parsedQs)
+  const parsedChainId = getParsedChainId(parsedQs)
+  const supportedChainId = useSupportedChainId(parsedChainId) ?? defaultChainId
+
+  const { currencyAddressA, currencyAddressB } = useMemo(() => {
+    const currencyAddressA = parseCurrencyFromURLParameter(parsedQs.currencyA ?? parsedQs.currencya)
+    const parsedCurrencyAddressB = parseCurrencyFromURLParameter(parsedQs.currencyB ?? parsedQs.currencyb)
+    const currencyAddressB = parsedCurrencyAddressB === currencyAddressA ? undefined : parsedCurrencyAddressB
+
+    // prevent weth + eth
+    const isETHOrWETHA =
+      checkIsNative(currencyAddressA) || currencyAddressA === WRAPPED_NATIVE_CURRENCY[supportedChainId]?.address
+    const isETHOrWETHB =
+      checkIsNative(currencyAddressB) || currencyAddressB === WRAPPED_NATIVE_CURRENCY[supportedChainId]?.address
+
+    return {
+      currencyAddressA,
+      currencyAddressB: currencyAddressB && !(isETHOrWETHA && isETHOrWETHB) ? currencyAddressB : undefined,
+    }
+  }, [parsedQs.currencyA, parsedQs.currencyB, parsedQs.currencya, parsedQs.currencyb, supportedChainId])
+
+  const currencyA = useCurrency(currencyAddressA, supportedChainId)
+  const currencyB = useCurrency(currencyAddressB, supportedChainId)
+
+  return useMemo(() => {
+    return {
+      [PositionField.TOKEN0]: currencyA ?? currencyB ?? defaultInitialToken,
+      [PositionField.TOKEN1]: currencyA && currencyB ? currencyB : undefined,
+      hook: hookAddress,
+    }
+  }, [currencyA, currencyB, hookAddress, defaultInitialToken])
 }

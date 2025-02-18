@@ -5,6 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActivityTab } from 'src/app/components/tabs/ActivityTab'
 import { NftsTab } from 'src/app/components/tabs/NftsTab'
+import AppRatingModal from 'src/app/features/appRating/AppRatingModal'
+import { useAppRating } from 'src/app/features/appRating/hooks/useAppRating'
+import { ForceUpgradeModal } from 'src/app/features/forceUpgrade/ForceUpgradeModal'
 import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
 import { TokenBalanceList } from 'src/app/features/home/TokenBalanceList'
@@ -111,6 +114,8 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
     }
   }, [apolloClient, shouldRefetchNfts])
 
+  const { appRatingModalVisible, onAppRatingModalClose } = useAppRating()
+
   return (
     <Flex fill alignItems="center" backgroundColor="$surface1" p="$spacing12">
       {address ? (
@@ -193,6 +198,8 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
           {t('home.extension.error')}
         </Text>
       )}
+      {appRatingModalVisible && <AppRatingModal onClose={onAppRatingModalClose} />}
+      <ForceUpgradeModal />
     </Flex>
   )
 })

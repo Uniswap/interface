@@ -2,39 +2,43 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
-import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
 import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/TokenDetails/BalanceSummary'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
-import { LeftPanel, RightPanel, TokenDetailsLayout, TokenInfoContainer } from 'components/Tokens/TokenDetails/Skeleton'
+import { LeftPanel, RightPanel, TokenDetailsLayout } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { TokenDetailsHeader } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
 import { Hr } from 'components/Tokens/TokenDetails/shared'
-import { CHAIN_ID_TO_BACKEND_NAME, isSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import deprecatedStyled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
-import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
-import { Flex, useIsTouchDevice } from 'ui/src'
+import { Flex, useIsTouchDevice, useMedia } from 'ui/src'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
+import { isUniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
+import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 
 const DividerLine = deprecatedStyled(Hr)`
   margin-top: 40px;
   margin-bottom: 40px;
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     opacity: 0;
     margin-bottom: 0;
   }
@@ -67,29 +71,41 @@ function getCurrencyURLAddress(currency?: Currency): string {
   return NATIVE_CHAIN_ID
 }
 
+// Defaults the input currency to the output currency's native currency or undefined if the output currency is already the chain's native currency
+// Note: Query string input currency takes precedence if it's set
 function useSwapInitialInputCurrency() {
   const { currency } = useTDPContext()
+  const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
 
   const inputTokenAddress = useMemo(() => {
-    return typeof parsedQs.inputCurrency === 'string' ? (parsedQs.inputCurrency as string) : undefined
-  }, [parsedQs])
+    return typeof parsedQs.inputCurrency === 'string'
+      ? parsedQs.inputCurrency
+      : currency.isNative
+        ? undefined
+        : getNativeAddress(currency.chainId)
+  }, [currency.chainId, currency.isNative, parsedQs.inputCurrency])
 
   return useCurrency(inputTokenAddress, currency.chainId)
 }
 
 function TDPSwapComponent() {
-  const { address, currency, currencyChainId, warning } = useTDPContext()
+  const { address, currency, currencyChainId, tokenColor } = useTDPContext()
   const navigate = useNavigate()
 
+  const currencyInfo = useCurrencyInfo(currencyId(currency))
+
   const handleCurrencyChange = useCallback(
-    (tokens: CurrencyState) => {
+    (tokens: CurrencyState, isBridgePair?: boolean) => {
       const inputCurrencyURLAddress = getCurrencyURLAddress(tokens.inputCurrency)
       const outputCurrencyURLAddress = getCurrencyURLAddress(tokens.outputCurrency)
-      if (
-        addressesAreEquivalent(inputCurrencyURLAddress, address) ||
-        addressesAreEquivalent(outputCurrencyURLAddress, address)
-      ) {
+
+      const inputEquivalent =
+        addressesAreEquivalent(inputCurrencyURLAddress, address) && tokens.inputCurrency?.chainId === currencyChainId
+      const outputEquivalent =
+        addressesAreEquivalent(outputCurrencyURLAddress, address) && tokens.outputCurrency?.chainId === currencyChainId
+
+      if (inputEquivalent || outputEquivalent || isBridgePair) {
         return
       }
 
@@ -107,10 +123,7 @@ function TDPSwapComponent() {
       const url = getTokenDetailsURL({
         // The function falls back to "NATIVE" if the address is null
         address: newDefaultToken.isNative ? null : newDefaultToken.address,
-        chain:
-          CHAIN_ID_TO_BACKEND_NAME[
-            isSupportedChainId(newDefaultToken.chainId) ? newDefaultToken.chainId : currencyChainId
-          ],
+        chain: toGraphQLChain(isUniverseChainId(newDefaultToken.chainId) ? newDefaultToken.chainId : currencyChainId),
         inputAddress:
           // If only one token was selected before we navigate, then it was the default token and it's being replaced.
           // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
@@ -124,18 +137,32 @@ function TDPSwapComponent() {
   // Other token to prefill the swap form with
   const initialInputCurrency = useSwapInitialInputCurrency()
 
+  const [showWarningModal, setShowWarningModal] = useState(false)
+  const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
+
   return (
-    <>
+    <Flex gap="$gap12">
       <Swap
         syncTabToUrl={false}
         chainId={currency.chainId}
         initialInputCurrency={initialInputCurrency}
         initialOutputCurrency={currency}
         onCurrencyChange={handleCurrencyChange}
+        tokenColor={tokenColor}
         compact
       />
-      {warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />}
-    </>
+      <TokenWarningCard currencyInfo={currencyInfo} onPress={() => setShowWarningModal(true)} />
+      {currencyInfo && (
+        // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard
+        <TokenWarningModal
+          currencyInfo0={currencyInfo}
+          isInfoOnlyWarning
+          isVisible={showWarningModal}
+          closeModalOnly={closeWarningModal}
+          onAcknowledge={closeWarningModal}
+        />
+      )}
+    </Flex>
   )
 }
 
@@ -161,7 +188,8 @@ export default function TokenDetails() {
   const { address, currency, tokenQuery, currencyChain, multiChainMap } = useTDPContext()
   const tokenQueryData = tokenQuery.data?.token
   const pageChainBalance = multiChainMap[currencyChain]?.balance
-  const { lg: showRightPanel } = useScreenSize()
+  const media = useMedia()
+  const showRightPanel = !media.xl
   const { direction: scrollDirection } = useScroll()
   const isTouchDevice = useIsTouchDevice()
 
@@ -170,9 +198,7 @@ export default function TokenDetails() {
       <TokenDetailsLayout>
         <LeftPanel>
           <TDPBreadcrumb />
-          <TokenInfoContainer data-testid="token-info-container">
-            <TokenDetailsHeader />
-          </TokenInfoContainer>
+          <TokenDetailsHeader />
           <ChartSection />
           {!showRightPanel && !!pageChainBalance && (
             <Flex mt="$spacing40">

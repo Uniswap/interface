@@ -1,9 +1,19 @@
-import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
-import React from 'react'
+import { DdRumReactNavigationTracking } from '@datadog/mobile-react-navigation'
+import {
+  NavigationContainer,
+  NavigationContainerRefWithCurrent,
+  NavigationState,
+  createNavigationContainerRef,
+} from '@react-navigation/native'
+import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack'
+import { StackNavigationOptions, TransitionPresets, createStackNavigator } from '@react-navigation/stack'
+import React, { useEffect } from 'react'
+import { DevSettings } from 'react-native'
 import { useSelector } from 'react-redux'
+import StorybookUIRoot from 'src/../.storybook'
+import { NotificationsOSSettingsModal } from 'src/app/modals/NotificationsOSSettingsModal'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
+import { navigationRef } from 'src/app/navigation/navigationRef'
 import {
   AppStackParamList,
   AppStackScreenProp,
@@ -11,9 +21,9 @@ import {
   FiatOnRampStackParamList,
   OnboardingStackParamList,
   SettingsStackParamList,
+  useAppStackNavigation,
 } from 'src/app/navigation/types'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
-import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { FiatOnRampProvider } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { ClaimUnitagScreen } from 'src/features/unitags/ClaimUnitagScreen'
 import { EditUnitagProfileScreen } from 'src/features/unitags/EditUnitagProfileScreen'
@@ -27,14 +37,14 @@ import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
 import { FiatOnRampConnectingScreen } from 'src/screens/FiatOnRampConnecting'
 import { FiatOnRampScreen } from 'src/screens/FiatOnRampScreen'
 import { FiatOnRampServiceProvidersScreen } from 'src/screens/FiatOnRampServiceProviders'
-import { HomeScreen } from 'src/screens/HomeScreen'
+import { HomeScreen } from 'src/screens/HomeScreen/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { OnDeviceRecoveryScreen } from 'src/screens/Import/OnDeviceRecoveryScreen'
 import { OnDeviceRecoveryViewSeedPhraseScreen } from 'src/screens/Import/OnDeviceRecoveryViewSeedPhraseScreen'
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
-import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
+import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
@@ -54,6 +64,7 @@ import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCl
 import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
 import { SettingsCloudBackupProcessingScreen } from 'src/screens/SettingsCloudBackupProcessingScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
+import { SettingsNotificationsScreen } from 'src/screens/SettingsNotificationsScreen'
 import { SettingsPrivacyScreen } from 'src/screens/SettingsPrivacyScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsViewSeedPhraseScreen } from 'src/screens/SettingsViewSeedPhraseScreen'
@@ -66,6 +77,7 @@ import { useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import {
@@ -75,6 +87,8 @@ import {
   UnitagScreens,
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
+import { datadogEnabled } from 'utilities/src/environment/constants'
+import { isDevEnv } from 'utilities/src/environment/env'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -90,7 +104,7 @@ function SettingsStackGroup(): JSX.Element {
   return (
     <SettingsStack.Navigator
       screenOptions={{
-        ...navOptions.noHeader,
+        ...navNativeStackOptions.noHeader,
         fullScreenGestureEnabled: true,
         animation: 'slide_from_right',
       }}
@@ -121,6 +135,10 @@ function SettingsStackGroup(): JSX.Element {
       <SettingsStack.Screen component={SettingsCloudBackupStatus} name={MobileScreens.SettingsCloudBackupStatus} />
       <SettingsStack.Screen component={SettingsAppearanceScreen} name={MobileScreens.SettingsAppearance} />
       <SettingsStack.Screen component={SettingsPrivacyScreen} name={MobileScreens.SettingsPrivacy} />
+      <SettingsStack.Screen component={SettingsNotificationsScreen} name={MobileScreens.SettingsNotifications} />
+      <SettingsStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
+        <SettingsStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
+      </SettingsStack.Group>
     </SettingsStack.Navigator>
   )
 }
@@ -133,6 +151,45 @@ export function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>)
 }
 
 export const exploreNavigationRef = createNavigationContainerRef<ExploreStackParamList>()
+const fiatOnRampNavigationRef = createNavigationContainerRef<FiatOnRampStackParamList>()
+const navRefs = [exploreNavigationRef, fiatOnRampNavigationRef, navigationRef]
+
+/**
+ * Since we are using multiple navigation containers, we need to start and stop tracking views
+ * manually since multiple nav containers are not supported by the Datadog RUM.
+ *
+ * https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/integrated_libraries/reactnative/#track-view-navigation
+ */
+const startTracking = (
+  navRefToStartTracking: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>,
+): void => {
+  if (!datadogEnabled) {
+    return
+  }
+  navRefs.forEach((navRef) => {
+    DdRumReactNavigationTracking.stopTrackingViews(navRef.current)
+  })
+  DdRumReactNavigationTracking.startTrackingViews(navRefToStartTracking.current)
+}
+
+/**
+ * Since we are using multiple navigation containers, we need to start and stop tracking views
+ * manually since multiple nav containers are not supported by the Datadog RUM.
+ *
+ * https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/integrated_libraries/reactnative/#track-view-navigation
+ */
+const stopTracking = (state: NavigationState | undefined): void => {
+  if (!datadogEnabled) {
+    return
+  }
+  const navContainerIsClosing = !state || state.routes.length === 0
+  if (navContainerIsClosing) {
+    navRefs.forEach((navRef) => {
+      DdRumReactNavigationTracking.stopTrackingViews(navRef.current)
+    })
+    DdRumReactNavigationTracking.startTrackingViews(navigationRef.current)
+  }
+}
 
 export function ExploreStackNavigator(): JSX.Element {
   const colors = useSporeColors()
@@ -140,7 +197,7 @@ export function ExploreStackNavigator(): JSX.Element {
   return (
     <NavigationContainer
       ref={exploreNavigationRef}
-      independent={true}
+      independent
       theme={{
         dark: false,
         colors: {
@@ -152,12 +209,14 @@ export function ExploreStackNavigator(): JSX.Element {
           notification: 'transparent',
         },
       }}
+      onStateChange={stopTracking}
+      onReady={() => startTracking(exploreNavigationRef)}
     >
       <HorizontalEdgeGestureTarget />
       <ExploreStack.Navigator
         initialRouteName={MobileScreens.Explore}
         screenOptions={{
-          ...navOptions.noHeader,
+          ...navNativeStackOptions.noHeader,
           fullScreenGestureEnabled: true,
           gestureEnabled: true,
           animation: 'slide_from_right',
@@ -181,13 +240,18 @@ export function ExploreStackNavigator(): JSX.Element {
 
 export function FiatOnRampStackNavigator(): JSX.Element {
   return (
-    <NavigationContainer independent={true}>
+    <NavigationContainer
+      ref={fiatOnRampNavigationRef}
+      independent
+      onReady={() => startTracking(fiatOnRampNavigationRef)}
+      onStateChange={stopTracking}
+    >
       <HorizontalEdgeGestureTarget />
       <FiatOnRampProvider>
         <FiatOnRampStack.Navigator
           initialRouteName={FiatOnRampScreens.AmountInput}
           screenOptions={{
-            ...navOptions.noHeader,
+            ...navNativeStackOptions.noHeader,
             fullScreenGestureEnabled: true,
             gestureEnabled: true,
             animation: 'slide_from_right',
@@ -228,13 +292,13 @@ export function OnboardingStackNavigator(): JSX.Element {
             <OnboardingStack.Screen
               component={AppLoadingScreen}
               name={OnboardingScreens.AppLoading}
-              options={navOptions.noHeader}
+              options={navNativeStackOptions.noHeader}
             />
           )}
           <OnboardingStack.Screen
             component={LandingScreen}
             name={OnboardingScreens.Landing}
-            options={navOptions.noHeader}
+            options={navNativeStackOptions.noHeader}
           />
           <OnboardingStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
           <OnboardingStack.Screen
@@ -263,12 +327,12 @@ export function OnboardingStackNavigator(): JSX.Element {
           <OnboardingStack.Screen
             component={OnDeviceRecoveryScreen}
             name={OnboardingScreens.OnDeviceRecovery}
-            options={navOptions.noHeader}
+            options={navNativeStackOptions.noHeader}
           />
           <OnboardingStack.Screen
             component={OnDeviceRecoveryViewSeedPhraseScreen}
             name={OnboardingScreens.OnDeviceRecoveryViewSeedPhrase}
-            options={navOptions.noHeader}
+            options={navNativeStackOptions.noHeader}
           />
           <OnboardingStack.Screen
             component={RestoreCloudBackupLoadingScreen}
@@ -317,12 +381,12 @@ export function UnitagStackNavigator(): JSX.Element {
         <UnitagStack.Screen
           component={UnitagConfirmationScreen}
           name={UnitagScreens.UnitagConfirmation}
-          options={{ ...navOptions.noHeader, gestureEnabled: false }}
+          options={{ ...navStackOptions.noHeader, gestureEnabled: false }}
         />
         <UnitagStack.Screen
           component={EditUnitagProfileScreen}
           name={UnitagScreens.EditProfile}
-          options={{ ...navOptions.noHeader, gestureEnabled: false }}
+          options={{ ...navStackOptions.noHeader, gestureEnabled: false }}
         />
       </UnitagStack.Group>
     </UnitagStack.Navigator>
@@ -331,12 +395,25 @@ export function UnitagStackNavigator(): JSX.Element {
 
 export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
-  useBiometricCheck()
+  const navigation = useAppStackNavigation()
+
+  useEffect(() => {
+    // Adds a menu item to navigate to Storybook in debug builds
+    if (__DEV__) {
+      DevSettings.addMenuItem('Toggle Storybook', () => {
+        if (navigationRef.getCurrentRoute()?.name === MobileScreens.Storybook) {
+          navigation.goBack()
+        } else {
+          navigation.navigate(MobileScreens.Storybook)
+        }
+      })
+    }
+  }, [navigation])
 
   return (
     <AppStack.Navigator
       screenOptions={{
-        ...navOptions.noHeader,
+        ...navNativeStackOptions.noHeader,
         fullScreenGestureEnabled: true,
         gestureEnabled: true,
         animation: 'slide_from_right',
@@ -359,14 +436,28 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen component={NFTCollectionScreen} name={MobileScreens.NFTCollection} />
       <AppStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={MobileScreens.SettingsStack} />
-      <AppStack.Group screenOptions={navOptions.presentationModal}>
+      <AppStack.Group screenOptions={navNativeStackOptions.presentationModal}>
         <AppStack.Screen component={EducationScreen} name={MobileScreens.Education} />
       </AppStack.Group>
+      <AppStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
+        <AppStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
+      </AppStack.Group>
+      {isDevEnv() && <AppStack.Screen component={StorybookUIRoot} name={MobileScreens.Storybook} />}
     </AppStack.Navigator>
   )
 }
 
-const navOptions = {
+const navNativeStackOptions: Record<string, NativeStackNavigationOptions> = {
   noHeader: { headerShown: false },
   presentationModal: { presentation: 'modal' },
-} as const
+  presentationBottomSheet: {
+    presentation: 'containedTransparentModal',
+    animation: 'none',
+    animationDuration: 0,
+    contentStyle: { backgroundColor: 'transparent' },
+  },
+}
+
+const navStackOptions: Record<string, StackNavigationOptions> = {
+  noHeader: { headerShown: false },
+}

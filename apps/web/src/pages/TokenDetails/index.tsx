@@ -2,11 +2,9 @@ import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
-import { useChainFromUrlParam } from 'constants/chains'
-import { useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
+import { gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSrcColor } from 'hooks/useColor'
@@ -16,13 +14,17 @@ import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/u
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { ThemeProvider } from 'theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isAddress } from 'utilities/src/addresses'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 function useOnChainToken(address: string | undefined, chainId: UniverseChainId, skip: boolean) {
@@ -93,7 +95,8 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   if (!tokenAddress) {
     throw new Error('Invalid token details route: token address URL param is undefined')
   }
-  const currencyChainInfo = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
+
+  const currencyChainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
 
   const isNative = tokenAddress === NATIVE_CHAIN_ID
 
@@ -113,8 +116,6 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     currencyChainInfo.id,
     isNative,
   )
-
-  const warning = useTokenWarning(tokenAddress, currencyChainInfo.id)
 
   // Extract color for page usage
   const theme = useTheme()
@@ -137,7 +138,6 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
       currencyWasFetchedOnChain,
       tokenQuery,
       chartState,
-      warning,
       multiChainMap,
       tokenColor,
     }
@@ -149,17 +149,18 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     currencyWasFetchedOnChain,
     tokenQuery,
     chartState,
-    warning,
     multiChainMap,
     tokenColor,
   ])
 }
 
 export default function TokenDetailsPage() {
+  const { t } = useTranslation()
   const account = useAccount()
   const pageChainId = account.chainId ?? UniverseChainId.Mainnet
   const contextValue = useCreateTDPContext()
   const { tokenColor, address, currency, currencyChain, currencyChainId, tokenQuery } = contextValue
+  const isSupportedChain = useIsSupportedChainId(currencyChainId)
 
   const tokenQueryData = tokenQuery.data?.token
   const metatagProperties = useMemo(() => {
@@ -180,13 +181,13 @@ export default function TokenDetailsPage() {
   return (
     <ThemeProvider accent1={tokenColor ?? undefined}>
       <Helmet>
-        <title>{getTokenPageTitle(currency, currencyChainId)}</title>
+        <title>{getTokenPageTitle(t, currency, currencyChainId)}</title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}
       </Helmet>
       {(() => {
-        if (currency) {
+        if (currency && isSupportedChain) {
           return (
             <TDPProvider contextValue={contextValue}>
               <TokenDetails />

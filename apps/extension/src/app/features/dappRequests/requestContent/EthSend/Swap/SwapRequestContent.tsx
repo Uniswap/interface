@@ -3,12 +3,13 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import { SwapDisplay } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapDisplay'
 import { ETH_ADDRESS } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/constants'
 import { formatUnits, useSwapDetails } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
-import { SignTypedDataRequest, SwapSendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
+import { SwapSendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { UniswapXSwapRequest } from 'src/app/features/dappRequests/types/Permit2Types'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -104,15 +105,13 @@ export function SwapRequestContent({
 }
 
 // this is a special cased version of SwapRequestContent used for UniswapX swaps
-export function UniswapXSwapRequestContent({ dappRequest }: { dappRequest: SignTypedDataRequest }): JSX.Element {
+export function UniswapXSwapRequestContent({ typedData }: { typedData: UniswapXSwapRequest }): JSX.Element {
   const { defaultChainId } = useEnabledChains()
-  const parsedTypedData = JSON.parse(dappRequest.typedData)
-  const { chainId: domainChainId } = parsedTypedData?.domain || {}
+  const { chainId: domainChainId } = typedData.domain
   const activeChain = toSupportedChainId(domainChainId) || defaultChainId
 
-  const { token: inputToken, amount: firstAmountInParam } = parsedTypedData?.message?.permitted || {}
-  const { token: outputToken, startAmount: lastAmountOutParam } =
-    parsedTypedData?.message?.witness?.baseOutputs[0] || {}
+  const { token: inputToken, amount: firstAmountInParam } = typedData.message.permitted
+  const { token: outputToken, startAmount: lastAmountOutParam } = typedData.message.witness.baseOutputs[0]
 
   const inputCurrencyInfo = useCurrencyInfo(buildCurrencyId(activeChain, inputToken))
   const nativeEthOrOutputToken = outputToken === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : outputToken

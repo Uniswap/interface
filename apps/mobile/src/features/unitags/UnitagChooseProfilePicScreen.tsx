@@ -6,8 +6,6 @@ import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboa
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Flex } from 'ui/src'
 import { Photo } from 'ui/src/components/icons'
-import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
-import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -26,16 +24,10 @@ export function UnitagChooseProfilePicScreen({
 
   const handleContinue = async (imageUri: string | undefined): Promise<void> => {
     if (entryPoint === OnboardingScreens.Landing) {
-      const onboardingExperimentEnabled = getExperimentValue(
-        Experiments.OnboardingRedesignRecoveryBackup,
-        OnboardingRedesignRecoveryBackupProperties.Enabled,
-        false,
-      )
-
       addUnitagClaim({ address, username: unitag, avatarUri: imageUri })
 
       navigate(MobileScreens.OnboardingStack, {
-        screen: onboardingExperimentEnabled ? OnboardingScreens.Notifications : OnboardingScreens.WelcomeWallet,
+        screen: OnboardingScreens.Notifications,
         params: {
           importType: ImportType.CreateNew,
           entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
@@ -54,16 +46,10 @@ export function UnitagChooseProfilePicScreen({
   }
 
   const onPressSkip = (): void => {
-    const onboardingExperimentEnabled = getExperimentValue(
-      Experiments.OnboardingRedesignRecoveryBackup,
-      OnboardingRedesignRecoveryBackupProperties.Enabled,
-      false,
-    )
-
     sendAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'later' })
 
     navigate(MobileScreens.OnboardingStack, {
-      screen: onboardingExperimentEnabled ? OnboardingScreens.Notifications : OnboardingScreens.WelcomeWallet,
+      screen: OnboardingScreens.Notifications,
       params: {
         importType: ImportType.CreateNew,
         entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,

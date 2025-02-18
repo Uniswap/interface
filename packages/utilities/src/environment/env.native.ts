@@ -2,6 +2,10 @@ import DeviceInfo from 'react-native-device-info'
 
 const BUNDLE_ID = DeviceInfo.getBundleId()
 
+export function isPlaywrightEnv(): boolean {
+  return false
+}
+
 export function isTestEnv(): boolean {
   return !!process.env.JEST_WORKER_ID || process.env.NODE_ENV === 'test'
 }
@@ -16,4 +20,8 @@ export function isBetaEnv(): boolean {
 
 export function isProdEnv(): boolean {
   return BUNDLE_ID === 'com.uniswap.mobile'
+}
+
+export function isRNDev(): boolean {
+  return __DEV__
 }

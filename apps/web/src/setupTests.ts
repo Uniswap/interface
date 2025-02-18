@@ -14,6 +14,7 @@ import React from 'react'
 import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { TextDecoder, TextEncoder } from 'util'
@@ -82,6 +83,23 @@ jest.mock('@popperjs/core', () => {
     },
   }
 })
+
+jest.mock('@datadog/browser-rum', () => ({
+  init: jest.fn(),
+  setUser: jest.fn(),
+  clearUser: jest.fn(),
+  addAction: jest.fn(),
+  addError: jest.fn(),
+}))
+
+jest.mock('@datadog/browser-logs', () => ({
+  init: jest.fn(),
+  setUser: jest.fn(),
+  setUserProperty: jest.fn(),
+  clearUser: jest.fn(),
+  addAction: jest.fn(),
+  addError: jest.fn(),
+}))
 
 jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
@@ -156,6 +174,13 @@ failOnConsole({
 })
 
 jest.mock('uniswap/src/features/gating/hooks')
+
+jest.mock('uniswap/src/features/chains/hooks/useOrderedChainIds', () => {
+  return {
+    useOrderedChainIds: (chainIds: UniverseChainId[]) => chainIds,
+  }
+})
+
 const originalConsoleDebug = console.debug
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
 beforeEach(() => {

@@ -15,12 +15,7 @@ import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
-import {
-  setBackupReminderLastSeenTs,
-  setCreatedOnboardingRedesignAccount,
-  setHasSkippedUnitagPrompt,
-  setHasViewedWelcomeWalletCard,
-} from 'wallet/src/features/behaviorHistory/slice'
+import { setBackupReminderLastSeenTs, setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { createImportedAccounts } from 'wallet/src/features/onboarding/createImportedAccounts'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
@@ -52,7 +47,6 @@ export interface OnboardingContext {
   generateAccountsAndImportAddresses: (selectedAddresses: string[]) => Promise<SignerMnemonicAccount[] | undefined>
   addBackupMethod: (backupMethod: BackupType) => void
   hasBackup: (address: string, backupType?: BackupType) => boolean | undefined
-  enableNotifications: () => void
   selectImportedAccounts: (accountAddresses: string[]) => Promise<SignerMnemonicAccount[]>
   finishOnboarding: ({
     importType,
@@ -92,7 +86,6 @@ const initialOnboardingContext: OnboardingContext = {
   generateAccountsAndImportAddresses: async () => [],
   addBackupMethod: () => undefined,
   hasBackup: () => undefined,
-  enableNotifications: () => undefined,
   selectImportedAccounts: async () => [],
   finishOnboarding: async (_params: {
     importType: ImportType
@@ -292,6 +285,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       derivationIndex: index,
       mnemonicId,
       backups: [BackupType.Manual],
+      pushNotificationsEnabled: true,
     }))
 
     setImportedAccounts(accountsToImport)
@@ -384,23 +378,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   }
 
   /**
-   * Enables push notifications for all pending accounts
-   */
-  const enableNotifications = (): void => {
-    if (onboardingAccount) {
-      setOnboardingAccount({ ...onboardingAccount, pushNotificationsEnabled: true })
-    } else if (importedAccounts) {
-      const updatedImportedAccounts = importedAccounts.map((acc) => {
-        acc.pushNotificationsEnabled = true
-        return acc
-      })
-      setImportedAccounts(updatedImportedAccounts)
-    } else {
-      throw new Error('No account available for toggling notifiations')
-    }
-  }
-
-  /**
    * Returns an array of accounts imported accounts or an array with a single
    * pending account depending on flow it is invoked in.
    */
@@ -421,12 +398,10 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     importType,
     accounts,
     extensionOnboardingFlow,
-    createdFromOnboardingRedesign = false,
   }: {
     importType: ImportType
     accounts?: SignerMnemonicAccount[]
     extensionOnboardingFlow?: ExtensionOnboardingFlow
-    createdFromOnboardingRedesign?: boolean
   }): Promise<void> => {
     const isWatchFlow = importType === ImportType.Watch
     const onboardingAccounts = isWatchFlow ? [] : accounts ?? getAllOnboardingAccounts()
@@ -486,13 +461,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
 
       // Reset the last timestamp for having shown the backup reminder modal
       dispatch(setBackupReminderLastSeenTs(undefined))
-
-      // Reset the flag for having seen the welcome wallet card
-      dispatch(setHasViewedWelcomeWalletCard(false))
-
-      if (createdFromOnboardingRedesign) {
-        dispatch(setCreatedOnboardingRedesignAccount(true))
-      }
     }
 
     const isExtensionNoAccounts = onboardingAddresses.length === 0 && isExtension
@@ -581,7 +549,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
         getGeneratedAddresses,
         generateImportedAccounts,
         generateAccountsAndImportAddresses,
-        enableNotifications,
         selectImportedAccounts,
         finishOnboarding,
         getAllOnboardingAccounts,

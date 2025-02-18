@@ -41,7 +41,6 @@ jest.mock('expo-clipboard', () => ({
   getStringAsync: () => Promise.resolve(),
 }))
 jest.mock('expo-blur', () => ({ BlurView: {} }))
-jest.mock('expo-barcode-scanner', () => ({}))
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),
   notificationAsync: jest.fn(),
@@ -87,14 +86,6 @@ jest.mock('@walletconnect/utils', () => ({
   getSdkError: jest.fn(),
   parseUri: jest.fn(),
   buildApprovedNamespaces: jest.fn(),
-}))
-
-// Mock Sentry crash reporting
-jest.mock('@sentry/react-native', () => ({
-  init: () => jest.fn(),
-  wrap: (val) => val,
-  ReactNavigationInstrumentation: jest.fn(),
-  ReactNativeTracing: jest.fn(),
 }))
 
 jest.mock('react-native-appsflyer', () => {
@@ -143,6 +134,14 @@ jest.mock('uniswap/src/features/gating/sdk/statsig', () => {
     },
   }
   return StatsigMock
+})
+
+jest.mock('uniswap/src/features/gating/hooks', () => {
+  const real = jest.requireActual('uniswap/src/features/gating/hooks')
+  return {
+    ...real,
+    useDynamicConfigValue: (_config, _key, defaultValue, _customTypeGuard) => defaultValue,
+  }
 })
 
 // TODO: Remove this mock after mocks in jest-expo are fixed

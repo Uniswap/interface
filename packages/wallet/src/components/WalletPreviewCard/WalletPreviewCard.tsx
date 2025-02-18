@@ -36,7 +36,7 @@ export default function WalletPreviewCard({
       backgroundColor={selected ? '$surface1' : '$surface2'}
       borderColor={selected ? '$surface3' : '$surface2'}
       borderRadius="$rounded20"
-      borderWidth={1}
+      borderWidth="$spacing1"
       height={WALLET_PREVIEW_CARD_HEIGHT}
       p="$spacing12"
       shadowColor={selected ? '$shadowColor' : '$transparent'}

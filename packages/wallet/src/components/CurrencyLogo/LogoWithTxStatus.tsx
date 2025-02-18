@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, UniversalImage, UniversalImageResizeMode, useSporeColors } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import {
   AlertTriangleFilled,
@@ -11,23 +11,22 @@ import {
   ArrowUpInCircle,
   QuestionInCircle,
 } from 'ui/src/components/icons'
-import { borderRadii } from 'ui/src/theme'
+import { borderRadii, zIndexes } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
   NFTTradeType,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 interface LogoWithTxStatusBaseProps {
   assetType: AssetType
@@ -103,6 +102,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
         Icon = Approve
         break
       case TransactionType.Send:
+      case TransactionType.OffRampSale:
         Icon = ArrowUpInCircle
         break
       case TransactionType.NFTTrade:
@@ -144,7 +144,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
     <Flex centered height={size} width={size}>
       {logo ?? icon}
       {logo && icon && (
-        <Flex bottom={-4} position="absolute" right={-4}>
+        <Flex bottom={-4} position="absolute" right={-4} zIndex={zIndexes.mask}>
           {icon}
         </Flex>
       )}
@@ -247,12 +247,19 @@ export function DappLogoWithWCBadge({
   const statusSize = dappImageSize * STATUS_RATIO
   const totalSize = dappImageSize + statusSize * (1 / 4)
   const dappImage = dappImageUrl ? (
-    <RemoteImage
-      borderRadius={circular ? borderRadii.roundedFull : borderRadii.rounded4}
-      height={dappImageSize}
+    <UniversalImage
+      size={{
+        height: dappImageSize,
+        width: dappImageSize,
+        resizeMode: UniversalImageResizeMode.Contain,
+      }}
+      style={{
+        image: {
+          borderRadius: circular ? borderRadii.roundedFull : borderRadii.rounded4,
+        },
+      }}
       testID="dapp-image"
       uri={dappImageUrl}
-      width={dappImageSize}
     />
   ) : (
     <DappIconPlaceholder iconSize={dappImageSize} name={dappName} />
@@ -272,7 +279,7 @@ export function DappLogoWithWCBadge({
           backgroundColor="$surface2"
           borderColor="$surface1"
           borderRadius="$roundedFull"
-          borderWidth={2}
+          borderWidth="$spacing2"
           bottom={-2}
           position="absolute"
           right={-2}

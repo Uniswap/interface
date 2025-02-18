@@ -29,6 +29,8 @@ interface MonitoredSagaOptions {
   timeoutDuration?: number // in milliseconds
   // when true, skip dispatch a notification. Defaults to true
   showErrorNotification?: boolean
+  // errors we exect to happen should not be logged to Datadog
+  doNotLogErrors?: Array<string>
   // If retry / or other options are ever needed, they can go here
 }
 
@@ -108,12 +110,13 @@ export function createMonitoredSaga<SagaParams, SagaYieldType, SagaResultType>(
         yield* put(statusAction(SagaStatus.Success))
         logger.debug('saga', 'monitoredSaga', `${name} finished`)
       } catch (error) {
-        logger.error(error, {
-          tags: { file: 'utils/saga', function: 'createMonitoredSaga' },
-          extra: { sagaName: name },
-        })
-
         const errorMessage = errorToString(error)
+        if (!options?.doNotLogErrors?.includes(errorMessage)) {
+          logger.error(error, {
+            tags: { file: 'utils/saga', function: 'createMonitoredSaga' },
+            extra: { sagaName: name },
+          })
+        }
         yield* put(errorAction(errorMessage))
         if (options?.showErrorNotification === undefined || options?.showErrorNotification) {
           yield* put(

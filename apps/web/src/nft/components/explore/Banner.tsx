@@ -14,7 +14,7 @@ const BannerContainer = styled.div`
   padding-top: 22px;
   position: relative;
 
-  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding: 32px 16px;
   }
 `
@@ -29,7 +29,7 @@ const BannerMainArea = styled.div`
   justify-content: space-between;
   z-index: 2;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     flex-direction: column;
     height: 100%;
     gap: 14px;
@@ -50,17 +50,17 @@ const HeaderContainer = styled.div`
 
   color: ${({ theme }) => theme.neutral1};
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xl}px`}) {
     font-size: 48px;
     line-height: 67px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     font-size: 36px;
     line-height: 50px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     line-height: 43px;
     text-align: center;
     padding-bottom: 16px;

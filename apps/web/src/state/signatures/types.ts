@@ -5,7 +5,7 @@ import {
   AssetActivityPartsFragment,
   SwapOrderDetailsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Prettify } from 'viem/chains'
 
 export type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
@@ -13,6 +13,7 @@ export type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDet
 export enum SignatureType {
   SIGN_UNISWAPX_ORDER = 'signUniswapXOrder',
   SIGN_UNISWAPX_V2_ORDER = 'signUniswapXV2Order',
+  SIGN_UNISWAPX_V3_ORDER = 'signUniswapXV3Order',
   SIGN_LIMIT = 'signLimit',
   SIGN_PRIORITY_ORDER = 'signPriorityOrder',
 }
@@ -20,6 +21,7 @@ export enum SignatureType {
 export const OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE: Partial<Record<OffchainOrderType, SignatureType>> = {
   [OffchainOrderType.DUTCH_AUCTION]: SignatureType.SIGN_UNISWAPX_ORDER,
   [OffchainOrderType.DUTCH_V2_AUCTION]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
+  [OffchainOrderType.DUTCH_V3_AUCTION]: SignatureType.SIGN_UNISWAPX_V3_ORDER,
   [OffchainOrderType.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
   [OffchainOrderType.PRIORITY_ORDER]: SignatureType.SIGN_PRIORITY_ORDER,
 }

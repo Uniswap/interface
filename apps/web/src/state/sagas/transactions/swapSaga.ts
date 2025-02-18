@@ -1,5 +1,4 @@
 /* eslint-disable rulesdir/no-undefined-or */
-import { TransactionResponse } from '@ethersproject/providers'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
@@ -19,6 +18,7 @@ import {
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
 import { handleWrapStep } from 'state/sagas/transactions/wrapSaga'
+import { VitalTxFields } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call, put } from 'typed-redux-saga'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
@@ -55,12 +55,13 @@ import {
   ValidatedUniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { createSaga } from 'uniswap/src/utils/saga'
-import { percentFromFloat } from 'utilities/src/format/percent'
 import { logger } from 'utilities/src/logger/logger'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
@@ -75,11 +76,12 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
   const info = getSwapTransactionInfo(trade)
   const txRequest = yield* call(getSwapTxRequest, step, signature)
 
-  const onModification = (response: TransactionResponse) => {
+  const onModification = ({ hash, data }: VitalTxFields) => {
     sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
-      txHash: response.hash,
+      ...analytics,
+      txHash: hash,
       expected: txRequest.data?.toString() ?? '',
-      actual: response.data,
+      actual: data,
     })
   }
 
@@ -94,12 +96,11 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
     onModification,
   })
 
-  const allowedSlippage = trade.slippageTolerance ? percentFromFloat(trade.slippageTolerance) : ZERO_PERCENT
   sendAnalyticsEvent(
     SwapEventName.SWAP_SIGNED,
     formatSwapSignedAnalyticsEventProperties({
       trade,
-      allowedSlippage,
+      allowedSlippage: trade.slippageTolerance ? slippageToleranceToPercent(trade.slippageTolerance) : ZERO_PERCENT,
       fiatValues: {
         amountIn: analytics.token_in_amount_usd,
         amountOut: analytics.token_out_amount_usd,
@@ -107,6 +108,7 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
       },
       txHash: hash,
       portfolioBalanceUsd: analytics.total_balances_usd,
+      trace: analytics,
     }),
   )
 
@@ -166,6 +168,7 @@ function* swap(params: SwapParams) {
       case Routing.BRIDGE:
         return yield* classicSwap({ ...params, swapTxContext, steps })
       case Routing.DUTCH_V2:
+      case Routing.DUTCH_V3:
       case Routing.PRIORITY:
         return yield* uniswapXSwap({ ...params, swapTxContext, steps })
     }
@@ -307,6 +310,7 @@ export function useSwapCallback(): SwapCallback {
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+  const trace = useTrace()
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
@@ -332,6 +336,7 @@ export function useSwapCallback(): SwapCallback {
         currencyInAmountUSD,
         currencyOutAmountUSD,
         portfolioBalanceUsd,
+        trace,
       })
       const swapParams = {
         swapTxContext,
@@ -363,6 +368,6 @@ export function useSwapCallback(): SwapCallback {
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [formatter, portfolioBalanceUsd, selectChain, startChainId, appDispatch, swapStartTimestamp, v4Enabled],
+    [formatter, portfolioBalanceUsd, trace, selectChain, startChainId, v4Enabled, appDispatch, swapStartTimestamp],
   )
 }

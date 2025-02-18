@@ -87,7 +87,7 @@ const fadeIn = keyframes`
   from { opacity: .25 }
   to { opacity: 1 }
 `
-export const portfolioFadeInAnimation = css`
+const portfolioFadeInAnimation = css`
   animation: ${fadeIn} ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
 `
 

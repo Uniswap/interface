@@ -371,6 +371,9 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
             </button>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -748,6 +751,9 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
             </button>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1125,6 +1131,9 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
             </button>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1502,6 +1511,9 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
             </button>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1822,6 +1834,25 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
                   class="c10 c11"
                 >
                   <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                    data-testid="token-logo"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                    />
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      data-testid="img-token-image"
+                    >
+                      <img
+                        height="16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                        style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                        width="16"
+                      />
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 DAI
@@ -1847,6 +1878,25 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
                       points="12 5 19 12 12 19"
                     />
                   </svg>
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                    data-testid="token-logo"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                    />
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      data-testid="img-token-image"
+                    >
+                      <img
+                        height="16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                        style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                        width="16"
+                      />
+                    </div>
+                  </div>
                   <div
                     class="c6 css-142zc9n"
                   >
@@ -1877,6 +1927,9 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
             </button>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -2199,6 +2252,25 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
                   class="c10 c11"
                 >
                   <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                    data-testid="token-logo"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                    />
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      data-testid="img-token-image"
+                    >
+                      <img
+                        height="16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                        style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                        width="16"
+                      />
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 DAI
@@ -2224,6 +2296,25 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
                       points="12 5 19 12 12 19"
                     />
                   </svg>
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                    data-testid="token-logo"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                    />
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      data-testid="img-token-image"
+                    >
+                      <img
+                        height="16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                        style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                        width="16"
+                      />
+                    </div>
+                  </div>
                   <div
                     class="c6 css-142zc9n"
                   >
@@ -2254,6 +2345,9 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
             </button>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

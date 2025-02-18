@@ -1,9 +1,9 @@
 import { useNavigation } from '@react-navigation/core'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo, SectionList } from 'react-native'
+import { ListRenderItemInfo } from 'react-native'
 import { SvgProps } from 'react-native-svg'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
 import { FooterSettings } from 'src/components/Settings/FooterSettings'
 import { OnboardingRow } from 'src/components/Settings/OnboardingRow'
@@ -15,11 +15,18 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { WalletSettings } from 'src/components/Settings/WalletSettings'
-import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { APP_FEEDBACK_LINK } from 'src/constants/urls'
-import { useBiometricContext } from 'src/features/biometrics/context'
-import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
+import { SettingsList } from 'src/components/Settings/lists/SettingsList'
+import { SectionData } from 'src/components/Settings/lists/types'
+import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
+import { useBiometricsState } from 'src/features/biometrics/useBiometricsState'
+import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
+import { useBiometricName } from 'src/features/biometricsSettings/hooks'
+import {
+  NotificationPermission,
+  useNotificationOSPermissionsEnabled,
+} from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { useWalletRestore } from 'src/features/wallet/hooks'
+import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex, IconProps, Text, useSporeColors } from 'ui/src'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
@@ -29,6 +36,7 @@ import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import {
+  Bell,
   Chart,
   Coins,
   Feedback,
@@ -40,29 +48,22 @@ import {
   WavePulse,
   Wrench,
 } from 'ui/src/components/icons'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { setHideSmallBalances, setHideSpamTokens, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
-import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { isAndroid } from 'utilities/src/platform'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
-import { selectHapticsEnabled, setHapticsUserSettingEnabled } from 'wallet/src/features/appearance/slice'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -74,8 +75,7 @@ export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
   const dispatch = useDispatch()
   const colors = useSporeColors()
-  const insets = useAppInsets()
-  const { deviceSupportsBiometrics } = useBiometricContext()
+  const { deviceSupportsBiometrics } = useBiometricsState()
   const { t } = useTranslation()
 
   // check if device supports biometric authentication, if not, hide option
@@ -100,15 +100,17 @@ export function SettingsScreen(): JSX.Element {
     }, AVOID_RENDER_DURING_ANIMATION_MS)
   }, [dispatch, hideSpamTokens])
 
-  const hapticsUserEnabled = useSelector(selectHapticsEnabled)
+  const { hapticsEnabled, setHapticsEnabled } = useHapticFeedback()
+
   const onToggleEnableHaptics = useCallback(() => {
     setTimeout(() => {
-      dispatch(setHapticsUserSettingEnabled(!hapticsUserEnabled))
+      setHapticsEnabled(!hapticsEnabled)
     }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, hapticsUserEnabled])
+  }, [setHapticsEnabled, hapticsEnabled])
 
-  const isTestnetModeFlagEnabled = useFeatureFlag(FeatureFlags.TestnetMode)
   const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
+  const { notificationPermissionsEnabled: notificationOSPermission } = useNotificationOSPermissionsEnabled()
+
   const { isTestnetModeEnabled } = useEnabledChains()
   const handleTestnetModeToggle = useCallback((): void => {
     const newIsTestnetMode = !isTestnetModeEnabled
@@ -116,6 +118,7 @@ export function SettingsScreen(): JSX.Element {
     const fireAnalytic = (): void =>
       sendAnalyticsEvent(WalletEventName.TestnetModeToggled, {
         enabled: newIsTestnetMode,
+        location: 'settings',
       })
 
     setTimeout(() => {
@@ -140,6 +143,21 @@ export function SettingsScreen(): JSX.Element {
   const hasCloudBackup = signerAccount?.backups?.includes(BackupType.Cloud)
   const noSignerAccountImported = !signerAccount
   const { walletNeedsRestore } = useWalletRestore()
+
+  const renderItem = useCallback(
+    ({ item }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>): JSX.Element | null => {
+      if (item.isHidden) {
+        return null
+      }
+      if ('component' in item) {
+        return item.component
+      }
+      return (
+        <SettingsRow key={item.screen} navigation={navigation} page={item} checkIfCanProceed={item.checkIfCanProceed} />
+      )
+    },
+    [navigation],
+  )
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const svgProps: SvgProps = {
@@ -186,6 +204,18 @@ export function SettingsScreen(): JSX.Element {
             icon: <Language {...iconProps} />,
           },
           {
+            screen: MobileScreens.SettingsNotifications,
+            text: t('settings.setting.notifications.title'),
+            icon: <Bell {...iconProps} />,
+            checkIfCanProceed: (): boolean => {
+              if (notificationOSPermission === NotificationPermission.Enabled) {
+                return true
+              }
+              navigation.navigate(ModalName.NotificationsOSSettings)
+              return false
+            },
+          },
+          {
             text: t('settings.setting.smallBalances.title'),
             icon: <Chart {...iconProps} />,
             isToggleEnabled: hideSmallBalances && !isTestnetModeEnabled,
@@ -201,28 +231,20 @@ export function SettingsScreen(): JSX.Element {
           {
             text: t('settings.setting.hapticTouch.title'),
             icon: <WavePulse {...iconProps} />,
-            isToggleEnabled: hapticsUserEnabled,
+            isToggleEnabled: hapticsEnabled,
             onToggle: onToggleEnableHaptics,
           },
+
           {
-            screen: MobileScreens.SettingsPrivacy,
-            text: t('settings.setting.privacy.title'),
-            icon: <LineChartDots {...iconProps} />,
+            text: t('settings.setting.wallet.testnetMode.title'),
+            icon: <Wrench {...iconProps} />,
+            isToggleEnabled: isTestnetModeEnabled,
+            onToggle: handleTestnetModeToggle,
           },
-          ...(isTestnetModeFlagEnabled
-            ? [
-                {
-                  text: t('settings.setting.wallet.testnetMode.title'),
-                  icon: <Wrench {...iconProps} />,
-                  isToggleEnabled: isTestnetModeEnabled,
-                  onToggle: handleTestnetModeToggle,
-                },
-              ]
-            : []),
         ],
       },
       {
-        subTitle: t('settings.section.security'),
+        subTitle: t('settings.section.privacyAndSecurity'),
         isHidden: noSignerAccountImported,
         data: [
           ...(deviceSupportsBiometrics
@@ -263,6 +285,11 @@ export function SettingsScreen(): JSX.Element {
             icon: <OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
             isHidden: noSignerAccountImported,
           },
+          {
+            screen: MobileScreens.SettingsPrivacy,
+            text: t('settings.setting.permissions.title'),
+            icon: <LineChartDots {...iconProps} />,
+          },
         ],
       },
       {
@@ -271,7 +298,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: MobileScreens.WebView,
             screenProps: {
-              uriLink: APP_FEEDBACK_LINK,
+              uriLink: uniswapUrls.walletFeedbackForm,
               headerTitle: t('settings.action.feedback'),
             },
             text: t('settings.action.feedback'),
@@ -280,7 +307,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: MobileScreens.WebView,
             screenProps: {
-              uriLink: uniswapUrls.helpArticleUrls.walletHelp,
+              uriLink: uniswapUrls.helpArticleUrls.mobileWalletHelp,
               headerTitle: t('settings.action.help'),
             },
             text: t('settings.action.help'),
@@ -335,7 +362,7 @@ export function SettingsScreen(): JSX.Element {
     onToggleHideSmallBalances,
     hideSpamTokens,
     onToggleHideSpamTokens,
-    hapticsUserEnabled,
+    hapticsEnabled,
     onToggleEnableHaptics,
     noSignerAccountImported,
     deviceSupportsBiometrics,
@@ -345,50 +372,52 @@ export function SettingsScreen(): JSX.Element {
     signerAccount?.address,
     walletNeedsRestore,
     hasCloudBackup,
-    isTestnetModeFlagEnabled,
     isTestnetModeEnabled,
     handleTestnetModeToggle,
+    notificationOSPermission,
+    navigation,
   ])
-
-  const renderItem = ({
-    item,
-  }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>): JSX.Element | null => {
-    if (item.isHidden) {
-      return null
-    }
-    if ('component' in item) {
-      return item.component
-    }
-    return <SettingsRow key={item.screen} navigation={navigation} page={item} />
-  }
 
   const handleModalClose = useCallback(() => setIsTestnetModalOpen(false), [])
 
   return (
-    <HeaderScrollScreen alwaysShowCenterElement centerElement={<Text variant="body1">{t('settings.title')}</Text>}>
+    <ScreenWithHeader centerElement={<Text variant="body1">{t('settings.title')}</Text>}>
       <TestnetModeModal isOpen={isTestnetModalOpen} onClose={handleModalClose} />
-      <Flex pb={insets.bottom - spacing.spacing16} pt="$spacing12" px="$spacing24">
-        <SectionList
-          ItemSeparatorComponent={renderItemSeparator}
-          ListFooterComponent={<FooterSettings />}
-          ListHeaderComponent={<WalletSettings />}
-          initialNumToRender={20}
-          keyExtractor={(_item, index): string => 'settings' + index}
-          renderItem={renderItem}
-          renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
-          renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-            <Flex backgroundColor="$surface1" py="$spacing12">
-              <Text color="$neutral2" variant="body1">
-                {subTitle}
-              </Text>
-            </Flex>
-          )}
-          sections={sections.filter((p) => !p.isHidden)}
-          showsVerticalScrollIndicator={false}
-        />
-      </Flex>
-    </HeaderScrollScreen>
+      <SettingsList
+        keyExtractor={keyExtractor}
+        sections={sections}
+        ItemSeparatorComponent={renderItemSeparator}
+        ListFooterComponent={<FooterSettings />}
+        ListHeaderComponent={<WalletSettings />}
+        renderItem={renderItem}
+        renderSectionHeader={renderSectionHeader}
+        renderSectionFooter={renderSectionFooter}
+        showsVerticalScrollIndicator={false}
+      />
+    </ScreenWithHeader>
   )
 }
 
-const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
+function keyExtractor(_item: SectionData, index: number): string {
+  return 'settings' + index
+}
+
+function renderSectionFooter(): JSX.Element {
+  return <Flex pt="$spacing24" />
+}
+
+function renderSectionHeader({ section }: { section: SettingsSection }): JSX.Element {
+  return section.subTitle ? (
+    <Flex backgroundColor="$surface1" py="$spacing12">
+      <Text color="$neutral2" variant="body1">
+        {section.subTitle}
+      </Text>
+    </Flex>
+  ) : (
+    <></>
+  )
+}
+
+function renderItemSeparator(): JSX.Element {
+  return <Flex pt="$spacing8" />
+}

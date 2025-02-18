@@ -18,7 +18,7 @@ import {
   UNITAGS_SPENCER_DARK,
   UNITAGS_SPENCER_LIGHT,
 } from 'ui/src/assets'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 
 // Makes it easier to change later if needed
 const MODIFIER = 1
@@ -42,11 +42,11 @@ export function UnitagClaimBackground({ children, blurAll }: PropsWithChildren<{
 
   return (
     <Flex height="100%" width="100%">
-      <Flex centered height="100%" width="100%" zIndex={zIndices.default}>
+      <Flex centered height="100%" width="100%" zIndex={zIndexes.default}>
         {children}
       </Flex>
 
-      <Flex position="absolute" height="100%" width="100%" zIndex={zIndices.background}>
+      <Flex position="absolute" height="100%" width="100%" zIndex={zIndexes.background}>
         <Image
           {...imageProps}
           src={isDarkMode ? UNITAGS_MAGGIE_DARK : UNITAGS_MAGGIE_LIGHT}

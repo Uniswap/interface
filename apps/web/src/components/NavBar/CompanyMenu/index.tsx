@@ -3,11 +3,10 @@ import { NavIcon } from 'components/Logo/NavIcon'
 import { MenuDropdown } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { MobileMenuDrawer } from 'components/NavBar/CompanyMenu/MobileMenuDrawer'
 import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Popover, Text, useIsTouchDevice } from 'ui/src'
+import { Popover, Text, useIsTouchDevice, useMedia } from 'ui/src'
 import { Hamburger } from 'ui/src/components/icons/Hamburger'
 
 const ArrowDown = styled(ArrowChangeDown)<{ $isActive: boolean }>`
@@ -35,9 +34,9 @@ const UniIcon = styled.div`
 
 export function CompanyMenu() {
   const popoverRef = useRef<Popover>(null)
-  const isSmallScreen = !useScreenSize()['sm']
+  const media = useMedia()
   const isMobileDrawer = useIsMobileDrawer()
-  const isLargeScreen = useScreenSize()['xl']
+  const isLargeScreen = !media.xxl
   const location = useLocation()
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
@@ -67,8 +66,8 @@ export function CompanyMenu() {
               </Text>
             )}
           </UniIcon>
-          {(isSmallScreen || isTouchDevice) && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
-          <ArrowDown $isActive={isOpen} width="12px" height="12px" />
+          {(media.md || isTouchDevice) && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
+          {!media.md && !isTouchDevice && <ArrowDown $isActive={isOpen} width="12px" height="12px" />}
         </Trigger>
       </Popover.Trigger>
       {isMobileDrawer ? <MobileMenuDrawer isOpen={isOpen} closeMenu={closeMenu} /> : <MenuDropdown close={closeMenu} />}

@@ -24,7 +24,7 @@ export function HiddenMnemonicWordView({
         backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded20"
-        borderWidth={1}
+        borderWidth="$spacing1"
         gap="$spacing36"
         px="$spacing32"
         py="$spacing24"
@@ -41,7 +41,7 @@ export function HiddenMnemonicWordView({
               backgroundColor="$surface1"
               borderColor="$surface3"
               borderRadius="$rounded16"
-              borderWidth={1}
+              borderWidth="$spacing1"
               gap="$spacing4"
               paddingEnd="$spacing16"
               paddingStart="$spacing12"

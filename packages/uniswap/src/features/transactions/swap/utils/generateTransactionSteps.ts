@@ -10,11 +10,17 @@ import {
   CreateLPPositionRequest,
   CreateSwapRequest,
   DutchQuoteV2,
+  DutchQuoteV3,
   IncreaseLPPositionRequest,
   MigrateLPPositionRequest,
   PriorityQuote,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import { LiquidityTxAndGasInfo, isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
+import {
+  LiquidityTransactionType,
+  LiquidityTxAndGasInfo,
+  isValidLiquidityTxContext,
+} from 'uniswap/src/features/transactions/liquidity/types'
+import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import {
   ClassicSwapFlow,
   ClassicSwapSteps,
@@ -72,6 +78,14 @@ function orderSwapSteps(flow: ClassicSwapFlow): ClassicSwapSteps[] {
 
 function orderIncreaseLiquiditySteps(flow: IncreasePositionFlow): IncreasePositionSteps[] {
   const steps: IncreasePositionSteps[] = []
+
+  if (flow.revokeToken0) {
+    steps.push(flow.revokeToken0)
+  }
+
+  if (flow.revokeToken1) {
+    steps.push(flow.revokeToken1)
+  }
 
   if (flow.approvalToken0) {
     steps.push(flow.approvalToken0)
@@ -150,6 +164,7 @@ function createWrapTransactionStep(
 function createApprovalTransactionStep(
   txRequest: ValidatedTransactionRequest | undefined,
   amountIn?: CurrencyAmount<Currency>,
+  pair?: [Currency, Currency],
 ): TokenApprovalTransactionStep | undefined {
   if (!txRequest?.data || !amountIn) {
     return undefined
@@ -160,7 +175,7 @@ function createApprovalTransactionStep(
   const { spender } = parseERC20ApproveCalldata(txRequest.data.toString())
   const amount = amountIn.quotient.toString()
 
-  return { type, txRequest, token, spender, amount }
+  return { type, txRequest, token, spender, amount, pair }
 }
 
 function createRevocationTransactionStep(
@@ -183,7 +198,7 @@ function createRevocationTransactionStep(
 
 function createSignOrderUniswapXStep(
   permitData: ValidatedPermit,
-  quote: DutchQuoteV2 | PriorityQuote,
+  quote: DutchQuoteV2 | DutchQuoteV3 | PriorityQuote,
 ): UniswapXSignatureStep {
   return { type: TransactionStepType.UniswapXSignature, deadline: quote.orderInfo.deadline, quote, ...permitData }
 }
@@ -238,13 +253,19 @@ function createCreatePositionAsyncStep(
         return undefined
       }
 
-      const { create } = await createLpPosition({
-        ...createPositionRequestArgs,
-        signature,
-        simulateTransaction: true,
-      })
+      try {
+        const { create } = await createLpPosition({
+          ...createPositionRequestArgs,
+          signature,
+          simulateTransaction: true,
+        })
 
-      return validateTransactionRequest(create)
+        return validateTransactionRequest(create)
+      } catch (e) {
+        throw new Error('create failed to get transaction request', {
+          cause: parseErrorMessageTitle(e, { includeRequestId: true }),
+        })
+      }
     },
   }
 }
@@ -260,13 +281,19 @@ function createIncreasePositionAsyncStep(
         return undefined
       }
 
-      const { increase } = await increaseLpPosition({
-        ...increasePositionRequestArgs,
-        signature,
-        simulateTransaction: true,
-      })
+      try {
+        const { increase } = await increaseLpPosition({
+          ...increasePositionRequestArgs,
+          signature,
+          simulateTransaction: true,
+        })
 
-      return validateTransactionRequest(increase)
+        return validateTransactionRequest(increase)
+      } catch (e) {
+        throw new Error('increase failed to get transaction request', {
+          cause: parseErrorMessageTitle(e, { includeRequestId: true }),
+        })
+      }
     },
   }
 }
@@ -296,13 +323,19 @@ function createMigratePositionAsyncStep(
         return undefined
       }
 
-      const { migrate } = await migrateLpPosition({
-        ...migratePositionRequestArgs,
-        signature,
-        signatureDeadline,
-      })
+      try {
+        const { migrate } = await migrateLpPosition({
+          ...migratePositionRequestArgs,
+          signature,
+          signatureDeadline,
+        })
 
-      return validateTransactionRequest(migrate)
+        return validateTransactionRequest(migrate)
+      } catch (e) {
+        throw new Error('migrate failed to get transaction request', {
+          cause: parseErrorMessageTitle(e, { includeRequestId: true }),
+        })
+      }
     },
   }
 }
@@ -315,13 +348,31 @@ export function generateTransactionSteps(
   const isValidLP = isValidLiquidityTxContext(txContext)
 
   if (isValidLP) {
+    if (txContext.type === LiquidityTransactionType.Collect) {
+      return [
+        {
+          type: TransactionStepType.CollectFeesTransactionStep,
+          txRequest: txContext.txRequest,
+        },
+      ]
+    }
+
     const { action, approveToken0Request, approveToken1Request, approvePositionTokenRequest } = txContext
 
+    const revokeToken0 = createRevocationTransactionStep(
+      txContext.revokeToken0Request,
+      action.currency0Amount.currency.wrapped,
+    )
+    const revokeToken1 = createRevocationTransactionStep(
+      txContext.revokeToken1Request,
+      action.currency1Amount.currency.wrapped,
+    )
     const approvalToken0 = createApprovalTransactionStep(approveToken0Request, action.currency0Amount)
     const approvalToken1 = createApprovalTransactionStep(approveToken1Request, action.currency1Amount)
     const approvalPositionToken = createApprovalTransactionStep(
       approvePositionTokenRequest,
       action.liquidityToken ? CurrencyAmount.fromRawAmount(action.liquidityToken, 1) : undefined,
+      [action.currency0Amount.currency, action.currency1Amount.currency],
     )
 
     switch (txContext.type) {
@@ -355,6 +406,8 @@ export function generateTransactionSteps(
       case 'increase':
         if (txContext.unsigned) {
           return orderIncreaseLiquiditySteps({
+            revokeToken0,
+            revokeToken1,
             approvalToken0,
             approvalToken1,
             approvalPositionToken,
@@ -366,6 +419,8 @@ export function generateTransactionSteps(
           })
         } else {
           return orderIncreaseLiquiditySteps({
+            revokeToken0,
+            revokeToken1,
             approvalToken0,
             approvalToken1,
             approvalPositionToken,

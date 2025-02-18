@@ -1,4 +1,4 @@
-import { t } from 'uniswap/src/i18n'
+import i18n from 'uniswap/src/i18n'
 import { v4 as uuid } from 'uuid'
 
 // You may throw an instance of this class when the user rejects a request in their wallet.
@@ -20,13 +20,13 @@ export function toReadableError(errorText: string, error: unknown) {
 
 export class WrongChainError extends Error {
   constructor() {
-    super(t('wallet.wrongNet'))
+    super(i18n.t('wallet.wrongNet'))
   }
 }
 
 export class UniswapXv2HardQuoteError extends Error {
   constructor() {
-    super(t('uniswapx.v2QuoteFailed'))
+    super(i18n.t('uniswapx.v2QuoteFailed'))
     this.name = 'UniswapXv2HardQuoteError'
   }
 }
@@ -34,7 +34,7 @@ export class UniswapXv2HardQuoteError extends Error {
 export class SignatureExpiredError extends Error {
   private _id: string
   constructor() {
-    super(t('common.signatureExpired'))
+    super(i18n.t('common.signatureExpired'))
     this.name = 'SignatureExpiredError'
     this._id = `SignatureExpiredError-${uuid()}`
   }

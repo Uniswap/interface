@@ -82,18 +82,24 @@ import {
   v78Schema,
   v79Schema,
   v7Schema,
+  v80Schema,
+  v81Schema,
+  v83Schema,
+  v84Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
-import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
+import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { initialModalsState } from 'src/features/modals/modalSlice'
+import { initialPushNotificationsState } from 'src/features/notifications/slice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { initialNotificationsState } from 'uniswap/src/features/notifications/slice'
@@ -103,8 +109,8 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import { transactionDetails } from 'uniswap/src/test/fixtures'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
@@ -118,11 +124,15 @@ import {
   testActivatePendingAccounts,
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
+  testDeleteWelcomeWalletCard,
   testMovedCurrencySetting,
   testMovedLanguageSetting,
   testMovedTokenWarnings,
   testMovedUserSettings,
+  testMoveTokenAndNFTVisibility,
+  testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
+  testUnchecksumDismissedTokenWarningKeys,
   testUpdateExploreOrderByType,
 } from 'wallet/src/state/walletMigrationsTests'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
@@ -190,6 +200,7 @@ describe('Redux state migrations', () => {
       passwordLockout: initialPasswordLockoutState,
       behaviorHistory: initialBehaviorHistoryState,
       providers: { isInitialized: false },
+      pushNotifications: initialPushNotificationsState,
       saga: {},
       searchHistory: initialSearchHistoryState,
       telemetry: initialTelemetryState,
@@ -199,6 +210,7 @@ describe('Redux state migrations', () => {
       tweaks: initialTweaksState,
       uniswapBehaviorHistory: initialUniswapBehaviorHistoryState,
       userSettings: initialUserSettingsState,
+      visibility: initialVisibilityState,
       wallet: initialWalletState,
       walletConnect: initialWalletConnectState,
       _persist: {
@@ -1585,5 +1597,30 @@ describe('Redux state migrations', () => {
 
   it('migrates from v79 to v80', async () => {
     testUpdateExploreOrderByType(migrations[80], v79Schema)
+  })
+
+  it('migrates from v80 to v81', async () => {
+    testRemoveCreatedOnboardingRedesignAccount(migrations[81], v80Schema)
+  })
+
+  it('migrates from v81 to v82', () => {
+    testUnchecksumDismissedTokenWarningKeys(migrations[82], v81Schema)
+  })
+
+  it('migrates from v82 to v83', () => {
+    // v82 didn't have a new schema
+    const v81Stub = { ...v81Schema }
+    const v83 = migrations[83](v81Stub)
+
+    expect(v83.pushNotifications.generalUpdatesEnabled).toBe(false)
+    expect(v83.pushNotifications.priceAlertsEnabled).toBe(false)
+  })
+
+  it('migrates from v83 to v84', () => {
+    testDeleteWelcomeWalletCard(migrations[84], v83Schema)
+  })
+
+  it('migrates from v84 to v85', () => {
+    testMoveTokenAndNFTVisibility(migrations[85], v84Schema)
   })
 })

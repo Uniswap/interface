@@ -1,7 +1,9 @@
 import { TypedDataDomain, TypedDataField } from "@ethersproject/abstract-signer"
 import { Currency, CurrencyAmount, Token } from "@uniswap/sdk-core"
-import { DutchQuoteV2, PriorityQuote } from "uniswap/src/data/tradingApi/__generated__"
+import { DutchQuoteV2, DutchQuoteV3, PriorityQuote } from "uniswap/src/data/tradingApi/__generated__"
 import { ValidatedTransactionRequest } from "uniswap/src/features/transactions/swap/utils/trade"
+
+
 
 
 export enum TransactionStepType {
@@ -17,6 +19,7 @@ export enum TransactionStepType {
   DecreasePositionTransaction = 'DecreasePositionTransaction',
   MigratePositionTransactionStep = 'MigratePositionTransaction',
   MigratePositionTransactionStepAsync = 'MigratePositionTransactionAsync',
+  CollectFeesTransactionStep = 'CollectFeesTransaction',
 }
 
 export type UniswapXSwapSteps =
@@ -32,8 +35,9 @@ export type ClassicSwapSteps =
   | SwapTransactionStep
   | SwapTransactionStepAsync
 
-export type IncreasePositionSteps =
+  export type IncreasePositionSteps =
   | TokenApprovalTransactionStep
+  | TokenRevocationTransactionStep
   | Permit2SignatureStep
   | IncreasePositionTransactionStep
   | IncreasePositionTransactionStepAsync
@@ -42,8 +46,10 @@ export type DecreasePositionSteps = TokenApprovalTransactionStep | DecreasePosit
 
 export type MigratePositionSteps = Permit2SignatureStep | MigratePositionTransactionStep | MigratePositionTransactionStepAsync
 
+export type CollectFeesSteps = CollectFeesTransactionStep
+
 // TODO: add v4 lp flow
-export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps | IncreasePositionSteps | DecreasePositionSteps | MigratePositionSteps
+export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps | IncreasePositionSteps | DecreasePositionSteps | MigratePositionSteps | CollectFeesSteps
 export type OnChainTransactionStep = TransactionStep & OnChainTransactionFields
 export type SignatureTransactionStep = TransactionStep & SignTypedDataStepFields
 
@@ -66,6 +72,7 @@ export interface TokenApprovalTransactionStep extends OnChainTransactionFields {
   type: TransactionStepType.TokenApprovalTransaction
   token: Token
   spender: string
+  pair?: [Currency, Currency]
   // TODO(WEB-5083): this is used to distinguish a revoke from an approve. It can likely be replaced by a boolean because for LP stuff the amount isn't straight forward.
   amount: string
 }
@@ -117,6 +124,10 @@ export interface MigratePositionTransactionStepAsync {
   getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined> // fetches tx request from trading api with signature
 }
 
+export interface CollectFeesTransactionStep extends OnChainTransactionFields {
+  type: TransactionStepType.CollectFeesTransactionStep
+}
+
 export type ClassicSwapFlow =
   | {
       revocation?: TokenRevocationTransactionStep
@@ -137,6 +148,8 @@ export type IncreasePositionFlow =
       approvalToken0?: TokenApprovalTransactionStep
       approvalToken1?: TokenApprovalTransactionStep
       approvalPositionToken?: TokenApprovalTransactionStep
+      revokeToken0?: TokenRevocationTransactionStep
+      revokeToken1?: TokenRevocationTransactionStep
       permit: undefined
       increasePosition: IncreasePositionTransactionStep
     }
@@ -145,6 +158,8 @@ export type IncreasePositionFlow =
       approvalToken0?: TokenApprovalTransactionStep
       approvalToken1?: TokenApprovalTransactionStep
       approvalPositionToken?: TokenApprovalTransactionStep
+      revokeToken0?: TokenRevocationTransactionStep
+      revokeToken1?: TokenRevocationTransactionStep
       permit: Permit2SignatureStep
       increasePosition: IncreasePositionTransactionStepAsync
     }
@@ -162,7 +177,7 @@ export type DecreasePositionFlow = {
 export interface UniswapXSignatureStep extends SignTypedDataStepFields {
   type: TransactionStepType.UniswapXSignature
   deadline: number
-  quote: DutchQuoteV2 | PriorityQuote
+  quote: DutchQuoteV2 | DutchQuoteV3 | PriorityQuote
 }
 
 export type UniswapXSwapFlow = {

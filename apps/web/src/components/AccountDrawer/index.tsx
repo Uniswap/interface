@@ -1,9 +1,10 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { SignInModal } from 'components/AccountDrawer/SignInModal'
 import { ScrollBarStyles } from 'components/Common/styles'
 import { Web3StatusRef } from 'components/Web3Status'
-import { useWindowSize } from 'hooks/screenSize/useWindowSize'
+import { useAccount } from 'hooks/useAccount'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
@@ -13,11 +14,13 @@ import styled, { css } from 'lib/styled-components'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { useGesture } from 'react-use-gesture'
-import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { INTERFACE_NAV_HEIGHT, breakpoints } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
+import { useWindowSize } from 'uniswap/src/hooks/useWindowSize'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const DRAWER_WIDTH_XL = '390px'
@@ -50,7 +53,7 @@ const ScrimBackground = styled.div<{ $open: boolean; $maxWidth?: number; $zIndex
 
   opacity: 0;
   pointer-events: none;
-  @media only screen and (max-width: ${({ theme, $maxWidth }) => `${$maxWidth ?? theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme, $maxWidth }) => `${$maxWidth ?? theme.breakpoint.md}px`}) {
     opacity: ${({ $open }) => ($open ? 1 : 0)};
     pointer-events: ${({ $open }) => ($open ? 'auto' : 'none')};
     transition: opacity ${({ theme }) => theme.transition.duration.medium} ease-in-out;
@@ -67,7 +70,7 @@ export const Scrim = (props: ScrimBackgroundProps) => {
   const { width } = useWindowSize()
 
   useEffect(() => {
-    if (width && width < BREAKPOINTS.sm && props.$open) {
+    if (width && width < breakpoints.md && props.$open) {
       document.body.style.overflow = 'hidden'
     }
     return () => {
@@ -99,7 +102,7 @@ const Container = styled.div<{ isUniExtensionAvailable?: boolean; $open?: boolea
 
   ${({ isUniExtensionAvailable }) => isUniExtensionAvailable && ExtensionContainerStyles}
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     height: 100%;
     top: 100%;
     left: 0;
@@ -123,7 +126,7 @@ const AccountDrawerWrapper = styled.div<{ open: boolean; isUniExtensionAvailable
   height: 100%;
   overflow: hidden;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     z-index: ${Z_INDEX.modal};
     position: absolute;
     margin-right: 0;
@@ -190,7 +193,7 @@ const CloseDrawer = styled.div`
     margin: 0 -8px 0 0;
     background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     display: none;
   }
 `
@@ -202,6 +205,8 @@ function AccountDrawer() {
   const modalRef = useRef<HTMLDivElement>(null)
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const [web3StatusRef] = useAtom(Web3StatusRef)
+  const account = useAccount()
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   useOnClickOutside(
     modalRef,
@@ -285,7 +290,7 @@ function AccountDrawer() {
     },
   })
 
-  return (
+  return account?.address || !isEmbeddedWalletEnabled ? (
     <Container isUniExtensionAvailable={isUniExtensionAvailable} $open={accountDrawer.isOpen}>
       {accountDrawer.isOpen && !isUniExtensionAvailable && (
         <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
@@ -313,6 +318,8 @@ function AccountDrawer() {
         </AccountDrawerScrollWrapper>
       </AccountDrawerWrapper>
     </Container>
+  ) : (
+    <SignInModal isOpen={accountDrawer.isOpen} close={accountDrawer.close} />
   )
 }
 

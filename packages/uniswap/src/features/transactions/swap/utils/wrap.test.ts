@@ -1,7 +1,7 @@
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { getWrapType } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 
 describe(getWrapType, () => {

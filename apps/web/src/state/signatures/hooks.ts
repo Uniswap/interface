@@ -11,7 +11,7 @@ import {
   UniswapXOrderDetails,
 } from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const account = useAccount()
@@ -38,6 +38,7 @@ export function useOrder(orderHash: string): UniswapXOrderDetails | undefined {
       ![
         SignatureType.SIGN_UNISWAPX_ORDER,
         SignatureType.SIGN_UNISWAPX_V2_ORDER,
+        SignatureType.SIGN_UNISWAPX_V3_ORDER,
         SignatureType.SIGN_LIMIT,
         SignatureType.SIGN_PRIORITY_ORDER,
       ].includes(order.type as SignatureType)
@@ -106,6 +107,7 @@ function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrder
   } else if (
     signature.type === SignatureType.SIGN_UNISWAPX_ORDER ||
     signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER ||
+    signature.type === SignatureType.SIGN_UNISWAPX_V3_ORDER ||
     signature.type === SignatureType.SIGN_PRIORITY_ORDER
   ) {
     return [

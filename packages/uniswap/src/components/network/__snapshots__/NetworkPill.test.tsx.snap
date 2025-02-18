@@ -27,13 +27,13 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
   }
 >
   <Text
-    allowFontScaling={false}
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       {
         "color": "#FFFFFF",
         "fontFamily": "Basel Grotesk",
-        "fontSize": 16,
+        "fontSize": 17,
         "fontWeight": "400",
         "lineHeight": 24,
         "paddingTop": 1,
@@ -73,13 +73,13 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
   }
 >
   <Text
-    allowFontScaling={false}
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       {
         "color": "#FFFFFF",
         "fontFamily": "Basel Grotesk",
-        "fontSize": 16,
+        "fontSize": 17,
         "fontWeight": "400",
         "lineHeight": 24,
         "paddingTop": 1,
@@ -119,15 +119,15 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
   }
 >
   <Text
-    allowFontScaling={false}
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.2}
     style={
       {
         "color": "#FFFFFF",
         "fontFamily": "Basel Grotesk",
-        "fontSize": 14,
+        "fontSize": 15,
         "fontWeight": "500",
-        "lineHeight": 16.099999999999998,
+        "lineHeight": 17.25,
         "paddingTop": 1,
       }
     }

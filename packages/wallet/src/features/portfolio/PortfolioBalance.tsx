@@ -1,24 +1,21 @@
 import { memo } from 'react'
 import { Flex, Shine } from 'ui/src'
+import AnimatedNumber, {
+  BALANCE_CHANGE_INDICATION_DURATION,
+} from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
+import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import i18next from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
-import { isWeb } from 'utilities/src/platform'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
-import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
 
 interface PortfolioBalanceProps {
   owner: Address
 }
-
-// This ensures the color changes quicker after animating on web platforms. This could be
-// safe for mobile to be the same but was kept the same as this animation is fragile
-const BALANCE_CHANGE_INDICATION_DURATION = isWeb ? ONE_SECOND_MS / 2 : ONE_SECOND_MS * 2
 
 export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
   const { data, loading, networkStatus } = usePortfolioTotalValue({
@@ -37,6 +34,8 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
 
   const { percentChange, absoluteChangeUSD, balanceUSD } = data || {}
 
+  const isRightToLeft = i18next.dir() === 'rtl'
+
   const totalBalance = convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance)
   const absoluteChange = absoluteChangeUSD && convertFiatAmount(absoluteChangeUSD).amount
   // TODO gary re-enabling this for USD/Euros only, replace with more scalable approach
@@ -53,6 +52,7 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
         shouldFadeDecimals={shouldFadePortfolioDecimals}
         value={totalBalance}
         warmLoading={isWarmLoading}
+        isRightToLeft={isRightToLeft}
       />
       <Shine disabled={!isWarmLoading}>
         <RelativeChange

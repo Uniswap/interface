@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron, WalletFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
 import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
@@ -35,7 +35,7 @@ export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
     onSetShowRecipientSelector(!showRecipientSelector)
   }, [onSetShowRecipientSelector, showRecipientSelector])
 
-  const sections = useFilteredRecipientSections(pattern)
+  const { sections } = useFilteredRecipientSections(pattern)
 
   const onSelectRecipient = useCallback((newRecipient: string) => {
     setSelectedRecipient(newRecipient)

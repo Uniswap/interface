@@ -1,15 +1,17 @@
 import '@tamagui/core/reset.css'
 import 'src/app/Global.css'
 
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useEffect, useRef, useState } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { RouterProvider } from 'react-router-dom'
+import { RouterProvider, createHashRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ExtensionStatsigProvider } from 'src/app/StatsigProvider'
 import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
+import { DatadogAppNameTag } from 'src/app/datadog'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
 import { DappContextProvider } from 'src/app/features/dapp/DappContext'
 import { addRequest } from 'src/app/features/dappRequests/saga'
@@ -17,7 +19,7 @@ import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
 import { SendFlow } from 'src/app/features/send/SendFlow'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
-import { SettingsPrivacyScreen } from 'src/app/features/settings/SettingsPrivacyScreen'
+import { SettingsPermissionsScreen } from 'src/app/features/settings/SettingsPermissionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
 import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseWallets'
 import { SettingsViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/ViewRecoveryPhraseScreen'
@@ -29,7 +31,6 @@ import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { MainContent, WebNavigation } from 'src/app/navigation/navigation'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
-import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import {
   DappBackgroundPortChannel,
@@ -39,14 +40,14 @@ import {
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
+import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider, useUnitagUpdater } from 'uniswap/src/features/unitags/context'
-import i18n from 'uniswap/src/i18n/i18n'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import i18n from 'uniswap/src/i18n'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -55,17 +56,7 @@ import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
-getUniqueId()
-  .then((userId) => {
-    initializeSentry(SentryAppNameTag.Sidebar, userId)
-  })
-  .catch((error) => {
-    logger.error(error, {
-      tags: { file: 'SidebarApp.tsx', function: 'getUniqueId' },
-    })
-  })
-
-const router = sentryCreateHashRouter([
+const router = createHashRouter([
   {
     path: '',
     element: <SidebarWrapper />,
@@ -116,8 +107,9 @@ const router = sentryCreateHashRouter([
           },
           {
             path: SettingsRoutes.Privacy,
-            element: <SettingsPrivacyScreen />,
+            element: <SettingsPermissionsScreen />,
           },
+          { path: SettingsRoutes.Permissions, element: <SettingsPermissionsScreen /> },
           {
             path: SettingsRoutes.ManageConnections,
             element: <SettingsManageConnectionsScreen />,
@@ -246,10 +238,11 @@ export default function SidebarApp(): JSX.Element {
   }, [])
 
   const isLoggedIn = useIsWalletUnlocked()
-  const hasSentLoginEvent = useRef(false)
+  const hasSentAppLoadEvent = useRef(false)
   useEffect(() => {
-    if (isLoggedIn !== null && !hasSentLoginEvent.current) {
-      hasSentLoginEvent.current = true
+    if (isLoggedIn !== null && !hasSentAppLoadEvent.current) {
+      hasSentAppLoadEvent.current = true
+      sendAnalyticsEvent(SharedEventName.APP_LOADED)
       sendAnalyticsEvent(ExtensionEventName.SidebarLoad, { locked: !isLoggedIn })
     }
   }, [isLoggedIn])
@@ -257,20 +250,22 @@ export default function SidebarApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={getReduxPersistor()}>
-        <ExtensionStatsigProvider appName={SentryAppNameTag.Sidebar}>
+        <ExtensionStatsigProvider appName={DatadogAppNameTag.Sidebar}>
           <I18nextProvider i18n={i18n}>
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
-                  <LocalizationContextProvider>
-                    <UnitagUpdaterContextProvider>
-                      <TraceUserProperties />
-                      <DappContextProvider>
-                        <PrimaryAppInstanceDebuggerLazy />
-                        <RouterProvider router={router} />
-                      </DappContextProvider>
-                    </UnitagUpdaterContextProvider>
-                  </LocalizationContextProvider>
+                  <BlankUrlProvider>
+                    <LocalizationContextProvider>
+                      <UnitagUpdaterContextProvider>
+                        <TraceUserProperties />
+                        <DappContextProvider>
+                          <PrimaryAppInstanceDebuggerLazy />
+                          <RouterProvider router={router} />
+                        </DappContextProvider>
+                      </UnitagUpdaterContextProvider>
+                    </LocalizationContextProvider>
+                  </BlankUrlProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
             </SharedWalletProvider>

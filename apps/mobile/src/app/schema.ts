@@ -1,9 +1,9 @@
 /* eslint-disable max-lines */
+import { RankingType } from 'uniswap/src/data/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { RankingType } from 'wallet/src/features/wallet/types'
 
 // only add fields that are persisted
 export const initialSchema = {
@@ -627,6 +627,52 @@ export const v80Schema = {
   },
 }
 
+const v81SchemaIntermediate = {
+  ...v80Schema,
+  behaviorHistory: {
+    ...v80Schema.behaviorHistory,
+    createdOnboardingRedesignAccount: undefined,
+  },
+}
+delete v81SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
+export const v81Schema = v81SchemaIntermediate
+
+// v82 had a migration but no schema update so skipping it here
+export const v83Schema = {
+  ...v81Schema,
+  pushNotifications: {
+    generalUpdatesEnabled: true,
+    priceAlertsEnabled: true,
+  },
+}
+
+const v84SchemaIntermediate = {
+  ...v83Schema,
+  behaviorHistory: {
+    ...v83Schema.behaviorHistory,
+    hasViewedWelcomeWalletCard: undefined,
+  },
+}
+delete v84SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
+export const v84Schema = v84SchemaIntermediate
+
+const v85SchemaIntermediate = {
+  ...v84Schema,
+  visibility: {
+    positions: {},
+    tokens: v84Schema.favorites.tokensVisibility,
+    nfts: v84Schema.favorites.nftsVisibility,
+  },
+  favorites: {
+    ...v84Schema.favorites,
+    tokensVisibility: undefined,
+    nftsVisibility: undefined,
+  },
+}
+delete v85SchemaIntermediate.favorites.tokensVisibility
+delete v85SchemaIntermediate.favorites.nftsVisibility
+export const v85Schema = v85SchemaIntermediate
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v80Schema => v80Schema
+export const getSchema = (): typeof v85Schema => v85Schema

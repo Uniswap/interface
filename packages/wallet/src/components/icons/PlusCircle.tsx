@@ -11,7 +11,7 @@ export function PlusCircle(): JSX.Element {
       backgroundColor="$surface1"
       borderColor="$surface3"
       borderRadius="$roundedFull"
-      borderWidth={1}
+      borderWidth="$spacing1"
       height={iconSizes.icon40}
       p="$spacing8"
       shadowColor={isDarkMode ? '$shadowColor' : '$surface3'}

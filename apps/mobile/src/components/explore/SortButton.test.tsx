@@ -1,6 +1,7 @@
 import { SortButton } from 'src/components/explore/SortButton'
-import { render } from 'src/test/test-utils'
-import { CustomRankingType, ExploreOrderBy, RankingType } from 'wallet/src/features/wallet/types'
+import { act, render } from 'src/test/test-utils'
+import { CustomRankingType, RankingType } from 'uniswap/src/data/types'
+import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 
 jest.mock('react-native-context-menu-view', () => {
   // Use the actual implementation of `react-native-context-menu-view` as the mock implementation
@@ -9,8 +10,20 @@ jest.mock('react-native-context-menu-view', () => {
 })
 
 describe('SortButton', () => {
-  it('renders without error', () => {
+  beforeEach(() => {
+    jest.useFakeTimers()
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  it('renders without error', async () => {
     const tree = render(<SortButton orderBy={RankingType.Volume} />)
+
+    await act(async () => {
+      jest.runAllTimers()
+    })
 
     expect(tree).toMatchSnapshot()
   })
@@ -32,8 +45,11 @@ describe('SortButton', () => {
   ]
 
   describe.each(cases)('when ordering by $test', ({ orderBy, label }) => {
-    it(`renders ${label} as the selected option`, () => {
+    it(`renders ${label} as the selected option`, async () => {
       const { queryByText } = render(<SortButton orderBy={orderBy} />)
+      await act(async () => {
+        jest.runAllTimers()
+      })
       const selectedOption = queryByText(label)
 
       expect(selectedOption).toBeTruthy()

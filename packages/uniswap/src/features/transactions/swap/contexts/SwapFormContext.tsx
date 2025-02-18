@@ -1,28 +1,24 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useSwapAnalytics } from 'uniswap/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/hooks/useDerivedSwapInfo'
-import { DEFAULT_CUSTOM_DEADLINE } from 'uniswap/src/features/transactions/swap/settings/useDeadlineSettings'
-import {
-  DEFAULT_PROTOCOL_OPTIONS,
-  FrontendSupportedProtocol,
-} from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 
 const SWAP_FORM_DEBOUNCE_TIME_MS = 250
 
 export type SwapFormState = {
-  customSlippageTolerance?: number
-  customDeadline?: number
   exactAmountFiat?: string
   exactAmountToken?: string
   exactCurrencyField: CurrencyField
@@ -31,12 +27,15 @@ export type SwapFormState = {
   input?: TradeableAsset
   output?: TradeableAsset
   selectingCurrencyField?: CurrencyField
+  isSelectingCurrencyFieldPrefilled?: boolean
   txId?: string
   isFiatMode: boolean
+  isMax: boolean
   isSubmitting: boolean
   hideFooter?: boolean
   hideSettings?: boolean
-  selectedProtocols: FrontendSupportedProtocol[]
+  prefilledCurrencies?: TradeableAsset[]
+  isPrefilled?: boolean
 }
 
 type DerivedSwapFormState = {
@@ -68,9 +67,8 @@ export const getDefaultState = (defaultChainId: UniverseChainId): Readonly<Omit<
   input: getDefaultInputCurrency(defaultChainId),
   output: undefined,
   isFiatMode: false,
+  isMax: false,
   isSubmitting: false,
-  selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
-  customDeadline: DEFAULT_CUSTOM_DEADLINE,
 })
 
 export const SwapFormContext = createContext<SwapFormContextState | undefined>(undefined)
@@ -117,33 +115,12 @@ export function SwapFormContextProvider({
         return {
           ...oldVal,
           selectingCurrencyField: prefilledState?.selectingCurrencyField,
+          filteredChainIds: prefilledState.filteredChainIds,
+          isSelectingCurrencyFieldPrefilled: true,
         }
       })
     }
-  }, [prefilledState?.selectingCurrencyField])
-
-  const updateSwapForm = useCallback(
-    (newState: Parameters<SwapFormContextState['updateSwapForm']>[0]): void => {
-      if ('exactAmountFiat' in newState || 'exactAmountToken' in newState) {
-        amountUpdatedTimeRef.current = Date.now()
-      }
-
-      if ('exactAmountFiat' in newState) {
-        exactAmountFiatRef.current = newState.exactAmountFiat ?? ''
-      }
-
-      if ('exactAmountToken' in newState) {
-        exactAmountTokenRef.current = newState.exactAmountToken ?? ''
-      }
-
-      setSwapForm((prevState) => {
-        const updatedState = { ...prevState, ...newState }
-        logContextUpdate('SwapFormContext', updatedState, datadogEnabled)
-        return updatedState
-      })
-    },
-    [setSwapForm, datadogEnabled],
-  )
+  }, [prefilledState?.selectingCurrencyField, prefilledState?.filteredChainIds])
 
   const [debouncedExactAmountToken, isDebouncingExactAmountToken] = useDebounceWithStatus(
     swapForm.exactAmountToken,
@@ -164,19 +141,63 @@ export function SwapFormContextProvider({
     exactAmountFiat: debouncedExactAmountFiat,
     focusOnCurrencyField: swapForm.focusOnCurrencyField,
     selectingCurrencyField: swapForm.selectingCurrencyField,
-    customSlippageTolerance: swapForm.customSlippageTolerance,
-    customDeadline: swapForm.customDeadline,
-    selectedProtocols: swapForm.selectedProtocols,
     isDebouncing: isDebouncingExactAmountToken || isDebouncingExactAmountFiat,
   })
 
   useSwapAnalytics(derivedSwapInfo)
 
+  const maxInputAmountAsRef = useValueAsRef(
+    useMaxAmountSpend({
+      currencyAmount: derivedSwapInfo.currencyBalances[CurrencyField.INPUT],
+      txType: TransactionType.Swap,
+      isExtraTx: true,
+    })?.toExact(),
+  )
+
+  const updateSwapForm = useCallback(
+    (newState: Parameters<SwapFormContextState['updateSwapForm']>[0]): void => {
+      let isAmountUpdated = false
+
+      if ('exactAmountFiat' in newState || 'exactAmountToken' in newState) {
+        amountUpdatedTimeRef.current = Date.now()
+        isAmountUpdated = true
+      }
+
+      if ('exactAmountFiat' in newState) {
+        exactAmountFiatRef.current = newState.exactAmountFiat ?? ''
+      }
+
+      if ('exactAmountToken' in newState) {
+        exactAmountTokenRef.current = newState.exactAmountToken ?? ''
+      }
+
+      setSwapForm((prevState) => {
+        const updatedState = { ...prevState, ...newState }
+
+        if (isAmountUpdated) {
+          const isMaxTokenAmount =
+            maxInputAmountAsRef.current &&
+            updatedState.exactAmountToken &&
+            parseFloat(maxInputAmountAsRef.current) <= parseFloat(updatedState.exactAmountToken)
+
+          // if max value is explicitly set, use that
+          // otherwise, check the token amount again the maxInputAmount
+          updatedState.isMax = newState.isMax ?? !!isMaxTokenAmount
+        }
+
+        logContextUpdate('SwapFormContext', updatedState, datadogEnabled)
+
+        return updatedState
+      })
+    },
+    // avoid rerenders unless absolutely necessary since this component is widely used
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [setSwapForm, datadogEnabled],
+  )
+
   const state = useMemo<SwapFormContextState>(
     (): SwapFormContextState => ({
       amountUpdatedTimeRef,
-      customSlippageTolerance: swapForm.customSlippageTolerance,
-      customDeadline: swapForm.customDeadline,
       derivedSwapInfo,
       exactAmountFiat: swapForm.exactAmountFiat,
       exactAmountFiatRef,
@@ -187,18 +208,21 @@ export function SwapFormContextProvider({
       filteredChainIds: swapForm.filteredChainIds,
       input: swapForm.input,
       isFiatMode: swapForm.isFiatMode,
+      isMax: swapForm.isMax,
       isSubmitting: swapForm.isSubmitting,
       output: swapForm.output,
-      selectedProtocols: swapForm.selectedProtocols,
       selectingCurrencyField: swapForm.selectingCurrencyField,
       txId: swapForm.txId,
       hideFooter,
       hideSettings,
       updateSwapForm,
+      prefilledCurrencies: [prefilledState?.input, prefilledState?.output].filter((asset): asset is TradeableAsset =>
+        Boolean(asset),
+      ),
+      isSelectingCurrencyFieldPrefilled: swapForm.isSelectingCurrencyFieldPrefilled,
     }),
     [
-      swapForm.customSlippageTolerance,
-      swapForm.customDeadline,
+      derivedSwapInfo,
       swapForm.exactAmountFiat,
       swapForm.exactAmountToken,
       swapForm.exactCurrencyField,
@@ -206,15 +230,17 @@ export function SwapFormContextProvider({
       swapForm.filteredChainIds,
       swapForm.input,
       swapForm.isFiatMode,
+      swapForm.isMax,
       swapForm.isSubmitting,
       swapForm.output,
-      swapForm.selectedProtocols,
       swapForm.selectingCurrencyField,
       swapForm.txId,
-      derivedSwapInfo,
-      hideSettings,
+      swapForm.isSelectingCurrencyFieldPrefilled,
       hideFooter,
+      hideSettings,
       updateSwapForm,
+      prefilledState?.input,
+      prefilledState?.output,
     ],
   )
 

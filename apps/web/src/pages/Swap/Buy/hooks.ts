@@ -1,14 +1,16 @@
 import { meldSupportedCurrencyToCurrencyInfo } from 'graphql/data/types'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
-import { getFiatCurrencyName } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useTranslation } from 'react-i18next'
+import {
+  getFiatCurrencyName,
+  useAppFiatCurrency,
+  useFiatCurrencyComponents,
+} from 'uniswap/src/features/fiatCurrency/hooks'
 import {
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
 import { FORCountry, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { useTranslation } from 'uniswap/src/i18n'
 // eslint-disable-next-line no-restricted-imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
@@ -34,8 +36,8 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
     countryCode: selectedCountry?.countryCode ?? 'US',
   })
 
-  const activeLocale = useActiveLocale()
-  const activeLocalCurrency = useActiveLocalCurrency()
+  const activeLocalCurrency = useAppFiatCurrency()
+  const fiatCurrencyComponents = useFiatCurrencyComponents(activeLocalCurrency)
   const { t } = useTranslation()
 
   const appFiatCurrencySupported =
@@ -44,16 +46,15 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
       (currency): boolean => activeLocalCurrency.toLowerCase() === currency.fiatCurrencyCode.toLowerCase(),
     )
   const meldSupportedFiatCurrency: FiatCurrencyInfo = useMemo(() => {
-    const activeLocalCurrencyComponents = getFiatCurrencyComponents(activeLocale, activeLocalCurrency)
     const { name, shortName } = getFiatCurrencyName(t, activeLocalCurrency)
     const activeLocalCurrencyFiatCurrencyInfo: FiatCurrencyInfo = {
-      ...activeLocalCurrencyComponents,
+      ...fiatCurrencyComponents,
       name,
       shortName,
       code: activeLocalCurrency,
     }
     return appFiatCurrencySupported ? activeLocalCurrencyFiatCurrencyInfo : fallbackCurrencyInfo
-  }, [activeLocalCurrency, activeLocale, appFiatCurrencySupported, t])
+  }, [activeLocalCurrency, appFiatCurrencySupported, fiatCurrencyComponents, t])
 
   return {
     meldSupportedFiatCurrency,

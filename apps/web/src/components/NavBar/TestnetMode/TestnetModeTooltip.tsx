@@ -1,9 +1,9 @@
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useAtom } from 'jotai'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { Wrench } from 'ui/src/components/icons/Wrench'
-import { useTranslation } from 'uniswap/src/i18n'
 
 export default function TestnetModeTooltip() {
   const { t } = useTranslation()
@@ -16,7 +16,7 @@ export default function TestnetModeTooltip() {
         <Flex
           p="$spacing4"
           background="$statusSuccess2"
-          borderWidth={1}
+          borderWidth="$spacing1"
           borderStyle="dashed"
           borderColor="$statusSuccess"
           borderRadius="$rounded8"

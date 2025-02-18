@@ -1,12 +1,12 @@
 import styled from 'lib/styled-components'
+import { useTranslation } from 'react-i18next'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
-import { BREAKPOINTS } from 'theme'
 import { ButtonText, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Trans, t } from 'uniswap/src/i18n'
+import { breakpoints } from 'ui/src/theme'
 
 const BannerWrapper = styled.div`
   position: relative;
@@ -26,7 +26,7 @@ const BannerContents = styled.div`
   width: 100%;
   display: flex;
 
-  @media only screen and (max-width: ${BREAKPOINTS.md}px) {
+  @media only screen and (max-width: ${breakpoints.lg}px) {
     flex-direction: column;
   }
 `
@@ -36,7 +36,7 @@ const BannerTextWrapper = styled(ThemedText.BodySecondary)`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  @media only screen and (max-width: ${BREAKPOINTS.md}px) {
+  @media only screen and (max-width: ${breakpoints.lg}px) {
     @supports (-webkit-line-clamp: 2) {
       white-space: initial;
       display: -webkit-box;
@@ -45,7 +45,7 @@ const BannerTextWrapper = styled(ThemedText.BodySecondary)`
     }
   }
 
-  @media only screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media only screen and (max-width: ${breakpoints.md}px) {
     @supports (-webkit-line-clamp: 3) {
       white-space: initial;
       display: -webkit-box;
@@ -69,18 +69,17 @@ export const useRenderUkBanner = () => {
   return Boolean(originCountry) && originCountry === 'GB'
 }
 
-export const bannerText = t('notice.uk')
-
 export function UkBanner() {
+  const { t } = useTranslation()
   const openDisclaimer = useOpenModal({ name: ApplicationModal.UK_DISCLAIMER })
 
   return (
     <BannerWrapper>
       <BannerContents>
-        <BannerTextWrapper lineHeight="24px">{t('notice.uk.label') + ' ' + bannerText}</BannerTextWrapper>
+        <BannerTextWrapper lineHeight="24px">{t('notice.uk.label') + ' ' + t('notice.uk')}</BannerTextWrapper>
         <ReadMoreWrapper>
           <ThemedText.BodySecondary lineHeight="24px" color="accent1" onClick={openDisclaimer}>
-            <Trans i18nKey="common.readMore" />
+            {t('common.readMore')}
           </ThemedText.BodySecondary>
         </ReadMoreWrapper>
       </BannerContents>

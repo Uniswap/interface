@@ -6,9 +6,9 @@ import { VerifiedIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 interface ViewMyNftsAssetProps {

@@ -411,6 +411,9 @@ exports[`NftCard renders correctly 1`] = `
             </div>
           </a>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

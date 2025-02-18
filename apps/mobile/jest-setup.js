@@ -2,32 +2,16 @@
 // For example: https://reactnavigation.org/docs/testing/
 
 import 'core-js' // necessary so setImmediate works in tests
-import 'uniswap/src/i18n/i18n' // Uses real translations for tests
-import 'utilities/src/logger/mocks'
+import 'utilities/jest-package-mocks'
+import 'uniswap/jest-package-mocks'
+import 'wallet/jest-package-mocks'
+import 'ui/jest-package-mocks'
+
+import 'uniswap/src/i18n' // Uses real translations for tests
 
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
-import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
-import { TextDecoder, TextEncoder } from 'util'
-import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
-import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
-import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
-
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
-
-// Mock Sentry crash reporting
-jest.mock('@sentry/react-native', () => ({
-  init: () => jest.fn(),
-  wrap: (val) => val,
-  ReactNavigationInstrumentation: jest.fn(),
-  ReactNativeTracing: jest.fn(),
-}))
 
 jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery', () => {})
-
-// Disables animated driver warning
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 
 jest.mock('@walletconnect/react-native-compat', () => ({}))
 
@@ -41,6 +25,7 @@ jest.mock('react-native-onesignal', () => {
     promptForPushNotificationsWithUserResponse: jest.fn(),
     setNotificationWillShowInForegroundHandler: jest.fn(),
     setNotificationOpenedHandler: jest.fn(),
+    sendTag: jest.fn(),
     getDeviceState: () => ({ userId: 'dummyUserId', pushToken: 'dummyPushToken' }),
   }
 })
@@ -74,25 +59,15 @@ jest.mock('react-native', () => {
   return RN
 })
 
-jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
-  useSafeAreaFrame: jest.fn().mockImplementation(() => ({})),
-  SafeAreaProvider: jest.fn(({ children }) => children),
-}))
-
 jest.mock('@react-navigation/elements', () => ({
   useHeaderHeight: jest.fn().mockImplementation(() => 200),
 }))
 
 require('react-native-reanimated').setUpTests()
 
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
-
 jest.mock('react-native/Libraries/Share/Share', () => ({
   share: jest.fn(),
 }))
-
-jest.mock('react-native-localize', () => mockRNLocalize)
 
 jest.mock('@react-native-firebase/auth', () => () => ({
   signInAnonymously: jest.fn(),
@@ -114,21 +89,18 @@ jest.mock('react-native/Libraries/Linking/Linking', () => ({
   getInitialURL: jest.fn(),
 }))
 
-// Mock the appearance hook for all tests
-const mockAppearanceSetting = AppearanceSettingType.System
-jest.mock('wallet/src/features/appearance/hooks', () => {
-  return {
-    useCurrentAppearanceSetting: () => mockAppearanceSetting,
-  }
-})
-jest.mock('wallet/src/features/appearance/hooks', () => {
-  return {
-    useSelectedColorScheme: () => 'light',
-  }
-})
 
 jest.mock('openai')
 
-jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
 
-mockUIAssets()
+jest.mock("react-native-bootsplash", () => {
+  return {
+    hide: jest.fn().mockResolvedValue(),
+    isVisible: jest.fn().mockResolvedValue(false),
+    useHideAnimation: jest.fn().mockReturnValue({
+      container: {},
+      logo: { source: 0 },
+      brand: { source: 0 },
+    }),
+  };
+});

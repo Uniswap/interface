@@ -22,6 +22,7 @@ import { BridgeSummaryItem } from 'wallet/src/features/transactions/SummaryCards
 import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import { NFTTradeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
+import { OffRampTransferSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/OffRampTransferSummaryItem'
 import { OnRampTransferSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/OnRampTransferSummaryItem'
 import { ReceiveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
 import { SendSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SendSummaryItem'
@@ -63,6 +64,9 @@ export function generateActivityItemRenderer(
       case TransactionType.OnRampPurchase:
       case TransactionType.OnRampTransfer:
         SummaryItem = OnRampTransferSummaryItem
+        break
+      case TransactionType.OffRampSale:
+        SummaryItem = OffRampTransferSummaryItem
         break
       case TransactionType.NFTApprove:
         SummaryItem = NFTApproveSummaryItem
@@ -260,6 +264,16 @@ function getTransactionTypeVerbs(
         failed: t('transaction.status.receive.failedFrom', { serviceProvider }),
         canceling: t('transaction.status.receive.canceling'), // On ramp transactions are not cancellable
         canceled: t('transaction.status.receive.canceled'), // On ramp transactions are not cancellable
+      }
+    }
+    case TransactionType.OffRampSale: {
+      const serviceProvider = typeInfo.serviceProvider.name
+      return {
+        success: t('transaction.status.sale.successOn', { serviceProvider }),
+        pending: t('transaction.status.sale.pendingOn', { serviceProvider }),
+        failed: t('transaction.status.sale.failedOn', { serviceProvider }),
+        canceling: t('transaction.status.sale.canceling'), // Offramp transactions are not cancellable
+        canceled: t('transaction.status.sale.canceled'), // Offramp transactions are not cancellable
       }
     }
     case TransactionType.Unknown:

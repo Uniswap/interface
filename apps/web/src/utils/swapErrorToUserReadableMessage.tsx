@@ -1,4 +1,4 @@
-import { t } from 'uniswap/src/i18n'
+import { TFunction } from 'i18next'
 import { logger } from 'utilities/src/logger/logger'
 import { UserRejectedRequestError } from 'utils/errors'
 
@@ -41,7 +41,7 @@ export function didUserReject(error: any): boolean {
  * This object seems to be undocumented by ethers.
  * @param error - An error from the ethers provider
  */
-export function swapErrorToUserReadableMessage(error: any): string {
+export function swapErrorToUserReadableMessage(t: TFunction, error: any): string {
   if (didUserReject(error)) {
     return t('swap.error.rejected')
   }

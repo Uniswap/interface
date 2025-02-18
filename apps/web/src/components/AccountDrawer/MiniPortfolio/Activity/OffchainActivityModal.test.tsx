@@ -8,7 +8,7 @@ import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
   formatTimestamp: jest.fn(),

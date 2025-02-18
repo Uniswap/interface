@@ -21,24 +21,28 @@ export function safetyLevelToWarningSeverity(safetyLevel: Maybe<SafetyLevel>): W
   }
 }
 
-export function getWarningIcon(severity?: WarningSeverity, tokenProtectionEnabled: boolean = false): GeneratedIcon {
+export function getWarningIcon(severity: WarningSeverity): GeneratedIcon | null {
   switch (severity) {
     case WarningSeverity.High:
-      return tokenProtectionEnabled ? OctagonExclamation : AlertTriangleFilled
+      return OctagonExclamation
     case WarningSeverity.Medium:
       return AlertTriangleFilled
     case WarningSeverity.Blocked:
       return Blocked
     case WarningSeverity.Low:
-    case WarningSeverity.None:
       return InfoCircleFilled
+    case WarningSeverity.None:
     default:
-      return AlertTriangleFilled
+      return null
   }
 }
 
 export function getWarningIconColors(severity?: WarningSeverity): {
   color: ColorTokens
+  /** `colorSecondary` used instead of `color` in certain places, such as token selector & mobile search */
+  colorSecondary?: ColorTokens
+  /** `inModalColor` used instead of `color` when the icon is inside a modal */
+  inModalColor?: ColorTokens
   backgroundColor: ColorTokens
   textColor: ColorTokens
 } {
@@ -46,21 +50,32 @@ export function getWarningIconColors(severity?: WarningSeverity): {
     case WarningSeverity.High:
       return {
         color: '$statusCritical',
+        colorSecondary: '$statusCritical',
         backgroundColor: '$DEP_accentCriticalSoft',
         textColor: '$statusCritical',
       }
     case WarningSeverity.Medium:
       return {
-        color: '$DEP_accentWarning',
-        backgroundColor: '$DEP_accentWarningSoft',
-        textColor: '$DEP_accentWarning',
+        color: '$statusWarning',
+        colorSecondary: '$neutral2',
+        backgroundColor: '$statusWarning2',
+        textColor: '$statusWarning',
       }
     case WarningSeverity.Blocked:
+      return {
+        color: '$neutral2',
+        colorSecondary: '$neutral2',
+        inModalColor: '$neutral1',
+        backgroundColor: '$surface3',
+        textColor: '$neutral1',
+      }
     case WarningSeverity.Low:
     case WarningSeverity.None:
     default:
       return {
         color: '$neutral2',
+        colorSecondary: undefined,
+        inModalColor: '$neutral1',
         backgroundColor: '$surface3',
         textColor: '$neutral1',
       }
@@ -83,19 +98,5 @@ export function getWarningButtonProps(severity?: WarningSeverity): { theme: Them
         buttonTextColor: '$neutral1',
         theme: 'secondary',
       }
-  }
-}
-
-export function getWarningIconColorOverride(severity?: WarningSeverity): ColorTokens | undefined {
-  switch (severity) {
-    case WarningSeverity.High:
-      return '$statusCritical'
-    case WarningSeverity.Medium:
-    case WarningSeverity.Blocked:
-      return '$neutral2'
-    case WarningSeverity.Low:
-    case WarningSeverity.None:
-    default:
-      return undefined
   }
 }

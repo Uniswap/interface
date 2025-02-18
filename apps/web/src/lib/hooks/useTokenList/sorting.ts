@@ -2,7 +2,7 @@ import { Token } from '@uniswap/sdk-core'
 import { PortfolioBalance } from 'graphql/data/portfolios'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { currencyKey } from 'utils/currencyKey'
 import { SplitOptions, splitHiddenTokens } from 'utils/splitHiddenTokens'
 

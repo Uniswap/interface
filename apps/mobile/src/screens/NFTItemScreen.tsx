@@ -16,35 +16,25 @@ import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackg
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import {
-  Flex,
-  Text,
-  Theme,
-  TouchableArea,
-  getTokenValue,
-  passesContrast,
-  useHapticFeedback,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, Text, Theme, TouchableArea, getTokenValue, passesContrast, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   NftActivityType,
   NftItemScreenQuery,
   useNftItemScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { setClipboardImage } from 'uniswap/src/utils/clipboard'
@@ -83,7 +73,6 @@ function NFTItemScreenContents({
   const dispatch = useDispatch()
   const colors = useSporeColors()
   const navigation = useAppStackNavigation()
-  const { hapticFeedback } = useHapticFeedback()
 
   const {
     data,
@@ -185,7 +174,7 @@ function NFTItemScreenContents({
 
   const onLongPressNFTImage = async (): Promise<void> => {
     await setClipboardImage(imageUrl)
-    await hapticFeedback.impact()
+
     dispatch(
       pushNotification({
         type: AppNotificationType.Copied,
@@ -288,7 +277,7 @@ function NFTItemScreenContents({
                       variant="subheading1"
                     />
                   ) : displayCollectionName ? (
-                    <Text color="$neutral1" mt="$spacing4" numberOfLines={2} variant="subheading1">
+                    <Text color={colors.neutral1.val} mt="$spacing8" numberOfLines={2} variant="subheading1">
                       {displayCollectionName}
                     </Text>
                   ) : null}
@@ -322,7 +311,7 @@ function NFTItemScreenContents({
                         <PriceAmount
                           iconColor="$neutral1"
                           price={listingPrice}
-                          textColor="$neutral1"
+                          textColor={colors.neutral1.val}
                           textVariant="buttonLabel2"
                         />
                       }
@@ -330,12 +319,12 @@ function NFTItemScreenContents({
                   ) : null}
                   {chainId && (
                     <AssetMetadata
-                      color={accentTextColor}
+                      color={colors.neutral2.val}
                       title={t('tokens.nfts.details.network')}
                       valueComponent={
                         <Flex row alignItems="center" gap="$spacing8">
-                          <Text color="$neutral1" variant="buttonLabel2">
-                            {UNIVERSE_CHAIN_INFO[chainId].label}
+                          <Text color={colors.neutral1.val} variant="buttonLabel2">
+                            {getChainLabel(chainId)}
                           </Text>
                           <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon20} />
                         </Flex>
@@ -344,13 +333,13 @@ function NFTItemScreenContents({
                   )}
                   {lastSaleData?.price?.value ? (
                     <AssetMetadata
-                      color={accentTextColor}
+                      color={colors.neutral2.val}
                       title={t('tokens.nfts.details.recentPrice')}
                       valueComponent={
                         <PriceAmount
                           iconColor="$neutral1"
                           price={lastSaleData.price}
-                          textColor="$neutral1"
+                          textColor={colors.neutral1.val}
                           textVariant="buttonLabel2"
                         />
                       }
@@ -359,7 +348,7 @@ function NFTItemScreenContents({
 
                   {owner && (
                     <AssetMetadata
-                      color={accentTextColor}
+                      color={colors.neutral2.val}
                       title={t('tokens.nfts.details.owner')}
                       valueComponent={
                         <TouchableArea disabled={disableProfileNavigation} hitSlop={16} onPress={onPressOwner}>
@@ -368,7 +357,7 @@ function NFTItemScreenContents({
                             hideAddressInSubtitle={true}
                             horizontalGap="$spacing4"
                             size={iconSizes.icon20}
-                            textColor="$neutral1"
+                            textColor={colors.neutral1.val}
                             variant="buttonLabel2"
                           />
                         </TouchableArea>
@@ -380,10 +369,10 @@ function NFTItemScreenContents({
                 {/* Traits */}
                 {asset?.traits && asset?.traits?.length > 0 ? (
                   <Flex gap="$spacing12">
-                    <Text color="$neutral1" ml="$spacing24" variant="body2">
+                    <Text color={colors.neutral1.val} ml="$spacing24" variant="body2">
                       {t('tokens.nfts.details.traits')}
                     </Text>
-                    <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />
+                    <NFTTraitList titleTextColor={colors.neutral2.val} traits={asset.traits} />
                   </Flex>
                 ) : null}
               </Flex>

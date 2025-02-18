@@ -7,8 +7,8 @@ import styled from 'lib/styled-components'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { CopyToClipboard, ExternalLink, ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 import { isRemoteReportingEnabled } from 'utils/env'
 
 const FallbackWrapper = styled.div`

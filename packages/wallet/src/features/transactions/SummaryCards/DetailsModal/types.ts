@@ -3,7 +3,9 @@ import {
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  LocalOffRampTransactionInfo,
   LocalOnRampTransactionInfo,
+  OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   UnknownTransactionInfo,
@@ -39,8 +41,16 @@ export function isOnRampTransferTransactionInfo(typeInfo: TransactionTypeInfo): 
   return typeInfo.type === TransactionType.OnRampTransfer
 }
 
+export function isOffRampSaleTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is OffRampSaleInfo {
+  return typeInfo.type === TransactionType.OffRampSale
+}
+
 export function isLocalOnRampTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is LocalOnRampTransactionInfo {
   return typeInfo.type === TransactionType.LocalOnRamp
+}
+
+export function isLocalOffRampTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is LocalOffRampTransactionInfo {
+  return typeInfo.type === TransactionType.LocalOffRamp
 }
 
 export function isNFTApproveTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is NFTApproveTransactionInfo {
@@ -81,4 +91,10 @@ export function isWrapTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo i
 
 export function isUnknownTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is UnknownTransactionInfo {
   return typeInfo.type === TransactionType.Unknown
+}
+
+export type TransactionParticipantRowProps = {
+  onClose: () => void
+  address: string
+  isSend?: boolean
 }

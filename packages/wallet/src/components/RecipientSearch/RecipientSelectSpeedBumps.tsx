@@ -6,9 +6,9 @@ import { iconSizes } from 'ui/src/theme'
 import { PaginatedModalRenderer } from 'uniswap/src/components/modals/PaginatedModals'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 import { NewAddressWarningModal } from 'wallet/src/components/RecipientSearch/modals/NewAddressWarningModal'
 import { ConditionalModalRenderer, SpeedBumps } from 'wallet/src/components/modals/SpeedBumps'
@@ -56,22 +56,29 @@ export function RecipientSelectSpeedBumps({
     (props) => (
       <WarningModal
         isOpen
-        backgroundIconColor={colors.surface2.val}
+        backgroundIconColor={colors.surface3.val}
         caption={t('send.recipient.warning.viewOnly.message')}
         rejectText={t('common.button.goBack')}
         acknowledgeText={t('common.button.understand')}
-        icon={<Eye color="$neutral2" size={iconSizes.icon24} />}
+        icon={<Eye color="$neutral1" size={iconSizes.icon24} />}
         modalName={ModalName.RecipientSelectViewOnlyWarning}
         severity={WarningSeverity.High}
         title={t('send.recipient.warning.viewOnly.title')}
         {...props}
       />
     ),
-    [t, colors.surface2.val],
+    [t, colors.surface3.val],
   )
 
   const renderNewAddressWarning = useCallback<PaginatedModalRenderer>(
-    (props) => (recipientAddress ? <NewAddressWarningModal address={recipientAddress} {...props} /> : null),
+    (props) =>
+      recipientAddress ? (
+        <NewAddressWarningModal
+          address={recipientAddress}
+          onAcknowledge={props.onAcknowledge}
+          onClose={props.onClose}
+        />
+      ) : null,
     [recipientAddress],
   )
 
@@ -96,7 +103,7 @@ export function RecipientSelectSpeedBumps({
       <WarningModal
         isOpen
         caption={t('send.warning.erc20.message')}
-        rejectText={t('common.button.cancel')}
+        rejectText={t('common.button.goBack')}
         acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectErc20Warning}
         severity={WarningSeverity.High}
@@ -112,10 +119,10 @@ export function RecipientSelectSpeedBumps({
       <WarningModal
         isOpen
         caption={t('send.warning.smartContract.message')}
-        rejectText={t('common.button.cancel')}
+        rejectText={t('common.button.goBack')}
         acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectSmartContractWarning}
-        severity={WarningSeverity.None}
+        severity={WarningSeverity.Medium}
         title={t('send.warning.smartContract.title')}
         {...props}
       />

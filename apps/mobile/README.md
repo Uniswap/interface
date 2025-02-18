@@ -4,6 +4,32 @@
 
 If you have suggestions on how we can improve the app, or would like to report a bug or a problem, check out the [Uniswap Help Center](https://support.uniswap.org/).
 
+## Table of contents
+
+- [Setup](#setup)
+ - [Packages and Software](#packages-and-software)
+ - [iOS Setup](#ios-setup)
+   - [Xcode](#xcode)
+   - [Add Xcode Command Line Tools](#add-xcode-command-line-tools)
+ - [Android Setup](#android-setup)
+   - [Deploying to Physical Android Device](#deploying-to-physical-android-device)
+- [Development](#development)
+ - [Environment variables](#environment-variables)
+ - [Compile contract ABI types](#compile-contract-abi-types) 
+ - [Run the app](#run-the-app)
+ - [Using Radon IDE](#using-radon-ide-vscodecursor-extension)
+   - [Running on a Physical iOS Device](#running-on-a-physical-ios-device)
+- [Important Libraries and Tools](#important-libraries-and-tools)
+- [Migrations](#migrations)
+- [Testing & Performance](#testing--performance)
+ - [Build local app files](./docs/build-app-files.md)
+ - [E2E testing](./docs/e2e-testing.md)
+ - [Performance monitoring](./docs/perf-monitoring.md)
+- [Troubleshooting](#troubleshooting)
+ - [Common issues](#common-issues)
+ - [Common fixes](#common-fixes)
+ - [Shell profile setup](#shell-profile-setup)
+
 ## Setup
 
 This guide assumes that:
@@ -11,81 +37,112 @@ This guide assumes that:
 - You are using a Mac (you will need a Mac computer in order to run the Xcode iOS Simulator)
 - You are using an Apple Silicon Mac (if you’re not sure, go to  → About this Mac and check if the chip name starts with "Apple")
 
-Note: if you are indeed using an Apple Silicon Mac, we recommend setting up your environment _without_ using Rosetta. Some instructions on how to do that can be found [here](https://medium.com/@davidjasonharding/developing-a-react-native-app-on-an-m1-mac-without-rosetta-29fcc7314d70).
+Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your environment _without_ using Rosetta. Some instructions on how to do that can be found [here](https://medium.com/@davidjasonharding/developing-a-react-native-app-on-an-m1-mac-without-rosetta-29fcc7314d70).
 
-* [React Native Requirements](#packages-and-software)
-* [iOS Setup](#ios-setup)
-  * NOTE: Start downloading [Xcode](#xcode) first since it's a large file
-* [Android Setup](#android-setup)
+- [React Native Requirements](#packages-and-software)
+- [iOS Setup](#ios-setup)
+  - NOTE: Start downloading [Xcode](#xcode) first since it's a large file
+- [Android Setup](#android-setup)
 
 ### Packages and Software
 
 1. Install `homebrew`. We’ll be using Homebrew to install many of the other required tools through the command line. Open a terminal and Copy and paste the command from [brew.sh](https://brew.sh/) into your terminal and run it
 2. Install `nvm` [Node Version Manager](https://github.com/nvm-sh/nvm) While not required, it makes it easy to install Node and switch between different versions. A minimum Node version of 18 (verify version in `.nvmrc`) is required to use this repository.
 
-* Copy the curl command listed under _Install & Update Script_ on [this page](https://github.com/nvm-sh/nvm#install--update-script) and run it in your terminal.
-* To make sure nvm installed correctly, try running `nvm -v` (you may need to quit and re-open the terminal window). It should return a version number. If it returns something like `zsh: command not found: nvm`, it hasn’t been installed correctly.
+   - Copy the curl command listed under _Install & Update Script_ on [this page](https://github.com/nvm-sh/nvm#install--update-script) and run it in your terminal.
+   - To make sure nvm installed correctly, try running `nvm -v` (you may need to re-source your shell with `source {base config}`). It should return a version number. If it returns something like `zsh: command not found: nvm`, it hasn’t been installed correctly.
 
-5. Install node
+3. Install `node`
 
-   Run the following command in your terminal:
+    Run the following command in your terminal:
 
-    ```
+    ```bash
     nvm install 18
     nvm use 18
-   ```
-   Quit and re-open the terminal, and then run to confirm that v18 is running
-
     ```
+
+    Quit and re-open the terminal, and then run to confirm that v18 is running
+
+    ```bash
     > node -v
     v18.20.4
     ```
 
-6. Install `yarn`. We use yarn as our package manager and to run scripts.
+    Alternatively, to automatically try to find and use an `.nvmrc` file in your workspace, per the [official nvm docs for zsh](https://github.com/nvm-sh/nvm?tab=readme-ov-file#zsh), add the following script to your shell (typically `~/.zshrc` on mac):
 
-   Run the following command to install it (npm comes with node, so it should work if the above step has been completed correctly)
+    ```zsh
+    # place this after nvm initialization!
+    autoload -U add-zsh-hook
 
+    load-nvmrc() {
+      local nvmrc_path
+      nvmrc_path="$(nvm_find_nvmrc)"
+
+      if [ -n "$nvmrc_path" ]; then
+        local nvmrc_node_version
+        nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+        if [ "$nvmrc_node_version" = "N/A" ]; then
+          nvm install
+        elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
+          nvm use
+          # Optionally, add `>/dev/null 2>&1` after `nvm use` to suppress output
+        fi
+      elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
+        echo "Reverting to nvm default version"
+        nvm use default
+      fi
+    }
+
+    add-zsh-hook chpwd load-nvmrc
+    load-nvmrc
     ```
+
+4. Install `yarn`. We use yarn as our package manager and to run scripts.
+
+    Run the following command to install it (npm comes with node, so it should work if the above step has been completed correctly)
+
+    ```bash
     npm install --global yarn
     ```
 
-   Check version to verify installation
+    Check version to verify installation
 
-    ```
+    ```bash
     > yarn -v
-    1.22.22
+    3.2.3
     ```
 
-7. Install `ruby`
+5. Install `ruby`
 
-   Use `rbenv` to install a specific version of `ruby`:
+    Use `rbenv` to install a specific version of `ruby`:
 
-    ```
+    ```bash
     brew install rbenv ruby-build
     ```
 
-   Run init and follow the instructions to complete the installation.
+    Run init and follow the instructions to complete the installation.
 
+    ```bash
+    rbenv init
     ```
-    `rbenv init`
-    ```
 
-   After following the instructions, make sure you `source` your `.zshrc` or `.bash_profile`, or start a new terminal session.
+    After following the instructions, make sure you `source` your `.zshrc` or `.bash_profile`, or start a new terminal session.
 
-   Install a version of `ruby` and set as the default.
+    Install a version of `ruby` and set as the default.
 
-    ```
+    ```bash
     rbenv install 3.2.2
     rbenv global 3.2.2
     ```
 
-8. Install cocoapods and fastlane using bundler (make sure to run in `mobile`)
+6. Install cocoapods and fastlane using bundler (make sure to run in `mobile`)
 
-    ```
+    ```bash
     bundle install
     ```
 
-   Note: In the case you run into permission issues when installing ruby, [you may need to add some permissions to make it work.](https://stackoverflow.com/a/50181250)
+    Note: In the case you run into permission issues when installing ruby, [you may need to add some permissions to make it work.](https://stackoverflow.com/a/50181250)
 
 ### iOS Setup
 
@@ -93,7 +150,7 @@ Note: if you are indeed using an Apple Silicon Mac, we recommend setting up your
 
 You should start with downloading Xcode if you don't already have it installed, since the file is so large. You can find it here: [developer.apple.com/xcode](https://developer.apple.com/xcode/)
 
-You must use **XCode 15** to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode)
+You must use the [Required Xcode Version](https://github.com/Uniswap/universe/blob/main/apps/mobile/scripts/podinstall.sh#L5) to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
 
 #### Add Xcode Command Line Tools
 
@@ -101,32 +158,32 @@ Open Xcode and go to:
 
 `Preferences → Locations → Command Line Tools`
 
-And select the version that pops up.
+Select the version that pops up.
 
 ### Android Setup
 
 1. Install [Android Studio](https://developer.android.com/studio)
-2. Install the JDK. Taken from [RN instructions](https://reactnative.dev/docs/environment-setup?guide=native&platform=android)
+2. Install the JDK. Taken from [RN instructions](https://reactnative.dev/docs/set-up-your-environment?platform=android)
 
-```
-brew install --cask zulu@17
+    ```bash
+    brew install --cask zulu@17
 
-# Get path to where cask was installed to double-click installer
-brew info --cask zulu@17
-```
+    # Get path to where cask was installed to double-click installer
+    brew info --cask zulu@17
+    ```
 
-Add the following to your .rc file
-`export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`
+    Add the following to your .rc file
+    `export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`
 
-[Also verify that in Android Studio it is using the correct JDK.](https://developer.android.com/build/jdks#jdk-config-in-studio)
+    [Also verify that in Android Studio it is using the correct JDK.](https://developer.android.com/build/jdks#jdk-config-in-studio)
 
-3. Add the following to your .rc file
+3. Add the following to your `.rc` file
 
-```
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-```
+    ```bash
+    export ANDROID_HOME=$HOME/Library/Android/sdk
+    export PATH=$PATH:$ANDROID_HOME/emulator
+    export PATH=$PATH:$ANDROID_HOME/platform-tools
+    ```
 
 4. Install an emulator. Android Studio should have an emulator already, but if not:
    Open the project at `universe/apps/mobile/android`
@@ -136,31 +193,26 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 1. Enable developer mode on Android
 
-1. Open Settings
-2. Tap About phone or About device
-3. Tap Software information
-4. Tap Build number seven times in a row
-5. A message will appear when you're close to enabling Developer mode
+   - Open Settings
+   - Tap About phone or About device
+   - Tap Software information
+   - Tap Build number seven times in a row
+   - A message will appear when you're close to enabling Developer mode
+   - Enable USB Debugging: Go to Developer Options in settings and enable USB Debugging
 
-2. Enable USB Debugging
+2. Connect device and Allow communication
 
-Go to Developer Options in settings and enable USB Debugging
+    - Pop up message must appear and enable transfer.
+    - Run the following command to verify your device has been detected: `adb devices`
 
-3. Connect device and Allow communication
+3. In your terminal run
 
-Pop up message must appear and enable transfer.
-Run the following command to verify your device has been detected:
+    ```bash
+    adb reverse tcp:8081 tcp:8081
+    yarn mobile android
+    ```
 
-`adb devices`
-
-4. In your terminal run
-
-```
-adb reverse tcp:8081 tcp:8081
-yarn mobile android
-```
-
-if it fails, quit the terminal and run it directly from Android Studio. Once you get the first build retry the previous step.
+If it fails, quit the terminal and run it directly from Android Studio. Once you get the first build running, retry the previous step.
 
 ## Development
 
@@ -192,16 +244,27 @@ You can also run the app from Xcode, which is necessary for any Swift related ch
 
 Hopefully you now (after a few minutes) see the Uniswap Wallet running in the iOS Simulator!
 
-### Enabling Flipper
+### Using Radon IDE (VSCode/Cursor Extension)
 
-We do not check Flipper into source. To prevent `pod install` from adding Flipper, set an environment variable in your `.bash_profile` or `.zshrc` or `.zprofile`:
+[Radon IDE](https://marketplace.visualstudio.com/items?itemName=swmansion.react-native-ide&ssr=false#review-details) is a relatively new VSCode extension build by Software Mansion. TLDR; its tagline is
 
-```bash
-# To enable flipper inclusion (optional)
-export USE_FLIPPER=1
-```
+> A better developer experience for React Native developers
 
-Note: To disable Flipper, the whole line should be commented out, as setting this value to 0 will not disable Flipper.
+It's not perfect, but it's great to have in the toolbox. One noteworthy feature is the ability to click on any piece of UI and be able to inspect the component hierarchy + jump straight into the relevant code. There's also support for breakpoints in VSCode/Cursor, better logging, instant replay of your session, and the ability to adjust common device settings on the fly.
+
+To get started, you should already be able to build the iOS app (either in XCode or via the cli). Install the extension, open it, and follow the onboarding instructions.
+
+One you have a device configured, it will start to build. If/when successful, you'll see the device simulator/emulator in the sidebar.
+
+In `.vscode/launch.json`, you will see configurations for each platform. This is where you can specify the fingerprint command. The fingerprint is a hash of the build environment, and Radon uses it to determine if the build has changed so that it knows when to re-run the build process (i.e. only on native code changes). See `getFingerprintForRadonIDE.js` for more details. There are more complex implementations of this, but this is a simple first step.
+
+#### Running on a Physical iOS Device
+
+1. Follow all steps listed above.
+2. Sign into your `@uniswap.org` Apple ID (`Cmd + ,` -> Accounts tab) + download provisioning profiles
+3. Connect your iOS device + follow the on-screen prompts to trust your computer
+4. Select the Uniswap target + your connect device, then `Cmd + R` or use the ▶️ button the start the build
+5. You may get an error about your device not yet being added to the Uniswap Apple Developer account; if so, click `Register` and restart the build
 
 ## Important Libraries and Tools
 
@@ -217,6 +280,13 @@ These are some tools you might want to familiarize yourself with to understand t
 ## Migrations
 
 We use `redux-persist` to persist the Redux state between user sessions. Most of this state is shared between the mobile app and the extension. Please review the [Wallet Migrations README](../../packages/wallet/src/state//README.md) for details on how to write migrations when you add or remove anything from the Redux state structure.
+
+## Testing & Performance
+
+- [Build local app files](./docs/build-app-files.md)
+- [E2E testing](./docs/e2e-testing.md)
+- [Performance monitoring](./docs/perf-monitoring.md)
+
 
 ## Troubleshooting
 
@@ -245,7 +315,7 @@ We use `redux-persist` to persist the Redux state between user sessions. Most of
 `cd ios && pod repo update`
 `cd ios && pod update hermes-engine --no-repo-update`
 
-Context: https://uniswapteam.slack.com/archives/C02GYG8TU12/p1692640189802989?thread_ts=1692635970.952869&cid=C02GYG8TU12
+Context: <https://uniswapteam.slack.com/archives/C02GYG8TU12/p1692640189802989?thread_ts=1692635970.952869&cid=C02GYG8TU12>
 
 ### Common fixes
 
@@ -277,7 +347,3 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
-# To enable flipper inclusion (optional)
-export USE_FLIPPER=1
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
-```

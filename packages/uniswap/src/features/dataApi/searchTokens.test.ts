@@ -25,7 +25,7 @@ describe(useTokenProjects, () => {
     const { resolvers, resolved } = queryResolvers({
       searchTokens: () => createArray(5, token),
     })
-    const { result } = renderHook(() => useSearchTokens('', null, false), {
+    const { result } = renderHook(() => useSearchTokens('hi', null, false), {
       resolvers,
     })
 

@@ -41,23 +41,70 @@ export function isPermit2(data: unknown): data is Permit2 {
   return Permit2Schema.safeParse(data).success
 }
 
-export const UniswapXSchema = Permit2Schema.refine(
-  (data) => {
-    try {   
-      const { message, domain } = data
-      const spender = message.spender?.toLowerCase()
-      const uniswapXAddress = REACTOR_ADDRESS_MAPPING?.[Number(domain.chainId)]?.Dutch_V2?.toLowerCase()
-      return uniswapXAddress && spender === uniswapXAddress
-    } catch {
-      return false
-    }
-  },
-  {
-    message: 'Invalid UniswapX request',
+function isValidUniswapXSpender(data: { 
+  message: { spender: string }, 
+  domain: { chainId: string | number | bigint } 
+}): boolean {
+  try {
+    const { message, domain } = data
+    const spender = message.spender?.toLowerCase()
+    const uniswapXAddress = REACTOR_ADDRESS_MAPPING?.[Number(domain.chainId)]?.Dutch_V2?.toLowerCase()
+    return Boolean(uniswapXAddress && spender === uniswapXAddress)
+  } catch {
+    return false
   }
-)
-type UniswapX = z.infer<typeof UniswapXSchema>
+}
 
-export function isUniswapXSwapRequest(data: unknown): data is UniswapX {
-  return UniswapXSchema.safeParse(data).success
+const DutchOrderTypesSchema = z
+  .object({
+    DutchOutput: z.array(TypeDefinitionSchema),
+    EIP712Domain: z.array(TypeDefinitionSchema),
+    OrderInfo: z.array(TypeDefinitionSchema),
+    PermitWitnessTransferFrom: z.array(TypeDefinitionSchema),
+    TokenPermissions: z.array(TypeDefinitionSchema),
+    V2DutchOrder: z.array(TypeDefinitionSchema),
+  })
+  .catchall(z.array(TypeDefinitionSchema))
+
+const BaseOutputSchema = z.object({
+  token: z.string(),
+  startAmount: z.string(),
+  endAmount: z.string(),
+  recipient: z.string(),
+})
+
+const DutchOrderMessageSchema = z.object({
+  deadline: z.string(),
+  nonce: z.string(),
+  permitted: z.object({
+    token: z.string(),
+    amount: z.string(),
+  }),
+  spender: z.string(),
+  witness: z.object({
+    baseInputEndAmount: z.string(),
+    baseInputStartAmount: z.string(),
+    baseInputToken: z.string(),
+    baseOutputs: z.array(BaseOutputSchema).nonempty(),
+    cosigner: z.string(),
+    info: z.object({}).passthrough(), // allows any additional fields in info
+  }),
+})
+
+const DutchOrderSchema = z.object({
+  domain: DomainSchema,
+  types: DutchOrderTypesSchema,
+  message: DutchOrderMessageSchema,
+  primaryType: z.string(),
+})
+
+const UniswapXSwapRequestSchema = DutchOrderSchema.refine(
+  isValidUniswapXSpender,
+  { message: 'Invalid UniswapX request' }
+)
+
+export type UniswapXSwapRequest = z.infer<typeof UniswapXSwapRequestSchema>
+
+export function isUniswapXSwapRequest(data: unknown): data is UniswapXSwapRequest {
+  return UniswapXSwapRequestSchema.safeParse(data).success
 }

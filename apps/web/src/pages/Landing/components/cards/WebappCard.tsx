@@ -1,19 +1,18 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { Computer } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useMedia } from 'ui/src'
 import { LDO, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const primary = '#2ABDFF'
@@ -38,14 +37,16 @@ const tokens: { chainId: UniverseChainId; address: string }[] = [
 ]
 
 function Token({ chainId, address }: { chainId: UniverseChainId; address: string }) {
-  const screenIsSmall = useScreenSize()['sm']
+  const media = useMedia()
+  const isSmallScreen = media.md
+
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta } = useFormatter()
   const currency = useCurrency(address, chainId)
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
       address: currency?.wrapped.address,
-      chain: chainIdToBackendChain({ chainId }),
+      chain: toGraphQLChain(chainId),
     },
   })
   const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0
@@ -68,7 +69,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
         navigate(
           getTokenDetailsURL({
             address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
-            chain: chainIdToBackendChain({ chainId }),
+            chain: toGraphQLChain(chainId),
           }),
         )
       }}
@@ -93,7 +94,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
         borderRadius: 16,
       }}
     >
-      <PortfolioLogo currencies={[currency]} chainId={chainId} size={screenIsSmall ? 32 : 24} />
+      <PortfolioLogo currencies={[currency]} chainId={chainId} size={isSmallScreen ? 24 : 32} />
       <Flex row flex={1} justifyContent="space-between" gap="$gap16">
         <Flex row width="auto" gap="$gap8" alignItems="center" overflow="hidden">
           <Text
@@ -194,6 +195,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
 }
 
 export function WebappCard() {
+  const { t } = useTranslation()
   return (
     <ValuePropCard
       to="/tokens/ethereum"

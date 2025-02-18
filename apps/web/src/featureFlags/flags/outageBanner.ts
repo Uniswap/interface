@@ -1,9 +1,7 @@
 import { ApolloError } from '@apollo/client'
 import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export type ChainOutageData = {
   chainId: UniverseChainId
@@ -28,13 +26,5 @@ export function useUpdateManualOutage({
   }
   if (errorV2 && chainId) {
     setManualOutage({ chainId, version: ProtocolVersion.V2 })
-  }
-}
-
-export function useOutageBanners(): Partial<Record<UniverseChainId, boolean>> {
-  return {
-    [UniverseChainId.Optimism]: useFeatureFlag(FeatureFlags.OutageBannerOptimism),
-    [UniverseChainId.ArbitrumOne]: useFeatureFlag(FeatureFlags.OutageBannerArbitrum),
-    [UniverseChainId.Polygon]: useFeatureFlag(FeatureFlags.OutageBannerPolygon),
   }
 }

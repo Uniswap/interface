@@ -2,15 +2,17 @@ import { ContractTransaction } from '@ethersproject/contracts'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
-import { useSingleCallResult } from 'lib/hooks/multicall'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useTriggerOnTransactionType } from 'hooks/useTriggerOnTransactionType'
+import { useCallback, useMemo, useRef } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { UserRejectedRequestError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { assume0xAddress } from 'utils/wagmi'
+import { erc20Abi } from 'viem'
+import { useReadContract } from 'wagmi'
 
 const MAX_ALLOWANCE = MaxUint256.toString()
 
@@ -22,26 +24,29 @@ export function useTokenAllowance(
   tokenAllowance?: CurrencyAmount<Token>
   isSyncing: boolean
 } {
-  const { chainId } = useSwapAndLimitContext()
-  const contract = useTokenContract(token?.address, false, chainId)
-  const inputs = useMemo(() => [owner, spender], [owner, spender])
+  const queryEnabled = !!owner && !!spender
+  const {
+    data: rawAmount,
+    isFetching,
+    refetch: refetchAllowance,
+  } = useReadContract({
+    address: assume0xAddress(token?.address),
+    chainId: token?.chainId,
+    abi: erc20Abi,
+    functionName: 'allowance',
+    args: queryEnabled ? [assume0xAddress(owner), assume0xAddress(spender)] : undefined,
+    query: { enabled: queryEnabled },
+  })
 
-  // If there is no allowance yet, re-check next observed block.
-  // This guarantees that the tokenAllowance is marked isSyncing upon approval and updated upon being synced.
-  const [blocksPerFetch, setBlocksPerFetch] = useState<1>()
-  const { result, syncing: isSyncing } = useSingleCallResult(contract, 'allowance', inputs, { blocksPerFetch }) as {
-    result?: Awaited<ReturnType<NonNullable<typeof contract>['allowance']>>
-    syncing: boolean
-  }
+  // Refetch when any approval transactions confirm
+  useTriggerOnTransactionType(TransactionType.APPROVAL, refetchAllowance)
 
-  const rawAmount = result?.toString() // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(
-    () => (token && rawAmount ? CurrencyAmount.fromRawAmount(token, rawAmount) : undefined),
+    () => (token && rawAmount !== undefined ? CurrencyAmount.fromRawAmount(token, rawAmount.toString()) : undefined),
     [token, rawAmount],
   )
-  useEffect(() => setBlocksPerFetch(allowance?.equalTo(0) ? 1 : undefined), [allowance])
 
-  return useMemo(() => ({ tokenAllowance: allowance, isSyncing }), [allowance, isSyncing])
+  return useMemo(() => ({ tokenAllowance: allowance, isSyncing: isFetching }), [allowance, isFetching])
 }
 
 export function useUpdateTokenAllowance(

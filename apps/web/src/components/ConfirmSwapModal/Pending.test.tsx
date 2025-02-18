@@ -3,22 +3,25 @@ import 'test-utils/tokens/mocks'
 import { WETH9 } from '@uniswap/sdk-core'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import { BigNumber } from 'ethers/lib/ethers'
-import { SwapResult } from 'hooks/useSwapCallback'
+import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import { TradeFillType } from 'state/routing/types'
 import { useOrder } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-import { useSwapTransactionStatus } from 'state/transactions/hooks'
 import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 jest.mock('state/transactions/hooks', () => ({
   ...jest.requireActual('state/transactions/hooks'),
-  useSwapTransactionStatus: jest.fn(),
   useIsTransactionConfirmed: jest.fn(),
+}))
+
+jest.mock('hooks/useSwapCallback', () => ({
+  ...jest.requireActual('hooks/useSwapCallback'),
+  useSwapTransactionStatus: jest.fn(),
 }))
 
 jest.mock('state/signatures/hooks', () => ({

@@ -4,7 +4,7 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsC
 import { Terms } from 'src/app/features/onboarding/Terms'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Button, Flex, GeneratedIcon, Text } from 'ui/src'
+import { DeprecatedButton, Flex, GeneratedIcon, Text } from 'ui/src'
 import { Bolt, Coupon, UserSquare } from 'ui/src/components/icons'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -46,9 +46,9 @@ export function UnitagIntroScreen(): JSX.Element {
           </Flex>
 
           <Flex gap="$spacing24">
-            <Button size="large" onPress={() => goToNextStep()}>
+            <DeprecatedButton size="large" onPress={() => goToNextStep()}>
               {t('unitags.extension.intro.buttton')}
-            </Button>
+            </DeprecatedButton>
             <Flex width={TERMS_WIDTH} alignSelf="center">
               <Terms />
             </Flex>
@@ -61,7 +61,7 @@ export function UnitagIntroScreen(): JSX.Element {
 
 function UnitagIntroPill({ Icon, text }: { Icon: GeneratedIcon; text: string }): JSX.Element {
   return (
-    <Flex row gap="$spacing8" p="$spacing12" borderWidth={1} borderColor="$surface3" borderRadius="$rounded16">
+    <Flex row gap="$spacing8" p="$spacing12" borderWidth="$spacing1" borderColor="$surface3" borderRadius="$rounded16">
       <Icon color="$accent1" size="$icon.24" />
       <Text color="$neutral2" variant="body1">
         {text}

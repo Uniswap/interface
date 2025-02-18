@@ -1,19 +1,19 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import dayjs from 'dayjs'
 import { isEnrolledAsync } from 'expo-local-authentication'
-import { t } from 'i18next'
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { SplashScreen } from 'src/features/appLoading/SplashScreen'
-import { useBiometricContext } from 'src/features/biometrics/context'
-import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useBiometricsState } from 'src/features/biometrics/useBiometricsState'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
+import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
 import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
-import { hideSplashScreen } from 'src/utils/splashScreen'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
@@ -36,12 +36,14 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 function useFinishAutomatedRecovery(navigation: Props['navigation']): {
   finishRecovery: (mnemonicId: string, recoveryWalletInfos: RecoveryWalletInfo[]) => void
 } {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const { setRecoveredImportedAccounts, finishOnboarding } = useOnboardingContext()
+  const hideSplashScreen = useHideSplashScreen()
 
-  const notificationOSPermission = useNotificationOSPermissionsEnabled()
+  const { notificationPermissionsEnabled: notificationOSPermission } = useNotificationOSPermissionsEnabled()
   const hasAnyNotificationsEnabled = useSelector(selectAnyAddressHasNotificationsEnabled)
-  const { deviceSupportsBiometrics } = useBiometricContext()
+  const { deviceSupportsBiometrics } = useBiometricsState()
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
 
   const importAccounts = useCallback(
@@ -54,11 +56,12 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
           address: addressInfo.address,
           derivationIndex: addressInfo.derivationIndex,
           timeImportedMs: dayjs().valueOf(),
+          pushNotificationsEnabled: true,
         }
       })
       setRecoveredImportedAccounts(accountsToImport)
     },
-    [setRecoveredImportedAccounts],
+    [t, setRecoveredImportedAccounts],
   )
 
   const finishRecovery = useCallback(
@@ -110,6 +113,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
       isBiometricAuthEnabled,
       navigation,
       notificationOSPermission,
+      hideSplashScreen,
     ],
   )
 

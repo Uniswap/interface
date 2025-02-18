@@ -3,14 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { Dispatch } from 'redux'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { DEAD_LUNI } from 'ui/src/assets'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { logger } from 'utilities/src/logger/logger'
 import { restartApp } from 'wallet/src/components/ErrorBoundary/restart'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
+
+const NOTIFICATION_ROUTER_COMPONENT_NAME = 'SharedNotificationToastRouter'
 
 interface ErrorBoundaryState {
   error: Error | null
@@ -46,7 +48,7 @@ class InternalErrorBoundary extends React.Component<
     // Based on https://github.com/getsentry/sentry-javascript/blob/develop/packages/react/src/errorboundary.tsx
     const errorBoundaryError = new Error(error.message)
     errorBoundaryError.name = `React ErrorBoundary ${errorBoundaryError.name}`
-    errorBoundaryError.stack = errorInfo.componentStack
+    errorBoundaryError.stack = errorInfo.componentStack?.toString()
     error.cause = errorBoundaryError
 
     logger.error(error, {
@@ -59,6 +61,11 @@ class InternalErrorBoundary extends React.Component<
     })
 
     this.props.onError?.(error)
+
+    const isNotificationError = !!errorBoundaryError.stack?.includes?.(NOTIFICATION_ROUTER_COMPONENT_NAME)
+    if (isNotificationError) {
+      this.props.dispatch(resetNotifications())
+    }
 
     if (this.props.notificationText) {
       this.props.dispatch(
@@ -129,7 +136,7 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
         {error.message && __DEV__ && <Text variant="body2">{error.message}</Text>}
       </Flex>
       <Flex alignSelf="stretch">
-        <Button onPress={restartApp}>{t('errors.crash.restart')}</Button>
+        <DeprecatedButton onPress={restartApp}>{t('errors.crash.restart')}</DeprecatedButton>
       </Flex>
     </Flex>
   )

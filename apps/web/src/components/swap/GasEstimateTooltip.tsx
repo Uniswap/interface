@@ -5,12 +5,12 @@ import { UniswapXGradient, UniswapXRouterIcon } from 'components/RouterLabel/Uni
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Row, { RowFixed } from 'components/deprecated/Row'
 import { GasBreakdownTooltip } from 'components/swap/GasBreakdownTooltip'
-import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import styled from 'lib/styled-components'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ThemedText } from 'theme/components'
+import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -24,10 +24,10 @@ const StyledGasIcon = styled(Gas)`
 `
 
 export default function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
   const { formatNumber } = useFormatter()
 
-  if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
+  if (!trade || !chainId || !chainSupportsGasEstimates(chainId)) {
     return null
   }
 

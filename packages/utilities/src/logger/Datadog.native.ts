@@ -59,10 +59,7 @@ export function logWarningToDatadog(
     functionName: string
   },
 ): void {
-  DdLogs.warn(message, {
-    ...options,
-    reduxState,
-  }).catch(() => {})
+  DdLogs.warn(message, options).catch(() => {})
 }
 
 export function logToDatadog(
@@ -77,10 +74,7 @@ export function logToDatadog(
     functionName: string
   },
 ): void {
-  DdLogs.info(message, {
-    ...options,
-    reduxState,
-  }).catch(() => {})
+  DdLogs.info(message, options).catch(() => {})
 }
 
 /*
@@ -88,7 +82,7 @@ export function logToDatadog(
  * https://github.com/getsentry/sentry-react-native/blob/0abe24e037e7272178f36ffc7a5c6e295e039650/src/js/integrations/reactnativeerrorhandlersutils.ts
  *
  * This function is used to attach a handler to the global promise rejection event
- * and log the error to the logger, which will send it to sentry and/or datadog
+ * and log the error to the logger, which will send it to datadog
  */
 export function attachUnhandledRejectionHandler(): void {
   // This section sets up Promise polyfills and rejection tracking

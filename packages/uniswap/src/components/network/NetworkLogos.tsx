@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  Button,
+  DeprecatedButton,
   Flex,
   Image,
   Text,
@@ -10,16 +10,18 @@ import {
   UniversalImageResizeMode,
   useSporeColors,
 } from 'ui/src'
-import { ALL_NETWORKS_LOGO } from 'ui/src/assets'
+import { ALL_NETWORKS_LOGO, ALL_NETWORKS_LOGO_UNICHAIN } from 'ui/src/assets'
 import { GlobeFilled } from 'ui/src/components/icons/GlobeFilled'
 import { X } from 'ui/src/components/icons/X'
-import { borderRadii, iconSizes, zIndices } from 'ui/src/theme'
+import { borderRadii, iconSizes, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isInterface } from 'utilities/src/platform'
 
 export type NetworkLogosProps = {
@@ -29,6 +31,7 @@ export type NetworkLogosProps = {
 export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const unichainPromoEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
 
   const [isShowingModal, setIsShowingModal] = useState(false)
   const closeModal = useCallback(() => setIsShowingModal(false), [])
@@ -38,7 +41,7 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
     () => (
       <Flex row flexWrap="wrap" justifyContent="center" gap="$gap12">
         {chains.map((chain) => {
-          const { label, logo } = UNIVERSE_CHAIN_INFO[chain]
+          const { label, logo } = getChainInfo(chain)
           return (
             <Flex
               key={chain}
@@ -73,10 +76,12 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
     [chains],
   )
 
+  const logo = unichainPromoEnabled ? ALL_NETWORKS_LOGO_UNICHAIN : ALL_NETWORKS_LOGO
+
   return (
     <>
       {/* TRIGGER BUTTON */}
-      <Button
+      <DeprecatedButton
         backgroundColor="$surface2"
         alignSelf="center"
         borderRadius="$rounded16"
@@ -89,7 +94,7 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
       >
         <UniversalImage
           allowLocalUri
-          uri={ALL_NETWORKS_LOGO}
+          uri={logo}
           size={{
             width: iconSizes.icon20,
             height: iconSizes.icon20,
@@ -99,13 +104,13 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
         <Text color="$neutral2" variant="buttonLabel4">
           {t('extension.connection.networks')}
         </Text>
-      </Button>
+      </DeprecatedButton>
       {/* SHEET/MODAL */}
       <Modal name={ModalName.QRCodeNetworkInfo} isModalOpen={isShowingModal} onClose={closeModal}>
         <Flex gap="$spacing12" px="$padding16" pb="$spacing4" alignItems="center" mt="$gap12">
           {/* X BUTTON */}
           {isInterface && (
-            <TouchableArea alignSelf="flex-end" zIndex={zIndices.default} onPress={closeModal}>
+            <TouchableArea alignSelf="flex-end" zIndex={zIndexes.default} onPress={closeModal}>
               <X color="$neutral2" size="$icon.24" />
             </TouchableArea>
           )}
@@ -125,9 +130,9 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
             url={uniswapUrls.helpArticleUrls.supportedNetworks}
           />
 
-          <Button width="100%" color="$neutral1" mt="$spacing12" theme="secondary" onPress={closeModal}>
+          <DeprecatedButton width="100%" color="$neutral1" mt="$spacing12" theme="secondary" onPress={closeModal}>
             {t('common.button.close')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Modal>
     </>

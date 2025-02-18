@@ -1,18 +1,21 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
-import { SecondaryIdentifiers } from 'components/AccountDrawer/Status'
 import Identicon from 'components/Identicon'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { PRODUCTION_CHAIN_IDS } from 'constants/chains'
-import useENSName from 'hooks/useENSName'
 import { useCallback } from 'react'
+import { Trans } from 'react-i18next'
 import { useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ThemedText } from 'theme/components'
-import { AdaptiveWebModal, Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
+import { CopyHelper, ThemedText } from 'theme/components'
+import { Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
+import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
+import { useENSName } from 'uniswap/src/features/ens/api'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { Trans } from 'uniswap/src/i18n'
+import { shortenAddress } from 'utilities/src/addresses'
 
 const UNICON_SIZE = 50
 const QR_CODE_SIZE = 240
@@ -22,10 +25,11 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
   const toggleModal = useToggleModal(ApplicationModal.RECEIVE_CRYPTO_QR)
   const isOpen = useModalIsOpen(ApplicationModal.RECEIVE_CRYPTO_QR)
   const openReceiveCryptoModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO })
-  const { ENSName } = useENSName(accountAddress)
+  const { data: ENSName } = useENSName(accountAddress)
   const { unitag } = useUnitagByAddress(accountAddress)
   const hasSecondaryIdentifier = ENSName || unitag?.username
   const addressColor = useAddressColorProps(accountAddress)
+  const orderedChainIds = useOrderedChainIds(SUPPORTED_CHAIN_IDS)
 
   const goBack = useCallback(() => {
     toggleModal()
@@ -33,7 +37,7 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
   }, [toggleModal, openReceiveCryptoModal])
 
   return (
-    <AdaptiveWebModal isOpen={isOpen} onClose={toggleModal} width={420}>
+    <Modal isModalOpen={isOpen} onClose={toggleModal} maxWidth={420} name={ModalName.AddressQR}>
       <Flex pb="$spacing16" gap="$spacing24">
         <GetHelpHeader goBack={goBack} closeModal={toggleModal} />
         <Flex gap="$spacing12">
@@ -42,13 +46,11 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
               <AddressDisplay enableCopyAddress address={accountAddress} />
             </ThemedText.SubHeader>
             {hasSecondaryIdentifier && (
-              <Text variant="heading3">
-                <SecondaryIdentifiers
-                  account={accountAddress!}
-                  ensUsername={ENSName}
-                  uniswapUsername={unitag?.username}
-                />
-              </Text>
+              <CopyHelper iconSize={14} iconPosition="right" toCopy={accountAddress}>
+                <Text variant="body4" color="neutral2">
+                  {shortenAddress(accountAddress)}
+                </Text>
+              </CopyHelper>
             )}
           </Flex>
           <QRCodeDisplay
@@ -56,7 +58,6 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
             color={addressColor}
             containerBackgroundColor={colors.surface1.val}
             size={QR_CODE_SIZE}
-            eyeSize={180}
             encodedValue={accountAddress!}
           >
             <Flex
@@ -70,14 +71,11 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
             </Flex>
           </QRCodeDisplay>
           <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body3">
-            <Trans
-              i18nKey="qrScanner.wallet.title"
-              values={{ numOfNetworks: Object.keys(PRODUCTION_CHAIN_IDS).length }}
-            />
+            <Trans i18nKey="qrScanner.wallet.title" values={{ numOfNetworks: Object.keys(orderedChainIds).length }} />
           </Text>
-          <NetworkLogos chains={PRODUCTION_CHAIN_IDS} />
+          <NetworkLogos chains={orderedChainIds} />
         </Flex>
       </Flex>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

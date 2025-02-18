@@ -2,7 +2,7 @@ import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
 import { useCallback, useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { isMobileWeb, isTouchable, isWebAndroid, isWebIOS } from 'utilities/src/platform'
+import { isMobileWeb } from 'utilities/src/platform'
 import { Connector } from 'wagmi'
 
 type ConnectorID = (typeof CONNECTION_PROVIDER_IDS)[keyof typeof CONNECTION_PROVIDER_IDS]
@@ -38,7 +38,7 @@ export function useConnectorWithId(id: ConnectorID, options?: { shouldThrow: tru
   )
 }
 
-function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapConnections?: boolean) {
+function getInjectedConnectors(connectors: readonly Connector[]) {
   let isCoinbaseWalletBrowser = false
   const injectedConnectors = connectors.filter((c) => {
     // Special-case: Ignore coinbase eip6963-injected connector; coinbase connection is handled via the SDK connector.
@@ -50,7 +50,7 @@ function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapC
     }
 
     // Special-case: Ignore the Uniswap Extension injection here if it's being displayed separately.
-    if (c.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS && excludeUniswapConnections) {
+    if (c.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) {
       return false
     }
 
@@ -71,8 +71,12 @@ function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapC
   return { injectedConnectors, isCoinbaseWalletBrowser }
 }
 
+/**
+ * These connectors do not include Uniswap Wallets because those are
+ * handled separately. See <UniswapWalletOptions />
+ */
 type InjectableConnector = Connector & { isInjected?: boolean }
-export function useOrderedConnections(excludeUniswapConnections?: boolean): InjectableConnector[] {
+export function useOrderedConnections(): InjectableConnector[] {
   const { connectors } = useConnect()
   const recentConnectorId = useRecentConnectorId()
 
@@ -90,10 +94,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean): Inje
   )
 
   return useMemo(() => {
-    const { injectedConnectors: injectedConnectorsBase, isCoinbaseWalletBrowser } = getInjectedConnectors(
-      connectors,
-      excludeUniswapConnections,
-    )
+    const { injectedConnectors: injectedConnectorsBase, isCoinbaseWalletBrowser } = getInjectedConnectors(connectors)
     const injectedConnectors = injectedConnectorsBase.map((c) => ({ ...c, isInjected: true }))
 
     const coinbaseSdkConnector = getConnectorWithId(
@@ -106,12 +107,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean): Inje
       CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
       SHOULD_THROW,
     )
-    const uniswapWalletConnectConnector = getConnectorWithId(
-      connectors,
-      CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
-      SHOULD_THROW,
-    )
-    if (!coinbaseSdkConnector || !walletConnectConnector || !uniswapWalletConnectConnector) {
+    if (!coinbaseSdkConnector || !walletConnectConnector) {
       throw new Error('Expected connector(s) missing from wagmi context.')
     }
 
@@ -126,12 +122,6 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean): Inje
     }
 
     const orderedConnectors: InjectableConnector[] = []
-    const shouldDisplayUniswapWallet = !excludeUniswapConnections && (isWebIOS || isWebAndroid || !isTouchable)
-
-    // Place the Uniswap Wallet at the top of the list by default.
-    if (shouldDisplayUniswapWallet) {
-      orderedConnectors.push(uniswapWalletConnectConnector)
-    }
 
     // Injected connectors should appear next in the list, as the user intentionally installed/uses them.
     orderedConnectors.push(...injectedConnectors)
@@ -143,7 +133,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean): Inje
     // Place the most recent connector at the top of the list.
     orderedConnectors.sort(sortByRecent)
     return orderedConnectors
-  }, [connectors, excludeUniswapConnections, sortByRecent])
+  }, [connectors, sortByRecent])
 }
 
 export enum ExtensionRequestMethods {

@@ -1,15 +1,26 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, HeightAnimator, Text, TouchableArea } from 'ui/src'
+import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
+import {
+  FeeOnTransferFeeGroupProps,
+  TokenWarningProps,
+} from 'uniswap/src/features/transactions/TransactionDetails/types'
+import { usePriceImpact } from 'uniswap/src/features/transactions/swap/hooks/usePriceImpact'
+import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
+import { MarketPriceImpactWarning } from 'uniswap/src/features/transactions/swap/modals/MarketPriceImpactWarning'
+import { RoutingInfo } from 'uniswap/src/features/transactions/swap/modals/RoutingInfo'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
@@ -20,6 +31,7 @@ import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
 interface SwapDetailsProps {
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
@@ -27,7 +39,8 @@ interface SwapDetailsProps {
   customSlippageTolerance?: number
   derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
-  feeOnTransferWarningChecked?: boolean
+  tokenWarningProps: TokenWarningProps
+  tokenWarningChecked?: boolean
   gasFallbackUsed?: boolean
   gasFee: GasFeeResult
   uniswapXGasBreakdown?: UniswapXGasBreakdown
@@ -35,7 +48,8 @@ interface SwapDetailsProps {
   warning?: Warning
   onAcceptTrade: () => void
   onShowWarning?: () => void
-  setFeeOnTransferWarningChecked?: (checked: boolean) => void
+  setTokenWarningChecked?: (checked: boolean) => void
+  txSimulationErrors?: TransactionFailureReason[]
 }
 
 export function SwapDetails({
@@ -44,15 +58,18 @@ export function SwapDetails({
   customSlippageTolerance,
   derivedSwapInfo,
   feeOnTransferProps,
-  feeOnTransferWarningChecked,
+  tokenWarningProps,
+  tokenWarningChecked,
   gasFee,
   uniswapXGasBreakdown,
   newTradeRequiresAcceptance,
   warning,
   onAcceptTrade,
   onShowWarning,
-  setFeeOnTransferWarningChecked,
+  setTokenWarningChecked,
+  txSimulationErrors,
 }: SwapDetailsProps): JSX.Element {
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const { t } = useTranslation()
 
   const isBridgeTrade = derivedSwapInfo.trade.trade && isBridge(derivedSwapInfo.trade.trade)
@@ -81,7 +98,7 @@ export function SwapDetails({
   }, [derivedSwapInfo.trade.trade?.quote])
 
   return (
-    <HeightAnimator animation="fast">
+    <HeightAnimatorWrapper>
       <TransactionDetails
         isSwap
         banner={
@@ -95,8 +112,9 @@ export function SwapDetails({
         }
         chainId={acceptedTrade.inputAmount.currency.chainId}
         feeOnTransferProps={feeOnTransferProps}
-        feeOnTransferWarningChecked={feeOnTransferWarningChecked}
-        setFeeOnTransferWarningChecked={setFeeOnTransferWarningChecked}
+        tokenWarningProps={tokenWarningProps}
+        tokenWarningChecked={tokenWarningChecked}
+        setTokenWarningChecked={setTokenWarningChecked}
         gasFee={gasFee}
         swapFee={acceptedTrade.swapFee}
         swapFeeUsd={swapFeeUsd}
@@ -109,6 +127,7 @@ export function SwapDetails({
         warning={warning}
         estimatedBridgingTime={estimatedBridgingTime}
         isBridgeTrade={isBridgeTrade ?? false}
+        txSimulationErrors={txSimulationErrors}
         onShowWarning={onShowWarning}
       >
         <Flex row alignItems="center" justifyContent="space-between">
@@ -128,8 +147,49 @@ export function SwapDetails({
             customSlippageTolerance={customSlippageTolerance}
           />
         )}
+        {!isBridgeTrade && v4Enabled && (
+          <RoutingInfo gasFee={gasFee} chainId={acceptedTrade.inputAmount.currency.chainId} />
+        )}
+        <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} />
       </TransactionDetails>
-    </HeightAnimator>
+    </HeightAnimatorWrapper>
+  )
+}
+
+export function PriceImpactRow({
+  hide,
+  derivedSwapInfo,
+}: {
+  hide?: boolean
+  derivedSwapInfo: DerivedSwapInfo
+}): JSX.Element | null {
+  const { t } = useTranslation()
+
+  const { formattedPriceImpact } = usePriceImpact({ derivedSwapInfo })
+  const { priceImpactWarning } = useParsedSwapWarnings()
+  const priceImpactWarningColor = getAlertColor(priceImpactWarning?.severity).text
+
+  const trade = derivedSwapInfo.trade.trade
+
+  if (hide || !trade || isBridge(trade)) {
+    return null
+  }
+
+  return (
+    <Flex row alignItems="center" justifyContent="space-between">
+      <MarketPriceImpactWarning routing={trade.routing} missing={!formattedPriceImpact}>
+        <Flex centered row gap="$spacing4">
+          <Text color="$neutral2" variant="body3">
+            {t('swap.priceImpact')}
+          </Text>
+        </Flex>
+      </MarketPriceImpactWarning>
+      <Flex row shrink justifyContent="flex-end">
+        <Text adjustsFontSizeToFit color={priceImpactWarningColor} variant="body3">
+          {formattedPriceImpact ?? 'N/A'}
+        </Text>
+      </Flex>
+    </Flex>
   )
 }
 
@@ -167,7 +227,7 @@ function AcceptNewQuoteRow({
       alignItems="center"
       borderColor="$surface3"
       borderRadius="$rounded16"
-      borderWidth={1}
+      borderWidth="$spacing1"
       gap="$spacing12"
       justifyContent="space-between"
       pl="$spacing12"
@@ -203,6 +263,19 @@ function AcceptNewQuoteRow({
       </Flex>
     </Flex>
   )
+}
+
+// We don't need to animate the height on mobile because bottom sheet already handles the animation.
+function HeightAnimatorWrapper({ children }: { children: React.ReactNode }): JSX.Element {
+  if (isMobileApp || isMobileWeb) {
+    return <>{children}</>
+  } else {
+    return (
+      <HeightAnimator useInitialHeight animation="fast">
+        {children}
+      </HeightAnimator>
+    )
+  }
 }
 
 function calculatePercentageDifference({

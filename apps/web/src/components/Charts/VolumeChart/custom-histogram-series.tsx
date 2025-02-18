@@ -23,13 +23,11 @@ export class CustomHistogramSeries<TData extends CustomHistogramData>
 {
   _renderer: CustomHistogramSeriesRenderer<TData>
   _colors: string[]
-  _isMultichainExploreEnabled?: boolean
   _background?: string
 
   constructor(props: CustomHistogramProps) {
     this._renderer = new CustomHistogramSeriesRenderer(props)
     this._colors = props.colors
-    this._isMultichainExploreEnabled = props.isMultichainExploreEnabled
     this._background = props.background
   }
 

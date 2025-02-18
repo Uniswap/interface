@@ -5,6 +5,7 @@ import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwa
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import {
+  CollectFeesSteps,
   DecreasePositionTransactionStep,
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
@@ -24,6 +25,7 @@ type LPSteps =
   | DecreasePositionTransactionStep
   | MigratePositionTransactionStep
   | MigratePositionTransactionStepAsync
+  | CollectFeesSteps
 export function LPTransactionStepRow({ status }: StepRowProps<LPSteps>): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()

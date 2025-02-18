@@ -3,7 +3,7 @@ import { useAccount } from 'hooks/useAccount'
 import { Provider } from 'jotai'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 jest.mock('hooks/useAccount')
 

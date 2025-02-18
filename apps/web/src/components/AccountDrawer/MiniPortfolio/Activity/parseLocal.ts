@@ -35,9 +35,9 @@ import {
 import { isConfirmedTx } from 'state/transactions/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import i18n from 'uniswap/src/i18n'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -57,25 +57,25 @@ function buildCurrencyDescriptor(
         input: parseFloat(CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t('common.unknown')
+    : i18n.t('common.unknown')
   const symbolA = currencyA?.symbol ? ` ${currencyA?.symbol}` : ''
   const formattedB = currencyB
     ? formatNumber({
         input: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t('common.unknown')
+    : i18n.t('common.unknown')
   const symbolB = currencyB?.symbol ? ` ${currencyB?.symbol}` : ''
 
   const amountWithSymbolA = `${formattedA}${symbolA}`
   const amountWithSymbolB = `${formattedB}${symbolB}`
 
   return isSwap
-    ? t('activity.transaction.swap.descriptor', {
+    ? i18n.t('activity.transaction.swap.descriptor', {
         amountWithSymbolA,
         amountWithSymbolB,
       })
-    : t('activity.transaction.tokens.descriptor', {
+    : i18n.t('activity.transaction.tokens.descriptor', {
         amountWithSymbolA,
         amountWithSymbolB,
       })
@@ -117,13 +117,13 @@ async function parseBridge(
         input: parseFloat(CurrencyAmount.fromRawAmount(tokenIn, bridge.inputCurrencyAmountRaw).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t('common.unknown')
+    : i18n.t('common.unknown')
   const outputAmount = tokenOut
     ? formatNumber({
         input: parseFloat(CurrencyAmount.fromRawAmount(tokenOut, bridge.outputCurrencyAmountRaw).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t('common.unknown')
+    : i18n.t('common.unknown')
   return {
     descriptor: getBridgeDescriptor({ tokenIn, tokenOut, inputAmount, outputAmount }),
     chainId: inputChainId,
@@ -163,7 +163,7 @@ async function parseApproval(
   status: TransactionStatus,
 ): Promise<Partial<Activity>> {
   const currency = await getCurrency(approval.tokenAddress, chainId)
-  const descriptor = currency?.symbol ?? currency?.name ?? t('common.unknown')
+  const descriptor = currency?.symbol ?? currency?.name ?? i18n.t('common.unknown')
   return {
     title: getActivityTitle(
       TransactionType.APPROVAL,
@@ -217,10 +217,10 @@ async function parseCollectFees(
 ): Promise<Partial<Activity>> {
   // Adapts CollectFeesTransactionInfo to generic LP type
   const {
-    currencyId0: baseCurrencyId,
-    currencyId1: quoteCurrencyId,
-    expectedCurrencyOwed0: expectedAmountBaseRaw,
-    expectedCurrencyOwed1: expectedAmountQuoteRaw,
+    token0CurrencyId: baseCurrencyId,
+    token1CurrencyId: quoteCurrencyId,
+    token0CurrencyAmountRaw: expectedAmountBaseRaw,
+    token1CurrencyAmountRaw: expectedAmountQuoteRaw,
   } = collect
   return parseLegacyLP(
     { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },
@@ -237,9 +237,9 @@ async function parseMigrateCreateV3(
     getCurrency(lp.baseCurrencyId, chainId),
     getCurrency(lp.quoteCurrencyId, chainId),
   ])
-  const baseSymbol = baseCurrency?.symbol ?? t('common.unknown')
-  const quoteSymbol = quoteCurrency?.symbol ?? t('common.unknown')
-  const descriptor = t('activity.transaction.tokens.descriptor', {
+  const baseSymbol = baseCurrency?.symbol ?? i18n.t('common.unknown')
+  const quoteSymbol = quoteCurrency?.symbol ?? i18n.t('common.unknown')
+  const descriptor = i18n.t('activity.transaction.tokens.descriptor', {
     amountWithSymbolA: baseSymbol,
     amountWithSymbolB: quoteSymbol,
   })
@@ -259,11 +259,11 @@ async function parseSend(
         input: parseFloat(CurrencyAmount.fromRawAmount(currency, amount).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t('common.unknown')
+    : i18n.t('common.unknown')
   const otherAccount = isAddress(recipient) || undefined
 
   return {
-    descriptor: t('activity.transaction.send.descriptor', {
+    descriptor: i18n.t('activity.transaction.send.descriptor', {
       amountWithSymbol: `${formattedAmount} ${currency?.symbol}`,
       walletAddress: recipient,
     }),
@@ -308,11 +308,19 @@ export async function transactionToActivity(
       info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
     ) {
       additionalFields = await parseLegacyLP(info, chainId, formatNumber)
-    } else if (info.type === TransactionType.INCREASE_LIQUIDITY || info.type === TransactionType.DECREASE_LIQUIDITY) {
+    } else if (
+      info.type === TransactionType.INCREASE_LIQUIDITY ||
+      info.type === TransactionType.DECREASE_LIQUIDITY ||
+      info.type === TransactionType.CREATE_POSITION ||
+      info.type === TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
+    ) {
       additionalFields = await parseLiquidity(info, chainId, formatNumber)
     } else if (info.type === TransactionType.COLLECT_FEES) {
       additionalFields = await parseCollectFees(info, chainId, formatNumber)
-    } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
+    } else if (
+      info.type === TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3 ||
+      info.type === TransactionType.CREATE_V3_POOL
+    ) {
       additionalFields = await parseMigrateCreateV3(info, chainId)
     } else if (info.type === TransactionType.SEND) {
       additionalFields = await parseSend(info, chainId, formatNumber)
@@ -373,6 +381,7 @@ export async function signatureToActivity(
   switch (signature.type) {
     case SignatureType.SIGN_UNISWAPX_ORDER:
     case SignatureType.SIGN_UNISWAPX_V2_ORDER:
+    case SignatureType.SIGN_UNISWAPX_V3_ORDER:
     case SignatureType.SIGN_PRIORITY_ORDER:
     case SignatureType.SIGN_LIMIT: {
       // Only returns Activity items for orders that don't have an on-chain counterpart

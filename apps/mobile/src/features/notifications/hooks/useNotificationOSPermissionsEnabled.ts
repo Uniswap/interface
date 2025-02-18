@@ -9,7 +9,10 @@ export enum NotificationPermission {
   Loading = 'loading',
 }
 
-export function useNotificationOSPermissionsEnabled(): NotificationPermission {
+export function useNotificationOSPermissionsEnabled(): {
+  notificationPermissionsEnabled: NotificationPermission
+  checkNotificationPermissions: () => Promise<void>
+} {
   const [notificationPermissionsEnabled, setNotificationPermissionsEnabled] = useState<NotificationPermission>(
     NotificationPermission.Loading,
   )
@@ -26,5 +29,5 @@ export function useNotificationOSPermissionsEnabled(): NotificationPermission {
 
   useAppStateTrigger('background', 'active', checkNotificationPermissions)
 
-  return notificationPermissionsEnabled
+  return { notificationPermissionsEnabled, checkNotificationPermissions }
 }

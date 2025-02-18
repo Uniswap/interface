@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unused-modules */
 import { ImageResponse } from '@vercel/og'
 
-import { blocklistedCollections } from '../../../../../src/nft/utils/blocklist'
+import { getDynamicBlocklistedNftCollections } from '../../../../../src/nft/utils/blocklist'
 import { WATERMARK_URL } from '../../../../constants'
 import getAsset from '../../../../utils/getAsset'
 import getFont from '../../../../utils/getFont'
@@ -9,6 +9,7 @@ import { getRequest } from '../../../../utils/getRequest'
 
 export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
+    const blocklistedCollections = await getDynamicBlocklistedNftCollections()
     const origin = new URL(request.url).origin
     const { index } = params
     const collectionAddress = index[0]?.toString()

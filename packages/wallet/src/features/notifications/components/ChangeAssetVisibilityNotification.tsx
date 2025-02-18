@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
-import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
-import EyeIcon from 'ui/src/assets/icons/eye.svg'
+import { Eye } from 'ui/src/components/icons/Eye'
+import { EyeOff } from 'ui/src/components/icons/EyeOff'
 import { iconSizes } from 'ui/src/theme'
 import { ChangeAssetVisibilityNotification as ChangeAssetVisibilityNotificationType } from 'uniswap/src/features/notifications/types'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
@@ -20,9 +20,9 @@ export function ChangeAssetVisibilityNotification({
       hideDelay={hideDelay}
       icon={
         visible ? (
-          <EyeOffIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+          <EyeOff color={colors.neutral1.get()} size={iconSizes.icon24} />
         ) : (
-          <EyeIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+          <Eye color={colors.neutral1.get()} size={iconSizes.icon24} />
         )
       }
       title={

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-lines */
 import { USDC } from 'uniswap/src/constants/tokens'
+import { RankingType } from 'uniswap/src/data/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { RankingType } from 'wallet/src/features/wallet/types'
 
 export function testActivatePendingAccounts(migration: (state: any) => any, prevSchema: any): void {
   // all accounts active
@@ -25,6 +25,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 0,
           timeImportedMs: 1,
+          pushNotificationsEnabled: true,
         },
         '0xTest1': {
           type: AccountType.SignerMnemonic,
@@ -33,6 +34,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 2',
           derivationIndex: 1,
           timeImportedMs: 2,
+          pushNotificationsEnabled: true,
         },
         '0xTest2': {
           type: AccountType.SignerMnemonic,
@@ -42,6 +44,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 2,
           timeImportedMs: 3,
+          pushNotificationsEnabled: true,
         },
         '0xTest3': {
           type: AccountType.Readonly,
@@ -49,6 +52,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 4',
           derivationIndex: 0,
           timeImportedMs: 4,
+          pushNotificationsEnabled: true,
         },
         '0xTest4': {
           type: AccountType.SignerMnemonic,
@@ -58,6 +62,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 0,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
         '0xTest5': {
           type: AccountType.SignerMnemonic,
@@ -67,6 +72,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 1,
           timeImportedMs: 6,
+          pushNotificationsEnabled: true,
         },
       } as Record<string, Account>,
     },
@@ -134,6 +140,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 0,
           timeImportedMs: 1,
+          pushNotificationsEnabled: true,
         },
         '0xTest1': {
           type: AccountType.SignerMnemonic,
@@ -143,6 +150,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 1,
           timeImportedMs: 2,
+          pushNotificationsEnabled: true,
         },
         '0xTest2': {
           type: AccountType.SignerMnemonic,
@@ -152,12 +160,14 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 2,
           timeImportedMs: 3,
+          pushNotificationsEnabled: true,
         },
         '0xTest3': {
           type: AccountType.Readonly,
           address: '0xTest3',
           name: 'Test Account 4',
           timeImportedMs: 4,
+          pushNotificationsEnabled: true,
         },
         '0xTest4': {
           type: AccountType.Readonly,
@@ -165,6 +175,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 5',
           pending: true,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
         '0xTest5': {
           type: AccountType.SignerMnemonic,
@@ -174,6 +185,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 0,
           timeImportedMs: 6,
+          pushNotificationsEnabled: true,
         },
       } as Record<string, Account>,
     },
@@ -203,6 +215,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           address: '0xTest3',
           name: 'Test Account 4',
           timeImportedMs: 4,
+          pushNotificationsEnabled: true,
         },
         '0xTest4': {
           type: AccountType.Readonly,
@@ -210,6 +223,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 5',
           pending: true,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
         '0xTest5': {
           type: AccountType.Readonly,
@@ -217,6 +231,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 6',
           pending: true,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
       } as Record<string, Account>,
     },
@@ -249,6 +264,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 0,
           timeImportedMs: 1,
+          pushNotificationsEnabled: true,
         },
         '0xTest1': {
           type: AccountType.SignerMnemonic,
@@ -258,6 +274,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 1,
           timeImportedMs: 2,
+          pushNotificationsEnabled: true,
         },
         '0xTest2': {
           type: AccountType.SignerMnemonic,
@@ -267,12 +284,14 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 2,
           timeImportedMs: 3,
+          pushNotificationsEnabled: true,
         },
         '0xTest3': {
           type: AccountType.Readonly,
           address: '0xTest3',
           name: 'Test Account 4',
           timeImportedMs: 4,
+          pushNotificationsEnabled: true,
         },
         '0xTest4': {
           type: AccountType.Readonly,
@@ -280,6 +299,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 5',
           pending: true,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
         '0xTest5': {
           type: AccountType.SignerMnemonic,
@@ -288,6 +308,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 6',
           derivationIndex: 0,
           timeImportedMs: 6,
+          pushNotificationsEnabled: true,
         },
       } as Record<string, Account>,
     },
@@ -545,6 +566,12 @@ export function testAddCreatedOnboardingRedesignAccount(migration: (state: any) 
   expect(result.behaviorHistory.createdOnboardingRedesignAccount).toBe(false)
 }
 
+export function testRemoveCreatedOnboardingRedesignAccount(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+
+  expect(result.behaviorHistory.createdOnboardingRedesignAccount).toBe(undefined)
+}
+
 export function testMovedTokenWarnings(migration: (state: any) => any, prevSchema: any): void {
   const prevSchemaWithWarnings = {
     ...prevSchema,
@@ -581,4 +608,57 @@ export function testMovedCurrencySetting(migration: (state: any) => any, prevSch
 export function testUpdateExploreOrderByType(migration: (state: any) => any, prevSchema: any): void {
   const result = migration(prevSchema)
   expect(result.wallet.settings.tokensOrderBy).toEqual(RankingType.Volume)
+}
+
+export function testUnchecksumDismissedTokenWarningKeys(migration: (state: any) => any, prevSchema: any): void {
+  const prevSchemaWithWarnings = {
+    ...prevSchema,
+    tokens: {
+      dismissedTokenWarnings: {
+        '1': {
+          '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': {
+            address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+            chainId: 1,
+          },
+          '0x6B175474E89094C44Da98b954EedeAC495271d0F': {
+            address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+            chainId: 1,
+          },
+        },
+        '137': {
+          '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174': {
+            address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+            chainId: 137,
+          },
+        },
+      },
+    },
+  }
+
+  const result = migration(prevSchemaWithWarnings)
+
+  // Verify addresses are converted to lowercase
+  expect(result.tokens.dismissedTokenWarnings['1']).toHaveProperty('0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48')
+  expect(result.tokens.dismissedTokenWarnings['1']).toHaveProperty('0x6b175474e89094c44da98b954eedeac495271d0f')
+  expect(result.tokens.dismissedTokenWarnings['137']).toHaveProperty('0x2791bca1f2de4661ed88a30c99a7a9449aa84174')
+
+  // Verify the rest of the data structure is maintained
+  expect(result.tokens.dismissedTokenWarnings['1']['0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48']).toEqual({
+    address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    chainId: 1,
+  })
+}
+
+export function testDeleteWelcomeWalletCard(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.behaviorHistory.hasViewedWelcomeWalletCard).toBe(undefined)
+}
+
+export function testMoveTokenAndNFTVisibility(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.visibility.positions).toEqual({})
+  expect(result.visibility.tokens).toEqual(prevSchema.favorites.tokensVisibility)
+  expect(result.visibility.nfts).toEqual(prevSchema.favorites.nftsVisibility)
+  expect(result.favorites.tokensVisibility).toBeUndefined()
+  expect(result.favorites.nftsVisibility).toBeUndefined()
 }

@@ -50,41 +50,6 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   min-height: 24px;
 }
 
-.c13 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.c15 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
 .c10 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -118,6 +83,41 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
 
 .c16:active {
   opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .c0 {
@@ -316,6 +316,9 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -372,41 +375,6 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   min-height: 24px;
 }
 
-.c13 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.c15 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
 .c10 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -440,6 +408,41 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
 
 .c16:active {
   opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .c0 {
@@ -637,6 +640,9 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -714,6 +720,22 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   min-height: 24px;
 }
 
+.c12 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c13 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c15 {
   width: 100%;
   display: -webkit-box;
@@ -747,22 +769,6 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-}
-
-.c12 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -955,6 +961,9 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1003,6 +1012,22 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   min-width: 0;
 }
 
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c13 {
   width: 100%;
   display: -webkit-box;
@@ -1019,22 +1044,6 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   -ms-flex-pack: center;
   justify-content: center;
   gap: 8px;
-}
-
-.c10 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -1180,6 +1189,25 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
                     class="c12 c13"
                   >
                     <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                      data-testid="token-logo"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                      />
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="img-token-image"
+                      >
+                        <img
+                          height="16"
+                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                          style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                          width="16"
+                        />
+                      </div>
+                    </div>
+                    <div
                       class="c10 css-142zc9n"
                     >
                       &lt;0.00001 DAI
@@ -1206,6 +1234,25 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
                       />
                     </svg>
                     <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                      data-testid="token-logo"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                      />
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="img-token-image"
+                      >
+                        <img
+                          height="16"
+                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                          style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                          width="16"
+                        />
+                      </div>
+                    </div>
+                    <div
                       class="c10 css-142zc9n"
                     >
                       0.0001 USDC
@@ -1216,6 +1263,9 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1272,41 +1322,6 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   min-height: 24px;
 }
 
-.c13 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.c15 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
 .c10 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -1340,6 +1355,41 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
 
 .c16:active {
   opacity: 0.4;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .c0 {
@@ -1484,6 +1534,25 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
                     class="c12 c13"
                   >
                     <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                      data-testid="token-logo"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                      />
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="img-token-image"
+                      >
+                        <img
+                          height="16"
+                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                          style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                          width="16"
+                        />
+                      </div>
+                    </div>
+                    <div
                       class="c10 css-142zc9n"
                     >
                       &lt;0.00001 DAI
@@ -1509,6 +1578,25 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
                         points="12 5 19 12 12 19"
                       />
                     </svg>
+                    <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                      data-testid="token-logo"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                      />
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="img-token-image"
+                      >
+                        <img
+                          height="16"
+                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                          style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                          width="16"
+                        />
+                      </div>
+                    </div>
                     <div
                       class="c10 css-142zc9n"
                     >
@@ -1537,6 +1625,9 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1614,6 +1705,22 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   min-height: 24px;
 }
 
+.c12 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c13 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c15 {
   width: 100%;
   display: -webkit-box;
@@ -1647,22 +1754,6 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-}
-
-.c12 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -1810,6 +1901,25 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
                     class="c14 c15"
                   >
                     <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                      data-testid="token-logo"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                      />
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="img-token-image"
+                      >
+                        <img
+                          height="16"
+                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                          style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                          width="16"
+                        />
+                      </div>
+                    </div>
+                    <div
                       class="c12 css-142zc9n"
                     >
                       &lt;0.00001 DAI
@@ -1836,6 +1946,25 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
                       />
                     </svg>
                     <div
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
+                      data-testid="token-logo"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
+                      />
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                        data-testid="img-token-image"
+                      >
+                        <img
+                          height="16"
+                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                          style="object-fit: contain; border-radius: 8px; z-index: 1;"
+                          width="16"
+                        />
+                      </div>
+                    </div>
+                    <div
                       class="c12 css-142zc9n"
                     >
                       0.0001 USDC
@@ -1855,6 +1984,9 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

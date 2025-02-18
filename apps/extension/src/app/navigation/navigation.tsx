@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
+import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
 import { DappRequestQueue } from 'src/app/features/dappRequests/DappRequestQueue'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import { Locked } from 'src/app/features/lockScreen/Locked'
@@ -84,7 +84,7 @@ export function WebNavigation(): JSX.Element {
   const routerState = useRouterState()
   if (routeName != null) {
     towards = routeDirections[routeName]
-    const isBackwards = routerState?.historyAction === 'POP'
+    const isBackwards = routerState?.historyAction === NavigationType.Pop
     if (isBackwards) {
       const lastRoute = getAppRouteFromPathName(history[1] || '')
       const previousDirection = lastRoute ? routeDirections[lastRoute] : 'right'

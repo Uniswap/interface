@@ -2,9 +2,9 @@ import { Trans } from 'react-i18next'
 import { Flex, Text, isWeb } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/constants'
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function InsufficientNativeTokenBaseComponent({
   parsedInsufficentNativeTokenWarning,
@@ -82,9 +82,11 @@ export function InsufficientNativeTokenBaseComponent({
         </Text>
       </Flex>
 
-      <Flex>
-        <InfoCircle color="$neutral3" size="$icon.16" />
-      </Flex>
+      {!isWeb && (
+        <Flex>
+          <InfoCircle color="$neutral3" size="$icon.16" />
+        </Flex>
+      )}
     </Flex>
   )
 }

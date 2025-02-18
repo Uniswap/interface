@@ -37,13 +37,10 @@ export function BaseSwipeableCardStack<T extends PickedCardProps>({
     [activeIndex, cards, keyExtractor, onSwiped],
   )
 
-  const handleLayout = useCallback(
-    ({ height, yOffset }: { height: number; yOffset: number }) => {
-      setContainerHeight(Math.max(containerHeight, height + yOffset))
-      setCardHeight(Math.max(cardHeight, height))
-    },
-    [cardHeight, containerHeight],
-  )
+  const handleLayout = useCallback(({ height, yOffset }: { height: number; yOffset: number }) => {
+    setContainerHeight((prev) => Math.max(prev, height + yOffset))
+    setCardHeight((prev) => Math.max(prev, height))
+  }, [])
 
   return (
     <Flex position="relative" style={{ height: containerHeight }}>

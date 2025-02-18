@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, useSporeColors } from 'ui/src'
+import { DeprecatedButton, useSporeColors } from 'ui/src'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import CopySheets from 'ui/src/assets/icons/copy-sheets.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -39,8 +39,8 @@ export function CopyTextButton({ copyText }: Props): JSX.Element {
   useTimeout(resetIsCopied, RESET_COPY_STATE_DELAY)
 
   return (
-    <Button icon={isCopied ? copiedIcon : copyIcon} theme="tertiary" onPress={onPress}>
+    <DeprecatedButton icon={isCopied ? copiedIcon : copyIcon} theme="tertiary" onPress={onPress}>
       {isCopied ? t('common.button.copied') : t('common.button.copy')}
-    </Button>
+    </DeprecatedButton>
   )
 }

@@ -9,29 +9,20 @@ import { SkeletonRow, SuggestionRow } from 'components/NavBar/SearchBar/Suggesti
 import QuestionHelper from 'components/QuestionHelper'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
-import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
-import useTrendingTokens from 'graphql/data/TrendingTokens'
-import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
+import useSearchTrendingTokensGql from 'graphql/data/SearchTrendingTokens'
 import { useAccount } from 'hooks/useAccount'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
-import { useIsNftPage } from 'hooks/useIsNftPage'
 import deprecatedStyled from 'lib/styled-components'
-import { GenieCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { Clock, TrendingUp } from 'react-feather'
-import { useLocation } from 'react-router-dom'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { Flex, Text, useScrollbarStyles } from 'ui/src'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import {
-  HistoryDuration,
-  SafetyLevel,
-  Token,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isBackendSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
-import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 interface SearchBarDropdownSectionProps {
@@ -61,9 +52,11 @@ function SearchBarDropdownSection({
 }: SearchBarDropdownSectionProps) {
   return (
     <Flex gap="$spacing4" data-testid="searchbar-dropdown">
-      <Flex row alignItems="center" py="$spacing4" px="$spacing16" gap="8px">
-        {headerIcon ? headerIcon : null}
-        <Text variant="body3">{header}</Text>
+      <Flex row alignItems="center" py="$spacing4" px="$spacing16">
+        <Flex row alignItems="center" gap="$spacing8">
+          {headerIcon ? headerIcon : null}
+          <Text variant="body3">{header}</Text>
+        </Flex>
         {headerInfoText ? <QuestionHelper text={headerInfoText} /> : null}
       </Flex>
       <Flex gap="$spacing4">
@@ -92,10 +85,6 @@ function SearchBarDropdownSection({
   )
 }
 
-function isKnownToken(token: GqlSearchToken) {
-  return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
-}
-
 const ChainComingSoonBadge = deprecatedStyled(Badge)`
   align-items: center;
   background-color: ${({ theme }) => theme.surface2};
@@ -113,7 +102,6 @@ const ChainComingSoonBadge = deprecatedStyled(Badge)`
 interface SearchBarDropdownProps {
   toggleOpen: () => void
   tokens: GqlSearchToken[]
-  collections: GenieCollection[]
   queryText: string
   hasInput: boolean
   isLoading: boolean
@@ -122,8 +110,7 @@ interface SearchBarDropdownProps {
 export function SearchBarDropdown(props: SearchBarDropdownProps) {
   const { isLoading } = props
   const account = useAccount()
-  const showChainComingSoonBadge =
-    account.chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(account.chainId) && !isLoading
+  const showChainComingSoonBadge = account.chainId && !isBackendSupportedChainId(account.chainId) && !isLoading
   const scrollBarStyles = useScrollbarStyles()
 
   return (
@@ -154,63 +141,23 @@ export function SearchBarDropdown(props: SearchBarDropdownProps) {
   )
 }
 
-function SearchBarDropdownContents({
-  toggleOpen,
-  tokens,
-  collections,
-  queryText,
-  hasInput,
-}: SearchBarDropdownProps): JSX.Element {
+function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: SearchBarDropdownProps): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   const { data: searchHistory } = useRecentlySearchedAssets()
   const shortenedHistory = useMemo(
-    () =>
-      searchHistory?.filter((item) => 'isVerified' in (item as GenieCollection) || (item as Token).chain) ?? [
-        ...Array<GqlSearchToken>(2),
-      ],
+    () => searchHistory?.filter((item) => (item as Token).chain) ?? [...Array<GqlSearchToken>(2)],
     [searchHistory],
   )
-  const { pathname } = useLocation()
-  const isNFTPage = useIsNftPage()
-  const isTokenPage = pathname.includes('/explore')
-  const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const account = useAccount()
 
-  const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
-    3,
-    HistoryDuration.Day,
-  )
+  const { data: trendingTokenData } = useSearchTrendingTokensGql(account.chainId)
 
-  const formattedTrendingCollections = useMemo(() => {
-    return !trendingCollectionsAreLoading
-      ? trendingCollections
-          ?.map((collection) => ({
-            ...collection,
-            collectionAddress: collection.address,
-            floorPrice: collection.floor,
-            stats: {
-              total_supply: collection.totalSupply,
-              one_day_change: collection.floorChange,
-              floor_price: collection.floor,
-            },
-          }))
-          .slice(0, isNFTPage ? 3 : 2) ?? []
-      : [...Array<GenieCollection>(isNFTPage ? 3 : 2)]
-  }, [trendingCollections, isNFTPage, trendingCollectionsAreLoading])
-
-  const { data: trendingTokenData } = useTrendingTokens(account.chainId)
-
-  const trendingTokensLength = !isNFTPage ? 3 : 2
   const trendingTokens = useMemo(
-    () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<GqlSearchToken>(trendingTokensLength)],
-    [trendingTokenData, trendingTokensLength],
+    () => trendingTokenData?.slice(0, 3) ?? [...Array<GqlSearchToken>(3)],
+    [trendingTokenData],
   )
 
-  const totalSuggestions = hasInput
-    ? tokens.length + collections.length
-    : Math.min(shortenedHistory.length, 2) +
-      (isNFTPage ? formattedTrendingCollections?.length ?? 0 : 0) +
-      (!isNFTPage ? trendingTokens?.length ?? 0 : 0)
+  const totalSuggestions = hasInput ? tokens.length : Math.min(shortenedHistory.length, 2) + trendingTokens?.length ?? 0
 
   // Navigate search results via arrow keys
   useEffect(() => {
@@ -218,7 +165,7 @@ function SearchBarDropdownContents({
       if (event.key === 'ArrowUp') {
         event.preventDefault()
         if (!hoveredIndex) {
-          setHoveredIndex(totalSuggestions - 1)
+          setHoveredIndex(trendingTokens.length - 1)
         } else {
           setHoveredIndex(hoveredIndex - 1)
         }
@@ -237,11 +184,7 @@ function SearchBarDropdownContents({
     return () => {
       document.removeEventListener('keydown', keyDownHandler)
     }
-  }, [toggleOpen, hoveredIndex, totalSuggestions])
-
-  const hasVerifiedCollection = collections.some((collection) => collection.isVerified)
-  const hasKnownToken = tokens.some(isKnownToken)
-  const showCollectionsFirst = isNFTPage && (hasVerifiedCollection || !hasKnownToken)
+  }, [toggleOpen, hoveredIndex, totalSuggestions, trendingTokens.length])
 
   const trace = useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH })
 
@@ -251,65 +194,31 @@ function SearchBarDropdownContents({
     ...trace,
   }
 
-  const tokenSearchResults =
-    tokens.length > 0 ? (
-      <SearchBarDropdownSection
-        hoveredIndex={hoveredIndex}
-        startingIndex={showCollectionsFirst ? collections.length : 0}
-        setHoveredIndex={setHoveredIndex}
-        toggleOpen={toggleOpen}
-        suggestions={tokens}
-        eventProperties={{
-          suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
-          ...eventProperties,
-        }}
-        header={<Trans i18nKey="common.tokens" />}
-      />
-    ) : (
-      <Flex py="$spacing4" px="$spacing16">
-        <Text variant="body3">
-          <Trans i18nKey="tokens.noneFound" />
-        </Text>
-      </Flex>
-    )
-
-  const collectionSearchResults =
-    collections.length > 0 ? (
-      <SearchBarDropdownSection
-        hoveredIndex={hoveredIndex}
-        startingIndex={showCollectionsFirst ? 0 : tokens.length}
-        setHoveredIndex={setHoveredIndex}
-        toggleOpen={toggleOpen}
-        suggestions={collections}
-        eventProperties={{
-          suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
-          ...eventProperties,
-        }}
-        header={<Trans i18nKey="nft.collections" />}
-      />
-    ) : (
-      <Flex py="$spacing4" px="$spacing16">
-        <Trans i18nKey="nft.noneFound" />
-      </Flex>
-    )
-
   return hasInput ? (
-    // Empty or Up to 8 combined tokens and nfts
     <Flex gap="$spacing20">
-      {showCollectionsFirst ? (
-        <>
-          {collectionSearchResults}
-          {tokenSearchResults}
-        </>
+      {tokens.length > 0 ? (
+        <SearchBarDropdownSection
+          hoveredIndex={hoveredIndex}
+          startingIndex={0}
+          setHoveredIndex={setHoveredIndex}
+          toggleOpen={toggleOpen}
+          suggestions={tokens}
+          eventProperties={{
+            suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
+            ...eventProperties,
+          }}
+          header={<Trans i18nKey="common.tokens" />}
+        />
       ) : (
-        <>
-          {tokenSearchResults}
-          {collectionSearchResults}
-        </>
+        <Flex py="$spacing4" px="$spacing16">
+          <Text variant="body3">
+            <Trans i18nKey="tokens.noneFound" />
+          </Text>
+        </Flex>
       )}
     </Flex>
   ) : (
-    // Recent Searches, Trending Tokens, Trending Collections
+    // Recent Searches, Trending Tokens
     <Flex gap="$spacing20">
       {shortenedHistory.length > 0 && (
         <SearchBarDropdownSection
@@ -327,47 +236,26 @@ function SearchBarDropdownContents({
           isLoading={!searchHistory}
         />
       )}
-      {!isNFTPage && (
-        <SearchBarDropdownSection
-          hoveredIndex={hoveredIndex}
-          startingIndex={shortenedHistory.length}
-          setHoveredIndex={setHoveredIndex}
-          toggleOpen={toggleOpen}
-          suggestions={trendingTokens}
-          eventProperties={{
-            suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
-            ...eventProperties,
-          }}
-          header={<Trans i18nKey="explore.search.section.popularTokens" />}
-          headerIcon={<TrendingUp width={20} height={20} />}
-          headerInfoText={<Trans i18nKey="explore.search.section.popularTokenInfo" />}
-          isLoading={!trendingTokenData}
-        />
-      )}
-      {Boolean(!isTokenPage && !shouldDisableNFTRoutes) && (
-        <SearchBarDropdownSection
-          hoveredIndex={hoveredIndex}
-          startingIndex={shortenedHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
-          setHoveredIndex={setHoveredIndex}
-          toggleOpen={toggleOpen}
-          suggestions={formattedTrendingCollections as unknown as GenieCollection[]}
-          eventProperties={{
-            suggestion_type: NavBarSearchTypes.COLLECTION_TRENDING,
-            ...eventProperties,
-          }}
-          header={<Trans i18nKey="nft.popularCollections" />}
-          headerIcon={<TrendingUp width={20} height={20} />}
-          headerInfoText={<Trans i18nKey="nft.popularCollectionsInfo" />}
-          isLoading={trendingCollectionsAreLoading}
-        />
-      )}
+      <SearchBarDropdownSection
+        hoveredIndex={hoveredIndex}
+        startingIndex={shortenedHistory.length}
+        setHoveredIndex={setHoveredIndex}
+        toggleOpen={toggleOpen}
+        suggestions={trendingTokens}
+        eventProperties={{
+          suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
+          ...eventProperties,
+        }}
+        header={<Trans i18nKey="explore.search.section.popularTokens" />}
+        headerIcon={<TrendingUp width={20} height={20} />}
+        headerInfoText={<Trans i18nKey="explore.search.section.popularTokenInfo" />}
+        isLoading={!trendingTokenData}
+      />
     </Flex>
   )
 }
 
 function ComingSoonText({ chainId }: { chainId: UniverseChainId }) {
-  const chainName = UNIVERSE_CHAIN_INFO[chainId]?.name
-  return BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) ? (
-    <Trans i18nKey="search.chainComing" values={{ chainName }} />
-  ) : null
+  const chainName = getChainInfo(chainId).name
+  return !isBackendSupportedChainId(chainId) ? <Trans i18nKey="search.chainComing" values={{ chainName }} /> : null
 }

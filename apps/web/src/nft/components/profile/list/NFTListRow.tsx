@@ -8,8 +8,8 @@ import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { Dispatch, useEffect, useReducer, useState } from 'react'
 import { Trash2 } from 'react-feather'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 
 const IMAGE_THUMBNAIL_SIZE = 60
 
@@ -31,7 +31,7 @@ const RemoveIconContainer = styled.div`
   align-items: center;
   display: flex;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     display: none;
   }
 
@@ -46,7 +46,7 @@ const NFTInfoWrapper = styled(Row)`
   flex: 2;
   margin-bottom: auto;
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     flex: 1.5;
   }
 `
@@ -88,11 +88,11 @@ const MarketPlaceRowWrapper = styled(Column)`
   margin-right: 12px;
   padding: 6px 0px;
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     flex: 2;
   }
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     flex: 3;
   }
 `

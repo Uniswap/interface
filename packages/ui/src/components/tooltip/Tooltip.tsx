@@ -1,63 +1,24 @@
-import { Tooltip as TamaguiTooltip, styled, withStaticProperties } from 'tamagui'
-
+import { Tooltip as TamaguiTooltip, TooltipProps, withStaticProperties } from 'tamagui'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 export type { TooltipProps } from 'tamagui'
 
-const Content = styled(TamaguiTooltip.Content, {
-  animation: 'fast',
-  gap: '$spacing8',
-  alignItems: 'center',
-  backgroundColor: '$surface1',
-  borderRadius: '$rounded16',
-  justifyContent: 'center',
-  maxWidth: 350,
-  px: '$spacing12',
-  py: '$spacing12',
-  '$theme-dark': {
-    borderWidth: 1,
-    borderColor: '$surface2',
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: '$none',
-  },
-  '$theme-light': {
-    shadowColor: '$surface3',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.04,
-    shadowRadius: '$spacing12',
-  },
-  enterStyle: {
-    y: -10,
-    opacity: 0,
-  },
-  exitStyle: {
-    y: -10,
-    opacity: 0,
-  },
-})
+type TriggerProps = React.ComponentProps<typeof TamaguiTooltip.Trigger>
+type ContentProps = React.ComponentProps<typeof TamaguiTooltip.Content>
+type ArrowProps = React.ComponentProps<typeof TamaguiTooltip.Arrow>
 
-const Arrow = styled(TamaguiTooltip.Arrow, {
-  size: '$spacing16',
-  '$theme-dark': {
-    borderWidth: 1,
-    borderColor: '$surface2',
+export const Tooltip = withStaticProperties(
+  (_props: TooltipProps) => {
+    throw new PlatformSplitStubError('Tooltip')
   },
-  '$theme-light': {
-    shadowColor: '$surface3',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: '$spacing16',
+  {
+    Trigger: (_props: TriggerProps) => {
+      throw new PlatformSplitStubError('Tooltip.Trigger')
+    },
+    Content: (_props: ContentProps) => {
+      throw new PlatformSplitStubError('Tooltip.Content')
+    },
+    Arrow: (_props: ArrowProps) => {
+      throw new PlatformSplitStubError('Tooltip.Arrow')
+    },
   },
-})
-
-const TooltipRoot = styled(TamaguiTooltip, {
-  offset: {
-    mainAxis: 16,
-  },
-  delay: { close: 500, open: 0 },
-  restMs: 200,
-})
-
-export const Tooltip = withStaticProperties(TooltipRoot, {
-  Trigger: TamaguiTooltip.Trigger,
-  Content,
-  Arrow,
-})
+)

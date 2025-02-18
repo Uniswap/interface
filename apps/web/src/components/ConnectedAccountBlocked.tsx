@@ -1,10 +1,11 @@
 import Column from 'components/deprecated/Column'
-import Modal from 'components/Modal'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 import { Flex, Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const ContentWrapper = styled(Column)`
   align-items: center;
@@ -20,7 +21,7 @@ interface ConnectedAccountBlockedProps {
 export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedProps) {
   const theme = useTheme()
   return (
-    <Modal isOpen={props.isOpen} onDismiss={Function.prototype()}>
+    <Modal name={ModalName.AccountBlocked} isModalOpen={props.isOpen} onClose={Function.prototype()} padding={0}>
       <ContentWrapper>
         <Slash size="22px" color={theme.neutral2} />
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>

@@ -29,13 +29,13 @@ import {
 } from 'components/Table/styled'
 import useDebounce from 'hooks/useDebounce'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { ThemedText } from 'theme/components'
 import { FadePresence } from 'theme/components/FadePresence'
 import { Z_INDEX } from 'theme/zIndex'
+import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 function TableBody<Data extends RowData>({
@@ -53,7 +53,7 @@ function TableBody<Data extends RowData>({
     // loading and error states
     return (
       <>
-        {Array.from({ length: 7 }, (_, rowIndex) => (
+        {Array.from({ length: 20 }, (_, rowIndex) => (
           <DataRow key={`skeleton-row-${rowIndex}`}>
             {table.getAllColumns().map((column, columnIndex) => (
               <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
@@ -241,7 +241,8 @@ export function Table<Data extends RowData>({
               </FadePresence>
             )}
           </TableHead>
-          <ScrollSyncPane innerRef={tableBodyRef}>
+          {/* @ts-expect-error `react-scroll-sync` hasn't been updated in awhile; therefore, this type has been incorrect for a while */}
+          <ScrollSyncPane attachTo={tableBodyRef}>
             <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
               <TableBody loading={loading} error={error} table={table} />
             </TableBodyContainer>

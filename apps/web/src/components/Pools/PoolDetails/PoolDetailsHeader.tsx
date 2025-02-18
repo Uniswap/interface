@@ -4,29 +4,37 @@ import { DropdownSelector } from 'components/DropdownSelector'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
+import { PoolDetailsBadge } from 'components/Pools/PoolTable/PoolTable'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { useTheme } from 'lib/styled-components'
+import { ReversedArrowsIcon } from 'nft/components/icons'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
+import {
+  ClickableStyle,
+  ClickableTamaguiStyle,
+  EllipsisStyle,
+  ExternalLink,
+  TamaguiClickableStyle,
+  ThemedText,
+} from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { TouchableArea } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
+import { Flex, TouchableArea, useMedia } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Trans, t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
@@ -47,12 +55,6 @@ const HeaderContainer = styled.div`
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
 
-const Badge = styled(ThemedText.LabelMicro)`
-  background: ${({ theme }) => theme.surface2};
-  padding: 2px 6px;
-  border-radius: 4px;
-`
-
 const IconBubble = styled(LoadingBubble)`
   width: 32px;
   height: 32px;
@@ -68,7 +70,8 @@ interface PoolDetailsBreadcrumbProps {
 }
 
 export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, loading }: PoolDetailsBreadcrumbProps) {
-  const chainName = chainIdToBackendChain({ chainId, withFallback: true })
+  const { defaultChainId } = useEnabledChains()
+  const chainName = toGraphQLChain(chainId ?? defaultChainId)
   const exploreOrigin = `/explore/${chainName.toLowerCase()}`
   const poolsOrigin = `/explore/pools/${chainName.toLowerCase()}`
 
@@ -100,7 +103,7 @@ const StyledPoolDetailsTitle = styled.div`
 const PoolName = styled(ThemedText.HeadlineMedium)`
   font-size: 24px !important;
 
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     font-size: 18px !important;
     line-height: 24px !important;
   }
@@ -113,6 +116,7 @@ const PoolDetailsTitle = ({
   feeTier,
   protocolVersion,
   toggleReversed,
+  hookAddress,
 }: {
   token0?: Token
   token1?: Token
@@ -120,8 +124,12 @@ const PoolDetailsTitle = ({
   feeTier?: number
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
+  hookAddress?: string
 }) => {
+  const theme = useTheme()
   const { formatPercent } = useFormatter()
+  const { defaultChainId } = useEnabledChains()
+  const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
   const feePercent = feeTier && formatPercent(new Percent(feeTier, BIPS_BASE * 100))
   return (
     <StyledPoolDetailsTitle>
@@ -130,7 +138,7 @@ const PoolDetailsTitle = ({
           <StyledLink
             to={getTokenDetailsURL({
               address: token0?.address,
-              chain: chainIdToBackendChain({ chainId, withFallback: true }),
+              chain: graphQLChain,
             })}
           >
             {token0?.symbol}
@@ -139,23 +147,37 @@ const PoolDetailsTitle = ({
           <StyledLink
             to={getTokenDetailsURL({
               address: token1?.address,
-              chain: chainIdToBackendChain({ chainId, withFallback: true }),
+              chain: graphQLChain,
             })}
           >
             {token1?.symbol}
           </StyledLink>
         </PoolName>
       </div>
-      {protocolVersion === ProtocolVersion.V2 && <Badge>v2</Badge>}
-      {!!feePercent && <Badge>{feePercent}</Badge>}
-      <TouchableArea hoverStyle={{ opacity: 0.8 }} onPress={toggleReversed}>
-        <ArrowUpDown
-          {...ClickableTamaguiStyle}
-          size="$icon.20"
-          testID="toggle-tokens-reverse-arrows"
-          rotate="90deg"
-          color="$neutral2"
-        />
+      <Flex row gap="$gap4" alignItems="center">
+        <PoolDetailsBadge variant="body3" $position="left">
+          {protocolVersion?.toLowerCase()}
+        </PoolDetailsBadge>
+        {hookAddress && (
+          <ExternalLink href={getExplorerLink(chainId ?? defaultChainId, hookAddress, ExplorerDataType.ADDRESS)}>
+            <PoolDetailsBadge variant="body3" {...TamaguiClickableStyle}>
+              {shortenAddress(hookAddress, 0)}
+            </PoolDetailsBadge>
+          </ExternalLink>
+        )}
+        {!!feePercent && (
+          <PoolDetailsBadge variant="body3" $position="right">
+            {feePercent}
+          </PoolDetailsBadge>
+        )}
+      </Flex>
+      <TouchableArea
+        hoverable
+        {...ClickableTamaguiStyle}
+        onPress={toggleReversed}
+        testID="toggle-tokens-reverse-arrows"
+      >
+        <ReversedArrowsIcon size="20px" color={theme.neutral2} />
       </TouchableArea>
     </StyledPoolDetailsTitle>
   )
@@ -210,7 +232,7 @@ const ContractsDropdownRow = ({
       <ContractsDropdownRowContainer>
         <Row gap="sm">
           {isPool ? (
-            <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={24} />
+            <DoubleCurrencyLogo currencies={currencies} size={24} />
           ) : (
             <CurrencyLogo currency={currency} size={24} />
           )}
@@ -237,13 +259,16 @@ const PoolDetailsHeaderActions = ({
   poolName,
   token0,
   token1,
+  protocolVersion,
 }: {
   chainId?: number
   poolAddress?: string
   poolName: string
   token0?: Token
   token1?: Token
+  protocolVersion?: ProtocolVersion
 }) => {
+  const { t } = useTranslation()
   const theme = useTheme()
   const [contractsModalIsOpen, toggleContractsModal] = useState(false)
 
@@ -261,7 +286,9 @@ const PoolDetailsHeaderActions = ({
         }
         internalMenuItems={
           <>
-            <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
+            {protocolVersion !== ProtocolVersion.V4 && (
+              <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
+            )}
             <ContractsDropdownRow address={token0?.address} chainId={chainId} tokens={[token0]} />
             <ContractsDropdownRow address={token1?.address} chainId={chainId} tokens={[token1]} />
           </>
@@ -292,6 +319,7 @@ interface PoolDetailsHeaderProps {
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean
+  hookAddress?: string
 }
 
 export function PoolDetailsHeader({
@@ -301,11 +329,12 @@ export function PoolDetailsHeader({
   token1,
   feeTier,
   protocolVersion,
+  hookAddress,
   toggleReversed,
   loading,
 }: PoolDetailsHeaderProps) {
-  const screenSize = useScreenSize()
-  const shouldColumnBreak = !screenSize['sm']
+  const media = useMedia()
+  const shouldColumnBreak = media.md
   const poolName = `${token0?.symbol} / ${token1?.symbol}`
   const currencies = useMemo(
     () => (token0 && token1 ? [gqlToCurrency(token0), gqlToCurrency(token1)] : []),
@@ -334,15 +363,14 @@ export function PoolDetailsHeader({
       {shouldColumnBreak ? (
         <Column gap="sm" style={{ width: '100%' }}>
           <Row gap="md" justify="space-between">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
+            <DoubleCurrencyLogo currencies={currencies} data-testid="double-token-logo" />
             <PoolDetailsHeaderActions
               chainId={chainId}
               poolAddress={poolAddress}
               poolName={poolName}
               token0={token0}
               token1={token1}
+              protocolVersion={protocolVersion}
             />
           </Row>
           <PoolDetailsTitle
@@ -357,9 +385,7 @@ export function PoolDetailsHeader({
       ) : (
         <>
           <Row gap="md">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
+            <DoubleCurrencyLogo currencies={currencies} data-testid="double-token-logo" />
             <PoolDetailsTitle
               token0={token0}
               token1={token1}
@@ -367,6 +393,7 @@ export function PoolDetailsHeader({
               feeTier={feeTier}
               protocolVersion={protocolVersion}
               toggleReversed={toggleReversed}
+              hookAddress={hookAddress}
             />
           </Row>
           <PoolDetailsHeaderActions
@@ -375,6 +402,7 @@ export function PoolDetailsHeader({
             poolName={poolName}
             token0={token0}
             token1={token1}
+            protocolVersion={protocolVersion}
           />
         </>
       )}

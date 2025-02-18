@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import {
-  Button,
+  DeprecatedButton,
   Flex,
   InputProps,
   LinearGradient,
@@ -24,9 +24,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
@@ -44,7 +43,6 @@ import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
-const BIO_TEXT_INPUT_LINES = 6
 const PADDING_WIDTH = isExtension ? '$none' : '$spacing16'
 
 const isProfileMetadataEdited = (
@@ -122,7 +120,7 @@ export function EditUnitagProfileContent({
   }
 
   const isDarkMode = useIsDarkMode()
-  const { name: ensName } = useENS(UniverseChainId.Mainnet, address)
+  const { name: ensName } = useENS({ nameOrAddress: address, autocompleteDomain: true })
   const onSetTwitterInput = (input: string): void => {
     const normalizedInput = normalizeTwitterUsername(input)
     setTwitterInput(normalizedInput)
@@ -347,14 +345,13 @@ export function EditUnitagProfileContent({
                 {!loading ? (
                   <TextInput
                     autoCorrect
-                    multiline={isMobileApp}
-                    maxHeight={fonts.body1.lineHeight * BIO_TEXT_INPUT_LINES}
-                    rows={BIO_TEXT_INPUT_LINES}
+                    height={fonts.subheading1.lineHeight}
                     placeholder={t('unitags.profile.bio.placeholder')}
                     value={bioInput}
+                    verticalAlign="top"
                     onChangeText={setBioInput}
                     {...inputProps}
-                    pt="$spacing4"
+                    mt="$spacing4"
                   />
                 ) : null}
                 {!loading ? (
@@ -364,8 +361,10 @@ export function EditUnitagProfileContent({
                       autoCapitalize="none"
                       autoComplete="off"
                       autoCorrect={false}
+                      height={fonts.subheading1.lineHeight}
                       placeholder={t('unitags.editProfile.placeholder')}
                       value={twitterInput}
+                      verticalAlign="top"
                       onChangeText={onSetTwitterInput}
                       {...inputProps}
                     />
@@ -381,8 +380,8 @@ export function EditUnitagProfileContent({
           </Flex>
         </Flex>
       </ScrollView>
-      <Button
-        disabled={!profileMetadataEdited}
+      <DeprecatedButton
+        isDisabled={!profileMetadataEdited}
         mt="$spacing12"
         mx={isExtension ? undefined : '$spacing24'}
         size="medium"
@@ -390,7 +389,7 @@ export function EditUnitagProfileContent({
         onPress={onPressSaveChanges}
       >
         {t('common.button.save')}
-      </Button>
+      </DeprecatedButton>
       {showAvatarModal && (
         <ChoosePhotoOptionsModal
           address={address}

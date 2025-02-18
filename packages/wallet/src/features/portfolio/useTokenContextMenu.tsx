@@ -1,39 +1,52 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import type { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { GeneratedIcon, isWeb } from 'ui/src'
-import { CoinConvert, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/components/icons'
+import { CoinConvert, ExternalLink, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/components/icons'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { toggleTokenVisibility } from 'uniswap/src/features/favorites/slice'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { isExtension } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+
+export enum TokenMenuActionType {
+  Swap = 'swap',
+  Send = 'send',
+  Receive = 'receive',
+  Share = 'share',
+  ViewDetails = 'viewDetails',
+  ToggleVisibility = 'toggleVisibility',
+}
 
 interface TokenMenuParams {
   currencyId: CurrencyId
   isBlocked: boolean
   tokenSymbolForNotification?: Nullable<string>
   portfolioBalance?: Nullable<PortfolioBalance>
+  excludedActions?: TokenMenuActionType[]
 }
 
-type MenuAction = ContextMenuAction & { onPress: () => void; Icon?: GeneratedIcon }
+type MenuAction = ContextMenuAction & { onPress: () => void; Icon?: GeneratedIcon; name: TokenMenuActionType }
 
 export function useTokenContextMenu({
   currencyId,
   isBlocked,
   tokenSymbolForNotification,
   portfolioBalance,
+  excludedActions,
 }: TokenMenuParams): {
   menuActions: Array<MenuAction>
   onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
@@ -47,10 +60,12 @@ export function useTokenContextMenu({
 
   const activeAccountHoldsToken =
     portfolioBalance && areCurrencyIdsEqual(currencyId, portfolioBalance?.currencyInfo.currencyId)
-  const isHidden = !!portfolioBalance?.isHidden
+  const isVisible = !portfolioBalance?.isHidden
 
   const currencyAddress = currencyIdToAddress(currencyId)
   const currencyChainId = (currencyIdToChain(currencyId) as UniverseChainId) ?? defaultChainId
+  const { navigateToTokenDetails } = useWalletNavigation()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const onPressSend = useCallback(() => {
     // Do not show warning modal speed-bump if user is trying to send tokens they own
@@ -65,6 +80,14 @@ export function useTokenContextMenu({
     [currencyAddress, currencyChainId, navigateToSwapFlow],
   )
 
+  const onPressViewDetails = useCallback(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.TokenItem,
+      section: SectionName.HomeTokensTab,
+    })
+    navigateToTokenDetails(currencyId)
+  }, [navigateToTokenDetails, currencyId])
+
   const onPressShare = useCallback(async () => {
     handleShareToken({ currencyId })
   }, [currencyId, handleShareToken])
@@ -78,95 +101,97 @@ export function useTokenContextMenu({
      * To avoid the empty state while fetching the new portfolio, we manually
      * modify the current one in the cache.
      */
-    updateCache(!isHidden, portfolioBalance ?? undefined)
+
+    updateCache(isVisible, portfolioBalance ?? undefined)
 
     sendAnalyticsEvent(WalletEventName.TokenVisibilityChanged, {
       currencyId,
       // we log the state to which it's transitioning
-      visible: isHidden,
+      visible: !isVisible,
     })
-    dispatch(toggleTokenVisibility({ currencyId: currencyId.toLowerCase(), isSpam: isHidden }))
+    dispatch(setTokenVisibility({ currencyId: currencyId.toLowerCase(), isVisible: !isVisible }))
 
     if (tokenSymbolForNotification) {
       dispatch(
         pushNotification({
           type: AppNotificationType.AssetVisibility,
-          visible: !isHidden,
+          visible: isVisible,
           hideDelay: 2 * ONE_SECOND_MS,
           assetName: t('walletConnect.request.details.label.token'),
         }),
       )
     }
-  }, [currencyId, dispatch, isHidden, tokenSymbolForNotification, updateCache, portfolioBalance, t])
+  }, [updateCache, isVisible, portfolioBalance, currencyId, dispatch, tokenSymbolForNotification, t])
 
-  const menuActions = useMemo(
-    (): MenuAction[] => [
+  const menuActions = useMemo(() => {
+    const allMenuActions: MenuAction[] = [
       {
+        name: TokenMenuActionType.Swap,
         title: t('common.button.swap'),
         disabled: isBlocked,
         onPress: () => onPressSwap(CurrencyField.INPUT),
-        ...(isWeb
-          ? {
-              Icon: CoinConvert,
-            }
-          : {
-              systemIcon: 'rectangle.2.swap',
-            }),
+        ...(isWeb ? { Icon: CoinConvert } : { systemIcon: 'rectangle.2.swap' }),
       },
       {
+        name: TokenMenuActionType.Send,
         title: t('common.button.send'),
         onPress: onPressSend,
-        ...(isWeb
-          ? {
-              Icon: SendAction,
-            }
-          : { systemIcon: 'paperplane' }),
+        ...(isWeb ? { Icon: SendAction } : { systemIcon: 'paperplane' }),
       },
       {
+        name: TokenMenuActionType.Receive,
         title: t('common.button.receive'),
         onPress: navigateToReceive,
-        ...(isWeb
-          ? {
-              Icon: ReceiveAlt,
-            }
-          : { systemIcon: 'qrcode' }),
+        ...(isWeb ? { Icon: ReceiveAlt } : { systemIcon: 'qrcode' }),
       },
-      ...(!isWeb
-        ? [
+      ...(isWeb
+        ? []
+        : [
             {
+              name: TokenMenuActionType.Share,
               title: t('common.button.share'),
               onPress: onPressShare,
               systemIcon: 'square.and.arrow.up',
             },
-          ]
-        : []),
-      ...(activeAccountHoldsToken
+          ]),
+      ...(isExtension && !isTestnetModeEnabled
         ? [
             {
-              title: isHidden ? t('tokens.action.unhide') : t('tokens.action.hide'),
-              destructive: !isHidden,
-              onPress: onPressHiddenStatus,
-              ...(isWeb
-                ? {
-                    Icon: isHidden ? Eye : EyeOff,
-                  }
-                : { systemIcon: isHidden ? 'eye' : 'eye.slash' }),
+              name: TokenMenuActionType.ViewDetails,
+              title: t('common.button.viewDetails'),
+              onPress: onPressViewDetails,
+              Icon: ExternalLink,
             },
           ]
         : []),
-    ],
-    [
-      t,
-      isBlocked,
-      onPressSend,
-      navigateToReceive,
-      onPressShare,
-      activeAccountHoldsToken,
-      isHidden,
-      onPressHiddenStatus,
-      onPressSwap,
-    ],
-  )
+      ...(activeAccountHoldsToken && !isTestnetModeEnabled
+        ? [
+            {
+              name: TokenMenuActionType.ToggleVisibility,
+              title: isVisible ? t('tokens.action.hide') : t('tokens.action.unhide'),
+              destructive: isVisible,
+              onPress: onPressHiddenStatus,
+              ...(isWeb ? { Icon: isVisible ? EyeOff : Eye } : { systemIcon: isVisible ? 'eye.slash' : 'eye' }),
+            },
+          ]
+        : []),
+    ]
+
+    return allMenuActions.filter((action) => !excludedActions?.includes(action.name))
+  }, [
+    t,
+    isBlocked,
+    onPressSend,
+    navigateToReceive,
+    onPressShare,
+    onPressViewDetails,
+    activeAccountHoldsToken,
+    isVisible,
+    onPressHiddenStatus,
+    onPressSwap,
+    excludedActions,
+    isTestnetModeEnabled,
+  ])
 
   const onContextMenuPress = useCallback(
     (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): void => {

@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { getEncryptedMnemonic } from 'src/features/scantastic/ScantasticEncryption'
-import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled, Faceid, Laptop, LinkBrokenHorizontal, Wifi } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -230,9 +231,9 @@ export function ScantasticModal(): JSX.Element | null {
               {t('scantastic.modal.ipMismatch.description')}
             </Text>
           </Flex>
-          <Button theme="secondary" width="100%" onPress={onClose}>
+          <DeprecatedButton theme="secondary" width="100%" onPress={onClose}>
             {t('common.button.close')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Modal>
     )
@@ -249,9 +250,9 @@ export function ScantasticModal(): JSX.Element | null {
           <Text color="$neutral2" mb="$spacing12" textAlign="center" variant="body3">
             {t('scantastic.error.timeout.message')}
           </Text>
-          <Button theme="secondary" width="100%" onPress={onClose}>
+          <DeprecatedButton theme="secondary" width="100%" onPress={onClose}>
             {t('common.button.close')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Modal>
     )
@@ -292,9 +293,9 @@ export function ScantasticModal(): JSX.Element | null {
             {error}
           </Text>
           <Flex gap="$spacing4" mt="$spacing12" width="100%">
-            <Button alignItems="center" theme="secondary" onPress={onClose}>
+            <DeprecatedButton alignItems="center" theme="secondary" onPress={onClose}>
               <Text variant="buttonLabel1">{t('common.button.close')}</Text>
-            </Button>
+            </DeprecatedButton>
           </Flex>
         </Flex>
       </Modal>
@@ -317,7 +318,7 @@ export function ScantasticModal(): JSX.Element | null {
           <Flex
             borderColor="$surface3"
             borderRadius="$rounded20"
-            borderWidth={1}
+            borderWidth="$spacing1"
             gap="$spacing12"
             p="$spacing16"
             width="100%"
@@ -355,14 +356,14 @@ export function ScantasticModal(): JSX.Element | null {
           </Text>
         </Flex>
         <Flex gap="$spacing4" width="100%">
-          <Button
+          <DeprecatedButton
             icon={requiresBiometricAuth ? <Faceid size={iconSizes.icon16} /> : undefined}
             mb="$spacing4"
             theme="primary"
             onPress={onConfirmSync}
           >
             {t('scantastic.confirmation.button.continue')}
-          </Button>
+          </DeprecatedButton>
           <TouchableArea alignItems="center" onPress={onClose}>
             <Text color="$accent1" py="$spacing16" variant="buttonLabel1">
               {t('common.button.cancel')}

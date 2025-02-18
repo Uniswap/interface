@@ -3,7 +3,7 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { closeAllModals } from 'src/features/modals/modalSlice'
-import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
+import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 describe(handleTransactionLink, () => {

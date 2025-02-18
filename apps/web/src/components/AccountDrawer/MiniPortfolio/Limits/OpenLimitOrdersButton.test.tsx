@@ -3,7 +3,7 @@ import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Li
 import { mocked } from 'test-utils/mocked'
 import { act, fireEvent, render, screen } from 'test-utils/render'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', () => ({
   ...jest.requireActual('components/AccountDrawer/MiniPortfolio/Activity/hooks'),
@@ -23,7 +23,7 @@ describe('OpenLimitOrdersButton', () => {
   it('should not render if there are no open limit orders', () => {
     mocked(useOpenLimitOrders).mockReturnValue({ openLimitOrders: [], loading: false })
     const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
-    expect(container.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
+    expect(container.firstChild?.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
   })
   it('should render if there are open limit orders', () => {
     mocked(useOpenLimitOrders).mockReturnValue({

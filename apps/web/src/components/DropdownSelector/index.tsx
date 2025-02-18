@@ -14,9 +14,8 @@ import {
   useShadowPropsMedium,
 } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { zIndices } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 export const InternalMenuItem = styled(Text, {
   display: 'flex',
@@ -56,9 +55,8 @@ const MenuFlyout = styled(Text, {
   fontSize: 16,
   position: 'absolute',
   top: 'calc(100% + 12px)',
-  zIndex: zIndices.dropdown,
+  zIndex: zIndexes.dropdown,
   animation: 'fastHeavy',
-  overflow: 'scroll',
   enterStyle: { opacity: 0, y: -20 },
   exitStyle: { opacity: 0, y: -20 },
 })
@@ -84,6 +82,7 @@ interface DropdownSelectorProps {
   buttonStyle?: FlexProps
   dropdownStyle?: FlexProps
   adaptToSheet?: boolean
+  containerStyle?: React.CSSProperties
 }
 
 export function DropdownSelector({
@@ -98,6 +97,7 @@ export function DropdownSelector({
   buttonStyle,
   dropdownStyle,
   adaptToSheet = true,
+  containerStyle,
 }: DropdownSelectorProps) {
   const node = useRef<HTMLDivElement | null>(null)
   useOnClickOutside(node, () => isOpen && toggleOpen(false))
@@ -108,7 +108,7 @@ export function DropdownSelector({
 
   return (
     <>
-      <div ref={node} style={{ width: '100%' }}>
+      <div ref={node} style={{ width: '100%', ...containerStyle }}>
         <StyledMenu id="Dropdown">
           <MouseoverTooltip
             disabled={!tooltipText}
@@ -144,6 +144,7 @@ export function DropdownSelector({
                 data-testid={optionsContainerTestId}
                 {...dropdownStyle}
                 {...shadowProps}
+                $platform-web={{ overflow: 'auto' }}
                 style={scrollbarStyles}
               >
                 {internalMenuItems}

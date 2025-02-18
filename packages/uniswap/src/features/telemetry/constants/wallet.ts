@@ -1,15 +1,18 @@
 import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants/uniswap'
 // eslint-disable-next-line no-restricted-imports
 import { TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 
 export enum WalletEventName {
+  AppRating = 'App Rating',
   BackupMethodAdded = 'Backup Method Added',
   BackupMethodRemoved = 'Backup Method Removed',
   DappRequestCardPressed = 'DappRequestCardPressed',
   DappRequestCardClosed = 'DappRequestCardClosed',
   GasEstimateAccuracy = 'Gas Estimate Accuracy',
   ExploreSearchCancel = 'Explore Search Cancel',
+  LowNetworkTokenInfoModalOpened = 'Low Network Token Info Modal Opened',
   ModalClosed = 'Modal Closed',
   NFTVisibilityChanged = 'NFT Visibility Changed',
   NFTsLoaded = 'NFTs Loaded',
@@ -18,6 +21,7 @@ export enum WalletEventName {
   OnboardingIntroCardSwiped = 'Onboarding Intro Card Swiped',
   OnboardingIntroCardPressed = 'Onboarding Intro Card Pressed',
   OnboardingIntroCardClosed = 'Onboarding Intro Card Closed',
+  PendingTransactionTimeout = 'Pending Transaction Timeout',
   PerformanceGraphql = 'Performance GraphQL',
   PortfolioBalanceFreshnessLag = 'Portfolio Balance Freshness Lag',
   SendRecipientSelected = 'Send Recipient Selected',
@@ -35,16 +39,20 @@ export enum WalletEventName {
 
 export const WALLET_TESTNET_CONFIG: TestnetModeConfig = {
   allowlistEvents: [
+    SharedEventName.PAGE_VIEWED,
+    SharedEventName.ELEMENT_CLICKED,
+    UniswapEventName.TokenSelected,
+    WalletEventName.ExternalLinkOpened,
     WalletEventName.NetworkFilterSelected,
+    WalletEventName.SwapSubmitted,
     WalletEventName.TransferCompleted,
     WalletEventName.TransferSubmitted,
-    SharedEventName.PAGE_VIEWED,
+    SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED,
     SwapEventName.SWAP_TRANSACTION_COMPLETED,
     SwapEventName.SWAP_TRANSACTION_FAILED,
+    SwapEventName.SWAP_QUOTE_RECEIVED,
+    ExtensionEventName.DappChangeChain,
     ExtensionEventName.DappRequest,
-    WalletEventName.SwapSubmitted,
-    WalletEventName.TransferSubmitted,
-    WalletEventName.TransferCompleted,
   ],
   passthroughAllowlistEvents: [
     ExtensionEventName.DappConnect,

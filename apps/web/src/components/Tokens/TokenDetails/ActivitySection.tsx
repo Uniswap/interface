@@ -2,9 +2,9 @@ import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/To
 import { TransactionsTable } from 'components/Tokens/TokenDetails/tables/TransactionsTable'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useState } from 'react'
+import { Trans } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, styled, Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled(Flex, {
   width: '100%',

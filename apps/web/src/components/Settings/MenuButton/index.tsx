@@ -1,12 +1,12 @@
 import { Settings } from 'components/Icons/Settings'
 import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
+import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { ThemedText } from 'theme/components'
-import { Trans, t } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 import validateUserSlippageTolerance, { SlippageValidationResult } from 'utils/validateUserSlippageTolerance'
 
@@ -88,6 +88,7 @@ export default function MenuButton({
   compact: boolean
   trade?: InterfaceTrade
 }) {
+  const { t } = useTranslation()
   return (
     <Button
       disabled={disabled}

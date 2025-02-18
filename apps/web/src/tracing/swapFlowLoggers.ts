@@ -52,6 +52,7 @@ const SIGNATURE_TYPE_TO_SWAP_ROUTING: Record<SignatureType, SwapRouting> = {
   [SignatureType.SIGN_LIMIT]: 'limit_order',
   [SignatureType.SIGN_PRIORITY_ORDER]: 'priority_order',
   [SignatureType.SIGN_UNISWAPX_V2_ORDER]: 'uniswap_x_v2',
+  [SignatureType.SIGN_UNISWAPX_V3_ORDER]: 'uniswap_x_v3',
   [SignatureType.SIGN_UNISWAPX_ORDER]: 'uniswap_x',
 }
 

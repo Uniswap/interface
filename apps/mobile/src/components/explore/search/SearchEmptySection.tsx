@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { SearchPopularNFTCollections } from 'src/components/explore/search/SearchPopularNFTCollections'
@@ -14,10 +14,10 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 
 const TrendUpIcon = <TrendUp color="$neutral2" size="$icon.24" />
@@ -29,6 +29,10 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
   const searchHistory = useSelector(selectSearchHistory)
 
   const [showPopularInfo, setShowPopularInfo] = useState(false)
+
+  // Popular NFT collections data is only available on Mainnet
+  // TODO(WALL-5876): Update this once we have a way to fetch NFT collections for all chains
+  const showPopularNftCollections = !selectedChain || selectedChain === UniverseChainId.Mainnet
 
   const onPressClearSearchHistory = (): void => {
     dispatch(clearSearchHistory())
@@ -79,16 +83,18 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
           />
           <SearchPopularTokens selectedChain={selectedChain} />
         </Flex>
-        <Flex gap="$spacing4">
-          <SectionHeaderText icon={TrendUpIcon} title={t('explore.search.section.popularNFT')} />
-          <SearchPopularNFTCollections />
-        </Flex>
+        {showPopularNftCollections && (
+          <Flex gap="$spacing4">
+            <SectionHeaderText icon={TrendUpIcon} title={t('explore.search.section.popularNFT')} />
+            <SearchPopularNFTCollections />
+          </Flex>
+        )}
       </AnimatedFlex>
       <WarningModal
-        backgroundIconColor={colors.surface2.get()}
+        backgroundIconColor={colors.surface3.get()}
         caption={t('explore.search.section.popularTokenInfo')}
         rejectText={t('common.button.close')}
-        icon={<Star color="$neutral2" size="$icon.24" />}
+        icon={<Star color="$neutral1" size="$icon.24" />}
         isOpen={showPopularInfo}
         modalName={ModalName.NetworkFeeInfo}
         severity={WarningSeverity.None}

@@ -1,10 +1,9 @@
 import { DropdownIcon } from 'components/Table/icons'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import deprecatedStyled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { RefObject, useCallback, useRef } from 'react'
-import { Checkbox, Flex, Text, styled } from 'ui/src'
+import { Checkbox, Flex, Text, styled, useMedia } from 'ui/src'
 
 const StyledDropdownIcon = deprecatedStyled(DropdownIcon)`
   position: relative;
@@ -59,8 +58,8 @@ export function Filter<T extends string>({
   toggleFilterModal,
   anchorRef,
 }: FilterProps<T>) {
-  const isScreenSize = useScreenSize()
-  const isMobile = !isScreenSize['sm']
+  const media = useMedia()
+  const isMobile = media.md
   const filterModalRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(filterModalRef, isOpen ? toggleFilterModal : undefined)
 
@@ -86,15 +85,11 @@ export function Filter<T extends string>({
             left={anchorRef.current.getBoundingClientRect().x}
           >
             {allFilters.map((filter) => (
-              <FilterRow key={filter}>
+              <FilterRow key={filter} onPress={() => handleFilterOptionClick(filter)} cursor="pointer">
                 <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
                   {filter}
                 </Text>
-                <Checkbox
-                  checked={activeFilter.includes(filter)}
-                  variant="branded"
-                  onPress={() => handleFilterOptionClick(filter)}
-                />
+                <Checkbox checked={activeFilter.includes(filter)} variant="branded" />
               </FilterRow>
             ))}
           </FilterDropdown>

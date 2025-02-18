@@ -1,5 +1,6 @@
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FlatList, LayoutRectangle, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
@@ -10,7 +11,7 @@ import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { AnimatePresence, Flex, LinearGradient, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SwirlyArrowDown } from 'ui/src/components/icons'
-import { spacing, zIndices } from 'ui/src/theme'
+import { spacing, zIndexes } from 'ui/src/theme'
 import {
   Chain,
   ContractInput,
@@ -19,11 +20,10 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
-import { Experiments, OnboardingRedesignHomeScreenProperties } from 'uniswap/src/features/gating/experiments'
-import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { DynamicConfigs, HomeScreenExploreTokensConfigKey } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { useTranslation } from 'uniswap/src/i18n'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 import { selectHasUsedExplore } from 'wallet/src/features/behaviorHistory/selectors'
@@ -42,15 +42,15 @@ export const HomeExploreTab = memo(
     const appFiatCurrency = useAppFiatCurrency()
     const [maxTokenPriceWrapperWidth, setMaxTokenPriceWrapperWidth] = useState(0)
 
-    const ethChainId = useExperimentValue(
-      Experiments.OnboardingRedesignHomeScreen,
-      OnboardingRedesignHomeScreenProperties.ExploreEthChainId,
+    const ethChainId = useDynamicConfigValue(
+      DynamicConfigs.HomeScreenExploreTokens,
+      HomeScreenExploreTokensConfigKey.EthChainId,
       Chain.Ethereum,
       (x): x is Chain => Object.values(Chain).includes(x as Chain),
     )
-    const recommendedTokens = useExperimentValue(
-      Experiments.OnboardingRedesignHomeScreen,
-      OnboardingRedesignHomeScreenProperties.ExploreTokens,
+    const recommendedTokens = useDynamicConfigValue(
+      DynamicConfigs.HomeScreenExploreTokens,
+      HomeScreenExploreTokensConfigKey.Tokens,
       [] as ContractInput[],
       (x): x is ContractInput[] =>
         Array.isArray(x) &&
@@ -95,7 +95,7 @@ export const HomeExploreTab = memo(
               index={index}
               metadataDisplayType={TokenMetadataDisplayType.Symbol}
               overlay={
-                <Flex height="100%" position="absolute" width="100%" zIndex={zIndices.mask}>
+                <Flex height="100%" position="absolute" width="100%" zIndex={zIndexes.mask}>
                   <LinearGradient
                     colors={[gradientColor, '$surface1']}
                     end={{ x: 0, y: gradientYEnd }}

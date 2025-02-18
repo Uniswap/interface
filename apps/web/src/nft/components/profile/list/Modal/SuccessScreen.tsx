@@ -2,7 +2,6 @@ import { ScrollBarStyles } from 'components/Common/styles'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled, { css, useTheme } from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -12,9 +11,10 @@ import { useSellAsset } from 'nft/hooks'
 import { generateTweetForList, pluralize } from 'nft/utils'
 import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
-import { BREAKPOINTS } from 'theme'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
+import { breakpoints } from 'ui/src/theme'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const SuccessImage = styled.img<{ numImages: number }>`
@@ -50,7 +50,7 @@ const buttonStyle = css`
     opacity: 0.6;
   }
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     width: 100%;
     margin-bottom: 8px;
   }
@@ -84,7 +84,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
-  const usdcValue = useStablecoinValue(parsedAmount)
+  const usdcValue = useUSDCValue(parsedAmount)
 
   return (
     <>

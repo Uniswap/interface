@@ -10,9 +10,9 @@ import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { Dispatch, useRef, useState } from 'react'
 import { AlertTriangle, Link } from 'react-feather'
-import { BREAKPOINTS } from 'theme'
+import { Trans, useTranslation } from 'react-i18next'
 import { colors } from 'theme/colors'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { breakpoints } from 'ui/src/theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PriceTextInputWrapper = styled(Column)`
@@ -63,7 +63,7 @@ const WarningMessage = styled(Row)<{ $color: string }>`
   line-height: 12px;
   color: ${({ $color }) => $color};
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     right: unset;
   }
 `

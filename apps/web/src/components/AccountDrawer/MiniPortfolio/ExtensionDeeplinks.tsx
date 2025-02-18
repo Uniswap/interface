@@ -1,21 +1,21 @@
+// eslint-disable-next-line no-restricted-imports
+import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { useFilterPossiblyMaliciousPositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'
-import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool } from 'components/Icons/Pool'
 import { ExtensionRequestMethods, useUniswapExtensionConnector } from 'components/WalletModal/useOrderedConnections'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
-import { Button, Flex, Image, Text } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { DeprecatedButton, Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { ArrowRightToLine } from 'ui/src/components/icons/ArrowRightToLine'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { TimePast } from 'ui/src/components/icons/TimePast'
-
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { t } from 'uniswap/src/i18n'
+import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 
 const UnreadIndicator = () => {
   const theme = useTheme()
@@ -31,7 +31,7 @@ const UnreadIndicator = () => {
 
 const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: string; onPress: () => void }) => {
   return (
-    <Button
+    <DeprecatedButton
       display="flex"
       alignItems="center"
       gap="$spacing12"
@@ -47,11 +47,12 @@ const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: st
         {Label}
       </Text>
       <RotatableChevron width={iconSizes.icon20} height={iconSizes.icon20} color="$neutral3" direction="right" />
-    </Button>
+    </DeprecatedButton>
   )
 }
 
 export function ExtensionDeeplinks({ account }: { account: string }) {
+  const { t } = useTranslation()
   const theme = useTheme()
   const uniswapExtensionConnector = useUniswapExtensionConnector()
   const accountDrawer = useAccountDrawer()
@@ -66,8 +67,10 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
     }
   }, [hasPendingActivity])
 
-  const { positions } = useMultiChainPositions(account)
-  const filteredPositions = useFilterPossiblyMaliciousPositionInfo(positions)
+  const { data } = useGetPositionsQuery({
+    address: account,
+    positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE, PositionStatus.CLOSED],
+  })
 
   if (!uniswapExtensionConnector) {
     return null
@@ -97,7 +100,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
           setActivityUnread(false)
         }}
       />
-      {filteredPositions.length > 0 && (
+      {data && data?.positions.length > 0 && (
         <DeepLinkButton
           Icon={<Pool width="20px" height="20px" fill={theme.neutral1} />}
           Label={t('common.pools')}

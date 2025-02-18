@@ -70,7 +70,8 @@ export function ApproveRequestContent({
 
   // To detect a revoke, both the transaction value and the parsed arg amount value must be zero
   const isArgAmountZero = parsedTransactionData?.args.some(
-    (arg) => typeof arg === 'object' && arg._hex && BigNumber.from(arg._hex).isZero(),
+    (arg) =>
+      arg !== null && typeof arg === 'object' && !Array.isArray(arg) && arg._hex && BigNumber.from(arg._hex).isZero(),
   )
   const isRevoke = dappRequest.transaction.value === '0x0' && isArgAmountZero
 

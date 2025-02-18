@@ -3,9 +3,9 @@ import Row from 'components/deprecated/Row'
 import styled, { css } from 'lib/styled-components'
 import { useLayoutEffect, useState } from 'react'
 
-export const NumericalInputFontStyle = css`
+export const NumericalInputFontStyle = css<{ $fontSize?: number }>`
   text-align: left;
-  font-size: 70px;
+  font-size: ${({ $fontSize }) => `${$fontSize ?? 70}px`};
   font-weight: 500;
   line-height: 60px;
 `
@@ -16,9 +16,9 @@ export const NumericalInputWrapper = styled(Row)`
   width: max-content;
 `
 
-export const StyledNumericalInput = styled(Input)<{ $width?: number } & InputProps>`
+export const StyledNumericalInput = styled(Input)<{ $width?: number; $hasPrefix?: boolean } & InputProps>`
   max-height: 84px;
-  max-width: 100%;
+  max-width: ${({ $hasPrefix }) => ($hasPrefix ? 'calc(100% - 43px)' : '100%')};
   width: ${({ $width }) => `${$width ?? 43}px`}; // this value is from the size of a 0 which is the default value
   ${NumericalInputFontStyle}
 
@@ -35,7 +35,7 @@ export const NumericalInputMimic = styled.span`
   ${NumericalInputFontStyle}
 `
 
-export const NumericalInputSymbolContainer = styled.span<{ showPlaceholder: boolean }>`
+export const NumericalInputSymbolContainer = styled.span<{ showPlaceholder: boolean; $fontSize?: number }>`
   user-select: none;
   ${NumericalInputFontStyle}
   ${({ showPlaceholder }) =>

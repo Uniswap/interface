@@ -4,11 +4,14 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Switch, Text, UniswapXText } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ElementNameType, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/modals/UniswapXInfo'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
@@ -24,48 +27,72 @@ function isDefaultOptions(selectedProtocols: FrontendSupportedProtocol[]): boole
 
 export const ProtocolPreference: SwapSettingConfig = {
   renderTitle: (t) => t('swap.settings.routingPreference.title'),
+  renderCloseButtonText: (t) => t('common.button.save'),
   Control() {
     const { t } = useTranslation()
-    const { selectedProtocols } = useSwapFormContext()
-    const tradeProtocolPreferenceTitle = isDefaultOptions(selectedProtocols) ? t('common.default') : t('common.custom')
+    const { selectedProtocols } = useTransactionSettingsContext()
+    const { isOnlyV2Allowed } = useTransactionSettingsContext()
+
+    const getTradeProtocolPreferenceTitle = (): string => {
+      if (isDefaultOptions(selectedProtocols)) {
+        return t('common.default')
+      }
+
+      if (isOnlyV2Allowed) {
+        return t('swap.settings.routingPreference.option.v2.title')
+      }
+
+      return t('common.custom')
+    }
 
     return (
       <Text color="$neutral2" flexWrap="wrap" variant="subheading2">
-        {tradeProtocolPreferenceTitle}
+        {getTradeProtocolPreferenceTitle()}
       </Text>
     )
   },
   Screen() {
     const { t } = useTranslation()
-    const { selectedProtocols, updateSwapForm } = useSwapFormContext()
+    const { selectedProtocols, updateTransactionSettings, isOnlyV2Allowed } = useTransactionSettingsContext()
     const [isDefault, setIsDefault] = useState(isDefaultOptions(selectedProtocols))
     const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
+    const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+
+    const { chainId } = useSwapFormContext().derivedSwapInfo
+    const chainName = getChainInfo(chainId).name
+    const v2RestrictionDescription = isOnlyV2Allowed
+      ? t('swap.settings.protection.subtitle.unavailable', { chainName })
+      : null
 
     // We prevent the user from deselecting all options
     const onlyOneProtocolSelected = selectedProtocols.length === 1
 
     // We prevent the user from deselecting all on-chain protocols (AKA only selecting UniswapX)
-    const onlyOneClassicProtocolSelected = selectedProtocols.filter((p) => p !== ProtocolItems.UNISWAPX_V2).length === 1
+    const onlyOneClassicProtocolSelected =
+      selectedProtocols.filter((p) => {
+        if (!v4Enabled && p === ProtocolItems.V4) {
+          return false
+        }
+        return p !== ProtocolItems.UNISWAPX_V2
+      }).length === 1
 
     const toggleProtocol = useCallback(
       (protocol: FrontendSupportedProtocol) => {
         if (selectedProtocols.includes(protocol)) {
-          updateSwapForm({ selectedProtocols: selectedProtocols.filter((p) => p !== protocol) })
+          updateTransactionSettings({ selectedProtocols: selectedProtocols.filter((p) => p !== protocol) })
         } else {
-          updateSwapForm({ selectedProtocols: [...selectedProtocols, protocol] })
+          updateTransactionSettings({ selectedProtocols: [...selectedProtocols, protocol] })
         }
       },
-      [updateSwapForm, selectedProtocols],
+      [updateTransactionSettings, selectedProtocols],
     )
-
-    const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
 
     const toggleDefault = useCallback(() => {
       setIsDefault(!isDefault)
       if (!isDefault) {
-        updateSwapForm({ selectedProtocols: DEFAULT_PROTOCOL_OPTIONS })
+        updateTransactionSettings({ selectedProtocols: DEFAULT_PROTOCOL_OPTIONS })
       }
-    }, [updateSwapForm, isDefault])
+    }, [updateTransactionSettings, isDefault])
 
     return (
       <Flex gap="$spacing16" my="$spacing16">
@@ -73,8 +100,9 @@ export const ProtocolPreference: SwapSettingConfig = {
           active={isDefault}
           description={<DefaultOptionDescription isDefault={isDefault} />}
           elementName={ElementName.SwapRoutingPreferenceDefault}
-          title={t('common.default')}
+          title={<DefaultOptionTitle />}
           cantDisable={false}
+          disabled={isOnlyV2Allowed}
           onSelect={toggleDefault}
         />
         {!isDefault && (
@@ -85,6 +113,8 @@ export const ProtocolPreference: SwapSettingConfig = {
                 elementName={ElementName.SwapRoutingPreferenceUniswapX}
                 title={getProtocolTitle(ProtocolItems.UNISWAPX_V2, t)}
                 cantDisable={onlyOneProtocolSelected}
+                disabled={isOnlyV2Allowed}
+                description={v2RestrictionDescription}
                 onSelect={() => toggleProtocol(ProtocolItems.UNISWAPX_V2)}
               />
             )}
@@ -93,7 +123,9 @@ export const ProtocolPreference: SwapSettingConfig = {
                 active={selectedProtocols.includes(ProtocolItems.V4)}
                 elementName={ElementName.SwapRoutingPreferenceV4}
                 title={getProtocolTitle(ProtocolItems.V4, t)}
-                cantDisable={onlyOneProtocolSelected}
+                cantDisable={onlyOneClassicProtocolSelected}
+                disabled={isOnlyV2Allowed}
+                description={v2RestrictionDescription}
                 onSelect={() => toggleProtocol(ProtocolItems.V4)}
               />
             )}
@@ -102,13 +134,15 @@ export const ProtocolPreference: SwapSettingConfig = {
               elementName={ElementName.SwapRoutingPreferenceV3}
               title={getProtocolTitle(ProtocolItems.V3, t)}
               cantDisable={onlyOneClassicProtocolSelected}
+              disabled={isOnlyV2Allowed}
+              description={v2RestrictionDescription}
               onSelect={() => toggleProtocol(ProtocolItems.V3)}
             />
             <OptionRow
               active={selectedProtocols.includes(ProtocolItems.V2)}
               elementName={ElementName.SwapRoutingPreferenceV3}
               title={getProtocolTitle(ProtocolItems.V2, t)}
-              cantDisable={onlyOneClassicProtocolSelected}
+              cantDisable={onlyOneClassicProtocolSelected || isOnlyV2Allowed}
               onSelect={() => toggleProtocol(ProtocolItems.V2)}
             />
           </>
@@ -124,7 +158,15 @@ export function getProtocolTitle(preference: FrontendSupportedProtocol, t: TFunc
       return (
         <UniswapXInfo
           tooltipTrigger={
-            <Text alignItems="center" color="$neutral2" variant="body3">
+            <Text
+              alignItems="center"
+              color="$neutral2"
+              variant="body3"
+              flexDirection="row"
+              flexShrink={0}
+              display="inline-flex"
+              gap="$gap4"
+            >
               <Trans
                 components={{
                   icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
@@ -161,6 +203,7 @@ function OptionRow({
   elementName,
   cantDisable,
   onSelect,
+  disabled,
 }: {
   title: JSX.Element | string
   active: boolean
@@ -168,6 +211,7 @@ function OptionRow({
   cantDisable: boolean
   onSelect: () => void
   description?: ReactNode
+  disabled?: boolean
 }): JSX.Element {
   return (
     <Flex row gap="$spacing16" justifyContent="space-between">
@@ -185,38 +229,47 @@ function OptionRow({
       </Flex>
       {/* Only log this event if toggle value is off, and then turned on */}
       <Trace element={elementName} logPress={!active}>
-        <Switch disabled={active && cantDisable} checked={active} variant="branded" onCheckedChange={onSelect} />
+        <Switch
+          disabled={(active && cantDisable) || disabled}
+          checked={active}
+          variant="branded"
+          onCheckedChange={onSelect}
+        />
       </Trace>
     </Flex>
   )
 }
 
 function DefaultOptionDescription({ isDefault }: { isDefault: boolean }): JSX.Element {
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const { t } = useTranslation()
 
   const showIncludesUniswapX = uniswapXEnabled && isDefault
 
+  const cheapestRouteText = t('swap.settings.routingPreference.option.default.description.preV4')
+  const cheapestRouteTextV4 = t('swap.settings.routingPreference.option.default.description')
+
   return (
     <Flex gap="$spacing4">
-      <Text color="$neutral2" variant="body3">
-        {t('swap.settings.routingPreference.option.default.description')}
+      <Text color="$neutral2" variant="body3" textWrap="pretty">
+        {v4Enabled ? cheapestRouteTextV4 : cheapestRouteText}
       </Text>
       {showIncludesUniswapX && (
         <UniswapXInfo
           tooltipTrigger={
-            <Text alignItems="center" color="$neutral2" variant="body3">
+            <Text
+              alignItems="center"
+              color="$neutral2"
+              variant="body3"
+              flexDirection="row"
+              gap="$gap4"
+              display="inline-flex"
+            >
               <Trans
                 components={{
                   icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
                   gradient: <UniswapXText height={18} variant="body3" />,
-                  info: (
-                    <InfoCircleFilled
-                      color="$neutral3"
-                      size="$icon.16"
-                      style={!isMobileApp && { transform: 'translateY(3px)' }}
-                    />
-                  ),
                 }}
                 i18nKey="uniswapx.included"
               />
@@ -224,6 +277,38 @@ function DefaultOptionDescription({ isDefault }: { isDefault: boolean }): JSX.El
           }
         />
       )}
+    </Flex>
+  )
+}
+
+function DefaultOptionTitle(): JSX.Element {
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+  const { t } = useTranslation()
+
+  if (!v4Enabled) {
+    return (
+      <Text color="$neutral1" variant="subheading2">
+        {t('common.default')}
+      </Text>
+    )
+  }
+
+  return (
+    <Flex row gap="$spacing4" alignItems="center">
+      <Text color="$neutral1" variant="subheading2">
+        {t('common.default')}
+      </Text>
+      <WarningInfo
+        modalProps={{
+          caption: t('swap.settings.routingPreference.option.default.tooltip'),
+          rejectText: t('common.button.close'),
+          modalName: ModalName.SwapSettingsDefaultRoutingInfo,
+        }}
+        tooltipProps={{
+          text: t('swap.settings.routingPreference.option.default.tooltip'),
+          placement: 'bottom',
+        }}
+      />
     </Flex>
   )
 }

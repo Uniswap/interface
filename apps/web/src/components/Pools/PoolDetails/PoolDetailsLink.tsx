@@ -1,30 +1,31 @@
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
-import Tooltip, { TooltipSize } from 'components/Tooltip'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { ChevronRight, Copy } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Trans, t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
   display: none;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) and (min-width: ${BREAKPOINTS.xs}px) {
+  @media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.xs}px) {
     display: block;
   }
   ${EllipsisStyle}
@@ -40,7 +41,7 @@ const TokenTextWrapper = styled(Row)<{ isClickable?: boolean }>`
 const SymbolText = styled(ThemedText.BodyPrimary)`
   flex-shrink: 0;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) and (min-width: ${BREAKPOINTS.xs}px) {
+  @media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.xs}px) {
     color: ${({ theme }) => theme.neutral2};
   }
 `
@@ -87,6 +88,7 @@ interface PoolDetailsLinkProps {
 
 export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetailsLinkProps) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const isNative = address === NATIVE_CHAIN_ID
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const [isCopied, setCopied] = useCopyClipboard()
@@ -107,7 +109,8 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     )
 
   const navigate = useNavigate()
-  const chainName = chainIdToBackendChain({ chainId, withFallback: true })
+  const { defaultChainId } = useEnabledChains()
+  const chainName = toGraphQLChain(chainId ?? defaultChainId)
   const handleTokenTextClick = useCallback(() => {
     if (!isPool) {
       navigate(getTokenDetailsURL({ address: tokens[0]?.address, chain: chainName }))
@@ -150,7 +153,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         ref={onTextRender}
       >
         {isPool ? (
-          <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={20} />
+          <DoubleCurrencyLogo currencies={currencies} size={20} />
         ) : (
           <CurrencyLogo currency={currency} size={20} />
         )}
@@ -167,12 +170,18 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
       </TokenTextWrapper>
       <ButtonsRow>
         {!isNative && (
-          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
+          <MouseoverTooltip
+            disabled
+            forceShow={isCopied}
+            placement="bottom"
+            size={TooltipSize.Max}
+            text={t('common.copied')}
+          >
             <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
               {shortenAddress(address, truncateAddress ? 2 : undefined, truncateAddress === 'both' ? 2 : undefined)}
               <StyledCopyIcon />
             </CopyAddress>
-          </Tooltip>
+          </MouseoverTooltip>
         )}
         {explorerUrl && (
           <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>

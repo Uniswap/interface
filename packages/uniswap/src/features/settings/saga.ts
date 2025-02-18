@@ -1,22 +1,23 @@
 import { call, select } from 'typed-redux-saga'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { filterChainIdsByFeatureFlag, getEnabledChains } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function* getEnabledChainIdsSaga() {
-  const testnetModeFeatureFlag = getFeatureFlag(FeatureFlags.Datadog)
-  const testnetModeEnabled = yield* select(selectIsTestnetModeEnabled)
+  const isTestnetModeEnabled = yield* select(selectIsTestnetModeEnabled)
 
-  const worldChainEnabled = getFeatureFlag(FeatureFlags.WorldChain)
+  const monadTestnetEnabled = getFeatureFlag(FeatureFlags.MonadTestnet)
+  const unichainEnabled = getFeatureFlag(FeatureFlags.Unichain)
 
   const featureFlaggedChainIds = filterChainIdsByFeatureFlag({
-    [UniverseChainId.WorldChain]: worldChainEnabled,
+    [UniverseChainId.MonadTestnet]: monadTestnetEnabled,
+    [UniverseChainId.Unichain]: unichainEnabled,
   })
 
   return yield* call(getEnabledChains, {
-    isTestnetModeEnabled: testnetModeEnabled && testnetModeFeatureFlag,
+    isTestnetModeEnabled,
     featureFlaggedChainIds,
   })
 }

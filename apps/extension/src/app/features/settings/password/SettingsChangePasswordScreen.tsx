@@ -1,5 +1,5 @@
-import { t } from 'i18next'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { ChangePasswordForm } from 'src/app/features/settings/password/ChangePasswordForm'
 import { EnterPasswordForm } from 'src/app/features/settings/password/EnterPasswordForm'
@@ -12,6 +12,7 @@ enum Step {
 }
 
 export function SettingsChangePasswordScreen(): JSX.Element {
+  const { t } = useTranslation()
   const [currentStep, setCurrentStep] = useState(Step.EnterPassword)
   const { navigateBack } = useExtensionNavigation()
 

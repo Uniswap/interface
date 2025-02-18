@@ -26,7 +26,7 @@ import {
 import { mocked } from 'test-utils/mocked'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isSameAddress } from 'utilities/src/addresses'
 
 beforeEach(() => {

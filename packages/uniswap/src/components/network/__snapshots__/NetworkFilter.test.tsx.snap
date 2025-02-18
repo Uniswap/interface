@@ -44,34 +44,209 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
       <View
         style={
           {
-            "borderColor": "#131313",
-            "borderRadius": 6,
-            "borderStyle": "solid",
-            "borderWidth": 0,
             "flexDirection": "column",
-            "height": 20,
-            "overflow": "hidden",
-            "width": 20,
           }
         }
-        testID="network-logo"
       >
-        <div
-          className="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
-          dir={null}
+        <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "opacity": 0,
+              },
+            }
+          }
           style={
             {
-              "height": "20px",
-              "width": "20px",
+              "flexDirection": "column",
+              "opacity": 0,
             }
           }
         >
-          <div
-            className="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
-            dir={null}
-            suppressHydrationWarning={true}
-          />
-        </div>
+          <View
+            style={
+              {
+                "borderColor": "#131313",
+                "borderRadius": 6,
+                "borderStyle": "solid",
+                "borderWidth": 0,
+                "flexDirection": "column",
+                "height": 20,
+                "overflow": "hidden",
+                "width": 20,
+                "zIndex": 10,
+              }
+            }
+            testID="network-logo"
+          >
+            <Image
+              resizeMode="contain"
+              source="mock-asset-ETHEREUM_LOGO.png"
+              style={
+                {
+                  "height": 20,
+                  "width": 20,
+                }
+              }
+            />
+          </View>
+        </View>
+        <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 0.8,
+                  },
+                ],
+              },
+            }
+          }
+          style={
+            {
+              "flexDirection": "column",
+              "opacity": 0,
+              "position": "absolute",
+              "transform": [
+                {
+                  "scale": 0.8,
+                },
+              ],
+              "zIndex": 1,
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "opacity": 0,
+                },
+              }
+            }
+            style={
+              {
+                "flexDirection": "column",
+                "opacity": 0,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "borderColor": "#131313",
+                  "borderRadius": 6,
+                  "borderStyle": "solid",
+                  "borderWidth": 0,
+                  "flexDirection": "column",
+                  "height": 20,
+                  "overflow": "hidden",
+                  "width": 20,
+                  "zIndex": 10,
+                }
+              }
+              testID="network-logo"
+            >
+              <Image
+                resizeMode="contain"
+                source="mock-asset-UNICHAIN_LOGO.png"
+                style={
+                  {
+                    "height": 20,
+                    "width": 20,
+                  }
+                }
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 0.8,
+                  },
+                ],
+              },
+            }
+          }
+          style={
+            {
+              "flexDirection": "column",
+              "opacity": 0,
+              "position": "absolute",
+              "transform": [
+                {
+                  "scale": 0.8,
+                },
+              ],
+              "zIndex": 1,
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "backgroundColor": "#1B1B1B",
+                  "opacity": 0,
+                },
+              }
+            }
+            style={
+              {
+                "backgroundColor": "#1B1B1B",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "opacity": 0,
+                "position": "relative",
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "borderColor": "#131313",
+                  "borderRadius": 6,
+                  "borderStyle": "solid",
+                  "borderWidth": 0,
+                  "flexDirection": "column",
+                  "height": 20,
+                  "overflow": "hidden",
+                  "width": 20,
+                  "zIndex": 10,
+                }
+              }
+              testID="network-logo"
+            >
+              <Image
+                resizeMode="contain"
+                source="mock-asset-ETHEREUM_LOGO.png"
+                style={
+                  {
+                    "height": 20,
+                    "width": 20,
+                  }
+                }
+              />
+            </View>
+          </View>
+        </View>
       </View>
       <View
         collapsable={false}
@@ -136,11 +311,11 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
               },
             ]
           }
-          tintColor="#9B9B9B"
           vbHeight={24}
           vbWidth={24}
         >
           <RNSVGGroup
+            color="#9B9B9B"
             fill={null}
             propList={
               [
@@ -172,15 +347,41 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
     </View>
   </View>,
   <View
-    pointerEvents="none"
+    collapsable={false}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "opacity": 0,
+          "transform": [
+            {
+              "scale": 0.8,
+            },
+          ],
+        },
+      }
+    }
+    style={
+      {
+        "flexDirection": "column",
+        "opacity": 0,
+        "transform": [
+          {
+            "scale": 0.8,
+          },
+        ],
+      }
+    }
+  />,
+  <View
+    pointerEvents="box-none"
     style={
       {
         "bottom": 0,
         "flexDirection": "column",
         "left": 0,
-        "maxHeight": "100vh",
-        "maxWidth": "100vw",
-        "position": "fixed",
+        "maxWidth": "100%",
+        "position": "absolute",
         "right": 0,
         "top": 0,
         "zIndex": 1070,

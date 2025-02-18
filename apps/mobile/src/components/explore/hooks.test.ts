@@ -206,7 +206,7 @@ describe(useExploreTokenContextMenu, () => {
         payload: {
           name: 'swap-modal',
           initialState: {
-            exactAmountToken: '0',
+            exactAmountToken: '',
             exactCurrencyField: 'input',
             [CurrencyField.INPUT]: null,
             [CurrencyField.OUTPUT]: {

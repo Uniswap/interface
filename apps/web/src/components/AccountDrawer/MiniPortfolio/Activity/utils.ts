@@ -1,7 +1,13 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { CosignedPriorityOrder, CosignedV2DutchOrder, DutchOrder, getCancelMultipleParams } from '@uniswap/uniswapx-sdk'
+import {
+  CosignedPriorityOrder,
+  CosignedV2DutchOrder,
+  CosignedV3DutchOrder,
+  DutchOrder,
+  getCancelMultipleParams,
+} from '@uniswap/uniswapx-sdk'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { ContractTransaction } from 'ethers/lib/ethers'
@@ -17,10 +23,10 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import i18n from 'uniswap/src/i18n'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -85,11 +91,11 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
     .map((year) => ({ title: year, transactions: yearMap[year] }))
 
   const transactionGroups: Array<ActivityGroup> = [
-    { title: t('common.pending'), transactions: pending.sort(sortActivities) },
-    { title: t('common.today'), transactions: today.sort(sortActivities) },
-    { title: t('common.thisWeek'), transactions: currentWeek.sort(sortActivities) },
-    { title: t('common.thisMonth'), transactions: last30Days.sort(sortActivities) },
-    { title: t('common.thisYear'), transactions: currentYear.sort(sortActivities) },
+    { title: i18n.t('common.pending'), transactions: pending.sort(sortActivities) },
+    { title: i18n.t('common.today'), transactions: today.sort(sortActivities) },
+    { title: i18n.t('common.thisWeek'), transactions: currentWeek.sort(sortActivities) },
+    { title: i18n.t('common.thisMonth'), transactions: last30Days.sort(sortActivities) },
+    { title: i18n.t('common.thisYear'), transactions: currentYear.sort(sortActivities) },
     ...sortedYears,
   ]
 
@@ -101,13 +107,18 @@ function getCancelMultipleUniswapXOrdersParams(
   chainId: UniverseChainId,
 ) {
   const nonces = orders
-    .map(({ encodedOrder, type }) =>
-      type === SignatureType.SIGN_UNISWAPX_V2_ORDER
-        ? CosignedV2DutchOrder.parse(encodedOrder, chainId)
-        : type === SignatureType.SIGN_PRIORITY_ORDER
-          ? CosignedPriorityOrder.parse(encodedOrder, chainId)
-          : DutchOrder.parse(encodedOrder, chainId),
-    )
+    .map(({ encodedOrder, type }) => {
+      switch (type) {
+        case SignatureType.SIGN_UNISWAPX_V2_ORDER:
+          return CosignedV2DutchOrder.parse(encodedOrder, chainId)
+        case SignatureType.SIGN_UNISWAPX_V3_ORDER:
+          return CosignedV3DutchOrder.parse(encodedOrder, chainId)
+        case SignatureType.SIGN_PRIORITY_ORDER:
+          return CosignedPriorityOrder.parse(encodedOrder, chainId)
+        default:
+          return DutchOrder.parse(encodedOrder, chainId)
+      }
+    })
     .map((order) => order.info.nonce)
   return getCancelMultipleParams(nonces)
 }

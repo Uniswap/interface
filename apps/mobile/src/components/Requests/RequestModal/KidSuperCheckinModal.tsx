@@ -66,7 +66,7 @@ function KidSuperCheckinModalContent({ request }: { request: SignRequest }): JSX
           centered
           borderColor="$surface3"
           borderRadius="$rounded20"
-          borderWidth={1}
+          borderWidth="$spacing1"
           gap="$spacing12"
           px="$spacing24"
           py="$spacing24"
