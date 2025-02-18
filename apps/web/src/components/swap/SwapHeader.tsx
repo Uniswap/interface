@@ -8,7 +8,6 @@ import { SwapTab } from "uniswap/src/types/screens/interface";
 import { isIFramed } from "utils/isIFramed";
 import { RowBetween, RowFixed } from "../Row";
 import SettingsTab from "../Settings";
-import SwapBuyFiatButton from "./SwapBuyFiatButton";
 import { SwapHeaderTabButton } from "./styled";
 
 import styled, { keyframes } from "styled-components";
@@ -138,7 +137,9 @@ export default function SwapHeader({
           {loading || error ? (
             <SkeletonLoader />
           ) : (
-            formatNumber(1e9 * tswapPrice)
+            `$${formatNumber(
+              (1e9 - Number(tswapBalance?.toExact() ?? 0)) * tswapPrice
+            )}`
           )}
         </StatText>
       </Card>
