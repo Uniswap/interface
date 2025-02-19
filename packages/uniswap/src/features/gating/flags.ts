@@ -11,6 +11,7 @@ export enum FeatureFlags {
   IndicativeSwapQuotes,
   InstantTokenBalanceUpdate,
   MonadTestnet,
+  MonadTestnetDown,
   PortionFields,
   SharedSwapArbitrumUniswapXExperiment,
   TokenSelectorTrendingTokens,
@@ -105,6 +106,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.LPRedesign, 'lp_redesign'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.MigrateV3ToV4, 'migrate-v3-to-v4'],
+  [FeatureFlags.MonadTestnetDown, 'monad_down'],
   [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
 
