@@ -79,7 +79,7 @@ export const uniswapUrls = {
   apiOrigin: 'https://api.rigoblock.com',
   apiBaseUrl: config.apiBaseUrlOverride || getRbCloudflareApiBaseUrl(),
   apiBaseUrlV2: config.apiBaseUrlV2Override || `${getRbCloudflareApiBaseUrl()}/v2`,
-  graphQLUrl: config.graphUrlOverride || `${getRbCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
+  graphQLUrl: config.graphqlUrlOverride || `${getRbCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
 
   // Proxies
   amplitudeProxyUrl:

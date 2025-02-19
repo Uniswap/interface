@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { Currency, NativeCurrency, Token, /*UNI_ADDRESSES, WETH9*/ } from '@uniswap/sdk-core'
+import { Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -335,16 +335,16 @@ export const UNI = {
   ),
   [UniverseChainId.Optimism]: new Token(
     UniverseChainId.Optimism,
-    '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984' as string,
-    //UNI_ADDRESSES[UniverseChainId.Optimism] as string,
+    //'0x1f9840a85d5af5bf1d1762f925bdaddc4201f984' as string,
+    UNI_ADDRESSES[UniverseChainId.Optimism] as string,
     18,
     'UNI',
     'Uniswap',
   ),
   [UniverseChainId.Sepolia]: new Token(
     UniverseChainId.Sepolia,
-    '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984' as string,
-    //UNI_ADDRESSES[UniverseChainId.Sepolia] as string,
+    //'0x1f9840a85d5af5bf1d1762f925bdaddc4201f984' as string,
+    UNI_ADDRESSES[UniverseChainId.Sepolia] as string,
     18,
     'UNI',
     'Uniswap',

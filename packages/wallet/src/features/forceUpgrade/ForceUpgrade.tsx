@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import Svg, { Circle } from 'react-native-svg'
 import { DeprecatedButton, Flex, Image, Text, isWeb, useSporeColors } from 'ui/src'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { RIGOBLOCK_LOGO } from 'ui/src/assets'
 import { imageSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
@@ -117,7 +117,7 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
                 <Image
                   height={imageSizes.image64}
                   resizeMode="contain"
-                  source={UNISWAP_LOGO}
+                  source={RIGOBLOCK_LOGO}
                   width={imageSizes.image64}
                 />
                 <Flex position="absolute" top={-15} right={-8} transform={[{ rotate: '10deg' }]}>

@@ -24,7 +24,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { DAI, GRG, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import POP_ABI from 'uniswap/src/abis/pop.json'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { logger } from 'utilities/src/logger/logger'
 

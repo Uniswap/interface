@@ -14,7 +14,7 @@ import { useCallback, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Z_INDEX } from 'theme/zIndex'
 import { Flex, Image, Text } from 'ui/src'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { RIGOBLOCK_LOGO, UNISWAP_LOGO } from 'ui/src/assets'
 import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { PhoneDownload } from 'ui/src/components/icons/PhoneDownload'
@@ -75,6 +75,8 @@ export function UniswapWalletOptions() {
     () => (isEmbeddedWalletEnabled ? iconSizes.icon32 : iconSizes.icon40),
     [isEmbeddedWalletEnabled],
   )
+  const showDownloadWalletOption = false
+  const shouldHide = true;
 
   return (
     <Column gap="16px">
@@ -94,10 +96,10 @@ export function UniswapWalletOptions() {
             <DetectedBadge />
           </OptionContainer>
         ) : // If not on a mobile web browser show the download wallet modal (includes link to download extension)
-        !isMobileWeb ? (
+        !isMobileWeb && showDownloadWalletOption ? (
           <DownloadWalletOption />
         ) : null}
-        {isEmbeddedWalletEnabled ? (
+        {isEmbeddedWalletEnabled && !shouldHide ? (
           <OptionContainer
             recent={isRecent(embeddedWalletConnector)}
             onClick={handleSignInWithPasskey}
@@ -124,7 +126,7 @@ export function UniswapWalletOptions() {
           }}
         >
           {isMobileWeb ? (
-            <Image height={iconSize} source={UNISWAP_LOGO} width={iconSize} />
+            <Image height={iconSize} source={RIGOBLOCK_LOGO} width={iconSize} />
           ) : (
             <ScanQr
               size={iconSize}

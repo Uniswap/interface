@@ -15,7 +15,6 @@ import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyIn
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import ErrorIcon from 'components/Icons/Error'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
-import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
@@ -115,7 +114,7 @@ export function SwapForm({
     if (
       prefilledOutputCurrencyInfo?.currency.isToken &&
       prefilledOutputCurrencyInfo.safetyLevel !== SafetyLevel.Verified &&
-      prefilledInputCurrencyInfo.currency.symbol !== "GRG"
+      prefilledInputCurrencyInfo?.currency.symbol !== "GRG"
     ) {
       tokens.push({ field: CurrencyField.OUTPUT, currencyInfo: prefilledOutputCurrencyInfo })
     }

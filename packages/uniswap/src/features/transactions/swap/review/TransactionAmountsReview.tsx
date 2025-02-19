@@ -94,10 +94,6 @@ export function TransactionAmountsReview({
     )
   }
 
-  const onPressGetHelp = async (): Promise<void> => {
-    await openUri(uniswapUrls.rigoblockDiscordUrl)
-  }
-
   return (
     <Flex $short={{ gap: '$spacing8' }} gap="$spacing16" ml="$spacing12" mr="$spacing12">
       <Flex row alignItems="center">

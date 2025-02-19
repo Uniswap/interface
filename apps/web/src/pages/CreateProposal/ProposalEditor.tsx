@@ -3,7 +3,8 @@ import { ResizingTextArea, TextInput } from 'components/TextInput'
 import styled from 'lib/styled-components'
 import { memo } from 'react'
 import { Text } from 'rebass'
-import { Trans, t } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
+import i18n from 'uniswap/src/i18n'
 
 const ProposalEditorHeader = styled(Text)`
   font-size: 14px;
@@ -56,7 +57,7 @@ Insert your conclusion here
       <ProposalEditorHeader>
         <Trans i18nKey="vote.proposal.title" />
       </ProposalEditorHeader>
-      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder={t('proposal.title')} fontSize="1.25rem" />
+      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder={i18n.t('proposal.title')} fontSize="1.25rem" />
       <hr />
       <ResizingTextArea value={body} onUserInput={onBodyInput} placeholder={bodyPlaceholder} fontSize="1rem" />
     </ProposalEditorContainer>

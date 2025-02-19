@@ -4,8 +4,9 @@ import { RowBetween } from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { ArrowUpCircle, CheckCircle } from 'react-feather'
-import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
+import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'react-i18next'
+import { ModalCloseIcon}  from 'ui/src'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const ConfirmOrLoadingWrapper = styled.div`
@@ -22,7 +23,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
     <ConfirmOrLoadingWrapper>
       <RowBetween>
         <div />
-        <CloseIcon onClick={onDismiss} />
+        <ModalCloseIcon onClose={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
         <CustomLightSpinner src={Circle} alt="loader" size="90px" />
@@ -55,7 +56,7 @@ export function SubmittedView({
     <ConfirmOrLoadingWrapper>
       <RowBetween>
         <div />
-        <CloseIcon onClick={onDismiss} />
+        <ModalCloseIcon onClose={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
         {!transactionSuccess ? (
@@ -72,7 +73,7 @@ export function SubmittedView({
             style={{ marginLeft: '4px' }}
           >
             <ThemedText.DeprecatedSubHeader>
-              <Trans i18nKey="common.viewTransactionExplorer.link" />
+              <Trans i18nKey="common.etherscan.link" />
             </ThemedText.DeprecatedSubHeader>
           </ExternalLink>
         )}

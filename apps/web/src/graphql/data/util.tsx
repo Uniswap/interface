@@ -139,10 +139,14 @@ export function getTokenDetailsURL({
   return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
-// TODO: add chainId, update PoolPositionListItem, PoolPositionPage, RouteDefinitions.
-//  Notice: the current flow allows correct smart pool display when switching chain.
-export function getPoolDetailsURL(address: string) {
-  return `/smart-pool/${address}`
+export function getPoolDetailsURL(address: string, chain: Chain) {
+  const chainName = chain.toLowerCase()
+  return `/explore/pools/${chainName}/${address}`
+}
+
+export function getSmartPoolDetailsURL(address: string, chain: Chain) {
+  const chainName = chain.toLowerCase()
+  return `/smart-pool/${chainName}/${address}`
 }
 
 export function unwrapToken<

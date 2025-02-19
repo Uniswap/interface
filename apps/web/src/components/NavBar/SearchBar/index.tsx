@@ -4,12 +4,13 @@ import { ScrollBarStyles } from 'components/Common/styles'
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
 import Row from 'components/deprecated/Row'
-import { useSearchTokens } from 'graphql/data/SearchTokens'
+import { GqlSearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
 import { KeyAction, useKeyDown } from 'hooks/useKeyPress'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import styled, { css, useTheme } from 'lib/styled-components'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
@@ -21,6 +22,9 @@ import { breakpoints } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useAccount } from 'wagmi'
+import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 const NAV_SEARCH_MAX_WIDTH = '400px'
 const NAV_SEARCH_MIN_WIDTH = '280px'
@@ -194,6 +198,7 @@ export const SearchBar = ({
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue)
   const reducedTokens = tokens?.slice(0, 8) ?? []
   const allPools = useAllPoolsData().data
+  const account = useAccount()
 
   const smartPools: Token[] = useMemo(() => {
     //const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
@@ -212,7 +217,7 @@ export const SearchBar = ({
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])
-  const chain = chainIdToBackendChain({ chainId: account.chainId })
+  const chain: GqlChainId | undefined = account.chainId ? toGraphQLChain(account.chainId) : undefined
   // TODO: check using a different struct for pools
   const searchPools: GqlSearchToken[] | undefined = useMemo(() => {
     if (!chain) {
@@ -242,7 +247,7 @@ export const SearchBar = ({
     })
   }, [chain, filteredPools])
 
-  const [reducedPools, reducedTokens] = organizeSearchResults(searchPools ?? [], tokens ?? [])
+  const reducedPools = searchPools?.slice(0, 8) ?? []
 
   // clear searchbar when changing pages
   useEffect(() => {

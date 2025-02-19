@@ -70,7 +70,7 @@ export function swapErrorToUserReadableMessage(t: TFunction, error: any): string
     case 'TF':
       return t('swap.error.v3.transferOutput')
     case 'AUNISWAP_TOKEN_NOT_WHITELISTED_ERROR':
-      return t`The token you are trying to buy is not whitelisted yet. Make a token whitelisting request.`
+      return t(`The token does not have a price feed.`)
     default:
       if (reason?.indexOf('undefined is not an object') !== -1) {
         logger.warn(

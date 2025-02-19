@@ -4,7 +4,6 @@ import { RigoblockUrls } from 'constants/rigoblockUrls'
 import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const StyledExternalLink = styled(ExternalLink)`
   width: fit-content;

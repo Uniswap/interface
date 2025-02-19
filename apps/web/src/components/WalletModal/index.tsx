@@ -73,7 +73,7 @@ export default function WalletModal() {
   const connectors = useOrderedConnections()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, !isEmbeddedWalletEnabled)
+  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, isEmbeddedWalletEnabled)
 
   const isSignIn =
     useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp ||
@@ -93,7 +93,6 @@ export default function WalletModal() {
           </Text>
         </AutoRow>
       )}
-      <UniswapWalletOptions />
       <Flex
         row
         alignItems="center"
@@ -103,12 +102,12 @@ export default function WalletModal() {
         {...(isUniExtensionAvailable ? ClickableTamaguiStyle : {})}
       >
         <Line />
-        <Flex row alignItems="center" mx={18}>
+        {!showOtherWallets && <Flex row alignItems="center" mx={18}>
           <Text variant="body3" color="$neutral2" whiteSpace="nowrap">
             <Trans i18nKey="wallet.other" />
           </Text>
           {isUniExtensionAvailable ? showOtherWallets ? <StyledExpandIcon /> : <StyledCollapsedIcon /> : null}
-        </Flex>
+        </Flex>}
         <Line />
       </Flex>
       <Column gap="md" flex="1">
@@ -119,6 +118,7 @@ export default function WalletModal() {
             ))}
           </OptionGrid>
         </Row>
+        <UniswapWalletOptions />
         <Column gap="md">
           <TextSectionWrapper>
             <PrivacyPolicyNotice />

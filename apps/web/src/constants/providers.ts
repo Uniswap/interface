@@ -6,7 +6,7 @@ import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chain
 function getAppProvider(chainId: UniverseChainId) {
   const info = getChainInfo(chainId)
   return new AppJsonRpcProvider(
-    info.rpcUrls.appOnly.http.map(
+    info.rpcUrls.interface.http.map(
       (url /*, index*/) => {
         //const overrideUrl = index === 0 && chainId === UniverseChainId.Bnb
         //  ? process.env.REACT_APP_BNB_RPC_URL
@@ -25,6 +25,7 @@ export const RPC_PROVIDERS = Object.fromEntries(
 ) as Record<UniverseChainId, AppJsonRpcProvider>
 
 export function getBackupRpcProvider(chainId: UniverseChainId) {
+  const info = getChainInfo(chainId)
   const url = 'https://api.rigoblock.com/logs'
-  return new AppJsonRpcProvider([new ConfiguredJsonRpcProvider(url, { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })]);
+  return new AppJsonRpcProvider([new ConfiguredJsonRpcProvider(url, { chainId, name: info.interfaceName })]);
 }

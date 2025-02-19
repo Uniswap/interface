@@ -1,14 +1,14 @@
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { CurrencyRow } from 'components/SearchModal//CurrencyList'
 import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
 import { memo } from 'react'
 import styled from 'lib/styled-components'
-import { memo, useCallback, useEffect, useState } from 'react'
 import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 const PoolListWrapper = styled.div`
   width: 100%;
@@ -35,7 +35,7 @@ interface CurrencySearchModalProps {
   showCurrencyAmount?: boolean
   currencyField?: CurrencyField
   chainIds?: UniverseChainId[]
-  operatedPools?: Token[]
+  operatedPools?: CurrencyInfo[]
   shouldDisplayPoolsOnly?: boolean
 }
 
@@ -59,12 +59,33 @@ export default memo(function CurrencySearchModal({
       flex={1}
       name={ModalName.CurrencySearch}
     >
-      <CurrencySearch
+      {!shouldDisplayPoolsOnly && <CurrencySearch
         currencyField={currencyField}
         onCurrencySelect={onCurrencySelect}
         onDismiss={onDismiss}
         chainIds={chainIds}
       />
+      } : {
+        <PoolListWrapper>
+          <PoolListContainer>
+            {operatedPools?.map((pool) => (
+              <CurrencyRow
+                key={pool.currencyId}
+                currencyInfo={pool}
+                onSelect={() => {
+                  onCurrencySelect(pool.currency)
+                  onDismiss() // TODO: check we want this dismissed on select
+                }}
+                isSelected={false} // Adjust as needed
+                balance={undefined}
+                isSmartPool={true}
+                eventProperties={{}}
+                otherSelected={false}
+              />
+            ))}
+          </PoolListContainer>
+        </PoolListWrapper>
+      }
     </Modal>
   )
 })

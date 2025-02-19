@@ -7,7 +7,7 @@ import { useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { fetchedLogs, fetchedLogsError, fetchingLogs } from 'state/logs/slice'
 import { isHistoricalLog, keyToFilter } from 'state/logs/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 
 export default function Updater(): null {

@@ -2,14 +2,12 @@ import { useAtom } from 'jotai'
 import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 import { ReactNode, Suspense, lazy, useMemo } from 'react'
-import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
+import { Navigate, matchPath, useLocation } from 'react-router-dom'
 import { shouldDisableExploreRoutesAtom, shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import CreatePool from 'pages/CreatePool'
 //import Landing from 'pages/Landing'
-import { CreatePosition } from 'pages/Pool/Positions/create/CreatePosition'
 import Stake from 'pages/Stake'
 import Swap from 'pages/Swap'
 import i18n from 'uniswap/src/i18n'
@@ -43,26 +41,10 @@ const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const RemoveLiquidityV2 = lazy(() => import('pages/RemoveLiquidity/V2'))
-const PoolFinder = lazy(() => import('pages/PoolFinder'))
 const PoolPositionPage = lazy(() => import('pages/CreatePool/PoolPositionPage'))
-const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const Vote = lazy(() => import('pages/Vote'))
-
-// this is the same svg defined in assets/images/blue-loader.svg
-// it is defined here because the remote asset may not have had time to load when this file is executing
-const LazyLoadSpinner = () => (
-  <SpinnerSVG width="94" height="94" viewBox="0 0 94 94" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M92 47C92 22.1472 71.8528 2 47 2C22.1472 2 2 22.1472 2 47C2 71.8528 22.1472 92 47 92"
-      stroke="#2172E5"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </SpinnerSVG>
-)
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
@@ -192,8 +174,8 @@ export const routes: RouteDefinition[] = [
     path: '/vote/*',
     getTitle: () => i18n.t('title.voteOnGov'),
     getDescription: () => i18n.t('title.uniToken'),
-    getElement: () => {
-      <Suspense fallback={<LazyLoadSpinner />}>
+    getElement: () => (
+      <Suspense fallback={null}>
         <Vote />
       </Suspense>
     ),
@@ -419,12 +401,12 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/mint',
     getElement: () => <CreatePool />,
-    getTitle: () => t`Buy smart pools on Rigoblock`,
+    getTitle: () => i18n.t(`Buy smart pools on Rigoblock`),
   }),
   createRouteDefinition({
     path: '/stake',
     getElement: () => <Stake />,
-    getTitle: () => t`Find the best pools on Rigoblock`,
+    getTitle: () => i18n.t(`Find the best pools on Rigoblock`),
   }),
   createRouteDefinition({
     path: '/smart-pool',
@@ -437,7 +419,7 @@ export const routes: RouteDefinition[] = [
       ':poolAddress/:returnPage/:poolStake/:apr/:poolOwnStake/:irr',
     ],
     getElement: () => <PoolPositionPage />,
-    getTitle: () => t`Provide liquidity to pools on Rigoblock`,
+    getTitle: () => i18n.t`Provide liquidity to pools on Rigoblock`,
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),

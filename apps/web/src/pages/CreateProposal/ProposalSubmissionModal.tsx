@@ -1,6 +1,6 @@
 import { ButtonPrimary } from 'components/Button/buttons'
 import { AutoColumn } from 'components/deprecated/Column'
-import Modal from 'components/Modal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { useAccount } from 'hooks/useAccount'
 import { useTheme } from 'lib/styled-components'
@@ -9,7 +9,8 @@ import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
+import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 export const ProposalSubmissionModal = ({
@@ -29,7 +30,7 @@ export const ProposalSubmissionModal = ({
   const transactionSuccess = transaction?.status === TransactionStatus.Confirmed
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss}>
+    <Modal name={ModalName.DappRequest} isModalOpen={isOpen} isDismissible onClose={onDismiss}>
       {!hash ? (
         <LoadingView onDismiss={onDismiss}>
           <AutoColumn gap="md" justify="center">

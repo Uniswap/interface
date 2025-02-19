@@ -42,8 +42,8 @@ import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
 import { GRG } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { Trans } from 'react-i18next'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

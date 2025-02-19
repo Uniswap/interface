@@ -3,6 +3,7 @@ import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Send } from 'components/Icons/Send'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
+import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { useTheme } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
@@ -27,6 +28,7 @@ export const useTabsContent = (props?: { userIsOperator?: boolean }): TabsSectio
   const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const { pathname } = useLocation()
   const theme = useTheme()
+  const areTabsVisible = useTabsVisible()
 
   return [
     {

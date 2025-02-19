@@ -3,6 +3,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { MulticallExtended, PaymentsExtended } from '@uniswap/router-sdk'
 import {
   Currency,
   CurrencyAmount,
@@ -49,7 +50,6 @@ import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import JSBI from 'jsbi'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import styled, { useTheme } from 'lib/styled-components'
 import { Review } from 'pages/AddLiquidityV3/Review'
 import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidityV3/blastAlerts'

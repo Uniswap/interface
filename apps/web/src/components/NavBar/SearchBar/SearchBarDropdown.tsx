@@ -141,7 +141,6 @@ export function SearchBarDropdown(props: SearchBarDropdownProps) {
   )
 }
 
-  tokens,
 function SearchBarDropdownContents({
   toggleOpen,
   pools,
@@ -167,7 +166,7 @@ function SearchBarDropdownContents({
     [trendingTokenData],
   )
 
-  const totalSuggestions = hasInput ? tokens.length : Math.min(shortenedHistory.length, 2) + trendingTokens?.length ?? 0
+  const totalSuggestions = hasInput ? tokens.length : Math.min(shortenedHistory.length, 2) + trendingTokens?.length
 
   // Navigate search results via arrow keys
   useEffect(() => {
@@ -208,7 +207,7 @@ function SearchBarDropdownContents({
     pools.length > 0 ? (
       <SearchBarDropdownSection
         hoveredIndex={hoveredIndex}
-        startingIndex={showCollectionsFirst ? collections.length : 0}
+        startingIndex={0}
         setHoveredIndex={setHoveredIndex}
         toggleOpen={toggleOpen}
         suggestions={pools}
@@ -230,7 +229,7 @@ function SearchBarDropdownContents({
     tokens.length > 0 ? (
       <SearchBarDropdownSection
         hoveredIndex={hoveredIndex}
-        startingIndex={showCollectionsFirst ? collections.length : 0}
+        startingIndex={0}
         setHoveredIndex={setHoveredIndex}
         toggleOpen={toggleOpen}
         suggestions={tokens}

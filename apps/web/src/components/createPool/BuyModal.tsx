@@ -5,11 +5,11 @@ import { ButtonConfirmed, ButtonError } from 'components/Button/buttons'
 import { AutoColumn } from 'components/deprecated/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { RowBetween } from 'components/deprecated/Row'
-import Modal from 'components/Modal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import ProgressCircles from 'components/ProgressSteps'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
 import { PoolInfo, useDerivedPoolInfo } from 'state/buy/hooks'
@@ -17,8 +17,10 @@ import { usePoolExtendedContract } from 'state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import styled from 'lib/styled-components'
-import { CloseIcon, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ModalCloseIcon } from 'ui/src'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -151,7 +153,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={480}>
+    <Modal name={ModalName.DappRequest} isModalOpen={isOpen} isDismissible onClose={wrappedOnDismiss} maxHeight={480}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           {userBaseTokenBalance && poolInfo && (
@@ -162,7 +164,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
                     Buy {poolInfo.pool?.symbol ?? null} using {userBaseTokenBalance.currency?.symbol}
                   </Trans>
                 </ThemedText.DeprecatedMediumHeader>
-                <CloseIcon onClick={wrappedOnDismiss} />
+                <ModalCloseIcon onClose={wrappedOnDismiss} />
               </RowBetween>
               <CurrencyInputPanel
                 value={typedValue}

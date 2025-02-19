@@ -146,6 +146,11 @@ export const createUniverseTransaction = (info: TransactionInfo, chainId: Univer
     case TransactionType.SUBMIT_PROPOSAL:
     case TransactionType.QUEUE:
     case TransactionType.EXECUTE:
+    case TransactionType.BUY:
+    case TransactionType.SELL:  
+    case TransactionType.SET_SPREAD:
+    case TransactionType.SET_LOCKUP:
+    case TransactionType.SET_VALUE:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails
     default:
       assertUnreachable(info)

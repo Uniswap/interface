@@ -1,4 +1,4 @@
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type AddressMap = { [chainId: number]: string }
 
@@ -37,7 +37,7 @@ export const GOVERNANCE_PROXY_ADDRESSES: AddressMap = {
 /* Staking Proxy Addresses */
 export const STAKING_PROXY_ADDRESSES: AddressMap = {
   [UniverseChainId.Mainnet]: '0x730dDf7b602dB822043e0409d8926440395e07fE',
-  [UniverseChainId.Sepolia]: '0x6C4594aa0CBcb8315E88EFdb11675c09A7a5f444',
+  [UniverseChainId.Sepolia]: '0x73f92F71544578BCC1D9F3B7dfce18859Bc20261',
   [UniverseChainId.Optimism]: '0xB844bDCC64a748fDC8c9Ee74FA4812E4BC28FD70',
   [UniverseChainId.ArbitrumOne]: '0xD495296510257DAdf0d74846a8307bf533a0fB48',
   [UniverseChainId.Polygon]: '0xC87d1B952303ae3A9218727692BAda6723662dad',
@@ -70,6 +70,7 @@ export const RB_FACTORY_ADDRESSES: AddressMap = {
     UniverseChainId.Bnb,
     UniverseChainId.Base,
   ]),
+  [UniverseChainId.Sepolia]: '0x91633ADe1ef900e5551BbC6381212A5eC2fEB424'
 }
 
 /* Rigoblock Pool Registry Addresses */
@@ -83,6 +84,7 @@ export const RB_REGISTRY_ADDRESSES: AddressMap = {
     UniverseChainId.Bnb,
     UniverseChainId.Base,
   ]),
+  [UniverseChainId.Sepolia]: '0xDE56aa34a550c47956cAc9df0d0f9d89C358396d'
 }
 
 export const POP_ADDRESSES: AddressMap = {

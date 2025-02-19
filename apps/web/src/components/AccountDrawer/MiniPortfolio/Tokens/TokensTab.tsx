@@ -105,7 +105,6 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
     )
     accountDrawer.close()
   }, [accountDrawer, isTestnetModeEnabled, navigate, tokenAddress, chainId, isExploreRouteActive])
-  const { formatNumber } = useFormatter()
 
   const portfolioRow = (
     <PortfolioRow

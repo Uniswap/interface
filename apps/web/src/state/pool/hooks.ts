@@ -27,7 +27,7 @@ import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
 import { GRG } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 //const PoolInterface = new Interface(POOL_EXTENDED_ABI)
@@ -75,7 +75,7 @@ function useStartBlock(chainId?: number): {fromBlock: number, toBlock?: number }
   if (chainId === UniverseChainId.Mainnet) {
     registryStartBlock = 15834693
   } else if (chainId === UniverseChainId.Sepolia) {
-    registryStartBlock = 7807806
+    registryStartBlock = 7707806
   } else if (chainId === UniverseChainId.ArbitrumOne) {
     registryStartBlock = 35439804
   } else if (chainId === UniverseChainId.Optimism) {
@@ -458,7 +458,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
 }
 
 // TODO: our rpc endpoint returns multichain pools, we can render by chainId, i.e. on chain switch should update.
-export function useOperatedPools() {
+export function useOperatedPools(): Token[] | undefined {
   const { data: poolsLogs } = useAllPoolsData()
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     if (!poolsLogs) {

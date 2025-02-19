@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Flex, Image, Text } from 'ui/src'
-import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
+import { RIGOBLOCK_LOGO_LARGE } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -27,7 +27,7 @@ export function FiatOnRampConnectingView({
         <Flex centered grow style={{ marginBottom: insets.bottom }}>
           <Flex row gap="$spacing16" pb="$spacing16">
             <Flex alignItems="center" justifyContent="center" style={ServiceProviderLogoStyles.uniswapLogoWrapper}>
-              <Image height={iconSizes.icon64} source={UNISWAP_LOGO_LARGE} width={iconSizes.icon64} />
+              <Image height={iconSizes.icon64} source={RIGOBLOCK_LOGO_LARGE} width={iconSizes.icon64} />
             </Flex>
             {serviceProviderLogo}
           </Flex>

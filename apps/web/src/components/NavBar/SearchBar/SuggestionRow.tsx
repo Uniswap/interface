@@ -6,7 +6,7 @@ import Column from 'components/deprecated/Column'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
-import { getPoolDetailsURL, getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { getSmartPoolDetailsURL, getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import styled, { css } from 'lib/styled-components'
 import { searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
 import { GenieCollection } from 'nft/types'
@@ -19,8 +19,9 @@ import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons/Verified'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
-import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { Chain, Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
@@ -136,11 +137,12 @@ export function SuggestionRow({
   }, [suggestion, isToken, toggleOpen, eventProperties, dispatch])
 
   const path = isPool
-    ? getPoolDetailsURL(
+    ? getSmartPoolDetailsURL(
       suggestion.address ?? '',
+      toGraphQLChain(supportedChainIdFromGQLChain(suggestion.chain) ?? UniverseChainId.Mainnet),
     ) : isToken
-    ? getTokenDetailsURL({ ...suggestion })
-    : `/nfts/collection/${suggestion.address}`
+      ? getTokenDetailsURL({ ...suggestion })
+      : `/nfts/collection/${suggestion.address}`
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {

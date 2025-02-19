@@ -65,6 +65,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
     },
     [navigate, setCurrentTab, syncTabToUrl],
   )
+  const isLimitOrderEnabled = false
 
   return (
     <StyledSwapHeader>
@@ -80,7 +81,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
         >
           <Trans i18nKey="common.swap" />
         </SwapHeaderTabButton>
-        {initialChainId === UniverseChainId.Sepolia && (
+        {isLimitOrderEnabled && (
           <SwapHeaderTabButton
             $isActive={currentTab === SwapTab.Limit}
             onClick={() => {

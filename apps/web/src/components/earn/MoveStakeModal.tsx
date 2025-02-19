@@ -1,7 +1,7 @@
 import { isAddress } from '@ethersproject/address'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
 import { X } from 'react-feather'
@@ -10,12 +10,13 @@ import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
 import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { TextButton } from 'components/vote/DelegateModal'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
-import useENS from 'hooks/useENS'
+import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
@@ -35,11 +36,11 @@ import { /*ButtonConfirmed,*/ ButtonPrimary } from 'components/Button/buttons'
 import { LightCard } from 'components/Card/cards'
 import { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow, RowBetween } from 'components/deprecated/Row'
-import Modal from 'components/Modal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import Slider from 'components/Slider'
 import { useAccount } from 'hooks/useAccount'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -76,7 +77,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   const { onPercentSelect } = useBurnV3ActionHandlers()
 
   const fromPoolAddress = typed ?? ZERO_ADDRESS
-  const { address: parsedAddress } = useENS(fromPoolAddress)
+  const { address: parsedAddress } = useENS({ nameOrAddress: fromPoolAddress })
 
   // TODO: we can save 1 rpc call here by using multicall
   const fromPoolId = usePoolIdByAddress(parsedAddress ?? undefined).poolId
@@ -176,7 +177,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={600}>
+    <Modal name={ModalName.DappRequest} isModalOpen={isOpen} isDismissible onClose={wrappedOnDismiss} maxHeight={600}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

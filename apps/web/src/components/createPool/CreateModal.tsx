@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useIsSupportedChainId } from 'constants/chains'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { X } from 'react-feather'
@@ -8,17 +7,18 @@ import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
-import { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { useCreateCallback } from 'state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import { ButtonGray, ButtonPrimary } from 'components/Button/buttons'
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import Modal from 'components/Modal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import NameInputPanel from 'components/NameInputPanel'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
@@ -94,6 +94,8 @@ interface CreateModalProps {
   onDismiss: () => void
   title: ReactNode
 }
+
+const MODAL_TRANSITION_DURATION = 200
 
 export default function CreateModal({ isOpen, onDismiss, title }: CreateModalProps) {
   // state for create input
@@ -185,7 +187,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
           shouldDisplayPoolsOnly={false}
         />
       ) : (
-        <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={600}>
+        <Modal name={ModalName.DappRequest} isModalOpen={isOpen} isDismissible onClose={wrappedOnDismiss} maxHeight={600}>
           {!attempting && !hash && (
             <ContentWrapper gap="lg">
               <AutoColumn gap="lg" justify="center">

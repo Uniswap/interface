@@ -15,7 +15,7 @@ import Animated, {
 import { Circle, Defs, Svg } from 'react-native-svg'
 import { Flex, FlexProps, Image, isWeb, useIsDarkMode } from 'ui/src'
 import { Jiggly } from 'ui/src/animations'
-import { UNISWAP_LOGO } from 'ui/src/assets'
+import { RIGOBLOCK_LOGO } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { imageSizes } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -93,7 +93,7 @@ const OnboardingAnimation = ({
           <Image
             height={isWeb ? LOGO_SIZE_WEB : imageSizes.image100}
             resizeMode="contain"
-            source={UNISWAP_LOGO}
+            source={RIGOBLOCK_LOGO}
             width={isWeb ? LOGO_SIZE_WEB : imageSizes.image100}
           />
         </Jiggly>
