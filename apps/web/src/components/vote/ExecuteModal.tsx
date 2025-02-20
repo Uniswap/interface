@@ -143,7 +143,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
                 style={{ marginLeft: '4px' }}
               >
                 <ThemedText.DeprecatedSubHeader>
-                  <Trans i18nKey="common.viewTransactionExplorer.link" />
+                  <Trans i18nKey="common.explorer.link" />
                 </ThemedText.DeprecatedSubHeader>
               </ExternalLink>
             )}

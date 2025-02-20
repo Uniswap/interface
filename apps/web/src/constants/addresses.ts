@@ -63,7 +63,6 @@ export const GRG_TRANSFER_PROXY_ADDRESSES: AddressMap = {
 export const RB_FACTORY_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x8DE8895ddD702d9a216E640966A98e08c9228f24', [
     UniverseChainId.Mainnet,
-    UniverseChainId.Sepolia,
     UniverseChainId.Optimism,
     UniverseChainId.ArbitrumOne,
     UniverseChainId.Polygon,
@@ -77,7 +76,6 @@ export const RB_FACTORY_ADDRESSES: AddressMap = {
 export const RB_REGISTRY_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x06767e8090bA5c4Eca89ED00C3A719909D503ED6', [
     UniverseChainId.Mainnet,
-    UniverseChainId.Sepolia,
     UniverseChainId.Optimism,
     UniverseChainId.ArbitrumOne,
     UniverseChainId.Polygon,

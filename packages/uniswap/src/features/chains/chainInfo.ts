@@ -795,7 +795,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Public]: {
-        http: [getQuicknodeEndpointUrl(UniverseChainId.Sepolia)],
+        http: [`https://sepolia.infura.io/v3/${config.infuraKey}`],
       },
       [RPCType.Default]: {
         http: ['https://rpc.sepolia.org/'],

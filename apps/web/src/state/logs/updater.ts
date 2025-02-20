@@ -1,13 +1,13 @@
 import type { Filter } from '@ethersproject/providers'
 //import { useWeb3React } from '@web3-react/core'
-import { getBackupRpcProvider, RPC_PROVIDERS } from 'constants/providers'
+import { getBackupRpcProvider, RPC_PROVIDERS, TESTNET_RPC_PROVIDERS } from 'constants/providers'
 import { useAccount } from 'hooks/useAccount'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { fetchedLogs, fetchedLogsError, fetchingLogs } from 'state/logs/slice'
 import { isHistoricalLog, keyToFilter } from 'state/logs/utils'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 
 export default function Updater(): null {
@@ -19,6 +19,10 @@ export default function Updater(): null {
   // TODO: should be dependent on chainId, so we can switch provider on switch chain, unless we
   //  use our multichain provider
   let provider = RPC_PROVIDERS[chainId ?? UniverseChainId.Mainnet]
+
+  if (SUPPORTED_TESTNET_CHAIN_IDS.includes(chainId ?? UniverseChainId.Sepolia)) {
+    provider = TESTNET_RPC_PROVIDERS[chainId ?? UniverseChainId.Sepolia]
+  }
 
   // TODO: check if we want to use our endpoints as addition to use onchain logs and ours combined
   // TODO: check define provider inside useEffect, so will update on chain switch.

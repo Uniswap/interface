@@ -143,7 +143,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
                 style={{ marginLeft: '4px' }}
               >
                 <ThemedText.DeprecatedSubHeader>
-                  <Trans i18nKey="common.viewTransactionExplorer.link" />
+                  <Trans i18nKey="common.explorer.link" />
                 </ThemedText.DeprecatedSubHeader>
               </ExternalLink>
             )}

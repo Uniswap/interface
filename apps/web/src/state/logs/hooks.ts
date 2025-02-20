@@ -59,6 +59,7 @@ export function useLogs(filter: Filter | undefined): UseLogsResult {
     const state = logs[chainId]?.[filterToKey(filter)]
     const result = state?.results
 
+
     if (!result) {
       return {
         state: LogsState.LOADING,
