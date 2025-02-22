@@ -29,12 +29,19 @@ import {
   postParsingError,
   postUnknownMethodError,
 } from 'src/contentScript/methodHandlers/utils'
-import { WindowEthereumRequest, isValidWindowEthereumRequest } from 'src/contentScript/types'
+import {
+  ETH_PROVIDER_CONFIG,
+  WindowEthereumConfigRequest,
+  WindowEthereumRequest,
+  isValidWindowEthereumConfigRequest,
+  isValidWindowEthereumRequest,
+} from 'src/contentScript/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 
+import { getIsDefaultProviderFromStorage } from 'src/app/utils/provider'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { ZodError } from 'zod'
@@ -259,3 +266,13 @@ async function passAnalytics(message: string, tags: Record<string, string>): Pro
   }
   await contentScriptUtilityMessageChannel.sendMessage(logMessage)
 }
+
+addWindowMessageListener<WindowEthereumConfigRequest>(
+  isValidWindowEthereumConfigRequest,
+  async () => {
+    const isDefaultProvider = await getIsDefaultProviderFromStorage()
+    window.postMessage({ type: ETH_PROVIDER_CONFIG.RESPONSE, config: { isDefaultProvider } })
+  },
+  undefined,
+  { removeAfterHandled: true },
+)

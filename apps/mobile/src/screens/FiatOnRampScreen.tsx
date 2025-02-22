@@ -82,6 +82,7 @@ function preloadServiceProviderLogos(serviceProviders: FORServiceProvider[], isD
 }
 
 const PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES = ['usd', 'eur', 'gbp', 'aud', 'cad', 'sgd']
+const US_STATES_WITH_RESTRICTIONS = 'US-NY'
 
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const isOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
@@ -398,7 +399,10 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     meldSupportedFiatCurrency.code.toLowerCase(),
   )
 
-  const notAvailableInThisRegion = supportedFiatCurrencies?.length === 0
+  const notAvailableInThisRegion =
+    supportedFiatCurrencies?.length === 0 ||
+    (!supportedTokensLoading && supportedTokensList?.length === 0) ||
+    (US_STATES_WITH_RESTRICTIONS.includes(countryState || '') && quotes?.length === 0)
 
   const { errorText } = useParseFiatOnRampError({
     error: !notAvailableInThisRegion && quotesError,

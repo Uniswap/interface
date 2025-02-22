@@ -193,7 +193,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           </Text>
         </Flex>
       </Flex>
-      <DeprecatedButton disabled={!isValid} mt="$spacing24" testID={TestID.Next} onPress={onSubmit}>
+      <DeprecatedButton isDisabled={!isValid} mt="$spacing24" size="large" testID={TestID.Next} onPress={onSubmit}>
         {t('common.button.continue')}
       </DeprecatedButton>
     </SafeKeyboardOnboardingScreen>

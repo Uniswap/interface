@@ -64,7 +64,11 @@ export function useSwapTxAndGasInfo({
     const permit = validatePermit(swapTxInfo.permitData)
     const unsigned = Boolean(isInterface && swapTxInfo.permitData)
 
-    if (trade?.routing === Routing.DUTCH_V2 || trade?.routing === Routing.PRIORITY) {
+    if (
+      trade?.routing === Routing.DUTCH_V2 ||
+      trade?.routing === Routing.DUTCH_V3 ||
+      trade?.routing === Routing.PRIORITY
+    ) {
       const signature = swapTxInfo.permitSignature
       const orderParams = signature ? { signature, quote: trade.quote.quote, routing: Routing.DUTCH_V2 } : undefined
       const gasFeeBreakdown: UniswapXGasBreakdown = {

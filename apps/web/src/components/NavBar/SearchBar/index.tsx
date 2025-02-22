@@ -1,22 +1,21 @@
 import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { ScrollBarStyles } from 'components/Common/styles'
 import { NavIcon } from 'components/NavBar/NavIcon'
-import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
 import Row from 'components/deprecated/Row'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import useDebounce from 'hooks/useDebounce'
 import { KeyAction, useKeyDown } from 'hooks/useKeyPress'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Search, X } from 'react-feather'
+import { Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
-import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { Input } from 'ui/src'
+import { Input, useMedia } from 'ui/src'
+import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
+import { breakpoints } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -115,7 +114,7 @@ const SearchInput = styled(Row)<{ $isOpen: boolean; $fullScreen: boolean }>`
   ${({ $fullScreen }) => $fullScreen && FullScreenSearchInput}
   ${({ $isOpen }) => !$isOpen && ClosedSearchInputHover}
 
-  @media screen and (max-width: ${BREAKPOINTS.xs}px) {
+  @media screen and (max-width: ${breakpoints.xs}px) {
     border: none;
   }
 `
@@ -137,16 +136,10 @@ const SearchBarDropdownContainer = styled.div<{ $isOpen: boolean; $fullScreen: b
   overflow-y: auto;
   ${({ $isOpen }) => $isOpen && OpenSearchDropdown}
   ${({ $fullScreen }) => $fullScreen && FullScreenSearchDropdown}
-  @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {
+  @media screen and (max-width: ${breakpoints.sm}px) {
     border: none;
   }
   ${ScrollBarStyles}
-`
-const CloseIcon = styled(X)`
-  width: 25px;
-  height: 25px;
-  stroke: ${({ theme }) => theme.neutral2};
-  cursor: pointer;
 `
 const SearchIcon = styled.div`
   width: 20px;
@@ -168,7 +161,8 @@ export const SearchBar = ({
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<any>(null)
   const { pathname } = useLocation()
-  const isNavSearchInputVisible = useScreenSize()['lg']
+  const media = useMedia()
+  const isNavSearchInputVisible = !media.xl
   const theme = useTheme()
   const { t } = useTranslation() // subscribe to locale changes
 
@@ -232,7 +226,7 @@ export const SearchBar = ({
           $fullScreen={fullScreen}
         >
           {(!!isNavSearchInputVisible || isOpen) && (
-            <SearchInput $isOpen={isOpen} $fullScreen={fullScreen}>
+            <SearchInput $isOpen={isOpen} $fullScreen={fullScreen} data-testid="nav-search-input">
               <SearchIcon data-cy="nav-search-icon">
                 <Search width="20px" height="20px" color={theme.neutral2} />
               </SearchIcon>
@@ -261,7 +255,7 @@ export const SearchBar = ({
                   value={searchValue}
                 />
               </Trace>
-              {fullScreen && isOpen && <CloseIcon onClick={toggleOpen} />}
+              {fullScreen && isOpen && <CloseIconWithHover onClose={toggleOpen} />}
               {!isOpen && <KeyShortcut>/</KeyShortcut>}
             </SearchInput>
           )}

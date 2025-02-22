@@ -10,7 +10,7 @@ import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
+import { breakpoints } from 'ui/src/theme'
 
 const TableHeader = styled.div`
   display: flex;
@@ -27,7 +27,7 @@ const TableHeader = styled.div`
   line-height: 20px;
   border-radius: 12px;
 
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (min-width: ${breakpoints.md}px) {
     padding-left: 48px;
   }
 `
@@ -35,7 +35,7 @@ const TableHeader = styled.div`
 const NFTHeader = styled.div`
   flex: 2;
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     flex: 1.5;
   }
 `
@@ -44,7 +44,7 @@ const PriceHeaders = styled(Row)`
   flex: 1.5;
   margin-right: 12px;
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     flex: 3;
   }
 `
@@ -53,7 +53,7 @@ const LastPriceHeader = styled.div`
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+  @media screen and (min-width: ${breakpoints.xl}px) {
     display: flex;
   }
 `
@@ -62,7 +62,7 @@ const FloorPriceHeader = styled.div`
   display: none;
   flex: 1;
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     display: flex;
   }
 `
@@ -74,7 +74,7 @@ const DropdownAndHeaderWrapper = styled(Row)`
 
 const DropdownPromptContainer = styled(Column)`
   position: relative;
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     display: none;
   }
 `
@@ -118,7 +118,7 @@ const DropdownContainer = styled.div`
 const FeeUserReceivesSharedStyles = css`
   display: none;
   justify-content: flex-end;
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     display: flex;
   }
 `

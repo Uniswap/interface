@@ -23,14 +23,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c16 {
+.c15 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -41,11 +34,11 @@ exports[`OrderContent should render without error, filled order 1`] = `
   font-weight: 500;
 }
 
-.c16:hover {
+.c15:hover {
   opacity: 0.6;
 }
 
-.c16:active {
+.c15:active {
   opacity: 0.4;
 }
 
@@ -137,7 +130,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 4px;
 }
 
-.c12 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -152,17 +145,17 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 8px;
 }
 
-.c13 {
+.c12 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c14 {
+.c13 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c15 {
+.c14 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -320,7 +313,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
                   class="c10"
                 >
                   <div
-                    class="c11 css-vhdk4b"
+                    class="c4 css-vhdk4b"
                     data-testid="input-amount"
                   >
                     252.074
@@ -332,6 +325,25 @@ exports[`OrderContent should render without error, filled order 1`] = `
                   >
                     -
                   </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
                 </div>
               </div>
             </div>
@@ -366,7 +378,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
                   class="c10"
                 >
                   <div
-                    class="c11 css-vhdk4b"
+                    class="c4 css-vhdk4b"
                     data-testid="output-amount"
                   >
                     0.10684
@@ -380,28 +392,47 @@ exports[`OrderContent should render without error, filled order 1`] = `
                   </div>
                 </div>
               </div>
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div
             class="c6 c7"
           />
           <div
-            class="c12"
+            class="c11"
           >
             <div
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c4 c13 css-142zc9n"
+                class="c4 c12 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Rate
               </div>
               <div
-                class="c4 c14 css-142zc9n"
+                class="c4 c13 css-142zc9n"
               >
                 <button
-                  class="c15"
+                  class="c14"
                   title="1 WETH = 2,359.34 DAI "
                 >
                   <div
@@ -417,13 +448,13 @@ exports[`OrderContent should render without error, filled order 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c4 c13 css-142zc9n"
+                class="c4 c12 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Network cost
               </div>
               <div
-                class="c4 c14 css-142zc9n"
+                class="c4 c13 css-142zc9n"
               >
                 <span>
                   $0
@@ -434,16 +465,16 @@ exports[`OrderContent should render without error, filled order 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c4 c13 css-142zc9n"
+                class="c4 c12 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Transaction ID
               </div>
               <div
-                class="c4 c14 css-142zc9n"
+                class="c4 c13 css-142zc9n"
               >
                 <a
-                  class="c16"
+                  class="c15"
                   href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
                   rel="noopener noreferrer"
                   target="_blank"
@@ -454,6 +485,9 @@ exports[`OrderContent should render without error, filled order 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -483,14 +517,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c22 {
+.c21 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -501,11 +528,11 @@ exports[`OrderContent should render without error, limit order 1`] = `
   font-weight: 500;
 }
 
-.c22:hover {
+.c21:hover {
   opacity: 0.6;
 }
 
-.c22:active {
+.c21:active {
   opacity: 0.4;
 }
 
@@ -517,7 +544,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   background-color: #22222212;
 }
 
-.c19 {
+.c18 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -531,7 +558,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   width: 100%;
 }
 
-.c16 {
+.c15 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -566,26 +593,26 @@ exports[`OrderContent should render without error, limit order 1`] = `
   user-select: none;
 }
 
-.c16:active .c18 {
+.c15:active .c17 {
   background-color: #B8C0DC3d;
 }
 
-.c16:focus .c18 {
+.c15:focus .c17 {
   background-color: #B8C0DC3d;
 }
 
-.c16:hover .c18 {
+.c15:hover .c17 {
   background-color: #98A1C014;
 }
 
-.c16:disabled {
+.c15:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c16:disabled:active .c18,
-.c16:disabled:focus .c18,
-.c16:disabled:hover .c18 {
+.c15:disabled:active .c17,
+.c15:disabled:focus .c17,
+.c15:disabled:hover .c17 {
   background-color: transparent;
 }
 
@@ -669,7 +696,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   gap: 4px;
 }
 
-.c12 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -684,17 +711,17 @@ exports[`OrderContent should render without error, limit order 1`] = `
   gap: 8px;
 }
 
-.c13 {
+.c12 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c14 {
+.c13 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c15 {
+.c14 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -740,14 +767,14 @@ exports[`OrderContent should render without error, limit order 1`] = `
   left: 0;
 }
 
-.c20 {
+.c19 {
   background-color: #F9F9F9;
   border-radius: 12px;
   padding: 12px;
   margin-top: 12px;
 }
 
-.c21 {
+.c20 {
   line-height: 16px;
 }
 
@@ -755,7 +782,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   margin: 28px 0;
 }
 
-.c17 {
+.c16 {
   margin-top: 16px;
   border-radius: 12px;
 }
@@ -868,7 +895,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
                   class="c10"
                 >
                   <div
-                    class="c11 css-vhdk4b"
+                    class="c4 css-vhdk4b"
                     data-testid="input-amount"
                   >
                     252.074
@@ -880,6 +907,25 @@ exports[`OrderContent should render without error, limit order 1`] = `
                   >
                     -
                   </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
                 </div>
               </div>
             </div>
@@ -914,7 +960,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
                   class="c10"
                 >
                   <div
-                    class="c11 css-vhdk4b"
+                    class="c4 css-vhdk4b"
                     data-testid="output-amount"
                   >
                     0.10684
@@ -928,28 +974,47 @@ exports[`OrderContent should render without error, limit order 1`] = `
                   </div>
                 </div>
               </div>
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div
             class="c6 c7"
           />
           <div
-            class="c12"
+            class="c11"
           >
             <div
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c4 c13 css-142zc9n"
+                class="c4 c12 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Rate
               </div>
               <div
-                class="c4 c14 css-142zc9n"
+                class="c4 c13 css-142zc9n"
               >
                 <button
-                  class="c15"
+                  class="c14"
                   title="1 WETH = 2,359.34 DAI "
                 >
                   <div
@@ -965,13 +1030,13 @@ exports[`OrderContent should render without error, limit order 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c4 c13 css-142zc9n"
+                class="c4 c12 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Expiry
               </div>
               <div
-                class="c4 c14 css-142zc9n"
+                class="c4 c13 css-142zc9n"
               >
                 <span />
               </div>
@@ -980,13 +1045,13 @@ exports[`OrderContent should render without error, limit order 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c4 c13 css-142zc9n"
+                class="c4 c12 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Network cost
               </div>
               <div
-                class="c4 c14 css-142zc9n"
+                class="c4 c13 css-142zc9n"
               >
                 <span>
                   $0
@@ -995,32 +1060,32 @@ exports[`OrderContent should render without error, limit order 1`] = `
             </div>
           </div>
           <button
-            class="c16 c17"
+            class="c15 c16"
             size="1"
           >
             <div
-              class="c18 c19"
+              class="c17 c18"
             />
             Cancel limit
           </button>
           <div
-            class="c12 c20"
+            class="c11 c19"
           >
             <div
-              class="c5 c21 css-1m65e73"
+              class="c5 c20 css-1m65e73"
             >
               Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
             </div>
             <div
-              class="c5 c21 css-1m65e73"
+              class="c5 c20 css-1m65e73"
             >
               Canceling a limit has a network cost.
             </div>
             <div
-              class="c5 c21 css-1m65e73"
+              class="c5 c20 css-1m65e73"
             >
               <a
-                class="c22"
+                class="c21"
                 href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -1030,6 +1095,9 @@ exports[`OrderContent should render without error, limit order 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1059,13 +1127,6 @@ exports[`OrderContent should render without error, open order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c11 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c6 {
   width: 100%;
   height: 1px;
@@ -1074,7 +1135,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   background-color: #22222212;
 }
 
-.c19 {
+.c18 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -1088,7 +1149,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   width: 100%;
 }
 
-.c16 {
+.c15 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1123,26 +1184,26 @@ exports[`OrderContent should render without error, open order 1`] = `
   user-select: none;
 }
 
-.c16:active .c18 {
+.c15:active .c17 {
   background-color: #B8C0DC3d;
 }
 
-.c16:focus .c18 {
+.c15:focus .c17 {
   background-color: #B8C0DC3d;
 }
 
-.c16:hover .c18 {
+.c15:hover .c17 {
   background-color: #98A1C014;
 }
 
-.c16:disabled {
+.c15:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c16:disabled:active .c18,
-.c16:disabled:focus .c18,
-.c16:disabled:hover .c18 {
+.c15:disabled:active .c17,
+.c15:disabled:focus .c17,
+.c15:disabled:hover .c17 {
   background-color: transparent;
 }
 
@@ -1226,7 +1287,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   gap: 4px;
 }
 
-.c12 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1241,17 +1302,17 @@ exports[`OrderContent should render without error, open order 1`] = `
   gap: 8px;
 }
 
-.c13 {
+.c12 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c14 {
+.c13 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c15 {
+.c14 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -1301,7 +1362,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   margin: 28px 0;
 }
 
-.c17 {
+.c16 {
   margin-top: 16px;
   border-radius: 12px;
 }
@@ -1414,7 +1475,7 @@ exports[`OrderContent should render without error, open order 1`] = `
                   class="c10"
                 >
                   <div
-                    class="c11 css-vhdk4b"
+                    class="c4 css-vhdk4b"
                     data-testid="input-amount"
                   >
                     252.074
@@ -1426,6 +1487,25 @@ exports[`OrderContent should render without error, open order 1`] = `
                   >
                     -
                   </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
                 </div>
               </div>
             </div>
@@ -1460,7 +1540,7 @@ exports[`OrderContent should render without error, open order 1`] = `
                   class="c10"
                 >
                   <div
-                    class="c11 css-vhdk4b"
+                    class="c4 css-vhdk4b"
                     data-testid="output-amount"
                   >
                     0.10684
@@ -1474,28 +1554,47 @@ exports[`OrderContent should render without error, open order 1`] = `
                   </div>
                 </div>
               </div>
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div
             class="c6 c7"
           />
           <div
-            class="c12"
+            class="c11"
           >
             <div
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c4 c13 css-142zc9n"
+                class="c4 c12 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Rate
               </div>
               <div
-                class="c4 c14 css-142zc9n"
+                class="c4 c13 css-142zc9n"
               >
                 <button
-                  class="c15"
+                  class="c14"
                   title="1 WETH = 2,359.34 DAI "
                 >
                   <div
@@ -1511,13 +1610,13 @@ exports[`OrderContent should render without error, open order 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c4 c13 css-142zc9n"
+                class="c4 c12 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Expiry
               </div>
               <div
-                class="c4 c14 css-142zc9n"
+                class="c4 c13 css-142zc9n"
               >
                 <span />
               </div>
@@ -1526,13 +1625,13 @@ exports[`OrderContent should render without error, open order 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c4 c13 css-142zc9n"
+                class="c4 c12 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Network cost
               </div>
               <div
-                class="c4 c14 css-142zc9n"
+                class="c4 c13 css-142zc9n"
               >
                 <span>
                   $0
@@ -1541,15 +1640,18 @@ exports[`OrderContent should render without error, open order 1`] = `
             </div>
           </div>
           <button
-            class="c16 c17"
+            class="c15 c16"
             size="1"
           >
             <div
-              class="c18 c19"
+              class="c17 c18"
             />
             Cancel order
           </button>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

@@ -1,7 +1,6 @@
 import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from 'components/Charts/types'
 import { formatTickMarks } from 'components/Charts/utils'
 import { MissingDataBars } from 'components/Table/icons'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
@@ -20,7 +19,7 @@ import {
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Flex, TamaguiElement, assertWebElement, styled } from 'ui/src'
+import { Flex, TamaguiElement, assertWebElement, styled, useMedia } from 'ui/src'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useFormatter } from 'utils/formatNumbers'
 import { v4 as uuidv4 } from 'uuid'
@@ -269,7 +268,8 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   const format = useFormatter()
   const theme = useTheme()
   const locale = useCurrentLocale()
-  const { md: isLargeScreen } = useScreenSize()
+  const media = useMedia()
+  const isLargeScreen = !media.lg
   const modelParams = useMemo(
     () => ({ ...params, format, theme, locale, isLargeScreen, onCrosshairMove: setCrosshairData }),
     [format, isLargeScreen, locale, params, theme],

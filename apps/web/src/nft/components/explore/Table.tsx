@@ -27,7 +27,7 @@ const RankCellContainer = styled.div`
   align-items: center;
   padding-left: 24px;
   gap: 12px;
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-left: 8px;
   }
 `
@@ -131,11 +131,11 @@ export function Table<D extends Record<string, unknown>>({
       return
     }
 
-    if (width <= theme.breakpoint.sm) {
+    if (width <= theme.breakpoint.md) {
       setHiddenColumns(smallHiddenColumns)
-    } else if (width <= theme.breakpoint.md) {
-      setHiddenColumns(mediumHiddenColumns)
     } else if (width <= theme.breakpoint.lg) {
+      setHiddenColumns(mediumHiddenColumns)
+    } else if (width <= theme.breakpoint.xl) {
       setHiddenColumns(largeHiddenColumns)
     } else {
       setHiddenColumns([])

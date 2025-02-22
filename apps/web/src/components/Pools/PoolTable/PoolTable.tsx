@@ -17,8 +17,9 @@ import { OrderDirection, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToke
 import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
-import { ReactElement, ReactNode, memo, useCallback, useEffect, useMemo } from 'react'
-import { Trans } from 'react-i18next'
+import { exploreProtocolVersionFilterAtom } from 'pages/Explore/ProtocolFilter'
+import { ReactElement, memo, useCallback, useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useExploreContextTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
@@ -32,14 +33,6 @@ import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
-  [PoolSortFields.TVL]: <Trans i18nKey="stats.tvl" />,
-  [PoolSortFields.Volume24h]: <Trans i18nKey="stats.volume.1d" />,
-  [PoolSortFields.Volume30D]: <Trans i18nKey="pool.volume.thirtyDay" />,
-  [PoolSortFields.VolOverTvl]: undefined,
-  [PoolSortFields.Apr]: <Trans i18nKey="pool.apr.description" />,
-}
 
 const TableWrapper = styled(Flex, {
   m: '0 auto',
@@ -144,14 +137,6 @@ function useSetSortMethod(newSortMethod: PoolSortFields) {
   }, [sortMethod, setSortMethod, setSortAscending, newSortMethod])
 }
 
-const HEADER_TEXT: Record<PoolSortFields, ReactNode> = {
-  [PoolSortFields.TVL]: <Trans i18nKey="common.totalValueLocked" />,
-  [PoolSortFields.Volume24h]: <Trans i18nKey="stats.volume.1d.short" />,
-  [PoolSortFields.Volume30D]: <Trans i18nKey="pool.volume.thirtyDay.short" />,
-  [PoolSortFields.Apr]: <Trans i18nKey="pool.apr" />,
-  [PoolSortFields.VolOverTvl]: <Trans i18nKey="pool.volOverTvl" />,
-}
-
 function PoolTableHeader({
   category,
   isCurrentSortMethod,
@@ -162,6 +147,23 @@ function PoolTableHeader({
   direction: OrderDirection
 }) {
   const handleSortCategory = useSetSortMethod(category)
+  const { t } = useTranslation()
+
+  const HEADER_DESCRIPTIONS = {
+    [PoolSortFields.TVL]: t('stats.tvl'),
+    [PoolSortFields.Volume24h]: t('stats.volume.1d'),
+    [PoolSortFields.Volume30D]: t('pool.volume.thirtyDay'),
+    [PoolSortFields.VolOverTvl]: undefined,
+    [PoolSortFields.Apr]: t('pool.apr.description'),
+  }
+  const HEADER_TEXT = {
+    [PoolSortFields.TVL]: t('common.totalValueLocked'),
+    [PoolSortFields.Volume24h]: t('stats.volume.1d.short'),
+    [PoolSortFields.Volume30D]: t('pool.volume.thirtyDay.short'),
+    [PoolSortFields.Apr]: t('pool.apr'),
+    [PoolSortFields.VolOverTvl]: t('pool.volOverTvl'),
+  }
+
   return (
     <MouseoverTooltip
       disabled={!HEADER_DESCRIPTIONS[category]}
@@ -186,6 +188,7 @@ interface TopPoolTableProps {
 export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
+  const selectedProtocol = useAtomValue(exploreProtocolVersionFilterAtom)
 
   const resetSortMethod = useResetAtom(sortMethodAtom)
   const resetSortAscending = useResetAtom(sortAscendingAtom)
@@ -194,10 +197,13 @@ export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
     resetSortAscending()
   }, [resetSortAscending, resetSortMethod])
 
-  const { topPools, isLoading, isError } = useExploreContextTopPools({
-    sortBy: sortMethod,
-    sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc,
-  })
+  const { topPools, isLoading, isError } = useExploreContextTopPools(
+    {
+      sortBy: sortMethod,
+      sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc,
+    },
+    selectedProtocol,
+  )
 
   return <TopPoolTable topPoolData={{ topPools, isLoading, isError }} />
 })
@@ -250,6 +256,7 @@ export function PoolsTable({
   const sortMethod = useAtomValue(sortMethodAtom)
   const filterString = useAtomValue(exploreSearchStringAtom)
   const { defaultChainId } = useEnabledChains()
+  const { t } = useTranslation()
 
   const poolTableValues: PoolTableValues[] | undefined = useMemo(
     () =>
@@ -321,7 +328,7 @@ export function PoolsTable({
         header: () => (
           <Cell justifyContent="flex-start" width={320} grow>
             <Text variant="body2" color="$neutral2">
-              <Trans i18nKey="common.pool" />
+              {t('common.pool')}
             </Text>
           </Cell>
         ),
@@ -441,7 +448,7 @@ export function PoolsTable({
           })
         : null,
     ].filter((column): column is ColumnDef<PoolTableValues, any> => Boolean(column))
-  }, [formatNumber, formatPercent, hiddenColumns, orderDirection, showLoadingSkeleton, sortMethod])
+  }, [formatNumber, formatPercent, hiddenColumns, orderDirection, showLoadingSkeleton, sortMethod, t])
 
   return (
     <Table

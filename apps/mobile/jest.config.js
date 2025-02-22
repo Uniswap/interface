@@ -3,6 +3,10 @@ const preset = require('../../config/jest-presets/jest/jest-preset')
 module.exports = {
   ...preset,
   testTimeout: 15000,
+  testEnvironmentOptions: {
+    ...preset.testEnvironmentOptions,
+    customExportConditions: ['react-native'],
+  },
   preset: 'jest-expo',
   displayName: 'Mobile Wallet',
   collectCoverageFrom: [

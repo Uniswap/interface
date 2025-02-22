@@ -151,6 +151,9 @@ exports[`OpenLimitOrdersButton should render if there are open limit orders 1`] 
             </svg>
           </div>
         </button>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

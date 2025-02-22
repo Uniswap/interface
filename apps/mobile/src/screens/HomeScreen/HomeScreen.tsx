@@ -41,12 +41,12 @@ import {
 } from 'src/components/layout/TabHelpers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
-import { DevAIAssistantOverlay } from 'src/features/openai/DevAIAssistantOverlay'
+import { DevAIAssistantOverlay } from 'src/features/openai/DevAIGate'
+import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
-import { hideSplashScreen } from 'src/utils/splashScreen'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
 import { Flex, GeneratedIcon, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { ArrowDownCircle, Bank, Buy, SendAction } from 'ui/src/components/icons'
@@ -73,7 +73,6 @@ import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
@@ -103,6 +102,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isFocused = useIsFocused()
   const isModalOpen = useSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
+  const hideSplashScreen = useHideSplashScreen()
 
   const { showEmptyWalletState, isTabsDataLoaded } = useHomeScreenState()
 
@@ -645,18 +645,15 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     ],
   )
 
-  // Hides lock screen on next js render cycle, ensuring this component is loaded when the screen is hidden
-  useTimeout(hideSplashScreen, 1)
-
   return (
-    <Screen edges={['left', 'right']}>
+    <Screen edges={['left', 'right']} onLayout={hideSplashScreen}>
       <DevAIAssistantOverlay />
       <View style={TAB_STYLES.container}>
         <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>
           {contentHeader}
         </Animated.View>
 
-        {isTabsDataLoaded && (
+        {isTabsDataLoaded && isLayoutReady && (
           <TraceTabView
             lazy
             initialLayout={{

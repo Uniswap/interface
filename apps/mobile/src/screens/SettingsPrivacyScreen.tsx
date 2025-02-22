@@ -11,9 +11,9 @@ export function SettingsPrivacyScreen(): JSX.Element {
   return (
     <Screen>
       <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-        <Text variant="body1">{t('settings.setting.privacy.title')}</Text>
+        <Text variant="body1">{t('settings.setting.permissions.title')}</Text>
       </BackHeader>
-      <AnalyticsToggleLineSwitch />
+      <AnalyticsToggleLineSwitch m="$spacing24" />
     </Screen>
   )
 }

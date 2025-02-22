@@ -23,7 +23,7 @@ describe('OpenLimitOrdersButton', () => {
   it('should not render if there are no open limit orders', () => {
     mocked(useOpenLimitOrders).mockReturnValue({ openLimitOrders: [], loading: false })
     const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
-    expect(container.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
+    expect(container.firstChild?.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
   })
   it('should render if there are open limit orders', () => {
     mocked(useOpenLimitOrders).mockReturnValue({

@@ -6,6 +6,7 @@ import { SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/co
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
+import { MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
 import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
@@ -14,8 +15,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
-
-const MAX_TOKEN_RESULTS_AMOUNT = 8
 
 function tokenStatsToTokenSearchResult(token: Maybe<TokenRankingsStat>): TokenSearchResult | null {
   if (!token) {
@@ -52,7 +51,10 @@ export function SearchPopularTokens({ selectedChain }: { selectedChain: Universe
     chainId: selectedChain?.toString() ?? ALL_NETWORKS_ARG,
   })
 
-  const popularTokens = data?.tokenRankings?.[RankingType.Popularity]?.tokens.slice(0, MAX_TOKEN_RESULTS_AMOUNT)
+  const popularTokens = data?.tokenRankings?.[RankingType.Popularity]?.tokens.slice(
+    0,
+    MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT,
+  )
 
   const formattedTokens = useMemo(
     () => popularTokens?.map(tokenStatsToTokenSearchResult).filter((t): t is TokenSearchResult => Boolean(t)),

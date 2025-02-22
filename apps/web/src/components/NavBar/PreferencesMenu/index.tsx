@@ -19,7 +19,7 @@ export function getSettingsViewIndex(view: PreferencesView) {
 }
 
 export function PreferenceMenu() {
-  const breakpoints = useMedia()
+  const media = useMedia()
 
   const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)
   const [isOpen, setIsOpen] = useState(false)
@@ -48,7 +48,7 @@ export function PreferenceMenu() {
             animationType={settingsView === PreferencesView.SETTINGS ? 'forward' : 'backward'}
           >
             <PreferenceSettings
-              showThemeLabel={!breakpoints.sm}
+              showThemeLabel={!media.sm}
               setSettingsView={(view: PreferencesView) => setSettingsView(view)}
             />
             <LanguageSettings onExitMenu={handleExitMenu} />

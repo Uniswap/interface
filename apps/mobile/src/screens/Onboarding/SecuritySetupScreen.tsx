@@ -5,14 +5,11 @@ import { ActivityIndicator, Alert, Image, Platform, StyleSheet } from 'react-nat
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
-import { enroll, tryLocalAuthenticate } from 'src/features/biometrics/biometrics'
-import {
-  biometricAuthenticationSuccessful,
-  checkOsBiometricAuthEnabled,
-  useBiometricName,
-  useDeviceSupportsBiometricAuth,
-} from 'src/features/biometrics/hooks'
-import { setRequiredForTransactions } from 'src/features/biometrics/slice'
+import { enroll, tryLocalAuthenticate } from 'src/features/biometrics/biometrics-utils'
+import { biometricAuthenticationSuccessful } from 'src/features/biometrics/biometricsSaga'
+import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
+import { checkOsBiometricAuthEnabled, useBiometricName } from 'src/features/biometricsSettings/hooks'
+import { setRequiredForTransactions } from 'src/features/biometricsSettings/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { DeprecatedButton, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
@@ -120,7 +117,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           </Flex>
         </Flex>
         <Trace logPress element={ElementName.Enable}>
-          <DeprecatedButton theme="primary" onPress={onPressEnableSecurity}>
+          <DeprecatedButton size="large" theme="primary" onPress={onPressEnableSecurity}>
             {isIOS
               ? t('onboarding.security.button.confirm.ios', { biometricsMethod })
               : t('onboarding.security.button.confirm.android')}

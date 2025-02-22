@@ -3,7 +3,6 @@ const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const { execSync } = require('child_process')
 const { readFileSync } = require('fs')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require(path.resolve(__dirname, '..', '..','node_modules/react-scripts/node_modules/react-dev-utils/ModuleScopePlugin'))
 const { IgnorePlugin, ProvidePlugin, DefinePlugin } = require('webpack')
@@ -27,9 +26,10 @@ const compileNodeModules = [
   // These libraries export JSX code from files with .js extension, which aren't transpiled
   // in the library to code that doesn't use JSX syntax. This file extension is not automatically
   // recognized as extension for files containing JSX, so we have to manually add them to
-  // the build proess (to the appropriate loader) and don't exclude them with other node_modules
+  // the build process (to the appropriate loader) and don't exclude them with other node_modules
   'expo-clipboard',
   'expo-linear-gradient',
+  'expo-modules-core',
 ]
 
 function getCacheDirectory(cacheName) {
@@ -76,8 +76,9 @@ module.exports = {
         },
         // Use d3-arrays's build directly, as jest does not support its exports.
         transformIgnorePatterns: ['d3-array'],
+        testPathIgnorePatterns: ['e2e'],
         moduleNameMapper: {
-          'd3-array': 'd3-array/dist/d3-array.min.js',
+          'd3-array': '<rootDir>/../../node_modules/d3-array/dist/d3-array.min.js',
           '^react-native$': 'react-native-web',
           'react-native-gesture-handler': require.resolve('react-native-gesture-handler'),
         },
@@ -124,7 +125,7 @@ module.exports = {
             statsFilename: 'webpack-stats.json'
           })
         }
-        
+
         webpackConfig.plugins.push(new BundleAnalyzerPlugin(analyzerConfig))
 
         // Only include stats configuration if not in static analyzer mode
@@ -146,7 +147,7 @@ module.exports = {
         .map((plugin) => {
           // CSS ordering is mitigated through scoping / naming conventions, so we can ignore order warnings.
           // See https://webpack.js.org/plugins/mini-css-extract-plugin/#remove-order-warnings.
-          if (plugin instanceof MiniCssExtractPlugin) {
+          if (plugin.constructor.name == 'MiniCssExtractPlugin') {
             plugin.options.ignoreOrder = true
           }
 
@@ -308,7 +309,7 @@ module.exports = {
         enforce: 'post',
         test: /node_modules.*\.(js)$/,
         loader: path.join(__dirname, 'scripts/terser-loader.js'),
-        options: { 
+        options: {
           compress: true,
           mangle: false,
         },

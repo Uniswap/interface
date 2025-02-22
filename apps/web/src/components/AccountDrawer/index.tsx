@@ -14,10 +14,9 @@ import styled, { css } from 'lib/styled-components'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { useGesture } from 'react-use-gesture'
-import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT, breakpoints } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -54,7 +53,7 @@ const ScrimBackground = styled.div<{ $open: boolean; $maxWidth?: number; $zIndex
 
   opacity: 0;
   pointer-events: none;
-  @media only screen and (max-width: ${({ theme, $maxWidth }) => `${$maxWidth ?? theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme, $maxWidth }) => `${$maxWidth ?? theme.breakpoint.md}px`}) {
     opacity: ${({ $open }) => ($open ? 1 : 0)};
     pointer-events: ${({ $open }) => ($open ? 'auto' : 'none')};
     transition: opacity ${({ theme }) => theme.transition.duration.medium} ease-in-out;
@@ -71,7 +70,7 @@ export const Scrim = (props: ScrimBackgroundProps) => {
   const { width } = useWindowSize()
 
   useEffect(() => {
-    if (width && width < BREAKPOINTS.sm && props.$open) {
+    if (width && width < breakpoints.md && props.$open) {
       document.body.style.overflow = 'hidden'
     }
     return () => {
@@ -103,7 +102,7 @@ const Container = styled.div<{ isUniExtensionAvailable?: boolean; $open?: boolea
 
   ${({ isUniExtensionAvailable }) => isUniExtensionAvailable && ExtensionContainerStyles}
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     height: 100%;
     top: 100%;
     left: 0;
@@ -127,7 +126,7 @@ const AccountDrawerWrapper = styled.div<{ open: boolean; isUniExtensionAvailable
   height: 100%;
   overflow: hidden;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     z-index: ${Z_INDEX.modal};
     position: absolute;
     margin-right: 0;
@@ -194,7 +193,7 @@ const CloseDrawer = styled.div`
     margin: 0 -8px 0 0;
     background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
   }
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     display: none;
   }
 `

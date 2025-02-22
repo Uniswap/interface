@@ -11,7 +11,11 @@ exports[`MarketplaceContainer should render null without list price or marketpla
     >
       <span
         class=" t_light _dsp_contents is_Theme"
-      />
+      >
+        <div
+          style="display: contents;"
+        />
+      </span>
     </span>
   </span>
 </div>
@@ -117,6 +121,9 @@ exports[`MarketplaceContainer should render with list price 1`] = `
              ETH
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -178,6 +185,9 @@ exports[`MarketplaceContainer should render with marketplace 1`] = `
             />
           </svg>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

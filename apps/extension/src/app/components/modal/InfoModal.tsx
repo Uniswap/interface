@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { Anchor, DeprecatedButton, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
@@ -44,7 +44,7 @@ export function InfoModal({
           position="absolute"
           right={0}
           top={0}
-          zIndex={zIndices.default}
+          zIndex={zIndexes.default}
           onPress={onDismiss}
         >
           <X color="$neutral2" size="$icon.16" />

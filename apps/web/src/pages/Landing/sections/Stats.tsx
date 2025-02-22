@@ -91,14 +91,12 @@ const Layout = styled(Flex, {
 
   $md: {
     '$platform-web': {
-      // @ts-expect-error TODO i guess we need one more type fix
       gridTemplateRows: 'repeat(2, 160px)',
     },
   },
 
   $lg: {
     '$platform-web': {
-      // @ts-expect-error TODO i guess we need one more type fix
       gridTemplateRows: 'repeat(2, 200px)',
     },
   },

@@ -43,6 +43,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
 
   const tap = Gesture.Tap()
     .withTestId(TestID.AccountHeaderSettings)
+    .hitSlop(20)
     .shouldCancelWhenOutside(true)
     .onBegin(() => {
       pressProgress.value = withTiming(1)
@@ -65,7 +66,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
 
   return (
     <GestureDetector gesture={tap}>
-      <Animated.View style={animatedStyle}>
+      <Animated.View style={animatedStyle} testID={TestID.AccountHeaderSettings}>
         <SettingsHome color="$neutral2" size="$icon.28" />
       </Animated.View>
     </GestureDetector>

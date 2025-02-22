@@ -13,7 +13,7 @@ import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE, TabProps } from 'src/componen
 import { Flex, Loader, useSporeColors } from 'ui/src'
 import { ShieldCheck } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -150,7 +150,7 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
     }, [])
 
     // add negative z index to prevent footer from covering hidden tokens row when minimized
-    const ListFooterComponentStyle = useMemo(() => ({ zIndex: zIndices.negative }), [])
+    const ListFooterComponentStyle = useMemo(() => ({ zIndex: zIndexes.negative }), [])
 
     const List = renderedInModal ? BottomSheetFlatList<TokenBalanceListRow> : Animated.FlatList<TokenBalanceListRow>
 

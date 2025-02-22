@@ -174,7 +174,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               {t('fee.uncollected')}
             </Text>
 
-            <Flex row gap alignItems="center" justifyContent="space-between">
+            <Flex row alignItems="center" justifyContent="space-between">
               <Flex row gap="$gap8" alignItems="center">
                 <CurrencyLogo currencyInfo={currency0CurrencyInfo} size={24} />
                 <Text variant="body3">{currency0Amount.currency.symbol} fees</Text>
@@ -187,7 +187,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               </Flex>
             </Flex>
 
-            <Flex row gap alignItems="center" justifyContent="space-between">
+            <Flex row alignItems="center" justifyContent="space-between">
               <Flex row gap="$gap8" alignItems="center">
                 <CurrencyLogo currencyInfo={currency1CurrencyInfo} size={24} />
                 <Text variant="body3">{currency1Amount.currency.symbol} fees</Text>

@@ -67,7 +67,7 @@ export function ChangePasswordForm({ onNext }: { onNext: () => void }): JSX.Elem
           {errorText || 'Placeholder text'}
         </Text>
       </Flex>
-      <DeprecatedButton disabled={!enableNext} theme="tertiary" onPress={onSubmit}>
+      <DeprecatedButton isDisabled={!enableNext} theme="tertiary" onPress={onSubmit}>
         {t('common.button.save')}
       </DeprecatedButton>
     </Flex>

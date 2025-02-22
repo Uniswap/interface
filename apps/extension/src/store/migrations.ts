@@ -16,6 +16,7 @@ import {
   moveCurrencySetting,
   moveDismissedTokenWarnings,
   moveLanguageSetting,
+  moveTokenAndNFTVisibility,
   moveUserSettings,
   removeCreatedOnboardingRedesignAccountBehaviorHistory,
   removeUniconV2BehaviorState,
@@ -46,6 +47,7 @@ export const migrations = {
   17: removeCreatedOnboardingRedesignAccountBehaviorHistory,
   18: unchecksumDismissedTokenWarningKeys,
   19: deleteWelcomeWalletCardBehaviorHistory,
+  20: moveTokenAndNFTVisibility,
 }
 
-export const EXTENSION_STATE_VERSION = 19
+export const EXTENSION_STATE_VERSION = 20

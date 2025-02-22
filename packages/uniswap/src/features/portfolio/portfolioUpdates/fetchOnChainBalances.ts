@@ -1,12 +1,13 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
-import { fetchTradingApiIndicativeQuote } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { fetchTradingApiIndicativeQuoteIgnoring404 } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
 import {
   PortfolioBalancesQuery,
   TokenDocument,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { TradeType } from 'uniswap/src/data/tradingApi/__generated__'
+import { IndicativeQuoteRequest, IndicativeQuoteResponse, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
@@ -41,6 +42,8 @@ export async function fetchOnChainBalances({
   currencyIds: Set<CurrencyId>
 }): Promise<OnChainMap> {
   const onchainBalancesByCurrencyId: OnChainMap = new Map()
+
+  logger.debug('getOnChainBalances.ts', 'getOnChainBalances', '[ITBU] Fetching onchain balances', currencyIds)
 
   await Promise.all(
     Array.from(currencyIds).map(async (currencyId): Promise<void> => {
@@ -105,9 +108,12 @@ export async function fetchOnChainBalances({
     }),
   )
 
-  logger.debug('getOnChainBalances.ts', 'getOnChainBalances', '[ITBU] Onchain balances fetched', {
-    onchainBalancesByCurrencyId,
-  })
+  logger.debug(
+    'getOnChainBalances.ts',
+    'getOnChainBalances',
+    '[ITBU] Onchain balances fetched',
+    JSON.stringify(Object.fromEntries(onchainBalancesByCurrencyId)),
+  )
 
   return onchainBalancesByCurrencyId
 }
@@ -155,23 +161,14 @@ async function getDenominatedValue({
     return undefined
   }
 
-  if (!token.address) {
-    logger.error(new Error('[ITBU] No `token.address` found'), {
-      tags: {
-        file: 'fetchOnChainBalances.ts',
-        function: 'getDenominatedValue',
-      },
-      extra,
-    })
-    return undefined
-  }
-
   const universeChainId = fromGraphQLChain(token.chain)
 
   // Skip any unsupported chains
   if (!universeChainId) {
     return undefined
   }
+
+  const tokenAddress = token.address ?? getNativeAddress(universeChainId)
 
   const stablecoinCurrency = STABLECOIN_AMOUNT_OUT[universeChainId]?.currency
 
@@ -186,15 +183,13 @@ async function getDenominatedValue({
     return undefined
   }
 
-  const indicativeQuote = await fetchTradingApiIndicativeQuote({
-    params: {
-      type: TradeType.EXACT_INPUT,
-      amount: onchainQuantityCurrencyAmount.quotient.toString(),
-      tokenInChainId: chainId,
-      tokenOutChainId: chainId,
-      tokenIn: token.address,
-      tokenOut: stablecoinCurrency.address,
-    },
+  const indicativeQuote = await fetchIndicativeQuote({
+    type: TradeType.EXACT_INPUT,
+    amount: onchainQuantityCurrencyAmount.quotient.toString(),
+    tokenInChainId: chainId,
+    tokenOutChainId: chainId,
+    tokenIn: tokenAddress,
+    tokenOut: stablecoinCurrency.address,
   })
 
   const amountOut = indicativeQuote?.output.amount
@@ -242,4 +237,22 @@ function getInferredCachedDenominatedValue({
   }
 
   return undefined
+}
+
+async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Promise<IndicativeQuoteResponse | undefined> {
+  try {
+    return await fetchTradingApiIndicativeQuoteIgnoring404({ params })
+  } catch (error) {
+    // We log any other errors, but we don't want to throw and instead just continue with an "N/A" value.
+    logger.error(error, {
+      tags: {
+        file: 'fetchOnChainBalances.ts',
+        function: 'getIndicativeQuote',
+      },
+      extra: {
+        params,
+      },
+    })
+    return undefined
+  }
 }

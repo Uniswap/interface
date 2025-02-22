@@ -12,8 +12,8 @@ import { generateTweetForList, pluralize } from 'nft/utils'
 import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -50,7 +50,7 @@ const buttonStyle = css`
     opacity: 0.6;
   }
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     width: 100%;
     margin-bottom: 8px;
   }

@@ -40,7 +40,9 @@ export function getWarningIcon(severity: WarningSeverity): GeneratedIcon | null 
 export function getWarningIconColors(severity?: WarningSeverity): {
   color: ColorTokens
   /** `colorSecondary` used instead of `color` in certain places, such as token selector & mobile search */
-  colorSecondary: ColorTokens | undefined
+  colorSecondary?: ColorTokens
+  /** `inModalColor` used instead of `color` when the icon is inside a modal */
+  inModalColor?: ColorTokens
   backgroundColor: ColorTokens
   textColor: ColorTokens
 } {
@@ -63,6 +65,7 @@ export function getWarningIconColors(severity?: WarningSeverity): {
       return {
         color: '$neutral2',
         colorSecondary: '$neutral2',
+        inModalColor: '$neutral1',
         backgroundColor: '$surface3',
         textColor: '$neutral1',
       }
@@ -72,6 +75,7 @@ export function getWarningIconColors(severity?: WarningSeverity): {
       return {
         color: '$neutral2',
         colorSecondary: undefined,
+        inModalColor: '$neutral1',
         backgroundColor: '$surface3',
         textColor: '$neutral1',
       }

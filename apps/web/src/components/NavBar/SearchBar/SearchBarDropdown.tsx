@@ -10,7 +10,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
-import useTrendingTokens from 'graphql/data/TrendingTokens'
+import useSearchTrendingTokensGql from 'graphql/data/SearchTrendingTokens'
 import { useAccount } from 'hooks/useAccount'
 import deprecatedStyled from 'lib/styled-components'
 import { useEffect, useMemo, useState } from 'react'
@@ -150,7 +150,7 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
   )
   const account = useAccount()
 
-  const { data: trendingTokenData } = useTrendingTokens(account.chainId)
+  const { data: trendingTokenData } = useSearchTrendingTokensGql(account.chainId)
 
   const trendingTokens = useMemo(
     () => trendingTokenData?.slice(0, 3) ?? [...Array<GqlSearchToken>(3)],

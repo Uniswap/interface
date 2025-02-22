@@ -4,6 +4,8 @@ import { forwardRef } from 'react'
 import type { FlatListProps } from 'react-native'
 import Animated from 'react-native-reanimated'
 
+// TODO(WALL-5764): update @gorhom/bottom-sheet to latest version so we can use their BottomSheetFlashList
+
 // difficult to properly type
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ReanimatedFlashList = Animated.createAnimatedComponent(FlashList as any) as any
@@ -15,7 +17,12 @@ type AnimatedFlashListProps = FlatListProps<any> &
   Pick<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     FlashListProps<any>,
-    'disableAutoLayout' | 'estimatedItemSize' | 'estimatedListSize' | 'getItemType' | 'overrideItemLayout'
+    | 'disableAutoLayout'
+    | 'estimatedItemSize'
+    | 'estimatedListSize'
+    | 'getItemType'
+    | 'overrideItemLayout'
+    | 'drawDistance'
   >
 
 // difficult to properly type

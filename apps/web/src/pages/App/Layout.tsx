@@ -2,7 +2,7 @@ import styled from 'lib/styled-components'
 import { Body } from 'pages/App/Body'
 import { Header } from 'pages/App/Header'
 import { GRID_AREAS } from 'pages/App/utils/shared'
-import { BREAKPOINTS } from 'theme'
+import { breakpoints } from 'ui/src/theme'
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -27,7 +27,7 @@ const AppBody = styled.div`
   position: relative;
   margin: auto;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     padding-left: 10px;
     padding-right: 10px;
   }

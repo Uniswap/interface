@@ -33,7 +33,7 @@ export function RemoveLastMnemonicWalletFooter({
       <Flex centered row mt="$spacing8">
         <DeprecatedButton
           fill
-          disabled={!checkBoxAccepted}
+          isDisabled={!checkBoxAccepted}
           icon={inProgress ? <SpinningLoader color="$statusCritical" /> : undefined}
           testID={TestID.Confirm}
           theme="detrimental"

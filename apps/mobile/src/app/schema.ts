@@ -656,6 +656,23 @@ const v84SchemaIntermediate = {
 delete v84SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
 export const v84Schema = v84SchemaIntermediate
 
+const v85SchemaIntermediate = {
+  ...v84Schema,
+  visibility: {
+    positions: {},
+    tokens: v84Schema.favorites.tokensVisibility,
+    nfts: v84Schema.favorites.nftsVisibility,
+  },
+  favorites: {
+    ...v84Schema.favorites,
+    tokensVisibility: undefined,
+    nftsVisibility: undefined,
+  },
+}
+delete v85SchemaIntermediate.favorites.tokensVisibility
+delete v85SchemaIntermediate.favorites.nftsVisibility
+export const v85Schema = v85SchemaIntermediate
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v84Schema => v84Schema
+export const getSchema = (): typeof v85Schema => v85Schema

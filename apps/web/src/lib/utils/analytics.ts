@@ -11,6 +11,7 @@ import {
   PriorityOrderTrade,
   UniswapXTrade,
   UniswapXV2Trade,
+  UniswapXV3Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -74,6 +75,7 @@ export function formatCommonPropertiesForTrade(
   const isUniversalSwapFlow =
     trade instanceof ClassicTrade ||
     trade instanceof UniswapXV2Trade ||
+    trade instanceof UniswapXV3Trade ||
     trade instanceof PriorityOrderTrade ||
     trade instanceof BridgeTrade
 

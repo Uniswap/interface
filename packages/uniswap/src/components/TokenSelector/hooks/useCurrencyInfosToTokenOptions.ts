@@ -35,9 +35,7 @@ export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> 
   return { data: filteredBaseCurrencyInfos, loading, error: persistedError, refetch }
 }
 
-export function currencyInfosToTokenOptions(
-  currencyInfos: Array<CurrencyInfo | null> | undefined,
-): TokenOption[] | undefined {
+export function currencyInfosToTokenOptions(currencyInfos?: Maybe<CurrencyInfo>[]): TokenOption[] | undefined {
   return currencyInfos
     ?.filter((cI): cI is CurrencyInfo => Boolean(cI))
     .map((currencyInfo) => ({
@@ -72,7 +70,8 @@ export function useCurrencyInfosToTokenOptions({
       : currencyInfos
 
     return sortedCurrencyInfos.map(
-      (currencyInfo) => portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo),
+      (currencyInfo) =>
+        portfolioBalancesById?.[currencyInfo.currencyId.toLowerCase()] ?? createEmptyBalanceOption(currencyInfo),
     )
   }, [currencyInfos, portfolioBalancesById, sortAlphabetically])
 }

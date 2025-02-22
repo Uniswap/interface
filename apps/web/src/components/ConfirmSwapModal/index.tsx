@@ -10,7 +10,7 @@ import { SwapDetails } from 'components/swap/SwapDetails'
 import { SwapPreview } from 'components/swap/SwapPreview'
 import { useConfirmModalState } from 'hooks/useConfirmModalState'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
-import { SwapResult } from 'hooks/useSwapCallback'
+import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useSuppressPopups } from 'state/application/hooks'
@@ -18,7 +18,6 @@ import { PopupType } from 'state/application/reducer'
 import { InterfaceTrade } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
-import { useSwapTransactionStatus } from 'state/transactions/hooks'
 import { ThemeProvider } from 'theme'
 import { FadePresence } from 'theme/components/FadePresence'
 import { UniswapXOrderStatus } from 'types/uniswapx'
@@ -76,7 +75,7 @@ export function ConfirmSwapModal({
   clearSwapState: () => void
   onAcceptChanges?: () => void
   onConfirm: () => void
-  onCurrencySelection: (field: CurrencyField, currency: Currency) => void
+  onCurrencySelection: (field: CurrencyField, currency: Currency, isResettingWETHAfterWrap?: boolean) => void
   onDismiss: () => void
   onXV2RetryWithClassic?: () => void
 }) {

@@ -34,6 +34,7 @@ import {
   moveCurrencySetting,
   moveDismissedTokenWarnings,
   moveLanguageSetting,
+  moveTokenAndNFTVisibility,
   moveUserSettings,
   removeCreatedOnboardingRedesignAccountBehaviorHistory,
   removeUniconV2BehaviorState,
@@ -979,6 +980,8 @@ export const migrations = {
   },
 
   84: deleteWelcomeWalletCardBehaviorHistory,
+
+  85: moveTokenAndNFTVisibility,
 }
 
-export const MOBILE_STATE_VERSION = 84
+export const MOBILE_STATE_VERSION = 85

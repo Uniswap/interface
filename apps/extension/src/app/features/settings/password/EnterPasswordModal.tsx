@@ -69,7 +69,7 @@ export function EnterPasswordModal({
         <Text color="$statusCritical" minHeight="$spacing24" textAlign="center" variant="body2">
           {showPasswordError ? t('setting.recoveryPhrase.remove.password.error') : ''}
         </Text>
-        <DeprecatedButton disabled={!password.length} theme="secondary" width="100%" onPress={checkPassword}>
+        <DeprecatedButton isDisabled={!password.length} theme="secondary" width="100%" onPress={checkPassword}>
           {t('common.button.continue')}
         </DeprecatedButton>
       </Flex>

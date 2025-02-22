@@ -109,7 +109,7 @@ export function DeleteUnitagModal({
           <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
         </Flex>
         <Flex centered row width="100%">
-          <DeprecatedButton fill disabled={isDeleting} testID={TestID.Remove} theme="detrimental" onPress={onDelete}>
+          <DeprecatedButton fill isDisabled={isDeleting} testID={TestID.Remove} theme="detrimental" onPress={onDelete}>
             {isDeleting ? (
               <Flex height={fonts.buttonLabel1.lineHeight}>
                 <ActivityIndicator color={colors.white.val} />

@@ -14,7 +14,7 @@ import { Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModa
 import { getCanonicalBridgingDappUrls } from 'uniswap/src/features/bridging/constants'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import {
   useFormattedUniswapXGasFeeInfo,
   useGasFeeFormattedDisplayAmounts,
@@ -27,7 +27,7 @@ import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/context
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isBridge, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -40,6 +40,7 @@ type DebouncedGasInfo = {
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
   isHighRelativeToValue: boolean
   isLoading: boolean
+  chainId: UniverseChainId
 }
 
 export function useDebouncedGasInfo(): DebouncedGasInfo {
@@ -72,7 +73,13 @@ export function useDebouncedGasInfo(): DebouncedGasInfo {
 
   const isLoading = tradeLoadingOrRefetching || gasLoading || amountChanged || tradeChanged
 
-  const [info, setInfo] = useState<DebouncedGasInfo>({ gasFee, isHighRelativeToValue, uniswapXGasFeeInfo, isLoading })
+  const [info, setInfo] = useState<DebouncedGasInfo>({
+    gasFee,
+    isHighRelativeToValue,
+    uniswapXGasFeeInfo,
+    isLoading,
+    chainId,
+  })
 
   useEffect(() => {
     if (isLoading) {
@@ -84,9 +91,10 @@ export function useDebouncedGasInfo(): DebouncedGasInfo {
         isHighRelativeToValue,
         uniswapXGasFeeInfo,
         isLoading,
+        chainId,
       })
     }
-  }, [gasFee, gasFeeFormatted, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo])
+  }, [gasFee, gasFeeFormatted, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo, chainId])
 
   return info
 }
@@ -142,6 +150,7 @@ function GasRow({ gasInfo, hidden }: { gasInfo: DebouncedGasInfo; hidden?: boole
             </Flex>
           }
           uniswapXGasFeeInfo={gasInfo.uniswapXGasFeeInfo}
+          chainId={gasInfo.chainId}
         />
       </Flex>
     )
@@ -164,6 +173,10 @@ export function TradeInfoRow({
   const warningColor = getAlertColor(warning?.severity)
   const { isTestnetModeEnabled } = useEnabledChains()
 
+  const {
+    derivedSwapInfo: { currencies },
+  } = useSwapFormContext()
+
   if (isTestnetModeEnabled) {
     return null
   }
@@ -173,12 +186,11 @@ export function TradeInfoRow({
   }
 
   // On interface, if the warning is a no quotes found warning, we want to show an external link to a canonical bridge
+
+  const inputChainId = currencies.input?.currency.chainId
+  const outputChainId = currencies.output?.currency.chainId
   const showCanonicalBridge =
-    isInterface &&
-    warning?.type === WarningLabel.NoQuotesFound &&
-    !debouncedTrade?.indicative &&
-    debouncedTrade &&
-    isBridge(debouncedTrade)
+    isInterface && warning?.type === WarningLabel.NoQuotesFound && inputChainId !== outputChainId
 
   return (
     <Flex centered row>
@@ -200,9 +212,7 @@ export function TradeInfoRow({
       </Flex>
 
       {showCanonicalBridge ? (
-        <CanonicalBridgeLink
-          chainId={toSupportedChainId(debouncedTrade?.quote?.quote?.destinationChainId) ?? UniverseChainId.Mainnet}
-        />
+        <CanonicalBridgeLink chainId={outputChainId ?? UniverseChainId.Mainnet} />
       ) : debouncedTrade ? (
         <Accordion.Trigger
           p="$none"

@@ -3,7 +3,7 @@ import React, { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
+import { useLockScreenOnBlur } from 'src/features/lockScreen/useLockScreenState'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 
 import { SeedPhraseInput } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/SeedPhraseInput'
@@ -107,9 +107,10 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
       footer={
         <Trace logPress element={ElementName.Next}>
           <DeprecatedButton
-            disabled={!isSubmitEnabled}
+            isDisabled={!isSubmitEnabled}
             mx="$spacing16"
             my="$spacing12"
+            size="large"
             testID={TestID.Continue}
             onPress={() => seedPhraseInputRef.current?.handleSubmit()}
           >

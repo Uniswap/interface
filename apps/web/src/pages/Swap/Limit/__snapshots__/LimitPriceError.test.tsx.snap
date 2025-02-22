@@ -166,6 +166,9 @@ exports[`LimitPriceError renders the limit price error correctly when there is a
           </div>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -337,6 +340,9 @@ exports[`LimitPriceError renders the limit price error correctly, inverted false
           </div>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -508,6 +514,9 @@ exports[`LimitPriceError renders the limit price error correctly, inverted false
           </div>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -679,6 +688,9 @@ exports[`LimitPriceError renders the limit price error correctly, inverted true 
           </div>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -850,6 +862,9 @@ exports[`LimitPriceError renders the limit price error correctly, inverted true 
           </div>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>

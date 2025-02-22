@@ -45,6 +45,7 @@ describe('PoolDetailsStatsButton', () => {
 
   const useUniswapContextReturnValue = {
     navigateToFiatOnRamp: () => {},
+    navigateToSwapFlow: () => {},
     onSwapChainsChanged: () => {},
     isSwapTokenSelectorOpen: false,
     setSwapOutputChainId: () => {},
@@ -107,7 +108,7 @@ describe('PoolDetailsStatsButton', () => {
   it('clicking swap reveals swap modal', async () => {
     render(<PoolDetailsStatsButtons {...mockProps} />)
 
-    await act(() => userEvent.click(screen.getByTestId('pool-details-swap-button')))
+    await userEvent.click(screen.getByTestId('pool-details-swap-button'))
     expect(screen.getByTestId('pool-details-swap-modal')).toBeVisible()
     expect(screen.getByTestId('pool-details-close-button')).toBeVisible()
   })
@@ -115,7 +116,7 @@ describe('PoolDetailsStatsButton', () => {
   it('clicking add liquidity goes to correct url', async () => {
     render(<PoolDetailsStatsButtons {...mockPropsTokensReversed} />)
 
-    await act(() => userEvent.click(screen.getByTestId('pool-details-add-liquidity-button')))
+    await userEvent.click(screen.getByTestId('pool-details-add-liquidity-button'))
     expect(globalThis.window.location.href).toContain(
       '/add/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/500',
     )

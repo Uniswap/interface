@@ -110,10 +110,10 @@ export type SwapRouting =
   | 'classic'
   | 'uniswap_x'
   | 'uniswap_x_v2'
+  | 'uniswap_x_v3'
   | 'priority_order'
   | 'bridge'
   | 'limit_order'
-  | 'priority'
   | 'none'
 
 export type SwapTradeBaseProperties = {
@@ -156,7 +156,7 @@ export type SwapTradeBaseProperties = {
   type?: TradeType
   // Legacy props only used on web. We might be able to delete these after we delete the old swap flow.
   method?: 'ROUTING_API' | 'QUICK_ROUTE' | 'CLIENT_SIDE_FALLBACK'
-  offchain_order_type?: 'Dutch' | 'Dutch_V2' | 'Limit' | 'Dutch_V1_V2' | 'Priority'
+  offchain_order_type?: 'Dutch' | 'Dutch_V2' | 'Limit' | 'Dutch_V1_V2' | 'Priority' | 'Dutch_V3'
   simulation_failure_reasons?: TransactionFailureReason[]
 } & ITraceContext
 
@@ -357,6 +357,11 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   currencyInfo0Decimals: number
   currencyInfo1Decimals: number
 }
+
+export type NotificationToggleLoggingType =
+  | 'settings_general_updates_enabled'
+  | 'settings_price_alerts_enabled'
+  | 'wallet_activity'
 
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
@@ -590,6 +595,7 @@ export type UniverseEventProperties = {
   [MobileEventName.FiatOnRampQuickActionButtonPressed]: ITraceContext
   [MobileEventName.NotificationsToggled]: ITraceContext & {
     enabled: boolean
+    type: NotificationToggleLoggingType
   }
   [MobileEventName.OnboardingCompleted]: OnboardingCompletedProps & ITraceContext
   [MobileEventName.PerformanceReport]: RenderPassReport
@@ -787,6 +793,17 @@ export type UniverseEventProperties = {
           tokenSection: TokenOptionSection
         })
     | InterfaceTokenSelectedProperties
+  [UniswapEventName.BlockaidFeesMismatch]: {
+    symbol: string
+    address: string
+    chainId: number
+    buyFeePercent?: number
+    sellFeePercent?: number
+    blockaidBuyFeePercent?: number
+    blockaidSellFeePercent?: number
+    attackType?: string
+    protectionResult?: string
+  }
   [UnitagEventName.UnitagBannerActionTaken]: {
     action: 'claim' | 'dismiss'
     entryPoint: 'home' | 'settings'

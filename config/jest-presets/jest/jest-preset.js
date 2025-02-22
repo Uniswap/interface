@@ -6,6 +6,9 @@ const globals = require('./globals')
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
+  testEnvironmentOptions: {
+    customExportConditions: ['react-native'],
+  },
   transform: {
     '\\.svg$': 'jest-transformer-svg',
     '^.+\\.jsx?$': 'babel-jest',

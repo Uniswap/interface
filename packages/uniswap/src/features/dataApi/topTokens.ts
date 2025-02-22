@@ -10,7 +10,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 
-export function usePopularTokens(chainFilter: UniverseChainId, disabled?: boolean): GqlResult<CurrencyInfo[]> {
+export function usePopularTokensGql(chainFilter: UniverseChainId, disabled?: boolean): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = toGraphQLChain(chainFilter)
   const isTestnet = isTestnetChain(chainFilter)
 

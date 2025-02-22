@@ -199,7 +199,7 @@ export function HookModal({
             </Trace>
             <Trace logPress element={ElementName.Continue}>
               <DeprecatedButton
-                disabled={!canContinue}
+                isDisabled={!canContinue}
                 size="small"
                 theme="primary"
                 width="49%"

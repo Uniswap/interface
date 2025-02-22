@@ -1,11 +1,11 @@
-import '@testing-library/jest-native/extend-expect'
+import '@testing-library/jest-native'
 
 import { ReactNode } from 'react'
 import { Text } from 'ui/src'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { fireEvent, render, screen, waitFor } from 'uniswap/src/test/test-utils'
+import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved } from 'uniswap/src/test/test-utils'
 
 jest.mock('react-native', () => {
   const actualReactNative = jest.requireActual('react-native')
@@ -85,7 +85,7 @@ describe(ActionSheetDropdown, () => {
     fireEvent.press(backdrop, ON_PRESS_EVENT_PAYLOAD)
 
     // Should be closed after pressing the backdrop
-    await waitFor(() => expect(screen.queryByTestId('dropdown-content')).toBeNull())
+    await waitForElementToBeRemoved(() => screen.queryByTestId('dropdown-content'))
   })
 
   it('closes the dropdown after pressing on an option', async () => {
@@ -98,7 +98,7 @@ describe(ActionSheetDropdown, () => {
     fireEvent.press(option, ON_PRESS_EVENT_PAYLOAD)
 
     // Should be closed after pressing an option
-    await waitFor(() => expect(screen.queryByTestId('dropdown-content')).toBeNull())
+    await waitForElementToBeRemoved(() => screen.queryByTestId('dropdown-content'))
   })
 
   it('calls the onPress function of the option after pressing on an option', async () => {

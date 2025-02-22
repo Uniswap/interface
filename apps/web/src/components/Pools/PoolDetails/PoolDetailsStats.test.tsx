@@ -3,10 +3,16 @@ import 'test-utils/tokens/mocks'
 import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
 import { enableNetConnect } from 'nock'
 import store from 'state'
+import { mocked } from 'test-utils/mocked'
 import { validPoolDataResponse } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
-import { BREAKPOINTS } from 'theme'
+import { useMedia } from 'ui/src'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
+
+jest.mock('tamagui', () => ({
+  ...jest.requireActual('tamagui'),
+  useMedia: jest.fn(),
+}))
 
 describe('PoolDetailsStats', () => {
   const mockProps = {
@@ -43,10 +49,17 @@ describe('PoolDetailsStats', () => {
   })
 
   it('renders stats text correctly', async () => {
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: BREAKPOINTS.xl,
+    mocked(useMedia).mockReturnValue({
+      xxs: false,
+      xs: false,
+      sm: false,
+      md: false,
+      lg: false,
+      xl: false,
+      xxl: true,
+      xxxl: true,
+      short: false,
+      midHeight: false,
     })
 
     const { asFragment } = render(<PoolDetailsStats {...mockProps} />)
@@ -68,10 +81,17 @@ describe('PoolDetailsStats', () => {
   })
 
   it('pool balance chart not visible on mobile', async () => {
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: BREAKPOINTS.lg,
+    mocked(useMedia).mockReturnValue({
+      xxs: false,
+      xs: false,
+      sm: false,
+      md: false,
+      lg: false,
+      xl: true,
+      xxl: true,
+      xxxl: true,
+      short: false,
+      midHeight: false,
     })
     const { asFragment } = render(<PoolDetailsStats {...mockProps} />)
     await act(async () => {

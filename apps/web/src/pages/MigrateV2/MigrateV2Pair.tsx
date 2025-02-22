@@ -773,7 +773,7 @@ export default function MigrateV2Pair() {
 
   // get data required for V2 pair migration
   const pairBalance = useTokenBalance(account.address, liquidityToken)
-  const isOwner = usePositionOwnerV2(account?.address, liquidityToken?.address ?? null, token0?.chainId)
+  const isOwner = usePositionOwnerV2(account?.address, liquidityToken?.address, token0?.chainId)
   const totalSupply = useTotalSupply(liquidityToken)
   const [reserve0Raw, reserve1Raw] = useSingleCallResult(pair, 'getReserves')?.result ?? []
   const reserve0 = useMemo(

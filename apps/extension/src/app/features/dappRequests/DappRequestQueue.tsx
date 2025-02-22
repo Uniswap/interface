@@ -21,7 +21,7 @@ import {
 import { ExtensionState } from 'src/store/extensionReducer'
 import { AnimatePresence, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ReceiptText, RotatableChevron } from 'ui/src/components/icons'
-import { iconSizes, zIndices } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -38,6 +38,7 @@ export function DappRequestQueue(): JSX.Element {
       isModalOpen={areRequestsPending}
       name={ModalName.DappRequest}
       padding="$none"
+      zIndex={zIndexes.overlay}
     >
       <DappRequestQueueProvider>
         <DappRequestQueueContent />
@@ -124,7 +125,7 @@ function DappRequestQueueContent(): JSX.Element {
             p="$spacing4"
             position="absolute"
             right={12}
-            zIndex={zIndices.fixed}
+            zIndex={zIndexes.fixed}
           >
             <TouchableArea
               borderRadius="$rounded4"

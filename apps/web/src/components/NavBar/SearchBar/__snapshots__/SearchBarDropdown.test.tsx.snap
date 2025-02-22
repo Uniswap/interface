@@ -134,7 +134,6 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; overflow-y: auto; width: 100%; opacity: 1;"
         >
           <div
@@ -337,6 +336,9 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

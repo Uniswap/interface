@@ -1,5 +1,6 @@
 // Migrating to a standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
 // Please avoid using deprecated numbers
+/** @deprecated - use ui/src/theme/zIndexes */
 export enum Z_INDEX {
   deprecated_zero = 0,
   default = 1,

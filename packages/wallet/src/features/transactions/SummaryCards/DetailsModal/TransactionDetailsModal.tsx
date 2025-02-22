@@ -20,6 +20,7 @@ import { ApproveTransactionDetails } from 'wallet/src/features/transactions/Summ
 import { BridgeTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/BridgeTransactionDetails'
 import { HeaderLogo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/HeaderLogo'
 import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
+import { OffRampPendingSupportCard } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OffRampPendingSupportCard'
 import { OffRampTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OffRampTransactionDetails'
 import { OnRampTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OnRampTransactionDetails'
 import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
@@ -163,7 +164,7 @@ export function TransactionDetailsModal({
   transactionDetails,
 }: TransactionDetailsModalProps): JSX.Element {
   const { t } = useTranslation()
-  const { typeInfo } = transactionDetails
+  const { typeInfo, status, addedTime } = transactionDetails
   const [isShowingMore, setIsShowingMore] = useState(false)
   const hasMoreInfoRows = [TransactionType.Swap, TransactionType.Bridge].includes(transactionDetails.typeInfo.type)
 
@@ -205,6 +206,10 @@ export function TransactionDetailsModal({
     )
   }
 
+  const OFFRAMP_PENDING_STALE_TIME_IN_MINUTES = 20
+  const isTransactionStale = dayjs().diff(dayjs(addedTime), 'minute') >= OFFRAMP_PENDING_STALE_TIME_IN_MINUTES
+  const showOffRampPendingCard = isOffRampSaleTransactionInfo(typeInfo) && status === 'pending' && isTransactionStale
+
   return (
     <>
       <Modal isDismissible alignment="top" name={ModalName.TransactionDetails} onClose={onClose}>
@@ -222,6 +227,7 @@ export function TransactionDetailsModal({
             pt={!hideBottomSeparator && !hasMoreInfoRows ? '$spacing8' : undefined}
             onClose={onClose}
           />
+          {showOffRampPendingCard && <OffRampPendingSupportCard />}
           {buttons.length > 0 && (
             <Flex gap="$spacing8" pt="$spacing8">
               {buttons}

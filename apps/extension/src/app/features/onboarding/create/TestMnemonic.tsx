@@ -6,7 +6,7 @@ import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { Flex, Square, Text } from 'ui/src'
 import { Check, FileListCheck } from 'ui/src/components/icons'
-import { iconSizes, zIndices } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -144,7 +144,7 @@ function RecoveryPhraseInputStack({
             position="absolute"
             right="$spacing24"
             width="100%"
-            zIndex={zIndices.fixed}
+            zIndex={zIndexes.fixed}
           >
             <Check color="$statusSuccess" size={iconSizes.icon24} />
           </Flex>
@@ -222,7 +222,7 @@ export function InputStack({ onChangeText, total, value, current, prefixText }: 
               position="absolute"
               px="$spacing24"
               variant="subheading1"
-              zIndex={zIndices.fixed}
+              zIndex={zIndexes.fixed}
             >
               {prefixTexts.current[i] || ''}
             </Text>
@@ -243,7 +243,7 @@ export function InputStack({ onChangeText, total, value, current, prefixText }: 
               shadowOpacity={0.4}
               shadowRadius={10}
               value={value}
-              zIndex={zIndices.sticky}
+              zIndex={zIndexes.sticky}
               onChangeText={onChangeText}
             />
           </Flex>

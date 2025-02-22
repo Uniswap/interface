@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event'
 import { CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenFromList } from 'state/lists/tokenFromList'
-import { act, render, screen } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -20,9 +20,9 @@ describe('BreadcrumbNav', () => {
     )
     expect(asFragment()).toMatchSnapshot()
 
-    await act(() => userEvent.hover(screen.getByTestId('current-breadcrumb')))
+    await userEvent.hover(screen.getByTestId('current-breadcrumb'))
     expect(screen.getByTestId('breadcrumb-hover-copy')).toBeInTheDocument()
-    await act(() => userEvent.unhover(screen.getByTestId('current-breadcrumb')))
+    await userEvent.unhover(screen.getByTestId('current-breadcrumb'))
     expect(screen.queryByTestId('breadcrumb-hover-copy')).not.toBeInTheDocument()
   })
 
@@ -31,7 +31,7 @@ describe('BreadcrumbNav', () => {
     const { asFragment } = render(<CurrentPageBreadcrumb address={NATIVE_CHAIN_ID} currency={ETH} />)
     expect(asFragment()).toMatchSnapshot()
 
-    await act(() => userEvent.hover(screen.getByTestId('current-breadcrumb')))
+    await userEvent.hover(screen.getByTestId('current-breadcrumb'))
     expect(screen.queryByTestId('breadcrumb-hover-copy')).not.toBeInTheDocument()
   })
 })

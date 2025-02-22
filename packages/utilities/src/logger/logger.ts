@@ -72,7 +72,7 @@ function logMessage(
   }
 
   if (level === 'warn') {
-    if (!isMobileApp) {
+    if (isInterface) {
       Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
     }
     if (walletDatadogEnabled) {
@@ -84,7 +84,7 @@ function logMessage(
       })
     }
   } else if (level === 'info') {
-    if (!isMobileApp) {
+    if (isInterface) {
       Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
     }
     if (walletDatadogEnabled) {
@@ -113,7 +113,7 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
   // Log to console directly for dev builds or interface for debugging
   if (__DEV__ || isInterface) {
     // eslint-disable-next-line no-console
-    console.error(error)
+    console.error(error, captureContext)
   }
 
   if (!datadogEnabled) {
@@ -129,7 +129,7 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
     }
   }
 
-  if (!isMobileApp) {
+  if (isInterface) {
     Sentry.captureException(error, updatedContext)
   }
   if (isInterface || walletDatadogEnabled) {

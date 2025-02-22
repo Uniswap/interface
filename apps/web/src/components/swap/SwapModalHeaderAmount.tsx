@@ -6,8 +6,8 @@ import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 import { useWindowSize } from 'uniswap/src/hooks/useWindowSize'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -21,7 +21,7 @@ const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
 const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextProps>) => {
   const { width } = useWindowSize()
 
-  if (width && width < BREAKPOINTS.xs) {
+  if (width && width < breakpoints.xs) {
     return <ThemedText.HeadlineMedium {...textProps}>{children}</ThemedText.HeadlineMedium>
   }
 
@@ -67,7 +67,7 @@ export function SwapModalHeaderAmount({
         <Column gap="xs">
           <ResponsiveHeadline
             data-testid={`${field}-amount`}
-            color={isLoading ? 'neutral2' : undefined}
+            color={isLoading ? 'neutral2' : 'neutral1'}
             {...headerTextProps}
           >
             {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}

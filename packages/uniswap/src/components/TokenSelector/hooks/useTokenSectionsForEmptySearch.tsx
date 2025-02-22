@@ -2,15 +2,13 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Text, TouchableArea } from 'ui/src'
-import { currencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
+import { MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
+import { usePopularTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/usePopularTokensOptions'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
-import { TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOptionSection, TokenSection, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
 import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
-import { usePopularTokens } from 'uniswap/src/features/tokens/hooks'
 
 function ClearAll({ onPress }: { onPress: () => void }): JSX.Element {
   const { t } = useTranslation()
@@ -23,10 +21,13 @@ function ClearAll({ onPress }: { onPress: () => void }): JSX.Element {
   )
 }
 
-export function useTokenSectionsForEmptySearch(chainFilter: UniverseChainId | null): GqlResult<TokenSection[]> {
+export function useTokenSectionsForEmptySearch({
+  activeAccountAddress,
+  chainFilter,
+}: Omit<TokenSectionsHookProps, 'input' | 'isKeyboardOpen'>): GqlResult<TokenSection[]> {
   const dispatch = useDispatch()
 
-  const { popularTokens, loading } = usePopularTokens()
+  const { data: popularTokenOptions, loading } = usePopularTokensOptions(activeAccountAddress, chainFilter)
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
@@ -42,8 +43,9 @@ export function useTokenSectionsForEmptySearch(chainFilter: UniverseChainId | nu
   })
 
   const popularSection = useTokenOptionsSection({
+    // TODO(WEB-5917): Rename to trendingTokens once feature flag is fully on
     sectionKey: TokenOptionSection.PopularTokens,
-    tokenOptions: currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo)),
+    tokenOptions: popularTokenOptions?.slice(0, MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT),
   })
   const sections = useMemo(() => [...(recentSection ?? []), ...(popularSection ?? [])], [popularSection, recentSection])
 

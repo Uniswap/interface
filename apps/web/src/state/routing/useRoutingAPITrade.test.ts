@@ -4,14 +4,13 @@ import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import ms from 'ms'
 import { useGetQuoteQuery, useGetQuoteQueryState } from 'state/routing/slice'
-import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
+import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, URAQuoteType } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
 import { useRouterPreference } from 'state/user/hooks'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
@@ -44,18 +43,6 @@ beforeEach(() => {
     error: false,
     currentData: undefined,
   })
-  mocked(useExperimentValue).mockImplementation((experiment, param) => {
-    switch (param) {
-      case 'deadlineBufferSecs':
-        return 0
-      case 'forceOpenOrders':
-        return false
-      case 'priceImprovementBps':
-        return 0
-      default:
-        return undefined
-    }
-  })
 })
 
 const MOCK_ARGS: GetQuoteArgs = {
@@ -74,15 +61,8 @@ const MOCK_ARGS: GetQuoteArgs = {
   needsWrapIfUniswapX: USDCAmount.currency.isNative,
   uniswapXForceSyntheticQuotes: false,
   sendPortionEnabled: true,
-  isXv2: false,
-  isXv2Arbitrum: false,
-  priceImprovementBps: 0,
-  forceOpenOrders: false,
-  deadlineBufferSecs: 0,
-  arbitrumXV2SlippageTolerance: undefined as any,
   protocolPreferences: undefined,
-  isPriorityOrder: false,
-  isUniswapXSupportedChain: true,
+  routingType: URAQuoteType.DUTCH_V1,
 }
 
 describe('#useRoutingAPITrade ExactIn', () => {

@@ -1,13 +1,12 @@
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { TimePeriod } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAtom } from 'jotai'
 import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { FlexProps } from 'ui/src'
+import { FlexProps, useMedia } from 'ui/src'
 
 export enum TimePeriodDisplay {
   HOUR = '1H',
@@ -65,8 +64,8 @@ export default function VolumeTimeFrameSelector() {
   const [isMenuOpen, toggleMenu] = useState(false)
   const [activeTime, setTime] = useAtom(filterTimeAtom)
 
-  const screenSize = useScreenSize()
-  const isLargeScreen = screenSize['lg']
+  const media = useMedia()
+  const isLargeScreen = !media.xl
 
   return (
     <div>

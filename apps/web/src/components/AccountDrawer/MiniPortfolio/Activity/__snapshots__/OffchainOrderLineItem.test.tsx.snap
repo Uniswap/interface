@@ -87,6 +87,9 @@ exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
             </button>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -140,6 +143,9 @@ exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
             </span>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -217,6 +223,9 @@ exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
             </a>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

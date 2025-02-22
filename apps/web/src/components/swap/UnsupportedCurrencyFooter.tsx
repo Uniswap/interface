@@ -9,9 +9,9 @@ import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { Trans } from 'react-i18next'
-import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Text } from 'ui/src'
+import { ModalCloseIcon, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -82,7 +82,7 @@ export default function UnsupportedCurrencyFooter({
               <ThemedText.DeprecatedMediumHeader>
                 <Trans i18nKey="common.unsupportedAsset_other" />
               </ThemedText.DeprecatedMediumHeader>
-              <CloseIcon onClick={() => setShowDetails(false)} data-testid="close-icon" />
+              <ModalCloseIcon onClose={() => setShowDetails(false)} testId="close-icon" />
             </RowBetween>
             {tokens.map((token) => {
               return (

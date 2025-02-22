@@ -35,7 +35,7 @@ const ProfileHeader = styled.div`
   margin-bottom: 8px;
   border-bottom: 1px solid ${({ theme }) => theme.surface3};
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     font-size: 20px;
     line-height: 28px;
     margin-bottom: 0px;

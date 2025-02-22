@@ -5,18 +5,17 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import { HookModal } from 'components/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
-import { getDefaultFeeTiersWithData, isDynamicFeeTier } from 'components/Liquidity/utils'
+import { getDefaultFeeTiersWithData, hasLPFoTTransferError, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { useCurrencyInfo } from 'hooks/Tokens'
 import { SUPPORTED_V2POOL_CHAIN_IDS } from 'hooks/useNetworkSupportsV2'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { AdvancedButton, Container } from 'pages/Pool/Positions/create/shared'
-import { FeeData } from 'pages/Pool/Positions/create/types'
+import { DEFAULT_POSITION_STATE, FeeData } from 'pages/Pool/Positions/create/types'
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -33,18 +32,31 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useFormatter } from 'utils/formatNumbers'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 
-export const CurrencySelector = ({ currency, onPress }: { currency?: Currency; onPress: () => void }) => {
+interface WrappedNativeWarning {
+  wrappedToken: Currency
+  nativeToken: Currency
+  swapUrlParams: string
+}
+
+export const CurrencySelector = ({
+  currencyInfo,
+  onPress,
+}: {
+  currencyInfo: Maybe<CurrencyInfo>
+  onPress: () => void
+}) => {
   const { t } = useTranslation()
-  // TODO: remove when backend returns token logos in graphql response: WEB-4920
-  const currencyInfo = useCurrencyInfo(currency)
+  const currency = currencyInfo?.currency
 
   return (
     <DeprecatedButton
@@ -155,7 +167,6 @@ export function SelectTokensStep({
   const { setSelectedChainId } = useMultichainContext()
   const trace = useTrace()
   const [hookModalOpen, setHookModalOpen] = useState(false)
-  const navigate = useNavigate()
 
   const {
     positionState: { hook, userApprovedHook, currencyInputs, fee, protocolVersion },
@@ -291,9 +302,7 @@ export function SelectTokensStep({
     }
   }
 
-  const wrappedNativeWarning = useMemo(():
-    | { wrappedToken: Currency; nativeToken: Currency; swapUrlParams: string }
-    | undefined => {
+  const wrappedNativeWarning = useMemo((): WrappedNativeWarning | undefined => {
     if (protocolVersion !== ProtocolVersion.V4) {
       return undefined
     }
@@ -328,6 +337,15 @@ export function SelectTokensStep({
 
     return undefined
   }, [token0, token1, protocolVersion])
+
+  const token0CurrencyInfo = useCurrencyInfo(token0 ? currencyId(token0) : undefined)
+  const token1CurrencyInfo = useCurrencyInfo(token1 ? currencyId(token1) : undefined)
+
+  const token0FoTError = hasLPFoTTransferError(token0CurrencyInfo, protocolVersion)
+  const token1FoTError = hasLPFoTTransferError(token1CurrencyInfo, protocolVersion)
+  const fotErrorToken = token0FoTError || token1FoTError
+
+  const hasError = isV4UnsupportedTokenSelected || Boolean(wrappedNativeWarning) || Boolean(fotErrorToken)
 
   return (
     <>
@@ -365,61 +383,21 @@ export function SelectTokensStep({
               ) : (
                 <Flex row gap="$gap16" $md={{ flexDirection: 'column' }}>
                   <CurrencySelector
-                    currency={token0}
+                    currencyInfo={token0CurrencyInfo}
                     onPress={() => setCurrencySearchInputState(PositionField.TOKEN0)}
                   />
                   <CurrencySelector
-                    currency={token1}
+                    currencyInfo={token1CurrencyInfo}
                     onPress={() => setCurrencySearchInputState(PositionField.TOKEN1)}
                   />
                 </Flex>
               )}
-              {protocolVersion === ProtocolVersion.V4 &&
-                (isV4UnsupportedTokenSelected ? (
-                  <Flex row alignItems="center" gap="$spacing8" mt="$spacing12">
-                    <AlertTriangleFilled size="$icon.24" color="$statusCritical" />
-                    <Text variant="body3" color="$statusCritical">
-                      {t('position.migrate.v4unsupportedChain')}
-                    </Text>
-                  </Flex>
-                ) : wrappedNativeWarning ? (
-                  <Flex row gap="$gap12" backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
-                    <Flex flexShrink={0}>
-                      <AlertTriangleFilled size="$icon.20" color="$statusWarning" />
-                    </Flex>
-                    <Flex flex={1}>
-                      <Text variant="body3" color="$statusWarning">
-                        <Trans
-                          i18nKey="position.wrapped.warning"
-                          values={{ nativeToken: wrappedNativeWarning.nativeToken.symbol }}
-                        />
-                      </Text>
-                      <Text variant="body3" color="$neutral2">
-                        <Trans
-                          i18nKey="position.wrapped.warning.info"
-                          values={{
-                            nativeToken: wrappedNativeWarning.nativeToken.symbol,
-                            wrappedToken: wrappedNativeWarning.wrappedToken.symbol,
-                          }}
-                        />
-                      </Text>
-                      <TouchableArea
-                        onPress={() => navigate(`/swap${wrappedNativeWarning.swapUrlParams}`)}
-                        mt="$spacing2"
-                        {...ClickableTamaguiStyle}
-                      >
-                        <Text variant="buttonLabel4">
-                          <Trans
-                            i18nKey="position.wrapped.unwrap"
-                            values={{ wrappedToken: wrappedNativeWarning.wrappedToken.symbol }}
-                          />
-                        </Text>
-                      </TouchableArea>
-                    </Flex>
-                  </Flex>
-                ) : (
-                  <AddHook />
-                ))}
+              <SelectStepError
+                isV4UnsupportedTokenSelected={isV4UnsupportedTokenSelected}
+                wrappedNativeWarning={wrappedNativeWarning}
+                fotToken={fotErrorToken}
+              />
+              {!hasError && protocolVersion === ProtocolVersion.V4 && <AddHook />}
             </Flex>
           </Flex>
           <Flex gap="$spacing24">
@@ -433,11 +411,7 @@ export function SelectTokensStep({
             </Flex>
 
             {protocolVersion !== ProtocolVersion.V2 && (
-              <Flex
-                gap="$spacing8"
-                pointerEvents={isV4UnsupportedTokenSelected || wrappedNativeWarning ? 'none' : 'auto'}
-                opacity={isV4UnsupportedTokenSelected || wrappedNativeWarning ? 0.5 : 1}
-              >
+              <Flex gap="$spacing8" pointerEvents={hasError ? 'none' : 'auto'} opacity={hasError ? 0.5 : 1}>
                 <Flex
                   row
                   py="$spacing12"
@@ -457,7 +431,7 @@ export function SelectTokensStep({
                         ) : (
                           <Trans
                             i18nKey="fee.tierExact"
-                            values={{ fee: formatPercent(new Percent(fee.feeAmount, 1000000)) }}
+                            values={{ fee: formatPercent(new Percent(fee.feeAmount, 1000000), 4) }}
                           />
                         )}
                       </Text>
@@ -469,7 +443,6 @@ export function SelectTokensStep({
                             backgroundColor="$surface3"
                             px={7}
                             py={2}
-                            x
                             $md={{ display: 'none' }}
                           >
                             <Text variant="buttonLabel4">
@@ -490,7 +463,7 @@ export function SelectTokensStep({
                     </Text>
                   </Flex>
                   <DeprecatedButton
-                    disabled={!currencyInputs.TOKEN0 || !currencyInputs.TOKEN1}
+                    isDisabled={!currencyInputs.TOKEN0 || !currencyInputs.TOKEN1}
                     size="small"
                     px="$spacing12"
                     my="auto"
@@ -561,7 +534,7 @@ export function SelectTokensStep({
             onPress={handleOnContinue}
             loading={Boolean(!continueButtonEnabled && token0 && token1)}
             loaderColor="$surface1"
-            disabled={!continueButtonEnabled || isV4UnsupportedTokenSelected || Boolean(wrappedNativeWarning)}
+            isDisabled={!continueButtonEnabled || hasError}
           >
             <Text variant="buttonLabel1" color="$surface1">
               <Trans i18nKey="common.button.continue" />
@@ -578,4 +551,108 @@ export function SelectTokensStep({
       </PrefetchBalancesWrapper>
     </>
   )
+}
+
+function SelectStepError({
+  isV4UnsupportedTokenSelected,
+  wrappedNativeWarning,
+  fotToken,
+}: {
+  isV4UnsupportedTokenSelected: boolean
+  wrappedNativeWarning?: WrappedNativeWarning
+  fotToken?: CurrencyInfo
+}) {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const { setPositionState } = useCreatePositionContext()
+
+  if (isV4UnsupportedTokenSelected) {
+    return (
+      <Flex row alignItems="center" gap="$spacing8" mt="$spacing12">
+        <AlertTriangleFilled size="$icon.24" color="$statusCritical" />
+        <Text variant="body3" color="$statusCritical">
+          {t('position.migrate.v4unsupportedChain')}
+        </Text>
+      </Flex>
+    )
+  }
+
+  if (wrappedNativeWarning) {
+    return (
+      <Flex row gap="$gap12" backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
+        <Flex flexShrink={0}>
+          <AlertTriangleFilled size="$icon.20" color="$statusWarning" />
+        </Flex>
+        <Flex flex={1}>
+          <Text variant="body3" color="$statusWarning">
+            <Trans
+              i18nKey="position.wrapped.warning"
+              values={{ nativeToken: wrappedNativeWarning.nativeToken.symbol }}
+            />
+          </Text>
+          <Text variant="body3" color="$neutral2">
+            <Trans
+              i18nKey="position.wrapped.warning.info"
+              values={{
+                nativeToken: wrappedNativeWarning.nativeToken.symbol,
+                wrappedToken: wrappedNativeWarning.wrappedToken.symbol,
+              }}
+            />
+          </Text>
+          <TouchableArea
+            onPress={() => navigate(`/swap${wrappedNativeWarning.swapUrlParams}`)}
+            mt="$spacing2"
+            {...ClickableTamaguiStyle}
+          >
+            <Text variant="buttonLabel4">
+              <Trans
+                i18nKey="position.wrapped.unwrap"
+                values={{ wrappedToken: wrappedNativeWarning.wrappedToken.symbol }}
+              />
+            </Text>
+          </TouchableArea>
+        </Flex>
+      </Flex>
+    )
+  }
+
+  if (fotToken) {
+    return (
+      <Flex row gap="$gap12" backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
+        <Flex flexShrink={0}>
+          <AlertTriangleFilled size="$icon.20" color="$statusCritical" />
+        </Flex>
+        <Flex flex={1}>
+          <Text variant="body3" color="$statusCritical">
+            {t('token.safety.warning.fotLow.title')}
+          </Text>
+          <Text variant="body3" color="$neutral2">
+            <Trans
+              i18nKey="position.fot.warning"
+              values={{
+                token: fotToken.currency.symbol,
+              }}
+            />
+          </Text>
+          <TouchableArea
+            onPress={() => {
+              navigate('/positions/create/v2')
+
+              setPositionState((prevState) => ({
+                ...DEFAULT_POSITION_STATE,
+                currencyInputs: prevState.currencyInputs,
+                protocolVersion: ProtocolVersion.V2,
+              }))
+            }}
+            mt="$spacing2"
+            {...ClickableTamaguiStyle}
+          >
+            <Text variant="buttonLabel4">{t('position.fot.warning.cta')}</Text>
+          </TouchableArea>
+        </Flex>
+      </Flex>
+    )
+  }
+
+  return null
 }

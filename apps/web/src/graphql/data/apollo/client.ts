@@ -33,6 +33,11 @@ export const apolloClient = new ApolloClient({
               return toReference({ __typename: 'Token', chain: args?.chain, address: args?.address?.toLowerCase() })
             },
           },
+          // Ignore `valueModifiers` and `onRampAuth` when caching `portfolios`.
+          // IMPORTANT: This assumes that `valueModifiers` are always the same when querying `portfolios` across the entire app.
+          portfolios: {
+            keyArgs: ['chains', 'ownerAddresses'],
+          },
         },
       },
       Token: {
@@ -85,7 +90,7 @@ export const apolloClient = new ApolloClient({
       TokenMarket: {
         keyFields: ['id'],
       },
-      // Disable normalizaton for these types.
+      // Disable normalization for these types.
       // Given that we would never query these objects directly, we want these to be stored by their parent instead of being normalized.
       Amount: { keyFields: false },
       AmountChange: { keyFields: false },

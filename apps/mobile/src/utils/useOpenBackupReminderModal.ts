@@ -24,7 +24,7 @@ export function useOpenBackupReminderModal(activeAccount: Account): void {
     !isBackupReminderModalOpen &&
     !isBackupReminderWarningModalOpen &&
     isSignerAccount &&
-    !!txns &&
+    !!txns?.length &&
     !activeAccount.backups
 
   useEffect(() => {

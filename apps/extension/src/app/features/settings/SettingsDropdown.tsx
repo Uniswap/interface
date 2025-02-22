@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Flex, Popover, ScrollView, Text, TouchableArea } from 'ui/src'
 import { Check, RotatableChevron } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 
 type DropdownItem = {
   label: string
@@ -39,7 +39,7 @@ export function SettingsDropdown({ selected, items, disableDropdown, onSelect }:
             <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon16} width={iconSizes.icon16} />
           </Flex>
         </Popover.Trigger>
-        <Popover.Content backgroundColor="$transparent" disableRemoveScroll={false}>
+        <Popover.Content zIndex={zIndexes.popover} backgroundColor="$transparent" disableRemoveScroll={false}>
           <Flex
             borderColor="$surface3"
             borderRadius="$rounded16"

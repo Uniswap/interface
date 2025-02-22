@@ -41,6 +41,7 @@ export function GasFeeRow({ gasFee, chainId }: GasFeeRowProps): JSX.Element | nu
         </Text>
       ) : (
         <NetworkFeeWarning
+          chainId={chainId}
           placement="bottom"
           tooltipTrigger={
             <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">

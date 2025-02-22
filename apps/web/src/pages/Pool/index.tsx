@@ -23,7 +23,8 @@ import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Anchor, DeprecatedButton, Flex, ModalCloseIcon, Text, useMedia, useSporeColors } from 'ui/src'
+import { Anchor, DeprecatedButton, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -302,18 +303,22 @@ export default function Pool() {
               setChainFilter(selectedChain ?? null)
             }}
             onVersionChange={(toggledVersion) => {
-              if (versionFilter?.includes(toggledVersion)) {
-                setVersionFilter(versionFilter?.filter((v) => v !== toggledVersion))
-              } else {
-                setVersionFilter([...(versionFilter ?? []), toggledVersion])
-              }
+              setVersionFilter((prevVersionFilter) => {
+                if (prevVersionFilter.includes(toggledVersion)) {
+                  return prevVersionFilter.filter((v) => v !== toggledVersion)
+                } else {
+                  return [...prevVersionFilter, toggledVersion]
+                }
+              })
             }}
             onStatusChange={(toggledStatus) => {
-              if (statusFilter?.includes(toggledStatus)) {
-                setStatusFilter(statusFilter?.filter((s) => s !== toggledStatus))
-              } else {
-                setStatusFilter([...(statusFilter ?? []), toggledStatus])
-              }
+              setStatusFilter((prevStatusFilter) => {
+                if (prevStatusFilter?.includes(toggledStatus)) {
+                  return prevStatusFilter.filter((s) => s !== toggledStatus)
+                } else {
+                  return [...prevStatusFilter, toggledStatus]
+                }
+              })
             }}
           />
           {!isLoadingPositions ? (
@@ -325,7 +330,7 @@ export default function Pool() {
                     style={{ textDecoration: 'none' }}
                     to={getPositionUrl(position)}
                   >
-                    <LiquidityPositionCard showVisibilityOption isClickableStyle liquidityPosition={position} />
+                    <LiquidityPositionCard showVisibilityOption liquidityPosition={position} />
                   </Link>
                 ))}
                 <HiddenPositions
@@ -346,7 +351,7 @@ export default function Pool() {
           )}
           {hasNextPage && (
             <Flex mx="auto">
-              <DeprecatedButton theme="outline" onPress={loadMorePositions} disabled={isFetching}>
+              <DeprecatedButton theme="outline" onPress={loadMorePositions} isDisabled={isFetching}>
                 <Text variant="buttonLabel3">{t('common.loadMore')}</Text>
               </DeprecatedButton>
             </Flex>
@@ -373,7 +378,7 @@ export default function Pool() {
                   <Trans i18nKey="pool.closedCTA.description" />
                 </Text>
               </Flex>
-              <ModalCloseIcon onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
+              <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
             </Flex>
           )}
           <Flex row centered mb="$spacing24" gap="$gap4">
@@ -437,12 +442,7 @@ function HiddenPositions({ showHiddenPositions, setShowHiddenPositions, hiddenPo
             style={{ textDecoration: 'none' }}
             to={getPositionUrl(position)}
           >
-            <LiquidityPositionCard
-              showVisibilityOption
-              isClickableStyle
-              liquidityPosition={position}
-              isVisible={false}
-            />
+            <LiquidityPositionCard showVisibilityOption liquidityPosition={position} isVisible={false} />
           </Link>
         ))}
       </Flex>

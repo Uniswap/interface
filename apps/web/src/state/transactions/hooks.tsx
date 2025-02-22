@@ -2,10 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
-import { SwapResult } from 'hooks/useSwapCallback'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { TradeFillType } from 'state/routing/types'
 import { addTransaction, cancelTransaction, removeTransaction } from 'state/transactions/reducer'
 import {
   PendingTransactionDetails,
@@ -14,7 +12,6 @@ import {
   TransactionType,
 } from 'state/transactions/types'
 import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePrevious } from 'utilities/src/react/hooks'
 
@@ -122,14 +119,6 @@ export function useIsTransactionConfirmed(transactionHash?: string): boolean {
   }
 
   return isConfirmedTx(transactions[transactionHash])
-}
-
-export function useSwapTransactionStatus(swapResult: SwapResult | undefined): TransactionStatus | undefined {
-  const transaction = useTransaction(swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined)
-  if (!transaction) {
-    return undefined
-  }
-  return transaction.status
 }
 
 /**

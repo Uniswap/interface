@@ -15,9 +15,9 @@ import { ListingStatus } from 'nft/types'
 import { useCallback, useEffect, useMemo, useReducer } from 'react'
 import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { breakpoints } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -40,7 +40,7 @@ const ListModalWrapper = styled.div`
   flex-direction: column;
   gap: 16px;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     width: 100%;
     height: 100%;
   }

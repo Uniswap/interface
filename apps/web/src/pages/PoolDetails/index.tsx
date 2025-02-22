@@ -19,7 +19,9 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import { BREAKPOINTS, ThemeProvider } from 'theme'
+import { ThemeProvider } from 'theme'
+import { breakpoints } from 'ui/src/theme'
+import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
@@ -31,10 +33,10 @@ const PageWrapper = styled(Row)`
   gap: 80px;
   align-items: flex-start;
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     padding: 48px 40px;
   }
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xl}px) {
     flex-direction: column;
     align-items: center;
     gap: 0px;
@@ -48,7 +50,7 @@ const LeftColumn = styled(Column)`
   justify-content: flex-start;
   width: 100%;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     max-width: unset;
   }
 `
@@ -62,7 +64,7 @@ const RightColumn = styled(Column)`
   gap: 24px;
   width: 360px;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     margin: 44px 0px;
     width: 100%;
     min-width: unset;
@@ -76,13 +78,13 @@ const TokenDetailsWrapper = styled(Column)`
   gap: 24px;
   padding: 20px;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) and (min-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.md}px) {
     flex-direction: row;
     flex-wrap: wrap;
     padding: unset;
   }
 
-  @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${breakpoints.md}px) {
     padding: unset;
   }
 `
@@ -220,12 +222,14 @@ export default function PoolDetailsPage() {
                 <Trans i18nKey="common.links" />
               </TokenDetailsHeader>
               <LinksContainer>
-                <PoolDetailsLink
-                  address={poolAddress}
-                  chainId={chainInfo?.id}
-                  tokens={[token0, token1]}
-                  loading={loading}
-                />
+                {poolData?.protocolVersion !== ProtocolVersion.V4 && (
+                  <PoolDetailsLink
+                    address={poolAddress}
+                    chainId={chainInfo?.id}
+                    tokens={[token0, token1]}
+                    loading={loading}
+                  />
+                )}
                 <PoolDetailsLink
                   address={token0?.address}
                   chainId={chainInfo?.id}

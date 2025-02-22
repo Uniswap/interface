@@ -50,7 +50,8 @@ interface BaseLiquidityTxAndGasInfo {
   approveToken1Request: ValidatedTransactionRequest | undefined
   approvePositionTokenRequest: ValidatedTransactionRequest | undefined
   permit: ValidatedPermit | undefined
-  revocationTxRequest: ValidatedTransactionRequest | undefined
+  revokeToken0Request: ValidatedTransactionRequest | undefined
+  revokeToken1Request: ValidatedTransactionRequest | undefined
   txRequest: ValidatedTransactionRequest | undefined
 }
 
@@ -58,7 +59,6 @@ export interface IncreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo 
   type: LiquidityTransactionType.Increase
   unsigned: boolean
   increasePositionRequestArgs: IncreaseLPPositionRequest | undefined
-  dependentAmount: string | undefined
 }
 
 export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
@@ -69,7 +69,6 @@ export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Create
   unsigned: boolean
   createPositionRequestArgs: CreateLPPositionRequest | undefined
-  dependentAmount: string | undefined
 }
 
 export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {

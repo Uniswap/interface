@@ -111,6 +111,9 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -203,6 +206,9 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

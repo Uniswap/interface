@@ -9,7 +9,6 @@ import {
   IconProps,
   Text,
   View,
-  ViewProps,
   useIsDarkMode,
   useShadowPropsShort,
 } from 'ui/src'
@@ -41,7 +40,7 @@ type IconGraphic = {
   type: IntroCardGraphicType.Icon
   Icon: GeneratedIcon
   iconProps?: IconProps
-  iconContainerProps?: ViewProps
+  iconContainerProps?: FlexProps
 }
 
 export type ImageGraphic = {

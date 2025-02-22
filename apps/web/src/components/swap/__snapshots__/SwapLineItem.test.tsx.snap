@@ -236,7 +236,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -394,7 +393,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -456,7 +454,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -509,7 +506,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -562,7 +558,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -664,6 +659,9 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -906,7 +904,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1064,7 +1061,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1126,7 +1122,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1179,7 +1174,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1232,7 +1226,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1334,6 +1327,9 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1608,7 +1604,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1729,7 +1724,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1791,7 +1785,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1844,7 +1837,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1897,7 +1889,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -1941,15 +1932,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
-                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
                       >
                         <div
-                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
-                          style="padding: 0.1rem 0.5rem;"
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
                           >
                             <svg
                               stroke-width="8"
@@ -1987,8 +1976,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                             </span>
                           </div>
                           <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
-                            style="justify-content: space-evenly; z-index: 2;"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
                           >
                             <div
                               aria-expanded="false"
@@ -1999,7 +1987,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                                 class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
                               >
                                 <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
                                 >
                                   <div
                                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
@@ -2041,6 +2029,9 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -2315,7 +2306,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -2436,7 +2426,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -2498,7 +2487,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -2551,7 +2539,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -2604,7 +2591,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -2648,15 +2634,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
-                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
                       >
                         <div
-                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
-                          style="padding: 0.1rem 0.5rem;"
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
                           >
                             <svg
                               stroke-width="8"
@@ -2694,8 +2678,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                             </span>
                           </div>
                           <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
-                            style="justify-content: space-evenly; z-index: 2;"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
                           >
                             <div
                               aria-expanded="false"
@@ -2706,7 +2689,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                                 class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
                               >
                                 <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
                                 >
                                   <div
                                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
@@ -2748,6 +2731,9 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -3022,7 +3008,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -3143,7 +3128,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -3205,7 +3189,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -3258,7 +3241,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -3302,7 +3284,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -3355,7 +3336,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -3399,15 +3379,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
-                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
                       >
                         <div
-                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
-                          style="padding: 0.1rem 0.5rem;"
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
                           >
                             <svg
                               stroke-width="8"
@@ -3445,8 +3423,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                             </span>
                           </div>
                           <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
-                            style="justify-content: space-evenly; z-index: 2;"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
                           >
                             <div
                               aria-expanded="false"
@@ -3457,7 +3434,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                                 class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
                               >
                                 <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
                                 >
                                   <div
                                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
@@ -3499,6 +3476,9 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -3773,7 +3753,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -3894,7 +3873,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -3951,7 +3929,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4013,7 +3990,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4066,7 +4042,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4119,7 +4094,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4163,15 +4137,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
-                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
                       >
                         <div
-                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
-                          style="padding: 0.1rem 0.5rem;"
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
                           >
                             <svg
                               stroke-width="8"
@@ -4209,8 +4181,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                             </span>
                           </div>
                           <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
-                            style="justify-content: space-evenly; z-index: 2;"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
                           >
                             <div
                               aria-expanded="false"
@@ -4221,7 +4192,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                                 class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
                               >
                                 <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
                                 >
                                   <div
                                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
@@ -4263,6 +4234,9 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -4537,7 +4511,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4658,7 +4631,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4715,7 +4687,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4777,7 +4748,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4830,7 +4800,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4883,7 +4852,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -4927,15 +4895,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
-                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
                       >
                         <div
-                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
-                          style="padding: 0.1rem 0.5rem;"
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _justifyContent-space-evenl121 _flexGrow-1 _position-relative _width-auto _pt-t-space-spa94665589 _pb-t-space-spa94665589"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _height-10037 _left-0px _top-0px _zIndex-1 _opacity-0--5"
                           >
                             <svg
                               stroke-width="8"
@@ -4973,8 +4939,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                             </span>
                           </div>
                           <div
-                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
-                            style="justify-content: space-evenly; z-index: 2;"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _gap-t-space-spa94665589 _width-auto _zIndex-2 _flexGrow-1 _justifyContent-space-evenl121 _alignItems-center"
                           >
                             <div
                               aria-expanded="false"
@@ -4985,7 +4950,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                                 class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
                               >
                                 <div
-                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-2px"
                                 >
                                   <div
                                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
@@ -5027,6 +4992,9 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -5237,7 +5205,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5298,7 +5265,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5360,7 +5326,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5385,7 +5350,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5438,7 +5402,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5462,6 +5425,9 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -5525,7 +5491,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5546,7 +5511,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5567,7 +5531,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5588,7 +5551,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5609,7 +5571,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <div
@@ -5629,6 +5590,9 @@ exports[`SwapLineItem.tsx syncing 1`] = `
             />
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

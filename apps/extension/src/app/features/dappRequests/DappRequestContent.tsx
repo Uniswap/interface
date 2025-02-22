@@ -257,7 +257,7 @@ export function DappRequestFooter({
             {t('common.button.cancel')}
           </DeprecatedButton>
           <DeprecatedButton
-            disabled={!isConfirmEnabled || disableConfirm}
+            isDisabled={!isConfirmEnabled || disableConfirm}
             flex={1}
             flexBasis={1}
             size="medium"

@@ -166,13 +166,13 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   width: max-content;
 }
 
-@media (max-width:1024px) and (min-width:396px) {
+@media (max-width:1024px) and (min-width:380px) {
   .c5 {
     display: block;
   }
 }
 
-@media (max-width:1024px) and (min-width:396px) {
+@media (max-width:1024px) and (min-width:380px) {
   .c6 {
     color: #7D7D7D;
   }
@@ -328,6 +328,9 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
             </a>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -531,13 +534,13 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   width: max-content;
 }
 
-@media (max-width:1024px) and (min-width:396px) {
+@media (max-width:1024px) and (min-width:380px) {
   .c5 {
     display: block;
   }
 }
 
-@media (max-width:1024px) and (min-width:396px) {
+@media (max-width:1024px) and (min-width:380px) {
   .c6 {
     color: #7D7D7D;
   }
@@ -560,6 +563,25 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
             class="c0 c2 c3"
             data-testid="pdp-token-logo-USDC"
           >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
+              data-testid="token-logo"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+              />
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                data-testid="img-token-image"
+              >
+                <img
+                  height="20"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  style="object-fit: contain; border-radius: 10px; z-index: 1;"
+                  width="20"
+                />
+              </div>
+            </div>
             <div
               class="c4 c5 css-1urox24"
             >
@@ -660,6 +682,9 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
             </a>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

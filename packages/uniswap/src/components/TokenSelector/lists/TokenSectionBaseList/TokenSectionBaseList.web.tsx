@@ -6,7 +6,7 @@ import { LayoutChangeEvent } from 'react-native'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import { Flex, useWindowDimensions } from 'ui/src'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
 import {
   ItemRowInfo,
@@ -100,7 +100,7 @@ export function TokenSectionBaseList({
         }),
       )
 
-      if (section.sectionKey === TokenOptionSection.BridgingTokens) {
+      if (section.sectionKey === TokenOptionSection.BridgingTokens && renderSectionFooter) {
         const unichainPromotion = {
           section: { sectionKey: TokenOptionSection.BridgingTokens },
           key: TokenOptionSection.BridgingTokens,
@@ -179,7 +179,7 @@ export function TokenSectionBaseList({
         {({ height }: { height: number }): JSX.Element => {
           return (
             <Flex position="relative">
-              <Flex position="absolute" top={-1} width="100%" zIndex={zIndices.sticky}>
+              <Flex position="absolute" top={-1} width="100%" zIndex={zIndexes.sticky}>
                 {activeSessionIndex >= 0 && (
                   <TokenSectionBaseListRow data={items} index={activeSessionIndex} windowWidth={windowWidth} />
                 )}

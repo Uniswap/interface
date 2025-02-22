@@ -4,8 +4,8 @@ import styled from 'lib/styled-components'
 import { StyledImage } from 'nft/components/card/media'
 import { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 
 const BORDER_RADIUS = '12'
 
@@ -25,7 +25,7 @@ const StyledDetailsContainer = styled(Column)`
   will-change: transform;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} transform`};
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     height: 112px;
     transform: translateY(-28px);
   }
@@ -54,7 +54,7 @@ const StyledActionButton = styled(ThemedText.BodySmall)<{
   visibility: hidden;
   cursor: ${({ isDisabled }) => (isDisabled ? 'default' : 'pointer')};
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     visibility: visible;
     bottom: 8px;
   }
@@ -126,7 +126,7 @@ const StyledCardContainer = styled.div<{ selected: boolean; isDisabled: boolean 
     transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} border`};
     will-change: border;
 
-    @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    @media screen and (max-width: ${breakpoints.md}px) {
       ${({ selected, theme }) => selected && `border-color: ${theme.critical}`};
     }
   }

@@ -2,7 +2,7 @@ import { PropsWithChildren, SyntheticEvent, useEffect, useRef, useState } from '
 import { Popover, PopperProps, Portal } from 'ui/src'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { MenuContent } from 'wallet/src/components/menu/MenuContent'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
@@ -83,7 +83,7 @@ export function ContextMenu({
             style={{ position: 'fixed' }}
             top={0}
             width="100vh"
-            zIndex={zIndices.modalBackdrop}
+            zIndex={zIndexes.modalBackdrop}
             onPress={() => setShowMenu(false)}
           />
         </Portal>

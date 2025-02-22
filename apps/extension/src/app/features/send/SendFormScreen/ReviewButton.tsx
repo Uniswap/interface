@@ -37,7 +37,7 @@ export function ReviewButton({ onPress, disabled }: ReviewButtonProps): JSX.Elem
       <Trace logPress element={ElementName.SendReview}>
         <DeprecatedButton
           backgroundColor="$accent1"
-          disabled={disableReviewButton}
+          isDisabled={disableReviewButton}
           size={isWeb ? 'medium' : 'large'}
           testID={TestID.SendReview}
           onPress={onPress}

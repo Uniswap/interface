@@ -6,17 +6,6 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
   forwardedRef={[Function]}
   handlerTag={1}
   handlerType="FlingGestureHandler"
-  jestAnimatedStyle={
-    {
-      "value": {
-        "transform": [
-          {
-            "translateY": -150,
-          },
-        ],
-      },
-    }
-  }
   onGestureHandlerEvent={[Function]}
   pointerEvents="box-none"
   style={
@@ -161,11 +150,11 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
                   },
                 ]
               }
-              tintColor="#7D7D7D"
               vbHeight={24}
               vbWidth={24}
             >
               <RNSVGGroup
+                color="#7D7D7D"
                 fill={
                   {
                     "type": 2,

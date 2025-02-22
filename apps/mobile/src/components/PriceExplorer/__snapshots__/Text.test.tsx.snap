@@ -321,18 +321,6 @@ exports[`RelativeChangeText renders without error 1`] = `
     collapsable={false}
     fill="none"
     focusable={false}
-    jestAnimatedStyle={
-      {
-        "value": {
-          "color": "#FF5F52",
-          "transform": [
-            {
-              "rotate": "0deg",
-            },
-          ],
-        },
-      }
-    }
     meetOrSlice={0}
     minX={0}
     minY={0}
@@ -361,11 +349,18 @@ exports[`RelativeChangeText renders without error 1`] = `
         },
       ]
     }
-    tintColor="#FF5F52"
+    transform={
+      [
+        {
+          "rotate": "0deg",
+        },
+      ]
+    }
     vbHeight={24}
     vbWidth={24}
   >
     <RNSVGGroup
+      color="#FF5F52"
       fill={null}
       matrix={
         [

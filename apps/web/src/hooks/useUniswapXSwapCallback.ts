@@ -9,7 +9,9 @@ import {
   PriorityOrderBuilder,
   UnsignedPriorityOrder,
   UnsignedV2DutchOrder,
+  UnsignedV3DutchOrder,
   V2DutchOrderBuilder,
+  V3DutchOrderBuilder,
 } from '@uniswap/uniswapx-sdk'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
@@ -25,6 +27,7 @@ import {
   PriorityOrderTrade,
   TradeFillType,
   V2DutchOrderTrade,
+  V3DutchOrderTrade,
 } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -86,7 +89,7 @@ export function useUniswapXSwapCallback({
   allowedSlippage,
   fiatValues,
 }: {
-  trade?: DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade | PriorityOrderTrade
+  trade?: DutchOrderTrade | V2DutchOrderTrade | V3DutchOrderTrade | LimitOrderTrade | PriorityOrderTrade
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {
@@ -142,9 +145,20 @@ export function useUniswapXSwapCallback({
           let domain: TypedDataDomain
           let types: Record<string, TypedDataField[]>
           let values: PermitTransferFrom
-          let updatedOrder: DutchOrder | UnsignedV2DutchOrder | UnsignedPriorityOrder
+          let updatedOrder: DutchOrder | UnsignedV2DutchOrder | UnsignedPriorityOrder | UnsignedV3DutchOrder
 
-          if (trade instanceof V2DutchOrderTrade) {
+          if (trade instanceof V3DutchOrderTrade) {
+            deadline = now + trade.deadlineBufferSecs
+
+            const order = trade.order
+            updatedOrder = V3DutchOrderBuilder.fromOrder(order)
+              .deadline(deadline)
+              .nonFeeRecipient(account.address, trade.swapFee?.recipient)
+              // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
+              .nonce(updatedNonce ?? order.info.nonce)
+              .buildPartial()
+            ;({ domain, types, values } = updatedOrder.permitData())
+          } else if (trade instanceof V2DutchOrderTrade) {
             deadline = now + trade.deadlineBufferSecs
 
             const order: UnsignedV2DutchOrder = trade.order

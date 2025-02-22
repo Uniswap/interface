@@ -327,7 +327,7 @@ export function SwapFormButton({
           hoverStyle={{ backgroundColor: buttonProps.hoverBackgroundColor, filter }}
           icon={indicative ? <SpinningLoader color="$neutral2" size={iconSizes.icon20} /> : undefined}
           backgroundColor={buttonProps.backgroundColor}
-          disabled={disabled}
+          isDisabled={disabled}
           opacity={buttonProps.opacity}
           size={isShortMobileDevice ? 'small' : 'large'}
           testID={TestID.ReviewSwap}

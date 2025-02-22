@@ -6,8 +6,7 @@ import { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { CloseIcon } from 'theme/components'
-import { Flex, useMedia } from 'ui/src'
+import { Flex, ModalCloseIcon, useMedia } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
@@ -31,13 +30,13 @@ export function FiatOnRampCurrencyModal({
   onSelectCurrency,
 }: FiatOnRampCurrencyModalProps) {
   const { t } = useTranslation()
-  const sm = useMedia().sm
+  const media = useMedia()
 
   return (
     <Modal
       name={ModalName.FiatOnRampTokenSelector}
       maxWidth={420}
-      height={sm ? '100vh' : '100%'}
+      height={media.sm ? '100vh' : '100%'}
       maxHeight={700}
       isModalOpen={isOpen}
       onClose={onDismiss}
@@ -47,7 +46,7 @@ export function FiatOnRampCurrencyModal({
         <HeaderContent>
           <Flex row justifyContent="space-between">
             <Text variant="subheading1">{t('common.selectToken.label')}</Text>
-            <CloseIcon data-testid="FiatOnRampCurrencyModal-close" onClick={onDismiss} />
+            <ModalCloseIcon testId="FiatOnRampCurrencyModal-close" onClose={onDismiss} />
           </Flex>
         </HeaderContent>
         <Flex grow>

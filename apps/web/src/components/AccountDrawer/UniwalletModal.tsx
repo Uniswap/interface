@@ -3,8 +3,8 @@ import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
 import { useConnect } from 'hooks/useConnect'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CloseIcon } from 'theme/components'
 import { DeprecatedButton, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
+import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -53,7 +53,7 @@ export default function UniwalletModal() {
       <Flex shrink grow p="$spacing20">
         <Flex row justifyContent="space-between">
           <Text variant="subheading1">{t('account.drawer.modal.scan')}</Text>
-          <CloseIcon onClick={close} />
+          <CloseIconWithHover onClose={close} />
         </Flex>
 
         <Flex row my="$spacing24" centered>

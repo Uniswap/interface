@@ -344,6 +344,9 @@ exports[`NftCard renders correctly 1`] = `
             List for sale
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

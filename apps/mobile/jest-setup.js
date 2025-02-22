@@ -13,9 +13,6 @@ import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js
 
 jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery', () => {})
 
-// Disables animated driver warning
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
-
 jest.mock('@walletconnect/react-native-compat', () => ({}))
 
 jest.mock('src/lib/RNEthersRs')

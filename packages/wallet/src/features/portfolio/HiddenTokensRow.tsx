@@ -16,7 +16,7 @@ export function HiddenTokensRow({
   const { t } = useTranslation()
 
   return (
-    <TouchableArea activeOpacity={1} mx={isMobileApp && '$spacing16'} onPress={onPress}>
+    <TouchableArea activeOpacity={1} mx={isMobileApp ? '$spacing16' : undefined} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="$spacing8">
         <Flex centered grow row gap="$spacing12">
           <Separator />

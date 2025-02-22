@@ -9,7 +9,7 @@ import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { AnimateTransition, Flex, ModalCloseIcon, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { iconSizes, zIndices } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -52,7 +52,7 @@ export function GetTheAppModal() {
           top="$spacing24"
           width="100%"
           justifyContent={showBackButton ? 'space-between' : 'flex-end'}
-          zIndex={zIndices.modal}
+          zIndex={zIndexes.modal}
           pl="$spacing24"
           pr="$spacing24"
         >

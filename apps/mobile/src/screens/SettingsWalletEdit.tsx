@@ -132,7 +132,7 @@ export function SettingsWalletEdit({
               {showUnitagBanner && <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} />}
             </Flex>
             <DeprecatedButton
-              disabled={nickname === displayName?.name}
+              isDisabled={nickname === displayName?.name}
               size="medium"
               theme="primary"
               onPress={onPressSaveChanges}

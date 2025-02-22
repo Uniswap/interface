@@ -9,7 +9,6 @@ import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { gqlToCurrency } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import { useSwitchChain } from 'hooks/useSwitchChain'
@@ -19,12 +18,12 @@ import { ReactNode, useCallback, useReducer, useState } from 'react'
 import { Plus, X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
-import { Flex, useIsTouchDevice } from 'ui/src'
+import { Flex, useIsTouchDevice, useMedia } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
+import { breakpoints } from 'ui/src/theme'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -40,7 +39,7 @@ const PoolDetailsStatsButtonsRow = styled(Row)`
   gap: 12px;
   z-index: 1;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     gap: 8px;
     position: fixed;
     bottom: 0px;
@@ -73,10 +72,10 @@ const PoolButton = styled.button<{ $open?: boolean; $fixedWidth?: boolean }>`
   transition: ${({ theme }) => `width ${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
   border: ${({ theme, $open }) => $open && `1px solid ${theme.surface3}`};
   ${ClickableStyle}
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     width: ${({ $fixedWidth }) => $fixedWidth && '120px'};
   }
-  @media (max-width: ${BREAKPOINTS.sm}px) {
+  @media (max-width: ${breakpoints.md}px) {
     width: ${({ $fixedWidth }) => !$fixedWidth && '100%'};
     background-color: ${({ theme, $open }) => ($open ? theme.surface1 : theme.accent1)};
     color: ${({ theme, $open }) => ($open ? theme.neutral1 : theme.white)};
@@ -109,7 +108,7 @@ const SwapModalWrapper = styled(Column)<{ open?: boolean }>`
     visibility: ${({ open }) => (open ? 'visible' : 'hidden')};
   }
 
-  @media (max-width: ${BREAKPOINTS.lg}px) {
+  @media (max-width: ${breakpoints.xl}px) {
     position: fixed;
     width: calc(100% - 16px);
     padding: 0px 12px 12px;
@@ -196,9 +195,9 @@ export function PoolDetailsStatsButtons({
   }
   const [swapModalOpen, toggleSwapModalOpen] = useReducer((state) => !state, false)
 
-  const isScreenSize = useScreenSize()
-  const screenSizeLargerThanTablet = isScreenSize['lg']
-  const isMobile = !isScreenSize['sm']
+  const media = useMedia()
+  const screenSizeLargerThanTablet = !media.xl
+  const isMobile = media.md
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
@@ -274,7 +273,7 @@ export function PoolDetailsStatsButtons({
       </SwapModalWrapper>
       <Scrim
         $open={swapModalOpen && !screenSizeLargerThanTablet}
-        $maxWidth={BREAKPOINTS.lg}
+        $maxWidth={breakpoints.xl}
         $zIndex={Z_INDEX.sticky}
         onClick={toggleSwapModalOpen}
       />

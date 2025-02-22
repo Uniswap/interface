@@ -2,12 +2,13 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Trans } from 'react-i18next'
-import { Flex, Text, Tooltip, styled as tamaguiStyled } from 'ui/src'
+import { Flex, styled as tamaguiStyled, Text, Tooltip } from 'ui/src'
 import { DotLine } from 'ui/src/components/icons/DotLine'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { RoutingDiagramEntry } from 'uniswap/src/utils/getRoutingDiagramEntries'
@@ -23,7 +24,7 @@ const OpaqueBadge = tamaguiStyled(PoolBadge, {
   borderRadius: '$rounded8',
   justifyContent: 'flex-start',
   p: '$spacing4',
-  zIndex: zIndices.sticky,
+  zIndex: zIndexes.sticky,
   '$platform-web': {
     display: 'grid',
     gridGap: '$spacing4',
@@ -60,7 +61,7 @@ function Pool({
     <Tooltip placement="top">
       <Tooltip.Trigger>
         <OpaqueBadge>
-          <Flex mr={4} ml={12}>
+          <Flex ml={2}>
             <SplitLogo
               chainId={currency0.chainId}
               inputCurrencyInfo={currency0CurrencyInfo}
@@ -99,32 +100,100 @@ export default function RoutingDiagram({
   return (
     <Flex>
       {routes.map((entry, index) => (
-        <Flex key={index} alignItems="center" style={{ display: 'grid', gridTemplateColumns: '24px 1fr 24px' }}>
-          <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={20} />
-          <Route entry={entry} />
-          <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={20} />
-        </Flex>
+        <RouteRow
+          key={index}
+          entry={entry}
+          currencyInCurrencyInfo={currencyInCurrencyInfo}
+          currencyOutCurrencyInfo={currencyOutCurrencyInfo}
+        />
       ))}
     </Flex>
   )
 }
 
-function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEntry }): JSX.Element {
+function RouteRow({
+  entry,
+  currencyInCurrencyInfo,
+  currencyOutCurrencyInfo,
+}: {
+  entry: RoutingDiagramEntry
+  currencyInCurrencyInfo: Maybe<CurrencyInfo>
+  currencyOutCurrencyInfo: Maybe<CurrencyInfo>
+}): JSX.Element {
+  const { path } = entry
+
+  // If we only have 2 or fewer pools, show everything in one row
+  if (path.length <= 2) {
+    return (
+      <Flex row alignItems="center" gap="$spacing4">
+        <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={20} />
+        <Route entry={entry} />
+        <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={20} />
+      </Flex>
+    )
+  }
+
+  // For more than 2 pools, use a two-line layout
+  return (
+    <Flex width="100%" gap="$spacing4">
+      {/* First line: currencyIn icon, first 2 pools */}
+      <Flex row alignItems="center" width="100%" gap="$spacing4">
+        <Flex ml="$spacing4">
+          <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={20} />
+        </Flex>
+        <Flex flex={1}>
+          <Route entry={{ ...entry, path: path.slice(0, 2) }} />
+        </Flex>
+      </Flex>
+
+      {/* Second line: remaining pools, currencyOut icon */}
+      <Flex row alignItems="center" width="100%" gap="$spacing4">
+        <Flex ml="$spacing4" flex={1}>
+          <Route entry={{ ...entry, path: path.slice(2) }} showBadge={false} />
+        </Flex>
+        <Flex mr="$spacing4">
+          <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={20} />
+        </Flex>
+      </Flex>
+    </Flex>
+  )
+}
+
+function Route({
+  entry: { percent, path, protocol },
+  showBadge = true,
+}: {
+  entry: RoutingDiagramEntry
+  showBadge?: boolean
+}): JSX.Element {
   const badgeText =
     protocol === Protocol.MIXED
-      ? [...new Set(path.map(([, , , p]) => p.toUpperCase()))].sort().join(' + ') // extract all protocols involved in mixed path
+      ? [...new Set(path.map(([, , , p]) => p.toUpperCase()))].sort().join(' + ')
       : protocol.toUpperCase()
 
   return (
-    <Flex row centered style={{ padding: '0.1rem 0.5rem' }} width="100%">
-      <Flex alignItems="center" position="absolute" width="100%" zIndex={1} opacity={0.5}>
+    <Flex row justifyContent="space-evenly" flex={1} position="relative" width="auto" py="$spacing4">
+      <Flex
+        alignItems="center"
+        position="absolute"
+        width="100%"
+        height="100%"
+        left={0}
+        top={0}
+        zIndex={1}
+        opacity={0.5}
+      >
         <DotLine minWidth="100%" minHeight={35} />
       </Flex>
-      <OpaqueBadge>
-        <BadgeText>{badgeText}</BadgeText>
-        <BadgeText style={{ minWidth: 'auto' }}>{percent.toSignificant(2)}%</BadgeText>
-      </OpaqueBadge>
-      <Flex row flexWrap="wrap" m={-32} gap={1} width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>
+
+      {showBadge && (
+        <OpaqueBadge>
+          <BadgeText>{badgeText}</BadgeText>
+          <BadgeText style={{ minWidth: 'auto' }}>{percent.toSignificant(2)}%</BadgeText>
+        </OpaqueBadge>
+      )}
+
+      <Flex row gap="$spacing4" width="auto" zIndex={2} flex={1} justifyContent="space-evenly" alignItems="center">
         {path.map(([currency0, currency1, feeAmount], index) => (
           <Pool key={index} currency0={currency0} currency1={currency1} feeAmount={feeAmount} />
         ))}

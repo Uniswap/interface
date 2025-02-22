@@ -56,7 +56,7 @@ export const TEST_TOKEN_3_INFO: CurrencyInfo = {
   safetyInfo: benignSafetyInfo,
 }
 export const ETH_MAINNET = nativeOnChain(UniverseChainId.Mainnet)
-
+export const ETH_SEPOLIA = nativeOnChain(UniverseChainId.Sepolia)
 export const TEST_POOL_12 = new Pool(
   TEST_TOKEN_1,
   TEST_TOKEN_2,

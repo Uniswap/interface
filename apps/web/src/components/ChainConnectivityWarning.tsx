@@ -1,4 +1,3 @@
-import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
@@ -9,9 +8,12 @@ import { Trans } from 'react-i18next'
 import { ClickableTamaguiStyle, ExternalLink } from 'theme/components'
 import { Flex, styled as tamaguiStyled } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { DEFAULT_MS_BEFORE_WARNING, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 const BodyRow = styled.div`
@@ -57,11 +59,12 @@ const CloseButton = tamaguiStyled(X, {
 })
 
 export function ChainConnectivityWarning() {
-  const { chainId } = useAccount()
   const { defaultChainId } = useEnabledChains()
+  const [hide, setHide] = useState(false)
+  const isMonadDownFlag = useFeatureFlag(FeatureFlags.MonadTestnetDown)
+  const { swapInputChainId: chainId } = useUniswapContext()
   const info = getChainInfo(chainId ?? defaultChainId)
   const label = info.label
-  const [hide, setHide] = useState(false)
 
   const isNFTPage = useIsPage(PageType.NFTS)
   const isLandingPage = useIsPage(PageType.LANDING)
@@ -80,8 +83,9 @@ export function ChainConnectivityWarning() {
     ),
   )
   const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
+  const isMonadDown = chainId === UniverseChainId.MonadTestnet && isMonadDownFlag
 
-  if (!warning || isNFTPage || isLandingPage || hide) {
+  if (hide || (!isMonadDown && (!warning || isNFTPage || isLandingPage))) {
     return null
   }
 

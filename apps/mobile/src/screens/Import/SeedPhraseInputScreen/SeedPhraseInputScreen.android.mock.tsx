@@ -3,8 +3,8 @@ import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
+import { useLockScreenOnBlur } from 'src/features/lockScreen/useLockScreenState'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
@@ -158,7 +158,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         </Flex>
       </Flex>
       <Trace logPress element={ElementName.Next}>
-        <DeprecatedButton disabled={!!errorMessage || !value} testID={ElementName.Continue} onPress={onSubmit}>
+        <DeprecatedButton isDisabled={!!errorMessage || !value} testID={ElementName.Continue} onPress={onSubmit}>
           {t('common.button.continue')}
         </DeprecatedButton>
       </Trace>

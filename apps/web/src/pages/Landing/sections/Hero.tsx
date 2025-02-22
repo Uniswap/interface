@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { Flex, Text, useMedia } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 
 interface HeroProps {
@@ -22,7 +22,8 @@ interface HeroProps {
 export function Hero({ scrollToRef, transition }: HeroProps) {
   const media = useMedia()
   const { height: scrollPosition } = useScroll({ enabled: !media.sm })
-  const initialInputCurrency = useCurrency('ETH', UniverseChainId.Mainnet)
+  const { defaultChainId } = useEnabledChains()
+  const initialInputCurrency = useCurrency('ETH', defaultChainId)
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { translateY, opacityY } = useMemo(
@@ -121,7 +122,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               hideHeader
               hideFooter
               syncTabToUrl={false}
-              chainId={UniverseChainId.Mainnet}
+              chainId={defaultChainId}
               initialInputCurrency={initialInputCurrency}
               swapRedirectCallback={swapRedirectCallback}
             />

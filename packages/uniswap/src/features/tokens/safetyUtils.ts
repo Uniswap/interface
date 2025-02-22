@@ -28,33 +28,55 @@ export const TOKEN_PROTECTION_FOT_HIGH_FEE_BREAKPOINT = 80
 export const TOKEN_PROTECTION_FOT_FEE_BREAKPOINT = 15
 
 // Gets the FoT percentages from Currency, populated by our internal fees DB
-export function getFeeOnTransfer(currency?: Currency): {
+function getCurrencyFeeOnTransfer(currency?: Currency): {
   buyFeePercent: number | undefined
   sellFeePercent: number | undefined
-  maxFeePercent: number | undefined
 } {
   if (!currency) {
     return {
       buyFeePercent: undefined,
       sellFeePercent: undefined,
-      maxFeePercent: undefined,
     }
   }
   if (currency.isNative) {
     return {
       buyFeePercent: 0,
       sellFeePercent: 0,
-      maxFeePercent: 0,
     }
   }
-  const sellFeeBps = currency.sellFeeBps ? currency.sellFeeBps.toNumber() / 100 : undefined
-  const buyFeeBps = currency.buyFeeBps ? currency.buyFeeBps.toNumber() / 100 : undefined
+
+  const sellFeePercent = currency.sellFeeBps ? currency.sellFeeBps.toNumber() / 100 : undefined
+  const buyFeePercent = currency.buyFeeBps ? currency.buyFeeBps.toNumber() / 100 : undefined
 
   // Returns the percent (i.e. 5.1 for 5.1%)
   return {
-    buyFeePercent: buyFeeBps,
-    sellFeePercent: sellFeeBps,
-    maxFeePercent: sellFeeBps || buyFeeBps ? Math.max(sellFeeBps ?? 0, buyFeeBps ?? 0) : undefined,
+    buyFeePercent,
+    sellFeePercent,
+  }
+}
+
+/** If Blockaid marks the token as having high fees, but we don't have data on token fees, show Blockaid's fees data in token protection warnings.
+ * Is *NOT* shown in swap review, which shows fees from TradingApi swap simulation.
+ */
+export function getTokenProtectionFeeOnTransfer(currencyInfo: Maybe<CurrencyInfo>): {
+  buyFeePercent: number | undefined
+  sellFeePercent: number | undefined
+  maxFeePercent: number | undefined
+} {
+  const { buyFeePercent, sellFeePercent } = getCurrencyFeeOnTransfer(currencyInfo?.currency)
+
+  const blockaidFeesData = currencyInfo?.safetyInfo?.blockaidFees
+  const displayedBuyFeePercent = buyFeePercent ?? blockaidFeesData?.buyFeePercent
+  const displayedSellFeePercent = sellFeePercent ?? blockaidFeesData?.sellFeePercent
+
+  // Returns the percent (i.e. 5.1 for 5.1%)
+  return {
+    buyFeePercent: displayedBuyFeePercent,
+    sellFeePercent: displayedSellFeePercent,
+    maxFeePercent:
+      displayedSellFeePercent || displayedBuyFeePercent
+        ? Math.max(displayedSellFeePercent ?? 0, displayedBuyFeePercent ?? 0)
+        : undefined,
   }
 }
 
@@ -70,7 +92,7 @@ export function getTokenProtectionWarning(currencyInfo?: Maybe<CurrencyInfo>): T
     return TokenProtectionWarning.None
   }
 
-  const { maxFeePercent: feeOnTransfer } = getFeeOnTransfer(currency)
+  const { maxFeePercent: feeOnTransfer } = getTokenProtectionFeeOnTransfer(currencyInfo)
 
   // prioritize high > medium > low warning levels
   if (safetyInfo.tokenList === TokenList.Blocked) {
@@ -193,12 +215,12 @@ export function useModalHeaderText({
   }
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.Blocked:
-      return shouldHavePluralTreatment
+      return shouldHavePluralTreatment && tokenSymbol1
         ? t('token.safety.blocked.title.tokensNotAvailable', {
-            tokenSymbol0,
+            tokenSymbol0: tokenSymbol0 ?? t('common.thisToken'),
             tokenSymbol1,
           })
-        : t('token.safety.blocked.title.tokenNotAvailable', { tokenSymbol: tokenSymbol0 })
+        : t('token.safety.blocked.title.tokenNotAvailable', { tokenSymbol: tokenSymbol0 ?? t('common.thisToken') })
     case TokenProtectionWarning.MaliciousHoneypot:
       return t('token.safety.warning.sellFee100.title')
     case TokenProtectionWarning.FotVeryHigh:
@@ -241,6 +263,7 @@ export function useModalSubtitleText({
     return null
   }
 
+  const tokenSymbolWithFallback = tokenSymbol ?? t('common.thisToken')
   const formattedBuyFeePercent = buyFeePercent && buyFeePercent > 0 ? formatPercent(buyFeePercent) : undefined
   const formattedSellFeePercent = sellFeePercent && sellFeePercent > 0 ? formatPercent(sellFeePercent) : undefined
 
@@ -252,39 +275,43 @@ export function useModalSubtitleText({
           : t('token.safety.warning.blocked.description.default_one')
         : t('token.safetyLevel.blocked.message')
     case TokenProtectionWarning.MaliciousHoneypot:
-      return t('token.safety.warning.honeypot.message', { tokenSymbol })
+      return t('token.safety.warning.honeypot.message', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.MaliciousGeneral:
       return (
-        t('token.safety.warning.malicious.general.message', { tokenSymbol }) +
+        t('token.safety.warning.malicious.general.message', { tokenSymbol: tokenSymbolWithFallback }) +
         ' ' +
         t('token.safety.warning.doYourOwnResearch')
       )
     case TokenProtectionWarning.MaliciousImpersonator:
-      return t('token.safety.warning.malicious.impersonator.message', { tokenSymbol })
+      return t('token.safety.warning.malicious.impersonator.message', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.SpamAirdrop:
-      return t('token.safety.warning.spam.message', { tokenSymbol }) + ' ' + t('token.safety.warning.doYourOwnResearch')
+      return (
+        t('token.safety.warning.spam.message', { tokenSymbol: tokenSymbolWithFallback }) +
+        ' ' +
+        t('token.safety.warning.doYourOwnResearch')
+      )
     case TokenProtectionWarning.FotVeryHigh:
     case TokenProtectionWarning.FotHigh:
     case TokenProtectionWarning.FotLow: {
       const feePercentCopy =
         !!formattedBuyFeePercent && !!formattedSellFeePercent
           ? t('token.safety.warning.tokenChargesFee.both.message', {
-              tokenSymbol,
+              tokenSymbol: tokenSymbolWithFallback,
               buyFeePercent: formattedBuyFeePercent,
               sellFeePercent: formattedSellFeePercent,
             })
           : formattedBuyFeePercent
             ? t('token.safety.warning.tokenChargesFee.buy.message', {
-                tokenSymbol,
+                tokenSymbol: tokenSymbolWithFallback,
                 feePercent: formattedBuyFeePercent,
               })
             : formattedSellFeePercent
               ? t('token.safety.warning.tokenChargesFee.sell.message', {
-                  tokenSymbol,
+                  tokenSymbol: tokenSymbolWithFallback,
                   feePercent: formattedSellFeePercent,
                 })
               : t('token.safety.warning.tokenChargesFee.unknownFee.message', {
-                  tokenSymbol,
+                  tokenSymbol: tokenSymbolWithFallback,
                 })
       return (
         feePercentCopy +
@@ -297,7 +324,7 @@ export function useModalSubtitleText({
     case TokenProtectionWarning.NonDefault:
       return shouldHavePluralTreatment
         ? t('token.safetyLevel.medium.message.plural')
-        : t('token.safety.warning.medium.heading.named', { tokenSymbol })
+        : t('token.safety.warning.medium.heading.named', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.None:
       return null
   }
@@ -308,17 +335,14 @@ export function useTokenWarningCardText(currencyInfo: Maybe<CurrencyInfo>): {
   description: string | null
 } {
   const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
-  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo?.currency)
+  const { buyFeePercent, sellFeePercent } = getTokenProtectionFeeOnTransfer(currencyInfo)
 
-  // If our token fees DB does not have fees data but Blockaid does, display Blockaid's fees data
-  const displayedBuyFeePercent = buyFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent
-  const displayedSellFeePercent = sellFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent
   const heading = useCardHeaderText({ tokenProtectionWarning })
   const description = useCardSubtitleText({
     tokenProtectionWarning,
     tokenSymbol: currencyInfo?.currency.symbol,
-    buyFeePercent: displayedBuyFeePercent,
-    sellFeePercent: displayedSellFeePercent,
+    buyFeePercent,
+    sellFeePercent,
   })
   if (!currencyInfo || !currencyInfo?.safetyInfo) {
     return {
@@ -360,6 +384,7 @@ export function useCardHeaderText({
   }
 }
 
+// eslint-disable-next-line complexity
 export function useCardSubtitleText({
   tokenProtectionWarning,
   tokenSymbol,
@@ -374,6 +399,7 @@ export function useCardSubtitleText({
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
 
+  const tokenSymbolWithFallback = tokenSymbol ?? t('common.thisToken')
   const formattedBuyFeePercent = buyFeePercent && buyFeePercent > 0 ? formatPercent(buyFeePercent) : undefined
   const formattedSellFeePercent = sellFeePercent && sellFeePercent > 0 ? formatPercent(sellFeePercent) : undefined
   switch (tokenProtectionWarning) {
@@ -382,40 +408,40 @@ export function useCardSubtitleText({
         ? t('token.safety.warning.blocked.description.default_one')
         : t('token.safetyLevel.blocked.message')
     case TokenProtectionWarning.MaliciousHoneypot:
-      return t('token.safety.warning.sellFee100.message', { tokenSymbol })
+      return t('token.safety.warning.sellFee100.message', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.MaliciousGeneral:
-      return t('token.safety.warning.malicious.general.message', { tokenSymbol })
+      return t('token.safety.warning.malicious.general.message', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.MaliciousImpersonator:
-      return t('token.safety.warning.malicious.impersonator.message.short', { tokenSymbol })
+      return t('token.safety.warning.malicious.impersonator.message.short', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.SpamAirdrop:
-      return t('token.safety.warning.spam.message', { tokenSymbol })
+      return t('token.safety.warning.spam.message', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.FotVeryHigh:
     case TokenProtectionWarning.FotHigh:
     case TokenProtectionWarning.FotLow: {
       const feePercentCopy =
         !!formattedBuyFeePercent && !!formattedSellFeePercent
           ? t('token.safety.warning.tokenChargesFee.both.message', {
-              tokenSymbol,
+              tokenSymbol: tokenSymbolWithFallback,
               buyFeePercent: formattedBuyFeePercent,
               sellFeePercent: formattedSellFeePercent,
             })
           : formattedBuyFeePercent
             ? t('token.safety.warning.tokenChargesFee.buy.message', {
-                tokenSymbol,
+                tokenSymbol: tokenSymbolWithFallback,
                 feePercent: formattedBuyFeePercent,
               })
             : formattedSellFeePercent
               ? t('token.safety.warning.tokenChargesFee.sell.message', {
-                  tokenSymbol,
+                  tokenSymbol: tokenSymbolWithFallback,
                   feePercent: formattedSellFeePercent,
                 })
               : t('token.safety.warning.tokenChargesFee.unknownFee.message', {
-                  tokenSymbol,
+                  tokenSymbol: tokenSymbolWithFallback,
                 })
       return feePercentCopy
     }
     case TokenProtectionWarning.NonDefault:
-      return t('token.safety.warning.medium.heading.named', { tokenSymbol })
+      return t('token.safety.warning.medium.heading.named', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.None:
       return null
   }

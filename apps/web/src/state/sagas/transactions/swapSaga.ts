@@ -168,6 +168,7 @@ function* swap(params: SwapParams) {
       case Routing.BRIDGE:
         return yield* classicSwap({ ...params, swapTxContext, steps })
       case Routing.DUTCH_V2:
+      case Routing.DUTCH_V3:
       case Routing.PRIORITY:
         return yield* uniswapXSwap({ ...params, swapTxContext, steps })
     }

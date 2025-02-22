@@ -1,9 +1,9 @@
-import { ViewProps } from 'tamagui'
+import { FlexProps } from 'ui/src/components/layout'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { colors, colorsDark, opacify } from 'ui/src/theme/color'
 import { isInterface } from 'utilities/src/platform'
 
-type ShadowProps = Pick<ViewProps, 'shadowColor' | 'shadowOffset' | 'shadowRadius' | '$platform-web'>
+type ShadowProps = Pick<FlexProps, 'shadowColor' | 'shadowOffset' | 'shadowRadius' | '$platform-web'>
 
 // TODO WALL-3699 replace with spore shadow support
 export function useShadowPropsShort(): ShadowProps {

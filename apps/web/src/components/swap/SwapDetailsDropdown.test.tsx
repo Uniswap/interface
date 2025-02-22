@@ -8,7 +8,7 @@ import {
   TEST_TRADE_FEE_ON_BUY,
   TEST_TRADE_FEE_ON_SELL,
 } from 'test-utils/constants'
-import { act, render, screen } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
 
 describe('SwapDetailsDropdown.tsx', () => {
   it('renders a trade', () => {
@@ -42,7 +42,7 @@ describe('SwapDetailsDropdown.tsx', () => {
     )
     expect(screen.getByTestId('swap-details-header-row')).toBeInTheDocument()
     expect(screen.getByTestId('trade-price-container')).toBeInTheDocument()
-    await act(() => userEvent.click(screen.getByTestId('swap-details-header-row')))
+    await userEvent.click(screen.getByTestId('swap-details-header-row'))
     expect(screen.getByTestId('advanced-swap-details')).toBeInTheDocument()
   })
 
@@ -55,7 +55,7 @@ describe('SwapDetailsDropdown.tsx', () => {
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
       />,
     )
-    await act(() => userEvent.click(screen.getByTestId('swap-details-header-row')))
+    await userEvent.click(screen.getByTestId('swap-details-header-row'))
 
     expect(
       screen.getByText(
@@ -74,7 +74,7 @@ describe('SwapDetailsDropdown.tsx', () => {
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
       />,
     )
-    await act(() => userEvent.click(screen.getByTestId('swap-details-header-row')))
+    await userEvent.click(screen.getByTestId('swap-details-header-row'))
 
     expect(
       screen.getByText(

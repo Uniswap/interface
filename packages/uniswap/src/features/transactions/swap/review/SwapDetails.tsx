@@ -16,6 +16,7 @@ import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
+import { usePriceImpact } from 'uniswap/src/features/transactions/swap/hooks/usePriceImpact'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
 import { MarketPriceImpactWarning } from 'uniswap/src/features/transactions/swap/modals/MarketPriceImpactWarning'
@@ -29,7 +30,6 @@ import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transacti
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
@@ -97,10 +97,6 @@ export function SwapDetails({
     return tradeQuote.quote.estimatedFillTimeMs
   }, [derivedSwapInfo.trade.trade?.quote])
 
-  const priceImpactPercentage = acceptedDerivedSwapInfo.trade.trade?.priceImpact
-  const { priceImpactWarning } = useParsedSwapWarnings()
-  const priceImpactWarningColor = getAlertColor(priceImpactWarning?.severity).text
-
   return (
     <HeightAnimatorWrapper>
       <TransactionDetails
@@ -154,24 +150,46 @@ export function SwapDetails({
         {!isBridgeTrade && v4Enabled && (
           <RoutingInfo gasFee={gasFee} chainId={acceptedTrade.inputAmount.currency.chainId} />
         )}
-        {!isBridgeTrade && v4Enabled && priceImpactPercentage ? (
-          <Flex row alignItems="center" justifyContent="space-between">
-            <MarketPriceImpactWarning>
-              <Flex centered row gap="$spacing4">
-                <Text color="$neutral2" variant="body3">
-                  {t('swap.priceImpact')}
-                </Text>
-              </Flex>
-            </MarketPriceImpactWarning>
-            <Flex row shrink justifyContent="flex-end">
-              <Text adjustsFontSizeToFit color={priceImpactWarningColor} variant="body3">
-                {normalizePriceImpact(priceImpactPercentage)}%
-              </Text>
-            </Flex>
-          </Flex>
-        ) : null}
+        <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} />
       </TransactionDetails>
     </HeightAnimatorWrapper>
+  )
+}
+
+export function PriceImpactRow({
+  hide,
+  derivedSwapInfo,
+}: {
+  hide?: boolean
+  derivedSwapInfo: DerivedSwapInfo
+}): JSX.Element | null {
+  const { t } = useTranslation()
+
+  const { formattedPriceImpact } = usePriceImpact({ derivedSwapInfo })
+  const { priceImpactWarning } = useParsedSwapWarnings()
+  const priceImpactWarningColor = getAlertColor(priceImpactWarning?.severity).text
+
+  const trade = derivedSwapInfo.trade.trade
+
+  if (hide || !trade || isBridge(trade)) {
+    return null
+  }
+
+  return (
+    <Flex row alignItems="center" justifyContent="space-between">
+      <MarketPriceImpactWarning routing={trade.routing} missing={!formattedPriceImpact}>
+        <Flex centered row gap="$spacing4">
+          <Text color="$neutral2" variant="body3">
+            {t('swap.priceImpact')}
+          </Text>
+        </Flex>
+      </MarketPriceImpactWarning>
+      <Flex row shrink justifyContent="flex-end">
+        <Text adjustsFontSizeToFit color={priceImpactWarningColor} variant="body3">
+          {formattedPriceImpact ?? 'N/A'}
+        </Text>
+      </Flex>
+    </Flex>
   )
 }
 

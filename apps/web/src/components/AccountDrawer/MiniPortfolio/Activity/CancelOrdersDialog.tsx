@@ -96,8 +96,9 @@ export function CancelOrdersDialog(
     const cancelSubmitted =
       (cancelState === CancellationState.CANCELLED || cancelState === CancellationState.PENDING_CONFIRMATION) &&
       cancelTxHash
+    const firstOrder = orders[0]
     return (
-      <Modal name={ModalName.CancelOrders} isModalOpen onClose={onCancel} maxHeight="90vh" padding={0}>
+      <Modal name={ModalName.CancelOrders} isModalOpen onClose={onCancel} padding={0}>
         <Container gap="lg">
           <ModalHeader closeModal={onCancel} />
           <LogoContainer>{icon}</LogoContainer>
@@ -107,7 +108,8 @@ export function CancelOrdersDialog(
           <Row justify="center" marginTop="32px" minHeight="24px">
             {cancelSubmitted ? (
               <ExternalLink
-                href={getExplorerLink(orders[0].chainId, cancelTxHash, ExplorerDataType.TRANSACTION)}
+                href={firstOrder ? getExplorerLink(firstOrder.chainId, cancelTxHash, ExplorerDataType.TRANSACTION) : ''}
+                disabled={!firstOrder}
                 color="neutral2"
               >
                 <Trans i18nKey="common.viewOnExplorer" />

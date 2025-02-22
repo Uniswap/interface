@@ -830,8 +830,9 @@ query SearchTokens($searchQuery: String!, $chains: [Chain!]!) {
 query ExploreSearch(
   $searchQuery: String!
   $nftCollectionsFilter: NftCollectionsFilterInput!
+  $chains: [Chain!]
 ) {
-  searchTokens(searchQuery: $searchQuery) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains) {
     chain
     address
     decimals
@@ -1058,12 +1059,18 @@ query FavoriteTokenCard($chain: Chain!, $address: String) {
 }
 
 # Currently used in Swift code only.
-query Tokens($contracts: [ContractInput!]!) {
+query WidgetTokens($contracts: [ContractInput!]!) {
   tokens(contracts: $contracts) {
     symbol
     chain
     address
     name
+  }
+}
+
+query Tokens($contracts: [ContractInput!]!) {
+  tokens(contracts: $contracts) {
+    ...TokenParts
   }
 }
 

@@ -95,6 +95,7 @@ export const CreateTxContext = React.createContext<{
   gasFeeEstimateUSD?: CurrencyAmount<Currency> | null
   error: boolean | string
   refetch?: () => void
+  dependentAmount?: string
 }>({ error: false })
 
 export const useCreateTxContext = () => {

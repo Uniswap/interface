@@ -389,6 +389,9 @@ exports[`TDPPoolTable renders data filled state 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -2238,6 +2241,9 @@ exports[`TDPPoolTable renders error state 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -3979,6 +3985,9 @@ exports[`TDPPoolTable renders loading state 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

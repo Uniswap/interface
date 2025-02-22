@@ -13,7 +13,7 @@ import {
 import { ALL_NETWORKS_LOGO, ALL_NETWORKS_LOGO_UNICHAIN } from 'ui/src/assets'
 import { GlobeFilled } from 'ui/src/components/icons/GlobeFilled'
 import { X } from 'ui/src/components/icons/X'
-import { borderRadii, iconSizes, zIndices } from 'ui/src/theme'
+import { borderRadii, iconSizes, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -110,7 +110,7 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
         <Flex gap="$spacing12" px="$padding16" pb="$spacing4" alignItems="center" mt="$gap12">
           {/* X BUTTON */}
           {isInterface && (
-            <TouchableArea alignSelf="flex-end" zIndex={zIndices.default} onPress={closeModal}>
+            <TouchableArea alignSelf="flex-end" zIndex={zIndexes.default} onPress={closeModal}>
               <X color="$neutral2" size="$icon.24" />
             </TouchableArea>
           )}

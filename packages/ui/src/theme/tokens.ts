@@ -9,7 +9,7 @@ import { iconSizes } from 'ui/src/theme/iconSizes'
 import { imageSizes } from 'ui/src/theme/imageSizes'
 import { gap, padding, spacing } from 'ui/src/theme/spacing'
 import { themes } from 'ui/src/theme/themes'
-import { zIndices } from 'ui/src/theme/zIndices'
+import { zIndexes } from 'ui/src/theme/zIndexes'
 
 const space = { ...spacing, ...padding, ...gap, true: spacing.spacing8 }
 
@@ -55,7 +55,7 @@ const fontSize = {
 
 const radius = { ...borderRadii, true: borderRadii.none }
 
-const zIndex = { ...zIndices, true: zIndices.default }
+const zIndex = { ...zIndexes, true: zIndexes.default }
 
 export const tokens = createTokens({
   color,

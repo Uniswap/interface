@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ArbitrumXV2SamplingProperties, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export const DEFAULT_PROTOCOL_OPTIONS = [
   // `as const` allows us to derive a type narrower than ProtocolItems, and the `...` spread removes readonly, allowing DEFAULT_PROTOCOL_OPTIONS to be passed around as an argument without `readonly`
@@ -19,15 +20,28 @@ export function useProtocolsForChain(
 ): ProtocolItems[] {
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const priorityOrdersAllowed = useUniswapXPriorityOrderFlag(chainId)
-  const arbUniswapXAllowed =
-    useFeatureFlag(FeatureFlags.SharedSwapArbitrumUniswapXExperiment) && chainId === UniverseChainId.ArbitrumOne
+  const xv2ArbitrumRoutingType = useExperimentValue<
+    Experiments.ArbitrumXV2Sampling,
+    ArbitrumXV2SamplingProperties.RoutingType,
+    'CLASSIC' | 'DUTCH_V2' | 'DUTCH_V3'
+  >(Experiments.ArbitrumXV2Sampling, ArbitrumXV2SamplingProperties.RoutingType, 'CLASSIC')
+  const arbUniswapXAllowed = chainId === UniverseChainId.ArbitrumOne && xv2ArbitrumRoutingType !== 'CLASSIC'
 
   const uniswapXAllowedForChain =
     (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbUniswapXAllowed
   const v4SwapAllowed = useFeatureFlag(FeatureFlags.V4Swap)
-
   return useMemo(() => {
-    let protocols = [...userSelectedProtocols]
+    let protocols: ProtocolItems[] = [...userSelectedProtocols]
+    // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
+    if (!uniswapXAllowedForChain || !uniswapXEnabled) {
+      protocols = protocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
+    }
+    // Replace UniswapXV2 with V3 if V3 experiment is enabled on arbitrum
+    if (arbUniswapXAllowed && xv2ArbitrumRoutingType === 'DUTCH_V3') {
+      protocols = protocols.map((protocol) =>
+        protocol === ProtocolItems.UNISWAPX_V2 ? ProtocolItems.UNISWAPX_V3 : protocol,
+      )
+    }
 
     // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
     if (!uniswapXAllowedForChain || !uniswapXEnabled) {
@@ -39,20 +53,29 @@ export function useProtocolsForChain(
     }
 
     return protocols
-  }, [uniswapXAllowedForChain, uniswapXEnabled, userSelectedProtocols, v4SwapAllowed])
+  }, [
+    uniswapXAllowedForChain,
+    uniswapXEnabled,
+    userSelectedProtocols,
+    v4SwapAllowed,
+    xv2ArbitrumRoutingType,
+    arbUniswapXAllowed,
+  ])
 }
 
 export function useUniswapXPriorityOrderFlag(chainId?: UniverseChainId): boolean {
+  const flagName = UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP[chainId ?? UniverseChainId.Base]
+  const result = useFeatureFlag(flagName ?? FeatureFlags.UniswapXPriorityOrdersBase)
+
   if (!chainId) {
     return false
   }
 
-  const flagName = UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP[chainId]
   if (!flagName) {
     return false
   }
 
-  return getFeatureFlag(flagName)
+  return result
 }
 
 // These are primarily OP stack chains, since only Priority Orders can only operate on chains with Priority Gas Auctions (PGA)

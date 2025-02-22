@@ -92,8 +92,11 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   yield* put(addPopup({ content: { type: PopupType.Order, orderHash }, key: orderHash }))
 }
 
-const ROUTING_TO_SIGNATURE_TYPE_MAP: { [key in Routing.DUTCH_V2 | Routing.PRIORITY]: SignatureType } = {
+const ROUTING_TO_SIGNATURE_TYPE_MAP: {
+  [key in Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY]: SignatureType
+} = {
   [Routing.DUTCH_V2]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
+  [Routing.DUTCH_V3]: SignatureType.SIGN_UNISWAPX_V3_ORDER,
   [Routing.PRIORITY]: SignatureType.SIGN_PRIORITY_ORDER,
   // [Routing.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
 }
@@ -102,7 +105,7 @@ function getUniswapXSignatureInfo(
   step: UniswapXSignatureStep,
   trade: UniswapXTrade,
   chainId: UniverseChainId,
-  routing: Routing.DUTCH_V2 | Routing.PRIORITY,
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY,
 ): UnfilledUniswapXOrderDetails {
   const swapInfo = getSwapTransactionInfo(trade)
 

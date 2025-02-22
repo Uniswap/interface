@@ -1,13 +1,14 @@
-import { ComponentProps, ReactNode } from 'react'
-import { DeprecatedButton, Flex, Text, TouchableArea, View, isWeb, useSporeColors } from 'ui/src'
+import { ReactNode } from 'react'
+import { DeprecatedButton, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
 
-export interface ModalProps {
+interface InfoModalProps {
   name: ModalNameType
   isOpen: boolean
   showCloseButton?: boolean
@@ -21,7 +22,7 @@ export interface ModalProps {
   onDismiss?: () => void
   onButtonPress?: () => void
   onAnalyticsEvent?: () => void
-  height?: ComponentProps<typeof View>['height']
+  height?: ModalProps['height']
 }
 
 export function InfoLinkModal({
@@ -39,7 +40,7 @@ export function InfoLinkModal({
   onButtonPress,
   onAnalyticsEvent,
   height,
-}: React.PropsWithChildren<ModalProps>): JSX.Element {
+}: React.PropsWithChildren<InfoModalProps>): JSX.Element {
   const colors = useSporeColors()
 
   const openUniswapURL = async (): Promise<void> => {
@@ -63,7 +64,7 @@ export function InfoLinkModal({
           position="absolute"
           right={0}
           top={0}
-          zIndex={zIndices.default}
+          zIndex={zIndexes.default}
           onPress={onDismiss}
         >
           {isWeb && <X color="$neutral2" size="$icon.16" />}

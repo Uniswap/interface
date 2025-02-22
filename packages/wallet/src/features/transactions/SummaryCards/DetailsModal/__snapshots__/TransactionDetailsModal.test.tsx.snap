@@ -292,11 +292,11 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           },
         ]
       }
-      tintColor="#7D7D7D"
       vbHeight={4}
       vbWidth={18}
     >
       <RNSVGGroup
+        color="#7D7D7D"
         fill={null}
         propList={
           [
@@ -588,11 +588,11 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
               },
             ]
           }
-          tintColor="#BFBFBF"
           vbHeight={24}
           vbWidth={24}
         >
           <RNSVGGroup
+            color="#BFBFBF"
             fill={null}
             propList={
               [
@@ -824,11 +824,11 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
               },
             ]
           }
-          tintColor="#BFBFBF"
           vbHeight={24}
           vbWidth={24}
         >
           <RNSVGGroup
+            color="#BFBFBF"
             fill={null}
             propList={
               [

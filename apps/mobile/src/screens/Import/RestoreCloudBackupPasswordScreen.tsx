@@ -176,8 +176,9 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
           </TouchableArea>
         )}
         <DeprecatedButton
-          disabled={!enteredPassword || isLockedOut || isLoading}
+          isDisabled={!enteredPassword || isLockedOut || isLoading}
           testID={TestID.Continue}
+          size="large"
           onPress={onPasswordSubmit}
         >
           {t('common.button.continue')}

@@ -1,10 +1,12 @@
+# should be removed after migrating to react-native new architecture
+ENV['RCT_NEW_ARCH_ENABLED'] = '0'
 # changes from here: https://docs.expo.dev/bare/installing-expo-modules/
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 require_relative '../../../node_modules/react-native/scripts/react_native_pods'
 require_relative '../../../node_modules/@react-native-community/cli-platform-ios/native_modules'
 require_relative '../../../node_modules/react-native-permissions/scripts/setup'
 
-platform :ios, '15.0'
+platform :ios, '15.1'
 prepare_react_native_project!
 
 setup_permissions([

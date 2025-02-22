@@ -30,6 +30,7 @@ export default memo(function CurrencySearchModal({
       isModalOpen={isOpen}
       onClose={onDismiss}
       maxHeight={700}
+      height="100vh"
       maxWidth={TOKEN_SELECTOR_WEB_MAX_WIDTH}
       padding={0}
       flex={1}

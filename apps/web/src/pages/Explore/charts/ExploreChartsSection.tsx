@@ -10,7 +10,6 @@ import { ChartType } from 'components/Charts/utils'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { TimePeriod, getProtocolColor, getProtocolGradient } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAtomValue } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo, useState } from 'react'
@@ -20,7 +19,7 @@ import {
   useHistoricalProtocolVolume as useRestHistoricalProtocolVolume,
 } from 'state/explore/protocolStats'
 import { EllipsisTamaguiStyle } from 'theme/components'
-import { Flex, SegmentedControl, Text, styled } from 'ui/src'
+import { Flex, SegmentedControl, Text, styled, useMedia } from 'ui/src'
 import { HistoryDuration, PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
@@ -62,7 +61,8 @@ function VolumeChartSection() {
   const { t } = useTranslation()
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const theme = useTheme()
-  const isSmallScreen = !useScreenSize()['sm']
+  const media = useMedia()
+  const isSmallScreen = media.md
   const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
   const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
   const EXPLORE_PRICE_SOURCES = isV4DataEnabled ? EXPLORE_PRICE_SOURCES_V4 : EXPLORE_PRICE_SOURCES_V3
@@ -190,7 +190,8 @@ function TVLChartSection() {
     [EXPLORE_PRICE_SOURCES, entries, theme],
   )
 
-  const isSmallScreen = !useScreenSize()['sm']
+  const media = useMedia()
+  const isSmallScreen = media.md
   if (isSmallScreen) {
     const currentTVL = lastEntry?.values.reduce((acc, curr) => acc + curr, 0)
     return <MinimalStatDisplay title={<Trans i18nKey="common.uniswapTVL" />} value={currentTVL} />

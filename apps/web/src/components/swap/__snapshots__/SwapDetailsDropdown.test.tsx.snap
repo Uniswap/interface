@@ -341,7 +341,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
+            data-disable-theme="true"
             style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%;"
           >
             <div
@@ -352,7 +352,6 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                 data-testid="advanced-swap-details"
               >
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
                 >
                   <div
@@ -387,7 +386,6 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
                 >
                   <div
@@ -413,7 +411,6 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
                 >
                   <div
@@ -439,7 +436,6 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
                 >
                   <div
@@ -504,7 +500,6 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
                 >
                   <div
@@ -537,6 +532,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

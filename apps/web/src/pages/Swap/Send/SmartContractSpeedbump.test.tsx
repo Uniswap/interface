@@ -28,7 +28,7 @@ describe('SmartContractSpeedBumpModal', () => {
     const mockOnConfirm = jest.fn()
     render(
       <SendContext.Provider value={mockSendContext}>
-        <SmartContractSpeedBumpModal onCancel={mockOnCancel} onConfirm={mockOnConfirm} />
+        <SmartContractSpeedBumpModal isOpen onDismiss={mockOnCancel} onConfirm={mockOnConfirm} />
       </SendContext.Provider>,
     )
 

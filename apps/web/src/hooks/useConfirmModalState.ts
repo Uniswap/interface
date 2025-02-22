@@ -47,7 +47,7 @@ export function useConfirmModalState({
   allowedSlippage: Percent
   onSwap: () => void
   allowance: Allowance
-  onCurrencySelection: (field: CurrencyField, currency: Currency) => void
+  onCurrencySelection: (field: CurrencyField, currency: Currency, isResettingWETHAfterWrap?: boolean) => void
 }) {
   const [confirmModalState, setConfirmModalState] = useState<ConfirmModalState>(ConfirmModalState.REVIEWING)
   const [approvalError, setApprovalError] = useState<PendingModalError>()
@@ -122,7 +122,7 @@ export function useConfirmModalState({
               setWrapTxHash(wrapTxHash)
               // After the wrap has succeeded, reset the input currency to be WETH
               // because the trade will be on WETH -> token
-              onCurrencySelection(CurrencyField.INPUT, trade.inputAmount.currency)
+              onCurrencySelection(CurrencyField.INPUT, trade.inputAmount.currency, /*isResettingWETHAfterWrap=*/ true)
               sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                 chain_id: chainId,
                 token_symbol: maximumAmountIn?.currency.symbol,

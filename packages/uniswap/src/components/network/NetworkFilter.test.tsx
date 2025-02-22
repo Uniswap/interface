@@ -30,9 +30,10 @@ describe(NetworkFilter, () => {
       <NetworkFilter chainIds={SUPPORTED_CHAIN_IDS} selectedChain={null} onPressChain={() => null} />,
     )
 
-    act(async () => {
+    await act(async () => {
       jest.runAllTimers()
     })
+
     expect(tree).toMatchSnapshot()
   })
 })

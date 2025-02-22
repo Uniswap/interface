@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`disable nft on searchbar should render text without nfts 1`] = `
+exports[`disable nft on searchbar should render searchbar on larger screen 1`] = `
 .c2 {
   box-sizing: border-box;
   margin: 0;
@@ -94,7 +94,7 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
   height: 20px;
 }
 
-@media screen and (max-width:396px) {
+@media screen and (max-width:380px) {
   .c4 {
     border: none;
   }
@@ -120,6 +120,7 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
           >
             <div
               class="c2 c3 c4"
+              data-testid="nav-search-input"
             >
               <div
                 class="c5"
@@ -165,6 +166,7 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
                   style="--placeholderTextColor: #7D7D7D;"
                   tabindex="0"
                   value=""
+                  virtualkeyboardpolicy="auto"
                 />
               </span>
               <div
@@ -175,6 +177,9 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

@@ -45,7 +45,7 @@ export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderPro
    * But, if `size` is 20.x, the CircleSpinner will still be 20x20 (it always rounds down)
    */
   return (
-    <AnimatedFlex sentry-label="SpinningLoader" style={animatedStyles} height={size} width={size}>
+    <AnimatedFlex style={animatedStyles} height={size} width={size}>
       <CircleSpinner color={color ?? '$neutral2'} size={size} />
     </AnimatedFlex>
   )
