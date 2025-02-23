@@ -154,8 +154,8 @@
     "redux-persist": "6.0.0",
     "redux-saga": "1.2.2",
     "typed-redux-saga": "1.5.0",
-    "uniswap": "workspace:^",
-    "utilities": "workspace:^",
+    "uniswap": "0.0.1",
+    "utilities": "1.0.6",
     "wallet": "0.0.1"
   },
   "devDependencies": {
