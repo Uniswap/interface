@@ -103,7 +103,7 @@ export function fromGraphQLChain(chain: Chain | string | undefined): UniverseCha
       return UniverseChainId.Sepolia
     case Chain.Unichain:
       return UniverseChainId.Unichain
-    case Chain.AstrochainSepolia:
+    case Chain.UnichainSepolia:
       return UniverseChainId.UnichainSepolia
     case Chain.Worldchain:
       return UniverseChainId.WorldChain
@@ -146,7 +146,7 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId |
       return UniverseChainId.Sepolia
     case Chain.Unichain.toLowerCase():
       return UniverseChainId.Unichain
-    case Chain.AstrochainSepolia.toLowerCase():
+    case Chain.UnichainSepolia.toLowerCase():
       return UniverseChainId.UnichainSepolia
     case Chain.Worldchain.toLowerCase():
       return UniverseChainId.WorldChain
@@ -186,7 +186,7 @@ export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
     case UniverseChainId.Unichain:
       return Chain.Unichain.toLowerCase()
     case UniverseChainId.UnichainSepolia:
-      return Chain.AstrochainSepolia.toLowerCase()
+      return Chain.UnichainSepolia.toLowerCase()
     case UniverseChainId.WorldChain:
       return Chain.Worldchain.toLowerCase()
     case UniverseChainId.Zksync:

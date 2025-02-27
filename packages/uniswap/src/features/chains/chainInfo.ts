@@ -873,7 +873,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     sdkId: UniswapSDKChainId.UNICHAIN_SEPOLIA,
     assetRepoNetworkName: undefined,
     backendChain: {
-      chain: BackendChainId.AstrochainSepolia as GqlChainId,
+      chain: BackendChainId.UnichainSepolia as GqlChainId,
       backendSupported: true,
       isSecondaryChain: false,
       nativeTokenBackendAddress: undefined,
@@ -889,8 +889,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore', // need
-    infuraPrefix: 'astrochain-sepolia',
-    interfaceName: 'astrochain',
+    infuraPrefix: 'unichain-sepolia',
+    interfaceName: 'unichain',
     label: 'Unichain Sepolia',
     logo: UNICHAIN_SEPOLIA_LOGO,
     nativeCurrency: {
