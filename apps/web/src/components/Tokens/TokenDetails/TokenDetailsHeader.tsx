@@ -126,7 +126,6 @@ export const TokenDetailsHeader = () => {
       $sm={{ mb: '$spacing8', alignItems: 'flex-start' }}
       animation="quick"
       data-testid="token-info-container"
-      zIndex="$default"
     >
       <Flex row alignItems="center" $sm={{ alignItems: 'flex-start', flexDirection: 'column' }} gap="$gap12">
         <PortfolioLogo currencies={[currency]} chainId={currency.chainId} size={32} />

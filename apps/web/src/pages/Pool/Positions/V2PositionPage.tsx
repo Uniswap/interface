@@ -113,7 +113,7 @@ function V2PositionPage() {
   const token0USDValue = useUSDCValue(currency0Amount)
   const token1USDValue = useUSDCValue(currency1Amount)
   const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
-  const liquidityTokenAddress = positionInfo?.liquidityToken?.isToken ? positionInfo.liquidityToken.address : null
+  const liquidityTokenAddress = positionInfo?.liquidityToken?.isToken ? positionInfo.liquidityToken.address : undefined
   const isOwner = usePositionOwnerV2(account?.address, liquidityTokenAddress, positionInfo?.chainId)
 
   if (!isLoading && !lpRedesignEnabled) {

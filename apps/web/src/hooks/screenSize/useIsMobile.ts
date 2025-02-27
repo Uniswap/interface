@@ -1,9 +1,6 @@
-// @deprecated in favor of useScreenSize
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
+import { useMedia } from 'ui/src'
 
 export function useIsMobile(): boolean {
-  const isScreenSize = useScreenSize()
-  const isMobile = !isScreenSize['sm']
-
-  return isMobile
+  const media = useMedia()
+  return media.md
 }

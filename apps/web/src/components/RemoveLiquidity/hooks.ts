@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { getErrorMessageToDisplay, getProtocolItems, parseErrorMessageTitle } from 'components/Liquidity/utils'
+import { getProtocolItems } from 'components/Liquidity/utils'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { RemoveLiquidityTxInfo } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -16,6 +16,7 @@ import {
   ProtocolItems,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { logger } from 'utilities/src/logger/logger'
@@ -67,7 +68,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     logger.info(
       'RemoveLiquidityTxAndGasInfo',
       'RemoveLiquidityTxAndGasInfo',
-      parseErrorMessageTitle(approvalError, 'unkown CheckLpApprovalQuery'),
+      parseErrorMessageTitle(approvalError, { defaultTitle: 'unkown CheckLpApprovalQuery' }),
       {
         error: JSON.stringify(approvalError),
         v2LpTokenApprovalQueryParams: JSON.stringify(v2LpTokenApprovalQueryParams),
@@ -164,7 +165,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     logger.info(
       'RemoveLiquidityTxAndGasInfo',
       'RemoveLiquidityTxAndGasInfo',
-      parseErrorMessageTitle(calldataError, 'DecreaseLpPositionCalldataQuery'),
+      parseErrorMessageTitle(calldataError, { defaultTitle: 'DecreaseLpPositionCalldataQuery' }),
       {
         error: JSON.stringify(calldataError),
         decreaseCalldataQueryParams: JSON.stringify(decreaseCalldataQueryParams),

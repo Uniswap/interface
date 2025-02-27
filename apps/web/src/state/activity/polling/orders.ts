@@ -3,7 +3,6 @@ import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { useEffect, useRef, useState } from 'react'
 import { OnActivityUpdate, OrderUpdate } from 'state/activity/types'
-import { OffchainOrderType } from 'state/routing/types'
 import { isFinalizedOrder, usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExactInputSwapTransactionInfo } from 'state/transactions/types'
@@ -37,7 +36,11 @@ export function getQuickPollingInterval(orderStartTime: number) {
 }
 
 function isUniswapXOrder(order: UniswapXOrderDetails): boolean {
-  return order.type === SignatureType.SIGN_UNISWAPX_ORDER || order.type === SignatureType.SIGN_UNISWAPX_V2_ORDER
+  return (
+    order.type === SignatureType.SIGN_UNISWAPX_ORDER ||
+    order.type === SignatureType.SIGN_UNISWAPX_V2_ORDER ||
+    order.type === SignatureType.SIGN_UNISWAPX_V3_ORDER
+  )
 }
 
 async function fetchStatuses(
@@ -63,20 +66,8 @@ async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[
   )
 }
 
-async function fetchPriorityStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
-  return fetchStatuses(
-    orders,
-    (order) => order.type === SignatureType.SIGN_PRIORITY_ORDER,
-    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}&orderType=${OffchainOrderType.PRIORITY_ORDER}`,
-  )
-}
-
 async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
-  return fetchStatuses(
-    orders,
-    isUniswapXOrder,
-    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}&orderType=${OffchainOrderType.DUTCH_V1_AND_V2}`,
-  )
+  return fetchStatuses(orders, isUniswapXOrder, (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}`)
 }
 
 function updateOrders(
@@ -162,13 +153,9 @@ function useQuickPolling({
       }
 
       try {
-        const statuses = await Promise.all([
-          fetchOrderStatuses(account.address, orders.filter(isUniswapXOrder)),
-          fetchPriorityStatuses(
-            account.address,
-            orders.filter((order) => order.type === SignatureType.SIGN_PRIORITY_ORDER),
-          ),
-        ]).then((results) => results.flat())
+        const statuses = await Promise.all([fetchOrderStatuses(account.address, orders.filter(isUniswapXOrder))]).then(
+          (results) => results.flat(),
+        )
 
         updateOrders(pendingOrders, statuses, onActivityUpdate)
 

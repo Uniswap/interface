@@ -8,8 +8,8 @@ import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -23,7 +23,7 @@ const BalancesCard = styled.div`
   height: fit-content;
   width: 100%;
 
-  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+  @media screen and (min-width: ${breakpoints.lg}px) {
     display: flex;
   }
 `

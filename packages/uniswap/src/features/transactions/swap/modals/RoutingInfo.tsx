@@ -57,7 +57,7 @@ export function RoutingInfo({
             components={{
               logo: (
                 <>
-                  <UniswapXText variant={textVariant}>Uniswap X</UniswapXText>
+                  <UniswapXText variant={textVariant}>UniswapX</UniswapXText>
                 </>
               ),
             }}

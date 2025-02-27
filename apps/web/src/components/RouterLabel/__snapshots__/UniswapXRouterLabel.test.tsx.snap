@@ -63,6 +63,9 @@ exports[`UniswapXRouterLabel matches snapshot 1`] = `
             test router label
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

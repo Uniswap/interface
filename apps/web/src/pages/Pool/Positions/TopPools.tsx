@@ -8,7 +8,6 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
-import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, Text } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
@@ -35,7 +34,7 @@ function TopPoolCard({ pool }: { pool: PoolStat }) {
       borderColor="$surface3"
       borderWidth="$spacing1"
       justifyContent="space-between"
-      {...ClickableTamaguiStyle}
+      hoverStyle={{ backgroundColor: '$surface1Hovered', borderColor: '$surface3Hovered' }}
       onPress={() => navigate(`/explore/pools/${toGraphQLChain(chainId ?? defaultChainId).toLowerCase()}/${pool.id}`)}
     >
       <Flex row gap="$gap16">

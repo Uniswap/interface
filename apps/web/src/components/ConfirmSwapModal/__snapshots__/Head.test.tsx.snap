@@ -141,6 +141,9 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -288,6 +291,9 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

@@ -43,7 +43,7 @@ const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType
 export type PoolsDetailsChartType = (typeof PDP_CHART_SELECTOR_OPTIONS)[number]
 
 const TimePeriodSelectorContainer = styled.div`
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     width: 100%;
   }
 `
@@ -51,7 +51,7 @@ const ChartTypeSelectorContainer = styled.div`
   display: flex;
   gap: 8px;
 
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     width: 100%;
   }
 `
@@ -157,7 +157,7 @@ function usePDPChartState(
 
 export default function ChartSection(props: ChartSectionProps) {
   const { defaultChainId } = useEnabledChains()
-  const breakpoints = useMedia()
+  const media = useMedia()
 
   const [currencyA, currencyB] = [
     props.poolData?.token0 && gqlToCurrency(props.poolData.token0),
@@ -249,7 +249,7 @@ export default function ChartSection(props: ChartSectionProps) {
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
           <TimePeriodSelectorContainer>
             <SegmentedControl
-              fullWidth={breakpoints.sm}
+              fullWidth={media.sm}
               options={filteredTimeOptions.options}
               selectedOption={filteredTimeOptions.selected}
               onSelectOption={(option) => {
@@ -276,7 +276,7 @@ const PriceDisplayContainer = styled.div`
 
 const ChartPriceText = styled(ThemedText.HeadlineMedium)`
   ${EllipsisStyle}
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     font-size: 24px !important;
     line-height: 32px !important;
   }

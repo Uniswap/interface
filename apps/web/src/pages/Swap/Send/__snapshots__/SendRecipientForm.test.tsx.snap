@@ -135,6 +135,9 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
           </div>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -390,6 +393,9 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
           </svg>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -635,6 +641,9 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
           </svg>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -775,6 +784,9 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
           </div>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>

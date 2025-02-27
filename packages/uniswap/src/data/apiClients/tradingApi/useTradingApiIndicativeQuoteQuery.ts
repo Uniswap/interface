@@ -1,5 +1,6 @@
 import { QueryClient, UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { is404Error } from 'uniswap/src/data/apiClients/FetchError'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { TRADING_API_CACHE_KEY, fetchIndicativeQuote } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
@@ -36,15 +37,24 @@ export function useTradingApiIndicativeQuoteQuery({
 }
 
 // To be used outside of React.
-export async function fetchTradingApiIndicativeQuote({
+// 404 means there's no quote for the given token pair,
+// which is something that we might want to safely ignore (and treat as `undefined`) in some cases.
+export async function fetchTradingApiIndicativeQuoteIgnoring404({
   queryClient = SharedQueryClient,
   params,
 }: {
   queryClient?: QueryClient
   params: IndicativeQuoteRequest
-}): Promise<IndicativeQuoteResponse> {
-  return queryClient.fetchQuery({
-    queryKey: getTradingApiIndicativeQuoteQueryKey(params),
-    queryFn: async () => fetchIndicativeQuote(params),
-  })
+}): Promise<IndicativeQuoteResponse | undefined> {
+  try {
+    return await queryClient.fetchQuery({
+      queryKey: getTradingApiIndicativeQuoteQueryKey(params),
+      queryFn: async () => fetchIndicativeQuote(params),
+    })
+  } catch (error) {
+    if (is404Error(error)) {
+      return undefined
+    }
+    throw error
+  }
 }

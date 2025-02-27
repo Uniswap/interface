@@ -35,7 +35,7 @@ const UploadLink = styled.a`
 
   ${OpacityHoverState}
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     right: 12px;
     top: 28px;
   }

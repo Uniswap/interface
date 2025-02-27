@@ -1,35 +1,32 @@
 import { RemoveScroll } from '@tamagui/remove-scroll'
-import { PropsWithChildren, ReactNode, useCallback, useState } from 'react'
-import { Adapt, Dialog, GetProps, Sheet, View, VisuallyHidden, styled, useIsTouchDevice } from 'tamagui'
-import { X } from 'ui/src/components/icons'
+import { PropsWithChildren, ReactNode, useCallback, useEffect, useState } from 'react'
+import { DimensionValue } from 'react-native'
+import { Adapt, Dialog, GetProps, Sheet, View, VisuallyHidden, styled, useIsTouchDevice, useMedia } from 'tamagui'
+import { CloseIconProps, CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Flex, FlexProps } from 'ui/src/components/layout'
-import { TouchableArea } from 'ui/src/components/touchable'
 import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
-import { INTERFACE_NAV_HEIGHT, IconSizeTokens, zIndices } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
 import { isInterface } from 'utilities/src/platform'
 
 export const ADAPTIVE_MODAL_ANIMATION_DURATION = 200
 
-export function ModalCloseIcon({
-  onClose,
-  size = '$icon.24',
-  testId,
-}: {
-  onClose: () => void
-  size?: IconSizeTokens
-  testId?: string
-}): JSX.Element {
-  return (
-    <TouchableArea data-testid={testId} onPress={onClose}>
-      <X size={size} color="$neutral2" hoverColor="$neutral2Hovered" />
-    </TouchableArea>
-  )
+export function ModalCloseIcon(props: CloseIconProps): JSX.Element {
+  // hide close icon on bottom sheet on interface
+  const sm = useMedia().sm
+  const hideCloseIcon = isInterface && sm
+  return hideCloseIcon ? <></> : <CloseIconWithHover {...props} />
 }
 
-export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element {
+export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element | null {
   const isTouchDevice = useIsTouchDevice()
   const [isHandlePressed, setHandlePressed] = useState(false)
+
+  // TODO: https://linear.app/uniswap/issue/WEB-6258/token-selector-not-rendering-bottom-sheet-on-web
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleClose = useCallback(
     (open: boolean) => {
@@ -40,19 +37,23 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
     [onClose],
   )
 
-  const sheetOverrideStyles: GetProps<typeof View> = {
-    ...rest,
+  const sheetOverrideStyles: FlexProps = {
+    ...(rest as FlexProps),
     width: '100%',
     maxWidth: '100%',
     minWidth: '100%',
   }
 
-  const sheetHeightStyles: GetProps<typeof View> = {
+  const sheetHeightStyles: FlexProps = {
     flex: 1,
-    height: rest.$sm?.['$platform-web']?.height,
+    height: rest.$sm?.['$platform-web']?.height as DimensionValue,
     maxHeight: isInterface
       ? `calc(100vh - ${INTERFACE_NAV_HEIGHT}px)`
-      : rest.$sm?.['$platform-web']?.maxHeight ?? '100dvh',
+      : ((rest.$sm?.['$platform-web']?.maxHeight ?? '100dvh') as DimensionValue),
+  }
+
+  if (!mounted) {
+    return null
   }
 
   return (
@@ -65,7 +66,7 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
         disableDrag={isTouchDevice && !isHandlePressed}
         open={isOpen}
         snapPointsMode="fit"
-        zIndex={zIndices.modal}
+        zIndex={zIndexes.modal}
         onOpenChange={handleClose}
       >
         <Sheet.Frame
@@ -75,7 +76,7 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
           borderTopRightRadius="$rounded16"
           borderWidth="$spacing1"
           px="$spacing8"
-          zIndex={zIndices.modal}
+          zIndex={zIndexes.modal}
           {...sheetOverrideStyles}
           {...sheetHeightStyles}
         >
@@ -100,7 +101,7 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
           backgroundColor="$scrim"
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
-          zIndex={zIndices.modalBackdrop}
+          zIndex={zIndexes.modalBackdrop}
         />
       </Sheet>
     </RemoveScroll>
@@ -139,6 +140,7 @@ export function AdaptiveWebModal({
   px,
   py,
   p,
+  zIndex,
   ...rest
 }: ModalProps): JSX.Element {
   const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) // Filter out undefined properties from rest
@@ -184,8 +186,8 @@ export function AdaptiveWebModal({
           </Adapt>
         )}
 
-      <Dialog.Portal zIndex={zIndices.modal}>
-        <Overlay key="overlay" zIndex={zIndices.modalBackdrop} />
+      <Dialog.Portal zIndex={zIndex ?? zIndexes.modal}>
+        <Overlay key="overlay" zIndex={zIndexes.modalBackdrop} />
 
         <Flex
           grow
@@ -214,7 +216,7 @@ export function AdaptiveWebModal({
             py={py ?? p ?? '$spacing16'}
             style={Object.assign({}, scrollbarStyles, style)}
             width="calc(100vw - 32px)"
-            zIndex={zIndices.modal}
+            zIndex={zIndexes.modal}
             {...filteredRest}
           >
             {children}
@@ -239,6 +241,7 @@ export function WebModalWithBottomAttachment({
   bottomAttachment,
   backgroundColor = '$surface1',
   gap,
+  zIndex,
   ...rest
 }: ModalProps & { bottomAttachment?: ReactNode }): JSX.Element {
   const shadowProps = useShadowPropsShort()
@@ -270,8 +273,8 @@ export function WebModalWithBottomAttachment({
           </Adapt>
         )}
 
-      <Dialog.Portal zIndex={zIndices.modal}>
-        <Overlay key="overlay" zIndex={zIndices.modalBackdrop} />
+      <Dialog.Portal zIndex={zIndex ?? zIndexes.modal}>
+        <Overlay key="overlay" zIndex={zIndexes.modalBackdrop} />
 
         <Dialog.Content
           key="content"
@@ -287,7 +290,7 @@ export function WebModalWithBottomAttachment({
           p="$none"
           style={style}
           width="calc(100vw - 32px)"
-          zIndex={zIndices.modal}
+          zIndex={zIndexes.modal}
         >
           <Flex height="100%" width="100%" gap="$spacing8">
             <Flex

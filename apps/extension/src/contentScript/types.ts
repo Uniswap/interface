@@ -1,5 +1,10 @@
 import { z } from 'zod'
 
+export enum ETH_PROVIDER_CONFIG {
+  REQUEST = 'ETHEREUM_PROVIDER_SCHEMA_REQUEST',
+  RESPONSE = 'ETHEREUM_PROVIDER_SCHEMA_RESPONSE',
+}
+
 /* eslint-disable no-restricted-syntax  */
 const ExtensionResponseSchema = z
   .object({
@@ -35,3 +40,24 @@ export type ContentScriptToProxyEmission = z.infer<typeof ContentScriptToProxyEm
 
 export const isValidContentScriptToProxyEmission = (request: unknown): request is ContentScriptToProxyEmission =>
   ContentScriptToProxyEmissionSchema.safeParse(request).success
+
+export const WindowEthereumConfigRequestSchema = z.object({
+  type: z.literal(ETH_PROVIDER_CONFIG.REQUEST),
+})
+
+export type WindowEthereumConfigRequest = z.infer<typeof WindowEthereumConfigRequestSchema>
+
+export const isValidWindowEthereumConfigRequest = (request: unknown): request is WindowEthereumConfigRequest =>
+  WindowEthereumConfigRequestSchema.safeParse(request).success
+
+export const WindowEthereumConfigResponseSchema = z.object({
+  type: z.literal(ETH_PROVIDER_CONFIG.RESPONSE),
+  config: z.object({
+    isDefaultProvider: z.boolean(),
+  }),
+})
+
+export type WindowEthereumConfigResponse = z.infer<typeof WindowEthereumConfigResponseSchema>
+
+export const isValidWindowEthereumConfigResponse = (request: unknown): request is WindowEthereumConfigResponse =>
+  WindowEthereumConfigResponseSchema.safeParse(request).success

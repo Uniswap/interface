@@ -241,7 +241,8 @@ export function Table<Data extends RowData>({
               </FadePresence>
             )}
           </TableHead>
-          <ScrollSyncPane innerRef={tableBodyRef}>
+          {/* @ts-expect-error `react-scroll-sync` hasn't been updated in awhile; therefore, this type has been incorrect for a while */}
+          <ScrollSyncPane attachTo={tableBodyRef}>
             <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
               <TableBody loading={loading} error={error} table={table} />
             </TableBodyContainer>

@@ -127,7 +127,7 @@ export function ChartHeader({
       gap="$gap8"
       alignItems="flex-start"
       animation="fast"
-      zIndex="$tooltip"
+      zIndex="$default"
       id="chart-header"
     >
       <Flex position="absolute" gap="$gap4" pb={14} pointerEvents="none" width="80%">

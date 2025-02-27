@@ -385,7 +385,6 @@ exports[`TDP Skeleton should render correctly 1`] = `
               />
             </nav>
             <div
-              class="css-view-175oi2r"
               style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; padding-top: 8px; margin-bottom: 20px; z-index: 1;"
             >
               <div
@@ -771,6 +770,9 @@ exports[`TDP Skeleton should render correctly 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -801,6 +803,9 @@ exports[`getLoadingTitle should return correct title 1`] = `
           USD//C (USDC)
         </a>
          on Ethereum
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

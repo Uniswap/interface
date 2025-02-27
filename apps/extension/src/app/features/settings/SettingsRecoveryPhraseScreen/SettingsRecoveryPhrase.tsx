@@ -39,7 +39,7 @@ export function SettingsRecoveryPhrase({
       <Flex grow>{children}</Flex>
       <Flex mt="$spacing12">
         <DeprecatedButton
-          disabled={!nextButtonEnabled}
+          isDisabled={!nextButtonEnabled}
           flexGrow={1}
           theme={nextButtonTheme as ThemeNames}
           onPress={onNextPressed}

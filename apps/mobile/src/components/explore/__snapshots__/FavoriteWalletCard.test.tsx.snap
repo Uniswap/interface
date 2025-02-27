@@ -3,13 +3,6 @@
 exports[`FavoriteWalletCard renders without error 1`] = `
 <View
   collapsable={false}
-  jestAnimatedStyle={
-    {
-      "value": {
-        "opacity": 1,
-      },
-    }
-  }
   style={
     {
       "flexDirection": "column",
@@ -48,6 +41,15 @@ exports[`FavoriteWalletCard renders without error 1`] = `
           "top": 5,
         }
       }
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
       style={
         {
           "backgroundColor": {
@@ -218,13 +220,6 @@ exports[`FavoriteWalletCard renders without error 1`] = `
               "left": 5,
               "right": 5,
               "top": 5,
-            }
-          }
-          jestAnimatedStyle={
-            {
-              "value": {
-                "opacity": 0,
-              },
             }
           }
           style={

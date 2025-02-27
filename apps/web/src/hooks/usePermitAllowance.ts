@@ -1,17 +1,18 @@
 import { AllowanceTransfer, MaxAllowanceTransferAmount, PermitSingle, permit2Address } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
 import { useEthersSigner } from 'hooks/useEthersSigner'
-import { useSingleCallResult } from 'lib/hooks/multicall'
+import { useTriggerOnTransactionType } from 'hooks/useTriggerOnTransactionType'
 import ms from 'ms'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
+import { TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
-import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
-import { Permit2 } from 'uniswap/src/abis/types'
+import { PERMIT2_ABI } from 'uniswap/src/abis/permit2'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { assume0xAddress } from 'utils/wagmi'
+import { useReadContract } from 'wagmi'
 
 const PERMIT_EXPIRATION = ms(`30d`)
 const PERMIT_SIG_EXPIRATION = ms(`30m`)
@@ -21,27 +22,30 @@ function toDeadline(expiration: number): number {
 }
 
 export function usePermitAllowance(token?: Token, owner?: string, spender?: string) {
-  const contract = useContract<Permit2>(permit2Address(token?.chainId), PERMIT2_ABI, undefined, token?.chainId)
-  const inputs = useMemo(() => [owner, token?.address, spender], [owner, spender, token?.address])
+  const queryEnabled = !!owner && !!token?.address && !!spender
+  const { data, refetch: refetchAllowance } = useReadContract({
+    address: assume0xAddress(permit2Address(token?.chainId)),
+    abi: PERMIT2_ABI,
+    chainId: token?.chainId,
+    functionName: 'allowance',
+    args: queryEnabled
+      ? [assume0xAddress(owner), assume0xAddress(token?.address), assume0xAddress(spender)]
+      : undefined,
+    query: { enabled: queryEnabled },
+  })
+  // Permit allowance is updated on chain when a swap is confirmed including a permit signature; we refetch permit allowance when a swap is confirmed
+  useTriggerOnTransactionType(TransactionType.SWAP, refetchAllowance)
 
-  // If there is no allowance yet, re-check next observed block.
-  // This guarantees that the permitAllowance is synced upon submission and updated upon being synced.
-  const [blocksPerFetch, setBlocksPerFetch] = useState<1>()
-  const result = useSingleCallResult(contract, 'allowance', inputs, {
-    blocksPerFetch,
-  }).result as Awaited<ReturnType<Permit2['allowance']>> | undefined
+  return useMemo(() => {
+    if (!data) {
+      return { permitAllowance: undefined, expiration: undefined, nonce: undefined }
+    }
 
-  const rawAmount = result?.amount.toString() // convert to a string before using in a hook, to avoid spurious rerenders
-  const allowance = useMemo(
-    () => (token && rawAmount ? CurrencyAmount.fromRawAmount(token, rawAmount) : undefined),
-    [token, rawAmount],
-  )
-  useEffect(() => setBlocksPerFetch(allowance?.equalTo(0) ? 1 : undefined), [allowance])
+    const [amount, expiration, nonce] = data
+    const allowance = token && amount !== undefined ? CurrencyAmount.fromRawAmount(token, amount.toString()) : undefined
 
-  return useMemo(
-    () => ({ permitAllowance: allowance, expiration: result?.expiration, nonce: result?.nonce }),
-    [allowance, result?.expiration, result?.nonce],
-  )
+    return { permitAllowance: allowance, expiration, nonce }
+  }, [data, token])
 }
 
 interface Permit extends PermitSingle {

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Pin, X } from 'ui/src/components/icons'
-import { iconSizes, zIndices } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 
 const POPUP_WIDTH = 240
 const POPUP_OFFSET = 4
@@ -68,7 +68,7 @@ function PinReminderArrow(): JSX.Element {
       rotate="45deg"
       top={POPUP_OFFSET - 6}
       width={POPUP_ARROW_SIZE}
-      zIndex={zIndices.popover + 1}
+      zIndex={zIndexes.popover + 1}
     />
   )
 }
@@ -83,6 +83,6 @@ const styles = {
     right: POPUP_OFFSET,
     top: POPUP_OFFSET,
     width: POPUP_WIDTH,
-    zIndex: zIndices.popover,
+    zIndex: zIndexes.popover,
   },
 }

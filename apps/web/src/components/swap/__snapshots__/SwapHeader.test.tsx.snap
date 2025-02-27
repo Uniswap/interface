@@ -216,6 +216,9 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

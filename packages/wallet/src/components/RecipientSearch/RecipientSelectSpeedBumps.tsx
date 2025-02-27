@@ -71,7 +71,14 @@ export function RecipientSelectSpeedBumps({
   )
 
   const renderNewAddressWarning = useCallback<PaginatedModalRenderer>(
-    (props) => (recipientAddress ? <NewAddressWarningModal address={recipientAddress} {...props} /> : null),
+    (props) =>
+      recipientAddress ? (
+        <NewAddressWarningModal
+          address={recipientAddress}
+          onAcknowledge={props.onAcknowledge}
+          onClose={props.onClose}
+        />
+      ) : null,
     [recipientAddress],
   )
 

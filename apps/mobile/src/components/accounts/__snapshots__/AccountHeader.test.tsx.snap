@@ -45,6 +45,15 @@ exports[`AccountHeader renders correctly 1`] = `
       >
         <View
           hitSlop={20}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             {
               "alignItems": "center",
@@ -132,6 +141,15 @@ exports[`AccountHeader renders correctly 1`] = `
         >
           <View
             hitSlop={20}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
             style={
               {
                 "flexDirection": "column",
@@ -204,6 +222,15 @@ exports[`AccountHeader renders correctly 1`] = `
                     "top": 5,
                   }
                 }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
                     "flexDirection": "column",
@@ -276,11 +303,11 @@ exports[`AccountHeader renders correctly 1`] = `
                         },
                       ]
                     }
-                    tintColor="#BFBFBF"
                     vbHeight={16}
                     vbWidth={16}
                   >
                     <RNSVGGroup
+                      color="#BFBFBF"
                       fill={null}
                       propList={
                         [
@@ -337,6 +364,15 @@ exports[`AccountHeader renders correctly 1`] = `
               "top": 5,
             }
           }
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             {
               "flexDirection": "column",
@@ -377,11 +413,11 @@ exports[`AccountHeader renders correctly 1`] = `
                 },
               ]
             }
-            tintColor="#7D7D7D"
             vbHeight={28}
             vbWidth={28}
           >
             <RNSVGGroup
+              color="#7D7D7D"
               fill={null}
               propList={
                 [
@@ -442,6 +478,7 @@ exports[`AccountHeader renders correctly 1`] = `
               ],
             }
           }
+          testID="account-header-settings-icon"
         >
           <RNSVGSvgView
             align="xMidYMid"
@@ -471,11 +508,11 @@ exports[`AccountHeader renders correctly 1`] = `
                 },
               ]
             }
-            tintColor="#7D7D7D"
             vbHeight={28}
             vbWidth={28}
           >
             <RNSVGGroup
+              color="#7D7D7D"
               fill={null}
               propList={
                 [

@@ -30,12 +30,12 @@ const PageWrapper = deprecatedStyled(AutoColumn)`
   max-width: 870px;
   width: 100%;
 
-  @media (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     max-width: 800px;
     padding-top: 48px;
   }
 
-  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     max-width: 500px;
     padding-top: 20px;
   }
@@ -85,7 +85,7 @@ const ResponsiveButtonPrimary = deprecatedStyled(ButtonPrimary)`
   font-size: 16px;
   padding: 6px 8px;
   white-space: nowrap;
-  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     flex: 1 1 auto;
     width: 50%;
   }

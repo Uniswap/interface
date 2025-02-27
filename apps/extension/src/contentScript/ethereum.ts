@@ -1,6 +1,11 @@
 import { addWindowMessageListener } from 'src/background/messagePassing/messageUtils'
 import { WindowEthereumProxy } from 'src/contentScript/WindowEthereumProxy'
-import { isValidContentScriptToProxyEmission } from 'src/contentScript/types'
+import {
+  ETH_PROVIDER_CONFIG,
+  WindowEthereumConfigResponse,
+  isValidContentScriptToProxyEmission,
+  isValidWindowEthereumConfigResponse,
+} from 'src/contentScript/types'
 import { logger } from 'utilities/src/logger/logger'
 import { v4 as uuid } from 'uuid'
 
@@ -25,7 +30,7 @@ const UNISWAP_RDNS = 'org.uniswap.app'
 declare global {
   interface Window {
     isStretchInstalled?: boolean
-    ethereum?: WindowEthereumProxy
+    ethereum?: unknown
   }
 }
 
@@ -40,6 +45,8 @@ interface EIP6963ProviderInfo {
   icon: string
   rdns: string
 }
+
+const oldProvider = window.ethereum
 
 const uniswapProvider = new WindowEthereumProxy()
 window.ethereum = uniswapProvider
@@ -66,7 +73,7 @@ function announceProvider(): void {
   )
 }
 
-window.addEventListener(EIP6963EventNames.Request, (event) => {
+const handle6963Request = (event: Event): void => {
   if (!isValidRequestProviderEvent(event)) {
     throw new Error(
       `Invalid EIP-6963 RequestProviderEvent object received from ${EIP6963EventNames.Request} event. See https://eips.ethereum.org/EIPS/eip-6963 for requirements.`,
@@ -74,9 +81,41 @@ window.addEventListener(EIP6963EventNames.Request, (event) => {
   }
 
   announceProvider()
-})
+}
 
-announceProvider()
+const create6963Listener = (): void => {
+  // remove the old listener if present
+  window.removeEventListener(EIP6963EventNames.Request, handle6963Request)
+
+  window.addEventListener(EIP6963EventNames.Request, handle6963Request)
+
+  announceProvider()
+}
+
+create6963Listener()
+
+// override logic impl details in src/app/utils/provider.ts
+// get config from sister content script
+addWindowMessageListener<WindowEthereumConfigResponse>(
+  isValidWindowEthereumConfigResponse,
+  async (request) => {
+    const isDefaultProvider = request.config.isDefaultProvider
+
+    // if default provider is false, restore old provider for 1193 and unspoof 6963 provider
+    if (isDefaultProvider === false) {
+      uniswapProvider.isMetaMask = false
+      if (oldProvider) {
+        // typing isn't exact here but the idea is that we are injecting some 1193 provider
+        window.ethereum = oldProvider
+        create6963Listener()
+      }
+    }
+  },
+  undefined,
+  { removeAfterHandled: true },
+)
+
+window.postMessage({ type: ETH_PROVIDER_CONFIG.REQUEST })
 
 type EIP6963RequestProviderEvent = Event & {
   type: EIP6963EventNames.Request

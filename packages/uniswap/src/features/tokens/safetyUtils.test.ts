@@ -111,6 +111,27 @@ describe('getTokenWarningSeverity', () => {
     expect(getTokenWarningSeverity(highFeeCurrencyInfo)).toBe(WarningSeverity.High)
   })
 
+  it('should return High for very high fee on transfer even if our fees DB doesnt have fees data & if Blockaid hasnt properly updated their ProtectionResult to malicious lol', () => {
+    const highFeeCurrencyInfo = {
+      ...mockCurrencyInfo,
+      safetyInfo: {
+        attackType: undefined,
+        blockaidFees: {
+          sellFeePercent: 100,
+        },
+        tokenList: TokenList.NonDefault,
+        protectionResult: ProtectionResult.Benign,
+      },
+      currency: {
+        ...mockCurrency,
+        sellFeeBps: undefined,
+        buyFeeBps: undefined,
+      } as Currency,
+    }
+
+    expect(getTokenWarningSeverity(highFeeCurrencyInfo)).toBe(WarningSeverity.High)
+  })
+
   it('should return None for default token with no warnings', () => {
     expect(getTokenWarningSeverity(mockCurrencyInfo)).toBe(WarningSeverity.None)
   })
@@ -430,6 +451,7 @@ describe('useModalSubtitleText', () => {
     expect(
       useModalSubtitleText({
         tokenProtectionWarning: TokenProtectionWarning.NonDefault,
+        tokenSymbol: 'ABC',
       }),
     ).toBe('token.safety.warning.medium.heading.named')
   })

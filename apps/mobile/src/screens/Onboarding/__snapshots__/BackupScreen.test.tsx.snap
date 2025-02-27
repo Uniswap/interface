@@ -2,7 +2,6 @@
 
 exports[`BackupScreen renders backup options when none are completed 1`] = `
 <View
-  sentry-label="Screen"
   style={
     {
       "backgroundColor": {
@@ -42,11 +41,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       collapsable={false}
       entering={[Function]}
       exiting={[Function]}
-      jestAnimatedStyle={
-        {
-          "value": {},
-        }
-      }
       style={
         {
           "flexDirection": "column",
@@ -133,11 +127,11 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   },
                 ]
               }
-              tintColor="#222222"
               vbHeight={20}
               vbWidth={19}
             >
               <RNSVGGroup
+                color="#222222"
                 fill={null}
                 propList={
                   [
@@ -261,6 +255,15 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     "top": 5,
                   }
                 }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
                     "backgroundColor": {
@@ -377,11 +380,11 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           },
                         ]
                       }
-                      tintColor="#FC72FF"
                       vbHeight={16}
                       vbWidth={16}
                     >
                       <RNSVGGroup
+                        color="#FC72FF"
                         fill={null}
                         propList={
                           [
@@ -559,6 +562,15 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     "top": 5,
                   }
                 }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
                     "backgroundColor": {
@@ -674,11 +686,11 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           },
                         ]
                       }
-                      tintColor="#FC72FF"
                       vbHeight={19}
                       vbWidth={19}
                     >
                       <RNSVGGroup
+                        color="#FC72FF"
                         fill={null}
                         propList={
                           [
@@ -809,6 +821,15 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "top": 5,
                 }
               }
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
                   "alignItems": "center",
@@ -854,11 +875,11 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     },
                   ]
                 }
-                tintColor="#BFBFBF"
                 vbHeight={24}
                 vbWidth={24}
               >
                 <RNSVGGroup
+                  color="#BFBFBF"
                   fill={null}
                   propList={
                     [
@@ -915,7 +936,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
 
 exports[`BackupScreen renders backup options when some are completed 1`] = `
 <View
-  sentry-label="Screen"
   style={
     {
       "backgroundColor": {
@@ -955,11 +975,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       collapsable={false}
       entering={[Function]}
       exiting={[Function]}
-      jestAnimatedStyle={
-        {
-          "value": {},
-        }
-      }
       style={
         {
           "flexDirection": "column",
@@ -1046,11 +1061,11 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   },
                 ]
               }
-              tintColor="#222222"
               vbHeight={20}
               vbWidth={19}
             >
               <RNSVGGroup
+                color="#222222"
                 fill={null}
                 propList={
                   [
@@ -1174,6 +1189,15 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     "top": 5,
                   }
                 }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
                     "backgroundColor": {
@@ -1290,11 +1314,11 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           },
                         ]
                       }
-                      tintColor="#FC72FF"
                       vbHeight={16}
                       vbWidth={16}
                     >
                       <RNSVGGroup
+                        color="#FC72FF"
                         fill={null}
                         propList={
                           [
@@ -1472,6 +1496,15 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     "top": 5,
                   }
                 }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
                     "backgroundColor": {
@@ -1587,11 +1620,11 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           },
                         ]
                       }
-                      tintColor="#FC72FF"
                       vbHeight={19}
                       vbWidth={19}
                     >
                       <RNSVGGroup
+                        color="#FC72FF"
                         fill={null}
                         propList={
                           [
@@ -1722,6 +1755,15 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "top": 5,
                 }
               }
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
                   "alignItems": "center",
@@ -1767,11 +1809,11 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     },
                   ]
                 }
-                tintColor="#BFBFBF"
                 vbHeight={24}
                 vbWidth={24}
               >
                 <RNSVGGroup
+                  color="#BFBFBF"
                   fill={null}
                   propList={
                     [

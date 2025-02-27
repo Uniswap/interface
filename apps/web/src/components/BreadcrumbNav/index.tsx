@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useState } from 'react'
@@ -9,6 +8,7 @@ import { Copy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ClickableStyle } from 'theme/components'
+import { useMedia } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
 
 export const BreadcrumbNavContainer = styled.nav`
@@ -71,7 +71,6 @@ export const CurrentPageBreadcrumb = ({
 }) => {
   const { t } = useTranslation()
   const { neutral2 } = useTheme()
-  const screenSize = useScreenSize()
   const [hover, setHover] = useState(false)
 
   const [isCopied, setCopied] = useCopyClipboard()
@@ -82,7 +81,8 @@ export const CurrentPageBreadcrumb = ({
   const isNative = currency?.isNative
   const tokenSymbolName = currency?.symbol ?? t('tdp.symbolNotFound')
 
-  const shouldEnableCopy = screenSize['sm']
+  const media = useMedia()
+  const shouldEnableCopy = !media.md
   const shouldShowActions = shouldEnableCopy && hover && !isCopied
 
   return (

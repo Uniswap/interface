@@ -77,7 +77,7 @@ export function BackupSpeedBumpModal({ backupType, onContinue, onClose }: Backup
           <DeprecatedButton fill size="medium" theme="secondary" onPress={() => onClose()}>
             {t('common.button.back')}
           </DeprecatedButton>
-          <DeprecatedButton fill disabled={!checked} size="medium" theme="primary" onPress={() => onContinue()}>
+          <DeprecatedButton fill isDisabled={!checked} size="medium" theme="primary" onPress={() => onContinue()}>
             {t('common.button.continue')}
           </DeprecatedButton>
         </Flex>

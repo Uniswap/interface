@@ -258,7 +258,7 @@ export function ChangeUnitagModal({
           <Flex centered row pt="$spacing4" width="100%">
             <DeprecatedButton
               fill
-              disabled={isSubmitButtonDisabled}
+              isDisabled={isSubmitButtonDisabled}
               testID={TestID.Confirm}
               theme="primary"
               onPress={onPressSaveChanges}

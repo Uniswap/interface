@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ActionTile } from 'components/AccountDrawer/ActionTile'
@@ -5,18 +6,14 @@ import IconButton, { IconHoverText, IconWithConfirmTextButton } from 'components
 import { EmptyWallet } from 'components/AccountDrawer/MiniPortfolio/EmptyWallet'
 import { ExtensionDeeplinks } from 'components/AccountDrawer/MiniPortfolio/ExtensionDeeplinks'
 import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio/MiniPortfolio'
-import { portfolioFadeInAnimation } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Status } from 'components/AccountDrawer/Status'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
-import Row, { AutoRow } from 'components/deprecated/Row'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
+import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
@@ -28,18 +25,28 @@ import { useNavigate } from 'react-router-dom'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
-import { ThemedText } from 'theme/components'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
+import { Flex } from 'ui/src/components/layout'
+import { Shine } from 'ui/src/loading/Shine'
+import AnimatedNumber, {
+  BALANCE_CHANGE_INDICATION_DURATION,
+} from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
+import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { disconnectWallet } from 'uniswap/src/data/rest/embeddedWallet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { useENSName } from 'uniswap/src/features/ens/api'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import i18next from 'uniswap/src/i18n'
+import { NumberType } from 'utilities/src/format/types'
 import { isPathBlocked } from 'utils/blockedPaths'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const AuthenticatedHeaderWrapper = styled.div<{ isUniExtensionAvailable?: boolean }>`
   padding: ${({ isUniExtensionAvailable }) => (isUniExtensionAvailable ? 16 : 20)}px 16px;
@@ -91,10 +98,6 @@ const HeaderWrapper = styled.div`
   align-items: flex-start;
 `
 
-const FadeInColumn = styled(Column)`
-  ${portfolioFadeInAnimation}
-`
-
 const PortfolioDrawerContainer = styled(Column)`
   flex: 1;
 `
@@ -106,11 +109,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const navigate = useNavigate()
   const openReceiveModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO })
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')
-  const { formatNumber, formatDelta } = useFormatter()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const { isTestnetModeEnabled } = useEnabledChains()
   const connectedWithEmbeddedWallet =
     useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+  const isRightToLeft = i18next.dir() === 'rtl'
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
@@ -132,17 +135,29 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     navigate(`/buy`, { replace: true })
   }, [accountDrawer, navigate])
 
-  const { data: portfolioBalances } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
-  const portfolio = portfolioBalances?.portfolios?.[0]
-  const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
+  const { data, networkStatus, loading } = usePortfolioTotalValue({
+    address: account,
+  })
+
+  const { percentChange, absoluteChangeUSD, balanceUSD } = data || {}
+
+  const isLoading = loading && !data
+  const isWarmLoading = !!data && networkStatus === NetworkStatus.loading
+
+  const currency = useAppFiatCurrency()
+  const currencyComponents = useAppFiatCurrencyInfo()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const totalFormattedValue = convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance)
+
   // denominated portfolio balance on testnet is always 0
-  const isPortfolioZero = !isTestnetModeEnabled && totalBalance === 0
-  const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
-  const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
+  const isPortfolioZero = !isTestnetModeEnabled && balanceUSD === 0
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
 
   const { unitag } = useUnitagByAddress(account)
   const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
+
+  const shouldFadePortfolioDecimals =
+    (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
 
   return (
     <AuthenticatedHeaderWrapper isUniExtensionAvailable={isUniExtensionAvailable}>
@@ -169,40 +184,29 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </IconContainer>
       </HeaderWrapper>
       <PortfolioDrawerContainer>
-        {totalBalance !== undefined ? (
-          <FadeInColumn gap="xs">
-            <ThemedText.HeadlineLarge
-              fontWeight={535}
-              color={isTestnetModeEnabled ? 'neutral3' : 'neutral1'}
-              data-testid="portfolio-total-balance"
-            >
-              {formatNumber({
-                input: isTestnetModeEnabled ? null : totalBalance,
-                placeholder: '--',
-                forceShowCurrencySymbol: true,
-                type: NumberType.PortfolioBalance,
-              })}
-            </ThemedText.HeadlineLarge>
-            <AutoRow marginBottom="20px">
-              {absoluteChange !== 0 && percentChange && !isTestnetModeEnabled && (
-                <>
-                  <DeltaArrow delta={absoluteChange} />
-                  <ThemedText.BodySecondary>
-                    {`${formatNumber({
-                      input: Math.abs(absoluteChange as number),
-                      type: NumberType.PortfolioBalance,
-                    })} (${formatDelta(percentChange)})`}
-                  </ThemedText.BodySecondary>
-                </>
-              )}
-            </AutoRow>
-          </FadeInColumn>
-        ) : (
-          <Column gap="xs">
-            <LoadingBubble height="44px" width="170px" />
-            <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
-          </Column>
-        )}
+        <Flex gap="$spacing4" mb="$spacing16" data-testid="portfolio-total-balance">
+          <AnimatedNumber
+            balance={balanceUSD}
+            isRightToLeft={isRightToLeft}
+            colorIndicationDuration={BALANCE_CHANGE_INDICATION_DURATION}
+            loading={isLoading}
+            loadingPlaceholderText="000000.00"
+            shouldFadeDecimals={shouldFadePortfolioDecimals}
+            value={totalFormattedValue}
+            warmLoading={isWarmLoading}
+          />
+          <Shine disabled={!isWarmLoading}>
+            <RelativeChange
+              absoluteChange={absoluteChangeUSD}
+              arrowSize="$icon.16"
+              change={percentChange}
+              loading={isLoading}
+              negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
+              positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
+              variant="body3"
+            />
+          </Shine>
+        </Flex>
         {isUniExtensionAvailable ? (
           <ExtensionDeeplinks account={account} />
         ) : (

@@ -60,7 +60,7 @@ describe('LimitDetailActivityRow', () => {
         selected={false}
       />,
     )
-    expect(container.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
+    expect(container.firstChild?.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
   })
 
   it('should not render with invalid amounts', () => {
@@ -68,13 +68,23 @@ describe('LimitDetailActivityRow', () => {
       <LimitDetailActivityRow
         onToggleSelect={jest.fn()}
         selected={false}
-        order={{ ...mockOrder, offchainOrderDetails: { ...mockOrderDetails, swapInfo: undefined as any } }}
+        order={{
+          ...mockOrder,
+          offchainOrderDetails: {
+            ...mockOrderDetails,
+            swapInfo: undefined as any,
+          },
+        }}
       />,
     )
-    expect(container.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
+    expect(container.firstChild?.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
   })
 
   it('should render with valid details', () => {
+    // Addresses a console.error -- `Warning: React does not recognize the `scaleIcon` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `scaleicon` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+    // This is from tamagui's Checkbox component`
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+
     const { container } = render(
       <LimitDetailActivityRow onToggleSelect={jest.fn()} selected={false} order={mockOrder} />,
     )

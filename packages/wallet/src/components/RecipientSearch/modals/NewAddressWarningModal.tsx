@@ -57,7 +57,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
 
   return (
     <Modal name={ModalName.NewAddressWarning} onClose={onClose}>
-      <Flex px={isMobileApp ?? '$spacing24'} py={isMobileApp ?? '$spacing12'}>
+      <Flex px={isMobileApp ? '$spacing24' : undefined} py={isMobileApp ? '$spacing12' : undefined}>
         <GenericHeader
           Icon={UserSquare}
           iconSize="$icon.24"

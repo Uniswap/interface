@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
 import { Feedback, LikeSquare, MessageText, X } from 'ui/src/components/icons'
-import { IconSizeTokens, zIndices } from 'ui/src/theme'
+import { IconSizeTokens, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -117,7 +117,7 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
 
   return (
     <Modal isDismissible isModalOpen name={ModalName.AppRatingModal} backgroundColor="$surface1" onClose={close}>
-      <TouchableArea p="$spacing16" position="absolute" right={0} top={0} zIndex={zIndices.default} onPress={close}>
+      <TouchableArea p="$spacing16" position="absolute" right={0} top={0} zIndex={zIndexes.default} onPress={close}>
         <X color="$neutral2" size="$icon.20" />
       </TouchableArea>
       <Flex alignItems="center" gap="$spacing8" pt="$spacing16">

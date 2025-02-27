@@ -27,6 +27,7 @@ const compileNodeModules = [
   'expo-clipboard',
   'expo-linear-gradient',
   'react-native-image-picker',
+  'expo-modules-core',
 ]
 
 // This is needed for webpack to compile JavaScript.

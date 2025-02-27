@@ -16,6 +16,7 @@ import {
   UniswapXConfig,
   UniswapXPriorityOrdersConfig,
   UniswapXv2Config,
+  UniswapXv3Config,
 } from 'state/routing/types'
 import { isExactInput, transformQuoteToTrade } from 'state/routing/utils'
 import { trace } from 'tracing/trace'
@@ -38,19 +39,7 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const {
-    account,
-    uniswapXForceSyntheticQuotes,
-    routerPreference,
-    protocolPreferences,
-    isXv2,
-    priceImprovementBps,
-    forceOpenOrders,
-    deadlineBufferSecs,
-    isXv2Arbitrum,
-    isPriorityOrder,
-    isUniswapXSupportedChain,
-  } = args
+  const { account, uniswapXForceSyntheticQuotes, routerPreference, protocolPreferences, routingType } = args
 
   const uniswapX: UniswapXConfig = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
@@ -64,16 +53,15 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   }
 
   const uniswapXv2: UniswapXv2Config = {
-    useSyntheticQuotes: uniswapXForceSyntheticQuotes || isXv2Arbitrum,
+    useSyntheticQuotes: uniswapXForceSyntheticQuotes,
     swapper: account,
     routingType: URAQuoteType.DUTCH_V2,
-    ...(isXv2Arbitrum
-      ? {
-          priceImprovementBps,
-          forceOpenOrders,
-          deadlineBufferSecs,
-        }
-      : {}),
+  }
+
+  const uniswapXv3: UniswapXv3Config = {
+    useSyntheticQuotes: uniswapXForceSyntheticQuotes,
+    swapper: account,
+    routingType: URAQuoteType.DUTCH_V3,
   }
 
   const classic: ClassicAPIConfig = {
@@ -88,12 +76,27 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     // If the user has opted out of UniswapX during the opt-out transition period, we should respect that preference and only request classic quotes.
     routerPreference === RouterPreference.API ||
     routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ||
-    !isUniswapXSupportedChain
+    routingType === URAQuoteType.CLASSIC
   ) {
     return [classic]
   }
 
-  return [isPriorityOrder ? uniswapXPriorityOrders : isXv2 || isXv2Arbitrum ? uniswapXv2 : uniswapX, classic]
+  let uniswapXConfig: UniswapXConfig | UniswapXPriorityOrdersConfig | UniswapXv2Config | UniswapXv3Config
+  switch (routingType) {
+    case URAQuoteType.PRIORITY:
+      uniswapXConfig = uniswapXPriorityOrders
+      break
+    case URAQuoteType.DUTCH_V3:
+      uniswapXConfig = uniswapXv3
+      break
+    case URAQuoteType.DUTCH_V2:
+      uniswapXConfig = uniswapXv2
+      break
+    default:
+      uniswapXConfig = uniswapX
+  }
+
+  return [uniswapXConfig, classic]
 }
 
 export const routingApi = createApi({
@@ -115,7 +118,6 @@ export const routingApi = createApi({
             amount,
             tradeType,
             sendPortionEnabled,
-            arbitrumXV2SlippageTolerance,
           } = args
 
           const requestBody = {
@@ -131,7 +133,6 @@ export const routingApi = createApi({
             configs: getRoutingAPIConfig(args),
             useUniswapX: args.routerPreference === RouterPreference.X,
             swapper: args.account,
-            slippageTolerance: arbitrumXV2SlippageTolerance,
           }
 
           try {

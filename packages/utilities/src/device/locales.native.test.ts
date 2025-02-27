@@ -10,6 +10,9 @@ jest.mock('expo-localization', () => ({
     {
       languageCode: MOCK_LANGUAGE_CODE,
       languageTag: MOCK_LANGUAGE_TAG,
+      languageRegionCode: null,
+      langageCurrencyCode: null,
+      langageCurrencySymbol: null,
       regionCode: null,
       currencyCode: null,
       currencySymbol: null,

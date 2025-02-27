@@ -141,9 +141,9 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           },
         )
       }
-      dispatchAddTransaction({ isOffRamp })
-      await openUri(widgetUrl).catch(onError)
-      dispatch(forceFetchFiatOnRampTransactions())
+      await dispatchAddTransaction({ isOffRamp })
+      await dispatch(forceFetchFiatOnRampTransactions())
+      openUri(widgetUrl).catch(onError)
     }
 
     if (!isOffRamp && timeoutElapsed && !widgetLoading && widgetData) {

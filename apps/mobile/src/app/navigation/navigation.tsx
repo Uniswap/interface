@@ -24,7 +24,6 @@ import {
   useAppStackNavigation,
 } from 'src/app/navigation/types'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
-import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { FiatOnRampProvider } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { ClaimUnitagScreen } from 'src/features/unitags/ClaimUnitagScreen'
 import { EditUnitagProfileScreen } from 'src/features/unitags/EditUnitagProfileScreen'
@@ -396,7 +395,6 @@ export function UnitagStackNavigator(): JSX.Element {
 
 export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
-  useBiometricCheck()
   const navigation = useAppStackNavigation()
 
   useEffect(() => {

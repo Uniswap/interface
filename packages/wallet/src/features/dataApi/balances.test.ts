@@ -20,8 +20,8 @@ import {
   useTokenBalancesGroupedByVisibility,
 } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { FavoritesState, initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { UserSettingsState, initialUserSettingsState } from 'uniswap/src/features/settings/slice'
+import { CurrencyIdToVisibility, VisibilityState, initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import {
   ARBITRUM_CURRENCY,
   BASE_CURRENCY,
@@ -70,10 +70,10 @@ describe(usePortfolioValueModifiers, () => {
     ...overrideSettings,
   })
 
-  const mockFavoritesState = (overrideTokensVisibility?: FavoritesState['tokensVisibility']): FavoritesState => ({
-    ...initialFavoritesState,
-    tokensVisibility: {
-      ...initialFavoritesState.tokensVisibility,
+  const mockVisibilityState = (overrideTokensVisibility?: CurrencyIdToVisibility): VisibilityState => ({
+    ...initialVisibilityState,
+    tokens: {
+      ...initialVisibilityState.tokens,
       ...overrideTokensVisibility,
     },
   })
@@ -150,7 +150,7 @@ describe(usePortfolioValueModifiers, () => {
   describe('token overrides', () => {
     it('does not include token overrides in the result if tokensVisibility does not contain addresses visibility settings', () => {
       const { result } = renderHook(() => usePortfolioValueModifiers(SAMPLE_SEED_ADDRESS_1), {
-        preloadedState: { favorites: mockFavoritesState() },
+        preloadedState: { visibility: mockVisibilityState() },
       })
 
       expect(result.current).toEqual([
@@ -170,7 +170,7 @@ describe(usePortfolioValueModifiers, () => {
             ...initialWalletState,
             accounts: { [SAMPLE_SEED_ADDRESS_1]: ACCOUNT, [SAMPLE_SEED_ADDRESS_2]: ACCOUNT2 },
           },
-          favorites: mockFavoritesState({
+          visibility: mockVisibilityState({
             [SAMPLE_CURRENCY_ID_1]: { isVisible: false },
             [SAMPLE_CURRENCY_ID_2]: { isVisible: true },
           }),

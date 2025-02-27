@@ -134,8 +134,8 @@ export function UnitagChooseProfilePicContent({
       </Flex>
       {isMobileApp && <Flex fill />}
       <DeprecatedButton
-        disabled={!!claimError || isClaiming}
-        size="medium"
+        isDisabled={!!claimError || isClaiming}
+        size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
         testID={TestID.Continue}
         theme="primary"
         onPress={onPressContinue}

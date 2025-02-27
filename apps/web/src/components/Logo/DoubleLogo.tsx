@@ -3,7 +3,7 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import styled from 'lib/styled-components'
 import { memo } from 'react'
 import { Flex, useColorSchemeFromSeed } from 'ui/src'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
@@ -40,7 +40,7 @@ function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: nu
     <MissingImageLogo $size={size + 'px'} $textColor={foreground} $backgroundColor={background}>
       {currency?.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
       {showNetworkLogo && (
-        <Flex bottom={-2} position="absolute" right={-3} zIndex={zIndices.mask}>
+        <Flex bottom={-2} position="absolute" right={-3} zIndex={zIndexes.mask}>
           <NetworkLogo borderWidth={networkLogoBorderWidth} chainId={chainId} size={networkLogoSize} />
         </Flex>
       )}

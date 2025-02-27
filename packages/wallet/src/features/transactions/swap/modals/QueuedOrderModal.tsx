@@ -114,7 +114,7 @@ export function QueuedOrderModal(): JSX.Element | null {
           <SwapTransactionDetails disableClick={isMobileApp} typeInfo={currentFailedOrder.typeInfo} />
           <Flex gap="$spacing8" row={isWeb}>
             <DeprecatedButton
-              disabled={!transactionState}
+              isDisabled={!transactionState}
               theme="primary"
               {...platformButtonStyling}
               size={buttonSize}

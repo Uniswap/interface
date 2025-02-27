@@ -1,3 +1,4 @@
+import { TFunction } from 'i18next'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -5,23 +6,46 @@ import { ChartBar } from 'ui/src/components/icons/ChartBar'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { openUri } from 'uniswap/src/utils/linking'
 
-export function MarketPriceImpactWarning({ children }: PropsWithChildren): JSX.Element {
+function getPriceImpactInfo(t: TFunction, routing: Routing, missing: boolean): { caption: string; link: string } {
+  if (isUniswapX({ routing })) {
+    if (missing) {
+      return {
+        caption: t('swap.impactOfTrade.uniswapx.missing'),
+        link: uniswapUrls.helpArticleUrls.uniswapXInfo,
+      }
+    } else {
+      return {
+        caption: t('swap.impactOfTrade.uniswapx'),
+        link: uniswapUrls.helpArticleUrls.priceImpact,
+      }
+    }
+  } else {
+    return {
+      caption: t('swap.impactOfTrade'),
+      link: uniswapUrls.helpArticleUrls.priceImpact,
+    }
+  }
+}
+
+export function MarketPriceImpactWarning({
+  children,
+  routing,
+  missing,
+}: PropsWithChildren<{ routing: Routing; missing: boolean }>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
-  const onPressLearnMore = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpArticleUrls.swapFeeInfo)
-  }
-
-  const caption = t('swap.impactOfTrade')
+  const { caption, link } = getPriceImpactInfo(t, routing, missing)
 
   return (
     <WarningInfo
       infoButton={
-        <TouchableArea onPress={onPressLearnMore}>
+        <TouchableArea onPress={async () => await openUri(link)}>
           <Text color="$accent1" variant={isWeb ? 'body4' : 'buttonLabel2'}>
             {t('common.button.learn')}
           </Text>

@@ -13,10 +13,10 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+// eslint-disable-next-line no-restricted-imports
+import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
 
@@ -76,27 +76,14 @@ function useHasAccountUpdate() {
   ])
 }
 
-function usePortfolioValueModifiers(): {
-  includeSmallBalances: boolean
-  includeSpamTokens: boolean
-} {
-  const hideSmallBalances = useHideSmallBalancesSetting()
-  const hideSpamTokens = useHideSpamTokensSetting()
-  return useMemo(
-    () => ({
-      includeSmallBalances: !hideSmallBalances,
-      includeSpamTokens: !hideSpamTokens,
-    }),
-    [hideSmallBalances, hideSpamTokens],
-  )
-}
-
 export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const [lazyFetch, query] = usePortfolioBalancesLazyQuery({ errorPolicy: 'all' })
   const account = useAccount()
   const hasAccountUpdate = useHasAccountUpdate()
-  const valueModifiers = usePortfolioValueModifiers()
+
+  const valueModifiers = usePortfolioValueModifiers(account.address)
   const prevValueModifiers = usePrevious(valueModifiers)
+
   const { gqlChains } = useEnabledChains()
   const pendingTransactions = usePendingTransactions()
   const prevPendingTransactions = usePrevious(pendingTransactions)
@@ -132,18 +119,10 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
       variables: {
         ownerAddress: account.address,
         chains: gqlChains,
-        valueModifiers: [
-          {
-            ownerAddress: account.address,
-            includeSpamTokens: valueModifiers.includeSpamTokens,
-            includeSmallBalances: valueModifiers.includeSmallBalances,
-            tokenExcludeOverrides: [],
-            tokenIncludeOverrides: [],
-          },
-        ],
+        valueModifiers,
       },
     })
-  }, [account.address, gqlChains, lazyFetch, valueModifiers.includeSmallBalances, valueModifiers.includeSpamTokens])
+  }, [account.address, gqlChains, lazyFetch, valueModifiers])
 
   return (
     <AdaptiveTokenBalancesProvider

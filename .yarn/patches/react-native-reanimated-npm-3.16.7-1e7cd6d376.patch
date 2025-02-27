@@ -1,0 +1,30 @@
+diff --git a/lib/module/createAnimatedComponent/createAnimatedComponent.js b/lib/module/createAnimatedComponent/createAnimatedComponent.js
+index 69682cb3b85d04d83ae29dc8d07e16204e62b29c..62fe52439729a7280c1fc5d33addc53fd367a5ca 100644
+--- a/lib/module/createAnimatedComponent/createAnimatedComponent.js
++++ b/lib/module/createAnimatedComponent/createAnimatedComponent.js
+@@ -392,8 +392,10 @@ export function createAnimatedComponent(Component, options) {
+       const skipEntering = this.context?.current;
+       const nativeID = skipEntering || !isFabric() ? undefined : `${this.reanimatedID}`;
+       const jestProps = IS_JEST ? {
+-        jestInlineStyle: this.props.style,
+-        jestAnimatedStyle: this.jestAnimatedStyle
++        // In react-native-reanimated 3.16.0>, there's a bug that generates components infinitely, because of the circular reference in jestAnimatedStyle.
++        // To fix this, let's temporarily not pass the jestAnimatedStyle to the component.
++        // jestInlineStyle: this.props.style,
++        // jestAnimatedStyle: this.jestAnimatedStyle
+       } : {};
+       return /*#__PURE__*/React.createElement(Component, _extends({
+         nativeID: nativeID
+diff --git a/lib/module/jestUtils.js b/lib/module/jestUtils.js
+index 09310c12af916c38bb51f6297a08fc880c1ede67..d41a4a07978ea9ce18d88a5bcad9dd8b03d65b22 100644
+--- a/lib/module/jestUtils.js
++++ b/lib/module/jestUtils.js
+@@ -6,7 +6,7 @@ import { ReanimatedError } from "./errors.js";
+ const defaultFramerateConfig = {
+   fps: 60
+ };
+-const isEmpty = obj => Object.keys(obj).length === 0;
++const isEmpty = (obj = {}) => Object.keys(obj).length === 0;
+ const getStylesFromObject = obj => {
+   return obj === undefined ? {} : Object.fromEntries(Object.entries(obj).map(([property, value]) => [property, value._isReanimatedSharedValue ? value.value : value]));
+ };

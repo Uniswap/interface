@@ -45,7 +45,7 @@ export function AnimatedNetworkLogo({
           backgroundColor="$surface2"
         >
           <AnimateInOrder index={1} delayMs={ANIMATION_DELAY} animation="125ms" enterStyle={{ width: 0 }}>
-            <Flex position="absolute" right={4}>
+            <Flex position="absolute" right={4} bottom={0}>
               <NewTag />
             </Flex>
           </AnimateInOrder>

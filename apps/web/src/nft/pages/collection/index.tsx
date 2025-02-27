@@ -5,7 +5,6 @@ import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useCollection } from 'graphql/data/nft/Collection'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
@@ -25,6 +24,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { useMedia } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const FILTER_WIDTH = 332
@@ -35,7 +35,7 @@ export const CollectionBannerLoading = styled(LoadingBubble)`
   height: 100%;
   border-radius: 0px;
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     border-radius: 16px;
   }
 `
@@ -54,7 +54,7 @@ export const BannerWrapper = styled.div`
   height: 100px;
   max-width: 100%;
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     margin-top: 16px;
     margin-left: 20px;
     margin-right: 20px;
@@ -69,7 +69,7 @@ const Banner = styled.div<{ src: string }>`
   background-position-y: center;
   background-size: cover;
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     border-radius: 16px;
   }
 `
@@ -88,7 +88,7 @@ const FiltersContainer = styled.div<{ isMobile: boolean; isFiltersExpanded: bool
   z-index: ${Z_INDEX.modalBackdrop - 3};
   overflow-y: ${({ isMobile }) => (isMobile ? 'scroll' : undefined)};
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
     top: 72px;
   }
 `
@@ -131,7 +131,7 @@ const Collection = () => {
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
   const { chainId } = useAccount()
-  const screenSize = useScreenSize()
+  const media = useMedia()
 
   const { data: collectionStats, loading } = useCollection(contractAddress as string)
 
@@ -154,10 +154,10 @@ const Collection = () => {
   }, [collectionStats?.marketplaceCount, setMarketCount])
 
   useEffect(() => {
-    if (isBagExpanded && isFiltersExpanded && !screenSize['xl']) {
+    if (isBagExpanded && isFiltersExpanded && media.xxl) {
       setFiltersExpanded(false)
     }
-  }, [isBagExpanded, isFiltersExpanded, screenSize, setFiltersExpanded])
+  }, [isBagExpanded, isFiltersExpanded, media, setFiltersExpanded])
 
   useEffect(() => {
     setBagExpanded({ bagExpanded: false, manualClose: false })
@@ -197,7 +197,7 @@ const Collection = () => {
       >
         <CollectionContainer
           style={{
-            width: `calc(100% - ${isBagExpanded && !isMobile ? (screenSize['xxxl'] ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0}px)`,
+            width: `calc(100% - ${isBagExpanded && !isMobile ? (!media.xxxl ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0}px)`,
           }}
         >
           {contractAddress && !blocklistedCollections.includes(contractAddress) ? (

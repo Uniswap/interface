@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
+import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
 import {
   OnDeviceRecoveryWalletCard,
   OnDeviceRecoveryWalletCardLoader,
 } from 'src/screens/Import/OnDeviceRecoveryWalletCard'
 import { RecoveryWalletInfo } from 'src/screens/Import/useOnDeviceRecoveryData'
-import { hideSplashScreen } from 'src/utils/splashScreen'
 import { Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { PapersText } from 'ui/src/components/icons'
@@ -31,7 +31,6 @@ import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
-import { useTimeout } from 'utilities/src/time/timing'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -55,6 +54,7 @@ export function OnDeviceRecoveryScreen({
     OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
     FALLBACK_RECOVERY_LOADING_TIMEOUT_MS,
   )
+  const hideSplashScreen = useHideSplashScreen()
 
   const [selectedMnemonicId, setSelectedMnemonicId] = useState<string>()
   const [selectedRecoveryWalletInfos, setSelectedRecoveryWalletInfos] = useState<RecoveryWalletInfo[]>([])
@@ -154,9 +154,6 @@ export function OnDeviceRecoveryScreen({
     }
   }
 
-  //Hides lock screen on next js render cycle, ensuring this component is loaded when the screen is hidden
-  useTimeout(hideSplashScreen, 1)
-
   useEffect(() => {
     if (loadedWallets >= mnemonicIds.length) {
       setScreenLoading(false)
@@ -187,7 +184,7 @@ export function OnDeviceRecoveryScreen({
         properties={{ mnemonicCount: mnemonicIds.length }}
         screen={OnboardingScreens.OnDeviceRecovery}
       >
-        <Screen>
+        <Screen onLayout={hideSplashScreen}>
           <Flex grow p="$spacing24">
             <Flex alignItems="flex-start" gap="$spacing16">
               <Image height={iconSizes.icon36} source={UNISWAP_LOGO} width={iconSizes.icon36} />

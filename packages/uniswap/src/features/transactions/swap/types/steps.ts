@@ -1,7 +1,9 @@
 import { TypedDataDomain, TypedDataField } from "@ethersproject/abstract-signer"
 import { Currency, CurrencyAmount, Token } from "@uniswap/sdk-core"
-import { DutchQuoteV2, PriorityQuote } from "uniswap/src/data/tradingApi/__generated__"
+import { DutchQuoteV2, DutchQuoteV3, PriorityQuote } from "uniswap/src/data/tradingApi/__generated__"
 import { ValidatedTransactionRequest } from "uniswap/src/features/transactions/swap/utils/trade"
+
+
 
 
 export enum TransactionStepType {
@@ -33,8 +35,9 @@ export type ClassicSwapSteps =
   | SwapTransactionStep
   | SwapTransactionStepAsync
 
-export type IncreasePositionSteps =
+  export type IncreasePositionSteps =
   | TokenApprovalTransactionStep
+  | TokenRevocationTransactionStep
   | Permit2SignatureStep
   | IncreasePositionTransactionStep
   | IncreasePositionTransactionStepAsync
@@ -145,6 +148,8 @@ export type IncreasePositionFlow =
       approvalToken0?: TokenApprovalTransactionStep
       approvalToken1?: TokenApprovalTransactionStep
       approvalPositionToken?: TokenApprovalTransactionStep
+      revokeToken0?: TokenRevocationTransactionStep
+      revokeToken1?: TokenRevocationTransactionStep
       permit: undefined
       increasePosition: IncreasePositionTransactionStep
     }
@@ -153,6 +158,8 @@ export type IncreasePositionFlow =
       approvalToken0?: TokenApprovalTransactionStep
       approvalToken1?: TokenApprovalTransactionStep
       approvalPositionToken?: TokenApprovalTransactionStep
+      revokeToken0?: TokenRevocationTransactionStep
+      revokeToken1?: TokenRevocationTransactionStep
       permit: Permit2SignatureStep
       increasePosition: IncreasePositionTransactionStepAsync
     }
@@ -170,7 +177,7 @@ export type DecreasePositionFlow = {
 export interface UniswapXSignatureStep extends SignTypedDataStepFields {
   type: TransactionStepType.UniswapXSignature
   deadline: number
-  quote: DutchQuoteV2 | PriorityQuote
+  quote: DutchQuoteV2 | DutchQuoteV3 | PriorityQuote
 }
 
 export type UniswapXSwapFlow = {

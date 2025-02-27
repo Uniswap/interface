@@ -1,13 +1,6 @@
-query TrendingTokens($chain: Chain!) {
-  topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: VOLUME) {
+query SearchTrendingTokensWeb($chain: Chain!) {
+  topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: POPULARITY) {
     ...SimpleTokenDetails
-    id
-    decimals
-    name
-    chain
-    standard
-    address
-    symbol
     market(currency: USD) {
       id
       price {
@@ -24,11 +17,6 @@ query TrendingTokens($chain: Chain!) {
         value
         currency
       }
-    }
-    project {
-      id
-      logoUrl
-      safetyLevel
     }
   }
 }

@@ -1,24 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ProviderConnectionError should render the component and call callbacks 1`] = `
-.c0 {
-  color: #7D7D7D;
-  cursor: pointer;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c0:hover {
-  opacity: 0.6;
-}
-
-.c0:active {
-  opacity: 0.4;
-}
-
 <span
   class=""
   style="display: contents;"
@@ -43,32 +25,26 @@ exports[`ProviderConnectionError should render the component and call callbacks 
         <div
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _alignItems-center _justifyContent-space-betwe3241 _zIndex-2"
         >
-          <svg
-            class="c0"
+          <div
+            class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
             data-testid="ConnectingViewWrapper-close"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="18"
-              x2="6"
-              y1="6"
-              y2="18"
-            />
-            <line
-              x1="6"
-              x2="18"
-              y1="6"
-              y2="18"
-            />
-          </svg>
+            <div
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+          </div>
           <svg
             cursor="pointer"
             data-testid="ConnectingViewWrapper-back"
@@ -146,18 +122,25 @@ exports[`ProviderConnectionError should render the component and call callbacks 
               </span>
             </div>
             <span
-              class="t_sub_theme t_primary_Button _dsp_contents is_Theme"
+              class=" _dsp_contents"
             >
-              <button
-                class="is_Button _backgroundColor-0hover-accent3Hove112785 _backgroundColor-0active-backgroundP3496915 _opacity-0active-0--7 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _alignItems-center _justifyContent-center _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _backgroundColor-accent3 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-                data-disable-theme="true"
+              <span
+                class="t_sub_theme t_primary_Button _dsp_contents is_Theme"
               >
-                Try again
-              </button>
+                <button
+                  class="is_Button _backgroundColor-0hover-accent3Hove112785 _backgroundColor-0active-backgroundP3496915 _opacity-0active-0--7 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _alignItems-center _justifyContent-center _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _backgroundColor-accent3 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                  data-disable-theme="true"
+                >
+                  Try again
+                </button>
+              </span>
             </span>
           </div>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>

@@ -10,6 +10,7 @@ import {
   FIREBASE_APP_CHECK_DEBUG_TOKEN,
   FOR_API_URL_OVERRIDE,
   GRAPHQL_URL_OVERRIDE,
+  INCLUDE_PROTOTYPE_FEATURES,
   INFURA_KEY,
   ONESIGNAL_APP_ID,
   OPENAI_API_KEY,
@@ -20,6 +21,7 @@ import {
   SENTRY_DSN,
   SIMPLEHASH_API_KEY,
   SIMPLEHASH_API_URL,
+  STATSIG_API_KEY,
   STATSIG_PROXY_URL_OVERRIDE,
   TRADING_API_KEY,
   TRADING_API_URL_OVERRIDE,
@@ -50,6 +52,7 @@ export interface Config {
   firebaseAppCheckDebugToken: string
   forApiUrlOverride: string
   graphqlUrlOverride: string
+  includePrototypeFeatures: string
   infuraKey: string
   onesignalAppId: string
   openaiApiKey: string
@@ -61,6 +64,7 @@ export interface Config {
   simpleHashApiKey: string
   simpleHashApiUrl: string
   statsigProxyUrlOverride: string
+  statsigApiKey: string
   tradingApiKey: string
   tradingApiUrlOverride: string
   uniswapApiKey: string
@@ -90,6 +94,7 @@ const _config: Config = {
   forApiUrlOverride: process.env.FOR_API_URL_OVERRIDE || FOR_API_URL_OVERRIDE,
   graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE || GRAPHQL_URL_OVERRIDE,
   infuraKey: process.env.REACT_APP_INFURA_KEY || INFURA_KEY,
+  includePrototypeFeatures: process.env.INCLUDE_PROTOTYPE_FEATURES || INCLUDE_PROTOTYPE_FEATURES,
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   openaiApiKey: process.env.OPENAI_API_KEY || OPENAI_API_KEY,
   quicknodeEndpointName:
@@ -104,6 +109,7 @@ const _config: Config = {
   sentryDsn: process.env.REACT_APP_SENTRY_DSN || process.env.SENTRY_DSN || SENTRY_DSN,
   simpleHashApiKey: process.env.SIMPLEHASH_API_KEY || SIMPLEHASH_API_KEY,
   simpleHashApiUrl: process.env.SIMPLEHASH_API_URL || SIMPLEHASH_API_URL,
+  statsigApiKey: process.env.REACT_APP_STATSIG_API_KEY || process.env.STATSIG_API_KEY || STATSIG_API_KEY,
   statsigProxyUrlOverride: process.env.STATSIG_PROXY_URL_OVERRIDE || STATSIG_PROXY_URL_OVERRIDE,
   tradingApiKey: process.env.REACT_APP_TRADING_API_KEY || process.env.TRADING_API_KEY || TRADING_API_KEY,
   tradingApiUrlOverride: process.env.TRADING_API_URL_OVERRIDE || TRADING_API_URL_OVERRIDE,

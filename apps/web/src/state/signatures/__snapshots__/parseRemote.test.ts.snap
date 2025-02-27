@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`parseRemote should parse expired UniswapX order 1`] = `
-Object {
+{
   "addedTime": 10000,
   "chainId": 1,
   "encodedOrder": undefined,
@@ -10,7 +10,7 @@ Object {
   "offerer": "someOfferer",
   "orderHash": "someHash",
   "status": "expired",
-  "swapInfo": Object {
+  "swapInfo": {
     "expectedOutputCurrencyAmountRaw": "200000000000000000000",
     "inputCurrencyAmountRaw": "100000000000000000000",
     "inputCurrencyId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -27,7 +27,7 @@ Object {
 `;
 
 exports[`parseRemote should parse filledUniswapX order 1`] = `
-Object {
+{
   "addedTime": 10000,
   "chainId": 1,
   "encodedOrder": undefined,
@@ -36,7 +36,7 @@ Object {
   "offerer": "someOfferer",
   "orderHash": "someHash",
   "status": "filled",
-  "swapInfo": Object {
+  "swapInfo": {
     "expectedOutputCurrencyAmountRaw": "200000000000000000000",
     "inputCurrencyAmountRaw": "100000000000000000000",
     "inputCurrencyId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
@@ -53,7 +53,7 @@ Object {
 `;
 
 exports[`parseRemote should parse open UniswapX order 1`] = `
-Object {
+{
   "addedTime": 10000,
   "chainId": 1,
   "encodedOrder": undefined,
@@ -62,7 +62,7 @@ Object {
   "offerer": "someOfferer",
   "orderHash": "someHash",
   "status": "open",
-  "swapInfo": Object {
+  "swapInfo": {
     "expectedOutputCurrencyAmountRaw": "200000000000000000000",
     "inputCurrencyAmountRaw": "100000000000000000000",
     "inputCurrencyId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",

@@ -58,7 +58,7 @@ export function* refetchGQLQueriesViaOnchainOverrideVariant({
   // and will continue to override the apollo cache balance until backend balance matches the onchain balance.
 }
 
-export function* modifyLocalCache({
+function* modifyLocalCache({
   apolloClient,
   ownerAddress,
   currencyIds,
@@ -156,20 +156,31 @@ export function* modifyLocalCache({
 
           const cachedQuantity = readField<number>('quantity', tokenBalanceRef)
 
+          const tokenBalanceId = apolloClient.cache.identify(tokenBalanceRef)
+
           logger.debug(
             'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
             'modifyLocalCache',
             `[ITBU] Calling apolloClient.cache.modify for ${currencyId}`,
-            { tokenBalanceRef, id: apolloClient.cache.identify(tokenBalanceRef) },
+            { tokenBalanceRef, tokenBalanceId },
           )
 
           apolloClient.cache.modify({
-            id: apolloClient.cache.identify(tokenBalanceRef),
+            id: tokenBalanceId,
             fields: {
               quantity: () => {
                 return onchainQuantity
               },
-              denominatedValue: (cachedDenominatedValue: Reference | AsStoreObject<Amount>) => {
+              denominatedValue: (cachedDenominatedValue: Reference | AsStoreObject<Amount> | null) => {
+                if (!cachedDenominatedValue) {
+                  logger.debug(
+                    'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
+                    'modifyLocalCache',
+                    `[ITBU] No cachedDenominatedValue found for ${currencyId}`,
+                  )
+                  return cachedDenominatedValue
+                }
+
                 if (!cachedQuantity) {
                   logger.debug(
                     'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
@@ -199,7 +210,7 @@ export function* modifyLocalCache({
                 logger.debug(
                   'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
                   'modifyLocalCache',
-                  `[ITBU] Overriding ${currencyId} with ${value}`,
+                  `[ITBU] Overriding ${currencyId} with $${value}`,
                 )
 
                 return {

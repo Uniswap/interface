@@ -17,11 +17,11 @@ export const ScrollablePage = styled.div`
     margin: 0 auto;
   `};
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     padding: 48px 8px 0px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-top: 20px;
   }
 `

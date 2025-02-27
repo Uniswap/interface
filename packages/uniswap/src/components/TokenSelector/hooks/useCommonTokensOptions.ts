@@ -6,6 +6,7 @@ import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/Token
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export function useCommonTokensOptions(
   address: Address | undefined,
@@ -25,8 +26,20 @@ export function useCommonTokensOptions(
     loading: loadingCommonBaseCurrencies,
   } = useAllCommonBaseCurrencies()
 
+  // this is a one-off filter for USDT on Unichain which at time of launch does not have enough liquidity for swapping so we are filtering it out of quick select
+  // TODO(WEB-6284): Replace useAllCommonBaseCurrencies static filter with a dynamic filter
+  const USDT_UNICHAIN_ADDRESS = '0x588ce4f028d8e7b53b687865d6a67b3a54c75518'
+  const filteredCommonBaseCurrencies = useMemo(() => {
+    return commonBaseCurrencies?.filter(
+      (currency) =>
+        currency.currency.isNative ||
+        currency.currency.chainId !== UniverseChainId.Unichain ||
+        !areAddressesEqual(USDT_UNICHAIN_ADDRESS, currency.currency.address),
+    )
+  }, [commonBaseCurrencies])
+
   const commonBaseTokenOptions = useCurrencyInfosToTokenOptions({
-    currencyInfos: commonBaseCurrencies,
+    currencyInfos: filteredCommonBaseCurrencies,
     portfolioBalancesById,
   })
 

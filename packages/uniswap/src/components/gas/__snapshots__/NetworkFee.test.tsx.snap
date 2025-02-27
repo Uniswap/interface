@@ -93,11 +93,11 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
             },
           ]
         }
-        tintColor="#5E5E5E"
         vbHeight={16}
         vbWidth={16}
       >
         <RNSVGGroup
+          color="#5E5E5E"
           fill={null}
           propList={
             [
@@ -244,11 +244,11 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
             },
           ]
         }
-        tintColor="#5E5E5E"
         vbHeight={16}
         vbWidth={16}
       >
         <RNSVGGroup
+          color="#5E5E5E"
           fill={null}
           propList={
             [
@@ -424,11 +424,11 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
             },
           ]
         }
-        tintColor="#5E5E5E"
         vbHeight={16}
         vbWidth={16}
       >
         <RNSVGGroup
+          color="#5E5E5E"
           fill={null}
           propList={
             [

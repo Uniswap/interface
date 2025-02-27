@@ -10,6 +10,7 @@ import {
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { getSwappableTokensQueryData } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
+import { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { setHasSeenNetworkSelectorTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -168,7 +169,7 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       onHideTokenSelector()
       updateSwapForm(newState)
       maybeLogFirstSwapAction(traceRef.current)
-      onCurrencyChange?.(currencyState)
+      onCurrencyChange?.(currencyState, isBridgePair)
     },
     // We want to be very careful about how often this function is re-created because it causes the entire token selector list to re-render.
     // This is why we use `swapContextRef` so that we can access the latest swap context without causing a re-render.
@@ -216,10 +217,8 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
 }
 
 /**
- * Checks if the newly selected output token is bridgeable from the input token.
- * It does NOT gurantee that this check will work to check if a newly selected input token is bridgeable to the output token.
- * This is because the Trading API does not currently support querying bridgeable tokens by the output token,
- * so we can't guarantee that the data will always be cached for this second use case.
+ * Checks if the newly selected input/output token is bridgeable.
+ * We want this to be a synchronous check, so it assumes we've called `usePrefetchSwappableTokens` for whichever token had been selected first.
  */
 function checkIsBridgePair({
   queryClient,
@@ -243,12 +242,49 @@ function checkIsBridgePair({
     return false
   }
 
-  const bridgePairs = getSwappableTokensQueryData({
+  // We assume that if you can swap A for B, then you can also swap B for A,
+  // so we check both directions and return true if we have data for either direction.
+  // We can guarantee that one of the 2 directions will already be cached (whichever token was selected first).
+
+  const inputBridgePairs = getSwappableTokensQueryData({
     params: { tokenIn, tokenInChainId },
     queryClient,
   })
 
-  return !!bridgePairs?.tokens.find((token) => {
-    return areAddressesEqual(token.address, tokenOut) && token.chainId === tokenOutChainId
+  const outputBridgePairs = getSwappableTokensQueryData({
+    params: { tokenIn: tokenOut, tokenInChainId: tokenOutChainId },
+    queryClient,
   })
+
+  const inputHasMatchingBridgeToken =
+    !!inputBridgePairs &&
+    hasMatchingBridgeToken({
+      bridgePairs: inputBridgePairs,
+      tokenAddress: tokenOut,
+      tokenChainId: tokenOutChainId,
+    })
+
+  const outputHasMatchingBridgeToken =
+    !!outputBridgePairs &&
+    hasMatchingBridgeToken({
+      bridgePairs: outputBridgePairs,
+      tokenAddress: tokenIn,
+      tokenChainId: tokenInChainId,
+    })
+
+  return inputHasMatchingBridgeToken || outputHasMatchingBridgeToken
+}
+
+function hasMatchingBridgeToken({
+  bridgePairs,
+  tokenAddress,
+  tokenChainId,
+}: {
+  bridgePairs: GetSwappableTokensResponse
+  tokenAddress: Address
+  tokenChainId: ChainId
+}): boolean {
+  return !!bridgePairs.tokens.find(
+    (token) => areAddressesEqual(token.address, tokenAddress) && token.chainId === tokenChainId,
+  )
 }

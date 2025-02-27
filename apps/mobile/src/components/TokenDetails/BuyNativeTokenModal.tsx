@@ -44,7 +44,7 @@ export function BuyNativeTokenModal({
           </Flex>
         </Flex>
         <Flex centered gap="$spacing12" width="100%">
-          <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} canBridge={false} />
+          <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} canBridge={false} onPress={onClose} />
           <Flex px="$spacing8" py="$spacing4">
             <LearnMoreLink
               textColor="$neutral2"

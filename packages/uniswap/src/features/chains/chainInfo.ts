@@ -53,6 +53,7 @@ import {
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isInterface } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import {
@@ -70,6 +71,9 @@ import {
   zkSync,
   zora,
 } from 'wagmi/chains'
+
+const LOCAL_MAINNET_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8545'
+const LOCAL_BASE_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8546'
 
 /** Address that represents native currencies on ETH, Arbitrum, etc. */
 export const DEFAULT_NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
@@ -142,6 +146,17 @@ export function getQuicknodeEndpointUrl(chainId: UniverseChainId): string {
   return `https://${config.quicknodeEndpointName}${quicknodeChainId ? `.${quicknodeChainId}` : ''}.quiknode.pro/${config.quicknodeEndpointToken}${getQuicknodeChainIdPathSuffix(chainId)}`
 }
 
+function getPlaywrightRpcUrls(url: string): { [key in RPCType]: { http: string[] } } {
+  return {
+    [RPCType.Public]: { http: [url] },
+    [RPCType.Default]: { http: [url] },
+    [RPCType.Fallback]: { http: [url] },
+    [RPCType.Interface]: { http: [url] },
+    [RPCType.Private]: { http: [url] },
+    [RPCType.PublicAlt]: { http: [url] },
+  }
+}
+
 export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
   [UniverseChainId.Mainnet]: {
     ...mainnet,
@@ -180,23 +195,28 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
-    rpcUrls: {
-      [RPCType.Private]: {
-        http: ['https://rpc.mevblocker.io/?referrer=uniswapwallet'],
-      },
-      [RPCType.Public]: {
-        http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
-      },
-      [RPCType.Default]: {
-        http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
-      },
-      [RPCType.Fallback]: {
-        http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
-      },
-      [RPCType.Interface]: {
-        http: [`https://mainnet.infura.io/v3/${config.infuraKey}`, getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
-      },
-    },
+    rpcUrls: isPlaywrightEnv()
+      ? getPlaywrightRpcUrls(LOCAL_MAINNET_PLAYWRIGHT_RPC_URL)
+      : {
+          [RPCType.Private]: {
+            http: ['https://rpc.mevblocker.io/?referrer=uniswapwallet'],
+          },
+          [RPCType.Public]: {
+            http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+          },
+          [RPCType.Default]: {
+            http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+          },
+          [RPCType.Fallback]: {
+            http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
+          },
+          [RPCType.Interface]: {
+            http: [
+              `https://mainnet.infura.io/v3/${config.infuraKey}`,
+              getQuicknodeEndpointUrl(UniverseChainId.Mainnet),
+            ],
+          },
+        },
     urlParam: 'ethereum',
     statusPage: undefined,
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
@@ -366,12 +386,14 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
     urlParam: 'base',
-    rpcUrls: {
-      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Base)] },
-      [RPCType.Default]: { http: ['https://mainnet.base.org/'] },
-      [RPCType.Fallback]: { http: ['https://1rpc.io/base', 'https://base.meowrpc.com'] },
-      [RPCType.Interface]: { http: [`https://base-mainnet.infura.io/v3/${config.infuraKey}`] },
-    },
+    rpcUrls: isPlaywrightEnv()
+      ? getPlaywrightRpcUrls(LOCAL_BASE_PLAYWRIGHT_RPC_URL)
+      : {
+          [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Base)] },
+          [RPCType.Default]: { http: ['https://mainnet.base.org/'] },
+          [RPCType.Fallback]: { http: ['https://1rpc.io/base', 'https://base.meowrpc.com'] },
+          [RPCType.Interface]: { http: [`https://base-mainnet.infura.io/v3/${config.infuraKey}`] },
+        },
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
     assetRepoNetworkName: 'base',
     stablecoins: [USDC_BASE],
@@ -827,7 +849,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
-      [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
+      [RPCType.Default]: { http: ['https://mainnet.unichain.org'] },
       [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
     },
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN, 10_000e6),

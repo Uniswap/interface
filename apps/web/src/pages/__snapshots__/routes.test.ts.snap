@@ -1,262 +1,262 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Routes router definition should match snapshot 1`] = `
-Array [
-  Object {
+[
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [
+    "nestedPaths": [
       ":tab",
       ":chainName",
       ":tab/:chainName",
     ],
     "path": "/explore",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/explore/tokens/:chainName/:tokenAddress",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/tokens",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/tokens/:chainName",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/tokens/:chainName/:tokenAddress",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/explore/pools/:chainName/:poolAddress",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/vote/*",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/create-proposal",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/buy",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/send",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/limits",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/limit",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/buy",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/swap",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [
+    "nestedPaths": [
       ":protocolVersion",
     ],
     "path": "/positions/create",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/positions",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/positions/v2/:chainName/:pairAddress",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/positions/v3/:chainName/:tokenId",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/positions/v4/:chainName/:tokenId",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/migrate/v3/:chainName/:tokenId",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/pool",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/pool/v2/find",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/pool/v2",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/pool/:tokenId",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/pools/v2/find",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/pools/v2",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/pools",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/pools/:tokenId",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [
+    "nestedPaths": [
       ":currencyIdA",
       ":currencyIdA/:currencyIdB",
     ],
     "path": "/add/v2",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [
+    "nestedPaths": [
       ":currencyIdA",
       ":currencyIdA/:currencyIdB",
       ":currencyIdA/:currencyIdB/:feeAmount",
@@ -264,92 +264,92 @@ Array [
     ],
     "path": "/add",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/remove/v2/:currencyIdA/:currencyIdB",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/remove/:tokenId",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/migrate/v2",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/migrate/v2/:address",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/nfts",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/nfts/asset/:contractAddress/:tokenId",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/nfts/profile",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/nfts/collection/:contractAddress",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/nfts/collection/:contractAddress/activity",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "*",
   },
-  Object {
+  {
     "enabled": [Function],
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [],
+    "nestedPaths": [],
     "path": "/not-found",
   },
 ]

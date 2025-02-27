@@ -214,4 +214,21 @@ const v18SchemaIntermediate = {
 delete v18SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
 export const v18Schema = v18SchemaIntermediate
 
-export const getSchema = (): typeof v18Schema => v18Schema
+const v19SchemaIntermediate = {
+  ...v18Schema,
+  visibility: {
+    positions: {},
+    tokens: v18Schema.favorites.tokensVisibility,
+    nfts: v18Schema.favorites.nftsVisibility,
+  },
+  favorites: {
+    ...v18Schema.favorites,
+    tokensVisibility: undefined,
+    nftsVisibility: undefined,
+  },
+}
+delete v19SchemaIntermediate.favorites.tokensVisibility
+delete v19SchemaIntermediate.favorites.nftsVisibility
+export const v19Schema = v19SchemaIntermediate
+
+export const getSchema = (): typeof v19Schema => v19Schema

@@ -347,7 +347,7 @@ export function SendReviewDetails({
           {!isWeb && <DeprecatedButton icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />}
           <DeprecatedButton
             fill
-            disabled={actionButtonProps.disabled}
+            isDisabled={actionButtonProps.disabled}
             icon={ButtonAuthIcon}
             size="medium"
             testID={actionButtonProps.name}

@@ -34,7 +34,6 @@ import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { getEnvName } from 'tracing/env'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
-import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n'
@@ -85,10 +84,15 @@ function StatsigProvider({ children }: PropsWithChildren) {
     }),
     [account.address],
   )
+
+  if (!process.env.REACT_APP_STATSIG_API_KEY) {
+    throw new Error('REACT_APP_STATSIG_API_KEY is not set')
+  }
+
   return (
     <BaseStatsigProvider
       user={statsigUser}
-      sdkKey={DUMMY_STATSIG_SDK_KEY}
+      sdkKey={process.env.REACT_APP_STATSIG_API_KEY}
       waitForInitialization={false}
       options={{
         environment: { tier: getEnvName() },

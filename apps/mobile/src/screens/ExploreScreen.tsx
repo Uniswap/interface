@@ -118,7 +118,6 @@ export function ExploreScreen(): JSX.Element {
             // Mimic ScrollView behavior with FlatList
             // Needs to be from gesture handler to work on android within BottomSheelModal
             <FlatList
-              sentry-label="VirtualizedList"
               ListHeaderComponent={<SearchEmptySection selectedChain={selectedChain} />}
               data={[]}
               keyExtractor={(): string => 'search-empty-section-container'}

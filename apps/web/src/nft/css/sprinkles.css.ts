@@ -133,7 +133,7 @@ const spacing = {
   unset: 'unset',
 }
 
-const zIndices = {
+const zIndexes = {
   auto: 'auto',
   '1': '1',
   '2': '2',
@@ -355,7 +355,7 @@ const layoutStyles = defineProperties({
     right: spacing,
     top: spacing,
     margin: spacing,
-    zIndex: zIndices,
+    zIndex: zIndexes,
     gap: spacing,
     flexShrink: spacing,
     flex: ['1', '1.5', '2', '3'],

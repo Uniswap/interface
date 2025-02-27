@@ -18,7 +18,6 @@ import {
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInputPanel, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
-import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
@@ -48,9 +47,9 @@ import { useSwapNetworkNotification } from 'uniswap/src/features/transactions/sw
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/hooks/useSyncFiatAndTokenAmountUpdater'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
-import { MarketPriceImpactWarning } from 'uniswap/src/features/transactions/swap/modals/MarketPriceImpactWarning'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/modals/RoutingInfo'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow'
+import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
 import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
@@ -71,7 +70,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
-import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { NumberType } from 'utilities/src/format/types'
 import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
@@ -176,6 +174,7 @@ function SwapFormContent({
   })
 
   usePrefetchSwappableTokens(input)
+  usePrefetchSwappableTokens(output)
 
   const onRestorePress = (): void => {
     if (!openWalletRestoreModal) {
@@ -752,7 +751,7 @@ const SwitchCurrenciesButton = memo(function _SwitchCurrenciesButton({
   const smallOrRegular = isShortMobileDevice ? 'small' : 'regular'
 
   return (
-    <Flex zIndex="$popover">
+    <Flex zIndex="$mask">
       <Flex alignItems="center" height={0}>
         <Flex
           alignItems="center"
@@ -825,7 +824,6 @@ function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | nul
 
   const { priceImpactWarning } = useParsedSwapWarnings()
   const showPriceImpactWarning = Boolean(priceImpactWarning)
-  const warningColor = getAlertColor(priceImpactWarning?.severity)
 
   const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
   const { chainId, trade } = derivedSwapInfo
@@ -868,24 +866,8 @@ function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | nul
             ) : undefined
           }
         >
-          {/* showPriceImpactWarning if we're not already showing it in ExpandoRow toggle row */}
-          {/* otherwise show rate */}
-          {trade.trade.priceImpact && !showPriceImpactWarning ? (
-            <Flex row alignItems="center" justifyContent="space-between">
-              <MarketPriceImpactWarning>
-                <Flex centered row gap="$spacing4">
-                  <Text color="$neutral2" variant="body3">
-                    {t('swap.priceImpact')}
-                  </Text>
-                </Flex>
-              </MarketPriceImpactWarning>
-              <Flex row shrink justifyContent="flex-end">
-                <Text adjustsFontSizeToFit color={warningColor.text} variant="body3">
-                  {normalizePriceImpact(trade.trade.priceImpact)}%
-                </Text>
-              </Flex>
-            </Flex>
-          ) : null}
+          {/* Price impact row is hidden if a price impact warning is already being shown in the expando toggle row. */}
+          <PriceImpactRow derivedSwapInfo={derivedSwapInfo} hide={showPriceImpactWarning} />
           {!isBridge && (
             <MaxSlippageRow
               acceptedDerivedSwapInfo={derivedSwapInfo}

@@ -136,7 +136,6 @@ export type V3PriceRangeInfo = BasePriceRangeInfo &
   BasePoolPriceRangeInfo & {
     protocolVersion: ProtocolVersion.V3
     mockPool?: V3Pool
-    isTaxed?: boolean
   }
 
 export type V2PriceRangeInfo = BasePriceRangeInfo & {

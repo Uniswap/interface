@@ -21,7 +21,7 @@ export const StatWrapper = styled.div`
   padding-top: 24px;
   padding-bottom: 0px;
 
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     min-width: 168px;
   }
 `

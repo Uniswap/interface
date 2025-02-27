@@ -25,9 +25,9 @@ import { ListingMarkets } from 'nft/utils/listNfts'
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { breakpoints } from 'ui/src/theme'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -37,7 +37,7 @@ const ListingHeader = styled(Column)`
   gap: 16px;
   margin-top: 36px;
 
-  @media screen and (min-width: ${BREAKPOINTS.xs}px) {
+  @media screen and (min-width: ${breakpoints.xs}px) {
     gap: 4px;
   }
 `
@@ -48,7 +48,7 @@ const ArrowContainer = styled.div`
   justify-content: center;
   margin-right: 4px;
 
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (min-width: ${breakpoints.md}px) {
     height: 40px;
     width: 40px;
   }
@@ -60,7 +60,7 @@ const BackArrow = styled(ArrowLeft)`
   cursor: pointer;
   color: ${({ theme }) => theme.neutral2};
 
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (min-width: ${breakpoints.md}px) {
     height: 20px;
     width: 20px;
   }
@@ -75,7 +75,7 @@ const TitleWrapper = styled(Row)`
   font-size: 20px;
   line-height: 28px;
 
-  @media screen and (min-width: ${BREAKPOINTS.xs}px) {
+  @media screen and (min-width: ${breakpoints.xs}px) {
     margin-bottom: 0px;
     font-weight: 535;
     font-size: 28px;
@@ -100,7 +100,7 @@ const ListingHeaderRow = styled(Row)`
   justify-content: space-between;
   flex-wrap: wrap;
 
-  @media screen and (min-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (min-width: ${breakpoints.md}px) {
     padding-left: 40px;
   }
 `
@@ -127,11 +127,11 @@ const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
   z-index: ${Z_INDEX.under_dropdown};
   box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
 
-  @media screen and (max-width: ${BREAKPOINTS.lg}px) {
+  @media screen and (max-width: ${breakpoints.xl}px) {
     bottom: 68px;
   }
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     width: calc(100% - ${LIST_PAGE_MARGIN_MOBILE * 2}px);
     padding: 8px 8px 8px 16px;
   }
@@ -151,7 +151,7 @@ const UsdValue = styled(ThemedText.SubHeader)`
   color: ${({ theme }) => theme.neutral2};
   display: none;
 
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+  @media screen and (min-width: ${breakpoints.xl}px) {
     display: flex;
   }
 `
@@ -160,7 +160,7 @@ const ProceedsAndButtonWrapper = styled(Row)`
   width: min-content;
   gap: 40px;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     gap: 20px;
   }
 `
@@ -176,7 +176,7 @@ const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
   line-height: 28px;
   color: ${({ theme, totalEthListingValue }) => (totalEthListingValue ? theme.neutral1 : theme.neutral2)};
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     font-size: 16px;
     line-height: 24px;
   }

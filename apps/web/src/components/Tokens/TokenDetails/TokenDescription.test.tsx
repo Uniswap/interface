@@ -4,7 +4,7 @@ import { useCurrency } from 'hooks/Tokens'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { mocked } from 'test-utils/mocked'
 import { validUSDCCurrency } from 'test-utils/pools/fixtures'
-import { act, render, screen } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
 import { validTokenProjectResponse } from 'test-utils/tokens/fixtures'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -53,7 +53,7 @@ describe('TokenDescription', () => {
     expect(truncatedDescription).toHaveClass('_display-inline')
     expect(fullDescription).toHaveClass('_display-none')
 
-    await act(() => userEvent.click(screen.getByText('Show more')))
+    await userEvent.click(screen.getByText('Show more'))
     expect(truncatedDescription).toHaveClass('_display-none')
     expect(fullDescription).toHaveClass('_display-inline')
     expect(screen.getByText('Hide')).toBeVisible()

@@ -2,14 +2,13 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
-import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isAddress, isSameAddress } from 'utilities/src/addresses'
+import { isAddress } from 'utilities/src/addresses'
 
 type Maybe<T> = T | undefined
 
@@ -47,40 +46,18 @@ export function useCurrencyInfo(
   const currencyInfo = useUniswapCurrencyInfo(currencyId, { skip })
 
   return useMemo(() => {
-    const commonBase = getCommonBase(chainIdWithFallback, isNative, address)
-
-    if (commonBase) {
-      // Related to TODO(WEB-5111)
-      // Some common base images are broken so this'll ensure we read from uniswap images
-      if (currencyInfo?.logoUrl) {
-        commonBase.logoUrl = currencyInfo.logoUrl
-      }
-
-      return commonBase
-    }
-
     if (!currencyInfo || !addressOrCurrency || skip) {
       return undefined
     }
 
     return currencyInfo
-  }, [addressOrCurrency, currencyInfo, chainIdWithFallback, isNative, address, skip])
+  }, [addressOrCurrency, skip, currencyInfo])
 }
 
 export const checkIsNative = (addressOrCurrency?: string | Currency): boolean => {
   return typeof addressOrCurrency === 'string'
     ? [NATIVE_CHAIN_ID, 'native', 'eth'].includes(addressOrCurrency.toLowerCase())
     : addressOrCurrency?.isNative ?? false
-}
-
-const getCommonBase = (chainId?: number, isNative?: boolean, address?: string): CurrencyInfo | undefined => {
-  if (!address || !chainId) {
-    return undefined
-  }
-  return COMMON_BASES[chainId]?.find(
-    (base) =>
-      (base.currency.isNative && isNative) || (base.currency.isToken && isSameAddress(base.currency.address, address)),
-  )
 }
 
 const getAddress = (

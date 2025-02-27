@@ -7,7 +7,16 @@ const EXTENSION_ID_BETA = 'foilfbjokdonehdajefeadkclfpmhdga'
 const EXTENSION_ID_PROD = 'nnpmfplkfogfpmcngplhnbdnnilmcdcg'
 
 export function isTestEnv(): boolean {
-  return !!process.env.JEST_WORKER_ID || process.env.NODE_ENV === 'test' || !!window.Cypress
+  return (
+    !!process.env.JEST_WORKER_ID ||
+    process.env.NODE_ENV === 'test' ||
+    !!(typeof window !== 'undefined' && window.Cypress) ||
+    !!isPlaywrightEnv()
+  )
+}
+
+export function isPlaywrightEnv(): boolean {
+  return typeof window.__playwright__binding__ !== 'undefined'
 }
 
 export function isDevEnv(): boolean {

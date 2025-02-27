@@ -1,0 +1,23 @@
+diff --git a/src/TabBar.tsx b/src/TabBar.tsx
+index e8d0b4c8dcbbe779fcd304f483d2d91c2d5e8dde..4205e8e286d501992c201d179e80866724924678 100644
+--- a/src/TabBar.tsx
++++ b/src/TabBar.tsx
+@@ -364,8 +364,7 @@ export function TabBar<T extends Route>({
+ 
+   const renderItem = React.useCallback(
+     ({ item: route, index }: ListRenderItemInfo<T>) => {
+-      const props: TabBarItemProps<T> & { key: string } = {
+-        key: route.key,
++      const props: TabBarItemProps<T> = {
+         position: position,
+         route: route,
+         navigationState: navigationState,
+@@ -446,7 +445,7 @@ export function TabBar<T extends Route>({
+         <>
+           {gap > 0 && index > 0 ? <Separator width={gap} /> : null}
+           {renderTabBarItem ? (
+-            renderTabBarItem(props)
++            renderTabBarItem({ key: route.key, ...props })
+           ) : (
+             <TabBarItem {...props} />
+           )}

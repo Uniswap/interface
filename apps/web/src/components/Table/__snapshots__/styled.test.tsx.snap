@@ -112,6 +112,9 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
             </span>
           </div>
         </a>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -205,6 +208,9 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
             </span>
           </div>
         </a>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -298,6 +304,9 @@ exports[`TokenLinkCell renders unknown token 1`] = `
             </span>
           </div>
         </a>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

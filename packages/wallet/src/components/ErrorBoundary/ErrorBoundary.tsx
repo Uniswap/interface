@@ -48,7 +48,7 @@ class InternalErrorBoundary extends React.Component<
     // Based on https://github.com/getsentry/sentry-javascript/blob/develop/packages/react/src/errorboundary.tsx
     const errorBoundaryError = new Error(error.message)
     errorBoundaryError.name = `React ErrorBoundary ${errorBoundaryError.name}`
-    errorBoundaryError.stack = errorInfo.componentStack
+    errorBoundaryError.stack = errorInfo.componentStack?.toString()
     error.cause = errorBoundaryError
 
     logger.error(error, {

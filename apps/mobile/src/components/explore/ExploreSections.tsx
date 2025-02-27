@@ -1,7 +1,11 @@
-import { TokenRankingsResponse, TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import React, { useCallback, useEffect, useState } from 'react'
+import {
+  TokenRankingsResponse,
+  TokenRankingsStat,
+  TokenStats,
+} from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItem, ListRenderItemInfo, StyleSheet } from 'react-native'
+import { ListRenderItem, ListRenderItemInfo, StyleSheet, useWindowDimensions } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { SharedValue, useSharedValue } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
@@ -47,7 +51,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   const insets = useAppInsets()
   const scrollY = useSharedValue(0)
   const visibleListHeight = useSharedValue(0)
-
+  const dimensions = useWindowDimensions()
   // Top tokens sorting
   const orderBy = useSelector(selectTokensOrderBy)
 
@@ -139,14 +143,14 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         estimatedItemSize={TOKEN_ITEM_SIZE}
-        // @ts-expect-error TODO: fix flashlist types
         drawDistance={TOKEN_ITEM_SIZE * AMOUNT_TO_DRAW}
+        estimatedListSize={dimensions}
       />
     </Flex>
   )
 }
 
-function NetworkPillsRow({
+const NetworkPillsRow = React.memo(function NetworkPillsRow({
   selectedNetwork,
   onSelectNetwork,
 }: {
@@ -196,9 +200,15 @@ function NetworkPillsRow({
       />
     </Flex>
   )
-}
+})
 
-function AllNetworksPill({ onPress, selected }: { onPress: () => void; selected: boolean }): JSX.Element {
+const AllNetworksPill = React.memo(function AllNetworksPill({
+  onPress,
+  selected,
+}: {
+  onPress: () => void
+  selected: boolean
+}): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex
@@ -219,7 +229,7 @@ function AllNetworksPill({ onPress, selected }: { onPress: () => void; selected:
       <Text variant="buttonLabel3">{t('common.all')}</Text>
     </Flex>
   )
-}
+})
 
 const tokenKey = (token: TokenItemDataWithMetadata, index: number): string => {
   return `${
@@ -276,35 +286,65 @@ const styles = StyleSheet.create({
   },
 })
 
+function getTokenMetadataDisplayTypeSafe(orderBy: ExploreOrderBy): TokenMetadataDisplayType | null {
+  try {
+    return getTokenMetadataDisplayType(orderBy)
+  } catch (e) {
+    return null
+  }
+}
+
+function processTokens(
+  tokens: TokenStats[],
+  tokenMetadataDisplayType: TokenMetadataDisplayType,
+): TokenItemDataWithMetadata[] {
+  const validTokens = tokens.filter(Boolean)
+  const processedTokens: TokenItemDataWithMetadata[] = []
+
+  for (const token of validTokens) {
+    const tokenItemData = tokenRankingStatsToTokenItemData(token)
+    if (tokenItemData) {
+      processedTokens.push({ tokenItemData, tokenMetadataDisplayType })
+    }
+  }
+
+  return processedTokens
+}
+
+function processTokenRankings(
+  tokenRankings: TokenRankingsResponse['tokenRankings'] | undefined,
+): Record<ExploreOrderBy, TokenItemDataWithMetadata[]> {
+  if (!tokenRankings) {
+    return {} as Record<ExploreOrderBy, TokenItemDataWithMetadata[]>
+  }
+
+  const result: Record<string, TokenItemDataWithMetadata[]> = {}
+
+  for (const [orderByKey, rankings] of Object.entries(tokenRankings)) {
+    const tokenMetadataDisplayType = getTokenMetadataDisplayTypeSafe(orderByKey as ExploreOrderBy)
+    if (tokenMetadataDisplayType === null) {
+      continue
+    }
+
+    const tokens = rankings?.tokens ?? []
+    const processedTokens = processTokens(tokens, tokenMetadataDisplayType)
+
+    if (processedTokens.length > 0) {
+      result[orderByKey] = processedTokens
+    }
+  }
+
+  return result
+}
+
 function useTokenItems(
   data: TokenRankingsResponse | undefined,
   orderBy: ExploreOrderBy,
 ): TokenItemDataWithMetadata[] | undefined {
-  const [topTokenItems, setTopTokenItems] = useState<TokenItemDataWithMetadata[] | undefined>(undefined)
-
-  useEffect(() => {
-    if (!data?.tokenRankings?.[orderBy]) {
-      setTopTokenItems(undefined)
-      return
-    }
-
-    const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
-    const topTokens: TokenItemDataWithMetadata[] | undefined = data.tokenRankings[orderBy]?.tokens?.reduce(
-      (acc: TokenItemDataWithMetadata[], tokenRankingStat) => {
-        if (tokenRankingStat) {
-          const tokenItemData = tokenRankingStatsToTokenItemData(tokenRankingStat)
-          if (tokenItemData) {
-            acc.push({ tokenItemData, tokenMetadataDisplayType })
-          }
-        }
-        return acc
-      },
-      [],
-    )
-
-    setTopTokenItems(topTokens)
-  }, [orderBy, data])
-  return topTokenItems
+  // process all the token rankings into a map of orderBy to token items (only do this once)
+  const allTokenItemsByOrderBy = useMemo(() => processTokenRankings(data?.tokenRankings), [data])
+  // return the token items for the given orderBy
+  return useMemo(() => allTokenItemsByOrderBy[orderBy], [allTokenItemsByOrderBy, orderBy])
 }
 
 type ListHeaderProps = {

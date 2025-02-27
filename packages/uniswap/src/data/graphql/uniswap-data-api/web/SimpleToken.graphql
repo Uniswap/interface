@@ -1,11 +1,5 @@
 fragment SimpleTokenDetails on Token {
-  id
-  address
-  chain
-  decimals
-  name
-  standard
-  symbol
+  ...TokenBasicInfoParts
   project {
     id
     isSpam
@@ -13,17 +7,6 @@ fragment SimpleTokenDetails on Token {
     name
     safetyLevel
   }
-  feeData {
-    buyFeeBps
-    sellFeeBps
-  }
-  protectionInfo {
-    attackTypes
-    result
-    blockaidFees {
-      buy
-      sell
-      transfer
-    }
-  }
+  ...TokenFeeDataParts
+  ...TokenProtectionInfoParts
 }

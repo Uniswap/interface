@@ -5,10 +5,15 @@ import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig, useExperiment } from 'uniswap/src/features/gating/sdk/statsig'
+import { isMobileApp } from 'utilities/src/platform'
 
 export function GatingOverrides(): JSX.Element {
   const featureFlagRows: JSX.Element[] = []
-  for (const [flag, flagName] of WALLET_FEATURE_FLAG_NAMES.entries()) {
+  const sortedFlags = Array.from(WALLET_FEATURE_FLAG_NAMES.entries()).sort(([, nameA], [, nameB]) =>
+    nameA.localeCompare(nameB),
+  )
+
+  for (const [flag, flagName] of sortedFlags) {
     featureFlagRows.push(<FeatureFlagRow key={flagName} flag={flag} />)
   }
 
@@ -86,15 +91,21 @@ function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
   const name = getFeatureFlagName(flag)
 
   return (
-    <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
-      <Text variant="body1">{name}</Text>
-      <Switch
-        checked={status}
-        variant="branded"
-        onCheckedChange={(newValue: boolean): void => {
-          Statsig.overrideGate(name, newValue)
-        }}
-      />
+    <Flex row alignItems="center" gap="$spacing16" width="100%">
+      <Flex flex={1} mr="$spacing8">
+        <Text adjustsFontSizeToFit variant="body1" numberOfLines={isMobileApp ? 1 : undefined}>
+          {name}
+        </Text>
+      </Flex>
+      <Flex minWidth={52}>
+        <Switch
+          checked={status}
+          variant="branded"
+          onCheckedChange={(newValue: boolean): void => {
+            Statsig.overrideGate(name, newValue)
+          }}
+        />
+      </Flex>
     </Flex>
   )
 }

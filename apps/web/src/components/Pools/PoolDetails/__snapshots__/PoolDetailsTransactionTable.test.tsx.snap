@@ -195,7 +195,6 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                       class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="css-view-175oi2r"
                         style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-items: center; user-select: none; gap: 4px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; opacity: 1;"
                       >
                         <svg
@@ -409,6 +408,9 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -610,7 +612,6 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
                       class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="css-view-175oi2r"
                         style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-items: center; user-select: none; gap: 4px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; opacity: 1;"
                       >
                         <svg
@@ -2265,6 +2266,9 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -2414,7 +2418,6 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                       class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="css-view-175oi2r"
                         style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-items: center; user-select: none; gap: 4px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; opacity: 1;"
                       >
                         <svg
@@ -4021,6 +4024,9 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

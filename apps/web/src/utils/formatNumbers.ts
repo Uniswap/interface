@@ -586,13 +586,13 @@ export function formatCurrencyAmount({
   })
 }
 
-function formatPercent(percent: Percent | undefined, locale: Locale = DEFAULT_LOCALE) {
+function formatPercent(percent: Percent | undefined, maxDecimals = 3, locale: Locale = DEFAULT_LOCALE) {
   if (!percent) {
     return '-'
   }
 
-  return `${Number(percent.toFixed(3)).toLocaleString(locale, {
-    maximumFractionDigits: 3,
+  return `${Number(percent.toFixed(maxDecimals)).toLocaleString(locale, {
+    maximumFractionDigits: maxDecimals,
     useGrouping: false,
   })}%`
 }
@@ -852,7 +852,7 @@ export function useFormatter() {
   )
 
   const formatPercentWithLocales = useCallback(
-    (percent: Percent | undefined) => formatPercent(percent, activeLocale),
+    (percent: Percent | undefined, maxDecimals?: number) => formatPercent(percent, maxDecimals, activeLocale),
     [activeLocale],
   )
 

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Loader, ModalCloseIcon, Text, isWeb, useSporeColors } from 'ui/src'
+import { Flex, isWeb, Loader, ModalCloseIcon, Text, useMedia, useSporeColors } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -167,13 +167,14 @@ function CurrencyValueWithIcon({
   const networkColors = useNetworkColors(chainId)
   const networkLabel = getChainLabel(chainId)
   const networkColor = validColor(networkColors.foreground)
+  const media = useMedia()
 
   // If you modify this UI, make sure to also modify the height of `CurrencyValueWithIconSkeleton`.
   return (
     <Flex centered grow row>
       <Flex grow gap="$spacing4">
         {isBridgeTrade && (
-          <Flex row gap="$spacing4" alignItems="center">
+          <Flex row mt={media.sm ? '$spacing8' : undefined} gap="$spacing4" alignItems="center">
             <NetworkLogo chainId={currencyInfo.currency.chainId} size={iconSizes.icon16} />
             <Text color={networkColor} variant="buttonLabel3">
               {networkLabel}

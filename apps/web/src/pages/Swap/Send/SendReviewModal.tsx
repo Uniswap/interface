@@ -66,7 +66,13 @@ const SendModalHeader = ({
   )
 }
 
-export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => void; onDismiss: () => void }) {
+export type SendModalProps = {
+  isOpen: boolean
+  onConfirm: () => void
+  onDismiss: () => void
+}
+
+export function SendReviewModal({ isOpen, onConfirm, onDismiss }: SendModalProps) {
   const { t } = useTranslation()
   const { chainId } = useMultichainContext()
   const {
@@ -97,7 +103,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     : [currencySymbolAmount, formattedFiatInputAmount]
 
   return (
-    <Modal name={ModalName.SendReview} isModalOpen onClose={onDismiss} maxHeight="90vh" padding={0}>
+    <Modal name={ModalName.SendReview} isModalOpen={isOpen} onClose={onDismiss} padding={0}>
       <ModalWrapper data-testid="send-review-modal" gap="md">
         <ModalHeader title={<Trans i18nKey="sendReviewModal.title" />} closeModal={onDismiss} />
         <ReviewContentContainer>

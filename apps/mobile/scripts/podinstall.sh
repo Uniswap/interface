@@ -3,6 +3,19 @@
 set -e
 
 REQUIRED_XCODE_VERSION="16.2"
+UPDATE_REPOS=false
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -u|--update)
+      UPDATE_REPOS=true
+      shift
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
 
 check_xcode_version() {
   local current_version=$(xcodebuild -version | grep "Xcode" | cut -d' ' -f2)
@@ -21,5 +34,9 @@ check_xcode_version
 # Install pods
 cd ios/
 bundle install
-bundle exec pod install
+if [ "$UPDATE_REPOS" = true ]; then
+  bundle exec pod install --repo-update
+else
+  bundle exec pod install
+fi
 cd ..

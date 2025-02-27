@@ -35,6 +35,7 @@ jest.mock('utilities/src/environment/env', () => ({
   isBetaEnv: jest.fn(() => false),
   isProdEnv: jest.fn(() => false),
   isRNDev: jest.fn(() => true),
+  isPlaywrightEnv: jest.fn(() => false),
 }))
 
 jest.mock('@datadog/browser-logs', () => ({

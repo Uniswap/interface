@@ -19,6 +19,7 @@ import {
   DecreaseLPPositionRequest,
   DecreaseLPPositionResponse,
   DutchQuoteV2,
+  DutchQuoteV3,
   GetOrdersResponse,
   GetSwappableTokensResponse,
   GetSwapsResponse,
@@ -45,8 +46,14 @@ import { isTestEnv } from 'utilities/src/environment/env'
 export type DiscriminatedQuoteResponse =
   | ClassicQuoteResponse
   | DutchQuoteResponse
+  | DutchV3QuoteResponse
   | PriorityQuoteResponse
   | BridgeQuoteResponse
+
+export type DutchV3QuoteResponse = QuoteResponse & {
+  quote: DutchQuoteV3
+  routing: Routing.DUTCH_V3
+}
 
 export type DutchQuoteResponse = QuoteResponse & {
   quote: DutchQuoteV2

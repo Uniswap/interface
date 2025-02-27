@@ -37,6 +37,9 @@ exports[`PredefinedAmount renders correctly with amount= 100 , currentAmount= "1
           $100
         </span>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -74,6 +77,9 @@ exports[`PredefinedAmount renders correctly with amount= 300 , currentAmount= "1
           $300
         </span>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -116,6 +122,9 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
           $1000
         </span>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -153,6 +162,9 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
           $1000
         </span>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>

@@ -12,7 +12,8 @@ import {
   methodCostsGas,
 } from 'src/components/Requests/RequestModal/WalletConnectRequestModalContent'
 import { useHasSufficientFunds } from 'src/components/Requests/RequestModal/hooks'
-import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'

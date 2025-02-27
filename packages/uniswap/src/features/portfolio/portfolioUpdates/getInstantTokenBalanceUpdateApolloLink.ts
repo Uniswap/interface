@@ -49,6 +49,7 @@ export function getInstantTokenBalanceUpdateApolloLink({ reduxStore }: { reduxSt
           'getInstantTokenBalanceUpdateApolloLink.ts',
           'getInstantTokenBalanceUpdateApolloLink',
           '[ITBU] Maybe overriding token balance in apollo response',
+          tokenBalanceOverrides,
         )
 
         if (!response?.data?.portfolios) {
@@ -255,7 +256,7 @@ export function createTokenBalanceRef({
   logger.debug(
     'getInstantTokenBalanceUpdateApolloLink.ts',
     'createTokenBalanceRef',
-    `Calling apolloCache.writeFragment for ${currencyId}`,
+    `[ITBU]Calling apolloCache.writeFragment for ${currencyId}`,
     {
       onchainBalanceQuantity,
       denominatedValue,

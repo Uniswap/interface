@@ -27,7 +27,7 @@ const Box = styled.div`
   user-select: none;
   z-index: ${Z_INDEX.fixed};
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     bottom: 70px;
   }
 `

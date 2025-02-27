@@ -1,5 +1,4 @@
 // eslint-disable-next-line no-restricted-imports
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
@@ -29,6 +28,7 @@ import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelection
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
+import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
 import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -79,7 +79,8 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const trace = useTrace()
   const { t } = useTranslation()
 
-  const { positionState, setPositionState, setStep, step } = useCreatePositionContext()
+  const { positionState, setPositionState, setStep, step, currentTransactionStep, setCurrentTransactionStep } =
+    useCreatePositionContext()
   const { protocolVersion } = positionState
   const { setPriceRangeState } = usePriceRangeContext()
   const { setDepositState } = useDepositContext()
@@ -89,9 +90,6 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
-  const [currentTransactionStep, setCurrentTransactionStep] = useState<
-    { step: TransactionStep; accepted: boolean } | undefined
-  >()
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
   const account = useAccountMeta()
@@ -151,8 +149,8 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                 ...DEFAULT_POSITION_STATE,
                 protocolVersion,
                 currencyInputs: {
-                  [PositionField.TOKEN0]: currency0Amount.currency,
-                  [PositionField.TOKEN1]: currency1Amount.currency,
+                  [PositionField.TOKEN0]: getCurrencyForProtocol(currency0Amount.currency, protocolVersion),
+                  [PositionField.TOKEN1]: getCurrencyForProtocol(currency1Amount.currency, protocolVersion),
                 },
               })
               setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
@@ -178,7 +176,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
             </Flex>
           )}
           <Flex gap="$gap16" maxWidth="calc(min(580px, 90vw))">
-            <LiquidityPositionCard liquidityPosition={positionInfo} />
+            <LiquidityPositionCard liquidityPosition={positionInfo} disabled />
             <Flex justifyContent="center" alignItems="center">
               <Flex shrink backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
                 <ArrowDown size={20} color="$neutral1" />
@@ -252,11 +250,11 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
       >
         <LiquidityModalHeader title={t('pool.migrateLiquidity')} closeModal={onClose} />
         <Flex gap="$gap16" px="$padding16" my="$spacing8">
-          <TokenInfo currencyAmount={currency0Amount} currencyUSDAmount={currency0FiatAmount} />
+          <TokenInfo currencyAmount={currency0Amount} currencyUSDAmount={currency0FiatAmount} isMigrating />
           <Text variant="body3" color="$neutral2">
             {t('common.and')}
           </Text>
-          <TokenInfo currencyAmount={currency1Amount} currencyUSDAmount={currency1FiatAmount} />
+          <TokenInfo currencyAmount={currency1Amount} currencyUSDAmount={currency1FiatAmount} isMigrating />
         </Flex>
         <ProgressIndicator steps={transactionSteps} currentStep={currentTransactionStep} />
       </Modal>
@@ -326,8 +324,8 @@ export default function MigrateV3() {
           <CreatePositionContextProvider
             initialState={{
               currencyInputs: {
-                [PositionField.TOKEN0]: currency0Amount.currency,
-                [PositionField.TOKEN1]: currency1Amount.currency,
+                [PositionField.TOKEN0]: getCurrencyForProtocol(currency0Amount.currency, ProtocolVersion.V4),
+                [PositionField.TOKEN1]: getCurrencyForProtocol(currency1Amount.currency, ProtocolVersion.V4),
               },
             }}
           >

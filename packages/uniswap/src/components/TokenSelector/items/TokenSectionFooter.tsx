@@ -37,12 +37,7 @@ export const SectionFooter = memo(function _SectionFooter({
   }
 
   return (
-    <AnimateInOrder
-      index={2}
-      delayMs={isMobileWeb ? 800 : 1500}
-      animation="125msDelayedLong"
-      enterStyle={{ opacity: 0 }}
-    >
+    <AnimateInOrder index={0} delayMs={800} animation="125msDelayedLong" enterStyle={{ opacity: 0 }}>
       <Flex
         row
         alignItems="center"

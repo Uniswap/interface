@@ -123,7 +123,7 @@ export const ProtocolPreference: SwapSettingConfig = {
                 active={selectedProtocols.includes(ProtocolItems.V4)}
                 elementName={ElementName.SwapRoutingPreferenceV4}
                 title={getProtocolTitle(ProtocolItems.V4, t)}
-                cantDisable={onlyOneProtocolSelected}
+                cantDisable={onlyOneClassicProtocolSelected}
                 disabled={isOnlyV2Allowed}
                 description={v2RestrictionDescription}
                 onSelect={() => toggleProtocol(ProtocolItems.V4)}

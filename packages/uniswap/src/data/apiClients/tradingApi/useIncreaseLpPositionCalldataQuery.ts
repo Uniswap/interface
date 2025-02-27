@@ -10,7 +10,7 @@ export function useIncreaseLpPositionCalldataQuery({
   deadlineInMinutes,
   ...rest
 }: UseQueryApiHelperHookArgs<IncreaseLPPositionRequest, IncreaseLPPositionResponse> & {
-  deadlineInMinutes: number | undefined
+  deadlineInMinutes?: number
 }): UseQueryResult<IncreaseLPPositionResponse> {
   const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.increaseLp, params]
 

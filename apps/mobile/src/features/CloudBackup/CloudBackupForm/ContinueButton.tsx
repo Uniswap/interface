@@ -9,7 +9,7 @@ export function ContinueButton({ onPressContinue }: { onPressContinue?: () => vo
   const { t } = useTranslation()
 
   return (
-    <DeprecatedButton disabled={!isInputValid} testID={TestID.Next} onPress={onPressContinue ?? onPressNext}>
+    <DeprecatedButton isDisabled={!isInputValid} testID={TestID.Next} onPress={onPressContinue ?? onPressNext}>
       {t('common.button.continue')}
     </DeprecatedButton>
   )

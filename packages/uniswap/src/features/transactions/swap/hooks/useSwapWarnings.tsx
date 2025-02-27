@@ -32,18 +32,19 @@ import {
 } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { formatPriceImpact, getPriceImpact } from 'uniswap/src/features/transactions/swap/hooks/usePriceImpact'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
-import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { isInterface } from 'utilities/src/platform'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
 const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%
 
+// eslint-disable-next-line complexity
 export function getSwapWarnings(
   t: TFunction,
   formatPercent: LocalizationContextState['formatPercent'],
@@ -69,7 +70,8 @@ export function getSwapWarnings(
       buttonText: t('swap.warning.tokenBlocked.button', {
         tokenSymbol:
           (isInputTokenBlocked
-            ? currencies[CurrencyField.INPUT]?.currency.symbol
+            ? // FIXME: Verify WALL-5906
+              currencies[CurrencyField.INPUT]?.currency.symbol ?? ''
             : currencies[CurrencyField.OUTPUT]?.currency.symbol) ?? 'Token',
       }),
     })
@@ -79,6 +81,8 @@ export function getSwapWarnings(
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   const swapBalanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
+  // FIXME: Verify WALL-5906
+  const currencySymbol = currencyAmountIn?.currency?.symbol ?? ''
 
   if (swapBalanceInsufficient) {
     warnings.push({
@@ -86,11 +90,11 @@ export function getSwapWarnings(
       severity: WarningSeverity.None,
       action: WarningAction.DisableReview,
       title: t('swap.warning.insufficientBalance.title', {
-        currencySymbol: currencyAmountIn.currency?.symbol,
+        currencySymbol,
       }),
       buttonText: isWeb
         ? t('common.insufficientTokenBalance.error.simple', {
-            tokenSymbol: currencyAmountIn.currency?.symbol,
+            tokenSymbol: currencySymbol,
           })
         : undefined,
       currency: currencyAmountIn.currency,
@@ -111,8 +115,8 @@ export function getSwapWarnings(
   }
 
   // price impact warning
-  const priceImpact = trade.trade?.priceImpact
-  const priceImpactValue = priceImpact ? formatPercent(normalizePriceImpact(priceImpact)) : undefined
+  const priceImpact = getPriceImpact(derivedSwapInfo)
+  const priceImpactValue = (priceImpact && formatPriceImpact(priceImpact, formatPercent)) ?? ''
   if (priceImpact?.greaterThan(PRICE_IMPACT_THRESHOLD_MEDIUM)) {
     const highImpact = !priceImpact.lessThan(PRICE_IMPACT_THRESHOLD_HIGH)
     warnings.push({
@@ -129,8 +133,10 @@ export function getSwapWarnings(
       message: highImpact
         ? t('swap.warning.priceImpact.message.veryHigh', { priceImpactValue })
         : t('swap.warning.priceImpact.message', {
-            outputCurrencySymbol: currencies[CurrencyField.OUTPUT]?.currency.symbol,
-            inputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol,
+            // FIXME: Verify WALL-5906
+            outputCurrencySymbol: currencies[CurrencyField.OUTPUT]?.currency.symbol ?? '',
+            // FIXME: Verify WALL-5906
+            inputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol ?? '',
           }),
       link: uniswapUrls.helpArticleUrls.priceImpact,
     })
@@ -266,7 +272,10 @@ export function useParsedSwapWarnings(): ParsedWarnings {
 }
 
 function getSwapWarningFromError(error: Error, t: TFunction, derivedSwapInfo: DerivedSwapInfo): Warning {
-  const isBridgeTrade = derivedSwapInfo.trade.trade !== null && isBridge(derivedSwapInfo.trade.trade)
+  // Trade object is null for quote not found case
+  const isBridgeTrade =
+    derivedSwapInfo.currencies.input?.currency.chainId !== derivedSwapInfo.currencies.output?.currency.chainId
+
   if (error instanceof FetchError) {
     // Special case: rate limit errors are not parsed by errorCode
     if (isRateLimitFetchError(error)) {
@@ -291,18 +300,16 @@ function getSwapWarningFromError(error: Error, t: TFunction, derivedSwapInfo: De
         }
       }
 
-      // no bridging quotes found warning
-      case Err404.errorCode.RESOURCE_NOT_FOUND && isBridgeTrade: {
-        return {
-          type: WarningLabel.NoQuotesFound,
-          severity: WarningSeverity.Low,
-          action: WarningAction.DisableReview,
-          title: t('swap.warning.noQuotesFound.title'),
-          message: t('swap.warning.noQuotesFound.bridging.message'),
-        }
-      }
-
       case Err404.errorCode.RESOURCE_NOT_FOUND: {
+        if (isBridgeTrade) {
+          return {
+            type: WarningLabel.NoQuotesFound,
+            severity: WarningSeverity.Low,
+            action: WarningAction.DisableReview,
+            title: t('swap.warning.noQuotesFound.title'),
+            message: t('swap.warning.noQuotesFound.bridging.message'),
+          }
+        }
         return {
           type: WarningLabel.NoRoutesError,
           severity: WarningSeverity.Low,

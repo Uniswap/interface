@@ -81,7 +81,7 @@ export function SendFormButton({
 
   return (
     <DeprecatedButton
-      disabled={actionButtonDisabled && !isViewOnlyWallet}
+      isDisabled={actionButtonDisabled && !isViewOnlyWallet}
       // Override opacity only for view-only wallets
       opacity={isViewOnlyWallet ? 0.4 : undefined}
       size="large"

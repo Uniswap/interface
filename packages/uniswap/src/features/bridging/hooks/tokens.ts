@@ -205,7 +205,7 @@ function useBridgingTokensToTokenOptions(
 
         const isNative = token.address === NATIVE_ADDRESS_FOR_TRADING_API
         const currencyId = isNative ? buildNativeCurrencyId(chainId) : buildCurrencyId(chainId, token.address)
-        return portfolioBalancesById?.[currencyId] ?? createEmptyTokenOptionFromBridgingToken(token)
+        return portfolioBalancesById?.[currencyId.toLowerCase()] ?? createEmptyTokenOptionFromBridgingToken(token)
       })
       .filter((tokenOption): tokenOption is TokenOption => tokenOption !== undefined)
   }, [bridgingTokens, portfolioBalancesById])

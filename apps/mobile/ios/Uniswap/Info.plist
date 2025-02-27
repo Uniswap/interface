@@ -71,6 +71,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+  <key>LSMinimumSystemVersion</key>
+  <string>15.1</string>
 	<key>NSAdvertisingAttributionReportEndpoint</key>
 	<string>https://appsflyer-skadnetwork.com/</string>
 	<key>NSAppTransportSecurity</key>
@@ -130,7 +132,7 @@
 	<string>SplashScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

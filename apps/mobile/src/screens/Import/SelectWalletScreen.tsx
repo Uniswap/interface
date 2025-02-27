@@ -97,8 +97,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         )}
         <Flex opacity={showError ? 0 : 1} px="$spacing16">
           <DeprecatedButton
-            disabled={isLoading || !!showError || selectedAddresses.length === 0}
+            isDisabled={isLoading || !!showError || selectedAddresses.length === 0}
             testID={TestID.Next}
+            size="large"
             onPress={onSubmit}
           >
             {t('common.button.continue')}

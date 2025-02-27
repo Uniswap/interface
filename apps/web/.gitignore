@@ -17,6 +17,8 @@
 /cache
 /functions/coverage
 /.swc
+/src/playwright-report
+/src/playwright/test-results
 
 # builds
 /build
@@ -55,4 +57,6 @@ cypress/screenshots
 
 .wrangler
 
+# Storybook
 *storybook.log
+storybook-static/

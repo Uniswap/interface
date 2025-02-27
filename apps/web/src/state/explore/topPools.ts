@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import {
   PoolSortFields,
@@ -93,25 +95,42 @@ function convertPoolStatsToPoolStat(poolStats: PoolStats): PoolStat {
   }
 }
 
+function getPoolDataByProtocol(
+  data: ExploreStatsResponse | undefined,
+  protocol?: ProtocolVersion,
+): PoolStats[] | undefined {
+  switch (protocol) {
+    case ProtocolVersion.V2:
+      return data?.stats?.poolStatsV2
+    case ProtocolVersion.V3:
+      return data?.stats?.poolStatsV3
+    case ProtocolVersion.V4:
+      return data?.stats?.poolStatsV4
+    default:
+      return data?.stats?.poolStats
+  }
+}
+
 interface TopPoolData {
   data?: ExploreStatsResponse
   isLoading: boolean
   isError: boolean
 }
 
-export function useExploreContextTopPools(sortState: PoolTableSortState) {
+export function useExploreContextTopPools(sortState: PoolTableSortState, protocol?: ProtocolVersion) {
   const {
     exploreStats: { data, isLoading, error: isError },
   } = useContext(ExploreContext)
-  return useTopPools({ data, isLoading, isError }, sortState)
+  return useTopPools({ data, isLoading, isError }, sortState, protocol)
 }
 
-export function useTopPools(topPoolData: TopPoolData, sortState: PoolTableSortState) {
+export function useTopPools(topPoolData: TopPoolData, sortState: PoolTableSortState, protocol?: ProtocolVersion) {
   const { data, isLoading, isError } = topPoolData
+  const poolStatsByProtocol = getPoolDataByProtocol(data, protocol)
   const sortedPoolStats = useMemo(() => {
-    const poolStats = data?.stats?.poolStats?.map((poolStat: PoolStats) => convertPoolStatsToPoolStat(poolStat))
+    const poolStats = poolStatsByProtocol?.map((poolStat: PoolStats) => convertPoolStatsToPoolStat(poolStat))
     return sortPools(sortState, poolStats)
-  }, [data?.stats?.poolStats, sortState])
+  }, [poolStatsByProtocol, sortState])
   const filteredPoolStats = useFilteredPools(sortedPoolStats)
 
   return { topPools: filteredPoolStats, isLoading, isError }

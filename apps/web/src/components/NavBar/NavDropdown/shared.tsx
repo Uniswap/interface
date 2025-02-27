@@ -1,12 +1,12 @@
 import Column from 'components/deprecated/Column'
-import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import styled from 'lib/styled-components'
+import { breakpoints } from 'ui/src/theme'
 
 export const NavDropdownDefaultWrapper = styled(Column)`
   width: 100%;
   align-items: center;
   gap: 2px;
-  @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {
+  @media screen and (max-width: ${breakpoints.sm}px) {
     width: 100%;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;

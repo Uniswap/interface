@@ -2,6 +2,10 @@ import DeviceInfo from 'react-native-device-info'
 
 const BUNDLE_ID = DeviceInfo.getBundleId()
 
+export function isPlaywrightEnv(): boolean {
+  return false
+}
+
 export function isTestEnv(): boolean {
   return !!process.env.JEST_WORKER_ID || process.env.NODE_ENV === 'test'
 }

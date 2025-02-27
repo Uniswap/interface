@@ -392,7 +392,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             />
           </button>
           <div
-            class="css-view-175oi2r"
             style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
           >
             <div
@@ -428,7 +427,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
+            data-disable-theme="true"
             style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
           >
             <div
@@ -438,7 +437,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
               >
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                 >
                   <div
@@ -468,7 +466,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                 >
                   <div
@@ -503,7 +500,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                 >
                   <div
@@ -532,7 +528,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
             style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
           >
             <div
@@ -558,7 +553,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
             style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
           >
             <div
@@ -638,6 +632,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </button>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1007,7 +1004,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             />
           </button>
           <div
-            class="css-view-175oi2r"
             style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
           >
             <div
@@ -1037,7 +1033,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
+            data-disable-theme="true"
             style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
           >
             <div
@@ -1047,7 +1043,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
               >
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                 >
                   <div
@@ -1082,7 +1077,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                 >
                   <div
@@ -1111,7 +1105,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
             style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
           >
             <div
@@ -1136,7 +1129,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
             style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
           >
             <div
@@ -1236,6 +1228,9 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             </div>
           </button>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -1283,6 +1278,9 @@ exports[`SwapDetails.tsx renders slippage tooltip 1`] = `
         >
           Learn more
         </a>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

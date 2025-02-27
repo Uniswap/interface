@@ -12,6 +12,7 @@ import DeviceInfo from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
 import OneSignal from 'react-native-onesignal'
+import { configureReanimatedLogger } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,13 +27,10 @@ import { persistor, store } from 'src/app/store'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
-import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
-import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
-import { DevAIAssistantScreen } from 'src/features/openai/DevAIAssistantScreen'
-import { DevOpenAIProvider } from 'src/features/openai/DevOpenAIProvider'
+import { DevAIAssistantScreen, DevOpenAIProvider } from 'src/features/openai/DevAIGate'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import {
@@ -45,6 +43,7 @@ import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getStatsigEnvironmentTier } from 'src/utils/version'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
+import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
@@ -54,7 +53,7 @@ import {
   DatadogSessionSampleRateValType,
   DynamicConfigs,
 } from 'uniswap/src/features/gating/configs'
-import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
+import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { getDynamicConfigValue, getFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -72,6 +71,7 @@ import i18n from 'uniswap/src/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { datadogEnabled, isE2EMode } from 'utilities/src/environment/constants'
+import { isTestEnv } from 'utilities/src/environment/env'
 import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/Datadog'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadogEvents'
@@ -95,8 +95,13 @@ import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 enableFreeze(true)
 
-if (__DEV__) {
+if (__DEV__ && !isTestEnv()) {
   registerConsoleOverrides()
+  // TODO(WALL-5780): Fix "Reading from `value` during component render." warnings while
+  // mainly switching between screens.
+  configureReanimatedLogger({
+    strict: false,
+  })
   loadDevMessages()
   loadErrorMessages()
 }
@@ -162,7 +167,7 @@ function App(): JSX.Element | null {
         )
       },
     },
-    sdkKey: DUMMY_STATSIG_SDK_KEY,
+    sdkKey: config.statsigApiKey,
     user: {
       ...(deviceId ? { userID: deviceId } : {}),
       custom: {
@@ -256,8 +261,8 @@ function AppOuter(): JSX.Element | null {
 
     // Used in case we aren't able to resolve notification filtering issues on iOS
     if (isIOS) {
-      const notificationsPriceAlertsEnabled = getFeatureFlag(FeatureFlags.NotificationPriceAlerts)
-      const notificationsUnfundedWalletEnabled = getFeatureFlag(FeatureFlags.NotificationUnfundedWallets)
+      const notificationsPriceAlertsEnabled = getFeatureFlag(FeatureFlags.NotificationPriceAlertsIOS)
+      const notificationsUnfundedWalletEnabled = getFeatureFlag(FeatureFlags.NotificationUnfundedWalletsIOS)
 
       OneSignal.sendTags({
         [OneSignalUserTagField.GatingPriceAlertsEnabled]: notificationsPriceAlertsEnabled ? 'true' : 'false',
@@ -279,26 +284,22 @@ function AppOuter(): JSX.Element | null {
               <GestureHandlerRootView style={flexStyles.fill}>
                 <WalletContextProvider>
                   <UnitagUpdaterContextProvider>
-                    <BiometricContextProvider>
-                      <LockScreenContextProvider>
-                        <DataUpdaters />
-                        <NavigationContainer>
-                          <MobileWalletNavigationProvider>
-                            <DevOpenAIProvider>
-                              <WalletUniswapProvider>
-                                <BottomSheetModalProvider>
-                                  <AppModals />
-                                  <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                    <AppInner />
-                                  </PerformanceProfiler>
-                                </BottomSheetModalProvider>
-                              </WalletUniswapProvider>
-                              <NotificationToastWrapper />
-                            </DevOpenAIProvider>
-                          </MobileWalletNavigationProvider>
-                        </NavigationContainer>
-                      </LockScreenContextProvider>
-                    </BiometricContextProvider>
+                    <DataUpdaters />
+                    <NavigationContainer>
+                      <MobileWalletNavigationProvider>
+                        <DevOpenAIProvider>
+                          <WalletUniswapProvider>
+                            <BottomSheetModalProvider>
+                              <AppModals />
+                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                <AppInner />
+                              </PerformanceProfiler>
+                            </BottomSheetModalProvider>
+                          </WalletUniswapProvider>
+                          <NotificationToastWrapper />
+                        </DevOpenAIProvider>
+                      </MobileWalletNavigationProvider>
+                    </NavigationContainer>
                   </UnitagUpdaterContextProvider>
                 </WalletContextProvider>
               </GestureHandlerRootView>

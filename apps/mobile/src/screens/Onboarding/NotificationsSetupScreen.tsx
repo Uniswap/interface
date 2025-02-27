@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { NotificationsBackgroundImage } from 'src/components/notifications/NotificationsBGImage'
-import { useBiometricContext } from 'src/features/biometrics/context'
-import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useBiometricsState } from 'src/features/biometrics/useBiometricsState'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
@@ -38,7 +38,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const { t } = useTranslation()
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
   const hasSeedPhrase = useNativeAccountExists()
-  const { deviceSupportsBiometrics } = useBiometricContext()
+  const { deviceSupportsBiometrics } = useBiometricsState()
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
@@ -77,7 +77,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
         <NotificationsBackgroundImage />
       </Flex>
       <Trace logPress element={ElementName.Enable}>
-        <DeprecatedButton testID="turn-on-notifications" onPress={onPressEnableNotifications}>
+        <DeprecatedButton size="large" testID="turn-on-notifications" onPress={onPressEnableNotifications}>
           {t('common.button.enable')}
         </DeprecatedButton>
       </Trace>

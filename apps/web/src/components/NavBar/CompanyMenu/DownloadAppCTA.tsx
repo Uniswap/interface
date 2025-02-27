@@ -1,6 +1,6 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { MobileAppLogo } from 'components/Icons/MobileAppLogo'
-import { NAV_BREAKPOINT, useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
+import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
 import Row from 'components/deprecated/Row'
 import styled, { css } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +9,7 @@ import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ThemedText } from 'theme/components'
 import { Flex, useIsTouchDevice } from 'ui/src'
+import { breakpoints } from 'ui/src/theme'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { APP_DOWNLOAD_LINKS, openDownloadApp } from 'utils/openDownloadApp'
 
@@ -28,7 +29,7 @@ const DownloadCTA = styled(Row)<{ isMobile: boolean }>`
   &:hover {
     ${HoverStyles}
   }
-  @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {
+  @media screen and (max-width: ${breakpoints.sm}px) {
     transform: none;
     box-sizing: border-box;
   }

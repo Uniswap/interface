@@ -5,9 +5,9 @@ import { UniformAspectRatio, UniformAspectRatios } from 'nft/types'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Pause, Play } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 
 const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   position: relative;
@@ -100,7 +100,7 @@ const PlaybackButton = styled.div<{ pauseButton?: boolean }>`
   margin-left: calc(100% - 50px);
   transform: translateY(-76px);
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     display: block;
   }
 

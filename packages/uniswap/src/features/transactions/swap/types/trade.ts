@@ -1,15 +1,16 @@
 import { MixedRouteSDK, Trade as RouterSDKTrade, ZERO_PERCENT } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
-import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade, PriorityOrderTrade as IPriorityOrderTrade, UnsignedPriorityOrderInfo } from '@uniswap/uniswapx-sdk'
+import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade, PriorityOrderTrade as IPriorityOrderTrade, UnsignedPriorityOrderInfo, V3DutchOrderTrade, UnsignedV3DutchOrderInfo } from '@uniswap/uniswapx-sdk'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { Route as V4RouteSDK } from '@uniswap/v4-sdk'
 import { AxiosError } from 'axios'
-import { BridgeQuoteResponse, ClassicQuoteResponse, DiscriminatedQuoteResponse, DutchQuoteResponse, PriorityQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { BridgeQuoteResponse, ClassicQuoteResponse, DutchQuoteResponse, DutchV3QuoteResponse, PriorityQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   DutchOrderInfoV2,
+  DutchOrderInfoV3,
   IndicativeQuoteResponse,
   PriorityOrderInfo,
   Routing,
@@ -19,8 +20,9 @@ import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCur
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
+import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
 
-export type UniswapXTrade = UniswapXV2Trade | PriorityOrderTrade
+export type UniswapXTrade = UniswapXV2Trade | UniswapXV3Trade | PriorityOrderTrade
 export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
   readonly routing = Routing.DUTCH_V2
   readonly quote: DutchQuoteResponse
@@ -39,7 +41,7 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
     currencyOut: Currency
     tradeType: TradeType
   }) {
-    const orderInfo = transformToDutchOrderInfo(quote.quote.orderInfo)
+    const orderInfo = transformToV2DutchOrderInfo(quote.quote.orderInfo)
     super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
@@ -54,8 +56,46 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
     return this.order.info.deadline
   }
 
-  public get priceImpact(): Percent {
+  public get inputTax(): Percent {
     return ZERO_PERCENT
+  }
+
+  public get outputTax(): Percent {
+    return ZERO_PERCENT
+  }
+}
+
+export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, TradeType> {
+  readonly routing = Routing.DUTCH_V3
+  readonly quote: DutchV3QuoteResponse
+  readonly slippageTolerance: number
+  readonly swapFee?: SwapFee
+  readonly indicative = false
+
+  constructor({
+    quote,
+    currencyIn,
+    currencyOut,
+    tradeType,
+  }: {
+    quote: DutchV3QuoteResponse
+    currencyIn: Currency
+    currencyOut: Currency
+    tradeType: TradeType
+  }) {
+    const orderInfo = transformToV3DutchOrderInfo(quote.quote.orderInfo)
+    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
+    this.quote = quote
+    this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
+    this.swapFee = getSwapFee(quote)
+  }
+
+  public get needsWrap(): boolean {
+    return this.inputAmount.currency.isNative
+  }
+
+  public get deadline(): number {
+    return this.order.info.deadline
   }
 
   public get inputTax(): Percent {
@@ -90,7 +130,7 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
     const expectedAmounts = expectedAmountIn && expectedAmountOut ? { expectedAmountIn, expectedAmountOut  } : undefined
 
     super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType, expectedAmounts })
-    
+
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
     this.swapFee = getSwapFee(quote)
@@ -102,10 +142,6 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
 
   public get deadline(): number {
     return this.order.info.deadline
-  }
-
-  public get priceImpact(): Percent {
-    return ZERO_PERCENT
   }
 
   public get inputTax(): Percent {
@@ -245,7 +281,7 @@ export type TokenApprovalInfo =
     }
 
 // Converts from BE type to SDK type
-function transformToDutchOrderInfo(orderInfo: DutchOrderInfoV2): UnsignedV2DutchOrderInfo {
+function transformToV2DutchOrderInfo(orderInfo: DutchOrderInfoV2): UnsignedV2DutchOrderInfo {
   return {
     ...orderInfo,
     nonce: BigNumber.from(orderInfo.nonce),
@@ -260,6 +296,38 @@ function transformToDutchOrderInfo(orderInfo: DutchOrderInfoV2): UnsignedV2Dutch
       token: output.token ?? '',
       startAmount: BigNumber.from(output.startAmount),
       endAmount: BigNumber.from(output.endAmount),
+      recipient: output.recipient,
+    })),
+    cosigner: orderInfo.cosigner ?? '',
+  }
+}
+
+function transformToV3DutchOrderInfo(orderInfo: DutchOrderInfoV3): UnsignedV3DutchOrderInfo {
+  return {
+    ...orderInfo,
+    startingBaseFee: BigNumber.from(0),
+    nonce: BigNumber.from(orderInfo.nonce),
+    additionalValidationContract: orderInfo.additionalValidationContract ?? '',
+    additionalValidationData: orderInfo.additionalValidationData ?? '',
+    input: {
+      token: orderInfo.input.token ?? '',
+      startAmount: BigNumber.from(orderInfo.input.startAmount),
+      curve: {
+        relativeBlocks: orderInfo.input.curve?.relativeBlocks ?? [],
+        relativeAmounts: orderInfo.input.curve?.relativeAmounts?.map((amount) => BigInt(amount)) ?? [],
+      },
+      maxAmount: BigNumber.from(orderInfo.input.maxAmount),
+      adjustmentPerGweiBaseFee: BigNumber.from(orderInfo.input.adjustmentPerGweiBaseFee),
+    },
+    outputs: orderInfo.outputs.map((output) => ({
+      token: output.token ?? '',
+      startAmount: BigNumber.from(output.startAmount),
+      curve: {
+        relativeBlocks: orderInfo.input.curve?.relativeBlocks ?? [],
+        relativeAmounts: orderInfo.input.curve?.relativeAmounts?.map((amount) => BigInt(amount)) ?? [],
+      },
+      minAmount: BigNumber.from(output.minAmount),
+      adjustmentPerGweiBaseFee: BigNumber.from(output.adjustmentPerGweiBaseFee),
       recipient: output.recipient,
     })),
     cosigner: orderInfo.cosigner ?? '',
@@ -285,17 +353,6 @@ function transformToPriorityOrderInfo(orderInfo: PriorityOrderInfo): UnsignedPri
     })),
     baselinePriorityFeeWei: BigNumber.from(orderInfo.baselinePriorityFeeWei),
     auctionStartBlock: BigNumber.from(orderInfo.auctionStartBlock),
-  }
-}
-
-function getSwapFee(quoteResponse?: DiscriminatedQuoteResponse): SwapFee | undefined {
-  if (!quoteResponse?.quote.portionAmount || !quoteResponse?.quote?.portionBips) {
-    return undefined
-  }
-  return {
-    recipient: quoteResponse.quote.portionRecipient,
-    percent: new Percent(quoteResponse.quote.portionBips, '10000'),
-    amount: quoteResponse?.quote.portionAmount,
   }
 }
 
@@ -380,7 +437,7 @@ export class BridgeTrade {
     this.tradeType = tradeType
   }
 
-  /* Bridge trades have no slippage and hence a static execution price. 
+  /* Bridge trades have no slippage and hence a static execution price.
   The following methods are overridden for compatibility with other trade types */
   worstExecutionPrice(_threshold: Percent): Price<Currency, Currency> {
     return this.executionPrice
@@ -389,7 +446,7 @@ export class BridgeTrade {
   maximumAmountIn(_slippageTolerance: Percent, _amountIn?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
     return this.inputAmount
   }
-  
+
   minimumAmountOut(_slippageTolerance: Percent, _amountOut?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
     return this.outputAmount
   }

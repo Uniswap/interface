@@ -13,7 +13,6 @@ import { Hr } from 'components/Tokens/TokenDetails/shared'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import deprecatedStyled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
@@ -23,7 +22,7 @@ import { ChevronRight } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
-import { Flex, useIsTouchDevice } from 'ui/src'
+import { Flex, useIsTouchDevice, useMedia } from 'ui/src'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { isUniverseChainId } from 'uniswap/src/features/chains/types'
@@ -39,7 +38,7 @@ import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 const DividerLine = deprecatedStyled(Hr)`
   margin-top: 40px;
   margin-bottom: 40px;
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     opacity: 0;
     margin-bottom: 0;
   }
@@ -97,7 +96,7 @@ function TDPSwapComponent() {
   const currencyInfo = useCurrencyInfo(currencyId(currency))
 
   const handleCurrencyChange = useCallback(
-    (tokens: CurrencyState) => {
+    (tokens: CurrencyState, isBridgePair?: boolean) => {
       const inputCurrencyURLAddress = getCurrencyURLAddress(tokens.inputCurrency)
       const outputCurrencyURLAddress = getCurrencyURLAddress(tokens.outputCurrency)
 
@@ -106,7 +105,7 @@ function TDPSwapComponent() {
       const outputEquivalent =
         addressesAreEquivalent(outputCurrencyURLAddress, address) && tokens.outputCurrency?.chainId === currencyChainId
 
-      if (inputEquivalent || outputEquivalent) {
+      if (inputEquivalent || outputEquivalent || isBridgePair) {
         return
       }
 
@@ -189,7 +188,8 @@ export default function TokenDetails() {
   const { address, currency, tokenQuery, currencyChain, multiChainMap } = useTDPContext()
   const tokenQueryData = tokenQuery.data?.token
   const pageChainBalance = multiChainMap[currencyChain]?.balance
-  const { lg: showRightPanel } = useScreenSize()
+  const media = useMedia()
+  const showRightPanel = !media.xl
   const { direction: scrollDirection } = useScroll()
   const isTouchDevice = useIsTouchDevice()
 

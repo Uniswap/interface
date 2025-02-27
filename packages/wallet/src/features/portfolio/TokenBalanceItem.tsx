@@ -2,13 +2,13 @@ import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Shine, Text, TouchableArea, isWeb } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import {
   useTokenBalanceMainPartsFragment,
   useTokenBalanceQuantityPartsFragment,
@@ -135,7 +135,6 @@ function TokenBalanceRightSideColumn({
             <Text color="$neutral1" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
               {balance}
             </Text>
-
             <RelativeChange
               alignRight
               change={relativeChange24}

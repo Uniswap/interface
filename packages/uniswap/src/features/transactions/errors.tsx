@@ -9,7 +9,7 @@ import {
 } from 'uniswap/src/features/transactions/swap/types/steps'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { OverridesSentryFingerprint } from 'utilities/src/logger/types'
-import { isMobileApp } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
 
 /** Superclass used to differentiate categorized/known transaction errors from generic/unknown errors. */
 export abstract class TransactionError extends Error {
@@ -79,7 +79,7 @@ export class TransactionStepFailedError extends TransactionError implements Over
         fingerprint.push(String(this.originalError.data.detail))
       }
     } catch (e) {
-      if (!isMobileApp) {
+      if (isInterface) {
         Sentry.addBreadCrumb({
           level: 'info',
           category: 'transaction',

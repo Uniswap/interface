@@ -12,9 +12,11 @@ import { useNetworkColors } from 'uniswap/src/utils/colors'
 export function BuyNativeTokenButton({
   nativeCurrencyInfo,
   canBridge,
+  onPress,
 }: {
   nativeCurrencyInfo: CurrencyInfo
   canBridge: boolean
+  onPress?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
@@ -28,6 +30,7 @@ export function BuyNativeTokenButton({
 
   const onPressBuyFiatOnRamp = (): void => {
     navigateToFiatOnRamp({ prefilledCurrency: fiatOnRampCurrency })
+    onPress?.()
   }
 
   return (
@@ -47,7 +50,8 @@ export function BuyNativeTokenButton({
       >
         {canBridge
           ? t('swap.warning.insufficientGas.button.buyWithCard')
-          : t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol })}
+          : // FIXME: Verify WALL-5906
+            t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol ?? '' })}
       </DeprecatedButton>
     </Trace>
   )

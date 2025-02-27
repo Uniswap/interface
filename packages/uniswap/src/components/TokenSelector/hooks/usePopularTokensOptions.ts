@@ -6,7 +6,7 @@ import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePopularTokens as usePopularTokensGql } from 'uniswap/src/features/dataApi/topTokens'
+import { usePopularTokensGql } from 'uniswap/src/features/dataApi/topTokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 

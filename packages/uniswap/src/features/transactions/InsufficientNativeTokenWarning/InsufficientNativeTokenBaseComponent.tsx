@@ -82,9 +82,11 @@ export function InsufficientNativeTokenBaseComponent({
         </Text>
       </Flex>
 
-      <Flex>
-        <InfoCircle color="$neutral3" size="$icon.16" />
-      </Flex>
+      {!isWeb && (
+        <Flex>
+          <InfoCircle color="$neutral3" size="$icon.16" />
+        </Flex>
+      )}
     </Flex>
   )
 }

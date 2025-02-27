@@ -189,7 +189,7 @@ function ModalFooter({
         </DeprecatedButton>
         <DeprecatedButton
           fill
-          disabled={!confirmationEnabled}
+          isDisabled={!confirmationEnabled}
           size="medium"
           testID={TestID.Confirm}
           onPress={onConfirm}

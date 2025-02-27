@@ -12,6 +12,7 @@ import { AnimatedTouchableArea, Flex, Loader, Text, useIsDarkMode, useShadowProp
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   FavoriteTokenCardQuery,
@@ -25,7 +26,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114

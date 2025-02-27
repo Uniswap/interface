@@ -10,7 +10,7 @@ export function useCreateLpPositionCalldataQuery({
   deadlineInMinutes,
   ...rest
 }: UseQueryApiHelperHookArgs<CreateLPPositionRequest, CreateLPPositionResponse> & {
-  deadlineInMinutes: number | undefined
+  deadlineInMinutes?: number
 }): UseQueryResult<CreateLPPositionResponse> {
   const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.createLp, params]
   const deadline = getTradeSettingsDeadline(deadlineInMinutes)

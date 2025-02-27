@@ -11,7 +11,6 @@ plugins {
 def nodeModulesPath = "../../../../node_modules"
 def rnRoot = "../.."
 
-
 def keystorePropertiesFile = rootProject.file("keystore.properties");
 def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) {
@@ -25,6 +24,8 @@ react {
     cliFile = file("$nodeModulesPath/react-native/cli.js")
     debuggableVariants = ["devDebug", "betaDebug", "prodDebug"]
     hermesCommand = "../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc" // This is relative to the project root.
+    /* Autolinking */
+    autolinkLibrariesWithApp()
 }
 /**
  * Set this to true to create four separate APKs instead of one,
@@ -64,24 +65,6 @@ def reactNativeArchitectures() {
 
 boolean isCI = System.getenv('CI') != null
 boolean isE2E = System.getenv('E2E_MODE') != null
-boolean sentryPropertiesAvailable = System.getenv('SENTRY_AUTH_TOKEN') != null && System.getenv('SENTRY_PROJECT') != null && System.getenv('SENTRY_ORG') != null
-
-if (isCI && sentryPropertiesAvailable && !isE2E) {
-  project.ext.sentryCli = [
-    logLevel: "info",
-  ]
-
-  apply plugin: "io.sentry.android.gradle"
-
-  sentry {
-    uploadNativeSymbols = true
-    includeNativeSources = true
-
-    autoInstallation {
-      enabled = false
-    }
-  }
-}
 
 boolean datadogPropertiesAvailable = System.getenv('DATADOG_API_KEY') != null
 
@@ -185,11 +168,17 @@ android {
       pickFirst 'lib/armeabi-v7a/libc++_shared.so'
       pickFirst 'lib/arm64-v8a/libc++_shared.so'
     }
+
+    androidResources {
+        ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
+
     buildFeatures {
         compose true
     }
+    
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.6"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     sourceSets {
@@ -254,12 +243,10 @@ dependencies {
 
     // For animated GIF support
     implementation 'com.facebook.fresco:animated-gif:3.6.0'
-    
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
 }
-
-apply from: file("${nodeModulesPath}/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

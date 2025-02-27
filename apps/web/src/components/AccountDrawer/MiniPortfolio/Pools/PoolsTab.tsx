@@ -182,9 +182,8 @@ function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: Po
 
   return (
     <Trace logPress element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW} properties={analyticsEventProperties}>
-      <TouchableArea onPress={onClick}>
+      <TouchableArea onPress={onClick} m="$spacing16">
         <LiquidityPositionCard
-          isClickableStyle
           isMiniVersion
           liquidityPosition={positionInfo}
           showVisibilityOption

@@ -17,7 +17,6 @@ import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useEffect, useMemo } from 'react'
 import ARGENT_WALLET_DETECTOR_ABI from 'uniswap/src/abis/argent-wallet-detector.json'
-import EIP_2612 from 'uniswap/src/abis/eip_2612.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { ArgentWalletDetector, Erc20, Erc721, Weth } from 'uniswap/src/abis/types'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
@@ -92,10 +91,6 @@ export function useArgentWalletDetectorContract() {
     ARGENT_WALLET_DETECTOR_ABI,
     false,
   )
-}
-
-export function useEIP2612Contract(tokenAddress?: string): Contract | null {
-  return useContract(tokenAddress, EIP_2612, false)
 }
 
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {

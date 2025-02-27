@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -27,12 +28,15 @@ export function useUnichainPromoVisibility(): {
   const hasDismissedUnichainWarmBanner = useSelector(selectHasDismissedUnichainWarmBanner)
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
 
+  const hasLoadedRef = useRef(false)
+  hasLoadedRef.current = hasLoadedRef.current || (!loading && !!sortedBalancesData)
+
   // Don't show promotion if:
   // - unichain isn't enabled
   // - the feature flag is off
-  // - data is loading
+  // - data hasn't loaded at least once
   // - testnet mode is on
-  if (!unichainEnabled || !unichainPromoEnabled || loading || isTestnetModeEnabled) {
+  if (!unichainEnabled || !unichainPromoEnabled || !hasLoadedRef.current || isTestnetModeEnabled) {
     return {
       shouldShowUnichainBannerCold: false,
       shouldShowUnichainBannerWarm: false,

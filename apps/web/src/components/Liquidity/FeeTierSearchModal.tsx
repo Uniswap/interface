@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
-import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
+import { MAX_FEE_TIER_DECIMALS, useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { StyledPercentInput } from 'components/PercentInput'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -12,12 +12,13 @@ import { useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
-import { ClickableTamaguiStyle, CloseIcon } from 'theme/components'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { ClickableTamaguiStyle } from 'theme/components'
+import { DeprecatedButton, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { Search } from 'ui/src/components/icons/Search'
+import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -32,6 +33,12 @@ const FeeTierPercentInput = styled(StyledPercentInput)`
   text-align: end;
   justify-content: flex-end;
 `
+
+const MAX_CHAR_PIXEL_WIDTH = 46
+const MAX_FONT_SIZE = 70
+const MIN_FONT_SIZE = 12
+
+const SMALLEST_BIP_AMOUNT = 0.0001
 
 export function FeeTierSearchModal() {
   const { chainId } = useMultichainContext()
@@ -98,20 +105,20 @@ export function FeeTierSearchModal() {
             if (!prev || prev === '') {
               return '0'
             }
-            newValue -= 0.01
+            newValue -= SMALLEST_BIP_AMOUNT
             if (newValue < 0) {
               return '0'
             }
           } else if (autoIncrementing) {
             if (!prev || prev === '') {
-              return '0.01'
+              return SMALLEST_BIP_AMOUNT.toString()
             }
-            newValue += 0.01
+            newValue += SMALLEST_BIP_AMOUNT
             if (newValue > 100) {
               return '100'
             }
           }
-          return newValue.toFixed(2)
+          return newValue.toFixed(MAX_FEE_TIER_DECIMALS)
         })
       }, currentInterval)
 
@@ -130,6 +137,15 @@ export function FeeTierSearchModal() {
 
   const feeHundredthsOfBips = Math.round(parseFloat(createFeeValue) * 10000)
 
+  const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_FONT_SIZE, MIN_FONT_SIZE)
+  useEffect(() => {
+    if (createFeeValue) {
+      onSetFontSize(createFeeValue)
+    } else {
+      onSetFontSize('0')
+    }
+  }, [onSetFontSize, createFeeValue])
+
   return (
     <Modal name={ModalName.FeeTierSearch} onClose={onClose} isDismissible isModalOpen={feeTierSearchModalOpen}>
       <Flex width="100%" gap="$gap20">
@@ -142,7 +158,7 @@ export function FeeTierSearchModal() {
           <Text variant="body2" flexGrow={1} textAlign="center" pl={showCreateModal ? 0 : 24}>
             {showCreateModal ? t('fee.tier.create') : t('fee.tier.select')}
           </Text>
-          <CloseIcon data-testid="LiquidityModalHeader-close" onClick={onClose} size={24} />
+          <ModalCloseIcon testId="LiquidityModalHeader-close" onClose={onClose} />
         </Flex>
 
         {showCreateModal ? (
@@ -170,11 +186,11 @@ export function FeeTierSearchModal() {
                     if (!prev || prev === '') {
                       return '0'
                     }
-                    const newValue = parseFloat(prev) - 0.01
+                    const newValue = parseFloat(prev) - SMALLEST_BIP_AMOUNT
                     if (isNaN(newValue) || newValue < 0) {
                       return '0'
                     }
-                    return newValue.toFixed(2)
+                    return newValue.toFixed(MAX_FEE_TIER_DECIMALS)
                   })
                 }}
                 {...ClickableTamaguiStyle}
@@ -183,24 +199,28 @@ export function FeeTierSearchModal() {
                   -
                 </Text>
               </Flex>
-              <Flex grow justifyContent="flex-end">
-                <Flex row maxWidth="100%" centered>
+              <Flex flex={1} justifyContent="flex-end">
+                <Flex row maxWidth="100%" centered onLayout={onLayout} minHeight="84px">
                   <FeeTierPercentInput
                     value={createFeeValue}
                     onUserInput={(input) => {
-                      if (parseInt(input) > 100) {
+                      if (parseFloat(input) > 100) {
                         setCreateFeeValue('100')
                       } else {
                         setCreateFeeValue(input)
                       }
                     }}
                     placeholder="0"
-                    maxDecimals={2}
-                    maxLength={4}
+                    maxDecimals={MAX_FEE_TIER_DECIMALS}
+                    $fontSize={fontSize}
                     $width={createFeeValue && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
                   />
-                  <NumericalInputSymbolContainer showPlaceholder={!createFeeValue}>%</NumericalInputSymbolContainer>
-                  <NumericalInputMimic ref={hiddenObserver.ref}>{createFeeValue}</NumericalInputMimic>
+                  <NumericalInputSymbolContainer showPlaceholder={!createFeeValue} $fontSize={fontSize}>
+                    %
+                  </NumericalInputSymbolContainer>
+                  <NumericalInputMimic ref={hiddenObserver.ref} $fontSize={fontSize}>
+                    {createFeeValue}
+                  </NumericalInputMimic>
                 </Flex>
               </Flex>
               <Flex
@@ -220,13 +240,13 @@ export function FeeTierSearchModal() {
                 onPress={() => {
                   setCreateFeeValue((prev) => {
                     if (!prev || prev === '') {
-                      return '0.01'
+                      return SMALLEST_BIP_AMOUNT.toString()
                     }
-                    const newValue = parseFloat(prev) + 0.01
+                    const newValue = parseFloat(prev) + SMALLEST_BIP_AMOUNT
                     if (newValue > 100) {
                       return '100'
                     }
-                    return newValue.toFixed(2)
+                    return newValue.toFixed(MAX_FEE_TIER_DECIMALS)
                   })
                 }}
                 {...ClickableTamaguiStyle}
@@ -252,7 +272,7 @@ export function FeeTierSearchModal() {
               pressStyle={{
                 backgroundColor: undefined,
               }}
-              disabled={!createFeeValue || createFeeValue === '0' || createFeeValue === ''}
+              isDisabled={!createFeeValue || createFeeValue === ''}
               onPress={() => {
                 setPositionState((prevState) => ({
                   ...prevState,

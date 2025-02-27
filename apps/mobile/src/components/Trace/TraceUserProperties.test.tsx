@@ -2,7 +2,8 @@ import React from 'react'
 import { useColorScheme } from 'react-native'
 import renderer, { act } from 'react-test-renderer'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
-import * as biometricHooks from 'src/features/biometrics/hooks'
+import * as biometricAppSettingsHooks from 'src/features/biometrics/useBiometricAppSettings'
+import * as deviceBiometricHooks from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import { AuthMethod } from 'src/features/telemetry/utils'
 import * as versionUtils from 'src/utils/version'
 import * as useIsDarkModeFile from 'ui/src/hooks/useIsDarkMode'
@@ -100,11 +101,11 @@ describe('TraceUserProperties', () => {
     mockFn(walletHooks, 'useSignerAccounts', [signerAccount1, signerAccount2, signerAccount3])
     mockFn(userSettingsHooks, 'useHideSpamTokensSetting', true)
     mockFn(userSettingsHooks, 'useHideSmallBalancesSetting', false)
-    mockFn(biometricHooks, 'useBiometricAppSettings', {
+    mockFn(biometricAppSettingsHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: true,
       requiredForTransactions: true,
     })
-    mockFn(biometricHooks, 'useDeviceSupportsBiometricAuth', {
+    mockFn(deviceBiometricHooks, 'useDeviceSupportsBiometricAuth', {
       touchId: false,
       faceId: true,
     })
@@ -159,11 +160,11 @@ describe('TraceUserProperties', () => {
     mockFn(walletHooks, 'useViewOnlyAccounts', [])
     mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.On)
     mockFn(walletHooks, 'useSignerAccounts', [])
-    mockFn(biometricHooks, 'useBiometricAppSettings', {
+    mockFn(biometricAppSettingsHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: false,
       requiredForTransactions: false,
     })
-    mockFn(biometricHooks, 'useDeviceSupportsBiometricAuth', {
+    mockFn(deviceBiometricHooks, 'useDeviceSupportsBiometricAuth', {
       touchId: false,
       faceId: false,
     })

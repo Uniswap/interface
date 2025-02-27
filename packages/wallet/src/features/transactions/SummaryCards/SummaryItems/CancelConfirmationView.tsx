@@ -100,7 +100,7 @@ export function CancelConfirmationView({
         </DeprecatedButton>
         <DeprecatedButton
           fill
-          disabled={disableConfirmationButton}
+          isDisabled={disableConfirmationButton}
           size="small"
           testID={TestID.Cancel}
           theme="detrimental"

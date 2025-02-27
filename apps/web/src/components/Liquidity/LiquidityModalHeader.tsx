@@ -1,9 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CloseIcon } from 'theme/components'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, ModalCloseIcon, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { iconSizes } from 'ui/src/theme'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/SwapFormSettings'
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
 import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
@@ -20,7 +18,7 @@ export function LiquidityModalHeader({
   const { t } = useTranslation()
 
   const CloseIconComponent = useMemo(
-    () => <CloseIcon data-testid="LiquidityModalHeader-close" onClick={closeModal} size={iconSizes.icon24} />,
+    () => <ModalCloseIcon testId="LiquidityModalHeader-close" onClose={closeModal} />,
     [closeModal],
   )
 

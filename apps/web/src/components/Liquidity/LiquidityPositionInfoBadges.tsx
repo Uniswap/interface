@@ -73,7 +73,7 @@ export function LiquidityPositionInfoBadges({
       v4hook && v4hook !== ZERO_ADDRESS
         ? { label: v4hook, copyable: true, icon: <DocumentList color="$neutral2" size={16} /> }
         : undefined,
-      feeTier
+      feeTier !== undefined && feeTier !== '' && (typeof feeTier === 'number' || !isNaN(Number(feeTier)))
         ? isDynamicFeeTierAmount(feeTier)
           ? { label: t('common.dynamic') }
           : { label: `${Number(feeTier) / 10000}%` }

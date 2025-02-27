@@ -2,14 +2,15 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
-import { useEIP2612Contract } from 'hooks/useContract'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import JSBI from 'jsbi'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
+import { EIP2612_ABI } from 'uniswap/src/abis/eip_2612'
 import { DAI, UNI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { assume0xAddress } from 'utils/wagmi'
+import { useReadContract } from 'wagmi'
 
 export enum PermitType {
   AMOUNT = 1,
@@ -115,10 +116,17 @@ export function useERC20Permit(
   const account = useAccount()
   const provider = useEthersWeb3Provider()
   const tokenAddress = currencyAmount?.currency?.isToken ? currencyAmount.currency.address : undefined
-  const eip2612Contract = useEIP2612Contract(tokenAddress)
   const isArgentWallet = useIsArgentWallet()
-  const nonceInputs = useMemo(() => [account.address ?? undefined], [account.address])
-  const tokenNonceState = useSingleCallResult(eip2612Contract, 'nonces', nonceInputs)
+
+  const { data: nonce, isLoading: nonceLoading } = useReadContract({
+    address: assume0xAddress(tokenAddress),
+    chainId: currencyAmount?.currency.chainId,
+    abi: EIP2612_ABI,
+    functionName: 'nonces',
+    args: account.address ? [assume0xAddress(account.address)] : undefined,
+    query: { enabled: !!account.address },
+  })
+
   const permitInfo =
     overridePermitInfo ??
     (status === 'connected' && account.chainId && tokenAddress
@@ -131,12 +139,11 @@ export function useERC20Permit(
     if (
       isArgentWallet ||
       !currencyAmount ||
-      !eip2612Contract ||
       !account.chainId ||
       !account.address ||
       !transactionDeadline ||
       !provider ||
-      !tokenNonceState.valid ||
+      nonce === undefined ||
       !tokenAddress ||
       !spender ||
       !permitInfo
@@ -148,8 +155,8 @@ export function useERC20Permit(
       }
     }
 
-    const nonceNumber = tokenNonceState.result?.[0]?.toNumber()
-    if (tokenNonceState.loading || typeof nonceNumber !== 'number') {
+    const nonceNumber = Number(nonce)
+    if (nonceLoading || typeof nonceNumber !== 'number') {
       return {
         state: UseERC20PermitState.LOADING,
         signatureData: null,
@@ -235,14 +242,12 @@ export function useERC20Permit(
   }, [
     isArgentWallet,
     currencyAmount,
-    eip2612Contract,
     account.chainId,
     account.address,
     transactionDeadline,
     provider,
-    tokenNonceState.valid,
-    tokenNonceState.result,
-    tokenNonceState.loading,
+    nonce,
+    nonceLoading,
     tokenAddress,
     spender,
     permitInfo,

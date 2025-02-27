@@ -19,7 +19,6 @@ import { fonts } from 'ui/src/theme'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 
 enum RangeSelectionInput {
   MIN,
@@ -65,7 +64,7 @@ const InitialPriceInput = () => {
     derivedPositionInfo.currencies,
     priceInverted,
   )
-  const price = derivedPriceRangeInfo.price
+  const { price, invertPrice } = derivedPriceRangeInfo
 
   const controlOptions = useMemo(() => {
     return [{ value: token0?.symbol ?? '' }, { value: token1?.symbol ?? '' }]
@@ -138,9 +137,7 @@ const InitialPriceInput = () => {
           />
         </Text>
       </Flex>
-      <DisplayCurrentPrice
-        price={areCurrenciesEqual(price?.baseCurrency, initialPriceBaseToken) ? price : price?.invert()}
-      />
+      <DisplayCurrentPrice price={invertPrice ? price?.invert() : price} />
     </Flex>
   )
 }
@@ -484,7 +481,7 @@ export const SelectPriceRangeStep = ({
             backgroundColor: undefined,
           }}
           onPress={onContinue}
-          disabled={invalidState}
+          isDisabled={invalidState}
         >
           <Text variant="buttonLabel1" color="$surface1">
             <Trans i18nKey="common.button.continue" />
@@ -534,7 +531,7 @@ export const SelectPriceRangeStep = ({
               px: '$spacing8',
             }}
           >
-            <DisplayCurrentPrice price={priceRangeState.priceInverted ? price?.invert() : price} />
+            <DisplayCurrentPrice price={invertPrice ? price?.invert() : price} />
             {!creatingPoolOrPair && !isPriceRangeInputV2Enabled && (
               <LiquidityChartRangeInput
                 currencyA={baseCurrency ?? undefined}
@@ -618,7 +615,7 @@ export const SelectPriceRangeStep = ({
           backgroundColor: undefined,
         }}
         onPress={onContinue}
-        disabled={invalidState}
+        isDisabled={invalidState}
       >
         <Text variant="buttonLabel1" color="$surface1">
           {t(`common.button.continue`)}

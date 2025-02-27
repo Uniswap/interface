@@ -51,8 +51,6 @@ const getPreloadedState = (props?: PreloadedStateProps): PreloadedState<MobileSt
     favorites: {
       watchedAddresses,
       tokens: [],
-      tokensVisibility: {},
-      nftsVisibility: {},
     },
     wallet: {
       accounts: {

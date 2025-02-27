@@ -1,6 +1,5 @@
-import { PermissionStatus, scanFromURLAsync } from 'expo-barcode-scanner'
-import { BarCodeScanningResult, CameraType } from 'expo-camera'
-import { CameraProps, CameraView, useCameraPermissions } from 'expo-camera/next'
+import { BarcodeScanningResult, CameraView, CameraViewProps, scanFromURLAsync, useCameraPermissions } from 'expo-camera'
+import { PermissionStatus } from 'expo-modules-core'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
@@ -21,6 +20,11 @@ import { openSettings } from 'wallet/src/utils/linking'
 
 enum BarcodeType {
   QR = 'qr',
+}
+
+enum CameraType {
+  Front = 'front',
+  Back = 'back',
 }
 
 type QRCodeScannerProps = {
@@ -60,7 +64,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const [bottomLayout, setBottomLayout] = useState<LayoutRectangle | null>()
 
   const handleBarcodeScanned = useCallback(
-    (result: BarCodeScanningResult): void => {
+    (result: BarcodeScanningResult): void => {
       if (shouldFreezeCamera) {
         return
       }
@@ -107,6 +111,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
         return
       }
       const { status } = await requestPermission()
+
       if ([PermissionStatus.UNDETERMINED, PermissionStatus.DENIED].includes(status)) {
         Alert.alert(t('qrScanner.error.camera.title'), t('qrScanner.error.camera.message'), [
           { text: t('common.navigation.systemSettings'), onPress: openSettings },
@@ -129,7 +134,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const cameraHeight = CAMERA_ASPECT_RATIO * cameraWidth
   const scannerSize = Math.min(overlayWidth, cameraWidth) * SCAN_ICON_WIDTH_RATIO
 
-  const disableMicPrompt: CameraProps = {
+  const disableMicPrompt: CameraViewProps = {
     mute: true,
     mode: 'picture',
   }
@@ -144,7 +149,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               barcodeScannerSettings={{
                 barcodeTypes: [BarcodeType.QR],
               }}
-              facing={CameraType.back}
+              facing={CameraType.Back}
               style={StyleSheet.absoluteFillObject}
               onBarcodeScanned={handleBarcodeScanned}
             />

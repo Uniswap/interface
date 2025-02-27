@@ -5,7 +5,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text, isWeb, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/useFilterCallbacks'
 import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
 import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
@@ -185,8 +185,8 @@ export function TokenSelectorContent({
     if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
       return (
         <TokenSelectorEmptySearchList
+          activeAccountAddress={activeAccountAddress}
           chainFilter={chainFilter}
-          isKeyboardOpen={isKeyboardOpen}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -285,7 +285,7 @@ export function TokenSelectorContent({
                     includeAllNetworks={!isTestnetModeEnabled}
                     chainIds={chainIds || enabledChains}
                     selectedChain={chainFilter}
-                    styles={isExtension ? { dropdownZIndex: zIndices.overlay } : undefined}
+                    styles={isExtension ? { dropdownZIndex: zIndexes.overlay } : undefined}
                     onDismiss={dismissNativeKeyboard}
                     onPressChain={(newChainId) => {
                       onChangeChainFilter(newChainId)
@@ -355,6 +355,7 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       name={ModalName.TokenSelector}
       padding="$none"
       snapPoints={['65%', '100%']}
+      height={isInterface ? '100vh' : undefined}
       onClose={onClose}
     >
       <TokenSelectorModalContent {...props} />

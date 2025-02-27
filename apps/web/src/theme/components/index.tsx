@@ -13,7 +13,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { AlertTriangle, CheckCircle, Copy, Icon, X } from 'react-feather'
+import { AlertTriangle, CheckCircle, Copy, Icon } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
@@ -97,12 +97,6 @@ export const TamaguiClickableStyle = {
     opacity: 0.6,
   },
 } satisfies TextProps
-
-export const CloseIcon = styled(X)<{ onClick: () => void; $color?: string }>`
-  color: ${({ theme, $color }) => $color ?? theme.neutral1};
-  cursor: pointer;
-  ${ClickableStyle}
-`
 
 const LinkStyle = css`
   color: ${({ theme }) => theme.accent1};
@@ -395,7 +389,7 @@ export const SmallOnly = styled.span`
 
 export const MediumOnly = styled.span`
   display: none;
-  @media (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+  @media (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
     display: block;
   }
 `

@@ -13,7 +13,7 @@ import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { Flex, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { borderRadii, spacing, zIndices } from 'ui/src/theme'
+import { borderRadii, spacing, zIndexes } from 'ui/src/theme'
 import { BottomSheetContextProvider } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
@@ -53,7 +53,7 @@ const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
   return (
     <BottomSheetBackdrop
       {...props}
-      style={[props.style, { zIndex: zIndices.popoverBackdrop }]}
+      style={[props.style, { zIndex: zIndexes.popoverBackdrop }]}
       appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
       disappearsOnIndex={DISAPPEARS_ON_INDEX}
       opacity={0.4}
@@ -137,7 +137,7 @@ function BottomSheetModalContents({
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
-        style={[props.style, { zIndex: fullScreen ? undefined : zIndices.modalBackdrop }]}
+        style={[props.style, { zIndex: fullScreen ? undefined : zIndexes.modalBackdrop }]}
         appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
         disappearsOnIndex={DISAPPEARS_ON_INDEX}
         opacity={hideScrim ? 0 : blurredBackground ? 0.2 : 0.4}
@@ -264,7 +264,7 @@ function BottomSheetModalContents({
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}
-      containerStyle={{ zIndex: fullScreen ? undefined : zIndices.modal }}
+      containerStyle={{ zIndex: fullScreen ? undefined : zIndexes.modal }}
       enableContentPanningGesture={isDismissible}
       enableDynamicSizing={!snapPoints || enableDynamicSizing}
       enableHandlePanningGesture={isDismissible}
@@ -337,7 +337,7 @@ export function BottomSheetDetachedModal({
       backdropComponent={Backdrop}
       backgroundStyle={backgroundStyle}
       bottomInset={insets.bottom}
-      containerStyle={{ zIndex: zIndices.popover }}
+      containerStyle={{ zIndex: zIndexes.popover }}
       detached={true}
       enableContentPanningGesture={isDismissible}
       enableDynamicSizing={!snapPoints}

@@ -62,8 +62,6 @@ const preloadedState: PreloadedState<UniswapState> = {
   favorites: {
     tokens: favoriteCurrencyIds,
     watchedAddresses: [],
-    tokensVisibility: {},
-    nftsVisibility: {},
   },
 }
 

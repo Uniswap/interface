@@ -5,10 +5,11 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { useBlockaidFeeComparisonAnalytics } from 'uniswap/src/features/tokens/hooks/useBlockaidFeeComparisonAnalytics'
 import {
   TokenProtectionWarning,
-  getFeeOnTransfer,
   getSeverityFromTokenProtectionWarning,
+  getTokenProtectionFeeOnTransfer,
   getTokenProtectionWarning,
   getTokenWarningSeverity,
   useCardHeaderText,
@@ -41,7 +42,7 @@ function useTokenWarningOverrides(
   },
 ): { severity: WarningSeverity; heading: string | null; description: string | null } {
   const { heading: headingDefault, description: descriptionDefault } = useTokenWarningCardText(currencyInfo)
-  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo?.currency)
+  const { buyFeePercent, sellFeePercent } = getTokenProtectionFeeOnTransfer(currencyInfo)
 
   const severity = tokenProtectionWarningOverride
     ? getSeverityFromTokenProtectionWarning(tokenProtectionWarningOverride)
@@ -51,10 +52,8 @@ function useTokenWarningOverrides(
     tokenProtectionWarning: tokenProtectionWarningOverride ?? TokenProtectionWarning.None,
   })
 
-  const displayedBuyFeePercent =
-    feeOnTransferOverride?.buyFeePercent ?? buyFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent
-  const displayedSellFeePercent =
-    feeOnTransferOverride?.sellFeePercent ?? sellFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent
+  const displayedBuyFeePercent = feeOnTransferOverride?.buyFeePercent ?? buyFeePercent
+  const displayedSellFeePercent = feeOnTransferOverride?.sellFeePercent ?? sellFeePercent
   const descriptionOverride = useCardSubtitleText({
     tokenProtectionWarning: tokenProtectionWarningOverride ?? TokenProtectionWarning.None,
     tokenSymbol: currencyInfo?.currency.symbol,
@@ -85,12 +84,13 @@ export function TokenWarningCard({
     tokenProtectionWarningOverride,
     feeOnTransferOverride,
   )
+  useBlockaidFeeComparisonAnalytics(currencyInfo)
 
   if (!currencyInfo || !severity || !description) {
     return null
   }
 
-  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo?.currency)
+  const { buyFeePercent, sellFeePercent } = getTokenProtectionFeeOnTransfer(currencyInfo)
   const analyticsProperties = {
     tokenSymbol: currencyInfo.currency.symbol,
     chainId: currencyInfo.currency.chainId,
@@ -98,10 +98,8 @@ export function TokenWarningCard({
     warningSeverity: WarningSeverity[severity],
     tokenProtectionWarning:
       TokenProtectionWarning[tokenProtectionWarningOverride ?? getTokenProtectionWarning(currencyInfo)],
-    buyFeePercent:
-      feeOnTransferOverride?.buyFeePercent ?? buyFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent,
-    sellFeePercent:
-      feeOnTransferOverride?.sellFeePercent ?? sellFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent,
+    buyFeePercent: feeOnTransferOverride?.buyFeePercent ?? buyFeePercent,
+    sellFeePercent: feeOnTransferOverride?.sellFeePercent ?? sellFeePercent,
     safetyInfo: currencyInfo.safetyInfo,
   }
 

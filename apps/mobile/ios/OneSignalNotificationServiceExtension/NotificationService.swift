@@ -87,6 +87,6 @@ struct Constants {
   static let typeUnfundedWallet = "unfunded_wallet_reminder"
   static let typePriceAlert = "price_alert"
   
-  static let gateUnfundedWallet = "notification_unfunded_wallet"
-  static let gatePriceAlert = "notification_price_alerts"
+  static let gateUnfundedWallet = "notification_unfunded_wallet_ios"
+  static let gatePriceAlert = "notification_price_alerts_ios"
 }

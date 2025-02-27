@@ -10,9 +10,10 @@ import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCar
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
+import { X } from 'react-feather'
 import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { useIsTransactionPending } from 'state/transactions/hooks'
-import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
+import { ClickableStyle, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
 import { Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useENS } from 'uniswap/src/features/ens/useENS'
@@ -41,6 +42,12 @@ const ConfirmOrLoadingWrapper = styled.div<{ activeBG: boolean }>`
 
 const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
+`
+
+const CloseIcon = styled(X)<{ onClick: () => void; $color?: string }>`
+  color: ${({ theme, $color }) => $color ?? theme.neutral1};
+  cursor: pointer;
+  ${ClickableStyle}
 `
 
 export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
@@ -99,7 +106,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
   // Avoiding translating because the structure for "Claiming UNI for address" is wrong but this modal is rarely used
   // and ran into difficulties with testing it
   return (
-    <Modal name={ModalName.AddressClaim} isModalOpen={isOpen} onClose={wrappedOnDismiss} maxHeight="90vh" padding={0}>
+    <Modal name={ModalName.AddressClaim} isModalOpen={isOpen} onClose={wrappedOnDismiss} padding={0}>
       {!attempting && (
         <ContentWrapper gap="lg">
           <ModalUpper>

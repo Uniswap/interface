@@ -9,15 +9,14 @@ import { reportNftSpamToSimpleHash } from 'uniswap/src/data/apiClients/simpleHas
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
-import { setNftVisibility } from 'uniswap/src/features/favorites/slice'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
+import { setNftVisibility } from 'uniswap/src/features/visibility/slice'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -62,7 +61,6 @@ export function useNFTContextMenu({
   const nftVisibility = useSelector(selectNftsVisibility)
   const nftKey = contractAddress && tokenId ? getNFTAssetKey(contractAddress, tokenId) : undefined
   const isVisible = !getIsNftHidden({ contractAddress, tokenId, isSpam, nftVisibility })
-  const networkName = chainId && getChainLabel(chainId)
 
   const onPressShare = useCallback(async (): Promise<void> => {
     if (!contractAddress || !tokenId) {
@@ -72,7 +70,7 @@ export function useNFTContextMenu({
   }, [contractAddress, handleShareNft, tokenId])
 
   const onPressReport = useCallback(async () => {
-    if (!nftKey) {
+    if (!nftKey || !chainId) {
       return
     }
 
@@ -84,7 +82,7 @@ export function useNFTContextMenu({
       await reportNftSpamToSimpleHash({
         contractAddress,
         tokenId,
-        networkName,
+        chainId,
       })
     } catch (e) {
       logger.error(e, {
@@ -99,7 +97,7 @@ export function useNFTContextMenu({
         title: t('notification.spam.NFT.successful'),
       }),
     )
-  }, [t, dispatch, contractAddress, isVisible, networkName, nftKey, tokenId])
+  }, [t, dispatch, contractAddress, isVisible, chainId, nftKey, tokenId])
 
   const onPressHiddenStatus = useCallback(() => {
     if (!nftKey) {

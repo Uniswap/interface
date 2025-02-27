@@ -11,6 +11,15 @@ exports[`renders collection preview card 1`] = `
       "top": 5,
     }
   }
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
       "flexDirection": "column",
@@ -219,11 +228,11 @@ exports[`renders collection preview card 1`] = `
             },
           ]
         }
-        tintColor="#222222"
         vbHeight={24}
         vbWidth={24}
       >
         <RNSVGGroup
+          color="#222222"
           fill={null}
           propList={
             [

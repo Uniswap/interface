@@ -3,10 +3,10 @@ import { ReactComponent as LineChartIcon } from 'assets/svg/line-chart-icon.svg'
 import { CHART_TYPE_LABELS, PriceChartType } from 'components/Charts/utils'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
 import Row from 'components/deprecated/Row'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { EllipsisStyle } from 'theme/components'
+import { useMedia } from 'ui/src'
 
 const ChartTypeRow = styled(Row)`
   ${EllipsisStyle}
@@ -44,8 +44,8 @@ export const AdvancedPriceChartToggle = ({
   disableCandlestickUI?: boolean
 }) => {
   const { t } = useTranslation()
-  const screenSize = useScreenSize()
-  const isMobileScreen = !screenSize['sm']
+  const media = useMedia()
+  const isMobileScreen = media.md
   const currentChartTypeDisplayOptions = ADVANCED_PRICE_CHART_OPTIONS.find((o) => o.value === currentChartType)
 
   return (
