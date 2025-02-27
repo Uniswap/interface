@@ -1,5 +1,5 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import { ReactComponent as ExpandoIconClosed } from 'assets/svg/expando-icon-closed.svg'
 import { ReactComponent as ExpandoIconOpened } from 'assets/svg/expando-icon-opened.svg'
 import { ButtonError, SmallButtonPrimary } from 'components/Button/buttons'
@@ -96,6 +96,7 @@ function DropdownController({ open, onClick }: { open: boolean; onClick: () => v
 
 export function SwapDetails({
   trade,
+  inputCurrency,
   allowance,
   allowedSlippage,
   swapResult,
@@ -110,6 +111,7 @@ export function SwapDetails({
   priceImpact,
 }: {
   trade: InterfaceTrade
+  inputCurrency?: Currency
   allowance?: Allowance
   swapResult?: SwapResult
   allowedSlippage: Percent
@@ -188,6 +190,7 @@ export function SwapDetails({
             properties={{
               ...formatSwapButtonClickEventProperties({
                 trade,
+                inputCurrency,
                 swapResult,
                 allowedSlippage,
                 isAutoSlippage,

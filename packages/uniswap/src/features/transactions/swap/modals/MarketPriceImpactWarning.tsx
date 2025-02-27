@@ -21,7 +21,7 @@ function getPriceImpactInfo(t: TFunction, routing: Routing, missing: boolean): {
     } else {
       return {
         caption: t('swap.impactOfTrade.uniswapx'),
-        link: uniswapUrls.helpArticleUrls.priceImpact,
+        link: uniswapUrls.helpArticleUrls.uniswapXInfo,
       }
     }
   } else {

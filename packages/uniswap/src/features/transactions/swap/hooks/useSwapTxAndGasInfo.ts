@@ -40,12 +40,18 @@ export function useSwapTxAndGasInfo({
     routing: trade?.routing,
   })
 
+  const { currencyBalances } = derivedSwapInfo
+  const currencyAmount = currencyAmounts[CurrencyField.INPUT]
+  const currencyBalance = currencyBalances[CurrencyField.INPUT]
+
+  const exceedsMaxAmount = Boolean(currencyBalance && currencyAmount && currencyBalance.lessThan(currencyAmount))
+
   // TODO(MOB-3425) decouple wrap tx from swap tx to simplify UniswapX code
   const swapTxInfo = useTransactionRequestInfo({
     account,
     derivedSwapInfo,
-    // Dont send transaction request if invalid or missing approval data
-    skip: !tokenApprovalInfo?.action || tokenApprovalInfo.action === ApprovalAction.Unknown,
+    // Dont send transaction request if invalid or missing approval data, or if amount exceeds maximum
+    skip: !tokenApprovalInfo?.action || tokenApprovalInfo.action === ApprovalAction.Unknown || exceedsMaxAmount,
     tokenApprovalInfo,
   })
 

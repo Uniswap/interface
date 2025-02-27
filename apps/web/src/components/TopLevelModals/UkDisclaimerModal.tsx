@@ -1,25 +1,9 @@
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
-import Column from 'components/deprecated/Column'
-import styled from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ThemedText } from 'theme/components'
-import { Flex, ModalCloseIcon } from 'ui/src'
+import { Button, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-
-const Wrapper = styled(Column)`
-  padding: 8px;
-`
-
-const ButtonContainer = styled(Column)`
-  padding: 8px 12px 4px;
-`
-
-const StyledThemeButton = styled(ThemeButton)`
-  width: 100%;
-`
 
 export function UkDisclaimerModal() {
   const { t } = useTranslation()
@@ -28,24 +12,24 @@ export function UkDisclaimerModal() {
 
   return (
     <Modal name={ModalName.UkDisclaimer} isModalOpen={isOpen} onClose={closeModal} padding={0}>
-      <Wrapper gap="md">
+      <Flex p="$padding8" gap="$gap12">
         <Flex alignItems="flex-end" pt="$spacing8" pb="$spacing4">
           <ModalCloseIcon onClose={closeModal} />
         </Flex>
-        <Column gap="sm">
-          <ThemedText.HeadlineLarge padding="0px 8px" fontSize="24px" lineHeight="32px">
+        <Flex gap="$gap8">
+          <Text px="$padding8" variant="heading2">
             {t('search.ukDisclaimer')}
-          </ThemedText.HeadlineLarge>
-          <ThemedText.BodyPrimary padding="8px 8px 12px" lineHeight="24px">
+          </Text>
+          <Text variant="body2" p="$padding8" pb="$padding12">
             {t('notice.uk')}
-          </ThemedText.BodyPrimary>
-        </Column>
-        <ButtonContainer gap="md">
-          <StyledThemeButton size={ButtonSize.large} emphasis={ButtonEmphasis.medium} onClick={() => closeModal()}>
+          </Text>
+        </Flex>
+        <Flex px="$padding12" pt="$padding8" pb="$spacing4" gap="$gap12">
+          <Button size="small" onPress={() => closeModal()}>
             {t('common.dismiss')}
-          </StyledThemeButton>
-        </ButtonContainer>
-      </Wrapper>
+          </Button>
+        </Flex>
+      </Flex>
     </Modal>
   )
 }

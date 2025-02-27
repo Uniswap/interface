@@ -24,16 +24,10 @@ const BASE_HEADERS = {
   ...(isMobileApp ? { Origin: uniswapUrls.apiOrigin } : {}),
 }
 
-const generateAxiosHeaders = async (
-  signature: string,
-  firebaseAppCheckToken?: string,
-): Promise<Record<string, string>> => {
+const generateAxiosHeaders = async (signature: string): Promise<Record<string, string>> => {
   return {
     ...BASE_HEADERS,
     'x-uni-sig': signature,
-    ...(firebaseAppCheckToken && {
-      'x-firebase-app-check': firebaseAppCheckToken,
-    }),
   }
 }
 
@@ -115,14 +109,12 @@ export async function claimUnitag({
   metadata,
   account,
   signerManager,
-  firebaseAppCheckToken,
 }: {
   username: string
   deviceId: string
   metadata: ProfileMetadata
   account: Account
   signerManager: SignerManager
-  firebaseAppCheckToken?: string
 }): ReturnType<typeof axios.post<UnitagResponse>> {
   const claimUnitagUrl = `${uniswapUrls.unitagsApiUrl}/username`
   const { requestBody, signature } = await createSignedRequestBody<UnitagClaimUsernameRequestBody>(
@@ -134,7 +126,7 @@ export async function claimUnitag({
     account,
     signerManager,
   )
-  const headers = await generateAxiosHeaders(signature, firebaseAppCheckToken)
+  const headers = await generateAxiosHeaders(signature)
   return await axios.post<UnitagResponse>(claimUnitagUrl, requestBody, {
     headers,
   })

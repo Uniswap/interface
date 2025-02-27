@@ -28,7 +28,7 @@ export const TOKEN_PROTECTION_FOT_HIGH_FEE_BREAKPOINT = 80
 export const TOKEN_PROTECTION_FOT_FEE_BREAKPOINT = 15
 
 // Gets the FoT percentages from Currency, populated by our internal fees DB
-function getCurrencyFeeOnTransfer(currency?: Currency): {
+export function getCurrencyFeeOnTransfer(currency?: Currency): {
   buyFeePercent: number | undefined
   sellFeePercent: number | undefined
 } {

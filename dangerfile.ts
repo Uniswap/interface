@@ -104,6 +104,33 @@ function checkSplitFiles() {
   })
 }
 
+function checkHookFilesHaveTests() {
+  const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)
+
+  touchedFiles.forEach((file) => {
+    // skip non-hook files
+    if (!file.includes('/hooks/') && !file.includes('/hooks.ts')) {
+      return
+    }
+
+    // skip test files
+    if (file.includes('.test.')) {
+      return
+    }
+
+    const baseFile = file.substring(0, file.indexOf('.ts'))
+    const extension = file.indexOf('.tsx') !== -1 ? 'tsx' : 'ts'
+
+    const assumedTestFile = `${dirname(__filename)}/${baseFile}.test.${extension}`
+
+    if (!fs.existsSync(assumedTestFile)) {
+      warn(
+        `\`${file}\` doesn't appear to have an accompanying test file (assumed \`${assumedTestFile}\`). Consider adding tests for this hook!`,
+      )
+    }
+  })
+}
+
 async function processAddChanges() {
   const updatedTsFiles = danger.git.modified_files
     .concat(danger.git.created_files)
@@ -286,6 +313,9 @@ checkSplitFiles()
 
 // Check hook file pattern
 checkGeneralizedHookFiles()
+
+// Check hook tests
+checkHookFilesHaveTests()
 
 // Run checks on added changes
 processAddChanges()

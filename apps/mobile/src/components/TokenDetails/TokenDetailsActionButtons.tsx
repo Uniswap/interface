@@ -4,8 +4,6 @@ import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetails
 import { DeprecatedButton, Flex, GeneratedIcon, useSporeColors } from 'ui/src'
 import { SwapCoin } from 'ui/src/components/icons'
 import { opacify, validColor } from 'ui/src/theme'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -69,12 +67,9 @@ export function TokenDetailsActionButtons({
   const { t } = useTranslation()
   const isOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
 
-  const { currencyId, currencyInfo, isChainEnabled, tokenColor } = useTokenDetailsContext()
+  const { currencyInfo, isChainEnabled, tokenColor } = useTokenDetailsContext()
 
-  const project = useTokenBasicProjectPartsFragment({ currencyId }).data?.project
-
-  const safetyLevel = project?.safetyLevel
-  const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
+  const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
   const disabled = isBlocked || !isChainEnabled
 

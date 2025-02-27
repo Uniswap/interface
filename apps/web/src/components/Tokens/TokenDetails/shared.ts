@@ -1,6 +1,6 @@
 import deprecatedStyled from 'lib/styled-components'
 import { TamaguiClickableStyle } from 'theme/components'
-import { FlexProps, TextProps } from 'ui/src'
+import { TextProps } from 'ui/src'
 
 export const ActionButtonStyle = {
   display: 'flex',
@@ -20,12 +20,6 @@ export const ActionButtonStyle = {
     backgroundColor: '$surface1Hovered',
   },
 } satisfies TextProps
-
-export const ActionMenuFlyoutStyle = {
-  width: 200,
-  top: 'calc(100% + 8px)',
-  right: 0,
-} satisfies FlexProps
 
 export const Hr = deprecatedStyled.hr`
   background-color: ${({ theme }) => theme.surface3};

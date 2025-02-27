@@ -57,10 +57,12 @@ const TransactionSettingsModalContent = ({
 
   // For selected settings, show title on all platforms unless it is explicitly hidden via hideTitle.
   // For top level settings (not selected), show title on mobile + small screen web only.
-  const isWebSmallScreen = media.sm && isInterface
-  const shouldShowTitle = SelectedSetting ? !SelectedSetting.hideTitle : isMobileApp || isWebSmallScreen
+  const isWebSmallScreen = media.sm && isWeb
+  const shouldShowTitle = SelectedSetting
+    ? !SelectedSetting.hideTitle
+    : isMobileApp || (isWebSmallScreen && !isExtension)
 
-  // Hide close button on desktop web and extension unless there is custom button text
+  // Hide close button on desktop web unless there is custom button text
   const shouldShowCloseButton = isMobileApp || isWebSmallScreen || Boolean(SelectedSetting?.renderCloseButtonText)
 
   return (

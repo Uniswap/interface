@@ -30,7 +30,6 @@ export enum FeatureFlags {
   ExtensionAppRating,
   ExtensionAutoConnect,
   ExtensionClaimUnitag,
-  ExtensionPromotionGA,
   FiatOffRamp,
   NotificationPriceAlertsAndroid,
   NotificationPriceAlertsIOS,
@@ -43,7 +42,6 @@ export enum FeatureFlags {
   Scantastic,
   SelfReportSpamNFTs,
   TransactionDetailsSheet,
-  UnitagsDeviceAttestation,
   UwULink,
   BlurredLockScreen,
   TokenSelectorFlashList,
@@ -60,6 +58,7 @@ export enum FeatureFlags {
   MigrateV3ToV4,
   MultipleRoutingOptions,
   NavigationHotkeys,
+  PositionPageV2,
   PriceRangeInputV2,
   QuickRouteMainnet,
   Realtime,
@@ -109,7 +108,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.MonadTestnetDown, 'monad_down'],
   [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
-
+  [FeatureFlags.PositionPageV2, 'position_page_v2'],
   [FeatureFlags.PriceRangeInputV2, 'price_range_input_v2'],
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
   [FeatureFlags.Realtime, 'realtime'],
@@ -130,7 +129,6 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.ExtensionAppRating, 'extension_app_rating'],
   [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
   [FeatureFlags.ExtensionClaimUnitag, 'extension-claim-unitag'],
-  [FeatureFlags.ExtensionPromotionGA, 'extension-promotion-ga'],
   [FeatureFlags.FiatOffRamp, 'fiat-offramp'],
   [FeatureFlags.ForAggregator, 'for-aggregator'],
   [FeatureFlags.NotificationOnboardingCard, 'notification_onboarding_card'],
@@ -145,7 +143,6 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
   [FeatureFlags.TokenSelectorFlashList, 'token_selector_flashlist'],
   [FeatureFlags.TransactionDetailsSheet, 'transaction-details-sheet'],
-  [FeatureFlags.UnitagsDeviceAttestation, 'unitags-device-attestation'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])
 

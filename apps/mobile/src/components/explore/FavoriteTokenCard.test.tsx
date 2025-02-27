@@ -1,4 +1,3 @@
-import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
 import FavoriteTokenCard, { FavoriteTokenCardProps } from 'src/components/explore/FavoriteTokenCard'
 import { act, cleanup, fireEvent, render, waitFor } from 'src/test/test-utils'
@@ -52,8 +51,6 @@ const touchableId = `token-box-${favoriteToken.symbol}`
 
 const defaultProps: FavoriteTokenCardProps = {
   currencyId: SAMPLE_CURRENCY_ID_1,
-  pressProgress: makeMutable(0),
-  dragActivationProgress: makeMutable(0),
   setIsEditing: jest.fn(),
   isEditing: false,
 }

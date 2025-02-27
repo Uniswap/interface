@@ -10,7 +10,7 @@ import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { EllipsisTamaguiStyle } from 'theme/components'
-import { ElementAfterText, Flex, FlexProps, ScrollView, styled } from 'ui/src'
+import { ElementAfterText, Flex, FlexProps, ScrollView, styled, useMedia } from 'ui/src'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -40,12 +40,7 @@ const Tag = deprecatedStyled(Badge)`
 const StyledDropdown = {
   maxHeight: 350,
   minWidth: 256,
-  right: 0,
   px: 0,
-  $lg: {
-    left: 0,
-    right: undefined,
-  },
 } satisfies FlexProps
 
 export default function TableNetworkFilter({ showMultichainOption = true }: { showMultichainOption?: boolean }) {
@@ -57,6 +52,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
   const exploreParams = useExploreParams()
   const currentChainId = useChainIdFromUrlParam()
   const tab = exploreParams.tab
+  const media = useMedia()
 
   const tableNetworkItemRenderer = useCallback(
     (chainId: UniverseChainId) => {
@@ -97,27 +93,28 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
               )}
             </NetworkLabel>
           }
-          internalMenuItems={
-            <ScrollView px="$spacing8">
-              {showMultichainOption && <TableNetworkItem chainInfo={null} toggleMenu={toggleMenu} tab={tab} />}
-              {/* non-testnet backend supported chains */}
-              {orderedChainIds
-                .filter(isBackendSupportedChainId)
-                .filter((c) => !isTestnetChain(c))
-                .map(tableNetworkItemRenderer)}
-              {/* Testnet backend supported chains */}
-              {isTestnetModeEnabled
-                ? orderedChainIds.filter(isBackendSupportedChainId).filter(isTestnetChain).map(tableNetworkItemRenderer)
-                : null}
-              {/* Unsupported non-testnet backend supported chains */}
-              {orderedChainIds
-                .filter((c) => !isBackendSupportedChainId(c) && !isTestnetChain(c))
-                .map(tableNetworkItemRenderer)}
-            </ScrollView>
-          }
           buttonStyle={{ height: 40 }}
           dropdownStyle={StyledDropdown}
-        />
+          adaptToSheet
+          alignRight={!media.lg}
+        >
+          <ScrollView px="$spacing8">
+            {showMultichainOption && <TableNetworkItem chainInfo={null} toggleMenu={toggleMenu} tab={tab} />}
+            {/* non-testnet backend supported chains */}
+            {orderedChainIds
+              .filter(isBackendSupportedChainId)
+              .filter((c) => !isTestnetChain(c))
+              .map(tableNetworkItemRenderer)}
+            {/* Testnet backend supported chains */}
+            {isTestnetModeEnabled
+              ? orderedChainIds.filter(isBackendSupportedChainId).filter(isTestnetChain).map(tableNetworkItemRenderer)
+              : null}
+            {/* Unsupported non-testnet backend supported chains */}
+            {orderedChainIds
+              .filter((c) => !isBackendSupportedChainId(c) && !isTestnetChain(c))
+              .map(tableNetworkItemRenderer)}
+          </ScrollView>
+        </DropdownSelector>
       </Trace>
     </div>
   )

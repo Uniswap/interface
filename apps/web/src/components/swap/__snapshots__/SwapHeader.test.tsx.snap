@@ -8,27 +8,6 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
   min-width: 0;
 }
 
-.c6 {
-  outline: none;
-  border: none;
-  font-size: inherit;
-  padding: 0;
-  margin: 0;
-  background: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  -webkit-transition-timing-function: ease-in-out;
-  transition-timing-function: ease-in-out;
-  -webkit-transition-property: opacity,color,background-color;
-  transition-property: opacity,color,background-color;
-}
-
-.c6:focus {
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-}
-
 .c1 {
   width: 100%;
   display: -webkit-box;
@@ -58,6 +37,27 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
+}
+
+.c6 {
+  outline: none;
+  border: none;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transition-property: opacity,color,background-color;
+  transition-property: opacity,color,background-color;
+}
+
+.c6:focus {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
 }
 
 .c12 {

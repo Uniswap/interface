@@ -2,6 +2,7 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
 import styled from 'lib/styled-components'
+import ms from 'ms'
 import { useMemo, useState } from 'react'
 import { AlertTriangle, X } from 'react-feather'
 import { Trans } from 'react-i18next'
@@ -74,15 +75,9 @@ export function ChainConnectivityWarning() {
     [chainId],
   )
   const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME_MS)
-  const blockTime = useCurrentBlockTimestamp(
-    useMemo(
-      () => ({
-        blocksPerFetch: /* 5m / 12s = */ 25 * (chainId ? getChainInfo(chainId).blockPerMainnetEpochForChainId : 1),
-      }),
-      [chainId],
-    ),
-  )
-  const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
+  const blockTime = useCurrentBlockTimestamp({ refetchInterval: ms('5min') })
+
+  const warning = Boolean(!!blockTime && machineTime - Number(blockTime) * 1000 > waitMsBeforeWarning)
   const isMonadDown = chainId === UniverseChainId.MonadTestnet && isMonadDownFlag
 
   if (hide || (!isMonadDown && (!warning || isNFTPage || isLandingPage))) {

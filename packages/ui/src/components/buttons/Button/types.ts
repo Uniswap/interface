@@ -11,11 +11,13 @@ export type ButtonVariantProps = {
   size?: ButtonSize
   variant?: ButtonVariant
   emphasis?: ButtonEmphasis
-  disabled?: boolean
+  // TODO(WEB-6347): change variant name back to `disabled`
+  isDisabled?: boolean
   singleLine?: boolean
 }
 
-export type ButtonProps = Omit<CustomButtonFrameProps, 'variant'> &
+// TODO(WEB-6347): don't allow people to set disabled prop until Tamagui issue resolved
+export type ButtonProps = Omit<CustomButtonFrameProps, 'variant' | 'disabled'> &
   ButtonVariantProps & {
     /**
      * add icon before or after, passes color and size automatically if Component

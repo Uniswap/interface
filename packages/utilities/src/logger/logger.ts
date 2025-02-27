@@ -1,8 +1,8 @@
 import { Extras } from '@sentry/types'
 import { datadogEnabled, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/Datadog'
+import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { Sentry } from 'utilities/src/logger/Sentry'
-import { LogLevel, LoggerErrorContext, OverridesSentryFingerprint } from 'utilities/src/logger/types'
+import { LoggerErrorContext, LogLevel, OverridesSentryFingerprint } from 'utilities/src/logger/types'
 import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:

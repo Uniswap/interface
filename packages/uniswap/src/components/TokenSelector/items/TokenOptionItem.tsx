@@ -144,7 +144,6 @@ function _TokenOptionItem({
               <Flex row alignItems="center" gap="$spacing8">
                 <UnichainAnimatedText
                   color="$neutral1"
-                  gradientTextColor={colors.neutral1.val}
                   delayMs={800}
                   enabled={showUnichainPromoAnimation}
                   numberOfLines={1}

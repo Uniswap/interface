@@ -205,6 +205,7 @@ export function SendReviewDetails({
           moonpayCurrencyCode: fiatOffRampMetaData.moonpayCurrencyCode,
           meldCurrencyCode: fiatOffRampMetaData.meldCurrencyCode,
         },
+        isOfframp: true,
       })
     }
     setScreen(TransactionScreen.Form)

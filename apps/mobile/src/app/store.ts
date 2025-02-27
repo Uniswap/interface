@@ -6,7 +6,7 @@ import { MobileState, mobilePersistedStateList, mobileReducer } from 'src/app/mo
 import { rootMobileSaga } from 'src/app/saga'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isNonJestDev } from 'utilities/src/environment/constants'
-import { createDatadogReduxEnhancer } from 'utilities/src/logger/Datadog'
+import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 

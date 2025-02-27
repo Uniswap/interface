@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { ActiveLiquidityChart2 } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart2'
 import { BandsIndicator } from 'components/Charts/BandsIndicator/bands-indicator'
 import { cloneReadonly } from 'components/Charts/BandsIndicator/helpers/simple-clone'
 import {
@@ -12,7 +14,9 @@ import {
 } from 'components/Charts/ChartModel'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { PriceChartType, formatTickMarks } from 'components/Charts/utils'
+import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useTheme } from 'lib/styled-components'
 import { CrosshairMode, ISeriesApi, LineStyle, LineType, UTCTimestamp } from 'lightweight-charts'
@@ -22,16 +26,25 @@ import {
   getPoolIdOrAddressFromCreatePositionInfo,
   getSortedCurrenciesTupleWithWrap,
 } from 'pages/Pool/Positions/create/utils'
-import { useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { opacify } from 'theme/utils'
-import { Flex, FlexProps, Shine, TamaguiElement, assertWebElement } from 'ui/src'
+import { Flex, FlexProps, Shine, useSporeColors } from 'ui/src'
+import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
 import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
+import { zIndexes } from 'ui/src/theme/zIndexes'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import useResizeObserver from 'use-resize-observer'
+// Not using the formatters in a react context, so we need to import the formatter directly.
+// eslint-disable-next-line no-restricted-imports
+import { formatNumber } from 'utilities/src/format/localeBased'
+import { isMobileWeb } from 'utilities/src/platform'
 
-const CHART_HEIGHT = 52
+export const CHART_HEIGHT = 52
 export const CHART_WIDTH = 224
+const X_AXIS_HEIGHT = 28
+const Y_AXIS_WIDTH = 80
 
 const pulseKeyframe = `
   @keyframes pulse {
@@ -82,6 +95,7 @@ interface LPPriceChartModelParams extends ChartModelParams<PriceChartData> {
   // Total height of the chart, including the time axis pane if showXAxis is true.
   height: number
   showXAxis?: boolean
+  showYAxis?: boolean
   // Controls the vertical margins of the price scale. Defaults are define in ChartModel.
   priceScaleMargins?: {
     top: number
@@ -96,45 +110,12 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
   protected series: ISeriesApi<'Area'>
   private rangeBandSeries?: ISeriesApi<'Line'>
   private extendedData?: PriceChartData[]
-  private positionRangeMin: number
-  private positionRangeMax: number
+  private positionRangeMin!: number
+  private positionRangeMax!: number
+  private bandIndicator?: BandsIndicator
 
   constructor(chartDiv: HTMLDivElement, params: LPPriceChartModelParams) {
     super(chartDiv, params)
-
-    this.positionRangeMin =
-      typeof params.positionPriceLower === 'number'
-        ? params.positionPriceLower
-        : Number(
-            params.positionPriceLower
-              ?.quote(
-                CurrencyAmount.fromRawAmount(
-                  params.positionPriceLower.baseCurrency,
-                  Math.pow(10, params.positionPriceLower.baseCurrency.decimals),
-                ),
-              )
-              ?.toSignificant(params.positionPriceLower.baseCurrency.decimals || 6) ?? 0,
-          )
-    this.positionRangeMax =
-      typeof params.positionPriceUpper === 'number'
-        ? params.positionPriceUpper
-        : Number(
-            params.positionPriceUpper
-              ?.quote(
-                CurrencyAmount.fromRawAmount(
-                  params.positionPriceUpper.baseCurrency,
-                  Math.pow(10, params.positionPriceUpper.baseCurrency.decimals),
-                ),
-              )
-              ?.toSignificant(params.positionPriceUpper.baseCurrency.decimals || 6) ?? 0,
-          )
-
-    if (isEffectivelyInfinity(this.positionRangeMin)) {
-      this.positionRangeMin = 0
-    }
-    if (isEffectivelyInfinity(this.positionRangeMax)) {
-      this.positionRangeMax = Number.MAX_SAFE_INTEGER
-    }
 
     // Price history (primary series)
     this.series = this.api.addAreaSeries()
@@ -150,16 +131,7 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
       color: 'transparent',
     })
 
-    if (params.positionPriceLower !== undefined && params.positionPriceUpper !== undefined) {
-      const bandIndicator = new BandsIndicator({
-        lineColor: opacify(10, params.theme.neutral1),
-        fillColor: params.theme.surface3,
-        lineWidth: 1,
-        upperValue: this.positionRangeMax,
-        lowerValue: this.positionRangeMin,
-      })
-      this.rangeBandSeries.attachPrimitive(bandIndicator)
-    }
+    this.calculatePositionRange(params)
 
     this.updateOptions(params)
     this.fitContent()
@@ -172,6 +144,7 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
       this.data = params.data
       this.series.setData(this.data)
       this.extendedData = LPPriceChartModel.generateExtendedData(this.data, params.disableExtendedTimeScale)
+      this.calculatePositionRange(params)
       this.rangeBandSeries?.setData(this.extendedData)
       this.fitContent()
       this.overrideCrosshair(params)
@@ -179,8 +152,10 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
 
     super.updateOptions(params, {
       rightPriceScale: {
-        visible: false,
+        visible: params.showYAxis ?? false,
         autoScale: true,
+        borderVisible: false,
+        minimumWidth: Y_AXIS_WIDTH,
       },
       leftPriceScale: {
         visible: false,
@@ -192,6 +167,12 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
       },
       handleScroll: false,
       handleScale: false,
+      localization: {
+        priceFormatter: (priceValue: number) => {
+          const currentLocale = window.navigator.languages[0]
+          return formatNumber({ input: priceValue, locale: currentLocale })
+        },
+      },
       crosshair: {
         mode: CrosshairMode.Hidden,
         vertLine: {
@@ -266,6 +247,64 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
     }
   }
 
+  private calculatePositionRange(params: LPPriceChartModelParams): void {
+    this.positionRangeMin =
+      typeof params.positionPriceLower === 'number'
+        ? params.positionPriceLower
+        : Number(
+            params.positionPriceLower
+              ?.quote(
+                CurrencyAmount.fromRawAmount(
+                  params.positionPriceLower.baseCurrency,
+                  Math.pow(10, params.positionPriceLower.baseCurrency.decimals),
+                ),
+              )
+              ?.toSignificant(params.positionPriceLower.baseCurrency.decimals || 6) ?? 0,
+          )
+    this.positionRangeMax =
+      typeof params.positionPriceUpper === 'number'
+        ? params.positionPriceUpper
+        : Number(
+            params.positionPriceUpper
+              ?.quote(
+                CurrencyAmount.fromRawAmount(
+                  params.positionPriceUpper.baseCurrency,
+                  Math.pow(10, params.positionPriceUpper.baseCurrency.decimals),
+                ),
+              )
+              ?.toSignificant(params.positionPriceUpper.baseCurrency.decimals || 6) ?? 0,
+          )
+
+    if (isEffectivelyInfinity(this.positionRangeMin)) {
+      this.positionRangeMin = 0
+    }
+    if (isEffectivelyInfinity(this.positionRangeMax)) {
+      this.positionRangeMax = Number.MAX_SAFE_INTEGER
+    }
+
+    if (params.positionPriceLower !== undefined && params.positionPriceUpper !== undefined) {
+      if (!this.bandIndicator) {
+        this.bandIndicator = new BandsIndicator({
+          lineColor: opacify(10, params.theme.neutral1),
+          fillColor: params.theme.surface3,
+          lineWidth: 1,
+          upperValue: this.positionRangeMax,
+          lowerValue: this.positionRangeMin,
+        })
+        this.rangeBandSeries?.attachPrimitive(this.bandIndicator)
+      } else {
+        this.bandIndicator.updateOptions({
+          lineColor: opacify(10, params.theme.neutral1),
+          fillColor: params.theme.surface3,
+          lineWidth: 1,
+          upperValue: this.positionRangeMax,
+          lowerValue: this.positionRangeMin,
+        })
+        this.bandIndicator.updateAllViews()
+      }
+    }
+  }
+
   private overrideCrosshair(params: LPPriceChartModelParams): void {
     const lastDataPoint = this.data[this.data.length - 1]
     if (!lastDataPoint) {
@@ -318,21 +357,34 @@ interface LiquidityPositionRangeChartProps {
   currency0: Currency
   currency1: Currency
   positionStatus?: PositionStatus
+  // Note: this should be representative of the ordering/prices you want to display.
+  // e.g. if the callsite supports inverting the prices, you should switch and invert the prices before passing them here.
   priceOrdering: {
     base?: Currency
     priceLower?: Price<Currency, Currency>
     priceUpper?: Price<Currency, Currency>
   }
   width?: number | string
-  grow?: boolean
+  height?: number
+  duration?: HistoryDuration
+  showXAxis?: boolean
+  showYAxis?: boolean
+  interactive?: boolean
+  tickSpacing?: number
+  feeTier?: string | FeeAmount
+  hook?: string
+  showLiquidityBars?: boolean
+  crosshairEnabled?: boolean
 }
 
 export function getLiquidityRangeChartProps({
   positionInfo,
   priceRangeInfo,
+  interactive,
 }: {
   positionInfo: CreatePositionInfo
   priceRangeInfo: PriceRangeInfo
+  interactive?: boolean
 }): LiquidityPositionRangeChartProps | undefined {
   const { currencies, protocolVersion } = positionInfo
 
@@ -363,17 +415,29 @@ export function getLiquidityRangeChartProps({
       priceRangeInfo.protocolVersion !== ProtocolVersion.V2 && priceRangeInfo.outOfRange
         ? PositionStatus.OUT_OF_RANGE
         : PositionStatus.IN_RANGE,
+    interactive,
   }
 }
 
-export function LiquidityPositionRangeChartLoader({ size }: { size?: number }) {
-  if (!size) {
-    return null
-  }
-
+export function LiquidityPositionRangeChartLoader({
+  width,
+  height,
+  ...rest
+}: { width: number; height: number } & FlexProps) {
   return (
-    <Shine height={CHART_HEIGHT}>
-      <LoadingPriceCurve size={size} color="$neutral2" />
+    <Shine
+      height={height}
+      width={width}
+      position="absolute"
+      top={0}
+      left={0}
+      right={0}
+      bottom={0}
+      alignItems="center"
+      justifyContent="center"
+      {...rest}
+    >
+      <LoadingPriceCurve size={{ width, height }} color="$neutral2" />
     </Shine>
   )
 }
@@ -386,8 +450,17 @@ export function LiquidityPositionRangeChart({
   chainId,
   positionStatus,
   priceOrdering,
+  duration,
   width = CHART_WIDTH,
-  grow = false,
+  height = CHART_HEIGHT,
+  showXAxis,
+  showYAxis,
+  interactive,
+  tickSpacing,
+  hook,
+  feeTier,
+  showLiquidityBars,
+  crosshairEnabled,
 }: LiquidityPositionRangeChartProps) {
   const theme = useTheme()
   const isV2 = version === ProtocolVersion.V2
@@ -398,13 +471,16 @@ export function LiquidityPositionRangeChart({
     ? {
         addressOrId: poolAddressOrId,
         chain: chainInfo.backendChain.chain,
-        duration: HistoryDuration.Month,
+        duration: duration ?? HistoryDuration.Month,
         isV4,
         isV3,
         isV2,
       }
     : undefined
-  const sortedCurrencies = getSortedCurrenciesTupleWithWrap(currency0, currency1, version)
+  const sortedCurrencies = useMemo(
+    () => getSortedCurrenciesTupleWithWrap(currency0, currency1, version),
+    [currency0, currency1, version],
+  )
   const priceData = usePoolPriceChartData(
     variables,
     currency0,
@@ -414,77 +490,98 @@ export function LiquidityPositionRangeChart({
   )
 
   const [crosshairCoordinates, setCrosshairCoordinates] = useState<{ x: number; y: number }>()
+  const [boundaryPrices, setBoundaryPrices] = useState<[number, number]>()
 
   const chartParams = useMemo(() => {
-    const invertPrices = priceOrdering.base?.equals(sortedCurrencies[0])
     return {
       data: priceData.entries,
       stale: priceData.dataQuality === DataQuality.STALE,
       type: PriceChartType.LINE,
       color: LPPriceChartModel.getPriceLineColor({ positionStatus, theme }),
-      positionPriceLower: isV2 ? 0 : invertPrices ? priceOrdering.priceLower?.invert() : priceOrdering.priceLower,
-      positionPriceUpper: isV2
-        ? Number.MAX_SAFE_INTEGER
-        : invertPrices
-          ? priceOrdering.priceUpper?.invert()
-          : priceOrdering.priceUpper,
-      height: CHART_HEIGHT,
+      positionPriceLower: isV2 ? 0 : priceOrdering.priceLower,
+      positionPriceUpper: isV2 ? Number.MAX_SAFE_INTEGER : priceOrdering.priceUpper,
+      height: showLiquidityBars ? height - X_AXIS_HEIGHT : height,
       setCrosshairCoordinates,
+      setBoundaryPrices: showLiquidityBars ? setBoundaryPrices : undefined,
+      showXAxis,
+      showYAxis,
+      interactive,
+      theme,
     } as const
   }, [
-    priceOrdering.base,
     priceOrdering.priceLower,
     priceOrdering.priceUpper,
-    sortedCurrencies,
     priceData.entries,
     priceData.dataQuality,
+    positionStatus,
     theme,
     isV2,
-    positionStatus,
+    height,
+    showLiquidityBars,
+    showXAxis,
+    showYAxis,
+    interactive,
   ])
 
-  const dataUnavailable = priceData.entries.length === 0 && !priceData.loading
+  const { formattedData, isLoading: liquidityDataLoading } = useDensityChartData({
+    poolId: poolAddressOrId,
+    currencyA: sortedCurrencies[0],
+    currencyB: sortedCurrencies[1],
+    invertPrices: currency0.equals(sortedCurrencies[0]),
+    version,
+    feeAmount: Number(feeTier),
+    tickSpacing,
+    hooks: hook ?? ZERO_ADDRESS,
+    skip: !showLiquidityBars,
+  })
 
-  const frameRef = useRef<TamaguiElement>(null)
-  const [chartWidth, setChartWidth] = useState<number | undefined>(undefined)
-  const hasChartWidth = (grow && !!chartWidth) || !grow
+  const sortedFormattedData = useMemo(() => {
+    if (!formattedData) {
+      return undefined
+    }
+    const uniqueTicksMap = new Map()
+    formattedData.forEach((entry) => {
+      uniqueTicksMap.set(entry.tick, entry)
+    })
+
+    // Convert Map values back to array and sort
+    return Array.from(uniqueTicksMap.values()).sort((a, b) => a.price0 - b.price0)
+  }, [formattedData])
+
+  const loading = liquidityDataLoading && priceData.loading && priceData.entries.length === 0
+  const dataUnavailable = priceData.entries.length === 0 && !liquidityDataLoading && !priceData.loading
+
+  const colors = useSporeColors()
+  const { ref: frameRef, width: chartWidth } = useResizeObserver<HTMLElement>()
+  const hasChartWidth = !!chartWidth
   const shouldRenderChart = !dataUnavailable && hasChartWidth
   const shouldRenderCrosshair =
+    crosshairEnabled &&
     shouldRenderChart &&
     !priceData.loading &&
     crosshairCoordinates?.y &&
     crosshairCoordinates.y > 5 &&
     crosshairCoordinates.x
 
-  useLayoutEffect(() => {
-    if (frameRef.current) {
-      assertWebElement(frameRef.current)
-      setChartWidth(frameRef.current.clientWidth)
-    }
-  }, [])
-
   return (
-    <Flex
-      grow={grow}
-      ref={frameRef}
-      height={CHART_HEIGHT}
-      flexBasis={grow ? 1 : undefined}
-      width={width}
-      $md={{ width: grow ? chartWidth : '100%' }}
-      overflow="hidden"
-    >
-      {priceData.loading && <LiquidityPositionRangeChartLoader size={chartWidth} />}
-      {dataUnavailable && (
+    <Flex ref={frameRef} height={height} width={width} $md={{ width: '100%' }} overflow="hidden" position="relative">
+      {loading && chartWidth && !dataUnavailable && (
+        <LiquidityPositionRangeChartLoader
+          width={chartWidth - (showLiquidityBars ? Y_AXIS_WIDTH : 0)}
+          height={height}
+        />
+      )}
+      {loading && (
         <LoadingPriceCurve
-          size={{ width: chartWidth ?? CHART_WIDTH, height: CHART_HEIGHT }}
+          size={{ width: chartWidth ?? CHART_WIDTH, height: height ?? CHART_HEIGHT }}
           color="$neutral2"
           mt="$spacing8"
           ml="$spacing4"
         />
       )}
       {shouldRenderChart && (
-        <Flex width={grow ? chartWidth : width} $md={{ width: grow ? chartWidth : '100%' }}>
-          <Chart Model={LPPriceChartModel} params={chartParams} height={CHART_HEIGHT} />
+        <Flex width={chartWidth} $md={{ width: '100%' }} zIndex={zIndexes.default}>
+          <Chart Model={LPPriceChartModel} params={chartParams} height={height ?? CHART_HEIGHT} />
         </Flex>
       )}
       <style>{pulseKeyframe}</style>
@@ -506,6 +603,50 @@ export function LiquidityPositionRangeChart({
             }}
           />
         </>
+      )}
+      {showLiquidityBars && chartWidth && sortedFormattedData && !loading && boundaryPrices && (
+        <Flex
+          width={chartWidth - Y_AXIS_WIDTH - 2 /* Padding to right-align the bars with the chart. */}
+          height={height - X_AXIS_HEIGHT}
+          position="absolute"
+          left={0}
+          top={0}
+          zIndex={zIndexes.mask}
+        >
+          <ActiveLiquidityChart2
+            barColor={colors.surface3.val}
+            data={{
+              series: sortedFormattedData,
+              current: priceData.entries[priceData.entries.length - 1]?.value,
+              min: boundaryPrices[0],
+              max: boundaryPrices[1],
+            }}
+            disableBrush={true}
+            showDiffIndicators={false}
+            dimensions={{
+              width: chartWidth - Y_AXIS_WIDTH,
+              height: height - X_AXIS_HEIGHT,
+              contentWidth: Y_AXIS_WIDTH,
+              axisLabelPaneWidth: 0,
+            }}
+            onBrushDomainChange={() => {}}
+            currency0={currency0}
+            currency1={currency1}
+            isMobile={isMobileWeb}
+          />
+        </Flex>
+      )}
+      {showLiquidityBars && loading && chartWidth && (
+        <Shine
+          position="absolute"
+          right={Y_AXIS_WIDTH}
+          top={0}
+          alignItems="flex-end"
+          height={height - X_AXIS_HEIGHT}
+          width={chartWidth - Y_AXIS_WIDTH}
+        >
+          <HorizontalDensityChart color="$neutral2" size={height - X_AXIS_HEIGHT} />
+        </Shine>
       )}
     </Flex>
   )

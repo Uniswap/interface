@@ -13,6 +13,7 @@ import {
   LockScreenVisibility,
   selectIsLockScreenVisible,
   selectLockScreenOnBlur,
+  selectPreventLock,
   setLockScreenVisibility,
 } from 'src/features/lockScreen/lockScreenSlice'
 import { call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
@@ -66,6 +67,10 @@ function* toBackgroundTransition(): SagaIterator {
 }
 
 function* invalidateAuthentication(): SagaIterator {
+  const preventLock = yield* select(selectPreventLock)
+  if (preventLock) {
+    return
+  }
   if (yield* select(selectRequiredForAppAccess)) {
     yield* put(setAuthenticationStatus(BiometricAuthenticationStatus.Invalid))
   }
@@ -90,6 +95,10 @@ function* shouldDismissLockScreen(): SagaIterator<boolean> {
 }
 
 function* shouldPresentLockScreen(): SagaIterator<boolean> {
+  const preventLock = yield* select(selectPreventLock)
+  if (preventLock) {
+    return false
+  }
   const requiredForAppAccess = yield* select(selectRequiredForAppAccess)
   const lockScreenOnBlur = yield* select(selectLockScreenOnBlur)
   return requiredForAppAccess || lockScreenOnBlur

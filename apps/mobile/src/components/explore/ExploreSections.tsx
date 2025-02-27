@@ -3,18 +3,18 @@ import {
   TokenRankingsStat,
   TokenStats,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItem, ListRenderItemInfo, StyleSheet, useWindowDimensions } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { SharedValue, useSharedValue } from 'react-native-reanimated'
-import { useSelector } from 'react-redux'
+import { AnimatedRef } from 'react-native-reanimated'
+import Sortable from 'react-native-sortables'
+import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
-import { AutoScrollProps } from 'src/components/sortableGrid/types'
 import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
 import { Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
@@ -32,16 +32,17 @@ import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { DDRumManualTiming } from 'utilities/src/logger/datadogEvents'
+import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
+import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
 import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 const TOKEN_ITEM_SIZE = 68
 const AMOUNT_TO_DRAW = 18
 
 type ExploreSectionsProps = {
-  listRef: React.MutableRefObject<null>
+  listRef: AnimatedRef<FlatList>
 }
 
 type TokenItemDataWithMetadata = { tokenItemData: TokenItemData; tokenMetadataDisplayType: TokenMetadataDisplayType }
@@ -49,11 +50,9 @@ type TokenItemDataWithMetadata = { tokenItemData: TokenItemData; tokenMetadataDi
 export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useAppInsets()
-  const scrollY = useSharedValue(0)
-  const visibleListHeight = useSharedValue(0)
   const dimensions = useWindowDimensions()
   // Top tokens sorting
-  const orderBy = useSelector(selectTokensOrderBy)
+  const { uiOrderBy, orderBy, onOrderByChange } = useOrderBy()
 
   // Network filtering
   const [selectedNetwork, setSelectedNetwork] = useState<UniverseChainId | null>(null)
@@ -108,30 +107,18 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   }
 
   return (
-    // Pass onLayout callback to the list wrapper component as it returned
-    // incorrect values when it was passed to the list itself
-    <Flex
-      fill
-      animation="100ms"
-      onLayout={({
-        nativeEvent: {
-          layout: { height },
-        },
-      }): void => {
-        visibleListHeight.value = height
-      }}
-    >
+    <Flex fill animation="100ms">
       <AnimatedBottomSheetFlashList
         ref={listRef}
         ListEmptyComponent={ListEmptyComponent}
         ListHeaderComponent={
           <ListHeaderComponent
             listRef={listRef}
-            orderBy={orderBy}
-            scrollY={scrollY}
+            orderBy={uiOrderBy}
+            showLoading={isLoadingOrFetching}
             selectedNetwork={selectedNetwork}
-            visibleListHeight={visibleListHeight}
             onSelectNetwork={onSelectNetwork}
+            onOrderByChange={onOrderByChange}
           />
         }
         ListHeaderComponentStyle={styles.foreground}
@@ -260,8 +247,9 @@ function tokenRankingStatsToTokenItemData(tokenRankingStat: TokenRankingsStat): 
   }
 }
 
-type FavoritesSectionProps = AutoScrollProps & {
+type FavoritesSectionProps = {
   showLoading: boolean
+  listRef: AnimatedRef<FlatList>
 }
 
 function FavoritesSection(props: FavoritesSectionProps): JSX.Element | null {
@@ -348,37 +336,32 @@ function useTokenItems(
 }
 
 type ListHeaderProps = {
-  listRef: React.MutableRefObject<null>
-  scrollY: SharedValue<number>
-  visibleListHeight: SharedValue<number>
+  listRef: AnimatedRef<FlatList>
   orderBy: ExploreOrderBy
+  showLoading: boolean
+  onOrderByChange: (orderBy: ExploreOrderBy) => void
 }
 
 const ListHeader = React.memo(function ListHeader({
   listRef,
-  scrollY,
-  visibleListHeight,
   orderBy,
+  showLoading,
+  onOrderByChange,
 }: ListHeaderProps): JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <Flex>
-      <FavoritesSection
-        showLoading={false}
-        scrollY={scrollY}
-        scrollableRef={listRef}
-        visibleHeight={visibleListHeight}
-      />
+    <Sortable.Layer>
+      <FavoritesSection showLoading={showLoading} listRef={listRef} />
       <Flex row alignItems="center" justifyContent="space-between" px="$spacing20">
         <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading1">
           {t('explore.tokens.top.title')}
         </Text>
         <Flex flexShrink={1}>
-          <SortButton orderBy={orderBy} />
+          <SortButton orderBy={orderBy} onOrderByChange={onOrderByChange} />
         </Flex>
       </Flex>
-    </Flex>
+    </Sortable.Layer>
   )
 })
 
@@ -402,13 +385,13 @@ const ListHeaderComponent = ({
   listRef,
   onSelectNetwork,
   orderBy,
-  scrollY,
   selectedNetwork,
-  visibleListHeight,
+  showLoading,
+  onOrderByChange,
 }: ListHeaderProps & NetworkPillsProps): JSX.Element => {
   return (
     <>
-      <ListHeader listRef={listRef} orderBy={orderBy} scrollY={scrollY} visibleListHeight={visibleListHeight} />
+      <ListHeader listRef={listRef} orderBy={orderBy} showLoading={showLoading} onOrderByChange={onOrderByChange} />
       <NetworkPills selectedNetwork={selectedNetwork} onSelectNetwork={onSelectNetwork} />
     </>
   )
@@ -419,3 +402,32 @@ const ListEmptyComponent = (): JSX.Element => (
     <Loader.Token repeat={5} />
   </Flex>
 )
+
+function useOrderBy(): {
+  uiOrderBy: ExploreOrderBy
+  orderBy: ExploreOrderBy
+  onOrderByChange: (orderBy: ExploreOrderBy) => void
+} {
+  const dispatch = useDispatch()
+  const orderBy = useSelector(selectTokensOrderBy)
+
+  // local state for immediate UI feedback
+  const [uiOrderBy, setUiOrderBy] = useState<ExploreOrderBy>(orderBy)
+
+  // When Redux orderBy changes, sync UI
+  useEffect(() => {
+    setUiOrderBy(orderBy)
+  }, [orderBy])
+
+  const onOrderByChange = useCallback(
+    (newTokensOrderBy: ExploreOrderBy) => {
+      setUiOrderBy(newTokensOrderBy)
+      requestAnimationFrame(() => {
+        dispatch(setTokensOrderBy({ newTokensOrderBy }))
+      })
+    },
+    [dispatch],
+  )
+
+  return { uiOrderBy, orderBy, onOrderByChange }
+}

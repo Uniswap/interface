@@ -5,14 +5,38 @@ import { useWeb3React } from '@web3-react/core'
 import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { UNI } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { assume0xAddress } from 'utils/wagmi'
+import { useReadContract } from 'wagmi'
+
+const claimAbi = [
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256',
+      },
+    ],
+    name: 'isClaimed',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
 
 function useMerkleDistributorContract() {
   const account = useAccount()
@@ -143,10 +167,18 @@ function useUserClaimData(account: string | null | undefined): UserClaimData | n
 // check if user is in blob and has not yet claimed UNI
 export function useUserHasAvailableClaim(account: string | null | undefined): boolean {
   const userClaimData = useUserClaimData(account)
-  const distributorContract = useMerkleDistributorContract()
-  const isClaimedResult = useSingleCallResult(distributorContract, 'isClaimed', [userClaimData?.index])
+
+  const { data: isClaimed, isLoading: isClaimedLoading } = useReadContract({
+    address: assume0xAddress(MERKLE_DISTRIBUTOR_ADDRESS[UniverseChainId.Mainnet]),
+    chainId: UniverseChainId.Mainnet,
+    abi: claimAbi,
+    functionName: 'isClaimed',
+    args: userClaimData ? [BigInt(userClaimData.index)] : undefined,
+    query: { enabled: !!userClaimData },
+  })
+
   // user is in blob and contract marks as unclaimed
-  return Boolean(userClaimData && !isClaimedResult.loading && isClaimedResult.result?.[0] === false)
+  return Boolean(userClaimData && !isClaimedLoading && !isClaimed)
 }
 
 export function useUserUnclaimedAmount(account: string | null | undefined): CurrencyAmount<Token> | undefined {

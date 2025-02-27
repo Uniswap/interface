@@ -31,7 +31,10 @@ export function PillMultiToggle({
     intentAt: null,
   })
 
-  const setCurrentTab = (currentTab: string): void => setTabState({ ...tabState, currentTab })
+  const setCurrentTab = (currentTab: string): void => {
+    setTabState({ ...tabState, currentTab })
+    onSelectOption?.(currentTab)
+  }
   const setIntentIndicator = (intentAt: TabLayout | null): void => setTabState({ ...tabState, intentAt })
   const setActiveIndicator = (activeAt: TabLayout | null): void => setTabState({ ...tabState, activeAt })
 
@@ -42,8 +45,6 @@ export function PillMultiToggle({
   }
 
   const handleOnInteraction: TabsTabProps['onInteraction'] = (type, layout) => {
-    onSelectOption?.(currentTab)
-
     if (type === 'select') {
       setActiveIndicator(layout)
     } else {

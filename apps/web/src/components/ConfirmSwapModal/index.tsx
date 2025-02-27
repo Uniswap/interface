@@ -219,6 +219,7 @@ export function ConfirmSwapModal({
                     suppressPopups()
                     startSwapFlow()
                   }}
+                  inputCurrency={inputCurrency}
                   trade={trade}
                   allowance={allowance}
                   swapResult={swapResult}

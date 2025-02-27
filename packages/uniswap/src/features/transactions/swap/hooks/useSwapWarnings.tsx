@@ -116,6 +116,7 @@ export function getSwapWarnings(
 
   // price impact warning
   const priceImpact = getPriceImpact(derivedSwapInfo)
+  // FIXME: Verify WALL-5906
   const priceImpactValue = (priceImpact && formatPriceImpact(priceImpact, formatPercent)) ?? ''
   if (priceImpact?.greaterThan(PRICE_IMPACT_THRESHOLD_MEDIUM)) {
     const highImpact = !priceImpact.lessThan(PRICE_IMPACT_THRESHOLD_HIGH)

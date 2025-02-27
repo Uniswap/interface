@@ -23,6 +23,7 @@ export function useDensityChartData({
   chainId,
   tickSpacing,
   hooks,
+  skip,
 }: {
   poolId?: string
   currencyA?: Currency
@@ -33,6 +34,7 @@ export function useDensityChartData({
   chainId?: UniverseChainId
   tickSpacing?: number
   hooks?: string
+  skip?: boolean
 }) {
   const { isLoading, error, data } = usePoolActiveLiquidity({
     currencyA,
@@ -43,6 +45,7 @@ export function useDensityChartData({
     chainId,
     tickSpacing,
     hooks,
+    skip,
   })
 
   const fetcher = async () => {

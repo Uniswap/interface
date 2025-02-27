@@ -88,6 +88,7 @@ export function usePoolsFromTokenAddress(
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
+            loadingMoreV4.current = false
             return prev
           }
           if (!loadingMoreV3.current && !loadingMoreV2.current) {
@@ -106,6 +107,7 @@ export function usePoolsFromTokenAddress(
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
+            loadingMoreV3.current = false
             return prev
           }
           if (!loadingMoreV2.current && !loadingMoreV4.current) {
@@ -124,6 +126,7 @@ export function usePoolsFromTokenAddress(
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
+            loadingMoreV2.current = false
             return prev
           }
           if (!loadingMoreV3.current && !loadingMoreV4.current) {

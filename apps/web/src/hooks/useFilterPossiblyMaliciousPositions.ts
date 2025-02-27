@@ -7,7 +7,6 @@ import { useTokenContractsConstant } from 'hooks/useTokenContractsConstant'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import {
-  SafetyLevel,
   Token,
   TokenDocument,
   TokenQuery,
@@ -15,6 +14,7 @@ import {
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { hasURL } from 'utils/urlChecks'
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
@@ -98,10 +98,10 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
 
         const { currency0Info, currency1Info, position } = result.data
         let tokensInListCount = 0
-        if (!currency0Info?.isSpam && currency0Info?.safetyLevel === SafetyLevel.Verified) {
+        if (!currency0Info?.isSpam && currency0Info?.safetyInfo?.tokenList === TokenList.Default) {
           tokensInListCount++
         }
-        if (!currency1Info?.isSpam && currency1Info?.safetyLevel === SafetyLevel.Verified) {
+        if (!currency1Info?.isSpam && currency1Info?.safetyInfo?.tokenList === TokenList.Default) {
           tokensInListCount++
         }
         // if both tokens are in the list, then we let both have url symbols (so we don't check)

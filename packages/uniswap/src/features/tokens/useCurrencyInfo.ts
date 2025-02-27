@@ -37,13 +37,15 @@ export function useCurrencyInfo(
     if (chainId && address) {
       const commonBase = getCommonBase(chainId, isNativeCurrencyAddress(chainId, address), address)
       if (commonBase) {
+        // Creating new object to avoid error "Cannot assign to read only property"
+        const copyCommonBase = { ...commonBase }
         // Related to TODO(WEB-5111)
         // Some common base images are broken so this'll ensure we read from uniswap images
         if (data?.token?.project?.logoUrl) {
-          commonBase.logoUrl = data.token.project.logoUrl
+          copyCommonBase.logoUrl = data.token.project.logoUrl
         }
-        commonBase.currencyId = _currencyId
-        return commonBase
+        copyCommonBase.currencyId = _currencyId
+        return copyCommonBase
       }
     }
 

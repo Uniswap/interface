@@ -283,6 +283,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
         break
       }
       case DeepLinkAction.TokenDetails: {
+        yield* put(closeAllModals())
         yield* call(handleGoToTokenDetailsDeepLink, deepLinkAction.data.currencyId)
         break
       }
@@ -295,6 +296,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
   } catch (error) {
     yield* call(logger.error, error, {
       tags: { file: 'handleDeepLinkSaga', function: 'handleDeepLink' },
+      extra: { coldStart: action.payload.coldStart, url: action.payload.url },
     })
   }
 }
@@ -344,6 +346,7 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
     } catch (error) {
       logger.error(error, {
         tags: { file: 'handleDeepLinkSaga', function: 'handleWalletConnectDeepLink' },
+        extra: { wcUri },
       })
       Alert.alert(i18n.t('walletConnect.error.general.title'), i18n.t('walletConnect.error.general.message'))
     }

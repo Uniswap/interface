@@ -74,7 +74,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   const account = useAccount()
 
   // detect if staking is ended
-  const currentBlockTimestamp = useCurrentBlockTimestamp(NEVER_RELOAD)
+  const currentBlockTimestamp = useCurrentBlockTimestamp({ refetchInterval: false })
 
   const info = useMemo(
     () =>
@@ -195,7 +195,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         // compare period end timestamp vs current block timestamp (in seconds)
         const active =
-          periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
+          periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > Number(currentBlockTimestamp) : true
 
         memo.push({
           stakingRewardAddress: rewardsAddress,

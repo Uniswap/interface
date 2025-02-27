@@ -26,6 +26,7 @@ import { fetchFORTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
   deleteTransaction,
+  logTransactionTimeout,
   transactionWatcher,
   waitForBridgeSendCompleted,
   waitForSameNonceFinalized,
@@ -56,6 +57,9 @@ describe(transactionWatcher, () => {
       from: ACTIVE_ACCOUNT_ADDRESS,
     })
 
+    const hash1 = faker.datatype.uuid()
+    const hash2 = faker.datatype.uuid()
+
     return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
       .withState({
         transactions: {
@@ -76,14 +80,14 @@ describe(transactionWatcher, () => {
         transaction: approveTxDetailsPending,
         apolloClient: mockApolloClient,
       })
-      .dispatch(addTransaction(approveTxDetailsPending))
+      .dispatch(addTransaction({ ...approveTxDetailsPending, hash: hash1 }))
       .fork(watchTransaction, {
-        transaction: approveTxDetailsPending,
+        transaction: { ...approveTxDetailsPending, hash: hash1 },
         apolloClient: mockApolloClient,
       })
-      .dispatch(updateTransaction(approveTxDetailsPending))
+      .dispatch(updateTransaction({ ...approveTxDetailsPending, hash: hash2 }))
       .fork(watchTransaction, {
-        transaction: approveTxDetailsPending,
+        transaction: { ...approveTxDetailsPending, hash: hash2 },
         apolloClient: mockApolloClient,
       })
       .silentRun()
@@ -190,6 +194,35 @@ describe(watchTransaction, () => {
       ])
       .call(deleteTransaction, txDetailsPending)
       .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))
+      .silentRun()
+  })
+
+  it('Logs timeout event without when transaction is pending for too long', () => {
+    const receiptProvider = {
+      waitForTransaction: jest.fn(async () => {
+        await sleep(1000)
+        return null
+      }),
+    }
+
+    const transaction = {
+      ...txDetailsPending,
+      options: { ...txDetailsPending.options, timeoutTimestampMs: Date.now() },
+    }
+
+    return expectSaga(watchTransaction, {
+      transaction,
+      apolloClient: mockApolloClient,
+    })
+      .withState({
+        wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+        userSettings: { isTestnetModeEnabled: false },
+      })
+      .provide([
+        [call(getProvider, chainId), receiptProvider],
+        [call(logTransactionTimeout, transaction), undefined],
+      ])
+      .call(logTransactionTimeout, transaction)
       .silentRun()
   })
 })

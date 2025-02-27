@@ -18,7 +18,7 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
     focusScaling = 'default',
     emphasis = 'primary',
     loading,
-    disabled: propDisabled,
+    isDisabled: propDisabled,
     ...props
   },
   ref,
@@ -46,15 +46,15 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
       variant={variant}
       {...props}
       iconPosition={iconPosition}
-      disabled={disabled}
+      isDisabled={disabled}
     >
-      <ThemedIcon disabled={disabled} emphasis={emphasis} size={props.size} variant={variant}>
+      <ThemedIcon isDisabled={disabled} emphasis={emphasis} size={props.size} variant={variant}>
         {loading ? undefined : icon}
       </ThemedIcon>
 
       {/* `iconPosition` takes care of setting flexDirection: 'row' | 'row-reverse', so we don't need to worry about it here */}
       {loading ? (
-        <ThemedSpinningLoader disabled={disabled} emphasis={emphasis} size={props.size} variant={variant} />
+        <ThemedSpinningLoader isDisabled={disabled} emphasis={emphasis} size={props.size} variant={variant} />
       ) : null}
 
       <CustomButtonText>{children}</CustomButtonText>

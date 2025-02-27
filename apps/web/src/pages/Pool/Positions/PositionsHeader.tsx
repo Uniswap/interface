@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Flex, LabeledCheckbox, Text } from 'ui/src'
+import { Flex, LabeledCheckbox, Text, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'
@@ -52,6 +52,7 @@ export function PositionsHeader({
   const { chains } = useEnabledChains()
   const navigate = useNavigate()
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const media = useMedia()
 
   const protocolVersions = useMemo(
     () =>
@@ -66,7 +67,7 @@ export function PositionsHeader({
       const config = lpStatusConfig[status]
 
       if (!config) {
-        return null
+        return <></>
       }
 
       return (
@@ -149,7 +150,7 @@ export function PositionsHeader({
             alignItems="center"
             $sm={{ justifyContent: 'center' }}
             justifyContent="flex-start"
-            flex={1}
+            flexGrow={1}
             {...ClickableTamaguiStyle}
             onPress={() => {
               navigate(`/positions/create/${isV4DataEnabled ? 'v4' : 'v3'}`)
@@ -179,16 +180,16 @@ export function PositionsHeader({
               borderWidth: 0,
               p: 0,
             }}
-            dropdownStyle={{
-              width: 160,
-            }}
-            internalMenuItems={<>{createOptions}</>}
+            dropdownStyle={{ width: 160 }}
             hideChevron={true}
             isOpen={createDropdownOpen}
             toggleOpen={() => {
               setCreateDropdownOpen((prev) => !prev)
             }}
-          />
+            alignRight={media.sm}
+          >
+            {createOptions}
+          </DropdownSelector>
         </Flex>
         {showFilters && (
           <Flex row alignItems="center" shrink height="100%" gap="$gap4">
@@ -198,24 +199,20 @@ export function PositionsHeader({
                 setProtocolDropdownOpen((prev) => !prev)
               }}
               menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
-              internalMenuItems={<>{statusFilterOptions}</>}
-              dropdownStyle={{
-                width: 240,
-                className: 'scrollbar-hidden',
-              }}
+              dropdownStyle={{ width: 240 }}
               buttonStyle={StyledDropdownButton}
-            />
+            >
+              {statusFilterOptions}
+            </DropdownSelector>
             <DropdownSelector
               isOpen={statusDropdownOpen}
               toggleOpen={() => setStatusDropdownOpen((prev) => !prev)}
               menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
-              internalMenuItems={<>{versionFilterOptions}</>}
-              dropdownStyle={{
-                width: 160,
-                className: 'scrollbar-hidden',
-              }}
+              dropdownStyle={{ width: 160 }}
               buttonStyle={StyledDropdownButton}
-            />
+            >
+              {versionFilterOptions}
+            </DropdownSelector>
             <Flex
               alignItems="center"
               justifyContent="center"

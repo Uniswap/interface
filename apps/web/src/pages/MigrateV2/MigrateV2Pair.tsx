@@ -1,4 +1,3 @@
-import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 // eslint-disable-next-line no-restricted-imports
@@ -32,7 +31,6 @@ import { useTotalSupply } from 'hooks/useTotalSupply'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import JSBI from 'jsbi'
-import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -64,11 +62,86 @@ import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
+import { assume0xAddress } from 'utils/wagmi'
+import { useReadContract, useReadContracts } from 'wagmi'
 import { MigrateHeader } from '.'
 
 const ZERO = JSBI.BigInt(0)
 
 const DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE = new Percent(75, 10_000)
+
+const MIGRATE_V2_ABI = [
+  {
+    constant: true,
+    inputs: [],
+    name: 'token0',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'token1',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'factory',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: 'getReserves',
+    outputs: [
+      {
+        internalType: 'uint112',
+        name: 'reserve0',
+        type: 'uint112',
+      },
+      {
+        internalType: 'uint112',
+        name: 'reserve1',
+        type: 'uint112',
+      },
+      {
+        internalType: 'uint32',
+        name: 'blockTimestampLast',
+        type: 'uint32',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
 
 function EmptyState({ message }: { message: ReactNode }) {
   return (
@@ -143,7 +216,7 @@ function LiquidityInfo({
 const percentageToMigrate = 100
 
 function V2PairMigration({
-  pair,
+  pairAddress,
   pairBalance,
   totalSupply,
   reserve0,
@@ -151,7 +224,7 @@ function V2PairMigration({
   token0,
   token1,
 }: {
-  pair: Contract
+  pairAddress: string
   pairBalance: CurrencyAmount<Token>
   totalSupply: CurrencyAmount<Token>
   reserve0: CurrencyAmount<Token>
@@ -165,8 +238,13 @@ function V2PairMigration({
   const v2FactoryAddress = account.chainId ? V2_FACTORY_ADDRESSES[account.chainId] : undefined
   const trace = useTrace()
 
-  const pairFactory = useSingleCallResult(pair, 'factory')
-  const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== v2FactoryAddress
+  const { data: pairFactory } = useReadContract({
+    address: assume0xAddress(pairAddress),
+    functionName: 'factory',
+    abi: MIGRATE_V2_ABI,
+  })
+
+  const isNotUniswap = !!pairFactory && pairFactory !== v2FactoryAddress
 
   const getDeadline = useGetTransactionDeadline() // custom from users settings
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE) // custom from users
@@ -331,7 +409,7 @@ function V2PairMigration({
     if (signatureData) {
       data.push(
         migrator.interface.encodeFunctionData('selfPermit', [
-          pair.address,
+          pairAddress,
           `0x${pairBalance.quotient.toString(16)}`,
           deadline,
           signatureData.v,
@@ -357,7 +435,7 @@ function V2PairMigration({
     data.push(
       migrator.interface.encodeFunctionData('migrate', [
         {
-          pair: pair.address,
+          pair: pairAddress,
           liquidityToMigrate: `0x${pairBalance.quotient.toString(16)}`,
           percentageToMigrate,
           token0: token0.address,
@@ -388,7 +466,7 @@ function V2PairMigration({
                 fee: feeAmount,
                 currency0: token0,
                 currency1: token1,
-                poolId: pair.address,
+                poolId: pairAddress,
                 version: ProtocolVersion.V2,
                 currency0AmountUsd: token0USD,
                 currency1AmountUsd: token1USD,
@@ -421,7 +499,7 @@ function V2PairMigration({
     signatureData,
     getDeadline,
     noLiquidity,
-    pair.address,
+    pairAddress,
     pairBalance.quotient,
     token0,
     token1,
@@ -756,10 +834,15 @@ export default function MigrateV2Pair() {
   const validatedAddress = isAddress(address)
   const pair = usePairContract(validatedAddress ? validatedAddress : undefined)
 
-  // get token addresses from pair contract
-  const token0AddressCallState = useSingleCallResult(pair, 'token0', undefined, NEVER_RELOAD)
-  const token0Address = token0AddressCallState?.result?.[0]
-  const token1Address = useSingleCallResult(pair, 'token1', undefined, NEVER_RELOAD)?.result?.[0]
+  const { data: pairAddresses, isLoading: pairAddressesLoading } = useReadContracts({
+    contracts: [
+      { address: validatedAddress || undefined, functionName: 'token0', abi: MIGRATE_V2_ABI },
+      { address: validatedAddress || undefined, functionName: 'token1', abi: MIGRATE_V2_ABI },
+    ],
+  })
+
+  const token0Address = pairAddresses?.[0].result
+  const token1Address = pairAddresses?.[1].result
 
   // get tokens
   const token0 = useToken(token0Address)
@@ -775,13 +858,17 @@ export default function MigrateV2Pair() {
   const pairBalance = useTokenBalance(account.address, liquidityToken)
   const isOwner = usePositionOwnerV2(account?.address, liquidityToken?.address, token0?.chainId)
   const totalSupply = useTotalSupply(liquidityToken)
-  const [reserve0Raw, reserve1Raw] = useSingleCallResult(pair, 'getReserves')?.result ?? []
+
+  const [reserve0Raw, reserve1Raw] =
+    useReadContract({ address: validatedAddress || undefined, functionName: 'getReserves', abi: MIGRATE_V2_ABI })
+      .data ?? []
+
   const reserve0 = useMemo(
-    () => (token0 && reserve0Raw ? CurrencyAmount.fromRawAmount(token0, reserve0Raw) : undefined),
+    () => (token0 && reserve0Raw ? CurrencyAmount.fromRawAmount(token0, reserve0Raw.toString()) : undefined),
     [token0, reserve0Raw],
   )
   const reserve1 = useMemo(
-    () => (token1 && reserve1Raw ? CurrencyAmount.fromRawAmount(token1, reserve1Raw) : undefined),
+    () => (token1 && reserve1Raw ? CurrencyAmount.fromRawAmount(token1, reserve1Raw.toString()) : undefined),
     [token1, reserve1Raw],
   )
 
@@ -792,15 +879,7 @@ export default function MigrateV2Pair() {
   }, [navigate])
 
   // redirect for invalid url params
-  if (
-    !validatedAddress ||
-    !pair ||
-    (pair &&
-      token0AddressCallState?.valid &&
-      !token0AddressCallState?.loading &&
-      !token0AddressCallState?.error &&
-      !token0Address)
-  ) {
+  if (!validatedAddress || !pair || (pair && !pairAddressesLoading && !token0Address && !account.isConnecting)) {
     logger.warn('MigrateV2Pair', 'MigrateV2Pair', 'Invalid pair address', {
       token0Address,
       token1Address,
@@ -851,7 +930,7 @@ export default function MigrateV2Pair() {
             </ThemedText.DeprecatedLargeHeader>
           ) : pairBalance && totalSupply && reserve0 && reserve1 && token0 && token1 ? (
             <V2PairMigration
-              pair={pair}
+              pairAddress={validatedAddress}
               pairBalance={pairBalance}
               totalSupply={totalSupply}
               reserve0={reserve0}

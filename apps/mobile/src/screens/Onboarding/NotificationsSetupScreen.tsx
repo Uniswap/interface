@@ -6,7 +6,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { NotificationsBackgroundImage } from 'src/components/notifications/NotificationsBGImage'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricsState } from 'src/features/biometrics/useBiometricsState'
-import { promptPushPermission } from 'src/features/notifications/Onesignal'
+import { usePromptPushPermission } from 'src/features/notifications/hooks/usePromptPushPermission'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { DeprecatedButton, Flex } from 'ui/src'
@@ -20,7 +20,6 @@ import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
-
 export const showNotificationSettingsAlert = (): void => {
   Alert.alert(
     i18n.t('onboarding.notification.permission.title'),
@@ -39,7 +38,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
   const hasSeedPhrase = useNativeAccountExists()
   const { deviceSupportsBiometrics } = useBiometricsState()
-
+  const promptPushPermission = usePromptPushPermission()
   const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
   const navigateToNextScreen = useCallback(async () => {
@@ -63,7 +62,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     }
 
     await navigateToNextScreen()
-  }, [navigateToNextScreen])
+  }, [navigateToNextScreen, promptPushPermission])
 
   return (
     <OnboardingScreen

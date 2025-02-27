@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmSHXp5oNAxME6KY7LJy4ndnuBfL3ujQ67aMiPuTUuQ66g`
-- CIDv1: `bafybeib2ui2plf3zbinsp24o4d5ir66yr4a3qlg55kswt2rmlgkoomvigu`
+- CIDv0: `QmbeaM3MCweTaV4GCYLVMEKm5ErB89zu5bD6JaZ1Eoxjgc`
+- CIDv1: `bafybeigfx5zxz364o5wjk7wwfil27fg27o6morrlgfik4cc3gohrlezape`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,65 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeib2ui2plf3zbinsp24o4d5ir66yr4a3qlg55kswt2rmlgkoomvigu.ipfs.dweb.link/
-- [ipfs://QmSHXp5oNAxME6KY7LJy4ndnuBfL3ujQ67aMiPuTUuQ66g/](ipfs://QmSHXp5oNAxME6KY7LJy4ndnuBfL3ujQ67aMiPuTUuQ66g/)
+- https://bafybeigfx5zxz364o5wjk7wwfil27fg27o6morrlgfik4cc3gohrlezape.ipfs.dweb.link/
+- [ipfs://QmbeaM3MCweTaV4GCYLVMEKm5ErB89zu5bD6JaZ1Eoxjgc/](ipfs://QmbeaM3MCweTaV4GCYLVMEKm5ErB89zu5bD6JaZ1Eoxjgc/)
 
-## 5.73.0 (2025-02-26)
+## 5.74.0 (2025-02-27)
 
 
 ### Features
 
-* **web:** reduce monad testnet quote polling interval (#16719) c99cc6c
+* **web:** add unichain default rpc - main (#16124) 95aff86
+* **web:** implement new design for the position detail page (#15895) df9fe66
+* **web:** remove unichain beta toggle - main (#16168) (#16186) f479a33
+
+
+### Bug Fixes
+
+* **web:** [styled-components] migrate SparklineChart/index.tsx (#16557) 66fefda
+* **web:** add space at bottom of Swap page (#16149) 600d027
+* **web:** align New Position page in center on med-small screens (#16512) 45905e6
+* **web:** analytics for 'swap submit button clicked' native eth transactions (#15914) bfe6da6
+* **web:** create position spacing and alignment issues (#16470) 83ece23
+* **web:** fix bug to showing blockaid logo (#16471) a0f3bdb
+* **web:** landing page input output initial value (#16597) 26660cf
+* **web:** LiquidityPositionRangeChart inverted prices bug (#16550) 8b658e8
+* **web:** migrate FiatValue to tamagui (#16342) aea37e7
+* **web:** migrate LoadingBubble to tamagui (#16341) 761a362
+* **web:** migrate styled components usage in ukDisclaimerModal (#16422) c39acb0
+* **web:** migrate styled-components usage in TaxTooltipBody (#16425) c346b04
+* **web:** playwright browser cache (#16256) 4afc1bb
+* **web:** positioning of loading liquidity bars in the range chart (#16222) dda5ff8
+* **web:** re-add position page old design, use feature flag (#16583) cc5b299
+* **web:** regression affecting Android keyboard opening (#16403) ab0fbed
+* **web:** set loading status to false if no pagination result (#16296) 90f7a50
+* **web:** sync table head and container scrollables (#16548) f83d68a
+
+
+### Styles
+
+* **web:** fix holiday nav icon size and use accent1 var from theme (#16558) 39e530a
+
+
+### Continuous Integration
+
+* **web:** Increase JS heap for web quality checks (#16395) fe4a390
+* **web:** update sitemaps dae503c
+
+
+### Code Refactoring
+
+* **web:** add alignRight prop (#16142) e68d57f
+* **web:** create mockMediaSize test util (#16414) b33ae5f
+* **web:** don't adapt to sheet by default (#16139) c3aa280
+* **web:** dropdown use children instead of internalMenuItems (#16130) 7ad312c
+* **web:** empty wallet content deprecate styled components (#16440) 46fc931
+* **web:** kill useSingleContractMultipleData (#15058) e908b3c
+* **web:** split out AdaptiveDropdown (#16132) ad16962
+* **web:** update AccountDrawer and use WebBottomSheet for small screens (#16340) 0b5615b
+* **web:** use DropdownSelector for positions dropdown (#16191) b70cc11
+* **web:** useReadContract instead of useSingleCallResult in block timestamp hooks (#14745) a5dde3f
+* **web:** useReadContract instead of useSingleCallResult in migrate v2 hooks (#14746) ee407d6
+* **web:** useReadContract instead of useSingleCallResult in misc hooks (#14717) f70fad4
 
 

@@ -1,6 +1,6 @@
 import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, order matters
 
-import { initStatSigForBrowserScripts } from 'src/app/StatsigProvider'
+import { initStatSigForBrowserScripts } from 'src/app/core/StatsigProvider'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { initMessageBridge } from 'src/background/backgroundDappRequests'
