@@ -94,9 +94,7 @@ export function RoutingInfo({
       return null
     }
 
-    const helpCenterUrl = isUniswapX(trade)
-      ? uniswapUrls.helpArticleUrls.uniswapXInfo
-      : uniswapUrls.helpArticleUrls.routingSettings
+    const helpCenterUrl = uniswapUrls.helpArticleUrls.routingSettings
 
     return (
       <TouchableArea

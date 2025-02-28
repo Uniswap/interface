@@ -1,7 +1,6 @@
 import { SearchBar } from 'components/NavBar/SearchBar'
-import { mocked } from 'test-utils/mocked'
+import mockMediaSize from 'test-utils/mockMediaSize'
 import { render, screen } from 'test-utils/render'
-import { useMedia } from 'ui/src'
 
 jest.mock('tamagui', () => ({
   ...jest.requireActual('tamagui'),
@@ -10,18 +9,7 @@ jest.mock('tamagui', () => ({
 
 describe('disable nft on searchbar', () => {
   beforeEach(() => {
-    mocked(useMedia).mockReturnValue({
-      xxs: false,
-      xs: false,
-      sm: false,
-      md: false,
-      lg: false,
-      xl: false,
-      xxl: true,
-      xxxl: true,
-      short: false,
-      midHeight: false,
-    })
+    mockMediaSize('xxl')
   })
 
   it('should render searchbar on larger screen', () => {

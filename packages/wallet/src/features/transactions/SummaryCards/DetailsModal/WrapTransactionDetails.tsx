@@ -1,7 +1,7 @@
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionDetails, WrapTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { SwapTransactionContent } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
-import { buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function WrapTransactionDetails({
   transactionDetails,

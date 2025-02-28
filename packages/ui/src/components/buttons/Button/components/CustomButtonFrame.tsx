@@ -312,7 +312,8 @@ export const CustomButtonFrame = styled(XStack, {
         flex: 1,
       },
     },
-    disabled: {
+    // TODO(WEB-6347): change variant name back to `disabled`
+    isDisabled: {
       true: {
         pointerEvents: 'none',
         userSelect: 'none',

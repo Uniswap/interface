@@ -3,7 +3,7 @@
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import PopupApp from 'src/app/PopupApp'
+import PopupApp from 'src/app/core/PopupApp'
 import { initializeReduxStore } from 'src/store/store'
 import { logger } from 'utilities/src/logger/logger'
 ;(globalThis as any).regeneratorRuntime = undefined // eslint-disable-line @typescript-eslint/no-explicit-any

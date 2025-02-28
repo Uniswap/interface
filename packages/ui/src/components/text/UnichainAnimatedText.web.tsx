@@ -1,5 +1,6 @@
 import { Text } from 'ui/src/components/text'
 import { UnichainAnimatedTextProps } from 'ui/src/components/text/UnichainAnimatedText'
+import { useColorHexFromThemeKey } from 'ui/src/hooks/useColorHexFromThemeKey'
 
 const unichainGradientAnimatedStyle = ({ textColor, delayMs }: { textColor: string; delayMs?: number }): string => `
   .unichain-gradient {
@@ -23,14 +24,15 @@ const unichainGradientAnimatedStyle = ({ textColor, delayMs }: { textColor: stri
 
 export function UnichainAnimatedText({
   children,
-  gradientTextColor,
+  gradientTextColor = 'neutral1',
   delayMs,
   enabled = true,
   ...props
 }: UnichainAnimatedTextProps): JSX.Element {
+  const textColor = useColorHexFromThemeKey(gradientTextColor).val
   return (
     <>
-      {enabled ? <style>{unichainGradientAnimatedStyle({ textColor: gradientTextColor, delayMs })}</style> : null}
+      {enabled ? <style>{unichainGradientAnimatedStyle({ textColor, delayMs })}</style> : null}
       <Text
         {...props}
         color={enabled ? 'transparent' : props.color}

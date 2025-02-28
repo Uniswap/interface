@@ -72,9 +72,9 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { datadogEnabled, isE2EMode } from 'utilities/src/environment/constants'
 import { isTestEnv } from 'utilities/src/environment/env'
-import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/Datadog'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
-import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadogEvents'
+import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
+import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -82,10 +82,9 @@ import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trac
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 // eslint-disable-next-line no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
-import { initFirebaseAppCheck } from 'wallet/src/features/appCheck/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
-import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -114,7 +113,6 @@ if (isE2EMode) {
 
 initOneSignal()
 initAppsFlyer()
-initFirebaseAppCheck()
 
 function App(): JSX.Element | null {
   useEffect(() => {

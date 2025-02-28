@@ -20,6 +20,7 @@
     "dotenv-webpack": "8.0.1",
     "ethers": "5.7.2",
     "eventemitter3": "5.0.1",
+    "framer-motion": "10.17.6",
     "i18next": "23.10.0",
     "node-polyfill-webpack-plugin": "2.0.1",
     "react": "18.3.1",

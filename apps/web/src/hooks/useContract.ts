@@ -1,7 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import {
-  ARGENT_WALLET_DETECTOR_ADDRESS,
   CHAIN_TO_ADDRESSES_MAP,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -16,9 +15,8 @@ import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contr
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useEffect, useMemo } from 'react'
-import ARGENT_WALLET_DETECTOR_ABI from 'uniswap/src/abis/argent-wallet-detector.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
-import { ArgentWalletDetector, Erc20, Erc721, Weth } from 'uniswap/src/abis/types'
+import { Erc20, Erc721, Weth } from 'uniswap/src/abis/types'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
@@ -81,15 +79,6 @@ export function useWETHContract(withSignerIfPossible?: boolean, chainId?: Univer
     WETH_ABI,
     withSignerIfPossible,
     chainId,
-  )
-}
-
-export function useArgentWalletDetectorContract() {
-  const account = useAccount()
-  return useContract<ArgentWalletDetector>(
-    account.chainId ? ARGENT_WALLET_DETECTOR_ADDRESS[account.chainId] : undefined,
-    ARGENT_WALLET_DETECTOR_ABI,
-    false,
   )
 }
 

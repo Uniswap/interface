@@ -14,6 +14,8 @@ declare module 'react-native-dotenv' {
   export const ONESIGNAL_APP_ID: string
   export const OPENAI_API_KEY: string
   export const WALLETCONNECT_PROJECT_ID: string
+  export const WALLETCONNECT_PROJECT_ID_BETA: string
+  export const WALLETCONNECT_PROJECT_ID_DEV: string
   export const QUICKNODE_ENDPOINT_NAME: string
   export const QUICKNODE_ENDPOINT_TOKEN: string
   export const QUICKNODE_MONAD_TESTNET_RPC_URL: string

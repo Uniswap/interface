@@ -1,4 +1,3 @@
-import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { useWeb3React } from '@web3-react/core'
 import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -82,7 +81,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
       : account.chainId,
   )
   const hasPending = pendingTransactions.length > 0
-  const blockTimestamp = useCurrentBlockTimestamp(hasPending ? undefined : NEVER_RELOAD)
+  const blockTimestamp = useCurrentBlockTimestamp({ refetchInterval: !hasPending ? false : undefined })
 
   const lastBlockNumber = useBlockNumber()
   const removeTransaction = useTransactionRemover()
@@ -102,7 +101,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
                 // Remove transactions past their deadline or - if there is no deadline - older than 6 hours.
                 if (tx.deadline) {
                   // Deadlines are expressed as seconds since epoch, as they are used on-chain.
-                  if (blockTimestamp && tx.deadline < blockTimestamp.toNumber()) {
+                  if (blockTimestamp && tx.deadline < Number(blockTimestamp)) {
                     removeTransaction(tx.hash)
                   }
                 } else if (tx.addedTime + ms(`6h`) < Date.now()) {

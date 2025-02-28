@@ -9,7 +9,6 @@ import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio/MiniPortfolio'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Status } from 'components/AccountDrawer/Status'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
-import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import Column from 'components/deprecated/Column'
@@ -26,6 +25,7 @@ import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
+import { Bank } from 'ui/src/components/icons/Bank'
 import { Flex } from 'ui/src/components/layout'
 import { Shine } from 'ui/src/loading/Shine'
 import AnimatedNumber, {
@@ -215,7 +215,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               {shouldShowBuyFiatButton && (
                 <ActionTile
                   dataTestId="wallet-buy-crypto"
-                  Icon={<CreditCardIcon />}
+                  Icon={<Bank size={24} />}
                   name={t('common.buy.label')}
                   onClick={handleBuyCryptoClick}
                   errorMessage={t('common.restricted.region')}

@@ -1150,10 +1150,6 @@ PODS:
   - Apollo (1.2.1):
     - Apollo/Core (= 1.2.1)
   - Apollo/Core (1.2.1)
-  - AppCheckCore (11.2.0):
-    - GoogleUtilities/Environment (~> 8.0)
-    - GoogleUtilities/UserDefaults (~> 8.0)
-    - PromisesObjC (~> 2.4)
   - AppsFlyerFramework (6.13.1):
     - AppsFlyerFramework/Main (= 6.13.1)
   - AppsFlyerFramework/Main (6.13.1)
@@ -1248,9 +1244,6 @@ PODS:
   - ExpoWebBrowser (13.0.3):
     - ExpoModulesCore
   - FBLazyVector (0.76.6)
-  - Firebase/AppCheck (11.2.0):
-    - Firebase/CoreOnly
-    - FirebaseAppCheck (~> 11.2.0)
   - Firebase/Auth (11.2.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 11.2.0)
@@ -1259,12 +1252,6 @@ PODS:
   - Firebase/Firestore (11.2.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 11.2.0)
-  - FirebaseAppCheck (11.2.0):
-    - AppCheckCore (~> 11.0)
-    - FirebaseAppCheckInterop (~> 11.0)
-    - FirebaseCore (~> 11.0)
-    - GoogleUtilities/Environment (~> 8.0)
-    - GoogleUtilities/UserDefaults (~> 8.0)
   - FirebaseAppCheckInterop (11.7.0)
   - FirebaseAuth (11.2.0):
     - FirebaseAppCheckInterop (~> 11.0)
@@ -1326,9 +1313,6 @@ PODS:
     - GoogleUtilities/Privacy
   - GoogleUtilities/Privacy (8.0.2)
   - GoogleUtilities/Reachability (8.0.2):
-    - GoogleUtilities/Logger
-    - GoogleUtilities/Privacy
-  - GoogleUtilities/UserDefaults (8.0.2):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
   - "gRPC-C++ (1.65.5)":
@@ -1458,7 +1442,6 @@ PODS:
     - OneSignalXCFramework/OneSignalCore
   - OpenTelemetrySwiftApi (1.6.0)
   - PLCrashReporter (1.11.2)
-  - PromisesObjC (2.4.0)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -2697,7 +2680,7 @@ PODS:
   - react-native-appsflyer (6.13.1):
     - AppsFlyerFramework (= 6.13.1)
     - React
-  - react-native-compat (2.17.1):
+  - react-native-compat (2.18.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -3149,10 +3132,6 @@ PODS:
   - RNFBApp (21.0.0):
     - Firebase/CoreOnly (= 11.2.0)
     - React-Core
-  - RNFBAppCheck (21.0.0):
-    - Firebase/AppCheck (= 11.2.0)
-    - React-Core
-    - RNFBApp
   - RNFBAuth (21.0.0):
     - Firebase/Auth (= 11.2.0)
     - React-Core
@@ -3209,6 +3188,9 @@ PODS:
     - React-Core
   - RNPermissions (4.1.5):
     - React-Core
+  - RNQrGenerator (1.4.3):
+    - React
+    - ZXingObjC
   - RNReanimated (3.16.7):
     - DoubleConversion
     - glog
@@ -3332,6 +3314,9 @@ PODS:
   - Statsig (1.49.0)
   - UIImageColors (2.1.0)
   - Yoga (0.0.0)
+  - ZXingObjC (3.6.9):
+    - ZXingObjC/All (= 3.6.9)
+  - ZXingObjC/All (3.6.9)
   - ZXingObjC/Core (3.6.9)
   - ZXingObjC/OneD (3.6.9):
     - ZXingObjC/Core
@@ -3449,7 +3434,6 @@ DEPENDENCIES:
   - RNDeviceInfo (from `../../../node_modules/react-native-device-info`)
   - RNFastImage (from `../../../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../../../node_modules/@react-native-firebase/app`)"
-  - "RNFBAppCheck (from `../../../node_modules/@react-native-firebase/app-check`)"
   - "RNFBAuth (from `../../../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../../../node_modules/@react-native-firebase/firestore`)"
   - "RNFlashList (from `../../../node_modules/@shopify/flash-list`)"
@@ -3457,6 +3441,7 @@ DEPENDENCIES:
   - RNImageColors (from `../../../node_modules/react-native-image-colors`)
   - RNLocalize (from `../../../node_modules/react-native-localize`)
   - RNPermissions (from `../../../node_modules/react-native-permissions`)
+  - RNQrGenerator (from `../../../node_modules/rn-qr-generator`)
   - RNReanimated (from `../../../node_modules/react-native-reanimated`)
   - RNScreens (from `../../../node_modules/react-native-screens`)
   - RNSVG (from `../../../node_modules/react-native-svg`)
@@ -3469,7 +3454,6 @@ SPEC REPOS:
   trunk:
     - abseil
     - Apollo
-    - AppCheckCore
     - AppsFlyerFramework
     - Argon2Swift
     - BoringSSL-GRPC
@@ -3481,7 +3465,6 @@ SPEC REPOS:
     - DatadogTrace
     - DatadogWebViewTracking
     - Firebase
-    - FirebaseAppCheck
     - FirebaseAppCheckInterop
     - FirebaseAuth
     - FirebaseAuthInterop
@@ -3503,7 +3486,6 @@ SPEC REPOS:
     - OneSignalXCFramework
     - OpenTelemetrySwiftApi
     - PLCrashReporter
-    - PromisesObjC
     - RecaptchaInterop
     - SDWebImage
     - SDWebImageWebPCoder
@@ -3724,8 +3706,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-fast-image"
   RNFBApp:
     :path: "../../../node_modules/@react-native-firebase/app"
-  RNFBAppCheck:
-    :path: "../../../node_modules/@react-native-firebase/app-check"
   RNFBAuth:
     :path: "../../../node_modules/@react-native-firebase/auth"
   RNFBFirestore:
@@ -3740,6 +3720,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-localize"
   RNPermissions:
     :path: "../../../node_modules/react-native-permissions"
+  RNQrGenerator:
+    :path: "../../../node_modules/rn-qr-generator"
   RNReanimated:
     :path: "../../../node_modules/react-native-reanimated"
   RNScreens:
@@ -3755,7 +3737,6 @@ SPEC CHECKSUMS:
   abseil: d121da9ef7e2ff4cab7666e76c5a3e0915ae08c3
   amplitude-react-native: 9d57e1bcc4175039e36283390aa3daeaea9441a5
   Apollo: fe380f40e55e501a2499dd5885fab0cdf082b2bb
-  AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
   AppsFlyerFramework: 971521cf5b890c2afeab2f2c91734547b8b169ca
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
@@ -3789,7 +3770,6 @@ SPEC CHECKSUMS:
   ExpoWebBrowser: 7595ccac6938eb65b076385fd23d035db9ecdc8e
   FBLazyVector: be509404b5de73a64a74284edcaf73a5d1e128b1
   Firebase: 98e6bf5278170668a7983e12971a66b2cd57fc8c
-  FirebaseAppCheck: a6a1c1ca169d795212b9e70b5cfb880083a28e7c
   FirebaseAppCheckInterop: 2376d3ec5cb4267facad4fe754ab4f301a5a519b
   FirebaseAuth: 2a198b8cdbbbd457f08d74df7040feb0a0e7777a
   FirebaseAuthInterop: a6973d72aa242ea88ffb6be9c9b06c65455071da
@@ -3814,7 +3794,6 @@ SPEC CHECKSUMS:
   OneSignalXCFramework: ff1c970b7aeb4ac0fe48fb35393eb5d8bf378135
   OpenTelemetrySwiftApi: 657da8071c2908caecce11548e006f779924ff9c
   PLCrashReporter: 499c53b0104f95c302d94fd723ebb03c56d9bac8
-  PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: bf5c0376ffe4dd2cf438dcf86db385df9fdce648
   RCTDeprecation: 063fc281b30b7dc944c98fe53a7e266dab1a8706
   RCTRequired: 8eda2a5a745f6081157a4f34baac40b65fe02b31
@@ -3845,7 +3824,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: eab34f6d54d26931c5f70eb19da1e36162d87bbd
   React-microtasksnativemodule: 9866981c8f1e80bb819e34f4ea45870cb3e6afaa
   react-native-appsflyer: 2cc1f96348065fc23e976fc7a27e371789fb349e
-  react-native-compat: ea7b6b73dbd2503594a287d7fb41660ee4f83f40
+  react-native-compat: f493f09bd0e990f72188d628dfc0a89cbb3122ed
   react-native-context-menu-view: dcec18eb8882e20596dbb75802e7d19cb87dac02
   react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
   react-native-image-picker: 00f0e4aae2710ad1ffbc72f65dfe0e396f6b6508
@@ -3895,7 +3874,6 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
   RNFastImage: 246de6b52d7642992cfd01e2005dda36d00a6660
   RNFBApp: 4122dd41d8d7ff017b6ecf777a6224f5b349ca04
-  RNFBAppCheck: 2625a4cd0bcb11b409cbe47186e29104603d4d34
   RNFBAuth: 1632cefd787a43ba952fa52ff016e7b69fe355cb
   RNFBFirestore: 5f110e37b7f7f3d6e03c85044dd4cf3ebacec38b
   RNFlashList: 997257a094906e3e254183ef90fcf7a5a6a2612d
@@ -3903,6 +3881,7 @@ SPEC CHECKSUMS:
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
   RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: 87aac13521bea6dcb6dfd60b03ac69741ccef2b4
+  RNQrGenerator: ac6a6c766e80dd3625038929ed2b13e2f3edcafb
   RNReanimated: 283b723ad4ac5295f1513519c938cb6c282c508f
   RNScreens: 906192367b418a8d644090d7375d4657d5a5aab0
   RNSVG: 7ff26379b2d1871b8571e6f9bc9630de6baf9bdf

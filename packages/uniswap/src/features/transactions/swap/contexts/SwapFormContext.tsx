@@ -144,15 +144,46 @@ export function SwapFormContextProvider({
     isDebouncing: isDebouncingExactAmountToken || isDebouncingExactAmountFiat,
   })
 
+  const inputAmount = derivedSwapInfo.currencyAmounts[CurrencyField.INPUT]
+  const inputBalanceAmount = derivedSwapInfo.currencyBalances[CurrencyField.INPUT]
+
   useSwapAnalytics(derivedSwapInfo)
 
+  // for native transfers, this is the balance - (estimated gas fee for one transaction * multiplier from flag);
+  // for ERC20 transfers, this is the balance
   const maxInputAmountAsRef = useValueAsRef(
     useMaxAmountSpend({
-      currencyAmount: derivedSwapInfo.currencyBalances[CurrencyField.INPUT],
+      currencyAmount: inputBalanceAmount,
       txType: TransactionType.Swap,
       isExtraTx: true,
     })?.toExact(),
   )
+
+  // update `isMax` when inputAmount changes indirectly (eg output amount is set)
+  useEffect(() => {
+    // exact-input-field forms are handled in `updateSwapForm()`
+    const inputAmountString = inputAmount?.toExact()
+    const maxInputAmountThresholdString = maxInputAmountAsRef.current
+
+    if (
+      derivedSwapInfo.exactCurrencyField === CurrencyField.OUTPUT &&
+      inputAmountString &&
+      maxInputAmountThresholdString
+    ) {
+      const isMaxThreshold = !!(parseFloat(inputAmountString) >= parseFloat(maxInputAmountThresholdString))
+
+      // do not rerender if isMax is unchanged
+      setSwapForm((prevState) =>
+        prevState.isMax === isMaxThreshold
+          ? prevState
+          : {
+              ...prevState,
+              isMax: isMaxThreshold,
+            },
+      )
+    }
+    // `maxInputAmountAsRef` is a ref so it does not trigger a rerender on change
+  }, [inputAmount, derivedSwapInfo.exactCurrencyField, maxInputAmountAsRef])
 
   const updateSwapForm = useCallback(
     (newState: Parameters<SwapFormContextState['updateSwapForm']>[0]): void => {
@@ -174,7 +205,7 @@ export function SwapFormContextProvider({
       setSwapForm((prevState) => {
         const updatedState = { ...prevState, ...newState }
 
-        if (isAmountUpdated) {
+        if (isAmountUpdated || newState.exactCurrencyField !== CurrencyField.OUTPUT) {
           const isMaxTokenAmount =
             maxInputAmountAsRef.current &&
             updatedState.exactAmountToken &&

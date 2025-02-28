@@ -6,14 +6,13 @@ import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
-import { Container } from 'pages/Pool/Positions/create/shared'
 import { CreatePositionInfo, PriceRangeState } from 'pages/Pool/Positions/create/types'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
-import { DeprecatedButton, Flex, FlexProps, SegmentedControl, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, SegmentedControl, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { fonts } from 'ui/src/theme'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
@@ -275,37 +274,41 @@ function RangeInput({
   )
 }
 
-export const SelectPriceRangeStepV2 = ({ onContinue, ...rest }: { onContinue: () => void } & FlexProps) => {
+export const SelectPriceRangeStepV2 = ({ onContinue }: { onContinue?: () => void }) => {
   return (
-    <Container {...rest}>
+    <>
       <InitialPriceInput />
-      <DeprecatedButton
-        flex={1}
-        py="$spacing16"
-        px="$spacing20"
-        backgroundColor="$accent3"
-        hoverStyle={{
-          backgroundColor: undefined,
-          opacity: 0.8,
-        }}
-        pressStyle={{
-          backgroundColor: undefined,
-        }}
-        onPress={onContinue}
-      >
-        <Text variant="buttonLabel1" color="$surface1">
-          <Trans i18nKey="common.button.continue" />
-        </Text>
-      </DeprecatedButton>
-    </Container>
+      {onContinue && (
+        <DeprecatedButton
+          flex={1}
+          py="$spacing16"
+          px="$spacing20"
+          backgroundColor="$accent3"
+          hoverStyle={{
+            backgroundColor: undefined,
+            opacity: 0.8,
+          }}
+          pressStyle={{
+            backgroundColor: undefined,
+          }}
+          onPress={onContinue}
+        >
+          <Text variant="buttonLabel1" color="$surface1">
+            <Trans i18nKey="common.button.continue" />
+          </Text>
+        </DeprecatedButton>
+      )}
+    </>
   )
 }
 
 export const SelectPriceRangeStep = ({
   onContinue,
   onDisableContinue,
-  ...rest
-}: { onContinue: () => void; onDisableContinue?: boolean } & FlexProps) => {
+}: {
+  onContinue?: () => void
+  onDisableContinue?: boolean
+}) => {
   const { t } = useTranslation()
 
   const {
@@ -466,46 +469,50 @@ export const SelectPriceRangeStep = ({
 
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
     return (
-      <Container {...rest}>
+      <>
         <InitialPriceInput />
-        <DeprecatedButton
-          flex={1}
-          py="$spacing16"
-          px="$spacing20"
-          backgroundColor="$accent3"
-          hoverStyle={{
-            backgroundColor: undefined,
-            opacity: 0.8,
-          }}
-          pressStyle={{
-            backgroundColor: undefined,
-          }}
-          onPress={onContinue}
-          isDisabled={invalidState}
-        >
-          <Text variant="buttonLabel1" color="$surface1">
-            <Trans i18nKey="common.button.continue" />
-          </Text>
-        </DeprecatedButton>
-      </Container>
+        {onContinue && (
+          <DeprecatedButton
+            flex={1}
+            py="$spacing16"
+            px="$spacing20"
+            backgroundColor="$accent3"
+            hoverStyle={{
+              backgroundColor: undefined,
+              opacity: 0.8,
+            }}
+            pressStyle={{
+              backgroundColor: undefined,
+            }}
+            onPress={onContinue}
+            isDisabled={invalidState}
+          >
+            <Text variant="buttonLabel1" color="$surface1">
+              <Trans i18nKey="common.button.continue" />
+            </Text>
+          </DeprecatedButton>
+        )}
+      </>
     )
   }
 
   const showIncrementButtons = !!derivedPositionInfo.pool && !priceRangeState.fullRange
 
   return (
-    <Container {...rest}>
+    <>
       {creatingPoolOrPair && <InitialPriceInput />}
       <Flex gap="$gap20">
         <Flex row alignItems="center">
           <Text flex={1} variant="subheading1">
             <Trans i18nKey="position.setRange" />
           </Text>
-          <SegmentedControl
-            options={controlOptions}
-            selectedOption={baseCurrency?.symbol ?? ''}
-            onSelectOption={handleSelectToken}
-          />
+          {!creatingPoolOrPair && (
+            <SegmentedControl
+              options={controlOptions}
+              selectedOption={baseCurrency?.symbol ?? ''}
+              onSelectOption={handleSelectToken}
+            />
+          )}
         </Flex>
         <SegmentedControl
           options={segmentedControlRangeOptions}
@@ -602,26 +609,28 @@ export const SelectPriceRangeStep = ({
           </Flex>
         )}
       </Flex>
-      <DeprecatedButton
-        flex={1}
-        py="$spacing16"
-        px="$spacing20"
-        backgroundColor="$accent3"
-        hoverStyle={{
-          backgroundColor: undefined,
-          opacity: 0.8,
-        }}
-        pressStyle={{
-          backgroundColor: undefined,
-        }}
-        onPress={onContinue}
-        isDisabled={invalidState}
-      >
-        <Text variant="buttonLabel1" color="$surface1">
-          {t(`common.button.continue`)}
-        </Text>
-      </DeprecatedButton>
-    </Container>
+      {onContinue && (
+        <DeprecatedButton
+          flex={1}
+          py="$spacing16"
+          px="$spacing20"
+          backgroundColor="$accent3"
+          hoverStyle={{
+            backgroundColor: undefined,
+            opacity: 0.8,
+          }}
+          pressStyle={{
+            backgroundColor: undefined,
+          }}
+          onPress={onContinue}
+          isDisabled={invalidState}
+        >
+          <Text variant="buttonLabel1" color="$surface1">
+            {t(`common.button.continue`)}
+          </Text>
+        </DeprecatedButton>
+      )}
+    </>
   )
 }
 

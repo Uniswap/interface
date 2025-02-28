@@ -7,7 +7,7 @@ export const buttonStyledContext = createStyledContext<ButtonVariantProps>({
   variant: 'default',
   singleLine: true,
   emphasis: 'primary',
-  disabled: false,
+  isDisabled: false,
 })
 
 export const lineHeights = {

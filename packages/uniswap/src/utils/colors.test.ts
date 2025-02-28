@@ -1,11 +1,5 @@
 import { colorsLight, opacify } from 'ui/src/theme'
-import {
-  AdjustmentType,
-  adjustColorVariant,
-  findNearestThemeColor,
-  getColorDiffScore,
-  hexToRGB,
-} from 'uniswap/src/utils/colors'
+import { AdjustmentType, adjustColorVariant, findNearestThemeColor, getColorDiffScore } from 'uniswap/src/utils/colors'
 
 it('returns an hex color with opacity', () => {
   expect(opacify(10, '#000000')).toEqual('#0000001a')
@@ -51,11 +45,5 @@ describe('getColorDiffScore', () => {
   })
   it('returns max for opposite color', () => {
     expect(getColorDiffScore('#000000', '#ffffff')).toEqual(442.6729559300637)
-  })
-})
-
-describe('hexToRGB', () => {
-  it('converts hex to rgb', () => {
-    expect(hexToRGB('#000000')).toEqual({ b: 0, g: 0, r: 0 })
   })
 })

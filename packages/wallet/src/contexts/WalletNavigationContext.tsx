@@ -110,6 +110,7 @@ export type NavigateToNftCollectionArgs = {
 
 export type NavigateToFiatOnRampArgs = {
   prefilledCurrency?: FiatOnRampCurrency
+  isOfframp?: boolean
 }
 
 export type NavigateToExternalProfileArgs = {

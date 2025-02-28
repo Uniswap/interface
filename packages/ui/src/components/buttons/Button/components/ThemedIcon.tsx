@@ -8,7 +8,7 @@ export const ThemedIcon = ({
   children,
   size = 'medium',
   variant,
-  disabled,
+  isDisabled,
   emphasis,
 }: ButtonVariantProps & {
   children?: JSX.Element
@@ -18,7 +18,7 @@ export const ThemedIcon = ({
   // @ts-expect-error we know the color will be there; deficiency in tamagui's types
   // TODO: possibly look into this as a performance bottleneck (refer to typedef for more info)
   const { color } = useStyle(
-    { variant, emphasis, disabled },
+    { variant, emphasis, isDisabled },
     {
       forComponent: CustomButtonText,
     },

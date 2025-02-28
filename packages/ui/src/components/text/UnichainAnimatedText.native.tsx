@@ -10,16 +10,18 @@ import Animated, {
 import { LinearGradient } from 'tamagui/linear-gradient'
 import { Text } from 'ui/src/components/text'
 import { UnichainAnimatedTextProps } from 'ui/src/components/text/UnichainAnimatedText'
+import { useColorHexFromThemeKey } from 'ui/src/hooks/useColorHexFromThemeKey'
 
 export function UnichainAnimatedText({
   children,
-  gradientTextColor,
+  gradientTextColor = 'neutral1',
   delayMs = 375,
   enabled = true,
   gradientEndingXPlacement = -125,
   ...props
 }: UnichainAnimatedTextProps): JSX.Element {
   const translateX = useSharedValue(0)
+  const textColor = useColorHexFromThemeKey(gradientTextColor).val
 
   useEffect(() => {
     if (enabled) {
@@ -39,7 +41,7 @@ export function UnichainAnimatedText({
     <MaskedView maskElement={<Text {...props}>{children}</Text>}>
       <Animated.View style={animatedStyle}>
         <LinearGradient
-          colors={[gradientTextColor, gradientTextColor, '#FA0ABF', '#FC63DF', gradientTextColor, gradientTextColor]}
+          colors={[textColor, textColor, '#FA0ABF', '#FC63DF', textColor, textColor]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           locations={[0, 0.2, 0.4, 0.6, 0.8, 1]}

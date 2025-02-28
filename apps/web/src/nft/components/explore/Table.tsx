@@ -13,8 +13,8 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
 import { ThemedText } from 'theme/components'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useWindowSize } from 'uniswap/src/hooks/useWindowSize'
 
 // Default table cell max width
 const CELL_WIDTH = '160px'
@@ -103,7 +103,7 @@ export function Table<D extends Record<string, unknown>>({
 }: TableProps<D>) {
   const theme = useTheme()
   const { chainId } = useAccount()
-  const { width } = useWindowSize()
+  const { fullWidth: width } = useDeviceDimensions()
   const isMobile = useIsMobile()
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns, visibleColumns } =

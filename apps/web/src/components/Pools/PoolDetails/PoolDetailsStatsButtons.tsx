@@ -1,12 +1,11 @@
-import { Scrim } from 'components/AccountDrawer'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
+import { Scrim } from 'components/AccountDrawer/Scrim'
 import { CurrencySelect } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import { MobileBottomBar } from 'components/NavBar/MobileBottomBar'
+import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { MobileBottomBar } from 'components/NavBar/MobileBottomBar'
-import { SwapWrapperOuter } from 'components/swap/styled'
-import { LoadingBubble } from 'components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { gqlToCurrency } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
@@ -96,12 +95,6 @@ const SwapModalWrapper = styled(Column)<{ open?: boolean }>`
   max-height: ${({ open }) => (open ? '100vh' : '0')};
   transition: ${({ theme }) => `max-height ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
   padding-bottom: ${({ open }) => (open ? '24px' : '0')};
-
-  ${SwapWrapperOuter} {
-    &:before {
-      background-color: unset;
-    }
-  }
 
   // Need to override the default visibility to properly hide
   ${CurrencySelect} {

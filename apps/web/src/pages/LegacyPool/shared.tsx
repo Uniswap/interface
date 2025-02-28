@@ -50,28 +50,24 @@ export function PoolVersionMenu({ protocolVersion }: { protocolVersion: Protocol
     <DropdownSelector
       isOpen={isOpen}
       menuLabel={<Text variant="body1">{titles[protocolVersion]}</Text>}
-      internalMenuItems={
-        <>
-          {Object.entries(menuItems)
-            .filter(([protocol, info]) => {
-              if (!isLPRedesignEnabled && protocol === ProtocolVersion.V4) {
-                return false
-              }
-              return info.title !== menuItems[protocolVersion].title
-            })
-            .map(([, info]) => (
-              <PoolVersionItem href={info.link} key={info.title}>
-                <Pool width="20px" height="20px" />
-                <Text variant="body1" style={{ color: 'inherit' }}>
-                  {info.title}
-                </Text>
-              </PoolVersionItem>
-            ))}
-        </>
-      }
       toggleOpen={setIsOpen}
       buttonStyle={{ height: 36 }}
-      adaptToSheet={false}
-    />
+    >
+      {Object.entries(menuItems)
+        .filter(([protocol, info]) => {
+          if (!isLPRedesignEnabled && protocol === ProtocolVersion.V4) {
+            return false
+          }
+          return info.title !== menuItems[protocolVersion].title
+        })
+        .map(([, info]) => (
+          <PoolVersionItem href={info.link} key={info.title}>
+            <Pool width="20px" height="20px" />
+            <Text variant="body1" style={{ color: 'inherit' }}>
+              {info.title}
+            </Text>
+          </PoolVersionItem>
+        ))}
+    </DropdownSelector>
   )
 }

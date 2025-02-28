@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
+import { expect } from '@storybook/test'
+import { userEvent, within } from '@storybook/testing-library'
 import { useEffect } from 'react'
 import { I18nManager } from 'react-native'
 import { Anchor, ScrollView, Spacer, XStack } from 'tamagui'
@@ -7,8 +9,10 @@ import type { ButtonProps } from 'ui/src/components/buttons/Button/types'
 import { Faceid, Heart } from 'ui/src/components/icons'
 import { Flex, Separator } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
+import { colorsLight } from 'ui/src/theme'
+import { logger } from 'utilities/src/logger/logger'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { useInterval } from 'utilities/src/time/timing'
+import { hexToRGBString } from 'utilities/src/theme/colors'
 
 const meta = {
   title: 'Spore/Button',
@@ -19,13 +23,13 @@ type Story = StoryObj<typeof meta>
 
 const RowOfButtons = (props: ButtonProps): JSX.Element => (
   <XStack justifyContent="space-between" flexWrap="wrap" gap="$gap12">
-    <Button variant="default" {...props}>
+    <Button variant="default" id="default" {...props}>
       Default
     </Button>
-    <Button variant="branded" {...props}>
+    <Button variant="branded" id="branded" {...props}>
       Branded
     </Button>
-    <Button variant="critical" {...props}>
+    <Button variant="critical" id="critical" {...props}>
       Critical
     </Button>
   </XStack>
@@ -53,20 +57,8 @@ const SectionSeparator = (): JSX.Element => (
   </>
 )
 
-const ChangingLoadingStateButton = (): JSX.Element => {
-  const { value: isLoading, toggle: toggleLoading } = useBooleanState(false)
-
-  useInterval(toggleLoading, 1000)
-
-  return (
-    <Button size="large" variant="default" flex={1} loading={isLoading}>
-      {isLoading ? 'Loading' : 'Not Loading'}
-    </Button>
-  )
-}
-
 export const All: Story = {
-  render: (_args) => {
+  render: (): JSX.Element => {
     return (
       <ScrollView showsVerticalScrollIndicator={false} px="$padding16">
         <SectionHeader title="Overview" />
@@ -139,16 +131,7 @@ export const All: Story = {
         <SectionSeparator />
 
         <SectionHeader title="Disabled" />
-        <RowOfButtons disabled />
-
-        <SectionSeparator />
-
-        <SectionHeader title="Changing Loading State" />
-        <Flex row>
-          <ChangingLoadingStateButton />
-        </Flex>
-
-        <SectionSeparator />
+        <RowOfButtons isDisabled />
       </ScrollView>
     )
   },
@@ -206,6 +189,210 @@ const args = {
   alignSelf: 'center',
 } as const
 
+const variants = ['default', 'branded', 'critical'] satisfies ButtonProps['variant'][]
+const emphases = ['primary', 'secondary', 'tertiary'] satisfies ButtonProps['emphasis'][]
+
+// Use in tests for 'State - Focused' and 'State - Pressed'
+// We're directly referencing the `colorsLight` object here and in `backgroundColorsForStates` because if we use `getToken`, the tamagui config may not yet be available
+const borderColorsForStates = [
+  hexToRGBString(colorsLight.neutral3Hovered),
+  hexToRGBString(colorsLight.neutral3Hovered),
+  hexToRGBString(colorsLight.neutral3Hovered),
+  hexToRGBString(colorsLight.accent1Hovered),
+  hexToRGBString(colorsLight.accent1Hovered),
+  hexToRGBString(colorsLight.accent1Hovered),
+  hexToRGBString(colorsLight.statusCriticalHovered),
+  hexToRGBString(colorsLight.statusCriticalHovered),
+  hexToRGBString(colorsLight.statusCriticalHovered),
+] satisfies string[]
+
+const backgroundColorsForStates = [
+  hexToRGBString(colorsLight.black),
+  'rgba(34, 34, 34, 0.09)',
+  hexToRGBString(colorsLight.white),
+  hexToRGBString(colorsLight.accent1Hovered),
+  hexToRGBString(colorsLight.accent2Hovered),
+  hexToRGBString(colorsLight.white),
+  hexToRGBString(colorsLight.statusCriticalHovered),
+  hexToRGBString(colorsLight.statusCritical2Hovered),
+  hexToRGBString(colorsLight.white),
+] satisfies string[]
+
+const VariantEmphasisGrid = (props: Partial<ButtonProps>): JSX.Element => {
+  return (
+    <ScrollView showsVerticalScrollIndicator={false} px="$padding16" gap="$spacing24">
+      {variants.map((variant) => (
+        <Flex key={variant} gap="$spacing16">
+          <Text>{variant}</Text>
+          <Flex gap="$spacing8">
+            {emphases.map((emphasis) => (
+              <Button
+                {...props}
+                key={`${variant}-${emphasis}`}
+                variant={variant}
+                emphasis={emphasis}
+                id={`${variant}-${emphasis}`}
+              >
+                {`${variant} ${emphasis}`}
+              </Button>
+            ))}
+          </Flex>
+          <Spacer size="$spacing16" />
+        </Flex>
+      ))}
+    </ScrollView>
+  )
+}
+
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
+export const ChangingLoadingState: Story = {
+  name: 'State - Loading',
+  play: async ({ canvasElement }) => {
+    // Set loading to true after 1 second
+    const canvas = within(canvasElement)
+    const [toggleButton, loadingButton] = canvas.getAllByRole('button')
+
+    if (!toggleButton || !loadingButton) {
+      throw new Error('No toggle button or loading button found')
+    }
+
+    await expect(loadingButton).toBeEnabled()
+    await expect(loadingButton).toHaveTextContent('Not Loading')
+
+    await sleep(1000)
+
+    await userEvent.click(toggleButton)
+
+    await expect(loadingButton).toBeDisabled()
+    await expect(loadingButton).toHaveTextContent('Loading')
+    await expect(loadingButton).toHaveAttribute('aria-disabled', 'true')
+
+    await sleep(1000)
+
+    await userEvent.click(toggleButton)
+
+    await expect(loadingButton).toBeEnabled()
+    await expect(loadingButton).toHaveTextContent('Not Loading')
+  },
+  render: function ChangingLoadingState(): JSX.Element {
+    const { value: isLoading, toggle: toggleLoading } = useBooleanState(false)
+
+    return (
+      <>
+        <Flex row>
+          <Button size="large" variant="branded" flex={1} onPress={toggleLoading}>
+            Toggle Loading
+          </Button>
+        </Flex>
+        <Spacer size="$spacing16" />
+        <Flex row>
+          <Button size="large" variant="default" flex={1} loading={isLoading}>
+            {isLoading ? 'Loading' : 'Not Loading'}
+          </Button>
+        </Flex>
+      </>
+    )
+  },
+}
+
+export const HoverState: Story = {
+  name: 'Hovered (Forced)',
+  render: (): JSX.Element => {
+    return <VariantEmphasisGrid forceStyle="hover" />
+  },
+}
+
+export const PressState: Story = {
+  name: 'Pressed (Forced)',
+  render: (): JSX.Element => {
+    return <VariantEmphasisGrid forceStyle="press" />
+  },
+}
+
+// NOTE: These tests run in the CI using Playwright in Light mode
+export const FocusState: Story = {
+  name: 'State - Focused ▶️',
+  render: (): JSX.Element => {
+    return <VariantEmphasisGrid />
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const buttons = canvas.getAllByRole('button')
+
+    for (let i = 0; i < buttons.length; i++) {
+      await userEvent.tab()
+
+      // Get the currently focused button and assert its styles
+      const focusedButton = document.activeElement
+
+      if (!focusedButton) {
+        throw new Error('No focused button found')
+      }
+
+      try {
+        await expect(focusedButton).toHaveStyle({
+          outlineOffset: '2px',
+          outlineColor: borderColorsForStates[i],
+          outlineStyle: 'solid',
+          transform: 'matrix(0.98, 0, 0, 0.905, 0, 0)',
+          backgroundColor: backgroundColorsForStates[i],
+        })
+      } catch (error) {
+        logger.debug(
+          'Button.stories.tsx',
+          'FocusState.play',
+          `If we've updated our theme and the tests break, the error thrown isn't terribly helpful. Check the following logs for differences in styles coming from the test.`,
+        )
+
+        const styleProperties = [
+          'outlineOffset',
+          'outlineColor',
+          'outlineStyle',
+          'transform',
+          'backgroundColor',
+        ] as const
+
+        const computedStyle = window.getComputedStyle(focusedButton)
+        styleProperties.forEach((styleProperty) => {
+          logger.debug(
+            'Button.stories.tsx',
+            'FocusState.play',
+            `button #${i}, ${styleProperty}: ${computedStyle[styleProperty]}`,
+          )
+        })
+
+        throw error
+      }
+    }
+
+    // Unfocus the final button
+    await userEvent.tab()
+  },
+}
+
+// NOTE: These tests run in the CI using Playwright in Light mode
+export const PressedState: Story = {
+  name: 'State - Pressed ▶️',
+  render: () => {
+    return <VariantEmphasisGrid />
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const buttons = canvas.getAllByRole('button')
+
+    // Press each button with a 500ms delay
+    for (const button of buttons) {
+      await userEvent.pointer({
+        keys: '[MouseLeft>]', // MouseLeft> means mouse down without up
+        target: button,
+      })
+    }
+
+    // Unfocus the final button
+    await userEvent.tab()
+  },
+}
+
 export const WithControls: Story = {
   decorators: (Story) => (
     <Flex grow alignItems="center">
@@ -235,10 +422,8 @@ export const WithControlsRTL: Story = {
     }, [])
 
     return (
-      <Flex grow alignItems="center">
-        <Flex row px="$padding16" flex={0}>
-          <Button {...storyArgs} />
-        </Flex>
+      <Flex row px="$padding16">
+        <Button {...storyArgs} />
       </Flex>
     )
   },

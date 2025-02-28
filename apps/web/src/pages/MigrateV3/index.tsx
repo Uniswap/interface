@@ -27,6 +27,7 @@ import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
+import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
 import { LoadingRow } from 'pages/Pool/Positions/shared'
@@ -196,45 +197,45 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
             )}
             {step === PositionFlowStep.PRICE_RANGE && (
               <>
-                <SelectPriceRangeStep
-                  width="100%"
-                  maxWidth="unset"
-                  onDisableContinue={!txInfo || Boolean(error)}
-                  onContinue={() => {
-                    const isValidTx = isValidLiquidityTxContext(txInfo)
-                    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
-                      return
-                    }
-                    dispatch(
-                      liquiditySaga.actions.trigger({
-                        selectChain,
-                        startChainId,
-                        account,
-                        liquidityTxContext: txInfo,
-                        setCurrentStep: setCurrentTransactionStep,
-                        setSteps: setTransactionSteps,
-                        onSuccess: () => {
-                          onClose()
-                          navigate('/positions')
-                        },
-                        onFailure: onClose,
-                        analytics: {
-                          ...getLPBaseAnalyticsProperties({
-                            trace,
-                            fee: positionInfo.feeTier,
-                            currency0: currency0Amount.currency,
-                            currency1: currency1Amount.currency,
-                            currency0AmountUsd: currency0FiatAmount,
-                            currency1AmountUsd: currency1FiatAmount,
-                            poolId: positionInfo.poolId,
-                            version: ProtocolVersion.V3,
-                          }),
-                          action: 'V3->V4',
-                        },
-                      }),
-                    )
-                  }}
-                />
+                <Container width="100%" maxWidth="unset">
+                  <SelectPriceRangeStep
+                    onDisableContinue={!txInfo || Boolean(error)}
+                    onContinue={() => {
+                      const isValidTx = isValidLiquidityTxContext(txInfo)
+                      if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+                        return
+                      }
+                      dispatch(
+                        liquiditySaga.actions.trigger({
+                          selectChain,
+                          startChainId,
+                          account,
+                          liquidityTxContext: txInfo,
+                          setCurrentStep: setCurrentTransactionStep,
+                          setSteps: setTransactionSteps,
+                          onSuccess: () => {
+                            onClose()
+                            navigate('/positions')
+                          },
+                          onFailure: onClose,
+                          analytics: {
+                            ...getLPBaseAnalyticsProperties({
+                              trace,
+                              fee: positionInfo.feeTier,
+                              currency0: currency0Amount.currency,
+                              currency1: currency1Amount.currency,
+                              currency0AmountUsd: currency0FiatAmount,
+                              currency1AmountUsd: currency1FiatAmount,
+                              poolId: positionInfo.poolId,
+                              version: ProtocolVersion.V3,
+                            }),
+                            action: 'V3->V4',
+                          },
+                        }),
+                      )
+                    }}
+                  />
+                </Container>
                 <TradingAPIError errorMessage={error} refetch={refetch} />
               </>
             )}

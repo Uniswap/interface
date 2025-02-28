@@ -7,6 +7,7 @@ import {
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
 import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
+import { isCurrencyIdValid } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
 const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
@@ -117,6 +118,9 @@ export function parseDeepLinkUrl(urlString: string): DeepLinkActionResult {
     case '/tokendetails':
       if (!currencyId) {
         return logAndReturnError('No currencyId found', DeepLinkAction.TokenDetails, urlString, data)
+      }
+      if (!isCurrencyIdValid(currencyId)) {
+        return logAndReturnError('Invalid currencyId found', DeepLinkAction.TokenDetails, urlString, data)
       }
       return {
         action: DeepLinkAction.TokenDetails,

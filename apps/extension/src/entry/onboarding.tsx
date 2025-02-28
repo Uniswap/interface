@@ -3,7 +3,7 @@
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import OnboardingApp from 'src/app/OnboardingApp'
+import OnboardingApp from 'src/app/core/OnboardingApp'
 import { initializeReduxStore } from 'src/store/store'
 import { ExtensionAppLocation, StoreSynchronization } from 'src/store/storeSynchronization'
 import { logger } from 'utilities/src/logger/logger'

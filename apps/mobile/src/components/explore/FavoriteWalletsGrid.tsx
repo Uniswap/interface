@@ -1,12 +1,13 @@
 import { default as React, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeIn, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import { FlatList } from 'react-native-gesture-handler'
+import { AnimatedRef, FadeIn } from 'react-native-reanimated'
+import type { SortableGridDragEndCallback, SortableGridRenderItem } from 'react-native-sortables'
+import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
 import { Loader } from 'src/components/loading/loaders'
-import { SortableGrid } from 'src/components/sortableGrid/SortableGrid'
-import { AutoScrollProps, SortableGridChangeEvent, SortableGridRenderItem } from 'src/components/sortableGrid/types'
 import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
@@ -15,17 +16,17 @@ import { setFavoriteWallets } from 'uniswap/src/features/favorites/slice'
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 
-type FavoriteWalletsGridProps = AutoScrollProps & {
+type FavoriteWalletsGridProps = {
   showLoading: boolean
+  listRef: AnimatedRef<FlatList>
 }
 
 /** Renders the favorite wallets section on the Explore tab */
-export function FavoriteWalletsGrid({ showLoading, ...rest }: FavoriteWalletsGridProps): JSX.Element {
+export function FavoriteWalletsGrid({ showLoading, listRef, ...rest }: FavoriteWalletsGridProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
   const [isEditing, setIsEditing] = useState(false)
-  const isTokenDragged = useSharedValue(false)
   const watchedWalletsSet = useSelector(selectWatchedAddressSet)
   const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
 
@@ -36,61 +37,47 @@ export function FavoriteWalletsGrid({ showLoading, ...rest }: FavoriteWalletsGri
     }
   }, [watchedWalletsSet.size])
 
-  const handleOrderChange = useCallback(
-    ({ data }: SortableGridChangeEvent<string>) => {
+  const handleDragEnd = useCallback<SortableGridDragEndCallback<string>>(
+    ({ data }) => {
       dispatch(setFavoriteWallets({ addresses: data }))
     },
     [dispatch],
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
-    ({ item: address, pressProgress, dragActivationProgress }): JSX.Element => (
-      <FavoriteWalletCard
-        key={address}
-        address={address}
-        dragActivationProgress={dragActivationProgress}
-        isEditing={isEditing}
-        pressProgress={pressProgress}
-        setIsEditing={setIsEditing}
-      />
+    ({ item: address }): JSX.Element => (
+      <FavoriteWalletCard address={address} isEditing={isEditing} setIsEditing={setIsEditing} />
     ),
     [isEditing],
   )
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    zIndex: isTokenDragged.value ? 1 : 0,
-  }))
-
   return (
-    <AnimatedFlex entering={FadeIn} style={animatedStyle}>
-      <FavoriteHeaderRow
-        editingTitle={t('explore.wallets.favorite.title.edit')}
-        isEditing={isEditing}
-        title={t('explore.wallets.favorite.title.default')}
-        disabled={showLoading}
-        onPress={(): void => setIsEditing(!isEditing)}
-      />
-      {showLoading ? (
-        <FavoriteWalletsGridLoader />
-      ) : (
-        <SortableGrid
-          {...rest}
-          activeItemOpacity={1}
-          animateContainerHeight={false}
-          data={watchedWalletsList}
-          editable={isEditing}
-          numColumns={NUM_COLUMNS}
-          renderItem={renderItem}
-          onChange={handleOrderChange}
-          onDragStart={(): void => {
-            isTokenDragged.value = true
-          }}
-          onDrop={(): void => {
-            isTokenDragged.value = false
-          }}
+    <Sortable.Layer>
+      <AnimatedFlex entering={FadeIn}>
+        <FavoriteHeaderRow
+          editingTitle={t('explore.wallets.favorite.title.edit')}
+          isEditing={isEditing}
+          title={t('explore.wallets.favorite.title.default')}
+          disabled={showLoading}
+          onPress={(): void => setIsEditing(!isEditing)}
         />
-      )}
-    </AnimatedFlex>
+        {showLoading ? (
+          <FavoriteWalletsGridLoader />
+        ) : (
+          <Sortable.Grid
+            {...rest}
+            animateHeight
+            scrollableRef={listRef}
+            autoScrollActivationOffset={[75, 100]}
+            data={watchedWalletsList}
+            sortEnabled={isEditing}
+            columns={NUM_COLUMNS}
+            renderItem={renderItem}
+            onDragEnd={handleDragEnd}
+          />
+        )}
+      </AnimatedFlex>
+    </Sortable.Layer>
   )
 }
 

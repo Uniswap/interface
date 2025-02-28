@@ -3,7 +3,6 @@ import multicall from 'lib/state/multicall'
 import { SkipFirst } from 'types/tuple'
 
 export { NEVER_RELOAD } from '@uniswap/redux-multicall' // re-export for convenience
-export type { CallStateResult } from '@uniswap/redux-multicall' // re-export for convenience
 
 // Create wrappers for hooks so consumers don't need to get latest block themselves
 
@@ -14,16 +13,4 @@ export function useMultipleContractSingleData(
 ) {
   const { chainId, latestBlock } = useCallContext()
   return multicall.hooks.useMultipleContractSingleData(chainId, latestBlock, ...args)
-}
-
-export function useSingleCallResult(...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleCallResult>) {
-  const { chainId, latestBlock } = useCallContext()
-  return multicall.hooks.useSingleCallResult(chainId, latestBlock, ...args)
-}
-
-export function useSingleContractMultipleData(
-  ...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleContractMultipleData>
-) {
-  const { chainId, latestBlock } = useCallContext()
-  return multicall.hooks.useSingleContractMultipleData(chainId, latestBlock, ...args)
 }

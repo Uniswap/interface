@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmUpezmR69HSSepjRJJh3q8JQFPgeG1i4JKw8FmVgUtqwd`
-- CIDv1: `bafybeidakk2ybrz27ok75u3dqidlp2pauhixudav4xr7lx4tmmjkxax6fa`
+- CIDv0: `QmQ2hU8vjNncmKCmEU6cU1DNpokWPfMtBRLj9fQpJRzCu2`
+- CIDv1: `bafybeiazdyfabltg5ykqliad3cflnjagpxmrkdv2bwagwtbjasovu2uftu`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeidakk2ybrz27ok75u3dqidlp2pauhixudav4xr7lx4tmmjkxax6fa.ipfs.dweb.link/
-- [ipfs://QmUpezmR69HSSepjRJJh3q8JQFPgeG1i4JKw8FmVgUtqwd/](ipfs://QmUpezmR69HSSepjRJJh3q8JQFPgeG1i4JKw8FmVgUtqwd/)
+- https://bafybeiazdyfabltg5ykqliad3cflnjagpxmrkdv2bwagwtbjasovu2uftu.ipfs.dweb.link/
+- [ipfs://QmQ2hU8vjNncmKCmEU6cU1DNpokWPfMtBRLj9fQpJRzCu2/](ipfs://QmQ2hU8vjNncmKCmEU6cU1DNpokWPfMtBRLj9fQpJRzCu2/)
 
-### 5.72.1 (2025-02-15)
+### 5.74.1 (2025-02-27)
 
 
 ### Bug Fixes
 
-* **web:** regression affecting Android keyboard opening (#16405) 12ac4db
+* **web:** wait for statsig init to check ff (#16802) af389dd
 
 

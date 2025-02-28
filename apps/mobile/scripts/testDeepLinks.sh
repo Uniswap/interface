@@ -28,6 +28,7 @@ urls=(
   "https://uniswap.org/app/wc?uri=wc:af098@2?relay-protocol=irn&symKey=51e"
   "uniswap://app/fiatonramp?userAddress=$user_id&source=push"
   "uniswap://app/tokendetails?currencyId=10-0x6fd9d7ad17242c41f7131d257212c54a0e816691&source=push"
+  "uniswap://app/tokendetails?currencyId=0-fwefe&source=push" # invalid currencyId
 )
 
 xcrun simctl terminate booted "$bundle_id"

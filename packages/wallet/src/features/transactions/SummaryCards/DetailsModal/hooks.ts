@@ -9,9 +9,9 @@ import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails, isFinalizedTx } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
-import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function useNetworkFee(transactionDetails: TransactionDetails): {
   value: string

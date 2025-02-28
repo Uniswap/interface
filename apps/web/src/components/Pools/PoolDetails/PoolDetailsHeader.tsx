@@ -8,7 +8,7 @@ import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
 import { PoolDetailsBadge } from 'components/Pools/PoolTable/PoolTable'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
-import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
+import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
@@ -29,7 +29,7 @@ import {
   ThemedText,
 } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { Flex, TouchableArea, useMedia } from 'ui/src'
+import { Flex, TouchableArea, useIsTouchDevice, useMedia } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -247,12 +247,6 @@ const ContractsDropdownRow = ({
   )
 }
 
-const ContractsModalContainer = {
-  ...ActionMenuFlyoutStyle,
-  minWidth: 235,
-  borderRadius: '$rounded16',
-}
-
 const PoolDetailsHeaderActions = ({
   chainId,
   poolAddress,
@@ -270,6 +264,7 @@ const PoolDetailsHeaderActions = ({
 }) => {
   const { t } = useTranslation()
   const theme = useTheme()
+  const isTouchDevice = useIsTouchDevice()
   const [contractsModalIsOpen, toggleContractsModal] = useState(false)
 
   return (
@@ -284,21 +279,20 @@ const PoolDetailsHeaderActions = ({
             <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
           )
         }
-        internalMenuItems={
-          <>
-            {protocolVersion !== ProtocolVersion.V4 && (
-              <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
-            )}
-            <ContractsDropdownRow address={token0?.address} chainId={chainId} tokens={[token0]} />
-            <ContractsDropdownRow address={token1?.address} chainId={chainId} tokens={[token1]} />
-          </>
-        }
-        tooltipText={t('pool.explorers')}
+        tooltipText={isTouchDevice ? undefined : t('pool.explorers')}
         hideChevron
         buttonStyle={ActionButtonStyle}
-        dropdownStyle={ContractsModalContainer}
-        adaptToSheet={false}
-      />
+        dropdownStyle={{ minWidth: 235 }}
+        alignRight
+      >
+        <>
+          {protocolVersion !== ProtocolVersion.V4 && (
+            <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
+          )}
+          <ContractsDropdownRow address={token0?.address} chainId={chainId} tokens={[token0]} />
+          <ContractsDropdownRow address={token1?.address} chainId={chainId} tokens={[token1]} />
+        </>
+      </DropdownSelector>
       <ShareButton name={poolName} utmSource="share-pool" />
     </Row>
   )

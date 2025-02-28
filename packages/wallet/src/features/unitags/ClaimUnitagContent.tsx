@@ -135,6 +135,7 @@ export function ClaimUnitagContent({
   const onChangeTextInput = useCallback(
     (text: string): void => {
       setShouldBlockContinue(false)
+      setUnitagToCheck(undefined)
 
       if (text.length > MAX_UNITAG_CHAR_LENGTH) {
         return

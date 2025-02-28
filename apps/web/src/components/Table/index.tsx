@@ -211,7 +211,7 @@ export function Table<Data extends RowData>({
       <ScrollSync>
         <TableContainer maxWidth={maxWidth} maxHeight={maxHeight}>
           <TableHead $isSticky={!maxHeight} $top={headerHeight}>
-            <ScrollSyncPane>
+            <ScrollSyncPane group="table-sync">
               <HeaderRow dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id}>
@@ -241,8 +241,7 @@ export function Table<Data extends RowData>({
               </FadePresence>
             )}
           </TableHead>
-          {/* @ts-expect-error `react-scroll-sync` hasn't been updated in awhile; therefore, this type has been incorrect for a while */}
-          <ScrollSyncPane attachTo={tableBodyRef}>
+          <ScrollSyncPane group="table-sync">
             <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
               <TableBody loading={loading} error={error} table={table} />
             </TableBodyContainer>

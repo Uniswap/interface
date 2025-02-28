@@ -39,6 +39,7 @@ import {
   UnitagEventName,
   WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
+import { TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
@@ -158,6 +159,10 @@ export type SwapTradeBaseProperties = {
   method?: 'ROUTING_API' | 'QUICK_ROUTE' | 'CLIENT_SIDE_FALLBACK'
   offchain_order_type?: 'Dutch' | 'Dutch_V2' | 'Limit' | 'Dutch_V1_V2' | 'Priority' | 'Dutch_V3'
   simulation_failure_reasons?: TransactionFailureReason[]
+  tokenWarnings?: {
+    input: TokenProtectionWarning
+    output: TokenProtectionWarning
+  }
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -365,6 +370,7 @@ export type NotificationToggleLoggingType =
 
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
+  [ExtensionEventName.BackgroundAttemptedToOpenSidebar]: { hasError: boolean }
   [ExtensionEventName.OnboardingLoad]: undefined
   [ExtensionEventName.SidebarLoad]: { locked: boolean }
   [ExtensionEventName.SidebarClosed]: undefined

@@ -1,11 +1,10 @@
 import { BlurView } from 'expo-blur'
 import React, { memo } from 'react'
-import { TouchableWithoutFeedback } from 'react-native'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SplashScreen } from 'src/features/appLoading/SplashScreen'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { useLockScreenState } from 'src/features/lockScreen/useLockScreenState'
-import { flexStyles, useIsDarkMode } from 'ui/src'
+import { TouchableArea, flexStyles, useIsDarkMode } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { zIndexes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -24,9 +23,9 @@ export const LockScreenModal = memo(function LockScreenModal(): JSX.Element | nu
   // the lock screen on error, hence we fallback to the global error boundary
   return (
     <FullScreenFader>
-      <TouchableWithoutFeedback style={flexStyles.fill} onPress={(): Promise<void> => trigger()}>
+      <TouchableArea activeOpacity={1} style={flexStyles.fill} onPress={(): Promise<void> => trigger()}>
         <LockScreenModalContent />
-      </TouchableWithoutFeedback>
+      </TouchableArea>
     </FullScreenFader>
   )
 })

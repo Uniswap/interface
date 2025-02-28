@@ -485,7 +485,6 @@ export function SelectTokensStep({
                 <HeightAnimator open={isShowMoreFeeTiersEnabled}>
                   <Flex flexDirection="column" display="flex" gap="$gap12">
                     <Flex
-                      display="flex"
                       $platform-web={{
                         display: 'grid',
                       }}

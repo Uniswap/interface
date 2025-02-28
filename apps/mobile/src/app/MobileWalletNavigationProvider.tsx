@@ -246,8 +246,8 @@ function useNavigateToFiatOnRamp(): (args: NavigateToFiatOnRampArgs) => void {
   const dispatch = useDispatch()
 
   return useCallback(
-    ({ prefilledCurrency }: NavigateToFiatOnRampArgs): void => {
-      dispatch(openModal({ name: ModalName.FiatOnRampAggregator, initialState: { prefilledCurrency } }))
+    ({ prefilledCurrency, isOfframp }: NavigateToFiatOnRampArgs): void => {
+      dispatch(openModal({ name: ModalName.FiatOnRampAggregator, initialState: { prefilledCurrency, isOfframp } }))
     },
     [dispatch],
   )

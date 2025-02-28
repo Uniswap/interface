@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { LinkButton, LinkButtonType } from 'src/components/TokenDetails/LinkButton'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
@@ -11,8 +12,8 @@ import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/unisw
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isDefaultNativeAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { isDefaultNativeAddress } from 'wallet/src/utils/currencyId'
 import { getTwitterLink } from 'wallet/src/utils/linking'
 
 export function TokenDetailsLinks(): JSX.Element {
@@ -25,57 +26,63 @@ export function TokenDetailsLinks(): JSX.Element {
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
   const explorerName = getChainInfo(chainId).explorer.name
 
+  const links = useMemo(() => {
+    return [
+      {
+        Icon: getBlockExplorerIcon(chainId),
+        buttonType: LinkButtonType.Link,
+        element: ElementName.TokenLinkEtherscan,
+        label: explorerName,
+        testID: TestID.TokenLinkEtherscan,
+        value: explorerLink,
+      },
+      homepageUrl
+        ? {
+            Icon: GlobeIcon,
+            buttonType: LinkButtonType.Link,
+            element: ElementName.TokenLinkWebsite,
+            label: t('token.links.website'),
+            testID: TestID.TokenLinkWebsite,
+            value: homepageUrl,
+          }
+        : null,
+      twitterName
+        ? {
+            Icon: TwitterIcon,
+            buttonType: LinkButtonType.Link,
+            element: ElementName.TokenLinkTwitter,
+            label: t('token.links.twitter'),
+            testID: TestID.TokenLinkTwitter,
+            value: getTwitterLink(twitterName),
+          }
+        : null,
+      !isDefaultNativeAddress(address)
+        ? {
+            buttonType: LinkButtonType.Copy,
+            element: ElementName.Copy,
+            label: t('common.text.contract'),
+            testID: TestID.TokenLinkCopy,
+            value: address,
+          }
+        : null,
+    ].filter((item): item is NonNullable<typeof item> => Boolean(item))
+  }, [chainId, address, homepageUrl, twitterName, explorerName, explorerLink, t])
+
   return (
     <View style={{ marginHorizontal: -14 }}>
       <Flex gap="$spacing8">
         <Text color="$neutral2" mx="$spacing16" variant="subheading2">
           {t('token.links.title')}
         </Text>
-
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Flex row gap="$spacing8" px="$spacing16">
-            <LinkButton
-              Icon={getBlockExplorerIcon(chainId)}
-              buttonType={LinkButtonType.Link}
-              element={ElementName.TokenLinkEtherscan}
-              label={explorerName}
-              testID={TestID.TokenLinkEtherscan}
-              value={explorerLink}
-            />
-
-            {homepageUrl && (
-              <LinkButton
-                Icon={GlobeIcon}
-                buttonType={LinkButtonType.Link}
-                element={ElementName.TokenLinkWebsite}
-                label={t('token.links.website')}
-                testID={TestID.TokenLinkWebsite}
-                value={homepageUrl}
-              />
-            )}
-
-            {twitterName && (
-              <LinkButton
-                Icon={TwitterIcon}
-                buttonType={LinkButtonType.Link}
-                element={ElementName.TokenLinkTwitter}
-                label={t('token.links.twitter')}
-                testID={TestID.TokenLinkTwitter}
-                value={getTwitterLink(twitterName)}
-              />
-            )}
-
-            {!isDefaultNativeAddress(address) && (
-              <LinkButton
-                buttonType={LinkButtonType.Copy}
-                element={ElementName.Copy}
-                label={t('common.text.contract')}
-                testID={TestID.TokenLinkCopy}
-                value={address}
-              />
-            )}
-          </Flex>
-        </ScrollView>
+        <Flex row gap="$spacing8" px="$spacing16">
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={links}
+            renderItem={({ item }) => <LinkButton {...item} />}
+            keyExtractor={(item) => item.testID}
+          />
+        </Flex>
       </Flex>
     </View>
   )

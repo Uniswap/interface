@@ -308,7 +308,7 @@ export function LiquidityRangeInput({
           {(liquidityDataLoading || priceData.loading) && (
             <Shine
               position="absolute"
-              right={0}
+              right={sizes.rightAxisWidth}
               top={0}
               overflow="hidden"
               justifyContent="flex-end"
@@ -388,37 +388,33 @@ export function LiquidityRangeInput({
                 borderWidth: 0,
                 p: 0,
               }}
-              dropdownStyle={{
-                width: 160,
-              }}
-              internalMenuItems={
-                <>
-                  {timePeriodOptions.options.map((p) => (
-                    <Flex
-                      key={p.value}
-                      width="100%"
-                      height={32}
-                      row
-                      alignItems="center"
-                      justifyContent="flex-start"
-                      p="$padding12"
-                      onPress={() => {
-                        setSelectedHistoryDuration(p.value)
-                        setZoomFactor(1)
-                        setBoundaryPrices(undefined)
-                      }}
-                    >
-                      {p.verboseDisplay}
-                    </Flex>
-                  ))}
-                </>
-              }
-              hideChevron={true}
+              dropdownStyle={{ width: 160 }}
+              hideChevron
               isOpen={createDropdownOpen}
+              adaptToSheet
               toggleOpen={() => {
                 setCreateDropdownOpen((prev) => !prev)
               }}
-            />
+            >
+              {timePeriodOptions.options.map((p) => (
+                <Flex
+                  key={p.value}
+                  width="100%"
+                  height={32}
+                  row
+                  alignItems="center"
+                  justifyContent="flex-start"
+                  p="$padding12"
+                  onPress={() => {
+                    setSelectedHistoryDuration(p.value)
+                    setZoomFactor(1)
+                    setBoundaryPrices(undefined)
+                  }}
+                >
+                  {p.verboseDisplay}
+                </Flex>
+              ))}
+            </DropdownSelector>
           ) : (
             <SegmentedControl
               options={timePeriodOptions.options}

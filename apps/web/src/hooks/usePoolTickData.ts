@@ -155,6 +155,7 @@ export function usePoolActiveLiquidity({
   tickSpacing,
   hooks,
   poolId,
+  skip,
 }: {
   poolId?: string
   currencyA?: Currency
@@ -164,6 +165,7 @@ export function usePoolActiveLiquidity({
   chainId?: UniverseChainId
   tickSpacing?: number
   hooks?: string
+  skip?: boolean
 }): {
   isLoading: boolean
   error: any
@@ -175,7 +177,7 @@ export function usePoolActiveLiquidity({
 } {
   const multichainContext = useMultichainContext()
   const defaultChainId = multichainContext.chainId ?? UniverseChainId.Mainnet
-  const poolsQueryEnabled = Boolean(poolEnabledProtocolVersion(version) && currencyA && currencyB)
+  const poolsQueryEnabled = Boolean(poolEnabledProtocolVersion(version) && currencyA && currencyB && !skip)
   const { data: poolData, isLoading: poolIsLoading } = useGetPoolsByTokens(
     {
       fee: feeAmount,
