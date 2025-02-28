@@ -459,6 +459,7 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
   }
 }
 
+// TODO: replace with hasPriceFeed()
 export function useIsWhitelistedToken(poolAddress?: string, token?: Currency): boolean | undefined {
   const contract = usePoolExtendedContract(poolAddress)
 

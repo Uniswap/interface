@@ -1,11 +1,11 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
-import { MulticallExtended, PaymentsExtended, SwapRouter } from '@uniswap/router-sdk'
+//import { MulticallExtended, PaymentsExtended, SwapRouter } from '@uniswap/router-sdk'
 import { Percent } from '@uniswap/sdk-core'
 import {
   FlatFeeOptions,
-  //SwapRouter,
+  SwapRouter,
   //UNIVERSAL_ROUTER_ADDRESS,
   //UniversalRouterVersion,
 } from '@uniswap/universal-router-sdk'
@@ -106,13 +106,15 @@ export function useUniversalRouterSwapCallback(
           const { calldata: data, value } = SwapRouter.swapCallParameters(trade, {
             slippageTolerance: options.slippageTolerance,
             deadlineOrPreviousBlockhash: deadline?.toString(),
+            inputTokenPermit: options.permit,
             fee: options.feeOptions,
             recipient: account.address,
+            flatFee: options.flatFeeOptions,
           })
           const tx = {
             from: account.address,
             to: options.smartPoolAddress,
-            data: MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(value)), data]),
+            data, //: MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(value)), data]),
             value: '0x0',
           }
 

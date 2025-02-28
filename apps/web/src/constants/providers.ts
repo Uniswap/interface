@@ -4,7 +4,6 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { SUPPORTED_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function getAppProvider(chainId: UniverseChainId) {
-  console.log(chainId, 'pippo')
   const info = getChainInfo(chainId)
   return new AppJsonRpcProvider(
     info.rpcUrls.interface.http.map(
