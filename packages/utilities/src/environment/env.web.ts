@@ -16,7 +16,7 @@ export function isTestEnv(): boolean {
 }
 
 export function isPlaywrightEnv(): boolean {
-  return typeof window.__playwright__binding__ !== 'undefined'
+  return typeof window !== 'undefined' && typeof window.__playwright__binding__ !== 'undefined'
 }
 
 export function isDevEnv(): boolean {

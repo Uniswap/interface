@@ -2,13 +2,13 @@
 
 exports[`TDP Skeleton should render correctly 1`] = `
 <DocumentFragment>
-  .c7 {
+  .c6 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c8 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -25,7 +25,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c18 {
+.c17 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -72,33 +72,18 @@ exports[`TDP Skeleton should render correctly 1`] = `
   color: #CECECE;
 }
 
-.c17 {
+.c16 {
   gap: 16px;
   padding: 24px 0px;
   -webkit-animation: iAjNNh 125ms ease-in;
   animation: iAjNNh 125ms ease-in;
 }
 
-.c19 {
+.c18 {
   font-size: 28px !important;
 }
 
-.c2 {
-  border-radius: 12px;
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
-  width: 50%;
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
-  will-change: background-position;
-  background-size: 400%;
-}
-
-.c13 {
+.c12 {
   color: #7D7D7D;
   font-size: 14px;
   min-width: 121px;
@@ -109,7 +94,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   padding-bottom: 0px;
 }
 
-.c12 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -122,19 +107,19 @@ exports[`TDP Skeleton should render correctly 1`] = `
   flex-wrap: wrap;
 }
 
-.c9 {
+.c8 {
   gap: 16px;
   -webkit-animation: iAjNNh 125ms ease-in;
   animation: iAjNNh 125ms ease-in;
 }
 
-.c16 {
+.c15 {
   background-color: #22222212;
   border: none;
   height: 0.5px;
 }
 
-.c31 {
+.c30 {
   border-radius: 12px;
   height: 40px;
   width: 40px;
@@ -149,7 +134,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   z-index: 2;
 }
 
-.c33 {
+.c32 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -166,7 +151,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   height: 100%;
 }
 
-.c32 {
+.c31 {
   position: absolute;
   left: 50%;
   -webkit-transform: translate(-50%,-50%);
@@ -175,7 +160,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   margin: 0;
 }
 
-.c23 {
+.c22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -194,37 +179,37 @@ exports[`TDP Skeleton should render correctly 1`] = `
   background-color: #FFFFFF;
 }
 
-.c27 {
+.c26 {
   background-color: #F9F9F9;
   border-radius: 4px;
   height: 56px;
   width: 60px;
 }
 
-.c29 {
+.c28 {
   background-color: #F9F9F9;
   border-radius: 16px;
   height: 56px;
   width: 100px;
 }
 
-.c34 {
+.c33 {
   background-color: #F9F9F9;
   border-radius: 16px;
   height: 56px;
   width: 100%;
 }
 
-.c28 {
+.c27 {
   background-color: #22222212;
   height: 36px;
 }
 
-.c24 {
+.c23 {
   padding: 8px;
 }
 
-.c26 {
+.c25 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -239,7 +224,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   justify-content: space-between;
 }
 
-.c25 {
+.c24 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -257,63 +242,63 @@ exports[`TDP Skeleton should render correctly 1`] = `
   padding: 48px 12px;
 }
 
-.c30 {
+.c29 {
   position: relative;
 }
 
-.c3 {
+.c2 {
   height: 16px;
   width: 180px;
 }
 
-.c10 {
+.c9 {
   height: 32px;
   border-radius: 8px;
 }
 
-.c4 {
+.c3 {
   width: 169px;
 }
 
-.c5 {
+.c4 {
   width: 32px;
   height: 32px;
   border-radius: 50%;
 }
 
-.c6 {
+.c5 {
   height: 36px;
   width: 136px;
 }
 
-.c11 {
+.c10 {
   width: 120px;
 }
 
-.c14 {
+.c13 {
   width: 80px;
   margin-bottom: 4px;
 }
 
-.c15 {
+.c14 {
   width: 116px;
 }
 
-.c20 {
+.c19 {
   margin-bottom: 6px;
   width: 100%;
 }
 
-.c22 {
+.c21 {
   width: 120px;
 }
 
-.c21 {
+.c20 {
   width: 50%;
 }
 
 @media screen and (max-width:640px) {
-  .c13 {
+  .c12 {
     min-width: 168px;
   }
 }
@@ -380,9 +365,26 @@ exports[`TDP Skeleton should render correctly 1`] = `
                   />
                 </svg>
               </a>
+              <style>
+                
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+              </style>
               <div
-                class="c2 c3 c4"
-              />
+                class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                style="animation: shine 1s linear infinite;"
+              >
+                <div
+                  class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c3"
+                />
+              </div>
             </nav>
             <div
               style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; padding-top: 8px; margin-bottom: 20px; z-index: 1;"
@@ -390,16 +392,50 @@ exports[`TDP Skeleton should render correctly 1`] = `
               <div
                 class="_flexDirection-_md_column _alignItems-_md_flex-start _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _pt-t-space-spa94665589 _minWidth-32px"
               >
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
                 <div
-                  class="c2 c3 c5"
-                />
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation: shine 1s linear infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c4"
+                  />
+                </div>
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
                 <div
-                  class="c2 c3 c6"
-                />
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation: shine 1s linear infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c5"
+                  />
+                </div>
               </div>
             </div>
             <div
-              class="c7 c8"
+              class="c6 c7"
               style="position: relative;"
             >
               <svg
@@ -578,149 +614,438 @@ exports[`TDP Skeleton should render correctly 1`] = `
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _height-4px"
             />
             <div
-              class="c9"
+              class="c8"
             >
+              <style>
+                
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+              </style>
               <div
-                class="c2 c3 c10 c11"
-              />
+                class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                style="animation: shine 1s linear infinite;"
+              >
+                <div
+                  class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c9 c10"
+                />
+              </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _width-10037"
               >
                 <div
-                  class="c12"
+                  class="c11"
                 >
                   <div
-                    class="c13"
+                    class="c12"
                   >
+                    <style>
+                      
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                    </style>
                     <div
-                      class="c2 c3 c14"
-                    />
+                      class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      style="animation: shine 1s linear infinite;"
+                    >
+                      <div
+                        class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c13"
+                      />
+                    </div>
+                    <style>
+                      
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                    </style>
                     <div
-                      class="c2 c3 c10 c15"
-                    />
+                      class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      style="animation: shine 1s linear infinite;"
+                    >
+                      <div
+                        class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c9 c14"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="c13"
+                    class="c12"
                   >
+                    <style>
+                      
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                    </style>
                     <div
-                      class="c2 c3 c14"
-                    />
+                      class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      style="animation: shine 1s linear infinite;"
+                    >
+                      <div
+                        class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c13"
+                      />
+                    </div>
+                    <style>
+                      
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                    </style>
                     <div
-                      class="c2 c3 c10 c15"
-                    />
+                      class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      style="animation: shine 1s linear infinite;"
+                    >
+                      <div
+                        class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c9 c14"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div
-                  class="c12"
+                  class="c11"
                 >
                   <div
-                    class="c13"
+                    class="c12"
                   >
+                    <style>
+                      
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                    </style>
                     <div
-                      class="c2 c3 c14"
-                    />
+                      class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      style="animation: shine 1s linear infinite;"
+                    >
+                      <div
+                        class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c13"
+                      />
+                    </div>
+                    <style>
+                      
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                    </style>
                     <div
-                      class="c2 c3 c10 c15"
-                    />
+                      class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      style="animation: shine 1s linear infinite;"
+                    >
+                      <div
+                        class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c9 c14"
+                      />
+                    </div>
                   </div>
                   <div
-                    class="c13"
+                    class="c12"
                   >
+                    <style>
+                      
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                    </style>
                     <div
-                      class="c2 c3 c14"
-                    />
+                      class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      style="animation: shine 1s linear infinite;"
+                    >
+                      <div
+                        class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c13"
+                      />
+                    </div>
+                    <style>
+                      
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                    </style>
                     <div
-                      class="c2 c3 c10 c15"
-                    />
+                      class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      style="animation: shine 1s linear infinite;"
+                    >
+                      <div
+                        class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c9 c14"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <hr
-              class="c16"
+              class="c15"
             />
             <div
-              class="c17"
+              class="c16"
             >
               <div
-                class="c18 c19 css-1a9hfw6"
+                class="c17 c18 css-1a9hfw6"
+              >
+                <style>
+                  
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+                </style>
+                <div
+                  class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  style="animation: shine 1s linear infinite;"
+                >
+                  <div
+                    class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c9 c10"
+                  />
+                </div>
+              </div>
+            </div>
+            <style>
+              
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+            </style>
+            <div
+              class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              style="animation: shine 1s linear infinite;"
+            >
+              <div
+                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c19"
+              />
+            </div>
+            <style>
+              
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+            </style>
+            <div
+              class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              style="animation: shine 1s linear infinite;"
+            >
+              <div
+                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c19"
+              />
+            </div>
+            <style>
+              
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+            </style>
+            <div
+              class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              style="animation: shine 1s linear infinite;"
+            >
+              <div
+                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c19 c20"
+                style="margin-bottom: 24px;"
+              />
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334047"
+            >
+              <style>
+                
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+              </style>
+              <div
+                class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                style="animation: shine 1s linear infinite;"
               >
                 <div
-                  class="c2 c3 c10 c11"
+                  class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c19 c21"
+                />
+              </div>
+              <style>
+                
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+              </style>
+              <div
+                class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                style="animation: shine 1s linear infinite;"
+              >
+                <div
+                  class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c19 c20"
                 />
               </div>
             </div>
             <div
-              class="c2 c3 c20"
-            />
-            <div
-              class="c2 c3 c20"
-            />
-            <div
-              class="c2 c3 c20 c21"
-              style="margin-bottom: 24px;"
-            />
-            <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334047"
             >
+              <style>
+                
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+              </style>
               <div
-                class="c2 c3 c20 c22"
-              />
+                class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                style="animation: shine 1s linear infinite;"
+              >
+                <div
+                  class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c19 c21"
+                />
+              </div>
+              <style>
+                
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+              </style>
               <div
-                class="c2 c3 c20 c21"
-              />
-            </div>
-            <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334047"
-            >
-              <div
-                class="c2 c3 c20 c22"
-              />
-              <div
-                class="c2 c3 c20 c21"
-              />
+                class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                style="animation: shine 1s linear infinite;"
+              >
+                <div
+                  class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c2 c19 c20"
+                />
+              </div>
             </div>
           </div>
           <div
             class="_width-_xl_10037 _maxWidth-_xl_780px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-53px _gap-40px _width-360px"
           >
             <div
-              class="c23"
+              class="c22"
             >
               <div
-                class="c24"
+                class="c23"
               >
                 <div
-                  class="c18 css-n8z49y"
+                  class="c17 css-n8z49y"
                 >
                   Swap
                 </div>
               </div>
               <div
-                class="c25"
+                class="c24"
               >
                 <div
-                  class="c26"
+                  class="c25"
                 >
                   <div
-                    class="c27 c28"
+                    class="c26 c27"
                     width="60"
                   />
                   <div
-                    class="c29 c28"
+                    class="c28 c27"
                     radius="16"
                     width="100"
                   />
                 </div>
               </div>
               <div
-                class="c30"
+                class="c29"
               >
                 <div
-                  class="c31 c32"
+                  class="c30 c31"
                 >
                   <div
-                    class="c33"
+                    class="c32"
                   >
                     <svg
                       fill="none"
@@ -746,17 +1071,17 @@ exports[`TDP Skeleton should render correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="c25"
+                  class="c24"
                 >
                   <div
-                    class="c26"
+                    class="c25"
                   >
                     <div
-                      class="c27 c28"
+                      class="c26 c27"
                       width="60"
                     />
                     <div
-                      class="c29 c28"
+                      class="c28 c27"
                       radius="16"
                       width="100"
                     />
@@ -764,7 +1089,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
                 </div>
               </div>
               <div
-                class="c34"
+                class="c33"
                 radius="16"
               />
             </div>

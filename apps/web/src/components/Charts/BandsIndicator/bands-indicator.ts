@@ -124,6 +124,11 @@ export class BandsIndicator extends PluginBase implements ISeriesPrimitive<Time>
     this._upperLower = new UpperLowerInRange([])
   }
 
+  updateOptions(options: Required<BandsIndicatorOptions>) {
+    this._options = options
+    this.dataUpdated('full')
+  }
+
   updateAllViews() {
     this._paneViews.forEach((pw) => pw.update())
   }

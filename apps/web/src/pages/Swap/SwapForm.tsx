@@ -50,10 +50,9 @@ import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
@@ -106,14 +105,14 @@ export function SwapForm({
     const tokens = []
     if (
       prefilledInputCurrencyInfo?.currency.isToken &&
-      prefilledInputCurrencyInfo.safetyLevel !== SafetyLevel.Verified &&
+      prefilledInputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default
       prefilledInputCurrencyInfo.currency.symbol !== "GRG"
     ) {
       tokens.push({ field: CurrencyField.INPUT, currencyInfo: prefilledInputCurrencyInfo })
     }
     if (
       prefilledOutputCurrencyInfo?.currency.isToken &&
-      prefilledOutputCurrencyInfo.safetyLevel !== SafetyLevel.Verified &&
+      prefilledOutputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default
       prefilledInputCurrencyInfo?.currency.symbol !== "GRG"
     ) {
       tokens.push({ field: CurrencyField.OUTPUT, currencyInfo: prefilledOutputCurrencyInfo })

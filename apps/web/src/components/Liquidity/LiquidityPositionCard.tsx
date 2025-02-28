@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
+  CHART_HEIGHT,
+  CHART_WIDTH,
   LiquidityPositionRangeChart,
   LiquidityPositionRangeChartLoader,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
@@ -34,7 +36,8 @@ import { Minus } from 'ui/src/components/icons/Minus'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
-import { iconSizes, zIndexes } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme/zIndexes'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -69,7 +72,7 @@ export function LiquidityPositionCardLoader() {
           $md={{ row: false, alignItems: 'flex-start', gap: '$gap20' }}
         >
           <LiquidityPositionInfoLoader />
-          <LiquidityPositionRangeChartLoader />
+          <LiquidityPositionRangeChartLoader height={CHART_HEIGHT} width={CHART_WIDTH} position="relative" />
         </Flex>
         <LiquidityPositionFeeStatsLoader />
       </Flex>
@@ -180,19 +183,22 @@ function useDropdownOptions(
         }
       : undefined
 
-    const migrateV3Option: MenuOptionItem | undefined =
+    const showMigrateV3Option =
       isOpenLiquidityPosition &&
       isV4DataEnabled &&
       isMigrateToV4Enabled &&
-      !isV4UnsupportedChain(liquidityPosition.chainId)
-        ? {
-            onPress: () => {
-              navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
-            },
-            label: t('pool.migrateLiquidity'),
-            Icon: RightArrow,
-          }
-        : undefined
+      !isV4UnsupportedChain(liquidityPosition.chainId) &&
+      liquidityPosition.version !== ProtocolVersion.V4
+
+    const migrateV3Option: MenuOptionItem | undefined = showMigrateV3Option
+      ? {
+          onPress: () => {
+            navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
+          },
+          label: t('pool.migrateLiquidity'),
+          Icon: RightArrow,
+        }
+      : undefined
 
     return [
       collectFeesOption,
@@ -278,8 +284,12 @@ export function LiquidityPositionCard({
     }
     return {
       base: pricesInverted ? liquidityPosition.position.amount1.currency : liquidityPosition.position.amount0.currency,
-      priceLower: liquidityPosition.position.token0PriceLower,
-      priceUpper: liquidityPosition.position.token0PriceUpper,
+      priceLower: pricesInverted
+        ? liquidityPosition.position.token0PriceUpper
+        : liquidityPosition.position.token0PriceLower.invert(),
+      priceUpper: pricesInverted
+        ? liquidityPosition.position.token0PriceLower
+        : liquidityPosition.position.token0PriceUpper.invert(),
     }
   }, [liquidityPosition, pricesInverted])
 

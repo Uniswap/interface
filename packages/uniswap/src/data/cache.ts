@@ -2,7 +2,7 @@ import { FieldFunctionOptions, InMemoryCache } from '@apollo/client'
 import { Reference, StoreObject, relayStylePagination } from '@apollo/client/utilities'
 import { isTestEnv } from 'utilities/src/environment/env'
 
-export function setupWalletCache(): InMemoryCache {
+export function setupSharedApolloCache(): InMemoryCache {
   return new InMemoryCache({
     typePolicies: {
       Query: {
@@ -10,13 +10,14 @@ export function setupWalletCache(): InMemoryCache {
           // relayStylePagination function unfortunately generates a field policy that ignores args
           // Note: all non-pagination related query args should be added for cache to work properly.
           // ^ This ensures that cache doesnt get overwritten by similar queries with different args (e.g. different filter on NFT Items)
-          nftBalances: relayStylePagination(['ownerAddress']),
+          nftBalances: relayStylePagination(['ownerAddress', 'filter']),
           nftAssets: relayStylePagination(['address', 'filter']),
+          nftActivity: relayStylePagination(),
 
           /*
            * CACHE REDIRECTS
            *
-           * when queries require params, Apollo cannot return partial data from cache
+           * When queries require params, Apollo cannot return partial data from cache
            * because it will not know the `id` until data is received.
            * The following redirects set ids to values known ahead of time.
            *
@@ -49,10 +50,11 @@ export function setupWalletCache(): InMemoryCache {
         },
       },
       Token: {
-        // key by chain, address combination so that Token(chain, address) endpoint can read from cache
         /**
-         * NOTE: In any query for `token` or `tokens`, you must include the `chain` and `address` fields
-         * in order for result to normalize properly in the cache.
+         * Key by `[chain, address]` so that when querying by `Token(chain, address)` we can read from cache.
+         *
+         * NOTE: In every query that returns a `Token` object, you must always request the `chain` and `address` fields
+         *       in order for the result to be normalized properly in the cache.
          */
         keyFields: ['chain', 'address'],
         fields: {
@@ -77,7 +79,23 @@ export function setupWalletCache(): InMemoryCache {
           },
         },
       },
-      // Disable normalizaton for these types.
+      TokenProject: {
+        fields: {
+          tokens: {
+            // Cache data may be lost when replacing the tokens array, so we either replace all or keep the existing array..
+            merge: incomingOrExistingArray,
+          },
+        },
+      },
+      TokenProjectMarket: {
+        fields: {
+          priceHistory: {
+            // This is here just to ignore the "cache may be lost" warning, as we do want this array to be overwritten when new data is available.
+            merge: incomingOrExistingArray,
+          },
+        },
+      },
+      // Disable normalization for these types.
       // Given that we would never query these objects directly, we want these to be stored by their parent instead of being normalized.
       Amount: { keyFields: false },
       AmountChange: { keyFields: false },
@@ -96,4 +114,11 @@ function ignoreIncomingNullValue(
     return existing
   }
   return mergeObjects(existing, incoming)
+}
+
+function incomingOrExistingArray(
+  existing: unknown[] | undefined,
+  incoming: unknown[] | undefined,
+): unknown[] | undefined {
+  return incoming ?? existing
 }

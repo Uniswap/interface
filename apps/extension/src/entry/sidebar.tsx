@@ -6,7 +6,7 @@ import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, or
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import SidebarApp from 'src/app/SidebarApp'
+import SidebarApp from 'src/app/core/SidebarApp'
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { initializeReduxStore } from 'src/store/store'

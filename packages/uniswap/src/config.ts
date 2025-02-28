@@ -7,7 +7,6 @@ import {
   APPSFLYER_APP_ID,
   DATADOG_CLIENT_TOKEN,
   DATADOG_PROJECT_ID,
-  FIREBASE_APP_CHECK_DEBUG_TOKEN,
   FOR_API_URL_OVERRIDE,
   GRAPHQL_URL_OVERRIDE,
   INCLUDE_PROTOTYPE_FEATURES,
@@ -28,6 +27,8 @@ import {
   UNISWAP_API_KEY,
   UNITAGS_API_URL_OVERRIDE,
   WALLETCONNECT_PROJECT_ID,
+  WALLETCONNECT_PROJECT_ID_BETA,
+  WALLETCONNECT_PROJECT_ID_DEV,
 } from 'react-native-dotenv'
 import { isNonJestDev } from 'utilities/src/environment/constants'
 
@@ -49,7 +50,6 @@ export interface Config {
   appsflyerAppId: string
   datadogClientToken: string
   datadogProjectId: string
-  firebaseAppCheckDebugToken: string
   forApiUrlOverride: string
   graphqlUrlOverride: string
   includePrototypeFeatures: string
@@ -70,6 +70,8 @@ export interface Config {
   uniswapApiKey: string
   unitagsApiUrlOverride: string
   walletConnectProjectId: string
+  walletConnectProjectIdBeta: string
+  walletConnectProjectIdDev: string
 }
 
 /**
@@ -90,7 +92,6 @@ const _config: Config = {
   appsflyerAppId: process.env.APPSFLYER_APP_ID || APPSFLYER_APP_ID,
   datadogClientToken: process.env.DATADOG_CLIENT_TOKEN || DATADOG_CLIENT_TOKEN,
   datadogProjectId: process.env.DATADOG_PROJECT_ID || DATADOG_PROJECT_ID,
-  firebaseAppCheckDebugToken: process.env.FIREBASE_APP_CHECK_DEBUG_TOKEN || FIREBASE_APP_CHECK_DEBUG_TOKEN,
   forApiUrlOverride: process.env.FOR_API_URL_OVERRIDE || FOR_API_URL_OVERRIDE,
   graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE || GRAPHQL_URL_OVERRIDE,
   infuraKey: process.env.REACT_APP_INFURA_KEY || INFURA_KEY,
@@ -117,6 +118,8 @@ const _config: Config = {
   unitagsApiUrlOverride: process.env.UNITAGS_API_URL_OVERRIDE || UNITAGS_API_URL_OVERRIDE,
   walletConnectProjectId:
     process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
+  walletConnectProjectIdBeta: process.env.WALLETCONNECT_PROJECT_ID_BETA || WALLETCONNECT_PROJECT_ID_BETA,
+  walletConnectProjectIdDev: process.env.WALLETCONNECT_PROJECT_ID_DEV || WALLETCONNECT_PROJECT_ID_DEV,
 }
 
 export const config = Object.freeze(_config)

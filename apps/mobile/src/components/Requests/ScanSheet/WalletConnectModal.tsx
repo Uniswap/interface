@@ -127,6 +127,7 @@ export function WalletConnectModal({
         } catch (error) {
           logger.error(error, {
             tags: { file: 'WalletConnectModal', function: 'onScanCode' },
+            extra: { wcUri: supportedURI.value },
           })
 
           const title = t('walletConnect.error.general.title')

@@ -9,6 +9,7 @@ import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/fe
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { getTokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
 import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -200,6 +201,10 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
     transactionOriginType: TransactionOriginType.Internal,
+    tokenWarnings: {
+      input: getTokenProtectionWarning(derivedSwapInfo.currencies.input),
+      output: getTokenProtectionWarning(derivedSwapInfo.currencies.output),
+    },
   }
 }
 

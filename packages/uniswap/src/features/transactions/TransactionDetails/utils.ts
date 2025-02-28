@@ -75,12 +75,15 @@ export function getShouldDisplayTokenWarningCard({
 
   const feeWarningMoreSevere = feeWarning > tokenProtectionWarning
   const tokenWarningIsFeeRelated = getIsFeeRelatedWarning(tokenProtectionWarning)
-  const tokenFeeWarningNotRelevant = tokenWarningIsFeeRelated && (feeSeverity === severity || !highestFeeTokenInfo)
+  const tokenFeeWarningNotRelevant =
+    tokenWarningIsFeeRelated &&
+    (feeSeverity === severity || (severity < WarningSeverity.Medium && !highestFeeTokenInfo))
 
   // We want to show the feeWarning over the tokenWarning IF
   // 1) the fewWarning is a higher priority than the tokenWarning
   // 2) if the tokenWarning is fee-related and feeWarning and tokenWarning of are equal severity, since the feeWarning's fee % is fresher (simulated trade from TradingApi)
-  // 3) if the tokenWarning is fee-related but there is no feeWarning (for example if the token has a buy tax but we're selling the token)
+  // 3) if the tokenWarning is fee-related, it is low severity (< 15% fee), but there is no feeWarning from txn simulation
+  // (i.e. the token has a low severity buy tax but we're selling the token -- this would hide the buy tax warning)
   const showFeeSeverityWarning = feeWarningMoreSevere || tokenFeeWarningNotRelevant
   const severityToDisplay = showFeeSeverityWarning ? feeSeverity : severity
   const tokenProtectionWarningToDisplay = showFeeSeverityWarning ? feeWarning : tokenProtectionWarning

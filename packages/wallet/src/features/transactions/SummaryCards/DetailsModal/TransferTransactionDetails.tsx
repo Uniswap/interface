@@ -14,10 +14,10 @@ import {
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
 import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function TransferTransactionDetails({
   transactionDetails,

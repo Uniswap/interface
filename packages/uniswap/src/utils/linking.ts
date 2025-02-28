@@ -66,7 +66,7 @@ export async function openUri(
       })
     }
   } catch (error) {
-    logger.error(error, { tags: { file: 'linking', function: 'openUri' } })
+    logger.error(error, { tags: { file: 'linking', function: 'openUri' }, extra: { uri } })
   }
 }
 

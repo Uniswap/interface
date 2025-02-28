@@ -29,6 +29,7 @@ import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fia
 import {
   useFiatOnRampQuotes,
   useFiatOnRampSupportedTokens,
+  useIsFORLoading,
   useMeldFiatCurrencySupportInfo,
   useParseFiatOnRampError,
 } from 'uniswap/src/features/fiatOnRamp/hooks'
@@ -211,7 +212,12 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   // always enforce the amount used in the request to backend service
   const hasValidAmount = isOffRamp ? !!tokenAmount : !!fiatAmount
 
-  const selectTokenLoading = hasValidAmount && (quotesLoading || !debouncedAmountsMatch) && !exceedsBalanceError
+  const isFORLoading = useIsFORLoading({
+    hasValidAmount,
+    debouncedAmountsMatch,
+    quotesLoading,
+    exceedsBalanceError,
+  })
 
   const { currentData: ipCountryData } = useFiatOnRampAggregatorGetCountryQuery()
 
@@ -464,10 +470,9 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     })
   }
 
-  // we only show loading when there are no errors and quote value is not empty
   const buttonDisabled =
     notAvailableInThisRegion ||
-    selectTokenLoading ||
+    isFORLoading ||
     !!quotesError ||
     !selectedQuote?.destinationAmount ||
     exceedsBalanceError
@@ -483,7 +488,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
                 <OffRampPopover
                   triggerContent={
                     <PillMultiToggle
-                      defaultOption={RampToggle.BUY}
+                      defaultOption={isOffRamp ? RampToggle.SELL : RampToggle.BUY}
                       options={[
                         { value: RampToggle.BUY, display: t('common.button.buy') },
                         { value: RampToggle.SELL, display: t('common.button.sell') },
@@ -523,7 +528,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               quoteAmount={selectedQuote?.destinationAmount ?? 0}
               sourceAmount={selectedQuote?.sourceAmount ?? 0}
               quoteCurrencyAmountReady={Boolean(fiatAmount && selectedQuote)}
-              selectTokenLoading={selectTokenLoading}
+              selectTokenLoading={isFORLoading}
               value={value}
               onChoosePredefinedValue={(val: string): void => {
                 if (isOffRamp) {
@@ -599,7 +604,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
                 eligible
                 continueButtonText={t('common.button.continue')}
                 disabled={buttonDisabled}
-                isLoading={selectTokenLoading}
+                isLoading={isFORLoading}
                 onPress={onContinue}
               />
             </AnimatedFlex>

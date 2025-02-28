@@ -3,11 +3,11 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SettingsStackNavigationProp } from 'src/app/navigation/types'
 import { NotificationsBackgroundImage } from 'src/components/notifications/NotificationsBGImage'
-import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
+import { usePromptPushPermission } from 'src/features/notifications/hooks/usePromptPushPermission'
 import { DeprecatedButton, Flex } from 'ui/src'
 import { BellOn } from 'ui/src/components/icons/BellOn'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
@@ -27,7 +27,7 @@ type NotificationsOSSettingsModalProps = {
  */
 export function NotificationsOSSettingsModal({ navigation }: NotificationsOSSettingsModalProps): JSX.Element {
   const { notificationPermissionsEnabled, checkNotificationPermissions } = useNotificationOSPermissionsEnabled()
-
+  const promptPushPermission = usePromptPushPermission()
   const { t } = useTranslation()
 
   const shouldNavigateToSettings = useMemo(() => {
@@ -55,7 +55,7 @@ export function NotificationsOSSettingsModal({ navigation }: NotificationsOSSett
     } else {
       await checkNotificationPermissions()
     }
-  }, [checkNotificationPermissions])
+  }, [checkNotificationPermissions, promptPushPermission])
 
   const onClose = useCallback(() => {
     if (shouldNavigateToSettings) {

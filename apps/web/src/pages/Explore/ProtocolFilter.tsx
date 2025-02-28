@@ -6,7 +6,7 @@ import { atom, useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Text, useSporeColors } from 'ui/src'
+import { Text, useMedia, useSporeColors } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -24,6 +24,7 @@ function ProtocolFilter() {
     const options = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
     return isV4DataEnabled ? options : options.filter((o) => o !== ProtocolVersion.V4)
   }, [isV4DataEnabled])
+  const media = useMedia()
 
   const onVersionChange = useCallback(
     (protocol: ProtocolVersion) => {
@@ -55,20 +56,12 @@ function ProtocolFilter() {
                 : getProtocolVersionLabel(selectedProtocol)}
             </Text>
           }
-          internalMenuItems={<>{versionFilterOptions}</>}
-          dropdownStyle={{
-            width: 160,
-            className: 'scrollbar-hidden',
-            top: 'calc(100% + 20px)',
-            right: 0,
-            $lg: {
-              right: 'unset',
-              left: 0,
-            },
-          }}
+          dropdownStyle={{ width: 160 }}
           buttonStyle={{ height: 40, width: 'max-content' }}
-          adaptToSheet={false}
-        />
+          alignRight={!media.lg}
+        >
+          {versionFilterOptions}
+        </DropdownSelector>
       </Trace>
     </div>
   )

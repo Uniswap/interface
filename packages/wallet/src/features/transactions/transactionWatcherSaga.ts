@@ -4,7 +4,7 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber, BigNumberish, providers } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
-import { call, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
+import { call, cancel, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
@@ -223,24 +223,26 @@ export function* watchTransaction({
 
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
-
   const options = isUniswapX(transaction) ? undefined : transaction.options
-  const timeoutTimestampMs =
-    options?.timeoutTimestampMs && !options.timeoutLogged ? options.timeoutTimestampMs : undefined
-  const { updatedTransaction, cancel, replace, invalidated, timeout } = yield* race({
+  const timeoutTask = yield* fork(handleTimeout, transaction)
+
+  const { updatedTransaction, cancelTx, replace, invalidated } = yield* race({
     updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
-    cancel: call(waitForCancellation, chainId, id),
+    cancelTx: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
     invalidated: call(waitForTxnInvalidated, chainId, id, options?.request.nonce),
-    ...(timeoutTimestampMs ? { timeout: call(waitForTimeout, timeoutTimestampMs) } : {}),
   })
 
-  // `cancel` and `updatedTransaction` conditions apply to both Classic and UniswapX transactions
-  if (cancel) {
+  if (timeoutTask.isRunning()) {
+    yield* cancel(timeoutTask)
+  }
+
+  // `cancelTx` and `updatedTransaction` conditions apply to both Classic and UniswapX transactions
+  if (cancelTx) {
     // reset watcher for the current txn, as it can still be mined (or invalidated by the new txn)
     yield* fork(watchTransaction, { transaction, apolloClient })
     // Cancel the current txn, which submits a new txn on chain and monitored in state
-    yield* call(attemptCancelTransaction, transaction, cancel)
+    yield* call(attemptCancelTransaction, transaction, cancelTx)
     return
   }
 
@@ -282,20 +284,6 @@ export function* watchTransaction({
     }
     return
   }
-
-  if (timeout && TEMPORARY_TRANSACTION_STATUSES.includes(transaction.status)) {
-    yield* call(logTransactionTimeout, transaction)
-    yield* call(maybeLogGasEstimateAccuracy, transaction)
-    // Since we don't update the transaction status, mark that the timeout was logged so it's not logged again
-    yield* put(
-      transactionActions.updateTransactionWithoutWatch({
-        ...transaction,
-        options: { ...transaction.options, timeoutLogged: true },
-      }),
-    )
-    // TODO: Consider marking the transaction as expired so it doesn't stay stuck in the pending state.
-    return
-  }
 }
 
 export async function waitForReceipt(
@@ -309,14 +297,30 @@ export async function waitForReceipt(
   return txReceipt
 }
 
-function* waitForTimeout(timeoutTimestampMs: number) {
-  const currentTime = Date.now()
-  const delayTime = timeoutTimestampMs - currentTime
-  if (delayTime <= 0) {
-    return true
+function* handleTimeout(transaction: TransactionDetails) {
+  if (
+    isUniswapX(transaction) ||
+    !transaction.options?.timeoutTimestampMs ||
+    transaction.options.timeoutLogged ||
+    !TEMPORARY_TRANSACTION_STATUSES.includes(transaction.status)
+  ) {
+    return
   }
-  yield* delay(delayTime)
-  return true
+
+  const delayToTimeout = transaction.options.timeoutTimestampMs - Date.now()
+  if (delayToTimeout > 0) {
+    yield* delay(delayToTimeout)
+  }
+
+  yield* call(logTransactionTimeout, transaction)
+  yield* call(maybeLogGasEstimateAccuracy, transaction)
+  // Mark as logged so we don't log it again
+  yield* put(
+    transactionActions.updateTransactionWithoutWatch({
+      ...transaction,
+      options: { ...transaction.options, timeoutLogged: true },
+    }),
+  )
 }
 
 function* waitForRemoteUpdate(transaction: TransactionDetails, provider: providers.Provider) {
@@ -669,7 +673,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
   maybeLogGasEstimateAccuracy(payload)
 }
 
-function logTransactionTimeout(transaction: TransactionDetails) {
+export function logTransactionTimeout(transaction: TransactionDetails) {
   const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
     DynamicConfigs.MainnetPrivateRpc,
     MainnetPrivateRpcConfigKey.UseFlashbots,

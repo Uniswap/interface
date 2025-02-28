@@ -4,29 +4,29 @@ import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { ButtonText } from 'theme/components'
-import { Z_INDEX } from 'theme/zIndex'
+import { Flex, styled as TamaguiStyled } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 
-export const PageWrapper = styled.div`
-  padding: 68px 8px 0px;
-  max-width: 480px;
-  width: 100%;
+export const PageWrapper = TamaguiStyled(Flex, {
+  pt: '$spacing60',
+  px: '$spacing8',
+  pb: '$spacing40',
+  width: '100%',
+  maxWidth: 480,
+  $lg: {
+    pt: '$spacing48',
+  },
+  $md: {
+    pt: '$spacing20',
+  },
+})
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-    padding-top: 48px;
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding-top: 20px;
-  }
-`
-
-// Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
-  position: relative;
-  z-index: ${Z_INDEX.default};
-  transition: transform 250ms ease;
-  border-radius: 24px;
-`
+const SwapWrapperOuter = TamaguiStyled(Flex, {
+  position: 'relative',
+  zIndex: zIndexes.default,
+  animation: 'fast',
+  borderRadius: 'rounded24',
+})
 
 export const SwapWrapper = (props: React.ComponentProps<typeof SwapWrapperOuter>) => {
   return (
@@ -36,10 +36,10 @@ export const SwapWrapper = (props: React.ComponentProps<typeof SwapWrapperOuter>
   )
 }
 
-const SwapWrapperInner = styled.div`
-  border-radius: 24px;
-  z-index: -1;
-`
+const SwapWrapperInner = TamaguiStyled(Flex, {
+  borderRadius: '$rounded24',
+  zIndex: zIndexes.negative,
+})
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   border-radius: 12px;

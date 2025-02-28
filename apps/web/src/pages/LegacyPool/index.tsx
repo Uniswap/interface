@@ -184,24 +184,6 @@ export default function Pool() {
 
   const showConnectAWallet = Boolean(!account)
 
-  // we use this flag to prevent display of learn about liquidity and redirect to top pools
-  const shoudDisplayCTACards: boolean = false
-
-  const menuItems = [
-    //<PoolMenuItem href="/migrate/v2" key="migrate">
-    //  {t('common.migrate')}
-    //  <ChevronsRight size={16} />
-    //</PoolMenuItem>,
-    //<PoolMenuItem href="/pools/v2" key="v2-liquidity">
-    //  {t('pool.v2liquidity')}
-    //  <Layers size={16} />
-    //</PoolMenuItem>,
-    <PoolMenuItem href="https://docs.rigoblock.com/" key="learn">
-      {t('pool.learn')}
-      <BookOpen size={16} />
-    </PoolMenuItem>,
-  ]
-
   return (
     <Trace logImpression page={InterfacePageName.POOL_PAGE}>
       <PageWrapper>
@@ -227,12 +209,26 @@ export default function Pool() {
                     <DropdownSelector
                       isOpen={isMenuOpen}
                       toggleOpen={toggleMenu}
-                      menuLabel={<>{t('common.more')}</>}
-                      internalMenuItems={<>{...menuItems}</>}
+                      menuLabel={t('common.more')}
                       buttonStyle={{ height: 40, justifyContent: 'center' }}
-                      dropdownStyle={{ width: 200, top: 'calc(100% + 20px)' }}
-                      adaptToSheet={false}
-                    />
+                      dropdownStyle={{ width: 200 }}
+                    >
+                      <PoolMenuItem href="/migrate/v2" key="migrate">
+                        {t('common.migrate')}
+                        <ChevronsRight size={16} />
+                      </PoolMenuItem>
+                      <PoolMenuItem href="/pools/v2" key="v2-liquidity">
+                        {t('pool.v2liquidity')}
+                        <Layers size={16} />
+                      </PoolMenuItem>
+                      <PoolMenuItem
+                        href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-"
+                        key="learn"
+                      >
+                        {t('pool.learn')}
+                        <BookOpen size={16} />
+                      </PoolMenuItem>
+                    </DropdownSelector>
                   </Flex>
                 )}
                 <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">

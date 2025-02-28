@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
-import { setupWalletCache } from 'uniswap/src/data/cache'
+import { setupSharedApolloCache } from 'uniswap/src/data/cache'
 import {
   Chain,
   PortfolioBalancesDocument,
@@ -656,7 +656,7 @@ describe(sortPortfolioBalances, () => {
 })
 
 describe(usePortfolioCacheUpdater, () => {
-  const cache = setupWalletCache()
+  const cache = setupSharedApolloCache()
   const modifyMock = jest.spyOn(cache, 'modify')
   const balance = portfolioBalance()
 

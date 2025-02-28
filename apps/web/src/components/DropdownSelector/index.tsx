@@ -1,20 +1,8 @@
+import { AdaptiveDropdown } from 'components/DropdownSelector/AdaptiveDropdown'
 import FilterButton from 'components/DropdownSelector/FilterButton'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useRef } from 'react'
-import {
-  AnimatePresence,
-  Flex,
-  FlexProps,
-  Text,
-  WebBottomSheet,
-  styled,
-  useMedia,
-  useScrollbarStyles,
-  useShadowPropsMedium,
-} from 'ui/src'
+import { useMemo } from 'react'
+import { Flex, FlexProps, Text, styled } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 
 export const InternalMenuItem = styled(Text, {
@@ -42,125 +30,75 @@ export const InternalMenuItem = styled(Text, {
   } as const,
 })
 
-const MenuFlyout = styled(Text, {
-  display: 'flex',
-  flexDirection: 'column',
-  minWidth: 150,
-  backgroundColor: '$surface1',
-  borderWidth: 0.5,
-  borderStyle: 'solid',
-  borderColor: '$surface3',
-  borderRadius: '$rounded12',
-  p: '$spacing8',
-  fontSize: 16,
-  position: 'absolute',
-  top: 'calc(100% + 12px)',
-  zIndex: zIndexes.dropdown,
-  animation: 'fastHeavy',
-  enterStyle: { opacity: 0, y: -20 },
-  exitStyle: { opacity: 0, y: -20 },
-})
-
-const StyledMenu = styled(Text, {
-  justifyContent: 'center',
-  alignItems: 'center',
-  position: 'relative',
-  borderWidth: '$none',
-  textAlign: 'left',
-  width: '100%',
-})
-
-interface DropdownSelectorProps {
+type DropdownSelectorProps = {
   isOpen: boolean
   toggleOpen: (open: boolean) => void
-  menuLabel: JSX.Element
-  internalMenuItems: JSX.Element
+  menuLabel: JSX.Element | string
   dataTestId?: string
-  optionsContainerTestId?: string
+  dropdownTestId?: string
   tooltipText?: string
   hideChevron?: boolean
   buttonStyle?: FlexProps
   dropdownStyle?: FlexProps
   adaptToSheet?: boolean
   containerStyle?: React.CSSProperties
+  alignRight?: boolean
+  children: JSX.Element | JSX.Element[]
 }
 
 export function DropdownSelector({
   isOpen,
   toggleOpen,
   menuLabel,
-  internalMenuItems,
   dataTestId,
-  optionsContainerTestId,
+  dropdownTestId,
   tooltipText,
   hideChevron,
   buttonStyle,
   dropdownStyle,
-  adaptToSheet = true,
+  adaptToSheet,
   containerStyle,
+  alignRight,
+  children,
 }: DropdownSelectorProps) {
-  const node = useRef<HTMLDivElement | null>(null)
-  useOnClickOutside(node, () => isOpen && toggleOpen(false))
-  const scrollbarStyles = useScrollbarStyles()
-  const shadowProps = useShadowPropsMedium()
-  const media = useMedia()
-  const isSheet = adaptToSheet && media.sm
-
-  return (
-    <>
-      <div ref={node} style={{ width: '100%', ...containerStyle }}>
-        <StyledMenu id="Dropdown">
-          <MouseoverTooltip
-            disabled={!tooltipText}
-            text={tooltipText}
-            size={TooltipSize.Max}
-            placement="top"
-            style={{ width: '100%' }}
-          >
-            <FilterButton
-              onPress={() => toggleOpen(!isOpen)}
-              active={isOpen}
-              aria-label={dataTestId}
-              data-testid={dataTestId}
-              {...buttonStyle}
-            >
-              <Flex row justifyContent="space-between" alignItems="center" gap="$gap8" width="100%">
-                {menuLabel}
-                {!hideChevron && (
-                  <RotatableChevron
-                    animation="200ms"
-                    color="$neutral2"
-                    direction={isOpen ? 'up' : 'down'}
-                    height={iconSizes.icon20}
-                    width={iconSizes.icon20}
-                  />
-                )}
-              </Flex>
-            </FilterButton>
-          </MouseoverTooltip>
-          <AnimatePresence>
-            {isOpen && !isSheet && (
-              <MenuFlyout
-                data-testid={optionsContainerTestId}
-                {...dropdownStyle}
-                {...shadowProps}
-                $platform-web={{ overflow: 'auto' }}
-                style={scrollbarStyles}
-              >
-                {internalMenuItems}
-              </MenuFlyout>
-            )}
-          </AnimatePresence>
-        </StyledMenu>
-      </div>
-      <WebBottomSheet
-        isOpen={isOpen && isSheet}
-        onClose={() => toggleOpen(false)}
-        {...dropdownStyle}
-        maxHeight={`calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`}
+  const Trigger = useMemo(
+    () => (
+      <FilterButton
+        onPress={() => toggleOpen(!isOpen)}
+        active={isOpen}
+        aria-label={dataTestId}
+        data-testid={dataTestId}
+        {...buttonStyle}
       >
-        {internalMenuItems}
-      </WebBottomSheet>
-    </>
+        <Flex row justifyContent="space-between" alignItems="center" gap="$gap8" width="100%">
+          {menuLabel}
+          {!hideChevron && (
+            <RotatableChevron
+              animation="200ms"
+              color="$neutral2"
+              direction={isOpen ? 'up' : 'down'}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
+            />
+          )}
+        </Flex>
+      </FilterButton>
+    ),
+    [toggleOpen, isOpen, dataTestId, buttonStyle, menuLabel, hideChevron],
+  )
+  return (
+    <AdaptiveDropdown
+      isOpen={isOpen}
+      toggleOpen={toggleOpen}
+      trigger={Trigger}
+      tooltipText={tooltipText}
+      adaptToSheet={adaptToSheet}
+      dropdownTestId={dropdownTestId}
+      dropdownStyle={dropdownStyle}
+      containerStyle={containerStyle}
+      alignRight={alignRight}
+    >
+      {children}
+    </AdaptiveDropdown>
   )
 }

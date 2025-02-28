@@ -32,6 +32,7 @@ type InputFormProps = {
   token1UnderCardComponent?: ReactNode
   amount0Loading: boolean
   amount1Loading: boolean
+  autofocus?: boolean
 } & DepositInfo
 
 export function DepositInputForm({
@@ -49,8 +50,9 @@ export function DepositInputForm({
   token1UnderCardComponent,
   amount0Loading,
   amount1Loading,
+  autofocus = true,
 }: InputFormProps) {
-  const [focusedInputField, setFocusedInputField] = useState(PositionField.TOKEN0)
+  const [focusedInputField, setFocusedInputField] = useState(autofocus ? PositionField.TOKEN0 : undefined)
 
   // TODO(WEB-4920): when the backend returns the logo info make sure that there is no call being made
   // to graphql to retrieve it

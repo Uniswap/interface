@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
+import { useAnimatedRef } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
@@ -45,7 +46,7 @@ export function ExploreScreen(): JSX.Element {
 
   const { t } = useTranslation()
 
-  const listRef = useRef(null)
+  const listRef = useAnimatedRef<FlatList>()
   useScrollToTop(listRef)
 
   const [searchQuery, setSearchQuery] = useState<string>('')

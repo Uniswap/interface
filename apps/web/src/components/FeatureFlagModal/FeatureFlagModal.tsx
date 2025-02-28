@@ -244,6 +244,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.V4Data} label="Enable v4 data" />
           <FeatureFlagOption flag={FeatureFlags.MigrateV3ToV4} label="Enable migrate flow from v3 -> v4" />
           <FeatureFlagOption flag={FeatureFlags.PriceRangeInputV2} label="Enable Price Range Input V2" />
+          <FeatureFlagOption flag={FeatureFlags.PositionPageV2} label="Enable Position Page V2" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
@@ -256,6 +257,7 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.Unichain} label="Enable Unichain" />
             <FeatureFlagOption flag={FeatureFlags.UnichainPromo} label="Unichain In App Promotion" />
             <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
+            <FeatureFlagOption flag={FeatureFlags.MonadTestnetDown} label="Enable Monad Testnet Down Banner" />
           </FeatureFlagGroup>
           <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
           <FeatureFlagGroup name="Quick routes">

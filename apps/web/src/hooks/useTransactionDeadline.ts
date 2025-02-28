@@ -12,7 +12,10 @@ export default function useTransactionDeadline(): BigNumber | undefined {
   const { chainId } = useAccount()
   const ttl = useAppSelector((state) => state.user.userDeadline)
   const blockTimestamp = useCurrentBlockTimestamp()
-  return useMemo(() => timestampToDeadline(chainId, blockTimestamp, ttl), [blockTimestamp, chainId, ttl])
+  return useMemo(
+    () => timestampToDeadline(chainId, BigNumber.from(blockTimestamp), ttl),
+    [blockTimestamp, chainId, ttl],
+  )
 }
 
 /**

@@ -24,7 +24,7 @@
     "turbo-ignore": "1.11.3"
   },
   "engines": {
-    "node": "=18.16.0",
+    "node": "=22.13.1",
     "yarn": ">=3.2.3",
     "npm": "please-use-yarn"
   },
@@ -40,6 +40,9 @@
     "react-native-wagmi-charts@2.5.1": "this fixes really bad performance issue when the pulse dot is enabled",
     "@tanstack/react-query@5.51.16": "Fixes an issue with importing this package from packages/uniswap via apps/web. We can remove this once we move away from craco.",
     "@typescript-eslint/eslint-plugin": "Fixes a conflict between our eslint configs and the configs of external packages, like '@react-native-community/eslint-config'.",
+    "@typescript-eslint/parser": "Fixes a conflict between our eslint configs and the configs of external packages.",
+    "eslint-plugin-react": "Fixes a conflict between our eslint configs and the configs of external packages.",
+    "eslint-plugin-jest": "Fixes a conflict between our eslint configs and the configs of external packages.",
     "@gorhom/bottom-sheet@4.5.1": "Fixes bottom sheet dynamic snap point backdrop flickering.",
     "react-native-tab-view@3.5.2": "Fixes warning on profile screens with spreading key from props. Fixed in react-native-tab-view <4.0.0-alpha.7",
     "react-native-reanimated@3.16.7": "Fixes circular component rendering during tests while matching snapshots. See https://github.com/software-mansion/react-native-reanimated/issues/6645#issuecomment-2610994809",
@@ -60,6 +63,9 @@
     "@tanstack/react-query@5.51.16": "patch:@tanstack/react-query@npm%3A5.51.16#./.yarn/patches/@tanstack-react-query-npm-5.51.16-8fa6414eca.patch",
     "@types/react": "18.3.18",
     "@typescript-eslint/eslint-plugin": "6.20.0",
+    "@typescript-eslint/parser": "6.20.0",
+    "eslint-plugin-react": "7.34.1",
+    "eslint-plugin-jest": "27.9.0",
     "@uniswap/router-sdk": "1.22.1",
     "@uniswap/sdk-core": "7.5.0",
     "@uniswap/v2-sdk": "4.13.0",
@@ -76,6 +82,7 @@
     "immer": "9.0.21",
     "is-core-module": "2.13.0",
     "jest": "29.7.0",
+    "node-gyp": "10.0.1",
     "json5": "2.2.2",
     "lightweight-charts@4.1.1": "patch:lightweight-charts@npm%3A4.1.1#./.yarn/patches/lightweight-charts-npm-4.1.1-01f161d9b6.patch",
     "moti": "0.27.2",
@@ -106,6 +113,7 @@
   "scripts": {
     "extension": "yarn workspace @uniswap/extension",
     "g:build": "turbo run build --concurrency=100%",
+    "g:build:storybook": "turbo run storybook:build --force --concurrency=100%",
     "g:check:deps:usage": " depcheck && turbo run check:deps:usage",
     "g:check:deps:mismatch": "manypkg check",
     "g:check:circular": "turbo run check:circular",
@@ -122,6 +130,7 @@
     "g:rm:nodemodules": "rm -rf node_modules",
     "g:run-fast-checks": "turbo run typecheck lint build format --filter=\"[HEAD]\"",
     "g:run-all-checks": "turbo run typecheck lint test build format check:circular",
+    "g:test:storybook:standalone": "turbo run storybook:test:standalone --force --concurrency=100%",
     "g:test": "turbo run test",
     "g:test:coverage": "turbo run test -- --collectCoverage=true",
     "g:test:coverage:rest": "turbo run test --filter=ui --filter=uniswap --filter=utilities --filter=@uniswap/eslint-config -- --collectCoverage=true",

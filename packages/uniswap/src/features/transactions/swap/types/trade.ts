@@ -201,6 +201,17 @@ export class ClassicTrade<
     this.slippageTolerance = quote?.quote.slippage ?? MAX_AUTO_SLIPPAGE_TOLERANCE
     this.swapFee = getSwapFee(quote)
   }
+
+  
+  private _cachedPriceImpact?: Percent
+  // Overrides trade sdk price impact with backend price impact when available, as sdk price impact formula can be inaccurate.
+  public get priceImpact(): Percent {
+    if (!this._cachedPriceImpact) {
+      const quotePriceImpact = this.quote?.quote.priceImpact
+      this._cachedPriceImpact = quotePriceImpact ? new Percent(Math.round(quotePriceImpact * 100), 10000) : super.priceImpact
+    }
+    return this._cachedPriceImpact
+  }
 }
 
 export type Trade<

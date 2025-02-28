@@ -1,9 +1,9 @@
 import { useApolloClient } from '@apollo/client'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import React, { memo, useCallback, useEffect, useMemo } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { BuyNativeTokenModal } from 'src/components/TokenDetails/BuyNativeTokenModal'
@@ -15,6 +15,7 @@ import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsHeaders'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
@@ -25,7 +26,6 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import {
   Chain,
-  SafetyLevel,
   useTokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
@@ -102,6 +102,23 @@ const TokenDetailsQuery = memo(function _TokenDetailsQuery(): JSX.Element {
 
 const TokenDetails = memo(function _TokenDetails(): JSX.Element {
   const inModal = useSelector(selectModalState(ModalName.Explore)).isOpen
+  const dispatch = useDispatch()
+
+  // #region Handle modal race condition
+  // This is a workaround to prevent a crash. The TDP can open as a full screen
+  // or in the Explore BSM. When this happens the TDP switches to components
+  // that can only be used in a modal causing a crash.
+  // This code closes the Explore modal when the TDP is opened as a full screen
+  // screen and disallows dynamically changing the TDP components based on the
+  // Explore modal state.
+  // This behavior should not be needed when we make the TDP full screen only.
+  const initialModalState = useRef<boolean | null>(null)
+  if (initialModalState.current === null) {
+    initialModalState.current = inModal
+  } else if (initialModalState.current !== null && initialModalState.current !== inModal && inModal) {
+    dispatch(closeModal({ name: ModalName.Explore }))
+  }
+  // #endregion
 
   const centerElement = useMemo(() => <HeaderTitleElement />, [])
   const rightElement = useMemo(() => <HeaderRightElement />, [])
@@ -109,8 +126,8 @@ const TokenDetails = memo(function _TokenDetails(): JSX.Element {
   return (
     <>
       <HeaderScrollScreen
-        showHandleBar={inModal}
-        renderedInModal={inModal}
+        showHandleBar={initialModalState.current}
+        renderedInModal={initialModalState.current}
         centerElement={centerElement}
         rightElement={rightElement}
       >
@@ -241,11 +258,11 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
 
   const { navigateToFiatOnRamp, navigateToSwapFlow } = useWalletNavigation()
 
-  const project = useTokenBasicProjectPartsFragment({ currencyId }).data?.project
+  let isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
-  const isGRG = project?.tokens?.[0]?.symbol === 'GRG'
-  const safetyLevel = isGRG ? SafetyLevel.Verified : project?.safetyLevel
-  const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
+  if (project?.tokens?.[0]?.symbol === 'GRG') {
+    isBlocked === false
+  }
 
   const isNativeCurrency = isNativeCurrencyAddress(chainId, address)
   const nativeCurrencyAddress = getChainInfo(chainId).nativeCurrency.address

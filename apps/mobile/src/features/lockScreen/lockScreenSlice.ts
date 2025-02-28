@@ -13,11 +13,13 @@ export enum LockScreenVisibility {
 export interface LockScreenState {
   visibility: LockScreenVisibility
   onBlur: boolean
+  preventLock: boolean
 }
 
 const initialState: LockScreenState = {
   visibility: LockScreenVisibility.Init,
   onBlur: false,
+  preventLock: false,
 }
 
 export const lockScreenSlice = createSlice({
@@ -33,10 +35,13 @@ export const lockScreenSlice = createSlice({
     setLockScreenOnBlur: (state, action: PayloadAction<boolean>) => {
       state.onBlur = action.payload
     },
+    setPreventLock: (state, action: PayloadAction<boolean>) => {
+      state.preventLock = action.payload
+    },
   },
 })
 
-export const { setLockScreenVisibility, setLockScreenOnBlur } = lockScreenSlice.actions
+export const { setLockScreenVisibility, setLockScreenOnBlur, setPreventLock } = lockScreenSlice.actions
 export const lockScreenReducer = lockScreenSlice.reducer
 
 //------------------------------
@@ -53,3 +58,5 @@ export const selectIsLockScreenVisible = (state: { lockScreen: LockScreenState }
   state.lockScreen.visibility === LockScreenVisibility.Visible
 
 export const selectLockScreenOnBlur = (state: { lockScreen: LockScreenState }): boolean => state.lockScreen.onBlur
+
+export const selectPreventLock = (state: { lockScreen: LockScreenState }): boolean => state.lockScreen.preventLock

@@ -6,7 +6,6 @@ import { SignRequest, TransactionRequest } from 'src/features/walletConnect/wall
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod, EthSignMethod } from 'uniswap/src/types/walletConnect'
-import { logger } from 'utilities/src/logger/logger'
 
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.
@@ -201,10 +200,6 @@ export async function pairWithWalletConnectURI(uri: string): Promise<void | Pair
   try {
     return await wcWeb3Wallet.pair({ uri })
   } catch (error) {
-    logger.error(error, {
-      tags: { file: 'walletConnectV2/utils', function: 'pairWithWalletConnectURI' },
-    })
-
     return Promise.reject(error instanceof Error ? error.message : '')
   }
 }

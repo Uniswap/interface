@@ -83,7 +83,7 @@ const CustomButtonFrame = styled(XStack, {
       },
     },
 
-    // TODO: change variant name back to `disabled` https://linear.app/uniswap/issue/WEB-6347/revert-deprecatedbutton-disabled-variant-name-change-following-tamagui
+    // TODO(WEB-6347): change variant name back to `disabled`
     isDisabled: {
       true: {
         opacity: 0.4,

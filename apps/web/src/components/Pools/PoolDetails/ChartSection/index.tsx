@@ -30,7 +30,7 @@ import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { SegmentedControl, useMedia } from 'ui/src'
+import { Flex, SegmentedControl, useMedia } from 'ui/src'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -42,11 +42,6 @@ const PDP_CHART_HEIGHT_PX = 356
 const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType.LIQUIDITY] as const
 export type PoolsDetailsChartType = (typeof PDP_CHART_SELECTOR_OPTIONS)[number]
 
-const TimePeriodSelectorContainer = styled.div`
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
-    width: 100%;
-  }
-`
 const ChartTypeSelectorContainer = styled.div`
   display: flex;
   gap: 8px;
@@ -247,9 +242,9 @@ export default function ChartSection(props: ChartSectionProps) {
           disabledOption={disabledChartOption}
         />
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
-          <TimePeriodSelectorContainer>
+          <Flex $md={{ width: '100%' }}>
             <SegmentedControl
-              fullWidth={media.sm}
+              fullWidth={media.md}
               options={filteredTimeOptions.options}
               selectedOption={filteredTimeOptions.selected}
               onSelectOption={(option) => {
@@ -261,7 +256,7 @@ export default function ChartSection(props: ChartSectionProps) {
                 }
               }}
             />
-          </TimePeriodSelectorContainer>
+          </Flex>
         )}
       </ChartActionsContainer>
     </div>

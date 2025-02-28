@@ -12,7 +12,7 @@ import {
   readDeprecatedReduxedChromeStorage,
 } from 'src/store/reduxedChromeStorageToReduxPersistMigration'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
-import { createDatadogReduxEnhancer } from 'utilities/src/logger/Datadog'
+import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 
