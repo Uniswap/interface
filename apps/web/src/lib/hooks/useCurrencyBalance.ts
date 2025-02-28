@@ -1,14 +1,16 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
+import { useInterfaceMulticall, useTokenContract } from 'hooks/useContract'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import JSBI from 'jsbi'
-import { useMultipleContractSingleData } from 'lib/hooks/multicall'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import ERC20ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isAddress } from 'utilities/src/addresses'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { currencyKey } from 'utils/currencyKey'
 import { assume0xAddress } from 'utils/wagmi'
 import { useBalance } from 'wagmi'
@@ -33,7 +35,7 @@ export function useCurrencyBalancesMultipleAccounts(
       uncheckedAddresses
         ? uncheckedAddresses
             .map(isAddress)
-            .filter((a): a is string => a !== false)
+            .filter((a): a is `0x${string}` => a !== false)
             .sort()
             .map((addr) => [addr])
         : [],

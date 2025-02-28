@@ -14,7 +14,7 @@ import CTACards from 'pages/LegacyPool/CTACards'
 import { PoolVersionMenu } from 'pages/LegacyPool/shared'
 import { LoadingRows } from 'pages/LegacyPool/styled'
 import { useMemo, useState } from 'react'
-import { AlertTriangle, BookOpen /*, ChevronsRight*/, Inbox /*, Layers*/ } from 'react-feather'
+import { AlertTriangle, BookOpen , /*ChevronsRight,*/ Inbox /*, Layers*/ } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
@@ -161,7 +161,7 @@ export default function Pool() {
 
   // we query pool address from application state
   const { address: smartPoolAddress } = useActiveSmartPool()
-  const { positions, loading: positionsLoading } = useV3Positions(smartPoolAddress)
+  const { positions, loading: positionsLoading } = useV3Positions(smartPoolAddress as `0x${string}`)
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
@@ -183,6 +183,9 @@ export default function Pool() {
   }
 
   const showConnectAWallet = Boolean(!account)
+
+  // we use this flag to prevent display of learn about liquidity and redirect to top pools
+  const shoudDisplayCTACards: boolean = false
 
   return (
     <Trace logImpression page={InterfacePageName.POOL_PAGE}>
@@ -213,18 +216,15 @@ export default function Pool() {
                       buttonStyle={{ height: 40, justifyContent: 'center' }}
                       dropdownStyle={{ width: 200 }}
                     >
-                      <PoolMenuItem href="/migrate/v2" key="migrate">
+                      {/*<PoolMenuItem href="/migrate/v2" key="migrate">
                         {t('common.migrate')}
                         <ChevronsRight size={16} />
                       </PoolMenuItem>
                       <PoolMenuItem href="/pools/v2" key="v2-liquidity">
                         {t('pool.v2liquidity')}
                         <Layers size={16} />
-                      </PoolMenuItem>
-                      <PoolMenuItem
-                        href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-"
-                        key="learn"
-                      >
+                      </PoolMenuItem>*/}
+                      <PoolMenuItem href="https://docs.rigoblock.com/" key="learn">
                         {t('pool.learn')}
                         <BookOpen size={16} />
                       </PoolMenuItem>

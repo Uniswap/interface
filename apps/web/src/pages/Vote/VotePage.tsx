@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button/buttons'
 import { GrayCard } from 'components/Card/cards'
@@ -198,20 +197,20 @@ export default function VotePage() {
   const toggleExecuteModal = useToggleExecuteModal()
 
   // get and format date from data
-  const currentTimestamp = useCurrentBlockTimestamp(NEVER_RELOAD)
+  const currentTimestamp = useCurrentBlockTimestamp({ refetchInterval: false })
   const currentBlock = useBlockNumber()
   const startDate = getDateFromBlockOrTime(
     proposalData?.startBlock,
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp,
+    BigNumber.from(currentTimestamp),
     true,
   )
   const endDate = getDateFromBlockOrTime(
     proposalData?.endBlock,
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp,
+    BigNumber.from(currentTimestamp),
     true,
   )
   const now = new Date()

@@ -1,4 +1,3 @@
-import searchIcon from 'assets/svg/search.svg'
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'

@@ -15,7 +15,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
-import JSBI from 'jsbi'
+//import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback, useRef } from 'react'
@@ -103,7 +103,7 @@ export function useUniversalRouterSwapCallback(
           const deadline = await getDeadline()
 
           trace.setData('slippageTolerance', options.slippageTolerance.toFixed(2))
-          const { calldata: data, value } = SwapRouter.swapCallParameters(trade, {
+          const { calldata: data /*, value*/ } = SwapRouter.swapCallParameters(trade, {
             slippageTolerance: options.slippageTolerance,
             deadlineOrPreviousBlockhash: deadline?.toString(),
             inputTokenPermit: options.permit,
@@ -202,6 +202,8 @@ export function useUniversalRouterSwapCallback(
       t,
       chainId,
       getDeadline,
+      options.flatFeeOptions,
+      options.permit,
       options.slippageTolerance,
       options.feeOptions,
       options.smartPoolAddress,

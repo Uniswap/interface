@@ -5,7 +5,7 @@ import {
   SwapEventName,
   SwapPriceImpactUserResponse,
 } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount /*, Token*/ } from '@uniswap/sdk-core'
 //import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
@@ -41,7 +41,6 @@ import { ArrowDown } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
-import { useAppSelector } from 'state/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
@@ -105,14 +104,14 @@ export function SwapForm({
     const tokens = []
     if (
       prefilledInputCurrencyInfo?.currency.isToken &&
-      prefilledInputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default
+      prefilledInputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default &&
       prefilledInputCurrencyInfo.currency.symbol !== "GRG"
     ) {
       tokens.push({ field: CurrencyField.INPUT, currencyInfo: prefilledInputCurrencyInfo })
     }
     if (
       prefilledOutputCurrencyInfo?.currency.isToken &&
-      prefilledOutputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default
+      prefilledOutputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default &&
       prefilledInputCurrencyInfo?.currency.symbol !== "GRG"
     ) {
       tokens.push({ field: CurrencyField.OUTPUT, currencyInfo: prefilledOutputCurrencyInfo })
