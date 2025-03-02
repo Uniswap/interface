@@ -176,7 +176,7 @@
     "webpack": "5.90.0",
     "webpack-bundle-analyzer": "4.10.2",
     "webpack-retry-chunk-load-plugin": "3.1.1",
-    "wrangler": "3.15.0",
+    "wrangler": "3.19.0",
     "yarn-deduplicate": "6.0.0"
   },
   "dependencies": {
