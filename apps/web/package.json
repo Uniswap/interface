@@ -197,7 +197,7 @@
     "@reduxjs/toolkit": "1.9.3",
     "@rive-app/canvas": "2.19.0",
     "@rive-app/react-canvas": "4.13.0",
-    "@sentry/browser": "7.80.0",
+    "@sentry/browser": "7.119.1",
     "@sentry/core": "7.80.0",
     "@sentry/react": "7.80.0",
     "@sentry/types": "7.80.0",
