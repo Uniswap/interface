@@ -4,7 +4,7 @@ gem 'fastlane', '2.214.0'
 # Exclude problematic versions of cocoapods and activesupport that causes build failures.
 gem 'cocoapods', '1.14.3'
 gem 'activesupport', '7.1.2'
-gem 'xcodeproj', '1.26.0'
+gem 'xcodeproj', '1.25.1'
 
 plugins_path = File.join(File.dirname(__FILE__), 'fastlane', 'Pluginfile')
 eval_gemfile(plugins_path) if File.exist?(plugins_path)
