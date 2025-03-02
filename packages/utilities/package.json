@@ -14,7 +14,7 @@
     "@ethersproject/address": "5.7.0",
     "@ethersproject/constants": "5.7.0",
     "@ethersproject/contracts": "5.7.0",
-    "@ethersproject/providers": "5.7.2",
+    "@ethersproject/providers": "5.8.0",
     "@react-native-community/netinfo": "11.4.1",
     "@react-navigation/core": "6.2.2",
     "@sentry/core": "7.80.0",
