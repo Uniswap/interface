@@ -30,7 +30,7 @@
     "@ethersproject/bignumber": "5.7.0",
     "@ethersproject/hash": "5.7.0",
     "@ethersproject/properties": "5.7.0",
-    "@ethersproject/providers": "5.7.2",
+    "@ethersproject/providers": "5.8.0",
     "@ethersproject/units": "5.7.0",
     "@ethersproject/web": "5.7.1",
     "@gorhom/bottom-sheet": "4.6.4",
