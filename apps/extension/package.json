@@ -6,7 +6,7 @@
     "@apollo/client": "3.10.4",
     "@datadog/browser-logs": "5.20.0",
     "@datadog/browser-rum": "5.23.3",
-    "@ethersproject/providers": "5.7.2",
+    "@ethersproject/providers": "5.8.0",
     "@metamask/rpc-errors": "6.2.1",
     "@reduxjs/toolkit": "1.9.3",
     "@svgr/webpack": "8.0.1",
