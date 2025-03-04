@@ -144,7 +144,7 @@ export function registerCommands() {
 
   Cypress.Commands.add('interceptGraphqlOperation', (operationName, fixturePath) => {
     const graphqlInterceptions = Cypress.env('graphqlInterceptions')
-    cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
+    cy.intercept(/(?:interface|beta)\.gateway\.uniswap\.org\/v1\/graphql/, (req) => {
       req.headers['origin'] = 'https://app.uniswap.org'
       const currentOperationName = req.body.operationName
 
