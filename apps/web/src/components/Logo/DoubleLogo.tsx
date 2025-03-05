@@ -38,7 +38,7 @@ function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: nu
 
   return (
     <MissingImageLogo $size={size + 'px'} $textColor={foreground} $backgroundColor={background}>
-      {currency?.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
+      {currency?.symbol?.toUpperCase().replace(/\$/g, '').replace(/\s+/g, '').slice(0, 3)}
       {showNetworkLogo && (
         <Flex bottom={-2} position="absolute" right={-3} zIndex={zIndexes.mask}>
           <NetworkLogo borderWidth={networkLogoBorderWidth} chainId={chainId} size={networkLogoSize} />
