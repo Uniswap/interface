@@ -138,7 +138,6 @@ exports[`renders wallet preview card 1`] = `
       <View
         style={
           {
-            "alignItems": "flex-start",
             "flexDirection": "column",
             "flexShrink": 1,
             "gap": 0,
@@ -148,10 +147,9 @@ exports[`renders wallet preview card 1`] = `
         <View
           style={
             {
-              "alignItems": "center",
               "flexDirection": "row",
+              "flexShrink": 1,
               "gap": 12,
-              "justifyContent": "center",
             }
           }
         >
@@ -160,15 +158,13 @@ exports[`renders wallet preview card 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "gap": 4,
-                "justifyContent": "center",
+                "flexShrink": 1,
               }
             }
           >
             <Text
               adjustsFontSizeToFit={true}
               allowFontScaling={false}
-              ellipsizeMode="tail"
               maxFontSizeMultiplier={1.4}
               numberOfLines={1}
               style={
@@ -179,7 +175,6 @@ exports[`renders wallet preview card 1`] = `
                   "fontSize": 18,
                   "fontWeight": "400",
                   "lineHeight": 24,
-                  "overflow": "hidden",
                 }
               }
               suppressHighlighting={true}

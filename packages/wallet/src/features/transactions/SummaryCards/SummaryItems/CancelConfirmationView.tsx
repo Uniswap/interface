@@ -11,7 +11,7 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { useCancelationGasFeeInfo } from 'wallet/src/features/gas/hooks'
+import { useCancellationGasFeeInfo } from 'wallet/src/features/gas/hooks'
 import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
 
 export function CancelConfirmationView({
@@ -28,20 +28,20 @@ export function CancelConfirmationView({
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
+  const cancellationGasFeeInfo = useCancellationGasFeeInfo(transactionDetails)
   const { value: gasFeeUSD } = useUSDValueOfGasFee(
     transactionDetails.chainId,
-    cancelationGasFeeInfo?.cancelationGasFeeDisplayValue,
+    cancellationGasFeeInfo?.gasFeeDisplayValue,
   )
   const gasFee = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onCancelConfirm = useCallback(() => {
-    if (!cancelationGasFeeInfo?.cancelRequest) {
+    if (!cancellationGasFeeInfo?.cancelRequest) {
       return
     }
 
-    onCancel(cancelationGasFeeInfo.cancelRequest)
-  }, [cancelationGasFeeInfo, onCancel])
+    onCancel(cancellationGasFeeInfo.cancelRequest)
+  }, [cancellationGasFeeInfo, onCancel])
 
   const onPressCancel = useCallback(async () => {
     if (authTrigger) {
@@ -57,7 +57,7 @@ export function CancelConfirmationView({
     isUniswapX(transactionDetails)
 
   const disableConfirmationButton =
-    !cancelationGasFeeInfo?.cancelRequest || transactionDetails.status !== TransactionStatus.Pending || isRemoteOrder
+    !cancellationGasFeeInfo?.cancelRequest || transactionDetails.status !== TransactionStatus.Pending || isRemoteOrder
 
   return (
     <Flex

@@ -8,7 +8,7 @@ import {
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { ExtensionScreen } from 'uniswap/src/types/screens/extension'
 import { MobileAppScreen } from 'uniswap/src/types/screens/mobile'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { TraceProps, Trace as UntypedTrace } from 'utilities/src/telemetry/trace/Trace'
 
 // Universe typed version of ITraceContext

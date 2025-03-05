@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
@@ -14,7 +13,7 @@ import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
@@ -23,8 +22,6 @@ import { usePairAdder } from 'state/user/hooks'
 import { Circle, DeprecatedButton, Flex, Main, Shine, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -105,8 +102,6 @@ function V2PositionPage() {
 
   usePendingLPTransactionsChangeListener(refetch)
 
-  const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
-
   const { currency0Amount, currency1Amount, liquidityAmount } = positionInfo ?? {}
 
   const token0USDValue = useUSDCValue(currency0Amount)
@@ -114,10 +109,6 @@ function V2PositionPage() {
   const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
   const liquidityTokenAddress = positionInfo?.liquidityToken?.isToken ? positionInfo.liquidityToken.address : undefined
   const isOwner = usePositionOwnerV2(account?.address, liquidityTokenAddress, positionInfo?.chainId)
-
-  if (!isLoading && !lpRedesignEnabled) {
-    return <Navigate to="/pools" replace />
-  }
 
   if (!positionLoading && (!positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount)) {
     return (

@@ -10,7 +10,6 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { gqlToCurrency } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
-import { useSwitchChain } from 'hooks/useSwitchChain'
 import styled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { ReactNode, useCallback, useReducer, useState } from 'react'
@@ -27,8 +26,6 @@ import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-ap
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -150,7 +147,6 @@ export function PoolDetailsStatsButtons({
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
 
-  const switchChain = useSwitchChain()
   const navigate = useNavigate()
   const location = useLocation()
   const currency0 = token0 && gqlToCurrency(token0)
@@ -158,29 +154,19 @@ export function PoolDetailsStatsButtons({
   const currencyInfo0 = useCurrencyInfo(currency0 && currencyId(currency0))
   const currencyInfo1 = useCurrencyInfo(currency1 && currencyId(currency1))
 
-  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const handleAddLiquidity = async () => {
     if (currency0 && currency1) {
-      if (!isLPRedesignEnabled && account.chainId !== chainId && chainId) {
-        await switchChain(chainId)
-      }
       const currency0Address = currency0.isNative ? NATIVE_CHAIN_ID : currency0.address
       const currency1Address = currency1.isNative ? NATIVE_CHAIN_ID : currency1.address
       const chainName = getChainInfo(chainId ?? currency0.chainId)?.urlParam
 
-      if (isLPRedesignEnabled) {
-        if (tokenId) {
-          navigate(`/positions/${protocolVersion?.toLowerCase()}/${chainName}/${tokenId}`, {
-            state: { from: location.pathname },
-          })
-        } else {
-          const url = `/positions/create/${protocolVersion?.toLowerCase()}?currencyA=${currency0Address}&currencyB=${currency1Address}&chain=${chainName}`
-          navigate(url, {
-            state: { from: location.pathname },
-          })
-        }
+      if (tokenId) {
+        navigate(`/positions/${protocolVersion?.toLowerCase()}/${chainName}/${tokenId}`, {
+          state: { from: location.pathname },
+        })
       } else {
-        navigate(`/add/${currency0Address}/${currency1Address}/${feeTier}${tokenId ? `/${tokenId}` : ''}`, {
+        const url = `/positions/create/${protocolVersion?.toLowerCase()}?currencyA=${currency0Address}&currencyB=${currency1Address}&chain=${chainName}`
+        navigate(url, {
           state: { from: location.pathname },
         })
       }

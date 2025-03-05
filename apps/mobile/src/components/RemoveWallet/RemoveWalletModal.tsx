@@ -7,7 +7,6 @@ import { AssociatedAccountsList } from 'src/components/RemoveWallet/AssociatedAc
 import { RemoveLastMnemonicWalletFooter } from 'src/components/RemoveWallet/RemoveLastMnemonicWalletFooter'
 import { RemoveWalletStep, useModalContent } from 'src/components/RemoveWallet/useModalContent'
 import { navigateToOnboardingImportMethod } from 'src/components/RemoveWallet/utils'
-import { Delay } from 'src/components/layout/Delayed'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
@@ -22,6 +21,7 @@ import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
@@ -159,7 +159,7 @@ export function RemoveWalletModal(): JSX.Element | null {
   // we want to nicely squeeze the cancel button when user presses remove
   const animatedCancelButtonSpanStyles = useAnimatedStyle(() => {
     return {
-      flexGrow: withTiming(inProgress ? 0 : 1, { duration: Delay.Short / 2 }),
+      flexGrow: withTiming(inProgress ? 0 : 1, { duration: ONE_SECOND_MS / 4 }),
     }
   })
 

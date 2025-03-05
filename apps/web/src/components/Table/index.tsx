@@ -207,7 +207,7 @@ export function Table<Data extends RowData>({
   }, [])
 
   return (
-    <div>
+    <>
       <ScrollSync>
         <TableContainer maxWidth={maxWidth} maxHeight={maxHeight}>
           <TableHead $isSticky={!maxHeight} $top={headerHeight}>
@@ -256,6 +256,6 @@ export function Table<Data extends RowData>({
           )}
         </TableContainer>
       </ScrollSync>
-    </div>
+    </>
   )
 }

@@ -7,9 +7,9 @@ const KEY_SHORT_TEXT_FONT_SIZE = 41
 
 // export for tests
 export enum State {
-  KeyUp,
-  KeyDown,
-  Highlighted,
+  KeyUp = 0,
+  KeyDown = 1,
+  Highlighted = 2,
 }
 
 type ReducerAction = { type: 'keyUp' | 'keyDown' | 'highlight'; key: string } | { type: 'highlight' }

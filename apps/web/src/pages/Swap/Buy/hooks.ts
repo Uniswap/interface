@@ -11,7 +11,7 @@ import {
   useFiatOnRampAggregatorSupportedTokensQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
 import { FORCountry, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
 type FiatOnRampCurrencyInfo = {

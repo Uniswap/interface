@@ -14,9 +14,6 @@ import { isPendingTx } from 'state/transactions/utils'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RetryOptions, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 
 interface Transaction {
   addedTime: number
@@ -68,18 +65,10 @@ function usePendingTransactions(chainId?: UniverseChainId) {
 }
 
 export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
-  const realtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
   const { provider } = useWeb3React()
   const account = useAccount()
 
-  const pendingTransactions = usePendingTransactions(
-    // We can skip polling when the app's current chain is supported by the subscription service.
-    realtimeEnabled &&
-      account.chainId &&
-      (SUBSCRIPTION_CHAINIDS as unknown as UniverseChainId[]).includes(account.chainId)
-      ? undefined
-      : account.chainId,
-  )
+  const pendingTransactions = usePendingTransactions(account.chainId)
   const hasPending = pendingTransactions.length > 0
   const blockTimestamp = useCurrentBlockTimestamp({ refetchInterval: !hasPending ? false : undefined })
 

@@ -1,6 +1,5 @@
 import { forwardRef, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-// eslint-disable-next-line no-restricted-imports
 import type {
   LayoutChangeEvent,
   NativeSyntheticEvent,

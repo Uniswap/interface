@@ -30,17 +30,9 @@ export function useLimitContext() {
 export function LimitContextProvider({ children }: PropsWithChildren) {
   const [limitState, setLimitState] = useState<LimitState>(DEFAULT_LIMIT_STATE)
 
-  const derivedLimitInfo = useDerivedLimitInfo(limitState, setLimitState)
+  const derivedLimitInfo = useDerivedLimitInfo(limitState)
 
   return (
     <LimitContext.Provider value={{ limitState, setLimitState, derivedLimitInfo }}>{children}</LimitContext.Provider>
   )
-}
-
-export function useLimitPrice() {
-  const { limitState, setLimitState } = useLimitContext()
-  const setLimitPrice = (limitPrice: string) => {
-    setLimitState((prevState) => ({ ...prevState, limitPrice, limitPriceEdited: true }))
-  }
-  return { limitPrice: limitState.limitPrice, setLimitPrice, limitPriceInverted: limitState.limitPriceInverted }
 }

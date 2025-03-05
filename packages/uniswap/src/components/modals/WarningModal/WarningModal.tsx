@@ -1,5 +1,4 @@
 import { PropsWithChildren, ReactNode, useContext } from 'react'
-// eslint-disable-next-line no-restricted-imports -- type import is safe
 import type { ColorValue } from 'react-native'
 import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'

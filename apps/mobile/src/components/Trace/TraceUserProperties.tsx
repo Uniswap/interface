@@ -14,7 +14,7 @@ import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { isAndroid } from 'utilities/src/platform'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAccountBalances } from 'wallet/src/features/accounts/useAccountListData'
 import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userPropertyHooks'

@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxAndGasInfo } from 'components/RemoveLiquidity/hooks'
-import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
+import { getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { CheckApprovalLPResponse, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
@@ -39,19 +39,17 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
     logContextUpdate('RemoveLiquidityTxContext', removeLiquidityTxInfo, datadogEnabled)
   }, [removeLiquidityTxInfo, datadogEnabled])
 
-  const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
+  const currency0 = getCurrencyWithOptionalUnwrap({
     currency: positionInfo?.currency0Amount.currency,
     shouldUnwrap: unwrapNativeCurrency,
   })
-  const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
+  const currency1 = getCurrencyWithOptionalUnwrap({
     currency: positionInfo?.currency1Amount.currency,
     shouldUnwrap: unwrapNativeCurrency,
   })
-  const token0 = currency0Info?.currency
-  const token1 = currency1Info?.currency
 
   const decreaseLiquidityTxContext = useMemo((): ValidatedDecreasePositionTxAndGasInfo | undefined => {
-    if (!positionInfo || approvalLoading || decreaseCalldataLoading || !decreaseCalldata || !token0 || !token1) {
+    if (!positionInfo || approvalLoading || decreaseCalldataLoading || !decreaseCalldata || !currency0 || !currency1) {
       return undefined
     }
     const approvePositionTokenRequest = validateTransactionRequest(
@@ -63,8 +61,8 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
     }
 
     const { currency0Amount, currency1Amount } = positionInfo
-    const token0Amount = CurrencyAmount.fromRawAmount(token0, currency0Amount.quotient)
-    const token1Amount = CurrencyAmount.fromRawAmount(token1, currency1Amount.quotient)
+    const token0Amount = CurrencyAmount.fromRawAmount(currency0, currency0Amount.quotient)
+    const token1Amount = CurrencyAmount.fromRawAmount(currency1, currency1Amount.quotient)
     const currency0AmountToRemove = token0Amount.multiply(percent).divide(100)
     const currency1AmountToRemove = token1Amount.multiply(percent).divide(100)
 
@@ -90,8 +88,8 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
     approvalLoading,
     decreaseCalldataLoading,
     decreaseCalldata,
-    token0,
-    token1,
+    currency0,
+    currency1,
     removeLiquidityTxInfo.v2LpTokenApproval?.positionTokenApproval,
     percent,
   ])

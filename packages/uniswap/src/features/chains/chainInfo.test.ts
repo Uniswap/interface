@@ -10,7 +10,6 @@ jest.mock('uniswap/src/config', () => ({
   config: {
     quicknodeEndpointName: 'test-endpoint',
     quicknodeEndpointToken: 'test-token-123',
-    quicknodeMonadTestnetRpcUrl: 'https://test-endpoint.monad-testnet.quiknode.pro',
   },
 }))
 
@@ -80,11 +79,6 @@ describe('getQuicknodeEndpointUrl', () => {
 
     supportedChains.forEach((chainId) => {
       const url = getQuicknodeEndpointUrl(chainId)
-
-      if (chainId === UniverseChainId.MonadTestnet) {
-        expect(url).toBe('https://test-endpoint.monad-testnet.quiknode.pro')
-        return
-      }
 
       expect(url).toEqual(
         `https://test-endpoint${chainId === UniverseChainId.Mainnet ? '' : `.${getQuicknodeChainId(chainId)}`}.quiknode.pro/test-token-123${getQuicknodeChainIdPathSuffix(chainId)}`,

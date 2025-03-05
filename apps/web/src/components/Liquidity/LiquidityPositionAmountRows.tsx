@@ -67,7 +67,7 @@ export function LiquidityPositionAmountRows({
   ).tokenColor
 
   return (
-    <Flex gap="$gap8" p="$padding8">
+    <Flex gap="$gap8">
       <Flex row alignItems="center" justifyContent="space-between">
         <TouchableArea onPress={() => navigate(currency0Link)} {...ClickableTamaguiStyle}>
           <Flex row alignItems="center" gap="$gap12" maxWidth={160}>

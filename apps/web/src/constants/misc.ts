@@ -17,9 +17,6 @@ export const BIG_INT_ZERO = JSBI.BigInt(0)
 
 export const BIPS_BASE = 10_000
 
-// one basis JSBI.BigInt
-export const ONE_BIPS = new Percent(JSBI.BigInt(1), BIPS_BASE)
-
 // used for warning states
 export const ALLOWED_PRICE_IMPACT_LOW: Percent = new Percent(1, 100) // 1%
 export const ALLOWED_PRICE_IMPACT_MEDIUM: Percent = new Percent(3, 100) // 3%

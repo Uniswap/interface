@@ -5,7 +5,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
   style={
     {
       "flexDirection": "column",
-      "maxHeight": NaN,
+      "maxHeight": 1298,
       "paddingBottom": 12,
     }
   }
@@ -15,6 +15,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
       {
         "flexDirection": "column",
         "gap": 16,
+        "marginLeft": 12,
+        "marginRight": 12,
         "paddingBottom": 16,
         "paddingTop": 12,
       }
@@ -92,7 +94,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
       <View
         style={
           {
-            "alignItems": "center",
             "flexDirection": "column",
             "flexShrink": 1,
             "gap": 0,
@@ -104,6 +105,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
+              "flexShrink": 1,
               "gap": 12,
               "justifyContent": "center",
             }
@@ -114,7 +116,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "gap": 4,
+                "flexShrink": 1,
                 "justifyContent": "center",
               }
             }
@@ -122,7 +124,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
             <Text
               adjustsFontSizeToFit={true}
               allowFontScaling={true}
-              ellipsizeMode="tail"
               maxFontSizeMultiplier={1.4}
               numberOfLines={1}
               style={
@@ -138,7 +139,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
                   "fontSize": 19,
                   "fontWeight": "400",
                   "lineHeight": 24,
-                  "overflow": "hidden",
                 }
               }
               suppressHighlighting={true}
@@ -380,7 +380,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
     style={
       {
         "flexDirection": "column",
-        "maxHeight": NaN,
+        "maxHeight": 649,
       }
     }
   >

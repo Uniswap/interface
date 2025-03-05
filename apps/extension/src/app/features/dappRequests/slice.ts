@@ -13,10 +13,11 @@ export interface SenderTabInfo {
   favIconUrl?: string
 }
 
-export interface DappRequestState {
+interface DappRequestState {
   pending: DappRequestStoreItem[]
 }
-export const initialDappRequestState: DappRequestState = {
+
+const initialDappRequestState: DappRequestState = {
   pending: [], // ordered array with the most recent request at the end
 }
 

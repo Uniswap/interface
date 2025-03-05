@@ -8,6 +8,7 @@ import {
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { usePromptPushPermission } from 'src/features/notifications/hooks/usePromptPushPermission'
+import { openNotificationSettings } from 'src/utils/linking'
 import { DeprecatedButton, Flex } from 'ui/src'
 import { BellOn } from 'ui/src/components/icons/BellOn'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
@@ -15,7 +16,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { openSettings } from 'wallet/src/utils/linking'
 
 type NotificationsOSSettingsModalProps = {
   navigation: SettingsStackNavigationProp
@@ -51,7 +51,7 @@ export function NotificationsOSSettingsModal({ navigation }: NotificationsOSSett
   const onPressEnableNotifications = useCallback(async () => {
     const arePushNotificationsEnabled = await promptPushPermission()
     if (!arePushNotificationsEnabled) {
-      await openSettings()
+      await openNotificationSettings()
     } else {
       await checkNotificationPermissions()
     }

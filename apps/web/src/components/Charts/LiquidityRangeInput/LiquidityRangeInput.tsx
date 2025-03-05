@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { ActiveLiquidityChart2 } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart2'
@@ -51,6 +50,7 @@ export function LiquidityRangeInput({
   setMinPrice,
   setMaxPrice,
   disableBrushInteraction = false,
+  setFallbackRangePrices,
 }: {
   currency0: Currency
   currency1: Currency
@@ -64,6 +64,7 @@ export function LiquidityRangeInput({
   disableBrushInteraction?: boolean
   setMinPrice: (minPrice?: number) => void
   setMaxPrice: (maxPrice?: number) => void
+  setFallbackRangePrices: () => void
 }) {
   const chainInfo = getChainInfo(currency0.chainId)
   const colors = useSporeColors()
@@ -253,6 +254,15 @@ export function LiquidityRangeInput({
     }
     return undefined
   }, [disableBrushInteraction, midPrice, minVisiblePrice, scrollIncrement])
+
+  // If chart error view is shown on custom range, set min/max price to defaults
+  useEffect(() => {
+    if (showChartErrorView && !disableBrushInteraction && minPrice === undefined && maxPrice === undefined) {
+      setFallbackRangePrices()
+    }
+
+    return undefined
+  }, [showChartErrorView, disableBrushInteraction, minPrice, maxPrice, setFallbackRangePrices])
 
   return (
     <Flex

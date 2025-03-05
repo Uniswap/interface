@@ -4,7 +4,7 @@ import ms from 'ms'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { Dropdown } from 'nft/components/profile/list/Dropdown'
-import { body, caption } from 'nft/css/common.css'
+import { caption } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
@@ -85,9 +85,9 @@ enum Duration {
 }
 
 enum ErrorState {
-  valid,
-  empty,
-  overMax,
+  valid = 0,
+  empty = 1,
+  overMax = 2,
 }
 
 export const SetDurationModal = () => {
@@ -100,8 +100,8 @@ export const SetDurationModal = () => {
   const durationDropdownRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(durationDropdownRef, showDropdown ? toggleShowDropdown : undefined)
 
-  const setCustomExpiration = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(event.target.value.length ? event.target.value : '')
+  const setCustomExpiration = (text: string) => {
+    setAmount(text.length ? text : '')
   }
 
   const durationOptions: DropDownOption[] = useMemo(
@@ -177,18 +177,13 @@ export const SetDurationModal = () => {
     <ModalWrapper ref={durationDropdownRef}>
       <InputWrapper isInvalid={errorState !== ErrorState.valid}>
         <NumericInput
-          as="input"
-          type="number"
-          pattern="[0-9]"
-          borderStyle="none"
-          className={body}
-          color={{ placeholder: 'neutral2', default: 'neutral1' }}
+          color="$neutral1"
           value={amount}
-          width="40"
-          marginRight="4"
+          width={40}
+          mr="$spacing4"
           backgroundColor="none"
-          onChange={setCustomExpiration}
-          flexShrink="0"
+          onChangeText={setCustomExpiration}
+          flexShrink={0}
         />
         <DropdownPrompt onClick={toggleShowDropdown}>
           {prompt} <DropdownChevron isOpen={showDropdown} />

@@ -250,14 +250,18 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
                   <div
                     class="c2"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c4"
                       >
@@ -305,16 +309,15 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                                 class="c10"
                               >
                                 <div
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                                   style="font-weight: 535;"
                                 >
                                   $0
                                 </div>
                               </div>
-                              <div>
-                                <s>
-                                  $7.87
-                                </s>
-                              </div>
+                              <s>
+                                $7.87
+                              </s>
                             </div>
                           </div>
                         </div>
@@ -407,7 +410,9 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -468,7 +473,9 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -520,7 +527,9 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -572,7 +581,9 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -918,14 +929,18 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
                   <div
                     class="c2"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c4"
                       >
@@ -973,16 +988,15 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                                 class="c10"
                               >
                                 <div
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                                   style="font-weight: 535;"
                                 >
                                   $0
                                 </div>
                               </div>
-                              <div>
-                                <s>
-                                  $7.87
-                                </s>
-                              </div>
+                              <s>
+                                $7.87
+                              </s>
                             </div>
                           </div>
                         </div>
@@ -1075,7 +1089,9 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -1136,7 +1152,9 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -1188,7 +1206,9 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -1240,7 +1260,9 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -1618,14 +1640,18 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
                   <div
                     class="c2"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c4"
                       >
@@ -1653,9 +1679,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                             <div
                               class="c5 c10"
                             >
-                              <div>
-                                $1.00
-                              </div>
+                              $1.00
                             </div>
                           </div>
                         </div>
@@ -1738,7 +1762,9 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -1799,7 +1825,9 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -1851,7 +1879,9 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -1903,7 +1933,9 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -2320,14 +2352,18 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
                   <div
                     class="c2"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c4"
                       >
@@ -2355,9 +2391,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                             <div
                               class="c5 c10"
                             >
-                              <div>
-                                $1.00
-                              </div>
+                              $1.00
                             </div>
                           </div>
                         </div>
@@ -2440,7 +2474,9 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -2501,7 +2537,9 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -2553,7 +2591,9 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -2605,7 +2645,9 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -3022,14 +3064,18 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
                   <div
                     class="c2"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c4"
                       >
@@ -3057,9 +3103,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                             <div
                               class="c5 c10"
                             >
-                              <div>
-                                -
-                              </div>
+                              -
                             </div>
                           </div>
                         </div>
@@ -3142,7 +3186,9 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -3203,7 +3249,9 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -3255,7 +3303,9 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -3298,7 +3348,9 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -3350,7 +3402,9 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -3767,14 +3821,18 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
                   <div
                     class="c2"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c4"
                       >
@@ -3802,9 +3860,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                             <div
                               class="c5 c10"
                             >
-                              <div>
-                                $1.00
-                              </div>
+                              $1.00
                             </div>
                           </div>
                         </div>
@@ -3887,7 +3943,9 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -3943,7 +4001,9 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -4004,7 +4064,9 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -4056,7 +4118,9 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -4108,7 +4172,9 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -4525,14 +4591,18 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
                   <div
                     class="c2"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c4"
                       >
@@ -4560,9 +4630,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                             <div
                               class="c5 c10"
                             >
-                              <div>
-                                $1.00
-                              </div>
+                              $1.00
                             </div>
                           </div>
                         </div>
@@ -4645,7 +4713,9 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -4701,7 +4771,9 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -4762,7 +4834,9 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -4814,7 +4888,9 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -4866,7 +4942,9 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -5219,7 +5297,9 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -5279,7 +5359,9 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >
@@ -5364,7 +5446,9 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
             <div
               class="c2"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c0 c3 css-142zc9n"
                 >

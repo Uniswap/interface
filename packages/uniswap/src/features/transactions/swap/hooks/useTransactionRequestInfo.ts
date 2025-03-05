@@ -20,8 +20,7 @@ import {
 } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -31,6 +30,7 @@ import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swa
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { SwapGasFeeEstimation } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   SWAP_GAS_URGENCY_OVERRIDE,
@@ -78,7 +78,7 @@ export function useTransactionRequestInfo({
   const trace = useTrace()
   const activeGasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(derivedSwapInfo.chainId, 'general')
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+  const v4SwapEnabled = useV4SwapEnabled(derivedSwapInfo.chainId)
   const transactionSettings = useTransactionSettingsContext()
 
   const { trade: tradeWithStatus } = derivedSwapInfo
@@ -121,7 +121,7 @@ export function useTransactionRequestInfo({
       refreshGasPrice: true,
       gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
       urgency: SWAP_GAS_URGENCY_OVERRIDE,
-      v4Enabled,
+      v4Enabled: v4SwapEnabled,
     }
 
     return swapArgs
@@ -133,7 +133,7 @@ export function useTransactionRequestInfo({
     shouldSimulateTxn,
     signatureInfo.signature,
     swapQuote,
-    v4Enabled,
+    v4SwapEnabled,
   ])
 
   // Wrap transaction request

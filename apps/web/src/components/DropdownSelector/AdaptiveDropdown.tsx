@@ -75,10 +75,11 @@ export function AdaptiveDropdown({
 
   return (
     <>
+      {/* eslint-disable-next-line react/forbid-elements */}
       <div ref={node} style={{ width: '100%', ...containerStyle }}>
         <DropdownContainer>
           <MouseoverTooltip
-            disabled={!tooltipText}
+            disabled={!tooltipText || isOpen}
             text={tooltipText}
             size={TooltipSize.Max}
             placement="top"

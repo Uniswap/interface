@@ -55,8 +55,8 @@ const ContentRowContainer = styled(Column)`
 `
 
 export const enum Section {
-  APPROVE,
-  SIGN,
+  APPROVE = 0,
+  SIGN = 1,
 }
 
 interface ListModalSectionProps {

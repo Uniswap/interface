@@ -68,8 +68,8 @@ export default function PoolFinder() {
   const token0UsdValue = useUSDCValue(token0Deposited)
   const token1UsdValue = useUSDCValue(token1Deposited)
 
-  const currency0CurrencyInfo = useCurrencyInfo(currency0 ? currencyId(currency0) : undefined)
-  const currency1CurrencyInfo = useCurrencyInfo(currency1 ? currencyId(currency1) : undefined)
+  const currency0CurrencyInfo = useCurrencyInfo(currencyId(currency0))
+  const currency1CurrencyInfo = useCurrencyInfo(currencyId(currency1))
 
   const networkSupportsV2 = useNetworkSupportsV2()
   if (!networkSupportsV2) {

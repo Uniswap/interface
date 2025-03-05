@@ -1,4 +1,3 @@
-/* eslint-disable-next-line no-restricted-imports */
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
@@ -31,7 +30,7 @@ import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/c
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
@@ -42,7 +41,7 @@ import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -326,7 +325,7 @@ const Toolbar = ({
   )
 
   return (
-    <div>
+    <Flex>
       <ResetCreatePositionFormModal
         isOpen={showResetModal}
         onClose={() => setShowResetModal(false)}
@@ -369,12 +368,11 @@ const Toolbar = ({
           />
         </Flex>
       </ToolbarContainer>
-    </div>
+    </Flex>
   )
 }
 
 export default function CreatePosition() {
-  const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const media = useMedia()
   const { t } = useTranslation()
@@ -394,14 +392,6 @@ export default function CreatePosition() {
 
     return paramsProtocolVersion
   }, [isV4DataEnabled, paramsProtocolVersion])
-
-  if (!isLoading && !lpRedesignEnabled) {
-    return <Navigate to="/pools" replace />
-  }
-
-  if (isLoading) {
-    return null
-  }
 
   return (
     <Trace logImpression page={InterfacePageNameLocal.CreatePosition}>

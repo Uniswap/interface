@@ -12,6 +12,7 @@ const urlParamsUtils = {
     const clonedQuery: Record<string, any> = { ...query }
 
     // Leveraging default values & not showing them on URL
+    // eslint-disable-next-line guard-for-in
     for (const key in clonedQuery) {
       const valueInQuery = clonedQuery[key]
       const initialValue = initialCollectionFilterState[key as keyof typeof initialCollectionFilterState]

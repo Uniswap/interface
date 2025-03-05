@@ -188,6 +188,7 @@ export function AccountSwitcherScreen(): JSX.Element {
         <Flex gap="$spacing16" pb="$spacing4" pt="$spacing8" px="$spacing12">
           <AddressDisplay
             showCopy
+            centered
             address={activeAddress}
             captionVariant="body3"
             direction="column"

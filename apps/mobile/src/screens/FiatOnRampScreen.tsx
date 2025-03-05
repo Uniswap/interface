@@ -478,7 +478,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     exceedsBalanceError
 
   return (
-    <Screen edges={['top']}>
+    <Screen edges={['top', 'bottom']}>
       <HandleBar backgroundColor="none" />
       <AnimatedFlex row height="100%" pt="$spacing12">
         {isSheetReady && (

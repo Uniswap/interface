@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-imports */
 import { createPromiseClient } from '@connectrpc/connect'
 import { createConnectTransport } from '@connectrpc/connect-web'
 import { startAuthentication, startRegistration } from '@simplewebauthn/browser'

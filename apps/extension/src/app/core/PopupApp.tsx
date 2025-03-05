@@ -80,7 +80,6 @@ function PopupContent(): JSX.Element {
             width="100%"
             onPress={async () => {
               if (windowIdNumber) {
-                // eslint-disable-next-line security/detect-non-literal-fs-filename
                 await chrome.sidePanel.open({ tabId: tabIdNumber, windowId: windowIdNumber })
                 window.close()
               }

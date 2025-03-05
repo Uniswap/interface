@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports -- type import is safe
 import type { AppStateStatus } from 'react-native'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 

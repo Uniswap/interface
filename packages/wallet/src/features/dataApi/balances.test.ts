@@ -14,7 +14,7 @@ import {
   usePortfolioBalances,
   usePortfolioCacheUpdater,
   usePortfolioTotalValue,
-  // eslint-disable-next-line no-restricted-imports
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   usePortfolioValueModifiers,
   useSortedPortfolioBalances,
   useTokenBalancesGroupedByVisibility,
@@ -548,7 +548,6 @@ describe(sortPortfolioBalances, () => {
       currencyInfo: {
         logoUrl: '',
         currencyId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        safetyLevel: undefined,
         currency: {
           isNative: false,
           isToken: true,
@@ -570,7 +569,6 @@ describe(sortPortfolioBalances, () => {
       currencyInfo: {
         logoUrl: '',
         currencyId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        safetyLevel: undefined,
         currency: {
           isNative: false,
           isToken: true,
@@ -667,8 +665,11 @@ describe(usePortfolioCacheUpdater, () => {
     const enabledChains = getEnabledChains({
       isTestnetModeEnabled: false,
       connectedWalletChainIds: ALL_CHAIN_IDS,
-      // Doesn't include Unichain while feature flagged
-      featureFlaggedChainIds: filterChainIdsByFeatureFlag({ [UniverseChainId.Unichain]: false }),
+      // Doesn't include Unichain or Soneium while feature flagged
+      featureFlaggedChainIds: filterChainIdsByFeatureFlag({
+        [UniverseChainId.Unichain]: false,
+        [UniverseChainId.Soneium]: false,
+      }),
     })
 
     cache.writeQuery({

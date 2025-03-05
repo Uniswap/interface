@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmbuG2Jv2nvtxg1RbUA8SEh6kb6bzdsGdqEZFBj2SZr11B`
-- CIDv1: `bafybeigjqjzaoz33uqg3dcvpmoyi2fwgwxau22tjdrur2gln7f6k3pu5si`
+- CIDv0: `QmdyyeDF8B2cnZZTCwzcigi4Ex83kykxa2fK128KrrCUxf`
+- CIDv1: `bafybeihin4zyne7cda54sxj5byjpk4cq4t7owos7dsu6gzim34tu4tpv2a`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,81 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeigjqjzaoz33uqg3dcvpmoyi2fwgwxau22tjdrur2gln7f6k3pu5si.ipfs.dweb.link/
-- [ipfs://QmbuG2Jv2nvtxg1RbUA8SEh6kb6bzdsGdqEZFBj2SZr11B/](ipfs://QmbuG2Jv2nvtxg1RbUA8SEh6kb6bzdsGdqEZFBj2SZr11B/)
+- https://bafybeihin4zyne7cda54sxj5byjpk4cq4t7owos7dsu6gzim34tu4tpv2a.ipfs.dweb.link/
+- [ipfs://QmdyyeDF8B2cnZZTCwzcigi4Ex83kykxa2fK128KrrCUxf/](ipfs://QmdyyeDF8B2cnZZTCwzcigi4Ex83kykxa2fK128KrrCUxf/)
 
-### 5.74.2 (2025-03-05)
+## 5.75.0 (2025-03-05)
+
+
+### Features
+
+* **web:** add breadcrumbs (actions) to datadog logs (#16693) 2fb01a6
+* **web:** add redux state to logs (#16696) 1d501f1
+* **web:** add stagehand for ai enabled e2e tests (#15309) 8740ec6
+* **web:** allow intercept graphql calls (#15310) ecb48ad
+* **web:** allow set erc20 balance (#16400) 1fb5684
+* **web:** datadog pt 1 (#16530) 52de326
+* **web:** migrate NFT inputs to Tamagui (#16479) 6295da3
+* **web:** sonner toasts (#15852) c9ec89f
 
 
 ### Bug Fixes
 
-* **web:** include priority orders in polling [production] (#16944) 0a19865
+* **web:** [playwright] better setErc20 logic (#16840) b2a6ce8
+* **web:** add datadog error boundary (#16761) 74055d4
+* **web:** add prop to useKeyDown to allow keydown in inputs (#16684) dcca7c7
+* **web:** cursor pointer top pools (#16682) a7d1f21
+* **web:** dedupe wrap tx analytics event (#16766) da37ff8
+* **web:** design feedbacks on new Position Detail Page (#16601) 4f69f75
+* **web:** filter ignored CB SDK error from being sent to Sentry (#16799) bd46b40
+* **web:** filter ProviderRpcError from sentry on testnets (#16771) d61cf56
+* **web:** fix faulty statsig check for priority orders (#16349) f2204ab
+* **web:** fix limit order price inversion bugs (#16542) 4347675
+* **web:** fix UNI claim popup (#16686) 595825f
+* **web:** gap in swap settings icon (#16589) c99a07c
+* **web:** include priority orders in polling [staging] (#16945) ff7625f
+* **web:** move the collect as weth toggle to the collect modal (#16654) 8fde9f2
+* **web:** overlay EW sign in modal under wallet connect (#16729) 758e9a3
+* **web:** prevent rendering context menu on mweb (#16617) 2bdb880
+* **web:** remove Box and Row from ActivitySwitcher (#16491) 1652525
+* **web:** remove Box and Row from NFT SortDropdown (#16482) 963cdcc
+* **web:** remove Box and Row from NFTItem component (#16474) ba9044d
+* **web:** remove Box and styled-components from ProfileBodyLoadingSkeleton (#16475) d6f504f
+* **web:** remove Box from CollectionStats (#16488) 6cb0e2b
+* **web:** remove Box from FilterSidebar (#16477) 4c8b10c
+* **web:** remove Box from nft AssetDetails component (#16481) ba2ef64
+* **web:** remove Box from NFT CollectionAssetLoading (#16490) 1b8e0b0
+* **web:** remove Box from NFT FilterButton (vercel ignore starts here) (#16487) 4ab7dce
+* **web:** remove Box from NFT Filters component, fix console errors (#16486) 2302c3b
+* **web:** remove Box from nft Overlay (#16478) c1daf73
+* **web:** remove Box from nft Table component (#16480) fd177ed
+* **web:** remove Box from NFT TransactionCompleteModal (#16483) b3229cf
+* **web:** remove Box from ProfilePage (#16476) 024eac7
+* **web:** remove Box from TraitsHeader (#16484) 07c62b1
+* **web:** remove Box in more NFT traits/filters components (#16485) a484bf2
+* **web:** remove Box, Row, Column from CollectionNFTs component (#16489) f97d20b
+* **web:** remove duplicative dd setup (#16718) 62452e7
+* **web:** render SendReviewModal appropriately so that animation is not broken (#16615) aef5cc4
+* **web:** testlio fix limit input (#16885) 2c53130
+* **web:** update unknown lend activity (#15473) e5bf5de
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 8906911
+
+
+### Styles
+
+* **web:** all page scrollbars (#16720) c59bea2
+* **web:** fix width on nav search loading rows (#16795) e339301
+
+
+### Code Refactoring
+
+* **web:** remove styled components from Preferenece Settings Header (#16669) 53a64e6
+* **web:** remove styled components nav index (#16631) b1fc622
+* **web:** remove styled-components from NavIcon (#16637) 8607516
+* **web:** update nft bag icon from styled-component (#16624) 24c2919
 
 

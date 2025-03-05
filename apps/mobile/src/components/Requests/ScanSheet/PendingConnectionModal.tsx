@@ -43,9 +43,9 @@ type Props = {
 }
 
 enum PendingConnectionModalState {
-  Hidden,
-  SwitchNetwork,
-  SwitchAccount,
+  Hidden = 0,
+  SwitchNetwork = 1,
+  SwitchAccount = 2,
 }
 
 const SitePermissions = (): JSX.Element => {

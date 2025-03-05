@@ -3,7 +3,7 @@ import React, { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { useLockScreenOnBlur } from 'src/features/lockScreen/useLockScreenState'
+import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 
 import { SeedPhraseInput } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/SeedPhraseInput'

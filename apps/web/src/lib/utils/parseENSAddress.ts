@@ -1,3 +1,4 @@
+// eslint-disable-next-line security/detect-unsafe-regex
 const ENS_NAME_REGEX = /^(([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\.)+)eth(\/.*)?$/
 
 export default function parseENSAddress(ensAddress: string): { ensName: string; ensPath?: string } | undefined {

@@ -155,7 +155,7 @@ function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.E
 
 const WINDOW_CLOSE_DELAY = 10
 
-export function DappRequestFooter({
+function DappRequestFooter({
   chainId,
   connectedAccountAddress,
   confirmText,
@@ -234,7 +234,7 @@ export function DappRequestFooter({
           <Flex pb="$spacing8">
             <Text color="$DEP_accentWarning" variant="body3">
               {t('swap.warning.insufficientGas.title', {
-                currencySymbol: nativeBalance?.currency?.symbol,
+                currencySymbol: nativeBalance?.currency?.symbol ?? '',
               })}
             </Text>
           </Flex>

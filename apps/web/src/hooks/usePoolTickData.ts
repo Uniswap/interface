@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool as V3Pool, tickToPrice } from '@uniswap/v3-sdk'

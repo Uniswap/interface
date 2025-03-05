@@ -211,6 +211,7 @@ const Collection = () => {
               </BannerWrapper>
               <CollectionDescriptionSection>
                 {collectionStats && <CollectionStats stats={collectionStats} isMobile={isMobile} />}
+                {/* eslint-disable-next-line react/forbid-elements */}
                 <div id="nft-anchor" />
                 <ActivitySwitcher
                   showActivity={isActivityToggled}

@@ -88,7 +88,7 @@ export function TokenBalances({
   )
 }
 
-export function CurrentChainBalance({
+function CurrentChainBalance({
   balance,
   isReadonly,
   displayName,
@@ -110,7 +110,7 @@ export function CurrentChainBalance({
     <Flex row>
       <Flex fill gap="$spacing8">
         <Text color="$neutral2" variant="subheading2">
-          {isReadonly ? t('token.balances.viewOnly', { ownerAddress: displayName }) : t('token.balances.main')}
+          {isReadonly ? t('token.balances.viewOnly', { ownerAddress: displayName ?? '' }) : t('token.balances.main')}
         </Text>
         <Flex fill gap="$spacing4">
           <Text variant="heading3">{isTestnetModeEnabled ? tokenBalance : fiatBalance}</Text>

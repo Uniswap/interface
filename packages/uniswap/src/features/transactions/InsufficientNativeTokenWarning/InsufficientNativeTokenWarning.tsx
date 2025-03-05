@@ -110,12 +110,10 @@ function InsufficientNativeTokenWarningContent({
           title={
             shouldShowNetworkName
               ? t('transaction.warning.insufficientGas.modal.title.withNetwork', {
-                  // FIXME: Verify WALL-5906
                   tokenSymbol: nativeCurrency.symbol ?? '',
                   networkName,
                 })
               : t('transaction.warning.insufficientGas.modal.title.withoutNetwork', {
-                  // FIXME: Verify WALL-5906
                   tokenSymbol: nativeCurrency.symbol ?? '',
                 })
           }

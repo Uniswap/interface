@@ -12,7 +12,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NotificationToggleLoggingType } from 'uniswap/src/features/telemetry/types'
@@ -50,7 +50,7 @@ function _SettingsNotificationsScreen(): JSX.Element {
   const { fullWidth, fullHeight } = useDeviceDimensions()
   const accounts = useAccountsList()
 
-  const priceAlertsToggleEnabled = useFeatureFlag(
+  const priceAlertsToggleEnabled = useFeatureFlagWithExposureLoggingDisabled(
     isIOS ? FeatureFlags.NotificationPriceAlertsIOS : FeatureFlags.NotificationPriceAlertsAndroid,
   )
 

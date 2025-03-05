@@ -179,7 +179,6 @@ function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
   const { defaultChainId } = useEnabledChains()
   return useCallback(
     ({ address, tokenId, chainId }: NavigateToNftItemArgs): void => {
-      // eslint-disable-next-line security/detect-non-literal-fs-filename
       window.open(getExplorerLink(chainId ?? defaultChainId, `${address}/${tokenId}`, ExplorerDataType.NFT))
     },
     [defaultChainId],

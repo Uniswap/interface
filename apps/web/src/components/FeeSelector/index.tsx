@@ -6,12 +6,12 @@ import Card from 'components/Card/cards'
 import { FeeOption } from 'components/FeeSelector/FeeOption'
 import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
+import { AutoColumn } from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
 import styled, { keyframes } from 'lib/styled-components'
-import { DynamicSection } from 'pages/AddLiquidityV3/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, RadioButtonGroup, Text } from 'ui/src'
@@ -45,6 +45,11 @@ const Select = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 8px;
   width: 100%;
+`
+
+const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
+  opacity: ${({ disabled }) => (disabled ? '0.2' : '1')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
 `
 
 export default function FeeSelector({

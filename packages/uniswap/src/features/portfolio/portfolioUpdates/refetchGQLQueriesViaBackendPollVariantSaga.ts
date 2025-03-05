@@ -12,7 +12,7 @@ import { DynamicConfigs, NetworkRequestsConfigKey } from 'uniswap/src/features/g
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { getCurrenciesWithExpectedUpdates } from 'uniswap/src/features/portfolio/portfolioUpdates/getCurrenciesWithExpectedUpdates'
-
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

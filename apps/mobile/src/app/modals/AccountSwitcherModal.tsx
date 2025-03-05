@@ -8,6 +8,7 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
+import { openSettings } from 'src/utils/linking'
 import { DeprecatedButton, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
@@ -30,7 +31,6 @@ import { createAccountsActions } from 'wallet/src/features/wallet/create/createA
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted, selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { openSettings } from 'wallet/src/utils/linking'
 
 export function AccountSwitcherModal(): JSX.Element {
   const dispatch = useDispatch()
@@ -257,9 +257,10 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   return (
     <Flex $short={{ pb: '$none' }} maxHeight={fullScreenContentHeight} pb="$spacing12">
-      <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12">
+      <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12" mx="$spacing12">
         <AddressDisplay
           showCopy
+          centered
           address={activeAccountAddress}
           direction="column"
           horizontalGap="$spacing8"

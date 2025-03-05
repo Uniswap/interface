@@ -22,7 +22,7 @@ import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
@@ -39,7 +39,7 @@ import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -102,7 +102,6 @@ function PositionPage() {
 
   const dispatch = useAppDispatch()
 
-  const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
@@ -188,10 +187,6 @@ function PositionPage() {
     }
     return 620
   }, [screenWidth])
-
-  if (!isLoading && !lpRedesignEnabled) {
-    return <Navigate to="/pools" replace />
-  }
 
   if (positionLoading) {
     return (
@@ -301,7 +296,7 @@ function PositionPage() {
                     dispatch(
                       setOpenModal({
                         name: ModalName.AddLiquidity,
-                        initialState: { ...positionInfo, collectAsWeth: false },
+                        initialState: positionInfo,
                       }),
                     )
                   }}
@@ -317,7 +312,7 @@ function PositionPage() {
                       dispatch(
                         setOpenModal({
                           name: ModalName.RemoveLiquidity,
-                          initialState: { ...positionInfo, collectAsWeth: false },
+                          initialState: positionInfo,
                         }),
                       )
                     }}
@@ -335,7 +330,7 @@ function PositionPage() {
                         dispatch(
                           setOpenModal({
                             name: ModalName.ClaimFee,
-                            initialState: { ...positionInfo, collectAsWeth: false },
+                            initialState: positionInfo,
                           }),
                         )
                       }
@@ -367,7 +362,18 @@ function PositionPage() {
                 <ExchangeHorizontal size="$icon.16" />
               </TouchableArea>
             </Flex>
-            <Flex animation="fast" height="auto" width="100%" $lg={{ width: '100%' }}>
+            <Flex
+              animation="fast"
+              height="auto"
+              width="100%"
+              $lg={{ width: '100%' }}
+              borderWidth={0}
+              borderColor="$surface3"
+              borderBottomRightRadius="$rounded20"
+              borderBottomWidth={mainView === 'chart' ? 1 : 0}
+              borderRightWidth={mainView === 'chart' ? 1 : 0}
+              pb="$padding12"
+            >
               {mainView === 'chart' ? (
                 <LiquidityPositionRangeChart
                   version={positionInfo.version}
@@ -397,7 +403,15 @@ function PositionPage() {
                   crosshairEnabled={false}
                 />
               ) : (
-                <Flex width="100%" height="100%" justifyContent="center" alignItems="center" py="$spacing20">
+                <Flex
+                  width="100%"
+                  height="100%"
+                  justifyContent="center"
+                  alignItems="center"
+                  py="$spacing20"
+                  backgroundColor="$surface2"
+                  borderRadius="$rounded20"
+                >
                   {'result' in metadata ? (
                     <PositionNFT image={metadata.result.image} height={400} />
                   ) : (

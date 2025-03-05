@@ -1,5 +1,3 @@
-import * as WebBrowser from 'expo-web-browser'
-import { Linking } from 'react-native'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -8,10 +6,6 @@ import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search
 import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
-
-export function dismissInAppBrowser(): void {
-  WebBrowser.dismissBrowser()
-}
 
 export async function openTransactionLink(hash: string | undefined, chainId: UniverseChainId): Promise<void> {
   if (!hash) {
@@ -31,10 +25,6 @@ export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): 
 
 export async function openOfframpPendingSupportLink(): Promise<void> {
   return openUri(uniswapUrls.helpArticleUrls.fiatOffRampHelp)
-}
-
-export async function openSettings(): Promise<void> {
-  await Linking.openSettings()
 }
 
 /**

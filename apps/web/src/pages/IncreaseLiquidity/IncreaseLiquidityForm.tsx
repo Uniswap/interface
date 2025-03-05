@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import {
@@ -12,13 +10,13 @@ import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDet
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
-import { useCanUnwrapCurrency, useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
+import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
 import { Flex, Switch, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 
 export function IncreaseLiquidityForm() {
   const { t } = useTranslation()
@@ -57,35 +55,32 @@ export function IncreaseLiquidityForm() {
 
   const { currency0Amount: initialCurrency0Amount, currency1Amount: initialCurrency1Amount } = position
 
-  // TODO(WEB-6295): this doesn't actually need to call useCurrencyInfo since only the currency object is accessed subsequently
-  const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
-    currency: initialCurrency0Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && position.version !== ProtocolVersion.V4,
-  })
-  const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
-    currency: initialCurrency1Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && position.version !== ProtocolVersion.V4,
-  })
+  const canUnwrap0 = canUnwrapCurrency(initialCurrency0Amount.currency, position.version)
+  const canUnwrap1 = canUnwrapCurrency(initialCurrency1Amount.currency, position.version)
 
-  const token0 = currency0Info?.currency
-  const token1 = currency1Info?.currency
-  const canUnwrap0 = useCanUnwrapCurrency(initialCurrency0Amount.currency) && position.version !== ProtocolVersion.V4
-  const canUnwrap1 = useCanUnwrapCurrency(initialCurrency1Amount.currency) && position.version !== ProtocolVersion.V4
-  const nativeCurrencyInfo = useNativeCurrencyInfo(position.chainId)
+  const token0 = getCurrencyWithOptionalUnwrap({
+    currency: initialCurrency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency && canUnwrap0,
+  })
+  const token1 = getCurrencyWithOptionalUnwrap({
+    currency: initialCurrency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency && canUnwrap1,
+  })
+  const nativeCurrency = nativeOnChain(position.chainId)
 
   const currency0Amount = useMemo(() => {
     if (unwrapNativeCurrency && canUnwrap0) {
-      return CurrencyAmount.fromRawAmount(currency0Info?.currency, initialCurrency0Amount.quotient)
+      return CurrencyAmount.fromRawAmount(token0, initialCurrency0Amount.quotient)
     }
     return initialCurrency0Amount
-  }, [unwrapNativeCurrency, canUnwrap0, currency0Info, initialCurrency0Amount])
+  }, [unwrapNativeCurrency, canUnwrap0, token0, initialCurrency0Amount])
 
   const currency1Amount = useMemo(() => {
     if (unwrapNativeCurrency && canUnwrap1) {
-      return CurrencyAmount.fromRawAmount(currency1Info?.currency, initialCurrency1Amount.quotient)
+      return CurrencyAmount.fromRawAmount(token1, initialCurrency1Amount.quotient)
     }
     return initialCurrency1Amount
-  }, [unwrapNativeCurrency, canUnwrap1, currency1Info, initialCurrency1Amount])
+  }, [unwrapNativeCurrency, canUnwrap1, token1, initialCurrency1Amount])
 
   const { updatedFormattedAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
     token0,
@@ -122,14 +117,10 @@ export function IncreaseLiquidityForm() {
   }
 
   const UnwrapNativeCurrencyToggle = useMemo(() => {
-    if (!nativeCurrencyInfo) {
-      return null
-    }
-
     return (
       <Flex row justifyContent="space-between" alignItems="center">
         <Text variant="body3" color="$neutral2">
-          {t('pool.addAs', { nativeWrappedSymbol: nativeCurrencyInfo.currency.symbol })}
+          {t('pool.addAs', { nativeWrappedSymbol: nativeCurrency.symbol })}
         </Text>
         <Switch
           id="add-as-weth"
@@ -139,7 +130,7 @@ export function IncreaseLiquidityForm() {
         />
       </Flex>
     )
-  }, [nativeCurrencyInfo, t, unwrapNativeCurrency, setUnwrapNativeCurrency])
+  }, [nativeCurrency, t, unwrapNativeCurrency, setUnwrapNativeCurrency])
 
   const requestLoading = Boolean(
     !dataFetchingError &&

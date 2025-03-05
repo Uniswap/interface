@@ -11,7 +11,6 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { setHasSeenBridgingAnimation, setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
@@ -52,13 +51,13 @@ function _TokenOptionItem({
   isSelected,
 }: OptionProps): JSX.Element {
   const { currencyInfo, isUnsupported } = option
-  const { currency, safetyLevel } = currencyInfo
+  const { currency } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
   const colors = useSporeColors()
   const dispatch = useDispatch()
 
   const severity = getTokenWarningSeverity(currencyInfo)
-  const isBlocked = severity === WarningSeverity.Blocked || safetyLevel === SafetyLevel.Blocked
+  const isBlocked = severity === WarningSeverity.Blocked
   // in token selector, we only show the warning icon if token is >=Medium severity
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
   const shouldShowWarningModalOnPress = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)

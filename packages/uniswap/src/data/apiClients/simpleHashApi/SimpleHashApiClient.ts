@@ -34,6 +34,7 @@ const SIMPLE_HASH_CHAIN_IDS: Record<UniverseChainId, string> = {
   [UniverseChainId.MonadTestnet]: 'monad',
   [UniverseChainId.Optimism]: 'optimism',
   [UniverseChainId.Polygon]: 'matic',
+  [UniverseChainId.Soneium]: 'soneium',
   [UniverseChainId.Unichain]: 'unichain',
   [UniverseChainId.WorldChain]: 'worldchain',
   [UniverseChainId.Zksync]: 'zksync',

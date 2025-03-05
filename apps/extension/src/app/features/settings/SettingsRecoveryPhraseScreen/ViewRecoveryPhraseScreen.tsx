@@ -14,9 +14,9 @@ import { logger } from 'utilities/src/logger/logger'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 const enum ViewStep {
-  Warning,
-  Password,
-  Reveal,
+  Warning = 0,
+  Password = 1,
+  Reveal = 2,
 }
 
 export function SettingsViewRecoveryPhraseScreen(): JSX.Element {

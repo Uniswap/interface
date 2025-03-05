@@ -1,7 +1,6 @@
 import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
-// eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { Analytics, TestnetModeConfig, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import {

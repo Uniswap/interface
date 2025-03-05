@@ -8,7 +8,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { MnemonicConfirmation } from 'src/components/mnemonic/MnemonicConfirmation'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
-import { useLockScreenOnBlur } from 'src/features/lockScreen/useLockScreenState'
+import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpModal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { DeprecatedButton, Flex, Text, useMedia, useSporeColors } from 'ui/src'
@@ -31,8 +31,8 @@ import { useSignerAccount } from 'wallet/src/features/wallet/hooks'
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
 enum View {
-  SeedPhrase,
-  SeedPhraseConfirm,
+  SeedPhrase = 0,
+  SeedPhraseConfirm = 1,
 }
 
 export function ManualBackupScreen({ navigation, route: { params } }: Props): JSX.Element | null {

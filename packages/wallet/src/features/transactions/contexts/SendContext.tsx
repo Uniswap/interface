@@ -124,6 +124,7 @@ export function SendContextProvider({
           chainId: currency.chainId,
           type: AssetType.Currency,
         },
+        exactAmountToken: '',
         selectingCurrencyField: undefined,
       })
     },

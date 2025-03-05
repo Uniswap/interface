@@ -45,7 +45,6 @@ import { Slippage } from 'uniswap/src/features/transactions/swap/settings/config
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import { isTestEnv } from 'utilities/src/environment/env'
 import { isMobileWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
@@ -169,10 +168,7 @@ export function Swap({
     skipFocusOnCurrencyField: isMobileWeb,
   })
 
-  // TODO(WEB-5078): Remove this once we upgrade swap e2e tests to use the new swap flow
-  const waitForLoading = isLoading && !isTestEnv()
-
-  if (universalSwapFlow || isTestnetModeEnabled || waitForLoading) {
+  if (universalSwapFlow || isTestnetModeEnabled || isLoading) {
     return (
       <MultichainContextProvider initialChainId={chainId}>
         <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>

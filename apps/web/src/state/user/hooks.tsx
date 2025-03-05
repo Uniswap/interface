@@ -10,7 +10,6 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 import {
   addSerializedPair,
-  updateHideClosedPositions,
   updateUserDeadline,
   updateUserRouterPreference,
   updateUserSlippageTolerance,
@@ -91,21 +90,6 @@ export function useUserSlippageTolerance(): [
 export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
   const [allowedSlippage] = useUserSlippageTolerance()
   return allowedSlippage === SlippageTolerance.Auto ? defaultSlippageTolerance : allowedSlippage
-}
-
-export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions: boolean) => void] {
-  const dispatch = useAppDispatch()
-
-  const hideClosedPositions = useAppSelector((state) => state.user.userHideClosedPositions)
-
-  const setHideClosedPositions = useCallback(
-    (newHideClosedPositions: boolean) => {
-      dispatch(updateHideClosedPositions({ userHideClosedPositions: newHideClosedPositions }))
-    },
-    [dispatch],
-  )
-
-  return [hideClosedPositions, setHideClosedPositions]
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {

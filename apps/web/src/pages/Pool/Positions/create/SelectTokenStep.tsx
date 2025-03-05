@@ -1,5 +1,4 @@
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { LoaderButton } from 'components/Button/LoaderButton'
@@ -338,8 +337,8 @@ export function SelectTokensStep({
     return undefined
   }, [token0, token1, protocolVersion])
 
-  const token0CurrencyInfo = useCurrencyInfo(token0 ? currencyId(token0) : undefined)
-  const token1CurrencyInfo = useCurrencyInfo(token1 ? currencyId(token1) : undefined)
+  const token0CurrencyInfo = useCurrencyInfo(currencyId(token0))
+  const token1CurrencyInfo = useCurrencyInfo(currencyId(token1))
 
   const token0FoTError = hasLPFoTTransferError(token0CurrencyInfo, protocolVersion)
   const token1FoTError = hasLPFoTTransferError(token1CurrencyInfo, protocolVersion)

@@ -16,14 +16,14 @@ export const TitleRow = styled(Row)`
 `
 
 export enum SetPriceMethod {
-  SAME_PRICE,
-  FLOOR_PRICE,
-  LAST_PRICE,
-  CUSTOM,
+  SAME_PRICE = 0,
+  FLOOR_PRICE = 1,
+  LAST_PRICE = 2,
+  CUSTOM = 3,
 }
 
 export enum WarningType {
-  BELOW_FLOOR,
-  ALREADY_LISTED,
-  NONE,
+  BELOW_FLOOR = 0,
+  ALREADY_LISTED = 1,
+  NONE = 2,
 }

@@ -62,7 +62,7 @@ function getProjectId() {
   return PROJECT_ID.default
 }
 
-export async function initializeWeb3Wallet(): Promise<void> {
+async function initializeWeb3Wallet(): Promise<void> {
   try {
     const wcCore = new Core({
       projectId: getProjectId(),

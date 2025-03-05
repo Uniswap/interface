@@ -11,6 +11,7 @@ import { generateTweetForAsset, getMarketplaceIcon, timeLeft } from 'nft/utils'
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { Flex } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -391,7 +392,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
           {expirationDate && expirationDate > new Date() && (
             <Tertiary fontSize="14px">Sale ends: {timeLeft(expirationDate)}</Tertiary>
           )}
-          <div>
+          <Flex>
             <BuyNowButtonContainer>
               <BuyNowButton
                 assetInBag={assetInBag}
@@ -409,7 +410,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
                 </ThemedText.SubHeader>
               </BuyNowButton>
             </BuyNowButtonContainer>
-          </div>
+          </Flex>
         </BestPriceContainer>
       ) : (
         <NotForSale collectionName={collection.collectionName ?? 'this collection'} collectionUrl={asset.address} />

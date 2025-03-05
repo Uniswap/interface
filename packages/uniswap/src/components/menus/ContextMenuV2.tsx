@@ -1,6 +1,7 @@
 import { BaseSyntheticEvent, Fragment, PropsWithChildren, useRef, useState } from 'react'
 import { FlexProps, GeneratedIcon, IconProps, Popover, PopperProps, TextProps, TouchableAreaProps } from 'ui/src'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
+import { isMobileWeb } from 'utilities/src/platform'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
 
 export type MenuOptionItem = {
@@ -71,7 +72,7 @@ export function ContextMenu({
 
   const { x, y } = getRelativeCoordinates()
 
-  if (disabled) {
+  if (disabled || isMobileWeb) {
     return <Fragment>{children}</Fragment>
   }
 
@@ -92,6 +93,7 @@ export function ContextMenu({
         keeping normal click behavior intact.
       */}
       <Popover.Trigger onMouseDown={onLeftClick ? onContextMenu : undefined}>
+        {/* eslint-disable-next-line react/forbid-elements */}
         <div ref={triggerContainerRef} onClick={undefined} onContextMenu={onLeftClick ? undefined : onContextMenu}>
           {children}
         </div>

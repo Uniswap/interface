@@ -41,7 +41,7 @@ export const TokenBalanceList = memo(function _TokenBalanceList({ owner }: Token
   )
 })
 
-export function TokenBalanceListInner(): JSX.Element {
+function TokenBalanceListInner(): JSX.Element {
   const { t } = useTranslation()
 
   const { rows, balancesById, networkStatus, refetch, hiddenTokensExpanded } = useTokenBalanceListContext()

@@ -1,4 +1,5 @@
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { Flex } from 'ui/src'
 
 type UnsubscribeFunction = () => void
 
@@ -97,9 +98,9 @@ export function createAdaptiveRefetchContext<T>() {
     const { refetch } = contextValue
 
     return (
-      <div className={className} onMouseEnter={refetch}>
+      <Flex className={className} onMouseEnter={refetch}>
         {children}
-      </div>
+      </Flex>
     )
   }
 

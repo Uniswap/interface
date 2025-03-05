@@ -45,7 +45,6 @@ describe(tokenProjectToCurrencyInfos, () => {
   const getExpectedResult = (proj: TokenProject, token: GQLToken): CurrencyInfo =>
     ({
       logoUrl: project.logoUrl,
-      safetyLevel: project.safetyLevel,
       currencyId: `${fromGraphQLChain(token.chain)}-${token.address}`,
       currency: buildCurrency({
         chainId: fromGraphQLChain(token.chain),
@@ -166,7 +165,6 @@ describe(gqlTokenToCurrencyInfo, () => {
       }),
       currencyId: `${fromGraphQLChain(token.chain)}-${token.address}`,
       logoUrl: token.project?.logoUrl,
-      safetyLevel: token.project?.safetyLevel,
       isSpam: token.project?.isSpam,
     })
   })

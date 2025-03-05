@@ -81,7 +81,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334076 _pb-t-space-spa94665589 _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
               >
                 <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _alignItems-center _flexDirection-column _gap-t-space-spa94665593"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _alignItems-center _gap-t-space-spa94665593"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
@@ -122,16 +122,16 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                     </svg>
                   </div>
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _alignItems-center _gap-t-space-spa94665593"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexShrink-1 _gap-t-space-spa94665593"
                   >
                     <div
-                      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa1360334080"
+                      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _justifyContent-center _flexShrink-1 _gap-t-space-spa1360334080"
                     >
                       <div
-                        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _alignItems-center _flexShrink-1 _justifyContent-center"
                       >
                         <span
-                          class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _flexShrink-1"
+                          class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _textAlign-center _flexShrink-1 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial"
                           data-disable-theme="true"
                           data-testid="address-display/name/Colin Schowalter Jr."
                         >
@@ -144,7 +144,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       data-testid="copy"
                     >
                       <div
-                        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _gap-t-space-spa94665589 _mt-t-space-non101 _pr-t-space-non101 _pl-t-space-non101 _pt-t-space-non101 _pb-t-space-non101"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _gap-t-space-spa94665589 _mt-t-space-non101 _pr-t-space-non101 _pl-t-space-non101 _pt-t-space-non101 _pb-t-space-non101"
                       >
                         <span
                           class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
@@ -320,7 +320,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa1360334076 _pb-t-space-spa94665589 _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
             >
               <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _alignItems-center _flexDirection-column _gap-t-space-spa94665593"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _alignItems-center _gap-t-space-spa94665593"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
@@ -361,16 +361,16 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                   </svg>
                 </div>
                 <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _alignItems-center _gap-t-space-spa94665593"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexShrink-1 _gap-t-space-spa94665593"
                 >
                   <div
-                    class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa1360334080"
+                    class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _justifyContent-center _flexShrink-1 _gap-t-space-spa1360334080"
                   >
                     <div
-                      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665589"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _alignItems-center _flexShrink-1 _justifyContent-center"
                     >
                       <span
-                        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _flexShrink-1"
+                        class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _textAlign-center _flexShrink-1 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial"
                         data-disable-theme="true"
                         data-testid="address-display/name/Colin Schowalter Jr."
                       >
@@ -383,7 +383,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                     data-testid="copy"
                   >
                     <div
-                      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _gap-t-space-spa94665589 _mt-t-space-non101 _pr-t-space-non101 _pl-t-space-non101 _pt-t-space-non101 _pb-t-space-non101"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _gap-t-space-spa94665589 _mt-t-space-non101 _pr-t-space-non101 _pl-t-space-non101 _pt-t-space-non101 _pb-t-space-non101"
                     >
                       <span
                         class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"

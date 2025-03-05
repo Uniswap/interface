@@ -47,7 +47,7 @@ import { serializeSwapStateToURLParameters, useSwapActionHandlers } from 'state/
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
@@ -539,7 +539,7 @@ export function SwapForm({
           }}
         />
       )}
-      <div style={{ display: 'relative' }}>
+      <Flex>
         <SwapSection>
           <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
             <SwapCurrencyInputPanel
@@ -585,9 +585,9 @@ export function SwapForm({
             </ArrowContainer>
           </Trace>
         </ArrowWrapper>
-      </div>
+      </Flex>
       <AutoColumn gap="xs">
-        <div>
+        <Flex>
           <OutputSwapSection>
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
               <SwapCurrencyInputPanel
@@ -619,9 +619,9 @@ export function SwapForm({
               />
             </Trace>
           </OutputSwapSection>
-        </div>
+        </Flex>
 
-        <div>
+        <Flex>
           {isLandingPage ? (
             <ButtonPrimary
               $borderRadius="16px"
@@ -698,7 +698,7 @@ export function SwapForm({
             />
           )}
           {isUsingBlockedExtension && <SwapNotice />}
-        </div>
+        </Flex>
       </AutoColumn>
     </>
   )

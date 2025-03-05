@@ -1,17 +1,17 @@
 import { CustomRankingType, RankingType } from 'uniswap/src/data/types'
 
 export enum NFTViewType {
-  Grid,
-  Collection,
+  Grid = 0,
+  Collection = 1,
 }
 
 export type ExploreOrderBy = RankingType | CustomRankingType
 
 export enum TokenMetadataDisplayType {
-  MarketCap,
-  Volume,
-  TVL,
-  Symbol,
+  MarketCap = 0,
+  Volume = 1,
+  TVL = 2,
+  Symbol = 3,
 }
 
 export type DisplayName = {
@@ -20,8 +20,8 @@ export type DisplayName = {
 }
 
 export enum DisplayNameType {
-  Address,
-  ENS,
-  Local,
-  Unitag,
+  Address = 0,
+  ENS = 1,
+  Local = 2,
+  Unitag = 3,
 }

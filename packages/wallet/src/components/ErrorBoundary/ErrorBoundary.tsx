@@ -82,7 +82,7 @@ class InternalErrorBoundary extends React.Component<
     const { fallback } = this.props
 
     if (error !== null) {
-      return fallback === null ? null : <ErrorScreen error={error} />
+      return fallback === null ? null : fallback || <ErrorScreen error={error} />
     }
 
     return this.props.children

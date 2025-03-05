@@ -1,3 +1,4 @@
+import { ErrorBoundary as DatadogErrorBoundary } from '@datadog/browser-rum-react'
 import * as Sentry from '@sentry/react'
 import { ButtonLight, SmallButtonPrimary } from 'components/Button/buttons'
 import { Column } from 'components/deprecated/Column'
@@ -9,6 +10,8 @@ import { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { CopyToClipboard, ExternalLink, ThemedText } from 'theme/components'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isRemoteReportingEnabled } from 'utils/env'
 
 const FallbackWrapper = styled.div`
@@ -190,7 +193,12 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
 
 export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
   const { chainId } = useAccount()
-  return (
+  const isDatadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
+  return isDatadogEnabled ? (
+    <DatadogErrorBoundary fallback={({ error }) => <Fallback error={error} eventId={null} />}>
+      {children}
+    </DatadogErrorBoundary>
+  ) : (
     <Sentry.ErrorBoundary
       fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}
       beforeCapture={(scope) => {

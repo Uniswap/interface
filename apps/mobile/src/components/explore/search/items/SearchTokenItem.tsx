@@ -30,7 +30,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const { chainId, address, name, symbol, logoUrl, safetyLevel, safetyInfo, feeData } = token
+  const { chainId, address, name, symbol, logoUrl, safetyInfo, feeData } = token
   const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId as UniverseChainId)
   const currencyInfo = useCurrencyInfo(currencyId)
   const severity = getTokenWarningSeverity(currencyInfo)
@@ -61,7 +61,6 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
           name,
           symbol,
           logoUrl,
-          safetyLevel,
           safetyInfo,
           feeData,
         },

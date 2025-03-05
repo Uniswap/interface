@@ -10,7 +10,6 @@ import { StackNavigationOptions, TransitionPresets, createStackNavigator } from 
 import React, { useEffect } from 'react'
 import { DevSettings } from 'react-native'
 import { useSelector } from 'react-redux'
-import StorybookUIRoot from 'src/../.storybook'
 import { NotificationsOSSettingsModal } from 'src/app/modals/NotificationsOSSettingsModal'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
 import { navigationRef } from 'src/app/navigation/navigationRef'
@@ -88,7 +87,6 @@ import {
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
 import { datadogEnabled } from 'utilities/src/environment/constants'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -143,7 +141,7 @@ function SettingsStackGroup(): JSX.Element {
   )
 }
 
-export function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
+function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   // Adding `key` forces a full re-render and re-mount when switching accounts
   // to avoid issues with wrong cached data being shown in some memoized components that are already mounted.
@@ -215,12 +213,7 @@ export function ExploreStackNavigator(): JSX.Element {
       <HorizontalEdgeGestureTarget />
       <ExploreStack.Navigator
         initialRouteName={MobileScreens.Explore}
-        screenOptions={{
-          ...navNativeStackOptions.noHeader,
-          fullScreenGestureEnabled: true,
-          gestureEnabled: true,
-          animation: 'slide_from_right',
-        }}
+        screenOptions={navNativeStackOptions.independentBsm}
       >
         <ExploreStack.Screen component={ExploreScreen} name={MobileScreens.Explore} />
         <ExploreStack.Group screenOptions={{ contentStyle: { backgroundColor: colors.surface1.val } }}>
@@ -250,12 +243,7 @@ export function FiatOnRampStackNavigator(): JSX.Element {
       <FiatOnRampProvider>
         <FiatOnRampStack.Navigator
           initialRouteName={FiatOnRampScreens.AmountInput}
-          screenOptions={{
-            ...navNativeStackOptions.noHeader,
-            fullScreenGestureEnabled: true,
-            gestureEnabled: true,
-            animation: 'slide_from_right',
-          }}
+          screenOptions={navNativeStackOptions.independentBsm}
         >
           <FiatOnRampStack.Screen component={FiatOnRampScreen} name={FiatOnRampScreens.AmountInput} />
           <FiatOnRampStack.Screen
@@ -269,7 +257,7 @@ export function FiatOnRampStackNavigator(): JSX.Element {
   )
 }
 
-export function OnboardingStackNavigator(): JSX.Element {
+function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
 
   const isOnboardingKeyringEnabled = useFeatureFlag(FeatureFlags.OnboardingKeyring)
@@ -352,7 +340,7 @@ export function OnboardingStackNavigator(): JSX.Element {
   )
 }
 
-export function UnitagStackNavigator(): JSX.Element {
+function UnitagStackNavigator(): JSX.Element {
   const colors = useSporeColors()
   const insets = useAppInsets()
 
@@ -442,7 +430,12 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
         <AppStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
       </AppStack.Group>
-      {isDevEnv() && <AppStack.Screen component={StorybookUIRoot} name={MobileScreens.Storybook} />}
+      {/* Explicitly using __DEV__ so that the bundler knows to exclude this code from release builds */}
+      {__DEV__ &&
+        ((): JSX.Element => {
+          const StorybookUIRoot = require('src/../.storybook').default
+          return <AppStack.Screen component={StorybookUIRoot} name={MobileScreens.Storybook} />
+        })()}
     </AppStack.Navigator>
   )
 }
@@ -455,6 +448,12 @@ const navNativeStackOptions: Record<string, NativeStackNavigationOptions> = {
     animation: 'none',
     animationDuration: 0,
     contentStyle: { backgroundColor: 'transparent' },
+  },
+  independentBsm: {
+    fullScreenGestureEnabled: true,
+    gestureEnabled: true,
+    headerShown: false,
+    animation: 'slide_from_right',
   },
 }
 

@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   CHART_HEIGHT,
@@ -13,8 +12,7 @@ import {
 } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
 import { useGetRangeDisplay, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { PositionInfo } from 'components/Liquidity/types'
-import { PriceOrdering } from 'components/PositionListItem'
+import { PositionInfo, PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getPoolDetailsURL } from 'graphql/data/util'
 import useHoverProps from 'hooks/useHoverProps'
@@ -174,7 +172,7 @@ function useDropdownOptions(
             dispatch(
               setOpenModal({
                 name: ModalName.ClaimFee,
-                initialState: { ...liquidityPosition, collectAsWeth: false },
+                initialState: liquidityPosition,
               }),
             )
           },

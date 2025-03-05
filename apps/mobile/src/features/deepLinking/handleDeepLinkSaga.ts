@@ -39,7 +39,7 @@ import { getContractManager, getProviderManager } from 'wallet/src/features/wall
 import { selectAccounts, selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
-export interface DeepLink {
+interface DeepLink {
   url: string
   coldStart: boolean
 }
@@ -373,7 +373,7 @@ export function* parseAndValidateUserAddress(userAddress: string | null) {
   return matchingAccount.address
 }
 
-export function* handleScantasticDeepLink(scantasticQueryParams: string): Generator {
+function* handleScantasticDeepLink(scantasticQueryParams: string): Generator {
   const params = parseScantasticParams(scantasticQueryParams)
   const scantasticEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.Scantastic))
 

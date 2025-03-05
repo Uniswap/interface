@@ -64,7 +64,7 @@ export const initialSchema = {
   },
 }
 
-export const v0Schema = {
+const v0Schema = {
   ...initialSchema,
   transactions: {},
   notifications: {
@@ -205,7 +205,7 @@ export const v28Schema = { ...v27Schema }
 
 export const v29Schema = { ...v28Schema }
 
-export const v30Schema = { ...v29Schema }
+const v30Schema = { ...v29Schema }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { tokenLists, ...v31SchemaIntermediate } = { ...v30Schema }
@@ -296,7 +296,7 @@ export const v43Schema = {
 }
 delete v43Schema.favorites.hiddenNfts
 
-export const { providers, ...v44Schema } = {
+export const v44Schema = {
   ...v43Schema,
 }
 
@@ -671,7 +671,7 @@ const v85SchemaIntermediate = {
 }
 delete v85SchemaIntermediate.favorites.tokensVisibility
 delete v85SchemaIntermediate.favorites.nftsVisibility
-export const v85Schema = v85SchemaIntermediate
+const v85Schema = v85SchemaIntermediate
 
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema

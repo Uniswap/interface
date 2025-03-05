@@ -7,39 +7,7 @@ import { NotImplementedError } from 'utilities/src/errors'
 import { ReduxEnhancerConfig } from 'utilities/src/logger/datadog/Datadog'
 import { handleReduxAction } from 'utilities/src/logger/datadog/reduxUtils'
 import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
-import { isExtension } from 'utilities/src/platform'
-import { v4 as uuidv4 } from 'uuid'
-
-// setup user information
-const USER_ID_KEY = 'datadog-user-id'
-
-export function setupDatadog(envNameFunc: () => string): void {
-  if (isTestEnv()) {
-    return
-  }
-  if (!process.env.REACT_APP_DATADOG_CLIENT_TOKEN) {
-    // eslint-disable-next-line no-console
-    console.error(`No datadog client token, disabling`)
-    return
-  }
-
-  datadogLogs.init({
-    clientToken: process.env.REACT_APP_DATADOG_CLIENT_TOKEN,
-    site: 'datadoghq.com',
-    forwardErrorsToLogs: true,
-  })
-
-  let userId = localStorage.getItem(USER_ID_KEY)
-  if (!userId) {
-    localStorage.setItem(USER_ID_KEY, (userId = uuidv4()))
-  }
-  datadogLogs.setUser({
-    id: userId,
-  })
-
-  datadogLogs.setUserProperty('env', envNameFunc())
-  datadogLogs.setUserProperty('version', process.env.REACT_APP_GIT_COMMIT_HASH)
-}
+import { isExtension, isInterface } from 'utilities/src/platform'
 
 export function logToDatadog(
   message: string,
@@ -80,7 +48,7 @@ export function logErrorToDatadog(error: Error, context?: LoggerErrorContext): v
     return
   }
 
-  if (isExtension) {
+  if (isExtension || isInterface) {
     datadogRum.addError(error, { ...context, reduxState })
     return
   }

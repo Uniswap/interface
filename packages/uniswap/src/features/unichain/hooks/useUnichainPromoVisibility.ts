@@ -10,6 +10,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSortedPortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 
 export function useUnichainPromoVisibility(): {

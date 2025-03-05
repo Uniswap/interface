@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { UseMediaState } from '@tamagui/core'
 import { mocked } from 'test-utils/mocked'
 import { useMedia } from 'ui/src'

@@ -3,10 +3,10 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
 export enum SortBy {
-  LowToHigh,
-  HighToLow,
-  RareToCommon,
-  CommonToRare,
+  LowToHigh = 0,
+  HighToLow = 1,
+  RareToCommon = 2,
+  CommonToRare = 3,
 }
 
 export const SortByPointers = {

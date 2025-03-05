@@ -31,8 +31,12 @@ export const LearnMoreLink = ({
       {t('common.button.learn')}
     </Text>
   ) : (
-    <TouchableArea display={display} onPress={(): Promise<void> => onPressLearnMore(url)}>
-      <Text color={textColor} variant={textVariant} textAlign={centered ? 'center' : undefined}>
+    <TouchableArea
+      display={display}
+      style={{ textAlign: centered ? 'center' : 'left' }}
+      onPress={(): Promise<void> => onPressLearnMore(url)}
+    >
+      <Text color={textColor} variant={textVariant}>
         {t('common.button.learn')}
       </Text>
     </TouchableArea>

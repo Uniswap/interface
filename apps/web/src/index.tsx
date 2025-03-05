@@ -27,16 +27,22 @@ import ApplicationUpdater from 'state/application/updater'
 import FiatOnRampTransactionsUpdater from 'state/fiatOnRampTransactions/updater'
 import ListsUpdater from 'state/lists/updater'
 import LogsUpdater from 'state/logs/updater'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
 import { ThemeProvider, ThemedGlobalStyle } from 'theme'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { getEnvName } from 'tracing/env'
+import { config } from 'uniswap/src/config'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n'
+import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
@@ -85,20 +91,26 @@ function StatsigProvider({ children }: PropsWithChildren) {
     [account.address],
   )
 
-  if (!process.env.REACT_APP_STATSIG_API_KEY) {
+  if (!config.statsigApiKey) {
     throw new Error('REACT_APP_STATSIG_API_KEY is not set')
   }
 
   return (
     <BaseStatsigProvider
       user={statsigUser}
-      sdkKey={process.env.REACT_APP_STATSIG_API_KEY}
+      sdkKey={config.statsigApiKey}
       waitForInitialization={false}
       options={{
         environment: { tier: getEnvName() },
-        api: process.env.REACT_APP_STATSIG_PROXY_URL,
+        api: uniswapUrls.statsigProxyUrl,
         disableAutoMetricsLogging: true,
         disableErrorLogging: true,
+        initCompletionCallback: () => {
+          const isDatadogEnabled = getFeatureFlag(FeatureFlags.Datadog)
+          if (isDatadogEnabled) {
+            initializeDatadog('web').catch(() => undefined)
+          }
+        },
       }}
     >
       {children}

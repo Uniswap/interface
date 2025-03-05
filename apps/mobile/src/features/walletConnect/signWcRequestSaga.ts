@@ -37,7 +37,7 @@ type SignTransactionParams = {
   request: TransactionRequest | UwuLinkErc20Request
 }
 
-export function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
+function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
   const { sessionId, requestInternalId, account, method, chainId } = params
   const { defaultChainId } = yield* getEnabledChainIdsSaga()
   try {

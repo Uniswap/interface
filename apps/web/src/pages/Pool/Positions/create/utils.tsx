@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -34,7 +33,6 @@ import {
   V3PriceRangeInfo,
   V4PriceRangeInfo,
 } from 'pages/Pool/Positions/create/types'
-import { useMemo } from 'react'
 import { tryParsePrice, tryParseTick } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -46,12 +44,9 @@ import {
   IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CreatePositionTxAndGasInfo, LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { areCurrenciesEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { getTickToPrice, getV4TickToPrice } from 'utils/getTickToPrice'
 
 type OptionalToken = Token | undefined
@@ -1215,52 +1210,46 @@ export function getPoolIdOrAddressFromCreatePositionInfo(positionInfo: CreatePos
   }
 }
 
-export function useCanUnwrapCurrency(currency: OptionalCurrency): boolean {
-  const chainId = currency?.chainId ?? UniverseChainId.Mainnet
-  const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
-  const currencyId = currency ? (currency.isNative ? undefined : buildCurrencyId(chainId, currency.address)) : undefined
-  const currencyInfo = useCurrencyInfo(currencyId, { skip: !currencyId }) ?? nativeCurrencyInfo
-
-  if (!currency) {
+export function canUnwrapCurrency(currency: OptionalCurrency, protocolVersion?: ProtocolVersion): boolean {
+  if (protocolVersion === ProtocolVersion.V4 || !currency) {
     return false
   }
 
-  return areCurrenciesEqual(currencyInfo?.currency, nativeCurrencyInfo?.currency.wrapped)
+  const wrappedNative = WRAPPED_NATIVE_CURRENCY[currency?.chainId]
+  return areCurrenciesEqual(wrappedNative, currency)
 }
 
-export function useCurrencyInfoWithUnwrapForTradingApi({
+export function getCurrencyWithOptionalUnwrap({
   currency,
   shouldUnwrap,
 }: {
   currency: Currency
   shouldUnwrap: boolean
-}): CurrencyInfo
-export function useCurrencyInfoWithUnwrapForTradingApi({
+}): Currency
+export function getCurrencyWithOptionalUnwrap({
   currency,
   shouldUnwrap,
 }: {
   currency: OptionalCurrency
   shouldUnwrap: boolean
-}): Maybe<CurrencyInfo>
-export function useCurrencyInfoWithUnwrapForTradingApi({
+}): OptionalCurrency
+export function getCurrencyWithOptionalUnwrap({
   currency,
   shouldUnwrap,
 }: {
   currency: OptionalCurrency
   shouldUnwrap: boolean
 }) {
-  const chainId = currency?.chainId ?? UniverseChainId.Mainnet
-  const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
-  const currencyId = currency ? (currency.isNative ? undefined : buildCurrencyId(chainId, currency.address)) : undefined
-  const currencyInfo = useCurrencyInfo(currencyId, { skip: !currencyId }) ?? nativeCurrencyInfo
-  const shouldUseUnwrappedCurrencyInfo =
-    shouldUnwrap && areCurrenciesEqual(currencyInfo?.currency, nativeCurrencyInfo?.currency.wrapped)
+  if (!currency) {
+    return undefined
+  }
 
-  return useMemo(() => {
-    if (!currency) {
-      return undefined
-    }
+  const wrappedNative = WRAPPED_NATIVE_CURRENCY[currency.chainId]
+  const isWrappedNative = areCurrenciesEqual(wrappedNative, currency)
 
-    return shouldUseUnwrappedCurrencyInfo ? nativeCurrencyInfo : currencyInfo
-  }, [currency, nativeCurrencyInfo, currencyInfo, shouldUseUnwrappedCurrencyInfo])
+  if (!isWrappedNative || !shouldUnwrap) {
+    return currency
+  }
+
+  return nativeOnChain(currency.chainId)
 }

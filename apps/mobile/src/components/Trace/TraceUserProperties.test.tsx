@@ -13,7 +13,7 @@ import * as fiatCurrencyHooks from 'uniswap/src/features/fiatCurrency/hooks'
 import * as languageHooks from 'uniswap/src/features/language/hooks'
 import * as userSettingsHooks from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import * as walletHooks from 'wallet/src/features/wallet/hooks'

@@ -36,10 +36,10 @@ const ViewOnlyHeaderContent = (): JSX.Element => {
 }
 
 enum AccountListItemType {
-  SignerHeader,
-  SignerAccount,
-  ViewOnlyHeader,
-  ViewOnlyAccount,
+  SignerHeader = 0,
+  SignerAccount = 1,
+  ViewOnlyHeader = 2,
+  ViewOnlyAccount = 3,
 }
 
 type AccountListItem =

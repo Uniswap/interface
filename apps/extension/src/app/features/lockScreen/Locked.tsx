@@ -20,7 +20,7 @@ import { EditAccountAction, editAccountActions } from 'wallet/src/features/walle
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { SagaStatus } from 'wallet/src/utils/saga'
 
-export function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
+function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
   const [value, setValue] = useState(defaultValue)
 
   const onChangeText: InputProps['onChangeText'] = (newValue): void => {
@@ -35,8 +35,8 @@ export function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeT
 }
 
 enum ForgotPasswordModalStep {
-  Initial,
-  Speedbump,
+  Initial = 0,
+  Speedbump = 1,
 }
 
 const CONTAINER_PADDING_TOP_MIN = 50

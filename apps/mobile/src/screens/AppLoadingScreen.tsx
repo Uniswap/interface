@@ -29,8 +29,6 @@ import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types
 import { selectAnyAddressHasNotificationsEnabled } from 'wallet/src/features/wallet/selectors'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
-export const SPLASH_SCREEN = { uri: 'SplashScreen' }
-
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.AppLoading>
 
 function useFinishAutomatedRecovery(navigation: Props['navigation']): {

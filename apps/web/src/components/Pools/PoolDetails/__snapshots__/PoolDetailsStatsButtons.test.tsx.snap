@@ -124,7 +124,7 @@ exports[`PoolDetailsStatsButton loading skeleton shown correctly 1`] = `
 
 exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 <DocumentFragment>
-  .c42 {
+  .c41 {
   z-index: 1020;
   overflow: hidden;
   top: 0;
@@ -143,7 +143,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   min-width: 0;
 }
 
-.c26 {
+.c25 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -194,7 +194,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   text-decoration: underline;
 }
 
-.c28 {
+.c27 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -233,25 +233,25 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c28:disabled {
+.c27:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c28 > * {
+.c27 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c28 > a {
+.c27 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c41 {
+.c40 {
   background-color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
@@ -259,21 +259,21 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   color: #FFFFFF;
 }
 
-.c41:focus {
+.c40:focus {
   box-shadow: 0 0 0 1pt #fb58ff;
   background-color: #fb58ff;
 }
 
-.c41:hover {
+.c40:hover {
   background-color: #fb58ff;
 }
 
-.c41:active {
+.c40:active {
   box-shadow: 0 0 0 1pt #fb3fff;
   background-color: #fb3fff;
 }
 
-.c41:disabled {
+.c40:disabled {
   background-color: #22222212;
   color: #7D7D7D;
   cursor: auto;
@@ -282,7 +282,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   outline: none;
 }
 
-.c29 {
+.c28 {
   background-color: #FFFFFF;
   color: #7D7D7D;
   border: 1px solid #22222212;
@@ -290,20 +290,15 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   font-weight: 535;
 }
 
-.c29:hover {
+.c28:hover {
   background-color: #ececec;
 }
 
-.c29:active {
+.c28:active {
   background-color: #e0e0e0;
 }
 
-.c25 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c36 {
+.c35 {
   -webkit-filter: none;
   filter: none;
   opacity: 1;
@@ -387,7 +382,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c39 {
+.c38 {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 4px;
@@ -447,7 +442,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   width: initial;
 }
 
-.c30 {
+.c29 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -480,12 +475,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   animation: none;
 }
 
-.c30:hover,
-.c30:active {
+.c29:hover,
+.c29:active {
   background-color: #F9F9F9;
 }
 
-.c30:before {
+.c29:before {
   background-size: 100%;
   border-radius: inherit;
   position: absolute;
@@ -496,11 +491,11 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   content: '';
 }
 
-.c30:hover:before {
+.c29:hover:before {
   background-color: #98A1C014;
 }
 
-.c30:active:before {
+.c29:active:before {
   background-color: #B8C0DC3d;
 }
 
@@ -523,7 +518,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   margin-top: 4px;
 }
 
-.c34 {
+.c33 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -540,12 +535,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   line-height: 1rem;
 }
 
-.c34 span:hover {
+.c33 span:hover {
   cursor: pointer;
   color: #4a4a4a;
 }
 
-.c35 {
+.c34 {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
@@ -554,7 +549,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   padding: 8px 0px 0px 0px;
 }
 
-.c31 {
+.c30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -570,18 +565,18 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   width: 100%;
 }
 
-.c33 {
+.c32 {
   margin: 0 0.25rem 0 0.35rem;
   height: 35%;
   margin-left: 8px;
 }
 
-.c33 path {
+.c32 path {
   stroke: #222222;
   stroke-width: 2px;
 }
 
-.c32 {
+.c31 {
   margin: 0 0.25rem 0 0.25rem;
   font-size: 20px;
   font-weight: 535;
@@ -618,7 +613,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   position: relative;
 }
 
-.c37 {
+.c36 {
   border-radius: 12px;
   height: 40px;
   width: 40px;
@@ -633,7 +628,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   z-index: 2;
 }
 
-.c37:hover {
+.c36:hover {
   cursor: pointer;
   opacity: 0.8;
 }
@@ -672,11 +667,11 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   border-color: #B8C0DC3d;
 }
 
-.c40 {
+.c39 {
   border-bottom: 1px solid #FFFFFF;
 }
 
-.c38 {
+.c37 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -798,12 +793,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   padding-bottom: 0;
 }
 
-.c6 .c27 {
+.c6 .c26 {
   visibility: hidden;
 }
 
 @media only screen and (max-width:1024px) {
-  .c42 {
+  .c41 {
     opacity: 0;
     pointer-events: none;
     -webkit-transition: opacity 250ms ease-in-out;
@@ -1025,7 +1020,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                     </div>
                   </div>
                   <div
-                    style="display: relative;"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                   >
                     <div
                       class="c19"
@@ -1047,7 +1042,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                             class="c22"
                           >
                             <div
-                              style="display: flex; flex-grow: 1;"
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexGrow-1"
                             >
                               <input
                                 autocomplete="off"
@@ -1064,69 +1059,65 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                 value=""
                               />
                             </div>
-                            <div>
-                              <div
-                                class="c25"
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                            >
+                              <button
+                                class="c25 c26 c27 c28 c29 open-currency-select-button"
+                                data-testid="currency-1-USDC"
                               >
-                                <div>
-                                  <button
-                                    class="c26 c27 c28 c29 c30 open-currency-select-button"
-                                    data-testid="currency-1-USDC"
+                                <span
+                                  class="c30"
+                                >
+                                  <div
+                                    class="c0 c1 c9"
                                   >
-                                    <span
-                                      class="c31"
+                                    <div
+                                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
                                     >
                                       <div
-                                        class="c0 c1 c9"
+                                        class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
+                                        data-testid="token-logo"
                                       >
                                         <div
-                                          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
+                                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-12px _borderTopRightRadius-12px _borderBottomRightRadius-12px _borderBottomLeftRadius-12px"
+                                        />
+                                        <div
+                                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                                          data-testid="img-token-image"
                                         >
-                                          <div
-                                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
-                                            data-testid="token-logo"
-                                          >
-                                            <div
-                                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-12px _borderTopRightRadius-12px _borderBottomRightRadius-12px _borderBottomLeftRadius-12px"
-                                            />
-                                            <div
-                                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                                              data-testid="img-token-image"
-                                            >
-                                              <img
-                                                height="24"
-                                                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                                                style="object-fit: contain; border-radius: 12px; z-index: 1;"
-                                                width="24"
-                                              />
-                                            </div>
-                                          </div>
-                                          <span
-                                            class="c32 token-symbol-container"
-                                          >
-                                            USDC
-                                          </span>
+                                          <img
+                                            height="24"
+                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                                            style="object-fit: contain; border-radius: 12px; z-index: 1;"
+                                            width="24"
+                                          />
                                         </div>
                                       </div>
-                                      <svg
-                                        class="c33"
+                                      <span
+                                        class="c31 token-symbol-container"
                                       >
-                                        dropdown.svg
-                                      </svg>
-                                    </span>
-                                  </button>
-                                </div>
-                              </div>
+                                        USDC
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <svg
+                                    class="c32"
+                                  >
+                                    dropdown.svg
+                                  </svg>
+                                </span>
+                              </button>
                             </div>
                           </div>
                           <div
-                            class="c34 c35"
+                            class="c33 c34"
                           >
                             <div
                               class="c0 c1 c7"
                             >
                               <div
-                                class="c36"
+                                class="c35"
                               />
                               <div
                                 class="c0 c1 c9"
@@ -1154,10 +1145,10 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                       </div>
                     </div>
                     <div
-                      class="c37"
+                      class="c36"
                     >
                       <div
-                        class="c38"
+                        class="c37"
                         color="#222222"
                         data-testid="swap-currency-button"
                       >
@@ -1186,11 +1177,13 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c39"
+                    class="c38"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
-                        class="c19 c40"
+                        class="c19 c39"
                       >
                         <div
                           class="c20"
@@ -1209,7 +1202,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                               class="c22"
                             >
                               <div
-                                style="display: flex; flex-grow: 1;"
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexGrow-1"
                               >
                                 <input
                                   autocomplete="off"
@@ -1226,69 +1219,65 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                   value=""
                                 />
                               </div>
-                              <div>
-                                <div
-                                  class="c25"
+                              <div
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                              >
+                                <button
+                                  class="c25 c26 c27 c28 c29 open-currency-select-button"
+                                  data-testid="currency-1-WETH"
                                 >
-                                  <div>
-                                    <button
-                                      class="c26 c27 c28 c29 c30 open-currency-select-button"
-                                      data-testid="currency-1-WETH"
+                                  <span
+                                    class="c30"
+                                  >
+                                    <div
+                                      class="c0 c1 c9"
                                     >
-                                      <span
-                                        class="c31"
+                                      <div
+                                        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
                                       >
                                         <div
-                                          class="c0 c1 c9"
+                                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
+                                          data-testid="token-logo"
                                         >
                                           <div
-                                            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
+                                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-12px _borderTopRightRadius-12px _borderBottomRightRadius-12px _borderBottomLeftRadius-12px"
+                                          />
+                                          <div
+                                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                                            data-testid="img-token-image"
                                           >
-                                            <div
-                                              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
-                                              data-testid="token-logo"
-                                            >
-                                              <div
-                                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-12px _borderTopRightRadius-12px _borderBottomRightRadius-12px _borderBottomLeftRadius-12px"
-                                              />
-                                              <div
-                                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                                                data-testid="img-token-image"
-                                              >
-                                                <img
-                                                  height="24"
-                                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                                                  style="object-fit: contain; border-radius: 12px; z-index: 1;"
-                                                  width="24"
-                                                />
-                                              </div>
-                                            </div>
-                                            <span
-                                              class="c32 token-symbol-container"
-                                            >
-                                              WETH
-                                            </span>
+                                            <img
+                                              height="24"
+                                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                                              style="object-fit: contain; border-radius: 12px; z-index: 1;"
+                                              width="24"
+                                            />
                                           </div>
                                         </div>
-                                        <svg
-                                          class="c33"
+                                        <span
+                                          class="c31 token-symbol-container"
                                         >
-                                          dropdown.svg
-                                        </svg>
-                                      </span>
-                                    </button>
-                                  </div>
-                                </div>
+                                          WETH
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <svg
+                                      class="c32"
+                                    >
+                                      dropdown.svg
+                                    </svg>
+                                  </span>
+                                </button>
                               </div>
                             </div>
                             <div
-                              class="c34 c35"
+                              class="c33 c34"
                             >
                               <div
                                 class="c0 c1 c7"
                               >
                                 <div
-                                  class="c36"
+                                  class="c35"
                                 />
                                 <div
                                   class="c0 c1 c9"
@@ -1316,9 +1305,11 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                         </div>
                       </div>
                     </div>
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <button
-                        class="c26 c28 c41"
+                        class="c25 c27 c40"
                         data-testid="swap-button"
                         disabled=""
                         id="swap-button"
@@ -1337,7 +1328,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
             </div>
           </div>
           <div
-            class="c42"
+            class="c41"
           />
         </div>
         <div

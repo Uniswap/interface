@@ -76,6 +76,7 @@ export function ActiveLiquidityChart2({
   brushDomain,
   onBrushDomainChange,
   disableBrush,
+  disableRightAxis,
   disableBrushInteraction,
   showDiffIndicators,
   isMobile,
@@ -91,6 +92,7 @@ export function ActiveLiquidityChart2({
     max?: number
   }
   disableBrush?: boolean
+  disableRightAxis?: boolean
   disableBrushInteraction?: boolean
   showDiffIndicators?: boolean
   dimensions: { width: number; height: number; contentWidth: number; axisLabelPaneWidth: number }
@@ -265,18 +267,18 @@ export function ActiveLiquidityChart2({
                 lineStyle="solid"
               />
             )}
-
-            {isMobile || disableBrush ? null : (
-              <AxisRight
-                yScale={yScale}
-                offset={width - contentWidth}
-                min={brushDomain?.[0]}
-                current={current}
-                max={brushDomain?.[1]}
-                height={height}
-              />
-            )}
           </g>
+
+          {isMobile || disableRightAxis ? null : (
+            <AxisRight
+              yScale={yScale}
+              offset={width - axisLabelPaneWidth}
+              min={brushDomain?.[0]}
+              current={current}
+              max={brushDomain?.[1]}
+              height={height}
+            />
+          )}
 
           {!disableBrush && (
             <Brush2

@@ -1,5 +1,7 @@
 /* eslint-disable rulesdir/no-undefined-or */
 import { SwapEventName } from '@uniswap/analytics-events'
+import { popupRegistry } from 'components/Popups/registry'
+import { PopupType } from 'components/Popups/types'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
@@ -7,7 +9,6 @@ import useSelectChain from 'hooks/useSelectChain'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { PopupType, addPopup } from 'state/application/reducer'
 import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
   HandleOnChainStepParams,
@@ -20,12 +21,10 @@ import {
 import { handleWrapStep } from 'state/sagas/transactions/wrapSaga'
 import { VitalTxFields } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
-import { call, put } from 'typed-redux-saga'
+import { call } from 'typed-redux-saga'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -55,6 +54,7 @@ import {
   ValidatedUniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -112,7 +112,7 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
     }),
   )
 
-  yield* put(addPopup({ content: { type: PopupType.Transaction, hash }, key: hash }))
+  popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
 
   return
 }
@@ -309,7 +309,7 @@ export function useSwapCallback(): SwapCallback {
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+  const v4SwapEnabled = useV4SwapEnabled(startChainId)
   const trace = useTrace()
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
@@ -348,7 +348,7 @@ export function useSwapCallback(): SwapCallback {
         setSteps,
         selectChain,
         startChainId,
-        v4Enabled,
+        v4Enabled: v4SwapEnabled,
       }
       appDispatch(swapSaga.actions.trigger(swapParams))
 
@@ -368,6 +368,6 @@ export function useSwapCallback(): SwapCallback {
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [formatter, portfolioBalanceUsd, trace, selectChain, startChainId, v4Enabled, appDispatch, swapStartTimestamp],
+    [formatter, portfolioBalanceUsd, trace, selectChain, startChainId, v4SwapEnabled, appDispatch, swapStartTimestamp],
   )
 }

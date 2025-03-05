@@ -10,7 +10,7 @@ import { breakpoints } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 
-export const MEDIA_WIDTHS = {
+const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
   deprecated_upToSmall: 720,
   deprecated_upToMedium: 960,

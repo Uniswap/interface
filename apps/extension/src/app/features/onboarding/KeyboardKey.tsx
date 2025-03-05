@@ -4,9 +4,9 @@ const MAC_OS_COMMAND_SYMBOL = '⌘'
 const KEY_HEIGHT = 70
 
 enum State {
-  KeyUp,
-  KeyDown,
-  Highlighted,
+  KeyUp = 0,
+  KeyDown = 1,
+  Highlighted = 2,
 }
 
 export interface KeyboardKeyProps {

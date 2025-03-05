@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { LiquidityRangeInput } from 'components/Charts/LiquidityRangeInput/LiquidityRangeInput'
@@ -8,7 +7,7 @@ import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Posit
 import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
 import { CreatePositionInfo, PriceRangeState } from 'pages/Pool/Positions/create/types'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
@@ -20,8 +19,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 enum RangeSelectionInput {
-  MIN,
-  MAX,
+  MIN = 0,
+  MAX = 1,
 }
 
 enum RangeSelection {
@@ -467,6 +466,32 @@ export const SelectPriceRangeStep = ({
     (derivedPositionInfo.creatingPoolOrPair &&
       (!priceRangeState.initialPrice || priceRangeState.initialPrice.length === 0))
 
+  // Setting min/max price to empty string resets them to defaults (0 / Infinity)
+  const setFallbackRangePrices = useCallback(() => {
+    handleChartRangeInput(RangeSelectionInput.MIN, '')
+    handleChartRangeInput(RangeSelectionInput.MAX, '')
+  }, [handleChartRangeInput])
+
+  // If no pool is found for custom range, set min/max price to defaults
+  useEffect(() => {
+    if (
+      !priceRangeState.fullRange &&
+      !derivedPositionInfo.poolId &&
+      priceRangeState.minPrice === undefined &&
+      priceRangeState.maxPrice === undefined
+    ) {
+      setFallbackRangePrices()
+    }
+
+    return undefined
+  }, [
+    priceRangeState.fullRange,
+    priceRangeState.minPrice,
+    priceRangeState.maxPrice,
+    derivedPositionInfo.poolId,
+    setFallbackRangePrices,
+  ])
+
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
     return (
       <>
@@ -578,6 +603,7 @@ export const SelectPriceRangeStep = ({
                 setMaxPrice={(maxPrice?: number) => {
                   handleChartRangeInput(RangeSelectionInput.MAX, maxPrice?.toString())
                 }}
+                setFallbackRangePrices={setFallbackRangePrices}
               />
             )}
           </Flex>

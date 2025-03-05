@@ -61,7 +61,7 @@ export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenB
   },
 )
 
-export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
+const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
   function _TokenBalanceListInner(
     {
       empty,

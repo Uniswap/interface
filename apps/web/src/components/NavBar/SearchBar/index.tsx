@@ -187,6 +187,7 @@ export const SearchBar = ({
     keys: ['Escape'],
     keyAction: KeyAction.UP,
     disabled: !isOpen,
+    shouldTriggerInInput: true,
   })
 
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue)

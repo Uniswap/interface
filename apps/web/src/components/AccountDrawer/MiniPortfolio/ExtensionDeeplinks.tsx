@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'

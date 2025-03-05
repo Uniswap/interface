@@ -7,10 +7,6 @@ export interface ReduxEnhancerConfig {
   shouldLogReduxState: (state: any) => boolean
 }
 
-export function setupDatadog(_envNameFunc: () => string): void {
-  throw new PlatformSplitStubError('setupDatadog')
-}
-
 export function createDatadogReduxEnhancer(
   _config: ReduxEnhancerConfig,
 ): (next: StoreEnhancerStoreCreator) => StoreEnhancerStoreCreator {

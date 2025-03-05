@@ -4,6 +4,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ArbitrumXV2SamplingProperties, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 
 export const DEFAULT_PROTOCOL_OPTIONS = [
   // `as const` allows us to derive a type narrower than ProtocolItems, and the `...` spread removes readonly, allowing DEFAULT_PROTOCOL_OPTIONS to be passed around as an argument without `readonly`
@@ -29,7 +30,8 @@ export function useProtocolsForChain(
 
   const uniswapXAllowedForChain =
     (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbUniswapXAllowed
-  const v4SwapAllowed = useFeatureFlag(FeatureFlags.V4Swap)
+  const v4SwapAllowed = useV4SwapEnabled(chainId)
+
   return useMemo(() => {
     let protocols: ProtocolItems[] = [...userSelectedProtocols]
     // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain

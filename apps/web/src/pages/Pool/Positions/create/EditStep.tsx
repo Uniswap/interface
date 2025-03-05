@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
-
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'

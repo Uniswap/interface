@@ -7845,4 +7845,34 @@
     <lastmod>2025-02-21T22:13:19.661Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0xc8219b876753a85025156b22176c2edea17aac53</loc>
+    <lastmod>2025-02-28T19:25:37.553Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/arbitrum/0x27807dd7adf218e1f4d885d54ed51c70efb9de50</loc>
+    <lastmod>2025-02-28T19:25:37.553Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x1d69099803b4580efb8df0c7ef083e550a1c42c1</loc>
+    <lastmod>2025-02-28T19:25:37.553Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0xec558e484cc9f2210714e345298fdc53b253c27d</loc>
+    <lastmod>2025-02-28T19:25:37.553Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x37bb450b17721c6720040a150029e504766e9777</loc>
+    <lastmod>2025-02-28T19:25:37.553Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x4cd04970dcad72d09c3af2e09f15bbcd2eb1d5d4</loc>
+    <lastmod>2025-02-28T19:25:37.553Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

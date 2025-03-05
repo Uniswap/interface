@@ -75,7 +75,7 @@ const InfoContainer = ({
   const [isOpen, setIsOpen] = useState(!!defaultOpen)
 
   return (
-    <div>
+    <>
       <Header {...props} isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
         <PrimaryHeader>
           {primaryHeader} <SecondaryHeader>{secondaryHeader}</SecondaryHeader>
@@ -83,7 +83,7 @@ const InfoContainer = ({
         <SecondaryHeaderContainer>{isOpen ? <ChevronUp /> : <ChevronDown />}</SecondaryHeaderContainer>
       </Header>
       {isOpen && <ContentContainer>{children}</ContentContainer>}
-    </div>
+    </>
   )
 }
 

@@ -6,8 +6,6 @@ import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
 import { useTheme } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export type TabsSection = {
   title: string
@@ -24,7 +22,6 @@ export type TabsItem = MenuItem & {
 
 export const useTabsContent = (): TabsSection[] => {
   const { t } = useTranslation()
-  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const { pathname } = useLocation()
   const theme = useTheme()
 
@@ -81,19 +78,19 @@ export const useTabsContent = (): TabsSection[] => {
     },
     {
       title: t('common.pool'),
-      href: isLPRedesignEnabled ? '/positions' : '/pool',
-      isActive: pathname.startsWith('/pool'),
+      href: '/positions',
+      isActive: pathname.startsWith('/positions'),
       items: [
         {
           label: t('nav.tabs.viewPositions'),
           quickKey: 'V',
-          href: isLPRedesignEnabled ? '/positions' : '/pool',
+          href: '/positions',
           internal: true,
         },
         {
           label: t('nav.tabs.createPosition'),
           quickKey: 'V',
-          href: isLPRedesignEnabled ? '/positions/create' : '/add',
+          href: '/positions/create',
           internal: true,
         },
       ],

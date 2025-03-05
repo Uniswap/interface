@@ -88,7 +88,7 @@ const TransactionSettingsModalContent = ({
       )}
       {screen}
       {shouldShowCloseButton && (
-        <Flex centered row pb={isWebSmallScreen ? '$spacing24' : '$spacing8'}>
+        <Flex centered row pb={isExtension ? '$none' : isWebSmallScreen ? '$spacing24' : '$spacing16'}>
           <DeprecatedButton fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
             {SelectedSetting?.renderCloseButtonText
               ? SelectedSetting.renderCloseButtonText(t)

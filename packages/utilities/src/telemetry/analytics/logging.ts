@@ -1,6 +1,6 @@
 import { isNonJestDev } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 
 interface ErrorLoggers {

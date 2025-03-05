@@ -12,5 +12,6 @@ export function SkeletonBox({
   height: number | string
   borderRadius?: string
 }): JSX.Element {
+  // eslint-disable-next-line react/forbid-elements
   return <div className="skeleton-box" style={{ width, height, borderRadius }} />
 }

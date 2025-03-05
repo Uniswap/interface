@@ -118,6 +118,7 @@ export type GasStrategies = {
 export enum MainnetPrivateRpcConfigKey {
   UseFlashbots = 'use_flashbots',
   FlashbotsBlockRange = 'flashbots_block_range',
+  FlashbotsRefundPercent = 'flashbots_refund_percent',
   SendFlashbotsAuthenticationHeader = 'send_authentication_header',
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unused-modules */
 import { EthereumRpcErrorSchema } from 'src/app/features/dappRequests/types/ErrorTypes'
 import {
   EthersTransactionRequestSchema,
@@ -42,19 +43,14 @@ export enum DappResponseType {
   UniswapOpenSidebarResponse = 'UniswapOpenSidebarResponse',
 }
 
-export enum UniswapOpenSidebarTab {
-  Activity = 'activity',
-  Tokens = 'tokens',
-}
-
 // SCHEMAS + TYPES
 
-export const BaseDappRequestSchema = MessageSchema.extend({
+const BaseDappRequestSchema = MessageSchema.extend({
   requestId: z.string(),
   type: z.nativeEnum(DappRequestType),
 })
 
-export const BaseDappResponseSchema = MessageSchema.extend({
+const BaseDappResponseSchema = MessageSchema.extend({
   requestId: z.string(),
   type: z.nativeEnum(DappResponseType),
 })
@@ -111,7 +107,6 @@ export type ApproveSendTransactionRequest = z.infer<typeof ApproveSendTransactio
 const ContractInteractionSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
   contractInteractions: z.literal(EthSendTransactionRPCActions.ContractInteraction),
 })
-export type ContractInteractionSendTransactionRequest = z.infer<typeof ContractInteractionSendTransactionRequestSchema>
 
 const SwapSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
   contractInteractions: z.literal(EthSendTransactionRPCActions.Swap),
@@ -122,7 +117,6 @@ export type SwapSendTransactionRequest = z.infer<typeof SwapSendTransactionReque
 const WrapSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
   contractInteractions: z.literal(EthSendTransactionRPCActions.Wrap),
 })
-export type WrapSendTransactionRequest = z.infer<typeof WrapSendTransactionRequestSchema>
 
 const LPSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
   contractInteractions: z.literal(EthSendTransactionRPCActions.LP),
@@ -133,9 +127,6 @@ export type LPSendTransactionRequest = z.infer<typeof LPSendTransactionRequestSc
 const UnknownContractInteractionSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
   contractInteractions: z.literal(EthSendTransactionRPCActions.Unknown).optional(),
 })
-export type UnknownContractInteractionSendTransactionRequest = z.infer<
-  typeof UnknownContractInteractionSendTransactionRequestSchema
->
 
 export const SendTransactionRequestSchema = z.union([
   ApproveSendTransactionRequestSchema,
@@ -278,7 +269,7 @@ export const DappRequestSchema = z.union([
   UniswapOpenSidebarRequestSchema,
 ])
 
-export const DappResponseSchema = z.union([
+const DappResponseSchema = z.union([
   AccountResponseSchema,
   ChangeChainResponseSchema,
   ChainIdResponseSchema,
@@ -293,7 +284,7 @@ export const DappResponseSchema = z.union([
 ])
 
 export type DappRequest = z.infer<typeof DappRequestSchema>
-export type DappResponse = z.infer<typeof DappResponseSchema>
+type DappResponse = z.infer<typeof DappResponseSchema>
 
 // VALIDATORS / UTILS
 

@@ -16,7 +16,6 @@ import { migration6 } from 'state/migrations/6'
 import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 
 const previousState: PersistAppStateV17 = {
@@ -34,7 +33,6 @@ const previousState: PersistAppStateV17 = {
         name: 'Ethereum',
         symbol: 'ETH',
         logoUrl: 'https://token-icons.s3.amazonaws.com/eth.png',
-        safetyLevel: SafetyLevel.Verified,
         searchId: 'token-1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
       },
       // navbar saved native asset
@@ -45,7 +43,6 @@ const previousState: PersistAppStateV17 = {
         address: null,
         name: 'Ethereum',
         logoUrl: 'https://token-icons.s3.amazonaws.com/eth.png',
-        safetyLevel: SafetyLevel.Verified,
         searchId: 'token-1-null',
       },
       // token selector saved token
@@ -56,7 +53,6 @@ const previousState: PersistAppStateV17 = {
         address: '0xaf88d065e77c8cc2239327c5edb3a432268e5831',
         name: 'USD Coin',
         logoUrl: 'https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694',
-        safetyLevel: SafetyLevel.Verified,
         searchId: 'token-42161-0xaf88d065e77c8cc2239327c5edb3a432268e5831',
       },
       // navbar saved nft collection
@@ -108,7 +104,6 @@ describe('migration to v17', () => {
         address: null,
         name: 'Ethereum',
         logoUrl: 'https://token-icons.s3.amazonaws.com/eth.png',
-        safetyLevel: SafetyLevel.Verified,
         searchId: 'token-1-null',
       },
       {
@@ -118,7 +113,6 @@ describe('migration to v17', () => {
         address: '0xaf88d065e77c8cc2239327c5edb3a432268e5831',
         name: 'USD Coin',
         logoUrl: 'https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694',
-        safetyLevel: SafetyLevel.Verified,
         searchId: 'token-42161-0xaf88d065e77c8cc2239327c5edb3a432268e5831',
       },
       {

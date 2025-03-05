@@ -10,6 +10,7 @@ import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
@@ -35,6 +36,7 @@ describe('PoolDetailsStatsButton', () => {
     token0: validBEPoolToken0,
     token1: validBEPoolToken1,
     feeTier: 500,
+    protocolVersion: ProtocolVersion.V3,
   } as const
 
   const mockPropsTokensReversed = {
@@ -118,7 +120,7 @@ describe('PoolDetailsStatsButton', () => {
 
     await userEvent.click(screen.getByTestId('pool-details-add-liquidity-button'))
     expect(globalThis.window.location.href).toContain(
-      '/add/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/500',
+      '/positions/create/v3?currencyA=0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&currencyB=0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&chain=ethereum',
     )
   })
 })

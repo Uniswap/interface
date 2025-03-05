@@ -1,8 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import multicall from 'lib/state/multicall'
 import application from 'state/application/reducer'
-import burn from 'state/burn/reducer'
-import burnV3 from 'state/burn/v3/reducer'
 import fiatOnRampTransactions from 'state/fiatOnRampTransactions/reducer'
 import lists from 'state/lists/reducer'
 import logs from 'state/logs/slice'
@@ -27,8 +25,6 @@ const interfaceReducers = {
   wallets,
   mint,
   mintV3,
-  burn,
-  burnV3,
   multicall: multicall.reducer,
   logs,
   [routingApi.reducerPath]: routingApi.reducer,

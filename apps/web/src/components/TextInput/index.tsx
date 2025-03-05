@@ -1,5 +1,6 @@
 import styled from 'lib/styled-components'
 import { ChangeEvent, memo, useCallback, useRef } from 'react'
+import { Flex } from 'ui/src'
 
 const Input = styled.input<{ error?: boolean; fontSize?: string }>`
   font-size: ${({ fontSize }) => fontSize || '1.25rem'};
@@ -84,7 +85,7 @@ export const TextInput = ({
   )
 
   return (
-    <div className={className}>
+    <Flex className={className}>
       <Input
         type="text"
         autoComplete="off"
@@ -96,7 +97,7 @@ export const TextInput = ({
         value={value}
         fontSize={fontSize}
       />
-    </div>
+    </Flex>
   )
 }
 

@@ -1,6 +1,5 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES, type Currency } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'

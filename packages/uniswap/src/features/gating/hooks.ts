@@ -10,6 +10,7 @@ import {
   useGate,
   useGateWithExposureLoggingDisabled,
 } from 'uniswap/src/features/gating/sdk/statsig'
+import { logger } from 'utilities/src/logger/logger'
 
 export function useFeatureFlag(flag: FeatureFlags): boolean {
   const name = getFeatureFlagName(flag)
@@ -24,8 +25,14 @@ export function useFeatureFlagWithLoading(flag: FeatureFlags): { value: boolean;
 }
 
 export function getFeatureFlag(flag: FeatureFlags): boolean {
-  const name = getFeatureFlagName(flag)
-  return Statsig.checkGate(name)
+  try {
+    const name = getFeatureFlagName(flag)
+    const result = Statsig.checkGate(name)
+    return result
+  } catch (e) {
+    logger.debug('gating/hooks.ts', 'getFeatureFlag', JSON.stringify({ e }))
+    return false
+  }
 }
 
 export function useFeatureFlagWithExposureLoggingDisabled(flag: FeatureFlags): boolean {

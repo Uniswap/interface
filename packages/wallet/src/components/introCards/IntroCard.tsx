@@ -25,15 +25,15 @@ import {
 import { isExtension } from 'utilities/src/platform'
 
 export enum CardType {
-  Default,
-  Required,
-  Dismissible,
-  Swipe,
+  Default = 0,
+  Required = 1,
+  Dismissible = 2,
+  Swipe = 3,
 }
 
 export enum IntroCardGraphicType {
-  Icon,
-  Image,
+  Icon = 0,
+  Image = 1,
 }
 
 type IconGraphic = {

@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Token } from '@uniswap/sdk-core'
 import { PriceChartData } from 'components/Charts/PriceChart'
