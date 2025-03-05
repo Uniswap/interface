@@ -61,9 +61,9 @@
     "redux-saga": "1.2.2",
     "redux-saga-test-plan": "4.0.4",
     "typed-redux-saga": "1.5.0",
-    "ui": "workspace:^",
-    "uniswap": "workspace:^",
-    "utilities": "workspace:^",
+    "ui": "0.0.0",
+    "uniswap": "0.0.1",
+    "utilities": "1.0.6",
     "zod": "3.22.4",
     "zxcvbn": "4.4.2"
   },
