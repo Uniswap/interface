@@ -15,7 +15,7 @@
     "@ethersproject/abstract-signer": "5.7.0",
     "@ethersproject/constants": "5.7.0",
     "@ethersproject/contracts": "5.7.0",
-    "@ethersproject/providers": "5.7.2",
+    "@ethersproject/providers": "5.8.0",
     "@gorhom/bottom-sheet": "4.6.4",
     "@react-native-firebase/app": "21.7.2",
     "@react-native-firebase/app-check": "21.0.0",
