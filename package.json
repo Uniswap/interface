@@ -19,7 +19,7 @@
     "prettier": "3.3.2",
     "prettier-plugin-organize-imports": "3.2.4",
     "syncpack": "8.5.14",
-    "turbo": "1.13.4",
+    "turbo": "2.4.2",
     "turbo-ignore": "1.11.3"
   },
   "engines": {
