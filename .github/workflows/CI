@@ -1,0 +1,24 @@
+name: Git-Secrets Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  git-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install git-secrets
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-secrets
+
+      - name: Register AWS patterns
+        run: git secrets --register-aws
+
+      - name: Run git-secrets scan
+        run: git secrets --scan -r .
