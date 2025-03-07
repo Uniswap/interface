@@ -15,8 +15,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 
 enum ViewStep {
-  Info = 0,
-  View = 1,
+  Info,
+  View,
 }
 
 export function ViewMnemonic(): JSX.Element {

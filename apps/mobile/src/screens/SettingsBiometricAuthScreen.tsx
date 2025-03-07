@@ -19,9 +19,9 @@ import {
   setRequiredForAppAccess,
   setRequiredForTransactions,
 } from 'src/features/biometricsSettings/slice'
-import { openSettings } from 'src/utils/linking'
 import { Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { isAndroid, isIOS } from 'utilities/src/platform'
+import { openSettings } from 'wallet/src/utils/linking'
 
 interface BiometricAuthSetting {
   onValueChange: (newValue: boolean) => void

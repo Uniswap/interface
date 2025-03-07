@@ -1,18 +1,23 @@
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { NotifSettingType } from 'src/features/notifications/constants'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { usePromptPushPermission } from 'src/features/notifications/hooks/usePromptPushPermission'
 import { selectAllPushNotificationSettings } from 'src/features/notifications/selectors'
-import { showNotificationSettingsAlert } from 'src/features/notifications/showNotificationSettingsAlert'
 import { updateNotifSettings } from 'src/features/notifications/slice'
-import { waitFrame } from 'utilities/src/react/delayUtils'
+import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
+
+// Wait for next frame to ensure UI updates without flashing
+// https://corbt.com/posts/2015/12/22/breaking-up-heavy-processing-in-react-native.html
+const waitFrame = async (): Promise<void> => {
+  await new Promise(requestAnimationFrame)
+}
 
 enum NotificationError {
   OsPermissionDenied = 'OS_PERMISSION_DENIED',
@@ -136,7 +141,7 @@ function useBaseNotificationToggle({
 
   // Optimistic UI state
   const [optimisticEnabled, setOptimisticEnabled] = useState<boolean>(isEnabled)
-  const promptPushPermission = usePromptPushPermission()
+
   // Helper to handle OS permission request and state update
   const requestOSPermissions = useCallback(async (): Promise<true> => {
     const granted = await promptPushPermission()
@@ -148,7 +153,7 @@ function useBaseNotificationToggle({
       throw new Error(NotificationError.OsPermissionDenied)
     }
     return true
-  }, [onToggle, promptPushPermission])
+  }, [onToggle])
 
   // Reset optimistic state if real state changes
   useEffect(() => {

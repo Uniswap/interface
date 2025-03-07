@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool as V3Pool, tickToPrice } from '@uniswap/v3-sdk'
@@ -154,7 +155,6 @@ export function usePoolActiveLiquidity({
   tickSpacing,
   hooks,
   poolId,
-  skip,
 }: {
   poolId?: string
   currencyA?: Currency
@@ -164,7 +164,6 @@ export function usePoolActiveLiquidity({
   chainId?: UniverseChainId
   tickSpacing?: number
   hooks?: string
-  skip?: boolean
 }): {
   isLoading: boolean
   error: any
@@ -176,7 +175,7 @@ export function usePoolActiveLiquidity({
 } {
   const multichainContext = useMultichainContext()
   const defaultChainId = multichainContext.chainId ?? UniverseChainId.Mainnet
-  const poolsQueryEnabled = Boolean(poolEnabledProtocolVersion(version) && currencyA && currencyB && !skip)
+  const poolsQueryEnabled = Boolean(poolEnabledProtocolVersion(version) && currencyA && currencyB)
   const { data: poolData, isLoading: poolIsLoading } = useGetPoolsByTokens(
     {
       fee: feeAmount,

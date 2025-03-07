@@ -1,7 +1,6 @@
 import { NativeSyntheticEvent, Share } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import configureMockStore from 'redux-mock-store'
-import { thunk } from 'redux-thunk'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { renderHookWithProviders } from 'src/test/render'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -20,7 +19,7 @@ const resolvers: Resolvers = {
   },
 }
 
-const mockStore = configureMockStore([thunk])
+const mockStore = configureMockStore()
 
 describe(useExploreTokenContextMenu, () => {
   const tokenMenuParams = {
@@ -146,10 +145,12 @@ describe(useExploreTokenContextMenu, () => {
       } as NativeSyntheticEvent<ContextMenuOnPressNativeEvent>)
 
       const dispatchedActions = store.getActions()
-      expect(dispatchedActions).toContainEqual({
-        type: 'favorites/addFavoriteToken',
-        payload: { currencyId: tokenMenuParams.currencyId },
-      })
+      expect(dispatchedActions).toEqual([
+        {
+          type: 'favorites/addFavoriteToken',
+          payload: { currencyId: tokenMenuParams.currencyId },
+        },
+      ])
       cleanup()
     })
 
@@ -172,10 +173,12 @@ describe(useExploreTokenContextMenu, () => {
       } as NativeSyntheticEvent<ContextMenuOnPressNativeEvent>)
 
       const dispatchedActions = store.getActions()
-      expect(dispatchedActions).toContainEqual({
-        type: 'favorites/removeFavoriteToken',
-        payload: { currencyId: tokenMenuParams.currencyId },
-      })
+      expect(dispatchedActions).toEqual([
+        {
+          type: 'favorites/removeFavoriteToken',
+          payload: { currencyId: tokenMenuParams.currencyId },
+        },
+      ])
       cleanup()
     })
   })
@@ -197,22 +200,24 @@ describe(useExploreTokenContextMenu, () => {
     } as NativeSyntheticEvent<ContextMenuOnPressNativeEvent>)
 
     const dispatchedActions = store.getActions()
-    expect(dispatchedActions).toContainEqual({
-      type: 'modals/openModal',
-      payload: {
-        name: 'swap-modal',
-        initialState: {
-          exactAmountToken: '',
-          exactCurrencyField: 'input',
-          [CurrencyField.INPUT]: null,
-          [CurrencyField.OUTPUT]: {
-            chainId: 1,
-            address: tokenId,
-            type: 'currency',
+    expect(dispatchedActions).toEqual([
+      {
+        type: 'modals/openModal',
+        payload: {
+          name: 'swap-modal',
+          initialState: {
+            exactAmountToken: '',
+            exactCurrencyField: 'input',
+            [CurrencyField.INPUT]: null,
+            [CurrencyField.OUTPUT]: {
+              chainId: 1,
+              address: tokenId,
+              type: 'currency',
+            },
           },
         },
       },
-    })
+    ])
     cleanup()
   })
 

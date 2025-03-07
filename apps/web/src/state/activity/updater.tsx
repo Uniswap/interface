@@ -1,11 +1,12 @@
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback } from 'react'
 import { usePollPendingBridgeTransactions } from 'state/activity/polling/bridge'
 import { usePollPendingOrders } from 'state/activity/polling/orders'
 import { usePollPendingTransactions } from 'state/activity/polling/transactions'
+import { useOnAssetActivity } from 'state/activity/subscription'
 import { ActivityUpdate, OnActivityUpdate } from 'state/activity/types'
+import { useAddPopup } from 'state/application/hooks'
+import { PopupType } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { updateSignature } from 'state/signatures/reducer'
 import { SignatureType } from 'state/signatures/types'
@@ -21,10 +22,16 @@ export function ActivityStateUpdater() {
   const onActivityUpdate = useOnActivityUpdate()
   return (
     <>
+      <SubscriptionActivityStateUpdater onActivityUpdate={onActivityUpdate} />
       {/* The polling updater is present to update activity states for chains that are not supported by the subscriptions service. */}
       <PollingActivityStateUpdater onActivityUpdate={onActivityUpdate} />
     </>
   )
+}
+
+function SubscriptionActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: OnActivityUpdate }) {
+  useOnAssetActivity(onActivityUpdate)
+  return null
 }
 
 function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: OnActivityUpdate }) {
@@ -36,6 +43,7 @@ function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: O
 
 function useOnActivityUpdate(): OnActivityUpdate {
   const dispatch = useAppDispatch()
+  const addPopup = useAddPopup()
   const analyticsContext = useTrace()
 
   return useCallback(
@@ -70,7 +78,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
           )
         }
 
-        popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
+        addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
       } else if (activity.type === 'signature') {
         const { chainId, original, update } = activity
 
@@ -90,7 +98,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
           const from = original.offerer
           // Add a transaction in addition to updating signature for filled orders
           dispatch(addTransaction({ chainId, from, hash, info: updatedOrder.swapInfo }))
-          popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
+          addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
 
           // Only track swap success for non-limit orders; limit order fill-time will throw off time tracking analytics
           if (original.type !== SignatureType.SIGN_LIMIT) {
@@ -105,7 +113,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
           }
         } else if (original.status !== updatedOrder.status) {
           const orderHash = original.orderHash
-          popupRegistry.addPopup({ type: PopupType.Order, orderHash }, orderHash, popupDismissalTime)
+          addPopup({ type: PopupType.Order, orderHash }, orderHash, popupDismissalTime)
 
           if (
             updatedOrder.status === UniswapXOrderStatus.CANCELLED ||
@@ -123,6 +131,6 @@ function useOnActivityUpdate(): OnActivityUpdate {
         }
       }
     },
-    [analyticsContext, dispatch],
+    [addPopup, analyticsContext, dispatch],
   )
 }

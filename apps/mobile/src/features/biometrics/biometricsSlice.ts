@@ -6,7 +6,6 @@ import { BiometricAuthenticationStatus } from 'src/features/biometrics/biometric
 // Biometrics State
 //------------------------------------------------------------------------------------------------
 
-// eslint-disable-next-line import/no-unused-modules
 export interface BiometricsState {
   authenticationStatus: BiometricAuthenticationStatus
   deviceSupportsBiometrics: boolean | undefined
@@ -27,9 +26,12 @@ export interface TriggerAuthenticationPayload<T = unknown> {
   onSuccess?: (params?: T) => void
   onFailure?: () => void
   params?: T
+  // if true, show an alert when authentication fails
+  // useful for when the user is trying to unlock the app
+  showAlert?: boolean
 }
 
-const biometricsSlice = createSlice({
+export const biometricsSlice = createSlice({
   name: 'biometrics',
   initialState,
   reducers: {
@@ -62,6 +64,7 @@ export const {
   setDeviceSupportsBiometrics,
   setIsEnrolled,
   setSupportedAuthenticationTypes,
+  invalidateAuthentication,
   triggerAuthentication,
 } = biometricsSlice.actions
 
@@ -74,13 +77,18 @@ export const biometricsReducer = biometricsSlice.reducer
 export const selectDeviceSupportsBiometrics = (state: { biometrics: BiometricsState }): boolean | undefined =>
   state.biometrics.deviceSupportsBiometrics
 
-const selectIsEnrolled = (state: { biometrics: BiometricsState }): boolean | undefined => state.biometrics.isEnrolled
+export const selectIsEnrolled = (state: { biometrics: BiometricsState }): boolean | undefined =>
+  state.biometrics.isEnrolled
 
-const selectSupportedAuthenticationTypes = (state: { biometrics: BiometricsState }): AuthenticationType[] | undefined =>
-  state.biometrics.supportedAuthenticationTypes
+export const selectSupportedAuthenticationTypes = (state: {
+  biometrics: BiometricsState
+}): AuthenticationType[] | undefined => state.biometrics.supportedAuthenticationTypes
 
 export const selectAuthenticationStatus = (state: { biometrics: BiometricsState }): BiometricAuthenticationStatus =>
   state.biometrics.authenticationStatus
+
+export const selectLastAuthenticationTime = (state: { biometrics: BiometricsState }): number | undefined =>
+  state.biometrics.lastAuthenticationTime
 
 export const selectAuthenticationStatusIsAuthenticated = (state: { biometrics: BiometricsState }): boolean =>
   selectAuthenticationStatus(state) === BiometricAuthenticationStatus.Authenticated

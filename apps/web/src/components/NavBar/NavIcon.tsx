@@ -1,23 +1,28 @@
+import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, styled } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 
-const Container = styled(Flex, {
-  animation: 'fast',
-  position: 'relative',
-  centered: true,
-  backgroundColor: '$surface1',
-  borderWidth: '$none',
-  borderRadius: '$roundedFull',
-  zIndex: zIndexes.default,
-  hoverStyle: { backgroundColor: '$surface1Hovered' },
-  variants: {
-    active: {
-      true: { backgroundColor: '$surface1Hovered' },
-    },
-  },
-})
+const Container = styled.div<{ $size: number; $isActive: boolean }>`
+  position: relative;
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 250ms;
+  z-index: 1;
+  background-color: ${({ $isActive, theme }) => ($isActive ? theme.surface1Hovered : 'transparent')};
+  color: ${({ theme }) => theme.neutral2};
+  border-radius: 50%;
+  &:hover {
+    background-color: ${({ theme }) => theme.surface1Hovered};
+  }
+`
 
 interface NavIconProps {
   children: ReactNode
@@ -30,14 +35,9 @@ interface NavIconProps {
 export const NavIcon = ({ children, isActive = false, size = 40, label, onClick }: NavIconProps) => {
   const { t } = useTranslation()
   const labelWithDefault = label ?? t('common.navigationButton')
-
   return (
-    <TouchableArea onPress={onClick} aria-label={labelWithDefault}>
-      <Container width={size} height={size} active={isActive}>
-        <Text color="$neutral2" textAlign="center" lineHeight={12}>
-          {children}
-        </Text>
-      </Container>
-    </TouchableArea>
+    <Container $size={size} $isActive={isActive} onClick={onClick} aria-label={labelWithDefault}>
+      {children}
+    </Container>
   )
 }

@@ -60,7 +60,7 @@ export default function TopLevelModals() {
 
   return (
     <>
-      <AddressClaimModal isOpen={addressClaimOpen} connectedAddress={account.address} onDismiss={addressClaimToggle} />
+      <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
       <ConnectedAccountBlocked account={account.address} isOpen={accountBlocked} />
       <Bag />
       <UniwalletModal />

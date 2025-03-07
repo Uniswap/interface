@@ -1,11 +1,9 @@
-/* eslint-disable max-lines */
 /* eslint-disable complexity */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { RefObject, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
+// eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChangeEventData } from 'react-native'
 import { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
 import { Flex, FlexProps, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -22,10 +20,7 @@ import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -105,13 +100,10 @@ export const CurrencyInputPanel = memo(
         ...rest
       } = props
 
-      const dispatch = useDispatch()
-      const { t } = useTranslation()
       const colors = useSporeColors()
       const account = useAccountMeta()
       const isShortMobileDevice = useIsShortMobileDevice()
       const { formatCurrencyAmount } = useLocalizationContext()
-      const { symbol: fiatCurrencySymbol, code: fiatCurrencyCode } = useAppFiatCurrencyInfo()
 
       const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
       const indicativeDisplay = useIndicativeTextDisplay(props)
@@ -146,21 +138,9 @@ export const CurrencyInputPanel = memo(
       const showInsufficientBalanceWarning =
         !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
-      const { price: usdPrice } = useUSDCPrice(currencyInfo?.currency)
-
       const _onToggleIsFiatMode = useCallback(() => {
-        if (!usdPrice) {
-          dispatch(
-            pushNotification({
-              type: AppNotificationType.Error,
-              errorMessage: t('swap.error.fiatInputUnavailable', { fiatCurrencyCode }),
-              hideDelay: ONE_SECOND_MS * 3,
-            }),
-          )
-        } else {
-          onToggleIsFiatMode(currencyField)
-        }
-      }, [currencyField, dispatch, fiatCurrencyCode, onToggleIsFiatMode, t, usdPrice])
+        onToggleIsFiatMode(currencyField)
+      }, [currencyField, onToggleIsFiatMode])
 
       // For native mobile, given that we're using a custom `DecimalPad`,
       // the input's focus state can sometimes be out of sync with the controlled `focus` prop.
@@ -238,6 +218,8 @@ export const CurrencyInputPanel = memo(
         onPressDisabled?.()
         triggerShakeAnimation()
       }, [onPressDisabled, triggerShakeAnimation])
+
+      const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
       const handleSetMax = useCallback(
         (amount: string) => {

@@ -1,11 +1,20 @@
 /* eslint-disable max-lines */
 import { useApolloClient } from '@apollo/client'
-import { useIsFocused } from '@react-navigation/native'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useIsFocused, useScrollToTop } from '@react-navigation/native'
+import { FlashList } from '@shopify/flash-list'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Freeze } from 'react-freeze'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, View, ViewProps, ViewStyle } from 'react-native'
-import Animated, { FadeIn, interpolateColor, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
+import { FlatList, StyleProp, View, ViewProps, ViewStyle } from 'react-native'
+import Animated, {
+  FadeIn,
+  interpolateColor,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+} from 'react-native-reanimated'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
@@ -35,28 +44,38 @@ import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { DevAIAssistantOverlay } from 'src/features/openai/DevAIGate'
 import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { HomeScreenQuickActions } from 'src/screens/HomeScreen/HomeScreenQuickActions'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
-import { useHomeScrollRefs } from 'src/screens/HomeScreen/useHomeScrollRefs'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
-import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { Flex, GeneratedIcon, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { ArrowDownCircle, Bank, Buy, SendAction } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { spacing } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
-import { ModalName, SectionName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import {
+  ElementName,
+  ElementNameType,
+  MobileEventName,
+  ModalName,
+  SectionName,
+  SectionNameType,
+} from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
+import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -154,21 +173,40 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     setIsLayoutReady(true)
   }, [])
 
-  const {
-    tokensTabScrollValue,
-    nftsTabScrollValue,
-    activityTabScrollValue,
-    exploreTabScrollValue,
-    tokensTabScrollHandler,
-    nftsTabScrollHandler,
-    activityTabScrollHandler,
-    exploreTabScrollHandler,
-    tokensTabScrollRef,
-    nftsTabScrollRef,
-    activityTabScrollRef,
-    exploreTabScrollRef,
-    resetScrollState,
-  } = useHomeScrollRefs()
+  // IMPORTANT: We must manually pass a dependency array to `useAnimatedScrollHandler`
+  //            because the reanimated babel plugin is not automatically injecting these.
+
+  const tokensTabScrollValue = useSharedValue(0)
+  const tokensTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (tokensTabScrollValue.value = event.contentOffset.y),
+    [tokensTabScrollValue],
+  )
+
+  const nftsTabScrollValue = useSharedValue(0)
+  const nftsTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (nftsTabScrollValue.value = event.contentOffset.y),
+    [nftsTabScrollValue],
+  )
+
+  const activityTabScrollValue = useSharedValue(0)
+  const activityTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (activityTabScrollValue.value = event.contentOffset.y),
+    [activityTabScrollValue],
+  )
+
+  const exploreTabScrollValue = useSharedValue(0)
+  const exploreTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (exploreTabScrollValue.value = event.contentOffset.y),
+    [exploreTabScrollValue],
+  )
+
+  const tokensTabScrollRef = useAnimatedRef<FlatList<TokenBalanceListRow>>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const nftsTabScrollRef = useAnimatedRef<FlashList<any>>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const activityTabScrollRef = useAnimatedRef<FlatList<any>>()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const exploreTabScrollRef = useAnimatedRef<FlatList<any>>()
 
   const currentScrollValue = useDerivedValue(() => {
     if (showEmptyWalletState) {
@@ -200,11 +238,50 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   // If accounts are switched, we want to scroll to top and show full header
   useEffect(() => {
-    resetScrollState()
-  }, [activeAccount, resetScrollState])
+    nftsTabScrollValue.value = 0
+    tokensTabScrollValue.value = 0
+    activityTabScrollValue.value = 0
+    exploreTabScrollValue.value = 0
+    nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+    tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+    activityTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+    exploreTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+  }, [
+    activeAccount,
+    activityTabScrollRef,
+    activityTabScrollValue,
+    exploreTabScrollRef,
+    exploreTabScrollValue,
+    nftsTabScrollRef,
+    nftsTabScrollValue,
+    tokensTabScrollRef,
+    tokensTabScrollValue,
+  ])
 
   // Need to create a derived value for tab index so it can be referenced from a static ref
   const currentTabIndex = useDerivedValue(() => tabIndex, [tabIndex])
+  const isNftTabsAtTop = useDerivedValue(() => nftsTabScrollValue.value === 0)
+  const isActivityTabAtTop = useDerivedValue(() => activityTabScrollValue.value === 0)
+
+  useScrollToTop(
+    useRef({
+      scrollToTop: () => {
+        if (showEmptyWalletState) {
+          exploreTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+        } else if (currentTabIndex.value === HomeScreenTabIndex.NFTs && isNftTabsAtTop.value) {
+          setRouteTabIndex(HomeScreenTabIndex.Tokens)
+        } else if (currentTabIndex.value === HomeScreenTabIndex.NFTs) {
+          nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+        } else if (currentTabIndex.value === HomeScreenTabIndex.Activity && isActivityTabAtTop.value) {
+          setRouteTabIndex(HomeScreenTabIndex.NFTs)
+        } else if (currentTabIndex.value === HomeScreenTabIndex.Activity) {
+          activityTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+        } else {
+          tokensTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
+        }
+      },
+    }),
+  )
 
   const translateY = useDerivedValue(() => {
     // Allow header to scroll vertically with list
@@ -236,6 +313,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   // Shows an info modal instead of FOR flow if country is listed behind this flag
   const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
+  const cexTransferProviders = useCexTransferProviders()
   const { isTestnetModeEnabled } = useEnabledChains()
   const { hapticFeedback } = useHapticFeedback()
 
@@ -243,6 +321,20 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     await hapticFeedback.light()
   }, [hapticFeedback])
 
+  const onPressSend = useCallback(async () => {
+    dispatch(openModal({ name: ModalName.Send }))
+    await triggerHaptics()
+  }, [dispatch, triggerHaptics])
+  const onPressReceive = useCallback(async () => {
+    dispatch(
+      openModal(
+        cexTransferProviders.length > 0
+          ? { name: ModalName.ReceiveCryptoModal, initialState: cexTransferProviders }
+          : { name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr },
+      ),
+    )
+    await triggerHaptics()
+  }, [dispatch, cexTransferProviders, triggerHaptics])
   const onPressViewOnlyLabel = useCallback(() => dispatch(openModal({ name: ModalName.ViewOnlyExplainer })), [dispatch])
 
   // Hide actions when active account isn't a signer account.
@@ -254,8 +346,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     setIsTestnetWarningModalOpen(false)
   }, [])
 
-  // TODO: when TestnetModeModal is moved to react-navigation, this can be moved
-  // to the HomeScreenQuickActions component
   const onPressBuy = useCallback(async (): Promise<void> => {
     await triggerHaptics()
     if (isTestnetModeEnabled) {
@@ -268,6 +358,38 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       }),
     )
   }, [dispatch, isTestnetModeEnabled, disableForKorea, triggerHaptics])
+
+  // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
+  const buyLabel = t('home.label.buy')
+  const forLabel = t('home.label.for')
+  const sendLabel = t('home.label.send')
+  const receiveLabel = t('home.label.receive')
+  const isOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
+
+  const actions = useMemo(
+    (): QuickAction[] => [
+      {
+        Icon: isOffRampEnabled ? Bank : Buy,
+        eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
+        label: isOffRampEnabled ? forLabel : buyLabel,
+        name: ElementName.Buy,
+        onPress: onPressBuy,
+      },
+      {
+        Icon: SendAction,
+        label: sendLabel,
+        name: ElementName.Send,
+        onPress: onPressSend,
+      },
+      {
+        Icon: ArrowDownCircle,
+        label: receiveLabel,
+        name: ElementName.Receive,
+        onPress: onPressReceive,
+      },
+    ],
+    [isOffRampEnabled, buyLabel, forLabel, sendLabel, receiveLabel, onPressBuy, onPressSend, onPressReceive],
+  )
 
   // This hooks handles the logic for when to open the BackupReminderModal
   useOpenBackupReminderModal(activeAccount)
@@ -293,7 +415,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
         {isSignerAccount ? (
-          <HomeScreenQuickActions onPressBuy={onPressBuy} />
+          <QuickActions actions={actions} />
         ) : (
           <TouchableArea mt="$spacing8" onPress={onPressViewOnlyLabel}>
             <Flex centered row backgroundColor="$surface2" borderRadius="$rounded12" minHeight={40} p="$spacing8">
@@ -313,10 +435,10 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     handleTestnetWarningModalClose,
     activeAccount.address,
     isSignerAccount,
+    actions,
     onPressViewOnlyLabel,
     viewOnlyLabel,
     promoBanner,
-    onPressBuy,
   ])
 
   const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyWalletState ? 0 : TAB_STYLES.tabListInner.paddingTop)
@@ -556,5 +678,54 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         zIndex="$sticky"
       />
     </Screen>
+  )
+}
+
+type QuickAction = {
+  /* Icon to display for the action */
+  Icon: GeneratedIcon
+  /* Event name to log when the action is triggered */
+  eventName?: MobileEventName
+  /* Label to display for the action */
+  label: string
+  /* Name of the element to log when the action is triggered */
+  name: ElementNameType
+  /* Callback to execute when the action is triggered */
+  onPress: () => void
+}
+
+/**
+ * CTA buttons that appear at top of the screen showing actions such as
+ * "Send", "Receive", "Buy" etc.
+ */
+function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
+  const colors = useSporeColors()
+  const iconSize = iconSizes.icon24
+  const contentColor = colors.accent1.val
+  const activeScale = 0.96
+
+  return (
+    <Flex centered row gap="$spacing8" px="$spacing12">
+      {actions.map(({ eventName, name, label, Icon, onPress }) => (
+        <Trace key={name} logPress element={name} eventOnTrigger={eventName}>
+          <TouchableArea flex={1} scaleTo={activeScale} onPress={onPress}>
+            <Flex
+              fill
+              backgroundColor="$accent2"
+              borderRadius="$rounded20"
+              py="$spacing16"
+              px="$spacing12"
+              gap="$spacing12"
+              justifyContent="space-between"
+            >
+              <Icon color={contentColor} size={iconSize} strokeWidth={2} />
+              <Text color={contentColor} variant="buttonLabel2">
+                {label}
+              </Text>
+            </Flex>
+          </TouchableArea>
+        </Trace>
+      ))}
+    </Flex>
   )
 }

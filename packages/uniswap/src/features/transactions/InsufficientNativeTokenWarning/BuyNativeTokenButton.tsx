@@ -50,7 +50,8 @@ export function BuyNativeTokenButton({
       >
         {canBridge
           ? t('swap.warning.insufficientGas.button.buyWithCard')
-          : t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol ?? '' })}
+          : // FIXME: Verify WALL-5906
+            t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol ?? '' })}
       </DeprecatedButton>
     </Trace>
   )

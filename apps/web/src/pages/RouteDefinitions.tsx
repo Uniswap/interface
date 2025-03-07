@@ -7,7 +7,6 @@ import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
-import { RemoveLiquidityV2WithTokenRedirects } from 'pages/LegacyPool/redirects'
 import Swap from 'pages/Swap'
 import i18n from 'uniswap/src/i18n'
 
@@ -30,12 +29,17 @@ const LegacyPoolRedirects = lazy(() =>
 const PoolFinderRedirects = lazy(() =>
   import('pages/LegacyPool/redirects').then((module) => ({ default: module.PoolFinderRedirects })),
 )
+const LegacyPoolV2Redirects = lazy(() =>
+  import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPoolV2Redirects })),
+)
 const LegacyPositionPageRedirects = lazy(() =>
   import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPositionPageRedirects })),
 )
 const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
+const RemoveLiquidityV2 = lazy(() => import('pages/RemoveLiquidity/V2'))
+const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 
 interface RouterConfig {
@@ -259,7 +263,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/pool/v2',
-    getElement: () => <LegacyPositionPageRedirects />,
+    getElement: () => <LegacyPoolV2Redirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
@@ -272,6 +276,12 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/pools/v2/find',
     getElement: () => <PoolFinderRedirects />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/pools/v2',
+    getElement: () => <LegacyPoolV2Redirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
@@ -308,13 +318,13 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/remove/v2/:currencyIdA/:currencyIdB',
-    getElement: () => <RemoveLiquidityV2WithTokenRedirects />,
+    getElement: () => <RemoveLiquidityV2 />,
     getTitle: () => i18n.t('title.removeLiquidityv2'),
     getDescription: () => i18n.t('title.removeTokensv2'),
   }),
   createRouteDefinition({
     path: '/remove/:tokenId',
-    getElement: () => <LegacyPositionPageRedirects />,
+    getElement: () => <RemoveLiquidityV3 />,
     getTitle: () => i18n.t('title.removePoolLiquidity'),
     getDescription: () => i18n.t('title.removev3Liquidity'),
   }),

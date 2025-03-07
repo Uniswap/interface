@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { lpStatusConfig } from 'components/Liquidity/constants'
 import { TextLoader } from 'pages/Pool/Positions/shared'

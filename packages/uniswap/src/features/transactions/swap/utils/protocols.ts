@@ -3,8 +3,7 @@ import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ArbitrumXV2SamplingProperties, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
+import { getFeatureFlag, useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export const DEFAULT_PROTOCOL_OPTIONS = [
   // `as const` allows us to derive a type narrower than ProtocolItems, and the `...` spread removes readonly, allowing DEFAULT_PROTOCOL_OPTIONS to be passed around as an argument without `readonly`
@@ -30,8 +29,7 @@ export function useProtocolsForChain(
 
   const uniswapXAllowedForChain =
     (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbUniswapXAllowed
-  const v4SwapAllowed = useV4SwapEnabled(chainId)
-
+  const v4SwapAllowed = useFeatureFlag(FeatureFlags.V4Swap)
   return useMemo(() => {
     let protocols: ProtocolItems[] = [...userSelectedProtocols]
     // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
@@ -66,18 +64,16 @@ export function useProtocolsForChain(
 }
 
 export function useUniswapXPriorityOrderFlag(chainId?: UniverseChainId): boolean {
-  const flagName = UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP[chainId ?? UniverseChainId.Base]
-  const result = useFeatureFlag(flagName ?? FeatureFlags.UniswapXPriorityOrdersBase)
-
   if (!chainId) {
     return false
   }
 
+  const flagName = UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP[chainId]
   if (!flagName) {
     return false
   }
 
-  return result
+  return getFeatureFlag(flagName)
 }
 
 // These are primarily OP stack chains, since only Priority Orders can only operate on chains with Priority Gas Auctions (PGA)

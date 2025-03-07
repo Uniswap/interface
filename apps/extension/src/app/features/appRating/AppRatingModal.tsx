@@ -16,9 +16,9 @@ interface AppRatingModalProps {
 }
 
 enum State {
-  Initial = 0,
-  NotReally = 1,
-  Yes = 2,
+  Initial,
+  NotReally,
+  Yes,
 }
 
 export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.Element | null {
@@ -66,6 +66,7 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
       iconSize: '$icon.18' as IconSizeTokens,
       onSecondaryButtonPress: onRemindLater,
       onPrimaryButtonPress: (): void => {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         window.open(uniswapUrls.walletFeedbackForm)
         dispatch(setAppRating({ feedbackProvided: true }))
         sendAnalyticsEvent(WalletEventName.AppRating, {
@@ -85,6 +86,7 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
       iconSize: '$icon.24' as IconSizeTokens,
       onSecondaryButtonPress: onRemindLater,
       onPrimaryButtonPress: (): void => {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         window.open(`https://chromewebstore.google.com/detail/uniswap-extension/${chrome.runtime.id}/reviews`)
         dispatch(setAppRating({ ratingProvided: true }))
         sendAnalyticsEvent(WalletEventName.AppRating, {

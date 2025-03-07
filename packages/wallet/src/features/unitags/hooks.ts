@@ -6,6 +6,8 @@ import { useUnitagsAddressesQuery } from 'uniswap/src/data/apiClients/unitagsApi
 import { useUnitagsClaimEligibilityQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsClaimEligibilityQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useENS } from 'uniswap/src/features/ens/useENS'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
@@ -22,6 +24,7 @@ import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
+import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck/appCheck'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { claimUnitag, getUnitagAvatarUploadUrl } from 'wallet/src/features/unitags/api'
 import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'wallet/src/features/unitags/avatars'
@@ -164,6 +167,7 @@ export const useClaimUnitag = (): ((
   const accounts = useAccounts()
   const signerManager = useWalletSigners()
   const { triggerRefetchUnitags } = useUnitagUpdater()
+  const unitagsDeviceAttestationEnabled = useFeatureFlag(FeatureFlags.UnitagsDeviceAttestation)
 
   const { getOnboardingAccount } = useOnboardingContext()
   // If used outside of the context, this will return undefined and be ignored
@@ -181,6 +185,14 @@ export const useClaimUnitag = (): ((
     }
 
     try {
+      let firebaseAppCheckToken
+      if (unitagsDeviceAttestationEnabled) {
+        firebaseAppCheckToken = await getFirebaseAppCheckToken()
+        if (!firebaseAppCheckToken) {
+          return { claimError: t('unitags.claim.error.appCheck') }
+        }
+      }
+
       const { data: claimResponse } = await claimUnitag({
         username: claim.username,
         deviceId,
@@ -189,6 +201,7 @@ export const useClaimUnitag = (): ((
         },
         account: claimAccount,
         signerManager,
+        firebaseAppCheckToken,
       })
 
       if (claimResponse.errorCode) {

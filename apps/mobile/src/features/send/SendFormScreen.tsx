@@ -130,7 +130,7 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
   )
 }
 
-function SendFormContent({
+export function SendFormContent({
   showViewOnlyModal,
   hideViewOnlyModal,
   showLowNetworkTokenWarning,

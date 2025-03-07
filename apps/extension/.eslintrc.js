@@ -1,10 +1,6 @@
-const rulesDirPlugin = require('eslint-plugin-rulesdir')
-rulesDirPlugin.RULES_DIR = '../../packages/uniswap/eslint_rules'
-
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/native-app'],
-  plugins: ['rulesdir'],
+  extends: ['@uniswap/eslint-config/native'],
   ignorePatterns: [
     'node_modules',
     'dist',
@@ -24,7 +20,6 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  rules: {},
   overrides: [
     {
       files: ['src/assets/index.ts', 'src/contentScript/index.tsx'],
@@ -43,21 +38,6 @@ module.exports = {
         ],
       },
     },
-    {
-      files: ['**/contentScript/injected.ts'],
-      rules: {
-        'no-restricted-syntax': [
-          'error',
-          {
-            selector: 'CallExpression[callee.object.name="logger"][callee.property.name!=/^(debug)$/]',
-            message:
-              'Only logger.debug is allowed in this file. Please handle errors and info logs explicitly using ErrorLog and InfoLog message passing.',
-          },
-        ],
-      },
-    },
   ],
-  rules: {
-    'rulesdir/i18n': 'error',
-  },
+  rules: {},
 }

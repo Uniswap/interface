@@ -67,7 +67,6 @@ exports[`DoubleLogo renders with custom icon 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _bottom--4px _position-absolute _right--4px _zIndex-10"
           >
             <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
               data-testid="custom-icon"
             >
               Custom Icon

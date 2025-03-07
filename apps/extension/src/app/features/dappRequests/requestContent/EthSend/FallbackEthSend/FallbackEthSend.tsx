@@ -27,9 +27,6 @@ interface FallbackEthSendRequestProps {
   onConfirm: () => Promise<void>
 }
 
-// Minimum valid calldata is '0x' + 4 bytes (8 hex chars) for the function selector
-const MIN_CALLDATA_LENGTH = 10
-
 export function FallbackEthSendRequestContent({
   dappRequest,
   transactionGasFeeResult,
@@ -44,7 +41,7 @@ export function FallbackEthSendRequestContent({
   const chainId = transactionChainId || activeChain
   const recipientLink = chainId && toAddress ? getExplorerLink(chainId, toAddress, ExplorerDataType.ADDRESS) : ''
   const contractFunction = dappRequest.transaction.type
-  const calldata = dappRequest.transaction.data ?? ''
+  const calldata = dappRequest.transaction.data
 
   const copyToClipboard = useCopyToClipboard()
 
@@ -105,8 +102,10 @@ export function FallbackEthSendRequestContent({
             borderRadius="$rounded8"
             borderWidth="$spacing1"
             color="$neutral1"
+            // fontFamily="SF Mono"
             px="$spacing8"
             py="$spacing2"
+            // variant="monospace"
             variant="body4"
           >
             {parsedTransactionData?.name || contractFunction || t('common.text.unknown')}
@@ -123,7 +122,7 @@ export function FallbackEthSendRequestContent({
               onPress={copyCalldata}
             >
               <Text color="$neutral1" variant="body4">
-                {calldata.length > MIN_CALLDATA_LENGTH ? ellipseMiddle(calldata) : calldata}
+                {ellipseMiddle(calldata)}
               </Text>
               <AnimatedCopySheets color="$neutral3" size="$icon.16" />
             </TouchableArea>

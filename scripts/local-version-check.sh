@@ -18,7 +18,7 @@ check "Xcode" $localXcodeVersion "16.2"
 
 # Check node version
 localNodeVersion="$(node --version)"
-check "node" $localNodeVersion "v22"
+check "node" $localNodeVersion "v18"
 
 # Check ruby version
 localRubyOutput="$(ruby --version)"

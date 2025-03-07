@@ -31,8 +31,9 @@ export function gqlTokenToCurrencyInfo(token?: GqlToken): CurrencyInfo | undefin
     currency,
     currencyId: currencyId(currency),
     logoUrl: token.project?.logo?.url ?? token.project?.logoUrl,
+    safetyLevel: token.project?.safetyLevel ?? SafetyLevel.StrongWarning,
     isSpam: token.project?.isSpam ?? false,
-    safetyInfo: getCurrencySafetyInfo(token.project?.safetyLevel ?? SafetyLevel.StrongWarning, token.protectionInfo),
+    safetyInfo: getCurrencySafetyInfo(token.project?.safetyLevel, token.protectionInfo),
   })
   return currencyInfo
 }
@@ -56,6 +57,7 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
     return {
       ...currencyInfo,
       logoUrl: forCurrency.symbol,
+      safetyLevel: SafetyLevel.Verified,
       safetyInfo: {
         tokenList: TokenList.Default,
         protectionResult: ProtectionResult.Benign,
@@ -77,6 +79,7 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
     currency,
     currencyId: currencyId(currency),
     logoUrl: forCurrency.symbol,
+    safetyLevel: SafetyLevel.Verified,
     safetyInfo: {
       tokenList: TokenList.Default,
       protectionResult: ProtectionResult.Benign,

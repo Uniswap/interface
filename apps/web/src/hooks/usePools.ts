@@ -1,4 +1,5 @@
 import { Interface } from '@ethersproject/abi'
+// eslint-disable-next-line no-restricted-imports
 import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
@@ -87,10 +88,10 @@ export class PoolCache {
 }
 
 export enum PoolState {
-  LOADING = 0,
-  NOT_EXISTS = 1,
-  EXISTS = 2,
-  INVALID = 3,
+  LOADING,
+  NOT_EXISTS,
+  EXISTS,
+  INVALID,
 }
 
 export function usePools(

@@ -13,8 +13,8 @@ import { ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { ModalCloseIcon, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -109,7 +109,7 @@ export default function UnsupportedCurrencyFooter({
 function UnsupportedTokenCard({ token, chainId }: { token?: Token; chainId?: UniverseChainId }) {
   const currencyInfo = useCurrencyInfo(token)
 
-  if (!token || (!currencyInfo?.isSpam && currencyInfo?.safetyInfo?.tokenList === TokenList.Default)) {
+  if (!token || (!currencyInfo?.isSpam && currencyInfo?.safetyLevel === SafetyLevel.Verified)) {
     return null
   }
 

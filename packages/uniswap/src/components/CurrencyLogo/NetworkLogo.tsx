@@ -1,4 +1,5 @@
 import React from 'react'
+// eslint-disable-next-line no-restricted-imports
 import type { ImageSourcePropType } from 'react-native'
 import { Flex, FlexProps, Image, useSporeColors } from 'ui/src'
 import { ALL_NETWORKS_LOGO, ALL_NETWORKS_LOGO_UNICHAIN } from 'ui/src/assets'

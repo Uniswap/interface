@@ -22,6 +22,7 @@ import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { Flex, SegmentedControl, Text, Tooltip, styled, useMedia } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
@@ -45,6 +46,7 @@ import { Slippage } from 'uniswap/src/features/transactions/swap/settings/config
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { isTestEnv } from 'utilities/src/environment/env'
 import { isMobileWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
@@ -64,7 +66,7 @@ export function getIsReviewableQuote(
   return Boolean(trade && tradeState === TradeState.VALID)
 }
 
-export default function SwapPage() {
+export default function SwapPage({ className }: { className?: string }) {
   const navigate = useNavigate()
   const location = useLocation()
   // (WEB-4737): Remove this line after completing A/A Test on Web
@@ -93,6 +95,7 @@ export default function SwapPage() {
     <Trace logImpression page={InterfacePageName.SWAP_PAGE}>
       <PageWrapper>
         <Swap
+          className={className}
           chainId={initialChainId}
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={initialOutputCurrency}
@@ -115,6 +118,7 @@ export default function SwapPage() {
  * chain (e.g. the TDP), then chainId should refer to the unconnected chain.
  */
 export function Swap({
+  className,
   initialInputCurrency,
   initialOutputCurrency,
   initialTypedValue,
@@ -130,6 +134,7 @@ export function Swap({
   swapRedirectCallback,
   tokenColor,
 }: {
+  className?: string
   chainId?: UniverseChainId
   onCurrencyChange?: (selected: CurrencyState) => void
   disableTokenInputs?: boolean
@@ -145,6 +150,7 @@ export function Swap({
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
 }) {
+  const isDark = useIsDarkMode()
   const media = useMedia()
   const isExplorePage = useIsPage(PageType.EXPLORE)
 
@@ -168,7 +174,10 @@ export function Swap({
     skipFocusOnCurrencyField: isMobileWeb,
   })
 
-  if (universalSwapFlow || isTestnetModeEnabled || isLoading) {
+  // TODO(WEB-5078): Remove this once we upgrade swap e2e tests to use the new swap flow
+  const waitForLoading = isLoading && !isTestEnv()
+
+  if (universalSwapFlow || isTestnetModeEnabled || waitForLoading) {
     return (
       <MultichainContextProvider initialChainId={chainId}>
         <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>
@@ -216,7 +225,7 @@ export function Swap({
               initialIndependentField={initialIndependentField}
             >
               <Flex width="100%" gap="$spacing16">
-                <SwapWrapper id="swap-page">
+                <SwapWrapper isDark={isDark} className={className} id="swap-page">
                   {!hideHeader && <SwapHeader compact={compact || media.md} syncTabToUrl={syncTabToUrl} />}
                   {currentTab === SwapTab.Swap && (
                     <SwapForm

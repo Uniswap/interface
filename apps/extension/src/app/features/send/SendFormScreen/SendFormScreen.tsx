@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RecipientPanel } from 'src/app/features/send/SendFormScreen/RecipientPanel'
 import { ReviewButton } from 'src/app/features/send/SendFormScreen/ReviewButton'
@@ -27,7 +27,6 @@ import { SendAmountInput } from 'wallet/src/features/transactions/send/SendAmoun
 import { SendReviewDetails } from 'wallet/src/features/transactions/send/SendReviewDetails'
 import { TokenSelectorPanel } from 'wallet/src/features/transactions/send/TokenSelectorPanel'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
-import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 export function SendFormScreen(): JSX.Element {
@@ -86,16 +85,11 @@ export function SendFormScreen(): JSX.Element {
   const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
   const showTokenSelector = selectingCurrencyField === CurrencyField.INPUT
 
-  const hasValueGreaterThanZero = useMemo(() => {
-    return isAmountGreaterThanZero(exactAmountToken, exactAmountFiat, currencyInInfo?.currency)
-  }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
-
   // blocked addresses
   const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } = useIsBlockedActiveAddress()
   const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(recipient)
-  const isSubjectBlocked = isActiveBlocked || isRecipientBlocked
-  const isSubjectBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
-  const isButtonBlocked = !hasValueGreaterThanZero || isSubjectBlocked || isSubjectBlockedLoading
+  const isBlocked = isActiveBlocked || isRecipientBlocked
+  const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
 
   const goToReview = useCallback(() => {
     const txId = createTransactionId()
@@ -211,7 +205,7 @@ export function SendFormScreen(): JSX.Element {
         </Flex>
         {!showRecipientSelector && (
           <>
-            {isSubjectBlocked && (
+            {isBlocked && (
               <BlockedAddressWarning
                 row
                 alignItems="center"
@@ -222,7 +216,7 @@ export function SendFormScreen(): JSX.Element {
                 py="$spacing12"
               />
             )}
-            <ReviewButton disabled={isButtonBlocked} onPress={onPressReview} />
+            <ReviewButton disabled={isBlocked || isBlockedLoading} onPress={onPressReview} />
             <GasFeeRow chainId={chainId as UniverseChainId} gasFee={gasFee} />
             <InsufficientNativeTokenWarning flow="send" gasFee={gasFee} warnings={warnings.warnings} />
           </>

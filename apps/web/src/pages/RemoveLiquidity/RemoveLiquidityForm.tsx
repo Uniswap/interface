@@ -1,4 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
@@ -9,13 +10,13 @@ import {
 } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
-import { canUnwrapCurrency } from 'pages/Pool/Positions/create/utils'
+import { useCanUnwrapCurrency } from 'pages/Pool/Positions/create/utils'
 import { ClickablePill } from 'pages/Swap/Buy/PredefinedAmount'
 import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from 'pages/Swap/common/shared'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Switch, Text, useSporeColors } from 'ui/src'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import useResizeObserver from 'use-resize-observer'
 
 const isValidPercentageInput = (value: string): boolean => {
@@ -37,14 +38,13 @@ export function RemoveLiquidityForm() {
   }
 
   const { currency0Amount, currency1Amount } = positionInfo
-  const canUnwrap0 = canUnwrapCurrency(currency0Amount.currency, positionInfo.version)
-  const canUnwrap1 = canUnwrapCurrency(currency1Amount.currency, positionInfo.version)
-  const nativeCurrency = nativeOnChain(positionInfo.chainId)
-
-  const canUnwrap = canUnwrap0 || canUnwrap1
+  const canUnwrap0 = useCanUnwrapCurrency(currency0Amount.currency)
+  const canUnwrap1 = useCanUnwrapCurrency(currency1Amount.currency)
+  const nativeCurrencyInfo = useNativeCurrencyInfo(positionInfo.chainId)
+  const canUnwrap = (canUnwrap0 || canUnwrap1) && positionInfo.version !== ProtocolVersion.V4
 
   const unwrapUnderCard = useMemo(() => {
-    if (!canUnwrap) {
+    if (!canUnwrap || !nativeCurrencyInfo) {
       return null
     }
 
@@ -60,7 +60,7 @@ export function RemoveLiquidityForm() {
         px="$padding16"
       >
         <Text variant="body3" color="$neutral2">
-          <Trans i18nKey="pool.withdrawAs" values={{ nativeWrappedSymbol: nativeCurrency.symbol }} />
+          <Trans i18nKey="pool.withdrawAs" values={{ nativeWrappedSymbol: nativeCurrencyInfo.currency.symbol }} />
         </Text>
         <Switch
           id="add-as-weth"
@@ -70,7 +70,7 @@ export function RemoveLiquidityForm() {
         />
       </Flex>
     )
-  }, [canUnwrap, nativeCurrency, unwrapNativeCurrency, setUnwrapNativeCurrency])
+  }, [canUnwrap, nativeCurrencyInfo, unwrapNativeCurrency, setUnwrapNativeCurrency])
 
   return (
     <Flex gap="$gap24">

@@ -15,11 +15,11 @@ import { useTransactionSettingsContext } from 'uniswap/src/features/transactions
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/modals/UniswapXInfo'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import {
   DEFAULT_PROTOCOL_OPTIONS,
   FrontendSupportedProtocol,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { isMobileApp } from 'utilities/src/platform'
 
 function isDefaultOptions(selectedProtocols: FrontendSupportedProtocol[]): boolean {
   return new Set(selectedProtocols).size === new Set([...selectedProtocols, ...DEFAULT_PROTOCOL_OPTIONS]).size
@@ -56,9 +56,9 @@ export const ProtocolPreference: SwapSettingConfig = {
     const { selectedProtocols, updateTransactionSettings, isOnlyV2Allowed } = useTransactionSettingsContext()
     const [isDefault, setIsDefault] = useState(isDefaultOptions(selectedProtocols))
     const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
+    const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
 
     const { chainId } = useSwapFormContext().derivedSwapInfo
-    const v4SwapEnabled = useV4SwapEnabled(chainId)
     const chainName = getChainInfo(chainId).name
     const v2RestrictionDescription = isOnlyV2Allowed
       ? t('swap.settings.protection.subtitle.unavailable', { chainName })
@@ -70,7 +70,7 @@ export const ProtocolPreference: SwapSettingConfig = {
     // We prevent the user from deselecting all on-chain protocols (AKA only selecting UniswapX)
     const onlyOneClassicProtocolSelected =
       selectedProtocols.filter((p) => {
-        if (!v4SwapEnabled && p === ProtocolItems.V4) {
+        if (!v4Enabled && p === ProtocolItems.V4) {
           return false
         }
         return p !== ProtocolItems.UNISWAPX_V2
@@ -98,9 +98,9 @@ export const ProtocolPreference: SwapSettingConfig = {
       <Flex gap="$spacing16" my="$spacing16">
         <OptionRow
           active={isDefault}
-          description={<DefaultOptionDescription isDefault={isDefault} v4SwapEnabled={v4SwapEnabled} />}
+          description={<DefaultOptionDescription isDefault={isDefault} />}
           elementName={ElementName.SwapRoutingPreferenceDefault}
-          title={<DefaultOptionTitle v4SwapEnabled={v4SwapEnabled} />}
+          title={<DefaultOptionTitle />}
           cantDisable={false}
           disabled={isOnlyV2Allowed}
           onSelect={toggleDefault}
@@ -118,7 +118,7 @@ export const ProtocolPreference: SwapSettingConfig = {
                 onSelect={() => toggleProtocol(ProtocolItems.UNISWAPX_V2)}
               />
             )}
-            {v4SwapEnabled && (
+            {v4Enabled && (
               <OptionRow
                 active={selectedProtocols.includes(ProtocolItems.V4)}
                 elementName={ElementName.SwapRoutingPreferenceV4}
@@ -169,9 +169,15 @@ export function getProtocolTitle(preference: FrontendSupportedProtocol, t: TFunc
             >
               <Trans
                 components={{
-                  icon: <UniswapX size="$icon.16" />,
+                  icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
                   gradient: <UniswapXText height={18} variant="body3" />,
-                  info: <InfoCircleFilled color="$neutral3" size="$icon.16" />,
+                  info: (
+                    <InfoCircleFilled
+                      color="$neutral3"
+                      size="$icon.16"
+                      style={!isMobileApp && { transform: 'translateY(3px)' }}
+                    />
+                  ),
                 }}
                 i18nKey="uniswapx.item"
               />
@@ -234,13 +240,8 @@ function OptionRow({
   )
 }
 
-function DefaultOptionDescription({
-  isDefault,
-  v4SwapEnabled,
-}: {
-  isDefault: boolean
-  v4SwapEnabled: boolean
-}): JSX.Element {
+function DefaultOptionDescription({ isDefault }: { isDefault: boolean }): JSX.Element {
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const { t } = useTranslation()
 
@@ -252,7 +253,7 @@ function DefaultOptionDescription({
   return (
     <Flex gap="$spacing4">
       <Text color="$neutral2" variant="body3" textWrap="pretty">
-        {v4SwapEnabled ? cheapestRouteTextV4 : cheapestRouteText}
+        {v4Enabled ? cheapestRouteTextV4 : cheapestRouteText}
       </Text>
       {showIncludesUniswapX && (
         <UniswapXInfo
@@ -267,7 +268,7 @@ function DefaultOptionDescription({
             >
               <Trans
                 components={{
-                  icon: <UniswapX size="$icon.16" />,
+                  icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
                   gradient: <UniswapXText height={18} variant="body3" />,
                 }}
                 i18nKey="uniswapx.included"
@@ -280,10 +281,11 @@ function DefaultOptionDescription({
   )
 }
 
-function DefaultOptionTitle({ v4SwapEnabled }: { v4SwapEnabled: boolean }): JSX.Element {
+function DefaultOptionTitle(): JSX.Element {
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const { t } = useTranslation()
 
-  if (!v4SwapEnabled) {
+  if (!v4Enabled) {
     return (
       <Text color="$neutral1" variant="subheading2">
         {t('common.default')}

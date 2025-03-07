@@ -10,15 +10,15 @@ import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } f
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 enum ApprovalState {
-  PENDING = 0,
-  SYNCING = 1,
-  SYNCED = 2,
+  PENDING,
+  SYNCING,
+  SYNCED,
 }
 
 export enum AllowanceState {
-  LOADING = 0,
-  REQUIRED = 1,
-  ALLOWED = 2,
+  LOADING,
+  REQUIRED,
+  ALLOWED,
 }
 
 interface AllowanceRequired {

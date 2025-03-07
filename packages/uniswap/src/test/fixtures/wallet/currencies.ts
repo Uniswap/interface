@@ -1,4 +1,4 @@
-import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -37,6 +37,7 @@ export const currencyInfo = createFixture<CurrencyInfo, CurrencyInfoOptions>({
   currencyId: currencyId(nativeCurrency),
   currency: nativeCurrency,
   logoUrl: faker.image.imageUrl(),
+  safetyLevel: SafetyLevel.Verified,
   safetyInfo: benignSafetyInfo,
 }))
 

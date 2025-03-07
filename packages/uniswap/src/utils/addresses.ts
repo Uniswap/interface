@@ -2,9 +2,9 @@ import { getAddress } from '@ethersproject/address'
 import { logger } from 'utilities/src/logger/logger'
 
 export enum AddressStringFormat {
-  Lowercase = 0,
-  Uppercase = 1,
-  Shortened = 2,
+  Lowercase,
+  Uppercase,
+  Shortened,
 }
 
 /**

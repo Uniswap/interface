@@ -29,7 +29,6 @@ import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fia
 import {
   useFiatOnRampQuotes,
   useFiatOnRampSupportedTokens,
-  useIsFORLoading,
   useMeldFiatCurrencySupportInfo,
   useParseFiatOnRampError,
 } from 'uniswap/src/features/fiatOnRamp/hooks'
@@ -212,12 +211,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   // always enforce the amount used in the request to backend service
   const hasValidAmount = isOffRamp ? !!tokenAmount : !!fiatAmount
 
-  const isFORLoading = useIsFORLoading({
-    hasValidAmount,
-    debouncedAmountsMatch,
-    quotesLoading,
-    exceedsBalanceError,
-  })
+  const selectTokenLoading = hasValidAmount && (quotesLoading || !debouncedAmountsMatch) && !exceedsBalanceError
 
   const { currentData: ipCountryData } = useFiatOnRampAggregatorGetCountryQuery()
 
@@ -470,15 +464,16 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     })
   }
 
+  // we only show loading when there are no errors and quote value is not empty
   const buttonDisabled =
     notAvailableInThisRegion ||
-    isFORLoading ||
+    selectTokenLoading ||
     !!quotesError ||
     !selectedQuote?.destinationAmount ||
     exceedsBalanceError
 
   return (
-    <Screen edges={['top', 'bottom']}>
+    <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
       <AnimatedFlex row height="100%" pt="$spacing12">
         {isSheetReady && (
@@ -528,7 +523,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               quoteAmount={selectedQuote?.destinationAmount ?? 0}
               sourceAmount={selectedQuote?.sourceAmount ?? 0}
               quoteCurrencyAmountReady={Boolean(fiatAmount && selectedQuote)}
-              selectTokenLoading={isFORLoading}
+              selectTokenLoading={selectTokenLoading}
               value={value}
               onChoosePredefinedValue={(val: string): void => {
                 if (isOffRamp) {
@@ -604,7 +599,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
                 eligible
                 continueButtonText={t('common.button.continue')}
                 disabled={buttonDisabled}
-                isLoading={isFORLoading}
+                isLoading={selectTokenLoading}
                 onPress={onContinue}
               />
             </AnimatedFlex>

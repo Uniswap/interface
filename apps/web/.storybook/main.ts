@@ -10,12 +10,7 @@ function getAbsolutePath(value: string): any {
   return dirname(require.resolve(join(value, 'package.json')))
 }
 const config: StorybookConfig = {
-  stories: [
-    '../../../packages/ui/**/*.stories.?(ts|tsx)',
-    '../../../packages/ui/**/*.mdx',
-    '../../../packages/uniswap/src/**/*.stories.?(ts|tsx|js|jsx)',
-    '../../../packages/uniswap/**/*.mdx',
-  ],
+  stories: ['../../../packages/ui/**/*.stories.?(ts|tsx)', '../../../packages/ui/**/*.mdx'],
   addons: [
     getAbsolutePath('@storybook/preset-create-react-app'),
     getAbsolutePath('@storybook/addon-essentials'),

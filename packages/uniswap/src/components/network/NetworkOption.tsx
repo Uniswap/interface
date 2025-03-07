@@ -91,6 +91,7 @@ export function NetworkOption({
         <ElementAfterGradientText
           element={isNew || showUnichainAnimation ? wrappedNewTag : undefined}
           text={info.label}
+          gradientTextColor={colors.neutral1?.val}
           enabled={showUnichainAnimation}
           textProps={{ variant: 'body2' }}
           gradientEndingXPlacement={-250}

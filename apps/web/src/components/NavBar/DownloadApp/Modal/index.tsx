@@ -17,9 +17,9 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export enum Page {
-  GetStarted = 0,
-  GetApp = 1,
-  PasskeyGeneration = 2,
+  GetStarted,
+  GetApp,
+  PasskeyGeneration,
 }
 
 export function GetTheAppModal() {

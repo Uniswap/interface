@@ -46,9 +46,9 @@ export const DEFAULT_GAS_STRATEGY: GasStrategy = {
   maxPriorityFeeGwei: 9,
 }
 
-export type CancellationGasFeeDetails = {
+export type CancelationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
-  gasFeeDisplayValue: string
+  cancelationGasFee: string
 }
 
 // Helper function to check if the config value is a valid GasStrategies object
@@ -340,6 +340,7 @@ export function useTransactionGasWarning({
     if (gasFee === undefined || balanceInsufficient || !nativeCurrencyBalance || hasGasFunds) {
       return undefined
     }
+    // FIXME: Verify WALL-5906
     const currencySymbol = nativeCurrencyBalance.currency.symbol ?? ''
 
     return {

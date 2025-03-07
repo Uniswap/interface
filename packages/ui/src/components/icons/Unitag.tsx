@@ -23,7 +23,7 @@ function _Unitag({ size = '$icon.24' }: { size: IconSizeTokens | number }): JSX.
     <UniversalImage
       style={{
         image: {
-          verticalAlign: 'sub',
+          verticalAlign: 'bottom',
         },
       }}
       size={universalImageSize}

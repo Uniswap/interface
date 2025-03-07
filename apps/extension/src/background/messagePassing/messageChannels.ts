@@ -84,7 +84,7 @@ import {
   UpdateConnectionRequestSchema,
 } from 'src/background/messagePassing/types/requests'
 
-enum MessageChannelName {
+export enum MessageChannelName {
   DappContentScript = 'DappContentScript',
   DappBackground = 'DappBackground',
   DappResponse = 'DappResponse',
@@ -107,6 +107,16 @@ function createOnboardingMessageChannel(): TypedRuntimeMessageChannel<Onboarding
   return new TypedRuntimeMessageChannel<OnboardingMessageType, OnboardingMessageSchemas>({
     channelName: MessageChannelName.Onboarding,
     messageParsers: onboardingMessageParsers,
+  })
+}
+
+export function createOnboardingMessagePort(
+  port: chrome.runtime.Port,
+): TypedPortMessageChannel<OnboardingMessageType, OnboardingMessageSchemas> {
+  return new TypedPortMessageChannel({
+    channelName: MessageChannelName.Onboarding,
+    messageParsers: onboardingMessageParsers,
+    port,
   })
 }
 
@@ -194,6 +204,17 @@ function createContentScriptToBackgroundMessageChannel(): TypedRuntimeMessageCha
   })
 }
 
+export function createContentScriptToBackgroundMessagePort(
+  port: chrome.runtime.Port,
+): TypedPortMessageChannel<DappRequestType, ContentScriptToBackgroundMessageSchemas> {
+  return new TypedPortMessageChannel<DappRequestType, ContentScriptToBackgroundMessageSchemas>({
+    channelName: MessageChannelName.DappContentScript,
+    messageParsers: contentScriptToBackgroundMessageParsers,
+    canReceiveFromContentScript: true,
+    port,
+  })
+}
+
 type DappResponseMessageSchemas = {
   [DappResponseType.AccountResponse]: AccountResponse
   [DappResponseType.ChainChangeResponse]: ChangeChainResponse
@@ -237,6 +258,16 @@ function createDappResponseMessageChannel(): TypedRuntimeMessageChannel<DappResp
   })
 }
 
+export function createDappResponseMessagePort(
+  port: chrome.runtime.Port,
+): TypedPortMessageChannel<DappResponseType, DappResponseMessageSchemas> {
+  return new TypedPortMessageChannel<DappResponseType, DappResponseMessageSchemas>({
+    channelName: MessageChannelName.DappResponse,
+    messageParsers: dappResponseMessageParsers,
+    port,
+  })
+}
+
 type ExternalDappMessageSchemas = {
   [ExtensionToDappRequestType.SwitchChain]: ExtensionChainChange
   [ExtensionToDappRequestType.UpdateConnections]: UpdateConnectionRequest
@@ -248,13 +279,23 @@ const externalDappMessageParsers: MessageParsers<ExtensionToDappRequestType, Ext
     UpdateConnectionRequestSchema.parse(message),
 }
 
-function createExternalDappMessageChannel(): TypedRuntimeMessageChannel<
+export function createExternalDappMessageChannel(): TypedRuntimeMessageChannel<
   ExtensionToDappRequestType,
   ExternalDappMessageSchemas
 > {
   return new TypedRuntimeMessageChannel<ExtensionToDappRequestType, ExternalDappMessageSchemas>({
     channelName: MessageChannelName.ExternalDapp,
     messageParsers: externalDappMessageParsers,
+  })
+}
+
+export function createExternalDappMessagePort(
+  port: chrome.runtime.Port,
+): TypedPortMessageChannel<ExtensionToDappRequestType, ExternalDappMessageSchemas> {
+  return new TypedPortMessageChannel<ExtensionToDappRequestType, ExternalDappMessageSchemas>({
+    channelName: MessageChannelName.ExternalDapp,
+    messageParsers: externalDappMessageParsers,
+    port,
   })
 }
 
@@ -273,7 +314,7 @@ const contentScriptUtilityMessageParsers: MessageParsers<
   [ContentScriptUtilityMessageType.AnalyticsLog]: (message): AnalyticsLog => AnalyticsLogSchema.parse(message),
 }
 
-function createContentScriptUtilityMessageChannel(): TypedRuntimeMessageChannel<
+export function createContentScriptUtilityMessageChannel(): TypedRuntimeMessageChannel<
   ContentScriptUtilityMessageType,
   ContentScriptUtilityMessageSchemas
 > {
@@ -281,6 +322,16 @@ function createContentScriptUtilityMessageChannel(): TypedRuntimeMessageChannel<
     channelName: MessageChannelName.ContentScriptUtility,
     messageParsers: contentScriptUtilityMessageParsers,
     canReceiveFromWebPage: true,
+  })
+}
+
+export function createContentScriptUtilityMessagePort(
+  port: chrome.runtime.Port,
+): TypedPortMessageChannel<ContentScriptUtilityMessageType, ContentScriptUtilityMessageSchemas> {
+  return new TypedPortMessageChannel<ContentScriptUtilityMessageType, ContentScriptUtilityMessageSchemas>({
+    channelName: MessageChannelName.ExternalDapp,
+    messageParsers: contentScriptUtilityMessageParsers,
+    port,
   })
 }
 

@@ -1,7 +1,7 @@
 import { InMemoryCache } from '@apollo/client'
 import { persistCache } from 'apollo3-cache-persist'
 import { PersistentStorage } from 'apollo3-cache-persist/lib/types'
-import { setupSharedApolloCache } from 'uniswap/src/data/cache'
+import { setupWalletCache } from 'uniswap/src/data/cache'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
@@ -14,7 +14,7 @@ export async function initAndPersistCache({
   storage: PersistentStorage<string>
   maxCacheSizeInBytes: number
 }): Promise<InMemoryCache> {
-  const cache = setupSharedApolloCache()
+  const cache = setupWalletCache()
 
   try {
     await persistCache({

@@ -3,7 +3,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { filterChainIdsByFeatureFlag, getEnabledChains } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 
 export function* getEnabledChainIdsSaga() {
@@ -11,12 +10,10 @@ export function* getEnabledChainIdsSaga() {
 
   const monadTestnetEnabled = getFeatureFlag(FeatureFlags.MonadTestnet)
   const unichainEnabled = getFeatureFlag(FeatureFlags.Unichain)
-  const soneiumEnabled = getFeatureFlag(FeatureFlags.Soneium)
 
   const featureFlaggedChainIds = filterChainIdsByFeatureFlag({
     [UniverseChainId.MonadTestnet]: monadTestnetEnabled,
     [UniverseChainId.Unichain]: unichainEnabled,
-    [UniverseChainId.Soneium]: soneiumEnabled,
   })
 
   return yield* call(getEnabledChains, {

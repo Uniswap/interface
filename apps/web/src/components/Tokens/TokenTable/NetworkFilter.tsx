@@ -75,7 +75,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
   )
 
   return (
-    <Flex>
+    <div>
       <Trace modal={ModalName.NetworkSelector}>
         <DropdownSelector
           isOpen={isMenuOpen}
@@ -116,7 +116,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           </ScrollView>
         </DropdownSelector>
       </Trace>
-    </Flex>
+    </div>
   )
 }
 

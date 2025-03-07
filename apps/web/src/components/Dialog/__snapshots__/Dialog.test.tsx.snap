@@ -482,7 +482,9 @@ exports[`<Dialog /> renders different button types 1`] = `
                         <div
                           class="c9"
                         >
-                          Mock Icon
+                          <div>
+                            Mock Icon
+                          </div>
                         </div>
                         <div
                           class="c10 c1"
@@ -490,14 +492,20 @@ exports[`<Dialog /> renders different button types 1`] = `
                           <div
                             class="c11 c12 css-4kpdx7"
                           >
-                            Mock Title
+                            <div>
+                              Mock Title
+                            </div>
                           </div>
                           <div
                             class="c13 c14 css-1urox24"
                           >
-                            Mock Description
+                            <div>
+                              Mock Description
+                            </div>
                           </div>
-                          Mock Body
+                          <div>
+                            Mock Body
+                          </div>
                         </div>
                       </div>
                       <div
@@ -510,7 +518,9 @@ exports[`<Dialog /> renders different button types 1`] = `
                           <div
                             class="c18 c19"
                           />
-                          Left Button
+                          <div>
+                            Left Button
+                          </div>
                         </button>
                         <button
                           class="c20 c17"
@@ -518,7 +528,9 @@ exports[`<Dialog /> renders different button types 1`] = `
                           <div
                             class="c18 c19"
                           />
-                          Right Button
+                          <div>
+                            Right Button
+                          </div>
                         </button>
                       </div>
                     </div>
@@ -958,7 +970,9 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
                         <div
                           class="c9"
                         >
-                          Mock Icon
+                          <div>
+                            Mock Icon
+                          </div>
                         </div>
                         <div
                           class="c10 c1"
@@ -966,14 +980,20 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
                           <div
                             class="c11 c12 css-4kpdx7"
                           >
-                            Mock Title
+                            <div>
+                              Mock Title
+                            </div>
                           </div>
                           <div
                             class="c13 c14 css-1urox24"
                           >
-                            Mock Description
+                            <div>
+                              Mock Description
+                            </div>
                           </div>
-                          Mock Body
+                          <div>
+                            Mock Body
+                          </div>
                         </div>
                       </div>
                       <div
@@ -985,7 +1005,9 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
                           <div
                             class="c18 c19"
                           />
-                          Left Button
+                          <div>
+                            Left Button
+                          </div>
                         </button>
                         <button
                           class="c16 c17"
@@ -993,7 +1015,9 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
                           <div
                             class="c18 c19"
                           />
-                          Right Button
+                          <div>
+                            Right Button
+                          </div>
                         </button>
                       </div>
                     </div>

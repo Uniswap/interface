@@ -3,8 +3,8 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export enum TokenStandard {
-  ERC20 = 0,
-  ERC721 = 1,
+  ERC20,
+  ERC721,
 }
 
 export interface InteractiveToken {

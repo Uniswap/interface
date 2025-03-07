@@ -4,7 +4,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { SearchResultType, WalletSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
@@ -41,10 +40,8 @@ export function useWalletSearchResults(
   // Search for matching Unitag by name
   const { unitag: unitagByName, loading: unitagLoading } = useUnitagByName(query)
 
-  // Search for matching Unitag by address (try user input address, then resolved ENS address, then autocompleted ENS address)
-  const { unitag: unitagByAddress, loading: unitagByAddressLoading } = useUnitagByAddress(
-    validAddress ?? ensAddress ?? dotEthAddress ?? undefined,
-  )
+  // Search for matching Unitag by address
+  const { unitag: unitagByAddress, loading: unitagByAddressLoading } = useUnitagByAddress(validAddress)
 
   // Search for matching EOA wallet address
   const { isSmartContractAddress, loading: loadingIsSmartContractAddress } = useIsSmartContractAddress(
@@ -72,28 +69,17 @@ export function useWalletSearchResults(
     })
   }
 
-  // Add unitag by address in the following relevant cases
-  // 1. query is an address that has a unitag
-  // 2. the ENS/dotETH address found has a unitag
-  //    a) AND the query starts with the unitag's username (otherwise the username isn't relevant to the search query)
-  //    b) AND the query isn't an exact ENS match, excluding .uni.eth queries (don't show unitag if query explicitly searches for X.eth, EXCEPT if it's X.uni.eth)
-  const showUnitagOverEns = !exactENSMatch || dotEthName.endsWith(UNITAG_SUFFIX)
-  const addressMatch = unitagByAddress?.address === validAddress
-  const nameMatch = unitagByAddress?.username && query.startsWith(unitagByAddress.username)
-  const addressOrNameMatch = addressMatch || (nameMatch && showUnitagOverEns)
-  const showUnitagByAddress =
-    !unitagByName?.address?.address && unitagByAddress?.address && unitagByAddress?.username && addressOrNameMatch
-  if (showUnitagByAddress) {
+  // Add full address if relevant
+  if (unitagByAddress?.username && validAddress) {
     results.push({
       type: SearchResultType.Unitag,
-      // Already checked that these aren't undefined but linter doesn't recognize it
-      address: unitagByAddress.address ?? '',
-      unitag: unitagByAddress.username ?? '',
+      address: validAddress,
+      unitag: unitagByAddress.username,
     })
   }
 
   // Add the raw ENS result if available and a unitag by address was not already added
-  if (!validAddress && ensAddress && ensName && !showUnitagByAddress) {
+  if (!validAddress && ensAddress && ensName && !unitagByAddress?.username) {
     results.push({
       type: SearchResultType.ENSAddress,
       address: ensAddress,
@@ -103,12 +89,10 @@ export function useWalletSearchResults(
   }
 
   // Add ENS result if it's different than the unitag result and raw ENS result
-  const differentFromUnitagByAddress = dotEthAddress !== unitagByAddress?.address || !showUnitagByAddress
   if (
     !validAddress &&
     hasENSResult &&
     dotEthAddress !== unitagByName?.address?.address &&
-    differentFromUnitagByAddress &&
     dotEthAddress !== ensAddress
   ) {
     results.push({
@@ -119,7 +103,7 @@ export function useWalletSearchResults(
   }
 
   // Do not show EOA address result if there is a Unitag result by address
-  if (hasEOAResult && !showUnitagByAddress) {
+  if (hasEOAResult && !unitagByAddress?.username) {
     results.push({
       type: SearchResultType.WalletByAddress,
       address: validAddress,

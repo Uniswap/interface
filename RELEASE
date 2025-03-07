@@ -1,23 +1,13 @@
-IPFS hash of the deployment:
-- CIDv0: `QmY1KGrtefyx6c622uKgMsF3wdgcHrctuPjx6FKEXtbTaU`
-- CIDv1: `bafybeiepudn33fn7she525pbbiq6vlylmo4ujkvbrzdbkxud5qevpnddxu`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Last release we introduced Unichain support! Now, enjoy faster swap speeds, more onramp options, and more token data. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Monad Testnet Support - Enjoy swapping on Monad testnet by toggling to Testnet mode in settings
 
-IPFS gateways:
-- https://bafybeiepudn33fn7she525pbbiq6vlylmo4ujkvbrzdbkxud5qevpnddxu.ipfs.dweb.link/
-- [ipfs://QmY1KGrtefyx6c622uKgMsF3wdgcHrctuPjx6FKEXtbTaU/](ipfs://QmY1KGrtefyx6c622uKgMsF3wdgcHrctuPjx6FKEXtbTaU/)
+Other changes: 
 
-### 5.75.2 (2025-03-06)
-
-
-### Bug Fixes
-
-* **web:** ensure that tick spacing is a whole number (#17038) 5acf938
-
-
+- VND current support
+- Improvements to our NFT Spam reporting feature
+- Stronger warnings when sending funds to token contracts
+- New icon for the Buy/Sell button on the homepage
+- Various bug fixes and performance improvements

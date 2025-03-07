@@ -231,11 +231,13 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
           </Trace>
         )}
       </Column>
-      <SendReviewModal
-        isOpen={sendFormModalState === SendFormModalState.REVIEW}
-        onConfirm={handleSend}
-        onDismiss={() => handleModalState(SendFormModalState.None)}
-      />
+      {sendFormModalState === SendFormModalState.REVIEW && (
+        <SendReviewModal
+          isOpen={true}
+          onConfirm={handleSend}
+          onDismiss={() => handleModalState(SendFormModalState.None)}
+        />
+      )}
       <SmartContractSpeedBumpModal
         isOpen={sendFormModalState === SendFormModalState.SMART_CONTRACT_SPEED_BUMP}
         onConfirm={handleConfirmSmartContractSpeedBump}

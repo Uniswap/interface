@@ -7,8 +7,8 @@ import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex } from 'ui/src'
 
 enum Step {
-  EnterPassword = 0,
-  ChangePassword = 1,
+  EnterPassword,
+  ChangePassword,
 }
 
 export function SettingsChangePasswordScreen(): JSX.Element {

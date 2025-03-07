@@ -2,6 +2,8 @@
 import { ApolloError } from '@apollo/client'
 import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
 import { SerializedError } from '@reduxjs/toolkit'
+import { Currency, TradeType } from '@uniswap/sdk-core'
+// eslint-disable-next-line no-restricted-imports
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import {
   AppDownloadPlatform,
@@ -20,7 +22,6 @@ import {
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, TradeType } from '@uniswap/sdk-core'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
@@ -38,7 +39,6 @@ import {
   UnitagEventName,
   WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
-import { TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
@@ -158,10 +158,6 @@ export type SwapTradeBaseProperties = {
   method?: 'ROUTING_API' | 'QUICK_ROUTE' | 'CLIENT_SIDE_FALLBACK'
   offchain_order_type?: 'Dutch' | 'Dutch_V2' | 'Limit' | 'Dutch_V1_V2' | 'Priority' | 'Dutch_V3'
   simulation_failure_reasons?: TransactionFailureReason[]
-  tokenWarnings?: {
-    input: TokenProtectionWarning
-    output: TokenProtectionWarning
-  }
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -251,16 +247,17 @@ export type InterfaceSearchResultSelectionProperties = {
 } & ITraceContext
 
 type WrapProperties = {
-  type: WrapType
-  token_in_address: string
-  token_out_address: string
+  type?: WrapType
+  token_symbol?: string
+  token_address?: string
+  token_in_address?: string
+  token_out_address?: string
   token_in_symbol?: string
   token_out_symbol?: string
-  chain_id: number
+  chain_id?: number
   amount?: number
   contract_address?: string
   contract_chain_id?: number
-  transaction_hash?: string
 }
 
 type NFTBagProperties = {

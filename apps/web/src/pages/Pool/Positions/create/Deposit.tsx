@@ -8,12 +8,13 @@ import {
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { CreatePositionModal } from 'pages/Pool/Positions/create/CreatePositionModal'
+import { Container } from 'pages/Pool/Positions/create/shared'
 import { useCallback, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { PositionField } from 'types/position'
-import { Flex, Text } from 'ui/src'
+import { Flex, FlexProps, Text } from 'ui/src'
 
-export const DepositStep = ({ autofocus = true }: { autofocus?: boolean }) => {
+export const DepositStep = ({ ...rest }: FlexProps) => {
   const {
     derivedPositionInfo: { currencies },
   } = useCreatePositionContext()
@@ -84,44 +85,45 @@ export const DepositStep = ({ autofocus = true }: { autofocus?: boolean }) => {
 
   return (
     <>
-      <Flex gap={32}>
-        <Flex gap="$spacing4">
-          <Text variant="subheading1">
-            <Trans i18nKey="common.depositTokens" />
-          </Text>
-          <Text variant="body3" color="$neutral2">
-            <Trans i18nKey="position.deposit.description" />
-          </Text>
+      <Container {...rest}>
+        <Flex gap={32}>
+          <Flex gap="$spacing4">
+            <Text variant="subheading1">
+              <Trans i18nKey="common.depositTokens" />
+            </Text>
+            <Text variant="body3" color="$neutral2">
+              <Trans i18nKey="position.deposit.description" />
+            </Text>
+          </Flex>
         </Flex>
-      </Flex>
-      <DepositInputForm
-        token0={token0}
-        token1={token1}
-        formattedAmounts={updatedFormattedAmounts}
-        currencyAmounts={currencyAmounts}
-        currencyAmountsUSDValue={updatedUSDAmounts}
-        currencyBalances={currencyBalances}
-        onUserInput={handleUserInput}
-        onSetMax={handleOnSetMax}
-        deposit0Disabled={updatedDeposit0Disabled}
-        deposit1Disabled={updatedDeposit1Disabled}
-        amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
-        amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
-        autofocus={autofocus}
-      />
-      <LoaderButton
-        flex={1}
-        py="$spacing16"
-        px="$spacing20"
-        onPress={handleReview}
-        isDisabled={disabled}
-        buttonKey="Position-Create-DepositButton"
-        loading={requestLoading}
-      >
-        <Text variant="buttonLabel1" color="$neutralContrast">
-          {inputError ? inputError : <Trans i18nKey="swap.button.review" />}
-        </Text>
-      </LoaderButton>
+        <DepositInputForm
+          token0={token0}
+          token1={token1}
+          formattedAmounts={updatedFormattedAmounts}
+          currencyAmounts={currencyAmounts}
+          currencyAmountsUSDValue={updatedUSDAmounts}
+          currencyBalances={currencyBalances}
+          onUserInput={handleUserInput}
+          onSetMax={handleOnSetMax}
+          deposit0Disabled={updatedDeposit0Disabled}
+          deposit1Disabled={updatedDeposit1Disabled}
+          amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
+          amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
+        />
+        <LoaderButton
+          flex={1}
+          py="$spacing16"
+          px="$spacing20"
+          onPress={handleReview}
+          isDisabled={disabled}
+          buttonKey="Position-Create-DepositButton"
+          loading={requestLoading}
+        >
+          <Text variant="buttonLabel1" color="$neutralContrast">
+            {inputError ? inputError : <Trans i18nKey="swap.button.review" />}
+          </Text>
+        </LoaderButton>
+      </Container>
       <CreatePositionModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
     </>
   )

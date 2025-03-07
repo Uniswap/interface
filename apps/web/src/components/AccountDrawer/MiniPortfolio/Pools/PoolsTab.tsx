@@ -1,4 +1,5 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { PortfolioSkeleton, PortfolioTabWrapper } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
@@ -16,6 +17,8 @@ import { useNavigate } from 'react-router-dom'
 import { TouchableArea } from 'ui/src'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 
@@ -34,6 +37,7 @@ function getPositionKey(position: PositionInfo) {
 
 export default function Pools({ account }: { account: string }) {
   const { t } = useTranslation()
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const { chains } = useEnabledChains()
   const isPositionVisible = usePositionVisibilityCheck()
 
@@ -41,7 +45,9 @@ export default function Pools({ account }: { account: string }) {
     address: account,
     chainIds: chains,
     positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE],
-    protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4],
+    protocolVersions: isLPRedesignEnabled
+      ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
+      : [ProtocolVersion.V2, ProtocolVersion.V3],
     includeHidden: true,
   })
 
@@ -49,7 +55,9 @@ export default function Pools({ account }: { account: string }) {
     address: account,
     chainIds: chains,
     positionStatuses: [PositionStatus.CLOSED],
-    protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4],
+    protocolVersions: isLPRedesignEnabled
+      ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
+      : [ProtocolVersion.V2, ProtocolVersion.V3],
     includeHidden: true,
   })
 
@@ -137,7 +145,9 @@ export default function Pools({ account }: { account: string }) {
 }
 
 function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: PositionInfo; isVisible?: boolean }) {
-  const { chainId, currency0Amount, currency1Amount } = positionInfo
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
+
+  const { tokenId, chainId, currency0Amount, currency1Amount } = positionInfo
   const token0 = currency0Amount.currency
   const token1 = currency1Amount.currency
 
@@ -152,9 +162,13 @@ function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: Po
 
     accountDrawer.close()
 
-    const positionUrl = getPositionUrl(positionInfo)
+    const positionUrl = isLPRedesignEnabled
+      ? getPositionUrl(positionInfo)
+      : positionInfo.version === ProtocolVersion.V3
+        ? '/pool/' + tokenId
+        : '/pools/v2'
     navigate(positionUrl)
-  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, positionInfo])
+  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, tokenId, isLPRedesignEnabled, positionInfo])
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,

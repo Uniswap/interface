@@ -7,8 +7,8 @@ import styled from 'lib/styled-components'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
 import { ThemedText } from 'theme/components'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme'
+import { useWindowSize } from 'uniswap/src/hooks/useWindowSize'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -19,7 +19,7 @@ const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
 `
 
 const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextProps>) => {
-  const { fullWidth: width } = useDeviceDimensions()
+  const { width } = useWindowSize()
 
   if (width && width < breakpoints.xs) {
     return <ThemedText.HeadlineMedium {...textProps}>{children}</ThemedText.HeadlineMedium>

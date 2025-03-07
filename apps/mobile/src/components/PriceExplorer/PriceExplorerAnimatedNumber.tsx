@@ -383,13 +383,13 @@ function PriceExplorerAnimatedNumber({
 
 export default PriceExplorerAnimatedNumber
 
-const RowWrapper = StyleSheet.create({
+export const RowWrapper = StyleSheet.create({
   wrapperStyle: {
     flexDirection: 'row',
   },
 })
 
-const Shimmer = StyleSheet.create({
+export const Shimmer = StyleSheet.create({
   shimmerSize: {
     height: DIGIT_HEIGHT,
     width: 200,

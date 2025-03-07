@@ -114,6 +114,6 @@ export interface CollectionRow extends AssetRow {
 
 // Creating this as an enum and not boolean as we will likely have a success screen state to show
 export enum ProfilePageStateType {
-  VIEWING = 0,
-  LISTING = 1,
+  VIEWING,
+  LISTING,
 }

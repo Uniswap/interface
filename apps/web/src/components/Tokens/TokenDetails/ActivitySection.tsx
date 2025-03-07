@@ -17,8 +17,8 @@ const Tab = styled(Text, {
 })
 
 enum ActivityTab {
-  Txs = 0,
-  Pools = 1,
+  Txs,
+  Pools,
 }
 export function ActivitySection() {
   const { wrapped: referenceToken, chainId } = useTDPContext().currency

@@ -169,7 +169,6 @@ export const ElementName = {
   ChainBase: 'chain-base',
   ChainBlast: 'chain-blast',
   ChainMonadTestnet: 'chain-monad-testnet',
-  ChainSoneium: 'chain-soneium',
   ChainWorldChain: 'chain-world-chain',
   ChainZora: 'chain-zora',
   ChainZkSync: 'chain-zksync',

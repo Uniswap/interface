@@ -5,13 +5,27 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { curveCardinal, scaleLinear } from 'd3'
 import { SparklineMap } from 'graphql/data/types'
 import { PricePoint } from 'graphql/data/util'
-import { useTheme } from 'lib/styled-components'
+import styled, { useTheme } from 'lib/styled-components'
 import { memo } from 'react'
 import { TokenStat } from 'state/explore/types'
-import { Flex } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
+
+const LoadingContainer = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const LongLoadingBubble = styled(LoadingBubble)`
+  width: 90%;
+`
+
+const SparkLineLoadingBubble = styled(LongLoadingBubble)`
+  height: 4px;
+`
 
 interface SparklineChartProps {
   width: number
@@ -34,9 +48,9 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
   // Don't display if there's one or less pricepoints
   if (!pricePoints || pricePoints.length <= 1) {
     return (
-      <Flex height="100%" centered>
-        <LoadingBubble height="4px" width="90%" />
-      </Flex>
+      <LoadingContainer>
+        <SparkLineLoadingBubble />
+      </LoadingContainer>
     )
   }
 

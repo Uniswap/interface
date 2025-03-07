@@ -25,7 +25,7 @@ import { Flex } from 'ui/src'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { logger } from 'utilities/src/logger/logger'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const router = createHashRouter([

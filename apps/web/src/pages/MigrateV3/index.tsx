@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
@@ -26,7 +27,6 @@ import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
-import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
 import { LoadingRow } from 'pages/Pool/Positions/shared'
@@ -34,7 +34,7 @@ import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { ClickableTamaguiStyle } from 'theme/components'
@@ -48,7 +48,7 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
@@ -84,6 +84,9 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const { protocolVersion } = positionState
   const { setPriceRangeState } = usePriceRangeContext()
   const { setDepositState } = useDepositContext()
+  const { value: lpRedesignEnabled, isLoading: isLPRedesignGateLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.LPRedesign,
+  )
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
@@ -104,8 +107,16 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const currency0FiatAmount = useUSDCValue(currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(currency1Amount) ?? undefined
 
+  if (!isLPRedesignGateLoading && !lpRedesignEnabled) {
+    return <Navigate to="/pools" replace />
+  }
+
   if (!isMigrateToV4Enabled || !isSameAddress(account?.address, owner)) {
     navigate('/positions')
+  }
+
+  if (isLPRedesignGateLoading) {
+    return null
   }
 
   return (
@@ -185,45 +196,45 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
             )}
             {step === PositionFlowStep.PRICE_RANGE && (
               <>
-                <Container width="100%" maxWidth="unset">
-                  <SelectPriceRangeStep
-                    onDisableContinue={!txInfo || Boolean(error)}
-                    onContinue={() => {
-                      const isValidTx = isValidLiquidityTxContext(txInfo)
-                      if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
-                        return
-                      }
-                      dispatch(
-                        liquiditySaga.actions.trigger({
-                          selectChain,
-                          startChainId,
-                          account,
-                          liquidityTxContext: txInfo,
-                          setCurrentStep: setCurrentTransactionStep,
-                          setSteps: setTransactionSteps,
-                          onSuccess: () => {
-                            onClose()
-                            navigate('/positions')
-                          },
-                          onFailure: onClose,
-                          analytics: {
-                            ...getLPBaseAnalyticsProperties({
-                              trace,
-                              fee: positionInfo.feeTier,
-                              currency0: currency0Amount.currency,
-                              currency1: currency1Amount.currency,
-                              currency0AmountUsd: currency0FiatAmount,
-                              currency1AmountUsd: currency1FiatAmount,
-                              poolId: positionInfo.poolId,
-                              version: ProtocolVersion.V3,
-                            }),
-                            action: 'V3->V4',
-                          },
-                        }),
-                      )
-                    }}
-                  />
-                </Container>
+                <SelectPriceRangeStep
+                  width="100%"
+                  maxWidth="unset"
+                  onDisableContinue={!txInfo || Boolean(error)}
+                  onContinue={() => {
+                    const isValidTx = isValidLiquidityTxContext(txInfo)
+                    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+                      return
+                    }
+                    dispatch(
+                      liquiditySaga.actions.trigger({
+                        selectChain,
+                        startChainId,
+                        account,
+                        liquidityTxContext: txInfo,
+                        setCurrentStep: setCurrentTransactionStep,
+                        setSteps: setTransactionSteps,
+                        onSuccess: () => {
+                          onClose()
+                          navigate('/positions')
+                        },
+                        onFailure: onClose,
+                        analytics: {
+                          ...getLPBaseAnalyticsProperties({
+                            trace,
+                            fee: positionInfo.feeTier,
+                            currency0: currency0Amount.currency,
+                            currency1: currency1Amount.currency,
+                            currency0AmountUsd: currency0FiatAmount,
+                            currency1AmountUsd: currency1FiatAmount,
+                            poolId: positionInfo.poolId,
+                            version: ProtocolVersion.V3,
+                          }),
+                          action: 'V3->V4',
+                        },
+                      }),
+                    )
+                  }}
+                />
                 <TradingAPIError errorMessage={error} refetch={refetch} />
               </>
             )}

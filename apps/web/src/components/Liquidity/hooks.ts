@@ -1,14 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Position as V3Position } from '@uniswap/v3-sdk'
-import { Position as V4Position } from '@uniswap/v4-sdk'
-import { FeeTierData, PositionInfo, PriceOrdering } from 'components/Liquidity/types'
+import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
 import {
   calculateInvertedValues,
   getDefaultFeeTiersForChainWithDynamicFeeTier,
   mergeFeeTiers,
 } from 'components/Liquidity/utils'
+import { PriceOrdering, getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
 import { ZERO_ADDRESS } from 'constants/misc'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import JSBI from 'jsbi'
@@ -19,59 +19,9 @@ import { useTranslation } from 'react-i18next'
 import { LiquidityModalInitialState } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { Bound } from 'state/mint/v3/actions'
-import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-function getPriceOrderingFromPositionForUI(position?: V3Position | V4Position): PriceOrdering {
-  if (!position) {
-    return {}
-  }
-
-  const token0 = position.amount0.currency
-  const token1 = position.amount1.currency
-
-  // if token0 is a dollar-stable asset, set it as the quote token
-  const stables = [DAI, USDC_MAINNET, USDT]
-  if (stables.some((stable) => stable.equals(token0))) {
-    return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
-      quote: token0,
-      base: token1,
-    }
-  }
-
-  // if token1 is an ETH-/BTC-stable asset, set it as the base token
-  const bases = [...Object.values(WRAPPED_NATIVE_CURRENCY), WBTC]
-  if (bases.some((base) => base && base.equals(token1))) {
-    return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
-      quote: token0,
-      base: token1,
-    }
-  }
-
-  // if both prices are below 1, invert
-  if (position.token0PriceUpper.lessThan(1)) {
-    return {
-      priceLower: position.token0PriceUpper.invert(),
-      priceUpper: position.token0PriceLower.invert(),
-      quote: token0,
-      base: token1,
-    }
-  }
-
-  // otherwise, just return the default
-  return {
-    priceLower: position.token0PriceLower,
-    priceUpper: position.token0PriceUpper,
-    quote: token1,
-    base: token0,
-  }
-}
 
 export const MAX_FEE_TIER_DECIMALS = 4
 /**

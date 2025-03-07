@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+// eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { StyleProp, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
@@ -128,14 +129,14 @@ export function useSlippageSettings(saveOnBlur?: boolean): {
        * isZero is intentionally left out here because the user should be able to type "0"
        * without the input shaking (ex. typing 0.x shouldn't shake after typing char)
        */
-      if (isInvalidNumber || overMaxTolerance || moreThanOneDecimalSymbol || moreThanTwoDecimals) {
+      if (isZero || isInvalidNumber || overMaxTolerance || moreThanOneDecimalSymbol || moreThanTwoDecimals) {
         inputShakeX.value = errorShakeAnimation(inputShakeX)
         return
       }
 
       setInputSlippageTolerance(value)
 
-      if (!saveOnBlur && !isZero) {
+      if (!saveOnBlur) {
         updateTransactionSettings({ customSlippageTolerance: parsedValue })
       }
     },
@@ -181,14 +182,10 @@ export function useSlippageSettings(saveOnBlur?: boolean): {
           ? Math.min(newSlippage, MAX_CUSTOM_SLIPPAGE_TOLERANCE)
           : Math.max(newSlippage, 0)
 
-      const isZero = constrainedNewSlippage === 0
-
       updateInputWarning(constrainedNewSlippage)
 
       setInputSlippageTolerance(constrainedNewSlippage.toFixed(2).toString())
-      if (!isZero) {
-        updateTransactionSettings({ customSlippageTolerance: constrainedNewSlippage })
-      }
+      updateTransactionSettings({ customSlippageTolerance: constrainedNewSlippage })
     },
     [autoSlippageEnabled, currentSlippageToleranceNum, updateInputWarning, updateTransactionSettings],
   )

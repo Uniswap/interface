@@ -33,12 +33,12 @@ export function BuyNativeTokenModal({
           <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon48} />
           <Flex centered gap="$spacing8">
             <Text variant="subheading1">
-              {t('token.zeroNativeBalance.title', { nativeTokenName: nativeCurrencyInfo.currency.name ?? '' })}
+              {t('token.zeroNativeBalance.title', { nativeTokenName: nativeCurrencyInfo.currency.name })}
             </Text>
             <Text color="$neutral2" textAlign="center" variant="body3">
               {t('token.zeroNativeBalance.description', {
-                tokenSymbol: currencyInfo.currency.symbol ?? '',
-                nativeTokenSymbol: nativeCurrencyInfo.currency.symbol ?? '',
+                tokenSymbol: currencyInfo.currency.symbol,
+                nativeTokenSymbol: nativeCurrencyInfo.currency.symbol,
               })}
             </Text>
           </Flex>

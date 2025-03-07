@@ -60,6 +60,7 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
       currencyId: currencyId(currency),
       logoUrl: balance.token.project?.logoUrl,
       isSpam: balance.token.project?.isSpam,
+      safetyLevel: balance.token.project?.safetyLevel,
       spamCode: balance.token.project?.spamCode,
       safetyInfo: getCurrencySafetyInfo(balance.token.project?.safetyLevel, balance.token.protectionInfo),
     },

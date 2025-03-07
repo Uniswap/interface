@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DutchOrderInfoV2,
   DutchOutput,
@@ -17,7 +18,6 @@ import {
   UniswapXV2Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
 import { createGasFeeEstimates } from 'uniswap/src/test/fixtures/tradingApi'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -76,13 +76,13 @@ export const createMockDerivedSwapInfo = (
     [CurrencyField.INPUT]: {
       currency: inputCurrency,
       currencyId: inputCurrency.symbol ?? '',
-      safetyInfo: benignSafetyInfo,
+      safetyLevel: SafetyLevel.Verified,
       logoUrl: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
     },
     [CurrencyField.OUTPUT]: {
       currency: outputCurrency,
       currencyId: outputCurrency.symbol ?? '',
-      safetyInfo: benignSafetyInfo,
+      safetyLevel: SafetyLevel.Verified,
       logoUrl: 'https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880',
     },
   },

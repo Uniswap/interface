@@ -31,18 +31,11 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import i18n from 'uniswap/src/i18n'
 import { EthEvent, EthMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export let wcWeb3Wallet: IWalletKit
-
-const PROJECT_ID = {
-  dev: config.walletConnectProjectIdDev,
-  beta: config.walletConnectProjectIdBeta,
-  default: config.walletConnectProjectId,
-}
 
 let wcWeb3WalletReadyResolve: () => void
 let wcWeb3WalletReadyReject: (e: unknown) => void
@@ -52,20 +45,10 @@ const wcWeb3WalletReady = new Promise<void>((resolve, reject) => {
 })
 export const waitForWcWeb3WalletIsReady = () => wcWeb3WalletReady
 
-function getProjectId() {
-  if (isDevEnv()) {
-    return PROJECT_ID.dev
-  }
-  if (isBetaEnv()) {
-    return PROJECT_ID.beta
-  }
-  return PROJECT_ID.default
-}
-
-async function initializeWeb3Wallet(): Promise<void> {
+export async function initializeWeb3Wallet(): Promise<void> {
   try {
     const wcCore = new Core({
-      projectId: getProjectId(),
+      projectId: config.walletConnectProjectId,
     })
 
     wcWeb3Wallet = await WalletKit.init({

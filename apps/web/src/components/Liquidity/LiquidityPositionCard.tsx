@@ -1,7 +1,6 @@
+// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
-  CHART_HEIGHT,
-  CHART_WIDTH,
   LiquidityPositionRangeChart,
   LiquidityPositionRangeChartLoader,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
@@ -12,7 +11,8 @@ import {
 } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
 import { useGetRangeDisplay, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { PositionInfo, PriceOrdering } from 'components/Liquidity/types'
+import { PositionInfo } from 'components/Liquidity/types'
+import { PriceOrdering } from 'components/PositionListItem'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getPoolDetailsURL } from 'graphql/data/util'
 import useHoverProps from 'hooks/useHoverProps'
@@ -34,8 +34,7 @@ import { Minus } from 'ui/src/components/icons/Minus'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
-import { iconSizes } from 'ui/src/theme'
-import { zIndexes } from 'ui/src/theme/zIndexes'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -70,7 +69,7 @@ export function LiquidityPositionCardLoader() {
           $md={{ row: false, alignItems: 'flex-start', gap: '$gap20' }}
         >
           <LiquidityPositionInfoLoader />
-          <LiquidityPositionRangeChartLoader height={CHART_HEIGHT} width={CHART_WIDTH} position="relative" />
+          <LiquidityPositionRangeChartLoader />
         </Flex>
         <LiquidityPositionFeeStatsLoader />
       </Flex>
@@ -172,7 +171,7 @@ function useDropdownOptions(
             dispatch(
               setOpenModal({
                 name: ModalName.ClaimFee,
-                initialState: liquidityPosition,
+                initialState: { ...liquidityPosition, collectAsWeth: false },
               }),
             )
           },
@@ -282,12 +281,8 @@ export function LiquidityPositionCard({
     }
     return {
       base: pricesInverted ? liquidityPosition.position.amount1.currency : liquidityPosition.position.amount0.currency,
-      priceLower: pricesInverted
-        ? liquidityPosition.position.token0PriceUpper
-        : liquidityPosition.position.token0PriceLower.invert(),
-      priceUpper: pricesInverted
-        ? liquidityPosition.position.token0PriceLower
-        : liquidityPosition.position.token0PriceUpper.invert(),
+      priceLower: liquidityPosition.position.token0PriceLower,
+      priceUpper: liquidityPosition.position.token0PriceUpper,
     }
   }, [liquidityPosition, pricesInverted])
 

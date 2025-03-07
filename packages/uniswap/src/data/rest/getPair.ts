@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { useQuery } from '@connectrpc/connect-query'

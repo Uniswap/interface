@@ -1,6 +1,5 @@
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
-import { dismissInAppBrowser } from 'src/utils/linking'
 import { call, put } from 'typed-redux-saga'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -14,6 +13,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { fetchOffRampTransferDetails } from 'wallet/src/features/fiatOnRamp/api'
+import { dismissInAppBrowser } from 'wallet/src/utils/linking'
 
 export function* handleOffRampReturnLink(url: URL) {
   try {

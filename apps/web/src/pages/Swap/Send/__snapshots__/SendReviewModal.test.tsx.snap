@@ -1,23 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
-.c7 {
+.c16 {
   height: 36px;
   width: 36px;
 }
 
-.c7 path {
+.c16 path {
   stroke: #CECECE;
   background: #7D7D7D;
   fill: #CECECE;
 }
 
-.c8 {
+.c17 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
-.c6 {
+.c15 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -31,13 +31,29 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   left: 0;
 }
 
-.c2 {
+.c6 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c10 {
+.c19 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c20 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+}
+
+.c22 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -60,7 +76,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   border-radius: 4px;
 }
 
-.c4 {
+.c13 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -68,7 +84,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c5 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -76,7 +92,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c0 {
+.c4 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -87,21 +103,21 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   font-weight: 500;
 }
 
-.c0:hover {
+.c4:hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c4:active {
   opacity: 0.4;
 }
 
-.c9 {
+.c18 {
   width: 100%;
   height: 1px;
   background-color: #22222212;
 }
 
-.c11 {
+.c23 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -140,25 +156,25 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c11:disabled {
+.c23:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c11 > * {
+.c23 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c11 > a {
+.c23 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c12 {
+.c24 {
   background-color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
@@ -166,21 +182,21 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   color: #FFFFFF;
 }
 
-.c12:focus {
+.c24:focus {
   box-shadow: 0 0 0 1pt #fb58ff;
   background-color: #fb58ff;
 }
 
-.c12:hover {
+.c24:hover {
   background-color: #fb58ff;
 }
 
-.c12:active {
+.c24:active {
   box-shadow: 0 0 0 1pt #fb3fff;
   background-color: #fb3fff;
 }
 
-.c12:disabled {
+.c24:disabled {
   background-color: #22222212;
   color: #7D7D7D;
   cursor: auto;
@@ -189,7 +205,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   outline: none;
 }
 
-.c3 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -207,7 +223,44 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   gap: 4px;
 }
 
-.c1 {
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c21 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c5 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -221,118 +274,198 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   stroke: none;
 }
 
-.c1:hover {
+.c5:hover {
   background: #22222212;
   color: #222222;
   opacity: unset;
 }
 
-.c1:hover path {
+.c5:hover path {
   fill: #222222;
 }
 
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c2 {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  width: 100%;
+  padding: 8px;
+}
+
+.c3 {
+  padding: 8px 12px 4px;
+}
+
+.c9 {
+  width: 100%;
+  padding: 12px 16px;
+  gap: 16px;
+}
+
 <div
-  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _width-10037 _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _gap-t-space-gap1569"
+  class="c0 c1 c2"
   data-testid="send-review-modal"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa94665593 _pb-t-space-spa94665589"
+    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
-      <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+        data-disable-theme="true"
       >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-          data-disable-theme="true"
-        >
-          Review send
-        </span>
-      </div>
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+        Review send
+      </span>
+    </div>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+    >
+      <a
+        class="c4 c5"
+        href="https://support.uniswap.org/hc/en-us"
+        rel="noopener noreferrer"
+        target="_blank"
       >
-        <a
-          class="c0 c1"
-          href="https://support.uniswap.org/hc/en-us"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <div
-            class="c2 c3"
-          >
-            <svg
-              fill="none"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                fill="#9B9B9B"
-              />
-            </svg>
-            Get help
-          </div>
-        </a>
         <div
-          class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+          class="c6 c7"
         >
-          <div
-            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+          <svg
+            fill="none"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              fill="none"
-              stroke-width="8"
-              style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
+            <path
+              d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
+              fill="#9B9B9B"
+            />
+          </svg>
+          Get help
+        </div>
+      </a>
+      <div
+        class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+        >
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+              fill="currentColor"
+            />
+          </svg>
         </div>
       </div>
     </div>
   </div>
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1573"
+    class="c8 c9"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602"
+      class="c10"
     >
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
+        class="c6 c11"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
+          class="c12"
         >
           <div
-            class="c4 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             You’re sending
           </div>
           <div
-            class="c5 css-15popx1"
+            class="c14 css-15popx1"
           >
             $1,000.00
           </div>
           <div
-            class="c4 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             100.00 DAI
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+          style="height: 36px;"
         >
           <div
-            class="c6"
+            class="c15"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -361,40 +494,40 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
         </div>
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
+        class="c6 c11"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
+          class="c12"
         >
           <div
-            class="c4 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             To
           </div>
           <div
-            class="c5 css-15popx1"
+            class="c14 css-15popx1"
           >
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center"
+              class="c6 c7"
             >
               <div
-                class="c5 css-15popx1"
+                class="c14 css-15popx1"
               >
                 hayden.eth
               </div>
             </div>
           </div>
           <div
-            class="c4 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             0x9984...9103
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+          style="height: 36px;"
         >
           <svg
-            class="c7 c8"
+            class="c16 c17"
             data-testid="IdenticonLoader"
             fill="#CECECE"
             stroke="#CECECE"
@@ -415,18 +548,20 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
       </div>
     </div>
     <div
-      class="c9"
+      class="c18"
     />
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _justifyContent-space-betwe3241"
+      class="c19 c11"
+      width="100%"
     >
       <div
-        class="c4 css-1a4qi6e"
+        class="c13 css-1a4qi6e"
       >
         Network cost
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-min-content _gap-t-space-gap52 _alignItems-center"
+        class="c20 c21"
+        width="min-content"
       >
         <img
           alt="Ethereum logo"
@@ -437,7 +572,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
           width="16px"
         />
         <div
-          class="c5 css-142zc9n"
+          class="c14 css-142zc9n"
         >
           -
         </div>
@@ -445,7 +580,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
     </div>
   </div>
   <button
-    class="c10 c11 c12"
+    class="c22 c23 c24"
   >
     Confirm send
   </button>
@@ -453,23 +588,23 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform should render input in token amount correctly 1`] = `
-.c7 {
+.c16 {
   height: 36px;
   width: 36px;
 }
 
-.c7 path {
+.c16 path {
   stroke: #CECECE;
   background: #7D7D7D;
   fill: #CECECE;
 }
 
-.c8 {
+.c17 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
-.c6 {
+.c15 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -483,13 +618,29 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   left: 0;
 }
 
-.c2 {
+.c6 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c10 {
+.c19 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c20 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+}
+
+.c22 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -512,7 +663,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   border-radius: 4px;
 }
 
-.c4 {
+.c13 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -520,7 +671,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   letter-spacing: -0.01em;
 }
 
-.c5 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -528,7 +679,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   letter-spacing: -0.01em;
 }
 
-.c0 {
+.c4 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -539,21 +690,21 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   font-weight: 500;
 }
 
-.c0:hover {
+.c4:hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c4:active {
   opacity: 0.4;
 }
 
-.c9 {
+.c18 {
   width: 100%;
   height: 1px;
   background-color: #22222212;
 }
 
-.c11 {
+.c23 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -592,25 +743,25 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   transform: perspective(1px) translateZ(0);
 }
 
-.c11:disabled {
+.c23:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c11 > * {
+.c23 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c11 > a {
+.c23 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c12 {
+.c24 {
   background-color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
@@ -618,21 +769,21 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   color: #FFFFFF;
 }
 
-.c12:focus {
+.c24:focus {
   box-shadow: 0 0 0 1pt #fb58ff;
   background-color: #fb58ff;
 }
 
-.c12:hover {
+.c24:hover {
   background-color: #fb58ff;
 }
 
-.c12:active {
+.c24:active {
   box-shadow: 0 0 0 1pt #fb3fff;
   background-color: #fb3fff;
 }
 
-.c12:disabled {
+.c24:disabled {
   background-color: #22222212;
   color: #7D7D7D;
   cursor: auto;
@@ -641,7 +792,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   outline: none;
 }
 
-.c3 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -659,7 +810,44 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   gap: 4px;
 }
 
-.c1 {
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c21 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c5 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -673,118 +861,198 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   stroke: none;
 }
 
-.c1:hover {
+.c5:hover {
   background: #22222212;
   color: #222222;
   opacity: unset;
 }
 
-.c1:hover path {
+.c5:hover path {
   fill: #222222;
 }
 
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c2 {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  width: 100%;
+  padding: 8px;
+}
+
+.c3 {
+  padding: 8px 12px 4px;
+}
+
+.c9 {
+  width: 100%;
+  padding: 12px 16px;
+  gap: 16px;
+}
+
 <div
-  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _width-10037 _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _gap-t-space-gap1569"
+  class="c0 c1 c2"
   data-testid="send-review-modal"
 >
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa94665593 _pb-t-space-spa94665589"
+    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
     >
-      <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+      <span
+        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+        data-disable-theme="true"
       >
-        <span
-          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-          data-disable-theme="true"
-        >
-          Review send
-        </span>
-      </div>
-      <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+        Review send
+      </span>
+    </div>
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+    >
+      <a
+        class="c4 c5"
+        href="https://support.uniswap.org/hc/en-us"
+        rel="noopener noreferrer"
+        target="_blank"
       >
-        <a
-          class="c0 c1"
-          href="https://support.uniswap.org/hc/en-us"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <div
-            class="c2 c3"
-          >
-            <svg
-              fill="none"
-              height="16"
-              viewBox="0 0 16 16"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                fill="#9B9B9B"
-              />
-            </svg>
-            Get help
-          </div>
-        </a>
         <div
-          class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+          class="c6 c7"
         >
-          <div
-            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+          <svg
+            fill="none"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              fill="none"
-              stroke-width="8"
-              style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
+            <path
+              d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
+              fill="#9B9B9B"
+            />
+          </svg>
+          Get help
+        </div>
+      </a>
+      <div
+        class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+        >
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+              fill="currentColor"
+            />
+          </svg>
         </div>
       </div>
     </div>
   </div>
   <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1573"
+    class="c8 c9"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1602"
+      class="c10"
     >
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
+        class="c6 c11"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
+          class="c12"
         >
           <div
-            class="c4 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             You’re sending
           </div>
           <div
-            class="c5 css-15popx1"
+            class="c14 css-15popx1"
           >
             1.00 DAI
           </div>
           <div
-            class="c4 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             $100.00
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+          style="height: 36px;"
         >
           <div
-            class="c6"
+            class="c15"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -813,40 +1081,40 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
         </div>
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center"
+        class="c6 c11"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap52"
+          class="c12"
         >
           <div
-            class="c4 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             To
           </div>
           <div
-            class="c5 css-15popx1"
+            class="c14 css-15popx1"
           >
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center"
+              class="c6 c7"
             >
               <div
-                class="c5 css-15popx1"
+                class="c14 css-15popx1"
               >
                 hayden.eth
               </div>
             </div>
           </div>
           <div
-            class="c4 css-1a4qi6e"
+            class="c13 css-1a4qi6e"
           >
             0x9984...9103
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+          style="height: 36px;"
         >
           <svg
-            class="c7 c8"
+            class="c16 c17"
             data-testid="IdenticonLoader"
             fill="#CECECE"
             stroke="#CECECE"
@@ -867,18 +1135,20 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
       </div>
     </div>
     <div
-      class="c9"
+      class="c18"
     />
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _justifyContent-space-betwe3241"
+      class="c19 c11"
+      width="100%"
     >
       <div
-        class="c4 css-1a4qi6e"
+        class="c13 css-1a4qi6e"
       >
         Network cost
       </div>
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-min-content _gap-t-space-gap52 _alignItems-center"
+        class="c20 c21"
+        width="min-content"
       >
         <img
           alt="Ethereum logo"
@@ -889,7 +1159,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
           width="16px"
         />
         <div
-          class="c5 css-142zc9n"
+          class="c14 css-142zc9n"
         >
           -
         </div>
@@ -897,7 +1167,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
     </div>
   </div>
   <button
-    class="c10 c11 c12"
+    class="c22 c23 c24"
   >
     Confirm send
   </button>

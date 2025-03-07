@@ -45,8 +45,8 @@ export type ConvertFiatAmountFormattedCallback = (
 ) => string
 
 export enum TokenSelectorFlow {
-  Swap = 0,
-  Send = 1,
+  Swap,
+  Send,
 }
 
 export interface TokenItemWrapperProps {

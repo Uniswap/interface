@@ -1,35 +1,31 @@
+import { loadingAnimation } from 'components/Loader/styled'
+import deprecatedStyled from 'lib/styled-components'
 import { lighten } from 'polished'
-import { FlexProps, Shine, View, useSporeColors } from 'ui/src'
 
-export const LoadingBubble = ({
-  containerWidth,
-  height,
-  width,
-  round,
-  delay,
-  margin,
-  ...rest
-}: {
-  containerWidth?: string | number
-  height?: string | number
-  width?: string | number
+/* Loading state bubbles (animation style from: src/components/Loader/styled.tsx) */
+export const LoadingBubble = deprecatedStyled.div<{
+  height?: string
+  width?: string
   round?: boolean
   delay?: string
   margin?: string
-} & FlexProps) => {
-  const colors = useSporeColors()
-  return (
-    <Shine $platform-web={{ animationDelay: delay, width: containerWidth ?? '100%' }}>
-      <View
-        borderRadius={round ? '$roundedFull' : '$rounded12'}
-        height={height ?? '$spacing24'}
-        width={width ?? '50%'}
-        m={margin}
-        $platform-web={{
-          background: `linear-gradient(to left, ${colors.surface3.val} 25%, ${lighten(0.075, colors.surface3.val ?? '#FFFFFF12')} 50%, ${colors.surface3.val} 75%)`,
-        }}
-        {...rest}
-      />
-    </Shine>
-  )
-}
+}>`
+  border-radius: 12px;
+  border-radius: ${({ round }) => (round ? '50%' : '12px')};
+  ${({ margin }) => margin && `margin: ${margin}`};
+  height: ${({ height }) => height ?? '24px'};
+  width: 50%;
+  width: ${({ width }) => width ?? '50%'};
+  animation: ${loadingAnimation} 1.5s infinite;
+  ${({ delay }) => delay && `animation-delay: ${delay};`}
+  animation-fill-mode: both;
+  background: linear-gradient(
+    to left,
+    ${({ theme }) => theme.surface3} 25%,
+    // Default color values prevent undefined argument error
+    ${({ theme }) => lighten(0.075, theme.surface3 ?? '#FFFFFF12')} 50%,
+    ${({ theme }) => theme.surface3} 75%
+  );
+  will-change: background-position;
+  background-size: 400%;
+`

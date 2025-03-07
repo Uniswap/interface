@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react'
 import { SpaceTokens, getToken } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { FlexLoader, FlexLoaderProps } from 'ui/src/loading/FlexLoader'
 import { NftCardLoader } from 'ui/src/loading/NftCardLoader'
 import { Skeleton } from 'ui/src/loading/Skeleton'

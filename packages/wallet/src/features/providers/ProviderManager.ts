@@ -5,9 +5,9 @@ import { createEthersProvider } from 'uniswap/src/features/providers/createEther
 import { logger } from 'utilities/src/logger/logger'
 
 enum ProviderStatus {
-  Disconnected = 0,
-  Connected = 1,
-  Error = 2,
+  Disconnected,
+  Connected,
+  Error,
 }
 
 interface ProviderDetails {
@@ -93,8 +93,7 @@ export class ProviderManager {
   }
 
   createPrivateProvider(chainId: UniverseChainId, signer?: Signer, address?: Address): undefined {
-    const signerInfo = signer && address ? { signer, address } : undefined
-    const provider = createEthersProvider(chainId, RPCType.Private, signerInfo)
+    const provider = createEthersProvider(chainId, RPCType.Private, signer)
     if (!provider) {
       return
     }

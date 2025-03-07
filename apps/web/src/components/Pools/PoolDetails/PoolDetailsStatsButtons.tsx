@@ -1,15 +1,17 @@
+import { Scrim } from 'components/AccountDrawer'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
-import { Scrim } from 'components/AccountDrawer/Scrim'
 import { CurrencySelect } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import { MobileBottomBar } from 'components/NavBar/MobileBottomBar'
-import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
+import { MobileBottomBar } from 'components/NavBar/MobileBottomBar'
+import { SwapWrapperOuter } from 'components/swap/styled'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { gqlToCurrency } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import styled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { ReactNode, useCallback, useReducer, useState } from 'react'
@@ -26,6 +28,8 @@ import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-ap
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -93,6 +97,12 @@ const SwapModalWrapper = styled(Column)<{ open?: boolean }>`
   transition: ${({ theme }) => `max-height ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
   padding-bottom: ${({ open }) => (open ? '24px' : '0')};
 
+  ${SwapWrapperOuter} {
+    &:before {
+      background-color: unset;
+    }
+  }
+
   // Need to override the default visibility to properly hide
   ${CurrencySelect} {
     visibility: ${({ open }) => (open ? 'visible' : 'hidden')};
@@ -147,6 +157,7 @@ export function PoolDetailsStatsButtons({
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
 
+  const switchChain = useSwitchChain()
   const navigate = useNavigate()
   const location = useLocation()
   const currency0 = token0 && gqlToCurrency(token0)
@@ -154,19 +165,29 @@ export function PoolDetailsStatsButtons({
   const currencyInfo0 = useCurrencyInfo(currency0 && currencyId(currency0))
   const currencyInfo1 = useCurrencyInfo(currency1 && currencyId(currency1))
 
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const handleAddLiquidity = async () => {
     if (currency0 && currency1) {
+      if (!isLPRedesignEnabled && account.chainId !== chainId && chainId) {
+        await switchChain(chainId)
+      }
       const currency0Address = currency0.isNative ? NATIVE_CHAIN_ID : currency0.address
       const currency1Address = currency1.isNative ? NATIVE_CHAIN_ID : currency1.address
       const chainName = getChainInfo(chainId ?? currency0.chainId)?.urlParam
 
-      if (tokenId) {
-        navigate(`/positions/${protocolVersion?.toLowerCase()}/${chainName}/${tokenId}`, {
-          state: { from: location.pathname },
-        })
+      if (isLPRedesignEnabled) {
+        if (tokenId) {
+          navigate(`/positions/${protocolVersion?.toLowerCase()}/${chainName}/${tokenId}`, {
+            state: { from: location.pathname },
+          })
+        } else {
+          const url = `/positions/create/${protocolVersion?.toLowerCase()}?currencyA=${currency0Address}&currencyB=${currency1Address}&chain=${chainName}`
+          navigate(url, {
+            state: { from: location.pathname },
+          })
+        }
       } else {
-        const url = `/positions/create/${protocolVersion?.toLowerCase()}?currencyA=${currency0Address}&currencyB=${currency1Address}&chain=${chainName}`
-        navigate(url, {
+        navigate(`/add/${currency0Address}/${currency1Address}/${feeTier}${tokenId ? `/${tokenId}` : ''}`, {
           state: { from: location.pathname },
         })
       }

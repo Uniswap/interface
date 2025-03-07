@@ -2,7 +2,7 @@ import { BigNumber, providers } from 'ethers'
 import { useCallback, useMemo } from 'react'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'uniswap/src/constants/transactions'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
-import { CancellationGasFeeDetails, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
@@ -10,17 +10,22 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'wallet/src/features/gas/adjustGasFee'
 import { getCancelOrderTxRequest } from 'wallet/src/features/transactions/cancelTransactionSaga'
 
+export type CancelationGasFeeDetails = {
+  cancelRequest: providers.TransactionRequest
+  cancelationGasFeeDisplayValue: string
+}
+
 /**
- * Construct cancellation transaction with increased gas (based on current network conditions),
+ * Construct cancelation transaction with increased gas (based on current network conditions),
  * then use it to compute new gas info.
  */
-export function useCancellationGasFeeInfo(transaction: TransactionDetails): CancellationGasFeeDetails | undefined {
+export function useCancelationGasFeeInfo(transaction: TransactionDetails): CancelationGasFeeDetails | undefined {
   const classicCancelRequest = useMemo(() => {
     return {
       chainId: transaction.chainId,
       from: transaction.from,
       to:
-        // Flashbots requires the cancellation transaction to be sent to the same address as the original transaction
+        // Flashbots requires the cancelation transaction to be sent to the same address as the original transaction
         // https://docs.flashbots.net/flashbots-protect/cancellations
         isClassic(transaction) &&
         transaction.options.privateRpcProvider === 'flashbots' &&
@@ -44,7 +49,7 @@ export function useCancellationGasFeeInfo(transaction: TransactionDetails): Canc
       }
       return {
         cancelRequest: uniswapXCancelRequest.data,
-        gasFeeDisplayValue: uniswapXGasFee.displayValue,
+        cancelationGasFeeDisplayValue: uniswapXGasFee.displayValue,
       }
     }
 
@@ -73,7 +78,7 @@ export function useCancellationGasFeeInfo(transaction: TransactionDetails): Canc
       gasLimit: baseTxGasFee.params.gasLimit,
     }
 
-    const gasFeeDisplayValue = getCancellationGasFeeDisplayValue(
+    const cancelationGasFeeDisplayValue = getCancellationGasFeeDisplayValue(
       adjustedFeeDetails,
       baseTxGasFee.params.gasLimit,
       baseTxGasFee.value,
@@ -82,7 +87,7 @@ export function useCancellationGasFeeInfo(transaction: TransactionDetails): Canc
 
     return {
       cancelRequest,
-      gasFeeDisplayValue,
+      cancelationGasFeeDisplayValue,
     }
   }, [
     isUniswapXTx,

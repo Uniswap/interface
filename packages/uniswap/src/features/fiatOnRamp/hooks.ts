@@ -1,7 +1,7 @@
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency } from '@uniswap/sdk-core'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
@@ -356,39 +356,4 @@ export function useIsSupportedFiatOnRampCurrency(
   const foundToken = supportedTokensList?.find((token) => token.currencyInfo?.currencyId === currencyId)
 
   return foundToken
-}
-
-/**
- * Determines loading state when fetching FOR quotes.
- * We debounce the amounts so theres some additional logic to consider
- * The useEffects help fix a race condition that otherwise results in some flickering
- */
-export function useIsFORLoading({
-  hasValidAmount,
-  debouncedAmountsMatch,
-  quotesLoading,
-  exceedsBalanceError,
-}: {
-  hasValidAmount: boolean
-  debouncedAmountsMatch: boolean
-  quotesLoading: boolean
-  exceedsBalanceError: boolean
-}): boolean {
-  const [isWaitingForNewQuotes, setIsWaitingForNewQuotes] = useState(false)
-
-  useEffect(() => {
-    // When amount changes, mark that we're waiting for new quotes
-    if (!debouncedAmountsMatch) {
-      setIsWaitingForNewQuotes(true)
-    }
-  }, [debouncedAmountsMatch])
-
-  useEffect(() => {
-    // When we get new quotes or an error, mark that we're no longer waiting
-    if (!quotesLoading) {
-      setIsWaitingForNewQuotes(false)
-    }
-  }, [quotesLoading])
-
-  return hasValidAmount && isWaitingForNewQuotes && !exceedsBalanceError
 }

@@ -1,6 +1,8 @@
 // until the web app needs all of tamagui, avoid heavy imports there
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { ColorTokens, ThemeKeys, ThemeProps, useTheme } from '@tamagui/core'
+// eslint-disable-next-line no-restricted-imports
+import { ColorTokens, ThemeKeys, ThemeProps } from '@tamagui/core'
+// eslint-disable-next-line no-restricted-imports
+import { useTheme } from '@tamagui/core'
 import { useMemo } from 'react'
 
 // copied from react-native (avoiding import for web)

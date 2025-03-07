@@ -16,9 +16,14 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { MAX_CUSTOM_SLIPPAGE_TOLERANCE, SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
+import {
+  MAX_AUTO_SLIPPAGE_TOLERANCE,
+  MAX_CUSTOM_SLIPPAGE_TOLERANCE,
+  SLIPPAGE_CRITICAL_TOLERANCE,
+} from 'uniswap/src/constants/transactions'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/settings/useSlippageSettings'
@@ -34,13 +39,23 @@ export const Slippage: SwapSettingConfig = {
     const { t } = useTranslation()
     const { formatPercent } = useLocalizationContext()
     const { derivedSwapInfo } = useSwapFormContext()
-    const { currentSlippageTolerance, autoSlippageEnabled } = useSlippageSettings()
+    const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
+
+    const isCustomSlippage = !!customSlippageTolerance
+    let currentSlippage = customSlippageTolerance ?? autoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
+    if (autoSlippageTolerance && currentSlippage === 0) {
+      currentSlippage = autoSlippageTolerance
+    }
+
     const isBridgeTrade = derivedSwapInfo.trade.trade instanceof BridgeTrade
-    const currentSlippage = isBridgeTrade ? 0 : currentSlippageTolerance
+
+    if (isBridgeTrade) {
+      currentSlippage = 0
+    }
 
     return (
       <Flex row gap="$spacing8">
-        {autoSlippageEnabled && !isBridgeTrade ? (
+        {!isCustomSlippage && !isBridgeTrade ? (
           <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
             <Text color="$accent1" variant="buttonLabel3">
               {t('swap.settings.slippage.control.auto')}

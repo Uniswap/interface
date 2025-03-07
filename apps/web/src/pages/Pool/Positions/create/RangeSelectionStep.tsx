@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { LiquidityRangeInput } from 'components/Charts/LiquidityRangeInput/LiquidityRangeInput'
@@ -5,13 +6,14 @@ import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
+import { Container } from 'pages/Pool/Positions/create/shared'
 import { CreatePositionInfo, PriceRangeState } from 'pages/Pool/Positions/create/types'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
-import { DeprecatedButton, Flex, SegmentedControl, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, FlexProps, SegmentedControl, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { fonts } from 'ui/src/theme'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
@@ -19,8 +21,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 enum RangeSelectionInput {
-  MIN = 0,
-  MAX = 1,
+  MIN,
+  MAX,
 }
 
 enum RangeSelection {
@@ -273,41 +275,37 @@ function RangeInput({
   )
 }
 
-export const SelectPriceRangeStepV2 = ({ onContinue }: { onContinue?: () => void }) => {
+export const SelectPriceRangeStepV2 = ({ onContinue, ...rest }: { onContinue: () => void } & FlexProps) => {
   return (
-    <>
+    <Container {...rest}>
       <InitialPriceInput />
-      {onContinue && (
-        <DeprecatedButton
-          flex={1}
-          py="$spacing16"
-          px="$spacing20"
-          backgroundColor="$accent3"
-          hoverStyle={{
-            backgroundColor: undefined,
-            opacity: 0.8,
-          }}
-          pressStyle={{
-            backgroundColor: undefined,
-          }}
-          onPress={onContinue}
-        >
-          <Text variant="buttonLabel1" color="$surface1">
-            <Trans i18nKey="common.button.continue" />
-          </Text>
-        </DeprecatedButton>
-      )}
-    </>
+      <DeprecatedButton
+        flex={1}
+        py="$spacing16"
+        px="$spacing20"
+        backgroundColor="$accent3"
+        hoverStyle={{
+          backgroundColor: undefined,
+          opacity: 0.8,
+        }}
+        pressStyle={{
+          backgroundColor: undefined,
+        }}
+        onPress={onContinue}
+      >
+        <Text variant="buttonLabel1" color="$surface1">
+          <Trans i18nKey="common.button.continue" />
+        </Text>
+      </DeprecatedButton>
+    </Container>
   )
 }
 
 export const SelectPriceRangeStep = ({
   onContinue,
   onDisableContinue,
-}: {
-  onContinue?: () => void
-  onDisableContinue?: boolean
-}) => {
+  ...rest
+}: { onContinue: () => void; onDisableContinue?: boolean } & FlexProps) => {
   const { t } = useTranslation()
 
   const {
@@ -466,78 +464,48 @@ export const SelectPriceRangeStep = ({
     (derivedPositionInfo.creatingPoolOrPair &&
       (!priceRangeState.initialPrice || priceRangeState.initialPrice.length === 0))
 
-  // Setting min/max price to empty string resets them to defaults (0 / Infinity)
-  const setFallbackRangePrices = useCallback(() => {
-    handleChartRangeInput(RangeSelectionInput.MIN, '')
-    handleChartRangeInput(RangeSelectionInput.MAX, '')
-  }, [handleChartRangeInput])
-
-  // If no pool is found for custom range, set min/max price to defaults
-  useEffect(() => {
-    if (
-      !priceRangeState.fullRange &&
-      !derivedPositionInfo.poolId &&
-      priceRangeState.minPrice === undefined &&
-      priceRangeState.maxPrice === undefined
-    ) {
-      setFallbackRangePrices()
-    }
-
-    return undefined
-  }, [
-    priceRangeState.fullRange,
-    priceRangeState.minPrice,
-    priceRangeState.maxPrice,
-    derivedPositionInfo.poolId,
-    setFallbackRangePrices,
-  ])
-
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
     return (
-      <>
+      <Container {...rest}>
         <InitialPriceInput />
-        {onContinue && (
-          <DeprecatedButton
-            flex={1}
-            py="$spacing16"
-            px="$spacing20"
-            backgroundColor="$accent3"
-            hoverStyle={{
-              backgroundColor: undefined,
-              opacity: 0.8,
-            }}
-            pressStyle={{
-              backgroundColor: undefined,
-            }}
-            onPress={onContinue}
-            isDisabled={invalidState}
-          >
-            <Text variant="buttonLabel1" color="$surface1">
-              <Trans i18nKey="common.button.continue" />
-            </Text>
-          </DeprecatedButton>
-        )}
-      </>
+        <DeprecatedButton
+          flex={1}
+          py="$spacing16"
+          px="$spacing20"
+          backgroundColor="$accent3"
+          hoverStyle={{
+            backgroundColor: undefined,
+            opacity: 0.8,
+          }}
+          pressStyle={{
+            backgroundColor: undefined,
+          }}
+          onPress={onContinue}
+          isDisabled={invalidState}
+        >
+          <Text variant="buttonLabel1" color="$surface1">
+            <Trans i18nKey="common.button.continue" />
+          </Text>
+        </DeprecatedButton>
+      </Container>
     )
   }
 
   const showIncrementButtons = !!derivedPositionInfo.pool && !priceRangeState.fullRange
 
   return (
-    <>
+    <Container {...rest}>
       {creatingPoolOrPair && <InitialPriceInput />}
       <Flex gap="$gap20">
         <Flex row alignItems="center">
           <Text flex={1} variant="subheading1">
             <Trans i18nKey="position.setRange" />
           </Text>
-          {!creatingPoolOrPair && (
-            <SegmentedControl
-              options={controlOptions}
-              selectedOption={baseCurrency?.symbol ?? ''}
-              onSelectOption={handleSelectToken}
-            />
-          )}
+          <SegmentedControl
+            options={controlOptions}
+            selectedOption={baseCurrency?.symbol ?? ''}
+            onSelectOption={handleSelectToken}
+          />
         </Flex>
         <SegmentedControl
           options={segmentedControlRangeOptions}
@@ -603,7 +571,6 @@ export const SelectPriceRangeStep = ({
                 setMaxPrice={(maxPrice?: number) => {
                   handleChartRangeInput(RangeSelectionInput.MAX, maxPrice?.toString())
                 }}
-                setFallbackRangePrices={setFallbackRangePrices}
               />
             )}
           </Flex>
@@ -635,28 +602,26 @@ export const SelectPriceRangeStep = ({
           </Flex>
         )}
       </Flex>
-      {onContinue && (
-        <DeprecatedButton
-          flex={1}
-          py="$spacing16"
-          px="$spacing20"
-          backgroundColor="$accent3"
-          hoverStyle={{
-            backgroundColor: undefined,
-            opacity: 0.8,
-          }}
-          pressStyle={{
-            backgroundColor: undefined,
-          }}
-          onPress={onContinue}
-          isDisabled={invalidState}
-        >
-          <Text variant="buttonLabel1" color="$surface1">
-            {t(`common.button.continue`)}
-          </Text>
-        </DeprecatedButton>
-      )}
-    </>
+      <DeprecatedButton
+        flex={1}
+        py="$spacing16"
+        px="$spacing20"
+        backgroundColor="$accent3"
+        hoverStyle={{
+          backgroundColor: undefined,
+          opacity: 0.8,
+        }}
+        pressStyle={{
+          backgroundColor: undefined,
+        }}
+        onPress={onContinue}
+        isDisabled={invalidState}
+      >
+        <Text variant="buttonLabel1" color="$surface1">
+          {t(`common.button.continue`)}
+        </Text>
+      </DeprecatedButton>
+    </Container>
   )
 }
 

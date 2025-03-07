@@ -17,7 +17,7 @@ import JSBI from 'jsbi'
 import styled from 'lib/styled-components'
 import { ReversedArrowsIcon } from 'nft/components/icons'
 import { useCallback, useMemo, useState } from 'react'
-import { useLimitContext } from 'state/limit/LimitContext'
+import { useLimitContext, useLimitPrice } from 'state/limit/LimitContext'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
@@ -74,18 +74,11 @@ interface LimitPriceInputPanelProps {
 
 export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelProps) {
   const [currencySelectModalField, setCurrencySelectModalField] = useState<keyof CurrencyState | undefined>(undefined)
+  const { limitPrice, setLimitPrice, limitPriceInverted } = useLimitPrice()
   const {
     derivedLimitInfo: { parsedLimitPrice, marketPrice: tradeMarketPrice },
     setLimitState,
-    limitState: { limitPrice, limitPriceInverted },
   } = useLimitContext()
-
-  const changeLimitPrice = useCallback(
-    (limitPrice: string) => {
-      setLimitState((prevState) => ({ ...prevState, limitPrice, limitPriceEdited: true }))
-    },
-    [setLimitState],
-  )
 
   const {
     currencyState: { inputCurrency, outputCurrency },
@@ -158,7 +151,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         JSBI.BigInt(parseUnits('1', baseCurrency?.decimals)),
       )
       const marketOutputAmount = adjustedPrice?.quote(oneUnitOfBaseCurrency)
-      changeLimitPrice(
+      setLimitPrice(
         formatCurrencyAmountWithoutUserLocale({
           amount: marketOutputAmount,
           type: NumberType.SwapTradeAmount,
@@ -166,9 +159,10 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           locale: Locale.EnglishUnitedStates,
         }),
       )
+      setLimitState((prev) => ({ ...prev, limitPriceEdited: true }))
       sendAnalyticsEvent(InterfaceEventNameLocal.LimitPresetRateSelected, { value: adjustmentPercentage })
     },
-    [baseCurrency, limitPrice, changeLimitPrice],
+    [baseCurrency, limitPrice, setLimitPrice, setLimitState],
   )
 
   const { currentPriceAdjustment } = useCurrentPriceAdjustment({
@@ -178,23 +172,6 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
     quoteCurrency,
     limitPriceInverted,
   })
-
-  const onInvertLimitPrices = useCallback(() => {
-    if (baseCurrency && marketPrice && quoteCurrency) {
-      changeLimitPrice(
-        formatCurrencyAmountWithoutUserLocale({
-          amount: marketPrice
-            .invert()
-            .quote(CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency?.decimals)))),
-          type: NumberType.SwapTradeAmount,
-          placeholder: '',
-          locale: Locale.EnglishUnitedStates,
-        }),
-      )
-    }
-    setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted, limitPriceEdited: true }))
-    sendAnalyticsEvent(InterfaceEventNameLocal.LimitPriceReversed)
-  }, [baseCurrency, marketPrice, quoteCurrency, changeLimitPrice, setLimitState])
 
   const presets = limitPriceInverted ? INVERTED_PRICE_ADJUSTMENT_PRESETS : PRICE_ADJUSTMENT_PRESETS
 
@@ -206,7 +183,29 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           showCurrencyMessage={!!formattedLimitPriceOutputAmount}
           openCurrencySearchModal={() => setCurrencySelectModalField('inputCurrency')}
         />
-        <ReverseIconContainer onClick={onInvertLimitPrices}>
+        <ReverseIconContainer
+          onClick={() => {
+            if (baseCurrency && marketPrice && quoteCurrency) {
+              setLimitPrice(
+                formatCurrencyAmountWithoutUserLocale({
+                  amount: marketPrice
+                    .invert()
+                    .quote(
+                      CurrencyAmount.fromRawAmount(
+                        quoteCurrency,
+                        JSBI.BigInt(parseUnits('1', quoteCurrency?.decimals)),
+                      ),
+                    ),
+                  type: NumberType.SwapTradeAmount,
+                  placeholder: '',
+                  locale: Locale.EnglishUnitedStates,
+                }),
+              )
+            }
+            setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted, limitPriceEdited: true }))
+            sendAnalyticsEvent(InterfaceEventNameLocal.LimitPriceReversed)
+          }}
+        >
           <ReversedArrowsIcon size="16px" />
         </ReverseIconContainer>
       </Row>
@@ -215,7 +214,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           disabled={!(baseCurrency && quoteCurrency)}
           className="limit-price-input"
           value={formattedLimitPriceOutputAmount}
-          onUserInput={changeLimitPrice}
+          onUserInput={setLimitPrice}
           $loading={false}
         />
         {quoteCurrency && (

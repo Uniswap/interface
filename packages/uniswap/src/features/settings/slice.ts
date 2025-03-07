@@ -4,7 +4,7 @@ import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
 import { WALLET_TESTNET_CONFIG } from 'uniswap/src/features/telemetry/constants'
 import { isInterface } from 'utilities/src/platform'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 
 export interface UserSettingsState {

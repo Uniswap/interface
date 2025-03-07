@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 
+#import "RNFBAppCheckModule.h"
 #import <Firebase.h>
 
 #import "Uniswap-Swift.h"
@@ -16,6 +17,8 @@
   // Must be first line in startup routine
   [ReactNativePerformance onAppStarted];
 
+  // Must be before [FIRApp configure], initializes RNFBAppCheckModule 
+  [RNFBAppCheckModule sharedInstance];
   [FIRApp configure];
 
   // This is needed so universal links opened from OneSignal notifications navigate to the proper page.

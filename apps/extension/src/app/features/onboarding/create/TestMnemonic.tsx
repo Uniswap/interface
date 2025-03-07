@@ -167,7 +167,7 @@ type InputStackProps = InputStackBaseProps & {
   prefixText: string
 }
 
-function InputStack({ onChangeText, total, value, current, prefixText }: InputStackProps): JSX.Element {
+export function InputStack({ onChangeText, total, value, current, prefixText }: InputStackProps): JSX.Element {
   const { t } = useTranslation()
   const refs = useRef<TextInput[]>([])
   const prefixTexts = useRef<string[]>([])

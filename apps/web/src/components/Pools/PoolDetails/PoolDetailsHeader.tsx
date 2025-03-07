@@ -29,7 +29,7 @@ import {
   ThemedText,
 } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { Flex, TouchableArea, useIsTouchDevice, useMedia } from 'ui/src'
+import { Flex, TouchableArea, useMedia } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -133,7 +133,7 @@ const PoolDetailsTitle = ({
   const feePercent = feeTier && formatPercent(new Percent(feeTier, BIPS_BASE * 100))
   return (
     <StyledPoolDetailsTitle>
-      <Flex>
+      <div>
         <PoolName>
           <StyledLink
             to={getTokenDetailsURL({
@@ -153,7 +153,7 @@ const PoolDetailsTitle = ({
             {token1?.symbol}
           </StyledLink>
         </PoolName>
-      </Flex>
+      </div>
       <Flex row gap="$gap4" alignItems="center">
         <PoolDetailsBadge variant="body3" $position="left">
           {protocolVersion?.toLowerCase()}
@@ -264,7 +264,6 @@ const PoolDetailsHeaderActions = ({
 }) => {
   const { t } = useTranslation()
   const theme = useTheme()
-  const isTouchDevice = useIsTouchDevice()
   const [contractsModalIsOpen, toggleContractsModal] = useState(false)
 
   return (
@@ -279,7 +278,7 @@ const PoolDetailsHeaderActions = ({
             <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
           )
         }
-        tooltipText={isTouchDevice ? undefined : t('pool.explorers')}
+        tooltipText={t('pool.explorers')}
         hideChevron
         buttonStyle={ActionButtonStyle}
         dropdownStyle={{ minWidth: 235 }}

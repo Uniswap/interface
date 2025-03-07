@@ -11,6 +11,7 @@ import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
@@ -81,15 +82,19 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
 
   const { currencyId, currencyInfo } = useTokenDetailsContext()
 
+  const token = useTokenBasicInfoPartsFragment({ currencyId }).data
+  const project = useTokenBasicProjectPartsFragment({ currencyId }).data?.project
+
   const currentChainBalance = useTokenDetailsCurrentChainBalance()
 
-  const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
+  const safetyLevel = project?.safetyLevel
+  const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
   const { menuActions, onContextMenuPress } = useTokenContextMenu({
     currencyId,
     isBlocked,
     excludedActions: EXCLUDED_ACTIONS,
-    tokenSymbolForNotification: currencyInfo?.currency.symbol,
+    tokenSymbolForNotification: token?.symbol,
     portfolioBalance: currentChainBalance,
   })
 

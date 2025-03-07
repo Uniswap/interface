@@ -74,7 +74,6 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
           borderRadius="$rounded16"
           borderWidth="$spacing1"
           flexDirection="column"
-          py="$padding12"
         >
           {displayName?.type === DisplayNameType.Unitag && (
             <LeftRightText
@@ -88,7 +87,6 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
                   lineHeight={fonts.body3.lineHeight}
                   size={16}
                   variant="body3"
-                  disableForcedWidth={true}
                 />
               }
             />
@@ -97,17 +95,9 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
             <LeftRightText
               leftText={t('send.warning.newAddress.details.ENS')}
               rightChild={
-                <Flex shrink row alignItems="center" gap="$spacing4">
+                <Flex row alignItems="center" gap="$spacing4">
                   <AccountIcon address={address} avatarUri={ensAvatar} size={imageSizes.image16} />
-                  <Text
-                    adjustsFontSizeToFit
-                    allowFontScaling
-                    flexShrink={1}
-                    numberOfLines={1}
-                    loading={ensDisplayName.isLoading}
-                    variant="body3"
-                    whiteSpace="initial"
-                  >
+                  <Text numberOfLines={0} loading={ensDisplayName.isLoading} variant="body3">
                     {ensDisplayName.data}
                   </Text>
                 </Flex>
@@ -117,14 +107,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
           <LeftRightText
             leftText={t('send.warning.newAddress.details.walletAddress')}
             rightChild={
-              <Text
-                adjustsFontSizeToFit
-                allowFontScaling
-                flexShrink={1}
-                numberOfLines={1}
-                variant="body3"
-                whiteSpace="initial"
-              >
+              <Text numberOfLines={0} variant="body3">
                 {shortenAddress(address, 6)}
               </Text>
             }
@@ -147,6 +130,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
 const styles = {
   scrollViewContent: {
     flexDirection: 'column',
+    flexWrap: 'wrap',
     py: '$spacing16',
     flexGrow: 1,
   } satisfies GetProps<typeof ScrollView>['contentContainerStyle'],

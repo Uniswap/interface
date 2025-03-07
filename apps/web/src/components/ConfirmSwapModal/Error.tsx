@@ -11,11 +11,11 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 export enum PendingModalError {
-  TOKEN_APPROVAL_ERROR = 0,
-  PERMIT_ERROR = 1,
-  XV2_HARD_QUOTE_ERROR = 2,
-  CONFIRMATION_ERROR = 3,
-  WRAP_ERROR = 4,
+  TOKEN_APPROVAL_ERROR,
+  PERMIT_ERROR,
+  XV2_HARD_QUOTE_ERROR,
+  CONFIRMATION_ERROR,
+  WRAP_ERROR,
 }
 
 interface ErrorModalContentProps {

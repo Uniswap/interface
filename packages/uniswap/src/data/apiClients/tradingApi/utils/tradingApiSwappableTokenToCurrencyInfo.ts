@@ -36,6 +36,7 @@ export function tradingApiSwappableTokenToCurrencyInfo(
     currencyId: currencyId(currency),
     logoUrl: token.project.logo?.url,
     isSpam: token.project.isSpam,
+    safetyLevel,
     safetyInfo: getCurrencySafetyInfo(safetyLevel ?? undefined),
   }
 

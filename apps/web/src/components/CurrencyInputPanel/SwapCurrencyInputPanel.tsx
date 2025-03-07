@@ -315,7 +315,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
           </Text>
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
             {!hideInput && (
-              <Flex row grow onPress={handleDisabledNumericalInputClick}>
+              <div style={{ display: 'flex', flexGrow: 1 }} onClick={handleDisabledNumericalInputClick}>
                 <StyledNumericalInput
                   className="token-amount-input"
                   value={value}
@@ -326,7 +326,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                   ref={ref}
                   maxDecimals={currency?.decimals}
                 />
-              </Flex>
+              </div>
             )}
             <PrefetchBalancesWrapper>
               <MouseoverTooltip

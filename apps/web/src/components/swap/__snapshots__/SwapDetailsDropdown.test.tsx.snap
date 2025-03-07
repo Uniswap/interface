@@ -285,9 +285,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
               <div
                 class="c12"
               >
-                <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                >
+                <div>
                   <div
                     class="c7"
                   >
@@ -315,7 +313,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                         <div
                           class="c2 c15"
                         >
-                          $1.00
+                          <div>
+                            $1.00
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -366,9 +366,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     <div
                       class="c12"
                     >
-                      <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      >
+                      <div>
                         <div
                           class="c9 c20 css-142zc9n"
                         >
@@ -402,9 +400,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     <div
                       class="c12"
                     >
-                      <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      >
+                      <div>
                         <div
                           class="c9 c20 css-142zc9n"
                         >
@@ -429,9 +425,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     <div
                       class="c12"
                     >
-                      <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      >
+                      <div>
                         <div
                           class="c9 c20 css-142zc9n"
                         >
@@ -456,18 +450,14 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     <div
                       class="c12"
                     >
-                      <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      >
+                      <div>
                         <div
                           class="c9 c20 css-142zc9n"
                         >
                           <div
                             class="c12"
                           >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                            >
+                            <div>
                               <div
                                 class="c7"
                               >
@@ -495,7 +485,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                                     <div
                                       class="c2 c15"
                                     >
-                                      $1.00
+                                      <div>
+                                        $1.00
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -522,9 +514,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     <div
                       class="c12"
                     >
-                      <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      >
+                      <div>
                         <div
                           class="c9 c20 css-142zc9n"
                         >

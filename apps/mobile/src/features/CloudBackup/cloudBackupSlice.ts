@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 
-// eslint-disable-next-line import/no-unused-modules
 export interface CloudBackupState {
   backupsFound: CloudStorageMnemonicBackup[]
 }

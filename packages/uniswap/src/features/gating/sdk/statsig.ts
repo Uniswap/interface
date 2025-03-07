@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-restricted-imports */
 import { Statsig, StatsigContext } from 'statsig-react'
 const statsig = Statsig
 const statsigContext = StatsigContext

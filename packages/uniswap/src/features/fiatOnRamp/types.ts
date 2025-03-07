@@ -7,7 +7,7 @@ import {
   OnRampTransferInfo,
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { FiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
 // Moonpay Legacy Info
@@ -257,8 +257,8 @@ export interface FiatOffRampMetaData {
 }
 
 export enum InitialQuoteSelection {
-  MostRecent = 0,
-  Best = 1,
+  MostRecent,
+  Best,
 }
 
 export type FiatCurrencyInfo = {

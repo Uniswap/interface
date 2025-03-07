@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { LoaderButton } from 'components/Button/LoaderButton'
@@ -9,26 +10,23 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
-import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
-import { Dispatch, SetStateAction, useMemo, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useCloseModal } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { Flex, Switch, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useClaimLpFeesCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useClaimLpFeesCalldataQuery'
 import { ClaimLPFeesRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   CollectFeesTxAndGasInfo,
   LiquidityTransactionType,
@@ -37,46 +35,11 @@ import {
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
-function UnwrapUnderCard({
-  unwrapNativeCurrency,
-  setUnwrapNativeCurrency,
-  chainId,
-}: {
-  unwrapNativeCurrency: boolean
-  chainId?: UniverseChainId
-  setUnwrapNativeCurrency: Dispatch<SetStateAction<boolean>>
-}) {
-  const nativeCurrency = chainId ? nativeOnChain(chainId) : undefined
-
-  return (
-    <Flex
-      row
-      backgroundColor="$surface2"
-      borderBottomLeftRadius="$rounded12"
-      borderBottomRightRadius="$rounded12"
-      justifyContent="space-between"
-      alignItems="center"
-      py="$padding8"
-      px="$padding16"
-    >
-      <Text variant="body3" color="$neutral2">
-        <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol: nativeCurrency?.symbol }} />
-      </Text>
-      <Switch
-        id="collect-as-weth"
-        checked={unwrapNativeCurrency}
-        onCheckedChange={() => setUnwrapNativeCurrency((unwrapNativeCurrency) => !unwrapNativeCurrency)}
-        variant="default"
-      />
-    </Flex>
-  )
-}
-
+// eslint-disable-next-line import/no-unused-modules
 export function ClaimFeeModal() {
   const { t } = useTranslation()
   const trace = useTrace()
@@ -86,12 +49,6 @@ export function ClaimFeeModal() {
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
     { step: TransactionStep; accepted: boolean } | undefined
   >()
-  const [unwrapNativeCurrency, setUnwrapNativeCurrency] = useState(true)
-
-  const { currency0Amount, currency1Amount, chainId } = positionInfo || {}
-  const canUnwrap0 = canUnwrapCurrency(currency0Amount?.currency, positionInfo?.version)
-  const canUnwrap1 = canUnwrapCurrency(currency1Amount?.currency, positionInfo?.version)
-  const canUnwrap = positionInfo && chainId && (canUnwrap0 || canUnwrap1)
 
   const onClose = useCloseModal(ModalName.ClaimFee)
   const {
@@ -101,24 +58,23 @@ export function ClaimFeeModal() {
     fiatFeeValue1: token1FeesUsd,
   } = useV3OrV4PositionDerivedInfo(positionInfo)
 
-  const currency0 = getCurrencyWithOptionalUnwrap({
-    currency: token0Fees?.currency,
-    shouldUnwrap: unwrapNativeCurrency && canUnwrap0,
-  })
-  const currency1 = getCurrencyWithOptionalUnwrap({
-    currency: token1Fees?.currency,
-    shouldUnwrap: unwrapNativeCurrency && canUnwrap1,
-  })
-  const currencyInfo0 = useCurrencyInfo(currencyId(currency0))
-  const currencyInfo1 = useCurrencyInfo(currencyId(currency1))
+  const chainId = positionInfo?.currency0Amount.currency.chainId
 
+  const currencyInfo0 = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: token0Fees?.currency,
+    shouldUnwrap: !positionInfo?.collectAsWeth && positionInfo?.version !== ProtocolVersion.V4,
+  })
+  const currencyInfo1 = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: token1Fees?.currency,
+    shouldUnwrap: !positionInfo?.collectAsWeth && positionInfo?.version !== ProtocolVersion.V4,
+  })
   const dispatch = useAppDispatch()
 
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
 
   const claimLpFeesParams = useMemo(() => {
-    if (!positionInfo || !currency0 || !currency1) {
+    if (!positionInfo || !currencyInfo0 || !currencyInfo1) {
       return undefined
     }
 
@@ -127,11 +83,11 @@ export function ClaimFeeModal() {
       protocol: getProtocolItems(positionInfo.version),
       tokenId: positionInfo.tokenId ? Number(positionInfo.tokenId) : undefined,
       walletAddress: account?.address,
-      chainId: positionInfo.currency0Amount.currency.chainId,
+      chainId,
       position: {
         pool: {
-          token0: currency0.isNative ? ZERO_ADDRESS : currency0.address,
-          token1: currency1.isNative ? ZERO_ADDRESS : currency1.address,
+          token0: currencyInfo0.currency.isNative ? ZERO_ADDRESS : currencyInfo0.currency.address,
+          token1: currencyInfo1.currency.isNative ? ZERO_ADDRESS : currencyInfo1.currency.address,
           fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
           tickSpacing: positionInfo?.tickSpacing ? Number(positionInfo?.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
@@ -143,16 +99,16 @@ export function ClaimFeeModal() {
         positionInfo.version !== ProtocolVersion.V4 ? token0Fees?.quotient.toString() : undefined,
       expectedTokenOwed1RawAmount:
         positionInfo.version !== ProtocolVersion.V4 ? token1Fees?.quotient.toString() : undefined,
-      collectAsWETH: positionInfo.version !== ProtocolVersion.V4 ? !unwrapNativeCurrency : undefined,
+      collectAsWETH: positionInfo.version !== ProtocolVersion.V4 ? positionInfo.collectAsWeth : undefined,
     } satisfies ClaimLPFeesRequest
   }, [
     account?.address,
-    currency0,
-    currency1,
+    chainId,
+    currencyInfo0,
+    currencyInfo1,
     positionInfo,
     token0Fees?.quotient,
     token1Fees?.quotient,
-    unwrapNativeCurrency,
   ])
 
   const {
@@ -207,60 +163,43 @@ export function ClaimFeeModal() {
           closeDataTestId="ClaimFeeModal-close-icon"
         />
         {token0Fees && token1Fees && (
-          <Flex gap="$gap4">
-            <Flex
-              backgroundColor="$surface2"
-              borderTopLeftRadius="$rounded12"
-              borderTopRightRadius="$rounded12"
-              borderBottomLeftRadius={canUnwrap ? '$rounded0' : '$rounded12'}
-              borderBottomRightRadius={canUnwrap ? '$rounded0' : '$rounded12'}
-              p="$padding16"
-              gap="$gap12"
-            >
-              <Flex row alignItems="center" justifyContent="space-between">
-                <Flex row gap="$gap8" alignItems="center">
-                  <CurrencyLogo currencyInfo={currencyInfo0} size={iconSizes.icon24} />
-                  <Text variant="body1" color="neutral1">
-                    {currency0?.symbol}
-                  </Text>
-                </Flex>
-                <Flex row gap="$gap8" alignItems="center">
-                  <Text variant="body1" color="$neutral1">
-                    {formatCurrencyAmount({ value: token0Fees })}
-                  </Text>
-                  {token0FeesUsd && (
-                    <Text variant="body1" color="$neutral2">
-                      ({formatCurrencyAmount({ value: token0FeesUsd, type: NumberType.FiatTokenPrice })})
-                    </Text>
-                  )}
-                </Flex>
+          <Flex backgroundColor="$surface3" borderRadius="$rounded12" p="$padding16" gap="$gap12">
+            <Flex row alignItems="center" justifyContent="space-between">
+              <Flex row gap="$gap8" alignItems="center">
+                <CurrencyLogo currencyInfo={currencyInfo0} size={iconSizes.icon24} />
+                <Text variant="body1" color="neutral1">
+                  {currencyInfo0?.currency.symbol}
+                </Text>
               </Flex>
-              <Flex row alignItems="center" justifyContent="space-between">
-                <Flex row gap="$gap8" alignItems="center">
-                  <CurrencyLogo currencyInfo={currencyInfo1} size={iconSizes.icon24} />
-                  <Text variant="body1" color="neutral1">
-                    {currency1?.symbol}
+              <Flex row gap="$gap8" alignItems="center">
+                <Text variant="body1" color="$neutral1">
+                  {formatCurrencyAmount({ value: token0Fees })}
+                </Text>
+                {token0FeesUsd && (
+                  <Text variant="body1" color="$neutral2">
+                    ({formatCurrencyAmount({ value: token0FeesUsd, type: NumberType.FiatTokenPrice })})
                   </Text>
-                </Flex>
-                <Flex row gap="$gap8" alignItems="center">
-                  <Text variant="body1" color="$neutral1">
-                    {formatCurrencyAmount({ value: token1Fees })}
-                  </Text>
-                  {token1FeesUsd && (
-                    <Text variant="body1" color="$neutral2">
-                      ({formatCurrencyAmount({ value: token1FeesUsd, type: NumberType.FiatTokenPrice })})
-                    </Text>
-                  )}
-                </Flex>
+                )}
               </Flex>
             </Flex>
-            {canUnwrap && (
-              <UnwrapUnderCard
-                unwrapNativeCurrency={unwrapNativeCurrency}
-                setUnwrapNativeCurrency={setUnwrapNativeCurrency}
-                chainId={chainId}
-              />
-            )}
+            <Flex row alignItems="center" justifyContent="space-between">
+              <Flex row gap="$gap8" alignItems="center">
+                <CurrencyLogo currencyInfo={currencyInfo1} size={iconSizes.icon24} />
+                <Text variant="body1" color="neutral1">
+                  {currencyInfo1?.currency.symbol}
+                </Text>
+              </Flex>
+              <Flex row gap="$gap8" alignItems="center">
+                <Text variant="body1" color="$neutral1">
+                  {formatCurrencyAmount({ value: token1Fees })}
+                </Text>
+                {token1FeesUsd && (
+                  <Text variant="body1" color="$neutral2">
+                    ({formatCurrencyAmount({ value: token1FeesUsd, type: NumberType.FiatTokenPrice })})
+                  </Text>
+                )}
+              </Flex>
+            </Flex>
           </Flex>
         )}
         <TradingAPIError errorMessage={getErrorMessageToDisplay({ calldataError: error })} refetch={refetch} />
@@ -294,8 +233,8 @@ export function ClaimFeeModal() {
                         ...getLPBaseAnalyticsProperties({
                           trace,
                           poolId: positionInfo.poolId,
-                          currency0: currencyInfo0?.currency ?? token0Fees.currency,
-                          currency1: currencyInfo1?.currency ?? token1Fees.currency,
+                          currency0: token0Fees?.currency,
+                          currency1: token1Fees?.currency,
                           currency0AmountUsd: token0FeesUsd,
                           currency1AmountUsd: token1FeesUsd,
                           version: positionInfo?.version,

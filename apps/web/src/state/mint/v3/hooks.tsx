@@ -37,7 +37,7 @@ import { tryParseTick } from 'state/mint/v3/utils'
 import { InterfaceState } from 'state/webReducer'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
-function useV3MintState(): InterfaceState['mintV3'] {
+export function useV3MintState(): InterfaceState['mintV3'] {
   return useAppSelector((state) => state.mintV3)
 }
 

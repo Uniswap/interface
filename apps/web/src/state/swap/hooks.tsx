@@ -536,13 +536,9 @@ export function useInitialCurrencyState(): {
     parsedCurrencyState.outputChainId ?? initialChainId,
   )
   const initialTypedValue = initialInputCurrency || initialOutputCurrency ? parsedCurrencyState.value : undefined
-  const initialFieldUpper =
-    parsedCurrencyState.field && typeof parsedCurrencyState.field === 'string'
-      ? parsedCurrencyState.field.toUpperCase()
-      : undefined
   const initialField =
-    initialTypedValue && initialFieldUpper && initialFieldUpper in CurrencyField
-      ? CurrencyField[initialFieldUpper as keyof typeof CurrencyField]
+    initialTypedValue && parsedCurrencyState.field && parsedCurrencyState.field in CurrencyField
+      ? CurrencyField[parsedCurrencyState.field as keyof typeof CurrencyField]
       : undefined
 
   return {

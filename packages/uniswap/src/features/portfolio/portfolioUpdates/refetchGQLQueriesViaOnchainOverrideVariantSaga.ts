@@ -58,7 +58,7 @@ export function* refetchGQLQueriesViaOnchainOverrideVariant({
   // and will continue to override the apollo cache balance until backend balance matches the onchain balance.
 }
 
-function* modifyLocalCache({
+export function* modifyLocalCache({
   apolloClient,
   ownerAddress,
   currencyIds,
@@ -171,16 +171,7 @@ function* modifyLocalCache({
               quantity: () => {
                 return onchainQuantity
               },
-              denominatedValue: (cachedDenominatedValue: Reference | AsStoreObject<Amount> | null) => {
-                if (!cachedDenominatedValue) {
-                  logger.debug(
-                    'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
-                    'modifyLocalCache',
-                    `[ITBU] No cachedDenominatedValue found for ${currencyId}`,
-                  )
-                  return cachedDenominatedValue
-                }
-
+              denominatedValue: (cachedDenominatedValue: Reference | AsStoreObject<Amount>) => {
                 if (!cachedQuantity) {
                   logger.debug(
                     'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',

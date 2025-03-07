@@ -120,7 +120,6 @@ export function usePoolTransactions(
         },
         updateQuery: (prev, { fetchMoreResult }: any) => {
           if (!fetchMoreResult) {
-            loadingMore.current = false
             return prev
           }
           onComplete?.()

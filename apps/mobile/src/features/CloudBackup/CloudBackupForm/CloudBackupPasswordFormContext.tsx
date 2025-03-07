@@ -7,7 +7,7 @@ import {
   isPasswordStrongEnough,
 } from 'wallet/src/utils/password'
 
-type CloudBackupPasswordFormContextType = {
+export type CloudBackupPasswordFormContextType = {
   password: string
   passwordStrength: PasswordStrength
   error: PasswordErrors | undefined
@@ -18,7 +18,7 @@ type CloudBackupPasswordFormContextType = {
   onPasswordChangeText: (newPassword: string) => void
 }
 
-const CloudBackupPasswordFormContext = createContext<CloudBackupPasswordFormContextType | null>(null)
+export const CloudBackupPasswordFormContext = createContext<CloudBackupPasswordFormContextType | null>(null)
 
 export function useCloudBackupPasswordFormContext(): CloudBackupPasswordFormContextType {
   const context = useContext(CloudBackupPasswordFormContext)

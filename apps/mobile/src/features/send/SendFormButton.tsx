@@ -8,11 +8,11 @@ import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/b
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
-import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -39,8 +39,23 @@ export function SendFormButton({
     exactAmountFiat,
   } = useSendContext()
   const { walletNeedsRestore } = useTransactionModalContext()
+
   const hasValueGreaterThanZero = useMemo(() => {
-    return isAmountGreaterThanZero(exactAmountToken, exactAmountFiat, currencyInInfo?.currency)
+    if (exactAmountToken) {
+      return getCurrencyAmount({
+        value: exactAmountToken,
+        valueType: ValueType.Exact,
+        currency: currencyInInfo?.currency,
+      })?.greaterThan(0)
+    }
+    if (exactAmountFiat) {
+      return getCurrencyAmount({
+        value: exactAmountFiat,
+        valueType: ValueType.Exact,
+        currency: currencyInInfo?.currency,
+      })?.greaterThan(0)
+    }
+    return false
   }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
 
   const isViewOnlyWallet = account.type === AccountType.Readonly

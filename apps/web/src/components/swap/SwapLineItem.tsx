@@ -25,17 +25,17 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { getPriceImpactColor } from 'utils/prices'
 
 export enum SwapLineItemType {
-  EXCHANGE_RATE = 0,
-  NETWORK_COST = 1,
-  INPUT_TOKEN_FEE_ON_TRANSFER = 2,
-  OUTPUT_TOKEN_FEE_ON_TRANSFER = 3,
-  PRICE_IMPACT = 4,
-  MAX_SLIPPAGE = 5,
-  SWAP_FEE = 6,
-  MAXIMUM_INPUT = 7,
-  MINIMUM_OUTPUT = 8,
-  ROUTING_INFO = 9,
-  EXPIRY = 10,
+  EXCHANGE_RATE,
+  NETWORK_COST,
+  INPUT_TOKEN_FEE_ON_TRANSFER,
+  OUTPUT_TOKEN_FEE_ON_TRANSFER,
+  PRICE_IMPACT,
+  MAX_SLIPPAGE,
+  SWAP_FEE,
+  MAXIMUM_INPUT,
+  MINIMUM_OUTPUT,
+  ROUTING_INFO,
+  EXPIRY,
 }
 
 const ColorWrapper = styled.span<{ textColor?: keyof DefaultTheme }>`

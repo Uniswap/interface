@@ -29,6 +29,7 @@ import { ArrowDown } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { LimitContextProvider, useLimitContext } from 'state/limit/LimitContext'
 import { getDefaultPriceInverted } from 'state/limit/hooks'
+import { LimitState } from 'state/limit/types'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { useSwapActionHandlers } from 'state/swap/hooks'
@@ -155,10 +156,11 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   ])
 
   const onTypeInput = useCallback(
-    (type: 'inputAmount' | 'outputAmount') => (newValue: string) => {
+    (type: keyof LimitState) => (newValue: string) => {
       setLimitState((prev) => ({
         ...prev,
         [type]: newValue,
+        limitPriceEdited: type === 'limitPrice' ? true : prev.limitPriceEdited,
         isInputAmountFixed: type !== 'outputAmount',
       }))
     },
@@ -167,14 +169,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const switchTokens = useCallback(() => {
     onSwitchTokens({ newOutputHasTax: false, previouslyEstimatedOutput: limitState.outputAmount })
-    setLimitState((prev) => {
-      // Reset limit price settings when switching tokens
-      return {
-        ...prev,
-        limitPriceEdited: false,
-        limitPriceInverted: getDefaultPriceInverted(outputCurrency, inputCurrency),
-      }
-    })
+    setLimitState((prev) => ({ ...prev, limitPriceInverted: getDefaultPriceInverted(outputCurrency, inputCurrency) }))
   }, [inputCurrency, limitState.outputAmount, onSwitchTokens, outputCurrency, setLimitState])
 
   const onSelectCurrency = useCallback(
@@ -206,19 +201,9 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       if (newCurrency.chainId !== otherCurrency?.chainId) {
         newCurrencyState[type === 'inputCurrency' ? 'outputCurrency' : 'inputCurrency'] = undefined
       }
-
-      // Reset limit price settings when selecting new token, except when we're just changing ETH>WETH because we're wrapping an ETH limit to an WETH limit
       if (!isResettingWETHAfterWrap) {
-        setLimitState((prev) => {
-          return {
-            ...prev,
-            limitPriceEdited: false,
-            limitPriceInverted: getDefaultPriceInverted(
-              newCurrencyState['inputCurrency'],
-              newCurrencyState['outputCurrency'],
-            ),
-          }
-        })
+        // If we're just changing the currency because we're wrapping an ETH limit to an WETH limit, don't reset limitPriceEdited to false
+        setLimitState((prev) => ({ ...prev, limitPriceEdited: false }))
       }
       onCurrencyChange?.(newCurrencyState)
       setCurrencyState(newCurrencyState)

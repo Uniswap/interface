@@ -1,5 +1,6 @@
-import { BarcodeScanningResult, CameraView, CameraViewProps } from 'expo-camera'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { BarcodeScanningResult, CameraView, CameraViewProps, useCameraPermissions } from 'expo-camera'
+import { PermissionStatus } from 'expo-modules-core'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
@@ -7,8 +8,6 @@ import { launchImageLibrary } from 'react-native-image-picker'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
 import RNQRGenerator from 'rn-qr-generator'
-import { useCameraPermissionQuery } from 'src/components/QRCodeScanner/hooks/useCameraPermissionQuery'
-import { useRequestCameraPermissionOnMountEffect } from 'src/components/QRCodeScanner/hooks/useRequestCameraPermissionOnMountEffect'
 import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeName, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { Global, PhotoStacked } from 'ui/src/components/icons'
@@ -18,6 +17,7 @@ import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { iconSizes, spacing } from 'ui/src/theme'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { logger } from 'utilities/src/logger/logger'
+import { openSettings } from 'wallet/src/utils/linking'
 
 enum BarcodeType {
   QR = 'qr',
@@ -56,7 +56,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const colors = useSporeColorsForTheme(theme)
 
   const dimensions = useDeviceDimensions()
-  const permission = useCameraPermissionQuery()
+
+  const [permission, requestPermission] = useCameraPermissions()
+
   const [isReadingImageFile, setIsReadingImageFile] = useState(false)
   const [overlayLayout, setOverlayLayout] = useState<LayoutRectangle | null>()
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
@@ -113,8 +115,29 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
     }
   }, [isReadingImageFile, onScanCode, t])
 
-  // always request permission on mount
-  useRequestCameraPermissionOnMountEffect()
+  useEffect(() => {
+    const handlePermissionStatus = async (): Promise<void> => {
+      if (permission?.granted) {
+        return
+      }
+      const { status } = await requestPermission()
+
+      if ([PermissionStatus.UNDETERMINED, PermissionStatus.DENIED].includes(status)) {
+        Alert.alert(t('qrScanner.error.camera.title'), t('qrScanner.error.camera.message'), [
+          { text: t('common.navigation.systemSettings'), onPress: openSettings },
+          {
+            text: t('common.button.notNow'),
+          },
+        ])
+      }
+    }
+
+    handlePermissionStatus().catch((error) => {
+      logger.error(error, {
+        tags: { file: 'QRCodeScanner.tsx', function: 'handlePermissionStatus' },
+      })
+    })
+  }, [permission?.granted, t, requestPermission])
 
   const overlayWidth = (overlayLayout?.height ?? 0) / CAMERA_ASPECT_RATIO
   const cameraWidth = dimensions.fullWidth
@@ -130,7 +153,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
     <AnimatedFlex grow theme={theme} borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
         <Flex height={cameraHeight} overflow="hidden" width={cameraWidth}>
-          {permission.data?.granted && !isReadingImageFile && (
+          {permission?.granted && !isReadingImageFile && (
             <CameraView
               {...disableMicPrompt}
               barcodeScannerSettings={{

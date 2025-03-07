@@ -1,4 +1,4 @@
-import { To, useLocation } from 'react-router-dom'
+import { To, matchPath, useLocation } from 'react-router-dom'
 import { TopLevelRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
@@ -14,6 +14,12 @@ export type SidebarLocationState =
       initialTransactionState?: TransactionState
     }
   | undefined
+
+export function useRouteMatch(pathToMatch: string): boolean {
+  const { pathname } = useLocation()
+
+  return !!matchPath(pathToMatch, pathname)
+}
 
 export const useExtensionNavigation = (): {
   navigateTo: (path: To) => void
@@ -174,6 +180,21 @@ export async function focusOrCreateTokensExploreTab({ currencyId }: { currencyId
     // We want to reuse the active tab only if it's already in any other TDP.
     // eslint-disable-next-line security/detect-non-literal-regexp
     reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(uniswapUrls.webInterfaceTokensUrl)}`),
+  })
+}
+
+export async function focusOrCreateNftItemTab({
+  address,
+  tokenId,
+}: {
+  address: string
+  tokenId: string
+}): Promise<void> {
+  return focusOrCreateUniswapInterfaceTab({
+    url: `${uniswapUrls.webInterfaceNftItemUrl}/${address}/${tokenId}`,
+    // We want to reuse the active tab only if it's already in any other NFT item page.
+    // eslint-disable-next-line security/detect-non-literal-regexp
+    reuseActiveTabIfItMatches: new RegExp(`^${escapeRegExp(uniswapUrls.webInterfaceNftItemUrl)}`),
   })
 }
 

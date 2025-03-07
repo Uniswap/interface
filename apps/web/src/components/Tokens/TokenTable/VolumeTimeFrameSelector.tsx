@@ -6,7 +6,7 @@ import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Flex, useMedia } from 'ui/src'
+import { useMedia } from 'ui/src'
 
 export enum TimePeriodDisplay {
   HOUR = '1H',
@@ -59,7 +59,7 @@ export default function VolumeTimeFrameSelector() {
   const isLargeScreen = !media.xl
 
   return (
-    <Flex>
+    <div>
       <DropdownSelector
         isOpen={isMenuOpen}
         toggleOpen={toggleMenu}
@@ -79,13 +79,13 @@ export default function VolumeTimeFrameSelector() {
               toggleMenu(false)
             }}
           >
-            <Flex>
+            <div>
               {DISPLAYS[time]} {t('common.volume').toLowerCase()}
-            </Flex>
+            </div>
             {time === activeTime && <Check color={theme.accent1} size={16} />}
           </InternalMenuItem>
         ))}
       </DropdownSelector>
-    </Flex>
+    </div>
   )
 }

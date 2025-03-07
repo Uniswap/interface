@@ -1,12 +1,13 @@
+import { isTouchable, TextStyle } from '@tamagui/core'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled, { css, keyframes } from 'lib/styled-components'
 import React, {
+  forwardRef,
   HTMLProps,
   PropsWithChildren,
   ReactNode,
-  forwardRef,
   useCallback,
   useImperativeHandle,
   useRef,
@@ -16,7 +17,7 @@ import { AlertTriangle, CheckCircle, Copy, Icon } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
-import { Flex, FlexProps, TextProps, TextStyle, isTouchable } from 'ui/src'
+import { FlexProps, TextProps } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { anonymizeLink } from 'utils/anonymizeLink'
 
@@ -147,6 +148,11 @@ function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
 }
 
 const StyledLink = styled.a`
+  ${ClickableStyle}
+  ${LinkStyle}
+`
+
+export const StyledRouterLink = styled(Link)`
   ${ClickableStyle}
   ${LinkStyle}
 `
@@ -328,7 +334,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
         <CopyHelperText ref={textRef} fontSize={fontSize} offset={offset}>
           {isCopied && iconPosition === 'left' ? <Trans i18nKey="common.copied" /> : children}
         </CopyHelperText>
-        <Flex $platform-web={{ clear: 'both' }} />
+        <div style={{ clear: 'both' }} />
         {iconPosition === 'right' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
       </CopyHelperContainer>
     )
@@ -360,6 +366,25 @@ export const SpinnerSVG = styled.svg`
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
+`
+
+export const HideSmall = styled.span`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    display: none;
+  `};
+`
+
+export const HideExtraSmall = styled.span`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
+    display: none;
+  `};
+`
+
+export const SmallOnly = styled.span`
+  display: none;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    display: block;
+  `};
 `
 
 export const MediumOnly = styled.span`

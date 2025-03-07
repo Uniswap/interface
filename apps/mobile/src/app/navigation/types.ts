@@ -25,11 +25,11 @@ type NFTItemScreenParams = {
   fallbackData?: NFTItem
 }
 
-type BackupFormParams = {
+export type BackupFormParams = {
   address: Address
 }
 
-type CloudBackupFormParams = {
+export type CloudBackupFormParams = {
   address: Address
   password: string
 }
@@ -128,13 +128,13 @@ export type AppStackParamList = {
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>
-type AppStackScreenProps = NativeStackScreenProps<AppStackParamList>
+export type AppStackScreenProps = NativeStackScreenProps<AppStackParamList>
 export type AppStackScreenProp<Screen extends keyof AppStackParamList> = NativeStackScreenProps<
   AppStackParamList,
   Screen
 >
 
-type ExploreStackNavigationProp = CompositeNavigationProp<
+export type ExploreStackNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ExploreStackParamList>,
   AppStackNavigationProp
 >
@@ -167,7 +167,7 @@ export type RootParamList = AppStackParamList &
   FiatOnRampStackParamList
 
 export enum EducationContentType {
-  SeedPhrase = 0,
+  SeedPhrase,
 }
 
 export const useAppStackNavigation = (): AppStackNavigationProp => useNavigation<AppStackNavigationProp>()

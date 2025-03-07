@@ -1,20 +1,21 @@
 import 'rc-slider/assets/index.css'
 
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
+import { Box } from 'components/deprecated/Box'
 import styled, { useTheme } from 'lib/styled-components'
 import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/PriceRange.css'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { NumericInput } from 'nft/components/layout/Input'
+import { body } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { default as Slider } from 'rc-slider'
-import { useEffect, useState } from 'react'
+import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { darkDeprecatedTheme } from 'theme/deprecatedColors'
-import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 const StyledSlider = styled(Slider)`
@@ -44,12 +45,12 @@ export const PriceRange = () => {
     setPriceRangeHigh('')
   }, [location.pathname, setMinPrice, setMaxPrice, setPriceRangeLow, setPriceRangeHigh])
 
-  const handleFocus = (e: any) => {
+  const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
     setPlaceholderText(e.currentTarget.placeholder)
     e.currentTarget.placeholder = ''
   }
 
-  const handleBlur = (e: any) => {
+  const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
     e.currentTarget.placeholder = placeholderText
     setPlaceholderText('')
     if (minPrice || maxPrice) {
@@ -57,19 +58,19 @@ export const PriceRange = () => {
     }
   }
 
-  const updateMinPriceRange = (v: string) => {
+  const updateMinPriceRange = (v: FormEvent<HTMLInputElement>) => {
     const [, prevMax] = prevMinMax
 
     // if there is actually a number, update the slider place
-    if (v) {
+    if (v.currentTarget.value) {
       // we are calculating the new slider position here
-      const diff = parseInt(v) - parseInt(priceRangeLow)
+      const diff = parseInt(v.currentTarget.value) - parseInt(priceRangeLow)
       const newLow = Math.floor(100 * (diff / (parseInt(priceRangeHigh) - parseInt(priceRangeLow))))
 
       // if the slider min value is larger than or equal to the max, we don't want it to move past the max
       // so we put the sliders on top of each other
       // if it is less than, we can move it
-      if (parseInt(v) >= parseInt(maxPrice)) {
+      if (parseInt(v.currentTarget.value) >= parseInt(maxPrice)) {
         setPrevMinMax([prevMax, prevMax])
       } else {
         setPrevMinMax([newLow, prevMax])
@@ -80,18 +81,18 @@ export const PriceRange = () => {
     }
 
     // set min price for price range querying
-    setMinPrice(v)
+    setMinPrice(v.currentTarget.value.toString())
     scrollToTop()
   }
 
-  const updateMaxPriceRange = (v: string) => {
+  const updateMaxPriceRange = (v: FormEvent<HTMLInputElement>) => {
     const [prevMin] = prevMinMax
 
-    if (v) {
-      const range = parseInt(priceRangeHigh) - parseInt(v)
+    if (v.currentTarget.value) {
+      const range = parseInt(priceRangeHigh) - parseInt(v.currentTarget.value)
       const newMax = Math.floor(100 - 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow))))
 
-      if (parseInt(v) <= parseInt(minPrice)) {
+      if (parseInt(v.currentTarget.value) <= parseInt(minPrice)) {
         setPrevMinMax([prevMin, prevMin])
       } else {
         setPrevMinMax([prevMin, newMax])
@@ -100,7 +101,7 @@ export const PriceRange = () => {
       setPrevMinMax([prevMin, 100])
     }
 
-    setMaxPrice(v)
+    setMaxPrice(v.currentTarget.value)
     scrollToTop()
   }
 
@@ -144,23 +145,27 @@ export const PriceRange = () => {
       <Row marginTop="12" color="neutral1" justifyContent="space-between">
         <Row position="relative">
           <NumericInput
-            width={126}
+            style={{
+              width: '126px',
+            }}
             className={styles.priceInput}
             placeholder={priceRangeLow}
-            onChangeText={updateMinPriceRange}
-            value={minPrice}
+            onChange={updateMinPriceRange}
             onFocus={handleFocus}
+            value={minPrice}
             onBlur={handleBlur}
           />
         </Row>
-        <Text variant="body2">to</Text>
+        <Box className={body}>to</Box>
         <Row position="relative">
           <NumericInput
-            width={126}
+            style={{
+              width: '126px',
+            }}
             className={styles.priceInput}
             placeholder={priceRangeHigh}
             value={maxPrice}
-            onChangeText={updateMaxPriceRange}
+            onChange={updateMaxPriceRange}
             onFocus={handleFocus}
             onBlur={handleBlur}
           />

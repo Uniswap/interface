@@ -1,4 +1,4 @@
-import { FeeData } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeeData, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SafetyInfo } from 'uniswap/src/features/dataApi/types'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
@@ -8,13 +8,14 @@ export type SearchResult = TokenSearchResult | WalletSearchResult | EtherscanSea
 
 export type InterfaceSearchResult = TokenSearchResult | NFTCollectionSearchResult
 
+// Retain original ordering as these are saved to storage and loaded back out
 export enum SearchResultType {
-  ENSAddress = 0,
-  Token = 1,
-  Etherscan = 2,
-  NFTCollection = 3,
-  Unitag = 4,
-  WalletByAddress = 5,
+  ENSAddress,
+  Token,
+  Etherscan,
+  NFTCollection,
+  Unitag,
+  WalletByAddress,
 }
 
 export interface SearchResultBase {
@@ -29,6 +30,7 @@ export interface TokenSearchResult extends SearchResultBase {
   address: Address | null
   name: string | null
   logoUrl: string | null
+  safetyLevel: SafetyLevel | null
   safetyInfo?: SafetyInfo | null
   feeData?: FeeData | null
 }

@@ -75,11 +75,10 @@ export function AdaptiveDropdown({
 
   return (
     <>
-      {/* eslint-disable-next-line react/forbid-elements */}
       <div ref={node} style={{ width: '100%', ...containerStyle }}>
         <DropdownContainer>
           <MouseoverTooltip
-            disabled={!tooltipText || isOpen}
+            disabled={!tooltipText}
             text={tooltipText}
             size={TooltipSize.Max}
             placement="top"
@@ -105,15 +104,13 @@ export function AdaptiveDropdown({
           </AnimatePresence>
         </DropdownContainer>
       </div>
-      {isSheet && (
-        <WebBottomSheet
-          isOpen={isOpen}
-          onClose={() => toggleOpen(false)}
-          maxHeight={`calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`}
-        >
-          {children}
-        </WebBottomSheet>
-      )}
+      <WebBottomSheet
+        isOpen={isOpen && isSheet}
+        onClose={() => toggleOpen(false)}
+        maxHeight={`calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`}
+      >
+        {children}
+      </WebBottomSheet>
     </>
   )
 }

@@ -6,7 +6,7 @@ import { mergeResolvers } from '@graphql-tools/merge'
 import { addMocksToSchema } from '@graphql-tools/mock'
 import path from 'path'
 import { PropsWithChildren } from 'react'
-import { setupSharedApolloCache } from 'uniswap/src/data/cache'
+import { setupWalletCache } from 'uniswap/src/data/cache'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getErrorLink, getRestLink } from 'uniswap/src/data/links'
 import { mocks as defaultMocks } from 'uniswap/src/test/mocks/gql/mocks'
@@ -31,7 +31,7 @@ export function AutoMockedApolloProvider({
 
   const client = new ApolloClient({
     link: ApolloLink.from([getErrorLink(1, 1), getRestLink(), new SchemaLink({ schema })]),
-    cache: cache ?? setupSharedApolloCache(),
+    cache: cache ?? setupWalletCache(),
   })
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>
@@ -45,5 +45,5 @@ const schema = addMocksToSchema({
 
 export const mockApolloClient = new ApolloClient({
   link: ApolloLink.from([getErrorLink(1, 1), getRestLink(), new SchemaLink({ schema })]),
-  cache: setupSharedApolloCache(),
+  cache: setupWalletCache(),
 })

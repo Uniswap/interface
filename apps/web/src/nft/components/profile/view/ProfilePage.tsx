@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { Box } from 'components/deprecated/Box'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
@@ -14,13 +15,13 @@ import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import * as styles from 'nft/components/profile/view/ProfilePage.css'
 import { ProfileBodyLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { ViewMyNftsAsset } from 'nft/components/profile/view/ViewMyNftsAsset'
+import { subhead } from 'nft/css/common.css'
 import { useBag, useFiltersExpanded, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { getOSCollectionsInfiniteQueryOptions } from 'nft/queries/openSea/OSCollectionsFetcher'
 import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Flex, Image, Text } from 'ui/src'
 
 const ProfilePageColumn = styled(Column)`
   ${ScreenBreakpointsPaddings}
@@ -102,41 +103,50 @@ export const ProfilePage = () => {
         </Row>
       </>
       {sellAssets.length > 0 && (
-        <Flex
-          row
-          alignItems="center"
-          display="none"
-          $platform-web={{ position: 'fixed' }}
-          $md={{ display: 'flex' }}
-          left={16}
-          height={56}
-          bottom={68}
-          width="calc(100% - 32px)"
-          borderRadius="$rounded12"
-          px="$spacing16"
-          py="$spacing12"
-          backgroundColor="$surface1"
-          borderColor="$surface3"
-          borderWidth={1}
+        <Row
+          display={{ sm: 'flex', md: 'none' }}
+          position="fixed"
+          left="16"
+          height="56"
+          borderRadius="12"
+          paddingX="16"
+          paddingY="12"
+          background="surface1"
+          borderStyle="solid"
+          borderColor="surface3"
+          borderWidth="1px"
+          style={{ bottom: '68px', width: 'calc(100% - 32px)', lineHeight: '24px' }}
+          className={subhead}
         >
           {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
-          <Text variant="body3" cursor="pointer" color="$neutral2" mr={20} ml="auto" onPress={resetSellAssets}>
-            Clear
-          </Text>
-          <Text
-            color="$white"
-            mr={0}
-            variant="body3"
+          <Box
+            fontWeight="medium"
+            fontSize="14"
             cursor="pointer"
-            backgroundColor="$accent1"
-            onPress={toggleBag}
-            borderRadius="$rounded12"
-            py="$spacing8"
-            px="$spacing28"
+            color="neutral2"
+            marginRight="20"
+            marginLeft="auto"
+            onClick={resetSellAssets}
+            lineHeight="16"
+          >
+            Clear
+          </Box>
+          <Box
+            color="white"
+            marginRight="0"
+            fontWeight="medium"
+            fontSize="14"
+            cursor="pointer"
+            backgroundColor="accent1"
+            onClick={toggleBag}
+            lineHeight="16"
+            borderRadius="12"
+            paddingY="8"
+            paddingX="28"
           >
             List for sale
-          </Text>
-        </Flex>
+          </Box>
+        </Row>
       )}
     </ProfilePageColumn>
   )
@@ -182,15 +192,13 @@ const ProfilePageNfts = ({
           <EmptyWalletModule />
         </EmptyStateContainer>
       ) : (
-        <Flex
-          flexShrink={0}
-          $platform-web={{
-            position: isMobile && isBagExpanded ? 'fixed' : 'static',
-          }}
+        <Box
+          flexShrink="0"
+          position={isMobile && isBagExpanded ? 'fixed' : 'static'}
           style={{
             transform: `translate(${Number(isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`,
           }}
-          py="$padding20"
+          paddingY="20"
         >
           <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
             <FilterButton
@@ -219,18 +227,18 @@ const ProfilePageNfts = ({
           >
             {ownerAssets?.length
               ? ownerAssets.map((asset, index) => (
-                  <Flex key={index}>
+                  <div key={index}>
                     <ViewMyNftsAsset
                       asset={asset}
                       mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
                       setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
                       hideDetails={sellAssets.length > 0}
                     />
-                  </Flex>
+                  </div>
                 ))
               : null}
           </InfiniteScroll>
-        </Flex>
+        </Box>
       )}
     </Column>
   )
@@ -287,19 +295,23 @@ const CollectionFilterItem = ({
       background="surface3"
       fontSize="14"
     >
-      <Image borderRadius="$roundedFull" width="$spacing20" height="$spacing20" src={collection.image} />
-      <Flex ml="$spacing6" className={styles.collectionFilterBubbleText}>
+      <Box as="img" borderRadius="round" width="20" height="20" src={collection.image} />
+      <Box marginLeft="6" className={styles.collectionFilterBubbleText}>
         {collection?.name}
-      </Flex>
-      <Flex
-        height="$spacing28"
-        width="$spacing28"
-        p={0}
+      </Box>
+      <Box
+        color="neutral2"
+        background="none"
+        height="28"
+        width="28"
+        padding="0"
+        as="button"
+        border="none"
         cursor="pointer"
-        onPress={() => setCollectionFilters(collection.address)}
+        onClick={() => setCollectionFilters(collection.address)}
       >
-        <CrossIcon color="$neutral2" />
-      </Flex>
+        <CrossIcon />
+      </Box>
     </Row>
   )
 }

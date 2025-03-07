@@ -268,6 +268,7 @@ exports[`AccountList renders without error 1`] = `
                   <View
                     style={
                       {
+                        "alignItems": "flex-start",
                         "flexDirection": "column",
                         "flexShrink": 1,
                         "gap": 2,
@@ -277,9 +278,10 @@ exports[`AccountList renders without error 1`] = `
                     <View
                       style={
                         {
+                          "alignItems": "center",
                           "flexDirection": "row",
-                          "flexShrink": 1,
                           "gap": 12,
+                          "justifyContent": "center",
                         }
                       }
                     >
@@ -288,13 +290,15 @@ exports[`AccountList renders without error 1`] = `
                           {
                             "alignItems": "center",
                             "flexDirection": "row",
-                            "flexShrink": 1,
+                            "gap": 4,
+                            "justifyContent": "center",
                           }
                         }
                       >
                         <Text
                           adjustsFontSizeToFit={true}
                           allowFontScaling={true}
+                          ellipsizeMode="tail"
                           maxFontSizeMultiplier={1.4}
                           numberOfLines={1}
                           style={
@@ -310,6 +314,7 @@ exports[`AccountList renders without error 1`] = `
                               "fontSize": 19,
                               "fontWeight": "400",
                               "lineHeight": 24,
+                              "overflow": "hidden",
                             }
                           }
                           suppressHighlighting={true}

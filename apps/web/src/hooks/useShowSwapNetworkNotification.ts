@@ -1,5 +1,6 @@
-import { popupRegistry } from 'components/Popups/registry'
-import { PopupType } from 'components/Popups/types'
+import { useCallback } from 'react'
+import { useAddPopup, useRemovePopup } from 'state/application/hooks'
+import { PopupType } from 'state/application/reducer'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 type SwapNetworkNotificationCallbackType = {
@@ -9,31 +10,38 @@ type SwapNetworkNotificationCallbackType = {
 }
 
 export function useShowSwapNetworkNotification() {
-  return ({ chainId, prevChainId, outputChainId }: SwapNetworkNotificationCallbackType) => {
-    if (!chainId || chainId === prevChainId || chainId === outputChainId) {
-      return
-    }
-    const isBridgeNotification = chainId && outputChainId
-    if (isBridgeNotification) {
-      popupRegistry.addPopup(
-        {
-          type: PopupType.Bridge,
-          inputChainId: chainId,
-          outputChainId,
-        },
-        `bridge-${chainId}-to-${outputChainId}`,
-        3000,
-      )
-    } else if (prevChainId) {
-      popupRegistry.addPopup(
-        {
-          type: PopupType.SwitchNetwork,
-          chainId,
-          action: SwapTab.Swap,
-        },
-        `switchNetwork-${chainId}`,
-        3000,
-      )
-    }
-  }
+  const addPopup = useAddPopup()
+  const removePopup = useRemovePopup()
+
+  return useCallback(
+    ({ chainId, prevChainId, outputChainId }: SwapNetworkNotificationCallbackType) => {
+      if (!chainId || chainId === prevChainId || chainId === outputChainId) {
+        return
+      }
+      const isBridgeNotification = chainId && outputChainId
+      removePopup(`switchNetwork-${prevChainId}`)
+      if (isBridgeNotification) {
+        addPopup(
+          {
+            type: PopupType.Bridge,
+            inputChainId: chainId,
+            outputChainId,
+          },
+          `bridge-${chainId}-to-${outputChainId}`,
+          3000,
+        )
+      } else if (prevChainId) {
+        addPopup(
+          {
+            type: PopupType.SwitchNetwork,
+            chainId,
+            action: SwapTab.Swap,
+          },
+          `switchNetwork-${chainId}`,
+          3000,
+        )
+      }
+    },
+    [addPopup, removePopup],
+  )
 }

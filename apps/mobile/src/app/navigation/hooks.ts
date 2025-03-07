@@ -2,11 +2,43 @@ import { NavigationContainerRefContext, NavigationContext, useFocusEffect } from
 import { useCallback, useContext } from 'react'
 import { BackHandler } from 'react-native'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
+import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useTransactionListLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+
+/**
+ * Utility hook to simplify navigating to Activity screen.
+ * Preloads query needed to render transaction list.
+ */
+export function useEagerActivityNavigation(): {
+  preload: (address: string) => Promise<void>
+  navigate: () => void
+} {
+  const navigation = useAppStackNavigation()
+  const [load] = useTransactionListLazyQuery()
+  const { gqlChains } = useEnabledChains()
+
+  const preload = useCallback(
+    async (address: string) => {
+      await load({
+        variables: {
+          address,
+          chains: gqlChains,
+        },
+      })
+    },
+    [gqlChains, load],
+  )
+
+  const navigate = useCallback(
+    () => navigation.navigate(MobileScreens.Home, { tab: HomeScreenTabIndex.Activity }),
+    [navigation],
+  )
+
+  return { preload, navigate }
+}
 
 /**
  * Utility hook to simplify navigating to Activity screen.

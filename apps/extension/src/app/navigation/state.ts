@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Location, NavigationType, Router, createHashRouter } from 'react-router-dom'
 
-export interface RouterState {
+interface RouterState {
   historyAction: NavigationType
   location: Location
 }
@@ -28,6 +28,10 @@ const listeners = new Set<RouterStateListener>()
 export function setRouterState(next: RouterState): void {
   state = next
   listeners.forEach((l) => l(next))
+}
+
+export function getRouterState(): RouterState | null {
+  return state
 }
 
 export function subscribeToRouterState(listener: RouterStateListener): () => void {

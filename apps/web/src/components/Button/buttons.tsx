@@ -186,6 +186,25 @@ export const ButtonSecondary = styled(BaseButton)`
   }
 `
 
+export const ButtonOutlined = styled(BaseButton)`
+  border: 1px solid ${({ theme }) => theme.surface3};
+  background-color: transparent;
+  color: ${({ theme }) => theme.neutral1};
+  &:focus {
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.surface3};
+  }
+  &:hover {
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.neutral3};
+  }
+  &:active {
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.surface3};
+  }
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
 export const ButtonEmpty = styled(BaseButton)`
   background-color: transparent;
   color: ${({ theme }) => theme.accent1};
@@ -201,6 +220,26 @@ export const ButtonEmpty = styled(BaseButton)`
   }
   &:active {
     text-decoration: none;
+  }
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
+export const ButtonText = styled(BaseButton)`
+  padding: 0;
+  width: fit-content;
+  background: none;
+  text-decoration: none;
+  &:focus {
+    text-decoration: underline;
+  }
+  &:hover {
+    opacity: 0.9;
+  }
+  &:active {
+    text-decoration: underline;
   }
   &:disabled {
     opacity: 50%;
@@ -266,19 +305,19 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & BaseButton
 }
 
 export enum ButtonSize {
-  small = 0,
-  medium = 1,
-  large = 2,
+  small,
+  medium,
+  large,
 }
 export enum ButtonEmphasis {
-  high = 0,
-  promotional = 1,
-  highSoft = 2,
-  medium = 3,
-  low = 4,
-  warning = 5,
-  destructive = 6,
-  failure = 7,
+  high,
+  promotional,
+  highSoft,
+  medium,
+  low,
+  warning,
+  destructive,
+  failure,
 }
 interface BaseThemeButtonProps {
   size: ButtonSize

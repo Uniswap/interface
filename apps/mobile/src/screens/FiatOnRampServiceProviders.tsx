@@ -92,7 +92,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
   )
 
   return (
-    <Screen edges={['top', 'bottom']}>
+    <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
       <Flex height="100%">
         <Flex row alignItems="center" justifyContent="space-between" pb="$spacing16" pt="$spacing12" px="$spacing16">

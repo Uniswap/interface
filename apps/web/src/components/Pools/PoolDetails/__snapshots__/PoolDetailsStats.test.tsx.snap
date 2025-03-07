@@ -2,7 +2,7 @@
 
 exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 <DocumentFragment>
-  .c12 {
+  .c14 {
   color: #FF5F52;
 }
 
@@ -26,6 +26,16 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   min-width: 0;
 }
 
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 4px 0px;
+}
+
 .c6 {
   width: 100%;
   display: -webkit-box;
@@ -41,6 +51,26 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c13 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 4px 0px;
 }
 
 .c4 {
@@ -231,69 +261,61 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                 class="c5 c6 c8"
               >
                 <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
+                  data-testid="token-logo"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
-                    data-testid="token-logo"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
                   >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+                    <img
+                      height="20"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      style="object-fit: contain; border-radius: 10px; z-index: 1;"
+                      width="20"
                     />
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      data-testid="img-token-image"
-                    >
-                      <img
-                        height="20"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                        style="object-fit: contain; border-radius: 10px; z-index: 1;"
-                        width="20"
-                      />
-                    </div>
                   </div>
-                  90.9M
-                  <a
-                    class="c9"
-                    href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-                  >
-                    USDC
-                  </a>
                 </div>
+                90.9M 
+                <a
+                  class="c9"
+                  href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                >
+                  USDC
+                </a>
               </div>
               <div
                 class="c5 c6 c8"
               >
                 <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
+                  data-testid="token-logo"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
-                    data-testid="token-logo"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
                   >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+                    <img
+                      height="20"
+                      src="eth-logo.png"
+                      style="object-fit: contain; border-radius: 10px; z-index: 1;"
+                      width="20"
                     />
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      data-testid="img-token-image"
-                    >
-                      <img
-                        height="20"
-                        src="eth-logo.png"
-                        style="object-fit: contain; border-radius: 10px; z-index: 1;"
-                        width="20"
-                      />
-                    </div>
                   </div>
-                  82.5K
-                  <a
-                    class="c9"
-                    href="/explore/tokens/ethereum/NATIVE"
-                  >
-                    ETH
-                  </a>
                 </div>
+                82.5K 
+                <a
+                  class="c9"
+                  href="/explore/tokens/ethereum/NATIVE"
+                >
+                  ETH
+                </a>
               </div>
             </div>
           </div>
@@ -314,11 +336,12 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                 $223.2M
               </div>
               <div
-                class="_pt-_lg_0px _pb-_lg_0px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                class="c12 c13"
+                width="max-content"
               >
                 <svg
                   aria-label="down"
-                  class="c12"
+                  class="c14"
                   fill="none"
                   height="16"
                   viewBox="0 0 24 24"
@@ -355,11 +378,12 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                 $194.3M
               </div>
               <div
-                class="_pt-_lg_0px _pb-_lg_0px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                class="c12 c13"
+                width="max-content"
               >
                 <svg
                   aria-label="down"
-                  class="c12"
+                  class="c14"
                   fill="none"
                   height="16"
                   viewBox="0 0 24 24"
@@ -409,7 +433,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 
 exports[`PoolDetailsStats renders stats text correctly 1`] = `
 <DocumentFragment>
-  .c14 {
+  .c16 {
   color: #FF5F52;
 }
 
@@ -433,6 +457,16 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   min-width: 0;
 }
 
+.c14 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 4px 0px;
+}
+
 .c6 {
   width: 100%;
   display: -webkit-box;
@@ -448,6 +482,26 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c15 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 4px 0px;
 }
 
 .c4 {
@@ -655,32 +709,24 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
               <div
                 class="c5 c6 c8"
               >
-                <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
+                90.9M 
+                <a
+                  class="c9"
+                  href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
                 >
-                  90.9M
-                  <a
-                    class="c9"
-                    href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-                  >
-                    USDC
-                  </a>
-                </div>
+                  USDC
+                </a>
               </div>
               <div
                 class="c5 c6 c8"
               >
-                <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665589"
+                82.5K 
+                <a
+                  class="c9"
+                  href="/explore/tokens/ethereum/NATIVE"
                 >
-                  82.5K
-                  <a
-                    class="c9"
-                    href="/explore/tokens/ethereum/NATIVE"
-                  >
-                    ETH
-                  </a>
-                </div>
+                  ETH
+                </a>
               </div>
             </div>
             <div
@@ -712,11 +758,12 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
                 $223.2M
               </div>
               <div
-                class="_pt-_lg_0px _pb-_lg_0px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                class="c14 c15"
+                width="max-content"
               >
                 <svg
                   aria-label="down"
-                  class="c14"
+                  class="c16"
                   fill="none"
                   height="16"
                   viewBox="0 0 24 24"
@@ -753,11 +800,12 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
                 $194.3M
               </div>
               <div
-                class="_pt-_lg_0px _pb-_lg_0px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                class="c14 c15"
+                width="max-content"
               >
                 <svg
                   aria-label="down"
-                  class="c14"
+                  class="c16"
                   fill="none"
                   height="16"
                   viewBox="0 0 24 24"

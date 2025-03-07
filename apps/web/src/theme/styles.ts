@@ -16,7 +16,7 @@ export enum TRANSITION_DURATIONS {
   fast = 125,
 }
 
-export const transitions = {
+const transitions = {
   duration: {
     slow: `${TRANSITION_DURATIONS.slow}ms`,
     medium: `${TRANSITION_DURATIONS.medium}ms`,

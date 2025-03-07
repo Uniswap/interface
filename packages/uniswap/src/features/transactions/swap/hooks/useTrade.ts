@@ -10,7 +10,6 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks/useIndicativeTrade'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import {
   SWAP_GAS_URGENCY_OVERRIDE,
   getTokenAddressForApi,
@@ -61,8 +60,6 @@ export function useTrade({
     currencyIn && currencyOut && areCurrencyIdsEqual(currencyId(currencyIn), currencyId(currencyOut))
 
   const tokenInChainId = toTradingApiSupportedChainId(currencyIn?.chainId)
-  const v4SwapEnabled = useV4SwapEnabled(tokenInChainId)
-
   const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
   const tokenInAddress = getTokenAddressForApi(currencyIn)
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
@@ -97,6 +94,8 @@ export function useTrade({
     isZeroAmount ||
     currencyInEqualsCurrencyOut
 
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+
   const quoteRequestArgs = useMemo((): Parameters<typeof useTradingApiQuoteQuery>[0]['params'] | undefined => {
     if (skipQuery) {
       return undefined
@@ -112,7 +111,7 @@ export function useTrade({
       tokenOutChainId,
       type: requestTradeType,
       urgency: SWAP_GAS_URGENCY_OVERRIDE,
-      v4Enabled: v4SwapEnabled,
+      v4Enabled,
       ...routingParams,
       ...slippageParams,
     }
@@ -130,7 +129,7 @@ export function useTrade({
     tokenInChainId,
     tokenOutAddress,
     tokenOutChainId,
-    v4SwapEnabled,
+    v4Enabled,
   ])
 
   /***** Fetch quote from trading API  ******/

@@ -8,8 +8,8 @@ import { AlertTriangleFilled, Code, StickyNoteTextSquare } from 'ui/src/componen
 import { containsNonPrintableChars } from 'utilities/src/primitives/string'
 
 enum ViewEncoding {
-  UTF8 = 0,
-  HEX = 1,
+  UTF8,
+  HEX,
 }
 interface PersonalSignRequestProps {
   dappRequest: SignMessageRequest

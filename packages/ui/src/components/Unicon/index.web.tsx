@@ -1,7 +1,6 @@
-import React, { Suspense, lazy } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { UniconProps } from 'ui/src/components/Unicon/types'
 import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
-import { Flex } from 'ui/src/components/layout/Flex'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { isAddress } from 'utilities/src/addresses'
 
@@ -58,7 +57,7 @@ const UniconSVGComponent = isTestEnv
     })
 
 export const Unicon: React.FC<UniconProps> = (props) => (
-  <Suspense fallback={<Flex width={props.size} height={props.size} />}>
+  <Suspense fallback={<div style={{ width: props.size, height: props.size }} />}>
     <UniconSVGComponent {...props} />
   </Suspense>
 )

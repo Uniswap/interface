@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { useQuery } from '@connectrpc/connect-query'
@@ -124,5 +125,7 @@ export function tokenRankingsStatToCurrencyInfo(tokenRankingsStat: TokenRankings
     currencyId: currencyId(currency),
     logoUrl: logo,
     safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
+    // TODO (WALL-4626): remove safetyLevel in lieu of safetyInfo.tokenList
+    safetyLevel,
   })
 }

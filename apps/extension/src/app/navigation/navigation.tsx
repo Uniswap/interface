@@ -11,7 +11,7 @@ import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { HideContentsWhenSidebarBecomesInactive } from 'src/app/navigation/HideContentsWhenSidebarBecomesInactive'
 import { SideBarNavigationProvider } from 'src/app/navigation/SideBarNavigationProvider'
 import { AppRoutes } from 'src/app/navigation/constants'
-import { RouterState, subscribeToRouterState, useRouterState } from 'src/app/navigation/state'
+import { subscribeToRouterState, useRouterState } from 'src/app/navigation/state'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { Flex, SpinningLoader, styled } from 'ui/src'
@@ -74,8 +74,8 @@ const getAppRouteFromPathName = (pathname: string): AppRoutes | null => {
 
 const animationVariant: Variants = {
   initial: (dir: Direction) => ({
-    x: isVertical(dir) ? 0 : dir === 'right' ? -30 : 30,
-    y: !isVertical(dir) ? 0 : dir === 'down' ? -15 : 15,
+    x: isVertical(dir) ? 0 : dir === 'right' ? 30 : -30,
+    y: !isVertical(dir) ? 0 : dir === 'down' ? 15 : -15,
     opacity: 0,
     zIndex: 1,
   }),
@@ -122,11 +122,8 @@ export function WebNavigation(): JSX.Element {
   useEffect(() => {
     // We're using subscribeToRouterState subscriber to detect, whether we will
     // navigate to another page, which will lead to the start of the animation.
-    subscribeToRouterState(({ historyAction, location }: RouterState) => {
-      const trimmedPathname = location.pathname.replace('/', '') as AppRoutes
-      if (historyAction !== NavigationType.Replace && Object.values(AppRoutes).includes(trimmedPathname)) {
-        setIsTransitioning(true)
-      }
+    subscribeToRouterState(() => {
+      setIsTransitioning(true)
     })
   }, [])
 

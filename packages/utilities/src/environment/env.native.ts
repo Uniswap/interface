@@ -1,6 +1,6 @@
 import DeviceInfo from 'react-native-device-info'
 
-export const BUNDLE_ID = DeviceInfo.getBundleId()
+const BUNDLE_ID = DeviceInfo.getBundleId()
 
 export function isPlaywrightEnv(): boolean {
   return false

@@ -183,9 +183,9 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
   const logoUrl = getOptionalServiceProviderLogo(serviceProvider?.logos, isDarkMode)
 
   return (
-    <Screen edges={['top', 'bottom']}>
-      {baseCurrencyInfo && serviceProvider && (
-        <Flex fill justifyContent="space-between" alignItems="center">
+    <Screen>
+      {baseCurrencyInfo && serviceProvider ? (
+        <>
           <FiatOnRampConnectingView
             amount={addFiatSymbolToNumber({
               value: fiatAmount,
@@ -206,11 +206,18 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
             }
             serviceProviderName={serviceProvider.name}
           />
-          <Text bottom={spacing.spacing8} color="$neutral3" px="$spacing24" textAlign="center" variant="body3">
+          <Text
+            bottom={spacing.spacing8}
+            color="$neutral3"
+            position="absolute"
+            px="$spacing24"
+            textAlign="center"
+            variant="body3"
+          >
             {t('fiatOnRamp.connection.terms', { serviceProvider: serviceProvider.name })}
           </Text>
-        </Flex>
-      )}
+        </>
+      ) : null}
     </Screen>
   )
 }

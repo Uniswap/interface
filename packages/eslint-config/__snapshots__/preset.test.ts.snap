@@ -1,0 +1,1722 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should have a correct configuration for a Cypress e2e file 1`] = `
+{
+  "env": {
+    "cypress/globals": true,
+    "es6": true,
+    "node": true,
+  },
+  "globals": {},
+  "ignorePatterns": [],
+  "noInlineConfig": undefined,
+  "parser": Any<String>,
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+  },
+  "plugins": [
+    "local-rules",
+    "check-file",
+    "unused-imports",
+    "import",
+    "@typescript-eslint",
+    "cypress",
+  ],
+  "reportUnusedDisableDirectives": undefined,
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": [
+      "off",
+    ],
+    "@typescript-eslint/ban-ts-ignore": [
+      "off",
+    ],
+    "@typescript-eslint/ban-types": [
+      "error",
+    ],
+    "@typescript-eslint/explicit-function-return-type": [
+      "off",
+    ],
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "off",
+    ],
+    "@typescript-eslint/no-array-constructor": [
+      "error",
+    ],
+    "@typescript-eslint/no-duplicate-enum-values": [
+      "error",
+    ],
+    "@typescript-eslint/no-explicit-any": [
+      "off",
+    ],
+    "@typescript-eslint/no-extra-non-null-assertion": [
+      "error",
+    ],
+    "@typescript-eslint/no-loss-of-precision": [
+      "error",
+    ],
+    "@typescript-eslint/no-misused-new": [
+      "error",
+    ],
+    "@typescript-eslint/no-namespace": [
+      "error",
+    ],
+    "@typescript-eslint/no-non-null-asserted-optional-chain": [
+      "error",
+    ],
+    "@typescript-eslint/no-this-alias": [
+      "error",
+    ],
+    "@typescript-eslint/no-unnecessary-type-constraint": [
+      "error",
+    ],
+    "@typescript-eslint/no-unsafe-declaration-merging": [
+      "error",
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+    ],
+    "@typescript-eslint/no-var-requires": [
+      "error",
+    ],
+    "@typescript-eslint/prefer-as-const": [
+      "error",
+    ],
+    "@typescript-eslint/triple-slash-reference": [
+      "error",
+    ],
+    "check-file/no-index": [
+      "error",
+      {
+        "ignoreMiddleExtensions": true,
+      },
+    ],
+    "consistent-return": [
+      "error",
+      {
+        "treatUndefinedAsUnspecified": false,
+      },
+    ],
+    "constructor-super": [
+      "off",
+    ],
+    "curly": [
+      "error",
+    ],
+    "cypress/no-assigning-return-values": [
+      "error",
+    ],
+    "cypress/no-async-tests": [
+      "error",
+    ],
+    "cypress/no-unnecessary-waiting": [
+      "error",
+    ],
+    "cypress/unsafe-to-chain-command": [
+      "error",
+    ],
+    "for-direction": [
+      "error",
+    ],
+    "getter-return": [
+      "off",
+    ],
+    "import/named": [
+      "off",
+    ],
+    "import/no-unused-modules": [
+      "error",
+      {
+        "unusedExports": true,
+      },
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
+      },
+    ],
+    "no-array-constructor": [
+      "off",
+    ],
+    "no-async-promise-executor": [
+      "error",
+    ],
+    "no-case-declarations": [
+      "error",
+    ],
+    "no-class-assign": [
+      "error",
+    ],
+    "no-compare-neg-zero": [
+      "error",
+    ],
+    "no-cond-assign": [
+      "error",
+    ],
+    "no-console": [
+      "error",
+    ],
+    "no-const-assign": [
+      "off",
+    ],
+    "no-constant-condition": [
+      "error",
+    ],
+    "no-control-regex": [
+      "error",
+    ],
+    "no-debugger": [
+      "error",
+    ],
+    "no-delete-var": [
+      "error",
+    ],
+    "no-dupe-args": [
+      "off",
+    ],
+    "no-dupe-class-members": [
+      "off",
+    ],
+    "no-dupe-else-if": [
+      "error",
+    ],
+    "no-dupe-keys": [
+      "off",
+    ],
+    "no-duplicate-case": [
+      "error",
+    ],
+    "no-empty": [
+      "error",
+    ],
+    "no-empty-character-class": [
+      "error",
+    ],
+    "no-empty-pattern": [
+      "error",
+    ],
+    "no-ex-assign": [
+      "error",
+    ],
+    "no-extra-boolean-cast": [
+      "error",
+    ],
+    "no-extra-semi": [
+      "error",
+    ],
+    "no-fallthrough": [
+      "error",
+    ],
+    "no-func-assign": [
+      "off",
+    ],
+    "no-global-assign": [
+      "error",
+    ],
+    "no-import-assign": [
+      "off",
+    ],
+    "no-inner-declarations": [
+      "error",
+    ],
+    "no-invalid-regexp": [
+      "error",
+    ],
+    "no-irregular-whitespace": [
+      "error",
+    ],
+    "no-loss-of-precision": [
+      "off",
+    ],
+    "no-misleading-character-class": [
+      "error",
+    ],
+    "no-mixed-spaces-and-tabs": [
+      "error",
+    ],
+    "no-new-symbol": [
+      "off",
+    ],
+    "no-nonoctal-decimal-escape": [
+      "error",
+    ],
+    "no-obj-calls": [
+      "off",
+    ],
+    "no-octal": [
+      "error",
+    ],
+    "no-prototype-builtins": [
+      "error",
+    ],
+    "no-redeclare": [
+      "off",
+    ],
+    "no-regex-spaces": [
+      "error",
+    ],
+    "no-self-assign": [
+      "error",
+    ],
+    "no-setter-return": [
+      "off",
+    ],
+    "no-shadow-restricted-names": [
+      "error",
+    ],
+    "no-sparse-arrays": [
+      "error",
+    ],
+    "no-this-before-super": [
+      "off",
+    ],
+    "no-undef": [
+      "off",
+    ],
+    "no-unexpected-multiline": [
+      "error",
+    ],
+    "no-unreachable": [
+      "off",
+    ],
+    "no-unsafe-finally": [
+      "error",
+    ],
+    "no-unsafe-negation": [
+      "off",
+    ],
+    "no-unsafe-optional-chaining": [
+      "error",
+    ],
+    "no-unused-labels": [
+      "error",
+    ],
+    "no-unused-vars": [
+      "off",
+    ],
+    "no-useless-backreference": [
+      "error",
+    ],
+    "no-useless-catch": [
+      "error",
+    ],
+    "no-useless-escape": [
+      "error",
+    ],
+    "no-var": [
+      "error",
+    ],
+    "no-with": [
+      "error",
+    ],
+    "object-shorthand": [
+      "error",
+      "always",
+    ],
+    "prefer-const": [
+      "error",
+    ],
+    "prefer-rest-params": [
+      "error",
+    ],
+    "prefer-spread": [
+      "error",
+    ],
+    "require-yield": [
+      "error",
+    ],
+    "unused-imports/no-unused-imports": [
+      "error",
+    ],
+    "use-isnan": [
+      "error",
+    ],
+    "valid-typeof": [
+      "error",
+    ],
+  },
+  "settings": {
+    "import/extensions": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx",
+    ],
+    "import/external-module-folders": [
+      "node_modules",
+      "node_modules/@types",
+    ],
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx",
+      ],
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".ts",
+          ".tsx",
+          ".js",
+          ".jsx",
+        ],
+      },
+      "typescript": {
+        "alwaysTryTypes": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`should have a correct configuration for a Jest file 1`] = `
+{
+  "env": {
+    "es6": true,
+    "jest": true,
+    "jest/globals": true,
+    "node": true,
+  },
+  "globals": {},
+  "ignorePatterns": [],
+  "noInlineConfig": undefined,
+  "parser": Any<String>,
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+  },
+  "plugins": [
+    "local-rules",
+    "check-file",
+    "unused-imports",
+    "import",
+    "@typescript-eslint",
+    "jest",
+  ],
+  "reportUnusedDisableDirectives": undefined,
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": [
+      "off",
+    ],
+    "@typescript-eslint/ban-ts-ignore": [
+      "off",
+    ],
+    "@typescript-eslint/ban-types": [
+      "error",
+    ],
+    "@typescript-eslint/explicit-function-return-type": [
+      "off",
+    ],
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "off",
+    ],
+    "@typescript-eslint/no-array-constructor": [
+      "error",
+    ],
+    "@typescript-eslint/no-duplicate-enum-values": [
+      "error",
+    ],
+    "@typescript-eslint/no-explicit-any": [
+      "off",
+    ],
+    "@typescript-eslint/no-extra-non-null-assertion": [
+      "error",
+    ],
+    "@typescript-eslint/no-loss-of-precision": [
+      "error",
+    ],
+    "@typescript-eslint/no-misused-new": [
+      "error",
+    ],
+    "@typescript-eslint/no-namespace": [
+      "error",
+    ],
+    "@typescript-eslint/no-non-null-asserted-optional-chain": [
+      "error",
+    ],
+    "@typescript-eslint/no-this-alias": [
+      "error",
+    ],
+    "@typescript-eslint/no-unnecessary-type-constraint": [
+      "error",
+    ],
+    "@typescript-eslint/no-unsafe-declaration-merging": [
+      "error",
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+    ],
+    "@typescript-eslint/no-var-requires": [
+      "error",
+    ],
+    "@typescript-eslint/prefer-as-const": [
+      "error",
+    ],
+    "@typescript-eslint/triple-slash-reference": [
+      "error",
+    ],
+    "check-file/no-index": [
+      "error",
+      {
+        "ignoreMiddleExtensions": true,
+      },
+    ],
+    "consistent-return": [
+      "error",
+      {
+        "treatUndefinedAsUnspecified": false,
+      },
+    ],
+    "constructor-super": [
+      "off",
+    ],
+    "curly": [
+      "error",
+    ],
+    "for-direction": [
+      "error",
+    ],
+    "getter-return": [
+      "off",
+    ],
+    "import/named": [
+      "off",
+    ],
+    "import/no-unused-modules": [
+      "error",
+      {
+        "unusedExports": true,
+      },
+    ],
+    "jest/expect-expect": [
+      "warn",
+    ],
+    "jest/no-alias-methods": [
+      "error",
+    ],
+    "jest/no-commented-out-tests": [
+      "warn",
+    ],
+    "jest/no-conditional-expect": [
+      "error",
+    ],
+    "jest/no-deprecated-functions": [
+      "error",
+    ],
+    "jest/no-disabled-tests": [
+      "warn",
+    ],
+    "jest/no-done-callback": [
+      "error",
+    ],
+    "jest/no-export": [
+      "error",
+    ],
+    "jest/no-focused-tests": [
+      "error",
+    ],
+    "jest/no-identical-title": [
+      "error",
+    ],
+    "jest/no-interpolation-in-snapshots": [
+      "error",
+    ],
+    "jest/no-jasmine-globals": [
+      "error",
+    ],
+    "jest/no-mocks-import": [
+      "error",
+    ],
+    "jest/no-standalone-expect": [
+      "error",
+    ],
+    "jest/no-test-prefixes": [
+      "error",
+    ],
+    "jest/valid-describe-callback": [
+      "error",
+    ],
+    "jest/valid-expect": [
+      "error",
+    ],
+    "jest/valid-expect-in-promise": [
+      "error",
+    ],
+    "jest/valid-title": [
+      "error",
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
+      },
+    ],
+    "no-array-constructor": [
+      "off",
+    ],
+    "no-async-promise-executor": [
+      "error",
+    ],
+    "no-case-declarations": [
+      "error",
+    ],
+    "no-class-assign": [
+      "error",
+    ],
+    "no-compare-neg-zero": [
+      "error",
+    ],
+    "no-cond-assign": [
+      "error",
+    ],
+    "no-const-assign": [
+      "off",
+    ],
+    "no-constant-condition": [
+      "error",
+    ],
+    "no-control-regex": [
+      "error",
+    ],
+    "no-debugger": [
+      "error",
+    ],
+    "no-delete-var": [
+      "error",
+    ],
+    "no-dupe-args": [
+      "off",
+    ],
+    "no-dupe-class-members": [
+      "off",
+    ],
+    "no-dupe-else-if": [
+      "error",
+    ],
+    "no-dupe-keys": [
+      "off",
+    ],
+    "no-duplicate-case": [
+      "error",
+    ],
+    "no-empty": [
+      "error",
+    ],
+    "no-empty-character-class": [
+      "error",
+    ],
+    "no-empty-pattern": [
+      "error",
+    ],
+    "no-ex-assign": [
+      "error",
+    ],
+    "no-extra-boolean-cast": [
+      "error",
+    ],
+    "no-extra-semi": [
+      "error",
+    ],
+    "no-fallthrough": [
+      "error",
+    ],
+    "no-func-assign": [
+      "off",
+    ],
+    "no-global-assign": [
+      "error",
+    ],
+    "no-import-assign": [
+      "off",
+    ],
+    "no-inner-declarations": [
+      "error",
+    ],
+    "no-invalid-regexp": [
+      "error",
+    ],
+    "no-irregular-whitespace": [
+      "error",
+    ],
+    "no-loss-of-precision": [
+      "off",
+    ],
+    "no-misleading-character-class": [
+      "error",
+    ],
+    "no-mixed-spaces-and-tabs": [
+      "error",
+    ],
+    "no-new-symbol": [
+      "off",
+    ],
+    "no-nonoctal-decimal-escape": [
+      "error",
+    ],
+    "no-obj-calls": [
+      "off",
+    ],
+    "no-octal": [
+      "error",
+    ],
+    "no-prototype-builtins": [
+      "error",
+    ],
+    "no-redeclare": [
+      "off",
+    ],
+    "no-regex-spaces": [
+      "error",
+    ],
+    "no-self-assign": [
+      "error",
+    ],
+    "no-setter-return": [
+      "off",
+    ],
+    "no-shadow-restricted-names": [
+      "error",
+    ],
+    "no-sparse-arrays": [
+      "error",
+    ],
+    "no-this-before-super": [
+      "off",
+    ],
+    "no-undef": [
+      "off",
+    ],
+    "no-unexpected-multiline": [
+      "error",
+    ],
+    "no-unreachable": [
+      "off",
+    ],
+    "no-unsafe-finally": [
+      "error",
+    ],
+    "no-unsafe-negation": [
+      "off",
+    ],
+    "no-unsafe-optional-chaining": [
+      "error",
+    ],
+    "no-unused-labels": [
+      "error",
+    ],
+    "no-unused-vars": [
+      "off",
+    ],
+    "no-useless-backreference": [
+      "error",
+    ],
+    "no-useless-catch": [
+      "error",
+    ],
+    "no-useless-escape": [
+      "error",
+    ],
+    "no-var": [
+      "error",
+    ],
+    "no-with": [
+      "error",
+    ],
+    "object-shorthand": [
+      "error",
+      "always",
+    ],
+    "prefer-const": [
+      "error",
+    ],
+    "prefer-rest-params": [
+      "error",
+    ],
+    "prefer-spread": [
+      "error",
+    ],
+    "require-yield": [
+      "error",
+    ],
+    "unused-imports/no-unused-imports": [
+      "error",
+    ],
+    "use-isnan": [
+      "error",
+    ],
+    "valid-typeof": [
+      "error",
+    ],
+  },
+  "settings": {
+    "import/extensions": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx",
+    ],
+    "import/external-module-folders": [
+      "node_modules",
+      "node_modules/@types",
+    ],
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx",
+      ],
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".ts",
+          ".tsx",
+          ".js",
+          ".jsx",
+        ],
+      },
+      "typescript": {
+        "alwaysTryTypes": true,
+      },
+    },
+  },
+}
+`;
+
+exports[`should have a correct configuration for a React file 1`] = `
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": false,
+  },
+  "globals": {},
+  "ignorePatterns": [
+    "**/__generated__/",
+  ],
+  "noInlineConfig": undefined,
+  "parser": Any<String>,
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+  },
+  "plugins": [
+    "check-file",
+    "unused-imports",
+    "import",
+    "@typescript-eslint",
+    "local-rules",
+    "no-relative-import-paths",
+    "react-hooks",
+    "react",
+  ],
+  "reportUnusedDisableDirectives": undefined,
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": [
+      "off",
+    ],
+    "@typescript-eslint/ban-ts-ignore": [
+      "off",
+    ],
+    "@typescript-eslint/ban-types": [
+      "error",
+    ],
+    "@typescript-eslint/explicit-function-return-type": [
+      "off",
+    ],
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "off",
+    ],
+    "@typescript-eslint/no-array-constructor": [
+      "error",
+    ],
+    "@typescript-eslint/no-duplicate-enum-values": [
+      "error",
+    ],
+    "@typescript-eslint/no-explicit-any": [
+      "off",
+    ],
+    "@typescript-eslint/no-extra-non-null-assertion": [
+      "error",
+    ],
+    "@typescript-eslint/no-loss-of-precision": [
+      "error",
+    ],
+    "@typescript-eslint/no-misused-new": [
+      "error",
+    ],
+    "@typescript-eslint/no-namespace": [
+      "error",
+    ],
+    "@typescript-eslint/no-non-null-asserted-optional-chain": [
+      "error",
+    ],
+    "@typescript-eslint/no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "message": "Please use the Trace in 'uniswap/src/features/telemetry/Trace' for app level usage!",
+            "name": "utilities/src/telemetry/trace/Trace",
+          },
+          {
+            "message": "Please only use this for initialization, tests, flushing, and internal usage. Otherwise use \`packages/uniswap/src/features/telemetry\`",
+            "name": "utilities/src/telemetry/analytics/analytics",
+          },
+          {
+            "message": "This is for internal use only. Please use \`packages/uniswap/src/features/telemetry\`",
+            "name": "@uniswap/analytics",
+          },
+          {
+            "message": "Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead",
+            "name": "expo-localization",
+          },
+          {
+            "importNames": [
+              "usePortfolioValueModifiers",
+            ],
+            "message": "Use the wrapper hooks \`usePortfolioTotalValue\`, \`useAccountListData\` or \`usePortfolioBalances\` instead of \`usePortfolioValueModifiers\` directly.",
+            "name": "uniswap/src/features/dataApi/balances",
+          },
+          {
+            "importNames": [
+              "t",
+            ],
+            "message": "Please avoid direct imports of t, using \`useTranslation\` and \`i18n.t\` when absolutely needed outside of a React context",
+            "name": "i18next",
+          },
+          {
+            "message": "Use via \`useLocalizationContext\` instead.",
+            "name": "utilities/src/format/localeBased",
+          },
+          {
+            "importNames": [
+              "useFiatConverter",
+            ],
+            "message": "Use via \`useLocalizationContext\` instead.",
+            "name": "uniswap/src/features/fiatCurrency/conversion",
+          },
+          {
+            "importNames": [
+              "useLocalizedFormatter",
+            ],
+            "message": "Use via \`useLocalizationContext\` instead.",
+            "name": "uniswap/src/features/language/formatter",
+          },
+          {
+            "importNames": [
+              "useDeviceInsets",
+            ],
+            "message": "Use \`useAppInsets\` instead.",
+            "name": "ui/src/hooks/useDeviceInsets",
+          },
+          {
+            "importNames": [
+              "getUniqueId",
+            ],
+            "message": "Not supported for web/extension, use \`getUniqueId\` from \`utilities/src/device/getUniqueId\` instead.",
+            "name": "react-native-device-info",
+          },
+          {
+            "message": "Use specific imports (e.g. \`import isEqual from 'lodash/isEqual'\`) to avoid pulling in all of lodash to web to keep bundle size down!",
+            "name": "lodash",
+          },
+          {
+            "importNames": [
+              "UNIVERSE_CHAIN_INFO",
+            ],
+            "message": "Use useChainInfo or helpers in packages/uniswap/src/features/chains/utils.ts when possible!",
+            "name": "uniswap/src/features/chains/chainInfo",
+          },
+          {
+            "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
+            "name": "ethers",
+          },
+          {
+            "message": "Please import icons directly from their respective files, e.g. \`ui/src/components/icons/SpecificIcon\`. This is to avoid importing the entire icons folder when only some icons are needed, which increases bundle size",
+            "name": "ui/src/components/icons",
+          },
+          {
+            "message": "Please import logos directly from their respective files, e.g. \`ui/src/components/logos/SpecificLogo\`. This is to avoid importing the entire logos folder when only some logos are needed, which increases bundle size",
+            "name": "ui/src/components/logos",
+          },
+          {
+            "message": "Please import Modal from \`uniswap/src/components/modals/Modal\` instead. Modal uses AdaptiveWebModal under the hood but has extra logic for handling animation, mounting, and dismounting.",
+            "name": "ui/src/components/modal/AdaptiveWebModal",
+          },
+        ],
+        "patterns": [
+          {
+            "group": [
+              "**/dist",
+            ],
+            "message": "Do not import from dist/ - this is an implementation detail, and breaks tree-shaking.",
+          },
+          {
+            "group": [
+              "*react-native*",
+              "!react-native-reanimated",
+              "!react-native-image-colors",
+              "!@testing-library/react-native",
+              "!@react-native-community/netinfo",
+              "!react-native-localize",
+            ],
+            "message": "React Native modules should not be imported outside of .native.ts files. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the whitelist in crossPlatform.js.",
+          },
+        ],
+      },
+    ],
+    "@typescript-eslint/no-this-alias": [
+      "error",
+    ],
+    "@typescript-eslint/no-unnecessary-type-constraint": [
+      "error",
+    ],
+    "@typescript-eslint/no-unsafe-declaration-merging": [
+      "error",
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+    ],
+    "@typescript-eslint/no-var-requires": [
+      "error",
+    ],
+    "@typescript-eslint/prefer-as-const": [
+      "error",
+    ],
+    "@typescript-eslint/triple-slash-reference": [
+      "error",
+    ],
+    "check-file/no-index": [
+      "error",
+      {
+        "ignoreMiddleExtensions": true,
+      },
+    ],
+    "consistent-return": [
+      "error",
+      {
+        "treatUndefinedAsUnspecified": false,
+      },
+    ],
+    "constructor-super": [
+      "off",
+    ],
+    "curly": [
+      "error",
+    ],
+    "for-direction": [
+      "error",
+    ],
+    "getter-return": [
+      "off",
+    ],
+    "import/named": [
+      "off",
+    ],
+    "import/no-unused-modules": [
+      "error",
+      {
+        "unusedExports": true,
+      },
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
+      },
+    ],
+    "no-array-constructor": [
+      "off",
+    ],
+    "no-async-promise-executor": [
+      "error",
+    ],
+    "no-case-declarations": [
+      "error",
+    ],
+    "no-class-assign": [
+      "error",
+    ],
+    "no-compare-neg-zero": [
+      "error",
+    ],
+    "no-cond-assign": [
+      "error",
+    ],
+    "no-console": [
+      "error",
+    ],
+    "no-const-assign": [
+      "off",
+    ],
+    "no-constant-condition": [
+      "error",
+    ],
+    "no-control-regex": [
+      "error",
+    ],
+    "no-debugger": [
+      "error",
+    ],
+    "no-delete-var": [
+      "error",
+    ],
+    "no-dupe-args": [
+      "off",
+    ],
+    "no-dupe-class-members": [
+      "off",
+    ],
+    "no-dupe-else-if": [
+      "error",
+    ],
+    "no-dupe-keys": [
+      "off",
+    ],
+    "no-duplicate-case": [
+      "error",
+    ],
+    "no-empty": [
+      "error",
+    ],
+    "no-empty-character-class": [
+      "error",
+    ],
+    "no-empty-pattern": [
+      "error",
+    ],
+    "no-ex-assign": [
+      "error",
+    ],
+    "no-extra-boolean-cast": [
+      "error",
+    ],
+    "no-extra-semi": [
+      "error",
+    ],
+    "no-fallthrough": [
+      "error",
+    ],
+    "no-func-assign": [
+      "off",
+    ],
+    "no-global-assign": [
+      "error",
+    ],
+    "no-import-assign": [
+      "off",
+    ],
+    "no-inner-declarations": [
+      "error",
+    ],
+    "no-invalid-regexp": [
+      "error",
+    ],
+    "no-irregular-whitespace": [
+      "error",
+    ],
+    "no-loss-of-precision": [
+      "off",
+    ],
+    "no-misleading-character-class": [
+      "error",
+    ],
+    "no-mixed-spaces-and-tabs": [
+      "error",
+    ],
+    "no-new-symbol": [
+      "off",
+    ],
+    "no-nonoctal-decimal-escape": [
+      "error",
+    ],
+    "no-obj-calls": [
+      "off",
+    ],
+    "no-octal": [
+      "error",
+    ],
+    "no-prototype-builtins": [
+      "error",
+    ],
+    "no-redeclare": [
+      "off",
+    ],
+    "no-regex-spaces": [
+      "error",
+    ],
+    "no-self-assign": [
+      "error",
+    ],
+    "no-setter-return": [
+      "off",
+    ],
+    "no-shadow-restricted-names": [
+      "error",
+    ],
+    "no-sparse-arrays": [
+      "error",
+    ],
+    "no-this-before-super": [
+      "off",
+    ],
+    "no-undef": [
+      "off",
+    ],
+    "no-unexpected-multiline": [
+      "error",
+    ],
+    "no-unreachable": [
+      "off",
+    ],
+    "no-unsafe-finally": [
+      "error",
+    ],
+    "no-unsafe-negation": [
+      "off",
+    ],
+    "no-unsafe-optional-chaining": [
+      "error",
+    ],
+    "no-unused-labels": [
+      "error",
+    ],
+    "no-unused-vars": [
+      "off",
+    ],
+    "no-useless-backreference": [
+      "error",
+    ],
+    "no-useless-catch": [
+      "error",
+    ],
+    "no-useless-escape": [
+      "error",
+    ],
+    "no-var": [
+      "error",
+    ],
+    "no-with": [
+      "error",
+    ],
+    "object-shorthand": [
+      "error",
+      "always",
+    ],
+    "prefer-const": [
+      "error",
+    ],
+    "prefer-rest-params": [
+      "error",
+    ],
+    "prefer-spread": [
+      "error",
+    ],
+    "react-hooks/exhaustive-deps": [
+      "warn",
+    ],
+    "react-hooks/rules-of-hooks": [
+      "error",
+    ],
+    "react/display-name": [
+      2,
+    ],
+    "react/jsx-curly-brace-presence": [
+      "error",
+      {
+        "children": "never",
+        "props": "never",
+      },
+    ],
+    "react/jsx-key": [
+      2,
+    ],
+    "react/jsx-no-comment-textnodes": [
+      2,
+    ],
+    "react/jsx-no-duplicate-props": [
+      2,
+    ],
+    "react/jsx-no-target-blank": [
+      2,
+    ],
+    "react/jsx-no-undef": [
+      2,
+    ],
+    "react/jsx-uses-react": [
+      2,
+    ],
+    "react/jsx-uses-vars": [
+      2,
+    ],
+    "react/no-children-prop": [
+      2,
+    ],
+    "react/no-danger-with-children": [
+      2,
+    ],
+    "react/no-deprecated": [
+      2,
+    ],
+    "react/no-direct-mutation-state": [
+      2,
+    ],
+    "react/no-find-dom-node": [
+      2,
+    ],
+    "react/no-is-mounted": [
+      2,
+    ],
+    "react/no-render-return-value": [
+      2,
+    ],
+    "react/no-string-refs": [
+      2,
+    ],
+    "react/no-unescaped-entities": [
+      2,
+    ],
+    "react/no-unknown-property": [
+      2,
+    ],
+    "react/no-unsafe": [
+      0,
+    ],
+    "react/prop-types": [
+      2,
+    ],
+    "react/react-in-jsx-scope": [
+      "off",
+    ],
+    "react/require-render-return": [
+      2,
+    ],
+    "require-yield": [
+      "error",
+    ],
+    "unused-imports/no-unused-imports": [
+      "error",
+    ],
+    "use-isnan": [
+      "error",
+    ],
+    "valid-typeof": [
+      "error",
+    ],
+  },
+  "settings": {
+    "import/extensions": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx",
+    ],
+    "import/external-module-folders": [
+      "node_modules",
+      "node_modules/@types",
+    ],
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx",
+      ],
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".ts",
+          ".tsx",
+          ".js",
+          ".jsx",
+        ],
+      },
+      "typescript": {
+        "alwaysTryTypes": true,
+      },
+    },
+    "react": {
+      "version": "detect",
+    },
+  },
+}
+`;
+
+exports[`should have a correct configuration for a TypeScript file 1`] = `
+{
+  "env": {
+    "es6": true,
+    "node": true,
+  },
+  "globals": {},
+  "ignorePatterns": [],
+  "noInlineConfig": undefined,
+  "parser": Any<String>,
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+  },
+  "plugins": [
+    "local-rules",
+    "check-file",
+    "unused-imports",
+    "import",
+    "@typescript-eslint",
+  ],
+  "reportUnusedDisableDirectives": undefined,
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": [
+      "off",
+    ],
+    "@typescript-eslint/ban-ts-ignore": [
+      "off",
+    ],
+    "@typescript-eslint/ban-types": [
+      "error",
+    ],
+    "@typescript-eslint/explicit-function-return-type": [
+      "off",
+    ],
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "off",
+    ],
+    "@typescript-eslint/no-array-constructor": [
+      "error",
+    ],
+    "@typescript-eslint/no-duplicate-enum-values": [
+      "error",
+    ],
+    "@typescript-eslint/no-explicit-any": [
+      "off",
+    ],
+    "@typescript-eslint/no-extra-non-null-assertion": [
+      "error",
+    ],
+    "@typescript-eslint/no-loss-of-precision": [
+      "error",
+    ],
+    "@typescript-eslint/no-misused-new": [
+      "error",
+    ],
+    "@typescript-eslint/no-namespace": [
+      "error",
+    ],
+    "@typescript-eslint/no-non-null-asserted-optional-chain": [
+      "error",
+    ],
+    "@typescript-eslint/no-this-alias": [
+      "error",
+    ],
+    "@typescript-eslint/no-unnecessary-type-constraint": [
+      "error",
+    ],
+    "@typescript-eslint/no-unsafe-declaration-merging": [
+      "error",
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+    ],
+    "@typescript-eslint/no-var-requires": [
+      "error",
+    ],
+    "@typescript-eslint/prefer-as-const": [
+      "error",
+    ],
+    "@typescript-eslint/triple-slash-reference": [
+      "error",
+    ],
+    "check-file/no-index": [
+      "error",
+      {
+        "ignoreMiddleExtensions": true,
+      },
+    ],
+    "consistent-return": [
+      "error",
+      {
+        "treatUndefinedAsUnspecified": false,
+      },
+    ],
+    "constructor-super": [
+      "off",
+    ],
+    "curly": [
+      "error",
+    ],
+    "for-direction": [
+      "error",
+    ],
+    "getter-return": [
+      "off",
+    ],
+    "import/named": [
+      "off",
+    ],
+    "import/no-unused-modules": [
+      "error",
+      {
+        "unusedExports": true,
+      },
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
+      },
+    ],
+    "no-array-constructor": [
+      "off",
+    ],
+    "no-async-promise-executor": [
+      "error",
+    ],
+    "no-case-declarations": [
+      "error",
+    ],
+    "no-class-assign": [
+      "error",
+    ],
+    "no-compare-neg-zero": [
+      "error",
+    ],
+    "no-cond-assign": [
+      "error",
+    ],
+    "no-console": [
+      "error",
+    ],
+    "no-const-assign": [
+      "off",
+    ],
+    "no-constant-condition": [
+      "error",
+    ],
+    "no-control-regex": [
+      "error",
+    ],
+    "no-debugger": [
+      "error",
+    ],
+    "no-delete-var": [
+      "error",
+    ],
+    "no-dupe-args": [
+      "off",
+    ],
+    "no-dupe-class-members": [
+      "off",
+    ],
+    "no-dupe-else-if": [
+      "error",
+    ],
+    "no-dupe-keys": [
+      "off",
+    ],
+    "no-duplicate-case": [
+      "error",
+    ],
+    "no-empty": [
+      "error",
+    ],
+    "no-empty-character-class": [
+      "error",
+    ],
+    "no-empty-pattern": [
+      "error",
+    ],
+    "no-ex-assign": [
+      "error",
+    ],
+    "no-extra-boolean-cast": [
+      "error",
+    ],
+    "no-extra-semi": [
+      "error",
+    ],
+    "no-fallthrough": [
+      "error",
+    ],
+    "no-func-assign": [
+      "off",
+    ],
+    "no-global-assign": [
+      "error",
+    ],
+    "no-import-assign": [
+      "off",
+    ],
+    "no-inner-declarations": [
+      "error",
+    ],
+    "no-invalid-regexp": [
+      "error",
+    ],
+    "no-irregular-whitespace": [
+      "error",
+    ],
+    "no-loss-of-precision": [
+      "off",
+    ],
+    "no-misleading-character-class": [
+      "error",
+    ],
+    "no-mixed-spaces-and-tabs": [
+      "error",
+    ],
+    "no-new-symbol": [
+      "off",
+    ],
+    "no-nonoctal-decimal-escape": [
+      "error",
+    ],
+    "no-obj-calls": [
+      "off",
+    ],
+    "no-octal": [
+      "error",
+    ],
+    "no-prototype-builtins": [
+      "error",
+    ],
+    "no-redeclare": [
+      "off",
+    ],
+    "no-regex-spaces": [
+      "error",
+    ],
+    "no-self-assign": [
+      "error",
+    ],
+    "no-setter-return": [
+      "off",
+    ],
+    "no-shadow-restricted-names": [
+      "error",
+    ],
+    "no-sparse-arrays": [
+      "error",
+    ],
+    "no-this-before-super": [
+      "off",
+    ],
+    "no-undef": [
+      "off",
+    ],
+    "no-unexpected-multiline": [
+      "error",
+    ],
+    "no-unreachable": [
+      "off",
+    ],
+    "no-unsafe-finally": [
+      "error",
+    ],
+    "no-unsafe-negation": [
+      "off",
+    ],
+    "no-unsafe-optional-chaining": [
+      "error",
+    ],
+    "no-unused-labels": [
+      "error",
+    ],
+    "no-unused-vars": [
+      "off",
+    ],
+    "no-useless-backreference": [
+      "error",
+    ],
+    "no-useless-catch": [
+      "error",
+    ],
+    "no-useless-escape": [
+      "error",
+    ],
+    "no-var": [
+      "error",
+    ],
+    "no-with": [
+      "error",
+    ],
+    "object-shorthand": [
+      "error",
+      "always",
+    ],
+    "prefer-const": [
+      "error",
+    ],
+    "prefer-rest-params": [
+      "error",
+    ],
+    "prefer-spread": [
+      "error",
+    ],
+    "require-yield": [
+      "error",
+    ],
+    "unused-imports/no-unused-imports": [
+      "error",
+    ],
+    "use-isnan": [
+      "error",
+    ],
+    "valid-typeof": [
+      "error",
+    ],
+  },
+  "settings": {
+    "import/extensions": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx",
+    ],
+    "import/external-module-folders": [
+      "node_modules",
+      "node_modules/@types",
+    ],
+    "import/parsers": {
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx",
+      ],
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".ts",
+          ".tsx",
+          ".js",
+          ".jsx",
+        ],
+      },
+      "typescript": {
+        "alwaysTryTypes": true,
+      },
+    },
+  },
+}
+`;

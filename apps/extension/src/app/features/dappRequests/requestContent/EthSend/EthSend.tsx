@@ -12,7 +12,6 @@ import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
-import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
 
 interface EthSendRequestContentProps {
@@ -76,73 +75,43 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
     await onCancel(requestWithGasValues)
   }, [onCancel, requestWithGasValues])
 
-  let content
-  switch (true) {
-    case isSwapRequest(dappRequest):
-      content = (
-        <SwapRequestContent
-          dappRequest={dappRequest}
-          transactionGasFeeResult={transactionGasFeeResult}
-          onCancel={onCancelRequest}
-          onConfirm={onConfirmRequest}
-        />
-      )
-      break
-    case isLPRequest(dappRequest):
-      content = (
-        <LPRequestContent
-          dappRequest={dappRequest}
-          transactionGasFeeResult={transactionGasFeeResult}
-          onCancel={onCancelRequest}
-          onConfirm={onConfirmRequest}
-        />
-      )
-      break
-    case isApproveRequest(dappRequest):
-      content = (
-        <ApproveRequestContent
-          dappRequest={dappRequest}
-          transactionGasFeeResult={transactionGasFeeResult}
-          onCancel={onCancelRequest}
-          onConfirm={onConfirmRequest}
-        />
-      )
-      break
-    default:
-      content = (
-        <FallbackEthSendRequestContent
-          dappRequest={dappRequest}
-          transactionGasFeeResult={transactionGasFeeResult}
-          onCancel={onCancelRequest}
-          onConfirm={onConfirmRequest}
-        />
-      )
+  if (isSwapRequest(dappRequest)) {
+    return (
+      <SwapRequestContent
+        dappRequest={dappRequest}
+        transactionGasFeeResult={transactionGasFeeResult}
+        onCancel={onCancelRequest}
+        onConfirm={onConfirmRequest}
+      />
+    )
+  } else if (isLPRequest(dappRequest)) {
+    return (
+      <LPRequestContent
+        dappRequest={dappRequest}
+        transactionGasFeeResult={transactionGasFeeResult}
+        onCancel={onCancelRequest}
+        onConfirm={onConfirmRequest}
+      />
+    )
+  } else if (isApproveRequest(dappRequest)) {
+    return (
+      <ApproveRequestContent
+        dappRequest={dappRequest}
+        transactionGasFeeResult={transactionGasFeeResult}
+        onCancel={onCancelRequest}
+        onConfirm={onConfirmRequest}
+      />
+    )
+  } else {
+    return (
+      <FallbackEthSendRequestContent
+        dappRequest={dappRequest}
+        transactionGasFeeResult={transactionGasFeeResult}
+        onCancel={onCancelRequest}
+        onConfirm={onConfirmRequest}
+      />
+    )
   }
-
-  return (
-    <ErrorBoundary
-      fallback={
-        <FallbackEthSendRequestContent
-          dappRequest={dappRequest}
-          transactionGasFeeResult={transactionGasFeeResult}
-          onCancel={onCancelRequest}
-          onConfirm={onConfirmRequest}
-        />
-      }
-      onError={(error) => {
-        if (error) {
-          logger.error(error, {
-            tags: { file: 'SignTypedDataRequestContent', function: 'ErrorBoundary' },
-            extra: {
-              dappRequest,
-            },
-          })
-        }
-      }}
-    >
-      {content}
-    </ErrorBoundary>
-  )
 }
 
 function isInvalidGasFeeResultForEthSend(gasFeeResult: GasFeeResult): boolean {

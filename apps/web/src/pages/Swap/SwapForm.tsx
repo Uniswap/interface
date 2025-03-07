@@ -47,10 +47,11 @@ import { serializeSwapStateToURLParameters, useSwapActionHandlers } from 'state/
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { Flex, Text } from 'ui/src'
+import { Text } from 'ui/src'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
@@ -102,13 +103,13 @@ export function SwapForm({
     const tokens = []
     if (
       prefilledInputCurrencyInfo?.currency.isToken &&
-      prefilledInputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default
+      prefilledInputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
     ) {
       tokens.push({ field: CurrencyField.INPUT, currencyInfo: prefilledInputCurrencyInfo })
     }
     if (
       prefilledOutputCurrencyInfo?.currency.isToken &&
-      prefilledOutputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default
+      prefilledOutputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
     ) {
       tokens.push({ field: CurrencyField.OUTPUT, currencyInfo: prefilledOutputCurrencyInfo })
     }
@@ -539,7 +540,7 @@ export function SwapForm({
           }}
         />
       )}
-      <Flex>
+      <div style={{ display: 'relative' }}>
         <SwapSection>
           <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
             <SwapCurrencyInputPanel
@@ -585,9 +586,9 @@ export function SwapForm({
             </ArrowContainer>
           </Trace>
         </ArrowWrapper>
-      </Flex>
+      </div>
       <AutoColumn gap="xs">
-        <Flex>
+        <div>
           <OutputSwapSection>
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
               <SwapCurrencyInputPanel
@@ -619,9 +620,9 @@ export function SwapForm({
               />
             </Trace>
           </OutputSwapSection>
-        </Flex>
+        </div>
 
-        <Flex>
+        <div>
           {isLandingPage ? (
             <ButtonPrimary
               $borderRadius="16px"
@@ -698,7 +699,7 @@ export function SwapForm({
             />
           )}
           {isUsingBlockedExtension && <SwapNotice />}
-        </Flex>
+        </div>
       </AutoColumn>
     </>
   )

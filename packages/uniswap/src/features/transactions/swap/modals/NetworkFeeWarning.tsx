@@ -100,7 +100,7 @@ function NetworkFeeText({
     const components = { gradient: <UniswapXText height={lineHeight} variant={variant} /> }
 
     return (
-      <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={variant}>
+      <Text color="$neutral2" textAlign="center" variant={variant}>
         {/* TODO(WALL-5311): Investigate Trans component vertical alignment on android */}
         {chainId === UniverseChainId.Unichain ? (
           <Trans components={components} i18nKey="swap.warning.networkFee.message.uniswapX.unichain" />
@@ -112,7 +112,7 @@ function NetworkFeeText({
   }
 
   return (
-    <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={variant}>
+    <Text color="$neutral2" textAlign="center" variant={variant}>
       {showHighGasFeeUI
         ? chainId === UniverseChainId.Unichain
           ? t('swap.warning.networkFee.highRelativeToValue.unichain')
@@ -145,6 +145,7 @@ function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: Format
       {approvalFeeFormatted && (
         <Flex row justifyContent="space-between" width="100%">
           <Text color="$neutral2" variant="body4">
+            {/* FIXME: Verify WALL-5906 */}
             {t('swap.warning.networkFee.allow', { inputTokenSymbol: inputTokenSymbol ?? '' })}
           </Text>
           <Text variant="body4">{approvalFeeFormatted}</Text>

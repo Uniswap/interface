@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -24,9 +25,9 @@ export const DYNAMIC_FEE_DATA = {
 } as const satisfies DynamicFeeData
 
 export enum PositionFlowStep {
-  SELECT_TOKENS_AND_FEE_TIER = 0,
-  PRICE_RANGE = 1,
-  DEPOSIT = 2,
+  SELECT_TOKENS_AND_FEE_TIER,
+  PRICE_RANGE,
+  DEPOSIT,
 }
 
 export interface PositionState {

@@ -1,6 +1,7 @@
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common/styles'
 import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { Box } from 'components/deprecated/Box'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import styled from 'lib/styled-components'
 import { Center } from 'nft/components/Flex'
@@ -19,7 +20,6 @@ import { isVideo } from 'nft/utils/isVideo'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
-import { Flex } from 'ui/src'
 import { NftActivityType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -165,8 +165,8 @@ const AudioPlayer = ({
   dominantColor,
 }: GenieAsset & { dominantColor: [number, number, number] }) => {
   return (
-    <Flex $platform-web={{ display: 'inline-block' }} alignSelf="center">
-      <audio className={styles.audioControls} controls src={animationUrl} style={{ width: '292px' }} />
+    <Box position="relative" display="inline-block" alignSelf="center">
+      <Box as="audio" className={styles.audioControls} width="292" controls src={animationUrl} />
       <img
         className={styles.image}
         src={imageUrl}
@@ -177,7 +177,7 @@ const AudioPlayer = ({
           minHeight: '300px',
         }}
       />
-    </Flex>
+    </Box>
   )
 }
 
@@ -218,7 +218,7 @@ const AssetView = ({
       return <AudioPlayer {...asset} dominantColor={dominantColor} />
     case MediaType.Embed:
       return (
-        <Flex className={styles.embedContainer}>
+        <div className={styles.embedContainer}>
           <iframe
             title={asset.name ?? `${asset.collectionName} #${asset.tokenId}`}
             src={asset.animationUrl}
@@ -231,7 +231,7 @@ const AssetView = ({
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-        </Flex>
+        </div>
       )
   }
 }
@@ -406,7 +406,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <>
               {!errorLoadingActivities && nftActivity && (
                 <EmptyActivitiesContainer>
-                  <Flex>No activities yet</Flex>
+                  <div>No activities yet</div>
                   <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
                 </EmptyActivitiesContainer>
               )}

@@ -1,7 +1,6 @@
-import { PropsWithChildren, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { View } from 'react-native'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { GestureResponderEvent } from 'react-native'
+import { PropsWithChildren, memo, useEffect, useMemo, useRef, useState } from 'react'
+/* eslint-disable-next-line no-restricted-imports */
+import { GestureResponderEvent, type View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { AnimatePresence, Flex, FlexProps, Portal, TouchableArea, isWeb, styled, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -25,7 +24,10 @@ type LayoutMeasurements = {
   height: number
 }
 
-type ToggleMeasurements = (LayoutMeasurements & { sticky?: boolean }) | null
+type DropdownState = {
+  isOpen: boolean
+  toggleMeasurements: (LayoutMeasurements & { sticky?: boolean }) | null
+}
 
 export type ActionSheetDropdownStyleProps = {
   alignment?: 'left' | 'right'
@@ -61,8 +63,10 @@ export function ActionSheetDropdown({
 }: ActionSheetDropdownProps): JSX.Element {
   const insets = useAppInsets()
   const containerRef = useRef<View>(null)
-  const [isOpen, setOpen] = useState(false)
-  const [toggleMeasurements, setToggleMeasurements] = useState<ToggleMeasurements>(null)
+  const [{ isOpen, toggleMeasurements }, setState] = useState<DropdownState>({
+    isOpen: false,
+    toggleMeasurements: null,
+  })
 
   const openDropdown = (event: GestureResponderEvent): void => {
     onDismiss?.()
@@ -72,14 +76,16 @@ export function ActionSheetDropdown({
 
     if (containerNode) {
       containerNode.measureInWindow((x, y, width, height) => {
-        setToggleMeasurements({
-          x,
-          y: y + (isAndroid ? insets.top : 0),
-          width,
-          height,
-          sticky: styles?.sticky,
+        setState({
+          isOpen: true,
+          toggleMeasurements: {
+            x,
+            y: y + (isAndroid ? insets.top : 0),
+            width,
+            height,
+            sticky: styles?.sticky,
+          },
         })
-        setOpen(true)
       })
     }
   }
@@ -91,12 +97,15 @@ export function ActionSheetDropdown({
 
     function resizeListener(): void {
       containerRef?.current?.measureInWindow((x, y, width, height) => {
-        setToggleMeasurements((prev) => ({
+        setState((prev) => ({
           ...prev,
-          x,
-          y,
-          width,
-          height,
+          toggleMeasurements: {
+            ...prev.toggleMeasurements,
+            x,
+            y,
+            width,
+            height,
+          },
         }))
       })
     }
@@ -108,15 +117,11 @@ export function ActionSheetDropdown({
     }
   }, [toggleMeasurements?.sticky, insets.top])
 
-  const closeDropdown = useCallback(
-    (event: GestureResponderEvent): void => {
-      setOpen(false)
-      setToggleMeasurements(null)
-      event.preventDefault()
-      event.stopPropagation()
-    },
-    [setOpen, setToggleMeasurements],
-  )
+  const closeDropdown = (event: GestureResponderEvent): void => {
+    setState({ isOpen: false, toggleMeasurements: null })
+    event.preventDefault()
+    event.stopPropagation()
+  }
 
   return (
     <>
@@ -168,7 +173,7 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
   closeDropdown: FlexProps['onPress']
   styles?: ActionSheetDropdownStyleProps & { backdropOpacity?: number }
   isOpen: boolean
-  toggleMeasurements: ToggleMeasurements
+  toggleMeasurements: DropdownState['toggleMeasurements']
   contentProps: ActionSheetDropdownProps
   closeOnSelect: boolean
 }): JSX.Element | null {
@@ -324,20 +329,21 @@ function DropdownContent({
 
   return (
     <TouchableWhenOpen
-      animation="fast"
+      animation="quicker"
       maxHeight={maxHeight}
       minWidth={dropdownMinWidth ?? DEFAULT_MIN_WIDTH}
       position="absolute"
       testID="dropdown-content"
       {...position}
       {...containerProps}
-      enterStyle={{ y: -20, opacity: 0 }}
-      exitStyle={{ y: -10, opacity: 0 }}
     >
       <BaseCard.Shadow
+        animation="fast"
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderWidth="$spacing1"
+        enterStyle={{ y: -20, opacity: 0 }}
+        exitStyle={{ y: -10, opacity: 0 }}
         overflow="hidden"
         p="$none"
         {...rest}

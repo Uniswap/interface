@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -12,10 +13,8 @@ import {
   PriceRangeState,
 } from 'pages/Pool/Positions/create/types'
 import {
-  canUnwrapCurrency,
   getCurrencyAddressWithWrap,
   getCurrencyForProtocol,
-  getCurrencyWithOptionalUnwrap,
   getCurrencyWithWrap,
   getV2PriceRangeInfo,
   getV3PriceRangeInfo,
@@ -1112,47 +1111,5 @@ describe('getCurrencyForProtocol', () => {
     expect(getCurrencyForProtocol(nativeCurrency, ProtocolVersion.V2)).toBe(nativeCurrency.wrapped)
     expect(getCurrencyForProtocol(nativeCurrency, ProtocolVersion.V3)).toBe(nativeCurrency.wrapped)
     expect(getCurrencyForProtocol(nativeCurrency, ProtocolVersion.V4)).toBe(nativeCurrency)
-  })
-})
-
-describe('canUnwrapCurrency', () => {
-  it('returns false when currency is undefined', () => {
-    expect(canUnwrapCurrency(undefined, ProtocolVersion.V2)).toBe(false)
-    expect(canUnwrapCurrency(undefined, ProtocolVersion.V3)).toBe(false)
-    expect(canUnwrapCurrency(undefined, ProtocolVersion.V4)).toBe(false)
-  })
-
-  it('never unwraps for v4', () => {
-    expect(canUnwrapCurrency(DAI, ProtocolVersion.V4)).toBe(false)
-    expect(canUnwrapCurrency(WETH, ProtocolVersion.V4)).toBe(false)
-    expect(canUnwrapCurrency(ETH, ProtocolVersion.V4)).toBe(false)
-  })
-
-  it('returns true for the wrapped native token on v3', () => {
-    expect(canUnwrapCurrency(DAI, ProtocolVersion.V3)).toBe(false)
-    expect(canUnwrapCurrency(WETH, ProtocolVersion.V3)).toBe(true)
-    expect(canUnwrapCurrency(ETH, ProtocolVersion.V3)).toBe(false)
-  })
-
-  it('returns true for the wrapped native currency for v2', () => {
-    expect(canUnwrapCurrency(DAI, ProtocolVersion.V2)).toBe(false)
-    expect(canUnwrapCurrency(WETH, ProtocolVersion.V2)).toBe(true)
-    expect(canUnwrapCurrency(ETH, ProtocolVersion.V2)).toBe(false)
-  })
-})
-
-describe('getCurrencyWithOptionalUnwrap', () => {
-  it('never unwraps when shouldUnwrap is false', () => {
-    expect(getCurrencyWithOptionalUnwrap({ currency: DAI, shouldUnwrap: true })).toBe(DAI)
-    expect(getCurrencyWithOptionalUnwrap({ currency: WETH, shouldUnwrap: true })).toBe(
-      nativeOnChain(UniverseChainId.Mainnet),
-    )
-    expect(getCurrencyWithOptionalUnwrap({ currency: ETH, shouldUnwrap: true })).toBe(ETH)
-  })
-
-  it('unwraps when shouldUnwrap is true and the currency is wrappedNative', () => {
-    expect(getCurrencyWithOptionalUnwrap({ currency: DAI, shouldUnwrap: false })).toBe(DAI)
-    expect(getCurrencyWithOptionalUnwrap({ currency: WETH, shouldUnwrap: false })).toBe(WETH)
-    expect(getCurrencyWithOptionalUnwrap({ currency: ETH, shouldUnwrap: false })).toBe(ETH)
   })
 })

@@ -16,7 +16,7 @@ import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
-import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 
 const router = createHashRouter([
   {
@@ -80,6 +80,7 @@ function PopupContent(): JSX.Element {
             width="100%"
             onPress={async () => {
               if (windowIdNumber) {
+                // eslint-disable-next-line security/detect-non-literal-fs-filename
                 await chrome.sidePanel.open({ tabId: tabIdNumber, windowId: windowIdNumber })
                 window.close()
               }

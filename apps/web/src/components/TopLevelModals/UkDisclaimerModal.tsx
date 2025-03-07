@@ -1,9 +1,25 @@
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
+import Column from 'components/deprecated/Column'
+import styled from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { Button, Flex, ModalCloseIcon, Text } from 'ui/src'
+import { ThemedText } from 'theme/components'
+import { Flex, ModalCloseIcon } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+
+const Wrapper = styled(Column)`
+  padding: 8px;
+`
+
+const ButtonContainer = styled(Column)`
+  padding: 8px 12px 4px;
+`
+
+const StyledThemeButton = styled(ThemeButton)`
+  width: 100%;
+`
 
 export function UkDisclaimerModal() {
   const { t } = useTranslation()
@@ -12,24 +28,24 @@ export function UkDisclaimerModal() {
 
   return (
     <Modal name={ModalName.UkDisclaimer} isModalOpen={isOpen} onClose={closeModal} padding={0}>
-      <Flex p="$padding8" gap="$gap12">
+      <Wrapper gap="md">
         <Flex alignItems="flex-end" pt="$spacing8" pb="$spacing4">
           <ModalCloseIcon onClose={closeModal} />
         </Flex>
-        <Flex gap="$gap8">
-          <Text px="$padding8" variant="heading2">
+        <Column gap="sm">
+          <ThemedText.HeadlineLarge padding="0px 8px" fontSize="24px" lineHeight="32px">
             {t('search.ukDisclaimer')}
-          </Text>
-          <Text variant="body2" p="$padding8" pb="$padding12">
+          </ThemedText.HeadlineLarge>
+          <ThemedText.BodyPrimary padding="8px 8px 12px" lineHeight="24px">
             {t('notice.uk')}
-          </Text>
-        </Flex>
-        <Flex px="$padding12" pt="$padding8" pb="$spacing4" gap="$gap12">
-          <Button size="small" onPress={() => closeModal()}>
+          </ThemedText.BodyPrimary>
+        </Column>
+        <ButtonContainer gap="md">
+          <StyledThemeButton size={ButtonSize.large} emphasis={ButtonEmphasis.medium} onClick={() => closeModal()}>
             {t('common.dismiss')}
-          </Button>
-        </Flex>
-      </Flex>
+          </StyledThemeButton>
+        </ButtonContainer>
+      </Wrapper>
     </Modal>
   )
 }

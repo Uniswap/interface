@@ -9,7 +9,7 @@ interface BaseUpdate<T> {
   update: Partial<T>
 }
 
-interface TransactionUpdate extends BaseUpdate<TransactionDetails> {
+export interface TransactionUpdate extends BaseUpdate<TransactionDetails> {
   type: 'transaction'
   update: Required<Pick<ConfirmedTransactionDetails, 'status' | 'info'>>
 }

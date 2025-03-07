@@ -1,7 +1,7 @@
 import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { DependencyList, useEffect, useRef } from 'react'
 import { InteractionManager } from 'react-native'
-import { DDRumAction } from 'utilities/src/logger/datadog/datadogEvents'
+import { DDRumAction } from 'utilities/src/logger/datadogEvents'
 import { logger } from 'utilities/src/logger/logger'
 
 /**

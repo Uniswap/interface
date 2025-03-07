@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from 'hooks/useContract'
 import JSBI from 'jsbi'

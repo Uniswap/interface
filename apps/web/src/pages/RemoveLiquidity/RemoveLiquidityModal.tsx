@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import {
   DecreaseLiquidityStep,

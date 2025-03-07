@@ -1,4 +1,5 @@
 import { Currency, Token, WETH9 } from '@uniswap/sdk-core'
+// eslint-disable-next-line no-restricted-imports
 import type { ImageSourcePropType } from 'react-native'
 import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {
@@ -23,7 +24,6 @@ import {
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
-  USDC_SONEIUM,
   USDC_UNICHAIN,
   USDC_WORLD_CHAIN,
   USDC_ZKSYNC,
@@ -45,7 +45,7 @@ import {
   isCelo,
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
-import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
@@ -138,12 +138,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     UNI[UniverseChainId.Sepolia],
   ].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.Soneium]: [
-    nativeOnChain(UniverseChainId.Soneium),
-    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Soneium] as Token,
-    USDC_SONEIUM,
-  ].map(buildPartialCurrencyInfo),
-
   [UniverseChainId.Unichain]: [
     nativeOnChain(UniverseChainId.Unichain),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Unichain] as Token,
@@ -218,6 +212,7 @@ export function buildPartialCurrencyInfo(commonBase: Currency): CurrencyInfo {
   return buildCurrencyInfo({
     currency: commonBase,
     logoUrl,
+    safetyLevel: SafetyLevel.Verified,
     safetyInfo: {
       tokenList: TokenList.Default,
       protectionResult: ProtectionResult.Benign,

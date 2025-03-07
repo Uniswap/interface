@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
@@ -5,7 +6,7 @@ import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/Remov
 import { RemoveLiquidityTxInfo } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
-import { getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
+import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useDecreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useDecreaseLpPositionCalldataQuery'
@@ -28,11 +29,11 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
 
   const [hasDecreaseErrorResponse, setHasDecreaseErrorResponse] = useState(false)
 
-  const currency0 = getCurrencyWithOptionalUnwrap({
+  const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: positionInfo?.currency0Amount.currency,
     shouldUnwrap: unwrapNativeCurrency && positionInfo?.version !== ProtocolVersion.V4,
   })
-  const currency1 = getCurrencyWithOptionalUnwrap({
+  const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: positionInfo?.currency1Amount.currency,
     shouldUnwrap: unwrapNativeCurrency && positionInfo?.version !== ProtocolVersion.V4,
   })
@@ -87,7 +88,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
 
   const decreaseCalldataQueryParams = useMemo((): DecreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
-    if (!positionInfo || !apiProtocolItems || !account || percentInvalid || !currency0 || !currency1) {
+    if (!positionInfo || !apiProtocolItems || !account || percentInvalid || !currency0Info || !currency1Info) {
       return undefined
     }
 
@@ -114,8 +115,8 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
         tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
         tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
         pool: {
-          token0: currency0.isNative ? ZERO_ADDRESS : currency0.address,
-          token1: currency1.isNative ? ZERO_ADDRESS : currency1.address,
+          token0: currency0Info.currency.isNative ? ZERO_ADDRESS : currency0Info.currency.address,
+          token1: currency1Info.currency.isNative ? ZERO_ADDRESS : currency1Info.currency.address,
           fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
           tickSpacing: positionInfo?.tickSpacing ? Number(positionInfo?.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
@@ -127,8 +128,8 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     positionInfo,
     account,
     percentInvalid,
-    currency0,
-    currency1,
+    currency0Info,
+    currency1Info,
     approvalsNeeded,
     percent,
     feeValue0?.quotient,

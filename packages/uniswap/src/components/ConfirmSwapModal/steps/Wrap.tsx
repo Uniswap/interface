@@ -9,6 +9,7 @@ export function WrapTransactionStepRow({ step, status }: StepRowProps<WrapTransa
 
   const { amount } = step
   const { currency } = amount
+  // FIXME: Verify WALL-5906
   const symbol = currency.symbol ?? ''
 
   const title = {

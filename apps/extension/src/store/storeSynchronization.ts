@@ -28,8 +28,8 @@ const currentAppInstanceId = uuid()
 const primaryAppInstanceListeners = new Set<(isPrimary: boolean) => void>()
 
 export enum ExtensionAppLocation {
-  SidePanel = 0,
-  Tab = 1,
+  SidePanel,
+  Tab,
 }
 
 async function initPrimaryInstanceHandler(appLocation: ExtensionAppLocation): Promise<void> {

@@ -1,7 +1,12 @@
 import { LoadingBubble } from 'components/Tokens/loading'
+import deprecatedStyled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { Flex, FlexProps } from 'ui/src'
 
+const LoadingDataBubble = deprecatedStyled(LoadingBubble)`
+  width: 75%;
+  height: 16px;
+`
 export function Cell({
   loading,
   children,
@@ -27,7 +32,7 @@ export function Cell({
       alignItems={rest.alignItems ?? 'center'}
       {...rest}
     >
-      {loading ? <LoadingBubble height={16} width="75%" data-testid="cell-loading-bubble" /> : children}
+      {loading ? <LoadingDataBubble data-testid="cell-loading-bubble" /> : children}
     </Flex>
   )
 }

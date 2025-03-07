@@ -71,7 +71,12 @@ exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
 
 exports[`BreadcrumbNav renders hover components correctly 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -138,7 +143,13 @@ exports[`BreadcrumbNav renders hover components correctly 1`] = `
             class="c0 c1 c4"
             data-testid="breadcrumb-token-address"
           >
-            0x2260...C599
+            <div
+              class="c5"
+            >
+              <div>
+                0x2260...C599
+              </div>
+            </div>
           </div>
         </div>
         <div

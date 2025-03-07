@@ -96,27 +96,15 @@ export const useTimeout = (
 // Copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useDebounce.ts
 // Which is modified from https://usehooks.com/useDebounce/
 export function useDebounce<T>(value: T, delay: number = DEFAULT_DELAY): T {
-  const [debouncedValue] = useDebounceWithStatus({ value, delay })
+  const [debouncedValue] = useDebounceWithStatus(value, delay)
   return debouncedValue
 }
 
-export function useDebounceWithStatus<T>({
-  value,
-  delay = DEFAULT_DELAY,
-  skipDebounce = false,
-}: {
-  value: T
-  delay?: number
-  skipDebounce?: boolean
-}): [T, boolean] {
+export function useDebounceWithStatus<T>(value: T, delay: number = DEFAULT_DELAY): [T, boolean] {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
   const [isDebouncing, setIsDebouncing] = useState(false)
 
   useEffect(() => {
-    if (skipDebounce) {
-      setDebouncedValue(value)
-      return
-    }
     // Update debounced value after delay
     const handler = setTimeout(() => {
       setDebouncedValue(value)
@@ -128,15 +116,10 @@ export function useDebounceWithStatus<T>({
     // Cancel the timeout if value changes (also on delay change or unmount)
     // This is how we prevent debounced value from updating if value is changed ...
     // .. within the delay period. Timeout gets cleared and restarted.
-    // eslint-disable-next-line consistent-return
     return () => {
       clearTimeout(handler)
     }
-  }, [value, delay, skipDebounce])
-
-  if (skipDebounce) {
-    return [value, false]
-  }
+  }, [value, delay])
 
   return [debouncedValue, isDebouncing]
 }

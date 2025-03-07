@@ -7,7 +7,6 @@ import { BadgeDollar } from 'ui/src/components/icons/BadgeDollar'
 import { ChartBarAxis } from 'ui/src/components/icons/ChartBarAxis'
 import { UniswapXUncolored } from 'ui/src/components/icons/UniswapXUncolored'
 import { X } from 'ui/src/components/icons/X'
-import { useIsExtraLargeScreen } from 'ui/src/hooks/useDeviceDimensions'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import {
   setHasDismissedUnichainColdBanner,
@@ -16,6 +15,7 @@ import {
   setIsFirstUnichainBridgeSelection,
 } from 'uniswap/src/features/behaviorHistory/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useIsExtraLargeScreen } from 'uniswap/src/hooks/useWindowSize'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
 export function UnichainIntroModal({

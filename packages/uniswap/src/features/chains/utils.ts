@@ -4,7 +4,7 @@ import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import {
   GQL_MAINNET_CHAINS,
   GQL_TESTNET_CHAINS,
-  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
+  // eslint-disable-next-line no-restricted-imports
   UNIVERSE_CHAIN_INFO,
   getChainInfo,
 } from 'uniswap/src/features/chains/chainInfo'
@@ -36,7 +36,7 @@ export function getChainLabel(chainId: UniverseChainId): string {
 }
 
 export function isTestnetChain(chainId: UniverseChainId): boolean {
-  return Boolean(getChainInfo(chainId)?.testnet)
+  return Boolean(getChainInfo(chainId).testnet)
 }
 
 export function getChainIdByInfuraPrefix(prefix: string): UniverseChainId | undefined {
@@ -103,8 +103,6 @@ export function fromGraphQLChain(chain: Chain | string | undefined): UniverseCha
       return UniverseChainId.Sepolia
     case Chain.Unichain:
       return UniverseChainId.Unichain
-    case Chain.Soneium:
-      return UniverseChainId.Soneium
     case Chain.AstrochainSepolia:
       return UniverseChainId.UnichainSepolia
     case Chain.Worldchain:
@@ -148,8 +146,6 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId |
       return UniverseChainId.Sepolia
     case Chain.Unichain.toLowerCase():
       return UniverseChainId.Unichain
-    case Chain.Soneium.toLowerCase():
-      return UniverseChainId.Soneium
     case Chain.AstrochainSepolia.toLowerCase():
       return UniverseChainId.UnichainSepolia
     case Chain.Worldchain.toLowerCase():
@@ -189,8 +185,6 @@ export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
       return Chain.EthereumSepolia.toLowerCase()
     case UniverseChainId.Unichain:
       return Chain.Unichain.toLowerCase()
-    case UniverseChainId.Soneium:
-      return Chain.Soneium.toLowerCase()
     case UniverseChainId.UnichainSepolia:
       return Chain.AstrochainSepolia.toLowerCase()
     case UniverseChainId.WorldChain:

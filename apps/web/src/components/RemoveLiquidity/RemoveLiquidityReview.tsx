@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
@@ -13,7 +14,7 @@ import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
-import { getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
+import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -70,11 +71,11 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const currentPrice = usePositionCurrentPrice(positionInfo)
 
-  const currency0 = getCurrencyWithOptionalUnwrap({
+  const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: positionInfo?.currency0Amount.currency,
     shouldUnwrap: unwrapNativeCurrency,
   })
-  const currency1 = getCurrencyWithOptionalUnwrap({
+  const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: positionInfo?.currency1Amount.currency,
     shouldUnwrap: unwrapNativeCurrency,
   })
@@ -85,10 +86,12 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     currency0AmountToRemove,
     currency1AmountToRemove,
   } = useMemo(() => {
-    const unwrappedCurrency0AmountToRemove = CurrencyAmount.fromRawAmount(currency0, currency0Amount.quotient)
+    const token0 = currency0Info?.currency
+    const token1 = currency1Info?.currency
+    const unwrappedCurrency0AmountToRemove = CurrencyAmount.fromRawAmount(token0, currency0Amount.quotient)
       .multiply(percent)
       .divide(100)
-    const unwrappedCurrency1AmountToRemove = CurrencyAmount.fromRawAmount(currency1, currency1Amount.quotient)
+    const unwrappedCurrency1AmountToRemove = CurrencyAmount.fromRawAmount(token1, currency1Amount.quotient)
       .multiply(percent)
       .divide(100)
 
@@ -101,7 +104,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
       currency0AmountToRemove,
       currency1AmountToRemove,
     }
-  }, [currency0Amount, currency0, currency1Amount, currency1, percent])
+  }, [currency0Amount, currency0Info?.currency, currency1Amount, currency1Info?.currency, percent])
 
   const currency0AmountToRemoveUSD = useUSDCValue(unwrappedCurrency0AmountToRemove)
   const currency1AmountToRemoveUSD = useUSDCValue(unwrappedCurrency1AmountToRemove)
@@ -137,8 +140,8 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
             trace,
             fee: feeTier,
             poolId,
-            currency0,
-            currency1,
+            currency0: currency0Info.currency,
+            currency1: currency1Info.currency,
             currency0AmountUsd: currency0AmountToRemoveUSD,
             currency1AmountUsd: currency1AmountToRemoveUSD,
             version,

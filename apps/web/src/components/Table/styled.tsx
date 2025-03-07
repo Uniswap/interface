@@ -42,7 +42,7 @@ export const TableHead = (props: PropsWithChildren<{ $isSticky: boolean; $top: n
           position: 'sticky',
         }}
       >
-        {props.$isSticky && <Flex height={12} />}
+        {props.$isSticky && <div style={{ height: 12 }} />}
         {props.children}
       </Flex>
     )

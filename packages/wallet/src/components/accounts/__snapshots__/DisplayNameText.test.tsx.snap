@@ -6,11 +6,13 @@ exports[`AccountDetails renders address display name without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
+      "justifyContent": "center",
     }
   }
 >
   <Text
     allowFontScaling={false}
+    ellipsizeMode="tail"
     maxFontSizeMultiplier={1.4}
     numberOfLines={1}
     style={
@@ -21,6 +23,7 @@ exports[`AccountDetails renders address display name without error 1`] = `
         "fontSize": 16,
         "fontWeight": "400",
         "lineHeight": 24,
+        "overflow": "hidden",
       }
     }
     suppressHighlighting={true}
@@ -36,11 +39,13 @@ exports[`AccountDetails renders ens display name without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
+      "justifyContent": "center",
     }
   }
 >
   <Text
     allowFontScaling={false}
+    ellipsizeMode="tail"
     maxFontSizeMultiplier={1.4}
     numberOfLines={1}
     style={
@@ -51,6 +56,7 @@ exports[`AccountDetails renders ens display name without error 1`] = `
         "fontSize": 16,
         "fontWeight": "400",
         "lineHeight": 24,
+        "overflow": "hidden",
       }
     }
     suppressHighlighting={true}
@@ -66,11 +72,13 @@ exports[`AccountDetails renders local display name without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
+      "justifyContent": "center",
     }
   }
 >
   <Text
     allowFontScaling={false}
+    ellipsizeMode="tail"
     maxFontSizeMultiplier={1.4}
     numberOfLines={1}
     style={
@@ -81,6 +89,7 @@ exports[`AccountDetails renders local display name without error 1`] = `
         "fontSize": 16,
         "fontWeight": "400",
         "lineHeight": 24,
+        "overflow": "hidden",
       }
     }
     suppressHighlighting={true}
@@ -96,11 +105,13 @@ exports[`AccountDetails renders unitag without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
+      "justifyContent": "center",
     }
   }
 >
   <Text
     allowFontScaling={false}
+    ellipsizeMode="tail"
     maxFontSizeMultiplier={1.4}
     numberOfLines={1}
     style={
@@ -111,20 +122,19 @@ exports[`AccountDetails renders unitag without error 1`] = `
         "fontSize": 16,
         "fontWeight": "400",
         "lineHeight": 24,
+        "overflow": "hidden",
       }
     }
     suppressHighlighting={true}
   >
     luni
-    <View
-      style={
-        {
-          "display": "inline",
-          "flexDirection": "column",
-          "paddingLeft": 4,
-        }
-      }
-    />
   </Text>
+  <View
+    style={
+      {
+        "flexDirection": "column",
+      }
+    }
+  />
 </View>
 `;

@@ -6,9 +6,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
 import { render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'
-import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { TokenList } from 'uniswap/src/features/dataApi/types'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -27,7 +25,7 @@ describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
     mocked(useCurrencyInfo).mockReturnValue({
       currencyId: unsupportedTokenAddress,
       logoUrl: '',
-      safetyInfo: getCurrencySafetyInfo(SafetyLevel.Blocked, undefined),
+      safetyLevel: SafetyLevel.Blocked,
       currency: unsupportedToken,
     })
   })
@@ -66,11 +64,8 @@ describe('UnsupportedCurrencyFooter.tsx with no unsupported tokens', () => {
     mocked(useCurrencyInfo).mockReturnValue({
       currencyId: unsupportedTokenAddress,
       logoUrl: '',
+      safetyLevel: SafetyLevel.Verified,
       currency: unsupportedToken,
-      safetyInfo: {
-        tokenList: TokenList.Default,
-        protectionResult: ProtectionResult.Benign,
-      },
     })
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
     await userEvent.click(screen.getByTestId(TestID.ReadMoreButton))

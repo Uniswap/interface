@@ -1,20 +1,18 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Flex, GeneratedIcon, InlineCard, LabeledCheckbox, Text, TouchableArea } from 'ui/src'
+import { Flex, GeneratedIcon, InlineCard, LabeledCheckbox, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { getWarningIcon, getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { openUri } from 'uniswap/src/utils/linking'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 type InlineWarningCardProps = {
   severity: WarningSeverity
   heading?: string
-  description?: string
-  learnMoreUrl?: string
+  description: string
+  heroIcon?: boolean
   checkboxLabel?: string
   onPressCtaButton?: () => void
   checked?: boolean
@@ -24,14 +22,12 @@ type InlineWarningCardProps = {
   descriptionTestId?: string
   analyticsProperties?: Record<string, unknown>
   Icon?: GeneratedIcon
-  heroIcon?: boolean
 }
 
 export function InlineWarningCard({
   severity,
   heading,
   description,
-  learnMoreUrl,
   checkboxLabel,
   heroIcon,
   onPressCtaButton,
@@ -43,7 +39,6 @@ export function InlineWarningCard({
   analyticsProperties,
   Icon,
 }: InlineWarningCardProps): JSX.Element | null {
-  const { t } = useTranslation()
   const [checkedFallback, setCheckedFallback] = useState(false)
   const { color, textColor, backgroundColor } = getWarningIconColors(severity)
   const WarningIcon = getWarningIcon(severity)
@@ -85,28 +80,6 @@ export function InlineWarningCard({
     />
   ) : null
 
-  const descriptionElement = (
-    <Flex gap="$spacing2">
-      {description && (
-        <Text color="$neutral2" variant="body3" testID={descriptionTestId}>
-          {description}
-        </Text>
-      )}
-      {learnMoreUrl && (
-        <TouchableArea
-          onPress={async (e) => {
-            e.stopPropagation()
-            await openUri(learnMoreUrl)
-          }}
-        >
-          <Text color="$neutral1" variant="body3">
-            {t('common.button.learn')}
-          </Text>
-        </TouchableArea>
-      )}
-    </Flex>
-  )
-
   return (
     <InlineCard
       CtaButtonIcon={shouldShowCtaIcon ? InfoCircleFilled : undefined}
@@ -114,7 +87,9 @@ export function InlineWarningCard({
       color={textColor}
       description={
         <Flex gap="$spacing8">
-          {descriptionElement}
+          <Text color="$neutral2" variant="body3" testID={descriptionTestId}>
+            {description}
+          </Text>
           {checkboxElement}
         </Flex>
       }

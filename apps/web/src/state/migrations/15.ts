@@ -26,7 +26,7 @@ function webResultToUniswapResult(webItem: TokenSearchResultWeb): SearchResult |
       address: webItem.address,
       name: webItem.name,
       logoUrl: webItem.logoUrl,
-      safetyInfo: webItem.safetyInfo,
+      safetyLevel: webItem.safetyLevel,
     }
   } else if (webItem.type === SearchResultType.NFTCollection) {
     return {

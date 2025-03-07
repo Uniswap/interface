@@ -77,6 +77,7 @@ export function tokenProjectToCurrencyInfos(
           currency,
           currencyId: currencyId(currency),
           logoUrl,
+          safetyLevel,
           safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
         })
 
@@ -220,6 +221,8 @@ export function gqlTokenToCurrencyInfo(
     currencyId: currencyId(currency),
     logoUrl: project?.logoUrl,
     safetyInfo: getCurrencySafetyInfo(project?.safetyLevel, protectionInfo),
+    // TODO (WALL-4626): remove safetyLevel in lieu of safetyInfo.tokenList
+    safetyLevel: project?.safetyLevel ?? SafetyLevel.StrongWarning,
     // defaulting to not spam. currently this flow triggers when a user is searching
     // for a token, in which case the user probably doesn't expect the token to be spam
     isSpam: project?.isSpam ?? false,

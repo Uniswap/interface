@@ -80,7 +80,6 @@ export function useTokenTransactions(
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) {
-            loadingMoreV4.current = false
             return prev
           }
           if (!loadingMoreV3.current && !loadingMoreV2.current) {
@@ -104,7 +103,6 @@ export function useTokenTransactions(
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) {
-            loadingMoreV3.current = false
             return prev
           }
           if (!loadingMoreV2.current && !loadingMoreV4.current) {
@@ -128,7 +126,6 @@ export function useTokenTransactions(
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) {
-            loadingMoreV2.current = false
             return prev
           }
           if (!loadingMoreV3.current && !loadingMoreV4.current) {

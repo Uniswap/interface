@@ -1,13 +1,15 @@
 import React, { memo, useCallback } from 'react'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
+import { SharedValue } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
-import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedTouchableArea, Flex, Loader, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
@@ -24,18 +26,26 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { isIOS } from 'utilities/src/platform'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
 
 export type FavoriteTokenCardProps = {
   currencyId: string
+  pressProgress: SharedValue<number>
+  dragActivationProgress: SharedValue<number>
   isEditing?: boolean
   setIsEditing: (update: boolean) => void
 } & ViewProps
 
-function FavoriteTokenCard({ currencyId, isEditing, setIsEditing, ...rest }: FavoriteTokenCardProps): JSX.Element {
+function FavoriteTokenCard({
+  currencyId,
+  isEditing,
+  pressProgress,
+  dragActivationProgress,
+  setIsEditing,
+  ...rest
+}: FavoriteTokenCardProps): JSX.Element {
   const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
@@ -88,75 +98,78 @@ function FavoriteTokenCard({ currencyId, isEditing, setIsEditing, ...rest }: Fav
     tokenDetailsNavigation.navigate(currencyId)
   }
 
+  const animatedDragStyle = useAnimatedCardDragStyle(pressProgress, dragActivationProgress)
+
   const shadowProps = useShadowPropsShort()
 
   const priceLoading = isNonPollingRequestInFlight(networkStatus)
 
   return (
-    <ContextMenu
-      actions={menuActions}
-      disabled={isEditing}
-      style={{ borderRadius: borderRadii.rounded16 }}
-      onPress={onContextMenuPress}
-      {...rest}
-    >
-      <AnimatedTouchableArea
-        activeOpacity={isEditing ? 1 : undefined}
-        backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
-        borderColor={opacify(0.05, colors.surface3.val)}
-        borderRadius="$rounded16"
-        overflow={isIOS ? 'hidden' : 'visible'}
-        borderWidth={isDarkMode ? '$none' : '$spacing1'}
-        m="$spacing4"
-        testID={`token-box-${token?.symbol}`}
-        onLongPress={disableOnPress}
-        onPress={onPress}
-        {...shadowProps}
+    <AnimatedFlex borderRadius="$rounded16" style={animatedDragStyle}>
+      <ContextMenu
+        actions={menuActions}
+        disabled={isEditing}
+        style={{ borderRadius: borderRadii.rounded16 }}
+        onPress={onContextMenuPress}
+        {...rest}
       >
-        <Flex alignItems="flex-start" gap="$spacing8" p="$spacing12">
-          <Flex row gap="$spacing4" justifyContent="space-between">
-            <Flex grow row alignItems="center" gap="$spacing8">
-              <TokenLogo
-                chainId={chainId ?? undefined}
-                name={token?.name ?? undefined}
-                size={imageSizes.image20}
-                symbol={token?.symbol ?? undefined}
-                url={token?.project?.logoUrl ?? undefined}
-              />
-              <Text variant="body1">{getSymbolDisplayText(token?.symbol)}</Text>
+        <AnimatedTouchableArea
+          activeOpacity={isEditing ? 1 : undefined}
+          backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
+          borderColor={opacify(0.05, colors.surface3.val)}
+          borderRadius="$rounded16"
+          borderWidth={isDarkMode ? '$none' : '$spacing1'}
+          m="$spacing4"
+          testID={`token-box-${token?.symbol}`}
+          onLongPress={disableOnPress}
+          onPress={onPress}
+          {...shadowProps}
+        >
+          <Flex alignItems="flex-start" gap="$spacing8" p="$spacing12">
+            <Flex row gap="$spacing4" justifyContent="space-between">
+              <Flex grow row alignItems="center" gap="$spacing8">
+                <TokenLogo
+                  chainId={chainId ?? undefined}
+                  name={token?.name ?? undefined}
+                  size={imageSizes.image20}
+                  symbol={token?.symbol ?? undefined}
+                  url={token?.project?.logoUrl ?? undefined}
+                />
+                <Text variant="body1">{getSymbolDisplayText(token?.symbol)}</Text>
+              </Flex>
+              <RemoveButton visible={isEditing} onPress={onRemove} />
             </Flex>
-            <RemoveButton visible={isEditing} onPress={onRemove} />
+            <Flex gap="$spacing2">
+              {priceLoading ? (
+                <Loader.Box
+                  height={fonts.heading3.lineHeight}
+                  width={fonts.heading3.lineHeight * 3}
+                  testID="loader/favorite/price"
+                />
+              ) : (
+                <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
+                  {priceFormatted}
+                </Text>
+              )}
+              {priceLoading ? (
+                <Loader.Box
+                  height={fonts.subheading2.lineHeight}
+                  width={fonts.subheading2.lineHeight * 3}
+                  testID="loader/favorite/priceChange"
+                />
+              ) : (
+                <RelativeChange
+                  arrowSize="$icon.16"
+                  change={pricePercentChange ?? undefined}
+                  semanticColor={true}
+                  variant="subheading2"
+                />
+              )}
+            </Flex>
           </Flex>
-          <Flex gap="$spacing2">
-            {priceLoading ? (
-              <Loader.Box
-                height={fonts.heading3.lineHeight}
-                width={fonts.heading3.lineHeight * 3}
-                testID="loader/favorite/price"
-              />
-            ) : (
-              <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
-                {priceFormatted}
-              </Text>
-            )}
-            {priceLoading ? (
-              <Loader.Box
-                height={fonts.subheading2.lineHeight}
-                width={fonts.subheading2.lineHeight * 3}
-                testID="loader/favorite/priceChange"
-              />
-            ) : (
-              <RelativeChange
-                arrowSize="$icon.16"
-                change={pricePercentChange ?? undefined}
-                semanticColor={true}
-                variant="subheading2"
-              />
-            )}
-          </Flex>
-        </Flex>
-      </AnimatedTouchableArea>
-    </ContextMenu>
+        </AnimatedTouchableArea>
+      </ContextMenu>
+    </AnimatedFlex>
   )
 }
 

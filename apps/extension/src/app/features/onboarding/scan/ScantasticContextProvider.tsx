@@ -29,7 +29,7 @@ type ScantasticContextState = {
 
 const uuidSchema = ScantasticParamsSchema.shape.uuid
 
-const ScantasticContext = createContext<ScantasticContextState | undefined>(undefined)
+export const ScantasticContext = createContext<ScantasticContextState | undefined>(undefined)
 
 export function ScantasticContextProvider({ children }: PropsWithChildren): JSX.Element {
   const { isResetting } = useOnboardingSteps()

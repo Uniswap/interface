@@ -1,20 +1,29 @@
+import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { ThemedText } from 'theme/components'
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 12px 0;
+  background-color: ${({ theme }) => theme.surface3};
+`
 
 export function OutputTaxTooltipBody({ currencySymbol }: { currencySymbol?: string }) {
   return (
     <>
-      <Text variant="body3">
+      <ThemedText.SubHeaderSmall color="textPrimary">
         <Trans i18nKey="swap.taxTooltip.label" />
-      </Text>
-      <Flex width="100%" height={1} backgroundColor="surface3" my="$spacing4" borderWidth={0} />
-      <Text variant="body4">
+      </ThemedText.SubHeaderSmall>
+      <Divider />
+      <ThemedText.LabelMicro color="textPrimary">
         {currencySymbol ? (
           <Trans i18nKey="swap.taxTooltip.tokenSelected" values={{ tokenSymbol: currencySymbol }} />
         ) : (
           <Trans i18nKey="swap.taxTooltip.noTokenSelected" />
         )}
-      </Text>
+      </ThemedText.LabelMicro>
     </>
   )
 }

@@ -3,12 +3,11 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SettingsStackNavigationProp } from 'src/app/navigation/types'
 import { NotificationsBackgroundImage } from 'src/components/notifications/NotificationsBGImage'
+import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { usePromptPushPermission } from 'src/features/notifications/hooks/usePromptPushPermission'
-import { openNotificationSettings } from 'src/utils/linking'
 import { DeprecatedButton, Flex } from 'ui/src'
 import { BellOn } from 'ui/src/components/icons/BellOn'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
@@ -16,6 +15,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { openSettings } from 'wallet/src/utils/linking'
 
 type NotificationsOSSettingsModalProps = {
   navigation: SettingsStackNavigationProp
@@ -27,7 +27,7 @@ type NotificationsOSSettingsModalProps = {
  */
 export function NotificationsOSSettingsModal({ navigation }: NotificationsOSSettingsModalProps): JSX.Element {
   const { notificationPermissionsEnabled, checkNotificationPermissions } = useNotificationOSPermissionsEnabled()
-  const promptPushPermission = usePromptPushPermission()
+
   const { t } = useTranslation()
 
   const shouldNavigateToSettings = useMemo(() => {
@@ -51,11 +51,11 @@ export function NotificationsOSSettingsModal({ navigation }: NotificationsOSSett
   const onPressEnableNotifications = useCallback(async () => {
     const arePushNotificationsEnabled = await promptPushPermission()
     if (!arePushNotificationsEnabled) {
-      await openNotificationSettings()
+      await openSettings()
     } else {
       await checkNotificationPermissions()
     }
-  }, [checkNotificationPermissions, promptPushPermission])
+  }, [checkNotificationPermissions])
 
   const onClose = useCallback(() => {
     if (shouldNavigateToSettings) {

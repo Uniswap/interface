@@ -43,14 +43,8 @@ const FlashbotsReceiptSchema = z.object({
 
 type FlashbotsReceipt = z.infer<typeof FlashbotsReceiptSchema>
 
-export type SignerInfo = {
-  signer: Signer
-  address: Address
-}
-
 export const FLASHBOTS_RPC_URL = 'https://rpc.flashbots.net/fast?originId=uniswapwallet'
 export const FLASHBOTS_DEFAULT_BLOCK_RANGE = 10
-export const FLASHBOTS_DEFAULT_REFUND_PERCENT = 50 // Default for fast mode
 
 /**
  * A provider to Flashbots RPC that uses a signer to authenticate requests.
@@ -65,11 +59,9 @@ export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
    *    @see {@link https://docs.flashbots.net/flashbots-protect/settings-guide#block-range}
    * @param signer - The signer to use for authenticated requests.
    */
-  constructor(blockRange: number, signerInfo?: SignerInfo, refundPercent?: number) {
-    const blockRangeString = blockRange > 0 ? `&blockRange=${blockRange}` : ''
-    const refundString = getRefundString(signerInfo?.address, refundPercent)
-    const url = `${FLASHBOTS_RPC_URL}${blockRangeString}${refundString}`
-    super(url, signerInfo?.signer)
+  constructor(blockRange?: number, signer?: Signer) {
+    const url = `${FLASHBOTS_RPC_URL}&blockRange=${blockRange && blockRange > 0 ? blockRange : FLASHBOTS_DEFAULT_BLOCK_RANGE}`
+    super(url, signer)
   }
 
   /**
@@ -149,13 +141,6 @@ export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
 
     return BigNumber.from(result).toNumber()
   }
-}
-
-function getRefundString(address?: Address, refundPercent?: number): string {
-  if (!address || !refundPercent || refundPercent < 0 || refundPercent > 100) {
-    return ''
-  }
-  return `&refund=${address}:${refundPercent}`
 }
 
 // Copied from JsonRpcProvider.getResult

@@ -1,8 +1,7 @@
 import { Extras } from '@sentry/types'
 import { datadogEnabled, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
+import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/Datadog'
 import { Sentry } from 'utilities/src/logger/Sentry'
-import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { LogLevel, LoggerErrorContext, OverridesSentryFingerprint } from 'utilities/src/logger/types'
 import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
 // weird temp fix: the web app is complaining about __DEV__ being global
@@ -207,20 +206,4 @@ function formatMessage(
     // Specific printing style for mobile logging
     return [`${timeString}::${fileName}#${functionName}`, message]
   }
-}
-
-export enum DatadogEnvironment {
-  DEV = 'dev',
-  BETA = 'beta',
-  PROD = 'prod',
-}
-
-export function getDatadogEnvironment(): DatadogEnvironment {
-  if (isDevEnv()) {
-    return DatadogEnvironment.DEV
-  }
-  if (isBetaEnv()) {
-    return DatadogEnvironment.BETA
-  }
-  return DatadogEnvironment.PROD
 }

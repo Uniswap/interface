@@ -39,7 +39,6 @@
     "@tamagui/build": "1.121.7",
     "@tamagui/core": "1.121.7",
     "@testing-library/react-native": "13.0.0",
-    "@types/chrome": "0.0.254",
     "@types/qrcode": "1.5.5",
     "@uniswap/eslint-config": "workspace:^",
     "camelcase": "6.3.0",

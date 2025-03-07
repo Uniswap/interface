@@ -75,12 +75,9 @@ export function ActiveLiquidityChart2({
   dimensions: { width, height, contentWidth, axisLabelPaneWidth },
   brushDomain,
   onBrushDomainChange,
-  disableBrush,
-  disableRightAxis,
   disableBrushInteraction,
   showDiffIndicators,
   isMobile,
-  barColor,
 }: {
   id?: string
   currency0: Currency
@@ -91,15 +88,12 @@ export function ActiveLiquidityChart2({
     min?: number
     max?: number
   }
-  disableBrush?: boolean
-  disableRightAxis?: boolean
   disableBrushInteraction?: boolean
   showDiffIndicators?: boolean
   dimensions: { width: number; height: number; contentWidth: number; axisLabelPaneWidth: number }
   brushDomain?: [number, number]
   onBrushDomainChange: (domain: [number, number], mode: string | undefined) => void
   isMobile?: boolean
-  barColor?: string
 }) {
   const { formatPercent } = useFormatter()
   const colors = useSporeColors()
@@ -220,7 +214,7 @@ export function ActiveLiquidityChart2({
             <rect x="0" y="0" width={width} height={height} />
           </clipPath>
 
-          {brushDomain && !disableBrush && (
+          {brushDomain && (
             // mask to highlight selected area
             <mask id={`${id}-chart-area-mask`}>
               <rect
@@ -243,20 +237,18 @@ export function ActiveLiquidityChart2({
               xValue={xAccessor}
               yValue={yAccessor}
               brushDomain={brushDomain}
-              fill={opacify(isMobile ? 10 : 100, brushDomain ? colors.neutral1.val : barColor ?? colors.accent1.val)}
-              selectedFill={opacify(isMobile ? 10 : 100, barColor ?? colors.accent1.val)}
+              fill={opacify(isMobile ? 10 : 100, brushDomain ? colors.neutral1.val : colors.accent1.val)}
+              selectedFill={opacify(isMobile ? 10 : 100, colors.accent1.val)}
               containerHeight={height}
               containerWidth={width - axisLabelPaneWidth}
             />
 
-            {!disableBrush && (
-              <HorizontalLine
-                value={current}
-                yScale={yScale}
-                width={contentWidth + 12}
-                containerWidth={width - axisLabelPaneWidth}
-              />
-            )}
+            <HorizontalLine
+              value={current}
+              yScale={yScale}
+              width={contentWidth + 12}
+              containerWidth={width - axisLabelPaneWidth}
+            />
 
             {hoverY && (
               <HorizontalLine
@@ -267,31 +259,29 @@ export function ActiveLiquidityChart2({
                 lineStyle="solid"
               />
             )}
+
+            {isMobile ? null : (
+              <AxisRight
+                yScale={yScale}
+                offset={width - contentWidth}
+                min={brushDomain?.[0]}
+                current={current}
+                max={brushDomain?.[1]}
+                height={height}
+              />
+            )}
           </g>
 
-          {isMobile || disableRightAxis ? null : (
-            <AxisRight
-              yScale={yScale}
-              offset={width - axisLabelPaneWidth}
-              min={brushDomain?.[0]}
-              current={current}
-              max={brushDomain?.[1]}
-              height={height}
-            />
-          )}
-
-          {!disableBrush && (
-            <Brush2
-              id={id}
-              yScale={yScale}
-              interactive={!disableBrushInteraction}
-              brushExtent={brushDomain ?? (yScale.domain() as [number, number])}
-              hideHandles={!brushDomain}
-              width={width - axisLabelPaneWidth}
-              height={height}
-              setBrushExtent={onBrushDomainChange}
-            />
-          )}
+          <Brush2
+            id={id}
+            yScale={yScale}
+            interactive={!disableBrushInteraction}
+            brushExtent={brushDomain ?? (yScale.domain() as [number, number])}
+            hideHandles={!brushDomain}
+            width={width - axisLabelPaneWidth}
+            height={height}
+            setBrushExtent={onBrushDomainChange}
+          />
         </g>
       </svg>
     </>

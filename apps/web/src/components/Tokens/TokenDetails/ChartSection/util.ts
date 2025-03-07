@@ -11,9 +11,9 @@ export type ChartQueryResult<TDataType, TChartType extends ChartType> = {
 }
 
 export enum DataQuality {
-  VALID = 0,
-  INVALID = 1,
-  STALE = 2,
+  VALID,
+  INVALID,
+  STALE,
 }
 
 /** Used for expecting the same data freshness regardless of time period, e.g. 1y price chart should still have a recent point */

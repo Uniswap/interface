@@ -1,4 +1,3 @@
-import { datadogRum } from '@datadog/browser-rum'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
@@ -81,15 +80,6 @@ export class TransactionStepFailedError extends TransactionError implements Over
       }
     } catch (e) {
       if (isInterface) {
-        datadogRum.addAction('Transaction Action', {
-          message: `problem determining fingerprint for ${this.step.type}`,
-          level: 'info',
-          step: this.step.type,
-          data: {
-            errorMessage: e instanceof Error ? e.message : undefined,
-          },
-        })
-
         Sentry.addBreadCrumb({
           level: 'info',
           category: 'transaction',

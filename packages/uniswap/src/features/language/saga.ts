@@ -1,6 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { I18nManager } from 'react-native'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import RNRestart from 'react-native-restart'
 import { call, put, select, takeLatest } from 'typed-redux-saga'
 import {

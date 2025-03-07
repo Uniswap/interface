@@ -19,7 +19,6 @@ describe('isV4UnsupportedChain', () => {
     UniverseChainId.Bnb,
     UniverseChainId.Optimism,
     UniverseChainId.Polygon,
-    UniverseChainId.Soneium,
     UniverseChainId.Unichain,
     UniverseChainId.Zora,
   ])('returns false for other chains', (chainId) => {

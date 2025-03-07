@@ -5,7 +5,6 @@ import { SwapHead } from 'components/ConfirmSwapModal/Head'
 import { SwapModal } from 'components/ConfirmSwapModal/Modal'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import SwapProgressIndicator from 'components/ConfirmSwapModal/ProgressIndicator'
-import { PopupType } from 'components/Popups/types'
 import { AutoColumn } from 'components/deprecated/Column'
 import { SwapDetails } from 'components/swap/SwapDetails'
 import { SwapPreview } from 'components/swap/SwapPreview'
@@ -15,13 +14,14 @@ import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useSuppressPopups } from 'state/application/hooks'
+import { PopupType } from 'state/application/reducer'
 import { InterfaceTrade } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { ThemeProvider } from 'theme'
 import { FadePresence } from 'theme/components/FadePresence'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -36,12 +36,12 @@ const Container = styled.div<{ $height?: string; $padding?: string }>`
 `
 
 export enum ConfirmModalState {
-  REVIEWING = 0,
-  WRAPPING = 1,
-  RESETTING_TOKEN_ALLOWANCE = 2,
-  APPROVING_TOKEN = 3,
-  PERMITTING = 4,
-  PENDING_CONFIRMATION = 5,
+  REVIEWING,
+  WRAPPING,
+  RESETTING_TOKEN_ALLOWANCE,
+  APPROVING_TOKEN,
+  PERMITTING,
+  PENDING_CONFIRMATION,
 }
 
 export function ConfirmSwapModal({
@@ -219,7 +219,6 @@ export function ConfirmSwapModal({
                     suppressPopups()
                     startSwapFlow()
                   }}
-                  inputCurrency={inputCurrency}
                   trade={trade}
                   allowance={allowance}
                   swapResult={swapResult}

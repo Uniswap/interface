@@ -122,22 +122,15 @@ export function SwapFormContextProvider({
     }
   }, [prefilledState?.selectingCurrencyField, prefilledState?.filteredChainIds])
 
-  const previousExactCurrencyField = usePrevious(swapForm.exactCurrencyField)
-  // If the exact currency field is changed, the amount may have changed as well
-  // so we'll skip debouncing in this case
-  const hasExactCurrencyFieldChanged = previousExactCurrencyField !== swapForm.exactCurrencyField
+  const [debouncedExactAmountToken, isDebouncingExactAmountToken] = useDebounceWithStatus(
+    swapForm.exactAmountToken,
+    SWAP_FORM_DEBOUNCE_TIME_MS,
+  )
 
-  const [debouncedExactAmountToken, isDebouncingExactAmountToken] = useDebounceWithStatus({
-    value: swapForm.exactAmountToken,
-    delay: SWAP_FORM_DEBOUNCE_TIME_MS,
-    skipDebounce: hasExactCurrencyFieldChanged,
-  })
-
-  const [debouncedExactAmountFiat, isDebouncingExactAmountFiat] = useDebounceWithStatus({
-    value: swapForm.exactAmountFiat,
-    delay: SWAP_FORM_DEBOUNCE_TIME_MS,
-    skipDebounce: hasExactCurrencyFieldChanged,
-  })
+  const [debouncedExactAmountFiat, isDebouncingExactAmountFiat] = useDebounceWithStatus(
+    swapForm.exactAmountFiat,
+    SWAP_FORM_DEBOUNCE_TIME_MS,
+  )
 
   const derivedSwapInfo = useDerivedSwapInfo({
     txId: swapForm.txId,

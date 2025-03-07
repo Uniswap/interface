@@ -6,6 +6,8 @@ import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -24,7 +26,6 @@ import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/Ma
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -68,7 +69,7 @@ export function SwapDetails({
   setTokenWarningChecked,
   txSimulationErrors,
 }: SwapDetailsProps): JSX.Element {
-  const v4SwapEnabled = useV4SwapEnabled(derivedSwapInfo.chainId)
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const { t } = useTranslation()
 
   const isBridgeTrade = derivedSwapInfo.trade.trade && isBridge(derivedSwapInfo.trade.trade)
@@ -146,7 +147,7 @@ export function SwapDetails({
             customSlippageTolerance={customSlippageTolerance}
           />
         )}
-        {!isBridgeTrade && v4SwapEnabled && (
+        {!isBridgeTrade && v4Enabled && (
           <RoutingInfo gasFee={gasFee} chainId={acceptedTrade.inputAmount.currency.chainId} />
         )}
         <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} />

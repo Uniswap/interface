@@ -20,6 +20,7 @@ describe('useExactOutputWillFail', () => {
   const createCurrencyInfo = (currency: Token): CurrencyInfo => {
     return {
       currency,
+      safetyLevel: undefined,
       logoUrl: undefined,
       currencyId: SAMPLE_CURRENCY_ID_1,
     }

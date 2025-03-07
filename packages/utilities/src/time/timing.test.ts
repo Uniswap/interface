@@ -162,7 +162,7 @@ describe('useTimeout', () => {
 describe('useDebounceWithStatus', () => {
   it('correctly delays updating the value', async () => {
     let value = 'first'
-    const { result, rerender } = renderHook(() => useDebounceWithStatus({ value, delay: DEFAULT_DELAY }))
+    const { result, rerender } = renderHook(() => useDebounceWithStatus(value))
 
     expect(result.current[0]).toEqual('first')
     value = 'second'
@@ -179,7 +179,7 @@ describe('useDebounceWithStatus', () => {
 
   it('correctly returns debounce state', async () => {
     let value = 'first'
-    const { result, rerender } = renderHook(() => useDebounceWithStatus({ value }))
+    const { result, rerender } = renderHook(() => useDebounceWithStatus(value))
 
     expect(result.current[1]).toEqual(true)
     value = 'second'
@@ -197,58 +197,6 @@ describe('useDebounceWithStatus', () => {
       jest.advanceTimersByTime(DEFAULT_DELAY / 2)
     })
     rerender()
-    expect(result.current[1]).toEqual(false)
-  })
-
-  it('updates value immediately when skip is true', () => {
-    let value = 'first'
-    const { result, rerender } = renderHook(() => useDebounceWithStatus({ value, skipDebounce: true }))
-
-    expect(result.current[0]).toEqual('first')
-    expect(result.current[1]).toEqual(false)
-
-    value = 'second'
-    rerender()
-
-    expect(result.current[0]).toEqual('second')
-    expect(result.current[1]).toEqual(false)
-
-    // Advancing time should not affect the result
-    jest.advanceTimersByTime(DEFAULT_DELAY)
-    expect(result.current[0]).toEqual('second')
-    expect(result.current[1]).toEqual(false)
-  })
-
-  it('transitions from skip to non-skip correctly', async () => {
-    let value = 'first'
-    let skipDebounce = true
-    const { result, rerender } = renderHook(() => useDebounceWithStatus({ value, delay: DEFAULT_DELAY, skipDebounce }))
-
-    expect(result.current[0]).toEqual('first')
-    expect(result.current[1]).toEqual(false)
-
-    // Change value while skipping
-    value = 'second'
-    rerender()
-    expect(result.current[0]).toEqual('second')
-    expect(result.current[1]).toEqual(false)
-
-    // Disable skip
-    skipDebounce = false
-    rerender()
-    expect(result.current[0]).toEqual('second')
-    expect(result.current[1]).toEqual(true)
-
-    // Change value again
-    value = 'third'
-    rerender()
-    expect(result.current[0]).toEqual('second')
-    expect(result.current[1]).toEqual(true)
-
-    await act(() => {
-      jest.advanceTimersByTime(DEFAULT_DELAY)
-    })
-    expect(result.current[0]).toEqual('third')
     expect(result.current[1]).toEqual(false)
   })
 })

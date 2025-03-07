@@ -1,8 +1,9 @@
 /* eslint-disable complexity */
 /* eslint-disable max-lines */
 import { SwapEventName } from '@uniswap/analytics-events'
-import { ComponentProps, memo, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ComponentProps, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+// eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { TextInputProps } from 'react-native'
 import {
   Accordion,
@@ -67,7 +68,7 @@ import {
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { NumberType } from 'utilities/src/format/types'
@@ -255,13 +256,29 @@ function SwapFormContent({
   )
 
   const moveCursorToEnd = useCallback(
-    ({ targetInputRef }: { targetInputRef: MutableRefObject<string> }) => {
+    (args?: { overrideIsFiatMode?: boolean }) => {
+      const _isFiatMode = args?.overrideIsFiatMode ?? isFiatMode
+
+      const amountRef =
+        decimalPadControlledField === derivedCurrencyField
+          ? formattedDerivedValueRef
+          : _isFiatMode
+            ? exactAmountFiatRef
+            : exactAmountTokenRef
+
       resetSelection({
-        start: targetInputRef.current.length,
-        end: targetInputRef.current.length,
+        start: amountRef.current.length,
+        end: amountRef.current.length,
       })
     },
-    [resetSelection],
+    [
+      decimalPadControlledField,
+      derivedCurrencyField,
+      exactAmountFiatRef,
+      exactAmountTokenRef,
+      isFiatMode,
+      resetSelection,
+    ],
   )
 
   const maxDecimals = isFiatMode
@@ -270,29 +287,23 @@ function SwapFormContent({
 
   const decimalPadSetValue = useCallback(
     (value: string): void => {
-      const currentIsFiatMode = isFiatMode && decimalPadControlledField === exactCurrencyField
-      const currentMaxDecimals = currentIsFiatMode
-        ? MAX_FIAT_INPUT_DECIMALS
-        : currencies[decimalPadControlledField]?.currency.decimals ?? 0
-
       // We disable the `DecimalPad` when the input reaches the max number of decimals,
       // but we still need to truncate in case the user moves the cursor and adds a decimal separator in the middle of the input.
       const truncatedValue = truncateToMaxDecimals({
         value,
-        maxDecimals: currentMaxDecimals,
+        maxDecimals,
       })
 
       updateSwapForm({
-        exactAmountFiat: currentIsFiatMode ? truncatedValue : undefined,
-        exactAmountToken: !currentIsFiatMode ? truncatedValue : undefined,
+        exactAmountFiat: isFiatMode ? truncatedValue : undefined,
+        exactAmountToken: !isFiatMode ? truncatedValue : undefined,
         exactCurrencyField: decimalPadControlledField,
         focusOnCurrencyField: decimalPadControlledField,
-        isFiatMode: currentIsFiatMode,
       })
 
       maybeLogFirstSwapAction(trace)
     },
-    [currencies, decimalPadControlledField, exactCurrencyField, isFiatMode, trace, updateSwapForm],
+    [decimalPadControlledField, isFiatMode, maxDecimals, trace, updateSwapForm],
   )
 
   const [decimalPadReady, setDecimalPadReady] = useState(false)
@@ -366,29 +377,42 @@ function SwapFormContent({
     })
   }, [updateSwapForm])
 
-  const onSetExactAmount = useCallback(
-    (currencyField: CurrencyField, amount: string) => {
-      const currentIsFiatMode = isFiatMode && focusOnCurrencyField === exactCurrencyField
-      updateSwapForm({
-        exactAmountFiat: currentIsFiatMode ? amount : undefined,
-        exactAmountToken: currentIsFiatMode ? undefined : amount,
-        exactCurrencyField: currencyField,
-        isFiatMode: currentIsFiatMode,
-      })
+  const onSetExactAmountInput = useCallback(
+    (amount: string): void => {
+      isFiatMode
+        ? updateSwapForm({
+            exactAmountFiat: amount,
+            exactAmountToken: undefined,
+            exactCurrencyField: CurrencyField.INPUT,
+          })
+        : updateSwapForm({
+            exactAmountFiat: undefined,
+            exactAmountToken: amount,
+            exactCurrencyField: CurrencyField.INPUT,
+          })
 
       maybeLogFirstSwapAction(trace)
     },
-    [exactCurrencyField, focusOnCurrencyField, isFiatMode, trace, updateSwapForm],
-  )
-
-  const onSetExactAmountInput = useCallback(
-    (amount: string) => onSetExactAmount(CurrencyField.INPUT, amount),
-    [onSetExactAmount],
+    [isFiatMode, trace, updateSwapForm],
   )
 
   const onSetExactAmountOutput = useCallback(
-    (amount: string) => onSetExactAmount(CurrencyField.OUTPUT, amount),
-    [onSetExactAmount],
+    (amount: string): void => {
+      isFiatMode
+        ? updateSwapForm({
+            exactAmountFiat: amount,
+            exactAmountToken: undefined,
+            exactCurrencyField: CurrencyField.OUTPUT,
+          })
+        : updateSwapForm({
+            exactAmountFiat: undefined,
+            exactAmountToken: amount,
+            exactCurrencyField: CurrencyField.OUTPUT,
+          })
+
+      maybeLogFirstSwapAction(trace)
+    },
+    [isFiatMode, trace, updateSwapForm],
   )
 
   const onSetMax = useCallback(
@@ -403,65 +427,37 @@ function SwapFormContent({
 
       // We want this update to happen on the next tick, after the input value is updated.
       setTimeout(() => {
-        moveCursorToEnd({ targetInputRef: exactAmountTokenRef })
+        moveCursorToEnd()
         decimalPadRef.current?.updateDisabledKeys()
       }, 0)
 
       maybeLogFirstSwapAction(trace)
     },
-    [exactAmountTokenRef, moveCursorToEnd, trace, updateSwapForm],
+    [moveCursorToEnd, trace, updateSwapForm],
   )
 
   // Reset selection based the new input value (token, or fiat), and toggle fiat mode
   const onToggleIsFiatMode = useCallback(
     (currencyField: CurrencyField) => {
       const newIsFiatMode = !isFiatMode
-      let targetInputRef: MutableRefObject<string> | undefined
 
-      if (currencyField !== focusOnCurrencyField) {
-        // Case 1: Clicking fiat toggle on a derived (non-exact) field should only focus that field
-        // without changing fiat mode
-        updateSwapForm({
-          focusOnCurrencyField: currencyField,
-        })
-        targetInputRef = formattedDerivedValueRef
-      } else if (currencyField !== exactCurrencyField) {
-        // Case 2: Field is focused but not exact:
-        // - Make it the exact field
-        // - Copy the value from derived input
-        // - Enable fiat mode (it must have been off)
-        // Note: When fiat mode is already active, this keeps it on and toggles the exact field
+      // When fiat mode is active, clicking on the toggle should keep the fiat mode on, but toggle the exact field.
+      if (currencyField !== exactCurrencyField && isFiatMode) {
         updateSwapForm({
           exactCurrencyField: currencyField,
-          // next two lines are needed, so useSyncFiatAndTokenAmountUpdater works correctly
-          exactAmountToken: formattedDerivedValueRef.current,
-          exactAmountFiat: undefined,
-          isFiatMode: true, // we can only be here if isFiatMode was false before as fiat mode can be triggered only on exact field
+          focusOnCurrencyField: currencyField,
         })
-        targetInputRef = exactAmountFiatRef
       } else {
-        // Case 3: Standard fiat mode toggle for the exact field
         updateSwapForm({
           isFiatMode: newIsFiatMode,
+          focusOnCurrencyField: currencyField,
         })
-        targetInputRef = newIsFiatMode ? exactAmountFiatRef : exactAmountTokenRef
       }
+
       // We want this update to happen on the next tick, after the input value is updated.
-      setTimeout(() => {
-        if (targetInputRef) {
-          moveCursorToEnd({ targetInputRef })
-        }
-      }, 0)
+      setTimeout(() => moveCursorToEnd({ overrideIsFiatMode: newIsFiatMode }), 0)
     },
-    [
-      exactAmountFiatRef,
-      exactAmountTokenRef,
-      exactCurrencyField,
-      focusOnCurrencyField,
-      isFiatMode,
-      moveCursorToEnd,
-      updateSwapForm,
-    ],
+    [exactCurrencyField, isFiatMode, moveCursorToEnd, updateSwapForm],
   )
 
   // If exact output will fail due to FoT tokens, the field should be disabled and un-focusable.
@@ -491,11 +487,10 @@ function SwapFormContent({
     })
 
     // When we have FOT disable exact output logic, the cursor gets out of sync when switching currencies
-    setTimeout(() => moveCursorToEnd({ targetInputRef: exactAmountTokenRef }), 0)
+    setTimeout(() => moveCursorToEnd(), 0)
 
     maybeLogFirstSwapAction(trace)
   }, [
-    isBridge,
     exactOutputWouldFailIfCurrenciesSwitched,
     exactFieldIsInput,
     updateSwapForm,
@@ -504,7 +499,7 @@ function SwapFormContent({
     isFiatMode,
     trace,
     moveCursorToEnd,
-    exactAmountTokenRef,
+    isBridge,
   ])
 
   // Swap input requires numeric values, not localized ones
@@ -525,7 +520,7 @@ function SwapFormContent({
 
     // When the `formattedDerivedValue` changes while the field that is not set as the `exactCurrencyField` is focused, we want to reset the cursor selection to the end of the input.
     // This to prevent an issue that happens with the cursor selection getting out of sync when a user changes focus from one input to another while a quote request in in flight.
-    moveCursorToEnd({ targetInputRef: formattedDerivedValueRef })
+    moveCursorToEnd()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formattedDerivedValue])
 

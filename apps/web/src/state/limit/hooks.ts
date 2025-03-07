@@ -3,7 +3,7 @@ import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
 import { LimitState } from 'state/limit/types'
 import { getWrapInfo } from 'state/routing/gas'
@@ -43,7 +43,7 @@ export function getDefaultPriceInverted(inputCurrency?: Currency, outputCurrency
   return isInputStablecoin && !isOutputStablecoin
 }
 
-export function useDerivedLimitInfo(state: LimitState): LimitInfo {
+export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetStateAction<LimitState>>): LimitInfo {
   const account = useAccount()
   const { inputAmount, outputAmount, limitPriceInverted } = state
   const {
@@ -54,6 +54,13 @@ export function useDerivedLimitInfo(state: LimitState): LimitInfo {
     account.address,
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
   )
+
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
+      limitPriceInverted: getDefaultPriceInverted(inputCurrency, outputCurrency),
+    }))
+  }, [inputCurrency, outputCurrency, setState])
 
   const currencyBalances = useMemo(
     () => ({
@@ -89,7 +96,6 @@ export function useDerivedLimitInfo(state: LimitState): LimitInfo {
     let parsedInputAmount
     let parsedOutputAmount
     const limitPrice = limitPriceInverted ? parsedLimitPrice?.invert() : parsedLimitPrice
-
     if (state.isInputAmountFixed) {
       parsedInputAmount = tryParseCurrencyAmount(inputAmount, inputCurrency)
       parsedOutputAmount = !limitPrice

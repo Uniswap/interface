@@ -1,6 +1,7 @@
 import { CommandParser, UniversalRouterCall } from '@uniswap/universal-router-sdk'
 import { V4BaseActionsParser, V4RouterCall } from '@uniswap/v4-sdk'
 import { EthSendTransactionRPCActions } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { EthersTransactionRequest } from 'src/app/features/dappRequests/types/EthersTypes'
 import { parseCalldata as parseNfPMCalldata } from 'src/app/features/dappRequests/types/NonfungiblePositionManager'
 import { NonfungiblePositionManagerCall } from 'src/app/features/dappRequests/types/NonfungiblePositionManagerTypes'
 import methodHashToFunctionSignature from 'utilities/src/calldata/methodHashToFunctionSignature'
@@ -14,16 +15,15 @@ interface GetCalldataInfoFromTransactionReturnValue {
 }
 
 function getCalldataInfoFromTransaction(
-  data: string,
-  to: string | undefined,
+  transaction: EthersTransactionRequest,
 ): GetCalldataInfoFromTransactionReturnValue {
-  const calldataMethodHash = data.substring(2, 10)
+  const calldataMethodHash = transaction.data.substring(2, 10)
   const functionSignature = methodHashToFunctionSignature(calldataMethodHash)
   const contractInteractions = EthSendTransactionRPCActions.ContractInteraction
   const result: GetCalldataInfoFromTransactionReturnValue = {
     functionSignature,
     contractInteractions,
-    to,
+    to: transaction.to,
   }
 
   if (functionSignature) {
@@ -32,7 +32,7 @@ function getCalldataInfoFromTransaction(
       return result
     }
     try {
-      const v4Calldata = V4BaseActionsParser.parseCalldata(data)
+      const v4Calldata = V4BaseActionsParser.parseCalldata(transaction.data)
 
       if (v4Calldata) {
         result.contractInteractions = EthSendTransactionRPCActions.Swap
@@ -43,7 +43,7 @@ function getCalldataInfoFromTransaction(
       noop()
     }
     try {
-      const URCalldata = CommandParser.parseCalldata(data)
+      const URCalldata = CommandParser.parseCalldata(transaction.data)
 
       if (URCalldata) {
         result.contractInteractions = EthSendTransactionRPCActions.Swap
@@ -54,7 +54,7 @@ function getCalldataInfoFromTransaction(
       noop()
     }
     try {
-      const NfPMCalldata = parseNfPMCalldata(data)
+      const NfPMCalldata = parseNfPMCalldata(transaction.data)
 
       if (NfPMCalldata) {
         result.contractInteractions = EthSendTransactionRPCActions.LP

@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { Flex, Text, Tooltip, isWeb, useMedia, type PopperProps } from 'ui/src'
+import { Flex, Text, Tooltip, isWeb } from 'ui/src'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 
 const TOOLTIP_REST_MS = 20
@@ -17,15 +17,6 @@ export function InfoTooltip({
   placement,
   open,
 }: PropsWithChildren<InfoTooltipProps>): JSX.Element {
-  // On xsmall screens, if tooltip placement is right or left
-  // Override b/c the tooltip will overflow off the screen
-  const media = useMedia()
-  const alignmentsToOverride = ['left', 'right'] as PopperProps['placement'][]
-
-  if (placement && alignmentsToOverride.includes(placement) && media.xs) {
-    placement = 'top'
-  }
-
   return (
     <Flex row shrink alignItems="center" gap="$spacing4">
       {triggerPlacement === 'end' && children}

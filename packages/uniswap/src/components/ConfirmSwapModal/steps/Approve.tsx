@@ -13,6 +13,7 @@ export function TokenApprovalTransactionStepRow({
 }: StepRowProps<TokenApprovalTransactionStep>): JSX.Element {
   const { t } = useTranslation()
   const { token, pair } = step
+  // FIXME: Verify WALL-5906
   const symbol = token.symbol ?? ''
 
   const title = {
@@ -41,6 +42,7 @@ export function TokenRevocationTransactionStepRow(props: StepRowProps<TokenRevoc
 
   const { t } = useTranslation()
   const { token } = step
+  // FIXME: Verify WALL-5906
   const symbol = token.symbol ?? ''
 
   const title = {

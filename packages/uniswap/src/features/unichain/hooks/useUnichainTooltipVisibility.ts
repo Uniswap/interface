@@ -6,7 +6,6 @@ import {
 } from 'uniswap/src/features/behaviorHistory/selectors'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 
 export function useUnichainTooltipVisibility(): {

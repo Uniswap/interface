@@ -1,5 +1,7 @@
+import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import { FlashList } from '@shopify/flash-list'
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import { SectionList } from 'react-native'
 import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { TokenSectionBaseListProps } from 'uniswap/src/components/TokenSelector/lists/TokenSectionBaseList/TokenSectionBaseList'
 import {
@@ -7,12 +9,23 @@ import {
   ProcessedRowType,
   processTokenSections,
 } from 'uniswap/src/components/TokenSelector/lists/TokenSectionBaseList/processTokenSections'
+import type { TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
+
+export function TokenSectionBaseList(props: TokenSectionBaseListProps): JSX.Element {
+  const flashListEnabled = useFeatureFlag(FeatureFlags.TokenSelectorFlashList)
+  if (flashListEnabled) {
+    return <TokenSectionBaseListFlashList {...props} />
+  }
+  return <TokenSectionBaseListOriginal {...props} />
+}
 
 const TOKEN_ITEM_SIZE = 68
 const AMOUNT_TO_DRAW = 18
 
-export const TokenSectionBaseList = memo(function TokenSectionBaseList({
+const TokenSectionBaseListFlashList = memo(function TokenSectionBaseListFlashList({
   sectionListRef,
   ListEmptyComponent,
   keyExtractor,
@@ -100,3 +113,47 @@ export const TokenSectionBaseList = memo(function TokenSectionBaseList({
     />
   )
 })
+
+function TokenSectionBaseListOriginal({
+  sectionListRef,
+  ListEmptyComponent,
+  focusHook,
+  keyExtractor,
+  renderItem,
+  renderSectionHeader,
+  renderSectionFooter,
+  sections,
+}: TokenSectionBaseListProps): JSX.Element {
+  const insets = useAppInsets()
+  const ref = useRef<SectionList<TokenOption>>(null)
+
+  useEffect(() => {
+    if (sectionListRef) {
+      sectionListRef.current = {
+        scrollToLocation: ({ itemIndex, sectionIndex, animated }): void => {
+          ref.current?.scrollToLocation({ itemIndex, sectionIndex, animated })
+        },
+      }
+    }
+  }, [sectionListRef])
+
+  return (
+    <BottomSheetSectionList<TokenOption | TokenOption[], TokenSection>
+      ref={ref}
+      ListEmptyComponent={ListEmptyComponent}
+      bounces={true}
+      contentContainerStyle={{ paddingBottom: insets.bottom }}
+      focusHook={focusHook}
+      keyExtractor={keyExtractor}
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="always"
+      renderItem={renderItem}
+      renderSectionFooter={renderSectionFooter}
+      renderSectionHeader={renderSectionHeader}
+      sections={sections ?? []}
+      showsVerticalScrollIndicator={false}
+      stickySectionHeadersEnabled={true}
+      windowSize={4}
+    />
+  )
+}

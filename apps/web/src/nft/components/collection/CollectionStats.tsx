@@ -1,6 +1,8 @@
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { Box, BoxProps } from 'components/deprecated/Box'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled, { css } from 'lib/styled-components'
+import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/CollectionStats.css'
 import {
   DiscordIcon,
@@ -20,8 +22,8 @@ import { GenieCollection, TokenType } from 'nft/types'
 import { roundWholePercentage } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { Anchor, Flex, FlexProps, Image, Shine, Text, useMedia } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
+import { ThemedText } from 'theme/components'
+import { useMedia } from 'ui/src'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PercentChange = styled.div<{ isNegative: boolean }>`
@@ -55,18 +57,19 @@ const MobileSocialsOverflowIcon = styled.div`
 
 const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
   return (
-    <Anchor
+    <Box
       display="flex"
+      as="a"
       target="_blank"
       rel="noreferrer"
       href={href}
-      height="$spacing40"
-      width="$spacing40"
-      borderRadius="$roundedFull"
-      backgroundColor="$surface1"
+      height="40"
+      width="40"
+      borderRadius="round"
+      backgroundColor="surface1"
     >
       {children}
-    </Anchor>
+    </Box>
   )
 }
 
@@ -89,43 +92,52 @@ const MobileSocialsPopover = ({
         )}
       </MobileSocialsOverflowIcon>
       {collectionSocialsIsOpen && (
-        <Flex row position="absolute" gap="$gap4" alignItems="center" justifyContent="center" top={-48} right={-6}>
+        <Row
+          position="absolute"
+          gap="4"
+          alignItems="center"
+          justifyContent="center"
+          style={{
+            top: '-48px',
+            right: '-6px',
+          }}
+        >
           {collectionStats.discordUrl ? (
             <MobileSocialsIcon href={collectionStats.discordUrl}>
-              <Flex m="auto" pt="$spacing4">
+              <Box margin="auto" paddingTop="4">
                 <DiscordIcon width={28} height={28} color={themeVars.colors.neutral2} />
-              </Flex>
+              </Box>
             </MobileSocialsIcon>
           ) : null}
           {collectionStats.twitterUrl ? (
             <MobileSocialsIcon href={'https://twitter.com/' + collectionStats.twitterUrl}>
-              <Flex m="auto" pt="$spacing6">
+              <Box margin="auto" paddingTop="6">
                 <TwitterIcon
                   fill={themeVars.colors.neutral2}
                   color={themeVars.colors.neutral2}
                   width="28px"
                   height="28px"
                 />
-              </Flex>
+              </Box>
             </MobileSocialsIcon>
           ) : null}
 
           {collectionStats.instagram ? (
             <MobileSocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
-              <Flex m="auto" pl="$spacing2" pt="$spacing4">
+              <Box margin="auto" paddingLeft="2" paddingTop="4">
                 <InstagramIcon fill={themeVars.colors.neutral2} width="28px" height="28px" />
-              </Flex>
+              </Box>
             </MobileSocialsIcon>
           ) : null}
 
           {collectionStats.externalUrl ? (
             <MobileSocialsIcon href={collectionStats.externalUrl}>
-              <Flex m="auto" pt="$spacing4">
+              <Box margin="auto" paddingTop="4">
                 <ExternalIcon fill={themeVars.colors.neutral2} width="28px" height="28px" />
-              </Flex>
+              </Box>
             </MobileSocialsIcon>
           ) : null}
-        </Flex>
+        </Row>
       )}
     </>
   )
@@ -133,9 +145,9 @@ const MobileSocialsPopover = ({
 
 const SocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
   return (
-    <Anchor display="flex" target="_blank" rel="noreferrer" href={href} height="100%" justifyContent="center">
+    <Column as="a" target="_blank" rel="noreferrer" href={href} height="full" justifyContent="center">
       {children}
-    </Anchor>
+    </Column>
   )
 }
 
@@ -157,8 +169,8 @@ const CollectionName = ({
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   return (
-    <Flex row alignItems="center" justifyContent="space-between">
-      <Flex minWidth={0} row alignItems="center">
+    <Row justifyContent="space-between">
+      <Row minWidth="0">
         {isCollectionStatsLoading ? (
           <CollectionNameTextLoading />
         ) : (
@@ -167,15 +179,13 @@ const CollectionName = ({
           </CollectionNameText>
         )}
         {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
-        <Flex
-          row
-          display="flex"
-          $lg={{ display: 'none' }}
+        <Row
+          display={{ sm: 'none', md: 'flex' }}
           alignItems="center"
           justifyContent="center"
-          ml="$spacing32"
-          gap="$gap8"
-          height="$spacing32"
+          marginLeft="32"
+          gap="8"
+          height="32"
         >
           {collectionStats.discordUrl ? (
             <SocialsIcon href={collectionStats.discordUrl ?? ''}>
@@ -208,8 +218,8 @@ const CollectionName = ({
               <ExternalIcon fill={themeVars.colors.neutral2} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
-        </Flex>
-      </Flex>
+        </Row>
+      </Row>
       {isMobile &&
         (collectionStats.discordUrl ||
           collectionStats.twitterUrl ||
@@ -221,7 +231,7 @@ const CollectionName = ({
             toggleCollectionSocials={toggleCollectionSocials}
           />
         )}
-    </Flex>
+    </Row>
   )
 }
 
@@ -267,7 +277,7 @@ const ReadMore = styled.span`
 `
 
 const CollectionDescriptionLoading = () => (
-  <Flex mt="$spacing12" $lg={{ mt: '$spacing16' }} className={styles.descriptionLoading} />
+  <Box marginTop={{ sm: '12', md: '16' }} className={styles.descriptionLoading} />
 )
 
 const CollectionDescription = ({ description }: { description: string }) => {
@@ -296,7 +306,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   return isCollectionStatsLoading ? (
     <CollectionDescriptionLoading />
   ) : (
-    <Flex ref={baseRef} mt="$spacing12" $lg={{ mt: '$spacing16' }} maxWidth={680}>
+    <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
       <CollectionDescriptionText readMore={readMore} ref={descriptionRef} className={isMobile ? bodySmall : body}>
         <ReactMarkdown
           source={description}
@@ -309,37 +319,38 @@ const CollectionDescription = ({ description }: { description: string }) => {
           show {readMore ? 'less' : 'more'}
         </ReadMore>
       )}
-    </Flex>
+    </Box>
   )
 }
 
 const StatsItem = ({ children, label, shouldHide }: { children: ReactNode; label: string; shouldHide: boolean }) => {
   return (
-    <Flex display={shouldHide ? 'none' : 'flex'} alignItems="baseline" gap="$gap4" height="fit-content">
-      <Text variant="subheading2">{children}</Text>
-      <Text variant="body3" color="$neutral2">
+    <Box display={shouldHide ? 'none' : 'flex'} flexDirection="column" alignItems="baseline" gap="2" height="min">
+      <ThemedText.SubHeader className={styles.statsValue}>{children}</ThemedText.SubHeader>
+      <Box as="span" className={styles.statsLabel}>
         {label}
-      </Text>
-    </Flex>
+      </Box>
+    </Box>
   )
 }
 
 const statsLoadingSkeleton = (isMobile: boolean) =>
   new Array(isMobile ? 3 : 5).fill(null).map((_, index) => (
-    <Flex
+    <Box
+      display="flex"
+      flexDirection="column"
       alignItems="baseline"
-      gap="$gap4"
-      height="fit-content"
+      gap="2"
+      height="min"
       key={`statsLoadingSkeleton-key-${index}`}
-      mb={isMobile ? '$spacing12' : '$spacing0'}
+      marginBottom={isMobile ? '12' : '0'}
     >
-      {/* eslint-disable-next-line react/forbid-elements */}
       <div className={styles.statsLabelLoading} />
       <span className={styles.statsValueLoading} />
-    </Flex>
+    </Box>
   ))
 
-const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & FlexProps) => {
+const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMobile?: boolean } & BoxProps) => {
   const { formatNumberOrString, formatDelta } = useFormatter()
 
   const uniqueOwnersPercentage = stats?.stats?.total_supply
@@ -370,7 +381,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const isSmallContainer = isMobile || (media.xl && isBagExpanded)
 
   return (
-    <Flex row alignItems="center" gap={60} $md={{ gap: '$gap24' }} $lg={{ gap: '$gap36' }} $xl={{ gap: 48 }} {...props}>
+    <Row gap={{ sm: '24', md: '36', lg: '48', xl: '60' }} {...props}>
       {isCollectionStatsLoading ? (
         statsLoadingSkeleton(isMobile ?? false)
       ) : (
@@ -410,80 +421,63 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
           ) : null}
         </>
       )}
-    </Flex>
+    </Row>
   )
 }
 
 export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
   return (
-    <Flex width="100%">
-      <Flex className={styles.collectionImageIsLoading} />
-      <Flex className={styles.statsText}>
-        <Flex className={styles.nameTextLoading} />
+    <Column position="relative" width="full">
+      <Box className={styles.collectionImageIsLoadingBackground} />
+      <Box className={styles.collectionImageIsLoading} />
+      <Box className={styles.statsText}>
+        <Box className={styles.nameTextLoading} />
         {!isMobile && (
           <>
             <CollectionDescriptionLoading />
-            <Flex row gap={60} mt="$spacing20">
+            <Row gap="60" marginTop="20">
               {statsLoadingSkeleton(false)}
-            </Flex>
+            </Row>
           </>
         )}
-      </Flex>
+      </Box>
       {isMobile && (
         <>
           <CollectionDescriptionLoading />
-          <Flex row alignItems="center" gap="$gap20" mt="$spacing20">
+          <Row gap="20" marginTop="20">
             {statsLoadingSkeleton(true)}
-          </Flex>
+          </Row>
         </>
       )}
-    </Flex>
+    </Column>
   )
 }
 
 export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; isMobile: boolean }) => {
   const [collectionSocialsIsOpen, toggleCollectionSocials] = useReducer((state) => !state, false)
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-  const [imageError, setImageError] = useState(false)
+
   return (
-    <Flex
-      mt={isMobile && !stats.bannerImageUrl ? (collectionSocialsIsOpen ? 52 : 20) : 0}
+    <Box
+      display="flex"
+      marginTop={isMobile && !stats.bannerImageUrl ? (collectionSocialsIsOpen ? '52' : '20') : '0'}
       justifyContent="center"
-      width="100%"
+      position="relative"
+      flexDirection="column"
+      width="full"
     >
-      {isCollectionStatsLoading || !stats.imageUrl || imageError ? (
-        <Shine disabled={!isCollectionStatsLoading}>
-          <Flex
-            backgroundColor="$white"
-            borderRadius="$roundedFull"
-            position="absolute"
-            className={styles.collectionImage}
-            borderWidth={4}
-            borderColor="$surface3"
-          />
-        </Shine>
-      ) : (
-        <Image
-          onError={() => setImageError(true)}
-          $platform-web={{ verticalAlign: 'top' }}
-          top={-118}
-          src={stats.imageUrl}
-          width={144}
-          height={144}
-          position="absolute"
-          zIndex={zIndexes.mask}
-          borderWidth={4}
-          borderColor="$surface1"
-          left={0}
-          $md={{
-            width: 60,
-            height: 60,
-            top: -20,
-            borderWidth: 2,
-          }}
-        />
+      {isCollectionStatsLoading && (
+        <Box as="div" borderRadius="round" position="absolute" className={styles.collectionImageIsLoadingBackground} />
       )}
-      <Flex className={styles.statsText}>
+      <Box
+        as={isCollectionStatsLoading ? 'div' : 'img'}
+        background="white"
+        borderRadius="round"
+        position="absolute"
+        className={isCollectionStatsLoading ? styles.collectionImageIsLoading : styles.collectionImage}
+        src={stats.imageUrl}
+      />
+      <Box className={styles.statsText}>
         <CollectionName
           collectionStats={stats}
           name={stats.name ?? ''}
@@ -495,14 +489,13 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
         {(stats.description || isCollectionStatsLoading) && !isMobile && (
           <CollectionDescription description={stats.description ?? ''} />
         )}
-        <StatsRow display="flex" $lg={{ display: 'none' }} overflow="hidden" stats={stats} mt="$spacing20" />
-      </Flex>
+        <StatsRow display={{ sm: 'none', md: 'flex' }} overflow="hidden" stats={stats} marginTop="20" />
+      </Box>
       {(stats.description || isCollectionStatsLoading) && isMobile && (
         <CollectionDescription description={stats.description ?? ''} />
       )}
-      {/* eslint-disable-next-line react/forbid-elements */}
       <div id="nft-anchor-mobile" />
-      <StatsRow isMobile display="none" $lg={{ display: 'flex' }} stats={stats} mt="$spacing20" mb="$spacing12" />
-    </Flex>
+      <StatsRow isMobile display={{ sm: 'flex', md: 'none' }} stats={stats} marginTop="20" marginBottom="12" />
+    </Box>
   )
 }

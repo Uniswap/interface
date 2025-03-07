@@ -1,9 +1,9 @@
 import { Percent } from '@uniswap/sdk-core'
 
 export enum SlippageValidationResult {
-  TooLow = 0,
-  TooHigh = 1,
-  Valid = 2,
+  TooLow,
+  TooHigh,
+  Valid,
 }
 
 export const MINIMUM_RECOMMENDED_SLIPPAGE = new Percent(5, 10_000)

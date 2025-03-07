@@ -1,3 +1,4 @@
+import { Component, ErrorInfo, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { UniswapXSwapRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapRequestContent'
@@ -13,30 +14,58 @@ import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 
 interface SignTypedDataRequestProps {
   dappRequest: SignTypedDataRequest
 }
 
+interface ErrorFallbackProps {
+  dappRequest: SignTypedDataRequest
+}
+
+function ErrorFallback({ dappRequest }: ErrorFallbackProps): JSX.Element {
+  return <NonStandardTypedDataRequestContent dappRequest={dappRequest} />
+}
+
+class SignTypedDataErrorBoundary extends Component<
+  { children: ReactNode; dappRequest: SignTypedDataRequest },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode; dappRequest: SignTypedDataRequest }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(): { hasError: boolean } {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    const { dappRequest } = this.props
+    logger.error(error, {
+      tags: { file: 'SignTypedDataRequestContent', function: 'ErrorBoundary' },
+      extra: {
+        errorInfo: JSON.stringify(errorInfo),
+        typedData: dappRequest.typedData,
+        address: dappRequest.address,
+      },
+    })
+  }
+
+  render(): ReactNode {
+    if (this.state.hasError) {
+      return <ErrorFallback dappRequest={this.props.dappRequest} />
+    }
+
+    return this.props.children
+  }
+}
+
 export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataRequestProps): JSX.Element | null {
   return (
-    <ErrorBoundary
-      fallback={<NonStandardTypedDataRequestContent dappRequest={dappRequest} />}
-      onError={(error) => {
-        if (error) {
-          logger.error(error, {
-            tags: { file: 'SignTypedDataRequestContent', function: 'ErrorBoundary' },
-            extra: {
-              typedData: dappRequest.typedData,
-              address: dappRequest.address,
-            },
-          })
-        }
-      }}
-    >
+    <SignTypedDataErrorBoundary dappRequest={dappRequest}>
       <SignTypedDataRequestContentInner dappRequest={dappRequest} />
-    </ErrorBoundary>
+    </SignTypedDataErrorBoundary>
   )
 }
 

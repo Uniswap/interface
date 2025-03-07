@@ -1,6 +1,7 @@
-import { POPUP_MAX_WIDTH } from 'components/Popups/PopupContent'
 import { Flex, Text, TouchableArea, useMedia, useShadowPropsMedium } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
+
+const MAX_WIDTH = 348
 
 // Temporary Spore-ish implementation for mweb until Spore project makes toasts consistent across all platforms
 export function ToastRegularSimple({
@@ -24,8 +25,8 @@ export function ToastRegularSimple({
       borderColor="$surface3"
       borderRadius="$rounded16"
       borderWidth="$spacing1"
-      enterStyle={media.sm ? { top: -58 } : { left: POPUP_MAX_WIDTH + 20 }}
-      exitStyle={media.sm ? { top: -58, opacity: 0 } : { left: POPUP_MAX_WIDTH + 20 }} // TODO(WEB-4712): small-screen animations defined here bc they don't work in $sm right now
+      enterStyle={media.sm ? { top: -58 } : { left: MAX_WIDTH + 20 }}
+      exitStyle={media.sm ? { top: -58, opacity: 0 } : { left: MAX_WIDTH + 20 }} // TODO(WEB-4712): small-screen animations defined here bc they don't work in $sm right now
       justifyContent="space-between"
       top={media.sm ? '$spacing16' : '$none'}
       left={0}
@@ -43,7 +44,7 @@ export function ToastRegularSimple({
       }}
       p="$spacing16"
       position="relative"
-      width={POPUP_MAX_WIDTH}
+      width={MAX_WIDTH}
       opacity={1}
     >
       <Flex row alignItems="center" gap={12}>

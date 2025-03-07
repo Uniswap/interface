@@ -21,9 +21,3 @@ export function executeWithFrameDelay(firstAction: () => void, secondAction: () 
   }
   executeAfterFrames(frames)
 }
-
-// Wait for next frame to ensure UI updates without flashing
-// https://corbt.com/posts/2015/12/22/breaking-up-heavy-processing-in-react-native.html
-export const waitFrame = async (): Promise<void> => {
-  await new Promise(requestAnimationFrame)
-}

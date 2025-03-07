@@ -26,13 +26,15 @@ export function DisplayNameText({
   const name = isUnitag ? displayName?.name.replaceAll(UNITAG_SUFFIX, '') : displayName?.name
 
   return (
-    <Flex row alignItems="center" {...rest} width={disableForcedWidth ? undefined : forcedWidth}>
+    <Flex centered row {...rest}>
       <Text
+        ellipsizeMode="tail"
         {...textProps}
         color={textProps?.color ?? '$neutral1'}
         flexShrink={1}
         numberOfLines={1}
-        whiteSpace="initial"
+        overflow="hidden"
+        width={isUnitag || disableForcedWidth ? undefined : forcedWidth}
       >
         {name}
         {isUnitag && includeUnitagSuffix && (
@@ -40,12 +42,12 @@ export function DisplayNameText({
             {UNITAG_SUFFIX}
           </Text>
         )}
-        {isUnitag ? (
-          <Flex display="inline" pl="$spacing4">
-            <Unitag size={unitagIconSize} />
-          </Flex>
-        ) : null}
       </Text>
+      {isUnitag ? (
+        <Flex>
+          <Unitag size={unitagIconSize} />
+        </Flex>
+      ) : null}
     </Flex>
   )
 }

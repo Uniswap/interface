@@ -288,7 +288,13 @@ export function SendReviewDetails({
                 </Text>
               </Flex>
             ) : (
-              <AddressDisplay address={recipient} captionVariant="body3" showAccountIcon={false} variant="heading3" />
+              <AddressDisplay
+                address={recipient}
+                captionVariant="body3"
+                showAccountIcon={false}
+                textAlign="flex-start"
+                variant="heading3"
+              />
             )}
             <AccountIcon
               address={recipient}

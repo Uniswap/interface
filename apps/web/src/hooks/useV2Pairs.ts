@@ -8,10 +8,10 @@ import { useMemo } from 'react'
 const PAIR_INTERFACE = new Interface(IUniswapV2PairJSON.abi)
 
 export enum PairState {
-  LOADING = 0,
-  NOT_EXISTS = 1,
-  EXISTS = 2,
-  INVALID = 3,
+  LOADING,
+  NOT_EXISTS,
+  EXISTS,
+  INVALID,
 }
 
 export function useV2Pairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {

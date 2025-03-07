@@ -35,6 +35,7 @@ function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Ele
     ? // if it has a url prop, open it in a new tab
       (): void => {
         // false positive because of .open
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         window.open(url, '_blank')
       }
     : // otherwise call the onClick function

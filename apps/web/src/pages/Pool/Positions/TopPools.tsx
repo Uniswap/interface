@@ -34,7 +34,6 @@ function TopPoolCard({ pool }: { pool: PoolStat }) {
       borderColor="$surface3"
       borderWidth="$spacing1"
       justifyContent="space-between"
-      cursor="pointer"
       hoverStyle={{ backgroundColor: '$surface1Hovered', borderColor: '$surface3Hovered' }}
       onPress={() => navigate(`/explore/pools/${toGraphQLChain(chainId ?? defaultChainId).toLowerCase()}/${pool.id}`)}
     >

@@ -4,8 +4,8 @@ import { TouchableArea } from 'ui/src/components/touchable/TouchableArea'
 import { iconSizes } from 'ui/src/theme'
 
 export enum PlusMinusButtonType {
-  Plus = 0,
-  Minus = 1,
+  Plus,
+  Minus,
 }
 
 export function PlusMinusButton({

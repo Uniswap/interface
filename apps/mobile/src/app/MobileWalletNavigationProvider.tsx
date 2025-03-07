@@ -6,11 +6,8 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import {
-  useFiatOnRampAggregatorCountryListQuery,
-  useFiatOnRampAggregatorGetCountryQuery,
-} from 'uniswap/src/features/fiatOnRamp/api'
-import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -226,14 +223,8 @@ function useNavigateToNftCollection(): (args: NavigateToNftCollectionArgs) => vo
 
 function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
   const dispatch = useDispatch()
-
-  const { data: countryResult } = useFiatOnRampAggregatorGetCountryQuery()
-  const { data: countryOptionsResult } = useFiatOnRampAggregatorCountryListQuery({
-    rampDirection: RampDirection.ONRAMP,
-  })
-  const forAggregatorEnabled = countryOptionsResult?.supportedCountries.some(
-    (c) => c.countryCode === countryResult?.countryCode,
-  )
+  // This flag is enabled only for supported countries.
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   return useCallback((): void => {
     dispatch(closeModal({ name: ModalName.Send }))

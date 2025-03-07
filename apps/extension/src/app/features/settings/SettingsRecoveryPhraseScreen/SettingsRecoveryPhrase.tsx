@@ -1,7 +1,7 @@
 import { DeprecatedButton, Flex, Square, Text } from 'ui/src'
 import { ThemeNames } from 'ui/src/theme'
 
-type SettingsRecoveryPhraseProps = {
+export type SettingsRecoveryPhraseProps = {
   title: string
   subtitle: string
   icon: React.ReactNode
@@ -11,7 +11,6 @@ type SettingsRecoveryPhraseProps = {
   onNextPressed: () => void
   children: React.ReactNode
 }
-
 export function SettingsRecoveryPhrase({
   title,
   subtitle,

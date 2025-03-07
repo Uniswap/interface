@@ -2,11 +2,14 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
+import { OpacityHoverState } from 'components/Common/styles'
+import { Box } from 'components/deprecated/Box'
 import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import styled, { css } from 'lib/styled-components'
+import { Center, Column, Row } from 'nft/components/Flex'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
@@ -17,7 +20,7 @@ import { TraitChip } from 'nft/components/collection/TraitChip'
 import { ClearAllButton } from 'nft/components/collection/shared'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { SweepIcon } from 'nft/components/icons'
-import { bodySmall, buttonTextMedium } from 'nft/css/common.css'
+import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
 import { loadingAsset } from 'nft/css/loading.css'
 import {
   CollectionFilters,
@@ -52,9 +55,8 @@ import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParam
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
-import { ClickableTamaguiStyle } from 'theme/components'
-import { Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
+import { ThemedText } from 'theme/components'
+import { useMedia } from 'ui/src'
 import {
   NftAssetTraitInput,
   NftMarketplace,
@@ -113,67 +115,77 @@ const SortDropdownContainer = styled.div<{ isFiltersExpanded: boolean }>`
   }
 `
 
+const EmptyCollectionWrapper = styled.div`
+  display: block;
+  text-align: center;
+`
+
+const ViewFullCollection = styled.span`
+  ${OpacityHoverState}
+`
+
 const InfiniteScrollWrapper = styled.div`
   ${InfiniteScrollWrapperCss}
 `
 
-const SweepButton = tamaguiStyled(Flex, {
-  row: true,
-  gap: '$gap8',
-  borderRadius: '$rounded12',
-  py: '$padding12',
-  pr: 18,
-  pl: '$padding12',
-  animation: 'fast',
-  backgroundColor: '$surface3',
-  $xl: {
-    p: '$padding12',
-  },
-  variants: {
-    disabled: {
-      true: {
-        cursor: 'auto',
-        opacity: 0.4,
+const SweepButton = styled.div<{ toggled: boolean; disabled?: boolean }>`
+  display: flex;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px 12px 12px;
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
+  color: ${({ toggled, disabled, theme }) =>
+    toggled && !disabled ? theme.deprecated_accentTextLightPrimary : theme.neutral1};
+  background: ${({ theme, toggled, disabled }) =>
+    !disabled && toggled ? 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)' : theme.surface3};
+  opacity: ${({ disabled }) => (disabled ? 0.4 : 1)};
+  :hover {
+    background-color: ${({ theme }) => theme.surface3};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
       },
-      false: {
-        ...ClickableTamaguiStyle,
-        opacity: 1,
-        backgroundColor: '$surface3',
-      },
-    },
-    toggled: {
-      true: {
-        '$platform-web': {
-          background: 'radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)',
-        },
-      },
-    },
-  },
-})
+    }) => `${duration.fast} background-color ${timing.in}`};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    padding: 12px 12px 12px 12px;
+  }
+`
+
+const SweepText = styled(ThemedText.BodyPrimary)`
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    display: none;
+  }
+`
+
+const MarketNameWrapper = styled(Row)`
+  gap: 8px;
+`
 
 const CollectionNftsLoading = ({ height }: { height?: number }) => (
-  <Flex width="100%" className={styles.assetList}>
+  <Box width="full" className={styles.assetList}>
     <LoadingAssets height={height} />
-  </Flex>
+  </Box>
 )
 
 export const CollectionNftsAndMenuLoading = () => (
   <InfiniteScrollWrapper>
-    <Flex alignItems="flex-start" position="relative" width="100%">
-      <Flex row my="$spacing12" gap="$gap12" mb="$spacing40">
-        <Flex className={loadingAsset} borderRadius="$rounded12" width={100} $md={{ width: 44 }} height={44} />
-        <Flex
+    <Column alignItems="flex-start" position="relative" width="full">
+      <Row marginY="12" gap="12" marginBottom="40">
+        <Box className={loadingAsset} borderRadius="12" width={{ sm: '44', md: '100' }} height="44" />
+        <Box
           className={loadingAsset}
-          borderRadius="$rounded12"
-          height={44}
-          display="flex"
-          $md={{ display: 'none' }}
-          width={220}
+          borderRadius="12"
+          height="44"
+          display={{ sm: 'none', md: 'flex' }}
+          style={{ width: '220px' }}
         />
-        <Flex className={loadingAsset} borderRadius="$rounded12" height={44} width={332} $md={{ width: 276 }} />
-      </Flex>
+        <Box className={loadingAsset} borderRadius="12" height="44" width={{ sm: '276', md: '332' }} />
+      </Row>
       <CollectionNftsLoading />
-    </Flex>
+    </Column>
   </InfiniteScrollWrapper>
 )
 
@@ -477,17 +489,15 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   return (
     <>
-      <Flex
-        backgroundColor="$surface1"
-        $platform-web={{
-          position: 'sticky',
-        }}
-        top={72}
-        width="100%"
-        zIndex={zIndexes.mask}
-        mb={20}
-        $md={{ mb: 8 }}
-        py="$padding16"
+      <Box
+        backgroundColor="surface1"
+        position="sticky"
+        top="72"
+        width="full"
+        zIndex="3"
+        marginBottom={{ sm: '8', md: '20' }}
+        paddingTop="16"
+        paddingBottom="16"
       >
         <ActionsContainer>
           <ActionsSubContainer>
@@ -520,14 +530,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
               toggled={sweepIsOpen}
               disabled={hasErc1155s}
               className={buttonTextMedium}
-              onPress={handleSweepClick}
+              onClick={handleSweepClick}
               data-testid="nft-sweep-button"
-              {...ClickableTamaguiStyle}
             >
               <SweepIcon viewBox="0 0 24 24" width="20px" height="20px" />
-              <Text variant="body2" color="$neutral1" display="flex" $lg={{ display: 'none' }}>
+              <SweepText fontWeight={535} color="currentColor" lineHeight="20px">
                 Sweep
-              </Text>
+              </SweepText>
             </SweepButton>
           )}
         </ActionsContainer>
@@ -535,20 +544,19 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           {sweepIsOpen && (
             <Sweep contractAddress={contractAddress} minPrice={debouncedMinPrice} maxPrice={debouncedMaxPrice} />
           )}
-          <Flex
-            row
-            pt={!!markets.length || !!traits.length || minMaxPriceChipText ? 12 : 0}
-            gap="$gap8"
+          <Row
+            paddingTop={!!markets.length || !!traits.length || minMaxPriceChipText ? '12' : '0'}
+            gap="8"
             flexWrap="wrap"
           >
             {markets.map((market) => (
               <TraitChip
                 key={market}
                 value={
-                  <Flex row gap="$gap8">
+                  <MarketNameWrapper>
                     {getMarketplaceIcon(market, '16')}
                     {MARKETPLACE_ITEMS[market as keyof typeof MARKETPLACE_ITEMS]}
-                  </Flex>
+                  </MarketNameWrapper>
                 }
                 onClick={() => {
                   scrollToTop()
@@ -584,9 +592,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             {Boolean(traits.length || markets.length || minMaxPriceChipText) && (
               <ClearAllButton onClick={handleClearAllClick}>Clear All</ClearAllButton>
             )}
-          </Flex>
+          </Row>
         </InfiniteScrollWrapper>
-      </Flex>
+      </Box>
       <InfiniteScrollWrapper>
         {loading ? (
           <CollectionNftsLoading height={renderedHeight} />
@@ -600,21 +608,20 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             className={hasNfts ? styles.assetList : undefined}
           >
             {!hasNfts ? (
-              <Flex justifyContent="center" gap="$gap12" alignItems="center" width="100%" style={{ height: '60vh' }}>
-                <Text variant="heading2" color="$neutral2" textAlign="center">
-                  No NFTS found
-                </Text>
-                <Text
-                  variant="body2"
-                  onPress={reset}
-                  className={clsx(bodySmall, buttonTextMedium)}
-                  color="$accent1"
-                  cursor="pointer"
-                  textAlign="center"
-                >
-                  View full collection
-                </Text>
-              </Flex>
+              <Center width="full" color="neutral2" textAlign="center" style={{ height: '60vh' }}>
+                <EmptyCollectionWrapper>
+                  <p className={headlineMedium}>No NFTS found</p>
+                  <Box
+                    onClick={reset}
+                    type="button"
+                    className={clsx(bodySmall, buttonTextMedium)}
+                    color="accent1"
+                    cursor="pointer"
+                  >
+                    <ViewFullCollection>View full collection</ViewFullCollection>
+                  </Box>
+                </EmptyCollectionWrapper>
+              </Center>
             ) : (
               assets
             )}

@@ -40,8 +40,9 @@ export function SearchENSAddressItem({ searchResult, searchContext }: SearchENSA
   const primaryENSName = savedPrimaryENSName ?? fetchedPrimaryENSName
   const isPrimaryENSName = completedENSName === primaryENSName
 
-  const showOwnedBy = !isFetchingPrimaryENSName && !isPrimaryENSName
-  const showAddress = !showOwnedBy
+  const showAddress = searchResult.isRawName
+  const showOwnedBy = !isFetchingPrimaryENSName && !isPrimaryENSName && !showAddress
+  const showSecondLine = showAddress || showOwnedBy
 
   const { data: avatar } = useENSAvatar(address)
 
@@ -53,13 +54,15 @@ export function SearchENSAddressItem({ searchResult, searchContext }: SearchENSA
           <Text ellipsizeMode="tail" numberOfLines={1} testID={`address-display/name/${ensName}`} variant="body1">
             {completedENSName || formattedAddress}
           </Text>
-          <Text color="$neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheading2">
-            {showOwnedBy &&
-              t('explore.search.label.ownedBy', {
-                ownerAddress: primaryENSName || formattedAddress,
-              })}
-            {showAddress && formattedAddress}
-          </Text>
+          {showSecondLine ? (
+            <Text color="$neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheading2">
+              {showOwnedBy &&
+                t('explore.search.label.ownedBy', {
+                  ownerAddress: primaryENSName || formattedAddress,
+                })}
+              {showAddress && formattedAddress}
+            </Text>
+          ) : null}
         </Flex>
       </Flex>
     </SearchWalletItemBase>

@@ -1,5 +1,6 @@
+// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
@@ -7,13 +8,6 @@ import { FeeData } from 'pages/Pool/Positions/create/types'
 import { Dispatch, ReactNode, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-
-export interface PriceOrdering {
-  priceLower?: Price<Currency, Currency>
-  priceUpper?: Price<Currency, Currency>
-  quote?: Currency
-  base?: Currency
-}
 
 export interface DepositState {
   exactField: PositionField

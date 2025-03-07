@@ -1,5 +1,4 @@
 /* eslint-disable max-lines */
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import {
   ARBITRUM_LOGO,
@@ -13,7 +12,6 @@ import {
   MONAD_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
-  SONEIUM_LOGO,
   UNICHAIN_LOGO,
   UNICHAIN_SEPOLIA_LOGO,
   WORLD_CHAIN_LOGO,
@@ -37,7 +35,6 @@ import {
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
-  USDC_SONEIUM,
   USDC_UNICHAIN,
   USDC_UNICHAIN_SEPOLIA,
   USDC_WORLD_CHAIN,
@@ -70,7 +67,6 @@ import {
   optimism,
   polygon,
   sepolia,
-  soneium,
   unichainSepolia,
   zkSync,
   zora,
@@ -141,6 +137,11 @@ export function getQuicknodeChainIdPathSuffix(chainId: UniverseChainId): string 
 
 export function getQuicknodeEndpointUrl(chainId: UniverseChainId): string {
   const quicknodeChainId = getQuicknodeChainId(chainId)
+
+  // TODO(WALL-5630): remove once Monad Testnet is supported by QuickNode Prism (ie GA release)
+  if (chainId === UniverseChainId.MonadTestnet) {
+    return config.quicknodeMonadTestnetRpcUrl
+  }
 
   return `https://${config.quicknodeEndpointName}${quicknodeChainId ? `.${quicknodeChainId}` : ''}.quiknode.pro/${config.quicknodeEndpointToken}${getQuicknodeChainIdPathSuffix(chainId)}`
 }
@@ -222,7 +223,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     stablecoins: [USDC, DAI, USDT],
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: true,
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
       symbol: 'WETH',
@@ -272,7 +272,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: true,
     urlParam: 'arbitrum',
     rpcUrls: {
       [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.ArbitrumOne)] },
@@ -340,7 +339,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: true,
     urlParam: 'avalanche',
     wrappedNativeCurrency: {
       name: 'Wrapped AVAX',
@@ -387,7 +385,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: 'https://status.base.org/',
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: true,
     urlParam: 'base',
     rpcUrls: isPlaywrightEnv()
       ? getPlaywrightRpcUrls(LOCAL_BASE_PLAYWRIGHT_RPC_URL)
@@ -442,7 +439,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: false,
     supportsGasEstimates: true,
-    supportsV4: true,
     urlParam: 'blast',
     nativeCurrency: {
       name: 'Blast ETH',
@@ -510,7 +506,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: true,
     urlParam: 'bnb',
     wrappedNativeCurrency: {
       name: 'Wrapped BNB',
@@ -561,7 +556,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: false,
     urlParam: 'celo',
     rpcUrls: {
       [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Celo)] },
@@ -604,7 +598,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: false,
     urlParam: 'monad_testnet',
     rpcUrls: {
       [RPCType.Public]: {
@@ -685,7 +678,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: 'https://optimism.io/status',
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: true,
     urlParam: 'optimism',
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -742,7 +734,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: true,
     urlParam: 'polygon',
     wrappedNativeCurrency: {
       name: 'Wrapped POL',
@@ -812,69 +803,12 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: false,
-    supportsV4: true,
     urlParam: 'ethereum_sepolia',
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
       symbol: 'WETH',
       decimals: 18,
       address: '0xfff9976782d46cc05630d1f6ebab18b2324d6b14',
-    },
-  } as const satisfies UniverseChainInfo,
-  [UniverseChainId.Soneium]: {
-    ...soneium,
-    id: UniverseChainId.Soneium,
-    sdkId: UniswapSDKChainId.SONEIUM,
-    assetRepoNetworkName: 'soneium',
-    backendChain: {
-      chain: BackendChainId.Soneium as GqlChainId,
-      backendSupported: true,
-      isSecondaryChain: false,
-      nativeTokenBackendAddress: undefined,
-    },
-    blockPerMainnetEpochForChainId: 6,
-    blockWaitMsBeforeWarning: isInterface ? 1500000 : 1200000,
-    bridge: 'https://superbridge.app/soneium',
-    docs: 'https://docs.soneium.org/',
-    elementName: ElementName.ChainSoneium,
-    explorer: {
-      name: 'Blockscout',
-      url: 'https://soneium.blockscout.com/',
-      apiURL: 'https://soneium.blockscout.com/api',
-    },
-    helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/soneium',
-    infuraPrefix: undefined,
-    interfaceName: 'soneium',
-    label: 'Soneium',
-    logo: SONEIUM_LOGO,
-    nativeCurrency: {
-      name: 'Ether',
-      symbol: 'ETH',
-      decimals: 18,
-      address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETH_LOGO,
-    },
-    networkLayer: NetworkLayer.L2,
-    pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
-    rpcUrls: {
-      // TODO (WEB-6702) - update public rpc to quicknode url when available
-      [RPCType.Public]: { http: [`https://soneium-mainnet.g.alchemy.com/v2/${config.alchemyApiKey}`] },
-      [RPCType.Default]: { http: ['https://rpc.soneium.org'] },
-      [RPCType.Interface]: { http: [`https://soneium-mainnet.g.alchemy.com/v2/${config.alchemyApiKey}`] },
-    },
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_SONEIUM, 10_000e6),
-    stablecoins: [USDC_SONEIUM],
-    statusPage: 'https://status.soneium.org/',
-    supportsInterfaceClientSideRouting: true,
-    supportsGasEstimates: true,
-    supportsV4: true,
-    urlParam: 'soneium',
-    wrappedNativeCurrency: {
-      name: 'Wrapped Ether',
-      symbol: 'WETH',
-      decimals: 18,
-      address: '0x4200000000000000000000000000000000000006',
     },
   } as const satisfies UniverseChainInfo,
   [UniverseChainId.Unichain]: {
@@ -895,8 +829,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     docs: 'https://docs.unichain.org',
     elementName: ElementName.ChainUnichain,
     explorer: {
-      name: 'Unichain Explorer',
-      url: 'https://explorer.unichain.org/',
+      name: 'Uniscan',
+      url: 'https://uniscan.xyz/',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/unichain',
@@ -915,7 +849,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
-      [RPCType.Default]: { http: ['https://mainnet.unichain.org'] },
+      [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
       [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
     },
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN, 10_000e6),
@@ -923,7 +857,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: true,
-    supportsV4: true,
     urlParam: 'unichain',
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -985,7 +918,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: false,
-    supportsV4: true,
     urlParam: 'astrochain_sepolia',
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -1045,7 +977,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     stablecoins: [USDC_WORLD_CHAIN],
     supportsInterfaceClientSideRouting: false,
     supportsGasEstimates: false,
-    supportsV4: true,
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
       symbol: 'WETH',
@@ -1100,7 +1031,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     stablecoins: [USDC_ZKSYNC],
     supportsInterfaceClientSideRouting: false,
     supportsGasEstimates: false,
-    supportsV4: false,
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
       symbol: 'WETH',
@@ -1153,7 +1083,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsInterfaceClientSideRouting: false,
     supportsGasEstimates: true,
-    supportsV4: true,
     urlParam: 'zora',
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',

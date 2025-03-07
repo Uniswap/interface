@@ -12,7 +12,8 @@ import { RouterPreference } from 'state/routing/types'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { Flex, Switch } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const LabelWrapper = styled(Column)`
   height: 100%;
@@ -122,7 +123,7 @@ function RoutePreferenceToggle({
 
 export default function MultipleRoutingOptions({ chainId }: { chainId?: number }) {
   const { t } = useTranslation()
-  const v4Enabled = useV4SwapEnabled(chainId)
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const [routePreferenceOptions, setRoutePreferenceOptions] = useAtom(routePreferenceOptionsAtom)
   const [, setRoutingPreferences] = useAtom(routingPreferencesAtom)
   const shouldDisableProtocolOptionToggle =

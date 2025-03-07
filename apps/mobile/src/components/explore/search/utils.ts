@@ -51,6 +51,7 @@ export function formatTokenSearchResults(
       address: address ?? null,
       name: name ?? null,
       symbol: symbol ?? '',
+      safetyLevel: safetyLevel ?? null,
       logoUrl: logoUrl ?? null,
       volume1D: market?.volume?.value ?? 0,
       safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),

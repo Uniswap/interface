@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, Text, isWeb } from 'ui/src'
 import { Wrench } from 'ui/src/components/icons/Wrench'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
 import { zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
