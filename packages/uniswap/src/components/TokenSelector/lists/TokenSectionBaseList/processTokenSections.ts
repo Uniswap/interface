@@ -17,7 +17,13 @@ export type ProcessedRow =
   | { type: ProcessedRowType.Footer; data: SectionRowInfo }
 
 export function processTokenSections(sections: TokenSection[]): ProcessedRow[] {
-  const result: ProcessedRow[] = []
+  const resultSize = sections.reduce((acc, section) => {
+    const dataLength = section.data.length
+    return acc + (section.name ? 1 : 0) + dataLength
+  }, 0)
+
+  const result: ProcessedRow[] = new Array(resultSize)
+  let index = 0
 
   for (const section of sections) {
     // process header
@@ -28,19 +34,19 @@ export function processTokenSections(sections: TokenSection[]): ProcessedRow[] {
       name: section.name,
     }
 
-    result.push({
+    result[index++] = {
       type: ProcessedRowType.Header,
       data: {
         section: headerProps,
       },
-    })
+    }
 
     // process items
     const tokenData = section.data
     let itemIndex = 0
 
     for (const item of tokenData) {
-      result.push({
+      result[index++] = {
         type: ProcessedRowType.Item,
         data: {
           item,
@@ -49,15 +55,15 @@ export function processTokenSections(sections: TokenSection[]): ProcessedRow[] {
           // expanded is not used in native :thinking:
           expanded: false,
         },
-      })
+      }
     }
 
-    result.push({
+    result[index++] = {
       type: ProcessedRowType.Footer,
       data: {
         section: headerProps,
       },
-    })
+    }
   }
 
   return result

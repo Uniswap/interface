@@ -153,7 +153,6 @@
     "redux-mock-store": "1.5.4",
     "redux-persist": "6.0.0",
     "redux-saga": "1.2.2",
-    "rn-qr-generator": "1.4.3",
     "typed-redux-saga": "1.5.0",
     "uniswap": "workspace:^",
     "utilities": "workspace:^",

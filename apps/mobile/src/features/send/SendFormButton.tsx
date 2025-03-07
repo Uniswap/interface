@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
+import React, { Dispatch, SetStateAction, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { DeprecatedButton } from 'ui/src'
@@ -8,7 +8,6 @@ import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/b
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -35,28 +34,8 @@ export function SendFormButton({
     recipient,
     isMax,
     derivedSendInfo: { chainId, currencyInInfo },
-    exactAmountToken,
-    exactAmountFiat,
   } = useSendContext()
   const { walletNeedsRestore } = useTransactionModalContext()
-
-  const hasValueGreaterThanZero = useMemo(() => {
-    if (exactAmountToken) {
-      return getCurrencyAmount({
-        value: exactAmountToken,
-        valueType: ValueType.Exact,
-        currency: currencyInInfo?.currency,
-      })?.greaterThan(0)
-    }
-    if (exactAmountFiat) {
-      return getCurrencyAmount({
-        value: exactAmountFiat,
-        valueType: ValueType.Exact,
-        currency: currencyInInfo?.currency,
-      })?.greaterThan(0)
-    }
-    return false
-  }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
 
   const isViewOnlyWallet = account.type === AccountType.Readonly
 
@@ -67,8 +46,7 @@ export function SendFormButton({
 
   const insufficientGasFunds = warnings.warnings.some((warning) => warning.type === WarningLabel.InsufficientGasFunds)
 
-  const actionButtonDisabled =
-    !!warnings.blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore || !hasValueGreaterThanZero
+  const actionButtonDisabled = !!warnings.blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore
 
   const onPressReview = useCallback(() => {
     if (isViewOnlyWallet) {

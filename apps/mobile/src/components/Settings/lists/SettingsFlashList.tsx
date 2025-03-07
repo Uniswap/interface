@@ -86,7 +86,13 @@ type ProcessedRow =
   | { type: 'footer'; data: SectionInfo }
 
 function processSections(sections: SettingsSection[]): ProcessedRow[] {
-  const result: ProcessedRow[] = []
+  const resultSize = sections.reduce((acc, section) => {
+    const dataLength = section.data.length
+    return acc + (section.subTitle ? 1 : 0) + dataLength
+  }, 0)
+
+  const result: ProcessedRow[] = new Array(resultSize)
+  let index = 0
 
   for (const section of sections) {
     if (section.isHidden) {
@@ -94,12 +100,12 @@ function processSections(sections: SettingsSection[]): ProcessedRow[] {
     }
 
     if (section.subTitle) {
-      result.push({
+      result[index++] = {
         type: 'header',
         data: {
           section,
         },
-      })
+      }
     }
 
     for (const data of section.data) {
@@ -107,19 +113,19 @@ function processSections(sections: SettingsSection[]): ProcessedRow[] {
         continue
       }
 
-      result.push({
+      result[index++] = {
         type: 'item',
         data,
-      })
+      }
     }
 
     if (section.subTitle) {
-      result.push({
+      result[index++] = {
         type: 'footer',
         data: {
           section,
         },
-      })
+      }
     }
   }
 

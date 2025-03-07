@@ -1,4 +1,4 @@
-import { BarcodeScanningResult, CameraView, CameraViewProps, useCameraPermissions } from 'expo-camera'
+import { BarcodeScanningResult, CameraView, CameraViewProps, scanFromURLAsync, useCameraPermissions } from 'expo-camera'
 import { PermissionStatus } from 'expo-modules-core'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,7 +7,6 @@ import DeviceInfo from 'react-native-device-info'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
-import RNQRGenerator from 'rn-qr-generator'
 import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeName, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { Global, PhotoStacked } from 'ui/src/components/icons'
@@ -95,25 +94,16 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       return
     }
 
-    // TODO (WALL-6014): Migrate to expo-camera once Android issue is fixed
-    try {
-      const results = await RNQRGenerator.detect({ uri })
+    const result = (await scanFromURLAsync(uri, [BarcodeType.QR]))[0]
 
-      if (results.values[0]) {
-        const data = results.values[0]
-        onScanCode(data)
-      } else {
-        Alert.alert(t('qrScanner.error.none'))
-      }
-    } catch (error) {
-      logger.error(`Cannot detect QR code in image: ${error}`, {
-        tags: { file: 'QRCodeScanner.tsx', function: 'onPickImageFilePress' },
-      })
+    if (!result) {
       Alert.alert(t('qrScanner.error.none'))
-    } finally {
       setIsReadingImageFile(false)
+      return
     }
-  }, [isReadingImageFile, onScanCode, t])
+
+    handleBarcodeScanned(result)
+  }, [handleBarcodeScanned, isReadingImageFile, t])
 
   useEffect(() => {
     const handlePermissionStatus = async (): Promise<void> => {

@@ -6,6 +6,7 @@ Monad Testnet Support - Enjoy swapping on Monad testnet by toggling to Testnet m
 
 Other changes: 
 
+- Improved scrollbar behavior
 - VND current support
 - Improvements to our NFT Spam reporting feature
 - Stronger warnings when sending funds to token contracts

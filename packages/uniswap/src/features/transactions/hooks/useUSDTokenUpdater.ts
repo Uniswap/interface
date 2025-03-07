@@ -39,8 +39,7 @@ export function useUSDTokenUpdater({
       return undefined
     }
 
-    const _exactAmountFiat = exactAmountFiat === '.' ? '0' : exactAmountFiat || '0'
-    const exactAmountUSD = (parseFloat(_exactAmountFiat) / conversionRate).toFixed(NUM_DECIMALS_USD)
+    const exactAmountUSD = (parseFloat(exactAmountFiat || '0') / conversionRate).toFixed(NUM_DECIMALS_USD)
 
     if (shouldUseUSDRef.current) {
       const stablecoinAmount = getCurrencyAmount({

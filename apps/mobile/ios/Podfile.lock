@@ -3209,9 +3209,6 @@ PODS:
     - React-Core
   - RNPermissions (4.1.5):
     - React-Core
-  - RNQrGenerator (1.4.3):
-    - React
-    - ZXingObjC
   - RNReanimated (3.16.7):
     - DoubleConversion
     - glog
@@ -3335,9 +3332,6 @@ PODS:
   - Statsig (1.49.0)
   - UIImageColors (2.1.0)
   - Yoga (0.0.0)
-  - ZXingObjC (3.6.9):
-    - ZXingObjC/All (= 3.6.9)
-  - ZXingObjC/All (3.6.9)
   - ZXingObjC/Core (3.6.9)
   - ZXingObjC/OneD (3.6.9):
     - ZXingObjC/Core
@@ -3463,7 +3457,6 @@ DEPENDENCIES:
   - RNImageColors (from `../../../node_modules/react-native-image-colors`)
   - RNLocalize (from `../../../node_modules/react-native-localize`)
   - RNPermissions (from `../../../node_modules/react-native-permissions`)
-  - RNQrGenerator (from `../../../node_modules/rn-qr-generator`)
   - RNReanimated (from `../../../node_modules/react-native-reanimated`)
   - RNScreens (from `../../../node_modules/react-native-screens`)
   - RNSVG (from `../../../node_modules/react-native-svg`)
@@ -3747,8 +3740,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-localize"
   RNPermissions:
     :path: "../../../node_modules/react-native-permissions"
-  RNQrGenerator:
-    :path: "../../../node_modules/rn-qr-generator"
   RNReanimated:
     :path: "../../../node_modules/react-native-reanimated"
   RNScreens:
@@ -3912,7 +3903,6 @@ SPEC CHECKSUMS:
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
   RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: 87aac13521bea6dcb6dfd60b03ac69741ccef2b4
-  RNQrGenerator: ac6a6c766e80dd3625038929ed2b13e2f3edcafb
   RNReanimated: 283b723ad4ac5295f1513519c938cb6c282c508f
   RNScreens: 906192367b418a8d644090d7375d4657d5a5aab0
   RNSVG: 7ff26379b2d1871b8571e6f9bc9630de6baf9bdf

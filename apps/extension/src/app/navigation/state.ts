@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Location, NavigationType, Router, createHashRouter } from 'react-router-dom'
 
-interface RouterState {
+export interface RouterState {
   historyAction: NavigationType
   location: Location
 }

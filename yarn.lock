@@ -17132,7 +17132,6 @@ __metadata:
     redux-persist: 6.0.0
     redux-saga: 1.2.2
     redux-saga-test-plan: 4.0.4
-    rn-qr-generator: 1.4.3
     typed-redux-saga: 1.5.0
     typescript: 5.3.3
     uniswap: "workspace:^"
@@ -42555,15 +42554,6 @@ __metadata:
   bin:
     rlp: bin/rlp
   checksum: 3db4dfe5c793f40ac7e0be689a1f75d05e6f2ca0c66189aeb62adab8c436b857ab4420a419251ee60370d41d957a55698fc5e23ab1e1b41715f33217bc4bb558
-  languageName: node
-  linkType: hard
-
-"rn-qr-generator@npm:1.4.3":
-  version: 1.4.3
-  resolution: "rn-qr-generator@npm:1.4.3"
-  peerDependencies:
-    react-native: ">=0.55"
-  checksum: 570ee73fbc897a6fb5e9cb69b90e5f6542c2622004921658bec467b9cd564dc2b0f0b4440e87eac740121f717bf760e873ba0977ca1f7924e364f3586b98ba82
   languageName: node
   linkType: hard
 
