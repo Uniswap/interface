@@ -76,7 +76,7 @@ export const getMarketplaceIcon = (marketplace: string, size: string | number = 
 }
 
 export const generateTweetForAsset = (asset: GenieAsset): string => {
-  return `https://twitter.com/intent/tweet?text=Check%20out%20${
+  return `https://x.com/intent/tweet?text=Check%20out%20${
     asset.name ? encodeURIComponent(asset.name) : `${asset.collectionName}%20%23${asset.tokenId}`
   }%20(${asset.collectionName})%20https://app.uniswap.org/nfts/asset/${asset.address}/${asset.tokenId}%20via%20@uniswap`
 }
@@ -87,7 +87,7 @@ export const generateTweetForPurchase = (assets: UpdatedGenieAsset[], txHashUrl:
   const tweetText = `I just purchased ${
     multipleCollections ? `${assets.length} NFTs` : `${assets.length} ${assets[0].collectionName ?? 'NFT'}`
   } with @Uniswap 🦄\n\nhttps://app.uniswap.org/nfts/${collectionUrl}\n${txHashUrl}`
-  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
+  return `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
 }
 
 function getMinListingPrice(listings: Listing[]): number {
@@ -122,5 +122,5 @@ export const generateTweetForList = (assets: WalletAsset[]): string => {
         } items on @Uniswap at https://app.uniswap.org/nfts/profile\n\nCollections: ${mapAssetsToCollections(assets)
           .map(({ collection, items }) => `${collection} ${items.map((item) => item).join(', ')}`)
           .join(', ')} \n\nMarketplaces: ${assets[0].marketplaces?.map((market) => market.name).join(', ')}`
-  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
+  return `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}`
 }

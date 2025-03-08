@@ -9,7 +9,7 @@ An open source repository for all Uniswap front end interfaces maintained by Uni
 
 ## Socials / Contact
 
-- Twitter: [@Uniswap](https://twitter.com/Uniswap)
+- Twitter: [@Uniswap](https://x.com/Uniswap)
 - Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
 - Email: [contact@uniswap.org](mailto:contact@uniswap.org)
 - Discord: [Uniswap](https://discord.gg/FCfyBSbCU5)
