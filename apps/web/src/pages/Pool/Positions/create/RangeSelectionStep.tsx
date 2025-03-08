@@ -9,7 +9,7 @@ import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncErr
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { CreatePositionInfo, PriceRangeState } from 'pages/Pool/Positions/create/types'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
@@ -182,16 +182,31 @@ function RangeInput({
   const [baseCurrency, quoteCurrency] = getInvertedTuple(derivedPositionInfo.currencies, priceInverted)
   const [displayUserTypedValue, setDisplayUserTypedValue] = useState(false)
 
-  const handlePriceRangeInput = useCallback(
-    (input: RangeSelectionInput, value: string) => {
-      if (input === RangeSelectionInput.MIN) {
-        setPriceRangeState((prev) => ({ ...prev, minPrice: value, fullRange: false }))
-      } else {
-        setPriceRangeState((prev) => ({ ...prev, maxPrice: value, fullRange: false }))
-      }
+  const handleTimer = useRef<NodeJS.Timer>()
+  const debounceTimer = 350
 
+  const handlePriceRangeInput = useCallback(
+    (input: RangeSelectionInput, value: string, debounce = false) => {
       setTypedValue(value)
       setDisplayUserTypedValue(true)
+      const mutateContext = () => {
+        if (input === RangeSelectionInput.MIN) {
+          setPriceRangeState((prev) => ({ ...prev, minPrice: value, fullRange: false }))
+        } else {
+          setPriceRangeState((prev) => ({ ...prev, maxPrice: value, fullRange: false }))
+        }
+      }
+
+      if (!debounce) {
+        mutateContext()
+
+        return
+      }
+
+      handleTimer.current && clearTimeout(handleTimer.current)
+      handleTimer.current = setTimeout(() => {
+        mutateContext()
+      }, debounceTimer)
     },
     [setPriceRangeState],
   )
@@ -237,7 +252,7 @@ function RangeInput({
           px="$none"
           py="$none"
           value={displayUserTypedValue ? typedValue : value}
-          onChangeText={(text) => handlePriceRangeInput(input, text)}
+          onChangeText={(text) => handlePriceRangeInput(input, text, true)}
           onBlur={() => setDisplayUserTypedValue(false)}
           inputEnforcer={numericInputEnforcerWithInfinity}
           $md={{
