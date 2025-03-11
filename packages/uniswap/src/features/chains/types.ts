@@ -46,7 +46,7 @@ export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
 
 export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Sepolia,
-  UniverseChainId.UnichainSepolia,
+  //UniverseChainId.UnichainSepolia,
   UniverseChainId.MonadTestnet,
 ]
 
@@ -80,7 +80,7 @@ export interface RetryOptions {
   maxWait: number
 }
 
-export type GqlChainId = Exclude<BackendChainId, BackendChainId.UnknownChain | BackendChainId.EthereumGoerli>
+export type GqlChainId = Exclude<BackendChainId, BackendChainId.UnknownChain | BackendChainId.EthereumGoerli | BackendChainId.MonadTestnet>
 
 export interface BackendChain {
   chain: GqlChainId

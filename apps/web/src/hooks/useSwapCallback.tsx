@@ -28,18 +28,19 @@ export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
 
 type UniversalRouterFeeField = { feeOptions: FeeOptions } | { flatFeeOptions: FlatFeeOptions }
 
-function getUniversalRouterFeeFields(trade?: InterfaceTrade): UniversalRouterFeeField | undefined {
+function getUniversalRouterFeeFields(trade?: InterfaceTrade, smartPoolAddress?: string): UniversalRouterFeeField | undefined {
   if (!isClassicTrade(trade)) {
     return undefined
   }
-  if (!trade.swapFee) {
+  if (!trade.swapFee || !smartPoolAddress) {
     return undefined
   }
 
+  // TODO: this does not overwrite recipient in the onchain transaction
   if (trade.tradeType === TradeType.EXACT_INPUT) {
-    return { feeOptions: { fee: trade.swapFee.percent, recipient: trade.swapFee.recipient } }
+    return { feeOptions: { fee: trade.swapFee.percent, recipient: smartPoolAddress } } // trade.swapFee.recipient
   } else {
-    return { flatFeeOptions: { amount: BigNumber.from(trade.swapFee.amount), recipient: trade.swapFee.recipient } }
+    return { flatFeeOptions: { amount: BigNumber.from(trade.swapFee.amount), recipient: smartPoolAddress } } // trade.swapFee.recipient
   }
 }
 
@@ -72,7 +73,7 @@ export function useSwapCallback(
       slippageTolerance: allowedSlippage,
       smartPoolAddress,
       permit: permitSignature,
-      ...getUniversalRouterFeeFields(trade),
+      ...getUniversalRouterFeeFields(trade, smartPoolAddress),
     },
   )
 

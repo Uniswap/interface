@@ -44,7 +44,7 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  userRouterPreference: RouterPreference.X,
+  userRouterPreference: RouterPreference.API,
   userHideClosedPositions: false,
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,

@@ -72,6 +72,7 @@ interface SwapFormProps {
   disableTokenInputs?: boolean
   initialCurrencyLoading?: boolean
   onCurrencyChange?: (selected: CurrencyState) => void
+  shouldUseLegacyRouter?: boolean
 }
 
 export function SwapForm({

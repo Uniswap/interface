@@ -14,7 +14,7 @@ import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { useActiveSmartPool } from 'state/application/hooks'
-import { useCurrencyBalance, useCurrencyBalances } from 'state/connection/hooks'
+import { /*useCurrencyBalance,*/ useCurrencyBalances } from 'state/connection/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { usePoolExtendedContract } from 'state/pool/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
@@ -146,7 +146,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const nativeCurrency = useNativeCurrency(chainId)
   const { address: smartPoolAddress } = useActiveSmartPool()
   // this is used to check the user has enough base currency to cover gas fees
-  const userBalance = useCurrencyBalance(account.address, nativeCurrency)
+  //const userBalance = useCurrencyBalance(account.address, nativeCurrency)
 
   // Note: if the currency was selected from recent searches
   // we don't have decimals (decimals are 0) need to fetch
@@ -188,7 +188,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   )
 
   // only used to check user has enough to cover gas fees
-  const { data: nativeCurrencyBalanceUSD } = useUSDPrice(userBalance, nativeCurrency)
+  //const { data: nativeCurrencyBalanceUSD } = useUSDPrice(userBalance, nativeCurrency)
 
   const { data: outputFeeFiatValue } = useUSDPrice(
     isSubmittableTrade(trade.trade) && trade.trade.swapFee
@@ -227,8 +227,9 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const allowedSlippage = uniswapXAutoSlippage ?? classicAllowedSlippage
 
   // totalGasUseEstimateUSD is greater than native token balance
-  const insufficientGas =
-    isClassicTrade(trade.trade) && (nativeCurrencyBalanceUSD ?? 0) < (trade.trade.totalGasUseEstimateUSDWithBuffer ?? 0)
+  // useUSDPrice returns undefined for any passed value, probably a bug
+  const insufficientGas = false
+    //isClassicTrade(trade.trade) && (nativeCurrencyBalanceUSD ?? 0) < (trade.trade.totalGasUseEstimateUSDWithBuffer ?? 0)
 
   const { isDisconnected } = useAccount()
   const inputError = useMemo(() => {

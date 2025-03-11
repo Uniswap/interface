@@ -171,8 +171,9 @@ export function Swap({
 
   // TODO(WEB-5078): Remove this once we upgrade swap e2e tests to use the new swap flow
   const waitForLoading = isLoading && !isTestEnv()
+  const shouldUseLegacyRouter = true
 
-  if (universalSwapFlow || isTestnetModeEnabled || waitForLoading) {
+  if ((universalSwapFlow || isTestnetModeEnabled || waitForLoading) && !shouldUseLegacyRouter) {
     return (
       <MultichainContextProvider initialChainId={chainId}>
         <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>
@@ -227,6 +228,7 @@ export function Swap({
                       onCurrencyChange={onCurrencyChange}
                       initialCurrencyLoading={initialCurrencyLoading}
                       disableTokenInputs={disableTokenInputs}
+                      shouldUseLegacyRouter={shouldUseLegacyRouter}
                     />
                   )}
                   {/*currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />*/}

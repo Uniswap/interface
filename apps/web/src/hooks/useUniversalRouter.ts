@@ -1,7 +1,7 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
-//import { MulticallExtended, PaymentsExtended, SwapRouter } from '@uniswap/router-sdk'
+import { MulticallExtended, PaymentsExtended, SwapRouter as SwapRouter2 } from '@uniswap/router-sdk'
 import { Percent } from '@uniswap/sdk-core'
 import {
   FlatFeeOptions,
@@ -15,7 +15,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
-//import JSBI from 'jsbi'
+import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback, useRef } from 'react'
@@ -103,18 +103,36 @@ export function useUniversalRouterSwapCallback(
           const deadline = await getDeadline()
 
           trace.setData('slippageTolerance', options.slippageTolerance.toFixed(2))
-          const { calldata: data /*, value*/ } = SwapRouter.swapCallParameters(trade, {
-            slippageTolerance: options.slippageTolerance,
-            deadlineOrPreviousBlockhash: deadline?.toString(),
-            inputTokenPermit: options.permit,
-            fee: options.feeOptions,
-            recipient: account.address,
-            flatFee: options.flatFeeOptions,
-          })
+
+          // Notice: for now, we use the SwapRouter2 instead of the UniversalRouter supporting uniswap v3
+          const isLegacyRouter = true
+
+          // use the legacy router or the universal router based on flag
+          const params = { data: '', value: '0' }
+          if (isLegacyRouter) {
+            const { calldata: data, value } = SwapRouter2.swapCallParameters(trade, {
+              slippageTolerance: options.slippageTolerance,
+              deadlineOrPreviousBlockhash: deadline?.toString(),
+              fee: options.feeOptions,
+              recipient: account.address,
+            })
+            params.data = data
+            params.value = value
+          } else {
+            const { calldata: data /*, value*/ } = SwapRouter.swapCallParameters(trade, {
+              slippageTolerance: options.slippageTolerance,
+              deadlineOrPreviousBlockhash: deadline?.toString(),
+              inputTokenPermit: options.permit,
+              fee: options.feeOptions,
+              recipient: options.smartPoolAddress,
+              flatFee: options.flatFeeOptions,
+            })
+            params.data = data
+          }
           const tx = {
             from: account.address,
             to: options.smartPoolAddress,
-            data, //: MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(value)), data]),
+            data: isLegacyRouter ? MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(params.value)), params.data]) : params.data,
             value: '0x0',
           }
 

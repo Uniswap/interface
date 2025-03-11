@@ -95,12 +95,13 @@ export function useConfirmModalState({
     ) {
       steps.push(ConfirmModalState.RESETTING_TOKEN_ALLOWANCE)
     }
-    if (allowance?.state === AllowanceState.REQUIRED && allowance?.needsSetupApproval) {
-      steps.push(ConfirmModalState.APPROVING_TOKEN)
-    }
-    if (allowance?.state === AllowanceState.REQUIRED && allowance?.needsPermitSignature) {
-      steps.push(ConfirmModalState.PERMITTING)
-    }
+    // TODO: check if we need to add this back in
+    //if (allowance?.state === AllowanceState.REQUIRED && allowance?.needsSetupApproval) {
+    //  steps.push(ConfirmModalState.APPROVING_TOKEN)
+    //}
+    //if (allowance?.state === AllowanceState.REQUIRED && allowance?.needsPermitSignature) {
+    //  steps.push(ConfirmModalState.PERMITTING)
+    //}
     steps.push(ConfirmModalState.PENDING_CONFIRMATION)
     return steps
   }, [allowance, trade])
