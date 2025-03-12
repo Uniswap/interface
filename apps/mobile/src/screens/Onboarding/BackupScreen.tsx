@@ -14,6 +14,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
+import { openSettings } from 'src/utils/linking'
 import { Flex, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
 import { Cloud, PenLine, QuestionInCircleFilled, ShieldCheck } from 'ui/src/components/icons'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -26,7 +27,6 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,

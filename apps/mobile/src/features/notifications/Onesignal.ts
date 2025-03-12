@@ -3,7 +3,7 @@ import OneSignal, { NotificationReceivedEvent, OpenedEvent } from 'react-native-
 import { NotificationType } from 'src/features/notifications/constants'
 import { config } from 'uniswap/src/config'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
@@ -24,10 +24,10 @@ export const initOneSignal = (): void => {
     if (isIOS) {
       switch (notificationType) {
         case NotificationType.UnfundedWalletReminder:
-          enabled = getFeatureFlag(FeatureFlags.NotificationPriceAlertsIOS)
+          enabled = getFeatureFlagWithExposureLoggingDisabled(FeatureFlags.NotificationPriceAlertsIOS)
           break
         case NotificationType.PriceAlert:
-          enabled = getFeatureFlag(FeatureFlags.NotificationPriceAlertsIOS)
+          enabled = getFeatureFlagWithExposureLoggingDisabled(FeatureFlags.NotificationPriceAlertsIOS)
           break
         default:
           enabled = false

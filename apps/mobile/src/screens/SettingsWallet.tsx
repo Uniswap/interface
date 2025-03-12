@@ -21,7 +21,7 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
-import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -152,9 +152,11 @@ export function SettingsWallet({
             stickySectionHeadersEnabled={false}
           />
         </Flex>
-        <DeprecatedButton testID={TestID.Remove} theme="detrimental" onPress={onRemoveWallet}>
-          {t('settings.setting.wallet.action.remove')}
-        </DeprecatedButton>
+        <Flex row>
+          <Button testID={TestID.Remove} size="large" emphasis="secondary" variant="critical" onPress={onRemoveWallet}>
+            {t('settings.setting.wallet.action.remove')}
+          </Button>
+        </Flex>
       </Flex>
     </Screen>
   )
@@ -198,11 +200,11 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
         />
       </Flex>
       {(!ensName || !!unitag) && (
-        <DeprecatedButton color="$neutral1" size="medium" theme="secondary_Button" onPress={onPressEditProfile}>
+        <Button size="large" emphasis="secondary" onPress={onPressEditProfile}>
           {unitag?.username
             ? t('settings.setting.wallet.action.editProfile')
             : t('settings.setting.wallet.action.editLabel')}
-        </DeprecatedButton>
+        </Button>
       )}
     </Flex>
   )

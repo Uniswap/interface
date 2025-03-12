@@ -4,7 +4,7 @@ import { DdRum, DdSdkReactNative, RumActionType } from '@datadog/mobile-react-na
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
-import { default as React, StrictMode, useCallback, useEffect, useRef } from 'react'
+import { default as React, StrictMode, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
@@ -39,6 +39,7 @@ import {
   setFavoritesUserDefaults,
   setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
+import { loadLocaleData } from 'src/polyfills/intl-delayed'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getStatsigEnvironmentTier } from 'src/utils/version'
 import { flexStyles, useIsDarkMode } from 'ui/src'
@@ -72,20 +73,19 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { datadogEnabled, isE2EMode } from 'utilities/src/environment/constants'
 import { isTestEnv } from 'utilities/src/environment/env'
-import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/Datadog'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
-import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadogEvents'
+import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
+import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
-import { initFirebaseAppCheck } from 'wallet/src/features/appCheck/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
-import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -114,7 +114,6 @@ if (isE2EMode) {
 
 initOneSignal()
 initAppsFlyer()
-initFirebaseAppCheck()
 
 function App(): JSX.Element | null {
   useEffect(() => {
@@ -214,10 +213,11 @@ function AppOuter(): JSX.Element | null {
   })
   const jsBundleLoadedRef = useRef(false)
 
-  useEffect(() => {
+  const { locale } = useCurrentLanguageInfo()
+  useLayoutEffect(() => {
     // Dynamically load polyfills so that we save on bundle size and improve app startup time
-    import('src/polyfills/intl-delayed')
-  }, [])
+    loadLocaleData(locale)
+  }, [locale])
 
   /**
    * Function called by the @shopify/react-native-performance PerformanceProfiler that returns a
@@ -236,7 +236,6 @@ function AppOuter(): JSX.Element | null {
         await DdRum.addTiming(DDRumTiming.ScreenInteractive)
       }
     }
-
     sendAnalyticsEvent(MobileEventName.PerformanceReport, report)
   }, [])
 

@@ -25,11 +25,11 @@ type NFTItemScreenParams = {
   fallbackData?: NFTItem
 }
 
-export type BackupFormParams = {
+type BackupFormParams = {
   address: Address
 }
 
-export type CloudBackupFormParams = {
+type CloudBackupFormParams = {
   address: Address
   password: string
 }
@@ -125,16 +125,17 @@ export type AppStackParamList = {
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
   [MobileScreens.Storybook]: undefined
   [ModalName.NotificationsOSSettings]: undefined
+  [ModalName.FundWallet]: undefined
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>
-export type AppStackScreenProps = NativeStackScreenProps<AppStackParamList>
+type AppStackScreenProps = NativeStackScreenProps<AppStackParamList>
 export type AppStackScreenProp<Screen extends keyof AppStackParamList> = NativeStackScreenProps<
   AppStackParamList,
   Screen
 >
 
-export type ExploreStackNavigationProp = CompositeNavigationProp<
+type ExploreStackNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ExploreStackParamList>,
   AppStackNavigationProp
 >
@@ -167,7 +168,7 @@ export type RootParamList = AppStackParamList &
   FiatOnRampStackParamList
 
 export enum EducationContentType {
-  SeedPhrase,
+  SeedPhrase = 0,
 }
 
 export const useAppStackNavigation = (): AppStackNavigationProp => useNavigation<AppStackNavigationProp>()

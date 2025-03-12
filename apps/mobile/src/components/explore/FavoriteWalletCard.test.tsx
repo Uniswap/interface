@@ -1,5 +1,5 @@
-import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
+import { thunk } from 'redux-thunk'
 import FavoriteWalletCard, { FavoriteWalletCardProps } from 'src/components/explore/FavoriteWalletCard'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { fireEvent, render, waitFor } from 'src/test/test-utils'
@@ -24,13 +24,11 @@ jest.mock('@react-navigation/native', () => {
   }
 })
 
-const mockStore = configureMockStore()
+const mockStore = configureMockStore([thunk])
 
 const defaultProps: FavoriteWalletCardProps = {
   address: SAMPLE_SEED_ADDRESS_1,
-  pressProgress: makeMutable(0),
   isEditing: false,
-  dragActivationProgress: makeMutable(0),
   setIsEditing: jest.fn(),
 }
 
@@ -131,7 +129,7 @@ describe('FavoriteWalletCard', () => {
 
     it('dispatches removeWatchedAddress when remove button is pressed', () => {
       const store = mockStore({
-        favorites: { tokens: [] },
+        favorites: { tokens: [], watchedAddresses: [defaultProps.address] },
         wallet: {
           accounts: {
             [defaultProps.address]: signerMnemonicAccount({ address: defaultProps.address }),
@@ -146,12 +144,10 @@ describe('FavoriteWalletCard', () => {
       const removeButton = getByTestId('explore/remove-button')
       fireEvent.press(removeButton, ON_PRESS_EVENT_PAYLOAD)
 
-      expect(store.getActions()).toEqual([
-        {
-          type: 'favorites/removeWatchedAddress',
-          payload: { address: defaultProps.address },
-        },
-      ])
+      expect(store.getActions()).toContainEqual({
+        type: 'favorites/removeWatchedAddress',
+        payload: { address: defaultProps.address },
+      })
     })
   })
 })

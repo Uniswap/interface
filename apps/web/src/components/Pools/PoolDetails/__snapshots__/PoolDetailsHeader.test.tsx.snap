@@ -26,22 +26,7 @@ exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
   gap: 8px;
 }
 
-.c3 {
-  border-radius: 12px;
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
-  width: 50%;
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
-  will-change: background-position;
-  background-size: 400%;
-}
-
-.c5 {
+.c4 {
   height: 40px;
   width: 137px;
 }
@@ -66,7 +51,7 @@ exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
   animation-duration: 250ms;
 }
 
-.c4 {
+.c3 {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -89,12 +74,46 @@ exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
           <div
             class="c1 c2"
           >
+            <style>
+              
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+            </style>
             <div
-              class="c3 c4"
-            />
+              class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              style="animation: shine 1s linear infinite;"
+            >
+              <div
+                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c3"
+              />
+            </div>
+            <style>
+              
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+            </style>
             <div
-              class="c3 c5"
-            />
+              class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              style="animation: shine 1s linear infinite;"
+            >
+              <div
+                class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c4"
+              />
+            </div>
           </div>
         </div>
         <div
@@ -108,12 +127,7 @@ exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
 
 exports[`PoolDetailsHeader renders breadcrumb text correctly 1`] = `
 <DocumentFragment>
-  .c7 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c2 {
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -265,13 +279,7 @@ exports[`PoolDetailsHeader renders breadcrumb text correctly 1`] = `
               class="c2 c3 c6"
               data-testid="breadcrumb-token-address"
             >
-              <div
-                class="c7"
-              >
-                <div>
-                  0x88e6...5640
-                </div>
-              </div>
+              0x88e6...5640
             </div>
           </div>
         </nav>
@@ -286,7 +294,7 @@ exports[`PoolDetailsHeader renders breadcrumb text correctly 1`] = `
 
 exports[`PoolDetailsHeader renders header text correctly 1`] = `
 <DocumentFragment>
-  .c9 {
+  .c15 {
   display: inline-block;
   height: inherit;
 }
@@ -344,12 +352,101 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   gap: 8px;
 }
 
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c4 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c14 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c16 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 485;
+  gap: 12px;
+  height: 40px;
+  color: #222222;
+  cursor: pointer;
+}
+
+.c16:hover {
+  background-color: #98A1C01a;
+}
+
+.c10:hover {
+  opacity: 1;
 }
 
 .c0 {
@@ -392,6 +489,26 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
 
 .c5 {
   font-size: 24px !important;
+}
+
+.c12 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c12:hover {
+  background: #22222212;
 }
 
 .c6 {
@@ -491,7 +608,9 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
             <div
               class="c3"
             >
-              <div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
                 <div
                   class="c4 c5 css-4kpdx7"
                 >
@@ -548,6 +667,257 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
             class="c7 c8"
             width="max-content"
           >
+            <span
+              class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
+                <span
+                  class="font_unset  font_body "
+                  data-disable-theme="true"
+                  style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; color: rgb(34, 34, 34); font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; font-size: 16px; line-height: 24px; font-weight: 485; display: flex; flex-direction: column; background-color: rgb(255, 255, 255); border-top-width: 0.5px; border-right-width: 0.5px; border-bottom-width: 0.5px; border-left-width: 0.5px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; padding: 8px 8px 8px 8px; z-index: 1000; min-width: 235px; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; right: 0px; top: calc(100% + 10px); opacity: 0; transform: translateY(-20px);"
+                >
+                  <a
+                    class="c9 c10"
+                    href="https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <div
+                      class="c1 c11 c12"
+                    >
+                      <div
+                        class="c1 c13"
+                      >
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-24px _width-24px"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-11px"
+                            data-testid="input-currency-logo-container"
+                          >
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
+                              data-testid="token-logo"
+                            >
+                              <div
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-12px _borderTopRightRadius-12px _borderBottomRightRadius-12px _borderBottomLeftRadius-12px"
+                              />
+                              <div
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                                data-testid="img-token-image"
+                              >
+                                <img
+                                  height="24"
+                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                                  style="object-fit: contain; border-radius: 12px; z-index: 1;"
+                                  width="24"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-11px"
+                            data-testid="output-currency-logo-container"
+                          >
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
+                              data-testid="token-logo"
+                            >
+                              <div
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-12px _borderTopRightRadius-12px _borderBottomRightRadius-12px _borderBottomLeftRadius-12px"
+                              />
+                              <div
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                                data-testid="img-token-image"
+                              >
+                                <img
+                                  height="24"
+                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                                  style="object-fit: contain; border-radius: 12px; z-index: 1;"
+                                  width="24"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="c4 css-1urox24"
+                        >
+                          Pool
+                        </div>
+                        <div
+                          class="c14 css-1urox24"
+                        >
+                          0x88e6...5640
+                        </div>
+                      </div>
+                      <svg
+                        fill="none"
+                        height="16px"
+                        stroke="#7D7D7D"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="16px"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                        />
+                        <polyline
+                          points="15 3 21 3 21 9"
+                        />
+                        <line
+                          x1="10"
+                          x2="21"
+                          y1="14"
+                          y2="3"
+                        />
+                      </svg>
+                    </div>
+                  </a>
+                  <a
+                    class="c9 c10"
+                    href="https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <div
+                      class="c1 c11 c12"
+                    >
+                      <div
+                        class="c1 c13"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
+                          data-testid="token-logo"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-12px _borderTopRightRadius-12px _borderBottomRightRadius-12px _borderBottomLeftRadius-12px"
+                          />
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                            data-testid="img-token-image"
+                          >
+                            <img
+                              height="24"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                              style="object-fit: contain; border-radius: 12px; z-index: 1;"
+                              width="24"
+                            />
+                          </div>
+                        </div>
+                        <div
+                          class="c4 css-1urox24"
+                        >
+                          USDC
+                        </div>
+                        <div
+                          class="c14 css-1urox24"
+                        >
+                          0xA0b8...eB48
+                        </div>
+                      </div>
+                      <svg
+                        fill="none"
+                        height="16px"
+                        stroke="#7D7D7D"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="16px"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                        />
+                        <polyline
+                          points="15 3 21 3 21 9"
+                        />
+                        <line
+                          x1="10"
+                          x2="21"
+                          y1="14"
+                          y2="3"
+                        />
+                      </svg>
+                    </div>
+                  </a>
+                  <a
+                    class="c9 c10"
+                    href="https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <div
+                      class="c1 c11 c12"
+                    >
+                      <div
+                        class="c1 c13"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
+                          data-testid="token-logo"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-12px _borderTopRightRadius-12px _borderBottomRightRadius-12px _borderBottomLeftRadius-12px"
+                          />
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                            data-testid="img-token-image"
+                          >
+                            <img
+                              height="24"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                              style="object-fit: contain; border-radius: 12px; z-index: 1;"
+                              width="24"
+                            />
+                          </div>
+                        </div>
+                        <div
+                          class="c4 css-1urox24"
+                        >
+                          WETH
+                        </div>
+                        <div
+                          class="c14 css-1urox24"
+                        >
+                          0xC02a...6Cc2
+                        </div>
+                      </div>
+                      <svg
+                        fill="none"
+                        height="16px"
+                        stroke="#7D7D7D"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="16px"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                        />
+                        <polyline
+                          points="15 3 21 3 21 9"
+                        />
+                        <line
+                          x1="10"
+                          x2="21"
+                          y1="14"
+                          y2="3"
+                        />
+                      </svg>
+                    </div>
+                  </a>
+                </span>
+              </div>
+            </span>
             <div
               style="width: 100%;"
             >
@@ -556,10 +926,12 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 data-disable-theme="true"
               >
                 <div
-                  class="c9"
+                  class="c15"
                   style="width: 100%;"
                 >
-                  <div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  >
                     <span
                       class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent _textDecorationLine-none _cursor-pointer"
                       data-disable-theme="true"
@@ -591,7 +963,71 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 </div>
               </span>
             </div>
-            <div />
+            <span
+              class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              >
+                <span
+                  class="font_unset  font_body "
+                  data-disable-theme="true"
+                  style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; color: rgb(34, 34, 34); font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; font-size: 16px; line-height: 24px; font-weight: 485; display: flex; flex-direction: column; min-width: 150px; background-color: rgb(255, 255, 255); border-top-width: 0.5px; border-right-width: 0.5px; border-bottom-width: 0.5px; border-left-width: 0.5px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; padding: 8px 8px 8px 8px; z-index: 1000; width: 200px; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; right: 0px; top: calc(100% + 10px); opacity: 0; transform: translateY(-20px);"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <svg
+                      fill="none"
+                      height="18px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="18px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                      />
+                      <path
+                        d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                      />
+                    </svg>
+                    <span
+                      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                      data-disable-theme="true"
+                    >
+                      Copy link
+                    </span>
+                  </div>
+                  <div
+                    class="c16"
+                  >
+                    <svg
+                      fill="#222222"
+                      height="18px"
+                      stroke="transparent"
+                      viewBox="0 0 18 18"
+                      width="18px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12.8761 3H14.9451L10.4251 8.16609L15.7425 15.196H11.579L8.31797 10.9324L4.58662 15.196H2.51644L7.35104 9.67026L2.25 3H6.51922L9.46689 6.89708L12.8761 3ZM12.15 13.9576H13.2964L5.89628 4.17332H4.66605L12.15 13.9576Z"
+                        fill="#222222"
+                      />
+                    </svg>
+                    <span
+                      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                      data-disable-theme="true"
+                    >
+                      Share to Twitter
+                    </span>
+                  </div>
+                </span>
+              </div>
+            </span>
             <div
               style="width: 100%;"
             >
@@ -600,10 +1036,12 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 data-disable-theme="true"
               >
                 <div
-                  class="c9"
+                  class="c15"
                   style="width: 100%;"
                 >
-                  <div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  >
                     <span
                       class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent _textDecorationLine-none _cursor-pointer"
                       data-disable-theme="true"
@@ -630,7 +1068,6 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 </div>
               </span>
             </div>
-            <div />
           </div>
         </div>
         <div

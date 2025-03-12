@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
+import { useSporeColors } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { MICROSITE_LINK } from 'utils/openDownloadApp'
@@ -18,6 +19,7 @@ import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 export default function App() {
   const [, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
+  const colors = useSporeColors()
 
   const location = useLocation()
   const { pathname } = location
@@ -70,6 +72,14 @@ export default function App() {
           {metaTags.map((tag, index) => (
             <meta key={index} {...tag} />
           ))}
+          <style>{`
+            html {
+              ::-webkit-scrollbar-thumb {
+                background-color: ${colors.surface3.val};
+              }
+              scrollbar-color: ${colors.surface3.val} ${colors.surface1.val};
+            }
+          `}</style>
         </Helmet>
         <UserPropertyUpdater />
         <ResetPageScrollEffect />

@@ -6,7 +6,6 @@ import { logger } from 'utilities/src/logger/logger'
 export async function openSidePanel(tabId: number | undefined, windowId: number): Promise<void> {
   let hasError = false
   try {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
     await chrome.sidePanel.open({
       tabId,
       windowId,

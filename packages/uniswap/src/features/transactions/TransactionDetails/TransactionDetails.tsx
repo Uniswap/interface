@@ -2,12 +2,12 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, DeprecatedButton, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, Button, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnglesMaximize } from 'ui/src/components/icons/AnglesMaximize'
 import { AnglesMinimize } from 'ui/src/components/icons/AnglesMinimize'
+import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
-import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -25,7 +25,6 @@ import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap
 import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/settings/configs/SlippageUpdate'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
-import { openUri } from 'uniswap/src/utils/linking'
 import { isInterface } from 'utilities/src/platform'
 
 interface TransactionDetailsProps {
@@ -171,7 +170,7 @@ export function TransactionDetails({
   )
 }
 
-export const ListSeparatorToggle = ({
+export function ListSeparatorToggle({
   onPress,
   isOpen,
   openText,
@@ -181,7 +180,7 @@ export const ListSeparatorToggle = ({
   isOpen?: boolean
   openText: string
   closedText: string
-}): JSX.Element => {
+}): JSX.Element {
   return (
     <Flex centered row gap="$spacing16" mb="$spacing16" px="$spacing12">
       <Separator />
@@ -214,55 +213,22 @@ const TransactionWarning = ({
   warning: Warning
   onShowWarning: () => void
 }): JSX.Element => {
-  const { t } = useTranslation()
-  const warningColor = getAlertColor(warning?.severity)
+  const { title, severity, message, link } = warning
 
   return (
-    <TouchableArea mt="$spacing6" onPress={onShowWarning}>
-      <Flex
-        row
-        alignItems="flex-start"
-        p="$spacing12"
-        borderRadius="$rounded16"
-        backgroundColor="$surface2"
-        gap="$spacing12"
-      >
-        <Flex centered p="$spacing8" borderRadius="$rounded12" backgroundColor={warningColor.background}>
-          <AlertTriangleFilled color={warningColor.text} size="$icon.16" />
-        </Flex>
-        <Flex gap="$spacing4" flex={1}>
-          <Text color={warningColor.text} variant="body3">
-            {warning.title}
-          </Text>
-          <Text color="$neutral2" variant="body3">
-            {warning.message}
-          </Text>
-          <TouchableArea
-            onPress={async (e) => {
-              const link = warning.link
-              if (link) {
-                e.stopPropagation()
-                await openUri(link)
-              }
-            }}
-          >
-            <Text color="$neutral1" variant="body3">
-              {t('common.button.learn')}
-            </Text>
-          </TouchableArea>
-        </Flex>
-      </Flex>
+    <TouchableArea onPress={onShowWarning}>
+      <InlineWarningCard hideCtaIcon severity={severity} heading={title} description={message} learnMoreUrl={link} />
     </TouchableArea>
   )
 }
 
-const ExpectedFailureBanner = ({
+function ExpectedFailureBanner({
   txFailureReasons,
   onSlippageEditPress,
 }: {
   txFailureReasons?: TransactionFailureReason[]
   onSlippageEditPress?: () => void
-}): JSX.Element => {
+}): JSX.Element {
   const { t } = useTranslation()
 
   const showSlippageWarning = txFailureReasons?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)
@@ -279,7 +245,7 @@ const ExpectedFailureBanner = ({
       p="$spacing12"
     >
       <Flex row justifyContent="flex-start" gap="$spacing12" alignItems="center">
-        <AlertTriangleFilled color="$DEP_accentWarning" size="$icon.20" />
+        <AlertTriangleFilled color="$statusWarning" size="$icon.20" />
         <Flex gap="$spacing4">
           <Text color="$statusWarning" variant="buttonLabel3">
             {t('swap.warning.expectedFailure.titleMay')}
@@ -296,23 +262,22 @@ const ExpectedFailureBanner = ({
   )
 }
 
-const SlippageEdit = ({
+function SlippageEdit({
   onWalletSlippageEditPress: onSlippageEditPress,
 }: {
   onWalletSlippageEditPress?: () => void
-}): JSX.Element => {
+}): JSX.Element {
   const { t } = useTranslation()
   const [showInterfaceSlippageSettings, setShowInterfaceSlippageSettings] = useState(false)
   const editButton = (
-    <DeprecatedButton
-      fontSize="$micro"
-      size="small"
-      theme="secondary"
-      borderRadius="$rounded16"
+    <Button
+      size="xxsmall"
+      emphasis="secondary"
+      fill={false}
       onPress={() => (isInterface ? setShowInterfaceSlippageSettings(true) : onSlippageEditPress?.())}
     >
       {t('common.button.edit')}
-    </DeprecatedButton>
+    </Button>
   )
 
   if (!isInterface) {

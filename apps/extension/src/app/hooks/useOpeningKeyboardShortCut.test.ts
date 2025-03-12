@@ -53,7 +53,7 @@ describe('useOpeningKeyboardShortCut', () => {
       {
         fontSize: 28,
         px: '$spacing12',
-        title: 'Crtl',
+        title: 'Ctrl',
         state: State.KeyUp,
       },
       {
@@ -83,7 +83,7 @@ describe('useOpeningKeyboardShortCut', () => {
       {
         fontSize: 28,
         px: '$spacing12',
-        title: 'Crtl',
+        title: 'Ctrl',
         state: State.KeyUp,
       },
       {
@@ -108,7 +108,7 @@ describe('useOpeningKeyboardShortCut', () => {
       {
         fontSize: 28,
         px: '$spacing12',
-        title: 'Crtl',
+        title: 'Ctrl',
         state: State.KeyUp,
       },
       {
@@ -138,7 +138,7 @@ describe('useOpeningKeyboardShortCut', () => {
       {
         fontSize: 28,
         px: '$spacing12',
-        title: 'Crtl',
+        title: 'Ctrl',
         state: State.Highlighted,
       },
       {

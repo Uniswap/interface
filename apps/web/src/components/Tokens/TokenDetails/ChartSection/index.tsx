@@ -138,10 +138,10 @@ export default function ChartSection() {
   }
 
   return (
-    <div data-cy={`tdp-${activeQuery.chartType}-chart-container`}>
+    <Flex data-cy={`tdp-${activeQuery.chartType}-chart-container`}>
       {getSection()}
       <ChartControls />
-    </div>
+    </Flex>
   )
 }
 
@@ -158,6 +158,7 @@ function ChartControls() {
   const refitChartContent = useAtomValue(refitChartContentAtom)
   const media = useMedia()
   const isMediumScreen = media.lg
+  const showAdvancedPriceChartToggle = activeQuery.chartType === ChartType.PRICE
 
   return (
     <ChartActionsContainer>
@@ -166,18 +167,18 @@ function ChartControls() {
         gap="$gap8"
         $md={{
           width: '100%',
-          display: 'grid' as any,
-          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+          '$platform-web': {
+            display: 'grid',
+            gridTemplateColumns: showAdvancedPriceChartToggle ? '1fr 1fr' : '1fr',
+          },
         }}
       >
-        {activeQuery.chartType === ChartType.PRICE && (
-          <div>
-            <AdvancedPriceChartToggle
-              currentChartType={priceChartType}
-              onChartTypeChange={setPriceChartType}
-              disableCandlestickUI={disableCandlestickUI}
-            />
-          </div>
+        {showAdvancedPriceChartToggle && (
+          <AdvancedPriceChartToggle
+            currentChartType={priceChartType}
+            onChartTypeChange={setPriceChartType}
+            disableCandlestickUI={disableCandlestickUI}
+          />
         )}
         <ChartTypeDropdown
           options={TDP_CHART_SELECTOR_OPTIONS}

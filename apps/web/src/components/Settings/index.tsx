@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { Scrim } from 'components/AccountDrawer'
+import { Scrim } from 'components/AccountDrawer/Scrim'
 import MaxSlippageSettings from 'components/Settings/MaxSlippageSettings'
 import MenuButton from 'components/Settings/MenuButton'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'

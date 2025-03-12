@@ -4,11 +4,9 @@ import {
   CHAIN_TO_ADDRESSES_MAP,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-  V2_ROUTER_ADDRESSES,
   V3_MIGRATOR_ADDRESSES,
 } from '@uniswap/sdk-core'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
@@ -27,7 +25,6 @@ import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
-const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson
 const { abi: NFTPositionManagerABI } = NonfungiblePositionManagerJson
 const { abi: V2MigratorABI } = V3MigratorJson
@@ -84,11 +81,6 @@ export function useWETHContract(withSignerIfPossible?: boolean, chainId?: Univer
 
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
-}
-
-export function useV2RouterContract(): Contract | null {
-  const { chainId } = useAccount()
-  return useContract(chainId ? V2_ROUTER_ADDRESSES[chainId] : undefined, IUniswapV2Router02ABI, true)
 }
 
 export function useInterfaceMulticall(chainId?: UniverseChainId) {

@@ -1,5 +1,4 @@
 import styled from 'lib/styled-components'
-import { PropsWithChildren } from 'react'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const BodyWrapper = styled.main<BodyWrapperProps>`
@@ -19,11 +18,4 @@ export const BodyWrapper = styled.main<BodyWrapperProps>`
 interface BodyWrapperProps {
   $margin?: string
   $maxWidth?: string
-}
-
-/**
- * The styled container element that wraps the content of most pages and the tabs.
- */
-export default function AppBody(props: PropsWithChildren<BodyWrapperProps>) {
-  return <BodyWrapper {...props} />
 }

@@ -18,10 +18,9 @@ export const BaseEthereumRequestSchema = z.object({
   params: z.union([z.array(z.unknown()), z.record(z.string(), z.unknown())]).optional(),
 })
 
-export const EthereumRequestWithIdSchema = BaseEthereumRequestSchema.extend({
+const EthereumRequestWithIdSchema = BaseEthereumRequestSchema.extend({
   requestId: z.string().uuid(),
 })
-export type EthereumRequestWithId = z.infer<typeof EthereumRequestWithIdSchema>
 
 export type BaseEthereumRequest = z.infer<typeof BaseEthereumRequestSchema>
 
@@ -96,43 +95,6 @@ export const PersonalSignRequestSchema = EthereumRequestWithIdSchema.extend({
 
 export type PersonalSignRequest = z.infer<typeof PersonalSignRequestSchema>
 
-export const EthSignTransactionRequestSchema = EthereumRequestWithIdSchema.extend({
-  method: z.literal('eth_signTransaction'),
-  params: z.array(z.unknown()),
-}).transform((data) => {
-  const { requestId, method, params } = data
-
-  if (params.length < 1) {
-    throw new z.ZodError([
-      {
-        message: 'Params array must contain at least one element',
-        path: ['params'],
-        code: ZodIssueCode.custom,
-      },
-    ])
-  }
-
-  const parseResult = EthersTransactionRequestSchema.safeParse(params[0])
-  if (!parseResult.success) {
-    throw new z.ZodError([
-      {
-        message: 'First element of the array must match EthersTransactionRequestSchema',
-        path: ['params', '0'],
-        code: ZodIssueCode.custom,
-      },
-    ])
-  }
-  const transaction = parseResult.data
-
-  return {
-    requestId,
-    method,
-    params,
-    transaction,
-  }
-})
-export type EthSignTransactionRequest = z.infer<typeof EthSignTransactionRequestSchema>
-
 export const EthSignTypedDataV4RequestSchema = EthereumRequestWithIdSchema.extend({
   method: z.literal('eth_signTypedData_v4'),
   params: z.array(z.unknown()),
@@ -173,7 +135,7 @@ export const EthSignTypedDataV4RequestSchema = EthereumRequestWithIdSchema.exten
 })
 export type EthSignTypedDataV4Request = z.infer<typeof EthSignTypedDataV4RequestSchema>
 
-export const SwitchEthereumChainParameterSchema = z.object({
+const SwitchEthereumChainParameterSchema = z.object({
   chainId: z.string(),
 })
 
@@ -217,17 +179,11 @@ export type WalletSwitchEthereumChainRequest = z.infer<typeof WalletSwitchEthere
 // eslint-disable-next-line no-restricted-syntax
 export const PermissionRequestSchema = z.record(z.record(z.any()))
 
-export const RequestedPermissionSchema = z.object({
-  parentCapability: z.string(), // name of the method for which the permission is requested
-  date: z.number().optional(), // in UNIX time
-})
-
-export const CaveatSchema = z.object({
+const CaveatSchema = z.object({
   type: z.string(),
   // eslint-disable-next-line no-restricted-syntax
   value: z.any(),
 })
-export type Caveat = z.infer<typeof CaveatSchema>
 
 export const PermissionSchema = z.object({
   invoker: z.string(),

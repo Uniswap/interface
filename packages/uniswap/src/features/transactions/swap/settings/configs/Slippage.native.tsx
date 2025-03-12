@@ -16,14 +16,9 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import {
-  MAX_AUTO_SLIPPAGE_TOLERANCE,
-  MAX_CUSTOM_SLIPPAGE_TOLERANCE,
-  SLIPPAGE_CRITICAL_TOLERANCE,
-} from 'uniswap/src/constants/transactions'
+import { MAX_CUSTOM_SLIPPAGE_TOLERANCE, SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/settings/useSlippageSettings'
@@ -39,23 +34,16 @@ export const Slippage: SwapSettingConfig = {
     const { t } = useTranslation()
     const { formatPercent } = useLocalizationContext()
     const { derivedSwapInfo } = useSwapFormContext()
-    const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
-
-    const isCustomSlippage = !!customSlippageTolerance
-    let currentSlippage = customSlippageTolerance ?? autoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
-    if (autoSlippageTolerance && currentSlippage === 0) {
-      currentSlippage = autoSlippageTolerance
-    }
-
+    const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
     const isBridgeTrade = derivedSwapInfo.trade.trade instanceof BridgeTrade
-
-    if (isBridgeTrade) {
-      currentSlippage = 0
-    }
+    const { currentSlippageTolerance, autoSlippageEnabled } = useSlippageSettings({
+      tradeAutoSlippage: acceptedTrade?.slippageTolerance,
+      isBridgeTrade,
+    })
 
     return (
       <Flex row gap="$spacing8">
-        {!isCustomSlippage && !isBridgeTrade ? (
+        {autoSlippageEnabled && !isBridgeTrade ? (
           <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
             <Text color="$accent1" variant="buttonLabel3">
               {t('swap.settings.slippage.control.auto')}
@@ -63,7 +51,7 @@ export const Slippage: SwapSettingConfig = {
           </Flex>
         ) : null}
         <Text color="$neutral2" variant="subheading2">
-          {formatPercent(currentSlippage)}
+          {formatPercent(currentSlippageTolerance)}
         </Text>
       </Flex>
     )
@@ -71,15 +59,12 @@ export const Slippage: SwapSettingConfig = {
   Screen() {
     const { t } = useTranslation()
     const colors = useSporeColors()
-    const {
-      derivedSwapInfo: {
-        trade: { trade },
-      },
-    } = useSwapFormContext()
+    const { derivedSwapInfo } = useSwapFormContext()
+    const { trade } = derivedSwapInfo.trade
+    const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
 
     const {
       isEditingSlippage,
-      autoSlippageEnabled,
       showSlippageWarning,
       inputSlippageTolerance,
       inputWarning,
@@ -91,7 +76,7 @@ export const Slippage: SwapSettingConfig = {
       onFocusSlippageInput,
       onBlurSlippageInput,
       onPressPlusMinusButton,
-    } = useSlippageSettings()
+    } = useSlippageSettings({ tradeAutoSlippage: acceptedTrade?.slippageTolerance })
 
     const isBridgeTrade = trade instanceof BridgeTrade
 
@@ -167,7 +152,7 @@ export const Slippage: SwapSettingConfig = {
                     }),
                   }}
                   textAlign="center"
-                  value={autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance}
+                  value={inputSlippageTolerance}
                   onBlur={onBlurSlippageInput}
                   onChangeText={onChangeSlippageInput}
                   onFocus={onFocusSlippageInput}

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
-import { setupWalletCache } from 'uniswap/src/data/cache'
+import { setupSharedApolloCache } from 'uniswap/src/data/cache'
 import {
   Chain,
   PortfolioBalancesDocument,
@@ -14,7 +14,7 @@ import {
   usePortfolioBalances,
   usePortfolioCacheUpdater,
   usePortfolioTotalValue,
-  // eslint-disable-next-line no-restricted-imports
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   usePortfolioValueModifiers,
   useSortedPortfolioBalances,
   useTokenBalancesGroupedByVisibility,
@@ -548,7 +548,6 @@ describe(sortPortfolioBalances, () => {
       currencyInfo: {
         logoUrl: '',
         currencyId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        safetyLevel: undefined,
         currency: {
           isNative: false,
           isToken: true,
@@ -570,7 +569,6 @@ describe(sortPortfolioBalances, () => {
       currencyInfo: {
         logoUrl: '',
         currencyId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        safetyLevel: undefined,
         currency: {
           isNative: false,
           isToken: true,
@@ -656,7 +654,7 @@ describe(sortPortfolioBalances, () => {
 })
 
 describe(usePortfolioCacheUpdater, () => {
-  const cache = setupWalletCache()
+  const cache = setupSharedApolloCache()
   const modifyMock = jest.spyOn(cache, 'modify')
   const balance = portfolioBalance()
 
@@ -667,8 +665,10 @@ describe(usePortfolioCacheUpdater, () => {
     const enabledChains = getEnabledChains({
       isTestnetModeEnabled: false,
       connectedWalletChainIds: ALL_CHAIN_IDS,
-      // Doesn't include Unichain while feature flagged
-      featureFlaggedChainIds: filterChainIdsByFeatureFlag({ [UniverseChainId.Unichain]: false }),
+      // Doesn't include feature flagged chains
+      featureFlaggedChainIds: filterChainIdsByFeatureFlag({
+        [UniverseChainId.Soneium]: false,
+      }),
     })
 
     cache.writeQuery({

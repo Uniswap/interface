@@ -8,7 +8,6 @@ import {
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { GrayCard } from 'components/Card/cards'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
@@ -38,7 +37,7 @@ import { getIsReviewableQuote } from 'pages/Swap'
 import { OutputTaxTooltipBody } from 'pages/Swap/TaxTooltipBody'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
@@ -47,11 +46,10 @@ import { serializeSwapStateToURLParameters, useSwapActionHandlers } from 'state/
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Button, Flex } from 'ui/src'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
@@ -73,12 +71,15 @@ interface SwapFormProps {
   onCurrencyChange?: (selected: CurrencyState) => void
 }
 
+// TODO: Remove this file as part of universal swap flow cleanup. Buttons have been replaced with the generic versions of the new components.
+
 export function SwapForm({
   disableTokenInputs = false,
   initialCurrencyLoading = false,
   onCurrencyChange,
 }: SwapFormProps) {
   const { isDisconnected, chainId: connectedChainId } = useAccount()
+  const { t } = useTranslation()
 
   const trace = useTrace()
 
@@ -103,13 +104,13 @@ export function SwapForm({
     const tokens = []
     if (
       prefilledInputCurrencyInfo?.currency.isToken &&
-      prefilledInputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
+      prefilledInputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default
     ) {
       tokens.push({ field: CurrencyField.INPUT, currencyInfo: prefilledInputCurrencyInfo })
     }
     if (
       prefilledOutputCurrencyInfo?.currency.isToken &&
-      prefilledOutputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
+      prefilledOutputCurrencyInfo.safetyInfo?.tokenList !== TokenList.Default
     ) {
       tokens.push({ field: CurrencyField.OUTPUT, currencyInfo: prefilledOutputCurrencyInfo })
     }
@@ -540,7 +541,7 @@ export function SwapForm({
           }}
         />
       )}
-      <div style={{ display: 'relative' }}>
+      <Flex>
         <SwapSection>
           <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
             <SwapCurrencyInputPanel
@@ -586,9 +587,9 @@ export function SwapForm({
             </ArrowContainer>
           </Trace>
         </ArrowWrapper>
-      </div>
+      </Flex>
       <AutoColumn gap="xs">
-        <div>
+        <Flex>
           <OutputSwapSection>
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
               <SwapCurrencyInputPanel
@@ -620,26 +621,21 @@ export function SwapForm({
               />
             </Trace>
           </OutputSwapSection>
-        </div>
+        </Flex>
 
-        <div>
+        <Flex>
           {isLandingPage ? (
-            <ButtonPrimary
-              $borderRadius="16px"
-              onClick={() => navigateToSwapWithParams()}
-              fontWeight={535}
-              data-testid="wrap-button"
-            >
-              <Text variant="buttonLabel1" color="$neutralContrast">
-                <Trans i18nKey="common.getStarted" />
-              </Text>
-            </ButtonPrimary>
+            <Flex row>
+              <Button onPress={() => navigateToSwapWithParams()} data-testid="wrap-button">
+                {t('common.getStarted')}
+              </Button>
+            </Flex>
           ) : swapIsUnsupported ? (
-            <ButtonPrimary $borderRadius="16px" disabled={true}>
-              <ThemedText.DeprecatedMain mb="4px">
-                <Trans i18nKey="common.unsupportedAsset_one" />
-              </ThemedText.DeprecatedMain>
-            </ButtonPrimary>
+            <Flex row>
+              <Button variant="branded" emphasis="primary" fill isDisabled={true}>
+                {t('common.unsupportedAsset_one')}
+              </Button>
+            </Flex>
           ) : isDisconnected ? (
             <Trace
               logPress
@@ -647,26 +643,24 @@ export function SwapForm({
               properties={{ received_swap_quote: getIsReviewableQuote(trade, tradeState, swapInputError) }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
-              <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-                <ConnectWalletButtonText />
-              </ButtonLight>
+              <Flex row>
+                <Button onPress={accountDrawer.open}>
+                  <ConnectWalletButtonText />
+                </Button>
+              </Flex>
             </Trace>
           ) : showWrap ? (
-            <ButtonPrimary
-              $borderRadius="16px"
-              disabled={Boolean(wrapInputError)}
-              onClick={handleOnWrap}
-              fontWeight={535}
-              data-testid="wrap-button"
-            >
-              {wrapInputError ? (
-                <WrapErrorText wrapInputError={wrapInputError} />
-              ) : wrapType === WrapType.Wrap ? (
-                <Trans i18nKey="common.wrap.button" />
-              ) : wrapType === WrapType.Unwrap ? (
-                <Trans i18nKey="common.unwrap.button" />
-              ) : null}
-            </ButtonPrimary>
+            <Flex row>
+              <Button isDisabled={Boolean(wrapInputError)} onPress={handleOnWrap} data-testid="wrap-button">
+                {wrapInputError ? (
+                  <WrapErrorText wrapInputError={wrapInputError} />
+                ) : wrapType === WrapType.Wrap ? (
+                  <Trans i18nKey="common.wrap.button" />
+                ) : wrapType === WrapType.Unwrap ? (
+                  <Trans i18nKey="common.unwrap.button" />
+                ) : null}
+              </Button>
+            </Flex>
           ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
             <GrayCard style={{ textAlign: 'center' }}>
               <ThemedText.DeprecatedMain mb="4px">
@@ -675,18 +669,19 @@ export function SwapForm({
             </GrayCard>
           ) : (
             <Trace logPress element={InterfaceElementName.SWAP_BUTTON}>
-              <ButtonError
-                onClick={() => {
-                  showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
-                }}
-                id="swap-button"
-                data-testid="swap-button"
-                disabled={isUsingBlockedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
-              >
-                <Text fontSize={20} color="$neutralContrast">
-                  {swapInputError ?? <Trans i18nKey="common.swap" />}
-                </Text>
-              </ButtonError>
+              <Flex row>
+                <Button
+                  onPress={() => {
+                    showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
+                  }}
+                  variant="branded"
+                  id="swap-button"
+                  data-testid="swap-button"
+                  isDisabled={isUsingBlockedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
+                >
+                  <Button.Text>{swapInputError ?? <Trans i18nKey="common.swap" />}</Button.Text>
+                </Button>
+              </Flex>
             </Trace>
           )}
           {showDetailsDropdown && (
@@ -699,7 +694,7 @@ export function SwapForm({
             />
           )}
           {isUsingBlockedExtension && <SwapNotice />}
-        </div>
+        </Flex>
       </AutoColumn>
     </>
   )

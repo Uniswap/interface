@@ -6,6 +6,7 @@ import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/use
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
 import { ALL_CHAIN_IDS, EnabledChainsInfo, GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getEnabledChains } from 'uniswap/src/features/chains/utils'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 import { isTestEnv } from 'utilities/src/environment/env'

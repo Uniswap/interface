@@ -1,12 +1,13 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { popupRegistry } from 'components/Popups/registry'
+import { PopupType } from 'components/Popups/types'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { PopupType, addPopup } from 'state/application/reducer'
 import { HandleOnChainStepParams, handleOnChainStep } from 'state/sagas/transactions/utils'
 import { TransactionType, WrapTransactionInfo } from 'state/transactions/types'
-import { call, put } from 'typed-redux-saga'
+import { call } from 'typed-redux-saga'
 import { TransactionStepType, WrapTransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { WrapCallback, WrapCallbackParams } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { createSaga } from 'uniswap/src/utils/saga'
@@ -45,7 +46,7 @@ function* wrap(params: WrapParams) {
       allowDuplicativeTx: true, // Compared to UniswapX wraps, the user should not be stopped from wrapping in quick succession
     })
 
-    yield* put(addPopup({ content: { type: PopupType.Transaction, hash }, key: hash }))
+    popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
 
     params.onSuccess()
   } catch (error) {

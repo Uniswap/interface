@@ -18,12 +18,10 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
 import { TamaguiClickableStyle } from 'theme/components'
-import { DeprecatedButton, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
+import { Button, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isBackendSupportedChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
@@ -101,7 +99,6 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const media = useMedia()
   const tabNavRef = useRef<HTMLDivElement>(null)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
-  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const Pages = usePages()
 
   const initialKey: number = useMemo(() => {
@@ -162,7 +159,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       properties={{ chainName: chainInfo?.backendChain.chain }}
     >
       <ExploreContextProvider chainId={chainInfo?.id}>
-        <Flex width="100%" minWidth={320} pt="$spacing48" px="$spacing40" $md={{ p: '$spacing16', pb: 0 }}>
+        <Flex width="100%" minWidth={320} py="$spacing48" px="$spacing40" $md={{ p: '$spacing16' }}>
           <ExploreChartsSection />
           <Flex
             ref={tabNavRef}
@@ -206,22 +203,13 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 )
               })}
             </Flex>
-            <Flex row gap="$spacing8" height="$spacing40" justifyContent="flex-start">
-              {currentKey === ExploreTab.Pools && isLPRedesignEnabled && (
-                <DeprecatedButton
-                  size="small"
-                  backgroundColor="$accent3"
-                  hoverStyle={{ backgroundColor: '$accent3', opacity: 0.6 }}
-                  pressStyle={{ backgroundColor: '$accent3', opacity: 0.8 }}
-                  onPress={() => navigate('/positions/create')}
-                >
-                  <Flex row gap="$gap8" alignItems="center" $sm={{ gap: '$gap2' }}>
-                    <Plus size={20} color="$surface1" />
-                    <Text variant="buttonLabel3" lineHeight={20} color="$surface1">
-                      {media.sm ? t('common.add.label') : t('common.addLiquidity')}
-                    </Text>
-                  </Flex>
-                </DeprecatedButton>
+            <Flex row gap="$spacing8" justifyContent="flex-start">
+              {currentKey === ExploreTab.Pools && (
+                <Flex row>
+                  <Button size="small" icon={<Plus />} onPress={() => navigate('/positions/create')}>
+                    {media.sm ? t('common.add.label') : t('common.addLiquidity')}
+                  </Button>
+                </Flex>
               )}
               <TableNetworkFilter showMultichainOption={currentKey !== ExploreTab.Transactions} />
               {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}

@@ -1,32 +1,10 @@
-import { BaseButton } from 'components/Button/buttons'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import styled from 'lib/styled-components'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { findListingIssues } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { breakpoints } from 'ui/src/theme'
-
-const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; missingPrices: boolean }>`
-  background: ${({ showResolveIssues, theme }) => (showResolveIssues ? theme.critical : theme.accent1)};
-  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
-  font-weight: 535;
-  font-size: 20px;
-  line-height: 24px;
-  padding: 16px;
-  border-radius: 12px;
-  width: min-content;
-  border: none;
-  cursor: ${({ missingPrices }) => (missingPrices ? 'auto' : 'pointer')};
-  opacity: ${({ showResolveIssues, missingPrices }) => !showResolveIssues && missingPrices && '0.3'};
-
-  @media screen and (max-width: ${breakpoints.md}px) {
-    font-size: 16px;
-    line-height: 20px;
-    padding: 10px 12px;
-  }
-`
+import { Button } from 'ui/src'
 
 export const ListingButton = ({ onClick }: { onClick: () => void }) => {
   const { t } = useTranslation()
@@ -78,19 +56,23 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
     }
   }
 
+  const missingPrices = !!listingsMissingPrice.length
+
   return (
     <>
-      <StyledListingButton
-        onClick={warningWrappedClick}
-        missingPrices={!!listingsMissingPrice.length}
-        showResolveIssues={showResolveIssues}
+      <Button
+        fill={false}
+        cursor={missingPrices ? 'auto' : 'pointer'}
+        opacity={!showResolveIssues && missingPrices ? 0.3 : 1}
+        variant={showResolveIssues ? 'critical' : 'branded'}
+        onPress={warningWrappedClick}
       >
         {showResolveIssues
           ? t('common.resolveIssues', { count: issues })
           : listingsMissingPrice.length && !isMobile
             ? t('nft.setPrices')
             : t('nft.startListing')}
-      </StyledListingButton>
+      </Button>
 
       {showWarning && (
         <BelowFloorWarningModal

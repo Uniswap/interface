@@ -1,11 +1,13 @@
-import { Signer, providers as ethersProviders } from 'ethers/lib/ethers'
+import { providers as ethersProviders } from 'ethers/lib/ethers'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import {
   FLASHBOTS_DEFAULT_BLOCK_RANGE,
+  FLASHBOTS_DEFAULT_REFUND_PERCENT,
   FlashbotsRpcProvider,
+  SignerInfo,
 } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -13,7 +15,7 @@ import { logger } from 'utilities/src/logger/logger'
 export function createEthersProvider(
   chainId: UniverseChainId,
   rpcType: RPCType = RPCType.Public,
-  signer?: Signer,
+  signerInfo?: SignerInfo,
 ): ethersProviders.JsonRpcProvider | null {
   try {
     if (rpcType === RPCType.Private) {
@@ -45,7 +47,21 @@ export function createEthersProvider(
           FLASHBOTS_DEFAULT_BLOCK_RANGE,
         )
 
-        return new FlashbotsRpcProvider(flashbotsBlockRange, sendAuthenticationHeader ? signer : undefined)
+        const flashbotsRefundPercent = getDynamicConfigValue<
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey,
+          number
+        >(
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey.FlashbotsRefundPercent,
+          FLASHBOTS_DEFAULT_REFUND_PERCENT,
+        )
+
+        return new FlashbotsRpcProvider(
+          flashbotsBlockRange,
+          sendAuthenticationHeader ? signerInfo : undefined,
+          flashbotsRefundPercent,
+        )
       }
 
       return new ethersProviders.JsonRpcProvider(privateRPCUrl)

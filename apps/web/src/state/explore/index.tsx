@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ExploreStatsResponse, ProtocolStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { createContext, useMemo } from 'react'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'

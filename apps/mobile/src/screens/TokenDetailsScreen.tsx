@@ -1,31 +1,35 @@
 import { useApolloClient } from '@apollo/client'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import React, { memo, useCallback, useEffect, useMemo } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import { StyledContextMenuAction } from 'src/components/ContextMenu/StyledContextMenu'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { BuyNativeTokenModal } from 'src/components/TokenDetails/BuyNativeTokenModal'
+import { ContractAddressExplainerModal } from 'src/components/TokenDetails/ContractAddressExplainerModal'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButtons'
 import { TokenDetailsContextProvider, useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
+import { useTokenDetailsCTAVariant } from 'src/components/TokenDetails/useTokenDetailsCTAVariant'
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsHeaders'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, Separator } from 'ui/src'
+import { ArrowDownCircle, ArrowUpCircle, Bank, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import {
   Chain,
-  SafetyLevel,
   useTokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
@@ -33,7 +37,6 @@ import {
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { AssetType } from 'uniswap/src/entities/assets'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -49,7 +52,7 @@ import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { buildCurrencyId, currencyIdToAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -102,6 +105,23 @@ const TokenDetailsQuery = memo(function _TokenDetailsQuery(): JSX.Element {
 
 const TokenDetails = memo(function _TokenDetails(): JSX.Element {
   const inModal = useSelector(selectModalState(ModalName.Explore)).isOpen
+  const dispatch = useDispatch()
+
+  // #region Handle modal race condition
+  // This is a workaround to prevent a crash. The TDP can open as a full screen
+  // or in the Explore BSM. When this happens the TDP switches to components
+  // that can only be used in a modal causing a crash.
+  // This code closes the Explore modal when the TDP is opened as a full screen
+  // screen and disallows dynamically changing the TDP components based on the
+  // Explore modal state.
+  // This behavior should not be needed when we make the TDP full screen only.
+  const initialModalState = useRef<boolean | null>(null)
+  if (initialModalState.current === null) {
+    initialModalState.current = inModal
+  } else if (initialModalState.current !== null && initialModalState.current !== inModal && inModal) {
+    dispatch(closeModal({ name: ModalName.Explore }))
+  }
+  // #endregion
 
   const centerElement = useMemo(() => <HeaderTitleElement />, [])
   const rightElement = useMemo(() => <HeaderRightElement />, [])
@@ -109,13 +129,13 @@ const TokenDetails = memo(function _TokenDetails(): JSX.Element {
   return (
     <>
       <HeaderScrollScreen
-        showHandleBar={inModal}
-        renderedInModal={inModal}
+        showHandleBar={initialModalState.current}
+        renderedInModal={initialModalState.current}
         centerElement={centerElement}
         rightElement={rightElement}
       >
         <Flex gap="$spacing16" pb="$spacing16">
-          <Flex gap="$spacing4">
+          <Flex gap="$spacing16">
             <TokenDetailsHeader />
             <PriceExplorer />
           </Flex>
@@ -175,16 +195,17 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
     isBuyNativeTokenModalOpen,
     isTokenWarningModalOpen,
     isTestnetWarningModalOpen,
-    setActiveTransactionType,
+    isContractAddressExplainerModalOpen,
     closeTokenWarningModal,
     closeBuyNativeTokenModal,
     closeTestnetWarningModal,
+    closeContractAddressExplainerModal,
+    copyAddressToClipboard,
   } = useTokenDetailsContext()
 
   const onCloseTokenWarning = useCallback(() => {
-    setActiveTransactionType(undefined)
     closeTokenWarningModal()
-  }, [closeTokenWarningModal, setActiveTransactionType])
+  }, [closeTokenWarningModal])
 
   const onAcknowledgeTokenWarning = useCallback(() => {
     closeTokenWarningModal()
@@ -217,11 +238,20 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
       {isBuyNativeTokenModalOpen && (
         <BuyNativeTokenModal chainId={chainId} currencyId={currencyId} onClose={closeBuyNativeTokenModal} />
       )}
+      {isContractAddressExplainerModalOpen && (
+        <ContractAddressExplainerModal
+          onAcknowledge={async () => {
+            closeContractAddressExplainerModal()
+            await copyAddressToClipboard(address)
+          }}
+        />
+      )}
     </>
   )
 })
 
 const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButtonsWrapper(): JSX.Element | null {
+  const { t } = useTranslation()
   const insets = useAppInsets()
   const activeAddress = useActiveAccountAddressWithThrow()
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -234,113 +264,106 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     openTestnetWarningModal,
     openTokenWarningModal,
     openBuyNativeTokenModal,
-    setActiveTransactionType,
     tokenColorLoading,
     navigation,
   } = useTokenDetailsContext()
 
-  const { navigateToFiatOnRamp, navigateToSwapFlow } = useWalletNavigation()
+  const { navigateToFiatOnRamp, navigateToSwapFlow, navigateToSend, navigateToReceive } = useWalletNavigation()
 
-  const project = useTokenBasicProjectPartsFragment({ currencyId }).data?.project
+  const token = useTokenBasicInfoPartsFragment({ currencyId }).data
 
-  const safetyLevel = project?.safetyLevel
-  const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
+  const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
   const isNativeCurrency = isNativeCurrencyAddress(chainId, address)
   const nativeCurrencyAddress = getChainInfo(chainId).nativeCurrency.address
 
-  const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, activeAddress)
+  const { balance: nativeCurrencyBalance, isLoading: isNativeCurrencyBalanceLoading } = useOnChainNativeCurrencyBalance(
+    chainId,
+    activeAddress,
+  )
   const hasZeroNativeBalance = nativeCurrencyBalance && nativeCurrencyBalance.equalTo('0')
 
-  const nativeFiatOnRampCurrency = useIsSupportedFiatOnRampCurrency(
-    buildCurrencyId(chainId, nativeCurrencyAddress),
-    isNativeCurrency || !hasZeroNativeBalance,
-  )
+  const { currency: nativeFiatOnRampCurrency, isLoading: isNativeFiatOnRampCurrencyLoading } =
+    useIsSupportedFiatOnRampCurrency(buildCurrencyId(chainId, nativeCurrencyAddress))
 
   const currentChainBalance = useTokenDetailsCurrentChainBalance()
 
   const hasTokenBalance = Boolean(currentChainBalance)
 
-  const fiatOnRampCurrency = useIsSupportedFiatOnRampCurrency(currencyId, !isNativeCurrency)
-  const shouldNavigateToFiatOnRampOnBuy = !hasTokenBalance && Boolean(fiatOnRampCurrency) && isNativeCurrency
-  const shouldOpenBuyNativeTokenModalOnBuy =
-    Boolean(nativeFiatOnRampCurrency) && !isNativeCurrency && hasZeroNativeBalance
+  const { currency: fiatOnRampCurrency, isLoading: isFiatOnRampCurrencyLoading } =
+    useIsSupportedFiatOnRampCurrency(currencyId)
 
-  const bridgingTokenWithHighestBalance = useBridgingTokenWithHighestBalance({
-    address: activeAddress,
-    currencyAddress: address,
-    currencyChainId: chainId,
-  })
+  const { data: bridgingTokenWithHighestBalance, isLoading: isBridgingTokenLoading } =
+    useBridgingTokenWithHighestBalance({
+      address: activeAddress,
+      currencyAddress: address,
+      currencyChainId: chainId,
+    })
 
   const onPressSwap = useCallback(
     (currencyField: CurrencyField) => {
       if (isBlocked) {
         openTokenWarningModal()
-        // show warning modal speed bump if token has a warning level and user has not dismissed
-      } else if (bridgingTokenWithHighestBalance && currencyField === CurrencyField.OUTPUT) {
-        // When clicking "Buy", if the user has a balance in another chain, we pre-populate the input token with that token.
-        setActiveTransactionType(undefined)
-        navigateToSwapFlow({
-          initialState: {
-            exactCurrencyField: CurrencyField.INPUT,
-            input: {
-              address: currencyIdToAddress(bridgingTokenWithHighestBalance.currencyInfo.currencyId),
-              chainId: bridgingTokenWithHighestBalance.currencyInfo.currency.chainId,
-              type: AssetType.Currency,
-            },
-            output: {
-              address,
-              chainId,
-              type: AssetType.Currency,
-            },
-            exactAmountToken: '',
-          },
-        })
       } else {
-        setActiveTransactionType(undefined)
         navigateToSwapFlow({ currencyField, currencyAddress: address, currencyChainId: chainId })
       }
     },
-    [
-      isBlocked,
-      bridgingTokenWithHighestBalance,
-      openTokenWarningModal,
-      setActiveTransactionType,
-      navigateToSwapFlow,
-      address,
-      chainId,
-    ],
+    [isBlocked, openTokenWarningModal, navigateToSwapFlow, address, chainId],
   )
 
-  const onPressBuyFiatOnRamp = useCallback((): void => {
-    navigateToFiatOnRamp({ prefilledCurrency: fiatOnRampCurrency })
-  }, [navigateToFiatOnRamp, fiatOnRampCurrency])
+  const onPressBuyFiatOnRamp = useCallback(
+    (isOfframp = false): void => {
+      navigateToFiatOnRamp({ prefilledCurrency: fiatOnRampCurrency, isOfframp })
+    },
+    [navigateToFiatOnRamp, fiatOnRampCurrency],
+  )
 
-  const onPressBuy = useCallback(() => {
-    if (shouldOpenBuyNativeTokenModalOnBuy) {
-      openBuyNativeTokenModal()
-    } else if (shouldNavigateToFiatOnRampOnBuy) {
-      onPressBuyFiatOnRamp()
-    } else {
-      onPressSwap(CurrencyField.OUTPUT)
-    }
-  }, [
-    shouldOpenBuyNativeTokenModalOnBuy,
-    shouldNavigateToFiatOnRampOnBuy,
-    openBuyNativeTokenModal,
-    onPressBuyFiatOnRamp,
-    onPressSwap,
-  ])
+  const onPressGet = useCallback(() => {
+    openBuyNativeTokenModal()
+  }, [openBuyNativeTokenModal])
+
+  const onPressSend = useCallback(() => {
+    navigateToSend({ currencyAddress: address, chainId })
+  }, [address, chainId, navigateToSend])
 
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
 
-  return isScreenNavigationReady && tokenColorLoading ? null : (
+  const getCTAVariant = useTokenDetailsCTAVariant({
+    hasTokenBalance,
+    isNativeCurrency,
+    nativeFiatOnRampCurrency,
+    fiatOnRampCurrency,
+    bridgingTokenWithHighestBalance,
+    hasZeroNativeBalance,
+    tokenSymbol: token?.symbol,
+    onPressBuyFiatOnRamp,
+    onPressGet,
+    onPressSwap,
+  })
+
+  const actionMenuOptions: StyledContextMenuAction[] = useMemo(
+    () => [
+      ...(fiatOnRampCurrency ? [{ title: t('common.button.buy'), icon: Bank, onPress: onPressBuyFiatOnRamp }] : []),
+      ...(hasTokenBalance && fiatOnRampCurrency
+        ? [{ title: t('common.button.sell'), icon: ArrowUpCircle, onPress: () => onPressBuyFiatOnRamp(true) }]
+        : []),
+      ...(hasTokenBalance ? [{ title: t('common.button.send'), icon: SendRoundedAirplane, onPress: onPressSend }] : []),
+      { title: t('common.button.receive'), icon: ArrowDownCircle, onPress: navigateToReceive },
+    ],
+    [fiatOnRampCurrency, hasTokenBalance, onPressBuyFiatOnRamp, t, onPressSend, navigateToReceive],
+  )
+
+  return !isScreenNavigationReady ||
+    tokenColorLoading ||
+    isNativeCurrencyBalanceLoading ||
+    isNativeFiatOnRampCurrencyLoading ||
+    isFiatOnRampCurrencyLoading ||
+    isBridgingTokenLoading ? null : (
     <AnimatedFlex backgroundColor="$surface1" entering={FadeInDown} style={{ marginBottom: insets.bottom }}>
       <TokenDetailsActionButtons
+        ctaButton={getCTAVariant}
+        actionMenuOptions={actionMenuOptions}
         userHasBalance={hasTokenBalance}
-        onPressBuy={onPressBuy}
-        onPressSell={(): void => onPressSwap(CurrencyField.INPUT)}
-        onPressSwap={(): void => onPressSwap(CurrencyField.OUTPUT)}
         onPressDisabled={isTestnetModeEnabled ? openTestnetWarningModal : openTokenWarningModal}
       />
     </AnimatedFlex>
@@ -349,8 +372,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
 
 const TokenBalancesWrapper = memo(function _TokenBalancesWrapper(): JSX.Element | null {
   const activeAddress = useActiveAccountAddressWithThrow()
-  const { address, chainId, currencyId, isChainEnabled } = useTokenDetailsContext()
-  const { navigateToSend } = useWalletNavigation()
+  const { currencyId, isChainEnabled } = useTokenDetailsContext()
 
   const projectTokens = useTokenBasicProjectPartsFragment({ currencyId }).data?.project?.tokens
 
@@ -376,16 +398,8 @@ const TokenBalancesWrapper = memo(function _TokenBalancesWrapper(): JSX.Element 
     crossChainTokens,
   })
 
-  const onPressSend = useCallback(() => {
-    navigateToSend({ currencyAddress: address, chainId })
-  }, [address, chainId, navigateToSend])
-
   return isChainEnabled ? (
-    <TokenBalances
-      currentChainBalance={currentChainBalance}
-      otherChainBalances={otherChainBalances}
-      onPressSend={onPressSend}
-    />
+    <TokenBalances currentChainBalance={currentChainBalance} otherChainBalances={otherChainBalances} />
   ) : null
 })
 

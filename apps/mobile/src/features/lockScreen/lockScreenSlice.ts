@@ -10,17 +10,22 @@ export enum LockScreenVisibility {
   Hidden = 'hidden',
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export interface LockScreenState {
   visibility: LockScreenVisibility
   onBlur: boolean
+  preventLock: boolean
+  manualRetryRequired: boolean
 }
 
 const initialState: LockScreenState = {
   visibility: LockScreenVisibility.Init,
   onBlur: false,
+  preventLock: false,
+  manualRetryRequired: false,
 }
 
-export const lockScreenSlice = createSlice({
+const lockScreenSlice = createSlice({
   name: 'lockScreen',
   initialState,
   reducers: {
@@ -33,23 +38,29 @@ export const lockScreenSlice = createSlice({
     setLockScreenOnBlur: (state, action: PayloadAction<boolean>) => {
       state.onBlur = action.payload
     },
+    setPreventLock: (state, action: PayloadAction<boolean>) => {
+      state.preventLock = action.payload
+    },
+    setManualRetryRequired: (state, action: PayloadAction<boolean>) => {
+      state.manualRetryRequired = action.payload
+    },
   },
 })
 
-export const { setLockScreenVisibility, setLockScreenOnBlur } = lockScreenSlice.actions
+export const { setLockScreenVisibility, setLockScreenOnBlur, setPreventLock, setManualRetryRequired } =
+  lockScreenSlice.actions
 export const lockScreenReducer = lockScreenSlice.reducer
 
 //------------------------------
 // LockScreen selectors
 //------------------------------
 
-export const selectLockScreenVisibility = (state: { lockScreen: LockScreenState }): LockScreenVisibility =>
-  state.lockScreen.visibility
-
-export const selectIsLockScreenHidden = (state: { lockScreen: LockScreenState }): boolean =>
-  state.lockScreen.visibility === LockScreenVisibility.Hidden
-
 export const selectIsLockScreenVisible = (state: { lockScreen: LockScreenState }): boolean =>
   state.lockScreen.visibility === LockScreenVisibility.Visible
 
 export const selectLockScreenOnBlur = (state: { lockScreen: LockScreenState }): boolean => state.lockScreen.onBlur
+
+export const selectPreventLock = (state: { lockScreen: LockScreenState }): boolean => state.lockScreen.preventLock
+
+export const selectManualRetryRequired = (state: { lockScreen: LockScreenState }): boolean =>
+  state.lockScreen.manualRetryRequired

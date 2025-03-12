@@ -6,7 +6,7 @@ import { SettingsRecoveryPhrase } from 'src/app/features/settings/SettingsRecove
 import { EnterPasswordModal } from 'src/app/features/settings/password/EnterPasswordModal'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled, Eye, Key, Laptop } from 'ui/src/components/icons'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -14,9 +14,9 @@ import { logger } from 'utilities/src/logger/logger'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 const enum ViewStep {
-  Warning,
-  Password,
-  Reveal,
+  Warning = 0,
+  Password = 1,
+  Reveal = 2,
 }
 
 export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
@@ -55,7 +55,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
           icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
           nextButtonEnabled={true}
           nextButtonText={t('common.button.continue')}
-          nextButtonTheme="secondary_Button"
+          nextButtonEmphasis="secondary"
           subtitle={t('setting.recoveryPhrase.view.warning.message1')}
           title={t('setting.recoveryPhrase.view.warning.title')}
           onNextPressed={showPasswordModal}
@@ -108,17 +108,20 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
             </Text>
           </Flex>
           <Flex fill justifyContent="flex-end">
-            <DeprecatedButton
-              theme="detrimental"
-              onPress={(): void =>
-                navigate(
-                  `${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Wallets}`,
-                  { replace: true },
-                )
-              }
-            >
-              {t('setting.recoveryPhrase.remove')}
-            </DeprecatedButton>
+            <Flex row>
+              <Button
+                variant="critical"
+                emphasis="secondary"
+                onPress={(): void =>
+                  navigate(
+                    `${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Wallets}`,
+                    { replace: true },
+                  )
+                }
+              >
+                {t('setting.recoveryPhrase.remove')}
+              </Button>
+            </Flex>
           </Flex>
         </Flex>
       )}

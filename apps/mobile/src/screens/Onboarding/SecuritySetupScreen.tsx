@@ -12,7 +12,8 @@ import { checkOsBiometricAuthEnabled, useBiometricName } from 'src/features/biom
 import { setRequiredForTransactions } from 'src/features/biometricsSettings/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { DeprecatedButton, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
+import { openSettings } from 'src/utils/linking'
+import { Button, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import { Lock } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -20,7 +21,6 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
-import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 
@@ -117,11 +117,13 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           </Flex>
         </Flex>
         <Trace logPress element={ElementName.Enable}>
-          <DeprecatedButton size="large" theme="primary" onPress={onPressEnableSecurity}>
-            {isIOS
-              ? t('onboarding.security.button.confirm.ios', { biometricsMethod })
-              : t('onboarding.security.button.confirm.android')}
-          </DeprecatedButton>
+          <Flex centered row>
+            <Button size="large" variant="branded" onPress={onPressEnableSecurity}>
+              {isIOS
+                ? t('onboarding.security.button.confirm.ios', { biometricsMethod })
+                : t('onboarding.security.button.confirm.android')}
+            </Button>
+          </Flex>
         </Trace>
       </OnboardingScreen>
     </>

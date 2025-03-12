@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SpamCode } from 'uniswap/src/data/types'
 import { FoTPercent } from 'uniswap/src/features/tokens/TokenWarningModal'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -27,7 +27,6 @@ export type SafetyInfo = {
 export type CurrencyInfo = {
   currency: Currency
   currencyId: CurrencyId
-  safetyLevel: Maybe<SafetyLevel>
   safetyInfo?: Maybe<SafetyInfo>
   spamCode?: Maybe<SpamCode>
   logoUrl: Maybe<string>

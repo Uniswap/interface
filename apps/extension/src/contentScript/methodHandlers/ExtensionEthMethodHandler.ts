@@ -370,10 +370,11 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     }
 
     // native transactions like native send will not have populated data field
-    const requestIncludesData = Boolean(request.transaction.data)
-
-    if (requestIncludesData && request.transaction.data !== '0x') {
-      Object.assign(sendTransactionRequest, getCalldataInfoFromTransaction(request.transaction))
+    if (request.transaction.data && request.transaction.data !== '0x') {
+      Object.assign(
+        sendTransactionRequest,
+        getCalldataInfoFromTransaction(request.transaction.data, request.transaction.to, request.transaction.chainId),
+      )
     }
 
     await contentScriptToBackgroundMessageChannel.sendMessage(sendTransactionRequest)

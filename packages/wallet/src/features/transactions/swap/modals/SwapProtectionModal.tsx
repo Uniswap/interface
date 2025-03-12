@@ -15,7 +15,6 @@ export function SwapProtectionInfoModal({ isOpen, onClose }: { isOpen: boolean; 
       backgroundIconColor={colors.DEP_accentSuccessSoft.val}
       caption={t('swap.settings.protection.description')}
       rejectText={t('common.button.close')}
-      rejectButtonTheme="tertiary"
       icon={<ShieldCheck color="$statusSuccess" size="$icon.24" />}
       isOpen={isOpen}
       modalName={ModalName.SwapProtection}

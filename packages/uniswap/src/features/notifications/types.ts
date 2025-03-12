@@ -6,28 +6,27 @@ import { FinalizedTransactionStatus, TransactionType } from 'uniswap/src/feature
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 
-// Add new types to bottom so we can preserve the enumeration of the existing types
 export enum AppNotificationType {
-  Default,
-  Error,
-  WalletConnect,
-  Transaction,
-  TransactionPending,
-  Favorites,
-  Copied,
-  CopyFailed,
-  Success,
-  NetworkChanged,
-  NetworkChangedBridge,
-  ChooseCountry,
-  AssetVisibility, // could be token or NFT
-  SwapPending,
-  TransferCurrencyPending,
-  ScantasticComplete,
-  DappConnected,
-  DappDisconnected,
-  NotSupportedNetwork,
-  PasswordChanged,
+  Default = 0,
+  Error = 1,
+  WalletConnect = 2,
+  Transaction = 3,
+  TransactionPending = 4,
+  Favorites = 5,
+  Copied = 6,
+  CopyFailed = 7,
+  Success = 8,
+  NetworkChanged = 9,
+  NetworkChangedBridge = 10,
+  ChooseCountry = 11,
+  AssetVisibility = 12, // could be token or NFT
+  SwapPending = 13,
+  TransferCurrencyPending = 14,
+  ScantasticComplete = 15,
+  DappConnected = 16,
+  DappDisconnected = 17,
+  NotSupportedNetwork = 18,
+  PasswordChanged = 19,
 }
 
 export interface AppNotificationBase {

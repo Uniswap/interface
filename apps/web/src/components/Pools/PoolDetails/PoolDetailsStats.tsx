@@ -15,7 +15,7 @@ import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ClickableStyle, ThemedText } from 'theme/components'
-import { useMedia } from 'ui/src'
+import { Flex, useMedia } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -135,22 +135,24 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
   const isNative = unwrappedToken?.address === NATIVE_CHAIN_ID
   const currency = isNative && chainId ? nativeOnChain(chainId) : token.currency
   const { defaultChainId } = useEnabledChains()
+
   return (
     <PoolBalanceTokenNamesContainer>
-      {!isLargeScreen && <CurrencyLogo currency={currency} size={20} style={{ marginRight: '8px' }} />}
-      {formatNumber({
-        input: token.tvl,
-        type: NumberType.TokenQuantityStats,
-      })}
-      &nbsp;
-      <StyledLink
-        to={getTokenDetailsURL({
-          address: unwrappedToken.address,
-          chain: toGraphQLChain(chainId ?? defaultChainId),
+      <Flex row alignItems="center" gap="$spacing4">
+        {!isLargeScreen && <CurrencyLogo currency={currency} size={20} />}
+        {formatNumber({
+          input: token.tvl,
+          type: NumberType.TokenQuantityStats,
         })}
-      >
-        {unwrappedToken.symbol}
-      </StyledLink>
+        <StyledLink
+          to={getTokenDetailsURL({
+            address: unwrappedToken.address,
+            chain: toGraphQLChain(chainId ?? defaultChainId),
+          })}
+        >
+          {unwrappedToken.symbol}
+        </StyledLink>
+      </Flex>
     </PoolBalanceTokenNamesContainer>
   )
 }
@@ -291,10 +293,10 @@ function StatItem({ title, value, delta }: { title: ReactNode; value: number; de
           })}
         </StatItemText>
         {!!delta && (
-          <Row width="max-content" padding="4px 0px">
+          <Flex row width="max-content" py="$spacing4" $lg={{ py: 0 }}>
             <DeltaArrow delta={delta} />
             <ThemedText.BodySecondary>{formatDelta(delta)}</ThemedText.BodySecondary>
-          </Row>
+          </Flex>
         )}
       </StatsTextContainer>
     </StatItemColumn>

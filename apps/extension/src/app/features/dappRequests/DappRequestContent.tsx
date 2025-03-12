@@ -4,16 +4,7 @@ import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { DappRequestType } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import {
-  Anchor,
-  AnimatePresence,
-  DeprecatedButton,
-  Flex,
-  Text,
-  UniversalImage,
-  UniversalImageResizeMode,
-  styled,
-} from 'ui/src'
+import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -126,10 +117,12 @@ function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.E
   return (
     <Flex mb="$spacing4" ml="$spacing8" mt="$spacing8">
       <Flex row>
-        <Flex grow>
+        <Flex borderRadius="$roundedFull" borderWidth="$spacing1" borderColor="$surface3">
           {headerIcon || (
             <UniversalImage
-              style={{ image: { borderRadius: borderRadii.rounded8 } }}
+              style={{
+                image: { borderRadius: borderRadii.roundedFull },
+              }}
               fallback={fallbackIcon}
               size={{
                 width: iconSizes.icon40,
@@ -155,7 +148,7 @@ function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.E
 
 const WINDOW_CLOSE_DELAY = 10
 
-export function DappRequestFooter({
+function DappRequestFooter({
   chainId,
   connectedAccountAddress,
   confirmText,
@@ -187,7 +180,9 @@ export function DappRequestFooter({
     throw error
   }
 
-  const currentChainId = chainId || activeChain || defaultChainId
+  const sendTransactionChainId =
+    request.dappRequest.type === DappRequestType.SendTransaction ? request.dappRequest.transaction.chainId : undefined
+  const currentChainId = chainId || sendTransactionChainId || activeChain || defaultChainId
   const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(currentChainId, currentAccount.address)
 
   const hasSufficientGas = hasSufficientFundsIncludingGas({
@@ -234,7 +229,7 @@ export function DappRequestFooter({
           <Flex pb="$spacing8">
             <Text color="$DEP_accentWarning" variant="body3">
               {t('swap.warning.insufficientGas.title', {
-                currencySymbol: nativeBalance?.currency?.symbol,
+                currencySymbol: nativeBalance?.currency?.symbol ?? '',
               })}
             </Text>
           </Flex>
@@ -253,19 +248,18 @@ export function DappRequestFooter({
           px="$spacing8"
         />
         <Flex row gap="$spacing12" pt="$spacing8">
-          <DeprecatedButton flex={1} flexBasis={1} size="medium" theme="secondary" onPress={handleOnCancel}>
+          <Button flexBasis={1} size="medium" emphasis="secondary" onPress={handleOnCancel}>
             {t('common.button.cancel')}
-          </DeprecatedButton>
-          <DeprecatedButton
+          </Button>
+          <Button
             isDisabled={!isConfirmEnabled || disableConfirm}
-            flex={1}
             flexBasis={1}
             size="medium"
-            theme="primary"
+            variant="branded"
             onPress={handleOnConfirm}
           >
             {confirmText}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
     </>

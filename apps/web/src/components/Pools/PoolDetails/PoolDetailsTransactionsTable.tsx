@@ -34,12 +34,12 @@ const TableWrapper = styled.div`
 `
 
 enum PoolTransactionColumn {
-  Timestamp,
-  Type,
-  MakerAddress,
-  FiatValue,
-  InputAmount,
-  OutputAmount,
+  Timestamp = 0,
+  Type = 1,
+  MakerAddress = 2,
+  FiatValue = 3,
+  InputAmount = 4,
+  OutputAmount = 5,
 }
 
 const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {

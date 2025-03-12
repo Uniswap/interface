@@ -17,7 +17,6 @@ import {
   PriceSource,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GQL_MAINNET_CHAINS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { GqlChainId, UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   fromGraphQLChain,
@@ -62,10 +61,6 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
 }
 
 export type PricePoint = { timestamp: number; value: number }
-
-export function isGqlSupportedChain(chainId?: UniverseChainId) {
-  return !!chainId && GQL_MAINNET_CHAINS.includes(getChainInfo(chainId).backendChain.chain)
-}
 
 export function toContractInput(currency: Currency, fallback: UniverseChainId): ContractInput {
   const supportedChainId = toSupportedChainId(currency.chainId)
@@ -137,11 +132,6 @@ export function getTokenDetailsURL({
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
   return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
-}
-
-export function getPoolDetailsURL(address: string, chain: Chain) {
-  const chainName = chain.toLowerCase()
-  return `/explore/pools/${chainName}/${address}`
 }
 
 export function unwrapToken<

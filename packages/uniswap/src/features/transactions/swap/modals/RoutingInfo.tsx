@@ -10,11 +10,10 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import getRoutingDiagramEntries from 'uniswap/src/utils/getRoutingDiagramEntries'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -38,8 +37,8 @@ export function RoutingInfo({
 
   const routes = useMemo(() => (trade && isClassic(trade) ? getRoutingDiagramEntries(trade) : []), [trade])
 
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
-  const isMaybeV4 = trade && v4Enabled && isClassic(trade)
+  const v4SwapEnabled = useV4SwapEnabled(chainId)
+  const isMaybeV4 = trade && v4SwapEnabled && isClassic(trade)
 
   const caption = useMemo(() => {
     if (!trade) {
@@ -94,9 +93,7 @@ export function RoutingInfo({
       return null
     }
 
-    const helpCenterUrl = isUniswapX(trade)
-      ? uniswapUrls.helpArticleUrls.uniswapXInfo
-      : uniswapUrls.helpArticleUrls.routingSettings
+    const helpCenterUrl = uniswapUrls.helpArticleUrls.routingSettings
 
     return (
       <TouchableArea

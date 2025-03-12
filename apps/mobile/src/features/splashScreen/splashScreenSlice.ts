@@ -4,11 +4,12 @@ import { createSlice } from '@reduxjs/toolkit'
 // Splash Screen
 //------------------------------------------------------------------------------------------------
 
-export enum SplashScreenVisibility {
+enum SplashScreenVisibility {
   INIT = 'init',
   HIDDEN = 'hidden',
 }
 
+// eslint-disable-next-line import/no-unused-modules
 export interface SplashScreenState {
   visibility: SplashScreenVisibility
 }
@@ -17,7 +18,7 @@ const initialState: SplashScreenState = {
   visibility: SplashScreenVisibility.INIT,
 }
 
-export const splashScreenSlice = createSlice({
+const splashScreenSlice = createSlice({
   name: 'splashScreen',
   initialState,
   reducers: {
@@ -34,7 +35,7 @@ export const splashScreenReducer = splashScreenSlice.reducer
 // Splash Screen selectors
 //------------------------------
 
-export const selectSplashScreen = (state: { splashScreen: SplashScreenState }): SplashScreenState['visibility'] =>
+const selectSplashScreen = (state: { splashScreen: SplashScreenState }): SplashScreenState['visibility'] =>
   state.splashScreen.visibility
 
 export const selectSplashScreenIsHidden = (state: { splashScreen: SplashScreenState }): boolean =>

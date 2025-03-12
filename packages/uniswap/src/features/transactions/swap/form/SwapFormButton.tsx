@@ -1,18 +1,8 @@
 /* eslint-disable complexity */
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  ColorTokens,
-  DeprecatedButton,
-  Flex,
-  SpinningLoader,
-  Text,
-  getHoverCssFilter,
-  useIsDarkMode,
-  useIsShortMobileDevice,
-} from 'ui/src'
+import { Button, Flex, useIsShortMobileDevice, type ButtonProps } from 'ui/src'
 import { opacify, validColor } from 'ui/src/theme'
-import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
@@ -45,9 +35,9 @@ import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { isInterface } from 'utilities/src/platform'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export const SWAP_BUTTON_TEXT_VARIANT = 'buttonLabel1'
 
@@ -60,7 +50,6 @@ export function SwapFormButton({
 }): JSX.Element {
   const { t } = useTranslation()
   const isShortMobileDevice = useIsShortMobileDevice()
-  const isDarkMode = useIsDarkMode()
 
   const activeAccount = useAccountMeta()
   const { walletNeedsRestore, setScreen, swapRedirectCallback } = useTransactionModalContext()
@@ -80,15 +69,28 @@ export function SwapFormButton({
     derivedSwapInfo,
     prefilledCurrencies,
   )
-  const [showTokenWarningModal, setShowTokenWarningModal] = useState(false)
+  const {
+    value: showTokenWarningModal,
+    setTrue: handleShowTokenWarningModal,
+    setFalse: handleHideTokenWarningModal,
+  } = useBooleanState(false)
 
   const needsBridgingWarning = useNeedsBridgingWarning(derivedSwapInfo)
   const [showBridgingWarningModal, setShowBridgingWarningModal] = useState(false)
 
   const needsLowNativeBalanceWarning = useNeedsLowNativeBalanceWarning({ derivedSwapInfo, isMax })
-  const [showMaxNativeTransferModal, setShowMaxNativeTransferModal] = useState(false)
 
-  const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
+  const {
+    value: showMaxNativeTransferModal,
+    setTrue: handleShowMaxNativeTransferModal,
+    setFalse: handleHideMaxNativeTransferModal,
+  } = useBooleanState(false)
+
+  const {
+    value: showViewOnlyModal,
+    setTrue: handleShowViewOnlyModal,
+    setFalse: handleHideViewOnlyModal,
+  } = useBooleanState(false)
 
   const { wrapType, trade, currencies, chainId, exactCurrencyField } = derivedSwapInfo
 
@@ -149,16 +151,16 @@ export function SwapFormButton({
       } else if (!activeAccount && onConnectWallet) {
         onConnectWallet()
       } else if (isViewOnlyWallet) {
-        setShowViewOnlyModal(true)
+        handleShowViewOnlyModal()
       } else if (isInterfaceWrap) {
         // TODO(WEB-5012): Align interface wrap UX into SwapReviewScreen
         onInterfaceWrap?.()
       } else if (needsTokenProtectionWarning && !skipTokenProtectionWarning) {
-        setShowTokenWarningModal(true)
+        handleShowTokenWarningModal()
       } else if (needsBridgingWarning && !skipBridgingWarning) {
         setShowBridgingWarningModal(true)
       } else if (needsLowNativeBalanceWarning && !skipMaxTransferWarning && !isInterface) {
-        setShowMaxNativeTransferModal(true)
+        handleShowMaxNativeTransferModal()
         sendAnalyticsEvent(WalletEventName.LowNetworkTokenInfoModalOpened, { location: 'swap' })
       } else {
         updateSwapForm({ txId: createTransactionId() })
@@ -171,18 +173,34 @@ export function SwapFormButton({
       onConnectWallet,
       isViewOnlyWallet,
       isInterfaceWrap,
+      needsTokenProtectionWarning,
       needsBridgingWarning,
+      needsLowNativeBalanceWarning,
       currencies,
       exactAmountToken,
       exactCurrencyField,
       chainId,
+      handleShowViewOnlyModal,
       onInterfaceWrap,
+      handleShowTokenWarningModal,
+      handleShowMaxNativeTransferModal,
       updateSwapForm,
       setScreen,
-      needsTokenProtectionWarning,
-      needsLowNativeBalanceWarning,
     ],
   )
+
+  const handleOnReviewPress = useCallback(() => {
+    // One of these modals may or may not be showing
+    // If showing, hide
+    handleHideMaxNativeTransferModal()
+    handleHideTokenWarningModal()
+
+    onReviewPress({
+      skipBridgingWarning: false,
+      skipMaxTransferWarning: false,
+      skipTokenProtectionWarning: false,
+    })
+  }, [handleHideMaxNativeTransferModal, handleHideTokenWarningModal, onReviewPress])
 
   const bridgingModalActionCallback = useCallback(
     (accepted: boolean) => {
@@ -194,7 +212,11 @@ export function SwapFormButton({
     [onReviewPress],
   )
 
-  const invalidTokenSelection = Object.values(currencies).some((currency) => !currency)
+  const handleBridgingOnContinue = useCallback(() => bridgingModalActionCallback(true), [bridgingModalActionCallback])
+
+  const handleBridgingOnClose = useCallback(() => bridgingModalActionCallback(false), [bridgingModalActionCallback])
+
+  const invalidTokenSelection = useMemo(() => Object.values(currencies).some((currency) => !currency), [currencies])
   const invalidAmountSelection = !exactAmountFiat && !exactAmountToken
 
   const isBlockingWithCustomMessage =
@@ -211,7 +233,7 @@ export function SwapFormButton({
   // TODO(WEB-5090): Simplify logic, deduplicate disabled vs reviewButtonDisabled
   const disabled = !!activeAccount && reviewButtonDisabled && !isViewOnlyWallet && !swapRedirectCallback
 
-  const getButtonText = (): string => {
+  const buttonText = ((): string => {
     if (swapRedirectCallback) {
       return t('common.getStarted')
     }
@@ -243,129 +265,90 @@ export function SwapFormButton({
     }
 
     return t('swap.button.review')
-  }
+  })()
 
-  const getButtonOpacity = (): number | undefined => {
-    switch (true) {
-      case isViewOnlyWallet:
-        return 0.4
-      case !!isBlockingWithCustomMessage:
-      case !!disabled:
-        // use opacity 1 for blocking states, because surface2 is hard to read with default disabled opacity
-        return 1
-      default:
-        return 1
-    }
-  }
-
-  const { validTokenColor, tokenColorText, lightTokenColor, hoveredLightTokenColor } = useMemo(() => {
+  const { validTokenColor, lightTokenColor } = useMemo(() => {
     const validatedColor = validColor(tokenColor)
+
     return {
-      validTokenColor: validatedColor,
-      tokenColorText: tokenColor ? getContrastPassingTextColor(tokenColor) : undefined,
+      validTokenColor: tokenColor ? validatedColor : undefined,
       lightTokenColor: tokenColor ? opacify(12, validatedColor) : undefined,
-      hoveredLightTokenColor: tokenColor ? opacify(24, validatedColor) : undefined,
     }
   }, [tokenColor])
 
-  const buttonProps: {
-    backgroundColor: ColorTokens
-    hoverBackgroundColor: ColorTokens
-    buttonTextColor: ColorTokens
-    buttonText: string
-    opacity: number | undefined
-  } = {
-    backgroundColor:
-      !activeAccount || isSubmitting
-        ? lightTokenColor ?? '$accent2'
-        : (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
-          ? '$surface2'
-          : validTokenColor ?? '$accent1',
-    hoverBackgroundColor:
-      !activeAccount || isSubmitting
-        ? hoveredLightTokenColor ?? '$accent2Hovered'
-        : (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
-          ? '$surface2'
-          : validTokenColor ?? '$accent1Hovered',
-    buttonTextColor: !activeAccount
-      ? validTokenColor ?? '$accent1'
-      : (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
-        ? '$neutral2'
-        : tokenColorText ?? '$white',
-    buttonText: getButtonText(),
-    opacity: getButtonOpacity(),
-  }
+  const isInactiveAccountOrSubmitting = !activeAccount || isSubmitting
+  const isBlockingOrDisabledWithoutSwapRedirect = (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
 
-  const filter =
-    buttonProps.hoverBackgroundColor === validTokenColor && buttonProps.backgroundColor === validTokenColor
-      ? getHoverCssFilter(isDarkMode)
-      : undefined
+  // If disabled, use defaults for background color
+  // Otherwise, we'll try and use the color from the token (i.e. swapping on Web > TDP)
+  const buttonBackgroundColor = disabled
+    ? undefined
+    : !activeAccount || isSubmitting
+      ? lightTokenColor
+      : validTokenColor
+
+  const buttonVariant: ButtonProps['variant'] = !activeAccount
+    ? 'branded'
+    : isBlockingOrDisabledWithoutSwapRedirect
+      ? 'default'
+      : 'branded'
+  const buttonEmphasis =
+    isInactiveAccountOrSubmitting || isBlockingOrDisabledWithoutSwapRedirect ? 'secondary' : 'primary'
+
+  const buttonTextColor = !activeAccount ? validTokenColor : undefined
+
+  const traceProperties = useMemo(
+    () => ({
+      chainId,
+      tokenAmount: exactAmountToken,
+      fiatAmount: exactAmountFiat,
+    }),
+    [chainId, exactAmountToken, exactAmountFiat],
+  )
 
   return (
     <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
-      <Trace
-        logPress
-        element={ElementName.SwapReview}
-        properties={{ chainId, tokenAmount: exactAmountToken, fiatAmount: exactAmountFiat }}
-      >
+      <Trace logPress element={ElementName.SwapReview} properties={traceProperties}>
         <LowNativeBalanceModal
           isOpen={showMaxNativeTransferModal}
-          onClose={() => setShowMaxNativeTransferModal(false)}
-          onAcknowledge={() => {
-            setShowMaxNativeTransferModal(false)
-            onReviewPress({
-              skipBridgingWarning: true,
-              skipTokenProtectionWarning: true,
-              skipMaxTransferWarning: true,
-            })
-          }}
+          onClose={handleHideMaxNativeTransferModal}
+          onAcknowledge={handleOnReviewPress}
         />
-        <DeprecatedButton
-          animation="fast"
-          // Custom styles are matched with our theme hover opacities - can remove this when we implement full theme support in DeprecatedButton
-          pressStyle={{ backgroundColor: buttonProps.backgroundColor, scale: 0.98 }}
-          hoverStyle={{ backgroundColor: buttonProps.hoverBackgroundColor, filter }}
-          icon={indicative ? <SpinningLoader color="$neutral2" size={iconSizes.icon20} /> : undefined}
-          backgroundColor={buttonProps.backgroundColor}
-          isDisabled={disabled}
-          opacity={buttonProps.opacity}
-          size={isShortMobileDevice ? 'small' : 'large'}
-          testID={TestID.ReviewSwap}
-          width="100%"
-          onPress={() =>
-            onReviewPress({
-              skipBridgingWarning: false,
-              skipMaxTransferWarning: false,
-              skipTokenProtectionWarning: false,
-            })
-          }
-        >
-          <Text color={buttonProps.buttonTextColor} variant={SWAP_BUTTON_TEXT_VARIANT}>
-            {buttonProps.buttonText}
-          </Text>
-        </DeprecatedButton>
+        <Flex row alignSelf="stretch">
+          <Button
+            variant={buttonVariant}
+            emphasis={buttonEmphasis}
+            loading={!!indicative}
+            isDisabled={disabled}
+            backgroundColor={buttonBackgroundColor}
+            size={isShortMobileDevice ? 'small' : 'large'}
+            testID={TestID.ReviewSwap}
+            onPress={handleOnReviewPress}
+          >
+            {buttonTextColor ? (
+              <Button.Text customBackgroundColor={buttonBackgroundColor} color={buttonTextColor}>
+                {buttonText}
+              </Button.Text>
+            ) : (
+              buttonText
+            )}
+          </Button>
+        </Flex>
       </Trace>
-      <ViewOnlyModal isOpen={showViewOnlyModal} onDismiss={(): void => setShowViewOnlyModal(false)} />
+      <ViewOnlyModal isOpen={showViewOnlyModal} onDismiss={handleHideViewOnlyModal} />
       <BridgingModal
         isOpen={showBridgingWarningModal}
         derivedSwapInfo={derivedSwapInfo}
-        onContinue={() => bridgingModalActionCallback(true)}
-        onClose={() => bridgingModalActionCallback(false)}
+        onContinue={handleBridgingOnContinue}
+        onClose={handleBridgingOnClose}
       />
       {currenciesWithProtectionWarnings.length > 0 && currenciesWithProtectionWarnings[0] && (
         <TokenWarningModal
           isVisible={showTokenWarningModal}
           currencyInfo0={currenciesWithProtectionWarnings[0]}
           currencyInfo1={currenciesWithProtectionWarnings.length > 1 ? currenciesWithProtectionWarnings[1] : undefined}
-          closeModalOnly={() => setShowTokenWarningModal(false)}
-          onAcknowledge={() => {
-            setShowTokenWarningModal(false)
-            onReviewPress({
-              skipBridgingWarning: false,
-              skipMaxTransferWarning: false,
-              skipTokenProtectionWarning: true,
-            })
-          }}
+          closeModalOnly={handleHideTokenWarningModal}
+          onAcknowledge={handleOnReviewPress}
         />
       )}
     </Flex>

@@ -19,7 +19,6 @@ import { PendingNotificationBadge } from 'wallet/src/features/notifications/comp
 
 export const TAB_VIEW_SCROLL_THROTTLE = 16
 export const TAB_BAR_HEIGHT = 48
-export const SWIPE_THRESHOLD = 5
 
 export const TAB_STYLES = StyleSheet.create({
   activeTabIndicator: {

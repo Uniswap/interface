@@ -4,13 +4,16 @@ import LanguageMenu from 'components/AccountDrawer/LanguageMenu'
 import LocalCurrencyMenu from 'components/AccountDrawer/LocalCurrencyMenu'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
 import { UniExtensionPoolsMenu } from 'components/AccountDrawer/MiniPortfolio/Pools/UniExtensionPoolsMenu'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
-import Column from 'components/deprecated/Column'
 import WalletModal from 'components/WalletModal'
+import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
+import usePrevious from 'hooks/usePrevious'
 import { useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo } from 'react'
+import { TransitionItem } from 'ui/src/animations'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
@@ -19,7 +22,7 @@ const DefaultMenuWrap = styled(Column)`
   height: 100%;
 `
 
-function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
+function DefaultMenu() {
   const account = useAccount()
 
   const [menu, setMenu] = useAtom(miniPortfolioMenuStateAtom)
@@ -28,6 +31,28 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const openLanguageSettings = useCallback(() => setMenu(MenuState.LANGUAGE_SETTINGS), [setMenu])
   const openLocalCurrencySettings = useCallback(() => setMenu(MenuState.LOCAL_CURRENCY_SETTINGS), [setMenu])
   const closeLimitsMenu = useCallback(() => setMenu(MenuState.DEFAULT), [setMenu])
+  const { isOpen: drawerOpen } = useAccountDrawer()
+
+  const prevMenu = usePrevious(menu)
+
+  const animationDirection = useMemo(() => {
+    const menuIndices = {
+      [MenuState.DEFAULT]: 0,
+      [MenuState.SETTINGS]: 1,
+      [MenuState.POOLS]: 1,
+      [MenuState.LANGUAGE_SETTINGS]: 2,
+      [MenuState.LOCAL_CURRENCY_SETTINGS]: 2,
+      [MenuState.LIMITS]: 2,
+    } as const
+
+    if (!prevMenu || prevMenu === menu) {
+      return 'forward'
+    }
+
+    const newIndex = menuIndices[menu] ?? 2
+    const oldIndex = menuIndices[prevMenu] ?? 2
+    return newIndex > oldIndex ? 'forward' : 'backward'
+  }, [menu, prevMenu])
 
   useEffect(() => {
     if (!drawerOpen && menu !== MenuState.DEFAULT) {
@@ -84,7 +109,13 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     openSettings,
   ])
 
-  return <DefaultMenuWrap>{SubMenu}</DefaultMenuWrap>
+  return (
+    <DefaultMenuWrap>
+      <TransitionItem animationType={animationDirection} animation="100ms" childKey={menu}>
+        {SubMenu}
+      </TransitionItem>
+    </DefaultMenuWrap>
+  )
 }
 
 export default DefaultMenu

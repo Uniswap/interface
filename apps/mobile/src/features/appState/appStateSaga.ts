@@ -38,7 +38,7 @@ const IS_ANDROID_SUBSCRIPTION_ENABLED = false
  * @param onChange - Callback function to handle app state changes
  * @returns - Function to unsubscribe from the app state change listener
  */
-export function appStateSubscription(onChange: (value: AppStateStatus) => void): () => void {
+function appStateSubscription(onChange: (value: AppStateStatus) => void): () => void {
   const subscription = AppState.addEventListener('change', (value: AppStateStatus) => {
     onChange(value)
   })

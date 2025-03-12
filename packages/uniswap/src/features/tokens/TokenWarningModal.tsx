@@ -17,6 +17,7 @@ import { TokenWarningFlagsTable } from 'uniswap/src/features/tokens/TokenWarning
 import { useBlockaidFeeComparisonAnalytics } from 'uniswap/src/features/tokens/hooks/useBlockaidFeeComparisonAnalytics'
 import {
   TokenProtectionWarning,
+  getCurrencyFeeOnTransfer,
   getFeeWarning,
   getIsFeeRelatedWarning,
   getSeverityFromTokenProtectionWarning,
@@ -85,13 +86,18 @@ function TokenWarningModalContent({
 
   // If Blockaid marks the token as having high fees, but we don't have data on token fees, show Blockaid's fees data
   const isFeeRelatedWarning = getIsFeeRelatedWarning(tokenProtectionWarning)
+  const { buyFeePercent: currencyBuyFeePercent, sellFeePercent: currencySellFeePercent } = getCurrencyFeeOnTransfer(
+    currencyInfo0.currency,
+  )
   const { buyFeePercent, sellFeePercent } = getTokenProtectionFeeOnTransfer(currencyInfo0)
   const blockaidFeesData = currencyInfo0.safetyInfo?.blockaidFees
   const showBlockaidFeesData =
     isFeeRelatedWarning &&
     blockaidFeesData &&
-    ((blockaidFeesData.buyFeePercent && (feeOnTransferOverride?.buyFeePercent ?? buyFeePercent) === undefined) ||
-      (blockaidFeesData.sellFeePercent && (feeOnTransferOverride?.sellFeePercent ?? sellFeePercent) === undefined))
+    ((blockaidFeesData.buyFeePercent &&
+      (feeOnTransferOverride?.buyFeePercent ?? currencyBuyFeePercent) === undefined) ||
+      (blockaidFeesData.sellFeePercent &&
+        (feeOnTransferOverride?.sellFeePercent ?? currencySellFeePercent) === undefined))
   const displayedBuyFeePercent = feeOnTransferOverride?.buyFeePercent ?? buyFeePercent
   const displayedSellFeePercent = feeOnTransferOverride?.sellFeePercent ?? sellFeePercent
 
@@ -159,7 +165,6 @@ function TokenWarningModalContent({
       <Flex>
         <WarningModalContent
           modalName={ModalName.TokenWarningModal}
-          rejectButtonTheme="tertiary"
           captionComponent={
             <Text color="$neutral2" textAlign="center" variant="body3">
               {`${subtitleText} `}

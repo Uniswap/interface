@@ -33,6 +33,7 @@ export enum SwapConfigKey {
   AverageL1BlockTimeMs = 'averageL1BlockTimeMs',
   AverageL2BlockTimeMs = 'averageL2BlockTimeMs',
   TradingApiSwapRequestMs = 'tradingApiSwapRequestMs',
+  MonadTestnetPollingIntervalMs = 'monadTestnetPollingIntervalMs',
 
   MinAutoSlippageToleranceL2 = 'minAutoSlippageToleranceL2',
 
@@ -117,6 +118,7 @@ export type GasStrategies = {
 export enum MainnetPrivateRpcConfigKey {
   UseFlashbots = 'use_flashbots',
   FlashbotsBlockRange = 'flashbots_block_range',
+  FlashbotsRefundPercent = 'flashbots_refund_percent',
   SendFlashbotsAuthenticationHeader = 'send_authentication_header',
 }
 

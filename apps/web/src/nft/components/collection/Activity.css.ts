@@ -1,127 +1,122 @@
 import { style } from '@vanilla-extract/css'
 import { body, bodySmall, buttonTextMedium, subhead, subheadSmall } from 'nft/css/common.css'
-import { breakpoints, sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
+import { breakpoints } from 'ui/src/theme'
 
-export const baseRow = style([
-  sprinkles({
-    display: 'grid',
-  }),
-  {
-    gridTemplateColumns: '2.5fr 1fr',
-    '@media': {
-      [`screen and (min-width: ${breakpoints.sm}px)`]: {
-        gridTemplateColumns: '2fr 1.5fr 1fr',
-      },
-      [`screen and (min-width: ${breakpoints.md}px)`]: {
-        gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr',
-      },
-      [`screen and (min-width: ${breakpoints.lg}px)`]: {
-        gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr',
-      },
-      [`screen and (min-width: ${breakpoints.xl}px)`]: {
-        gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr 1fr',
-      },
+export const baseRow = style({
+  display: 'grid',
+  gridTemplateColumns: '2.5fr 1fr',
+  '@media': {
+    [`screen and (min-width: ${breakpoints.md}px)`]: {
+      gridTemplateColumns: '2fr 1.5fr 1fr',
+    },
+    [`screen and (min-width: ${breakpoints.lg}px)`]: {
+      gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr',
+    },
+    [`screen and (min-width: ${breakpoints.xl}px)`]: {
+      gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr',
+    },
+    [`screen and (min-width: ${breakpoints.xxl}px)`]: {
+      gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr 1fr',
     },
   },
-])
+})
 
 export const eventRow = style([
   baseRow,
-  sprinkles({
-    paddingY: '12',
-    paddingX: { sm: '4', md: '16' },
-    color: 'neutral1',
+  {
+    paddingTop: '12px',
+    paddingBottom: '12px',
+    paddingLeft: '4px',
+    paddingRight: '4px',
+    color: 'var(--neutral1)',
     cursor: 'pointer',
     borderWidth: '1px',
     borderStyle: 'solid',
     borderColor: 'transparent',
-    borderBottomColor: 'surface3',
-  }),
-  {
+    borderBottomColor: 'var(--surface3)',
     textDecoration: 'none',
     height: '84px',
+    '@media': {
+      [`screen and (min-width: ${breakpoints.lg}px)`]: {
+        paddingLeft: '16px',
+        paddingRight: '16px',
+      },
+    },
     ':hover': {
-      background: themeVars.colors.surface1,
+      background: 'var(--surface1)',
     },
   },
 ])
 
 export const headerRow = style([
   baseRow,
-  sprinkles({
-    paddingBottom: '8',
-    color: 'neutral2',
-    fontSize: '12',
-    fontWeight: 'medium',
-    paddingX: '16',
-  }),
   {
+    paddingBottom: '8px',
+    color: 'var(--neutral2)',
+    fontSize: '12px',
+    fontWeight: '500',
+    paddingLeft: '16px',
+    paddingRight: '16px',
     lineHeight: '16px',
   },
 ])
 
-export const detailsImage = sprinkles({
-  width: '60',
-  height: '60',
-  borderRadius: '8',
+export const detailsImage = style({
+  width: '60px',
+  height: '60px',
+  borderRadius: '8px',
 })
 
 export const detailsName = style([
   body,
-  sprinkles({
-    marginBottom: '6',
-    fontWeight: 'book',
+  {
+    marginBottom: '6px',
+    fontWeight: '400',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-  }),
+  },
 ])
 
 export const eventDetail = style([
   subhead,
-  sprinkles({
-    gap: '8',
-  }),
   {
+    gap: '8px',
     lineHeight: '24px',
   },
 ])
 
 export const eventTime = style([
   bodySmall,
-  sprinkles({
-    color: 'neutral2',
-  }),
   {
+    color: 'var(--neutral2)',
     lineHeight: '20px',
   },
 ])
 
 export const addressCell = style([
   buttonTextMedium,
-  sprinkles({
-    color: 'neutral1',
-    height: 'full',
-    justifyContent: 'center',
-    paddingLeft: '2',
-  }),
   {
+    color: 'var(--neutral1)',
+    height: '100%',
+    justifyContent: 'center',
+    paddingLeft: '2px',
     lineHeight: '24px',
   },
 ])
 
 export const baseBuyCell = style([
   buttonTextMedium,
-  sprinkles({
-    width: 'max',
-    background: 'none',
-    paddingY: '12',
-    paddingX: '16',
-    border: 'none',
-    borderRadius: '12',
-    transition: '250',
-  }),
   {
+    width: 'max-content',
+    background: 'none',
+    paddingTop: '12px',
+    paddingBottom: '12px',
+    paddingLeft: '16px',
+    paddingRight: '16px',
+    border: 'none',
+    borderRadius: '12px',
+    transition: '250ms',
     lineHeight: '20px',
   },
 ])
@@ -132,14 +127,14 @@ export const buyCell = style([
     selectors: {
       '&:enabled': {
         cursor: 'pointer',
-        color: vars.color.accent1,
+        color: 'var(--accent1)',
       },
       '&:disabled': {
-        color: themeVars.colors.neutral3,
+        color: 'var(--neutral3)',
       },
       '&:hover&:enabled': {
-        background: vars.color.accent1,
-        color: themeVars.colors.white,
+        background: 'var(--accent1)',
+        color: 'var(--white)',
       },
     },
   },
@@ -147,49 +142,44 @@ export const buyCell = style([
 
 export const removeCell = style([
   baseBuyCell,
-  sprinkles({
-    color: 'critical',
-    cursor: 'pointer',
-  }),
   {
+    color: 'var(--critical)',
+    cursor: 'pointer',
     ':hover': {
-      background: vars.color.critical,
-      color: themeVars.colors.white,
+      background: 'var(--critical)',
+      color: 'var(--white)',
     },
   },
 ])
 
 export const filter = style([
   subheadSmall,
-  sprinkles({
-    background: 'surface3',
-    color: 'neutral1',
-    paddingY: '12',
-    paddingX: '16',
-    borderRadius: '12',
-    cursor: 'pointer',
-  }),
   {
+    background: 'var(--surface3)',
+    color: 'var(--neutral1)',
+    paddingTop: '12px',
+    paddingBottom: '12px',
+    paddingLeft: '16px',
+    paddingRight: '16px',
+    borderRadius: '12px',
+    cursor: 'pointer',
     boxSizing: 'border-box',
   },
 ])
 
-export const rarityInfo = style([
-  sprinkles({
-    display: 'flex',
-    borderRadius: '4',
-    height: '16',
-    width: 'min',
-    color: 'neutral1',
-    background: 'surface3',
-    fontSize: '10',
-    fontWeight: 'medium',
-    paddingX: '4',
-    cursor: 'pointer',
-  }),
-  {
-    lineHeight: '12px',
-    letterSpacing: '0.04em',
-    backdropFilter: 'blur(6px)',
-  },
-])
+export const rarityInfo = style({
+  display: 'flex',
+  borderRadius: '4px',
+  height: '16px',
+  width: 'min-content',
+  color: 'var(--neutral1)',
+  background: 'var(--surface3)',
+  fontSize: '10px',
+  fontWeight: '500',
+  paddingLeft: '4px',
+  paddingRight: '4px',
+  cursor: 'pointer',
+  lineHeight: '12px',
+  letterSpacing: '0.04em',
+  backdropFilter: 'blur(6px)',
+})

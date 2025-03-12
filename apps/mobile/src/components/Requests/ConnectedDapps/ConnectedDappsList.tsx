@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
-import { DappConnectedNetworkModal } from 'src/components/Requests/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/Requests/ConnectedDapps/DappConnectionItem'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -39,7 +38,6 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
   const { t } = useTranslation()
   const { fullHeight } = useDeviceDimensions()
   const [isEditing, setIsEditing] = useState(false)
-  const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
   const { address } = useActiveAccountWithThrow()
 
   const onPressScan = useCallback(() => {
@@ -164,9 +162,6 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           </Flex>
         )}
       </AnimatedFlex>
-      {selectedSession && (
-        <DappConnectedNetworkModal session={selectedSession} onClose={(): void => setSelectedSession(undefined)} />
-      )}
     </>
   )
 }

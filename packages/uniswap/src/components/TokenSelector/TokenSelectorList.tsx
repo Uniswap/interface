@@ -5,7 +5,6 @@ import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
-import { SectionFooter, TokenSectionFooterProps } from 'uniswap/src/components/TokenSelector/items/TokenSectionFooter'
 import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/items/TokenSectionHeader'
 import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
 import {
@@ -18,13 +17,10 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
-import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
-import { useIsExtraLargeScreen } from 'uniswap/src/hooks/useWindowSize'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { DDRumManualTiming } from 'utilities/src/logger/datadogEvents'
+import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
-import { isInterface } from 'utilities/src/platform'
 
 function isHorizontalListTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
@@ -123,11 +119,6 @@ function _TokenSelectorList({
   const { t } = useTranslation()
   const sectionListRef = useRef<TokenSectionBaseListRef>()
   const [expandedItems, setExpandedItems] = useState<string[]>([])
-  const { shouldShowUnichainBridgingTooltip } = useUnichainTooltipVisibility()
-  const isExtraLargeScreen = useIsExtraLargeScreen()
-  const isXLInterface = isInterface && isExtraLargeScreen
-  const shouldRenderUnichainInlineBridgingTooltip =
-    shouldShowUnichainBridgingTooltip && !isXLInterface && chainFilter === UniverseChainId.Unichain
 
   usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])
 
@@ -192,22 +183,9 @@ function _TokenSelectorList({
         endElement={section.endElement}
         sectionKey={section.sectionKey}
         name={section.name}
-        chainId={chainFilter}
       />
     ),
-    [chainFilter],
-  )
-
-  const renderSectionFooter = useCallback(
-    ({ section }: { section: TokenSectionFooterProps }): JSX.Element => (
-      <SectionFooter
-        rightElement={section.rightElement}
-        sectionKey={section.sectionKey}
-        name={section.name}
-        chainId={chainFilter}
-      />
-    ),
-    [chainFilter],
+    [],
   )
 
   if (hasError) {
@@ -245,7 +223,6 @@ function _TokenSelectorList({
         keyExtractor={key}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
-        renderSectionFooter={shouldRenderUnichainInlineBridgingTooltip ? renderSectionFooter : undefined}
         sectionListRef={sectionListRef}
         sections={sections ?? []}
         expandedItems={expandedItems}

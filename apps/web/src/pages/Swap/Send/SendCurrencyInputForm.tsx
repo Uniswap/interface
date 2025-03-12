@@ -1,15 +1,10 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
-import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ButtonLight } from 'components/Button/buttons'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { isInputGreaterThanDecimals } from 'components/NumericalInput'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import Column from 'components/deprecated/Column'
-import Row, { RowBetween } from 'components/deprecated/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import styled, { css } from 'lib/styled-components'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
@@ -22,9 +17,10 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSendContext } from 'state/send/SendContext'
 import { SendInputError } from 'state/send/hooks'
 import { CurrencyState } from 'state/swap/types'
-import { ClickableStyle, ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
+import { ClickableTamaguiStyle, ThemedText } from 'theme/components'
+import { Button, Flex, Text, styled, type ButtonProps } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -36,81 +32,59 @@ import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
-const Wrapper = styled(Column)<{ $disabled: boolean }>`
-  opacity: ${({ $disabled }) => (!$disabled ? 1 : 0.4)};
-  pointer-events: ${({ $disabled }) => (!$disabled ? 'initial' : 'none')};
-  gap: 1px;
-`
+const Wrapper = styled(Flex, {
+  opacity: 1,
+  gap: '1px',
 
-const CurrencyInputWrapper = styled(PrefetchBalancesWrapper)`
-  display: flex;
-  background-color: ${({ theme }) => theme.surface2};
-  padding: 16px 16px;
-  border-radius: 0px 0px 16px 16px;
-  height: 64px;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-`
-const ClickableRowBetween = styled(RowBetween)`
-  ${ClickableStyle};
-`
+  variants: {
+    disabled: {
+      true: {
+        opacity: 0.4,
+        pointerEvents: 'none',
+      },
+    },
+  },
+})
 
-const InputWrapper = styled(Column)`
-  position: relative;
-  background-color: ${({ theme }) => theme.surface2};
-  padding: 0px 12px 60px 12px;
-  height: 256px;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-  border-radius: 16px 16px 0px 0px;
-`
-const InputLabelContainer = styled.div`
-  position: absolute;
-  top: 16px;
-  left: 16px;
-`
+const CurrencyInputWrapper = styled(Flex, {
+  backgroundColor: '$surface2',
+  px: '$spacing16',
+  borderBottomRightRadius: '$rounded16',
+  borderBottomLeftRadius: '$rounded16',
+  height: '64px',
+  justifyContent: 'center',
+  position: 'relative',
+})
 
-const MaxButton = styled(ButtonLight)`
-  position: absolute;
-  right: 40px;
-  height: min-content;
-  width: min-content;
-  padding: 2px 8px;
-  font-size: 14px;
-  line-height: 20px;
-`
-const StyledDropDown = styled(DropDown)`
-  ${ClickableStyle}
-  width: 20px;
-  height: 8px;
-  path {
-    stroke: ${({ theme }) => theme.neutral3};
-    stroke-width: 2px;
-  }
-`
+const InputWrapper = styled(Flex, {
+  position: 'relative',
+  backgroundColor: '$surface2',
+  px: '$gap12',
+  pb: '60px',
+  height: '256px',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  gap: '$gap4',
+  borderTopLeftRadius: '$rounded16',
+  borderTopRightRadius: '$rounded16',
+})
 
-const CurrencySelectorRow = styled(Row)`
-  ${ClickableStyle}
-`
+const ErrorContainer = styled(Flex, {
+  position: 'absolute',
+  width: '100%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  left: '0',
+  bottom: '32px',
+})
 
-const ErrorContainer = styled(Row)`
-  position: absolute;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  left: 0px;
-  bottom: 32px;
-`
-
-const AlternateCurrencyDisplayRow = styled(Row)<{ $disabled: boolean }>`
-  ${({ $disabled }) =>
-    !$disabled &&
-    css`
-      ${ClickableStyle}
-    `}
-`
+const MaxButton = ({ onPress }: { onPress: ButtonProps['onPress'] }) => {
+  return (
+    <Button variant="branded" emphasis="secondary" size="xxsmall" onPress={onPress}>
+      <Trans i18nKey="common.max" />
+    </Button>
+  )
+}
 
 const AlternateCurrencyDisplay = ({ disabled, onToggle }: { disabled: boolean; onToggle: () => void }) => {
   const { formatConvertedFiatNumberOrString, formatNumberOrString } = useFormatter()
@@ -139,26 +113,22 @@ const AlternateCurrencyDisplay = ({ disabled, onToggle }: { disabled: boolean; o
 
   return (
     <LoadingOpacityContainer $loading={false}>
-      <AlternateCurrencyDisplayRow
-        align="center"
-        justify="center"
-        gap="xs"
-        $disabled={disabled}
-        onClick={disabled ? undefined : onToggle}
+      <Flex
+        row
+        alignItems="center"
+        justifyContent="center"
+        gap="$gap4"
+        onPress={disabled ? undefined : onToggle}
+        {...(!disabled ? ClickableTamaguiStyle : {})}
       >
         <ThemedText.BodySecondary fontSize="16px" lineHeight="24px" color="neutral3">
           {formattedAlternateCurrency}
         </ThemedText.BodySecondary>
         <ArrowUpDown color="$neutral3" size="$icon.16" />
-      </AlternateCurrencyDisplayRow>
+      </Flex>
     </LoadingOpacityContainer>
   )
 }
-
-const StyledErrorText = styled(ThemedText.Caption)`
-  color: ${({ theme }) => theme.critical};
-  line-height: 16px;
-`
 
 const InputErrorLookup = {
   [SendInputError.INSUFFICIENT_FUNDS]: <Trans i18nKey="common.insufficient.funds" />,
@@ -174,8 +144,10 @@ const InputError = () => {
   }
 
   return (
-    <ErrorContainer justify="center">
-      <StyledErrorText>{InputErrorLookup[inputError]}</StyledErrorText>
+    <ErrorContainer>
+      <Text variant="body4" color="$statusCritical">
+        {InputErrorLookup[inputError]}
+      </Text>
     </ErrorContainer>
   )
 }
@@ -275,25 +247,30 @@ export default function SendCurrencyInputForm({
     }
   }, [exactAmountOut, inputInFiat, setSendState])
 
-  const handleMaxInput = useCallback(() => {
-    if (maxInputAmount) {
-      setSendState((prev) => ({
-        ...prev,
-        exactAmountToken: maxInputAmount.toExact(),
-        exactAmountFiat: undefined,
-        inputInFiat: false,
-      }))
-    }
-  }, [maxInputAmount, setSendState])
+  const handleMaxInput = useCallback(
+    (e: Parameters<NonNullable<ButtonProps['onPress']>>[0]) => {
+      e.stopPropagation()
+
+      if (maxInputAmount) {
+        setSendState((prev) => ({
+          ...prev,
+          exactAmountToken: maxInputAmount.toExact(),
+          exactAmountFiat: undefined,
+          inputInFiat: false,
+        }))
+      }
+    },
+    [maxInputAmount, setSendState],
+  )
 
   return (
-    <Wrapper $disabled={disabled}>
+    <Wrapper disabled={disabled}>
       <InputWrapper>
-        <InputLabelContainer>
+        <Flex position="absolute" top="16px" left="16px">
           <Text variant="body3" userSelect="none" color="$neutral2">
             <Trans i18nKey="common.youreSending" />
           </Text>
-        </InputLabelContainer>
+        </Flex>
         <NumericalInputWrapper>
           {inputInFiat && (
             <NumericalInputSymbolContainer showPlaceholder={!displayValue}>{fiatSymbol}</NumericalInputSymbolContainer>
@@ -319,43 +296,54 @@ export default function SendCurrencyInputForm({
         )}
         <InputError />
       </InputWrapper>
-      <CurrencyInputWrapper>
-        <ClickableRowBetween onClick={() => setTokenSelectorOpen(true)}>
-          <Row width="100%" gap="md">
-            <CurrencySelectorRow width="100%" gap="md" onClick={() => setTokenSelectorOpen(true)}>
-              {inputCurrency && (
-                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
+      <PrefetchBalancesWrapper>
+        <CurrencyInputWrapper>
+          <Flex
+            row
+            justifyContent="space-between"
+            {...ClickableTamaguiStyle}
+            onPress={() => setTokenSelectorOpen(true)}
+          >
+            <Flex row alignItems="center" gap="$gap12">
+              <Flex alignItems="center" row width="100%" gap="$gap12" onPress={() => setTokenSelectorOpen(true)}>
+                {inputCurrency && (
+                  <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
+                )}
+                <Flex row width="100%">
+                  <Flex>
+                    <ThemedText.BodyPrimary lineHeight="24px">
+                      {inputCurrency?.symbol ?? inputCurrency?.name}
+                    </ThemedText.BodyPrimary>
+                    <Flex row gap="$gap4" width="100%">
+                      {currencyBalance && (
+                        <ThemedText.LabelMicro lineHeight="16px">{`Balance: ${formattedBalance}`}</ThemedText.LabelMicro>
+                      )}
+                      {Boolean(fiatBalanceValue) && (
+                        <ThemedText.LabelMicro lineHeight="16px" color="neutral3">{`(${formatCurrencyAmount({
+                          amount: fiatBalanceValue,
+                          type: NumberType.FiatTokenPrice,
+                        })})`}</ThemedText.LabelMicro>
+                      )}
+                    </Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex row>
+              {showMaxButton && (
+                <Trace logPress element={InterfaceElementName.SEND_MAX_BUTTON}>
+                  <Flex centered>
+                    <Flex row mr="$spacing4">
+                      <MaxButton onPress={handleMaxInput} />
+                    </Flex>
+                  </Flex>
+                </Trace>
               )}
-              <Row width="100%">
-                <Column>
-                  <ThemedText.BodyPrimary lineHeight="24px">
-                    {inputCurrency?.symbol ?? inputCurrency?.name}
-                  </ThemedText.BodyPrimary>
-                  <Row gap="xs" width="100%">
-                    {currencyBalance && (
-                      <ThemedText.LabelMicro lineHeight="16px">{`Balance: ${formattedBalance}`}</ThemedText.LabelMicro>
-                    )}
-                    {Boolean(fiatBalanceValue) && (
-                      <ThemedText.LabelMicro lineHeight="16px" color="neutral3">{`(${formatCurrencyAmount({
-                        amount: fiatBalanceValue,
-                        type: NumberType.FiatTokenPrice,
-                      })})`}</ThemedText.LabelMicro>
-                    )}
-                  </Row>
-                </Column>
-              </Row>
-            </CurrencySelectorRow>
-          </Row>
-          <StyledDropDown />
-        </ClickableRowBetween>
-        {showMaxButton && (
-          <Trace logPress element={InterfaceElementName.SEND_MAX_BUTTON}>
-            <MaxButton onClick={handleMaxInput}>
-              <Trans i18nKey="common.max" />
-            </MaxButton>
-          </Trace>
-        )}
-      </CurrencyInputWrapper>
+              <RotatableChevron direction="down" />
+            </Flex>
+          </Flex>
+        </CurrencyInputWrapper>
+      </PrefetchBalancesWrapper>
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
         onDismiss={() => setTokenSelectorOpen(false)}

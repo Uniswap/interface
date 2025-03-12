@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { PositionInfo } from 'components/Liquidity/types'

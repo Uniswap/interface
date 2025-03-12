@@ -9,7 +9,7 @@ import { OnSelectCurrency, TokenOptionSection } from 'uniswap/src/components/Tok
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
+export function NoResultsFound({ searchFilter }: { searchFilter: string }): JSX.Element {
   return (
     <Flex>
       <SectionHeader sectionKey={TokenOptionSection.SearchResults} />
@@ -70,7 +70,7 @@ function _TokenSelectorSearchResultsList({
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)
 
   const emptyElement = useMemo(
-    () => (debouncedSearchFilter ? <EmptyResults searchFilter={debouncedSearchFilter} /> : undefined),
+    () => (debouncedSearchFilter ? <NoResultsFound searchFilter={debouncedSearchFilter} /> : undefined),
     [debouncedSearchFilter],
   )
   return (

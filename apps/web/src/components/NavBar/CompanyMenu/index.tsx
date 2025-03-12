@@ -59,7 +59,7 @@ export function CompanyMenu() {
       <Popover.Trigger data-testid="nav-company-menu">
         <Trigger>
           <UniIcon onClick={handleLogoClick} data-testid="nav-uniswap-logo">
-            <NavIcon width="48" height="48" />
+            <NavIcon />
             {isLargeScreen && (
               <Text variant="subheading1" color="$accent1" userSelect="none">
                 Uniswap

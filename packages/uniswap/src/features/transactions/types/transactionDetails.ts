@@ -68,7 +68,6 @@ export type TransactionNetworkFee = {
 export type GasFeeEstimates = {
   activeEstimate: GasEstimate
   shadowEstimates?: GasEstimate[]
-  blockSubmitted?: number
 }
 
 export interface UniswapXOrderDetails extends BaseTransactionDetails {
@@ -155,8 +154,12 @@ export type FinalizedTransactionDetails = TransactionDetails &
 
 export type TransactionOptions = {
   request: providers.TransactionRequest
-  submittedTimestampMs?: number
+  userSubmissionTimestampMs?: number
+  rpcSubmissionTimestampMs?: number
+  rpcSubmissionDelayMs?: number
+  currentBlockFetchDelayMs?: number
   timeoutTimestampMs?: number
+  blockSubmitted?: number
   timeoutLogged?: boolean
   submitViaPrivateRpc?: boolean
   privateRpcProvider?: 'flashbots' | 'mevblocker'

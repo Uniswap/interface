@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
@@ -9,23 +8,20 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import { usePositionOwnerV2 } from 'hooks/usePositionOwnerV2'
 import { useV2Pair } from 'hooks/useV2Pairs'
 import NotFound from 'pages/NotFound'
-import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { usePairAdder } from 'state/user/hooks'
-import { Circle, DeprecatedButton, Flex, Main, Shine, Text, styled } from 'ui/src'
+import { Button, Circle, Flex, Main, Shine, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -106,8 +102,6 @@ function V2PositionPage() {
 
   usePendingLPTransactionsChangeListener(refetch)
 
-  const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
-
   const { currency0Amount, currency1Amount, liquidityAmount } = positionInfo ?? {}
 
   const token0USDValue = useUSDCValue(currency0Amount)
@@ -115,10 +109,6 @@ function V2PositionPage() {
   const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
   const liquidityTokenAddress = positionInfo?.liquidityToken?.isToken ? positionInfo.liquidityToken.address : undefined
   const isOwner = usePositionOwnerV2(account?.address, liquidityTokenAddress, positionInfo?.chainId)
-
-  if (!isLoading && !lpRedesignEnabled) {
-    return <Navigate to="/pools" replace />
-  }
 
   if (!positionLoading && (!positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount)) {
     return (
@@ -132,7 +122,11 @@ function V2PositionPage() {
           </Flex>
         }
         actionButton={
-          <DeprecatedButton onPress={() => navigate('/positions')}>{t('common.backToPositions')}</DeprecatedButton>
+          <Flex row centered>
+            <Button width="fit-content" variant="branded" onPress={() => navigate('/positions')}>
+              {t('common.backToPositions')}
+            </Button>
+          </Flex>
         }
       />
     )
@@ -168,9 +162,11 @@ function V2PositionPage() {
           )}
           {isOwner && (
             <Flex row gap="$gap12" alignItems="center" maxWidth="100%" flexWrap="wrap">
-              <HeaderButton
-                disabled={positionLoading}
+              <Button
+                size="small"
                 emphasis="secondary"
+                $sm={{ width: '100%' }}
+                isDisabled={positionLoading}
                 onPress={() => {
                   if (pair && chainId && pairAddress && !savedSerializedPairs[chainId]?.[pairAddress]) {
                     addPair(pair)
@@ -182,32 +178,29 @@ function V2PositionPage() {
                   })
                 }}
               >
-                <Text variant="buttonLabel2" color="$neutral1">
-                  <Trans i18nKey="common.migrate.v3" />
-                </Text>
-              </HeaderButton>
-              <HeaderButton
-                disabled={positionLoading}
+                {t('common.migrate.v3')}
+              </Button>
+              <Button
+                size="small"
                 emphasis="secondary"
+                $sm={{ width: '100%' }}
+                isDisabled={positionLoading}
                 onPress={() => {
                   dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
                 }}
               >
-                <Text variant="buttonLabel2" color="$neutral1">
-                  <Trans i18nKey="common.addLiquidity" />
-                </Text>
-              </HeaderButton>
-              <HeaderButton
-                disabled={positionLoading}
-                emphasis="primary"
+                {t('common.addLiquidity')}
+              </Button>
+              <Button
+                size="small"
+                $sm={{ width: '100%' }}
+                isDisabled={positionLoading}
                 onPress={() => {
                   dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
                 }}
               >
-                <Text variant="buttonLabel2" color="$surface1">
-                  <Trans i18nKey="pool.removeLiquidity" />
-                </Text>
-              </HeaderButton>
+                {t('pool.removeLiquidity')}
+              </Button>
             </Flex>
           )}
           <Flex borderColor="$surface3" borderWidth="$spacing1" p="$spacing24" gap="$gap12" borderRadius="$rounded20">

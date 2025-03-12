@@ -1,10 +1,14 @@
 import { Children, ReactNode, useEffect, useState } from 'react'
 import { AnimatePresence, styled } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
+import { animations } from 'ui/src/theme/animations'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 type TransitionDirection = 'forward' | 'backward' | 'up' | 'down'
 type AnimationType = 'fade' | TransitionDirection
+
+type AnimationKey = keyof (typeof animations)['animations']
+type AnimationTransitionType = 'unset' | AnimationKey | null | undefined
 
 const AnimationStyle: { [key in AnimationType]: { enter: object; exit: object } } = {
   fade: {
@@ -52,15 +56,19 @@ const AnimatedItem = styled(Flex, {
 
 export function TransitionItem({
   animationType = 'fade',
+  childKey,
+  animation,
   children,
 }: {
-  children?: ReactNode
   animationType?: AnimationType
+  childKey?: string | number
+  animation?: AnimationTransitionType
+  children?: ReactNode
 }): JSX.Element {
   return (
     <AnimatePresence exitBeforeEnter custom={{ going: animationType }} initial={false}>
       {children && (
-        <AnimatedItem key="animated-item" animation="fastHeavy" going={animationType}>
+        <AnimatedItem key={childKey ?? 'animated-item'} animation={animation ?? 'fastHeavy'} going={animationType}>
           {children}
         </AnimatedItem>
       )}

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { colors } from 'theme/colors'
 import { opacify } from 'theme/utils'
-import { Text, useSporeColors } from 'ui/src'
+import { Text, useMedia, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
 import { isMobileWeb } from 'utilities/src/platform'
 
@@ -48,6 +48,7 @@ export default function ShareButton({ name, utmSource }: { name: string; utmSour
   const colors = useSporeColors()
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
+  const media = useMedia()
 
   const [searchParams] = useSearchParams()
   const utmTag = `${searchParams.size > 0 ? '&' : '?'}utm_source=${utmSource}&utm_medium=${isMobileWeb ? 'mobile' : 'web'}`
@@ -60,7 +61,7 @@ export default function ShareButton({ name, utmSource }: { name: string; utmSour
       isOpen={isOpen}
       toggleOpen={setIsOpen}
       menuLabel={<ShareIcon fill={colors.neutral1.val} width={18} height={18} />}
-      tooltipText={t('common.share')}
+      tooltipText={media.sm ? undefined : t('common.share')}
       hideChevron
       buttonStyle={ActionButtonStyle}
       dropdownStyle={{ width: 200 }}

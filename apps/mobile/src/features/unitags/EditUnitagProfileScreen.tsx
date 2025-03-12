@@ -35,8 +35,12 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
     navigation.goBack()
   }
 
-  const onClose = (): void => {
+  const onCloseChangeModal = (): void => {
     setShowChangeUnitagModal(false)
+  }
+
+  const onCloseDeleteModal = (): void => {
+    setShowDeleteUnitagModal(false)
   }
 
   const menuActions = useMemo(() => {
@@ -93,7 +97,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
         <EditUnitagProfileContent address={address} unitag={unitag} entryPoint={entryPoint} onNavigate={onNavigate} />
       </KeyboardAvoidingView>
       {showDeleteUnitagModal && (
-        <DeleteUnitagModal address={address} unitag={unitag} onSuccess={onBack} onClose={onClose} />
+        <DeleteUnitagModal address={address} unitag={unitag} onSuccess={onBack} onClose={onCloseDeleteModal} />
       )}
       {showChangeUnitagModal && (
         <ChangeUnitagModal
@@ -101,7 +105,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
           unitag={unitag}
           keyboardHeight={keyboardHeight}
           onSuccess={onBack}
-          onClose={onClose}
+          onClose={onCloseChangeModal}
         />
       )}
     </Screen>

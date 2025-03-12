@@ -20,7 +20,7 @@ type TextProps = TextPropsBase & {
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
-export const BaseAnimatedText = ({
+const BaseAnimatedText = ({
   style,
   text,
   loading,

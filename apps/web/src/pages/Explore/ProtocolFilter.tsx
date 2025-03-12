@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
@@ -6,7 +5,7 @@ import { atom, useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Text, useMedia, useSporeColors } from 'ui/src'
+import { Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -44,7 +43,7 @@ function ProtocolFilter() {
   }, [protocolVersions, selectedProtocol, onVersionChange, colors, t])
 
   return (
-    <div>
+    <Flex>
       <Trace modal={ModalName.ExploreProtocolFilter}>
         <DropdownSelector
           isOpen={open}
@@ -58,12 +57,13 @@ function ProtocolFilter() {
           }
           dropdownStyle={{ width: 160 }}
           buttonStyle={{ height: 40, width: 'max-content' }}
+          allowFlip
           alignRight={!media.lg}
         >
           {versionFilterOptions}
         </DropdownSelector>
       </Trace>
-    </div>
+    </Flex>
   )
 }
 

@@ -7,8 +7,8 @@ import { PositionField } from 'types/position'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 
 export enum IncreaseLiquidityStep {
-  Input,
-  Review,
+  Input = 0,
+  Review = 1,
 }
 
 export interface IncreaseLiquidityState {

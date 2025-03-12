@@ -1,11 +1,9 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES, type Currency } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge/Badge'
-import { ButtonConfirmed } from 'components/Button/buttons'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card/cards'
 import FeeSelector from 'components/FeeSelector'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -45,7 +43,7 @@ import { useIsTransactionPending, useTransactionAdder } from 'state/transactions
 import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
@@ -761,8 +759,8 @@ function V2PairMigration({
           <AutoColumn gap="md">
             {!isSuccessfullyMigrated && !isMigrationPending ? (
               <AutoColumn gap="md" style={{ flex: '1' }}>
-                <ButtonConfirmed
-                  disabled={
+                <Button
+                  isDisabled={
                     approval !== ApprovalState.NOT_APPROVED ||
                     signatureData !== null ||
                     !v3Amount0Min ||
@@ -770,7 +768,7 @@ function V2PairMigration({
                     invalidRange ||
                     confirmingMigration
                   }
-                  onClick={approve}
+                  onPress={approve}
                 >
                   {approval === ApprovalState.PENDING ? (
                     <Dots>
@@ -781,13 +779,12 @@ function V2PairMigration({
                   ) : (
                     <Trans i18nKey="migrate.allowLpMigration" />
                   )}
-                </ButtonConfirmed>
+                </Button>
               </AutoColumn>
             ) : null}
             <AutoColumn gap="md" style={{ flex: '1' }}>
-              <ButtonConfirmed
-                confirmed={isSuccessfullyMigrated}
-                disabled={
+              <Button
+                isDisabled={
                   !v3Amount0Min ||
                   !v3Amount1Min ||
                   invalidRange ||
@@ -796,7 +793,7 @@ function V2PairMigration({
                   isMigrationPending ||
                   isSuccessfullyMigrated
                 }
-                onClick={migrate}
+                onPress={migrate}
               >
                 {isSuccessfullyMigrated ? (
                   'Success!'
@@ -807,7 +804,7 @@ function V2PairMigration({
                 ) : (
                   <Trans i18nKey="common.migrate" />
                 )}
-              </ButtonConfirmed>
+              </Button>
             </AutoColumn>
           </AutoColumn>
         </Flex>

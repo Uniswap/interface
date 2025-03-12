@@ -10,6 +10,7 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'
+import { Flex } from 'ui/src'
 import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -49,31 +50,31 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Submitt
             <Row gap="sm">
               {isUniswapXTrade(trade) ? (
                 <UniswapXGradient>
-                  <div style={{ fontWeight: 535 }}>
+                  <Flex style={{ fontWeight: 535 }}>
                     {formatNumber({
                       input: trade.totalGasUseEstimateUSD,
                       type: NumberType.FiatGasPrice,
                     })}
-                  </div>
+                  </Flex>
                 </UniswapXGradient>
               ) : (
-                <div>
+                <>
                   {formatNumber({
                     input: trade.totalGasUseEstimateUSD,
                     type: NumberType.FiatGasPrice,
                   })}
-                </div>
+                </>
               )}
 
               {isUniswapXTrade(trade) && (trade.classicGasUseEstimateUSD ?? 0) > 0 && (
-                <div>
+                <>
                   <s>
                     {formatNumber({
                       input: trade.classicGasUseEstimateUSD,
                       type: NumberType.FiatGasPrice,
                     })}
                   </s>
-                </div>
+                </>
               )}
             </Row>
           </ThemedText.BodySmall>

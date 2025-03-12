@@ -1,15 +1,14 @@
 import React, { memo, useCallback } from 'react'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { SharedValue } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
-import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { Loader } from 'src/components/loading/loaders'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { AnimatedTouchableArea, Flex, Loader, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { AnimatedTouchableArea, Flex, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { borderRadii, fonts, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
@@ -26,24 +25,23 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { isIOS } from 'utilities/src/platform'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 
-export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
+const ESTIMATED_FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 116
 
 export type FavoriteTokenCardProps = {
   currencyId: string
-  pressProgress: SharedValue<number>
-  dragActivationProgress: SharedValue<number>
   isEditing?: boolean
   setIsEditing: (update: boolean) => void
+  showLoading?: boolean
 } & ViewProps
 
 function FavoriteTokenCard({
   currencyId,
   isEditing,
-  pressProgress,
-  dragActivationProgress,
   setIsEditing,
+  showLoading,
   ...rest
 }: FavoriteTokenCardProps): JSX.Element {
   const dispatch = useDispatch()
@@ -54,7 +52,7 @@ function FavoriteTokenCard({
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
-  const { data, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
+  const { data, loading, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
     variables: currencyIdToContractInput(currencyId),
     // Rely on cache for fast favoriting UX, and poll for updates.
     fetchPolicy: 'cache-and-network',
@@ -98,78 +96,85 @@ function FavoriteTokenCard({
     tokenDetailsNavigation.navigate(currencyId)
   }
 
-  const animatedDragStyle = useAnimatedCardDragStyle(pressProgress, dragActivationProgress)
-
   const shadowProps = useShadowPropsShort()
 
   const priceLoading = isNonPollingRequestInFlight(networkStatus)
 
+  if (showLoading) {
+    return (
+      <Loader.Favorite
+        contrast
+        borderWidth="$spacing1"
+        borderColor="transparent"
+        height={ESTIMATED_FAVORITE_TOKEN_CARD_LOADER_HEIGHT}
+      />
+    )
+  }
   return (
-    <AnimatedFlex borderRadius="$rounded16" style={animatedDragStyle}>
-      <ContextMenu
-        actions={menuActions}
-        disabled={isEditing}
-        style={{ borderRadius: borderRadii.rounded16 }}
-        onPress={onContextMenuPress}
-        {...rest}
+    <ContextMenu
+      actions={menuActions}
+      disabled={isEditing}
+      style={{ borderRadius: borderRadii.rounded16 }}
+      onPress={onContextMenuPress}
+      {...rest}
+    >
+      <AnimatedTouchableArea
+        activeOpacity={isEditing ? 1 : undefined}
+        backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
+        borderColor={isDarkMode ? '$transparent' : opacify(0.05, colors.surface3.val)}
+        borderRadius="$rounded16"
+        overflow={isIOS ? 'hidden' : 'visible'}
+        borderWidth={isDarkMode ? '$none' : '$spacing1'}
+        testID={`token-box-${token?.symbol}`}
+        onLongPress={disableOnPress}
+        onPress={onPress}
+        {...shadowProps}
       >
-        <AnimatedTouchableArea
-          activeOpacity={isEditing ? 1 : undefined}
-          backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
-          borderColor={opacify(0.05, colors.surface3.val)}
-          borderRadius="$rounded16"
-          borderWidth={isDarkMode ? '$none' : '$spacing1'}
-          m="$spacing4"
-          testID={`token-box-${token?.symbol}`}
-          onLongPress={disableOnPress}
-          onPress={onPress}
-          {...shadowProps}
-        >
-          <Flex alignItems="flex-start" gap="$spacing8" p="$spacing12">
-            <Flex row gap="$spacing4" justifyContent="space-between">
-              <Flex grow row alignItems="center" gap="$spacing8">
-                <TokenLogo
-                  chainId={chainId ?? undefined}
-                  name={token?.name ?? undefined}
-                  size={imageSizes.image20}
-                  symbol={token?.symbol ?? undefined}
-                  url={token?.project?.logoUrl ?? undefined}
-                />
-                <Text variant="body1">{getSymbolDisplayText(token?.symbol)}</Text>
-              </Flex>
-              <RemoveButton visible={isEditing} onPress={onRemove} />
+        <Flex alignItems="flex-start" gap="$spacing8" p="$spacing12">
+          <Flex row gap="$spacing4" justifyContent="space-between">
+            <Flex grow row alignItems="center" gap="$spacing8">
+              <TokenLogo
+                loading={loading}
+                chainId={chainId ?? undefined}
+                name={token?.name ?? undefined}
+                size={imageSizes.image20}
+                symbol={token?.symbol ?? undefined}
+                url={token?.project?.logoUrl ?? undefined}
+              />
+              <Text variant="body1">{getSymbolDisplayText(token?.symbol)}</Text>
             </Flex>
-            <Flex gap="$spacing2">
-              {priceLoading ? (
-                <Loader.Box
-                  height={fonts.heading3.lineHeight}
-                  width={fonts.heading3.lineHeight * 3}
-                  testID="loader/favorite/price"
-                />
-              ) : (
-                <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
-                  {priceFormatted}
-                </Text>
-              )}
-              {priceLoading ? (
-                <Loader.Box
-                  height={fonts.subheading2.lineHeight}
-                  width={fonts.subheading2.lineHeight * 3}
-                  testID="loader/favorite/priceChange"
-                />
-              ) : (
-                <RelativeChange
-                  arrowSize="$icon.16"
-                  change={pricePercentChange ?? undefined}
-                  semanticColor={true}
-                  variant="subheading2"
-                />
-              )}
-            </Flex>
+            <RemoveButton visible={isEditing} onPress={onRemove} />
           </Flex>
-        </AnimatedTouchableArea>
-      </ContextMenu>
-    </AnimatedFlex>
+          <Flex gap="$spacing2">
+            {priceLoading ? (
+              <Loader.Box
+                height={fonts.heading3.lineHeight}
+                width={fonts.heading3.lineHeight * 3}
+                testID="loader/favorite/price"
+              />
+            ) : (
+              <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
+                {priceFormatted}
+              </Text>
+            )}
+            {priceLoading ? (
+              <Loader.Box
+                height={fonts.subheading2.lineHeight}
+                width={fonts.subheading2.lineHeight * 3}
+                testID="loader/favorite/priceChange"
+              />
+            ) : (
+              <RelativeChange
+                arrowSize="$icon.16"
+                change={pricePercentChange ?? undefined}
+                semanticColor={true}
+                variant="subheading2"
+              />
+            )}
+          </Flex>
+        </Flex>
+      </AnimatedTouchableArea>
+    </ContextMenu>
   )
 }
 

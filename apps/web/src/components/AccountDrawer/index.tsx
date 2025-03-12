@@ -2,7 +2,6 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SignInModal } from 'components/AccountDrawer/SignInModal'
-import { ScrollBarStyles } from 'components/Common/styles'
 import { Web3StatusRef } from 'components/Web3Status'
 import { useAccount } from 'hooks/useAccount'
 import useDisableScrolling from 'hooks/useDisableScrolling'
@@ -10,23 +9,32 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import { atom, useAtom } from 'jotai'
-import styled, { css } from 'lib/styled-components'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { ChevronsRight } from 'react-feather'
-import { useGesture } from 'react-use-gesture'
-import { ClickableStyle } from 'theme/components'
-import { Z_INDEX } from 'theme/zIndex'
-import { INTERFACE_NAV_HEIGHT, breakpoints } from 'ui/src/theme'
+import { transitions } from 'theme/styles'
+import {
+  AnimatePresence,
+  Flex,
+  FlexProps,
+  TouchableArea,
+  WebBottomSheet,
+  styled,
+  useMedia,
+  useScrollbarStyles,
+  useShadowPropsMedium,
+  useSporeColors,
+} from 'ui/src'
+import { INTERFACE_NAV_HEIGHT, iconSizes, zIndexes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useWindowSize } from 'uniswap/src/hooks/useWindowSize'
-import { isMobileWeb } from 'utilities/src/platform'
 
-const DRAWER_WIDTH_XL = '390px'
-const DRAWER_WIDTH = '320px'
-const DRAWER_MARGIN = '8px'
-const DRAWER_OFFSET = '10px'
+const DRAWER_SPECS = {
+  WIDTH_XL: '390px',
+  WIDTH: '320px',
+  MARGIN: '8px',
+  OFFSET: '10px',
+}
 
 export const MODAL_WIDTH = '368px'
 
@@ -41,190 +49,211 @@ export enum MenuState {
 
 export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)
 
-const ScrimBackground = styled.div<{ $open: boolean; $maxWidth?: number; $zIndex?: number }>`
-  z-index: ${({ $zIndex }) => $zIndex ?? Z_INDEX.modalBackdrop};
-  overflow: hidden;
-  top: 0;
-  left: 0;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: ${({ theme }) => theme.scrim};
+const AccountDrawerScrollWrapper = styled(Flex, {
+  '$platform-web': {
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    overscrollBehavior: 'contain',
+  },
+  borderRadius: '$rounded20',
+})
 
-  opacity: 0;
-  pointer-events: none;
-  @media only screen and (max-width: ${({ theme, $maxWidth }) => `${$maxWidth ?? theme.breakpoint.md}px`}) {
-    opacity: ${({ $open }) => ($open ? 1 : 0)};
-    pointer-events: ${({ $open }) => ($open ? 'auto' : 'none')};
-    transition: opacity ${({ theme }) => theme.transition.duration.medium} ease-in-out;
-  }
-`
+const ExtensionContainerStyles: FlexProps = {
+  height: 'auto',
+  width: MODAL_WIDTH,
+  right: '$spacing12',
+  top: INTERFACE_NAV_HEIGHT,
+} as const
 
-interface ScrimBackgroundProps extends React.ComponentPropsWithRef<'div'> {
-  $open: boolean
-  $maxWidth?: number
-  $zIndex?: number
+const Container = styled(Flex, {
+  height: '100%',
+  '$platform-web': { position: 'fixed' },
+  top: DRAWER_SPECS.MARGIN,
+  right: '0',
+  zIndex: zIndexes.fixed,
+  variants: {
+    open: {
+      true: { right: DRAWER_SPECS.MARGIN },
+    },
+    isUniExtensionAvailable: {
+      true: ExtensionContainerStyles,
+      false: {
+        width: DRAWER_SPECS.WIDTH_XL,
+        maxWidth: DRAWER_SPECS.WIDTH_XL,
+      },
+    },
+  },
+})
+
+const sharedContainerStyles: FlexProps = {
+  borderRadius: '$rounded12',
+  backgroundColor: '$surface1',
+  borderWidth: '$spacing1',
+  borderColor: '$surface3',
+} as const
+
+const DropdownContainer = styled(Flex, {
+  ...sharedContainerStyles,
+  maxHeight: `calc(100vh - ${INTERFACE_NAV_HEIGHT + 16}px)`,
+  borderRadius: '$rounded20',
+  animation: 'fastHeavy',
+  transformOrigin: 'right top',
+  enterStyle: { opacity: 0, scale: 0.98 },
+  exitStyle: { opacity: 0, scale: 0.98 },
+})
+
+const SideDrawerContainer = styled(Flex, {
+  ...sharedContainerStyles,
+  mr: `-${DRAWER_SPECS.WIDTH_XL}`,
+  transition: `margin-right ${transitions.duration.medium}`,
+  width: DRAWER_SPECS.WIDTH_XL,
+  maxWidth: DRAWER_SPECS.WIDTH_XL,
+  $xl: {
+    mr: `-${DRAWER_SPECS.WIDTH}`,
+    width: DRAWER_SPECS.WIDTH,
+    maxWidth: DRAWER_SPECS.WIDTH,
+  },
+  variants: {
+    open: {
+      true: {
+        mr: 8,
+        $xl: { mr: 8 },
+      },
+    },
+  },
+})
+
+const CloseDrawer = styled(Flex, {
+  animation: 'fast',
+  opacity: 0.6,
+  height: '100%',
+  p: '$spacing24',
+  pl: '$spacing12',
+  pr: `calc(18px + ${DRAWER_SPECS.OFFSET})`,
+  borderTopLeftRadius: '$rounded20',
+  borderBottomLeftRadius: '$rounded20',
+  borderTopRightRadius: '$none',
+  borderBottomRightRadius: '$none',
+  '$group-hover': {
+    x: '$spacing8',
+    backgroundColor: 'rgba(153,161,189,0.08)',
+  },
+})
+
+type AccountDrawerProps = {
+  isOpen: boolean
+  onClose: () => void
+  children: JSX.Element | JSX.Element[]
 }
 
-export const Scrim = (props: ScrimBackgroundProps) => {
-  const { width } = useWindowSize()
-
-  useEffect(() => {
-    if (width && width < breakpoints.md && props.$open) {
-      document.body.style.overflow = 'hidden'
-    }
-    return () => {
-      document.body.style.overflow = 'visible'
-    }
-  }, [props.$open, width])
-
-  return <ScrimBackground {...props} />
-}
-
-const AccountDrawerScrollWrapper = styled.div`
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  ${ScrollBarStyles}
-
-  overscroll-behavior: contain;
-  border-radius: 12px;
-`
-
-const Container = styled.div<{ isUniExtensionAvailable?: boolean; $open?: boolean }>`
-  display: flex;
-  flex-direction: row;
-  height: calc(100% - 2 * ${DRAWER_MARGIN});
-  position: fixed;
-  right: ${({ $open }) => ($open ? DRAWER_MARGIN : 0)};
-  top: ${DRAWER_MARGIN};
-  z-index: ${Z_INDEX.fixed};
-
-  ${({ isUniExtensionAvailable }) => isUniExtensionAvailable && ExtensionContainerStyles}
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    height: 100%;
-    top: 100%;
-    left: 0;
-    right: 0;
-    width: 100%;
-    overflow: visible;
-  }
-`
-
-const ExtensionContainerStyles = css`
-  height: auto;
-  max-height: calc(100% - ${INTERFACE_NAV_HEIGHT + 16}px);
-  right: 12px;
-  top: ${INTERFACE_NAV_HEIGHT}px;
-  ${ScrollBarStyles}
-`
-
-const AccountDrawerWrapper = styled.div<{ open: boolean; isUniExtensionAvailable?: boolean }>`
-  margin-right: ${({ open, isUniExtensionAvailable }) =>
-    open ? 0 : '-' + (isUniExtensionAvailable ? MODAL_WIDTH : DRAWER_WIDTH)};
-  height: 100%;
-  overflow: hidden;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    z-index: ${Z_INDEX.modal};
-    position: absolute;
-    margin-right: 0;
-    top: ${({ open }) => (open ? `calc(-1 * (100% - ${INTERFACE_NAV_HEIGHT}px))` : 0)};
-    height: calc(100% - ${INTERFACE_NAV_HEIGHT}px);
-
-    width: 100%;
-    max-width: 100%;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 0px;
-    box-shadow: unset;
-    transition: top ${({ theme }) => theme.transition.duration.medium};
-  }
-
-  @media screen and (min-width: 1440px) {
-    margin-right: ${({ open }) => (open ? 0 : `-${DRAWER_WIDTH_XL}`)};
-    width: ${DRAWER_WIDTH_XL};
-    max-width: ${DRAWER_WIDTH_XL};
-  }
-
-  border-radius: 12px;
-  width: ${DRAWER_WIDTH};
-  max-width: ${DRAWER_WIDTH};
-  font-size: 16px;
-  background-color: ${({ theme }) => theme.surface1};
-  border: ${({ theme }) => `1px solid ${theme.surface3}`};
-
-  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
-  transition: margin-right ${({ theme }) => theme.transition.duration.medium};
-
-  ${({ isUniExtensionAvailable }) => isUniExtensionAvailable && ExtensionDrawerWrapperStyles}
-`
-
-const ExtensionDrawerWrapperStyles = css<{ open: boolean }>`
-  ${ScrollBarStyles}
-  height: max-content;
-  max-height: 100%;
-  width: ${MODAL_WIDTH};
-  max-width: ${MODAL_WIDTH};
-  border-radius: 20px;
-  transform: scale(${({ open }) => (open ? 1 : 0.96)});
-  transform-origin: top right;
-  opacity: ${({ open }) => (open ? 1 : 0)};
-  overflow-y: auto;
-  transition: ${({ theme }) => `transform ${theme.transition.duration.fast} ${theme.transition.timing.inOut},
-    opacity ${theme.transition.duration.fast} ${theme.transition.timing.inOut}`};
-`
-
-const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
-  stroke: ${({ theme }) => theme.neutral2};
-`
-
-const CloseDrawer = styled.div`
-  ${ClickableStyle}
-  cursor: pointer;
-  height: 100%;
-  // When the drawer is not hovered, the icon should be 18px from the edge of the sidebar.
-  padding: 24px calc(18px + ${DRAWER_OFFSET}) 24px 14px;
-  border-radius: 20px 0 0 20px;
-  transition: ${({ theme }) =>
-    `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color, ${theme.transition.duration.medium} ${theme.transition.timing.ease} margin`};
-  &:hover {
-    z-index: -1;
-    margin: 0 -8px 0 0;
-    background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
-  }
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    display: none;
-  }
-`
-
-function AccountDrawer() {
-  const accountDrawer = useAccountDrawer()
-  const wasAccountDrawerOpen = usePrevious(accountDrawer.isOpen)
-  const scrollRef = useRef<HTMLDivElement>(null)
+function AccountDropdown({ isOpen, onClose, children }: AccountDrawerProps) {
+  const shadowProps = useShadowPropsMedium()
+  const scrollbarStyles = useScrollbarStyles()
   const modalRef = useRef<HTMLDivElement>(null)
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const [web3StatusRef] = useAtom(Web3StatusRef)
-  const account = useAccount()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   useOnClickOutside(
     modalRef,
     () => {
       if (isUniExtensionAvailable) {
-        accountDrawer.close()
+        onClose()
       }
     },
     // Prevents quick close & re-open when tapping the Web3Status
     // stopPropagation does not work here
     web3StatusRef ? [web3StatusRef] : [],
   )
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <DropdownContainer
+          ref={modalRef}
+          animation="fastHeavy"
+          {...shadowProps}
+          style={scrollbarStyles}
+          $platform-web={{ overflow: 'auto' }}
+        >
+          {children}
+        </DropdownContainer>
+      )}
+    </AnimatePresence>
+  )
+}
+
+function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
+  const scrollbarStyles = useScrollbarStyles()
+  const colors = useSporeColors()
+  const accountDrawer = useAccountDrawer()
+  const wasAccountDrawerOpen = usePrevious(accountDrawer.isOpen)
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (wasAccountDrawerOpen && !accountDrawer.isOpen) {
       scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [accountDrawer, wasAccountDrawerOpen])
+
+  return (
+    <Flex row height={`calc(100% - 2 * ${DRAWER_SPECS.MARGIN})`}>
+      {isOpen && (
+        <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
+          <TouchableArea group zIndex={zIndexes.background} width={60}>
+            <CloseDrawer onPress={onClose} data-testid="close-account-drawer">
+              <ChevronsRight color={colors.neutral2.val} size={iconSizes.icon24} />
+            </CloseDrawer>
+          </TouchableArea>
+        </Trace>
+      )}
+      <SideDrawerContainer open={isOpen}>
+        {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
+        <AccountDrawerScrollWrapper
+          ref={scrollRef}
+          style={scrollbarStyles}
+          id="wallet-dropdown-scroll-wrapper"
+          height="100%"
+        >
+          {children}
+        </AccountDrawerScrollWrapper>
+      </SideDrawerContainer>
+    </Flex>
+  )
+}
+
+function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
+  const accountDrawer = useAccountDrawer()
+  const isUniExtensionAvailable = useIsUniExtensionAvailable()
+  const media = useMedia()
+
+  if (media.md) {
+    return (
+      <WebBottomSheet data-testid="account-drawer" isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
+        {children}
+      </WebBottomSheet>
+    )
+  } else if (!isUniExtensionAvailable) {
+    return (
+      <Container data-testid="account-drawer">
+        <AccountSideDrawer isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
+          {children}
+        </AccountSideDrawer>
+      </Container>
+    )
+  } else {
+    return (
+      <Container data-testid="account-drawer" isUniExtensionAvailable>
+        <AccountDropdown isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
+          {children}
+        </AccountDropdown>
+      </Container>
+    )
+  }
+}
+
+function AccountDrawer() {
+  const accountDrawer = useAccountDrawer()
+  const account = useAccount()
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   // close on escape keypress
   useEffect(() => {
@@ -242,82 +271,12 @@ function AccountDrawer() {
     }
   }, [accountDrawer])
 
-  // useStates for detecting swipe gestures
-  const [yPosition, setYPosition] = useState(0)
-  const [dragStartTop, setDragStartTop] = useState(true)
   useDisableScrolling(accountDrawer.isOpen)
 
-  // useGesture hook for detecting swipe gestures
-  const bind = useGesture({
-    // if the drawer is open and the user is dragging down, close the drawer
-    onDrag: (state) => {
-      // if the user is dragging up, set dragStartTop to false
-      if (state.movement[1] < 0) {
-        setDragStartTop(false)
-        if (scrollRef.current) {
-          scrollRef.current.style.overflowY = 'auto'
-        }
-      } else if (
-        (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
-        accountDrawer.isOpen &&
-        dragStartTop
-      ) {
-        accountDrawer.close()
-      } else if (accountDrawer.isOpen && dragStartTop && state.movement[1] > 0) {
-        setYPosition(state.movement[1])
-        if (scrollRef.current) {
-          scrollRef.current.style.overflowY = 'hidden'
-        }
-      }
-    },
-    // reset the yPosition when the user stops dragging
-    onDragEnd: () => {
-      setYPosition(0)
-      if (scrollRef.current) {
-        scrollRef.current.style.overflowY = 'auto'
-      }
-    },
-    // set dragStartTop to true if the user starts dragging from the top of the drawer
-    onDragStart: () => {
-      if (!scrollRef.current?.scrollTop || scrollRef.current?.scrollTop < 30) {
-        setDragStartTop(true)
-      } else {
-        setDragStartTop(false)
-        if (scrollRef.current) {
-          scrollRef.current.style.overflowY = 'auto'
-        }
-      }
-    },
-  })
-
   return account?.address || !isEmbeddedWalletEnabled ? (
-    <Container isUniExtensionAvailable={isUniExtensionAvailable} $open={accountDrawer.isOpen}>
-      {accountDrawer.isOpen && !isUniExtensionAvailable && (
-        <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
-          <CloseDrawer onClick={accountDrawer.close} data-testid="close-account-drawer">
-            <CloseIcon />
-          </CloseDrawer>
-        </Trace>
-      )}
-      <Scrim onClick={accountDrawer.close} $open={accountDrawer.isOpen} />
-      <AccountDrawerWrapper
-        isUniExtensionAvailable={isUniExtensionAvailable}
-        ref={modalRef}
-        data-testid="account-drawer"
-        open={accountDrawer.isOpen}
-        {...(isMobileWeb
-          ? {
-              ...bind(),
-              style: { transform: `translateY(${yPosition}px)` },
-            }
-          : {})}
-      >
-        {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
-        <AccountDrawerScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
-          <DefaultMenu drawerOpen={accountDrawer.isOpen} />
-        </AccountDrawerScrollWrapper>
-      </AccountDrawerWrapper>
-    </Container>
+    <Drawer>
+      <DefaultMenu />
+    </Drawer>
   ) : (
     <SignInModal isOpen={accountDrawer.isOpen} close={accountDrawer.close} />
   )

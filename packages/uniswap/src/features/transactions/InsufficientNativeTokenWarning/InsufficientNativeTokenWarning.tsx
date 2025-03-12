@@ -81,7 +81,7 @@ function InsufficientNativeTokenWarningContent({
 
   const currencyAddress = currencyIdToAddress(nativeCurrencyInfo.currencyId)
 
-  const bridgingTokenWithHighestBalance = useBridgingTokenWithHighestBalance({
+  const { data: bridgingTokenWithHighestBalance } = useBridgingTokenWithHighestBalance({
     address,
     currencyAddress,
     currencyChainId: nativeCurrencyInfo.currency.chainId,
@@ -110,21 +110,27 @@ function InsufficientNativeTokenWarningContent({
           title={
             shouldShowNetworkName
               ? t('transaction.warning.insufficientGas.modal.title.withNetwork', {
-                  // FIXME: Verify WALL-5906
                   tokenSymbol: nativeCurrency.symbol ?? '',
                   networkName,
                 })
               : t('transaction.warning.insufficientGas.modal.title.withoutNetwork', {
-                  // FIXME: Verify WALL-5906
                   tokenSymbol: nativeCurrency.symbol ?? '',
                 })
           }
           onClose={onClose}
         >
-          <Flex centered gap="$spacing16" width="100%">
-            <Text color="$neutral2" textAlign="center" variant="body3">
-              {modalOrTooltipMainMessage}
-            </Text>
+          <Text color="$neutral2" textAlign="center" variant="body3">
+            {modalOrTooltipMainMessage}
+          </Text>
+
+          <Flex width="100%" gap="$spacing12">
+            <Flex row alignSelf="stretch">
+              <LearnMoreLink
+                textColor="$neutral2"
+                componentType="Button"
+                url={uniswapUrls.helpArticleUrls.networkFeeInfo}
+              />
+            </Flex>
 
             {bridgingTokenWithHighestBalance && (
               <BridgeTokenButton
@@ -139,12 +145,6 @@ function InsufficientNativeTokenWarningContent({
               nativeCurrencyInfo={nativeCurrencyInfo}
               canBridge={!!bridgingTokenWithHighestBalance}
               onPress={onClose}
-            />
-
-            <LearnMoreLink
-              textColor="$neutral2"
-              textVariant="buttonLabel2"
-              url={uniswapUrls.helpArticleUrls.networkFeeInfo}
             />
           </Flex>
         </WarningModal>

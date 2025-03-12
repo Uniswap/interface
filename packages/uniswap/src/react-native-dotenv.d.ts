@@ -1,6 +1,7 @@
 // Adds typings for env vars
 // Keep in sync with .env files
 declare module 'react-native-dotenv' {
+  export const ALCHEMY_API_KEY: string
   export const APPSFLYER_API_KEY: string
   export const APPSFLYER_APP_ID: string
   export const DATADOG_CLIENT_TOKEN: string
@@ -14,9 +15,10 @@ declare module 'react-native-dotenv' {
   export const ONESIGNAL_APP_ID: string
   export const OPENAI_API_KEY: string
   export const WALLETCONNECT_PROJECT_ID: string
+  export const WALLETCONNECT_PROJECT_ID_BETA: string
+  export const WALLETCONNECT_PROJECT_ID_DEV: string
   export const QUICKNODE_ENDPOINT_NAME: string
   export const QUICKNODE_ENDPOINT_TOKEN: string
-  export const QUICKNODE_MONAD_TESTNET_RPC_URL: string
   export const TRADING_API_KEY: string
   export const FIREBASE_APP_CHECK_DEBUG_TOKEN: string
   export const AMPLITUDE_PROXY_URL_OVERRIDE: string

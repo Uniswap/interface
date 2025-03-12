@@ -1,11 +1,12 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { isNativeCurrency } from '@uniswap/universal-router-sdk'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent } from 'react-native'
 import type { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { GeneratedIcon, isWeb } from 'ui/src'
 import { CoinConvert, ExternalLink, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/components/icons'
+import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances'
@@ -29,6 +30,7 @@ export enum TokenMenuActionType {
   Share = 'share',
   ViewDetails = 'viewDetails',
   ToggleVisibility = 'toggleVisibility',
+  CopyAddress = 'copyAddress',
 }
 
 interface TokenMenuParams {
@@ -37,6 +39,8 @@ interface TokenMenuParams {
   tokenSymbolForNotification?: Nullable<string>
   portfolioBalance?: Nullable<PortfolioBalance>
   excludedActions?: TokenMenuActionType[]
+  openContractAddressExplainerModal?: () => void
+  copyAddressToClipboard?: (address: string) => Promise<void>
 }
 
 type MenuAction = ContextMenuAction & { onPress: () => void; Icon?: GeneratedIcon; name: TokenMenuActionType }
@@ -47,9 +51,13 @@ export function useTokenContextMenu({
   tokenSymbolForNotification,
   portfolioBalance,
   excludedActions,
+  openContractAddressExplainerModal,
+  copyAddressToClipboard,
 }: TokenMenuParams): {
   menuActions: Array<MenuAction>
-  onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
+  onContextMenuPress: (e: { nativeEvent: ContextMenuOnPressNativeEvent }) => void
+  // TODO(WALL-6032): do not expose after tracking mobile icons with actions
+  isVisible: boolean
 } {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -63,6 +71,7 @@ export function useTokenContextMenu({
   const isVisible = !portfolioBalance?.isHidden
 
   const currencyAddress = currencyIdToAddress(currencyId)
+  const isNative = isNativeCurrency(currencyAddress)
   const currencyChainId = (currencyIdToChain(currencyId) as UniverseChainId) ?? defaultChainId
   const { navigateToTokenDetails } = useWalletNavigation()
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -93,6 +102,17 @@ export function useTokenContextMenu({
   }, [currencyId, handleShareToken])
 
   const updateCache = usePortfolioCacheUpdater(activeAccountAddress)
+
+  const hasViewedContractAddressExplainer = useSelector(selectHasViewedContractAddressExplainer)
+
+  const onPressCopyAddress = useCallback(async () => {
+    if (!hasViewedContractAddressExplainer) {
+      openContractAddressExplainerModal?.()
+      return
+    }
+
+    await copyAddressToClipboard?.(currencyAddress)
+  }, [currencyAddress, hasViewedContractAddressExplainer, openContractAddressExplainerModal, copyAddressToClipboard])
 
   const onPressHiddenStatus = useCallback(() => {
     /**
@@ -144,6 +164,16 @@ export function useTokenContextMenu({
         onPress: navigateToReceive,
         ...(isWeb ? { Icon: ReceiveAlt } : { systemIcon: 'qrcode' }),
       },
+      ...(!isWeb && !isTestnetModeEnabled && copyAddressToClipboard && !isNative
+        ? [
+            {
+              name: TokenMenuActionType.CopyAddress,
+              title: t('common.copy.address'),
+              onPress: onPressCopyAddress,
+              ...{ systemIcon: 'doc.on.doc' },
+            },
+          ]
+        : []),
       ...(isWeb
         ? []
         : [
@@ -188,17 +218,20 @@ export function useTokenContextMenu({
     activeAccountHoldsToken,
     isVisible,
     onPressHiddenStatus,
+    onPressCopyAddress,
     onPressSwap,
     excludedActions,
     isTestnetModeEnabled,
+    isNative,
+    copyAddressToClipboard,
   ])
 
   const onContextMenuPress = useCallback(
-    (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): void => {
+    (e: { nativeEvent: ContextMenuOnPressNativeEvent }): void => {
       menuActions[e.nativeEvent.index]?.onPress?.()
     },
     [menuActions],
   )
 
-  return { menuActions, onContextMenuPress }
+  return { menuActions, onContextMenuPress, isVisible }
 }

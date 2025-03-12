@@ -1,7 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
 import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'

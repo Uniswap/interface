@@ -4,14 +4,6 @@ import xlUnicorn from 'assets/images/xl_uni.png'
 import { AutoColumn } from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 
-export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #2172e5 100%);
-  border-radius: 12px;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-`
-
 export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   background: url(${uImage});
   width: 1000px;

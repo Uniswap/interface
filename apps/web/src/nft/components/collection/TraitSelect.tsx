@@ -1,7 +1,5 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
-import { Box } from 'components/deprecated/Box'
 import useDebounce from 'hooks/useDebounce'
-import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Filters.css'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { Input } from 'nft/components/layout/Input'
@@ -9,10 +7,10 @@ import { subheadSmall } from 'nft/css/common.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
-import { CSSProperties, FormEvent, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { CSSProperties, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { LabeledCheckbox } from 'ui/src'
+import { Flex, LabeledCheckbox, Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 const TRAIT_ROW_HEIGHT = 44
@@ -65,49 +63,49 @@ const TraitItem = ({
   const showFullTraitName = shouldShow && trait_type === trait.trait_type && trait_value === trait.trait_value
 
   return (
-    <Row
+    <Flex
+      row
+      alignItems="center"
       key={trait.trait_value}
-      maxWidth="full"
-      overflowX="hidden"
-      overflowY="hidden"
-      fontWeight="book"
+      maxWidth="100%"
+      overflow="hidden"
       className={`${subheadSmall} ${styles.subRowHover}`}
       justifyContent="space-between"
       cursor="pointer"
-      paddingLeft="12"
-      paddingRight="16"
-      borderRadius="12"
+      pl="$padding12"
+      pr="$padding16"
+      borderRadius="$rounded12"
       style={{
         paddingBottom: '22px',
         paddingTop: '22px',
         ...style,
       }}
-      maxHeight="44"
+      maxHeight={44}
       onMouseEnter={handleHover}
       onMouseLeave={handleHover}
-      onClick={handleCheckbox}
+      onPress={handleCheckbox}
     >
-      <Box
-        as="span"
+      <Text
+        variant="body2"
         whiteSpace="nowrap"
         textOverflow="ellipsis"
         overflow="hidden"
         style={{ minHeight: 15 }}
-        maxWidth={!showFullTraitName ? '160' : 'full'}
-        onMouseOver={(e) => isEllipsisActive(e)}
+        maxWidth={!showFullTraitName ? 160 : '100%'}
+        onMouseEnter={(e) => isEllipsisActive(e)}
         onMouseLeave={() => toggleShowFullTraitName({ shouldShow: false, trait_type: '', trait_value: '' })}
       >
         {trait.trait_type === 'Number of traits'
           ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
           : trait.trait_value}
-      </Box>
+      </Text>
       <LabeledCheckbox
         checked={isCheckboxSelected}
         onCheckPressed={handleCheckbox}
         text={showFullTraitName ? String(trait.trait_count) : ''}
         variant="branded"
       />
-    </Row>
+    </Flex>
   )
 }
 
@@ -151,15 +149,15 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
     <TraitsHeader index={index} numTraits={traits.length} title={type}>
       <Input
         value={search}
-        onChange={(e: FormEvent<HTMLInputElement>) => setSearch(e.currentTarget.value)}
+        onChangeText={(value: string) => setSearch(value)}
         placeholder="Search"
-        marginTop="8"
-        marginBottom="8"
+        mt="$spacing8"
+        mb="$spacing8"
         autoComplete="off"
         position="static"
         width="full"
       />
-      <Column
+      <Flex
         className={styles.filterDropDowns}
         style={{
           height: `${Math.min(TRAIT_ROW_HEIGHT * searchedTraits.length, styles.MAX_FILTER_DROPDOWN_HEIGHT)}px`,
@@ -179,7 +177,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
             </FixedSizeList>
           )}
         </AutoSizer>
-      </Column>
+      </Flex>
     </TraitsHeader>
   ) : null
 }

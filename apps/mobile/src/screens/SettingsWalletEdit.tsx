@@ -8,9 +8,9 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { PenLine } from 'ui/src/components/icons'
-import { fonts } from 'ui/src/theme'
+import { fonts, iconSizes } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -115,11 +115,10 @@ export function SettingsWalletEdit({
                   onSubmitEditing={onFinishEditing}
                 />
                 {showEditButton && accountNameIsEditable && (
-                  <DeprecatedButton
-                    backgroundless
-                    icon={<PenLine color="$neutral3" />}
-                    m="$none"
-                    size="medium"
+                  <PenLine
+                    alignItems="flex-end"
+                    color="$neutral3"
+                    size={iconSizes.icon20}
                     onPress={onEditButtonPress}
                   />
                 )}
@@ -131,14 +130,16 @@ export function SettingsWalletEdit({
               )}
               {showUnitagBanner && <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} />}
             </Flex>
-            <DeprecatedButton
-              isDisabled={nickname === displayName?.name}
-              size="medium"
-              theme="primary"
-              onPress={onPressSaveChanges}
-            >
-              {t('settings.setting.wallet.editLabel.save')}
-            </DeprecatedButton>
+            <Flex row centered>
+              <Button
+                isDisabled={nickname === displayName?.name}
+                size="large"
+                variant="branded"
+                onPress={onPressSaveChanges}
+              >
+                {t('settings.setting.wallet.editLabel.save')}
+              </Button>
+            </Flex>
           </Flex>
         </KeyboardAvoidingView>
       </GestureDetector>

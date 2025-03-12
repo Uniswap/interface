@@ -2,7 +2,6 @@ import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { Box } from 'components/deprecated/Box'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
@@ -13,8 +12,9 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
 import { ThemedText } from 'theme/components'
+import { Flex, useSporeColors } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useWindowSize } from 'uniswap/src/hooks/useWindowSize'
 
 // Default table cell max width
 const CELL_WIDTH = '160px'
@@ -103,8 +103,9 @@ export function Table<D extends Record<string, unknown>>({
 }: TableProps<D>) {
   const theme = useTheme()
   const { chainId } = useAccount()
-  const { width } = useWindowSize()
+  const { fullWidth: width } = useDeviceDimensions()
   const isMobile = useIsMobile()
+  const colors = useSporeColors()
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns, visibleColumns } =
     useTable(
@@ -163,20 +164,18 @@ export function Table<D extends Record<string, unknown>>({
                   disabled={column.disableSortBy}
                   key={index}
                 >
-                  <Box as="span" color="neutral2" position="relative">
+                  <Flex row alignItems="center" justifyContent="flex-end">
                     {column.isSorted ? (
                       column.isSortedDesc ? (
-                        <ArrowChangeUp width="16px" height="16px" style={{ position: 'absolute', top: 3 }} />
+                        <ArrowChangeUp color={colors.neutral2.val} width="16px" height="16px" />
                       ) : (
-                        <ArrowChangeDown width="16px" height="16px" style={{ position: 'absolute', top: 3 }} />
+                        <ArrowChangeDown color={colors.neutral2.val} width="16px" height="16px" />
                       )
                     ) : (
                       ''
                     )}
-                  </Box>
-                  <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
-                    {column.render('Header')}
-                  </Box>
+                    <Flex pl={column.isSorted ? 18 : 0}>{column.render('Header')}</Flex>
+                  </Flex>
                 </StyledHeader>
               )
             })}
@@ -241,6 +240,7 @@ interface LoadingTableProps {
 }
 
 function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTableProps) {
+  const colors = useSporeColors()
   return (
     <table {...props} className={styles.table}>
       <thead className={styles.thead}>
@@ -258,24 +258,20 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
                   disabled={index === 0}
                   key={index}
                 >
-                  <Box as="span" color="accent1" position="relative">
+                  <Flex row alignItems="center" justifyContent="flex-end">
                     {column.isSorted ? (
                       column.isSortedDesc ? (
-                        <ArrowChangeUp width="16px" height="16px" style={{ position: 'absolute', marginTop: '2px' }} />
+                        <ArrowChangeUp color={colors.accent1.val} width="16px" height="16px" />
                       ) : (
-                        <ArrowChangeDown
-                          width="16px"
-                          height="16px"
-                          style={{ position: 'absolute', marginTop: '2px' }}
-                        />
+                        <ArrowChangeDown color={colors.accent1.val} width="16px" height="16px" />
                       )
                     ) : (
                       ''
                     )}
-                  </Box>
-                  <Box as="span" paddingLeft={column.isSorted ? '18' : '0'}>
-                    {column.render('Header')}
-                  </Box>
+                    <Flex pl={column.isSorted ? 18 : 0} row>
+                      {column.render('Header')}
+                    </Flex>
+                  </Flex>
                 </StyledHeader>
               )
             })}

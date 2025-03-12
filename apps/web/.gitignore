@@ -17,8 +17,8 @@
 /cache
 /functions/coverage
 /.swc
+/test-results
 /src/playwright-report
-/src/playwright/test-results
 
 # builds
 /build

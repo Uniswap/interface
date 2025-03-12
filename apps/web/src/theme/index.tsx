@@ -1,6 +1,5 @@
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'lib/styled-components'
-import { rootCssString } from 'nft/css/cssStringFromTheme'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -10,7 +9,7 @@ import { breakpoints } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 
-export const MEDIA_WIDTHS = {
+const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
   deprecated_upToSmall: 720,
   deprecated_upToMedium: 960,
@@ -162,9 +161,5 @@ export const ThemedGlobalStyle = createGlobalStyle`
 
   a {
     color: ${({ theme }) => theme.accent1}; 
-  }
-
-  :root {
-    ${({ theme }) => rootCssString(theme.darkMode)}
   }
 `

@@ -1,5 +1,4 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { ButtonEmpty } from 'components/Button/buttons'
 import Card, { OutlineCard } from 'components/Card/cards'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoColumn } from 'components/deprecated/Column'
@@ -8,13 +7,13 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { ModalCloseIcon, Text } from 'ui/src'
+import { Button, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -38,10 +37,6 @@ const DetailsFooter = styled.div<{ show: boolean }>`
   text-align: center;
 `
 
-const StyledButtonEmpty = styled(ButtonEmpty)`
-  text-decoration: none;
-`
-
 const AddressText = styled(Text)`
   color: ${({ theme }) => theme.accent1};
   font-size: 12px;
@@ -58,6 +53,7 @@ export default function UnsupportedCurrencyFooter({
   show: boolean
   currencies: (Currency | undefined | null)[]
 }) {
+  const { t } = useTranslation()
   const { chainId } = useAccount()
   const [showDetails, setShowDetails] = useState(false)
 
@@ -97,11 +93,11 @@ export default function UnsupportedCurrencyFooter({
           </AutoColumn>
         </Card>
       </Modal>
-      <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)} data-testid="read-more-button">
-        <Text color="$accent1">
-          <Trans i18nKey="swap.unsupportedAssets.readMore" />
-        </Text>
-      </StyledButtonEmpty>
+      <Flex centered>
+        <Button emphasis="secondary" onPress={() => setShowDetails(true)} data-testid="read-more-button">
+          {t('swap.unsupportedAssets.readMore')}
+        </Button>
+      </Flex>
     </DetailsFooter>
   )
 }
@@ -109,7 +105,7 @@ export default function UnsupportedCurrencyFooter({
 function UnsupportedTokenCard({ token, chainId }: { token?: Token; chainId?: UniverseChainId }) {
   const currencyInfo = useCurrencyInfo(token)
 
-  if (!token || (!currencyInfo?.isSpam && currencyInfo?.safetyLevel === SafetyLevel.Verified)) {
+  if (!token || (!currencyInfo?.isSpam && currencyInfo?.safetyInfo?.tokenList === TokenList.Default)) {
     return null
   }
 

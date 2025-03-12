@@ -12,6 +12,8 @@ import { rootWebSaga } from 'state/sagas/root'
 import { InterfaceState, interfacePersistedStateList, interfaceReducer } from 'state/webReducer'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
+import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
+import { ALLOW_ANALYTICS_ATOM_KEY } from 'utilities/src/telemetry/analytics/constants'
 
 const persistConfig: PersistConfig<InterfaceState> = {
   key: 'interface',
@@ -35,10 +37,18 @@ const persistedReducer = persistReducer(persistConfig, interfaceReducer)
 
 const sagaMiddleware = createSagaMiddleware()
 
+const dataDogReduxEnhancer = createDatadogReduxEnhancer({
+  shouldLogReduxState: (): boolean => {
+    const allowAnalytics = window.localStorage.getItem(ALLOW_ANALYTICS_ATOM_KEY) !== 'false'
+    // Do not log the state if a user has opted out of analytics.
+    return !!allowAnalytics
+  },
+})
+
 export function createDefaultStore() {
   const store = configureStore({
     reducer: persistedReducer,
-    enhancers: (defaultEnhancers) => defaultEnhancers.concat(sentryEnhancer),
+    enhancers: (defaultEnhancers) => defaultEnhancers.concat(sentryEnhancer, dataDogReduxEnhancer),
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: true,

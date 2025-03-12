@@ -8,8 +8,7 @@ import { ShieldCheck } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
@@ -42,7 +41,7 @@ export const TokenBalanceList = memo(function _TokenBalanceList({ owner }: Token
   )
 })
 
-export function TokenBalanceListInner(): JSX.Element {
+function TokenBalanceListInner(): JSX.Element {
   const { t } = useTranslation()
 
   const { rows, balancesById, networkStatus, refetch, hiddenTokensExpanded } = useTokenBalanceListContext()
@@ -158,7 +157,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
         <InfoLinkModal
           showCloseButton
           buttonText={t('common.button.close')}
-          buttonTheme="tertiary"
           description={t('hidden.tokens.info.text.info')}
           icon={
             <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
@@ -211,7 +209,7 @@ function TokenContextMenu({
 }>): JSX.Element {
   const contextMenu = useTokenContextMenu({
     currencyId: portfolioBalance.currencyInfo.currencyId,
-    isBlocked: portfolioBalance.currencyInfo.safetyLevel === SafetyLevel.Blocked,
+    isBlocked: portfolioBalance.currencyInfo.safetyInfo?.tokenList === TokenList.Blocked,
     tokenSymbolForNotification: portfolioBalance?.currencyInfo?.currency?.symbol,
     portfolioBalance,
   })

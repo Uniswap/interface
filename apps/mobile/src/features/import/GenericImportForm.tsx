@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { Keyboard, TextInput as NativeTextInput } from 'react-native'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { ColorTokens, Flex, Text, useMedia } from 'ui/src'

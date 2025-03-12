@@ -1,7 +1,7 @@
 import isArray from 'lodash/isArray'
 import isEqual from 'lodash/isEqual'
 import React, { CSSProperties, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { LayoutChangeEvent } from 'react-native'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'

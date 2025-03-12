@@ -1,19 +1,16 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AssociatedAccountsList } from 'src/components/RemoveWallet/AssociatedAccountsList'
 import { RemoveLastMnemonicWalletFooter } from 'src/components/RemoveWallet/RemoveLastMnemonicWalletFooter'
 import { RemoveWalletStep, useModalContent } from 'src/components/RemoveWallet/useModalContent'
 import { navigateToOnboardingImportMethod } from 'src/components/RemoveWallet/utils'
-import { Delay } from 'src/components/layout/Delayed'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { Button, Flex, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -156,18 +153,11 @@ export function RemoveWalletModal(): JSX.Element | null {
     associatedAccounts,
   })
 
-  // we want to nicely squeeze the cancel button when user presses remove
-  const animatedCancelButtonSpanStyles = useAnimatedStyle(() => {
-    return {
-      flexGrow: withTiming(inProgress ? 0 : 1, { duration: Delay.Short / 2 }),
-    }
-  })
-
   if (!modalContent) {
     return null
   }
 
-  const { title, description, Icon, iconColorLabel, actionButtonTheme, actionButtonLabel } = modalContent
+  const { title, description, Icon, iconColorLabel, actionButtonLabel } = modalContent
 
   const labelColor: ThemeKeys = iconColorLabel
 
@@ -201,24 +191,20 @@ export function RemoveWalletModal(): JSX.Element | null {
               <RemoveLastMnemonicWalletFooter inProgress={inProgress} onPress={onPress} />
             </>
           ) : (
-            <Flex centered row gap={inProgress ? '$none' : '$spacing12'} pt="$spacing12">
-              {inProgress ? (
-                <AnimatedFlex style={animatedCancelButtonSpanStyles} />
-              ) : (
-                <DeprecatedButton fill disabled={inProgress} theme="outline" onPress={onClose}>
-                  {t('common.button.cancel')}
-                </DeprecatedButton>
-              )}
-              <DeprecatedButton
-                fill
-                icon={inProgress ? <SpinningLoader color={`$${labelColor}`} /> : undefined}
+            <Flex row gap={inProgress ? '$none' : '$spacing12'} pt="$spacing12">
+              <Button size="large" emphasis="tertiary" isDisabled={inProgress} onPress={onClose}>
+                {t('common.button.cancel')}
+              </Button>
+
+              <Button
+                size="large"
+                emphasis="secondary"
+                loading={inProgress}
                 testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
-                theme={actionButtonTheme}
-                width="100%"
                 onPress={onPress}
               >
-                {inProgress ? undefined : actionButtonLabel}
-              </DeprecatedButton>
+                {actionButtonLabel}
+              </Button>
             </Flex>
           )}
         </Flex>

@@ -46,7 +46,7 @@ export interface DappRequestRejectParams {
   senderTabInfo: SenderTabInfo
 }
 
-export type OptionalTransactionTypeInfo = {
+type OptionalTransactionTypeInfo = {
   transactionTypeInfo?: TransactionTypeInfo
 }
 export type DappRequestNoDappInfo = Omit<DappRequestStoreItem, 'dappInfo'> & OptionalTransactionTypeInfo
@@ -87,7 +87,7 @@ const ACCOUNT_INFO_TYPES = [DappRequestType.GetChainId, DappRequestType.GetAccou
  * i think remove all the checks from here and push to later.
  */
 // eslint-disable-next-line complexity
-export function* handleRequest(requestParams: DappRequestNoDappInfo) {
+function* handleRequest(requestParams: DappRequestNoDappInfo) {
   if (requestParams.dappRequest.type === DappRequestType.UniswapOpenSidebar) {
     // We can auto-confirm these requests since they are only for navigating to a certain tab
     // At this point the sidebar is already open

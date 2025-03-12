@@ -91,56 +91,60 @@ export function SwapFormSettings({
   }, [customSlippageTolerance, showTransactionSettingsModal, autoSlippageTolerance])
 
   return (
-    <Flex row gap="$spacing4" position={position} top={topAlignment} right={rightAlignment} zIndex="$default">
+    <>
       <ViewOnlyModal isOpen={showViewOnlyModal} onDismiss={(): void => setShowViewOnlyModal(false)} />
-      {isViewOnlyWallet && (
-        <TouchableArea
-          backgroundColor="$surface2"
-          borderRadius="$rounded12"
-          justifyContent="center"
-          px="$spacing8"
-          py="$spacing4"
-          onPress={onPressViewOnlyModal}
-        >
-          <Flex row alignItems="center" gap="$spacing4">
-            <Eye color="$neutral2" size={iconSizes.icon16} />
-            <Text color="$neutral2" variant="buttonLabel2">
-              {t('swap.header.viewOnly')}
-            </Text>
-          </Flex>
-        </TouchableArea>
-      )}
-
-      {!isViewOnlyWallet && (
-        <Popover
-          offset={popoverOffset}
-          placement="bottom-end"
-          open={showTransactionSettingsModal}
-          onOpenChange={(open: boolean) => {
-            // Only close on interface because SwapSettings are rendered in a modal on mobile/extension
-            // and when click is triggered inside extension Modal it causes onOpenChange to trigger
-            if (!open && isInterface) {
-              onCloseSettingsModal()
-            }
-          }}
-        >
-          <SwapFormSettingsButton
-            showCustomSlippage={!!showCustomSlippage}
-            customSlippageTolerance={customSlippageTolerance}
-            showTooltip={showSettingsIconTooltip}
-            iconColor={iconColor}
-            iconSize={iconSize}
-            onPress={onPressSwapSettings}
-          />
-          <TransactionSettingsModal
-            settings={settings}
-            defaultTitle={defaultTitle}
-            isOpen={showTransactionSettingsModal}
-            onClose={onCloseSettingsModal}
-          />
-        </Popover>
-      )}
       <SlippageWarningModal isOpen={showSlippageWarningModal} onClose={() => setShowSlippageWarningModal(false)} />
-    </Flex>
+      <Flex row gap="$spacing4" position={position} top={topAlignment} right={rightAlignment} zIndex="$default">
+        {isViewOnlyWallet && (
+          <TouchableArea
+            backgroundColor="$surface2"
+            borderRadius="$rounded12"
+            justifyContent="center"
+            px="$spacing8"
+            py="$spacing4"
+            onPress={onPressViewOnlyModal}
+          >
+            <Flex row alignItems="center" gap="$spacing4">
+              <Eye color="$neutral2" size={iconSizes.icon16} />
+              <Text color="$neutral2" variant="buttonLabel2">
+                {t('swap.header.viewOnly')}
+              </Text>
+            </Flex>
+          </TouchableArea>
+        )}
+
+        {!isViewOnlyWallet && (
+          <Popover
+            offset={popoverOffset}
+            placement="bottom-end"
+            open={showTransactionSettingsModal}
+            onOpenChange={(open: boolean) => {
+              // Only close on interface because SwapSettings are rendered in a modal on mobile/extension
+              // and when click is triggered inside extension Modal it causes onOpenChange to trigger
+              if (!open && isInterface) {
+                onCloseSettingsModal()
+              }
+            }}
+          >
+            <Flex>
+              <SwapFormSettingsButton
+                showCustomSlippage={!!showCustomSlippage}
+                customSlippageTolerance={customSlippageTolerance}
+                showTooltip={showSettingsIconTooltip}
+                iconColor={iconColor}
+                iconSize={iconSize}
+                onPress={onPressSwapSettings}
+              />
+              <TransactionSettingsModal
+                settings={settings}
+                defaultTitle={defaultTitle}
+                isOpen={showTransactionSettingsModal}
+                onClose={onCloseSettingsModal}
+              />
+            </Flex>
+          </Popover>
+        )}
+      </Flex>
+    </>
   )
 }

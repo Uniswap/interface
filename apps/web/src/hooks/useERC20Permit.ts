@@ -45,10 +45,10 @@ const PERMITTABLE_TOKENS: {
 
 enum UseERC20PermitState {
   // returned for any reason, e.g. it is an argent wallet, or the currency does not support it
-  NOT_APPLICABLE,
-  LOADING,
-  NOT_SIGNED,
-  SIGNED,
+  NOT_APPLICABLE = 0,
+  LOADING = 1,
+  NOT_SIGNED = 2,
+  SIGNED = 3,
 }
 
 interface BaseSignatureData {
@@ -129,7 +129,7 @@ export function useERC20Permit(
 
   const permitInfo =
     overridePermitInfo ??
-    (status === 'connected' && account.chainId && tokenAddress
+    (account.isConnected && account.chainId && tokenAddress
       ? PERMITTABLE_TOKENS[account.chainId]?.[tokenAddress]
       : undefined)
 

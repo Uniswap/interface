@@ -45,7 +45,7 @@ import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
-import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
 
 const router = createHashRouter([
   {

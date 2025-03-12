@@ -92,14 +92,14 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [isOffRamp, setIsOffRamp] = useState<boolean>(initialModalState?.isOfframp ?? false)
 
   useEffect(() => {
-    if (prefilledCurrency) {
+    if (prefilledCurrency || quoteCurrency.currencyInfo) {
       return
     }
     // Addresses a race condition where the quoteCurrency could be set before ethCurrencyInfo is loaded
     if (ethCurrencyInfo) {
       setQuoteCurrency(defaultCurrency)
     }
-  }, [ethCurrencyInfo, defaultCurrency, prefilledCurrency])
+  }, [ethCurrencyInfo, defaultCurrency, prefilledCurrency, quoteCurrency])
 
   return (
     <FiatOnRampContext.Provider

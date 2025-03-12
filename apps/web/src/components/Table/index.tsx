@@ -18,9 +18,6 @@ import {
   LoadingIndicator,
   LoadingIndicatorContainer,
   NoDataFoundTableRow,
-  ReturnButton,
-  ReturnButtonContainer,
-  ReturnIcon,
   SHOW_RETURN_TO_TOP_OFFSET,
   TableBodyContainer,
   TableContainer,
@@ -32,8 +29,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { ThemedText } from 'theme/components'
-import { FadePresence } from 'theme/components/FadePresence'
-import { Z_INDEX } from 'theme/zIndex'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -136,7 +131,6 @@ export function Table<Data extends RowData>({
   maxWidth?: number
   maxHeight?: number
 }) {
-  const [showReturn, setShowReturn] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
 
   const [scrollPosition, setScrollPosition] = useState<{
@@ -175,7 +169,6 @@ export function Table<Data extends RowData>({
   }, [loadMore, maxHeight, loadingMore])
 
   useEffect(() => {
-    setShowReturn(!loading && !error && distanceFromTop >= SHOW_RETURN_TO_TOP_OFFSET)
     if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore && canLoadMore.current && !error) {
       setLoadingMore(true)
       // Manually update scroll position to prevent re-triggering
@@ -207,11 +200,11 @@ export function Table<Data extends RowData>({
   }, [])
 
   return (
-    <div>
+    <>
       <ScrollSync>
         <TableContainer maxWidth={maxWidth} maxHeight={maxHeight}>
           <TableHead $isSticky={!maxHeight} $top={headerHeight}>
-            <ScrollSyncPane>
+            <ScrollSyncPane group="table-sync">
               <HeaderRow dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id}>
@@ -220,29 +213,8 @@ export function Table<Data extends RowData>({
                 ))}
               </HeaderRow>
             </ScrollSyncPane>
-            {showReturn && (
-              <FadePresence $zIndex={Z_INDEX.hover}>
-                <ReturnButtonContainer top={maxHeight ? 55 : 75}>
-                  <ReturnButton
-                    height="24px"
-                    onClick={() => {
-                      setShowReturn(false)
-                      const scrollableElement = maxHeight ? tableBodyRef.current : window
-                      scrollableElement?.scrollTo({
-                        top: 0,
-                        behavior: 'smooth',
-                      })
-                    }}
-                  >
-                    <ReturnIcon />
-                    <Trans i18nKey="common.returnToTop" />
-                  </ReturnButton>
-                </ReturnButtonContainer>
-              </FadePresence>
-            )}
           </TableHead>
-          {/* @ts-expect-error `react-scroll-sync` hasn't been updated in awhile; therefore, this type has been incorrect for a while */}
-          <ScrollSyncPane attachTo={tableBodyRef}>
+          <ScrollSyncPane group="table-sync">
             <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
               <TableBody loading={loading} error={error} table={table} />
             </TableBodyContainer>
@@ -257,6 +229,6 @@ export function Table<Data extends RowData>({
           )}
         </TableContainer>
       </ScrollSync>
-    </div>
+    </>
   )
 }

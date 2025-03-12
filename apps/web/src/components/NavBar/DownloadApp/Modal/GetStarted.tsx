@@ -11,7 +11,7 @@ import styled, { useTheme } from 'lib/styled-components'
 import { Wiggle } from 'pages/Landing/components/animations'
 import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { StyledInternalLink, TamaguiClickableStyle } from 'theme/components'
+import { StyledInternalLink } from 'theme/components'
 import { Button, Flex, Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
@@ -105,32 +105,18 @@ export function GetStarted({
       rightThumbnail={<PromoImage />}
     >
       <Flex gap="$spacing16" width="100%">
-        <Button
-          variant="branded"
-          onPress={() => setPage(Page.PasskeyGeneration)}
-          py="$gap16"
-          display={isEmbeddedWalletEnabled ? 'flex' : 'none'}
-        >
-          <Text color="white" variant="buttonLabel1">
-            {t('nav.signUp.button')}
-          </Text>
-        </Button>
-        <Flex flexDirection={isEmbeddedWalletEnabled ? 'row' : 'column'} gap="$gap12">
-          <Flex
-            justifyContent="space-between"
-            alignItems="center"
-            p="$gap12"
-            pl="$gap16"
-            background="$surface3"
-            borderRadius="$rounded16"
-            height="$spacing48"
-            flex={1}
-            flexWrap="nowrap"
-            flexDirection="row"
-            onPress={() => setPage(Page.GetApp)}
-            {...TamaguiClickableStyle}
+        <Flex row>
+          <Button
+            variant="branded"
+            onPress={() => setPage(Page.PasskeyGeneration)}
+            display={isEmbeddedWalletEnabled ? 'flex' : 'none'}
           >
-            <Text variant="buttonLabel2">{t('common.mobile')}</Text>
+            {t('nav.signUp.button')}
+          </Button>
+        </Flex>
+        <Flex flexDirection={isEmbeddedWalletEnabled ? 'row' : 'column'} gap="$gap12">
+          <Button gap="$spacing12" emphasis="secondary" onPress={() => setPage(Page.GetApp)}>
+            <Button.Text>{t('common.mobile')}</Button.Text>
             <Flex row gap="$spacing4">
               <WiggleIcon>
                 <AppleLogo fill={theme.neutral1} />
@@ -139,27 +125,20 @@ export function GetStarted({
                 <AndroidLogo fill={theme.neutral1} />
               </WiggleIcon>
             </Flex>
-          </Flex>
+          </Button>
           <Trace logPress element={InterfaceElementName.EXTENSION_DOWNLOAD_BUTTON}>
-            <Flex
-              justifyContent="space-between"
-              alignItems="center"
-              p="$gap12"
-              pl="$gap16"
-              background="$surface3"
-              borderRadius="$rounded16"
-              height="$spacing48"
-              flex={1}
-              flexWrap="nowrap"
-              flexDirection="row"
+            <Button
+              iconPosition="after"
+              icon={
+                <WiggleIcon>
+                  <GoogleChromeLogo width="16px" height="16px" />
+                </WiggleIcon>
+              }
+              emphasis="secondary"
               onPress={() => window.open(uniswapUrls.chromeExtension)}
-              {...TamaguiClickableStyle}
             >
-              <Text variant="buttonLabel2">{t('common.chromeExtension')}</Text>
-              <WiggleIcon>
-                <GoogleChromeLogo width="16px" height="16px" />
-              </WiggleIcon>
-            </Flex>
+              {t('common.chromeExtension')}
+            </Button>
           </Trace>
         </Flex>
         <Text

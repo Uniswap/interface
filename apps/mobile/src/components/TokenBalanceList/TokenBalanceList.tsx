@@ -22,7 +22,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { DDRumManualTiming } from 'utilities/src/logger/datadogEvents'
+import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
 import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
@@ -61,7 +61,7 @@ export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenB
   },
 )
 
-export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
+const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
   function _TokenBalanceListInner(
     {
       empty,
@@ -336,7 +336,6 @@ const HiddenTokensRowWrapper = memo(function HiddenTokensRowWrapper(): JSX.Eleme
       <InfoLinkModal
         showCloseButton
         buttonText={t('common.button.close')}
-        buttonTheme="tertiary"
         description={t('hidden.tokens.info.text.info')}
         icon={
           <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">

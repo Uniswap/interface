@@ -1,26 +1,19 @@
 import 'rc-slider/assets/index.css'
 
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
-import { Box } from 'components/deprecated/Box'
-import styled, { useTheme } from 'lib/styled-components'
-import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/PriceRange.css'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { NumericInput } from 'nft/components/layout/Input'
-import { body } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { usePriceRange } from 'nft/hooks/usePriceRange'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { scrollToTop } from 'nft/utils/scrollToTop'
 import { default as Slider } from 'rc-slider'
-import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { darkDeprecatedTheme } from 'theme/deprecatedColors'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-
-const StyledSlider = styled(Slider)`
-  cursor: pointer;
-`
 
 export const PriceRange = () => {
   const [placeholderText, setPlaceholderText] = useState('')
@@ -34,7 +27,7 @@ export const PriceRange = () => {
   const setPriceRangeHigh = usePriceRange((statae) => statae.setPriceRangeHigh)
   const prevMinMax = usePriceRange((state) => state.prevMinMax)
   const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const location = useLocation()
 
@@ -45,12 +38,12 @@ export const PriceRange = () => {
     setPriceRangeHigh('')
   }, [location.pathname, setMinPrice, setMaxPrice, setPriceRangeLow, setPriceRangeHigh])
 
-  const handleFocus: FocusEventHandler<HTMLInputElement> = (e) => {
+  const handleFocus = (e: any) => {
     setPlaceholderText(e.currentTarget.placeholder)
     e.currentTarget.placeholder = ''
   }
 
-  const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
+  const handleBlur = (e: any) => {
     e.currentTarget.placeholder = placeholderText
     setPlaceholderText('')
     if (minPrice || maxPrice) {
@@ -58,19 +51,19 @@ export const PriceRange = () => {
     }
   }
 
-  const updateMinPriceRange = (v: FormEvent<HTMLInputElement>) => {
+  const updateMinPriceRange = (v: string) => {
     const [, prevMax] = prevMinMax
 
     // if there is actually a number, update the slider place
-    if (v.currentTarget.value) {
+    if (v) {
       // we are calculating the new slider position here
-      const diff = parseInt(v.currentTarget.value) - parseInt(priceRangeLow)
+      const diff = parseInt(v) - parseInt(priceRangeLow)
       const newLow = Math.floor(100 * (diff / (parseInt(priceRangeHigh) - parseInt(priceRangeLow))))
 
       // if the slider min value is larger than or equal to the max, we don't want it to move past the max
       // so we put the sliders on top of each other
       // if it is less than, we can move it
-      if (parseInt(v.currentTarget.value) >= parseInt(maxPrice)) {
+      if (parseInt(v) >= parseInt(maxPrice)) {
         setPrevMinMax([prevMax, prevMax])
       } else {
         setPrevMinMax([newLow, prevMax])
@@ -81,18 +74,18 @@ export const PriceRange = () => {
     }
 
     // set min price for price range querying
-    setMinPrice(v.currentTarget.value.toString())
+    setMinPrice(v)
     scrollToTop()
   }
 
-  const updateMaxPriceRange = (v: FormEvent<HTMLInputElement>) => {
+  const updateMaxPriceRange = (v: string) => {
     const [prevMin] = prevMinMax
 
-    if (v.currentTarget.value) {
-      const range = parseInt(priceRangeHigh) - parseInt(v.currentTarget.value)
+    if (v) {
+      const range = parseInt(priceRangeHigh) - parseInt(v)
       const newMax = Math.floor(100 - 100 * (range / (parseInt(priceRangeHigh) - parseInt(priceRangeLow))))
 
-      if (parseInt(v.currentTarget.value) <= parseInt(minPrice)) {
+      if (parseInt(v) <= parseInt(minPrice)) {
         setPrevMinMax([prevMin, prevMin])
       } else {
         setPrevMinMax([prevMin, newMax])
@@ -101,7 +94,7 @@ export const PriceRange = () => {
       setPrevMinMax([prevMin, 100])
     }
 
-    setMaxPrice(v.currentTarget.value)
+    setMaxPrice(v)
     scrollToTop()
   }
 
@@ -142,48 +135,52 @@ export const PriceRange = () => {
 
   return (
     <TraitsHeader title="Price range" index={TraitPosition.PRICE_RANGE_INDEX}>
-      <Row marginTop="12" color="neutral1" justifyContent="space-between">
-        <Row position="relative">
+      <Flex row mt="$spacing12" justifyContent="space-between" alignItems="center">
+        <Flex position="relative">
           <NumericInput
-            style={{
-              width: '126px',
-            }}
+            width={126}
             className={styles.priceInput}
             placeholder={priceRangeLow}
-            onChange={updateMinPriceRange}
-            onFocus={handleFocus}
+            onChangeText={updateMinPriceRange}
             value={minPrice}
+            onFocus={handleFocus}
             onBlur={handleBlur}
+            color="$neutral1"
           />
-        </Row>
-        <Box className={body}>to</Box>
-        <Row position="relative">
+        </Flex>
+        <Text color="$neutral1" variant="body2">
+          to
+        </Text>
+        <Flex row>
           <NumericInput
-            style={{
-              width: '126px',
-            }}
+            width={126}
             className={styles.priceInput}
             placeholder={priceRangeHigh}
             value={maxPrice}
-            onChange={updateMaxPriceRange}
+            onChangeText={updateMaxPriceRange}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            color="$neutral1"
           />
-        </Row>
-      </Row>
+        </Flex>
+      </Flex>
 
-      <Row marginTop="24" marginBottom="12" paddingLeft="8" paddingRight="8">
-        <StyledSlider
+      <Flex mt="$spacing24" mb="$spacing12" pl="$spacing8" pr="$spacing8">
+        <Slider
           defaultValue={[0, 100]}
           min={0}
           max={100}
           range
           step={0.0001}
           value={prevMinMax}
+          style={{
+            cursor: 'pointer',
+          }}
           trackStyle={{
             top: '3px',
             height: '8px',
-            background: `${theme.accent1}`,
+            background: `${colors.accent1.val}`,
+            cursor: 'pointer',
           }}
           handleStyle={{
             top: '3px',
@@ -194,15 +191,16 @@ export const PriceRange = () => {
             borderRadius: '4px',
             border: 'none',
             boxShadow: darkDeprecatedTheme.deprecated_shallowShadow.slice(0, -1),
+            cursor: 'pointer',
           }}
           railStyle={{
             top: '3px',
             height: '8px',
-            backgroundColor: `${theme.accent2}`,
+            backgroundColor: `${colors.accent2.val}`,
           }}
           onChange={handleSliderLogic}
         />
-      </Row>
+      </Flex>
     </TraitsHeader>
   )
 }

@@ -1,6 +1,6 @@
-const eslintConfig = require('@uniswap/eslint-config/native')
-
-const noRestrictedImportsPaths = eslintConfig.rules['no-restricted-imports']?.[1]?.paths ?? []
+const {
+  native: { paths: nativePaths, patterns: nativePatterns },
+} = require('@uniswap/eslint-config/restrictedImports')
 
 module.exports = {
   root: true,
@@ -25,16 +25,17 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'no-restricted-imports': [
+    '@typescript-eslint/no-restricted-imports': [
       'error',
       {
         paths: [
-          ...noRestrictedImportsPaths,
+          ...nativePaths,
           {
             name: 'ui/src',
             message: 'Avoid importing directly from ui/src from within the ui package which causes circular imports.',
           },
         ],
+        patterns: nativePatterns,
       },
     ],
   },

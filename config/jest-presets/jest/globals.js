@@ -19,7 +19,6 @@ module.exports = {
     OPENAI_API_KEY: 'key',
     QUICKNODE_ENDPOINT_NAME: 'name',
     QUICKNODE_ENDPOINT_TOKEN: 'token',
-    QUICKNODE_MONAD_TESTNET_RPC_URL: 'https://rpc.testnet.monad.xyz',
     SCANTASTIC_API_URL_OVERRIDE: '',
     SENTRY_DSN: 'http://sentry.com',
     SHAKE_CLIENT_ID: 123,
@@ -34,6 +33,8 @@ module.exports = {
     UNISWAP_API_KEY: 'key',
     UNITAGS_API_URL_OVERRIDE: '',
     WALLETCONNECT_PROJECT_ID: 123,
+    WALLETCONNECT_PROJECT_ID_BETA: 123,
+    WALLETCONNECT_PROJECT_ID_DEV: 123,
     INCLUDE_PROTOTYPE_FEATURES: true,
   },
 }

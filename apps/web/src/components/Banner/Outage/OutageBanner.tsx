@@ -1,45 +1,36 @@
-import { Container, PopupContainer, StyledXButton, TextContainer } from 'components/Banner/shared/styled'
 import { ChainOutageData } from 'featureFlags/flags/outageBanner'
-import styled, { useTheme } from 'lib/styled-components'
+import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
-import { Globe } from 'react-feather'
+import { Globe, X } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { ExternalLink, ThemedText } from 'theme/components'
+import { ClickableTamaguiStyle, ExternalLink } from 'theme/components'
 import { capitalize } from 'tsafe'
+import { Flex, Text, styled as tamaguiStyled } from 'ui/src'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
-const IconContainer = styled.div`
-  height: 100%;
-  margin: 12px 0 0 12px;
-  align-self: flex-start;
-`
-
-const IconBackground = styled.div`
-  display: flex;
-  background-color: ${({ theme }) => theme.deprecated_accentWarningSoft};
-  padding: 10px;
-  border-radius: 12px;
-`
-
-const StyledPopupContainer = styled(PopupContainer)`
-  height: unset;
-`
-
-const OutageTextContainer = styled(TextContainer)`
-  padding: 10px 10px 10px 0;
-`
-
-const HelpCenterLink = styled(ExternalLink)`
-  font-size: 12px;
-  margin-top: 4px;
-  font-weight: 535;
-`
-
 export function getOutageBannerSessionStorageKey(chainId: UniverseChainId) {
   return `hideOutageBanner-${chainId}`
 }
+
+// TODO replace with IconButton when it's available from buttons migration
+const CloseButton = tamaguiStyled(X, {
+  ...ClickableTamaguiStyle,
+  size: iconSizes.icon24,
+  p: '$spacing4',
+  right: 0,
+  top: '-30px',
+  borderRadius: '50%',
+  backgroundColor: '$surface5',
+  color: '$neutral2',
+  position: 'absolute',
+  $xs: {
+    top: 8,
+    right: 6,
+  },
+})
 
 export function OutageBanner({ chainId, version }: ChainOutageData) {
   const [hidden, setHidden] = useState(false)
@@ -49,37 +40,70 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
   const chainName = capitalize(toGraphQLChain(chainId ?? defaultChainId).toLowerCase())
   const versionDescription = version ? ' ' + version.toString().toLowerCase() : ''
 
+  if (hidden) {
+    return null
+  }
+
   return (
-    <StyledPopupContainer show={!hidden}>
-      <Container>
-        <IconContainer>
-          <IconBackground>
-            <Globe size={28} color={theme.warning2} />
-          </IconBackground>
-        </IconContainer>
-        <OutageTextContainer>
-          <ThemedText.BodySmall lineHeight="20px">
+    <Flex
+      width={360}
+      maxWidth="95%"
+      $platform-web={{ position: 'fixed' }}
+      bottom={40}
+      right={20}
+      backgroundColor={theme.surface2}
+      zIndex={zIndexes.sticky}
+      borderRadius="$rounded20"
+      borderStyle="solid"
+      borderWidth={1.3}
+      borderColor={theme.surface3}
+      $lg={{
+        bottom: 62,
+      }}
+      $sm={{
+        bottom: 80,
+      }}
+      $xs={{
+        right: 10,
+        left: 10,
+      }}
+    >
+      <Flex row p="$spacing10" borderRadius="$rounded20" height="100%">
+        <Flex
+          centered
+          m={12}
+          mr={6}
+          height={45}
+          width={45}
+          backgroundColor={theme.deprecated_accentWarningSoft}
+          borderRadius="$rounded12"
+        >
+          <Globe size={28} color={theme.warning2} />
+        </Flex>
+        <Flex gap="$spacing2" p={10} $xs={{ maxWidth: 270 }} flexShrink={1}>
+          <Text variant="body2" color={theme.neutral1}>
             <Trans i18nKey="outageBanner.title" values={{ versionName }} />
-          </ThemedText.BodySmall>
-          <ThemedText.LabelMicro>
+          </Text>
+          <Text variant="body3" color={theme.neutral2}>
             <Trans i18nKey="outageBanner.message" values={{ chainName, versionDescription }} />
-          </ThemedText.LabelMicro>
-          <ThemedText.LabelMicro>
+          </Text>
+          <Text variant="body3" color={theme.neutral2}>
             <Trans i18nKey="outageBanner.message.sub" />
-          </ThemedText.LabelMicro>
-          <HelpCenterLink href="https://support.uniswap.org/hc/en-us/articles/23952001935373-Subgraph-downtime">
-            <Trans i18nKey="common.button.learn" />
-          </HelpCenterLink>
-        </OutageTextContainer>
-        <StyledXButton
+          </Text>
+          <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/23952001935373-Subgraph-downtime">
+            <Text variant="body3" color={theme.accent1}>
+              <Trans i18nKey="common.button.learn" />
+            </Text>
+          </ExternalLink>
+        </Flex>
+        <CloseButton
           data-testid="uniswap-outage-banner"
-          size={24}
           onClick={() => {
             setHidden(true)
             sessionStorage.setItem(getOutageBannerSessionStorageKey(chainId), 'true')
           }}
         />
-      </Container>
-    </StyledPopupContainer>
+      </Flex>
+    </Flex>
   )
 }

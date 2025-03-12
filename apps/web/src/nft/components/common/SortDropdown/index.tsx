@@ -1,14 +1,12 @@
 import clsx from 'clsx'
-import { Box } from 'components/deprecated/Box'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/common/SortDropdown/SortDropdown.css'
 import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'
-import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useCollectionFilters, useIsCollectionLoading } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { Flex, Text, useSporeColors } from 'ui/src'
 
 export { FilterSortDropdown } from './FilterSortDropdown'
 
@@ -33,6 +31,8 @@ export const SortDropdown = ({
   const [selectedIndex, setSelectedIndex] = useState(sortBy)
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
+  const colors = useSporeColors()
+
   const [maxWidth, setMaxWidth] = useState(0)
 
   useEffect(() => {
@@ -52,41 +52,42 @@ export const SortDropdown = ({
   const width = isCollectionStatsLoading ? 220 : inFilters ? 'full' : mini ? 'min' : maxWidth ? maxWidth : '300px'
 
   return (
-    <Box
+    <Flex
       ref={ref}
-      borderRadius="12"
-      borderBottomLeftRadius={isOpen ? '0' : undefined}
-      borderBottomRightRadius={isOpen ? '0' : undefined}
-      style={{ width }}
+      borderRadius="$rounded12"
+      borderBottomLeftRadius={isOpen ? 0 : undefined}
+      borderBottomRightRadius={isOpen ? 0 : undefined}
+      width={width}
     >
-      <Box
-        as="button"
-        borderRadius="12"
-        borderStyle="solid"
-        background={mini ? 'none' : 'surface1'}
-        borderColor="surface3"
-        borderWidth="1px"
-        borderBottomLeftRadius={isOpen ? '0' : undefined}
-        borderBottomRightRadius={isOpen ? '0' : undefined}
-        padding={inFilters ? '12' : mini ? '0' : '8'}
-        color="neutral1"
-        whiteSpace="nowrap"
-        display="flex"
+      <Flex
+        borderRadius="$rounded12"
+        backgroundColor={mini ? '$transparent' : '$surface1'}
+        borderColor="$surface3"
+        borderWidth={1}
+        borderBottomLeftRadius={isOpen ? 0 : undefined}
+        borderBottomRightRadius={isOpen ? 0 : undefined}
+        p={inFilters ? 12 : mini ? 0 : 8}
+        $platform-web={{
+          whiteSpace: 'nowrap',
+        }}
         justifyContent="space-between"
-        height="44"
+        height={44}
         alignItems="center"
-        width={inFilters ? 'full' : 'inherit'}
-        onClick={toggleOpen}
+        width={inFilters ? '100%' : 'auto'}
+        onPress={toggleOpen}
         cursor="pointer"
         className={isCollectionStatsLoading ? styles.isLoadingDropdown : clsx(isOpen && !mini && styles.activeDropdown)}
       >
         {!isCollectionStatsLoading && (
           <>
-            <Box display="flex" alignItems="center" color="neutral1">
+            <Flex row alignItems="center" height="100%">
               {!isOpen && reversable && (
-                <Row
-                  marginRight="4"
-                  onClick={(e) => {
+                <Flex
+                  row
+                  mr={4}
+                  alignItems="center"
+                  height="100%"
+                  onPress={(e) => {
                     e.stopPropagation()
 
                     if (dropDownOptions[selectedIndex].reverseOnClick) {
@@ -100,25 +101,24 @@ export const SortDropdown = ({
                   }}
                 >
                   {dropDownOptions[selectedIndex].reverseOnClick &&
-                    (isReversed ? <ArrowsIcon /> : <ReversedArrowsIcon />)}
+                    (isReversed ? (
+                      <ArrowsIcon color={colors.neutral1.val} />
+                    ) : (
+                      <ReversedArrowsIcon color={colors.neutral1.val} />
+                    ))}
                   {dropDownOptions[selectedIndex].reverseIndex &&
                     (selectedIndex > (dropDownOptions[selectedIndex].reverseIndex ?? 1) - 1 ? (
-                      <ArrowsIcon />
+                      <ArrowsIcon color={colors.neutral1.val} />
                     ) : (
                       <ReversedArrowsIcon />
                     ))}
-                </Row>
+                </Flex>
               )}
 
-              <Box
-                marginLeft={reversable ? '4' : '0'}
-                marginRight={mini ? '2' : '0'}
-                color="neutral1"
-                className={buttonTextMedium}
-              >
+              <Text ml={reversable ? 4 : 0} mr={mini ? 2 : 0} color="$neutral1" variant="buttonLabel2">
                 {mini ? miniPrompt : isOpen ? 'Sort by' : dropDownOptions[selectedIndex].displayText}
-              </Box>
-            </Box>
+              </Text>
+            </Flex>
             <ChevronUpIcon
               secondaryColor={mini ? themeVars.colors.neutral1 : undefined}
               secondaryWidth={mini ? '20' : undefined}
@@ -129,26 +129,26 @@ export const SortDropdown = ({
             />
           </>
         )}
-      </Box>
-      <Box
+      </Flex>
+      <Flex
         position="absolute"
         zIndex="3"
         width={inFilters ? 'auto' : 'inherit'}
-        right={inFilters ? '16' : 'auto'}
-        paddingBottom="8"
-        fontSize="14"
-        background="surface1"
-        borderStyle="solid"
-        borderColor="surface3"
-        borderWidth="1px"
-        borderRadius="8"
-        borderTopLeftRadius={mini ? undefined : '0'}
-        borderTopRightRadius={mini ? undefined : '0'}
-        overflowY="hidden"
+        right={inFilters ? 16 : 'auto'}
+        pb={8}
+        backgroundColor="$surface1"
+        borderColor="$surface3"
+        borderWidth={1}
+        borderRadius={8}
+        borderTopLeftRadius={mini ? undefined : 0}
+        borderTopRightRadius={mini ? undefined : 0}
+        overflow="hidden"
         transition="250"
         display={isOpen || !maxWidth ? 'block' : 'none'}
-        visibility={maxWidth ? 'visible' : 'hidden'}
-        marginTop={mini ? '12' : '0'}
+        $platform-web={{
+          visibility: maxWidth ? 'visible' : 'hidden',
+        }}
+        mt={mini ? 12 : 0}
         className={clsx(!mini && styles.activeDropDownItems)}
         style={{
           top: top ? `${top}px` : 'inherit',
@@ -180,8 +180,8 @@ export const SortDropdown = ({
                 />
               )
             })}
-      </Box>
-    </Box>
+      </Flex>
+    </Flex>
   )
 }
 
@@ -197,29 +197,23 @@ const DropDownItem = ({
   mini?: boolean
 }) => {
   return (
-    <Box
-      as="button"
-      border="none"
+    <Flex
+      borderWidth={0}
       key={index}
-      display="flex"
       alignItems="center"
-      paddingTop="10"
-      paddingBottom="10"
-      paddingLeft="12"
-      paddingRight={mini ? '20' : '0'}
+      py={10}
+      pl={12}
+      pr={mini ? 20 : 0}
       width="full"
-      background={{
-        default: 'surface1',
-        hover: 'surface3',
-      }}
-      color="neutral1"
-      onClick={onClick}
+      backgroundColor="$surface1"
+      hoverStyle={{ backgroundColor: '$surface3' }}
+      onPress={onClick}
       cursor="pointer"
     >
-      <Box marginLeft="8" className={buttonTextMedium}>
+      <Text ml={8} variant="buttonLabel2" color="$neutral1">
         {option.displayText}
-      </Box>
-    </Box>
+      </Text>
+    </Flex>
   )
 }
 
@@ -243,8 +237,8 @@ const LargestItem = ({
   })
 
   return (
-    <Box key={index} position="absolute" ref={maxWidthRef}>
+    <Flex key={index} position="absolute" ref={maxWidthRef}>
       <DropDownItem option={option} index={index} />
-    </Box>
+    </Flex>
   )
 }

@@ -6,8 +6,8 @@ import {
 } from 'uniswap/src/components/TokenSelector/lists/TokenSectionBaseList/processTokenSections'
 import type { TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
 
 describe('processTokenSections', () => {
   const mockToken = new Token(
@@ -22,8 +22,7 @@ describe('processTokenSections', () => {
     currency: mockToken,
     currencyId: 'test-id',
     logoUrl: null,
-    safetyLevel: SafetyLevel.Verified,
-    safetyInfo: null,
+    safetyInfo: benignSafetyInfo,
     isSpam: false,
   }
 
@@ -127,8 +126,8 @@ describe('processTokenSections', () => {
   })
 
   it('preserves section metadata in processed items', () => {
-    const rightElement = <div>Right</div>
-    const endElement = <div>End</div>
+    const rightElement = <>Right</>
+    const endElement = <>End</>
     const section: TokenSection = {
       sectionKey: TokenOptionSection.YourTokens,
       data: [mockTokenOption],

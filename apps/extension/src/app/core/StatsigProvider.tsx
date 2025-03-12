@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { initializeDatadog } from 'src/app/datadog'
 import { getStatsigEnvironmentTier } from 'src/app/version'
 import Statsig from 'statsig-js' // Use JS package for browser
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
+import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { useAsyncData } from 'utilities/src/react/hooks'
 

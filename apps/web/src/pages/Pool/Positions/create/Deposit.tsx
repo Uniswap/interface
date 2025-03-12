@@ -1,4 +1,3 @@
-import { LoaderButton } from 'components/Button/LoaderButton'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import {
@@ -8,16 +7,16 @@ import {
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { CreatePositionModal } from 'pages/Pool/Positions/create/CreatePositionModal'
-import { Container } from 'pages/Pool/Positions/create/shared'
 import { useCallback, useState } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
-import { Flex, FlexProps, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 
-export const DepositStep = ({ ...rest }: FlexProps) => {
+export const DepositStep = () => {
   const {
     derivedPositionInfo: { currencies },
   } = useCreatePositionContext()
+  const { t } = useTranslation()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
   const {
     depositState: { exactField },
@@ -85,45 +84,42 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
 
   return (
     <>
-      <Container {...rest}>
-        <Flex gap={32}>
-          <Flex gap="$spacing4">
-            <Text variant="subheading1">
-              <Trans i18nKey="common.depositTokens" />
-            </Text>
-            <Text variant="body3" color="$neutral2">
-              <Trans i18nKey="position.deposit.description" />
-            </Text>
-          </Flex>
+      <Flex gap={32}>
+        <Flex gap="$spacing4">
+          <Text variant="subheading1">
+            <Trans i18nKey="common.depositTokens" />
+          </Text>
+          <Text variant="body3" color="$neutral2">
+            <Trans i18nKey="position.deposit.description" />
+          </Text>
         </Flex>
-        <DepositInputForm
-          token0={token0}
-          token1={token1}
-          formattedAmounts={updatedFormattedAmounts}
-          currencyAmounts={currencyAmounts}
-          currencyAmountsUSDValue={updatedUSDAmounts}
-          currencyBalances={currencyBalances}
-          onUserInput={handleUserInput}
-          onSetMax={handleOnSetMax}
-          deposit0Disabled={updatedDeposit0Disabled}
-          deposit1Disabled={updatedDeposit1Disabled}
-          amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
-          amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
-        />
-        <LoaderButton
-          flex={1}
-          py="$spacing16"
-          px="$spacing20"
+      </Flex>
+      <DepositInputForm
+        token0={token0}
+        token1={token1}
+        formattedAmounts={updatedFormattedAmounts}
+        currencyAmounts={currencyAmounts}
+        currencyAmountsUSDValue={updatedUSDAmounts}
+        currencyBalances={currencyBalances}
+        onUserInput={handleUserInput}
+        onSetMax={handleOnSetMax}
+        deposit0Disabled={updatedDeposit0Disabled}
+        deposit1Disabled={updatedDeposit1Disabled}
+        amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
+        amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
+      />
+      <Flex row>
+        <Button
+          size="large"
+          variant="branded"
           onPress={handleReview}
           isDisabled={disabled}
-          buttonKey="Position-Create-DepositButton"
+          key="Position-Create-DepositButton"
           loading={requestLoading}
         >
-          <Text variant="buttonLabel1" color="$neutralContrast">
-            {inputError ? inputError : <Trans i18nKey="swap.button.review" />}
-          </Text>
-        </LoaderButton>
-      </Container>
+          {inputError ? inputError : t('swap.button.review')}
+        </Button>
+      </Flex>
       <CreatePositionModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
     </>
   )

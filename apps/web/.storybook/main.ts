@@ -1,6 +1,9 @@
 import type { StorybookConfig } from '@storybook/react-webpack5'
+import { DefinePlugin } from 'webpack'
 
 import { dirname, join, resolve } from 'path'
+
+const isDev = process.env.NODE_ENV === 'development'
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -10,7 +13,12 @@ function getAbsolutePath(value: string): any {
   return dirname(require.resolve(join(value, 'package.json')))
 }
 const config: StorybookConfig = {
-  stories: ['../../../packages/ui/**/*.stories.?(ts|tsx)', '../../../packages/ui/**/*.mdx'],
+  stories: [
+    '../../../packages/ui/**/*.stories.?(ts|tsx)',
+    '../../../packages/ui/**/*.mdx',
+    '../../../packages/uniswap/src/**/*.stories.?(ts|tsx|js|jsx)',
+    '../../../packages/uniswap/**/*.mdx',
+  ],
   addons: [
     getAbsolutePath('@storybook/preset-create-react-app'),
     getAbsolutePath('@storybook/addon-essentials'),
@@ -25,9 +33,17 @@ const config: StorybookConfig = {
   staticDirs: ['../public'],
   webpackFinal: (config) => {
     // There are some conflicting ESLint rules that prevent storybook from building if this plugin is added to the Webpack configuration
-    if (config.plugins) {
-      config.plugins = config.plugins.filter((plugin) => plugin?.constructor.name !== 'ESLintWebpackPlugin')
+    if (!config.plugins) {
+      config.plugins = []
     }
+
+    config.plugins = config.plugins.filter((plugin) => plugin?.constructor.name !== 'ESLintWebpackPlugin')
+
+    config.plugins.push(
+      new DefinePlugin({
+        __DEV__: isDev,
+      }),
+    )
 
     // This modifies the existing image rule to exclude `.svg` files
     // since we handle those with `@svgr/webpack`.
