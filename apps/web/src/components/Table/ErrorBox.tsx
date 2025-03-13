@@ -1,7 +1,7 @@
-import Column from 'components/deprecated/Column'
 import { MissingDataIcon } from 'components/Table/icons'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components'
+import { Flex } from 'ui/src'
 
 const ErrorModalContainer = styled.div`
   display: flex;
@@ -27,12 +27,12 @@ const ErrorModalContainer = styled.div`
 
 export const ErrorModal = ({ header, subtitle }: { header: React.ReactNode; subtitle: React.ReactNode }) => (
   <ErrorModalContainer data-testid="table-error-modal">
-    <div>
+    <Flex>
       <MissingDataIcon />
-    </div>
-    <Column>
+    </Flex>
+    <Flex>
       <ThemedText.SubHeader>{header}</ThemedText.SubHeader>
       <ThemedText.LabelSmall>{subtitle}</ThemedText.LabelSmall>
-    </Column>
+    </Flex>
   </ErrorModalContainer>
 )

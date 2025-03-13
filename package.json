@@ -46,7 +46,8 @@
     "react-native-tab-view@3.5.2": "Fixes warning on profile screens with spreading key from props. Fixed in react-native-tab-view <4.0.0-alpha.7",
     "react-native-reanimated@3.16.7": "Fixes circular component rendering during tests while matching snapshots. See https://github.com/software-mansion/react-native-reanimated/issues/6645#issuecomment-2610994809",
     "react-scripts@5.0.1": "Fixes incompatibility with jest 28+",
-    "@react-native/assets-registry@0.76.6": "Fixes an issue with building on Web due to webpack's inability to handle Flow typings: https://github.com/facebook/react-native/issues/48349"
+    "@react-native/assets-registry@0.76.6": "Fixes an issue with building on Web due to webpack's inability to handle Flow typings: https://github.com/facebook/react-native/issues/48349",
+    "webpack@5.90.0": "Fixes issues with incompatible webpack typings in storybook"
   },
   "resolutions": {
     "@apollo/client": "3.10.4",
@@ -102,12 +103,14 @@
     "viem": "2.22.9",
     "xml2js": "0.5.0",
     "yaml": "2.2.2",
+    "webpack": "5.90.0",
     "@gorhom/bottom-sheet@4.6.4": "patch:@gorhom/bottom-sheet@npm%3A4.6.4#./.yarn/patches/@gorhom-bottom-sheet-npm-4.6.4-5b2c27bb1f.patch",
     "react-native-tab-view@3.5.2": "patch:react-native-tab-view@npm%3A3.5.2#./.yarn/patches/react-native-tab-view-npm-3.5.2-fb6cb6fe6f.patch",
     "@react-native/gradle-plugin@0.76.3": "patch:@react-native/gradle-plugin@npm%3A0.76.3#./.yarn/patches/@react-native-gradle-plugin-npm-0.76.3-0d3eabf9b6.patch",
     "react-native-reanimated@3.16.7": "patch:react-native-reanimated@npm%3A3.16.7#./.yarn/patches/react-native-reanimated-npm-3.16.7-1e7cd6d376.patch",
     "react-scripts@5.0.1": "patch:react-scripts@npm%3A5.0.1#./.yarn/patches/react-scripts-npm-5.0.1-d06bd2d5ad.patch",
-    "@react-native/assets-registry@0.76.6": "patch:@react-native/assets-registry@npm%3A0.76.6#./.yarn/patches/@react-native-assets-registry-npm-0.76.6-2e03ad50eb.patch"
+    "@react-native/assets-registry@0.76.6": "patch:@react-native/assets-registry@npm%3A0.76.6#./.yarn/patches/@react-native-assets-registry-npm-0.76.6-2e03ad50eb.patch",
+    "@tamagui/web@1.121.7": "patch:@tamagui/web@npm%3A1.121.7#./.yarn/patches/@tamagui-web-npm-1.121.7-4de089c18f.patch"
   },
   "scripts": {
     "extension": "yarn workspace @uniswap/extension",

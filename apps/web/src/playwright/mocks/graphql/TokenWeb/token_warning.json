@@ -1,0 +1,33 @@
+{
+  "data": {
+    "token": {
+      "id": "1-0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+      "decimals": 9,
+      "name": "test token",
+      "chain": "ETHEREUM",
+      "address": "0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+      "symbol": "test",
+      "standard": "ERC20",
+      "market": {},
+      "project": {
+        "id": "1-0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+        "name": "test token",
+        "description": "",
+        "homepageUrl": "",
+        "twitterName": "",
+        "logoUrl": "",
+        "tokens": [
+          {
+            "id": "1-0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+            "chain": "ETHEREUM",
+            "address": "0x1eFBB78C8b917f67986BcE54cE575069c0143681",
+            "__typename": "Token"
+          }
+        ],
+        "markets": [],
+        "__typename": "TokenProject"
+      },
+      "__typename": "Token"
+    }
+  }
+}

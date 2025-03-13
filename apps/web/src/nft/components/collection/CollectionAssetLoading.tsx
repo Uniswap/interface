@@ -1,14 +1,13 @@
 import SizingImage from 'assets/images/sizingImage.png'
 import { ASSET_PAGE_SIZE } from 'graphql/data/nft/Asset'
-import * as styles from 'nft/components/collection/CollectionAssetLoading.css'
 import { loadingAsset } from 'nft/css/loading.css'
 import { Flex, Image } from 'ui/src'
 
 const CollectionAssetLoading = ({ height }: { height?: number }) => {
   return (
-    <Flex className={styles.collectionAssetLoading}>
-      <Flex width="100%" height={height}>
-        <Flex className={styles.collectionAssetsImageLoading} />
+    <Flex borderRadius="$rounded12" pb="$padding12" backgroundColor="$surface2">
+      <Flex width="100%" height={height ?? 200}>
+        <Flex height="100%" width="100%" />
         <Image width="100%" opacity={0} src={SizingImage} />
       </Flex>
       <Flex row alignItems="center" justifyContent="space-between" mt="$spacing12" pl="$spacing12" pr="$spacing12">

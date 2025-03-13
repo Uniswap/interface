@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SendButton } from 'src/components/TokenDetails/SendButton'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { InlineNetworkPill } from 'uniswap/src/components/network/NetworkPill'
@@ -24,11 +23,9 @@ import { useActiveAccount, useDisplayName } from 'wallet/src/features/wallet/hoo
 export function TokenBalances({
   currentChainBalance,
   otherChainBalances,
-  onPressSend,
 }: {
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null
-  onPressSend: () => void
 }): JSX.Element | null {
   const { t } = useTranslation()
 
@@ -58,12 +55,7 @@ export function TokenBalances({
       {currentChainBalance && (
         <Flex gap="$spacing24">
           <Separator />
-          <CurrentChainBalance
-            balance={currentChainBalance}
-            displayName={displayName}
-            isReadonly={isReadonly}
-            onPressSend={onPressSend}
-          />
+          <CurrentChainBalance balance={currentChainBalance} displayName={displayName} isReadonly={isReadonly} />
         </Flex>
       )}
       {hasOtherChainBalances && otherChainBalances ? (
@@ -88,19 +80,16 @@ export function TokenBalances({
   )
 }
 
-export function CurrentChainBalance({
+function CurrentChainBalance({
   balance,
   isReadonly,
   displayName,
-  onPressSend,
 }: {
   balance: PortfolioBalance
   isReadonly: boolean
   displayName?: string
-  onPressSend: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const { isTestnetModeEnabled } = useEnabledChains()
 
@@ -110,17 +99,14 @@ export function CurrentChainBalance({
     <Flex row>
       <Flex fill gap="$spacing8">
         <Text color="$neutral2" variant="subheading2">
-          {isReadonly ? t('token.balances.viewOnly', { ownerAddress: displayName }) : t('token.balances.main')}
+          {isReadonly ? t('token.balances.viewOnly', { ownerAddress: displayName ?? '' }) : t('token.balances.main')}
         </Text>
-        <Flex fill gap="$spacing4">
+        <Flex row gap="$spacing8" alignItems="flex-end">
           <Text variant="heading3">{isTestnetModeEnabled ? tokenBalance : fiatBalance}</Text>
           <Text color="$neutral2" variant="body2">
             {!isTestnetModeEnabled && tokenBalance}
           </Text>
         </Flex>
-      </Flex>
-      <Flex alignItems="flex-end" justifyContent="center">
-        <SendButton color={colors.neutral1.val} size={iconSizes.icon28} onPress={onPressSend} />
       </Flex>
     </Flex>
   )

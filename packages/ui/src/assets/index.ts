@@ -1,5 +1,4 @@
 export const ALL_NETWORKS_LOGO = require('./logos/png/all-networks-icon.png')
-export const ALL_NETWORKS_LOGO_UNICHAIN = require('./logos/png/all-networks-icon-unichain.png')
 export const ETHEREUM_LOGO = require('./logos/png/ethereum-logo.png')
 export const OPTIMISM_LOGO = require('./logos/png/optimism-logo.png')
 export const ARBITRUM_LOGO = require('./logos/png/arbitrum-logo.png')
@@ -36,10 +35,6 @@ export const UNITAGS_INTRO_BANNER_LIGHT = require('./graphics/unitags-intro-bann
 export const UNITAGS_INTRO_BANNER_DARK = require('./graphics/unitags-intro-banner-dark.png')
 
 export const BRIDGING_BANNER = require('./graphics/bridging-banner.png')
-export const UNICHAIN_BANNER_COLD = require('./graphics/unichain-banner-cold.png')
-export const UNICHAIN_BANNER_WARM = require('./graphics/unichain-banner-warm.png')
-
-export const UNICHAIN_PROMO_MODAL_GIF = require('./graphics/unichain-modal.gif')
 
 export const DAI_LOGO = require('./logos/png/dai-logo.png')
 export const USDC_LOGO = require('./logos/png/usdc-logo.png')

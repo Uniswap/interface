@@ -9,8 +9,8 @@ import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItem
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import {
+  Button,
   ColorTokens,
-  DeprecatedButton,
   Flex,
   GeneratedIcon,
   ScrollView,
@@ -225,9 +225,11 @@ export function SettingsScreen(): JSX.Element {
             <Text color="$neutral3" px="$spacing12" py="$spacing4" variant="body4">{`Version ${manifestVersion}`}</Text>
           </SettingsSection>
         </ScrollView>
-        <DeprecatedButton icon={<Lock />} theme="secondary" onPress={onPressLockWallet}>
-          {t('settings.action.lock')}
-        </DeprecatedButton>
+        <Flex row>
+          <Button icon={<Lock />} emphasis="secondary" onPress={onPressLockWallet}>
+            {t('settings.action.lock')}
+          </Button>
+        </Flex>
       </Flex>
     </>
   )

@@ -1,6 +1,5 @@
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'lib/styled-components'
-import { rootCssString } from 'nft/css/cssStringFromTheme'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -162,9 +161,5 @@ export const ThemedGlobalStyle = createGlobalStyle`
 
   a {
     color: ${({ theme }) => theme.accent1}; 
-  }
-
-  :root {
-    ${({ theme }) => rootCssString(theme.darkMode)}
   }
 `

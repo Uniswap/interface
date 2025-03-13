@@ -1,6 +1,7 @@
 import { PropsWithChildren, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-/* eslint-disable-next-line no-restricted-imports */
-import { GestureResponderEvent, type View } from 'react-native'
+import type { View } from 'react-native'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { GestureResponderEvent } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { AnimatePresence, Flex, FlexProps, Portal, TouchableArea, isWeb, styled, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'

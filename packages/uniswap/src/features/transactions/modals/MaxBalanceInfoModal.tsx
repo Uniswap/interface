@@ -7,16 +7,20 @@ import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 interface MaxBalanceInfoModalProps {
+  isMax: boolean
   isModalOpen: boolean
   isTooltipEnabled: boolean
+  currencySymbol?: string
   onClose: () => void
 }
 
 // similar to `WarningInfo` but it's a controlled modal
 export function MaxBalanceInfoModal({
+  isMax,
   children,
   isModalOpen,
   isTooltipEnabled,
+  currencySymbol,
   onClose,
 }: PropsWithChildren<MaxBalanceInfoModalProps>): JSX.Element {
   const { t } = useTranslation()
@@ -30,10 +34,14 @@ export function MaxBalanceInfoModal({
       <InfoTooltip
         text={
           <Text variant="body4" textAlign="left" color="$neutral2">
-            {t('transaction.networkCost.maxNativeBalance.description')}
+            {isMax
+              ? t('transaction.networkCost.maxNativeBalance.description')
+              : t('swap.warning.insufficientGas.button', {
+                  currencySymbol: currencySymbol || '',
+                })}
           </Text>
         }
-        placement="bottom"
+        placement="top"
         trigger={children}
       />
     )
@@ -49,7 +57,6 @@ export function MaxBalanceInfoModal({
         severity={WarningSeverity.Low}
         title={t('transaction.networkCost.maxNativeBalance.title')}
         rejectText={t('common.button.close')}
-        rejectButtonTheme="tertiary"
         onClose={onClose}
         onReject={onClose}
       />

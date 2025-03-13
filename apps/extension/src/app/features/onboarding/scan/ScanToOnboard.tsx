@@ -245,9 +245,6 @@ export function ScanToOnboard(): JSX.Element {
             <Mobile color="$neutral1" size={iconSizes.icon24} />
           </Square>
         }
-        nextButtonEnabled={false}
-        nextButtonText={errorDerivingQR ? t('common.button.retry') : t('onboarding.scan.button')}
-        nextButtonTheme="secondary"
         subtitle={t('onboarding.scan.subtitle')}
         title={t('onboarding.scan.title')}
         onBack={(): void => navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })}

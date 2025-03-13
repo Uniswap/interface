@@ -197,6 +197,7 @@ export function OnboardingStepsProvider({
         {onboardingScreen && (
           <>
             {/* render actual screen contents "offscreen", we use context and put it on onboardingScreen */}
+            {/* eslint-disable-next-line react/forbid-elements */}
             <div style={{ height: 0, opacity: 0, pointerEvents: 'none' }}>{stepContents}</div>
             <Frame
               animation="stiff"

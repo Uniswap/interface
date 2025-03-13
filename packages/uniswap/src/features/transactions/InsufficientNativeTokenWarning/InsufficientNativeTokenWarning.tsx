@@ -81,7 +81,7 @@ function InsufficientNativeTokenWarningContent({
 
   const currencyAddress = currencyIdToAddress(nativeCurrencyInfo.currencyId)
 
-  const bridgingTokenWithHighestBalance = useBridgingTokenWithHighestBalance({
+  const { data: bridgingTokenWithHighestBalance } = useBridgingTokenWithHighestBalance({
     address,
     currencyAddress,
     currencyChainId: nativeCurrencyInfo.currency.chainId,
@@ -110,44 +110,42 @@ function InsufficientNativeTokenWarningContent({
           title={
             shouldShowNetworkName
               ? t('transaction.warning.insufficientGas.modal.title.withNetwork', {
-                  // FIXME: Verify WALL-5906
                   tokenSymbol: nativeCurrency.symbol ?? '',
                   networkName,
                 })
               : t('transaction.warning.insufficientGas.modal.title.withoutNetwork', {
-                  // FIXME: Verify WALL-5906
                   tokenSymbol: nativeCurrency.symbol ?? '',
                 })
           }
           onClose={onClose}
         >
-          <Flex centered gap="$spacing24" width="100%">
-            <Text color="$neutral2" textAlign="center" variant="body3">
-              {modalOrTooltipMainMessage}
-            </Text>
+          <Text color="$neutral2" textAlign="center" variant="body3">
+            {modalOrTooltipMainMessage}
+          </Text>
 
-            <LearnMoreLink
-              textColor="$accent3"
-              textVariant="buttonLabel3"
-              url={uniswapUrls.helpArticleUrls.networkFeeInfo}
-            />
-
-            <Flex gap="$spacing8" width="100%">
-              {bridgingTokenWithHighestBalance && (
-                <BridgeTokenButton
-                  inputToken={bridgingTokenWithHighestBalance.currencyInfo}
-                  outputToken={nativeCurrencyInfo}
-                  outputNetworkName={networkName}
-                  onPress={onClose}
-                />
-              )}
-
-              <BuyNativeTokenButton
-                nativeCurrencyInfo={nativeCurrencyInfo}
-                canBridge={!!bridgingTokenWithHighestBalance}
-                onPress={onClose}
+          <Flex width="100%" gap="$spacing12">
+            <Flex row alignSelf="stretch">
+              <LearnMoreLink
+                textColor="$neutral2"
+                componentType="Button"
+                url={uniswapUrls.helpArticleUrls.networkFeeInfo}
               />
             </Flex>
+
+            {bridgingTokenWithHighestBalance && (
+              <BridgeTokenButton
+                inputToken={bridgingTokenWithHighestBalance.currencyInfo}
+                outputToken={nativeCurrencyInfo}
+                outputNetworkName={networkName}
+                onPress={onClose}
+              />
+            )}
+
+            <BuyNativeTokenButton
+              nativeCurrencyInfo={nativeCurrencyInfo}
+              canBridge={!!bridgingTokenWithHighestBalance}
+              onPress={onClose}
+            />
           </Flex>
         </WarningModal>
       )}

@@ -28,7 +28,6 @@ import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
 import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
@@ -87,7 +86,6 @@ export function TokenSelectorContent({
   const scrollbarStyles = useScrollbarStyles()
   const isKeyboardOpen = useIsKeyboardOpen()
   const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
-  const { shouldShowUnichainNetworkSelectorTooltip } = useUnichainTooltipVisibility()
 
   const media = useMedia()
   const isSmallScreen = (media.sm && isInterface) || isMobileApp || isMobileWeb
@@ -278,9 +276,7 @@ export function TokenSelectorContent({
               backgroundColor="$surface2"
               endAdornment={
                 <Flex row alignItems="center">
-                  {hasClipboardString && !shouldShowUnichainNetworkSelectorTooltip && (
-                    <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />
-                  )}
+                  {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
                   <NetworkFilter
                     includeAllNetworks={!isTestnetModeEnabled}
                     chainIds={chainIds || enabledChains}

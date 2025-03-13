@@ -2,146 +2,7 @@
 
 exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
-  .c12 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c21 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-block;
-  text-align: center;
-  line-height: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  font-size: inherit;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  color: white;
-  background-color: primary;
-  border: 0;
-  border-radius: 4px;
-}
-
-.c5 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c6 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c3 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
-.c22 {
-  padding: 16px;
-  width: 100%;
-  line-height: 24px;
-  font-weight: 535;
-  text-align: center;
-  border-radius: 16px;
-  outline: none;
-  border: 1px solid transparent;
-  color: #222222;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-flex-wrap: nowrap;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-  will-change: transform;
-  -webkit-transition: -webkit-transform 450ms ease;
-  -webkit-transition: transform 450ms ease;
-  transition: transform 450ms ease;
-  -webkit-transform: perspective(1px) translateZ(0);
-  -ms-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-}
-
-.c22:disabled {
-  opacity: 50%;
-  cursor: auto;
-  pointer-events: none;
-}
-
-.c22 > * {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c22 > a {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c23 {
-  background-color: #FC72FF;
-  font-size: 20px;
-  font-weight: 535;
-  padding: 16px;
-  color: #FFFFFF;
-}
-
-.c23:focus {
-  box-shadow: 0 0 0 1pt #fb58ff;
-  background-color: #fb58ff;
-}
-
-.c23:hover {
-  background-color: #fb58ff;
-}
-
-.c23:active {
-  box-shadow: 0 0 0 1pt #fb3fff;
-  background-color: #fb3fff;
-}
-
-.c23:disabled {
-  background-color: #22222212;
-  color: #7D7D7D;
-  cursor: auto;
-  box-shadow: none;
-  border: 1px solid transparent;
-  outline: none;
-}
-
-.c0 {
+  .c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -154,6 +15,12 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
+}
+
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
 }
 
 .c13 {
@@ -225,6 +92,28 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
+}
+
+.c5 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c6 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c3 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 .c15 {
@@ -315,10 +204,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   padding: 0px 12px 8px;
 }
 
-.c24 {
-  height: 56px;
-}
-
 .c4 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -406,7 +291,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
               <div
                 class="c8"
               >
-                <div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
                   <div
                     class="c6 c9 css-142zc9n"
                   >
@@ -451,7 +338,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                     <div
                       class="c8"
                     >
-                      <div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
                         <div
                           class="c6 c9 css-142zc9n"
                         >
@@ -480,7 +369,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                     <div
                       class="c8"
                     >
-                      <div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
                         <div
                           class="c6 c9 css-142zc9n"
                         >
@@ -514,7 +405,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                     <div
                       class="c8"
                     >
-                      <div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
                         <div
                           class="c6 c9 css-142zc9n"
                         >
@@ -542,7 +435,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
               <div
                 class="c8"
               >
-                <div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
                   <div
                     class="c6 c9 css-142zc9n"
                   >
@@ -567,14 +462,18 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
               <div
                 class="c8"
               >
-                <div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
                   <div
                     class="c6 c9 css-142zc9n"
                   >
                     <div
                       class="c8"
                     >
-                      <div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
                         <div
                           class="c15"
                         >
@@ -602,9 +501,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                               <div
                                 class="c12 c13"
                               >
-                                <div>
-                                  $1.00
-                                </div>
+                                $1.00
                               </div>
                             </div>
                           </div>
@@ -621,15 +518,16 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
           class="c12 c19 c20"
         >
           <button
-            class="c21 c22 c23 c24"
+            class=" is_Button  t_group_item"
             data-testid="confirm-swap-button"
             id="confirm-swap-or-send"
+            style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(252, 114, 255); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
           >
-            <div
-              class="css-1cmsyys"
+            <span
+              class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
             >
               Confirm swap
-            </div>
+            </span>
           </button>
         </div>
         <div
@@ -643,146 +541,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 
 exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] = `
 <DocumentFragment>
-  .c12 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c18 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-block;
-  text-align: center;
-  line-height: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  font-size: inherit;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  color: white;
-  background-color: primary;
-  border: 0;
-  border-radius: 4px;
-}
-
-.c5 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c6 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c3 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
-.c19 {
-  padding: 16px;
-  width: 100%;
-  line-height: 24px;
-  font-weight: 535;
-  text-align: center;
-  border-radius: 16px;
-  outline: none;
-  border: 1px solid transparent;
-  color: #222222;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-flex-wrap: nowrap;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-  will-change: transform;
-  -webkit-transition: -webkit-transform 450ms ease;
-  -webkit-transition: transform 450ms ease;
-  transition: transform 450ms ease;
-  -webkit-transform: perspective(1px) translateZ(0);
-  -ms-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-}
-
-.c19:disabled {
-  opacity: 50%;
-  cursor: auto;
-  pointer-events: none;
-}
-
-.c19 > * {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c19 > a {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c20 {
-  background-color: #FC72FF;
-  font-size: 20px;
-  font-weight: 535;
-  padding: 16px;
-  color: #FFFFFF;
-}
-
-.c20:focus {
-  box-shadow: 0 0 0 1pt #fb58ff;
-  background-color: #fb58ff;
-}
-
-.c20:hover {
-  background-color: #fb58ff;
-}
-
-.c20:active {
-  box-shadow: 0 0 0 1pt #fb3fff;
-  background-color: #fb3fff;
-}
-
-.c20:disabled {
-  background-color: #22222212;
-  color: #7D7D7D;
-  cursor: auto;
-  box-shadow: none;
-  border: 1px solid transparent;
-  outline: none;
-}
-
-.c0 {
+  .c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -795,6 +554,12 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
+}
+
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
 }
 
 .c13 {
@@ -840,6 +605,28 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 
 .c17 > * {
   margin: !important;
+}
+
+.c5 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c6 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c3 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 .c15 {
@@ -925,10 +712,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 
 .c1 {
   padding: 0px 12px 8px;
-}
-
-.c21 {
-  height: 56px;
 }
 
 .c4 {
@@ -1057,7 +840,9 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                     <div
                       class="c11"
                     >
-                      <div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
                         <div
                           class="c6 c8 css-142zc9n"
                         >
@@ -1091,7 +876,9 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                     <div
                       class="c11"
                     >
-                      <div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
                         <div
                           class="c6 c8 css-142zc9n"
                         >
@@ -1143,7 +930,9 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
               <div
                 class="c11"
               >
-                <div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
                   <div
                     class="c6 c8 css-142zc9n"
                   >
@@ -1163,19 +952,13 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
           class="c12 c16 c17"
         >
           <button
-            class="c18 c19 c20 c21"
+            class=" is_Button  t_group_item"
             data-testid="confirm-swap-button"
-            disabled=""
             id="confirm-swap-or-send"
+            style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(249, 249, 249); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; pointer-events: none; user-select: none; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid;"
           >
-            <div
-              class="c5 css-1jyz67g"
-            >
-              <div
-                class="c12 c13"
-              >
-                <style>
-                  
+            <style>
+              
   @keyframes rotate360 {
       from {
           transform: rotate(0deg);
@@ -1190,42 +973,36 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
       transform-origin: center center;
   }
 
-                </style>
-                <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _marginEnd-2px _marginStart-2px _width-20px"
-                >
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _flexShrink-0 _flexDirection-column _height-20px _minHeight-8px _minWidth-8px _pt-1--66667px _pr-1--66667px _pb-1--66667px _pl-1--66667px _position-relative _width-20px"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute RotateElement"
-                    >
-                      <svg
-                        fill="none"
-                        stroke-width="8"
-                        style="width: 20px; height: 20px; color: currentColor;"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"
-                          opacity="0.1"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-width="3"
-                        />
-                        <path
-                          d="M21 12C21 7.02944 16.9706 3 12 3"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-width="3"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                Finalizing quote...
-              </div>
+            </style>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column RotateElement"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 20.7px; height: 20.7px;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"
+                  opacity="0.1"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                />
+                <path
+                  d="M21 12C21 7.02944 16.9706 3 12 3"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                />
+              </svg>
             </div>
+            <span
+              class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+            >
+              Finalizing quote...
+            </span>
           </button>
         </div>
         <div

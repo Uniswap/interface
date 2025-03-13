@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Linking } from 'react-native'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
 import { colors, opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -36,9 +36,11 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
             {t('settings.setting.language.description.mobile')}
           </Text>
         </Flex>
-        <DeprecatedButton testID={TestID.OpenDeviceLanguageSettings} theme="tertiary" onPress={openLanguageSettings}>
-          {t('settings.setting.language.button.navigate')}
-        </DeprecatedButton>
+        <Flex row>
+          <Button testID={TestID.OpenDeviceLanguageSettings} emphasis="secondary" onPress={openLanguageSettings}>
+            {t('settings.setting.language.button.navigate')}
+          </Button>
+        </Flex>
       </Flex>
     </Modal>
   )

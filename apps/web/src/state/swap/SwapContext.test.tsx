@@ -5,6 +5,7 @@ import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/Swa
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { render, screen } from 'test-utils/render'
+import { Flex } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -20,7 +21,7 @@ describe('Swap Context', () => {
     let swapContext
     const TestComponent = () => {
       swapContext = useSwapContext()
-      return <div />
+      return <Flex />
     }
 
     render(
@@ -67,7 +68,7 @@ describe('SwapAndLimitContext', () => {
     let swapAndLimitContext
     const TestComponent = () => {
       swapAndLimitContext = useSwapAndLimitContext()
-      return <div />
+      return <Flex />
     }
 
     render(
@@ -119,7 +120,7 @@ describe('Combined contexts', () => {
 
     const TestComponent = () => {
       derivedSwapInfo = useSwapContext().derivedSwapInfo
-      return <div />
+      return <Flex />
     }
 
     render(

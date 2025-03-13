@@ -93,6 +93,7 @@ export function ContextMenu({
         keeping normal click behavior intact.
       */}
       <Popover.Trigger onMouseDown={onLeftClick ? onContextMenu : undefined}>
+        {/* eslint-disable-next-line react/forbid-elements */}
         <div ref={triggerContainerRef} onClick={undefined} onContextMenu={onLeftClick ? undefined : onContextMenu}>
           {children}
         </div>

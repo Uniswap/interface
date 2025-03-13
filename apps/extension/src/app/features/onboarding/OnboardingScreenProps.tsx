@@ -1,4 +1,4 @@
-import { ThemeNames } from 'ui/src/theme'
+import { ButtonEmphasis, ButtonVariant } from 'ui/src'
 
 export type OnboardingScreenProps = {
   Icon?: JSX.Element
@@ -6,7 +6,8 @@ export type OnboardingScreenProps = {
   nextButtonEnabled?: boolean
   nextButtonIcon?: JSX.Element
   nextButtonText?: string
-  nextButtonTheme?: ThemeNames
+  nextButtonVariant?: ButtonVariant
+  nextButtonEmphasis?: ButtonEmphasis
   onBack?: () => void
   onSubmit?: () => void
   onSkip?: () => void

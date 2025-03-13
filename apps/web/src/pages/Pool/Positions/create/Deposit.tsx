@@ -1,4 +1,3 @@
-import { LoaderButton } from 'components/Button/LoaderButton'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import {
@@ -9,14 +8,15 @@ import {
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { CreatePositionModal } from 'pages/Pool/Positions/create/CreatePositionModal'
 import { useCallback, useState } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
-import { Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 
-export const DepositStep = ({ autofocus = true }: { autofocus?: boolean }) => {
+export const DepositStep = () => {
   const {
     derivedPositionInfo: { currencies },
   } = useCreatePositionContext()
+  const { t } = useTranslation()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
   const {
     depositState: { exactField },
@@ -107,21 +107,19 @@ export const DepositStep = ({ autofocus = true }: { autofocus?: boolean }) => {
         deposit1Disabled={updatedDeposit1Disabled}
         amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
         amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
-        autofocus={autofocus}
       />
-      <LoaderButton
-        flex={1}
-        py="$spacing16"
-        px="$spacing20"
-        onPress={handleReview}
-        isDisabled={disabled}
-        buttonKey="Position-Create-DepositButton"
-        loading={requestLoading}
-      >
-        <Text variant="buttonLabel1" color="$neutralContrast">
-          {inputError ? inputError : <Trans i18nKey="swap.button.review" />}
-        </Text>
-      </LoaderButton>
+      <Flex row>
+        <Button
+          size="large"
+          variant="branded"
+          onPress={handleReview}
+          isDisabled={disabled}
+          key="Position-Create-DepositButton"
+          loading={requestLoading}
+        >
+          {inputError ? inputError : t('swap.button.review')}
+        </Button>
+      </Flex>
       <CreatePositionModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
     </>
   )

@@ -1,15 +1,14 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { ActiveLiquidityChart2 } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart2'
+import { ActiveLiquidityChart } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart'
 import { Chart } from 'components/Charts/ChartModel'
 import { LPPriceChartModel } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { useRangeInputSizes } from 'components/Charts/LiquidityRangeInput/constants'
+import { useDensityChartData } from 'components/Charts/LiquidityRangeInput/hooks'
 import { ChartErrorView } from 'components/Charts/LoadingState'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
 import { DropdownSelector } from 'components/DropdownSelector'
-import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
@@ -21,7 +20,17 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { DeprecatedButton, Flex, SegmentedControl, SegmentedControlOption, Shine, Text, useSporeColors } from 'ui/src'
+import {
+  Button,
+  Flex,
+  SegmentedControl,
+  SegmentedControlOption,
+  Shine,
+  Text,
+  TouchableArea,
+  TouchableAreaProps,
+  useSporeColors,
+} from 'ui/src'
 import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
 import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -33,6 +42,25 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const MIN_DATA_POINTS = 5
+
+const PlusMinusButton = ({ children, ...props }: TouchableAreaProps) => {
+  return (
+    <TouchableArea
+      {...props}
+      animation="100ms"
+      backgroundColor="$transparent"
+      hoverStyle={{ backgroundColor: '$transparent', opacity: 0.8 }}
+      pressStyle={{ backgroundColor: '$surface3', opacity: 0.8 }}
+      alignItems="center"
+      justifyContent="center"
+      borderColor="$surface3"
+      borderWidth="$spacing1"
+      p="$spacing8"
+    >
+      {children}
+    </TouchableArea>
+  )
+}
 
 /**
  * Chart input for selecting the min/max prices for a liquidity position.
@@ -182,7 +210,16 @@ export function LiquidityRangeInput({
   })
 
   const sortedFormattedData = useMemo(() => {
-    return formattedData?.sort((a, b) => a.price0 - b.price0)
+    if (!formattedData) {
+      return undefined
+    }
+    const uniqueTicksMap = new Map()
+    formattedData.forEach((entry) => {
+      uniqueTicksMap.set(entry.tick, entry)
+    })
+
+    // Convert Map values back to array and sort
+    return Array.from(uniqueTicksMap.values()).sort((a, b) => a.price0 - b.price0)
   }, [formattedData])
 
   const timePeriodOptions = useMemo(() => {
@@ -334,7 +371,7 @@ export function LiquidityRangeInput({
             !priceData.loading &&
             boundaryPrices &&
             !showChartErrorView && (
-              <ActiveLiquidityChart2
+              <ActiveLiquidityChart
                 data={{
                   series: sortedFormattedData,
                   current: priceData.entries[priceData.entries.length - 1]?.value,
@@ -438,51 +475,31 @@ export function LiquidityRangeInput({
             />
           )}
           <Flex row centered borderRadius="$roundedFull">
-            <DeprecatedButton
-              animation="100ms"
-              backgroundColor="$transparent"
-              hoverStyle={{ backgroundColor: '$transparent', opacity: 0.8 }}
-              pressStyle={{ backgroundColor: '$surface3', opacity: 0.8 }}
-              alignItems="center"
-              justifyContent="center"
-              borderColor="$surface3"
-              borderWidth="$spacing1"
+            <PlusMinusButton
               borderTopLeftRadius="$roundedFull"
               borderBottomLeftRadius="$roundedFull"
-              p="$spacing8"
               onPress={() => {
                 setZoomFactor((prevZoomFactor) => prevZoomFactor * 1.2)
               }}
             >
               <SearchPlus size={16} color="$neutral1" />
-            </DeprecatedButton>
-            <DeprecatedButton
-              animation="100ms"
-              backgroundColor="$transparent"
-              hoverStyle={{ backgroundColor: '$transparent', opacity: 0.8 }}
-              pressStyle={{ backgroundColor: '$surface3', opacity: 0.8 }}
-              alignItems="center"
-              justifyContent="center"
-              borderColor="$surface3"
-              borderWidth="$spacing1"
+            </PlusMinusButton>
+            <PlusMinusButton
               borderTopRightRadius="$roundedFull"
               borderBottomRightRadius="$roundedFull"
-              p="$spacing8"
               onPress={() => {
                 setZoomFactor((prevZoomFactor) => prevZoomFactor / 1.2)
               }}
             >
               <SearchMinus size={16} color="$neutral1" />
-            </DeprecatedButton>
+            </PlusMinusButton>
           </Flex>
         </Flex>
-        <DeprecatedButton
-          height={32}
+        <Button
+          emphasis="tertiary"
+          size="small"
+          fill={false}
           backgroundColor="$transparent"
-          borderColor="$surface3"
-          borderWidth="$spacing1"
-          hoverStyle={{ backgroundColor: '$transparent', opacity: 0.8 }}
-          pressStyle={{ backgroundColor: '$surface3', opacity: 0.8 }}
           onPress={() => {
             setSelectedHistoryDuration(HistoryDuration.Month)
             setZoomFactor(1)
@@ -490,13 +507,10 @@ export function LiquidityRangeInput({
             setMaxPrice(undefined)
             setMidPrice(priceData.entries[priceData.entries.length - 1]?.value)
           }}
+          icon={isMobileWeb ? <RotateLeft /> : undefined}
         >
-          {isMobileWeb ? (
-            <RotateLeft size={16} color="$neutral1" />
-          ) : (
-            <Text variant="buttonLabel3">{t('common.button.reset')}</Text>
-          )}
-        </DeprecatedButton>
+          {isMobileWeb ? null : t('common.button.reset')}
+        </Button>
       </Flex>
     </Flex>
   )

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
+import { Button, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
 import { AnglesDownUp, Ellipsis, SortVertical, UniswapX } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
@@ -187,22 +187,20 @@ export function TransactionDetailsModal({
   const buttons: JSX.Element[] = []
   if (isCancelable) {
     buttons.push(
-      <DeprecatedButton
-        backgroundColor="$DEP_accentCriticalSoft"
-        color="$statusCritical"
-        size="small"
-        theme="secondary"
-        onPress={openCancelModal}
-      >
-        {t('transaction.action.cancel.button')}
-      </DeprecatedButton>,
+      <Flex key="cancel" row>
+        <Button variant="critical" emphasis="secondary" onPress={openCancelModal}>
+          {t('transaction.action.cancel.button')}
+        </Button>
+      </Flex>,
     )
   }
   if (isWeb) {
     buttons.push(
-      <DeprecatedButton size="small" theme="secondary" onPress={onClose}>
-        {t('common.button.close')}
-      </DeprecatedButton>,
+      <Flex key="close" row>
+        <Button emphasis="secondary" onPress={onClose}>
+          {t('common.button.close')}
+        </Button>
+      </Flex>,
     )
   }
 

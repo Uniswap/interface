@@ -23,7 +23,6 @@ import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 export type SwappableTokensParams = {
   tokenIn: Address
   tokenInChainId: ChainId
-  unichainEnabled?: boolean
 }
 
 export function useTradingApiSwappableTokensQuery({

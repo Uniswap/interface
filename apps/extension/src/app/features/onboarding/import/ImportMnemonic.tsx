@@ -13,7 +13,7 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { SyncFromPhoneButton } from 'src/app/features/onboarding/SyncFromPhoneButton'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { DeprecatedButton, Flex, FlexProps, Input, Square, Text, inputStyles } from 'ui/src'
+import { Button, Flex, Input, Square, Text, inputStyles } from 'ui/src'
 import { FileListLock, RotatableChevron } from 'ui/src/components/icons'
 import { fonts, iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -227,42 +227,40 @@ export function ImportMnemonic(): JSX.Element {
             >
               {debouncedErrorMessageToDisplay ?? DUMMY_TEXT} {/* To prevent layout shift */}
             </Text>
-            <Flex>
-              <Flex row flexWrap="wrap" gap="$spacing16">
-                {mnemonic.map(
-                  (word, index) =>
-                    Boolean(expanded || (!expanded && index < 12)) && (
-                      <Flex key={index} position="relative" style={styles.recoveryPhraseWord}>
-                        <RecoveryPhraseWord
-                          key={index + 'input'}
-                          ref={(ref) => (inputRefs[index] = ref)}
-                          handleBlur={handleBlur}
-                          handleChange={handleChange}
-                          handleKeyPress={handleKeyPress}
-                          index={index}
-                          word={word}
-                          onSubmitEditing={onSubmit}
-                        />
-                      </Flex>
-                    ),
-                )}
-              </Flex>
-              <DeprecatedButton
-                backgroundColor="$transparent"
-                gap="$spacing4"
-                hoverStyle={{ backgroundColor: 'transparent' } as FlexProps}
+            <Flex row flexWrap="wrap" gap="$spacing16">
+              {mnemonic.map(
+                (word, index) =>
+                  Boolean(expanded || (!expanded && index < 12)) && (
+                    <Flex key={index} style={styles.recoveryPhraseWord}>
+                      <RecoveryPhraseWord
+                        key={index + 'input'}
+                        ref={(ref) => (inputRefs[index] = ref)}
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        handleKeyPress={handleKeyPress}
+                        index={index}
+                        word={word}
+                        onSubmitEditing={onSubmit}
+                      />
+                    </Flex>
+                  ),
+              )}
+            </Flex>
+            <Flex row alignSelf="stretch">
+              <Button
                 mt="$spacing16"
-                mx="auto"
-                pressStyle={{ backgroundColor: 'transparent' } as FlexProps}
+                mb="$spacing8"
+                icon={
+                  <RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} width={iconSizes.icon20} />
+                }
+                iconPosition="after"
+                emphasis="text-only"
                 onPress={(): void => setExpanded(!expanded)}
               >
-                <Text color="$neutral2" variant="body3">
-                  {expanded
-                    ? t('onboarding.importMnemonic.button.default')
-                    : t('onboarding.importMnemonic.button.longPhrase')}
-                </Text>
-                <RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} width={iconSizes.icon20} />
-              </DeprecatedButton>
+                {expanded
+                  ? t('onboarding.importMnemonic.button.default')
+                  : t('onboarding.importMnemonic.button.longPhrase')}
+              </Button>
             </Flex>
           </>
         </OnboardingScreen>

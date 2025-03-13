@@ -91,14 +91,6 @@ const slice = createSlice({
       state.pendingSession = null
     },
 
-    updateSession: (state, action: PayloadAction<{ account: string; wcSession: WalletConnectSession }>) => {
-      const { wcSession, account } = action.payload
-      const wcAccount = state.byAccount[account]
-      if (wcAccount) {
-        wcAccount.sessions[wcSession.id] = wcSession
-      }
-    },
-
     removeSession: (state, action: PayloadAction<{ sessionId: string; account?: string }>) => {
       const { sessionId, account } = action.payload
 
@@ -152,7 +144,6 @@ const slice = createSlice({
 
 export const {
   addSession,
-  updateSession,
   removeSession,
   addPendingSession,
   removePendingSession,

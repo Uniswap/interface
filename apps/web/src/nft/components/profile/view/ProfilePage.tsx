@@ -1,49 +1,23 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT, XLARGE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
-import styled from 'lib/styled-components'
-import { Column, Row } from 'nft/components/Flex'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
-import { assetList } from 'nft/components/collection/CollectionNfts.css'
+import { AssetListCss } from 'nft/components/collection/CollectionNftsCss'
 import { FilterButton } from 'nft/components/collection/FilterButton'
 import { ClearAllButton } from 'nft/components/collection/shared'
 import { CrossIcon } from 'nft/components/icons'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
-import * as styles from 'nft/components/profile/view/ProfilePage.css'
 import { ProfileBodyLoadingSkeleton } from 'nft/components/profile/view/ProfilePageLoadingSkeleton'
 import { ViewMyNftsAsset } from 'nft/components/profile/view/ViewMyNftsAsset'
 import { useBag, useFiltersExpanded, useSellAsset, useWalletCollections } from 'nft/hooks'
-import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { getOSCollectionsInfiniteQueryOptions } from 'nft/queries/openSea/OSCollectionsFetcher'
 import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Flex, Image, Text } from 'ui/src'
-
-const ProfilePageColumn = styled(Column)`
-  ${ScreenBreakpointsPaddings}
-`
-
-const ProfileHeader = styled.div`
-  font-size: 28px;
-  font-weight: 535;
-  line-height: 38px;
-  padding-bottom: 16px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid ${({ theme }) => theme.surface3};
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    font-size: 20px;
-    line-height: 28px;
-    margin-bottom: 0px;
-  }
-`
-
-const EmptyStateContainer = styled.div`
-  margin-top: 164px;
-`
+import { Flex, Image, Text, View } from 'ui/src'
 
 export const DEFAULT_WALLET_ASSET_QUERY_AMOUNT = 25
 export const WALLET_COLLECTIONS_PAGINATION_LIMIT = 300
@@ -80,65 +54,102 @@ export const ProfilePage = () => {
   }, [ownerCollections, setWalletCollections])
 
   return (
-    <ProfilePageColumn width="full" paddingTop={{ sm: `${PADDING}`, md: '40' }}>
-      <>
-        <ProfileHeader>My NFTs</ProfileHeader>
-        <Row alignItems="flex-start" position="relative">
-          <FilterSidebar
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-            isFetchingNextPage={isFetchingNextPage}
-            walletCollections={walletCollections}
-          />
-          {(!isMobile || !isFiltersExpanded) && (
-            <Suspense fallback={<ProfileBodyLoadingSkeleton />}>
-              <ProfilePageNfts
-                walletCollections={walletCollections}
-                isFiltersExpanded={isFiltersExpanded}
-                setFiltersExpanded={setFiltersExpanded}
-              />
-            </Suspense>
-          )}
-        </Row>
-      </>
-      {sellAssets.length > 0 && (
-        <Flex
-          row
-          alignItems="center"
-          display="none"
-          $platform-web={{ position: 'fixed' }}
-          $md={{ display: 'flex' }}
-          left={16}
-          height={56}
-          bottom={68}
-          width="calc(100% - 32px)"
-          borderRadius="$rounded12"
-          px="$spacing16"
-          py="$spacing12"
-          backgroundColor="$surface1"
-          borderColor="$surface3"
-          borderWidth={1}
-        >
-          {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
-          <Text variant="body3" cursor="pointer" color="$neutral2" mr={20} ml="auto" onPress={resetSellAssets}>
-            Clear
-          </Text>
+    <>
+      <style>
+        {`
+          .profile-page-container {
+             @media screen and (min-width: ${XLARGE_MEDIA_BREAKPOINT}) {
+              padding-left: 48px;
+              padding-right: 48px;
+            }
+
+            @media screen and (max-width: ${XLARGE_MEDIA_BREAKPOINT}) {
+              padding-left: 26px;
+              padding-right: 26px;
+            }
+
+            @media screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+              padding-left: 20px;
+              padding-right: 20px;
+            }
+
+            @media screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+              padding-left: 16px;
+              padding-right: 16px;
+            }
+          }
+        `}
+      </style>
+      <Flex width="100%" pt={40} $md={{ pt: `${PADDING}` }} className="profile-page-container">
+        <>
           <Text
-            color="$white"
-            mr={0}
-            variant="body3"
-            cursor="pointer"
-            backgroundColor="$accent1"
-            onPress={toggleBag}
-            borderRadius="$rounded12"
-            py="$spacing8"
-            px="$spacing28"
+            variant="heading2"
+            pb="$padding16"
+            mb="$spacing8"
+            $lg={{
+              variant: 'heading3',
+              mb: 0,
+            }}
           >
-            List for sale
+            My NFTs
           </Text>
-        </Flex>
-      )}
-    </ProfilePageColumn>
+          <Flex row alignItems="flex-start" position="relative">
+            <FilterSidebar
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              walletCollections={walletCollections}
+            />
+            {(!isMobile || !isFiltersExpanded) && (
+              <Suspense fallback={<ProfileBodyLoadingSkeleton />}>
+                <ProfilePageNfts
+                  walletCollections={walletCollections}
+                  isFiltersExpanded={isFiltersExpanded}
+                  setFiltersExpanded={setFiltersExpanded}
+                />
+              </Suspense>
+            )}
+          </Flex>
+        </>
+        {sellAssets.length > 0 && (
+          <Flex
+            row
+            alignItems="center"
+            display="none"
+            $platform-web={{ position: 'fixed' }}
+            $md={{ display: 'flex' }}
+            left={16}
+            height={56}
+            bottom={68}
+            width="calc(100% - 32px)"
+            borderRadius="$rounded12"
+            px="$spacing16"
+            py="$spacing12"
+            backgroundColor="$surface1"
+            borderColor="$surface3"
+            borderWidth={1}
+          >
+            {sellAssets.length} NFT{sellAssets.length === 1 ? '' : 's'}
+            <Text variant="body3" cursor="pointer" color="$neutral2" mr={20} ml="auto" onPress={resetSellAssets}>
+              Clear
+            </Text>
+            <Text
+              color="$white"
+              mr={0}
+              variant="body3"
+              cursor="pointer"
+              backgroundColor="$accent1"
+              onPress={toggleBag}
+              borderRadius="$rounded12"
+              py="$spacing8"
+              px="$spacing28"
+            >
+              List for sale
+            </Text>
+          </Flex>
+        )}
+      </Flex>
+    </>
   )
 }
 
@@ -176,11 +187,11 @@ const ProfilePageNfts = ({
   }
 
   return (
-    <Column width="full">
+    <Flex grow flexGrow={1}>
       {ownerAssets?.length === 0 ? (
-        <EmptyStateContainer>
+        <View mt={164}>
           <EmptyWalletModule />
-        </EmptyStateContainer>
+        </View>
       ) : (
         <Flex
           flexShrink={0}
@@ -192,21 +203,22 @@ const ProfilePageNfts = ({
           }}
           py="$padding20"
         >
-          <Row gap="8" flexWrap="nowrap" justifyContent="space-between">
+          <Flex row gap="$gap8" flexWrap="nowrap" justifyContent="space-between">
             <FilterButton
               isMobile={isMobile}
               isFiltersExpanded={isFiltersExpanded}
               onClick={() => setFiltersExpanded(!isFiltersExpanded)}
             />
-          </Row>
-          <Row>
+          </Flex>
+          <Flex row alignItems="center">
             <CollectionFiltersRow
               collections={walletCollections}
               collectionFilters={collectionFilters}
               setCollectionFilters={setCollectionFilters}
               clearCollectionFilters={clearCollectionFilters}
             />
-          </Row>
+          </Flex>
+          <AssetListCss isFiltersExpanded={isFiltersExpanded} />
           <InfiniteScroll
             next={loadMore}
             hasMore={hasNext ?? false}
@@ -214,25 +226,25 @@ const ProfilePageNfts = ({
               Boolean(hasNext && ownerAssets?.length) && <LoadingAssets count={DEFAULT_WALLET_ASSET_QUERY_AMOUNT} />
             }
             dataLength={ownerAssets?.length ?? 0}
-            className={ownerAssets?.length ? assetList : undefined}
+            className={ownerAssets?.length ? 'asset-list' : undefined}
             style={{ overflow: 'unset' }}
           >
             {ownerAssets?.length
               ? ownerAssets.map((asset, index) => (
-                  <div key={index}>
+                  <Flex key={index}>
                     <ViewMyNftsAsset
                       asset={asset}
                       mediaShouldBePlaying={asset.tokenId === currentTokenPlayingMedia}
                       setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}
                       hideDetails={sellAssets.length > 0}
                     />
-                  </div>
+                  </Flex>
                 ))
               : null}
           </InfiniteScroll>
         </Flex>
       )}
-    </Column>
+    </Flex>
   )
 }
 
@@ -252,7 +264,7 @@ const CollectionFiltersRow = ({
   }
   const handleClearAllClick = useCallback(() => clearCollectionFilters(), [clearCollectionFilters])
   return (
-    <Row paddingY="18" gap="8" flexWrap="wrap">
+    <Flex py={18} gap="$gap8" flexWrap="wrap">
       {Boolean(collectionFilters?.length) &&
         collectionFilters.map((collectionAddress, index) => (
           <CollectionFilterItem
@@ -262,7 +274,7 @@ const CollectionFiltersRow = ({
           />
         ))}
       {Boolean(collectionFilters?.length) && <ClearAllButton onClick={handleClearAllClick}>Clear all</ClearAllButton>}
-    </Row>
+    </Flex>
   )
 }
 
@@ -277,20 +289,11 @@ const CollectionFilterItem = ({
     return null
   }
   return (
-    <Row
-      justifyContent="center"
-      paddingTop="6"
-      paddingRight="6"
-      paddingBottom="6"
-      paddingLeft="12"
-      borderRadius="8"
-      background="surface3"
-      fontSize="14"
-    >
+    <Flex row justifyContent="center" pr={6} py={6} pl={12} borderRadius="$rounded8" backgroundColor="$surface3">
       <Image borderRadius="$roundedFull" width="$spacing20" height="$spacing20" src={collection.image} />
-      <Flex ml="$spacing6" className={styles.collectionFilterBubbleText}>
+      <Text variant="body3" ml="$spacing6" textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap" maxWidth={100}>
         {collection?.name}
-      </Flex>
+      </Text>
       <Flex
         height="$spacing28"
         width="$spacing28"
@@ -300,6 +303,6 @@ const CollectionFilterItem = ({
       >
         <CrossIcon color="$neutral2" />
       </Flex>
-    </Row>
+    </Flex>
   )
 }

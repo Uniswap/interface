@@ -3,13 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateUnitagTab } from 'src/app/navigation/utils'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { Person } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
@@ -38,7 +36,6 @@ export function EditLabelModal({ isOpen, address, onClose }: EditLabelModalProps
   const [isfocused, setIsFocused] = useState(false)
 
   const { canClaimUnitag } = useCanActiveAddressClaimUnitag(address)
-  const unitagsClaimEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
 
   const onConfirm = useCallback(async () => {
     await dispatch(
@@ -76,7 +73,7 @@ export function EditLabelModal({ isOpen, address, onClose }: EditLabelModalProps
     <Modal
       isModalOpen={isOpen}
       name={ModalName.AccountEditLabel}
-      bottomAttachment={canClaimUnitag && unitagsClaimEnabled ? unitagClaimCard : undefined}
+      bottomAttachment={canClaimUnitag ? unitagClaimCard : undefined}
       onClose={onClose}
     >
       <Flex centered fill borderRadius="$rounded16" gap="$spacing24" mt="$spacing16">
@@ -100,12 +97,12 @@ export function EditLabelModal({ isOpen, address, onClose }: EditLabelModalProps
           </Text>
         </Flex>
         <Flex centered fill row gap="$spacing12" justifyContent="space-between" width="100%">
-          <DeprecatedButton color="$neutral1" flex={1} flexBasis={1} size="small" theme="secondary" onPress={onClose}>
+          <Button flexBasis={1} size="small" emphasis="secondary" onPress={onClose}>
             {t('common.button.cancel')}
-          </DeprecatedButton>
-          <DeprecatedButton flex={1} flexBasis={1} size="small" theme="accentSecondary" onPress={onConfirm}>
+          </Button>
+          <Button flexBasis={1} size="small" variant="branded" emphasis="secondary" onPress={onConfirm}>
             {t('common.button.save')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
     </Modal>

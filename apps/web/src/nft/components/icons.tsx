@@ -356,8 +356,8 @@ export const ActivityTransferIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const ActivityExternalLinkIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const ActivityExternalLinkIcon = (props: SVGProps) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <mask id="path-1-outside-1_3799_46574" maskUnits="userSpaceOnUse" x="2" y="2" width="15" height="15" fill="black">
       <rect fill="white" x="2" y="2" width="15" height="15" />
       <path

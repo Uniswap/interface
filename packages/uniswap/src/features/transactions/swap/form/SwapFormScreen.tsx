@@ -3,7 +3,6 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { ComponentProps, memo, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-// eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { TextInputProps } from 'react-native'
 import {
   Accordion,
@@ -17,11 +16,14 @@ import {
 } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets'
 import { CurrencyInputPanel, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
@@ -67,7 +69,7 @@ import {
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { NumberType } from 'utilities/src/format/types'
@@ -139,6 +141,7 @@ function SwapFormContent({
   const colors = useSporeColors()
   const isShortMobileDevice = useIsShortMobileDevice()
   const { walletNeedsRestore, openWalletRestoreModal, screen } = useTransactionModalContext()
+  const isSwapPresetsEnabled = useFeatureFlag(FeatureFlags.SwapPresets)
 
   const trace = useTrace()
 
@@ -382,14 +385,14 @@ function SwapFormContent({
     [onSetExactAmount],
   )
 
-  const onSetMax = useCallback(
-    (amount: string): void => {
+  const onSetPresetValue = useCallback(
+    (amount: string, isLessThanMax?: boolean): void => {
       updateSwapForm({
         exactAmountFiat: undefined,
         exactAmountToken: amount,
         exactCurrencyField: CurrencyField.INPUT,
         focusOnCurrencyField: undefined,
-        isMax: true,
+        isMax: !isLessThanMax,
       })
 
       // We want this update to happen on the next tick, after the input value is updated.
@@ -597,7 +600,7 @@ function SwapFormContent({
               onPressIn={onFocusInput}
               onSelectionChange={onInputSelectionChange}
               onSetExactAmount={onSetExactAmountInput}
-              onSetMax={onSetMax}
+              onSetPresetValue={onSetPresetValue}
               onShowTokenSelector={onShowTokenSelectorInput}
               onToggleIsFiatMode={onToggleIsFiatMode}
             />
@@ -637,7 +640,7 @@ function SwapFormContent({
               onPressIn={onFocusOutput}
               onSelectionChange={onOutputSelectionChange}
               onSetExactAmount={onSetExactAmountOutput}
-              onSetMax={onSetMax}
+              onSetPresetValue={onSetPresetValue}
               onShowTokenSelector={onShowTokenSelectorOutput}
               onToggleIsFiatMode={onToggleIsFiatMode}
             />
@@ -720,6 +723,21 @@ function SwapFormContent({
             right={0}
           >
             <Flex grow justifyContent="flex-end">
+              {isSwapPresetsEnabled && currencyBalances[CurrencyField.INPUT] && (
+                <AmountInputPresets
+                  flex={1}
+                  px="$spacing24"
+                  gap="$gap8"
+                  currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+                  currencyBalance={currencyBalances[CurrencyField.INPUT]}
+                  buttonProps={{
+                    emphasis: 'tertiary',
+                    size: 'xsmall',
+                    fill: true,
+                  }}
+                  onSetPresetValue={onSetPresetValue}
+                />
+              )}
               <DecimalPadInput
                 ref={decimalPadRef}
                 maxDecimals={maxDecimals}

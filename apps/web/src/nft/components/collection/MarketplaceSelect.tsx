@@ -96,9 +96,9 @@ const MarketplaceItem = ({
   )
 
   return (
-    <div key={value}>
+    <Flex key={value}>
       <FilterItem title={titleWithLogo} element={checkbox} onClick={handleCheckbox} />
-    </div>
+    </Flex>
   )
 }
 

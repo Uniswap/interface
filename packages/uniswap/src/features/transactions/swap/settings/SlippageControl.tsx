@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-// eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { LayoutChangeEvent } from 'react-native'
 import { Flex, Input, Text } from 'ui/src'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/settings/useSlippageSettings'
@@ -18,6 +17,9 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
   const [inputWidth, setInputWidth] = useState(0)
   const [isLayoutReady, setIsLayoutReady] = useState(false)
 
+  // TODO (WEB-6896): determine how to use tradeAutoSlippage update here
+  // See:https://github.com/Uniswap/universe/pull/16428
+
   const {
     isEditingSlippage,
     autoSlippageEnabled,
@@ -28,7 +30,7 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
     onChangeSlippageInput,
     onFocusSlippageInput,
     onBlurSlippageInput,
-  } = useSlippageSettings(saveOnBlur)
+  } = useSlippageSettings({ saveOnBlur })
 
   useEffect(() => {
     inputRef.current?.blur()

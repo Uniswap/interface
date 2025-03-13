@@ -14,7 +14,7 @@ import {
   usePortfolioBalances,
   usePortfolioCacheUpdater,
   usePortfolioTotalValue,
-  // eslint-disable-next-line no-restricted-imports
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   usePortfolioValueModifiers,
   useSortedPortfolioBalances,
   useTokenBalancesGroupedByVisibility,
@@ -665,9 +665,8 @@ describe(usePortfolioCacheUpdater, () => {
     const enabledChains = getEnabledChains({
       isTestnetModeEnabled: false,
       connectedWalletChainIds: ALL_CHAIN_IDS,
-      // Doesn't include Unichain or Soneium while feature flagged
+      // Doesn't include feature flagged chains
       featureFlaggedChainIds: filterChainIdsByFeatureFlag({
-        [UniverseChainId.Unichain]: false,
         [UniverseChainId.Soneium]: false,
       }),
     })

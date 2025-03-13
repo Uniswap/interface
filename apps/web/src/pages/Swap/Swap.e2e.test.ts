@@ -1,11 +1,8 @@
 import { expect, test } from 'playwright/fixtures'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/anvil'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { USDT } from 'uniswap/src/constants/tokens'
 import { assume0xAddress } from 'utils/wagmi'
 import { parseEther } from 'viem'
-
-// 100 * 10^6
-const ONE_HUNDRED_USDC = 100_000_000n
 
 test('should load balances', async ({ page, anvil }) => {
   await page.goto('/swap')
@@ -17,13 +14,13 @@ test('should load balances', async ({ page, anvil }) => {
 })
 
 test('should load erc20 balances', async ({ page, anvil }) => {
-  await page.goto(`/swap?outputCurrency=${USDC_MAINNET.address}`)
-  await anvil.setErc20Balance(assume0xAddress(USDC_MAINNET.address), ONE_HUNDRED_USDC)
+  await anvil.setErc20Balance(assume0xAddress(USDT.address), 100_000_000n)
+  await page.goto(`/swap?outputCurrency=${USDT.address}`)
 
-  const usdcBalance = await anvil.getErc20Balance(assume0xAddress(USDC_MAINNET.address))
+  const USDTBalance = await anvil.getErc20Balance(assume0xAddress(USDT.address))
 
-  await expect(usdcBalance).toBe(ONE_HUNDRED_USDC)
-  await expect(page.getByText('100.00 USDC')).toBeVisible()
+  await expect(USDTBalance).toBe(100_000_000n)
+  await expect(page.getByText('100.00 USDT')).toBeVisible()
 })
 
 test('should swap ETH to USDC', async ({ page, anvil }) => {

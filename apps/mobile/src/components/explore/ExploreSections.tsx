@@ -115,7 +115,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           <ListHeaderComponent
             listRef={listRef}
             orderBy={uiOrderBy}
-            showLoading={isLoadingOrFetching}
+            showLoading={isLoading}
             selectedNetwork={selectedNetwork}
             onSelectNetwork={onSelectNetwork}
             onOrderByChange={onOrderByChange}

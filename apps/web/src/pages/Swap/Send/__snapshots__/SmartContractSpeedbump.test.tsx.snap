@@ -7,113 +7,6 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   min-width: 0;
 }
 
-.c13 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c15 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c4 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c4:hover {
-  opacity: 0.6;
-}
-
-.c4:active {
-  opacity: 0.4;
-}
-
-.c21 {
-  background-color: transparent;
-  bottom: 0;
-  border-radius: inherit;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  -webkit-transition: 150ms ease background-color;
-  transition: 150ms ease background-color;
-  width: 100%;
-}
-
-.c18 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #22222212;
-  border-radius: 16px;
-  border: 0;
-  color: #222222;
-  cursor: pointer;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  font-size: 14px;
-  font-weight: 535;
-  gap: 12px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 16px;
-  padding: 8px;
-  position: relative;
-  -webkit-transition: 150ms ease opacity;
-  transition: 150ms ease opacity;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c18:active .c20 {
-  background-color: #B8C0DC3d;
-}
-
-.c18:focus .c20 {
-  background-color: #B8C0DC3d;
-}
-
-.c18:hover .c20 {
-  background-color: #98A1C014;
-}
-
-.c18:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
-
-.c18:disabled:active .c20,
-.c18:disabled:focus .c20,
-.c18:disabled:hover .c20 {
-  background-color: transparent;
-}
-
 .c7 {
   width: 100%;
   display: -webkit-box;
@@ -148,6 +41,41 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   -ms-flex-pack: center;
   justify-content: center;
   gap: 12px;
+}
+
+.c13 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c15 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c4 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c4:hover {
+  opacity: 0.6;
+}
+
+.c4:active {
+  opacity: 0.4;
 }
 
 .c5 {
@@ -269,19 +197,6 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   -ms-letter-spacing: 0em;
   letter-spacing: 0em;
   text-align: center;
-}
-
-.c19 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  height: 40px;
-  border-radius: 12px;
 }
 
 .c3 {
@@ -469,20 +384,24 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
                         class="c6 c17"
                       >
                         <button
-                          class="c18 c19"
+                          class=" is_Button  t_group_item"
+                          style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                         >
-                          <div
-                            class="c20 c21"
-                          />
-                          Cancel
+                          <span
+                            class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                          >
+                            Cancel
+                          </span>
                         </button>
                         <button
-                          class="c18 c19"
+                          class=" is_Button  t_group_item"
+                          style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                         >
-                          <div
-                            class="c20 c21"
-                          />
-                          Continue
+                          <span
+                            class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
+                          >
+                            Continue
+                          </span>
                         </button>
                       </div>
                     </div>

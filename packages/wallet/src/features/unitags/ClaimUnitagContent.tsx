@@ -2,9 +2,9 @@ import { EventConsumer, EventMapBase } from '@react-navigation/core'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, LayoutChangeEvent } from 'react-native'
+import { LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { AnimatePresence, DeprecatedButton, Flex, FlexProps, Input, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatePresence, Button, Flex, FlexProps, Input, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
@@ -366,27 +366,22 @@ export function ClaimUnitagContent({
           </Text>
         </Flex>
       </Flex>
-      <Flex gap="$spacing24" justifyContent="flex-end">
-        <DeprecatedButton
+      <Flex row justifyContent="flex-end">
+        <Button
+          size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
+          variant="branded"
           isDisabled={
             (entryPoint === OnboardingScreens.Landing && !unitagAddress) ||
             !unitagInputValue ||
             isCheckingUnitag ||
             shouldBlockContinue
           }
-          size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
           testID={TestID.Continue}
-          theme="primary"
+          loading={isCheckingUnitag}
           onPress={onPressContinue}
         >
-          {isCheckingUnitag ? (
-            <Flex height={fonts.buttonLabel1.lineHeight}>
-              <ActivityIndicator color={colors.white.val} />
-            </Flex>
-          ) : (
-            t('common.button.continue')
-          )}
-        </DeprecatedButton>
+          {t('common.button.continue')}
+        </Button>
       </Flex>
       <UnitagInfoModal
         isOpen={showInfoModal}

@@ -61,7 +61,7 @@ export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenB
   },
 )
 
-export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
+const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
   function _TokenBalanceListInner(
     {
       empty,
@@ -336,7 +336,6 @@ const HiddenTokensRowWrapper = memo(function HiddenTokensRowWrapper(): JSX.Eleme
       <InfoLinkModal
         showCloseButton
         buttonText={t('common.button.close')}
-        buttonTheme="tertiary"
         description={t('hidden.tokens.info.text.info')}
         icon={
           <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">

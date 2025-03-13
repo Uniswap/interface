@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { TickData } from 'graphql/data/AllV3TicksQuery'
@@ -36,9 +38,25 @@ describe('#computeSurroundingTicks', () => {
       getV3Tick(activeTickProcessed.tick + 5 * spacing, 20),
     ]
 
-    const previous = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, !ascending)
+    const previous = computeSurroundingTicks(
+      token0,
+      token1,
+      activeTickProcessed,
+      sortedTickData,
+      pivot,
+      !ascending,
+      ProtocolVersion.V3,
+    )
 
-    const subsequent = computeSurroundingTicks(token0, token1, activeTickProcessed, sortedTickData, pivot, ascending)
+    const subsequent = computeSurroundingTicks(
+      token0,
+      token1,
+      activeTickProcessed,
+      sortedTickData,
+      pivot,
+      ascending,
+      ProtocolVersion.V3,
+    )
 
     expect(previous.length).toEqual(3)
     expect(previous.map((t) => [t.tick, parseFloat(t.liquidityActive.toString())])).toEqual([

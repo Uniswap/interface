@@ -8,6 +8,7 @@ import { isInterface } from 'utilities/src/platform'
  */
 export enum FeatureFlags {
   // Shared
+  BlockaidFotLogging,
   Datadog,
   EmbeddedWallet,
   IndicativeSwapQuotes,
@@ -15,26 +16,22 @@ export enum FeatureFlags {
   MonadTestnet,
   MonadTestnetDown,
   PortionFields,
-  Soneium,
+  SearchRevamp,
   SharedSwapArbitrumUniswapXExperiment,
+  Soneium,
+  SwapPresets,
   TokenSelectorTrendingTokens,
   TwoSecondSwapQuotePollingInterval,
-  Unichain,
-  UnichainPromo,
   UniswapX,
   V4Swap,
   UniswapXPriorityOrdersBase,
   UniswapXPriorityOrdersOptimism,
   UniswapXPriorityOrdersUnichain,
-  BlockaidFotLogging,
-  SwapPresets,
 
   // Wallet
   DisableFiatOnRampKorea,
   ExtensionAppRating,
   ExtensionAutoConnect,
-  ExtensionClaimUnitag,
-  FiatOffRamp,
   NotificationPriceAlertsAndroid,
   NotificationPriceAlertsIOS,
   NotificationOnboardingCard,
@@ -45,7 +42,6 @@ export enum FeatureFlags {
   PrivateRpc,
   Scantastic,
   SelfReportSpamNFTs,
-  TransactionDetailsSheet,
   UwULink,
   BlurredLockScreen,
 
@@ -69,7 +65,6 @@ export enum FeatureFlags {
   UniswapXv2,
   UniversalSwap,
   V4Data,
-  Zora,
 }
 /* eslint-enable @typescript-eslint/prefer-enum-initializers */
 
@@ -82,13 +77,12 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.InstantTokenBalanceUpdate, 'instant-token-balance-update'],
   [FeatureFlags.MonadTestnet, 'monad_testnet'],
   [FeatureFlags.PortionFields, 'portion-fields'],
+  [FeatureFlags.SearchRevamp, 'search_revamp'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
   [FeatureFlags.Soneium, 'soneium'],
   [FeatureFlags.SwapPresets, 'swap_presets'],
   [FeatureFlags.TokenSelectorTrendingTokens, 'token_selector_trending_tokens'],
   [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
-  [FeatureFlags.Unichain, 'unichain'],
-  [FeatureFlags.UnichainPromo, 'unichain_promo'],
   [FeatureFlags.UniswapX, 'uniswapx'],
   [FeatureFlags.UniswapXPriorityOrdersBase, 'uniswapx_priority_orders_base'],
   [FeatureFlags.UniswapXPriorityOrdersOptimism, 'uniswapx_priority_orders_optimism'],
@@ -119,7 +113,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UniswapXv2, 'uniswapx_v2'],
   [FeatureFlags.UniversalSwap, 'universal_swap'],
   [FeatureFlags.V4Data, 'v4_data'],
-  [FeatureFlags.Zora, 'zora'],
 ])
 
 // These names must match the gate name on statsig
@@ -129,8 +122,6 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
   [FeatureFlags.ExtensionAppRating, 'extension_app_rating'],
   [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
-  [FeatureFlags.ExtensionClaimUnitag, 'extension-claim-unitag'],
-  [FeatureFlags.FiatOffRamp, 'fiat-offramp'],
   [FeatureFlags.NotificationOnboardingCard, 'notification_onboarding_card'],
   [FeatureFlags.NotificationPriceAlertsAndroid, 'notification_price_alerts_android'],
   [FeatureFlags.NotificationPriceAlertsIOS, 'notification_price_alerts_ios'],
@@ -141,7 +132,6 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PrivateRpc, 'mev-blocker'],
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
-  [FeatureFlags.TransactionDetailsSheet, 'transaction-details-sheet'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])
 

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import Svg, { Circle } from 'react-native-svg'
-import { DeprecatedButton, Flex, Image, Text, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, Image, Text, isWeb, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { imageSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -136,18 +136,18 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
             </Text>
           </Flex>
           <Flex centered gap="$spacing8" pb={isWeb ? '$none' : '$spacing12'} width="100%">
-            <DeprecatedButton size="medium" theme="primary" width="100%" onPress={onPressConfirm}>
-              <Text color="$white" variant="buttonLabel2">
+            <Flex row>
+              <Button size="medium" variant="branded" onPress={onPressConfirm}>
                 {isMobileApp ? t('forceUpgrade.action.confirm') : t('forceUpgrade.action.learn')}
-              </Text>
-            </DeprecatedButton>
+              </Button>
+            </Flex>
 
             {mnemonicId && (
-              <DeprecatedButton size="medium" theme="secondary" width="100%" onPress={onPressViewRecovery}>
-                <Text color="$neutral1" variant="buttonLabel2">
+              <Flex row>
+                <Button size="medium" emphasis="secondary" onPress={onPressViewRecovery}>
                   {t('forceUpgrade.action.recoveryPhrase')}
-                </Text>
-              </DeprecatedButton>
+                </Button>
+              </Flex>
             )}
           </Flex>
         </Flex>

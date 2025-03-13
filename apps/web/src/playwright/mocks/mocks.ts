@@ -8,4 +8,7 @@ export const Mocks = {
   TokenProjects: {
     token_spam: '../mocks/graphql/TokenProjects/token_warning.json',
   },
+  TokenWeb: {
+    token_warning: '../mocks/graphql/TokenWeb/token_warning.json',
+  },
 }

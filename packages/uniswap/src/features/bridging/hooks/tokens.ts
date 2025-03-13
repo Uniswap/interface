@@ -14,8 +14,6 @@ import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/type
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
   NATIVE_ADDRESS_FOR_TRADING_API,
   getTokenAddressFromChainForTradingApi,
@@ -32,18 +30,21 @@ export function useBridgingTokenWithHighestBalance({
   address: Address
   currencyAddress: Address
   currencyChainId: UniverseChainId
-}):
-  | {
-      token: GetSwappableTokensResponse['tokens'][number]
-      balance: PortfolioBalance
-      currencyInfo: CurrencyInfo
-    }
-  | undefined {
+}): {
+  data:
+    | {
+        token: GetSwappableTokensResponse['tokens'][number]
+        balance: PortfolioBalance
+        currencyInfo: CurrencyInfo
+      }
+    | undefined
+  isLoading: boolean
+} {
   const currencyId = buildCurrencyId(currencyChainId, currencyAddress)
   const tokenIn = currencyAddress ? getTokenAddressFromChainForTradingApi(currencyAddress, currencyChainId) : undefined
   const tokenInChainId = toTradingApiSupportedChainId(currencyChainId)
 
-  const { data: tokenProjectsData } = useTokenProjectsQuery({
+  const { data: tokenProjectsData, loading: tokenProjectsLoading } = useTokenProjectsQuery({
     variables: { contracts: [currencyIdToContractInput(currencyId)] },
   })
 
@@ -56,25 +57,30 @@ export function useBridgingTokenWithHighestBalance({
     fetchPolicy: 'cache-first',
   })
 
-  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
-  const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
+  const { data: bridgingTokens, isLoading: bridgingTokensLoading } = useTradingApiSwappableTokensQuery({
     params:
       otherChainBalances && otherChainBalances?.length > 0 && tokenIn && tokenInChainId
         ? {
             tokenIn,
             tokenInChainId,
-            unichainEnabled,
           }
         : undefined,
   })
 
+  const isLoading = tokenProjectsLoading || bridgingTokensLoading
+
   return useMemo(() => {
     if (!otherChainBalances || !bridgingTokens?.tokens) {
-      return undefined
+      return { data: undefined, isLoading }
     }
 
     const tokenWithHighestBalance = bridgingTokens.tokens.reduce<
-      ReturnType<typeof useBridgingTokenWithHighestBalance> | undefined
+      | {
+          token: GetSwappableTokensResponse['tokens'][number]
+          balance: PortfolioBalance
+          currencyInfo: CurrencyInfo
+        }
+      | undefined
     >((currentHighest, token) => {
       const balance = otherChainBalances.find((b) => b.currencyInfo.currency.chainId === token.chainId)
 
@@ -107,8 +113,8 @@ export function useBridgingTokenWithHighestBalance({
       return currentHighest
     }, undefined)
 
-    return tokenWithHighestBalance
-  }, [otherChainBalances, bridgingTokens])
+    return { data: tokenWithHighestBalance, isLoading }
+  }, [otherChainBalances, bridgingTokens, isLoading])
 }
 
 export function useBridgingTokensOptions({
@@ -122,7 +128,6 @@ export function useBridgingTokensOptions({
 }): GqlResult<TokenOption[] | undefined> & { shouldNest?: boolean } {
   const tokenIn = input?.address ? getTokenAddressFromChainForTradingApi(input.address, input.chainId) : undefined
   const tokenInChainId = toTradingApiSupportedChainId(input?.chainId)
-  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
   const {
     data: bridgingTokens,
     isLoading: loadingBridgingTokens,
@@ -134,7 +139,6 @@ export function useBridgingTokensOptions({
         ? {
             tokenIn,
             tokenInChainId,
-            unichainEnabled,
           }
         : undefined,
   })

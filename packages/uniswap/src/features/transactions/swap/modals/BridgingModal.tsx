@@ -60,7 +60,6 @@ export function BridgingModal({
       })}
       rejectText={t('common.button.back')}
       acknowledgeText={t('common.button.continue')}
-      acknowledgeButtonTheme="primary"
       icon={icon}
       isOpen={isOpen}
       modalName={ModalName.BridgingWarning}

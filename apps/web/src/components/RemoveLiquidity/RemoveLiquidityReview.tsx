@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
@@ -19,7 +18,7 @@ import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { DeprecatedButton, Flex, Separator, Text } from 'ui/src'
+import { Button, Flex, Separator, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -288,9 +287,11 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               }}
             />
           </Flex>
-          <DeprecatedButton size="large" onPress={onDecreaseLiquidity}>
-            {t('common.confirm')}
-          </DeprecatedButton>
+          <Flex row>
+            <Button size="large" onPress={onDecreaseLiquidity}>
+              {t('common.confirm')}
+            </Button>
+          </Flex>
         </>
       )}
     </Flex>

@@ -29,8 +29,10 @@ type AddressDisplayProps = {
   size?: number
   variant?: keyof typeof fonts
   textColor?: ColorTokens
+  alignItems?: 'flex-start' | 'center'
   captionTextColor?: ColorTokens
   captionVariant?: keyof typeof fonts
+  centered?: boolean
   direction?: 'row' | 'column'
   showCopy?: boolean
   showCopyWrapperButton?: boolean
@@ -39,7 +41,6 @@ type AddressDisplayProps = {
   showIconBackground?: boolean
   showIconBorder?: boolean
   includeUnitagSuffix?: boolean
-  textAlign?: FlexAlignType
   horizontalGap?: SpaceTokens
   notificationsBadgeContainer?: ({ children, address }: { children: JSX.Element; address: string }) => JSX.Element
   gapBetweenLines?: SpaceTokens
@@ -79,15 +80,15 @@ export function AddressDisplay({
   size = 24,
   variant = 'body1',
   textColor = '$neutral1',
+  alignItems = 'center',
   captionTextColor = '$neutral2',
   captionVariant = 'subheading2',
+  centered,
   hideAddressInSubtitle,
   direction = 'row',
   showCopy = false,
   showCopyWrapperButton = false,
   showAccountIcon = true,
-  textAlign,
-  contentAlign = 'center', // vertical alignment of all items
   showIconBackground,
   showIconBorder,
   horizontalGap = '$spacing12',
@@ -127,7 +128,6 @@ export function AddressDisplay({
   // Extract sizes so copy icon can match font variants
   const mainSize = fonts[variant].fontSize
   const captionSize = fonts[captionVariant].fontSize
-  const itemAlignment = textAlign || (!showAccountIcon || direction === 'column' ? 'center' : 'flex-start')
 
   const icon = useMemo(() => {
     return (
@@ -145,8 +145,8 @@ export function AddressDisplay({
   return (
     <Flex
       shrink
-      alignItems={contentAlign}
       flexDirection={direction}
+      alignItems={alignItems}
       gap={horizontalGap}
       onLayout={(e: LayoutChangeEvent) => {
         Platform.OS === 'web' && setWrapperWidth(e.nativeEvent.layout.width)
@@ -154,9 +154,9 @@ export function AddressDisplay({
     >
       {showAccountIcon &&
         (notificationsBadgeContainer ? notificationsBadgeContainer({ children: icon, address }) : icon)}
-      <Flex shrink alignItems={itemAlignment} gap={gapBetweenLines}>
+      <Flex flexShrink={1} gap={gapBetweenLines}>
         <CopyButtonWrapper onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
-          <Flex centered row gap="$spacing12">
+          <Flex row centered={centered} gap="$spacing12">
             <DisplayNameText
               disableForcedWidth={disableForcedWidth}
               displayName={displayName}
@@ -176,6 +176,8 @@ export function AddressDisplay({
                 textAlign: displayNameTextAlign,
               }}
               unitagIconSize={mainSize}
+              flexShrink={1}
+              centered={centered}
             />
             {showCopy && !showAddressAsSubtitle && <CopySheets color="$neutral1" size={mainSize} />}
           </Flex>
@@ -186,6 +188,7 @@ export function AddressDisplay({
             captionSize={captionSize}
             captionTextColor={captionTextColor}
             captionVariant={captionVariant}
+            centered={centered}
             showCopy={showCopy}
             showCopyWrapperButton={showCopyWrapperButton}
             onPressCopyAddress={onPressCopyAddress}
@@ -211,17 +214,19 @@ const AddressSubtitle = ({
   captionTextColor,
   captionVariant,
   captionSize,
+  centered,
   showCopy,
   showCopyWrapperButton,
   onPressCopyAddress,
 }: { captionSize: number; onPressCopyAddress: () => Promise<void> } & Pick<
   AddressDisplayProps,
-  'address' | 'captionTextColor' | 'captionVariant' | 'showCopy' | 'showCopyWrapperButton'
+  'address' | 'captionTextColor' | 'captionVariant' | 'centered' | 'showCopy' | 'showCopyWrapperButton'
 >): JSX.Element => (
   <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
     <Flex
-      centered
       row
+      centered={centered}
+      alignItems="center"
       backgroundColor={showCopyWrapperButton ? '$surface2' : '$transparent'}
       borderRadius="$roundedFull"
       gap="$spacing4"

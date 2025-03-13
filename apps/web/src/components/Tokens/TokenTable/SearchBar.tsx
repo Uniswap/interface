@@ -98,10 +98,10 @@ export default function SearchBar({ tab }: { tab?: string }) {
       eventOnTrigger={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
       element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
     >
-      <Flex position="relative" height="100%" flex={1}>
+      <Flex centered flex={1}>
         <SearchIcon
           fill={colors.neutral1.val}
-          style={{ position: 'absolute', left: '12px', top: '10px' }}
+          style={{ position: 'absolute', left: '12px' }}
           width={ICON_SIZE}
           height={ICON_SIZE}
           pointerEvents="none"

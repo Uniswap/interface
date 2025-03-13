@@ -5,7 +5,6 @@ import { OpacityHoverState } from 'components/Common/styles'
 import { UniIcon } from 'components/Logo/UniIcon'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
-import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/TransactionCompleteModal.css'
 import { Portal } from 'nft/components/common/Portal'
 import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, TwitterIcon } from 'nft/components/icons'
@@ -165,7 +164,7 @@ const TxCompleteModal = () => {
                     className={styles.bottomBar}
                     justifyContent="space-between"
                   >
-                    <Row>
+                    <Flex row alignItems="center">
                       <Flex mr={16}>
                         {nftsPurchased.length} NFT{nftsPurchased.length === 1 ? '' : 's'}
                       </Flex>
@@ -176,7 +175,7 @@ const TxCompleteModal = () => {
                         })}{' '}
                         ETH
                       </Flex>
-                    </Row>
+                    </Flex>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                       <Text color="$neutral2" variant="body2">
                         <Trans i18nKey="common.etherscan.link" />

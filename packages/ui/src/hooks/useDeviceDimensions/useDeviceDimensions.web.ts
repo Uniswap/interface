@@ -20,16 +20,16 @@ export const useDeviceDimensions = (): DeviceDimensions => {
 
   // handles interface resize
   useEffect(() => {
+    function handleResize(): void {
+      setDeviceDimensions(getDeviceDimensions())
+    }
+
     if (isExtension) {
-      return undefined
+      handleResize()
     }
 
     if (!isClient) {
       return undefined
-    }
-
-    async function handleResize(): Promise<void> {
-      setDeviceDimensions(getDeviceDimensions())
     }
 
     window.addEventListener('resize', handleResize)

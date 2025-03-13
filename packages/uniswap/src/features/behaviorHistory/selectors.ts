@@ -9,6 +9,9 @@ export const selectHasDismissedBridgingWarning = (state: UniswapState): boolean 
 export const selectHasDismissedLowNetworkTokenWarning = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasDismissedLowNetworkTokenWarning === true
 
+export const selectHasViewedContractAddressExplainer = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasViewedContractAddressExplainer === true
+
 export const selectHasDismissedUnichainColdBanner = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.unichainPromotion?.coldBannerDismissed === true
 

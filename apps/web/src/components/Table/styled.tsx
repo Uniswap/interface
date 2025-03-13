@@ -1,14 +1,12 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ButtonLight } from 'components/Button/buttons'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import deprecatedStyled from 'lib/styled-components'
-import opacify from 'polished/lib/color/opacify'
 import { PropsWithChildren } from 'react'
-import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
+import { ArrowDown, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ClickableStyle, ClickableTamaguiStyle, EllipsisTamaguiStyle, ThemedText } from 'theme/components'
@@ -42,7 +40,7 @@ export const TableHead = (props: PropsWithChildren<{ $isSticky: boolean; $top: n
           position: 'sticky',
         }}
       >
-        {props.$isSticky && <div style={{ height: 12 }} />}
+        {props.$isSticky && <Flex height={12} />}
         {props.children}
       </Flex>
     )
@@ -77,28 +75,6 @@ export const TableBodyContainer = styled(View, {
     overflowX: 'auto',
     overflowY: 'scroll',
   },
-})
-
-export const ReturnButton = deprecatedStyled(ButtonLight)`
-  font-size: 16px;
-  border-radius: 900px;
-  width: fit-content;
-  margin-top: 8px;
-  box-shadow: ${({ theme }) => `0px 10px 15px -3px ${opacify(54, theme.surface1)}, 0px 4px 6px -2px ${opacify(40, theme.surface1)}`};
-`
-
-export const ReturnIcon = deprecatedStyled(CornerLeftUp)`
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-`
-
-export const ReturnButtonContainer = styled(Flex, {
-  position: 'absolute',
-  justifyContent: 'center',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  width: 'max-content',
 })
 
 export const LoadingIndicatorContainer = styled(Flex, {

@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { PriceRangeInfo } from 'pages/Pool/Positions/create/types'

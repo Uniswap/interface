@@ -3,7 +3,6 @@ import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import styled from 'lib/styled-components'
-import { Center } from 'nft/components/Flex'
 import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import AssetActivity, { LoadingAssetActivity } from 'nft/components/details/AssetActivity'
@@ -105,6 +104,7 @@ const ActivitySelectContainer = styled.div`
   @media (max-width: 720px) {
     padding-bottom: 8px;
   }
+  height: 32px;
 `
 
 const ContentNotAvailable = styled.div`
@@ -121,6 +121,7 @@ const ContentNotAvailable = styled.div`
 `
 
 const FilterBox = styled.div<{ backgroundColor: string }>`
+  display: flex;
   box-sizing: border-box;
   background-color: ${({ backgroundColor }) => backgroundColor};
   font-size: 14px;
@@ -192,7 +193,6 @@ enum MediaType {
   Audio = 'audio',
   Video = 'video',
   Image = 'image',
-  Embed = 'embed',
 }
 
 const AssetView = ({
@@ -216,23 +216,6 @@ const AssetView = ({
       )
     case MediaType.Audio:
       return <AudioPlayer {...asset} dominantColor={dominantColor} />
-    case MediaType.Embed:
-      return (
-        <div className={styles.embedContainer}>
-          <iframe
-            title={asset.name ?? `${asset.collectionName} #${asset.tokenId}`}
-            src={asset.animationUrl}
-            className={styles.embed}
-            style={style}
-            frameBorder={0}
-            height="100%"
-            width="100%"
-            sandbox="allow-scripts"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-      )
   }
 }
 
@@ -262,8 +245,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       return MediaType.Audio
     } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
-    } else if (asset.animationUrl) {
-      return MediaType.Embed
     }
     return MediaType.Image
   }, [asset])
@@ -392,9 +373,9 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               hasMore={!!hasNextActivity}
               loader={
                 activitiesAreLoading && (
-                  <Center>
+                  <Flex justifyContent="center" alignItems="center">
                     <LoadingSparkle />
-                  </Center>
+                  </Flex>
                 )
               }
               dataLength={nftActivity?.length ?? 0}
@@ -406,7 +387,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <>
               {!errorLoadingActivities && nftActivity && (
                 <EmptyActivitiesContainer>
-                  <div>No activities yet</div>
+                  <Flex>No activities yet</Flex>
                   <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
                 </EmptyActivitiesContainer>
               )}

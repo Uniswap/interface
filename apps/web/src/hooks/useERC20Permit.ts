@@ -129,7 +129,7 @@ export function useERC20Permit(
 
   const permitInfo =
     overridePermitInfo ??
-    (status === 'connected' && account.chainId && tokenAddress
+    (account.isConnected && account.chainId && tokenAddress
       ? PERMITTABLE_TOKENS[account.chainId]?.[tokenAddress]
       : undefined)
 

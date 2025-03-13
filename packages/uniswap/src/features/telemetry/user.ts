@@ -1,5 +1,5 @@
 import { CustomUserProperties } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { UserPropertyValue, analytics } from 'utilities/src/telemetry/analytics/analytics'
 
 /**

@@ -1,92 +1,83 @@
 import { style } from '@vanilla-extract/css'
-import { breakpoints, sprinkles, themeVars } from 'nft/css/sprinkles.css'
+import { breakpoints } from 'ui/src/theme'
 
-export const container = style([
-  sprinkles({
-    overflow: 'auto',
-    height: 'viewHeight',
-    paddingTop: '4',
-    marginLeft: { sm: '8', md: '48' },
-  }),
-  {
-    width: '308px',
-    paddingRight: '8px',
-    paddingBottom: '96px',
-    '@media': {
-      [`(max-width: ${breakpoints.sm - 1}px)`]: {
-        width: 'auto',
-        height: 'auto',
-        paddingBottom: '0px',
-      },
-    },
-    selectors: {
-      '&::-webkit-scrollbar': {
-        display: 'none',
-      },
+export const container = style({
+  overflow: 'auto',
+  height: '100vh',
+  paddingTop: '16px',
+  width: '308px',
+  paddingRight: '8px',
+  paddingBottom: '96px',
+  marginLeft: '48px',
+  '@media': {
+    [`(max-width: ${breakpoints.md - 1}px)`]: {
+      width: 'auto',
+      height: 'auto',
+      paddingBottom: '0px',
+      marginLeft: '8px',
     },
   },
-])
-
-export const rowHover = style([
-  {
-    ':hover': {
-      background: themeVars.colors.surface3,
-      borderRadius: 12,
+  selectors: {
+    '&::-webkit-scrollbar': {
+      display: 'none',
     },
   },
-])
+})
 
-export const row = style([
-  sprinkles({
-    display: 'flex',
-    paddingRight: '16',
-    cursor: 'pointer',
-    fontSize: '16',
-    lineHeight: '20',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: '12',
-    paddingTop: '10',
-    paddingBottom: '10',
-  }),
-])
+export const rowHover = style({
+  ':hover': {
+    background: 'var(--surface3)',
+    borderRadius: '12px',
+  },
+})
+
+export const row = style({
+  display: 'flex',
+  paddingRight: '16px',
+  cursor: 'pointer',
+  fontSize: '16px',
+  lineHeight: '20px',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  paddingLeft: '12px',
+  paddingTop: '10px',
+  paddingBottom: '10px',
+})
 
 export const subRowHover = style({
   ':hover': {
-    background: themeVars.colors.surface3,
+    background: 'var(--surface3)',
   },
 })
 
-export const borderTop = sprinkles({
+export const borderTop = style({
   borderTopStyle: 'solid',
-  borderTopColor: 'surface3',
+  borderTopColor: 'var(--surface3)',
   borderTopWidth: '1px',
 })
 
-export const borderBottom = sprinkles({
+export const borderBottom = style({
   borderBottomStyle: 'solid',
-  borderBottomColor: 'surface3',
+  borderBottomColor: 'var(--surface3)',
   borderBottomWidth: '1px',
 })
 
 export const detailsOpen = style([
   borderTop,
-  sprinkles({
+  {
     overflow: 'hidden',
-    marginTop: '2',
-    marginBottom: '2',
-  }),
+    marginTop: '8px',
+    marginBottom: '8px',
+  },
 ])
 
 export const MAX_FILTER_DROPDOWN_HEIGHT = 302
 
 export const filterDropDowns = style([
   borderBottom,
-  sprinkles({
-    paddingLeft: '0',
-    paddingBottom: '8',
-  }),
   {
+    paddingLeft: '0',
+    paddingBottom: '8px',
     maxHeight: `${MAX_FILTER_DROPDOWN_HEIGHT}px`,
     '::-webkit-scrollbar': { display: 'none' },
     scrollbarWidth: 'none',
@@ -94,18 +85,14 @@ export const filterDropDowns = style([
 ])
 
 export const chevronIcon = style({
-  marginLeft: -1,
+  marginLeft: '-1px',
 })
 
-export const chevronContainer = style([
-  sprinkles({
-    color: 'neutral2',
-    display: 'inline-block',
-    height: '28',
-    width: '28',
-    transition: '250',
-  }),
-  {
-    marginRight: -1,
-  },
-])
+export const chevronContainer = style({
+  color: 'var(--neutral2)',
+  display: 'inline-block',
+  height: '28px',
+  width: '28px',
+  transition: '250ms',
+  marginRight: '-1px',
+})

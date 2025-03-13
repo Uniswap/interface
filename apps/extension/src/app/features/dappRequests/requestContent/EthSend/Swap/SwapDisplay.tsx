@@ -23,6 +23,8 @@ export function SwapDisplay({
   onCancel,
   onConfirm,
   isUniswapX,
+  isWrap,
+  isUnwrap,
 }: {
   inputAmount: string
   outputAmount: string
@@ -33,6 +35,8 @@ export function SwapDisplay({
   onCancel?: () => Promise<void>
   onConfirm?: () => Promise<void>
   isUniswapX?: boolean
+  isWrap?: boolean
+  isUnwrap?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const { formatCurrencyAmount } = useLocalizationContext()
@@ -56,10 +60,25 @@ export function SwapDisplay({
   const showSplitLogo = Boolean(inputCurrencyInfo?.logoUrl && outputCurrencyInfo?.logoUrl)
   const showSwapDetails = Boolean(currencyIn?.symbol && currencyOut?.symbol)
 
+  // Determine the appropriate title based on transaction type
+  let title = ''
+  if (isWrap && currencyIn?.symbol) {
+    title = t('common.wrap', { symbol: currencyIn.symbol })
+  } else if (isUnwrap && currencyIn?.symbol) {
+    title = t('position.wrapped.unwrap', { wrappedToken: currencyIn.symbol })
+  } else if (currencyIn?.symbol && currencyOut?.symbol) {
+    title = t('swap.request.title.full', {
+      inputCurrencySymbol: currencyIn.symbol,
+      outputCurrencySymbol: currencyOut.symbol,
+    })
+  } else {
+    title = t('swap.request.title.short')
+  }
+
   return (
     <DappRequestContent
       showNetworkCost
-      confirmText={t('swap.button.swap')}
+      confirmText={isWrap ? t('swap.button.wrap') : isUnwrap ? t('common.unwrap.button') : t('swap.button.swap')}
       headerIcon={
         showSplitLogo ? (
           <SplitLogo
@@ -71,14 +90,7 @@ export function SwapDisplay({
         ) : undefined
       }
       isUniswapX={isUniswapX}
-      title={
-        currencyIn?.symbol && currencyOut?.symbol
-          ? t('swap.request.title.full', {
-              inputCurrencySymbol: currencyIn?.symbol,
-              outputCurrencySymbol: currencyOut?.symbol,
-            })
-          : t('swap.request.title.short')
-      }
+      title={title}
       transactionGasFeeResult={transactionGasFeeResult}
       onCancel={onCancel}
       onConfirm={onConfirm}

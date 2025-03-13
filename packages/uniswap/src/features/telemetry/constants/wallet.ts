@@ -1,7 +1,7 @@
 import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants/uniswap'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 
 export enum WalletEventName {

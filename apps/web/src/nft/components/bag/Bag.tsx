@@ -1,10 +1,6 @@
 import { NFTEventName } from '@uniswap/analytics-events'
-import { Box } from 'components/deprecated/Box'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import styled from 'lib/styled-components'
-import { Column } from 'nft/components/Flex'
-import * as styles from 'nft/components/bag/Bag.css'
 import { BagContent } from 'nft/components/bag/BagContent'
 import { BagFooter } from 'nft/components/bag/BagFooter'
 import { BagHeader } from 'nft/components/bag/BagHeader'
@@ -18,83 +14,11 @@ import { formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Z_INDEX } from 'theme/zIndex'
+import { Button, Flex, useScrollbarStyles } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
-
-interface SeparatorProps {
-  top?: boolean
-  show?: boolean
-}
-
-const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }>`
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  top: 88px;
-  right: 20px;
-  width: ${BAG_WIDTH}px;
-  height: calc(100vh - 108px);
-  background: ${({ theme }) => theme.surface1};
-  border: 1px solid ${({ theme }) => theme.surface3};
-  border-radius: 16px;
-  box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
-  z-index: ${({ raiseZIndex, isProfilePage }) =>
-    raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop - 1) : 3};
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    right: 0px;
-    top: 0px;
-    width: 100%;
-    height: 100%;
-    border-radius: 0px;
-    border: none;
-  }
-
-  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.xxxl}px`}) {
-    width: ${XXXL_BAG_WIDTH}px;
-  }
-`
-
-const DetailsPageBackground = styled.div`
-  position: fixed;
-  background: rgba(0, 0, 0, 0.7);
-  top: 0px;
-  width: 100%;
-  height: 100%;
-`
-
-const ContinueButton = styled.div`
-  background: ${({ theme }) => theme.accent1};
-  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
-  margin: 32px 28px 16px;
-  padding: 10px 0px;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 535;
-  line-height: 20px;
-  cursor: pointer;
-  transition: ${({ theme }) => theme.transition.duration.medium};
-
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-`
-
-const ScrollingIndicator = ({ top, show }: SeparatorProps) => (
-  <Box
-    marginX="24"
-    borderWidth="1px"
-    borderStyle="solid"
-    borderColor="transparent"
-    borderTopColor={top ? 'transparent' : 'surface3'}
-    borderBottomColor={top ? 'surface3' : 'transparent'}
-    opacity={show ? '1' : '0'}
-    transition="250"
-  />
-)
 
 const Bag = () => {
   const { resetSellAssets, sellAssets } = useSellAsset(({ reset, sellAssets }) => ({
@@ -120,6 +44,7 @@ const Bag = () => {
 
   const [isModalOpen, setModalIsOpen] = useState(false)
   const { userCanScroll, scrollRef, scrollProgress, scrollHandler } = useSubscribeScrollState()
+  const scrollbarStyles = useScrollbarStyles()
 
   const handleCloseBag = useCallback(() => {
     setBagExpanded({ bagExpanded: false, manualClose: true })
@@ -152,7 +77,33 @@ const Bag = () => {
 
   return (
     <Portal>
-      <BagContainer data-testid="nft-bag" raiseZIndex={isMobile || isModalOpen} isProfilePage={isProfilePage}>
+      <Flex
+        top={88}
+        right={20}
+        width={XXXL_BAG_WIDTH}
+        height="calc(100vh - 108px)"
+        backgroundColor="$surface1"
+        borderColor="$surface3"
+        borderWidth={1}
+        borderRadius="$rounded16"
+        shadowColor="$surface3"
+        shadowRadius={10}
+        shadowOpacity={0.04}
+        zIndex={isMobile || isModalOpen ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop - 1) : 3}
+        $md={{
+          right: 0,
+          width: '100%',
+          height: '100%',
+          borderWidth: 0,
+          borderRadius: '$none',
+        }}
+        $xxl={{
+          width: BAG_WIDTH,
+        }}
+        $platform-web={{
+          position: 'fixed',
+        }}
+      >
         <BagHeader
           numberOfAssets={isProfilePage ? sellAssets.length : itemsInBag.length}
           closeBag={handleCloseBag}
@@ -160,16 +111,43 @@ const Bag = () => {
           isProfilePage={isProfilePage}
         />
         {shouldRenderEmptyState && <EmptyState />}
-        <ScrollingIndicator top show={userCanScroll && scrollProgress > 0} />
-        <Column ref={scrollRef} className={styles.assetsContainer} onScroll={scrollHandler} gap="12">
+        <Flex
+          mx="$spacing24"
+          borderWidth={1}
+          borderColor="$transparent"
+          borderTopColor={userCanScroll && scrollProgress > 0 ? '$surface3' : 'transparent'}
+          borderBottomColor="transparent"
+          opacity={userCanScroll && scrollProgress > 0 ? 1 : 0}
+          animation="fast"
+        />
+        {/* Tamagui flex components don't allow custom scroll handlers */}
+        {/* eslint-disable-next-line react/forbid-elements */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            overflowY: 'auto',
+            paddingLeft: '20px',
+            paddingRight: '20px',
+            ...scrollbarStyles,
+          }}
+          ref={scrollRef}
+          onScroll={scrollHandler}
+        >
           {isProfilePage ? <ProfileBagContent /> : <BagContent />}
-        </Column>
+        </div>
         {hasAssetsToShow && !isProfilePage && (
           <BagFooter setModalIsOpen={setModalIsOpen} eventProperties={eventProperties} />
         )}
         {isSellingAssets && isProfilePage && (
-          <ContinueButton
-            onClick={() => {
+          <Button
+            size="large"
+            emphasis="primary"
+            mx="$spacing28"
+            my="$spacing16"
+            mt="$spacing32"
+            onPress={() => {
               toggleBag()
               setProfilePageState(ProfilePageStateType.LISTING)
               sendAnalyticsEvent(NFTEventName.NFT_PROFILE_PAGE_START_SELL, {
@@ -180,12 +158,21 @@ const Bag = () => {
             }}
           >
             <Trans i18nKey="common.button.continue" />
-          </ContinueButton>
+          </Button>
         )}
-      </BagContainer>
+      </Flex>
 
       {isDetailsPage ? (
-        <DetailsPageBackground onClick={toggleBag} />
+        <Flex
+          backgroundColor="rgba(0, 0, 0, 0.7)"
+          top={0}
+          width="100%"
+          height="100%"
+          onPress={toggleBag}
+          $platform-web={{
+            position: 'fixed',
+          }}
+        />
       ) : (
         isModalOpen && <Overlay onClick={() => (!bagIsLocked ? setModalIsOpen(false) : undefined)} />
       )}

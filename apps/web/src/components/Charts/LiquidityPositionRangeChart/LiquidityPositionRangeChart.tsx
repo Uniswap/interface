@@ -1,8 +1,7 @@
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { ActiveLiquidityChart2 } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart2'
+import { ActiveLiquidityChart } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart'
 import { BandsIndicator } from 'components/Charts/BandsIndicator/bands-indicator'
 import { cloneReadonly } from 'components/Charts/BandsIndicator/helpers/simple-clone'
 import {
@@ -12,9 +11,9 @@ import {
   DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
   DEFAULT_TOP_PRICE_SCALE_MARGIN,
 } from 'components/Charts/ChartModel'
+import { useDensityChartData } from 'components/Charts/LiquidityRangeInput/hooks'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { PriceChartType, formatTickMarks } from 'components/Charts/utils'
-import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
@@ -37,7 +36,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import useResizeObserver from 'use-resize-observer'
 // Not using the formatters in a react context, so we need to import the formatter directly.
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatNumber } from 'utilities/src/format/localeBased'
 import { isMobileWeb } from 'utilities/src/platform'
 
@@ -613,7 +612,7 @@ export function LiquidityPositionRangeChart({
           top={0}
           zIndex={zIndexes.mask}
         >
-          <ActiveLiquidityChart2
+          <ActiveLiquidityChart
             barColor={colors.surface3.val}
             data={{
               series: sortedFormattedData,

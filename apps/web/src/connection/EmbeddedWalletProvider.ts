@@ -3,8 +3,7 @@ import {
   signTransactionWithPasskey,
   signTypedDataWithPasskey,
 } from 'uniswap/src/data/rest/embeddedWallet'
-// eslint-disable-next-line no-restricted-imports
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 import { Account, Hash, SignableMessage, createPublicClient, fallback, http } from 'viem'
@@ -48,13 +47,15 @@ export class EmbeddedWalletProvider {
   }
 
   private getPublicClient(chainId: UniverseChainId) {
-    if (!this.publicClient || this.publicClient.chain !== UNIVERSE_CHAIN_INFO[chainId]) {
-      const fallbackTransports = UNIVERSE_CHAIN_INFO[this.chainId].rpcUrls.fallback?.http.map((url) => http(url)) ?? []
+    if (!this.publicClient || this.publicClient.chain !== getChainInfo(chainId)) {
+      const chainInfo = getChainInfo(this.chainId)
+      const rpcUrls = chainInfo.rpcUrls
+      const fallbackTransports = rpcUrls.fallback?.http.map((url) => http(url)) ?? []
       this.publicClient = createPublicClient({
-        chain: UNIVERSE_CHAIN_INFO[chainId],
+        chain: chainInfo,
         transport: fallback([
-          http(UNIVERSE_CHAIN_INFO[this.chainId].rpcUrls.public?.http?.[0]), // generally quicknode
-          http(UNIVERSE_CHAIN_INFO[this.chainId].rpcUrls.default.http?.[0]), // options here and below are usually public endpoints
+          http(rpcUrls.public?.http?.[0]), // generally quicknode
+          http(rpcUrls.default.http?.[0]), // options here and below are usually public endpoints
           ...fallbackTransports,
         ]),
       })
@@ -237,7 +238,7 @@ export class EmbeddedWalletProvider {
       }
       const publicClient = this.getPublicClient(this.chainId)
       const [currentGasData, nonce] = await Promise.all([
-        publicClient?.estimateFeesPerGas({ chain: UNIVERSE_CHAIN_INFO[this.chainId] }),
+        publicClient?.estimateFeesPerGas({ chain: getChainInfo(this.chainId) }),
         publicClient?.getTransactionCount({ address: account.address }),
       ])
       const tx = {

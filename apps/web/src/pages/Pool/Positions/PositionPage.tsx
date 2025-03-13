@@ -17,7 +17,7 @@ import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import NotFound from 'pages/NotFound'
 import { LegacyPositionPage } from 'pages/Pool/Positions/LegacyPositionPage'
 import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
-import { BodyWrapper, HeaderButton, LoadingRow } from 'pages/Pool/Positions/shared'
+import { BodyWrapper, LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -28,7 +28,7 @@ import { useAppDispatch } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { DeprecatedButton, Flex, SegmentedControl, SegmentedControlOption, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, SegmentedControl, SegmentedControlOption, Text, TouchableArea, useMedia } from 'ui/src'
 import { ExchangeHorizontal } from 'ui/src/components/icons/ExchangeHorizontal'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -108,6 +108,7 @@ function PositionPage() {
   const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const media = useMedia()
 
   const { currency0Amount, currency1Amount, status } = positionInfo ?? {}
   const {
@@ -220,7 +221,11 @@ function PositionPage() {
           </Flex>
         }
         actionButton={
-          <DeprecatedButton onPress={() => navigate('/positions')}>{t('common.backToPositions')}</DeprecatedButton>
+          <Flex row centered>
+            <Button width="fit-content" variant="branded" onPress={() => navigate('/positions')}>
+              {t('common.backToPositions')}
+            </Button>
+          </Flex>
         }
       />
     )
@@ -265,7 +270,7 @@ function PositionPage() {
             justifyContent="space-between"
             alignItems="center"
           >
-            <LiquidityPositionInfo positionInfo={positionInfo} />
+            <LiquidityPositionInfo positionInfo={positionInfo} linkToPool />
             {isOwner && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
                 {positionInfo.version === ProtocolVersion.V3 &&
@@ -275,23 +280,26 @@ function PositionPage() {
                     <MouseoverTooltip
                       text={t('pool.migrateLiquidityDisabledTooltip')}
                       disabled={!showV4UnsupportedTooltip}
+                      style={media.sm ? { width: '100%', display: 'block' } : {}}
                     >
-                      <HeaderButton
+                      <Button
+                        size="small"
                         emphasis="secondary"
-                        disabled={showV4UnsupportedTooltip}
+                        $sm={{ width: '100%' }}
+                        isDisabled={showV4UnsupportedTooltip}
                         opacity={showV4UnsupportedTooltip ? 0.5 : 1}
                         onPress={() => {
                           navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
                         }}
                       >
-                        <Text variant="buttonLabel3" color="$neutral1">
-                          <Trans i18nKey="pool.migrateToV4" />
-                        </Text>
-                      </HeaderButton>
+                        {t('pool.migrateToV4')}
+                      </Button>
                     </MouseoverTooltip>
                   )}
-                <HeaderButton
+                <Button
+                  size="small"
                   emphasis="secondary"
+                  $sm={{ width: '100%' }}
                   onPress={() => {
                     dispatch(
                       setOpenModal({
@@ -301,13 +309,12 @@ function PositionPage() {
                     )
                   }}
                 >
-                  <Text variant="buttonLabel3" color="$neutral1">
-                    <Trans i18nKey="common.addLiquidity" />
-                  </Text>
-                </HeaderButton>
+                  {t('common.addLiquidity')}
+                </Button>
                 {status !== PositionStatus.CLOSED && (
-                  <HeaderButton
-                    emphasis="secondary"
+                  <Button
+                    size="small"
+                    $sm={{ width: '100%' }}
                     onPress={() => {
                       dispatch(
                         setOpenModal({
@@ -317,14 +324,13 @@ function PositionPage() {
                       )
                     }}
                   >
-                    <Text variant="buttonLabel3" color="$neutral1">
-                      <Trans i18nKey="pool.removeLiquidity" />
-                    </Text>
-                  </HeaderButton>
+                    {t('pool.removeLiquidity')}
+                  </Button>
                 )}
                 {hasFees && isOwner && (
-                  <HeaderButton
-                    emphasis="primary"
+                  <Button
+                    size="small"
+                    maxWidth="fit-content"
                     onPress={() => {
                       if (hasFees) {
                         dispatch(
@@ -336,10 +342,8 @@ function PositionPage() {
                       }
                     }}
                   >
-                    <Text variant="buttonLabel3" color="$surface1">
-                      <Trans i18nKey="pool.collectFees" />
-                    </Text>
-                  </HeaderButton>
+                    {t('pool.collectFees')}
+                  </Button>
                 )}
               </Flex>
             )}

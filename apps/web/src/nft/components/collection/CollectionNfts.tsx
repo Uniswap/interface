@@ -10,7 +10,7 @@ import styled, { css } from 'lib/styled-components'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
-import * as styles from 'nft/components/collection/CollectionNfts.css'
+import { AssetListCss } from 'nft/components/collection/CollectionNftsCss'
 import { MARKETPLACE_ITEMS } from 'nft/components/collection/MarketplaceSelect'
 import { Sweep } from 'nft/components/collection/Sweep'
 import { TraitChip } from 'nft/components/collection/TraitChip'
@@ -152,7 +152,26 @@ const SweepButton = tamaguiStyled(Flex, {
 })
 
 const CollectionNftsLoading = ({ height }: { height?: number }) => (
-  <Flex width="100%" className={styles.assetList}>
+  <Flex
+    width="100%"
+    gap="$gap8"
+    $platform-web={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/2 - 8px), 1fr) )',
+    }}
+    $lg={{
+      gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/3 - 8px), 1fr) )',
+    }}
+    $xl={{
+      gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/3 - 12px), 1fr) )',
+    }}
+    $xxl={{
+      gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/4 - 16px), 1fr) )',
+    }}
+    $xxxl={{
+      gridTemplateColumns: 'repeat(auto-fill, minmax(calc(100%/5 - 16px), 1fr) )',
+    }}
+  >
     <LoadingAssets height={height} />
   </Flex>
 )
@@ -587,6 +606,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
           </Flex>
         </InfiniteScrollWrapper>
       </Flex>
+      <AssetListCss />
       <InfiniteScrollWrapper>
         {loading ? (
           <CollectionNftsLoading height={renderedHeight} />
@@ -597,7 +617,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             loader={Boolean(hasNext && hasNfts) && <LoadingAssets />}
             dataLength={collectionAssets?.length ?? 0}
             style={{ overflow: 'unset' }}
-            className={hasNfts ? styles.assetList : undefined}
+            className={hasNfts ? 'asset-list' : undefined}
           >
             {!hasNfts ? (
               <Flex justifyContent="center" gap="$gap12" alignItems="center" width="100%" style={{ height: '60vh' }}>

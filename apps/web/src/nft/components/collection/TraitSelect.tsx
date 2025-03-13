@@ -1,6 +1,5 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import useDebounce from 'hooks/useDebounce'
-import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Filters.css'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { Input } from 'nft/components/layout/Input'
@@ -11,7 +10,7 @@ import { scrollToTop } from 'nft/utils/scrollToTop'
 import { CSSProperties, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { LabeledCheckbox, Text } from 'ui/src'
+import { Flex, LabeledCheckbox, Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 const TRAIT_ROW_HEIGHT = 44
@@ -64,27 +63,27 @@ const TraitItem = ({
   const showFullTraitName = shouldShow && trait_type === trait.trait_type && trait_value === trait.trait_value
 
   return (
-    <Row
+    <Flex
+      row
+      alignItems="center"
       key={trait.trait_value}
-      maxWidth="full"
-      overflowX="hidden"
-      overflowY="hidden"
-      fontWeight="book"
+      maxWidth="100%"
+      overflow="hidden"
       className={`${subheadSmall} ${styles.subRowHover}`}
       justifyContent="space-between"
       cursor="pointer"
-      paddingLeft="12"
-      paddingRight="16"
-      borderRadius="12"
+      pl="$padding12"
+      pr="$padding16"
+      borderRadius="$rounded12"
       style={{
         paddingBottom: '22px',
         paddingTop: '22px',
         ...style,
       }}
-      maxHeight="44"
+      maxHeight={44}
       onMouseEnter={handleHover}
       onMouseLeave={handleHover}
-      onClick={handleCheckbox}
+      onPress={handleCheckbox}
     >
       <Text
         variant="body2"
@@ -106,7 +105,7 @@ const TraitItem = ({
         text={showFullTraitName ? String(trait.trait_count) : ''}
         variant="branded"
       />
-    </Row>
+    </Flex>
   )
 }
 
@@ -158,7 +157,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
         position="static"
         width="full"
       />
-      <Column
+      <Flex
         className={styles.filterDropDowns}
         style={{
           height: `${Math.min(TRAIT_ROW_HEIGHT * searchedTraits.length, styles.MAX_FILTER_DROPDOWN_HEIGHT)}px`,
@@ -178,7 +177,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
             </FixedSizeList>
           )}
         </AutoSizer>
-      </Column>
+      </Flex>
     </TraitsHeader>
   ) : null
 }

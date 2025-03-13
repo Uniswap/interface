@@ -333,6 +333,7 @@ const statsLoadingSkeleton = (isMobile: boolean) =>
       key={`statsLoadingSkeleton-key-${index}`}
       mb={isMobile ? '$spacing12' : '$spacing0'}
     >
+      {/* eslint-disable-next-line react/forbid-elements */}
       <div className={styles.statsLabelLoading} />
       <span className={styles.statsValueLoading} />
     </Flex>
@@ -499,6 +500,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       {(stats.description || isCollectionStatsLoading) && isMobile && (
         <CollectionDescription description={stats.description ?? ''} />
       )}
+      {/* eslint-disable-next-line react/forbid-elements */}
       <div id="nft-anchor-mobile" />
       <StatsRow isMobile display="none" $lg={{ display: 'flex' }} stats={stats} mt="$spacing20" mb="$spacing12" />
     </Flex>

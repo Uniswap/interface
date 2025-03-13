@@ -5,8 +5,6 @@ import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { AlertTriangleFilled, UniswapX } from 'ui/src/components/icons'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
@@ -52,8 +50,6 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
 }: TransactionSummaryLayoutProps & { isQueued: boolean }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const isTransactionDetailsModalEnabled = useFeatureFlag(FeatureFlags.TransactionDetailsSheet)
-
   const { type } = useActiveAccountWithThrow()
   const readonly = type === AccountType.Readonly
 
@@ -68,7 +64,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
   const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
   const isCancel = status === TransactionStatus.Canceled || status === TransactionStatus.Cancelling
 
-  const { openActionsModal, renderModals } = useTransactionActions({
+  const { renderModals } = useTransactionActions({
     authTrigger,
     transaction,
   })
@@ -77,11 +73,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
     if (readonly) {
       await openTransactionLink(hash, chainId)
     } else {
-      if (isTransactionDetailsModalEnabled) {
-        setShowDetailsModal(true)
-      } else {
-        openActionsModal()
-      }
+      setShowDetailsModal(true)
     }
   }
 

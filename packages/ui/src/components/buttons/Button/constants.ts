@@ -5,7 +5,6 @@ import type { ButtonVariantProps } from 'ui/src/components/buttons/Button/types'
 export const buttonStyledContext = createStyledContext<ButtonVariantProps>({
   size: 'medium',
   variant: 'default',
-  singleLine: true,
   emphasis: 'primary',
   isDisabled: false,
 })

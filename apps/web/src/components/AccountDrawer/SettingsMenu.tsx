@@ -14,6 +14,7 @@ import { Trans } from 'react-i18next'
 import { useOpenModal } from 'state/application/hooks'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
+import { Flex } from 'ui/src'
 import { LockedDocument } from 'ui/src/components/icons/LockedDocument'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -86,7 +87,7 @@ export default function SettingsMenu({
   return (
     <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose}>
       <Container>
-        <div>
+        <Flex>
           <ToggleWrapper>
             <ThemeToggle />
             <SmallBalanceToggle />
@@ -117,7 +118,7 @@ export default function SettingsMenu({
               />
             )}
           </Column>
-        </div>
+        </Flex>
         <GitVersionRow />
       </Container>
     </SlideOutMenu>

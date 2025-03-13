@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import { AnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ScrollDownOverlay } from 'src/components/Requests/ModalWithOverlay/ScrollDownOverlay'
-import { DeprecatedButton, Flex } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
@@ -184,18 +184,19 @@ function ModalFooter({
         pt="$spacing12"
         px="$spacing24"
       >
-        <DeprecatedButton fill size="medium" testID={TestID.Cancel} theme="tertiary" onPress={onReject}>
+        <Button size="large" testID={TestID.Cancel} emphasis="tertiary" onPress={onReject}>
           {t('common.button.cancel')}
-        </DeprecatedButton>
-        <DeprecatedButton
-          fill
+        </Button>
+
+        <Button
+          variant="branded"
           isDisabled={!confirmationEnabled}
-          size="medium"
+          size="large"
           testID={TestID.Confirm}
           onPress={onConfirm}
         >
           {confirmationButtonText ?? t('common.button.accept')}
-        </DeprecatedButton>
+        </Button>
       </Flex>
     </BottomSheetFooter>
   )

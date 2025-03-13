@@ -1,14 +1,5 @@
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
-import { ThemedText } from 'theme/components'
-import { Switch } from 'ui/src'
-
-const StyledColumn = styled(Column)`
-  width: 100%;
-  margin-right: 10px;
-`
+import { Flex, Switch, Text } from 'ui/src'
 
 interface SettingsToggleProps {
   title: ReactNode
@@ -21,20 +12,18 @@ interface SettingsToggleProps {
 
 export function SettingsToggle({ title, description, dataid, isActive, toggle, disabled }: SettingsToggleProps) {
   return (
-    <Row align="center">
-      <StyledColumn>
-        <Row>
-          <ThemedText.SubHeaderSmall color="neutral1">{title}</ThemedText.SubHeaderSmall>
-        </Row>
+    <Flex row alignItems="center" justifyContent="space-between">
+      <Flex maxWidth="80%" $xl={{ maxWidth: '70%' }}>
+        <Text variant="body3" color="neutral1">
+          {title}
+        </Text>
         {description && (
-          <Row>
-            <ThemedText.BodySmall color="neutral2" lineHeight="16px">
-              {description}
-            </ThemedText.BodySmall>
-          </Row>
+          <Text variant="body3" color="neutral2">
+            {description}
+          </Text>
         )}
-      </StyledColumn>
+      </Flex>
       <Switch testID={dataid} variant="branded" checked={isActive} onCheckedChange={toggle} disabled={disabled} />
-    </Row>
+    </Flex>
   )
 }

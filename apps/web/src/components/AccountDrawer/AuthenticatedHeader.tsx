@@ -8,7 +8,7 @@ import { ExtensionDeeplinks } from 'components/AccountDrawer/MiniPortfolio/Exten
 import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio/MiniPortfolio'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Status } from 'components/AccountDrawer/Status'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
+import { ButtonEmphasis, ThemeButton } from 'components/Button/DeprecatedWebButtons'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import Column from 'components/deprecated/Column'
@@ -235,7 +235,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               <MiniPortfolio account={account} />
             )}
             {isUnclaimed && (
-              <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
+              <UNIButton onClick={openClaimModal} emphasis={ButtonEmphasis.medium}>
                 <Trans i18nKey="account.authHeader.claimReward" values={{ amount }} />
               </UNIButton>
             )}
