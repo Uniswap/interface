@@ -14,7 +14,7 @@ export type PersistAppStateV3 = {
  */
 export const migration3 = (state: PersistAppStateV3 | undefined) => {
   if (state?.user) {
-    // Update USDC.e tokens to use the the new USDC.e symbol (from USDC)
+    // Update USDC.e tokens to use the new USDC.e symbol (from USDC)
     const USDCe_ADDRESSES: { [key in UniverseChainId]?: string } = {
       [UniverseChainId.Optimism]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
       [UniverseChainId.ArbitrumOne]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
