@@ -24,7 +24,7 @@ export enum URIType {
   UwULink = 'uwu-link',
 }
 
-type URIFormat = {
+export type URIFormat = {
   type: URIType
   value: string
 }

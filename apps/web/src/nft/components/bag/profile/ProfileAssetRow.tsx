@@ -1,10 +1,13 @@
+import { ButtonEmphasis, ButtonSize } from 'components/Button/buttons'
+import { Box } from 'components/deprecated/Box'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { RemoveAssetButton } from 'nft/components/bag/BagRow'
+import { Column, Row } from 'nft/components/Flex'
+import { RemoveAssetButton, RemoveButton } from 'nft/components/bag/BagRow'
+import * as styles from 'nft/components/bag/BagRow.css'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useState } from 'react'
-import { Button, Flex, Image, Text, TouchableAreaEvent } from 'ui/src'
 
 const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
   const removeAsset = useSellAsset((state) => state.removeSellAsset)
@@ -12,68 +15,33 @@ const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
   const [hovered, setHovered] = useState(false)
   const handleHover = () => setHovered(!hovered)
 
-  const handleRemoveAsset = (e: TouchableAreaEvent): void => {
+  const handleRemoveAsset: React.MouseEventHandler<HTMLElement> = (e) => {
     e.preventDefault()
     e.stopPropagation()
     removeAsset(asset)
   }
 
   return (
-    <Flex
-      row
-      px="$spacing12"
-      py="$spacing8"
-      gap="$gap12"
-      cursor="pointer"
-      borderRadius="$rounded12"
-      onMouseEnter={handleHover}
-      onMouseLeave={handleHover}
-      overflow="hidden"
-      hoverStyle={{ backgroundColor: '$surface3' }}
-    >
-      <Flex>
+    <Row className={styles.bagRow} onMouseEnter={handleHover} onMouseLeave={handleHover}>
+      <Box position="relative" display="flex">
         {isMobile && <RemoveAssetButton onClick={handleRemoveAsset} />}
-        <Image
-          src={asset.smallImageUrl}
-          alt={asset.name}
-          width={56}
-          height={56}
-          objectFit="cover"
-          borderRadius="$rounded8"
-        />
-      </Flex>
-      <Flex overflow="hidden" width="100%">
-        <Flex
-          row
-          overflow="hidden"
-          width="full"
-          justifyContent="space-between"
-          $platform-web={{ whiteSpace: 'nowrap' }}
-          gap="$spacing16"
-        >
-          <Text color="$neutral1" variant="body2">
-            {asset.name || `#${asset.tokenId}`}
-          </Text>
-        </Flex>
-        <Flex row overflow="hidden" $platform-web={{ whiteSpace: 'nowrap' }} gap="$spacing2">
-          <Text variant="body3" color="$neutral2" textOverflow="ellipsis" maxWidth="80%">
-            {asset.asset_contract.name}
-          </Text>
-          {asset.collectionIsVerified && <VerifiedIcon style={{ flexShrink: 0 }} />}
-        </Flex>
-      </Flex>
+        <img src={asset.smallImageUrl} alt={asset.name} className={styles.bagRowImage} />
+      </Box>
+      <Column overflow="hidden" width="full" color="neutral1">
+        <Row overflow="hidden" width="full" justifyContent="space-between" whiteSpace="nowrap" gap="16">
+          <Box className={styles.assetName}>{asset.name || `#${asset.tokenId}`}</Box>
+        </Row>
+        <Row overflow="hidden" whiteSpace="nowrap" gap="2">
+          <Box className={styles.collectionName}>{asset.asset_contract.name}</Box>
+          {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
+        </Row>
+      </Column>
       {hovered && !isMobile && (
-        <Button
-          size="small"
-          onPress={handleRemoveAsset}
-          right="$spacing16"
-          borderRadius="$rounded12"
-          position="absolute"
-        >
+        <RemoveButton onClick={handleRemoveAsset} emphasis={ButtonEmphasis.medium} size={ButtonSize.medium}>
           Remove
-        </Button>
+        </RemoveButton>
       )}
-    </Flex>
+    </Row>
   )
 }
 

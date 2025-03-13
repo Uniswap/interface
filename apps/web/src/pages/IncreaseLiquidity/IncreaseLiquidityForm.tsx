@@ -1,5 +1,6 @@
+// eslint-disable-next-line no-restricted-imports
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { ErrorCallout } from 'components/ErrorCallout'
+import { LoaderButton } from 'components/Button/LoaderButton'
 import {
   IncreaseLiquidityStep,
   useIncreaseLiquidityContext,
@@ -9,11 +10,13 @@ import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
+import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
-import { Button, Flex, Switch, Text } from 'ui/src'
+import { Flex, Switch, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 
 export function IncreaseLiquidityForm() {
@@ -166,25 +169,36 @@ export function IncreaseLiquidityForm() {
         networkCost={gasFeeEstimateUSD}
       />
       {fotErrorToken && (
-        <ErrorCallout
-          errorMessage={true}
-          title={t('token.safety.warning.fotLow.title')}
-          description={t('position.increase.fot', { token: fotErrorToken.currency.symbol })}
-        />
+        <Flex row gap="$gap12" backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
+          <Flex flexShrink={0}>
+            <AlertTriangleFilled size="$icon.20" color="$statusCritical" />
+          </Flex>
+          <Flex flex={1}>
+            <Text variant="body3" color="$statusCritical">
+              {t('token.safety.warning.fotLow.title')}
+            </Text>
+            <Text variant="body3" color="$neutral2">
+              <Trans
+                i18nKey="position.increase.fot"
+                values={{
+                  token: fotErrorToken.currency.symbol,
+                }}
+              />
+            </Text>
+          </Flex>
+        </Flex>
       )}
-      <ErrorCallout errorMessage={dataFetchingError} onPress={refetch} />
-      <Flex row>
-        <Button
-          isDisabled={Boolean(error) || !txInfo?.txRequest || Boolean(fotErrorToken)}
-          onPress={handleOnContinue}
-          loading={requestLoading}
-          variant="branded"
-          key="LoaderButton-animation-IncreaseLiquidity-continue"
-          size="large"
-        >
+      <TradingAPIError errorMessage={dataFetchingError} refetch={refetch} />
+      <LoaderButton
+        isDisabled={Boolean(error) || !txInfo?.txRequest || Boolean(fotErrorToken)}
+        onPress={handleOnContinue}
+        loading={requestLoading}
+        buttonKey="IncreaseLiquidity-continue"
+      >
+        <Text variant="buttonLabel1" color="$white">
           {error || t('common.add.label')}
-        </Button>
-      </Flex>
+        </Text>
+      </LoaderButton>
     </Flex>
   )
 }

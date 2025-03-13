@@ -97,7 +97,7 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
         icon={<TrashFilled color="$statusCritical" size="$icon.24" strokeWidth="$spacing2" />}
         nextButtonEnabled={removeButtonEnabled}
         nextButtonText={t('setting.recoveryPhrase.remove')}
-        nextButtonVariant="critical"
+        nextButtonTheme="detrimental_Button"
         subtitle={t('setting.recoveryPhrase.remove.subtitle')}
         title={t('setting.recoveryPhrase.remove.title')}
         onNextPressed={checkPassword}

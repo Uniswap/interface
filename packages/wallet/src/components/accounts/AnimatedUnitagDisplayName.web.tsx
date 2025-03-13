@@ -59,43 +59,46 @@ export function AnimatedUnitagDisplayName({
   const isLayoutReady = textWidth > 0
 
   return (
-    <Flex shrink cursor="pointer" onPress={isUnitag ? onPressUnitag : undefined}>
-      <AnimatePresence>
-        <Flex row>
-          <Text color="$neutral1" numberOfLines={1} variant="subheading1">
-            {displayName.name}
-          </Text>
+    <Flex row shrink cursor="pointer" onPress={isUnitag ? onPressUnitag : undefined}>
+      <Text color="$neutral1" numberOfLines={1} variant="subheading1">
+        {displayName.name}
+      </Text>
 
-          <Flex row animation="semiBouncy" ml={-textWidth} x={showUnitagSuffix ? textWidth : 0}>
-            {/*
+      <AnimatePresence>
+        <Flex row animation="semiBouncy" ml={-textWidth} x={showUnitagSuffix ? textWidth : 0}>
+          {/*
           We need to calculate this width in order to animate the suffix in and out,
           but we don't want the initial render to show the suffix nor use the space and push other elements to the right.
           So we set it to `position: absolute` on first render and then switch it to `relative` once we have the width.
           */}
-            <Flex position={isLayoutReady ? 'relative' : 'absolute'} onLayout={onTextLayout}>
-              <Text animation="semiBouncy" color="$neutral3" opacity={showUnitagSuffix ? 1 : 0} variant="subheading1">
-                {UNITAG_SUFFIX}
-              </Text>
-            </Flex>
-
-            {isUnitag ? (
-              <Flex animation="semiBouncy" pl="$spacing4">
-                <Unitag size={unitagIconSize} />
-              </Flex>
-            ) : null}
+          <Flex position={isLayoutReady ? 'relative' : 'absolute'} onLayout={onTextLayout}>
+            <Text animation="semiBouncy" color="$neutral3" opacity={showUnitagSuffix ? 1 : 0} variant="subheading1">
+              {UNITAG_SUFFIX}
+            </Text>
           </Flex>
-        </Flex>
 
-        {address && (
-          <TouchableArea hitSlop={20} testID={TestID.AccountHeaderCopyAddress} onPress={onPressCopyAddress}>
-            <Flex row alignItems="center" gap="$spacing4">
-              <Text color="$neutral3" numberOfLines={1} variant="body2">
-                {sanitizeAddressText(shortenAddress(address))}
-              </Text>
-              <CopyAlt color="$neutral3" size="$icon.16" />
+          {isUnitag ? (
+            <Flex animation="semiBouncy" pl="$spacing4">
+              <Unitag size={unitagIconSize} />
             </Flex>
-          </TouchableArea>
-        )}
+          ) : null}
+
+          {address && (
+            <TouchableArea
+              hitSlop={20}
+              pl="$spacing8"
+              testID={TestID.AccountHeaderCopyAddress}
+              onPress={onPressCopyAddress}
+            >
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text color="$neutral3" numberOfLines={1} variant="body2">
+                  {sanitizeAddressText(shortenAddress(address))}
+                </Text>
+                <CopyAlt color="$neutral3" size="$icon.16" />
+              </Flex>
+            </TouchableArea>
+          )}
+        </Flex>
       </AnimatePresence>
     </Flex>
   )

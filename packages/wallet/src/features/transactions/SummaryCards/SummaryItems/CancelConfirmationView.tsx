@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, FlexLoader, Separator, Skeleton, Text, isWeb } from 'ui/src'
+import { DeprecatedButton, Flex, FlexLoader, Separator, Skeleton, Text, isWeb } from 'ui/src'
 import { SlashCircle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
@@ -11,7 +11,7 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { useCancellationGasFeeInfo } from 'wallet/src/features/gas/hooks'
+import { useCancelationGasFeeInfo } from 'wallet/src/features/gas/hooks'
 import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
 
 export function CancelConfirmationView({
@@ -28,20 +28,20 @@ export function CancelConfirmationView({
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const cancellationGasFeeInfo = useCancellationGasFeeInfo(transactionDetails)
+  const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
   const { value: gasFeeUSD } = useUSDValueOfGasFee(
     transactionDetails.chainId,
-    cancellationGasFeeInfo?.gasFeeDisplayValue,
+    cancelationGasFeeInfo?.cancelationGasFeeDisplayValue,
   )
   const gasFee = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onCancelConfirm = useCallback(() => {
-    if (!cancellationGasFeeInfo?.cancelRequest) {
+    if (!cancelationGasFeeInfo?.cancelRequest) {
       return
     }
 
-    onCancel(cancellationGasFeeInfo.cancelRequest)
-  }, [cancellationGasFeeInfo, onCancel])
+    onCancel(cancelationGasFeeInfo.cancelRequest)
+  }, [cancelationGasFeeInfo, onCancel])
 
   const onPressCancel = useCallback(async () => {
     if (authTrigger) {
@@ -57,7 +57,7 @@ export function CancelConfirmationView({
     isUniswapX(transactionDetails)
 
   const disableConfirmationButton =
-    !cancellationGasFeeInfo?.cancelRequest || transactionDetails.status !== TransactionStatus.Pending || isRemoteOrder
+    !cancelationGasFeeInfo?.cancelRequest || transactionDetails.status !== TransactionStatus.Pending || isRemoteOrder
 
   return (
     <Flex
@@ -95,18 +95,20 @@ export function CancelConfirmationView({
         )}
       </Flex>
       <Flex row gap="$spacing8" width="100%">
-        <Button emphasis="secondary" onPress={onBack}>
+        <DeprecatedButton fill size="small" theme="tertiary" width="50%" onPress={onBack}>
           {t('common.button.back')}
-        </Button>
-        <Button
+        </DeprecatedButton>
+        <DeprecatedButton
+          fill
           isDisabled={disableConfirmationButton}
+          size="small"
           testID={TestID.Cancel}
-          variant="critical"
-          emphasis="secondary"
+          theme="detrimental"
+          width="50%"
           onPress={onPressCancel}
         >
           {t('common.button.confirm')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </Flex>
   )

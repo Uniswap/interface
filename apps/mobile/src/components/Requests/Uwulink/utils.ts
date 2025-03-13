@@ -19,7 +19,7 @@ import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 // This type must match the format in statsig dynamic config for uwulink
 // https://console.statsig.com/5HjUux4OvSGzgqWIfKFt8i/dynamic_configs/uwulink_config
-type UwULinkAllowlistItem = {
+export type UwULinkAllowlistItem = {
   chainId: number
   address: string
   name: string
@@ -29,7 +29,7 @@ type UwULinkAllowlistItem = {
   }
 }
 
-type UwULinkAllowlist = {
+export type UwULinkAllowlist = {
   contracts: UwULinkAllowlistItem[]
   tokenRecipients: UwULinkAllowlistItem[]
 }
@@ -80,7 +80,7 @@ export function useUwuLinkContractAllowlist(): UwULinkAllowlist {
   )
 }
 
-function findAllowedTokenRecipientForUwuLink(
+export function findAllowedTokenRecipientForUwuLink(
   request: UwULinkRequest,
   allowlist: UwULinkAllowlist,
 ): UwULinkAllowlistItem | undefined {
@@ -127,7 +127,7 @@ export function isAllowedUwuLinkRequest(request: UwULinkRequest, allowlist: UwUL
   return true
 }
 
-type HandleUwuLinkRequestParams = {
+export type HandleUwuLinkRequestParams = {
   request: UwULinkRequest
   activeAccount: Account
   allowList: UwULinkAllowlist

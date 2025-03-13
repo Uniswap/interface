@@ -30,6 +30,10 @@ export function setRouterState(next: RouterState): void {
   listeners.forEach((l) => l(next))
 }
 
+export function getRouterState(): RouterState | null {
+  return state
+}
+
 export function subscribeToRouterState(listener: RouterStateListener): () => void {
   listeners.add(listener)
 

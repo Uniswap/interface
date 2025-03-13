@@ -6,7 +6,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 
 export const ActivitySwitcherLoading = new Array(2)
   .fill(null)
-  .map((_, index) => <Flex className={styles.styledLoading} key={`ActivitySwitcherLoading-key-${index}`} />)
+  .map((_, index) => <div className={styles.styledLoading} key={`ActivitySwitcherLoading-key-${index}`} />)
 
 export const ActivitySwitcher = ({
   showActivity,

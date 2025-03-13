@@ -117,7 +117,7 @@ export default function ClaimPopup() {
               </ThemedText.DeprecatedSubHeader>
             </AutoColumn>
             <AutoColumn style={{ zIndex: 10 }} justify="center">
-              <Button variant="branded" fill={false} onPress={toggleClaimModal}>
+              <Button width="fit-content" onPress={toggleClaimModal}>
                 <Trans i18nKey="common.claimUnis" />
               </Button>
             </AutoColumn>

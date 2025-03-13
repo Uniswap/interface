@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Anchor, Button, ButtonEmphasis, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Anchor, DeprecatedButton, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -14,7 +14,7 @@ export interface ModalProps {
   title: string
   description: string
   buttonText: string
-  buttonEmphasis?: ButtonEmphasis
+  buttonTheme?: 'primary' | 'secondary' | 'tertiary'
   onButtonPress?: () => void
   linkText?: string
   linkUrl?: string
@@ -29,7 +29,7 @@ export function InfoModal({
   title,
   description,
   buttonText,
-  buttonEmphasis,
+  buttonTheme,
   onButtonPress,
   linkText,
   linkUrl,
@@ -60,11 +60,9 @@ export function InfoModal({
             {description}
           </Text>
         </Flex>
-        <Flex row alignSelf="stretch">
-          <Button size="medium" emphasis={buttonEmphasis} onPress={onButtonPress}>
-            {buttonText}
-          </Button>
-        </Flex>
+        <DeprecatedButton size="medium" theme={buttonTheme} width="100%" onPress={onButtonPress}>
+          {buttonText}
+        </DeprecatedButton>
         {linkText && linkUrl && (
           <Anchor href={linkUrl} lineHeight={16} p="$spacing12" target="_blank" textDecorationLine="none">
             <Text color="$neutral2" textAlign="center" variant="buttonLabel3">

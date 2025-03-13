@@ -8,7 +8,7 @@ import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreen
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -158,17 +158,9 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         </Flex>
       </Flex>
       <Trace logPress element={ElementName.Next}>
-        <Flex row>
-          <Button
-            isDisabled={!!errorMessage || !value}
-            size="large"
-            variant="branded"
-            testID={ElementName.Continue}
-            onPress={onSubmit}
-          >
-            {t('common.button.continue')}
-          </Button>
-        </Flex>
+        <DeprecatedButton isDisabled={!!errorMessage || !value} testID={ElementName.Continue} onPress={onSubmit}>
+          {t('common.button.continue')}
+        </DeprecatedButton>
       </Trace>
     </SafeKeyboardOnboardingScreen>
   )

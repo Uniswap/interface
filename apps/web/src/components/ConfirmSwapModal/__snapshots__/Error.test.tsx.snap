@@ -79,6 +79,78 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   opacity: 0.4;
 }
 
+.c17 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c14 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #22222212;
+  border-radius: 16px;
+  border: 0;
+  color: #222222;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 535;
+  gap: 12px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 16px;
+  padding: 8px;
+  position: relative;
+  -webkit-transition: 150ms ease opacity;
+  transition: 150ms ease opacity;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c14:active .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:focus .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:hover .c16 {
+  background-color: #98A1C014;
+}
+
+.c14:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.c14:disabled:active .c16,
+.c14:disabled:focus .c16,
+.c14:disabled:hover .c16 {
+  background-color: transparent;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -167,6 +239,19 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   -ms-letter-spacing: 0em;
   letter-spacing: 0em;
   text-align: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  height: 40px;
+  border-radius: 12px;
 }
 
 .c4 {
@@ -277,14 +362,12 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
             class="c10 c13"
           >
             <button
-              class=" is_Button  t_group_item"
-              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+              class="c14 c15"
             >
-              <span
-                class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
-              >
-                Try again
-              </span>
+              <div
+                class="c16 c17"
+              />
+              Try again
             </button>
           </div>
         </div>
@@ -376,6 +459,78 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   opacity: 0.4;
 }
 
+.c17 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c14 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #22222212;
+  border-radius: 16px;
+  border: 0;
+  color: #222222;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 535;
+  gap: 12px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 16px;
+  padding: 8px;
+  position: relative;
+  -webkit-transition: 150ms ease opacity;
+  transition: 150ms ease opacity;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c14:active .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:focus .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:hover .c16 {
+  background-color: #98A1C014;
+}
+
+.c14:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.c14:disabled:active .c16,
+.c14:disabled:focus .c16,
+.c14:disabled:hover .c16 {
+  background-color: transparent;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -464,6 +619,19 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   -ms-letter-spacing: 0em;
   letter-spacing: 0em;
   text-align: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  height: 40px;
+  border-radius: 12px;
 }
 
 .c4 {
@@ -574,14 +742,12 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
             class="c10 c13"
           >
             <button
-              class=" is_Button  t_group_item"
-              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+              class="c14 c15"
             >
-              <span
-                class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
-              >
-                Try again
-              </span>
+              <div
+                class="c16 c17"
+              />
+              Try again
             </button>
           </div>
         </div>
@@ -673,6 +839,78 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   opacity: 0.4;
 }
 
+.c17 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c14 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #22222212;
+  border-radius: 16px;
+  border: 0;
+  color: #222222;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 535;
+  gap: 12px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 16px;
+  padding: 8px;
+  position: relative;
+  -webkit-transition: 150ms ease opacity;
+  transition: 150ms ease opacity;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c14:active .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:focus .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:hover .c16 {
+  background-color: #98A1C014;
+}
+
+.c14:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.c14:disabled:active .c16,
+.c14:disabled:focus .c16,
+.c14:disabled:hover .c16 {
+  background-color: transparent;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -761,6 +999,19 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   -ms-letter-spacing: 0em;
   letter-spacing: 0em;
   text-align: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  height: 40px;
+  border-radius: 12px;
 }
 
 .c4 {
@@ -871,14 +1122,12 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
             class="c10 c13"
           >
             <button
-              class=" is_Button  t_group_item"
-              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+              class="c14 c15"
             >
-              <span
-                class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
-              >
-                Try again
-              </span>
+              <div
+                class="c16 c17"
+              />
+              Try again
             </button>
           </div>
         </div>
@@ -970,6 +1219,78 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   opacity: 0.4;
 }
 
+.c17 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c14 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #22222212;
+  border-radius: 16px;
+  border: 0;
+  color: #222222;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 535;
+  gap: 12px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 16px;
+  padding: 8px;
+  position: relative;
+  -webkit-transition: 150ms ease opacity;
+  transition: 150ms ease opacity;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c14:active .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:focus .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:hover .c16 {
+  background-color: #98A1C014;
+}
+
+.c14:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.c14:disabled:active .c16,
+.c14:disabled:focus .c16,
+.c14:disabled:hover .c16 {
+  background-color: transparent;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1058,6 +1379,19 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   -ms-letter-spacing: 0em;
   letter-spacing: 0em;
   text-align: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  height: 40px;
+  border-radius: 12px;
 }
 
 .c4 {
@@ -1168,14 +1502,12 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
             class="c10 c13"
           >
             <button
-              class=" is_Button  t_group_item"
-              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+              class="c14 c15"
             >
-              <span
-                class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
-              >
-                Try again
-              </span>
+              <div
+                class="c16 c17"
+              />
+              Try again
             </button>
           </div>
         </div>
@@ -1267,6 +1599,78 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   opacity: 0.4;
 }
 
+.c17 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c14 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #22222212;
+  border-radius: 16px;
+  border: 0;
+  color: #222222;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 535;
+  gap: 12px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 16px;
+  padding: 8px;
+  position: relative;
+  -webkit-transition: 150ms ease opacity;
+  transition: 150ms ease opacity;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c14:active .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:focus .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:hover .c16 {
+  background-color: #98A1C014;
+}
+
+.c14:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.c14:disabled:active .c16,
+.c14:disabled:focus .c16,
+.c14:disabled:hover .c16 {
+  background-color: transparent;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1355,6 +1759,19 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   -ms-letter-spacing: 0em;
   letter-spacing: 0em;
   text-align: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  height: 40px;
+  border-radius: 12px;
 }
 
 .c4 {
@@ -1501,14 +1918,12 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
             class="c10 c13"
           >
             <button
-              class=" is_Button  t_group_item"
-              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+              class="c14 c15"
             >
-              <span
-                class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
-              >
-                Try again
-              </span>
+              <div
+                class="c16 c17"
+              />
+              Try again
             </button>
           </div>
         </div>
@@ -1600,6 +2015,78 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   opacity: 0.4;
 }
 
+.c17 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c14 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #22222212;
+  border-radius: 16px;
+  border: 0;
+  color: #222222;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  font-size: 14px;
+  font-weight: 535;
+  gap: 12px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 16px;
+  padding: 8px;
+  position: relative;
+  -webkit-transition: 150ms ease opacity;
+  transition: 150ms ease opacity;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c14:active .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:focus .c16 {
+  background-color: #B8C0DC3d;
+}
+
+.c14:hover .c16 {
+  background-color: #98A1C014;
+}
+
+.c14:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.c14:disabled:active .c16,
+.c14:disabled:focus .c16,
+.c14:disabled:hover .c16 {
+  background-color: transparent;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1688,6 +2175,19 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   -ms-letter-spacing: 0em;
   letter-spacing: 0em;
   text-align: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  height: 40px;
+  border-radius: 12px;
 }
 
 .c4 {
@@ -1836,14 +2336,12 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
             class="c10 c13"
           >
             <button
-              class=" is_Button  t_group_item"
-              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+              class="c14 c15"
             >
-              <span
-                class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
-              >
-                Try again
-              </span>
+              <div
+                class="c16 c17"
+              />
+              Try again
             </button>
           </div>
         </div>

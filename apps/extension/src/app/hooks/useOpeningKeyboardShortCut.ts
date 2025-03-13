@@ -51,7 +51,7 @@ export const useOpeningKeyboardShortCut = (shortCutPressed: boolean): KeyboardKe
       : {
           fontSize: KEY_LONG_TEXT_FONT_SIZE,
           px: '$spacing12',
-          title: 'Ctrl',
+          title: 'Crtl',
           state: State.KeyUp,
         },
     { fontSize: KEY_SHORT_TEXT_FONT_SIZE, px: '$spacing24', title: 'U', state: State.KeyUp },

@@ -1,18 +1,24 @@
 import { useCallback } from 'react'
-import { Flex } from 'ui/src'
+import { useDispatch } from 'react-redux'
+import { Flex, Tooltip } from 'ui/src'
 import { easeInEaseOutLayoutAnimation } from 'ui/src/animations/layout/layoutAnimation'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
+import { useIsExtraLargeScreen } from 'ui/src/hooks/useDeviceDimensions'
 import { colors, iconSizes } from 'ui/src/theme'
+import { AnimatedNetworkLogo } from 'uniswap/src/components/CurrencyLogo/AnimatedNetworkLogo'
 import { NetworkLogo, SQUIRCLE_BORDER_RADIUS_RATIO } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { UnichainTooltip } from 'uniswap/src/components/TokenSelector/tooltips/UnichainNetworkTooltip'
 import {
   ActionSheetDropdown,
   ActionSheetDropdownStyleProps,
 } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { useNetworkOptions } from 'uniswap/src/components/network/hooks'
+import { setHasSeenNetworkSelectorTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isMobileApp } from 'utilities/src/platform'
+import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
+import { isInterface, isMobileApp } from 'utilities/src/platform'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
@@ -93,6 +99,15 @@ export function NetworkFilter({
   hideArrow = false,
 }: NetworkFilterProps): JSX.Element {
   const { defaultChainId } = useEnabledChains()
+  const dispatch = useDispatch()
+  const isExtraLargeScreen = useIsExtraLargeScreen()
+  const isXLInterface = isInterface && isExtraLargeScreen
+  const { shouldShowUnichainNetworkSelectorTooltip } = useUnichainTooltipVisibility()
+
+  // Desktop Web exclusive
+  const showUnichainPromoTooltip = isXLInterface && shouldShowUnichainNetworkSelectorTooltip
+  // Wallet and MWeb exclusive
+  const showUnichainPromoAnimation = !isXLInterface && shouldShowUnichainNetworkSelectorTooltip
 
   const onPress = useCallback(
     async (chainId: UniverseChainId | null) => {
@@ -102,9 +117,20 @@ export function NetworkFilter({
       }
 
       onPressChain(chainId)
+
+      if (shouldShowUnichainNetworkSelectorTooltip) {
+        dispatch(setHasSeenNetworkSelectorTooltip(true))
+      }
     },
-    [onPressChain],
+    [dispatch, onPressChain, shouldShowUnichainNetworkSelectorTooltip],
   )
+
+  const wrappedOnDismiss = useCallback(() => {
+    if (shouldShowUnichainNetworkSelectorTooltip) {
+      dispatch(setHasSeenNetworkSelectorTooltip(true))
+    }
+    onDismiss?.()
+  }, [dispatch, onDismiss, shouldShowUnichainNetworkSelectorTooltip])
 
   const networkOptions = useNetworkOptions({
     selectedChain,
@@ -114,22 +140,37 @@ export function NetworkFilter({
   })
 
   return (
-    <ActionSheetDropdown
-      options={networkOptions}
-      showArrow={!hideArrow}
-      styles={{
-        alignment: 'right',
-        buttonPaddingY: '$none',
-        ...styles,
-      }}
-      testID="chain-selector"
-      onDismiss={onDismiss}
-    >
-      {showUnsupportedConnectedChainWarning ? (
-        <AlertTriangle color="$neutral2" size={20} />
-      ) : (
-        <NetworkLogo chainId={selectedChain ?? (includeAllNetworks ? null : defaultChainId)} size={NETWORK_ICON_SIZE} />
-      )}
-    </ActionSheetDropdown>
+    <Tooltip placement="right" open={showUnichainPromoTooltip}>
+      <Tooltip.Trigger>
+        <ActionSheetDropdown
+          options={networkOptions}
+          showArrow={!hideArrow}
+          styles={{
+            alignment: 'right',
+            buttonPaddingY: '$none',
+            ...styles,
+          }}
+          testID="chain-selector"
+          onDismiss={wrappedOnDismiss}
+        >
+          {showUnsupportedConnectedChainWarning ? (
+            <AlertTriangle color="$neutral2" size={20} />
+          ) : showUnichainPromoAnimation ? (
+            <AnimatedNetworkLogo
+              promoChainId={UniverseChainId.Unichain}
+              size={NETWORK_ICON_SIZE}
+              selectedChain={selectedChain ?? (includeAllNetworks ? null : defaultChainId)}
+              includeAllNetworks={includeAllNetworks}
+            />
+          ) : (
+            <NetworkLogo
+              chainId={selectedChain ?? (includeAllNetworks ? null : defaultChainId)}
+              size={NETWORK_ICON_SIZE}
+            />
+          )}
+        </ActionSheetDropdown>
+      </Tooltip.Trigger>
+      <UnichainTooltip onPress={() => onPress(UniverseChainId.Unichain)} />
+    </Tooltip>
   )
 }

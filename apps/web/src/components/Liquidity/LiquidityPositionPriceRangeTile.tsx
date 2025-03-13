@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { Currency, Price } from '@uniswap/sdk-core'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/Liquidity/types'

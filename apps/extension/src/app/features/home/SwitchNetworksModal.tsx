@@ -4,7 +4,7 @@ import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { removeDappConnection, saveDappChain } from 'src/app/features/dapp/actions'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { PopupName, closePopup } from 'src/app/features/popups/slice'
-import { Anchor, Button, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
+import { Anchor, DeprecatedButton, Flex, Popover, Separator, Text, getTokenValue } from 'ui/src'
 import { Check, Power } from 'ui/src/components/icons'
 import { usePreventOverflowBelowFold } from 'ui/src/hooks/usePreventOverflowBelowFold'
 import { iconSizes } from 'ui/src/theme'
@@ -76,16 +76,16 @@ export function SwitchNetworksModal(): JSX.Element {
         {enabledChains.map((chain: UniverseChainId) => {
           return (
             <Popover.Close asChild>
-              {/* TODO(WALL-5883): Use new component */}
-              <TouchableArea
+              <DeprecatedButton
                 key={chain}
                 borderRadius="$rounded12"
-                hoverStyle={{ backgroundColor: '$surface2' }}
                 justifyContent="space-between"
-                p="$spacing8"
+                px="$spacing8"
+                py="$spacing8"
+                theme={null}
                 onPress={async (): Promise<void> => onNetworkClicked(chain)}
               >
-                <Flex grow row alignItems="center" justifyContent="space-between">
+                <Flex grow row alignItems="center" justifyContent="flex-start">
                   <Flex grow row alignItems="center" gap="$spacing8">
                     <NetworkLogo chainId={chain} size={iconSizes.icon20} />
                     <Text color="$neutral1" variant="subheading2">
@@ -98,18 +98,22 @@ export function SwitchNetworksModal(): JSX.Element {
                     </Flex>
                   ) : null}
                 </Flex>
-              </TouchableArea>
+              </DeprecatedButton>
             </Popover.Close>
           )
         })}
       </Flex>
 
       <Popover.Close asChild>
-        <Flex row>
-          <Button icon={<Power />} mt="$spacing8" size="small" emphasis="secondary" onPress={onDisconnect}>
-            {t('common.button.disconnect')}
-          </Button>
-        </Flex>
+        <DeprecatedButton mt="$spacing8" size="small" theme="tertiary" onPress={onDisconnect}>
+          <Flex centered row gap="$spacing8">
+            <Power color="$neutral1" size={getTokenValue('$icon.16')} />
+            {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}{' '}
+            <Text color="$neutral1" variant="buttonLabel2">
+              {t('common.button.disconnect')}
+            </Text>
+          </Flex>
+        </DeprecatedButton>
       </Popover.Close>
     </Flex>
   )

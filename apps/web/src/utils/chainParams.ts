@@ -1,6 +1,6 @@
 import { ParsedQs } from 'qs'
 import { useParams } from 'react-router-dom'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

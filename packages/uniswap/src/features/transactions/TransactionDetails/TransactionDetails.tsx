@@ -2,7 +2,7 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Button, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, DeprecatedButton, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnglesMaximize } from 'ui/src/components/icons/AnglesMaximize'
 import { AnglesMinimize } from 'ui/src/components/icons/AnglesMinimize'
@@ -170,7 +170,7 @@ export function TransactionDetails({
   )
 }
 
-export function ListSeparatorToggle({
+export const ListSeparatorToggle = ({
   onPress,
   isOpen,
   openText,
@@ -180,7 +180,7 @@ export function ListSeparatorToggle({
   isOpen?: boolean
   openText: string
   closedText: string
-}): JSX.Element {
+}): JSX.Element => {
   return (
     <Flex centered row gap="$spacing16" mb="$spacing16" px="$spacing12">
       <Separator />
@@ -222,13 +222,13 @@ const TransactionWarning = ({
   )
 }
 
-function ExpectedFailureBanner({
+const ExpectedFailureBanner = ({
   txFailureReasons,
   onSlippageEditPress,
 }: {
   txFailureReasons?: TransactionFailureReason[]
   onSlippageEditPress?: () => void
-}): JSX.Element {
+}): JSX.Element => {
   const { t } = useTranslation()
 
   const showSlippageWarning = txFailureReasons?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)
@@ -245,7 +245,7 @@ function ExpectedFailureBanner({
       p="$spacing12"
     >
       <Flex row justifyContent="flex-start" gap="$spacing12" alignItems="center">
-        <AlertTriangleFilled color="$statusWarning" size="$icon.20" />
+        <AlertTriangleFilled color="$DEP_accentWarning" size="$icon.20" />
         <Flex gap="$spacing4">
           <Text color="$statusWarning" variant="buttonLabel3">
             {t('swap.warning.expectedFailure.titleMay')}
@@ -262,22 +262,23 @@ function ExpectedFailureBanner({
   )
 }
 
-function SlippageEdit({
+const SlippageEdit = ({
   onWalletSlippageEditPress: onSlippageEditPress,
 }: {
   onWalletSlippageEditPress?: () => void
-}): JSX.Element {
+}): JSX.Element => {
   const { t } = useTranslation()
   const [showInterfaceSlippageSettings, setShowInterfaceSlippageSettings] = useState(false)
   const editButton = (
-    <Button
-      size="xxsmall"
-      emphasis="secondary"
-      fill={false}
+    <DeprecatedButton
+      fontSize="$micro"
+      size="small"
+      theme="secondary"
+      borderRadius="$rounded16"
       onPress={() => (isInterface ? setShowInterfaceSlippageSettings(true) : onSlippageEditPress?.())}
     >
       {t('common.button.edit')}
-    </Button>
+    </DeprecatedButton>
   )
 
   if (!isInterface) {

@@ -1,12 +1,23 @@
 import { forwardRef, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+// eslint-disable-next-line no-restricted-imports
 import type {
   LayoutChangeEvent,
   NativeSyntheticEvent,
   TextInput as NativeTextInput,
   TextInputFocusEventData,
 } from 'react-native'
-import { AnimatePresence, Flex, Input, InputProps, SpaceTokens, Text, TouchableArea, useComposedRefs } from 'ui/src'
+import {
+  AnimatePresence,
+  DeprecatedButton,
+  Flex,
+  Input,
+  InputProps,
+  SpaceTokens,
+  Text,
+  TouchableArea,
+  useComposedRefs,
+} from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -205,15 +216,23 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           <AnimatePresence>{endAdornment ? <Flex animation="quick">{endAdornment}</Flex> : null}</AnimatePresence>
           <AnimatePresence>
             {showCloseButton && (
-              <TouchableArea
+              <DeprecatedButton
                 animation="quick"
                 backgroundColor={backgroundColor}
                 enterStyle={{ opacity: 0, scale: 0 }}
                 exitStyle={{ opacity: 0, scale: 0 }}
+                icon={
+                  <RotatableChevron
+                    color="$neutral3"
+                    direction="up"
+                    height={iconSizes.icon20}
+                    width={iconSizes.icon20}
+                  />
+                }
+                p="$none"
+                theme="secondary"
                 onPress={onClose}
-              >
-                <RotatableChevron color="$neutral3" direction="up" height={iconSizes.icon20} width={iconSizes.icon20} />
-              </TouchableArea>
+              />
             )}
           </AnimatePresence>
         </Flex>

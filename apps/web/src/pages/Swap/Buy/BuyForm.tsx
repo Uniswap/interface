@@ -16,13 +16,11 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, styled } from 'ui/src'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
-import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOnRampEventName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -54,10 +52,9 @@ const PREDEFINED_AMOUNTS = [100, 300, 1000]
 
 type BuyFormProps = {
   disabled?: boolean
-  initialCurrency?: TradeableAsset | null
 }
 
-function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
+function BuyFormInner({ disabled }: BuyFormProps) {
   const account = useAccount()
   const { t } = useTranslation()
   const { convertToFiatAmount } = useFormatter()
@@ -90,31 +87,10 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
   useEffect(() => {
-    let supportedToken: Maybe<FiatOnRampCurrency>
-
-    if (initialCurrency) {
-      const supportedNativeToken = supportedTokens?.find(
-        (meldToken) =>
-          meldToken.currencyInfo?.currency.chainId === initialCurrency.chainId &&
-          meldToken.currencyInfo?.currency.isNative,
-      )
-      // Defaults the quote currency to the initial currency if supported
-      supportedToken =
-        supportedTokens?.find(
-          (meldToken) =>
-            meldToken.currencyInfo?.currency.chainId === initialCurrency.chainId &&
-            meldToken.currencyInfo?.currency.isToken &&
-            meldToken.currencyInfo?.currency.address === initialCurrency.address,
-        ) || supportedNativeToken
-    } else {
-      const quoteCurrencyCode = parsedQs.quoteCurrencyCode
-      if (quoteCurrencyCode) {
-        // Defaults the quote currency to the initial currency (from query params) if supported
-        supportedToken = supportedTokens?.find((meldToken) => meldToken.meldCurrencyCode === quoteCurrencyCode)
-      }
-    }
-
-    if (supportedToken) {
+    const quoteCurrencyCode = parsedQs.quoteCurrencyCode
+    const supportedToken = supportedTokens?.find((meldToken) => meldToken.meldCurrencyCode === quoteCurrencyCode)
+    // If currency code is specified and known to be supported, set it as the quote currency
+    if (quoteCurrencyCode && supportedToken) {
       setBuyFormState((state) => ({
         ...state,
         quoteCurrency: supportedToken,
@@ -131,7 +107,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
         quoteCurrency: supportedNativeToken,
       }))
     }
-  }, [account.chainId, parsedQs, initialCurrency, setBuyFormState, supportedTokens])
+  }, [account.chainId, parsedQs, setBuyFormState, supportedTokens])
 
   return (
     <Trace page={InterfacePageNameLocal.Buy} logImpression>
@@ -198,9 +174,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
             </Flex>
           </Flex>
         </InputWrapper>
-        <Flex row>
-          <BuyFormButton />
-        </Flex>
+        <BuyFormButton />
       </Flex>
       {supportedTokens && Boolean(supportedTokens?.length) && (
         <FiatOnRampCurrencyModal

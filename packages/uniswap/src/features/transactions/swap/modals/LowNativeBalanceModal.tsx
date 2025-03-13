@@ -40,6 +40,8 @@ export function LowNativeBalanceModal({ isOpen, onClose, onAcknowledge }: LowNat
       severity={WarningSeverity.Low}
       title={t('transaction.warning.maxNative.title')}
       rejectText={t('common.button.back')}
+      rejectButtonTheme="tertiary"
+      acknowledgeButtonTheme="primary"
       onAcknowledge={handleOnAcknowledge}
       onClose={onClose}
       onReject={onClose}

@@ -1,7 +1,7 @@
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { HelpCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -48,12 +48,30 @@ export default function ResetCreatePositionFormModal({
           </Text>
         </Flex>
         <Flex row gap="$spacing8" width="100%" mt="$spacing8">
-          <Button size="small" emphasis="secondary" onPress={onClose}>
-            {t('common.button.cancel')}
-          </Button>
-          <Button size="small" onPress={handleReset}>
-            {t('common.button.reset')}
-          </Button>
+          <DeprecatedButton theme="secondary" borderRadius="12px" py="$spacing8" flex={1} onPress={onClose}>
+            <Text variant="buttonLabel3" color="$neutralContrast">
+              {t('common.button.cancel')}
+            </Text>
+          </DeprecatedButton>
+          <DeprecatedButton
+            theme="tertiary"
+            py="$spacing8"
+            backgroundColor="$accent3"
+            borderRadius="12px"
+            hoverStyle={{
+              backgroundColor: undefined,
+              opacity: 0.8,
+            }}
+            pressStyle={{
+              backgroundColor: undefined,
+            }}
+            flex={1}
+            onPress={handleReset}
+          >
+            <Text variant="buttonLabel3" color="$surface1">
+              {t('common.button.reset')}
+            </Text>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

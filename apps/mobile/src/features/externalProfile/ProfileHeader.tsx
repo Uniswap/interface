@@ -170,11 +170,12 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
               showIconBackground
               showIconBorder
               address={address}
-              alignItems="flex-start"
               captionTextColor="$neutral3"
               captionVariant="body3"
+              contentAlign="flex-start"
               direction="column"
               size={HEADER_ICON_SIZE}
+              textAlign="flex-start"
               variant="heading3"
             />
             {bio ? <LongText color={colors.neutral2.val} initialDisplayedLines={2} text={bio} /> : null}

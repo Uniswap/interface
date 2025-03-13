@@ -1,8 +1,8 @@
+/* eslint-disable-next-line no-restricted-imports */
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { DropdownSelector } from 'components/DropdownSelector'
-import { ErrorCallout } from 'components/ErrorCallout'
 import { getProtocolVersionLabel, parseProtocolVersion } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import {
@@ -24,6 +24,7 @@ import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep, SelectPriceRangeStepV2 } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import ResetCreatePositionFormModal from 'pages/Pool/Positions/create/ResetCreatePositionsFormModal'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
+import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { useInitialPoolInputs } from 'pages/Pool/Positions/create/hooks'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
@@ -34,7 +35,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
-import { Button, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
@@ -126,8 +127,8 @@ function CreatePositionInner() {
         <Container>
           {v2Selected ? <SelectPriceRangeStepV2 /> : <SelectPriceRangeStep />}
           <CreatingPoolInfo />
-          <DepositStep />
-          <ErrorCallout errorMessage={error} onPress={refetch} />
+          <DepositStep autofocus={false} />
+          <TradingAPIError errorMessage={error} refetch={refetch} />
         </Container>
       </Trace>
     )
@@ -139,7 +140,7 @@ function CreatePositionInner() {
       <Container>
         <DepositStep />
       </Container>
-      <ErrorCallout errorMessage={error} onPress={refetch} />
+      <TradingAPIError errorMessage={error} refetch={refetch} />
     </Trace>
   )
 }
@@ -199,9 +200,24 @@ interface ResetProps {
 const ResetButton = ({ onClickReset, isDisabled }: ResetProps) => {
   const { t } = useTranslation()
   return (
-    <Button size="xsmall" emphasis="tertiary" onPress={onClickReset} isDisabled={isDisabled} icon={<RotateLeft />}>
-      {t('common.button.reset')}
-    </Button>
+    <DeprecatedButton
+      theme="tertiary"
+      py="10px"
+      px="$spacing12"
+      backgroundColor="$surface1"
+      borderRadius="$rounded12"
+      borderColor="$surface3"
+      borderWidth="$spacing1"
+      gap="$gap4"
+      onPress={onClickReset}
+      isDisabled={isDisabled}
+      flex={1}
+    >
+      <RotateLeft size={iconSizes.icon16} color="$neutral1" />
+      <Text variant="buttonLabel3" lineHeight="16px">
+        {t('common.button.reset')}
+      </Text>
+    </DeprecatedButton>
   )
 }
 
@@ -310,7 +326,7 @@ const Toolbar = ({
   )
 
   return (
-    <Flex>
+    <div>
       <ResetCreatePositionFormModal
         isOpen={showResetModal}
         onClose={() => setShowResetModal(false)}
@@ -353,7 +369,7 @@ const Toolbar = ({
           />
         </Flex>
       </ToolbarContainer>
-    </Flex>
+    </div>
   )
 }
 

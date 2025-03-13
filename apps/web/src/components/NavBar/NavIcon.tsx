@@ -4,9 +4,10 @@ import { Flex, Text, TouchableArea, styled } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 
 const Container = styled(Flex, {
+  animation: 'fast',
   position: 'relative',
   centered: true,
-  backgroundColor: '$transparent',
+  backgroundColor: '$surface1',
   borderWidth: '$none',
   borderRadius: '$roundedFull',
   zIndex: zIndexes.default,
@@ -32,7 +33,7 @@ export const NavIcon = ({ children, isActive = false, size = 40, label, onClick 
 
   return (
     <TouchableArea onPress={onClick} aria-label={labelWithDefault}>
-      <Container width={size} height={size} active={isActive} style={{ transition: 'background-color 0.1s' }}>
+      <Container width={size} height={size} active={isActive}>
         <Text color="$neutral2" textAlign="center" lineHeight={12}>
           {children}
         </Text>

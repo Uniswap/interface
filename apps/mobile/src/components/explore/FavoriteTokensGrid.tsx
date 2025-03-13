@@ -6,13 +6,15 @@ import type { SortableGridDragEndCallback, SortableGridRenderItem } from 'react-
 import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
-import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
-import { getTokenValue } from 'ui/src'
+import FavoriteTokenCard, { FAVORITE_TOKEN_CARD_LOADER_HEIGHT } from 'src/components/explore/FavoriteTokenCard'
+import { Loader } from 'src/components/loading/loaders'
+import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { setFavoriteTokens } from 'uniswap/src/features/favorites/slice'
 
 const NUM_COLUMNS = 2
+const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
 
 type FavoriteTokensGridProps = {
   showLoading: boolean
@@ -42,20 +44,12 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
-    ({ item: currencyId }): JSX.Element => {
-      return (
-        <FavoriteTokenCard
-          showLoading={showLoading}
-          currencyId={currencyId}
-          isEditing={isEditing}
-          setIsEditing={setIsEditing}
-        />
-      )
-    },
-    [isEditing, showLoading],
+    ({ item: currencyId }): JSX.Element => (
+      <FavoriteTokenCard currencyId={currencyId} isEditing={isEditing} setIsEditing={setIsEditing} />
+    ),
+    [isEditing],
   )
 
-  const GRID_GAP = getTokenValue('$spacing8')
   return (
     <Sortable.Layer>
       <AnimatedFlex entering={FadeIn}>
@@ -66,20 +60,35 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
           title={t('explore.tokens.favorite.title.default')}
           onPress={(): void => setIsEditing(!isEditing)}
         />
-        <Sortable.Grid
-          {...rest}
-          animateHeight
-          scrollableRef={listRef}
-          data={favoriteCurrencyIds}
-          sortEnabled={isEditing}
-          autoScrollActivationOffset={[75, 100]}
-          columns={NUM_COLUMNS}
-          renderItem={renderItem}
-          rowGap={GRID_GAP}
-          columnGap={GRID_GAP}
-          onDragEnd={handleDragEnd}
-        />
+        {showLoading ? (
+          <FavoriteTokensGridLoader />
+        ) : (
+          <Sortable.Grid
+            {...rest}
+            animateHeight
+            scrollableRef={listRef}
+            data={favoriteCurrencyIds}
+            sortEnabled={isEditing}
+            autoScrollActivationOffset={[75, 100]}
+            columns={NUM_COLUMNS}
+            renderItem={renderItem}
+            onDragEnd={handleDragEnd}
+          />
+        )}
       </AnimatedFlex>
     </Sortable.Layer>
+  )
+}
+
+function FavoriteTokensGridLoader(): JSX.Element {
+  return (
+    <Flex row>
+      <Flex mx="$spacing4" style={ITEM_FLEX}>
+        <Loader.Favorite contrast height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
+      </Flex>
+      <Flex mx="$spacing4" style={ITEM_FLEX}>
+        <Loader.Favorite contrast height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
+      </Flex>
+    </Flex>
   )
 }

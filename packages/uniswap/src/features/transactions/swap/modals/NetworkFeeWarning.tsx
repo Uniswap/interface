@@ -145,6 +145,7 @@ function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: Format
       {approvalFeeFormatted && (
         <Flex row justifyContent="space-between" width="100%">
           <Text color="$neutral2" variant="body4">
+            {/* FIXME: Verify WALL-5906 */}
             {t('swap.warning.networkFee.allow', { inputTokenSymbol: inputTokenSymbol ?? '' })}
           </Text>
           <Text variant="body4">{approvalFeeFormatted}</Text>

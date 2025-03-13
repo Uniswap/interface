@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -767,7 +768,7 @@ export function getV4PriceRangeInfo({
   positionState: PositionState
   derivedPositionInfo: CreateV4PositionInfo
 }): V4PriceRangeInfo {
-  const { fee, hook, initialPosition } = positionState
+  const { fee, hook } = positionState
   const { protocolVersion, currencies, pool } = derivedPositionInfo
 
   const sortedCurrencies = getSortedCurrenciesTuple(currencies[0], currencies[1])
@@ -797,26 +798,23 @@ export function getV4PriceRangeInfo({
   })
 
   const poolForPosition = pool ?? mockPool
-  const tickSpaceLimits: [OptionalNumber, OptionalNumber] =
-    initialPosition?.tickLower && initialPosition?.tickUpper
-      ? [initialPosition.tickLower, initialPosition.tickUpper]
-      : [
-          poolForPosition ? nearestUsableTick(TickMath.MIN_TICK, poolForPosition.tickSpacing) : undefined,
-          poolForPosition ? nearestUsableTick(TickMath.MAX_TICK, poolForPosition.tickSpacing) : undefined,
-        ]
+  const tickSpaceLimits: [OptionalNumber, OptionalNumber] = [
+    poolForPosition ? nearestUsableTick(TickMath.MIN_TICK, poolForPosition.tickSpacing) : undefined,
+    poolForPosition ? nearestUsableTick(TickMath.MAX_TICK, poolForPosition.tickSpacing) : undefined,
+  ]
 
   const invertPrice = Boolean(baseCurrency && sortedCurrency0 && !baseCurrency.equals(sortedCurrency0))
   const [baseRangeInput, quoteRangeInput] = invertPrice
     ? [state.maxPrice, state.minPrice]
     : [state.minPrice, state.maxPrice]
   const lowerTick =
-    baseRangeInput === '' || initialPosition?.isOutOfRange
+    baseRangeInput === ''
       ? tickSpaceLimits[0]
       : invertPrice
         ? tryParseV4Tick(sortedCurrency1, sortedCurrency0, state.maxPrice, poolForPosition?.tickSpacing)
         : tryParseV4Tick(sortedCurrency0, sortedCurrency1, state.minPrice, poolForPosition?.tickSpacing)
   const upperTick =
-    quoteRangeInput === '' || initialPosition?.isOutOfRange
+    quoteRangeInput === ''
       ? tickSpaceLimits[1]
       : invertPrice
         ? tryParseV4Tick(sortedCurrency1, sortedCurrency0, state.minPrice, poolForPosition?.tickSpacing)

@@ -1,12 +1,10 @@
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import {
   AnimatePresence,
-  Flex,
   FlexProps,
   Text,
-  VisuallyHidden,
   WebBottomSheet,
   styled,
   useMedia,
@@ -26,35 +24,12 @@ const DropdownContent = styled(Text, {
   borderRadius: '$rounded12',
   p: '$spacing8',
   fontSize: 16,
+  position: 'absolute',
   zIndex: zIndexes.dropdown,
   animation: 'fastHeavy',
   '$platform-web': { overflow: 'auto' },
-  variants: {
-    positionRight: {
-      true: {
-        right: 0,
-        left: 'unset',
-      },
-      false: {
-        right: 'unset',
-        left: 0,
-      },
-    },
-    positionTop: {
-      true: {
-        top: 'unset',
-        bottom: 'calc(100% + 10px)',
-        enterStyle: { opacity: 0, y: 20 },
-        exitStyle: { opacity: 0, y: 20 },
-      },
-      false: {
-        bottom: 'unset',
-        top: 'calc(100% + 10px)',
-        enterStyle: { opacity: 0, y: -20 },
-        exitStyle: { opacity: 0, y: -20 },
-      },
-    },
-  },
+  enterStyle: { opacity: 0, y: -20 },
+  exitStyle: { opacity: 0, y: -20 },
 })
 
 const DropdownContainer = styled(Text, {
@@ -66,22 +41,17 @@ const DropdownContainer = styled(Text, {
   width: '100%',
 })
 
-export interface SharedDropdownProps {
+interface AdaptiveDropdownProps {
   isOpen: boolean
   toggleOpen: (open: boolean) => void
+  trigger: JSX.Element
   dropdownTestId?: string
   adaptToSheet?: boolean
   tooltipText?: string
   dropdownStyle?: FlexProps
   containerStyle?: React.CSSProperties
   alignRight?: boolean
-  allowFlip?: boolean
-  positionFixed?: boolean // used to determine if fixed dropdown should be flipped
   children: JSX.Element | JSX.Element[]
-}
-
-type AdaptiveDropdownProps = SharedDropdownProps & {
-  trigger: JSX.Element
 }
 
 export function AdaptiveDropdown({
@@ -94,50 +64,17 @@ export function AdaptiveDropdown({
   dropdownStyle,
   containerStyle,
   alignRight,
-  allowFlip,
-  positionFixed,
   children,
 }: AdaptiveDropdownProps) {
   const node = useRef<HTMLDivElement | null>(null)
-  const dropdownNode = useRef<HTMLDivElement | null>(null)
   useOnClickOutside(node, () => isOpen && toggleOpen(false))
   const scrollbarStyles = useScrollbarStyles()
   const shadowProps = useShadowPropsMedium()
   const media = useMedia()
   const isSheet = !!adaptToSheet && media.sm
-  const [flipVertical, setFlipVertical] = useState(false)
-
-  useEffect(() => {
-    if (isOpen && allowFlip && !isSheet) {
-      if (dropdownNode.current && node.current) {
-        const rect = node.current.getBoundingClientRect()
-        const verticalPageOffset = rect.height + rect.top + 15
-        const dropdownContainerHeight = positionFixed ? window.innerHeight : document.body.offsetHeight
-        setFlipVertical(dropdownNode.current.offsetHeight + verticalPageOffset > dropdownContainerHeight)
-      }
-    }
-  }, [isOpen, allowFlip, dropdownNode, node, positionFixed, isSheet])
 
   return (
     <>
-      {!isSheet && (
-        <VisuallyHidden>
-          <Flex ref={dropdownNode}>
-            {/* hidden node cannot be position absolute or else height will register as 0 */}
-            <DropdownContent
-              animation="fastHeavy"
-              {...dropdownStyle}
-              {...shadowProps}
-              style={scrollbarStyles}
-              positionRight={alignRight}
-              positionTop={false}
-            >
-              {children}
-            </DropdownContent>
-          </Flex>
-        </VisuallyHidden>
-      )}
-      {/* eslint-disable-next-line react/forbid-elements */}
       <div ref={node} style={{ width: '100%', ...containerStyle }}>
         <DropdownContainer>
           <MouseoverTooltip
@@ -157,9 +94,9 @@ export function AdaptiveDropdown({
                 {...dropdownStyle}
                 {...shadowProps}
                 style={scrollbarStyles}
-                positionRight={alignRight}
-                positionTop={flipVertical}
-                position="absolute"
+                right={alignRight ? 0 : 'unset'}
+                left={!alignRight ? 0 : 'unset'}
+                top="calc(100% + 20px)"
               >
                 {children}
               </DropdownContent>

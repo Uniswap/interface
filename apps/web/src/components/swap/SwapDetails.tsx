@@ -2,8 +2,9 @@ import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { ReactComponent as ExpandoIconClosed } from 'assets/svg/expando-icon-closed.svg'
 import { ReactComponent as ExpandoIconOpened } from 'assets/svg/expando-icon-opened.svg'
+import { ButtonError, SmallButtonPrimary } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
-import { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
+import Row, { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import SwapLineItem, { SwapLineItemType } from 'components/swap/SwapLineItem'
 import { SwapCallbackError, SwapShowAcceptChanges } from 'components/swap/styled'
@@ -14,11 +15,12 @@ import ms from 'ms'
 import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
+import { Text } from 'rebass'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
 import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
-import { Button, Flex, HeightAnimator } from 'ui/src'
+import { Flex, HeightAnimator, SpinningLoader } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
@@ -31,6 +33,10 @@ const DetailsContainer = styled(Column)`
 const StyledAlertTriangle = styled(AlertTriangle)`
   margin-right: 8px;
   min-width: 24px;
+`
+
+const ConfirmButton = styled(ButtonError)`
+  height: 56px;
 `
 
 const DropdownControllerWrapper = styled.div`
@@ -170,11 +176,9 @@ export function SwapDetails({
                 <Trans i18nKey="common.priceUpdated" />
               </ThemedText.DeprecatedMain>
             </RowFixed>
-            <Flex>
-              <Button size="small" variant="branded" onPress={onAcceptChanges}>
-                <Trans i18nKey="common.accept" />
-              </Button>
-            </Flex>
+            <SmallButtonPrimary onClick={onAcceptChanges}>
+              <Trans i18nKey="common.accept" />
+            </SmallButtonPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : (
@@ -198,16 +202,24 @@ export function SwapDetails({
               ...analyticsContext,
             }}
           >
-            <Button
-              variant="branded"
+            <ConfirmButton
               data-testid="confirm-swap-button"
-              loading={isLoading}
-              onPress={onConfirm}
-              isDisabled={disabledConfirm}
+              onClick={onConfirm}
+              disabled={disabledConfirm}
+              $borderRadius="12px"
               id={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             >
-              {isLoading ? t('swap.finalizingQuote') : callToAction.buttonText}
-            </Button>
+              {isLoading ? (
+                <ThemedText.HeadlineSmall color="neutral2">
+                  <Row gap="8px">
+                    <SpinningLoader />
+                    <Trans i18nKey="swap.finalizingQuote" />
+                  </Row>
+                </ThemedText.HeadlineSmall>
+              ) : (
+                <Text fontSize={20}>{callToAction.buttonText}</Text>
+              )}
+            </ConfirmButton>
             {callToAction.helpLink && (
               <HelpLink href={callToAction.helpLink.url}>{callToAction.helpLink.text}</HelpLink>
             )}

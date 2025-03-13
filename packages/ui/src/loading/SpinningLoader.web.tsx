@@ -18,22 +18,10 @@ const rotateCSS = `
   }
 `
 
-export function SpinningLoader({ size = 20, disabled, color, unstyled }: SpinningLoaderProps): JSX.Element {
+export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderProps): JSX.Element {
   if (disabled) {
     return <EmptySpinner color="$neutral3" size={size} />
   }
-
-  if (unstyled) {
-    return (
-      <>
-        <style>{rotateCSS}</style>
-        <Flex className="RotateElement">
-          <CircleSpinner color={color} size={size} />
-        </Flex>
-      </>
-    )
-  }
-
   return (
     <>
       <style>{rotateCSS}</style>

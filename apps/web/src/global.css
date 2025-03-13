@@ -2,24 +2,6 @@
    things go here, but stuff like keyframe CSS animations that Tamagui doesn't
    support can be added here. Be sure to try `$platform-web` style prop first as
    that should avoid needing to add here.  */
-html {
-  overscroll-behavior: none;
-  overflow-x: hidden;
-  ::-webkit-scrollbar {
-    background-color: transparent;
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    width: 8px;
-    background-color: gray;
-  }
-  scrollbar-width: thin;
-  scrollbar-color: gray transparent;
-}
 
 .text-wrap-pretty {
   text-wrap: pretty;
@@ -56,14 +38,6 @@ html {
   100% {
     transform: rotate(22deg);
   }
-}
-
-.layout-animation-ease-in-ease-out * {
-  transition: all 0.3s ease-in-out;
-}
-
-.layout-animation-linear * {
-  transition: all 0.5s linear;
 }
 
 .scrollbar-hidden {

@@ -21,7 +21,7 @@ export type ExtensionResponse = z.infer<typeof ExtensionResponseSchema>
 export const isValidExtensionResponse = (response: unknown): response is ExtensionResponse =>
   ExtensionResponseSchema.safeParse(response).success
 
-const WindowEthereumRequestSchema = z.object({
+export const WindowEthereumRequestSchema = z.object({
   method: z.string(),
   params: z.any(),
   requestId: z.string(),
@@ -31,17 +31,17 @@ export type WindowEthereumRequest = z.infer<typeof WindowEthereumRequestSchema>
 export const isValidWindowEthereumRequest = (request: unknown): request is WindowEthereumRequest =>
   WindowEthereumRequestSchema.safeParse(request).success
 
-const ContentScriptToProxyEmissionSchema = z.object({
+export const ContentScriptToProxyEmissionSchema = z.object({
   emitKey: z.string(),
   emitValue: z.any(),
 })
 
-type ContentScriptToProxyEmission = z.infer<typeof ContentScriptToProxyEmissionSchema>
+export type ContentScriptToProxyEmission = z.infer<typeof ContentScriptToProxyEmissionSchema>
 
 export const isValidContentScriptToProxyEmission = (request: unknown): request is ContentScriptToProxyEmission =>
   ContentScriptToProxyEmissionSchema.safeParse(request).success
 
-const WindowEthereumConfigRequestSchema = z.object({
+export const WindowEthereumConfigRequestSchema = z.object({
   type: z.literal(ETH_PROVIDER_CONFIG.REQUEST),
 })
 
@@ -50,7 +50,7 @@ export type WindowEthereumConfigRequest = z.infer<typeof WindowEthereumConfigReq
 export const isValidWindowEthereumConfigRequest = (request: unknown): request is WindowEthereumConfigRequest =>
   WindowEthereumConfigRequestSchema.safeParse(request).success
 
-const WindowEthereumConfigResponseSchema = z.object({
+export const WindowEthereumConfigResponseSchema = z.object({
   type: z.literal(ETH_PROVIDER_CONFIG.RESPONSE),
   config: z.object({
     isDefaultProvider: z.boolean(),

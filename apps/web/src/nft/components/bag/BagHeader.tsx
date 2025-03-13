@@ -3,8 +3,19 @@ import styled from 'lib/styled-components'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { Button } from 'ui/src'
+import { ButtonText, ThemedText } from 'theme/components'
+
+const ClearButton = styled(ButtonText)`
+  color: ${({ theme }) => theme.neutral2};
+  cursor: pointer;
+  font-weight: 535;
+  font-size: 14px;
+  line-height: 16px;
+
+  :active {
+    text-decoration: none;
+  }
+`
 
 const IconWrapper = styled.button`
   align-items: center;
@@ -73,9 +84,9 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
       {numberOfAssets > 0 && (
         <>
           <CounterDot sizing={sizing}>{numberOfAssets}</CounterDot>
-          <Button fill={false} emphasis="text-only" onPress={resetFlow}>
+          <ClearButton onClick={resetFlow}>
             <Trans i18nKey="tokens.selector.button.clear" />
-          </Button>
+          </ClearButton>
         </>
       )}
       <IconWrapper onClick={closeBag}>

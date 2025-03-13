@@ -140,7 +140,6 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                   })
                   sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                     ...eventProperties,
-                    transaction_hash: txReceipt.hash,
                     type: WrapType.Wrap,
                   })
                   return txReceipt.hash
@@ -175,7 +174,6 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     })
                     sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                       ...eventProperties,
-                      transaction_hash: txReceipt.hash,
                       type: WrapType.Unwrap,
                     })
                     return txReceipt.hash

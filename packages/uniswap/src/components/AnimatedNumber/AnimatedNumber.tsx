@@ -1,5 +1,6 @@
 import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
 import { useEffect, useMemo, useRef, useState } from 'react'
+// eslint-disable-next-line no-restricted-imports
 import type { LayoutChangeEvent, TextStyle, ViewStyle } from 'react-native'
 import Animated, {
   useAnimatedStyle,

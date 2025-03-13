@@ -9,7 +9,7 @@ import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorage
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { openSettings } from 'src/utils/linking'
-import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
@@ -257,10 +257,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   return (
     <Flex $short={{ pb: '$none' }} maxHeight={fullScreenContentHeight} pb="$spacing12">
-      <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12" mx="$spacing12">
+      <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12">
         <AddressDisplay
           showCopy
-          centered
           address={activeAccountAddress}
           direction="column"
           horizontalGap="$spacing8"
@@ -268,10 +267,10 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           size={spacing.spacing60 - spacing.spacing4}
           variant="subheading1"
         />
-        <Flex row px="$spacing24">
-          <Button size="small" testID={TestID.WalletSettings} emphasis="secondary" onPress={onManageWallet}>
+        <Flex px="$spacing24">
+          <DeprecatedButton size="small" testID={TestID.WalletSettings} theme="secondary" onPress={onManageWallet}>
             {t('account.wallet.button.manage')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
       <Flex maxHeight={fullScreenContentHeight / 2}>

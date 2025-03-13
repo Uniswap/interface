@@ -1,7 +1,6 @@
 import { act, fireEvent } from '@testing-library/react-native'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { View } from 'react-native'
-import { Flex } from 'ui/src'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { renderWithProviders } from 'uniswap/src/test/render'
 
@@ -21,7 +20,7 @@ describe('ContextMenu', () => {
   it('renders without error', () => {
     const tree = renderWithProviders(
       <ContextMenu menuItems={mockMenuItems}>
-        <Flex>Trigger</Flex>
+        <div>Trigger</div>
       </ContextMenu>,
     )
 
@@ -33,7 +32,7 @@ describe('ContextMenu', () => {
       const { getByTestId, queryByText } = renderWithProviders(
         <ContextMenu menuItems={mockMenuItems}>
           <View testID="trigger">
-            <Flex>Trigger</Flex>
+            <div>Trigger</div>
           </View>
         </ContextMenu>,
       )
@@ -57,7 +56,7 @@ describe('ContextMenu', () => {
       const { getByTestId, queryByText } = renderWithProviders(
         <ContextMenu menuItems={mockMenuItems} onLeftClick>
           <View testID="trigger">
-            <Flex>Trigger</Flex>
+            <div>Trigger</div>
           </View>
         </ContextMenu>,
       )
@@ -82,7 +81,7 @@ describe('ContextMenu', () => {
       const { getByTestId, queryByRole } = renderWithProviders(
         <ContextMenu menuItems={[]}>
           <View testID="trigger">
-            <Flex>Trigger</Flex>
+            <div>Trigger</div>
           </View>
         </ContextMenu>,
       )
@@ -101,7 +100,7 @@ describe('ContextMenu', () => {
       const { queryByRole } = renderWithProviders(
         <ContextMenu menuItems={mockMenuItems}>
           <View testID="trigger">
-            <Flex>Trigger</Flex>
+            <div>Trigger</div>
           </View>
         </ContextMenu>,
       )

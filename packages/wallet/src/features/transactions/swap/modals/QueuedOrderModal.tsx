@@ -2,7 +2,7 @@ import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, Separator, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { DeprecatedButton, Flex, Separator, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
@@ -113,22 +113,20 @@ export function QueuedOrderModal(): JSX.Element | null {
           <Separator />
           <SwapTransactionDetails disableClick={isMobileApp} typeInfo={currentFailedOrder.typeInfo} />
           <Flex gap="$spacing8" row={isWeb}>
-            <Flex row>
-              <Button
-                isDisabled={!transactionState}
-                variant="branded"
-                {...platformButtonStyling}
-                size={buttonSize}
-                onPress={onRetry}
-              >
+            <DeprecatedButton
+              isDisabled={!transactionState}
+              theme="primary"
+              {...platformButtonStyling}
+              size={buttonSize}
+              onPress={onRetry}
+            >
+              <Text color="$white" variant="buttonLabel2">
                 {t('common.button.retry')}
-              </Button>
-            </Flex>
-            <Flex row>
-              <Button {...platformButtonStyling} size={buttonSize} emphasis="secondary" onPress={onCancel}>
-                {t('common.button.cancel')}
-              </Button>
-            </Flex>
+              </Text>
+            </DeprecatedButton>
+            <DeprecatedButton {...platformButtonStyling} size={buttonSize} theme="secondary" onPress={onCancel}>
+              <Text variant="buttonLabel2">{t('common.button.cancel')}</Text>
+            </DeprecatedButton>
           </Flex>
         </Flex>
       </Modal>

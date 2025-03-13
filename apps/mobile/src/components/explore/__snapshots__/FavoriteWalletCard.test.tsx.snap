@@ -171,12 +171,14 @@ exports[`FavoriteWalletCard renders without error 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
+              "justifyContent": "center",
             }
           }
         >
           <Text
             adjustsFontSizeToFit={true}
             allowFontScaling={true}
+            ellipsizeMode="tail"
             maxFontSizeMultiplier={1.4}
             numberOfLines={1}
             style={
@@ -192,6 +194,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
                 "fontSize": 19,
                 "fontWeight": "400",
                 "lineHeight": 24,
+                "overflow": "hidden",
               }
             }
             suppressHighlighting={true}

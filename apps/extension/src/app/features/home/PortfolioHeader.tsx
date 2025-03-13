@@ -207,7 +207,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
                   <ConnectPopupContent
                     asPopover
                     showConnectButton={connectedAccounts.length > 0 && !isConnected}
-                    onClose={onClosePopup}
+                    onClose={(): void => onClosePopup()}
                   />
                 )}
               </Popover.Content>

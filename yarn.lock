@@ -14459,26 +14459,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/web@patch:@tamagui/web@npm%3A1.121.7#./.yarn/patches/@tamagui-web-npm-1.121.7-4de089c18f.patch::locator=universe%40workspace%3A.":
-  version: 1.121.7
-  resolution: "@tamagui/web@patch:@tamagui/web@npm%3A1.121.7#./.yarn/patches/@tamagui-web-npm-1.121.7-4de089c18f.patch::version=1.121.7&hash=fee43d&locator=universe%40workspace%3A."
-  dependencies:
-    "@tamagui/compose-refs": 1.121.7
-    "@tamagui/constants": 1.121.7
-    "@tamagui/helpers": 1.121.7
-    "@tamagui/normalize-css-color": 1.121.7
-    "@tamagui/timer": 1.121.7
-    "@tamagui/types": 1.121.7
-    "@tamagui/use-did-finish-ssr": 1.121.7
-    "@tamagui/use-event": 1.121.7
-    "@tamagui/use-force-update": 1.121.7
-  peerDependencies:
-    react: "*"
-    react-dom: "*"
-  checksum: 4066ec731f534e8eaebf50c75624e68db838c0f755fe4b2fcfc8b38c7343578c33e5240f58090b2c15370d0aba2adc41f5ea0f22791df762d8de0021145c7337
-  languageName: node
-  linkType: hard
-
 "@tanstack/query-async-storage-persister@npm:5.51.21":
   version: 5.51.21
   resolution: "@tanstack/query-async-storage-persister@npm:5.51.21"
@@ -15339,7 +15319,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint-scope@npm:^3.7.3":
+"@types/eslint-scope@npm:^3.7.3, @types/eslint-scope@npm:^3.7.7":
   version: 3.7.7
   resolution: "@types/eslint-scope@npm:3.7.7"
   dependencies:
@@ -15359,7 +15339,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/estree@npm:*, @types/estree@npm:^1.0.0, @types/estree@npm:^1.0.5":
+"@types/estree@npm:*, @types/estree@npm:^1.0.0, @types/estree@npm:^1.0.5, @types/estree@npm:^1.0.6":
   version: 1.0.6
   resolution: "@types/estree@npm:1.0.6"
   checksum: 8825d6e729e16445d9a1dd2fb1db2edc5ed400799064cd4d028150701031af012ba30d6d03fe9df40f4d7a437d0de6d2b256020152b7b09bde9f2e420afdffd9
@@ -16614,7 +16594,6 @@ __metadata:
     dotenv-webpack: 8.0.1
     esbuild-loader: 3.2.0
     eslint: 8.44.0
-    eslint-plugin-rulesdir: 0.2.2
     ethers: 5.7.2
     eventemitter3: 5.0.1
     framer-motion: 10.17.6
@@ -16767,6 +16746,7 @@ __metadata:
     "@uniswap/v3-sdk": 3.25.2
     "@uniswap/v4-sdk": 1.21.2
     "@vanilla-extract/css": 1.14.0
+    "@vanilla-extract/dynamic": 2.1.0
     "@vanilla-extract/jest-transform": 1.1.1
     "@vanilla-extract/sprinkles": 1.6.1
     "@vanilla-extract/webpack-plugin": 2.3.1
@@ -16804,6 +16784,7 @@ __metadata:
     ethers: 5.7.2
     expo-crypto: 12.8.1
     fancy-canvas: 2.1.0
+    focus-visible: 5.2.0
     framer-motion: 10.17.6
     graphql: 16.6.0
     hardhat: 2.22.16
@@ -16871,6 +16852,7 @@ __metadata:
     storybook-addon-pseudo-states: 4.0.2
     styled-components: 5.3.11
     swc-loader: 0.2.6
+    tamagui: 1.121.7
     terser: 5.24.0
     terser-webpack-plugin: 5.3.9
     tiny-invariant: 1.3.1
@@ -16966,7 +16948,6 @@ __metadata:
     "@storybook/react-native": 8.5.2
     "@tamagui/babel-plugin": 1.121.7
     "@tanstack/react-query": 5.51.16
-    "@testing-library/react-hooks": 8.0.1
     "@testing-library/react-native": 13.0.0
     "@types/jest": 29.5.14
     "@types/react": 18.3.18
@@ -16994,7 +16975,6 @@ __metadata:
     d3-shape: 3.2.0
     dayjs: 1.11.7
     eslint: 8.44.0
-    eslint-plugin-rulesdir: 0.2.2
     ethers: 5.7.2
     expo: 52.0.9
     expo-blur: 14.0.3
@@ -17359,6 +17339,15 @@ __metadata:
     modern-ahocorasick: ^1.0.0
     outdent: ^0.8.0
   checksum: ca12de26f72b908c7ac2ee9319faff885fb451ab3da7cef86aae8660c7e042c447041be40ac8c6155d87e8a709efb0697214db3a6cce211e8ef3c110d4dcf8a1
+  languageName: node
+  linkType: hard
+
+"@vanilla-extract/dynamic@npm:2.1.0":
+  version: 2.1.0
+  resolution: "@vanilla-extract/dynamic@npm:2.1.0"
+  dependencies:
+    "@vanilla-extract/private": ^1.0.3
+  checksum: a6f129d096286cf7e2c7c868f12866d2da2967cd7591e071eb6420f0fafccce86c58e1d408864109fc894332399e731fe8ae67e2c92d456feb4b21c602287f6d
   languageName: node
   linkType: hard
 
@@ -18205,7 +18194,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webassemblyjs/ast@npm:1.14.1, @webassemblyjs/ast@npm:^1.11.5":
+"@webassemblyjs/ast@npm:1.14.1, @webassemblyjs/ast@npm:^1.11.5, @webassemblyjs/ast@npm:^1.14.1":
   version: 1.14.1
   resolution: "@webassemblyjs/ast@npm:1.14.1"
   dependencies:
@@ -18291,7 +18280,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webassemblyjs/wasm-edit@npm:^1.11.5":
+"@webassemblyjs/wasm-edit@npm:^1.11.5, @webassemblyjs/wasm-edit@npm:^1.14.1":
   version: 1.14.1
   resolution: "@webassemblyjs/wasm-edit@npm:1.14.1"
   dependencies:
@@ -18332,7 +18321,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webassemblyjs/wasm-parser@npm:1.14.1, @webassemblyjs/wasm-parser@npm:^1.11.5":
+"@webassemblyjs/wasm-parser@npm:1.14.1, @webassemblyjs/wasm-parser@npm:^1.11.5, @webassemblyjs/wasm-parser@npm:^1.14.1":
   version: 1.14.1
   resolution: "@webassemblyjs/wasm-parser@npm:1.14.1"
   dependencies:
@@ -25357,7 +25346,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enhanced-resolve@npm:^5.0.0, enhanced-resolve@npm:^5.15.0, enhanced-resolve@npm:^5.8.3":
+"enhanced-resolve@npm:^5.0.0, enhanced-resolve@npm:^5.15.0, enhanced-resolve@npm:^5.17.1, enhanced-resolve@npm:^5.8.3":
   version: 5.17.1
   resolution: "enhanced-resolve@npm:5.17.1"
   dependencies:
@@ -28433,6 +28422,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"focus-visible@npm:5.2.0":
+  version: 5.2.0
+  resolution: "focus-visible@npm:5.2.0"
+  checksum: 876f646ef453680d3d34e9f9b23961527ffd5ccaed8690f423d4fbfa37ff023d98a490972bc1387850e37ec2e44958c81f6096ef95b67462e5c4b5404cf1dbb9
+  languageName: node
+  linkType: hard
+
 "follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.12.1, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.4, follow-redirects@npm:^1.15.6":
   version: 1.15.6
   resolution: "follow-redirects@npm:1.15.6"
@@ -29790,7 +29786,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:^4.0.0, graceful-fs@npm:^4.1.11, graceful-fs@npm:^4.1.15, graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.3, graceful-fs@npm:^4.1.5, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6, graceful-fs@npm:^4.2.9":
+"graceful-fs@npm:^4.0.0, graceful-fs@npm:^4.1.11, graceful-fs@npm:^4.1.15, graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.3, graceful-fs@npm:^4.1.5, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.11, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6, graceful-fs@npm:^4.2.9":
   version: 4.2.11
   resolution: "graceful-fs@npm:4.2.11"
   checksum: ac85f94da92d8eb6b7f5a8b20ce65e43d66761c55ce85ac96df6865308390da45a8d3f0296dd3a663de65d30ba497bd46c696cc1e248c72b13d6d567138a4fc7
@@ -46446,7 +46442,6 @@ __metadata:
     jest-presets: "workspace:^"
     qrcode: 1.5.1
     react: 18.3.1
-    react-i18next: 14.1.0
     react-native: 0.76.6
     react-native-fast-image: 8.6.3
     react-native-gesture-handler: 2.21.2
@@ -46881,6 +46876,7 @@ __metadata:
     utilities: "workspace:^"
     uuid: 9.0.0
     wagmi: 2.9.3
+    wcag-contrast: 3.0.0
     zod: 3.22.4
   languageName: unknown
   linkType: soft
@@ -47973,7 +47969,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"watchpack@npm:^2.4.0":
+"watchpack@npm:^2.4.0, watchpack@npm:^2.4.1":
   version: 2.4.2
   resolution: "watchpack@npm:2.4.2"
   dependencies:
@@ -48352,6 +48348,42 @@ __metadata:
   version: 0.6.2
   resolution: "webpack-virtual-modules@npm:0.6.2"
   checksum: 7e8e1d63f35864c815420cc2f27da8561a1e028255040698a352717de0ba46d3b3faf16f06c1a1965217054c4c2894eb9af53a85451870e919b5707ce9c5822d
+  languageName: node
+  linkType: hard
+
+"webpack@npm:5, webpack@npm:^5.64.4":
+  version: 5.97.1
+  resolution: "webpack@npm:5.97.1"
+  dependencies:
+    "@types/eslint-scope": ^3.7.7
+    "@types/estree": ^1.0.6
+    "@webassemblyjs/ast": ^1.14.1
+    "@webassemblyjs/wasm-edit": ^1.14.1
+    "@webassemblyjs/wasm-parser": ^1.14.1
+    acorn: ^8.14.0
+    browserslist: ^4.24.0
+    chrome-trace-event: ^1.0.2
+    enhanced-resolve: ^5.17.1
+    es-module-lexer: ^1.2.1
+    eslint-scope: 5.1.1
+    events: ^3.2.0
+    glob-to-regexp: ^0.4.1
+    graceful-fs: ^4.2.11
+    json-parse-even-better-errors: ^2.3.1
+    loader-runner: ^4.2.0
+    mime-types: ^2.1.27
+    neo-async: ^2.6.2
+    schema-utils: ^3.2.0
+    tapable: ^2.1.1
+    terser-webpack-plugin: ^5.3.10
+    watchpack: ^2.4.1
+    webpack-sources: ^3.2.3
+  peerDependenciesMeta:
+    webpack-cli:
+      optional: true
+  bin:
+    webpack: bin/webpack.js
+  checksum: 649065e2258b495ae41a4088be804b4be2ec07d280aa514ebef43da79caf96fa973d26a08826c3902b5676a098d9b37c589f16be7b4da17b68b08b6c76441196
   languageName: node
   linkType: hard
 

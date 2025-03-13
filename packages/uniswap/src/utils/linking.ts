@@ -148,8 +148,3 @@ export function getTokenDetailsURL({
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
   return `/explore/tokens/${chainName}/${address}${inputAddressSuffix}`
 }
-
-export function getPoolDetailsURL(address: string, chain: UniverseChainId): string {
-  const chainName = getChainInfo(chain).urlParam
-  return `/explore/pools/${chainName}/${address}`
-}

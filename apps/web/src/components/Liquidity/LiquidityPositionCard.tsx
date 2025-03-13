@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   CHART_HEIGHT,
@@ -14,6 +15,7 @@ import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/L
 import { useGetRangeDisplay, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { PositionInfo, PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { getPoolDetailsURL } from 'graphql/data/util'
 import useHoverProps from 'hooks/useHoverProps'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useSwitchChain } from 'hooks/useSwitchChain'
@@ -38,13 +40,13 @@ import { zIndexes } from 'ui/src/theme/zIndexes'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { togglePositionVisibility } from 'uniswap/src/features/visibility/slice'
-import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 import { useAccount } from 'wagmi'
@@ -119,7 +121,7 @@ function useDropdownOptions(
           return
         }
 
-        navigate(getPoolDetailsURL(liquidityPosition.poolId, liquidityPosition.chainId))
+        navigate(getPoolDetailsURL(liquidityPosition.poolId, toGraphQLChain(liquidityPosition.chainId)))
       },
       label: t('pool.info'),
       Icon: InfoCircleFilled,

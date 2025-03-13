@@ -19,7 +19,6 @@ import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import { colors } from 'theme/colors'
 import { Divider } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { Flex } from 'ui/src'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -180,10 +179,10 @@ export default function ProgressIndicator({
       </DividerContainer>
       {steps.map((step, i) => {
         return (
-          <Flex key={`progress-indicator-step-${i}`}>
+          <div key={`progress-indicator-step-${i}`}>
             <Step stepStatus={getStatus(step)} stepDetails={stepDetails[step]} />
             {i !== steps.length - 1 && <Edge />}
-          </Flex>
+          </div>
         )
       })}
     </Column>

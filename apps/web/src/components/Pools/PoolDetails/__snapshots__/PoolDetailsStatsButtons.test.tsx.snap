@@ -124,7 +124,7 @@ exports[`PoolDetailsStatsButton loading skeleton shown correctly 1`] = `
 
 exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 <DocumentFragment>
-  .c39 {
+  .c41 {
   z-index: 1020;
   overflow: hidden;
   top: 0;
@@ -143,7 +143,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   min-width: 0;
 }
 
-.c23 {
+.c25 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -166,7 +166,35 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   border-radius: 4px;
 }
 
-.c25 {
+.c4 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c12 {
+  outline: none;
+  border: none;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transition-property: opacity,color,background-color;
+  transition-property: opacity,color,background-color;
+}
+
+.c12:focus {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c27 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -205,25 +233,56 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c25:disabled {
+.c27:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c25 > * {
+.c27 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c25 > a {
+.c27 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c26 {
+.c40 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c40:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c40:hover {
+  background-color: #fb58ff;
+}
+
+.c40:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c40:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c28 {
   background-color: #FFFFFF;
   color: #7D7D7D;
   border: 1px solid #22222212;
@@ -231,15 +290,15 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   font-weight: 535;
 }
 
-.c26:hover {
+.c28:hover {
   background-color: #ececec;
 }
 
-.c26:active {
+.c28:active {
   background-color: #e0e0e0;
 }
 
-.c33 {
+.c35 {
   -webkit-filter: none;
   filter: none;
   opacity: 1;
@@ -247,7 +306,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c21 {
+.c23 {
   color: #222222;
   pointer-events: auto;
   width: 0;
@@ -268,36 +327,36 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   text-align: right;
 }
 
-.c21::-webkit-search-decoration {
+.c23::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-.c21 [type='number'] {
+.c23 [type='number'] {
   -moz-appearance: textfield;
 }
 
-.c21::-webkit-outer-spin-button,
-.c21::-webkit-inner-spin-button {
+.c23::-webkit-outer-spin-button,
+.c23::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-.c21::-webkit-input-placeholder {
+.c23::-webkit-input-placeholder {
   color: #CECECE;
 }
 
-.c21::-moz-placeholder {
+.c23::-moz-placeholder {
   color: #CECECE;
 }
 
-.c21:-ms-input-placeholder {
+.c23:-ms-input-placeholder {
   color: #CECECE;
 }
 
-.c21::placeholder {
+.c23::placeholder {
   color: #CECECE;
 }
 
-.c22 {
+.c24 {
   -webkit-filter: none;
   filter: none;
   opacity: 1;
@@ -309,7 +368,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   max-height: 44px;
 }
 
-.c3 {
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -323,7 +382,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c37 {
+.c38 {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 4px;
@@ -346,49 +405,21 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c5 {
+.c7 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
-.c7 {
+.c9 {
   position: relative;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
 }
 
-.c34 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c10 {
-  outline: none;
-  border: none;
-  font-size: inherit;
-  padding: 0;
-  margin: 0;
-  background: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  -webkit-transition-timing-function: ease-in-out;
-  transition-timing-function: ease-in-out;
-  -webkit-transition-property: opacity,color,background-color;
-  transition-property: opacity,color,background-color;
-}
-
-.c10:focus {
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-}
-
-.c18 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -405,13 +436,13 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   will-change: height;
 }
 
-.c19 {
+.c21 {
   min-height: 44px;
   border-radius: 20px;
   width: initial;
 }
 
-.c27 {
+.c29 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -444,12 +475,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   animation: none;
 }
 
-.c27:hover,
-.c27:active {
+.c29:hover,
+.c29:active {
   background-color: #F9F9F9;
 }
 
-.c27:before {
+.c29:before {
   background-size: 100%;
   border-radius: inherit;
   position: absolute;
@@ -460,15 +491,15 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   content: '';
 }
 
-.c27:hover:before {
+.c29:hover:before {
   background-color: #98A1C014;
 }
 
-.c27:active:before {
+.c29:active:before {
   background-color: #B8C0DC3d;
 }
 
-.c20 {
+.c22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -487,7 +518,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   margin-top: 4px;
 }
 
-.c31 {
+.c33 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -504,7 +535,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   line-height: 1rem;
 }
 
-.c32 {
+.c33 span:hover {
+  cursor: pointer;
+  color: #4a4a4a;
+}
+
+.c34 {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
@@ -513,7 +549,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   padding: 8px 0px 0px 0px;
 }
 
-.c28 {
+.c30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -529,33 +565,33 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   width: 100%;
 }
 
-.c30 {
+.c32 {
   margin: 0 0.25rem 0 0.35rem;
   height: 35%;
   margin-left: 8px;
 }
 
-.c30 path {
+.c32 path {
   stroke: #222222;
   stroke-width: 2px;
 }
 
-.c29 {
+.c31 {
   margin: 0 0.25rem 0 0.25rem;
   font-size: 20px;
   font-weight: 535;
 }
 
-.c16 {
+.c18 {
   height: 24px;
   width: 24px;
 }
 
-.c16 > * {
+.c18 > * {
   fill: #7D7D7D;
 }
 
-.c14 {
+.c16 {
   border: none;
   background-color: transparent;
   margin: 0;
@@ -564,20 +600,20 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   outline: none;
 }
 
-.c14:not([disabled]):hover {
+.c16:not([disabled]):hover {
   opacity: 0.7;
 }
 
-.c15 {
+.c17 {
   padding: 6px 12px;
   border-radius: 16px;
 }
 
-.c13 {
+.c15 {
   position: relative;
 }
 
-.c35 {
+.c36 {
   border-radius: 12px;
   height: 40px;
   width: 40px;
@@ -592,12 +628,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   z-index: 2;
 }
 
-.c35:hover {
+.c36:hover {
   cursor: pointer;
   opacity: 0.8;
 }
 
-.c17 {
+.c19 {
   background-color: #F9F9F9;
   border-radius: 16px;
   color: #7D7D7D;
@@ -609,7 +645,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   position: relative;
 }
 
-.c17:before {
+.c19:before {
   box-sizing: border-box;
   background-size: 100%;
   border-radius: inherit;
@@ -623,19 +659,19 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   border: 1px solid #F9F9F9;
 }
 
-.c17:hover:before {
+.c19:hover:before {
   border-color: #98A1C014;
 }
 
-.c17:focus-within:before {
+.c19:focus-within:before {
   border-color: #B8C0DC3d;
 }
 
-.c38 {
+.c39 {
   border-bottom: 1px solid #FFFFFF;
 }
 
-.c36 {
+.c37 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -652,7 +688,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   height: 100%;
 }
 
-.c11 {
+.c13 {
   color: #222222;
   background-color: #22222212;
   padding: 8px 16px;
@@ -661,17 +697,17 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   font-weight: 485;
 }
 
-.c11:focus {
+.c13:focus {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c11:active {
+.c13:active {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c12 {
+.c14 {
   color: #7D7D7D;
   padding: 8px 16px;
   border-radius: 20px;
@@ -679,27 +715,27 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   font-weight: 485;
 }
 
-.c12:focus {
+.c14:focus {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c12:active {
+.c14:active {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c6 {
+.c8 {
   margin-bottom: 12px;
   padding-right: 4px;
   color: #7D7D7D;
 }
 
-.c8 {
+.c10 {
   gap: 0px;
 }
 
-.c8 .c9 {
+.c10 .c11 {
   padding: 8px 12px;
 }
 
@@ -708,7 +744,45 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   z-index: 1;
 }
 
-.c4 {
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 12px 16px 12px 12px;
+  border: unset;
+  border-radius: 900px;
+  gap: 8px;
+  color: #FC72FF;
+  background-color: #FC72FF1f;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: width 250ms ease-in-out;
+  transition: width 250ms ease-in-out;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c3:hover {
+  opacity: 0.6;
+}
+
+.c3:active {
+  opacity: 0.4;
+}
+
+.c6 {
   z-index: 0;
   gap: 24px;
   visibility: hidden;
@@ -719,12 +793,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   padding-bottom: 0;
 }
 
-.c4 .c24 {
+.c6 .c26 {
   visibility: hidden;
 }
 
 @media only screen and (max-width:1024px) {
-  .c39 {
+  .c41 {
     opacity: 0;
     pointer-events: none;
     -webkit-transition: opacity 250ms ease-in-out;
@@ -733,7 +807,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 }
 
 @media (hover:hover) and (pointer:fine) {
-  .c10:hover {
+  .c12:hover {
     opacity: 0.6;
   }
 }
@@ -761,7 +835,19 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 }
 
 @media (max-width:1024px) {
-  .c4 {
+
+}
+
+@media (max-width:640px) {
+  .c3 {
+    width: 100%;
+    background-color: #FC72FF;
+    color: #FFFFFF;
+  }
+}
+
+@media (max-width:1024px) {
+  .c6 {
     position: fixed;
     width: calc(100% - 16px);
     padding: 0px 12px 12px;
@@ -799,15 +885,14 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa1360334080 _width-10037"
             >
               <button
-                class=" is_Button  t_group_item"
+                class="c3"
                 data-testid="pool-details-swap-button"
-                style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(254, 244, 255); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
               >
                 <svg
                   fill="none"
                   height="100%"
                   stroke-width="8"
-                  style="width: 20.7px; height: 20.7px;"
+                  style="width: 20px; height: 20px; color: rgb(252, 114, 255);"
                   viewBox="0 0 16 16"
                   width="100%"
                 >
@@ -816,26 +901,25 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                     fill="currentColor"
                   />
                 </svg>
-                <span
-                  class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                <div
+                  class="c4 css-1guhfcl"
                 >
                   Swap
-                </span>
+                </div>
               </button>
               <button
-                class=" is_Button  t_group_item"
+                class="c3"
                 data-testid="pool-details-add-liquidity-button"
-                style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(254, 244, 255); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
               >
                 <svg
                   fill="none"
-                  height="20.7"
-                  stroke="var(--accent1)"
+                  height="20"
+                  stroke="currentColor"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
                   viewBox="0 0 24 24"
-                  width="20.7"
+                  width="20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <line
@@ -851,16 +935,16 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                     y2="12"
                   />
                 </svg>
-                <span
-                  class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                <div
+                  class="c4 css-1guhfcl"
                 >
                   Add liquidity
-                </span>
+                </div>
               </button>
             </div>
           </div>
           <div
-            class="c3 c4"
+            class="c5 c6"
             data-testid="pool-details-swap-modal"
           >
             <div
@@ -874,51 +958,51 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586420 _borderTopRightRadius-t-radius-ro291586420 _borderBottomRightRadius-t-radius-ro291586420 _borderBottomLeftRadius-t-radius-ro291586420 _zIndex--1"
                 >
                   <div
-                    class="c0 c1 c5 c6"
+                    class="c0 c1 c7 c8"
                   >
                     <div
-                      class="c0 c1 c7 c8"
+                      class="c0 c1 c9 c10"
                     >
                       <h1
-                        class="c9 c10 c11"
+                        class="c11 c12 c13"
                         role="button"
                         tabindex="0"
                       >
                         Swap
                       </h1>
                       <button
-                        class="c9 c10 c12"
+                        class="c11 c12 c14"
                       >
                         Limit
                       </button>
                       <button
-                        class="c9 c10 c12"
+                        class="c11 c12 c14"
                       >
                         Send
                       </button>
                       <button
-                        class="c9 c10 c12"
+                        class="c11 c12 c14"
                       >
                         Buy
                       </button>
                     </div>
                     <div
-                      class="c0 c1 c7"
+                      class="c0 c1 c9"
                     >
                       <div
-                        class="c13"
+                        class="c15"
                       >
                         <button
                           aria-label="Transaction Settings"
-                          class="c14"
+                          class="c16"
                           data-testid="open-settings-dialog-button"
                           id="open-settings-dialog-button"
                         >
                           <div
-                            class="c0 c1 c15"
+                            class="c0 c1 c17"
                           >
                             <svg
-                              class="c16"
+                              class="c18"
                               fill="none"
                               height="24"
                               viewBox="0 0 24 24"
@@ -936,17 +1020,17 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                     </div>
                   </div>
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    style="display: relative;"
                   >
                     <div
-                      class="c17"
+                      class="c19"
                     >
                       <div
-                        class="c18"
+                        class="c20"
                         id="swap-currency-input"
                       >
                         <div
-                          class="c19"
+                          class="c21"
                         >
                           <span
                             class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
@@ -955,15 +1039,15 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                             Sell
                           </span>
                           <div
-                            class="c20"
+                            class="c22"
                           >
                             <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1"
+                              style="display: flex; flex-grow: 1;"
                             >
                               <input
                                 autocomplete="off"
                                 autocorrect="off"
-                                class="c21 c22 token-amount-input"
+                                class="c23 c24 token-amount-input"
                                 id="swap-currency-input"
                                 inputmode="decimal"
                                 maxlength="79"
@@ -971,23 +1055,20 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                 pattern="^[0-9]*[.,]?[0-9]*$"
                                 placeholder="0"
                                 spellcheck="false"
-                                style="width: 100%;"
                                 type="text"
                                 value=""
                               />
                             </div>
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                            >
+                            <div>
                               <button
-                                class="c23 c24 c25 c26 c27 open-currency-select-button"
+                                class="c25 c26 c27 c28 c29 open-currency-select-button"
                                 data-testid="currency-1-USDC"
                               >
                                 <span
-                                  class="c28"
+                                  class="c30"
                                 >
                                   <div
-                                    class="c0 c1 c7"
+                                    class="c0 c1 c9"
                                   >
                                     <div
                                       style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
@@ -1012,14 +1093,14 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                         </div>
                                       </div>
                                       <span
-                                        class="c29 token-symbol-container"
+                                        class="c31 token-symbol-container"
                                       >
                                         USDC
                                       </span>
                                     </div>
                                   </div>
                                   <svg
-                                    class="c30"
+                                    class="c32"
                                   >
                                     dropdown.svg
                                   </svg>
@@ -1028,20 +1109,20 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                             </div>
                           </div>
                           <div
-                            class="c31 c32"
+                            class="c33 c34"
                           >
                             <div
-                              class="c0 c1 c5"
+                              class="c0 c1 c7"
                             >
                               <div
-                                class="c33"
+                                class="c35"
                               />
                               <div
-                                class="c0 c1 c7"
+                                class="c0 c1 c9"
                                 style="height: 16px;"
                               >
                                 <div
-                                  class="c34 css-142zc9n"
+                                  class="c4 css-142zc9n"
                                   data-testid="balance-text"
                                   style="display: inline;"
                                 />
@@ -1062,10 +1143,10 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                       </div>
                     </div>
                     <div
-                      class="c35"
+                      class="c36"
                     >
                       <div
-                        class="c36"
+                        class="c37"
                         color="#222222"
                         data-testid="swap-currency-button"
                       >
@@ -1094,20 +1175,18 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c37"
+                    class="c38"
                   >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                    >
+                    <div>
                       <div
-                        class="c17 c38"
+                        class="c19 c39"
                       >
                         <div
-                          class="c18"
+                          class="c20"
                           id="swap-currency-output"
                         >
                           <div
-                            class="c19"
+                            class="c21"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
@@ -1116,15 +1195,15 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                               Buy
                             </span>
                             <div
-                              class="c20"
+                              class="c22"
                             >
                               <div
-                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1"
+                                style="display: flex; flex-grow: 1;"
                               >
                                 <input
                                   autocomplete="off"
                                   autocorrect="off"
-                                  class="c21 c22 token-amount-input"
+                                  class="c23 c24 token-amount-input"
                                   id="swap-currency-output"
                                   inputmode="decimal"
                                   maxlength="79"
@@ -1132,23 +1211,20 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                   pattern="^[0-9]*[.,]?[0-9]*$"
                                   placeholder="0"
                                   spellcheck="false"
-                                  style="width: 100%;"
                                   type="text"
                                   value=""
                                 />
                               </div>
-                              <div
-                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                              >
+                              <div>
                                 <button
-                                  class="c23 c24 c25 c26 c27 open-currency-select-button"
+                                  class="c25 c26 c27 c28 c29 open-currency-select-button"
                                   data-testid="currency-1-WETH"
                                 >
                                   <span
-                                    class="c28"
+                                    class="c30"
                                   >
                                     <div
-                                      class="c0 c1 c7"
+                                      class="c0 c1 c9"
                                     >
                                       <div
                                         style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
@@ -1173,14 +1249,14 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                           </div>
                                         </div>
                                         <span
-                                          class="c29 token-symbol-container"
+                                          class="c31 token-symbol-container"
                                         >
                                           WETH
                                         </span>
                                       </div>
                                     </div>
                                     <svg
-                                      class="c30"
+                                      class="c32"
                                     >
                                       dropdown.svg
                                     </svg>
@@ -1189,20 +1265,20 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                               </div>
                             </div>
                             <div
-                              class="c31 c32"
+                              class="c33 c34"
                             >
                               <div
-                                class="c0 c1 c5"
+                                class="c0 c1 c7"
                               >
                                 <div
-                                  class="c33"
+                                  class="c35"
                                 />
                                 <div
-                                  class="c0 c1 c7"
+                                  class="c0 c1 c9"
                                   style="height: 16px;"
                                 >
                                   <div
-                                    class="c34 css-142zc9n"
+                                    class="c4 css-142zc9n"
                                     data-testid="balance-text"
                                     style="display: inline;"
                                   />
@@ -1223,29 +1299,20 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                    >
-                      <div
-                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
+                    <div>
+                      <button
+                        class="c25 c27 c40"
+                        data-testid="swap-button"
+                        disabled=""
+                        id="swap-button"
                       >
-                        <button
-                          class=" is_Button  t_group_item"
-                          data-testid="swap-button"
-                          id="swap-button"
-                          style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(249, 249, 249); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; pointer-events: none; user-select: none; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid;"
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-color _fontFamily-f-family _wordWrap-break-word _fontSize-20px _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                          data-disable-theme="true"
                         >
-                          <span
-                            class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                          >
-                            <span
-                              class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                            >
-                              Connecting wallet...
-                            </span>
-                          </span>
-                        </button>
-                      </div>
+                          Connecting wallet...
+                        </span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1253,7 +1320,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
             </div>
           </div>
           <div
-            class="c39"
+            class="c41"
           />
         </div>
         <div

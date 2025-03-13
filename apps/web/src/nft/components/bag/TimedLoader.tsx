@@ -1,37 +1,41 @@
-import { Flex } from 'ui/src'
+import { Box } from 'components/deprecated/Box'
+import styled, { keyframes } from 'lib/styled-components'
 
-const styles = {
-  circle: {
-    strokeDasharray: '1000',
-    strokeDashoffset: '0',
-    animation: 'dash 160s linear',
-  },
-  container: {
-    position: 'absolute' as const,
-  },
-} as const
-
+const dash = keyframes`
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+`
+const Circle = styled.circle`
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  -webkit-animation: ${dash} linear;
+  animation: ${dash} linear;
+  animation-duration: 160s;
+  stroke: ${({ theme }) => theme.accent1};
+`
 export const TimedLoader = () => {
   const stroke = 1.5
 
   return (
-    <Flex style={styles.container}>
+    <Box display="flex" position="absolute">
       <svg height="18px" width="18px">
-        <circle
-          style={{
-            ...styles.circle,
-            transform: 'rotate(90deg)',
-            transformOrigin: '50% 50%',
-            stroke: 'var(--accent1)',
-          }}
+        <Circle
           strokeWidth={`${stroke}`}
           strokeLinecap="round"
+          style={{
+            transform: 'rotate(90deg)',
+            transformOrigin: '50% 50%',
+          }}
           fill="transparent"
           r="8px"
           cx="9px"
           cy="9px"
         />
       </svg>
-    </Flex>
+    </Box>
   )
 }

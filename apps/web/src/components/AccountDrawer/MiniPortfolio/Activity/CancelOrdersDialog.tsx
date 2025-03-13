@@ -139,12 +139,14 @@ export function CancelOrdersDialog(
           left: {
             title: <Trans i18nKey="common.neverMind" />,
             onClick: onCancel,
+            textColor: 'neutral1',
           },
           right: {
             title: <Trans i18nKey="common.proceed" />,
             onClick: onConfirm,
             type: DialogButtonType.Error,
             disabled: cancelState !== CancellationState.REVIEWING_CANCELLATION,
+            textColor: 'white',
           },
         }}
       />

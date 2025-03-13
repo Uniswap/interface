@@ -1,15 +1,49 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled from 'lib/styled-components'
 import ms from 'ms'
+import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
 import { Dropdown } from 'nft/components/profile/list/Dropdown'
+import { caption } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Z_INDEX } from 'theme/zIndex'
-import { Flex, Text } from 'ui/src'
+
+const ModalWrapper = styled(Column)`
+  gap: 4px;
+  position: relative;
+`
+
+const InputWrapper = styled(Row)<{ isInvalid: boolean }>`
+  padding: 6px 6px 6px 12px;
+  border: 1px solid;
+  position: relative;
+  height: 44px;
+  border-radius: 8px;
+  border-color: ${({ isInvalid, theme }) => (isInvalid ? theme.critical : theme.surface3)};
+  width: 160px;
+  justify-content: space-between;
+`
+
+const DropdownPrompt = styled(Row)`
+  gap: 4px;
+  background-color: ${({ theme }) => theme.surface3};
+  cursor: pointer;
+  font-weight: 535;
+  font-size: 14px;
+  line-height: 16px;
+  border-radius: 8px;
+  padding: 6px 4px 6px 8px;
+  white-space: nowrap;
+  color: ${({ theme }) => theme.neutral1};
+
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+`
 
 const DropdownChevron = styled(ChevronDown)<{ isOpen: boolean }>`
   height: 20px;
@@ -28,6 +62,14 @@ const DropdownContainer = styled.div`
   top: 48px;
   right: 0px;
   z-index: ${Z_INDEX.dropdown};
+`
+
+const ErrorMessage = styled(Row)`
+  color: ${({ theme }) => theme.critical};
+  gap: 4px;
+  position: absolute;
+  top: 44px;
+  white-space: nowrap;
 `
 
 const WarningIcon = styled(AlertTriangle)`
@@ -132,19 +174,8 @@ export const SetDurationModal = () => {
   }, [amount, duration, setGlobalExpiration])
 
   return (
-    <Flex gap="$spacing4" ref={durationDropdownRef}>
-      <Flex
-        row
-        py={6}
-        pr={6}
-        pl={12}
-        borderWidth={1}
-        borderColor={errorState !== ErrorState.valid ? '$statusCritical' : '$surface3'}
-        height={44}
-        width={160}
-        borderRadius="$rounded8"
-        justifyContent="space-between"
-      >
+    <ModalWrapper ref={durationDropdownRef}>
+      <InputWrapper isInvalid={errorState !== ErrorState.valid}>
         <NumericInput
           color="$neutral1"
           value={amount}
@@ -154,43 +185,22 @@ export const SetDurationModal = () => {
           onChangeText={setCustomExpiration}
           flexShrink={0}
         />
-        <Flex
-          row
-          onPress={toggleShowDropdown}
-          gap="$gap4"
-          backgroundColor="$surface3"
-          cursor="pointer"
-          borderRadius="$rounded8"
-          py="$spacing6"
-          pr="$spacing4"
-          pl="$spacing8"
-          $platform-web={{
-            whiteSpace: 'nowrap',
-          }}
-          hoverStyle={{
-            opacity: 0.5,
-          }}
-        >
-          <Text variant="body3" color="$neutral1">
-            {prompt}{' '}
-          </Text>
-          <DropdownChevron isOpen={showDropdown} />
-        </Flex>
+        <DropdownPrompt onClick={toggleShowDropdown}>
+          {prompt} <DropdownChevron isOpen={showDropdown} />
+        </DropdownPrompt>
         {showDropdown && (
           <DropdownContainer>
             <Dropdown dropDownOptions={durationOptions} width={125} />
           </DropdownContainer>
         )}
-      </Flex>
+      </InputWrapper>
       {errorState !== ErrorState.valid && (
-        <Flex row gap="$gap4" position="absolute" top={44} $platform-web={{ whiteSpace: 'nowrap' }}>
-          <WarningIcon />
-          <Text variant="body4" color="$statusCritical">
-            {errorState === ErrorState.overMax ? 'Maximum 6 months' : 'Set duration'}
-          </Text>
-        </Flex>
+        <ErrorMessage className={caption}>
+          {' '}
+          <WarningIcon /> {errorState === ErrorState.overMax ? 'Maximum 6 months' : 'Set duration'}
+        </ErrorMessage>
       )}
-    </Flex>
+    </ModalWrapper>
   )
 }
 

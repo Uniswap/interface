@@ -6,7 +6,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
 
-const educationContent = {
+export const educationContent = {
   [EducationContentType.SeedPhrase]: SeedPhraseEducationContent,
 }
 

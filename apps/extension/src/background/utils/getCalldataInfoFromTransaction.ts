@@ -3,8 +3,6 @@ import { V4BaseActionsParser, V4RouterCall } from '@uniswap/v4-sdk'
 import { EthSendTransactionRPCActions } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { parseCalldata as parseNfPMCalldata } from 'src/app/features/dappRequests/types/NonfungiblePositionManager'
 import { NonfungiblePositionManagerCall } from 'src/app/features/dappRequests/types/NonfungiblePositionManagerTypes'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 import methodHashToFunctionSignature from 'utilities/src/calldata/methodHashToFunctionSignature'
 import noop from 'utilities/src/react/noop'
 
@@ -18,7 +16,6 @@ interface GetCalldataInfoFromTransactionReturnValue {
 function getCalldataInfoFromTransaction(
   data: string,
   to: string | undefined,
-  chainId: UniverseChainId | undefined,
 ): GetCalldataInfoFromTransactionReturnValue {
   const calldataMethodHash = data.substring(2, 10)
   const functionSignature = methodHashToFunctionSignature(calldataMethodHash)
@@ -67,11 +64,7 @@ function getCalldataInfoFromTransaction(
     } catch (_e) {
       noop()
     }
-
-    const isWrapUnwrapSignature = functionSignature === 'deposit()' || functionSignature === 'withdraw(uint256)'
-    const isNativeWrappedCurrencyTo =
-      chainId && to?.toLowerCase() === wrappedNativeCurrency(chainId).address.toLowerCase()
-    if (functionSignature.includes('wrap') || (isWrapUnwrapSignature && isNativeWrappedCurrencyTo)) {
+    if (functionSignature.includes('wrap')) {
       result.contractInteractions = EthSendTransactionRPCActions.Wrap
       return result
     }

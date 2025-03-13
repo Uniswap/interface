@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { Amount, PoolStats, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeData } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

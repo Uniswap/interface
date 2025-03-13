@@ -1,5 +1,4 @@
-import { breakpoints } from 'ui/src/theme'
-
+import { breakpoints } from 'nft/css/sprinkles.css'
 const isClient = typeof window !== 'undefined'
 
 function getIsMobile() {

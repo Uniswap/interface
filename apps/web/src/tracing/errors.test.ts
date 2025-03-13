@@ -1,6 +1,5 @@
 import { ErrorEvent } from '@sentry/types'
 import { beforeSend } from 'tracing/errors'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 Object.defineProperty(window.performance, 'getEntriesByType', {
   writable: true,
@@ -198,57 +197,6 @@ describe('beforeSend', () => {
         exception,
         { type: 'ProviderRpcError', value: `${originalException.code}: ${originalException.message}` },
       ])
-    })
-
-    it('filters errors from testnet chains', () => {
-      const exception = { mechanism: { handled: false, synthetic: true } }
-      const event = {
-        exception: { values: [exception] },
-        contexts: {
-          state: {
-            state: {
-              value: {
-                application: {
-                  chainId: UniverseChainId.Sepolia,
-                },
-              },
-            },
-          },
-        },
-      } as unknown as ErrorEvent
-      const originalException = { code: -32603, message: 'Some error on testnet', data: '[Object]' }
-      expect(beforeSend(event, { originalException })).toBeNull()
-    })
-
-    it('does not filter errors from mainnet', () => {
-      const exception = { mechanism: { handled: false, synthetic: true } }
-      const event = {
-        exception: { values: [exception] },
-        contexts: {
-          state: {
-            state: {
-              value: {
-                application: {
-                  chainId: 1, // Mainnet
-                },
-              },
-            },
-          },
-        },
-      } as unknown as ErrorEvent
-      const originalException = { code: -32603, message: 'Some error on mainnet', data: '[Object]' }
-      expect(beforeSend(event, { originalException })).not.toBeNull()
-    })
-
-    it('filters eth_requestAccounts prerequisite errors', () => {
-      const exception = { mechanism: { handled: false, synthetic: true } }
-      const event = { exception: { values: [exception] } } as ErrorEvent
-      const originalException = {
-        code: -32002,
-        message: "Must call 'eth_requestAccounts' before other methods",
-        data: '[Object]',
-      }
-      expect(beforeSend(event, { originalException })).toBeNull()
     })
   })
 })

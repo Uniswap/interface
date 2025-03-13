@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
@@ -41,9 +41,18 @@ export default function SlippageWarningModal({ isOpen, onClose }: SlippageWarnin
           </Text>
         </Flex>
         <Flex centered row width="100%" px={isMobileApp ? '$spacing24' : '$spacing6'}>
-          <Button emphasis="secondary" onPress={onClose}>
-            {t('common.close')}
-          </Button>
+          <DeprecatedButton
+            theme="secondary"
+            width="100%"
+            borderRadius="$rounded12"
+            py="$spacing12"
+            mt="$spacing4"
+            onPress={onClose}
+          >
+            <Text variant="buttonLabel3" color="$neutral1">
+              {t('common.close')}
+            </Text>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

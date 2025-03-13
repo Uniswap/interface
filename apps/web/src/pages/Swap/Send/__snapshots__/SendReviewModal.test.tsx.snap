@@ -37,22 +37,27 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   min-width: 0;
 }
 
-.c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
+.c10 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
 }
 
 .c4 {
@@ -94,6 +99,112 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   width: 100%;
   height: 1px;
   background-color: #22222212;
+}
+
+.c11 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c11:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c11 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c11 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c12 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c12:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c12:hover {
+  background-color: #fb58ff;
+}
+
+.c12:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c12:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c1 {
@@ -218,7 +329,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+          style="height: 36px;"
         >
           <div
             class="c6"
@@ -280,7 +391,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+          style="height: 36px;"
         >
           <svg
             class="c7 c8"
@@ -333,20 +444,11 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
       </div>
     </div>
   </div>
-  <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
+  <button
+    class="c10 c11 c12"
   >
-    <button
-      class=" is_Button  t_group_item"
-      style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(252, 114, 255); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 16px 20px 16px 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; gap: 12px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
-    >
-      <span
-        class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-      >
-        Confirm send
-      </span>
-    </button>
-  </div>
+    Confirm send
+  </button>
 </div>
 `;
 
@@ -387,22 +489,27 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   min-width: 0;
 }
 
-.c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
+.c10 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
 }
 
 .c4 {
@@ -444,6 +551,112 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   width: 100%;
   height: 1px;
   background-color: #22222212;
+}
+
+.c11 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c11:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c11 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c11 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c12 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c12:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c12:hover {
+  background-color: #fb58ff;
+}
+
+.c12:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c12:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c1 {
@@ -568,7 +781,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+          style="height: 36px;"
         >
           <div
             class="c6"
@@ -630,7 +843,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
           </div>
         </div>
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px"
+          style="height: 36px;"
         >
           <svg
             class="c7 c8"
@@ -683,19 +896,10 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
       </div>
     </div>
   </div>
-  <div
-    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignSelf-stretch"
+  <button
+    class="c10 c11 c12"
   >
-    <button
-      class=" is_Button  t_group_item"
-      style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(252, 114, 255); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 16px 20px 16px 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; gap: 12px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
-    >
-      <span
-        class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-larg101 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-      >
-        Confirm send
-      </span>
-    </button>
-  </div>
+    Confirm send
+  </button>
 </div>
 `;

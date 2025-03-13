@@ -7,16 +7,13 @@ import { PositionInfo } from 'components/Liquidity/types'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { TextLoader } from 'pages/Pool/Positions/shared'
-import { ClickableTamaguiStyle } from 'theme/components'
-import { Anchor, Circle, Flex, Text } from 'ui/src'
-import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
+import { Circle, Flex, Text } from 'ui/src'
 
 interface LiquidityPositionInfoProps {
   positionInfo: PositionInfo
   currencyLogoSize?: number
   hideStatusIndicator?: boolean
   isMiniVersion?: boolean
-  linkToPool?: boolean
 }
 
 export function LiquidityPositionInfoLoader({ hideStatus }: { hideStatus?: boolean }) {
@@ -38,7 +35,6 @@ export function LiquidityPositionInfo({
   currencyLogoSize = 44,
   hideStatusIndicator = false,
   isMiniVersion = false,
-  linkToPool = false,
 }: LiquidityPositionInfoProps) {
   const { currency0Amount, currency1Amount, status, feeTier, v4hook, version } = positionInfo
   const versionLabel = getProtocolVersionLabel(version)
@@ -52,17 +48,9 @@ export function LiquidityPositionInfo({
         alignItems="flex-start"
       >
         <Flex $md={{ row: true, gap: '$gap16' }}>
-          {linkToPool ? (
-            <Anchor href={getPoolDetailsURL(positionInfo.poolId, positionInfo.chainId)} textDecorationLine="none">
-              <Text variant="subheading1" {...ClickableTamaguiStyle}>
-                {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
-              </Text>
-            </Anchor>
-          ) : (
-            <Text variant="subheading1">
-              {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
-            </Text>
-          )}
+          <Text variant="subheading1">
+            {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
+          </Text>
           {!hideStatusIndicator && <LiquidityPositionStatusIndicator status={status} />}
         </Flex>
 

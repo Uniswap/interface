@@ -1,6 +1,8 @@
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { Box } from 'components/deprecated/Box'
 import styled from 'lib/styled-components'
+import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Activity.css'
 import {
   ActivityExternalLinkIcon,
@@ -23,10 +25,9 @@ import {
 import { getMarketplaceIcon } from 'nft/utils'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { getTimeDifference } from 'nft/utils/date'
-import { ReactNode, useMemo, useState } from 'react'
+import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { ClickableTamaguiStyle, ExternalLink } from 'theme/components'
-import { Flex, GetThemeValueForKey, Image, Text } from 'ui/src'
+import { ExternalLink } from 'theme/components'
 import {
   NftActivityType,
   NftMarketplace,
@@ -131,27 +132,25 @@ export const BuyCell = ({
   }
 
   return (
-    <Flex $md={{ display: 'none' }} height="100%" justifyContent="center">
+    <Column display={{ sm: 'none', lg: 'flex' }} height="full" justifyContent="center" marginX="auto">
       {event.eventType === NftActivityType.Listing && event.orderStatus ? (
-        <Text
-          variant="buttonLabel2"
-          color={orderIsPurchasable ? '$accent1' : '$neutral1'}
+        <Box
+          as="button"
           className={orderIsPurchasable && isSelected ? styles.removeCell : styles.buyCell}
-          onPress={(e) => {
+          onClick={(e: MouseEvent) => {
             e.preventDefault()
             isSelected ? removeAsset([asset]) : selectAsset([asset])
             !isSelected && !cartExpanded && !isMobile && toggleCart()
             !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, eventProperties)
           }}
           disabled={!orderIsPurchasable}
-          {...(orderIsPurchasable ? ClickableTamaguiStyle : {})}
         >
           {formatListingStatus(event.orderStatus, orderIsPurchasable, isSelected)}
-        </Text>
+        </Box>
       ) : (
         '-'
       )}
-    </Flex>
+    </Column>
   )
 }
 
@@ -161,31 +160,32 @@ interface AddressCellProps {
   chainId?: number
 }
 
-export const AddressCell = ({ address, chainId }: AddressCellProps) => {
+export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCellProps) => {
   return (
-    <Flex $md={{ display: 'none' }} className={styles.addressCell}>
+    <Column
+      display={{ sm: 'none', xl: desktopLBreakpoint ? 'none' : 'flex', xxl: 'flex' }}
+      className={styles.addressCell}
+    >
       <AddressLink
         href={getExplorerLink(chainId ?? UniverseChainId.Mainnet, address ?? '', ExplorerDataType.ADDRESS)}
         style={{ textDecoration: 'none' }}
       >
-        <Text variant="body2" onPress={(e) => e.stopPropagation()}>
-          {address ? shortenAddress(address, 2) : '-'}
-        </Text>
+        <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2) : '-'}</Box>
       </AddressLink>
-    </Flex>
+    </Column>
   )
 }
 
 const PriceTooltip = ({ price }: { price: string }) => (
   <MouseoverTooltip
     text={
-      <Text textAlign="left" variant="body3" color="$neutral2">
+      <Box textAlign="left" fontSize="14" fontWeight="book" color="neutral2">
         {`${price} ETH`}
-      </Text>
+      </Box>
     }
     placement="top"
   >
-    <Text variant="body3">{`${price.substring(0, 5)}... ETH`}</Text>
+    <Box>{`${price.substring(0, 5)}... ETH`}</Box>
   </MouseoverTooltip>
 )
 
@@ -197,7 +197,7 @@ export const PriceCell = ({ marketplace, price }: { marketplace?: Markets | stri
   )
 
   return (
-    <Flex row $md={{ display: 'none' }} gap="$gap8" alignItems="center">
+    <Row display={{ sm: 'none', md: 'flex' }} gap="8">
       {marketplace && getMarketplaceIcon(marketplace, '16')}
       {formattedPrice ? (
         formattedPrice.length > 6 ? (
@@ -208,7 +208,7 @@ export const PriceCell = ({ marketplace, price }: { marketplace?: Markets | stri
       ) : (
         <>-</>
       )}
-    </Flex>
+    </Row>
   )
 }
 
@@ -222,47 +222,40 @@ interface EventCellProps {
 }
 
 const renderEventIcon = (eventType: NftActivityType) => {
-  const color = eventColors(eventType) as string
   switch (eventType) {
     case NftActivityType.Listing:
-      return <ActivityListingIcon width={16} height={16} color={color} />
+      return <ActivityListingIcon width={16} height={16} />
     case NftActivityType.Sale:
-      return <ActivitySaleIcon width={16} height={16} color={color} />
+      return <ActivitySaleIcon width={16} height={16} />
     case NftActivityType.Transfer:
-      return <ActivityTransferIcon width={16} height={16} color={color} />
+      return <ActivityTransferIcon width={16} height={16} />
     case NftActivityType.CancelListing:
-      return <CancelListingIcon width={16} height={16} color={color} />
+      return <CancelListingIcon width={16} height={16} />
     default:
       return null
   }
 }
 
-const openEtherscanLinkInNewTab = (transactionHash: string) => {
+const openEtherscanLinkInNewTab = (e: MouseEvent, transactionHash: string) => {
+  e.preventDefault()
   window.open(`https://etherscan.io/tx/${transactionHash}`, '_blank', 'noopener,noreferrer')
 }
 
-const ExternalLinkIcon = ({ transactionHash, color }: { transactionHash: string; color: string }) => (
-  <Flex
-    row
-    onPress={(e) => {
-      e.preventDefault()
-      openEtherscanLinkInNewTab(transactionHash)
-    }}
-    ml="$spacing4"
-  >
-    <ActivityExternalLinkIcon color={color} />
-  </Flex>
+const ExternalLinkIcon = ({ transactionHash }: { transactionHash: string }) => (
+  <Row onClick={(e: MouseEvent) => openEtherscanLinkInNewTab(e, transactionHash)} marginLeft="4">
+    <ActivityExternalLinkIcon />
+  </Row>
 )
 
-const eventColors = (eventType: NftActivityType): GetThemeValueForKey<'color'> => {
+const eventColors = (eventType: NftActivityType) => {
   const activityEvents = {
-    [NftActivityType.Listing]: '#eeb317',
-    [NftActivityType.Sale]: '$statusSuccess',
-    [NftActivityType.Transfer]: '#bdb8fa',
-    [NftActivityType.CancelListing]: '$statusCritical',
-  } as const
+    [NftActivityType.Listing]: 'deprecated_gold',
+    [NftActivityType.Sale]: 'success',
+    [NftActivityType.Transfer]: 'deprecated_violet',
+    [NftActivityType.CancelListing]: 'critical',
+  }
 
-  return activityEvents[eventType]
+  return activityEvents[eventType] as 'deprecated_gold' | 'success' | 'deprecated_violet' | 'critical'
 }
 
 export const EventCell = ({
@@ -279,23 +272,19 @@ export const EventCell = ({
     [formatNumberOrString, price],
   )
   return (
-    <Flex height="100%" justifyContent="center" gap="$gap4">
-      <Flex row gap="$gap8" alignItems="center">
+    <Column height="full" justifyContent="center" gap="4">
+      <Row className={styles.eventDetail} color={eventColors(eventType)}>
         {renderEventIcon(eventType)}
-        <Text variant="body2" color={eventColors(eventType)}>
-          {ActivityEventTypeDisplay[eventType]}
-        </Text>
-      </Flex>
+        {ActivityEventTypeDisplay[eventType]}
+      </Row>
       {eventTimestamp && !isMobile && !eventOnly && (
-        <Flex row alignItems="center" gap="$gap8">
-          <Text variant="body3" color="$neutral2">
-            {getTimeDifference(eventTimestamp.toString())}
-          </Text>
-          {eventTransactionHash && <ExternalLinkIcon color="$neutral2" transactionHash={eventTransactionHash} />}
-        </Flex>
+        <Row className={styles.eventTime}>
+          {getTimeDifference(eventTimestamp.toString())}
+          {eventTransactionHash && <ExternalLinkIcon transactionHash={eventTransactionHash} />}
+        </Row>
       )}
-      {isMobile && price && <Text variant="body2" color="$neutral1">{`${formattedPrice} ETH`}</Text>}
-    </Flex>
+      {isMobile && price && <Row fontSize="16" fontWeight="book" color="neutral1">{`${formattedPrice} ETH`}</Row>}
+    </Column>
   )
 }
 
@@ -308,23 +297,30 @@ interface ItemCellProps {
 }
 
 const NoContentContainer = () => (
-  <Flex position="relative" backgroundColor="#24272e" width={60} height={60} borderRadius="$rounded8">
-    <Text
+  <Box
+    position="relative"
+    style={{
+      background: `#24272e`,
+    }}
+    className={styles.detailsImage}
+  >
+    <Box
       position="absolute"
       textAlign="center"
-      left="50%"
-      top="50%"
+      left="1/2"
+      top="1/2"
       style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-      color="$neutral2"
-      variant="body3"
+      color="gray500"
+      fontSize="12"
+      fontWeight="book"
     >
       Image
       <br />
       not
       <br />
       available
-    </Text>
-  </Flex>
+    </Box>
+  </Box>
 )
 
 interface RankingProps {
@@ -343,31 +339,31 @@ const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
   }
 
   return (
-    <Flex>
+    <Box>
       <MouseoverTooltip
         text={
-          <Flex row alignItems="center">
-            <Flex mr="$spacing4">
+          <Row>
+            <Box display="flex" marginRight="4">
               <img src="/nft/svgs/gem.svg" alt="cardLogo" width={16} />
-            </Flex>
-            <Text variant="body3" width="100%">
+            </Box>
+            <Box width="full" fontSize="14">
               {rarityVerified ? `Verified by ${collectionName}` : `Ranking by Rarity Sniper`}
-            </Text>
-          </Flex>
+            </Box>
+          </Row>
         }
         placement="top"
       >
-        <Flex className={styles.rarityInfo} row alignItems="center">
-          <Text my="$spacing2" variant="body3">
+        <Box className={styles.rarityInfo}>
+          <Box paddingTop="2" paddingBottom="2" display="flex">
             {formatNumber({ input: rank, type: NumberType.WholeNumber })}
-          </Text>
+          </Box>
 
-          <Text display="flex" height="$spacing16" variant="body2">
+          <Box display="flex" height="16">
             {rarityVerified ? <RarityVerifiedIcon /> : null}
-          </Text>
-        </Flex>
+          </Box>
+        </Box>
       </MouseoverTooltip>
-    </Flex>
+    </Box>
   )
 }
 
@@ -380,32 +376,25 @@ export const ItemCell = ({ event, rarityVerified, collectionName, eventTimestamp
   const [noContent, setNoContent] = useState(!getItemImage(event.tokenMetadata))
 
   return (
-    <Flex row alignItems="center" gap="$gap16" overflow="hidden" $platform-web={{ whiteSpace: 'nowrap' }}>
+    <Row gap="16" overflow="hidden" whiteSpace="nowrap">
       {!noContent ? (
-        <Image
+        <Box
+          as="img"
           alt={event.tokenMetadata?.name || event.tokenId}
           src={getItemImage(event.tokenMetadata)}
-          borderRadius="$rounded8"
-          overflow="hidden"
-          backgroundColor={loaded ? 'transparent' : '#24272e'}
+          draggable={false}
+          className={styles.detailsImage}
+          style={{
+            background: loaded ? 'none' : '#24272e',
+          }}
           onLoad={() => setLoaded(true)}
           onError={() => setNoContent(true)}
-          height={60}
-          width={60}
         />
       ) : (
         <NoContentContainer />
       )}
-      <Flex
-        height="100%"
-        justifyContent="center"
-        overflow="hidden"
-        $platform-web={{ whiteSpace: 'nowrap' }}
-        mr="$spacing24"
-      >
-        <Text mb="$spacing6" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis" variant="body2" width="90%">
-          {event.tokenMetadata?.name || event.tokenId}
-        </Text>
+      <Column height="full" justifyContent="center" overflow="hidden" whiteSpace="nowrap" marginRight="24">
+        <Box className={styles.detailsName}>{event.tokenMetadata?.name || event.tokenId}</Box>
         {event.tokenMetadata?.rarity && !isMobile && (
           <Ranking
             rarity={event.tokenMetadata?.rarity}
@@ -414,7 +403,7 @@ export const ItemCell = ({ event, rarityVerified, collectionName, eventTimestamp
           />
         )}
         {isMobile && eventTimestamp && getTimeDifference(eventTimestamp.toString())}
-      </Flex>
-    </Flex>
+      </Column>
+    </Row>
   )
 }

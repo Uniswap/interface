@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { useFiatConverter } from 'uniswap/src/features/fiatCurrency/conversion'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { useLocalizedFormatter } from 'uniswap/src/features/language/formatter'
 
 export type LocalizationContextState = {

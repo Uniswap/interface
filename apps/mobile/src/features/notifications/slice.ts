@@ -1,7 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { NotifSettingType } from 'src/features/notifications/constants'
 
-// eslint-disable-next-line import/no-unused-modules
 export interface PushNotificationsState {
   generalUpdatesEnabled: boolean
   priceAlertsEnabled: boolean
@@ -12,7 +11,7 @@ export const initialPushNotificationsState: PushNotificationsState = {
   priceAlertsEnabled: true,
 }
 
-type SettingsUpdatePayload = {
+export type SettingsUpdatePayload = {
   [k in NotifSettingType]?: boolean
 }
 

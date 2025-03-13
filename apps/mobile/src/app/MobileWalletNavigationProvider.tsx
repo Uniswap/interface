@@ -263,16 +263,14 @@ function useNavigateToFiatOnRamp(): (args: NavigateToFiatOnRampArgs) => void {
 }
 
 function useNavigateToExternalProfile(): (args: NavigateToExternalProfileArgs) => void {
-  const appNavigation = useAppStackNavigation()
+  const navigation = useAppStackNavigation()
 
   return useCallback(
     ({ address }: NavigateToExternalProfileArgs): void => {
-      if (exploreNavigationRef.isFocused()) {
-        exploreNavigationRef.navigate(MobileScreens.ExternalProfile, { address })
-      } else {
-        appNavigation.navigate(MobileScreens.ExternalProfile, { address })
-      }
+      navigation.navigate(MobileScreens.ExternalProfile, {
+        address,
+      })
     },
-    [appNavigation],
+    [navigation],
   )
 }

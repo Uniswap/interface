@@ -23,6 +23,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { isE2EMode } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
@@ -77,6 +78,10 @@ function TimeRangeTraceWrapper({
   )
 }
 
+export type LineChartPriceAndDateTimeTextProps = {
+  currencyId: CurrencyId
+}
+
 export const PriceExplorer = memo(function _PriceExplorer(): JSX.Element {
   const { isTestnetModeEnabled } = useEnabledChains()
   const { chartHeight, chartWidth } = useChartDimensions()
@@ -88,7 +93,7 @@ export const PriceExplorer = memo(function _PriceExplorer(): JSX.Element {
   return <PriceExplorerInner />
 })
 
-const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
+export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
   const { currencyId, tokenColor, navigation } = useTokenDetailsContext()
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
 

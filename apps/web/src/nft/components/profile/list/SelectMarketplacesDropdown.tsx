@@ -1,14 +1,34 @@
+import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled from 'lib/styled-components'
+import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
+import { buttonTextMedium, caption } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { ListingMarket } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { Dispatch, useMemo, useReducer, useRef } from 'react'
 import { ThemedText } from 'theme/components'
-import { Checkbox, Flex, Text } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
+import { Z_INDEX } from 'theme/zIndex'
+import { Checkbox } from 'ui/src'
+
+const MarketplaceRowWrapper = styled(Row)`
+  gap: 6px;
+  height: 44px;
+  width: 100%;
+  cursor: pointer;
+  justify-content: space-between;
+  padding: 0px 16px;
+  &:hover {
+    background-color: ${({ theme }) => theme.surface3};
+  }
+  border-radius: 12px;
+`
+
+const FeeText = styled.div`
+  color: ${({ theme }) => theme.neutral2};
+`
 
 interface MarketplaceRowProps {
   market: ListingMarket
@@ -29,34 +49,34 @@ const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: Marketp
   }
 
   return (
-    <Flex
-      row
-      onPress={toggleSelected}
-      gap="$gap6"
-      height="$spacing44"
-      width="100%"
-      cursor="pointer"
-      justifyContent="space-between"
-      px="$padding16"
-      borderRadius="$rounded12"
-      hoverStyle={{
-        backgroundColor: '$surface3',
-      }}
-    >
-      <Flex row gap="$gap12" onPress={toggleSelected}>
+    <MarketplaceRowWrapper onClick={toggleSelected}>
+      <Row gap="12" onClick={toggleSelected}>
         {getMarketplaceIcon(market.name, '24')}
-        <Flex>
+        <Column>
           <ThemedText.BodyPrimary>{market.name}</ThemedText.BodyPrimary>
-          <Text variant="body4" color="$neutral2">
-            {market.fee}% fee
-          </Text>
-        </Flex>
-      </Flex>
+          <FeeText className={caption}>{market.fee}% fee</FeeText>
+        </Column>
+      </Row>
 
       <Checkbox checked={isSelected} onPress={toggleSelected} variant="branded" />
-    </Flex>
+    </MarketplaceRowWrapper>
   )
 }
+
+const HeaderButtonWrap = styled(Row)`
+  padding: 12px;
+  border-radius: 12px;
+  width: 180px;
+  justify-content: space-between;
+  background: ${({ theme }) => theme.surface3};
+  cursor: pointer;
+  &:hover {
+    opacity: ${({ theme }) => theme.opacity.hover};
+  }
+  @media screen and (min-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    width: 220px;
+  }
+`
 
 const HeaderButtonContentWrapper = styled.div`
   display: flex;
@@ -90,6 +110,20 @@ const ModalWrapper = styled.div`
   position: relative;
 `
 
+const DropdownWrapper = styled(Column)<{ isOpen: boolean }>`
+  padding: 16px 0px;
+  background-color: ${({ theme }) => theme.surface1};
+  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+  position: absolute;
+  top: 52px;
+  width: 100%;
+  border-radius: 12px;
+  gap: 12px;
+  z-index: ${Z_INDEX.modalBackdrop};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+  border: 0.5px solid ${({ theme }) => theme.surface3};
+`
+
 export const SelectMarketplacesDropdown = ({
   setSelectedMarkets,
   selectedMarkets,
@@ -106,22 +140,7 @@ export const SelectMarketplacesDropdown = ({
   useOnClickOutside(ref, () => isOpen && toggleIsOpen())
   return (
     <ModalWrapper ref={ref}>
-      <Flex
-        row
-        onPress={toggleIsOpen}
-        p="$padding12"
-        borderRadius="$rounded12"
-        width={180}
-        justifyContent="space-between"
-        backgroundColor="$surface3"
-        cursor="pointer"
-        hoverStyle={{
-          opacity: 0.5,
-        }}
-        $md={{
-          width: 220,
-        }}
-      >
+      <HeaderButtonWrap className={buttonTextMedium} onClick={toggleIsOpen}>
         <HeaderButtonContentWrapper>
           {selectedMarkets.map((market, index) => {
             return (
@@ -134,25 +153,12 @@ export const SelectMarketplacesDropdown = ({
         </HeaderButtonContentWrapper>
 
         <Chevron isOpen={isOpen} secondaryColor={themeVars.colors.neutral1} />
-      </Flex>
-      <Flex
-        py="$padding16"
-        backgroundColor="$surface1"
-        display={isOpen ? 'flex' : 'none'}
-        position="absolute"
-        top={52}
-        width="100%"
-        borderRadius="$rounded12"
-        gap="$spacing12"
-        zIndex={zIndexes.modalBackdrop}
-        boxShadow="$deep"
-        borderWidth={0.5}
-        borderColor="$surface3"
-      >
+      </HeaderButtonWrap>
+      <DropdownWrapper isOpen={isOpen}>
         {ListingMarkets.map((market) => {
           return MarketplaceRow({ market, setSelectedMarkets, selectedMarkets })
         })}
-      </Flex>
+      </DropdownWrapper>
     </ModalWrapper>
   )
 }

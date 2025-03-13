@@ -1,5 +1,5 @@
 // until the web app needs all of tamagui, avoid heavy imports there
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { ColorTokens, createTokens } from '@tamagui/core'
 import { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import { borderRadii } from 'ui/src/theme/borderRadii'

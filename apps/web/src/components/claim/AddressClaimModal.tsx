@@ -115,18 +115,16 @@ export default function AddressClaimModal({
             </Text>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && !hasAvailableClaim && <Text color="$statusCritical">Address has no available claim</Text>}
-            <Flex row>
-              <Button
-                variant="branded"
-                size="large"
-                isDisabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
-                borderRadius="$rounded12"
-                mt="$spacing16"
-                onPress={onClaim}
-              >
-                Claim UNI
-              </Button>
-            </Flex>
+            <Button
+              isDisabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
+              p="$padding16"
+              width="100%"
+              borderRadius="$rounded12"
+              mt="$spacing16"
+              onPress={onClaim}
+            >
+              Claim UNI
+            </Button>
           </AutoColumn>
         </Flex>
       )}

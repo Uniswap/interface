@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { EmitterSubscription, Keyboard } from 'react-native'
 import { KeyboardInfo } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { isIOS } from 'utilities/src/platform'

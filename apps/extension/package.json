@@ -16,7 +16,6 @@
     "@uniswap/v3-sdk": "3.25.2",
     "@uniswap/v4-sdk": "1.21.2",
     "dotenv-webpack": "8.0.1",
-    "eslint-plugin-rulesdir": "0.2.2",
     "ethers": "5.7.2",
     "eventemitter3": "5.0.1",
     "framer-motion": "10.17.6",

@@ -1,9 +1,8 @@
-import { GetProps, XStack, XStackProps, styled } from 'tamagui'
+import { XStack, XStackProps, styled } from 'tamagui'
 import { buttonStyledContext } from 'ui/src/components/buttons/Button/constants'
 import { ButtonVariantProps } from 'ui/src/components/buttons/Button/types'
-import { getMaybeHexOrRGBColor } from 'ui/src/components/buttons/Button/utils/getMaybeHexOrRGBColor'
 
-import { getHoverCssFilter } from 'ui/src/utils/colors'
+import { isWeb } from 'utilities/src/platform'
 
 const FOCUS_SCALE = 0.98
 const PRESS_SCALE = FOCUS_SCALE
@@ -20,37 +19,26 @@ const criticalFocusVisibleStyle = {
   outlineColor: '$statusCriticalHovered',
 } satisfies XStackProps['focusVisibleStyle']
 
-const COMMON_PRESS_STYLE = {
-  scale: PRESS_SCALE,
-} satisfies XStackProps['pressStyle']
-
-// We have this because, if `COMMON_PRESS_STYLE` is applied in the top=level of `styled`'s options, it gets overridden by any additional `pressStyle` passed in via a subsequent variant
-const withCommonPressStyle = (style: XStackProps['pressStyle']): XStackProps['pressStyle'] => ({
-  ...COMMON_PRESS_STYLE,
-  ...style,
-})
-
-const CustomButtonFrameWithoutCustomProps = styled(XStack, {
+export const CustomButtonFrame = styled(XStack, {
   context: buttonStyledContext,
   name: 'Button',
   tag: 'button',
-  group: 'item',
-  '$platform-web': {
-    containerType: 'normal',
-  },
-  animation: 'fast',
-  // TODO(WALL-6057): Ideally we'd like to animate everything; however, there's an issue when animating colors with alpha channels
-  animateOnly: ['transform'],
+  // TODO: remove this once we've updated to tamagui@~1.120.2
+  // CAUTION: When animation is passed on Web, it loses the ability to be focused. Adding an animation on Web will also cause the button to regain its default styling at the end of a `click` event.
+  ...(isWeb ? {} : { animation: 'fast' }),
   // instead of setting border: 0 when no border, make it 1px but transparent, so the size or alignment of a button won't change unexpectedly between variants
   borderWidth: 1,
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '$transparent',
+  backgroundColor: '$background',
   borderColor: '$borderColor',
   focusVisibleStyle: {
     outlineWidth: 1,
     outlineOffset: 2,
     outlineStyle: 'solid',
+  },
+  pressStyle: {
+    scale: PRESS_SCALE,
   },
   cursor: 'pointer',
   height: 'auto',
@@ -61,7 +49,6 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
       primary: {},
       secondary: {},
       tertiary: {},
-      'text-only': {},
     },
     // By default, the button scales up and down in both directions, slightly more in the Y direction
     // The best strategy will depend on the Button' parent's styling
@@ -99,7 +86,6 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
     variant: {
       // See tamagui docs on string, boolean, and number variants
       // https://arc.net/l/quote/lpoqmiea
-
       ':string': (untypedVariant, { props }) => {
         const variant = untypedVariant as ButtonVariantProps['variant']
 
@@ -107,56 +93,9 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
           // @ts-expect-error we know emphasis will be ButtonEmphasis
           (props.emphasis || 'primary') as ButtonVariantProps['emphasis']
 
-        // TODO(WEB-6347): change name back to `disabled`
-        // @ts-expect-error we know isDisabled will be ButtonVariantProps['isDisabled']
-        if (props.isDisabled) {
+        if (props.disabled) {
           return {
             backgroundColor: '$surface2',
-          }
-        }
-
-        const hexOrRGBColorFromProps = getMaybeHexOrRGBColor(props.backgroundColor)
-        // @ts-expect-error we know primary-color will be a string
-        // We're unable to directly inject the props of a component created using `styled`, so we've typecasted it below, resulting in `primary-color` being an accepted prop when using `CustomButtonFrame` directly
-        const maybePrimaryColor = getMaybeHexOrRGBColor(props['primary-color'])
-
-        // When a `backgroundColor` is passed in as a prop, we automatically use it to set the other states
-        // In the `Button` implementation, this is passed as the prop, `customBackgroundColor`, to `CustomButtonText`
-        if (hexOrRGBColorFromProps) {
-          const DARK_FILTER = getHoverCssFilter({ isDarkMode: true, differenceFrom1: 0.25 })
-          const LIGHT_FILTER = getHoverCssFilter({ isDarkMode: true, differenceFrom1: 0.25 })
-
-          return {
-            borderColor: hexOrRGBColorFromProps,
-            pressStyle: withCommonPressStyle({
-              filter: DARK_FILTER,
-            }),
-            '$theme-dark': {
-              focusVisibleStyle: {
-                filter: DARK_FILTER,
-                outlineColor: maybePrimaryColor ?? hexOrRGBColorFromProps,
-              },
-              hoverStyle: {
-                filter: DARK_FILTER,
-                borderColor: maybePrimaryColor,
-              },
-              pressStyle: withCommonPressStyle({
-                filter: DARK_FILTER,
-              }),
-            },
-            '$theme-light': {
-              focusVisibleStyle: {
-                filter: LIGHT_FILTER,
-                outlineColor: maybePrimaryColor ?? hexOrRGBColorFromProps,
-              },
-              pressStyle: withCommonPressStyle({
-                filter: LIGHT_FILTER,
-              }),
-              hoverStyle: {
-                borderColor: maybePrimaryColor ?? hexOrRGBColorFromProps,
-                filter: LIGHT_FILTER,
-              },
-            },
           }
         }
 
@@ -166,16 +105,20 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
           if (emphasis === 'tertiary') {
             return {
               borderColor: '$accent2',
+              borderWidth: 1,
+
               hoverStyle: {
                 borderColor: '$accent2Hovered',
               },
+
               focusVisibleStyle: {
                 backgroundColor: '$surface1',
                 ...brandedFocusVisibleStyle,
               },
-              pressStyle: withCommonPressStyle({
+
+              pressStyle: {
                 borderColor: '$accent2Hovered',
-              }),
+              },
             }
           }
 
@@ -190,9 +133,9 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
                 backgroundColor: '$accent2Hovered',
                 ...brandedFocusVisibleStyle,
               },
-              pressStyle: withCommonPressStyle({
+              pressStyle: {
                 backgroundColor: '$accent2Hovered',
-              }),
+              },
             }
           }
 
@@ -206,19 +149,20 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
               backgroundColor: '$accent1Hovered',
               ...brandedFocusVisibleStyle,
             },
-            pressStyle: withCommonPressStyle({
+            pressStyle: {
               backgroundColor: '$accent1Hovered',
-            }),
+            },
           }
         }
 
         /* Critical Styling */
         if (variant === 'critical') {
           /* Critical Styling - Tertiary Emphasis */
-
           if (emphasis === 'tertiary') {
             return {
+              backgroundColor: 'transparent',
               borderColor: '$statusCritical2',
+              borderWidth: 1,
               hoverStyle: {
                 borderColor: '$statusCritical2Hovered',
               },
@@ -226,19 +170,9 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
                 backgroundColor: '$surface1',
                 ...criticalFocusVisibleStyle,
               },
-              pressStyle: withCommonPressStyle({
+              pressStyle: {
                 borderColor: '$statusCritical2Hovered',
-              }),
-            }
-          }
-
-          if (emphasis === 'text-only') {
-            return {
-              borderColor: '$transparent',
-              focusVisibleStyle: criticalFocusVisibleStyle,
-              pressStyle: withCommonPressStyle({
-                borderColor: '$transparent',
-              }),
+              },
             }
           }
 
@@ -246,16 +180,19 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
           if (emphasis === 'secondary') {
             return {
               backgroundColor: '$statusCritical2',
+
               hoverStyle: {
                 backgroundColor: '$statusCritical2Hovered',
               },
+
               focusVisibleStyle: {
                 backgroundColor: '$statusCritical2Hovered',
                 ...criticalFocusVisibleStyle,
               },
-              pressStyle: withCommonPressStyle({
+
+              pressStyle: {
                 backgroundColor: '$statusCritical2Hovered',
-              }),
+              },
             }
           }
 
@@ -269,9 +206,9 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
               backgroundColor: '$statusCriticalHovered',
               ...criticalFocusVisibleStyle,
             },
-            pressStyle: withCommonPressStyle({
+            pressStyle: {
               backgroundColor: '$statusCriticalHovered',
-            }),
+            },
           }
         }
 
@@ -280,7 +217,9 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
         /* Default Styling - Tertiary Emphasis */
         if (emphasis === 'tertiary') {
           return {
+            backgroundColor: 'transparent',
             borderColor: '$surface3',
+            borderWidth: 1,
             hoverStyle: {
               borderColor: '$surface3Hovered',
             },
@@ -288,19 +227,9 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
               backgroundColor: '$surface1',
               ...defaultFocusVisibleStyle,
             },
-            pressStyle: withCommonPressStyle({
+            pressStyle: {
               borderColor: '$surface3Hovered',
-            }),
-          }
-        }
-
-        if (emphasis === 'text-only') {
-          return {
-            borderColor: '$transparent',
-            focusVisibleStyle: defaultFocusVisibleStyle,
-            pressStyle: withCommonPressStyle({
-              borderColor: '$transparent',
-            }),
+            },
           }
         }
 
@@ -315,9 +244,9 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
               backgroundColor: '$surface3Hovered',
               ...defaultFocusVisibleStyle,
             },
-            pressStyle: withCommonPressStyle({
+            pressStyle: {
               backgroundColor: '$surface3Hovered',
-            }),
+            },
           }
         }
 
@@ -331,9 +260,9 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
             backgroundColor: '$accent3Hovered',
             ...defaultFocusVisibleStyle,
           },
-          pressStyle: withCommonPressStyle({
+          pressStyle: {
             backgroundColor: '$accent3Hovered',
-          }),
+          },
         }
       },
     },
@@ -348,7 +277,7 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
     size: {
       xxsmall: {
         px: '$spacing6',
-        py: '$spacing4',
+        py: '$spacing8',
         borderRadius: '$rounded12',
         gap: '$spacing4',
       },
@@ -360,13 +289,13 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
       },
       small: {
         px: '$spacing12',
-        py: '$spacing8',
+        py: '$spacing12',
         borderRadius: '$rounded12',
         gap: '$spacing8',
       },
       medium: {
         px: '$spacing16',
-        py: '$spacing12',
+        py: '$spacing16',
         borderRadius: '$rounded16',
         gap: '$spacing8',
       },
@@ -381,7 +310,6 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
       true: {
         alignSelf: 'stretch',
         flex: 1,
-        flexBasis: 0,
       },
     },
     // TODO(WEB-6347): change variant name back to `disabled`
@@ -392,21 +320,4 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
       },
     },
   } as const,
-  defaultVariants: {
-    variant: 'default',
-    emphasis: 'primary',
-    focusScaling: 'default',
-    fill: true,
-    size: 'medium',
-  },
 })
-
-type CustomProps = {
-  'primary-color'?: string
-}
-
-type CustomButtonWithExtraProps = typeof CustomButtonFrameWithoutCustomProps & {
-  (props: CustomProps & GetProps<typeof CustomButtonFrameWithoutCustomProps>): JSX.Element | null
-}
-
-export const CustomButtonFrame = CustomButtonFrameWithoutCustomProps as CustomButtonWithExtraProps

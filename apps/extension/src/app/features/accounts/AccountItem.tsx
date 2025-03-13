@@ -160,25 +160,31 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
             size={iconSizes.icon40}
             variant="subheading2"
           />
-          <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
-            <Flex centered>
-              <Text $group-hover={{ opacity: 0 }} color="$neutral2" opacity={1} variant="body3">
-                {formattedBalance}
-              </Text>
+          <Flex>
+            <Text
+              $group-hover={{ opacity: 0 }}
+              color="$neutral2"
+              opacity={1}
+              position="absolute"
+              right={0}
+              top="50%"
+              transform="translateY(-50%)"
+              variant="body3"
+            >
+              {formattedBalance}
+            </Text>
+            <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
               <Flex
                 $group-hover={{ opacity: 1 }}
                 borderRadius="$roundedFull"
                 hoverStyle={{ backgroundColor: '$surface2Hovered' }}
                 opacity={0}
-                position="absolute"
                 p="$spacing4"
-                right={0}
-                top={0}
               >
                 <Ellipsis color="$neutral2" size="$icon.16" />
               </Flex>
-            </Flex>
-          </ContextMenu>
+            </ContextMenu>
+          </Flex>
         </Flex>
       </TouchableArea>
     </>

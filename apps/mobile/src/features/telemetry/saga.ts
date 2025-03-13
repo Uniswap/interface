@@ -1,4 +1,5 @@
 import ReactNativeIdfaAaid from '@sparkfabrik/react-native-idfa-aaid'
+// eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID, OriginApplication } from '@uniswap/analytics'
 import DeviceInfo from 'react-native-device-info'
 import { call, delay, fork, select } from 'typed-redux-saga'
@@ -7,7 +8,7 @@ import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { isAndroid } from 'utilities/src/platform'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { watchTransactionEvents } from 'wallet/src/features/transactions/transactionWatcherSaga'

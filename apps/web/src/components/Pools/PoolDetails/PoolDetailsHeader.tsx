@@ -133,7 +133,7 @@ const PoolDetailsTitle = ({
   const feePercent = feeTier && formatPercent(new Percent(feeTier, BIPS_BASE * 100))
   return (
     <StyledPoolDetailsTitle>
-      <Flex>
+      <div>
         <PoolName>
           <StyledLink
             to={getTokenDetailsURL({
@@ -153,7 +153,7 @@ const PoolDetailsTitle = ({
             {token1?.symbol}
           </StyledLink>
         </PoolName>
-      </Flex>
+      </div>
       <Flex row gap="$gap4" alignItems="center">
         <PoolDetailsBadge variant="body3" $position="left">
           {protocolVersion?.toLowerCase()}

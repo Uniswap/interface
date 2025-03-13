@@ -1,6 +1,6 @@
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { ButtonEmpty } from 'components/Button/DeprecatedWebButtons'
+import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from 'components/Button/buttons'
 import { LightCard } from 'components/Card/cards'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -15,10 +15,10 @@ import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import { useTranslation } from 'react-i18next'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useTokenBalance } from 'state/connection/hooks'
-import { Button, Flex, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { FixedHeightRow } from '.'
@@ -40,7 +40,6 @@ interface PositionCardProps {
 
 export default function MigrateV2PositionCard({ pair, border, stakedBalance }: PositionCardProps) {
   const account = useAccount()
-  const { t } = useTranslation()
 
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
@@ -83,7 +82,9 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
             <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
             <Text variant="body1">
               {!currency0 || !currency1 ? (
-                <Dots>{t('common.loading')}</Dots>
+                <Dots>
+                  <Trans i18nKey="common.loading" />
+                </Dots>
               ) : (
                 `${currency0.symbol}/${currency1.symbol}`
               )}
@@ -98,12 +99,12 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
             >
               {showMore ? (
                 <>
-                  {t('common.manage')}
+                  <Trans i18nKey="common.manage" />
                   <ChevronUp size="20" style={{ marginLeft: '10px' }} />
                 </>
               ) : (
                 <>
-                  {t('common.manage')}
+                  <Trans i18nKey="common.manage" />
                   <ChevronDown size="20" style={{ marginLeft: '10px' }} />
                 </>
               )}
@@ -114,17 +115,23 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
         {showMore && (
           <Flex gap="$spacing6">
             <Flex row alignItems="center" justifyContent="space-between">
-              <Text variant="body2">{t('pool.totalTokens')}</Text>
+              <Text variant="body2">
+                <Trans i18nKey="pool.totalTokens" />
+              </Text>
               <Text variant="body2">{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</Text>
             </Flex>
             {stakedBalance && (
               <Flex row alignItems="center" justifyContent="space-between">
-                <Text variant="body2">{t('pool.rewardsPool.label')}</Text>
+                <Text variant="body2">
+                  <Trans i18nKey="pool.rewardsPool.label" />
+                </Text>
                 <Text variant="body2">{stakedBalance.toSignificant(4)}</Text>
               </Flex>
             )}
             <Flex row alignItems="center" justifyContent="space-between">
-              <Text variant="body2">{t('removeLiquidity.pooled', { symbol: currency0.symbol })}</Text>
+              <Text variant="body2">
+                <Trans i18nKey="removeLiquidity.pooled" values={{ symbol: currency0.symbol }} />
+              </Text>
               {token0Deposited ? (
                 <Flex row centered>
                   <Text variant="body2" mr="$spacing4">
@@ -138,7 +145,9 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
             </Flex>
 
             <Flex row alignItems="center" justifyContent="space-between">
-              <Text variant="body2">{t('pool.pooled', { sym: currency1.symbol })}</Text>
+              <Text variant="body2">
+                <Trans i18nKey="pool.pooled" values={{ sym: currency1.symbol }} />
+              </Text>
               {token1Deposited ? (
                 <Flex row centered>
                   <Text variant="body2" mr="$spacing4">
@@ -152,7 +161,9 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
             </Flex>
 
             <FixedHeightRow>
-              <Text variant="body2">{t('pool.share.label')}</Text>
+              <Text variant="body2">
+                <Trans i18nKey="pool.share.label" />
+              </Text>
               <Text variant="body2">
                 {poolTokenPercentage
                   ? (poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2)) + '%'
@@ -161,23 +172,25 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
             </FixedHeightRow>
 
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
-              <Flex row justifyContent="space-between" mt="$spacing16" width="100%">
-                <Link
+              <Flex row justifyContent="space-between" mt="$spacing16">
+                <ButtonPrimary
+                  padding="8px"
+                  $borderRadius="8px"
+                  as={Link}
                   to={`/migrate/v2/${pair.liquidityToken.address}`}
-                  style={{ textDecoration: 'none', width: '64%' }}
+                  width="64%"
                 >
-                  <Button size="large" variant="branded" width="100%">
-                    {t('common.migrate')}
-                  </Button>
-                </Link>
-                <Link
+                  <Trans i18nKey="common.migrate" />
+                </ButtonPrimary>
+                <ButtonSecondary
+                  padding="8px"
+                  $borderRadius="8px"
+                  as={Link}
+                  width="32%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
-                  style={{ textDecoration: 'none', width: '32%' }}
                 >
-                  <Button size="medium" variant="branded" emphasis="tertiary" width="100%">
-                    {t('common.remove.label')}
-                  </Button>
-                </Link>
+                  <Trans i18nKey="common.remove.label" />
+                </ButtonSecondary>
               </Flex>
             )}
           </Flex>

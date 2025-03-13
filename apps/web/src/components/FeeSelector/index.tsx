@@ -1,6 +1,7 @@
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { ButtonGray } from 'components/Button/buttons'
 import Card from 'components/Card/cards'
 import { FeeOption } from 'components/FeeSelector/FeeOption'
 import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentageBadge'
@@ -13,7 +14,7 @@ import usePrevious from 'hooks/usePrevious'
 import styled, { keyframes } from 'lib/styled-components'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { Button, Flex, RadioButtonGroup, Text } from 'ui/src'
+import { Flex, RadioButtonGroup, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -195,15 +196,9 @@ export default function FeeSelector({
               )}
             </Flex>
 
-            <Button
-              onPress={() => setShowOptions(!showOptions)}
-              variant="default"
-              emphasis="secondary"
-              size="small"
-              fill={false}
-            >
+            <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" $borderRadius="6px">
               {showOptions ? <Trans i18nKey="common.hide.button" /> : <Trans i18nKey="common.edit.button" />}
-            </Button>
+            </ButtonGray>
           </Flex>
         </FocusedOutlineCard>
 

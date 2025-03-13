@@ -10,17 +10,23 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import styled from 'lib/styled-components'
 import { useCallback, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { Button, Flex } from 'ui/src'
 
 const Container = styled(Column)`
   height: 100%;
   position: relative;
+`
+
+const StyledCancelButton = styled(ThemeButton)`
+  bottom: 0;
+  width: 100%;
+  margin: 24px 0 0;
 `
 
 const StyledLimitsDisclaimer = styled(LimitDisclaimer)`
@@ -76,17 +82,14 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
           />
         ))}
         {Boolean(selectedOrders.filter((order) => isLimitCancellable(order)).length) && (
-          <Flex row>
-            <Button
-              mt="spacing24"
-              emphasis="secondary"
-              onPress={() => setCancelState(CancellationState.REVIEWING_CANCELLATION)}
-              size="small"
-              isDisabled={cancelState !== CancellationState.NOT_STARTED || selectedOrders.length === 0}
-            >
-              {t('common.limit.cancel', { count: selectedOrders.length })}
-            </Button>
-          </Flex>
+          <StyledCancelButton
+            emphasis={ButtonEmphasis.medium}
+            onClick={() => setCancelState(CancellationState.REVIEWING_CANCELLATION)}
+            size={ButtonSize.medium}
+            disabled={cancelState !== CancellationState.NOT_STARTED || selectedOrders.length === 0}
+          >
+            {t('common.limit.cancel', { count: selectedOrders.length })}
+          </StyledCancelButton>
         )}
       </Container>
       <CancelOrdersDialog

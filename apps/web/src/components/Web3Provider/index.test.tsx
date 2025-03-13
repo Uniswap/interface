@@ -2,7 +2,6 @@ import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-e
 import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
-import { Flex } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setUserProperty } from 'uniswap/src/features/telemetry/user'
 
@@ -39,7 +38,7 @@ describe('Web3Provider', () => {
     it('sends event when the active account changes', async () => {
       // Arrange
       mocked(useAccount).mockReturnValue(account1Result)
-      render(<Flex />)
+      render(<div />)
 
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(1)
@@ -60,13 +59,13 @@ describe('Web3Provider', () => {
     it('sends event with is_reconnect when a previous account reconnects', async () => {
       // Arrange
       mocked(useAccount).mockReturnValue(account1Result)
-      const { rerender } = render(<Flex />)
+      const { rerender } = render(<div />)
 
       mocked(useAccount).mockReturnValue(account2Result)
-      rerender(<Flex />)
+      rerender(<div />)
 
       mocked(useAccount).mockReturnValue(account1Result)
-      rerender(<Flex />)
+      rerender(<div />)
 
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(3)

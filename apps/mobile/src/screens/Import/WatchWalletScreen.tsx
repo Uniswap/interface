@@ -9,7 +9,7 @@ import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { Eye, GraduationCap } from 'ui/src/components/icons'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
@@ -193,18 +193,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           </Text>
         </Flex>
       </Flex>
-      <Flex row>
-        <Button
-          testID={TestID.Next}
-          mt="$spacing24"
-          isDisabled={!isValid}
-          variant="branded"
-          size="large"
-          onPress={onSubmit}
-        >
-          {t('common.button.continue')}
-        </Button>
-      </Flex>
+      <DeprecatedButton isDisabled={!isValid} mt="$spacing24" size="large" testID={TestID.Next} onPress={onSubmit}>
+        {t('common.button.continue')}
+      </DeprecatedButton>
     </SafeKeyboardOnboardingScreen>
   )
 }

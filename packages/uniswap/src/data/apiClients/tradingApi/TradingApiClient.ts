@@ -38,6 +38,8 @@ import {
   TransactionHash,
   UniversalRouterVersion,
 } from 'uniswap/src/data/tradingApi/__generated__'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isTestEnv } from 'utilities/src/environment/env'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
 // See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
@@ -132,11 +134,19 @@ export async function fetchOrders({ orderIds }: { orderIds: string[] }): Promise
 }
 
 export async function fetchSwappableTokens(params: SwappableTokensParams): Promise<GetSwappableTokensResponse> {
+  const chainBlocklist = params.unichainEnabled ? [] : [UniverseChainId.Unichain.toString()]
+
   return await TradingApiClient.get<GetSwappableTokensResponse>(uniswapUrls.tradingApiPaths.swappableTokens, {
     params: {
       tokenIn: params.tokenIn,
       tokenInChainId: params.tokenInChainId,
     },
+    headers:
+      params.unichainEnabled || isTestEnv()
+        ? {}
+        : {
+            'x-chain-blocklist': chainBlocklist.join(','),
+          },
   })
 }
 

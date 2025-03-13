@@ -10,7 +10,6 @@ import {
   PortfolioBalancesQuery,
   PortfolioBalancesQueryVariables,
   PortfolioValueModifier,
-  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult, SpamCode } from 'uniswap/src/data/types'

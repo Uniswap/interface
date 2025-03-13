@@ -70,6 +70,7 @@ export enum ExtensionToDappRequestType {
 const BaseExtensionRequestSchema = MessageSchema.extend({
   type: z.nativeEnum(ExtensionToDappRequestType),
 })
+export type BaseExtensionRequest = z.infer<typeof BaseExtensionRequestSchema>
 
 export const ExtensionChainChangeSchema = BaseExtensionRequestSchema.extend({
   type: z.literal(ExtensionToDappRequestType.SwitchChain),
@@ -83,3 +84,15 @@ export const UpdateConnectionRequestSchema = BaseExtensionRequestSchema.extend({
   addresses: z.array(z.string()), // TODO (Thomas): Figure out what to do for type safety here
 })
 export type UpdateConnectionRequest = z.infer<typeof UpdateConnectionRequestSchema>
+
+export const ExtensionToDappRequestSchema = z.union([
+  ExtensionChainChangeSchema,
+  UpdateConnectionRequestSchema,
+])
+export type ExtensionToDappRequest = z.infer<typeof ExtensionToDappRequestSchema>
+
+// VALIDATORS
+
+export function isValidExtensionToDappRequest(request: unknown): request is ExtensionToDappRequest {
+  return ExtensionToDappRequestSchema.safeParse(request).success
+}

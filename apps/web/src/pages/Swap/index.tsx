@@ -346,7 +346,7 @@ function UniversalSwapFlow({
       {currentTab === SwapTab.Send && (
         <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
       )}
-      {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} initialCurrency={prefilledState?.output} />}
+      {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} />}
     </Flex>
   )
 }

@@ -126,8 +126,8 @@ describe('processTokenSections', () => {
   })
 
   it('preserves section metadata in processed items', () => {
-    const rightElement = <>Right</>
-    const endElement = <>End</>
+    const rightElement = <div>Right</div>
+    const endElement = <div>End</div>
     const section: TokenSection = {
       sectionKey: TokenOptionSection.YourTokens,
       data: [mockTokenOption],

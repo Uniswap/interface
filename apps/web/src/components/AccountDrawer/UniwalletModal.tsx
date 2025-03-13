@@ -3,7 +3,7 @@ import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
 import { useConnect } from 'hooks/useConnect'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -79,16 +79,14 @@ export default function UniwalletModal() {
               {t('account.drawer.modal.body')}
             </Text>
           </Flex>
-          <Flex row>
-            <Button
-              size="small"
-              emphasis="primary"
-              variant="branded"
-              onPress={() => openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })}
-            >
-              {t('common.download')}
-            </Button>
-          </Flex>
+
+          <DeprecatedButton
+            size="small"
+            onPress={() => openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })}
+            height="fit-content"
+          >
+            {t('common.download')}
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

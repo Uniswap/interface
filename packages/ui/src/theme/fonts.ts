@@ -1,5 +1,5 @@
 // until the web app needs all of tamagui, avoid heavy imports there
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { createFont, isAndroid, isWeb } from '@tamagui/core'
 import { needsSmallFont } from 'ui/src/utils/needs-small-font'
 import { isInterface } from 'utilities/src/platform'

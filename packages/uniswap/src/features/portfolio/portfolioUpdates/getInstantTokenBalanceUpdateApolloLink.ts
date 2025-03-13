@@ -1,7 +1,7 @@
 import { ApolloCache, ApolloLink, NormalizedCacheObject } from '@apollo/client'
 import { Reference, asyncMap } from '@apollo/client/utilities'
+// eslint-disable-next-line no-restricted-imports
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
-import { Buffer } from 'buffer'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
   Amount,

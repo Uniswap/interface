@@ -1,4 +1,4 @@
-import { AdaptiveDropdown, SharedDropdownProps } from 'components/DropdownSelector/AdaptiveDropdown'
+import { AdaptiveDropdown } from 'components/DropdownSelector/AdaptiveDropdown'
 import FilterButton from 'components/DropdownSelector/FilterButton'
 import { useMemo } from 'react'
 import { Flex, FlexProps, Text, styled } from 'ui/src'
@@ -30,21 +30,36 @@ export const InternalMenuItem = styled(Text, {
   } as const,
 })
 
-type DropdownSelectorProps = SharedDropdownProps & {
+type DropdownSelectorProps = {
+  isOpen: boolean
+  toggleOpen: (open: boolean) => void
   menuLabel: JSX.Element | string
   dataTestId?: string
+  dropdownTestId?: string
+  tooltipText?: string
   hideChevron?: boolean
   buttonStyle?: FlexProps
+  dropdownStyle?: FlexProps
+  adaptToSheet?: boolean
+  containerStyle?: React.CSSProperties
+  alignRight?: boolean
+  children: JSX.Element | JSX.Element[]
 }
 
 export function DropdownSelector({
-  menuLabel,
-  dataTestId,
-  hideChevron,
-  buttonStyle,
   isOpen,
   toggleOpen,
-  ...rest
+  menuLabel,
+  dataTestId,
+  dropdownTestId,
+  tooltipText,
+  hideChevron,
+  buttonStyle,
+  dropdownStyle,
+  adaptToSheet,
+  containerStyle,
+  alignRight,
+  children,
 }: DropdownSelectorProps) {
   const Trigger = useMemo(
     () => (
@@ -56,7 +71,7 @@ export function DropdownSelector({
         {...buttonStyle}
       >
         <Flex row justifyContent="space-between" alignItems="center" gap="$gap8" width="100%">
-          {typeof menuLabel === 'string' ? <Text>{menuLabel}</Text> : menuLabel}
+          {menuLabel}
           {!hideChevron && (
             <RotatableChevron
               animation="200ms"
@@ -71,5 +86,19 @@ export function DropdownSelector({
     ),
     [toggleOpen, isOpen, dataTestId, buttonStyle, menuLabel, hideChevron],
   )
-  return <AdaptiveDropdown isOpen={isOpen} toggleOpen={toggleOpen} trigger={Trigger} {...rest} />
+  return (
+    <AdaptiveDropdown
+      isOpen={isOpen}
+      toggleOpen={toggleOpen}
+      trigger={Trigger}
+      tooltipText={tooltipText}
+      adaptToSheet={adaptToSheet}
+      dropdownTestId={dropdownTestId}
+      dropdownStyle={dropdownStyle}
+      containerStyle={containerStyle}
+      alignRight={alignRight}
+    >
+      {children}
+    </AdaptiveDropdown>
+  )
 }

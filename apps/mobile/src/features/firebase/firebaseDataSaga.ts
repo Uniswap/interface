@@ -152,7 +152,7 @@ function* addAccountToFirebase(account: Account) {
   }
 }
 
-function* removeAccountFromFirebase(address: Address, notificationsEnabled: boolean | undefined) {
+export function* removeAccountFromFirebase(address: Address, notificationsEnabled: boolean | undefined) {
   try {
     if (!notificationsEnabled) {
       return
@@ -166,7 +166,7 @@ function* removeAccountFromFirebase(address: Address, notificationsEnabled: bool
   }
 }
 
-function* renameAccountInFirebase(address: Address | undefined, newName: string) {
+export function* renameAccountInFirebase(address: Address | undefined, newName: string) {
   if (!address) {
     throw new Error('Address is required for renameAccountInFirebase')
   }
@@ -178,7 +178,7 @@ function* renameAccountInFirebase(address: Address | undefined, newName: string)
   }
 }
 
-function* toggleFirebaseNotificationSettings({ address, enabled }: TogglePushNotificationParams) {
+export function* toggleFirebaseNotificationSettings({ address, enabled }: TogglePushNotificationParams) {
   if (!address) {
     throw new Error('Address is required for toggleFirebaseNotificationSettings')
   }

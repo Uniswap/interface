@@ -1,7 +1,16 @@
 import type { TFunction } from 'i18next'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AdaptiveWebPopoverContent, Button, Flex, isWeb, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import {
+  AdaptiveWebPopoverContent,
+  DeprecatedButton,
+  Flex,
+  isWeb,
+  Text,
+  TouchableArea,
+  useMedia,
+  useSporeColors,
+} from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -79,12 +88,12 @@ const TransactionSettingsModalContent = ({
       )}
       {screen}
       {shouldShowCloseButton && (
-        <Flex centered row pb={isWebSmallScreen ? '$spacing24' : '$spacing8'}>
-          <Button testID="swap-settings-close" emphasis="secondary" onPress={onClose}>
+        <Flex centered row pb={isExtension ? '$none' : isWebSmallScreen ? '$spacing24' : '$spacing16'}>
+          <DeprecatedButton fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
             {SelectedSetting?.renderCloseButtonText
               ? SelectedSetting.renderCloseButtonText(t)
               : t('common.button.save')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       )}
     </Flex>

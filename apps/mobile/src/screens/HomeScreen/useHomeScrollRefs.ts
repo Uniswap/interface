@@ -10,7 +10,7 @@ type FlashListAnyType = FlashList<any>
 type FlatListAnyType = FlatList<any>
 type ScrollRefType = FlashListAnyType | FlatListAnyType
 
-interface ScrollRefs {
+export interface ScrollRefs {
   tokensTabScrollValue: ReturnType<typeof useSharedValue<number>>
   nftsTabScrollValue: ReturnType<typeof useSharedValue<number>>
   activityTabScrollValue: ReturnType<typeof useSharedValue<number>>

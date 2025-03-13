@@ -9,7 +9,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
@@ -95,20 +95,25 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
             <Flex grow $short={{ gap: '$spacing16' }} gap="$spacing24" mx="$spacing16">
               <Trace logPress element={ElementName.CreateAccount}>
                 <Flex centered row>
-                  <Button
-                    fill={false}
-                    variant="branded"
+                  <TouchableArea
+                    alignItems="center"
+                    backgroundColor="$accent1"
+                    borderRadius="$rounded20"
                     flexShrink={1}
                     hitSlop={16}
+                    px="$spacing36"
+                    py="$spacing16"
+                    scaleTo={0.97}
                     shadowColor="$accent1"
                     shadowOpacity={0.4}
                     shadowRadius="$spacing8"
-                    size="large"
                     testID={TestID.CreateAccount}
                     onPress={onPressCreateWallet}
                   >
-                    {t('onboarding.landing.button.create')}
-                  </Button>
+                    <Text color="$white" variant="buttonLabel1">
+                      {t('onboarding.landing.button.create')}
+                    </Text>
+                  </TouchableArea>
                 </Flex>
               </Trace>
               <Trace logPress element={ElementName.ImportAccount}>

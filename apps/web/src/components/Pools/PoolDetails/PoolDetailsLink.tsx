@@ -15,7 +15,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { breakpoints } from 'ui/src/theme'
-import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -89,20 +89,22 @@ interface PoolDetailsLinkProps {
 export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetailsLinkProps) {
   const theme = useTheme()
   const { t } = useTranslation()
+  const isNative = address === NATIVE_CHAIN_ID
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     const checksummedAddress = isAddress(address)
     checksummedAddress && setCopied(checksummedAddress)
   }, [address, setCopied])
+
   const isPool = tokens.length === 2
-  const isNative = address === NATIVE_CHAIN_ID || (tokens[0] && !isPool && tokens[0].standard === TokenStandard.Native)
   const currencies = isPool && tokens[1] ? [currency, gqlToCurrency(tokens[1])] : [currency]
   const explorerUrl =
+    address &&
     chainId &&
     getExplorerLink(
       chainId,
-      address ?? '',
+      address,
       isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
     )
 
@@ -131,7 +133,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     [truncateAddress],
   )
 
-  if (loading || !chainId) {
+  if (loading || !address || !chainId) {
     return (
       <Row gap="8px" padding="6px 0px">
         <SmallDetailBubble />

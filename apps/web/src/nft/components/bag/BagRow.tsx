@@ -1,5 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
+import clsx from 'clsx'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
+import { Box } from 'components/deprecated/Box'
+import styled from 'lib/styled-components'
+import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/bag/BagRow.css'
 import { TimedLoader } from 'nft/components/bag/TimedLoader'
 import { Suspicious } from 'nft/components/card/icons'
 import {
@@ -11,50 +17,67 @@ import {
   SquareArrowUpIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
+import { bodySmall } from 'nft/css/common.css'
 import { loadingBlock } from 'nft/css/loading.css'
 import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { getAssetHref } from 'nft/utils'
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Flex, Image, Text, TouchableAreaEvent, View } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-export const RemoveAssetButton = ({ onClick }: { onClick: (e: TouchableAreaEvent) => void }) => (
-  <Flex
-    position="absolute"
-    right={-11}
-    top={-11}
-    zIndex="$default"
-    width={45}
-    height={45}
-    alignItems="center"
-    justifyContent="center"
-    animation="125ms"
-    onPress={onClick}
-  >
+export const RemoveButton = styled(ThemeButton)`
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 16px;
+  margin-left: 16px;
+  padding: 12px 14px;
+`
+const ReviewButton = styled(ThemeButton)`
+  border-radius: 12px;
+  flex: 1 1 auto;
+  font-size: 14px;
+  padding: 8px;
+  width: 50%;
+`
+const RemoveAssetOverlay = styled.div`
+  position: absolute;
+  display: block;
+  right: -11px;
+  top: -11px;
+  z-index: 1;
+  transition: 250ms;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const RemoveAssetButton = ({ onClick }: { onClick: (e: MouseEvent<HTMLDivElement>) => void }) => (
+  <RemoveAssetOverlay onClick={onClick}>
     <CircularCloseIcon />
-  </Flex>
+  </RemoveAssetOverlay>
 )
 
 const NoContentContainer = () => (
-  <Flex position="relative" backgroundColor="$surface3" width="56" height="56" borderRadius="$rounded8">
-    <Text
+  <Box position="relative" background="loadingBackground" className={styles.bagRowImage}>
+    <Box
       position="absolute"
       textAlign="center"
-      left="50%"
-      top="50%"
+      left="1/2"
+      top="1/2"
       style={{ transform: 'translate3d(-50%, -50%, 0)' }}
-      color="$neutral2"
-      variant="body3"
+      color="gray500"
+      fontSize="12"
+      fontWeight="book"
     >
       Image
       <br />
       not
       <br />
       available
-    </Text>
-  </Flex>
+    </Box>
+  </Box>
 )
 
 interface BagRowProps {
@@ -84,7 +107,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
   })
 
   const handleRemoveClick = useCallback(
-    (e: TouchableAreaEvent) => {
+    (e: MouseEvent<HTMLElement>) => {
       e.preventDefault()
       e.stopPropagation()
       removeAsset([asset])
@@ -94,100 +117,52 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
 
   return (
     <Link to={getAssetHref(asset)} style={{ textDecoration: 'none' }}>
-      <Flex
-        row
-        px="$padding12"
-        py="$padding8"
-        gap="$gap12"
-        cursor="pointer"
-        height="100%"
-        borderRadius="$rounded12"
-        ml={-4}
-        mr={-4}
-        width="100%"
-        hoverStyle={{
-          backgroundColor: '$deprecated_stateOverlayHover',
-        }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        <Flex>
+      <Row className={styles.bagRow} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <Box position="relative" display="flex">
           {showRemove && isMobile && <RemoveAssetButton onClick={handleRemoveClick} />}
           {!noImageAvailable && (
-            <Image
+            <Box
+              as="img"
               src={asset.smallImageUrl}
               alt={asset.name}
-              height={56}
-              width={56}
-              borderRadius="$rounded8"
-              objectFit="cover"
+              className={clsx(styles.bagRowImage, grayscale && !cardHovered && styles.grayscaleImage)}
               onLoad={() => {
                 setImageLoaded(true)
               }}
               onError={() => {
                 setNoImageAvailable(true)
               }}
-              $platform-web={{
-                visibility: loadedImage ? 'visible' : 'hidden',
-                filter: grayscale && !cardHovered ? 'grayscale(100%)' : 'none',
-              }}
+              visibility={loadedImage ? 'visible' : 'hidden'}
             />
           )}
-          {!loadedImage && (
-            <View position="absolute" className={`${loadingBlock}`} width="56" height="56" borderRadius="$rounded8" />
-          )}
+          {!loadedImage && <Box position="absolute" className={`${styles.bagRowImage} ${loadingBlock}`} />}
           {noImageAvailable && <NoContentContainer />}
-        </Flex>
-        <Flex overflow="hidden" flex={1}>
-          <Flex row overflow="hidden" width="full" $platform-web={{ whiteSpace: 'nowrap' }}>
-            <Text
-              color={grayscale ? '$neutral2' : '$neutral1'}
-              variant="body3"
-              textOverflow="ellipsis"
-              maxWidth="80%"
-              textWrap="nowrap"
-            >
-              {asset.name ?? `#${asset.tokenId}`}
-            </Text>
+        </Box>
+        <Column overflow="hidden" width="full" color={grayscale ? 'neutral2' : 'neutral1'}>
+          <Row overflow="hidden" width="full" whiteSpace="nowrap">
+            <Box className={styles.assetName}>{asset.name ?? `#${asset.tokenId}`}</Box>
             {asset.susFlag && <Suspicious />}
-          </Flex>
-          <Flex row overflow="hidden" $platform-web={{ whiteSpace: 'nowrap' }} gap="$spacing2">
-            <Text
-              color={grayscale ? '$neutral2' : '$neutral1'}
-              variant="body3"
-              textOverflow="ellipsis"
-              maxWidth="80%"
-              textWrap="nowrap"
-            >
-              {asset.collectionName}
-            </Text>
-            {asset.collectionIsVerified && <VerifiedIcon style={{ flexShrink: 0 }} />}
-          </Flex>
-        </Flex>
+          </Row>
+          <Row overflow="hidden" whiteSpace="nowrap" gap="2">
+            <Box className={styles.collectionName}>{asset.collectionName}</Box>
+            {asset.collectionIsVerified && <VerifiedIcon className={styles.icon} />}
+          </Row>
+        </Column>
         {showRemoveButton && (
-          <Button
-            zIndex={zIndexes.mask}
-            size="small"
-            onPress={handleRemoveClick}
-            position="absolute"
-            right="$spacing12"
-            top="$spacing8"
-          >
+          <RemoveButton onClick={handleRemoveClick} emphasis={ButtonEmphasis.medium} size={ButtonSize.medium}>
             Remove
-          </Button>
+          </RemoveButton>
         )}
-        {!isMobile && (
-          <Flex flexShrink={0} alignItems="flex-end" opacity={showRemoveButton ? 0 : 1}>
-            <Text variant="body3">
+        {(!showRemoveButton || isMobile) && (
+          <Column flexShrink="0" alignItems="flex-end">
+            <Box className={styles.bagRowPrice}>
               {assetEthPriceFormatted}
               &nbsp;ETH
-            </Text>
-            <Text variant="body4" color="$neutral2">
-              {assetUSDPriceFormatted}
-            </Text>
-          </Flex>
+            </Box>
+            <Box className={styles.collectionName}>{assetUSDPriceFormatted}</Box>
+          </Column>
         )}
-      </Flex>
+      </Row>
     </Link>
   )
 }
@@ -204,7 +179,7 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
   const { formatEther } = useFormatter()
   const isPriceIncrease = BigNumber.from(asset.updatedPriceInfo?.ETHPrice).gt(BigNumber.from(asset.priceInfo.ETHPrice))
   const handleRemove = useCallback(
-    (e: TouchableAreaEvent) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
       e.stopPropagation()
       const toKeep = false
@@ -213,7 +188,7 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
     [asset, markAssetAsReviewed],
   )
   const handleKeep = useCallback(
-    (e: TouchableAreaEvent) => {
+    (e: MouseEvent<HTMLButtonElement>) => {
       e.preventDefault()
       e.stopPropagation()
       const toKeep = true
@@ -222,49 +197,26 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
     [asset, markAssetAsReviewed],
   )
   return (
-    <Flex
-      gap="$gap8"
-      py="$spacing16"
-      mx="$spacing8"
-      borderBottomColor="$surface3"
-      height="100%"
-      cursor="pointer"
-      borderTopColor={top ? '$surface3' : '$transparent'}
-    >
-      <Flex row gap="$spacing4">
+    <Column className={styles.priceChangeColumn} borderTopColor={top ? 'surface3' : 'transparent'}>
+      <Row className={styles.priceChangeRow}>
         {isPriceIncrease ? <SquareArrowUpIcon /> : <SquareArrowDownIcon />}
-        <Text variant="body3" color="gold">{`Price ${isPriceIncrease ? 'increased' : 'decreased'} from ${formatEther({
+        <Box>{`Price ${isPriceIncrease ? 'increased' : 'decreased'} from ${formatEther({
           input: asset.priceInfo.ETHPrice,
           type: NumberType.NFTToken,
-        })} ETH`}</Text>
-      </Flex>
-      <Flex>
+        })} ETH`}</Box>
+      </Row>
+      <Box style={{ marginLeft: '-8px', marginRight: '-8px' }}>
         <BagRow asset={asset} usdPrice={usdPrice} removeAsset={() => undefined} isMobile={isMobile} />
-      </Flex>
-      <Flex row gap="$spacing8" justifyContent="space-between">
-        <Button
-          flex={1}
-          borderRadius="$rounded12"
-          width="50%"
-          emphasis="secondary"
-          size="xsmall"
-          onPress={handleRemove}
-        >
-          <Text variant="buttonLabel3">Remove</Text>
-        </Button>
-        <Button
-          flex={1}
-          borderRadius="$rounded12"
-          width="50%"
-          emphasis="primary"
-          variant="branded"
-          size="xsmall"
-          onPress={handleKeep}
-        >
-          <Text variant="buttonLabel3">Keep</Text>
-        </Button>
-      </Flex>
-    </Flex>
+      </Box>
+      <Row gap="8" justifyContent="space-between">
+        <ReviewButton onClick={handleRemove} emphasis={ButtonEmphasis.medium} size={ButtonSize.small}>
+          Remove
+        </ReviewButton>
+        <ReviewButton onClick={handleKeep} emphasis={ButtonEmphasis.high} size={ButtonSize.small}>
+          Keep
+        </ReviewButton>
+      </Row>
+    </Column>
   )
 }
 
@@ -285,31 +237,29 @@ const ASSET_PREVIEW_WIDTH = 32
 const ASSET_PREVIEW_OFFSET = 20
 
 const UnavailableAssetsPreview = ({ assets }: UnavailableAssetsPreviewProps) => (
-  <View
-    $platform-web={{
-      display: 'grid',
-    }}
+  <Column
+    display="grid"
     style={{
       gridTemplateColumns: `repeat(${assets.length}, 20px)`,
       width: `${ASSET_PREVIEW_WIDTH + (assets.length - 1) * ASSET_PREVIEW_OFFSET}px`,
     }}
   >
     {assets.map((asset, index) => (
-      <Image
+      <Box
         key={`${asset.address}-${asset.tokenId}`}
+        as="img"
         src={asset.smallImageUrl}
-        width={32}
-        height={32}
-        borderWidth={1}
-        borderColor="$surface1"
-        borderRadius="$rounded4"
-        zIndex={index}
-        $platform-web={{
-          filter: 'grayscale(100%)',
-        }}
+        width="32"
+        height="32"
+        borderStyle="solid"
+        borderWidth="1px"
+        borderColor="surface1"
+        borderRadius="4"
+        style={{ zIndex: index }}
+        className={styles.grayscaleImage}
       />
     ))}
-  </View>
+  </Column>
 )
 
 export const UnavailableAssetsHeaderRow = ({
@@ -348,53 +298,42 @@ export const UnavailableAssetsHeaderRow = ({
   const isShowingAssets = isOpen || !moreThanOneUnavailable
 
   return (
-    <Flex
-      gap="$gap12"
-      mx="$spacing8"
-      py="$spacing16"
-      borderWidth={1}
-      borderColor="$transparent"
-      borderTopColor="$surface3"
-      borderBottomColor="$surface3"
-      height="100%"
-    >
-      <Flex>
-        <Flex
-          row
+    <Column className={styles.unavailableAssetsContainer}>
+      <Column>
+        <Row
           justifyContent="space-between"
-          mb={isShowingAssets ? '$spacing12' : 0}
+          marginBottom={isShowingAssets ? '12' : '0'}
           cursor={moreThanOneUnavailable ? 'pointer' : 'default'}
-          onPress={() => {
+          onClick={() => {
             if (moreThanOneUnavailable) {
               !didOpenUnavailableAssets && setDidOpenUnavailableAssets(true)
               toggleOpen()
             }
           }}
         >
-          <Text gap="$gap12" color="$neutral2" variant="body3">
+          <Row gap="12" color="neutral2" className={bodySmall}>
             {!isShowingAssets && <UnavailableAssetsPreview assets={assets.slice(0, 5)} />}
             No longer available
-          </Text>
+          </Row>
           {moreThanOneUnavailable && (
-            <Flex row>
-              {isOpen ? <ChevronUpBagIcon color="$neutral2" /> : <ChevronDownBagIcon color="$neutral2" />}
-            </Flex>
+            <Row color="neutral2">{isOpen ? <ChevronUpBagIcon /> : <ChevronDownBagIcon />}</Row>
           )}
           {!didOpenUnavailableAssets && (
-            <Flex
-              row
-              width="$spacing20"
-              height="$spacing20"
+            <Row
+              position="relative"
+              width="20"
+              height="20"
+              color="neutral1"
               justifyContent="center"
               cursor="pointer"
-              onPress={clearUnavailableAssets}
+              onClick={clearUnavailableAssets}
             >
               <TimedLoader />
-              <CloseTimerIcon color="$neutral1" />
-            </Flex>
+              <CloseTimerIcon />
+            </Row>
           )}
-        </Flex>
-        <Flex gap="$gap8" ml={-8} mr={-8}>
+        </Row>
+        <Column gap="8" style={{ marginLeft: '-8px', marginRight: '-8px' }}>
           {isShowingAssets &&
             assets.map((asset) => (
               <BagRow
@@ -406,8 +345,8 @@ export const UnavailableAssetsHeaderRow = ({
                 isMobile={isMobile}
               />
             ))}
-        </Flex>
-      </Flex>
-    </Flex>
+        </Column>
+      </Column>
+    </Column>
   )
 }

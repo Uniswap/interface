@@ -1,8 +1,10 @@
+import { Box } from 'components/deprecated/Box'
+import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/bag/MobileHoverBag.css'
+import { body, bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
 import { useBagTotalEthPrice, useBagTotalUsdPrice } from 'nft/hooks/useBagTotalEthPrice'
 import { roundAndPluralize } from 'nft/utils'
-import { Flex, Image, Text, View } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const MobileHoverBag = () => {
@@ -15,41 +17,21 @@ export const MobileHoverBag = () => {
   const shouldShowBag = itemsInBag.length > 0
 
   return (
-    <Flex
-      row
-      alignItems="center"
-      display="none"
-      $md={{
-        display: shouldShowBag ? 'flex' : 'none',
-      }}
-      $platform-web={{
-        position: 'fixed',
-      }}
-      bottom={72}
-      left={16}
-      right={16}
-      backgroundColor="$surface2"
-      p="$padding8"
-      zIndex={zIndexes.dropdown}
-      borderRadius="$rounded8"
-      borderColor="$surface3"
-      borderWidth={1}
-      justifyContent="space-between"
-    >
-      <Flex row gap="$spacing8">
-        <View width={34} height={34}>
+    <Row display={{ sm: shouldShowBag ? 'flex' : 'none', md: 'none' }} className={styles.bagContainer}>
+      <Row gap="8">
+        <Box position="relative" style={{ width: '34px', height: '34px' }}>
           {itemsInBag.slice(0, 3).map((item, index) => {
             return (
-              <Image
+              <Box
+                as="img"
                 key={index}
                 position="absolute"
                 src={item.asset.smallImageUrl}
-                top="50%"
-                left="50%"
-                width={26}
-                height={26}
-                borderRadius="$rounded8"
-                overflow="hidden"
+                top="1/2"
+                left="1/2"
+                width="26"
+                height="26"
+                borderRadius="4"
                 style={{
                   transform:
                     index === 0
@@ -62,31 +44,24 @@ export const MobileHoverBag = () => {
               />
             )
           })}
-        </View>
-        <Flex>
-          <Text variant="body2">{roundAndPluralize(itemsInBag.length, 'NFT')}</Text>
-          <Flex row gap="$gap8">
-            <Text variant="body2">
+        </Box>
+        <Column>
+          <Box className={body} fontWeight="medium">
+            {roundAndPluralize(itemsInBag.length, 'NFT')}
+          </Box>
+          <Row gap="8">
+            <Box className={body}>
               {`${formatEther({ input: totalEthPrice.toString(), type: NumberType.NFTToken })}`} ETH
-            </Text>
-            <Text variant="body4" color="$neutral2">
+            </Box>
+            <Box color="neutral2" className={bodySmall}>
               {formatNumberOrString({ input: totalUsdPrice, type: NumberType.FiatNFTToken })}
-            </Text>
-          </Flex>
-        </Flex>
-      </Flex>
-      <Text
-        variant="buttonLabel3"
-        color="$white"
-        backgroundColor="$accent1"
-        py="$spacing8"
-        px="$spacing18"
-        borderRadius="$rounded12"
-        cursor="pointer"
-        onPress={toggleBag}
-      >
+            </Box>
+          </Row>
+        </Column>
+      </Row>
+      <Box className={styles.viewBagButton} onClick={toggleBag}>
         View bag
-      </Text>
-    </Flex>
+      </Box>
+    </Row>
   )
 }

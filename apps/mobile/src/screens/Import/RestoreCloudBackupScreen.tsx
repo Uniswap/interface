@@ -23,6 +23,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
   const isDarkMode = useIsDarkMode()
   const localizedDayjs = useLocalizedDayjs()
 
+  // const backups = useMockCloudBackups(4) // returns 4 mock backups with random mnemonicIds and createdAt dates
   const backups = useCloudBackups()
   const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
 

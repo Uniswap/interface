@@ -1,3 +1,4 @@
+import { SmallButtonPrimary } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
@@ -5,7 +6,7 @@ import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { Button, ModalCloseIcon } from 'ui/src'
+import { ModalCloseIcon } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
@@ -76,6 +77,22 @@ const FlagInfo = styled.div`
   padding-left: 8px;
   flex-shrink: 1;
   overflow: hidden;
+`
+
+const SaveButton = styled.button`
+  border-radius: 12px;
+  padding: 8px;
+  margin: 0px 20px;
+  background: ${({ theme }) => theme.surface3};
+  font-weight: 535;
+  font-size: 16px;
+  border: none;
+  color: ${({ theme }) => theme.neutral1};
+  cursor: pointer;
+
+  :hover {
+    background: ${({ theme }) => theme.surface3};
+  }
 `
 
 interface FeatureFlagProps {
@@ -185,17 +202,14 @@ export default function FeatureFlagModal() {
         <Header>
           <Row width="100%" justify="space-between">
             <span>Feature Flag Settings</span>
-            <Button
-              onPress={() => {
+            <SmallButtonPrimary
+              onClick={() => {
                 Statsig.removeGateOverride()
                 Statsig.removeConfigOverride()
               }}
-              variant="branded"
-              size="small"
-              fill={false}
             >
               Clear Overrides
-            </Button>
+            </SmallButtonPrimary>
           </Row>
           <ModalCloseIcon onClose={closeModal} />
         </Header>
@@ -229,6 +243,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
           <FeatureFlagOption flag={FeatureFlags.V4Data} label="Enable v4 data" />
           <FeatureFlagOption flag={FeatureFlags.MigrateV3ToV4} label="Enable migrate flow from v3 -> v4" />
+          <FeatureFlagOption flag={FeatureFlags.PriceRangeInputV2} label="Enable Price Range Input V2" />
           <FeatureFlagOption flag={FeatureFlags.PositionPageV2} label="Enable Position Page V2" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
@@ -236,8 +251,10 @@ export default function FeatureFlagModal() {
             flag={FeatureFlags.TokenSelectorTrendingTokens}
             label="Enable 24h volume trending tokens in Token Selector"
           />
-          <FeatureFlagOption flag={FeatureFlags.SearchRevamp} label="Enable search revamp" />
           <FeatureFlagGroup name="New Chains">
+            <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
+            <FeatureFlagOption flag={FeatureFlags.Unichain} label="Enable Unichain" />
+            <FeatureFlagOption flag={FeatureFlags.UnichainPromo} label="Unichain In App Promotion" />
             <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
             <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />
             <FeatureFlagOption flag={FeatureFlags.MonadTestnetDown} label="Enable Monad Testnet Down Banner" />
@@ -273,9 +290,7 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.AATestWeb} label="A/A Test for Web" />
           </FeatureFlagGroup>
         </FlagsColumn>
-        <Button onPress={() => window.location.reload()} variant="default" emphasis="secondary" size="small">
-          Reload
-        </Button>
+        <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
       </Wrapper>
     </Modal>
   )

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { Amount, PriceHistory, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import {
   TokenSortMethod,

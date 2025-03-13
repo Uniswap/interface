@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/core'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import React, { PropsWithChildren, ReactNode, memo, useEffect, useId, useMemo } from 'react'
 import { isWeb } from 'utilities/src/platform'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAnalyticsNavigationContext } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ITraceContext, TraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
