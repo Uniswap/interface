@@ -51,6 +51,14 @@
       "symbol": "stTARA",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0x37Df886BE517F9c75b27Cb70dac0D61432C92FBE/logo.png"
+    },
+    {
+      "chainId": 841,
+      "address": "0xaad94afea296dcf8c97d05dbf3733a245c3ea78f",
+      "name": "ChadPu",
+      "symbol": "CHDPU",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0xaad94Afea296DCF8c97D05dbf3733A245c3Ea78F/logo.png"
     }
   ],
   "version": {

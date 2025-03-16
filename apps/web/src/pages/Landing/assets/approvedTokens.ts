@@ -67,6 +67,16 @@ export const approvedERC20: InteractiveToken[] = [
     logoUrl:
       "https://docs.meridianfinance.net/~gitbook/image?url=https%3A%2F%2F2791058162-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FznH0wmdBqe8s23j9vKpZ%252Ficon%252FUbuNuQudXb1BnT6HAme2%252Fmlogo.png%3Falt%3Dmedia%26token%3Dcdd3a8e5-fc46-444c-b604-d5b366b0b871&width=32&dpr=2&quality=100&sign=a305c8f5&sv=1",
   },
+  {
+    name: "ChadPu",
+    symbol: "CHDPU",
+    address: "0xaad94afea296dcf8c97d05dbf3733a245c3ea78f",
+    chain: Chain.Taraxa,
+    standard: TokenStandard.ERC20,
+    color: "#CC7777",
+    logoUrl:
+      "https://raw.githubusercontent.com/taraswap/assets/main/logos/0xaad94Afea296DCF8c97D05dbf3733A245c3Ea78F/logo.png",
+  },
 ];
 
 export const approvedERC721: InteractiveToken[] = [
