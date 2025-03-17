@@ -189,19 +189,6 @@ export function SwapFormButton({
     ],
   )
 
-  const handleOnReviewPress = useCallback(() => {
-    // One of these modals may or may not be showing
-    // If showing, hide
-    handleHideMaxNativeTransferModal()
-    handleHideTokenWarningModal()
-
-    onReviewPress({
-      skipBridgingWarning: false,
-      skipMaxTransferWarning: false,
-      skipTokenProtectionWarning: false,
-    })
-  }, [handleHideMaxNativeTransferModal, handleHideTokenWarningModal, onReviewPress])
-
   const bridgingModalActionCallback = useCallback(
     (accepted: boolean) => {
       setShowBridgingWarningModal(false)
@@ -211,10 +198,6 @@ export function SwapFormButton({
     },
     [onReviewPress],
   )
-
-  const handleBridgingOnContinue = useCallback(() => bridgingModalActionCallback(true), [bridgingModalActionCallback])
-
-  const handleBridgingOnClose = useCallback(() => bridgingModalActionCallback(false), [bridgingModalActionCallback])
 
   const invalidTokenSelection = useMemo(() => Object.values(currencies).some((currency) => !currency), [currencies])
   const invalidAmountSelection = !exactAmountFiat && !exactAmountToken
@@ -281,11 +264,7 @@ export function SwapFormButton({
 
   // If disabled, use defaults for background color
   // Otherwise, we'll try and use the color from the token (i.e. swapping on Web > TDP)
-  const buttonBackgroundColor = disabled
-    ? undefined
-    : !activeAccount || isSubmitting
-      ? lightTokenColor
-      : validTokenColor
+  const buttonBackgroundColor = disabled ? undefined : isInactiveAccountOrSubmitting ? lightTokenColor : validTokenColor
 
   const buttonVariant: ButtonProps['variant'] = !activeAccount
     ? 'branded'
@@ -312,7 +291,14 @@ export function SwapFormButton({
         <LowNativeBalanceModal
           isOpen={showMaxNativeTransferModal}
           onClose={handleHideMaxNativeTransferModal}
-          onAcknowledge={handleOnReviewPress}
+          onAcknowledge={() => {
+            handleHideMaxNativeTransferModal()
+            onReviewPress({
+              skipBridgingWarning: true,
+              skipTokenProtectionWarning: true,
+              skipMaxTransferWarning: true,
+            })
+          }}
         />
         <Flex row alignSelf="stretch">
           <Button
@@ -323,7 +309,13 @@ export function SwapFormButton({
             backgroundColor={buttonBackgroundColor}
             size={isShortMobileDevice ? 'small' : 'large'}
             testID={TestID.ReviewSwap}
-            onPress={handleOnReviewPress}
+            onPress={() =>
+              onReviewPress({
+                skipBridgingWarning: false,
+                skipMaxTransferWarning: false,
+                skipTokenProtectionWarning: false,
+              })
+            }
           >
             {buttonTextColor ? (
               <Button.Text customBackgroundColor={buttonBackgroundColor} color={buttonTextColor}>
@@ -339,8 +331,8 @@ export function SwapFormButton({
       <BridgingModal
         isOpen={showBridgingWarningModal}
         derivedSwapInfo={derivedSwapInfo}
-        onContinue={handleBridgingOnContinue}
-        onClose={handleBridgingOnClose}
+        onContinue={() => bridgingModalActionCallback(true)}
+        onClose={() => bridgingModalActionCallback(false)}
       />
       {currenciesWithProtectionWarnings.length > 0 && currenciesWithProtectionWarnings[0] && (
         <TokenWarningModal
@@ -348,7 +340,14 @@ export function SwapFormButton({
           currencyInfo0={currenciesWithProtectionWarnings[0]}
           currencyInfo1={currenciesWithProtectionWarnings.length > 1 ? currenciesWithProtectionWarnings[1] : undefined}
           closeModalOnly={handleHideTokenWarningModal}
-          onAcknowledge={handleOnReviewPress}
+          onAcknowledge={() => {
+            handleHideTokenWarningModal()
+            onReviewPress({
+              skipBridgingWarning: false,
+              skipMaxTransferWarning: false,
+              skipTokenProtectionWarning: true,
+            })
+          }}
         />
       )}
     </Flex>
