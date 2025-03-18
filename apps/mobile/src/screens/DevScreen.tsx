@@ -45,23 +45,7 @@ export function DevScreen(): JSX.Element {
   }
 
   const activateWormhole = (s: MobileScreens): void => {
-    switch (s) {
-      case MobileScreens.SettingsCloudBackupPasswordCreate:
-        navigate(s, {
-          address: '0x0000000000000000000000000000000000000000',
-        })
-        break
-
-      case MobileScreens.SettingsCloudBackupPasswordConfirm:
-        navigate(s, {
-          address: '0x0000000000000000000000000000000000000000',
-          password: 'password',
-        })
-        break
-
-      default:
-        navigate(s)
-    }
+    navigate(s)
   }
 
   const onPressShowError = (): void => {

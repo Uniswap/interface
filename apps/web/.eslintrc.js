@@ -1,4 +1,6 @@
 /* eslint-env node */
+
+const { crossPlatform: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
 require('@uniswap/eslint-config/load')
 
 const rulesDirPlugin = require('eslint-plugin-rulesdir')
@@ -68,6 +70,78 @@ module.exports = {
     {
       files: ['**/*.ts', '**/*.tsx'],
       rules: {
+        '@typescript-eslint/no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: '@playwright/test',
+                message: 'Import test and expect from playwright/fixtures instead.',
+                importNames: ['test', 'expect'],
+              },
+              {
+                name: 'i18next',
+                importNames: ['i18n'],
+                message: 'Import from `uniswap/src/i18n` instead.',
+              },
+              {
+                name: 'styled-components',
+                message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.',
+              },
+              {
+                name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+                importNames: ['useActivityWebQuery'],
+                message: 'Import cached/subscription-based activity hooks from `AssetActivityProvider` instead.',
+              },
+              {
+                name: '@uniswap/smart-order-router',
+                message: 'Only import types, unless you are in the client-side SOR, to preserve lazy-loading.',
+                allowTypeImports: true,
+              },
+              {
+                name: 'moment',
+                // tree-shaking for moment is not configured because it degrades performance - see craco.config.cjs.
+                message: 'moment is not configured for tree-shaking. If you use it, update the Webpack configuration.',
+              },
+              {
+                name: 'react-helmet-async',
+                // default package's esm export is broken, but the explicit cjs export works.
+                message: `Import from 'react-helment-async/lib/index' instead.`,
+              },
+              {
+                name: 'zustand',
+                importNames: ['default'],
+                message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
+              },
+              {
+                name: 'utilities/src/platform',
+                importNames: ['isIOS', 'isAndroid'],
+                message:
+                  'Importing isIOS and isAndroid from platform is not allowed. Use isWebIOS and isWebAndroid instead.',
+              },
+              {
+                name: 'wagmi',
+                importNames: ['useChainId', 'useAccount'],
+                message: 'Import properly typed account data from `hooks/useAccount` instead.',
+              },
+              {
+                name: 'wagmi',
+                importNames: ['useConnect'],
+                message: 'Import wrapped useConnect util from `hooks/useConnect` instead.',
+              },
+              {
+                name: 'wagmi',
+                importNames: ['useDisconnect'],
+                message: 'Import wrapped useDisconnect util from `hooks/useDisconnect` instead.',
+              },
+              {
+                name: 'wagmi',
+                importNames: ['useBlockNumber', 'useWatchBlockNumber'],
+                message: 'Import wrapped useBlockNumber util from `hooks/useBlockNumber` instead.',
+              },
+            ],
+          },
+        ],
         'import/no-restricted-paths': [
           'error',
           {
@@ -89,6 +163,10 @@ module.exports = {
             selector: `:matches(Literal[value='NATIVE'])`,
             message:
               "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
+          },
+          {
+            selector: `ImportDeclaration[source.value='@uniswap/sdk-core'] > ImportSpecifier[imported.name='ChainId']`,
+            message: "Don't use ChainId from @uniswap/sdk-core. Use the UniverseChainId from universe/uniswap.",
           },
           // TODO(WEB-4251) - remove useWeb3React rules once web3 react is removed
           {
@@ -112,6 +190,13 @@ module.exports = {
               'Do not use type assertions with "<Address>". Use `assumeOxAddress` to treat a string as an address, or isAddress/getAddress from viem to validate a string as an Address.',
           },
         ],
+      },
+    },
+    {
+      files: ['*.ts', '*.tsx'],
+      excludedFiles: ['*.native.*', '*.ios.*', '*.android.*'],
+      rules: {
+        'no-restricted-imports': ['error', restrictedImports],
       },
     },
     {

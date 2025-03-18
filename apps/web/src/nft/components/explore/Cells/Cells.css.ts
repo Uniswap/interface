@@ -1,41 +1,40 @@
 import { style } from '@vanilla-extract/css'
 import { body } from 'nft/css/common.css'
+import { sprinkles } from 'nft/css/sprinkles.css'
 
-export const logo = style({
-  borderRadius: '12px',
-})
+export const logo = sprinkles({ borderRadius: '12' })
 
 export const title = style([
   body,
-  {
-    color: 'var(--neutral1)',
+  sprinkles({
+    color: 'neutral1',
     textAlign: 'left',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    paddingLeft: '12px',
-    paddingRight: '2px',
-  },
+    paddingLeft: '12',
+    paddingRight: '2',
+  }),
 ])
 
 export const address = style([
   title,
-  {
-    marginLeft: '8px',
+  sprinkles({
+    marginLeft: '8',
     alignItems: 'center',
     minWidth: '0',
-    width: 'max-content',
+    width: 'max',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-  },
+  }),
 ])
 
-export const verifiedBadge = style({
-  marginLeft: '4px',
+export const verifiedBadge = sprinkles({
+  marginLeft: '4',
   display: 'inline-block',
-  paddingTop: '4px',
-  height: '28px',
-  width: '28px',
+  paddingTop: '4',
+  height: '28',
+  width: '28',
   textAlign: 'left',
 })

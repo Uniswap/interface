@@ -1,25 +1,23 @@
-import { Button, ButtonEmphasis, ButtonVariant, Flex, Square, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Square, Text } from 'ui/src'
+import { ThemeNames } from 'ui/src/theme'
 
-type SettingsRecoveryPhraseProps = {
+export type SettingsRecoveryPhraseProps = {
   title: string
   subtitle: string
   icon: React.ReactNode
   nextButtonEnabled: boolean
   nextButtonText: string
-  nextButtonVariant?: ButtonVariant
-  nextButtonEmphasis?: ButtonEmphasis
+  nextButtonTheme: string
   onNextPressed: () => void
   children: React.ReactNode
 }
-
 export function SettingsRecoveryPhrase({
   title,
   subtitle,
   icon,
   nextButtonEnabled,
   nextButtonText,
-  nextButtonVariant,
-  nextButtonEmphasis,
+  nextButtonTheme,
   onNextPressed,
   children,
 }: SettingsRecoveryPhraseProps): JSX.Element {
@@ -39,16 +37,15 @@ export function SettingsRecoveryPhrase({
         </Flex>
       </Flex>
       <Flex grow>{children}</Flex>
-      <Flex row mt="$spacing12">
-        <Button
+      <Flex mt="$spacing12">
+        <DeprecatedButton
           isDisabled={!nextButtonEnabled}
           flexGrow={1}
-          variant={nextButtonVariant}
-          emphasis={nextButtonEmphasis}
+          theme={nextButtonTheme as ThemeNames}
           onPress={onNextPressed}
         >
           {nextButtonText}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </Flex>
   )

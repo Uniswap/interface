@@ -1,7 +1,8 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { FeeAmount, Pool as V3Pool, tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
-import { Pool as V4Pool, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
+import { Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { FeeAmount, Pool as V3Pool, tickToPrice } from '@uniswap/v3-sdk'
+import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { TickData, Ticks } from 'graphql/data/AllV3TicksQuery'
 import JSBI from 'jsbi'
@@ -222,8 +223,8 @@ export function usePoolActiveLiquidity({
       }
     }
 
-    const token0 = version === ProtocolVersion.V3 ? currencyA?.wrapped : currencyA
-    const token1 = version === ProtocolVersion.V3 ? currencyB?.wrapped : currencyB
+    const token0 = currencyA?.wrapped
+    const token1 = currencyB?.wrapped
 
     // find where the active tick would be to partition the array
     // if the active tick is initialized, the pivot will be an element
@@ -233,8 +234,8 @@ export function usePoolActiveLiquidity({
     if (pivot < 0) {
       // consider setting a local error
       logger.debug('usePoolTickData', 'usePoolActiveLiquidity', 'TickData pivot not found', {
-        token0: token0.isToken ? token0.address : ZERO_ADDRESS,
-        token1: token1.isToken ? token1.address : ZERO_ADDRESS,
+        token0: token0.address,
+        token1: token1.address,
         chainId: token0.chainId,
       })
       return {
@@ -247,15 +248,12 @@ export function usePoolActiveLiquidity({
 
     let sdkPrice
     try {
-      sdkPrice =
-        version === ProtocolVersion.V3
-          ? tickToPriceV3(token0 as Token, token1 as Token, activeTick)
-          : tickToPriceV4(token0, token1, activeTick)
+      sdkPrice = tickToPrice(token0, token1, activeTick)
     } catch (e) {
       logger.debug('usePoolTickData', 'usePoolActiveLiquidity', 'Error getting price', {
         error: e,
-        token0: token0.isToken ? token0.address : ZERO_ADDRESS,
-        token1: token1.isToken ? token1.address : ZERO_ADDRESS,
+        token0: token0.address,
+        token1: token1.address,
         chainId: token0.chainId,
       })
 
@@ -276,9 +274,9 @@ export function usePoolActiveLiquidity({
       sdkPrice,
     }
 
-    const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, true, version)
+    const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, true)
 
-    const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, false, version)
+    const previousTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, false)
 
     const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)
 
@@ -298,7 +296,6 @@ export function usePoolActiveLiquidity({
     pool,
     ticks,
     isLoading,
-    version,
     error,
     currentTick,
     liquidity,

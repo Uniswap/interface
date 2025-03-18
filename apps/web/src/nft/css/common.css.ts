@@ -15,5 +15,7 @@ export const subheadSmall = sprinkles({ fontWeight: 'book', fontSize: '14', line
 
 export const body = sprinkles({ fontWeight: 'book', fontSize: '16', lineHeight: '24' })
 export const bodySmall = sprinkles({ fontWeight: 'book', fontSize: '14', lineHeight: '20' })
+export const caption = sprinkles({ fontWeight: 'book', fontSize: '12', lineHeight: '16' })
 
 export const buttonTextMedium = sprinkles({ fontWeight: 'medium', fontSize: '16', lineHeight: '20' })
+export const buttonTextSmall = sprinkles({ fontWeight: 'medium', fontSize: '14', lineHeight: '16' })

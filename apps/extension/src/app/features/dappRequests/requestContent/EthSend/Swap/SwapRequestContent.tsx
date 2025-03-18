@@ -98,8 +98,6 @@ export function SwapRequestContent({
       outputAmount={outputAmount}
       outputCurrencyInfo={currencyInfo1}
       transactionGasFeeResult={transactionGasFeeResult}
-      isWrap={false}
-      isUnwrap={false}
       onCancel={onCancel}
       onConfirm={onConfirmWithTransactionTypeInfo}
     />
@@ -141,8 +139,6 @@ export function UniswapXSwapRequestContent({ typedData }: { typedData: UniswapXS
       inputCurrencyInfo={inputCurrencyInfo}
       outputAmount={outputAmount}
       outputCurrencyInfo={outputCurrencyInfo}
-      isWrap={false}
-      isUnwrap={false}
     />
   )
 }

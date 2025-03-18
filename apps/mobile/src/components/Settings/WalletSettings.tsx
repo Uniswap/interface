@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSettingsStackNavigation } from 'src/app/navigation/types'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -58,9 +58,11 @@ export function WalletSettings(): JSX.Element {
         )
       })}
       {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
-        <Button emphasis="secondary" onPress={toggleViewAll}>
-          {showAll ? t('settings.section.wallet.button.viewLess') : t('settings.section.wallet.button.viewAll')}
-        </Button>
+        <DeprecatedButton theme="tertiary" onPress={toggleViewAll}>
+          <Text color="$neutral1" variant="buttonLabel2">
+            {showAll ? t('settings.section.wallet.button.viewLess') : t('settings.section.wallet.button.viewAll')}
+          </Text>
+        </DeprecatedButton>
       )}
     </Flex>
   )

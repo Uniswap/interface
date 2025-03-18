@@ -1,7 +1,16 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Image, Text, TouchableArea, UniversalImage, UniversalImageResizeMode } from 'ui/src'
-import { ALL_NETWORKS_LOGO } from 'ui/src/assets'
+import {
+  DeprecatedButton,
+  Flex,
+  Image,
+  Text,
+  TouchableArea,
+  UniversalImage,
+  UniversalImageResizeMode,
+  useSporeColors,
+} from 'ui/src'
+import { ALL_NETWORKS_LOGO, ALL_NETWORKS_LOGO_UNICHAIN } from 'ui/src/assets'
 import { GlobeFilled } from 'ui/src/components/icons/GlobeFilled'
 import { X } from 'ui/src/components/icons/X'
 import { borderRadii, iconSizes, zIndexes } from 'ui/src/theme'
@@ -10,6 +19,8 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isInterface } from 'utilities/src/platform'
 
@@ -19,6 +30,8 @@ export type NetworkLogosProps = {
 
 export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
   const { t } = useTranslation()
+  const colors = useSporeColors()
+  const unichainPromoEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
 
   const [isShowingModal, setIsShowingModal] = useState(false)
   const closeModal = useCallback(() => setIsShowingModal(false), [])
@@ -63,31 +76,35 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
     [chains],
   )
 
+  const logo = unichainPromoEnabled ? ALL_NETWORKS_LOGO_UNICHAIN : ALL_NETWORKS_LOGO
+
   return (
     <>
       {/* TRIGGER BUTTON */}
-      <Flex row centered>
-        <Button
-          size="xxsmall"
-          emphasis="secondary"
-          aria-label={t('extension.connection.networks')}
-          fill={false}
-          icon={
-            <UniversalImage
-              allowLocalUri
-              uri={ALL_NETWORKS_LOGO}
-              size={{
-                width: iconSizes.icon20,
-                height: iconSizes.icon20,
-                resizeMode: UniversalImageResizeMode.Contain,
-              }}
-            />
-          }
-          onPress={openModal}
-        >
+      <DeprecatedButton
+        backgroundColor="$surface2"
+        alignSelf="center"
+        borderRadius="$rounded16"
+        aria-label={t('extension.connection.networks')}
+        p="$padding8"
+        pr="$padding12"
+        hoverStyle={{ backgroundColor: colors.surface3Hovered.val }}
+        pressStyle={{ backgroundColor: colors.surface3Hovered.val }}
+        onPress={openModal}
+      >
+        <UniversalImage
+          allowLocalUri
+          uri={logo}
+          size={{
+            width: iconSizes.icon20,
+            height: iconSizes.icon20,
+            resizeMode: UniversalImageResizeMode.Contain,
+          }}
+        />
+        <Text color="$neutral2" variant="buttonLabel4">
           {t('extension.connection.networks')}
-        </Button>
-      </Flex>
+        </Text>
+      </DeprecatedButton>
       {/* SHEET/MODAL */}
       <Modal name={ModalName.QRCodeNetworkInfo} isModalOpen={isShowingModal} onClose={closeModal}>
         <Flex gap="$spacing12" px="$padding16" pb="$spacing4" alignItems="center" mt="$gap12">
@@ -113,11 +130,9 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
             url={uniswapUrls.helpArticleUrls.supportedNetworks}
           />
 
-          <Flex row width="100%">
-            <Button mt="$spacing12" emphasis="secondary" size="small" onPress={closeModal}>
-              {t('common.button.close')}
-            </Button>
-          </Flex>
+          <DeprecatedButton width="100%" color="$neutral1" mt="$spacing12" theme="secondary" onPress={closeModal}>
+            {t('common.button.close')}
+          </DeprecatedButton>
         </Flex>
       </Modal>
     </>

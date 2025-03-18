@@ -135,8 +135,6 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
     if (typeof token?.address !== 'string' || typeof spender !== 'string') {
       return undefined
     }
-
-    // eslint-disable-next-line guard-for-in
     for (const txHash in allTransactions) {
       const tx = allTransactions[txHash]
       if (!tx || isConfirmedTx(tx) || tx.info.type !== TransactionType.APPROVAL) {

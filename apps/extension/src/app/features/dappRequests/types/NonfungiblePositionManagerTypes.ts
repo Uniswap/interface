@@ -1,15 +1,16 @@
 import { BigNumberSchema } from 'src/app/features/dappRequests/types/EthersTypes'
 import { z } from 'zod'
 
-const UnwrapNFPMCommandSchema = z.object({
+export const UnwrapNFPMCommandSchema = z.object({
   commandName: z.literal('unwrapWETH9'),
   params: z.object({
     amountMinimum: BigNumberSchema,
     recipient: z.string(),
   }),
 })
+export type UnwrapNFPMCommand = z.infer<typeof UnwrapNFPMCommandSchema>
 
-const SweepNFPMCommandSchema = z.object({
+export const SweepNFPMCommandSchema = z.object({
   commandName: z.literal('sweepToken'),
   params: z.object({
     amountMinimum: BigNumberSchema,
@@ -17,8 +18,9 @@ const SweepNFPMCommandSchema = z.object({
     token: z.string(),
   }),
 })
+export type SweepNFPMCommand = z.infer<typeof SweepNFPMCommandSchema>
 
-const CollectNFPMCommandSchema = z.object({
+export const CollectNFPMCommandSchema = z.object({
   commandName: z.literal('collect'),
   params: z.object({
     amountMinimum: BigNumberSchema,
@@ -26,8 +28,9 @@ const CollectNFPMCommandSchema = z.object({
     token: z.string(),
   }),
 })
+export type CollectNFPMCommand = z.infer<typeof CollectNFPMCommandSchema>
 
-const DecreaseLiquidityNFPMCommandSchema = z.object({
+export const DecreaseLiquidityNFPMCommandSchema = z.object({
   commandName: z.literal('decreaseLiquidity'),
   params: z.object({
     amount0Min: BigNumberSchema,
@@ -37,8 +40,9 @@ const DecreaseLiquidityNFPMCommandSchema = z.object({
     tokenId: BigNumberSchema,
   }),
 })
+export type DecreaseLiquidityNFPMCommand = z.infer<typeof DecreaseLiquidityNFPMCommandSchema>
 
-const IncreaseLiquidityNFPMCommandSchema = z.object({
+export const IncreaseLiquidityNFPMCommandSchema = z.object({
   commandName: z.literal('increaseLiquidity'),
   params: z.object({
     amount0Desired: BigNumberSchema,
@@ -49,10 +53,12 @@ const IncreaseLiquidityNFPMCommandSchema = z.object({
     tokenId: BigNumberSchema,
   }),
 })
+export type IncreaseLiquidityNFPMCommand = z.infer<typeof IncreaseLiquidityNFPMCommandSchema>
 
-const RefundETHNFPMCommandSchema = z.object({
+export const RefundETHNFPMCommandSchema = z.object({
   commandName: z.literal('refundETH'),
 })
+export type RefundETHNFPMCommand = z.infer<typeof RefundETHNFPMCommandSchema>
 
 export const NfpmCommandSchema = z.union([
   UnwrapNFPMCommandSchema,

@@ -138,10 +138,10 @@ export default function ChartSection() {
   }
 
   return (
-    <Flex data-cy={`tdp-${activeQuery.chartType}-chart-container`}>
+    <div data-cy={`tdp-${activeQuery.chartType}-chart-container`}>
       {getSection()}
       <ChartControls />
-    </Flex>
+    </div>
   )
 }
 

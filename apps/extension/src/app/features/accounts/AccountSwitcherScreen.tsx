@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
+import { ComingSoon } from 'src/app/components/ComingSoon'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { CreateWalletModal } from 'src/app/features/accounts/CreateWalletModal'
@@ -14,12 +15,14 @@ import { PopupName, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { focusOrCreateUnitagTab } from 'src/app/navigation/utils'
-import { Button, Flex, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
 import { WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -185,7 +188,6 @@ export function AccountSwitcherScreen(): JSX.Element {
         <Flex gap="$spacing16" pb="$spacing4" pt="$spacing8" px="$spacing12">
           <AddressDisplay
             showCopy
-            centered
             address={activeAddress}
             captionVariant="body3"
             direction="column"
@@ -199,16 +201,14 @@ export function AccountSwitcherScreen(): JSX.Element {
           {activeAccountHasUnitag ? (
             <UnitagActionButton />
           ) : (
-            <Flex row>
-              <Button
-                size="small"
-                testID={TestID.AccountCard}
-                emphasis="secondary"
-                onPress={() => setShowEditLabelModal(true)}
-              >
-                {t('account.wallet.header.button.title')}
-              </Button>
-            </Flex>
+            <DeprecatedButton
+              size="small"
+              testID={TestID.AccountCard}
+              theme="secondary"
+              onPress={() => setShowEditLabelModal(true)}
+            >
+              {t('account.wallet.header.button.title')}
+            </DeprecatedButton>
           )}
         </Flex>
         <ScrollView backgroundColor="$surface1" height="auto">
@@ -283,16 +283,31 @@ export function AccountSwitcherScreen(): JSX.Element {
 const UnitagActionButton = (): JSX.Element => {
   const { t } = useTranslation()
   const address = useActiveAccountAddressWithThrow()
+  const isClaimUnitagEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
 
   const onPressEditProfile = useCallback(async () => {
     await focusOrCreateUnitagTab(address, UnitagClaimRoutes.EditProfile)
   }, [address])
 
-  return (
-    <Flex row>
-      <Button size="small" testID={TestID.AccountCard} emphasis="secondary" onPress={onPressEditProfile}>
+  if (isClaimUnitagEnabled) {
+    return (
+      <DeprecatedButton
+        color="$neutral1"
+        size="small"
+        testID={TestID.AccountCard}
+        theme="tertiary"
+        onPress={onPressEditProfile}
+      >
         {t('account.wallet.header.button.disabled.title')}
-      </Button>
-    </Flex>
+      </DeprecatedButton>
+    )
+  }
+
+  return (
+    <ComingSoon placement="top">
+      <DeprecatedButton color="$neutral2" isDisabled={true} size="small" testID={TestID.AccountCard} theme="secondary">
+        {t('account.wallet.header.button.disabled.title')}
+      </DeprecatedButton>
+    </ComingSoon>
   )
 }

@@ -1,20 +1,20 @@
 export function isIFramed(redirect = false): boolean {
   try {
-    if (window.location.ancestorOrigins !== undefined) {
+    if (location.ancestorOrigins !== undefined) {
       // Does not exist in IE and firefox.
       // See https://developer.mozilla.org/en-US/docs/Web/API/Location/ancestorOrigins for how this works
-      if (window.location.ancestorOrigins.length > 0) {
-        if (redirect && window.top) {
-          window.top.location = window.self.location
+      if (location.ancestorOrigins.length > 0) {
+        if (redirect && top) {
+          top.location = self.location
         }
         return true
       }
     }
-    if (window.self !== window.top) {
+    if (self !== top) {
       // For IE and Firefox
       // See https://cheatsheetseries.owasp.org/cheatsheets/Clickjacking_Defense_Cheat_Sheet.html for how this works
-      if (redirect && window.top) {
-        window.top.location = window.self.location
+      if (redirect && top) {
+        top.location = self.location
       }
       return true
     }

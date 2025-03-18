@@ -1,23 +1,12 @@
-IPFS hash of the deployment:
-- CIDv0: `Qmb32y1Tr36548yibWocrfwjoXvLKDe2fwiJ34vMNi6A24`
-- CIDv1: `bafybeif4ussdpkymilubf3qmecctn52my5szafwzho24vhcxez6nvfwdpe`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Unichain Updates: Enjoy faster swap speeds, more onramp options, and more token data.
+Monad Testnet Support: Swap here by toggling to testnet mode in settings
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
-
-IPFS gateways:
-- https://bafybeif4ussdpkymilubf3qmecctn52my5szafwzho24vhcxez6nvfwdpe.ipfs.dweb.link/
-- [ipfs://Qmb32y1Tr36548yibWocrfwjoXvLKDe2fwiJ34vMNi6A24/](ipfs://Qmb32y1Tr36548yibWocrfwjoXvLKDe2fwiJ34vMNi6A24/)
-
-### 5.76.2 (2025-03-17)
-
-
-### Bug Fixes
-
-* **web:** fix swapping on TDP (#17378) 3000727
-
-
+Other changes:
+- VND currency support
+- Improvements to our NFT Spam reporting feature
+- Stronger warnings when sending funds to token contracts
+- New icon for the Buy/Sell button on the homepage
+- Various bug fixes and performance improvements
+- Improved help center articles

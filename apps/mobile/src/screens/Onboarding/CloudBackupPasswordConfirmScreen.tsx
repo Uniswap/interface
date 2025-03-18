@@ -12,10 +12,9 @@ import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
-export function CloudBackupPasswordConfirmScreen({
-  navigation,
-  route: { params },
-}: NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudPasswordConfirm>): JSX.Element {
+export type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudPasswordConfirm>
+
+export function CloudBackupPasswordConfirmScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
 
   const { password, entryPoint } = params

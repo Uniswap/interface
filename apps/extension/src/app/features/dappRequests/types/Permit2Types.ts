@@ -12,6 +12,7 @@ const MessageSchema = z.object({
   spender: z.string(),
   sigDeadline: z.string(),
 })
+export type Permit2Message = z.infer<typeof MessageSchema>
 
 const TypesSchema = z
   .object({

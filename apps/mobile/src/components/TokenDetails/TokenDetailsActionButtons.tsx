@@ -1,15 +1,16 @@
-import { useMemo, useState } from 'react'
-import { StyledContextMenu, StyledContextMenuAction } from 'src/components/ContextMenu/StyledContextMenu'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { Button, Flex, GeneratedIcon } from 'ui/src'
-import { IconButton } from 'ui/src/components/buttons/IconButton/IconButton'
-import { GridView, X } from 'ui/src/components/icons'
-import { validColor } from 'ui/src/theme'
+import { DeprecatedButton, Flex, GeneratedIcon, useSporeColors } from 'ui/src'
+import { SwapCoin } from 'ui/src/components/icons'
+import { opacify, validColor } from 'ui/src/theme'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ElementNameType, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ElementName, ElementNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
+import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
 
 function CTAButton({
   title,
@@ -19,7 +20,7 @@ function CTAButton({
   testID,
   tokenColor,
   disabled,
-  icon: Icon,
+  icon,
 }: {
   title: string
   element: ElementNameType
@@ -30,53 +31,47 @@ function CTAButton({
   disabled?: boolean
   icon?: GeneratedIcon
 }): JSX.Element {
+  const colors = useSporeColors()
   return (
     <Trace logPress element={element} section={SectionName.TokenDetails}>
-      <Button
-        variant="branded"
-        opacity={disabled ? 0.5 : undefined}
-        icon={Icon ? <Icon /> : undefined}
-        backgroundColor={validColor(tokenColor)}
+      <DeprecatedButton
+        fill
+        icon={icon}
+        opacity={disabled ? 0.5 : 1}
+        color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$white'}
+        pressStyle={{ backgroundColor: validColor(opacify(60, tokenColor ?? colors.accent1.val)) }}
         size="large"
+        backgroundColor={validColor(tokenColor) ?? '$accent1'}
         testID={testID}
         onPress={disabled ? onPressDisabled : onPress}
       >
         {title}
-      </Button>
+      </DeprecatedButton>
     </Trace>
   )
 }
 
 export function TokenDetailsActionButtons({
-  ctaButton,
-  userHasBalance,
-  actionMenuOptions,
+  onPressBuy,
+  onPressSell,
+  onPressSwap,
   onPressDisabled,
+  userHasBalance,
 }: {
-  ctaButton: {
-    title: string
-    icon?: GeneratedIcon
-    onPress: () => void
-  }
+  onPressBuy: () => void
+  onPressSell: () => void
+  onPressSwap: () => void
   onPressDisabled?: () => void
   userHasBalance: boolean
-  actionMenuOptions: StyledContextMenuAction[]
 }): JSX.Element {
+  const { t } = useTranslation()
+  const isOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
+
   const { currencyInfo, isChainEnabled, tokenColor } = useTokenDetailsContext()
-  const [actionMenuOpen, setActionMenuOpen] = useState(false)
 
   const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
   const disabled = isBlocked || !isChainEnabled
-
-  const actionsWithIcons = useMemo(() => {
-    return actionMenuOptions.map((action) => {
-      return {
-        ...action,
-        iconColor: tokenColor ?? undefined,
-      }
-    })
-  }, [actionMenuOptions, tokenColor])
 
   return (
     <Flex
@@ -89,43 +84,41 @@ export function TokenDetailsActionButtons({
       pt="$spacing12"
       px="$spacing16"
     >
-      <Flex fill row gap="$spacing12">
+      {isOffRampEnabled ? (
         <CTAButton
           disabled={disabled}
           element={ElementName.Swap}
           testID={TestID.TokenDetailsSwapButton}
-          title={ctaButton.title}
+          title={t('common.button.swap')}
           tokenColor={tokenColor}
-          icon={ctaButton.icon}
-          onPress={ctaButton.onPress}
+          icon={SwapCoin}
+          onPress={onPressSwap}
           onPressDisabled={onPressDisabled}
         />
-        {userHasBalance && !disabled && (
-          <StyledContextMenu
-            isAboveTrigger
-            actions={actionsWithIcons}
-            isOpen={actionMenuOpen}
-            closeMenu={() => setActionMenuOpen(false)}
-            onPressAny={(e) => {
-              sendAnalyticsEvent(MobileEventName.TokenDetailsContextMenuAction, {
-                action: e.name,
-              })
-            }}
-          >
-            <Trace logPress element={ElementName.TDPActionMenuButton} section={SectionName.TokenDetails}>
-              <IconButton
-                emphasis="primary"
-                variant="branded"
-                icon={actionMenuOpen ? <X /> : <GridView />}
-                backgroundColor={validColor(tokenColor) ?? undefined}
-                size="large"
-                testID={TestID.TokenDetailsActionButton}
-                onPress={() => setActionMenuOpen(!actionMenuOpen)}
-              />
-            </Trace>
-          </StyledContextMenu>
-        )}
-      </Flex>
+      ) : (
+        <>
+          <CTAButton
+            disabled={disabled}
+            element={ElementName.Buy}
+            testID={TestID.TokenDetailsBuyButton}
+            title={t('common.button.buy')}
+            tokenColor={tokenColor}
+            onPress={onPressBuy}
+            onPressDisabled={onPressDisabled}
+          />
+          {userHasBalance && (
+            <CTAButton
+              disabled={disabled}
+              element={ElementName.Sell}
+              testID={TestID.TokenDetailsSellButton}
+              title={t('common.button.sell')}
+              tokenColor={tokenColor}
+              onPress={onPressSell}
+              onPressDisabled={onPressDisabled}
+            />
+          )}
+        </>
+      )}
     </Flex>
   )
 }

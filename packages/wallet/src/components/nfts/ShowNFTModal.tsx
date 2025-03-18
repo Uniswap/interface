@@ -36,6 +36,7 @@ export function ShowNFTModal(): JSX.Element {
       <InfoLinkModal
         showCloseButton
         buttonText={t('common.button.close')}
+        buttonTheme="tertiary"
         description={isExtension ? t('hidden.nfts.info.text.extension') : t('hidden.nfts.info.text.mobile')}
         icon={
           <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">

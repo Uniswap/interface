@@ -1,8 +1,9 @@
 /* eslint-disable complexity */
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { ActivityIndicator } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled, Person } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -42,6 +43,7 @@ export function ChangeUnitagModal({
   onSuccess?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
+  const colors = useSporeColors()
   const dispatch = useDispatch()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const account = useAccount(address)
@@ -95,7 +97,7 @@ export function ChangeUnitagModal({
       logger.error(new Error('DeviceId is undefined'), {
         tags: { file: 'ChangeUnitagModal', function: 'onChangeSubmit' },
       })
-      return // Should never hit this condition. Button is disabled if deviceId is undefined
+      return // Should never hit this condition. DeprecatedButton is disabled if deviceId is undefined
     }
 
     onFinishEditing()
@@ -253,17 +255,22 @@ export function ChangeUnitagModal({
               </Text>
             )}
           </Flex>
-          <Flex row width="100%" pt="$spacing4">
-            <Button
+          <Flex centered row pt="$spacing4" width="100%">
+            <DeprecatedButton
+              fill
               isDisabled={isSubmitButtonDisabled}
-              loading={isCheckingUnitag || isChangeResponseLoading}
               testID={TestID.Confirm}
-              variant="branded"
-              emphasis="primary"
+              theme="primary"
               onPress={onPressSaveChanges}
             >
-              {t('common.button.save')}
-            </Button>
+              {isCheckingUnitag || isChangeResponseLoading ? (
+                <Flex height={fonts.buttonLabel1.lineHeight}>
+                  <ActivityIndicator color={colors.white.val} />
+                </Flex>
+              ) : (
+                t('common.button.save')
+              )}
+            </DeprecatedButton>
           </Flex>
         </Flex>
       </Modal>
@@ -304,15 +311,15 @@ function ChangeUnitagConfirmModal({
         <Flex py="$spacing32">
           <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
         </Flex>
-        <Flex row gap="$spacing12" width="100%">
+        <Flex centered row gap="$spacing12" width="100%">
           {isMobileApp && (
-            <Button testID={TestID.Remove} size="large" variant="default" emphasis="secondary" onPress={onClose}>
+            <DeprecatedButton fill testID={TestID.Remove} theme="secondary" onPress={onClose}>
               {t('common.button.back')}
-            </Button>
+            </DeprecatedButton>
           )}
-          <Button testID={TestID.Remove} size="large" variant="critical" emphasis="secondary" onPress={onChangeSubmit}>
+          <DeprecatedButton fill testID={TestID.Remove} theme="detrimental" onPress={onChangeSubmit}>
             {t('common.button.confirm')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

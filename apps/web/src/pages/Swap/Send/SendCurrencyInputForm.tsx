@@ -18,7 +18,7 @@ import { useSendContext } from 'state/send/SendContext'
 import { SendInputError } from 'state/send/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { ClickableTamaguiStyle, ThemedText } from 'theme/components'
-import { Button, Flex, Text, styled, type ButtonProps } from 'ui/src'
+import { Button, Flex, Text, styled } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -69,6 +69,13 @@ const InputWrapper = styled(Flex, {
   borderTopRightRadius: '$rounded16',
 })
 
+const MaxButton = styled(Flex, {
+  position: 'absolute',
+  right: '40px',
+  py: '$spacing2',
+  px: '$spacing8',
+})
+
 const ErrorContainer = styled(Flex, {
   position: 'absolute',
   width: '100%',
@@ -77,14 +84,6 @@ const ErrorContainer = styled(Flex, {
   left: '0',
   bottom: '32px',
 })
-
-const MaxButton = ({ onPress }: { onPress: ButtonProps['onPress'] }) => {
-  return (
-    <Button variant="branded" emphasis="secondary" size="xxsmall" onPress={onPress}>
-      <Trans i18nKey="common.max" />
-    </Button>
-  )
-}
 
 const AlternateCurrencyDisplay = ({ disabled, onToggle }: { disabled: boolean; onToggle: () => void }) => {
   const { formatConvertedFiatNumberOrString, formatNumberOrString } = useFormatter()
@@ -247,21 +246,16 @@ export default function SendCurrencyInputForm({
     }
   }, [exactAmountOut, inputInFiat, setSendState])
 
-  const handleMaxInput = useCallback(
-    (e: Parameters<NonNullable<ButtonProps['onPress']>>[0]) => {
-      e.stopPropagation()
-
-      if (maxInputAmount) {
-        setSendState((prev) => ({
-          ...prev,
-          exactAmountToken: maxInputAmount.toExact(),
-          exactAmountFiat: undefined,
-          inputInFiat: false,
-        }))
-      }
-    },
-    [maxInputAmount, setSendState],
-  )
+  const handleMaxInput = useCallback(() => {
+    if (maxInputAmount) {
+      setSendState((prev) => ({
+        ...prev,
+        exactAmountToken: maxInputAmount.toExact(),
+        exactAmountFiat: undefined,
+        inputInFiat: false,
+      }))
+    }
+  }, [maxInputAmount, setSendState])
 
   return (
     <Wrapper disabled={disabled}>
@@ -305,7 +299,7 @@ export default function SendCurrencyInputForm({
             onPress={() => setTokenSelectorOpen(true)}
           >
             <Flex row alignItems="center" gap="$gap12">
-              <Flex alignItems="center" row width="100%" gap="$gap12" onPress={() => setTokenSelectorOpen(true)}>
+              <Flex row width="100%" gap="$gap12" onPress={() => setTokenSelectorOpen(true)}>
                 {inputCurrency && (
                   <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
                 )}
@@ -329,19 +323,17 @@ export default function SendCurrencyInputForm({
                 </Flex>
               </Flex>
             </Flex>
-            <Flex row>
-              {showMaxButton && (
-                <Trace logPress element={InterfaceElementName.SEND_MAX_BUTTON}>
-                  <Flex centered>
-                    <Flex row mr="$spacing4">
-                      <MaxButton onPress={handleMaxInput} />
-                    </Flex>
-                  </Flex>
-                </Trace>
-              )}
-              <RotatableChevron direction="down" />
-            </Flex>
+            <RotatableChevron direction="down" />
           </Flex>
+          {showMaxButton && (
+            <Trace logPress element={InterfaceElementName.SEND_MAX_BUTTON}>
+              <MaxButton>
+                <Button variant="branded" emphasis="secondary" size="xxsmall" onPress={handleMaxInput}>
+                  <Trans i18nKey="common.max" />
+                </Button>
+              </MaxButton>
+            </Trace>
+          )}
         </CurrencyInputWrapper>
       </PrefetchBalancesWrapper>
       <CurrencySearchModal

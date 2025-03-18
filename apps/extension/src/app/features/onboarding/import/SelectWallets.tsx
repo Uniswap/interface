@@ -74,8 +74,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
               ? t('onboarding.importMnemonic.button.importing')
               : t('common.button.continue')
         }
-        nextButtonVariant={showError ? 'default' : 'branded'}
-        nextButtonEmphasis={showError || buttonClicked ? 'secondary' : 'primary'}
+        nextButtonTheme={showError ? 'secondary' : buttonClicked ? 'accentSecondary' : 'primary'}
         title={title}
         onBack={goToPreviousStep}
         onSubmit={showError ? refetch : onSubmit}

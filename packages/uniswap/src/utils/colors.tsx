@@ -1,9 +1,12 @@
 import { useMemo } from 'react'
 import { useExtractedColors, useSporeColors } from 'ui/src'
-import { GlobalColorNames, colors as GlobalColors, GlobalPalette, opacify } from 'ui/src/theme'
+import { GlobalColorNames, colors as GlobalColors, GlobalPalette, colorsLight, opacify } from 'ui/src/theme'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { assert } from 'utilities/src/errors'
 import { hexToRGB } from 'utilities/src/theme/colors'
+import { hex } from 'wcag-contrast'
+
+export const MIN_COLOR_CONTRAST_THRESHOLD = 3
 
 export function getNetworkColorKey(chainId: UniverseChainId): `chain_${UniverseChainId}` {
   return `chain_${chainId}`
@@ -24,6 +27,20 @@ export function useNetworkColors(chainId: UniverseChainId): {
     foreground,
     background: opacify(10, foreground),
   }
+}
+
+/**
+ * Picks a contrast-passing text color to put on top of a given background color.
+ * The threshold right now is 3.0, which is the WCAG AA standard.
+ * @param backgroundColor The hex value of the background color to check contrast against
+ * @returns either 'white' or 'black'
+ */
+export function getContrastPassingTextColor(backgroundColor: string): '$white' | '$black' {
+  const lightText = colorsLight.white
+  if (hex(lightText, backgroundColor) >= MIN_COLOR_CONTRAST_THRESHOLD) {
+    return '$white'
+  }
+  return '$black'
 }
 
 /**

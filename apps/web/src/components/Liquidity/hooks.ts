@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Position as V3Position } from '@uniswap/v3-sdk'

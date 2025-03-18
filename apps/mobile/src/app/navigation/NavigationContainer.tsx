@@ -85,7 +85,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
   )
 }
 
-const useManageDeepLinks = (): void => {
+export const useManageDeepLinks = (): void => {
   const dispatch = useDispatch()
   const manageDeepLinks = useCallback(async () => {
     const url = await Linking.getInitialURL()

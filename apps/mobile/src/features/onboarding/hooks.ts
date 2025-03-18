@@ -13,6 +13,8 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
+export type OnboardingCompleteProps = OnboardingStackBaseParams
+
 /**
  * Bundles various actions that should be performed to complete onboarding.
  *

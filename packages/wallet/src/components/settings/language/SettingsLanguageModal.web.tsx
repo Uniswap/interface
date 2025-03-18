@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
 import { DEP_accentColors, opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -27,11 +27,9 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
               {t('settings.setting.language.description.extension')}
             </Text>
           </Flex>
-          <Flex row>
-            <Button emphasis="secondary" onPress={() => onClose()}>
-              {t('common.button.close')}
-            </Button>
-          </Flex>
+          <DeprecatedButton theme="tertiary" onPress={() => onClose()}>
+            {t('common.button.close')}
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

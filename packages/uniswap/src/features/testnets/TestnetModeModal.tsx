@@ -28,6 +28,7 @@ export function TestnetModeModal({
       }
       isOpen={isOpen}
       buttonText={t('common.button.close')}
+      buttonTheme="secondary"
       name={ModalName.TestnetMode}
       icon={
         <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">

@@ -22,7 +22,6 @@ import {
   SettingsStackParamList,
   useAppStackNavigation,
 } from 'src/app/navigation/types'
-import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { FiatOnRampProvider } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { ClaimUnitagScreen } from 'src/features/unitags/ClaimUnitagScreen'
@@ -142,7 +141,7 @@ function SettingsStackGroup(): JSX.Element {
   )
 }
 
-function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
+export function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   // Adding `key` forces a full re-render and re-mount when switching accounts
   // to avoid issues with wrong cached data being shown in some memoized components that are already mounted.
@@ -258,7 +257,7 @@ export function FiatOnRampStackNavigator(): JSX.Element {
   )
 }
 
-function OnboardingStackNavigator(): JSX.Element {
+export function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
 
   const isOnboardingKeyringEnabled = useFeatureFlag(FeatureFlags.OnboardingKeyring)
@@ -341,7 +340,7 @@ function OnboardingStackNavigator(): JSX.Element {
   )
 }
 
-function UnitagStackNavigator(): JSX.Element {
+export function UnitagStackNavigator(): JSX.Element {
   const colors = useSporeColors()
   const insets = useAppInsets()
 
@@ -430,7 +429,6 @@ export function AppStackNavigator(): JSX.Element {
       </AppStack.Group>
       <AppStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
         <AppStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
-        <AppStack.Screen component={FundWalletModal} name={ModalName.FundWallet} />
       </AppStack.Group>
       {/* Explicitly using __DEV__ so that the bundler knows to exclude this code from release builds */}
       {__DEV__ &&

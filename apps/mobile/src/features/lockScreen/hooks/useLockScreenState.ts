@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { selectIsLockScreenVisible, selectManualRetryRequired } from 'src/features/lockScreen/lockScreenSlice'
 
-interface LockScreenContextValue {
+export interface LockScreenContextValue {
   isLockScreenVisible: boolean
   manualRetryRequired: boolean
 }

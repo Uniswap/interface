@@ -1,35 +1,27 @@
-import React, { memo, useMemo } from 'react'
+import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
+import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn } from 'react-native-reanimated'
-import { StyledContextMenu } from 'src/components/ContextMenu/StyledContextMenu'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
-import { Flex, GeneratedIcon, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import { disableOnPress } from 'src/utils/disableOnPress'
+import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
-import {
-  CoinConvert,
-  CopyAlt,
-  ExternalLink,
-  Eye,
-  EyeOff,
-  ReceiveAlt,
-  SendAction,
-  ShareArrow,
-} from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
+  useTokenMarketPartsFragment,
+  useTokenProjectMarketsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
-import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { NumberType } from 'utilities/src/format/types'
 import { TokenMenuActionType, useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 
 export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Element {
@@ -47,6 +39,8 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
 
   return (
     <Flex alignItems="center" justifyContent="space-between" ml="$spacing32">
+      <TokenPrice />
+
       <Flex centered row gap="$spacing4">
         <TokenLogo
           chainId={fromGraphQLChain(chain) ?? undefined}
@@ -63,77 +57,58 @@ export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Elemen
   )
 })
 
-const EXCLUDED_ACTIONS = [TokenMenuActionType.Swap, TokenMenuActionType.Send, TokenMenuActionType.Receive]
+const TokenPrice = memo(function _TokenPrice(): JSX.Element {
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { currencyId } = useTokenDetailsContext()
 
-// TODO:(WALL-6032) store with actions in `useTokenContextMenu` after migrating `TokenBalanceList`
-const getActionTypeToMobileIcon = (isTokenVisible: boolean): Record<TokenMenuActionType, GeneratedIcon> => ({
-  [TokenMenuActionType.CopyAddress]: CopyAlt,
-  [TokenMenuActionType.Receive]: ReceiveAlt,
-  [TokenMenuActionType.Send]: SendAction,
-  [TokenMenuActionType.Share]: ShareArrow,
-  [TokenMenuActionType.Swap]: CoinConvert,
-  [TokenMenuActionType.ToggleVisibility]: isTokenVisible ? EyeOff : Eye,
-  [TokenMenuActionType.ViewDetails]: ExternalLink,
+  const onChainMarket = useTokenMarketPartsFragment({ currencyId }).data.market
+  const offChainMarkets = useTokenProjectMarketsPartsFragment({ currencyId }).data?.project?.markets
+
+  const price = offChainMarkets?.[0]?.price?.value || onChainMarket?.price?.value || undefined
+
+  return (
+    <Text color="$neutral1" variant="body1">
+      {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
+    </Text>
+  )
 })
+
+const EXCLUDED_ACTIONS = [TokenMenuActionType.Swap, TokenMenuActionType.Send, TokenMenuActionType.Receive]
 
 export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Element {
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
-  const { currencyId, currencyInfo, openContractAddressExplainerModal, copyAddressToClipboard } =
-    useTokenDetailsContext()
+  const { currencyId, currencyInfo } = useTokenDetailsContext()
 
   const currentChainBalance = useTokenDetailsCurrentChainBalance()
 
   const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
-  const { value: isMenuOpen, setFalse: closeMenu, setTrue: openMenu } = useBooleanState(false)
-  const { menuActions, isVisible } = useTokenContextMenu({
+  const { menuActions, onContextMenuPress } = useTokenContextMenu({
     currencyId,
     isBlocked,
     excludedActions: EXCLUDED_ACTIONS,
     tokenSymbolForNotification: currencyInfo?.currency.symbol,
     portfolioBalance: currentChainBalance,
-    openContractAddressExplainerModal,
-    copyAddressToClipboard,
   })
 
   // Should be the same color as heart icon in not favorited state next to it
   const ellipsisColor = isDarkMode ? colors.neutral2.get() : colors.neutral2.get()
 
-  const actionsWithIcons = useMemo(() => {
-    const actionTypeToIcon = getActionTypeToMobileIcon(isVisible)
-
-    return menuActions.map((action) => {
-      return {
-        ...action,
-        icon: actionTypeToIcon[action.name],
-        iconColor: colors.neutral2.val ?? undefined,
-      }
-    })
-  }, [menuActions, isVisible, colors.neutral2])
-
   return (
-    <AnimatedFlex row alignItems="center" entering={FadeIn} gap="$spacing20">
-      <StyledContextMenu
-        actions={actionsWithIcons}
-        isOpen={isMenuOpen}
-        closeMenu={closeMenu}
-        openMenu={openMenu}
-        onPressAny={(e) => {
-          sendAnalyticsEvent(MobileEventName.TokenDetailsContextMenuAction, {
-            action: e.name,
-          })
-        }}
-      >
-        <Flex
+    <AnimatedFlex row alignItems="center" entering={FadeIn} gap="$spacing16">
+      <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
+        <TouchableArea
           hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
           style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}
           testID={TestID.TokenDetailsMoreButton}
+          onLongPress={disableOnPress}
+          onPress={disableOnPress}
         >
           <EllipsisIcon color={ellipsisColor} height={iconSizes.icon16} width={iconSizes.icon16} />
-        </Flex>
-      </StyledContextMenu>
+        </TouchableArea>
+      </ContextMenu>
       <TokenDetailsFavoriteButton currencyId={currencyId} />
     </AnimatedFlex>
   )

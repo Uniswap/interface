@@ -10,7 +10,6 @@ export enum LockScreenVisibility {
   Hidden = 'hidden',
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export interface LockScreenState {
   visibility: LockScreenVisibility
   onBlur: boolean
@@ -25,7 +24,7 @@ const initialState: LockScreenState = {
   manualRetryRequired: false,
 }
 
-const lockScreenSlice = createSlice({
+export const lockScreenSlice = createSlice({
   name: 'lockScreen',
   initialState,
   reducers: {
@@ -54,6 +53,12 @@ export const lockScreenReducer = lockScreenSlice.reducer
 //------------------------------
 // LockScreen selectors
 //------------------------------
+
+export const selectLockScreenVisibility = (state: { lockScreen: LockScreenState }): LockScreenVisibility =>
+  state.lockScreen.visibility
+
+export const selectIsLockScreenHidden = (state: { lockScreen: LockScreenState }): boolean =>
+  state.lockScreen.visibility === LockScreenVisibility.Hidden
 
 export const selectIsLockScreenVisible = (state: { lockScreen: LockScreenState }): boolean =>
   state.lockScreen.visibility === LockScreenVisibility.Visible

@@ -16,7 +16,7 @@ const AccessListEntrySchema = z.object({
 
 const AccessListSchema = z.array(AccessListEntrySchema)
 
-const EthersTransactionSchema = z.object({
+export const EthersTransactionSchema = z.object({
   hash: z.string().optional(),
   to: z.string().optional(),
   from: z.string().optional(),
@@ -34,6 +34,7 @@ const EthersTransactionSchema = z.object({
   maxPriorityFeePerGas: BigNumberSchema.optional(),
   maxFeePerGas: BigNumberSchema.optional(),
 })
+export type EthersTransaction = z.infer<typeof EthersTransactionSchema>
 
 // https://docs.ethers.org/v5/api/utils/bignumber/#BigNumberish
 const BigNumberishSchema = z.union([
@@ -71,6 +72,7 @@ export const EthersTransactionRequestSchema = z.object({
   customData: z.record(z.any()).optional(),
   ccipReadEnabled: z.boolean().optional(),
 })
+export type EthersTransactionRequest = z.infer<typeof EthersTransactionRequestSchema>
 
 export const EthersTransactionResponseSchema = EthersTransactionSchema.extend({
   hash: z.string(),
@@ -83,3 +85,5 @@ export const EthersTransactionResponseSchema = EthersTransactionSchema.extend({
   // eslint-disable-next-line no-restricted-syntax
   wait: z.any(), // TODO (EXT-831): Add schema
 })
+
+export type EthersTransactionResponse = z.infer<typeof EthersTransactionResponseSchema>

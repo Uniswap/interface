@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, isWeb } from 'ui/src'
-import { IconButton } from 'ui/src/components/buttons/IconButton/IconButton'
+import { DeprecatedButton, Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
 import { X } from 'ui/src/components/icons/X'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -56,11 +55,30 @@ export function SwapErrorScreen({
     <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
       <Flex gap="$spacing16">
         {isWeb && (
-          <Flex row justifyContent="flex-end" m="$spacing12" gap="$spacing8">
-            <Button fill={false} emphasis="tertiary" size="xxsmall" icon={<HelpCenter />} onPress={onPressGetHelp}>
-              {t('common.getHelp.button')}
-            </Button>
-            <IconButton size="xxsmall" variant="default" emphasis="text-only" icon={<X />} onPress={onClose} />
+          <Flex row justifyContent="flex-end" m="$spacing12" gap="$spacing12">
+            <TouchableArea
+              hoverable
+              p="$padding6"
+              borderColor="$surface3"
+              borderWidth="$spacing1"
+              borderRadius="$rounded12"
+              onPress={onPressGetHelp}
+            >
+              <Flex row centered gap="$spacing4">
+                <HelpCenter color="$neutral1" size="$icon.16" />{' '}
+                <Text variant="body4" color="$neutral1">
+                  {t('common.getHelp.button')}
+                </Text>
+              </Flex>
+            </TouchableArea>
+            <DeprecatedButton
+              backgroundColor="$transparent"
+              color="$neutral2"
+              icon={<X size="$icon.20" />}
+              p="$none"
+              theme="secondary"
+              onPress={onClose}
+            />
           </Flex>
         )}
         <Flex animation="quick" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }}>

@@ -1,6 +1,7 @@
 import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import {
   TokenSelectorModal,
   TokenSelectorProps,
@@ -11,6 +12,7 @@ import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapC
 import { getSwappableTokensQueryData } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
+import { setHasSeenNetworkSelectorTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
@@ -22,6 +24,7 @@ import {
   getTokenAddressFromChainForTradingApi,
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { areCurrencyIdsEqual, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
@@ -31,6 +34,8 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JSX.Element {
   const { onCurrencyChange } = useTransactionModalContext()
   const swapContext = useSwapFormContext()
+  const dispatch = useDispatch()
+  const { shouldShowUnichainNetworkSelectorTooltip } = useUnichainTooltipVisibility()
 
   const traceRef = useValueAsRef(useTrace())
   const swapContextRef = useValueAsRef(swapContext)
@@ -55,7 +60,18 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       ...(isSelectingCurrencyFieldPrefilled ? { filteredChainIds: {} } : {}),
     })
     setIsSwapTokenSelectorOpen(false) // resets force flag for web on close as cleanup
-  }, [isSelectingCurrencyFieldPrefilled, setIsSwapTokenSelectorOpen, updateSwapForm])
+
+    // Ensure tooltip is hidden after closing network selector
+    if (shouldShowUnichainNetworkSelectorTooltip) {
+      dispatch(setHasSeenNetworkSelectorTooltip(true))
+    }
+  }, [
+    dispatch,
+    isSelectingCurrencyFieldPrefilled,
+    setIsSwapTokenSelectorOpen,
+    shouldShowUnichainNetworkSelectorTooltip,
+    updateSwapForm,
+  ])
 
   const inputTokenProjects = useTokenProjects(input ? [currencyId(input)] : [])
   const outputTokenProjects = useTokenProjects(output ? [currencyId(output)] : [])

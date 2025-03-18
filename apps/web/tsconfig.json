@@ -31,7 +31,7 @@
     "types": ["jest", "chrome"],
     "useUnknownInCatchVariables": false,
   },
-  "include": ["src/**/*", "src/**/*.json", ".storybook/preview.tsx", ".storybook/main.ts"],
+  "include": ["src/**/*", "src/**/*.json"],
   "references": [
     {
       "path": "../../packages/ui"

@@ -1,6 +1,7 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { ErrorCallout } from 'components/ErrorCallout'
+import { LoaderButton } from 'components/Button/LoaderButton'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useModalLiquidityInitialState, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
@@ -8,13 +9,14 @@ import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
+import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useCloseModal } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { Button, Flex, Switch, Text } from 'ui/src'
+import { Flex, Switch, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -196,44 +198,6 @@ export function ClaimFeeModal() {
     }
   }, [data?.claim, token0Fees, token1Fees, positionInfo])
 
-  const onPressConfirm = async () => {
-    const isValidTx = isValidLiquidityTxContext(txInfo)
-    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
-      return
-    }
-
-    dispatch(
-      liquiditySaga.actions.trigger({
-        selectChain,
-        startChainId,
-        account,
-        liquidityTxContext: txInfo,
-        setCurrentStep: setCurrentTransactionStep,
-        setSteps: () => undefined,
-        onSuccess: () => {
-          onClose()
-        },
-        onFailure: () => {
-          setCurrentTransactionStep(undefined)
-        },
-        analytics:
-          positionInfo && token0Fees?.currency && token1Fees?.currency
-            ? {
-                ...getLPBaseAnalyticsProperties({
-                  trace,
-                  poolId: positionInfo.poolId,
-                  currency0: currencyInfo0?.currency ?? token0Fees.currency,
-                  currency1: currencyInfo1?.currency ?? token1Fees.currency,
-                  currency0AmountUsd: token0FeesUsd,
-                  currency1AmountUsd: token1FeesUsd,
-                  version: positionInfo?.version,
-                }),
-              }
-            : undefined,
-      }),
-    )
-  }
-
   return (
     <Modal name={ModalName.ClaimFee} onClose={onClose} isDismissible>
       <Flex gap="$gap16">
@@ -300,19 +264,53 @@ export function ClaimFeeModal() {
             )}
           </Flex>
         )}
-        <ErrorCallout errorMessage={getErrorMessageToDisplay({ calldataError: error })} onPress={refetch} />
-        <Flex row>
-          <Button
-            key="LoaderButton-animation-ClaimFeeModal-button"
-            isDisabled={!data?.claim || Boolean(currentTransactionStep)}
-            loading={calldataLoading || Boolean(currentTransactionStep)}
-            size="large"
-            variant="branded"
-            onPress={onPressConfirm}
-          >
+        <TradingAPIError errorMessage={getErrorMessageToDisplay({ calldataError: error })} refetch={refetch} />
+        <LoaderButton
+          buttonKey="ClaimFeeModal-button"
+          isDisabled={!data?.claim || Boolean(currentTransactionStep)}
+          loading={calldataLoading || Boolean(currentTransactionStep)}
+          onPress={async () => {
+            const isValidTx = isValidLiquidityTxContext(txInfo)
+            if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+              return
+            }
+
+            dispatch(
+              liquiditySaga.actions.trigger({
+                selectChain,
+                startChainId,
+                account,
+                liquidityTxContext: txInfo,
+                setCurrentStep: setCurrentTransactionStep,
+                setSteps: () => undefined,
+                onSuccess: () => {
+                  onClose()
+                },
+                onFailure: () => {
+                  setCurrentTransactionStep(undefined)
+                },
+                analytics:
+                  positionInfo && token0Fees?.currency && token1Fees?.currency
+                    ? {
+                        ...getLPBaseAnalyticsProperties({
+                          trace,
+                          poolId: positionInfo.poolId,
+                          currency0: currencyInfo0?.currency ?? token0Fees.currency,
+                          currency1: currencyInfo1?.currency ?? token1Fees.currency,
+                          currency0AmountUsd: token0FeesUsd,
+                          currency1AmountUsd: token1FeesUsd,
+                          version: positionInfo?.version,
+                        }),
+                      }
+                    : undefined,
+              }),
+            )
+          }}
+        >
+          <Text variant="buttonLabel1" color="$neutralContrast">
             {currentTransactionStep ? t('common.confirmWallet') : t('common.collect.button')}
-          </Button>
-        </Flex>
+          </Text>
+        </LoaderButton>
       </Flex>
     </Modal>
   )

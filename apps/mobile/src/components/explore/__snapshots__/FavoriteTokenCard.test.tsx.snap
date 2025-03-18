@@ -75,6 +75,10 @@ exports[`FavoriteTokenCard renders without error 1`] = `
         "borderTopRightRadius": 16,
         "borderTopWidth": 1,
         "flexDirection": "column",
+        "marginBottom": 4,
+        "marginLeft": 4,
+        "marginRight": 4,
+        "marginTop": 4,
         "opacity": 1,
         "overflow": "hidden",
         "shadowColor": "rgb(0,0,0)",
@@ -126,41 +130,72 @@ exports[`FavoriteTokenCard renders without error 1`] = `
           }
         >
           <View
-            onLayout={[Function]}
+            pointerEvents="auto"
             style={
               {
+                "alignItems": "center",
                 "flexDirection": "column",
-                "opacity": 0,
+                "height": 20,
+                "justifyContent": "center",
+                "position": "relative",
+                "width": 20,
               }
             }
-            testID="shimmer-placeholder"
+            testID="token-logo"
           >
             <View
-              sentry-label="FlexLoader"
               style={
                 {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomLeftRadius": 10,
+                  "borderBottomRightRadius": 10,
+                  "borderTopLeftRadius": 10,
+                  "borderTopRightRadius": 10,
                   "flexDirection": "column",
+                  "height": "96%",
+                  "left": "2%",
+                  "opacity": 0,
+                  "position": "absolute",
+                  "top": "2%",
+                  "width": "96%",
+                  "zIndex": 0,
+                }
+              }
+            />
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#FEF4FF",
+                  "borderBottomLeftRadius": 999999,
+                  "borderBottomRightRadius": 999999,
+                  "borderTopLeftRadius": 999999,
+                  "borderTopRightRadius": 999999,
+                  "flexDirection": "column",
+                  "height": 20,
+                  "justifyContent": "center",
+                  "paddingLeft": 8,
+                  "paddingRight": 8,
+                  "width": 20,
                 }
               }
             >
-              <View
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={false}
+                maxFontSizeMultiplier={1.4}
+                minimumFontScale={0.5}
+                numberOfLines={1}
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "#5E5E5E",
-                        "light": "#BFBFBF",
-                      },
-                    },
-                    "borderBottomLeftRadius": 999999,
-                    "borderBottomRightRadius": 999999,
-                    "borderTopLeftRadius": 999999,
-                    "borderTopRightRadius": 999999,
-                    "flexDirection": "column",
-                    "height": 20,
-                    "width": 20,
+                    "color": "#FC74FE",
+                    "fontFamily": "Basel Grotesk",
+                    "fontSize": 17,
+                    "fontWeight": "500",
+                    "lineHeight": 14,
                   }
                 }
+                suppressHighlighting={true}
               />
             </View>
           </View>

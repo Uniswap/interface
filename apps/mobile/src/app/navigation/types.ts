@@ -25,11 +25,11 @@ type NFTItemScreenParams = {
   fallbackData?: NFTItem
 }
 
-type BackupFormParams = {
+export type BackupFormParams = {
   address: Address
 }
 
-type CloudBackupFormParams = {
+export type CloudBackupFormParams = {
   address: Address
   password: string
 }
@@ -125,17 +125,16 @@ export type AppStackParamList = {
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
   [MobileScreens.Storybook]: undefined
   [ModalName.NotificationsOSSettings]: undefined
-  [ModalName.FundWallet]: undefined
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>
-type AppStackScreenProps = NativeStackScreenProps<AppStackParamList>
+export type AppStackScreenProps = NativeStackScreenProps<AppStackParamList>
 export type AppStackScreenProp<Screen extends keyof AppStackParamList> = NativeStackScreenProps<
   AppStackParamList,
   Screen
 >
 
-type ExploreStackNavigationProp = CompositeNavigationProp<
+export type ExploreStackNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ExploreStackParamList>,
   AppStackNavigationProp
 >

@@ -6,7 +6,7 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Button, Flex } from 'ui/src'
+import { DeprecatedButton, Flex } from 'ui/src'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -64,15 +64,14 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
           <MnemonicDisplay mnemonicId={mnemonicId} showMnemonic={showSeedPhrase} />
         </Flex>
       </Flex>
-      <Flex row borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
-        <Button
-          size="large"
-          emphasis="secondary"
+      <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
+        <DeprecatedButton
           testID={TestID.Next}
+          theme="secondary"
           onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}
         >
           {showSeedPhrase ? t('setting.recoveryPhrase.action.hide') : t('setting.recoveryPhrase.account.show')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
 
       {showSeedPhraseViewWarningModal && (

@@ -275,7 +275,7 @@ export function SendTokenForm(): JSX.Element {
                 onPressIn={(): void => setCurrencyFieldFocused(true)}
                 onSelectionChange={onInputSelectionChange}
                 onSetExactAmount={onSetExactAmount}
-                onSetPresetValue={onSetMax}
+                onSetMax={onSetMax}
                 onShowTokenSelector={onShowTokenSelector}
                 onToggleIsFiatMode={onToggleFiatInput}
               />

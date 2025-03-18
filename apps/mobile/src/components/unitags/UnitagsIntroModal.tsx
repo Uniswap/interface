@@ -7,7 +7,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
-import { Button, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
+import { DeprecatedButton, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
 import { Lightning, Ticket, UserSquare } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -69,10 +69,10 @@ export function UnitagsIntroModal(): JSX.Element {
           <BodyItem Icon={Ticket} title={t('unitags.intro.features.free')} />
           <BodyItem Icon={Lightning} title={t('unitags.intro.features.ens')} />
         </Flex>
-        <Flex row gap="$spacing8">
-          <Button variant="branded" emphasis="primary" size="large" onPress={onPressClaimOneNow}>
+        <Flex gap="$spacing8">
+          <DeprecatedButton size="medium" theme="primary" onPress={onPressClaimOneNow}>
             {t('common.button.continue')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
         <Flex $short={{ py: '$none', mx: '$spacing12' }} mx="$spacing24">
           <TermsOfService />

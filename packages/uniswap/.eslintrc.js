@@ -3,7 +3,7 @@ rulesDirPlugin.RULES_DIR = 'eslint_rules'
 
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/native', '@uniswap/eslint-config/webPlatform'],
+  extends: ['@uniswap/eslint-config/native', '@uniswap/eslint-config/crossPlatform'],
   plugins: ['rulesdir'],
   ignorePatterns: ['node_modules', '.turbo', '.eslintrc.js', 'codegen.ts'],
   parserOptions: {
@@ -14,9 +14,6 @@ module.exports = {
     },
     ecmaVersion: 2018,
     sourceType: 'module',
-  },
-  rules: {
-    'rulesdir/i18n': 'error',
   },
   overrides: [
     {
@@ -43,11 +40,8 @@ module.exports = {
         ],
       },
     },
-    {
-      files: ['**/features/gating/flags.ts'],
-      rules: {
-        'local-rules/custom-map-sort': 'error',
-      },
-    },
   ],
+  rules: {
+    'rulesdir/i18n': 'error',
+  },
 }

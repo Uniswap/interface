@@ -31,7 +31,7 @@ exports[`renders wallet preview card 1`] = `
       "borderTopRightRadius": 20,
       "borderTopWidth": 1,
       "flexDirection": "column",
-      "minHeight": 72,
+      "height": 72,
       "opacity": 1,
       "paddingBottom": 12,
       "paddingLeft": 12,
@@ -138,6 +138,7 @@ exports[`renders wallet preview card 1`] = `
       <View
         style={
           {
+            "alignItems": "flex-start",
             "flexDirection": "column",
             "flexShrink": 1,
             "gap": 0,
@@ -147,8 +148,10 @@ exports[`renders wallet preview card 1`] = `
         <View
           style={
             {
+              "alignItems": "center",
               "flexDirection": "row",
               "gap": 12,
+              "justifyContent": "center",
             }
           }
         >
@@ -157,8 +160,8 @@ exports[`renders wallet preview card 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "flexShrink": 1,
                 "gap": 4,
+                "justifyContent": "center",
               }
             }
           >
@@ -176,6 +179,7 @@ exports[`renders wallet preview card 1`] = `
                   "fontSize": 18,
                   "fontWeight": "400",
                   "lineHeight": 24,
+                  "overflow": "hidden",
                 }
               }
               suppressHighlighting={true}
@@ -192,7 +196,7 @@ exports[`renders wallet preview card 1`] = `
         {
           "flexDirection": "row",
           "gap": 8,
-          "paddingLeft": 12,
+          "paddingLeft": 4,
           "paddingRight": 4,
         }
       }

@@ -7,7 +7,6 @@ import { PoolSortFields } from 'graphql/data/pools/useTopPools'
 import { OrderDirection } from 'graphql/data/util'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect, useMemo } from 'react'
-import { Flex } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const HIDDEN_COLUMNS = [PoolSortFields.VolOverTvl]
@@ -47,7 +46,7 @@ export function TokenDetailsPoolsTable({
   }, [resetSortAscending, resetSortMethod])
 
   return (
-    <Flex data-testid={`tdp-pools-table-${referenceToken.address.toLowerCase()}`}>
+    <div data-testid={`tdp-pools-table-${referenceToken.address.toLowerCase()}`}>
       <PoolsTable
         pools={pools}
         loading={allDataStillLoading}
@@ -56,6 +55,6 @@ export function TokenDetailsPoolsTable({
         hiddenColumns={HIDDEN_COLUMNS}
         loadMore={loadMore}
       />
-    </Flex>
+    </div>
   )
 }

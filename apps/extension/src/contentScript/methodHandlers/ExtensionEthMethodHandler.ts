@@ -373,7 +373,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     if (request.transaction.data && request.transaction.data !== '0x') {
       Object.assign(
         sendTransactionRequest,
-        getCalldataInfoFromTransaction(request.transaction.data, request.transaction.to, request.transaction.chainId),
+        getCalldataInfoFromTransaction(request.transaction.data, request.transaction.to),
       )
     }
 

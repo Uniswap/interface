@@ -36,7 +36,6 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
         <AddressDisplay
           includeUnitagSuffix
           showCopy
-          centered
           disableForcedWidth
           address={address}
           captionVariant="body2"

@@ -1,2 +1,2 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 export { getUniqueId } from 'react-native-device-info'

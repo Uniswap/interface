@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { AdaptiveWebModal, WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'

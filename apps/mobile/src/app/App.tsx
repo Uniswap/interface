@@ -81,7 +81,7 @@ import { isIOS } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, isWeb } from 'ui/src'
+import { DeprecatedButton, Flex, Text, isWeb } from 'ui/src'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -33,17 +33,19 @@ export function ReviewButton({ onPress, disabled }: ReviewButtonProps): JSX.Elem
     : t('common.button.review')
 
   return (
-    <Flex row alignSelf="stretch" gap="$spacing16">
+    <Flex gap="$spacing16">
       <Trace logPress element={ElementName.SendReview}>
-        <Button
-          variant="branded"
+        <DeprecatedButton
+          backgroundColor="$accent1"
           isDisabled={disableReviewButton}
           size={isWeb ? 'medium' : 'large'}
           testID={TestID.SendReview}
           onPress={onPress}
         >
-          {buttonText}
-        </Button>
+          <Text color="white" variant="buttonLabel1">
+            {buttonText}
+          </Text>
+        </DeprecatedButton>
       </Trace>
     </Flex>
   )

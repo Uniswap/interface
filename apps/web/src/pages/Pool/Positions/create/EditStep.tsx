@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -9,27 +11,30 @@ import {
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Button, Flex, FlexProps, Text, useMedia } from 'ui/src'
+import { Trans } from 'react-i18next'
+import { DeprecatedButton, Flex, FlexProps, Text, useMedia } from 'ui/src'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { iconSizes } from 'ui/src/theme'
 
 const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onClick: () => void } & FlexProps) => {
-  const { t } = useTranslation()
   return (
     <Container row gap="$gap24" justifyContent="space-between" alignItems="center" {...rest}>
       {children}
-      <Flex row>
-        <Button
-          maxWidth="fit-content"
-          emphasis="secondary"
-          size="small"
-          onPress={onClick}
-          icon={<Edit size="$icon.20" />}
-        >
-          {t('common.edit.button')}
-        </Button>
-      </Flex>
+      <DeprecatedButton
+        theme="secondary"
+        py="$spacing8"
+        px="$spacing12"
+        gap="$gap8"
+        height={36}
+        borderRadius="$rounded12"
+        onPress={onClick}
+        $md={{ px: '$spacing8' }}
+      >
+        <Edit size={iconSizes.icon20} color="$neutral1" />
+        <Text variant="buttonLabel3" $md={{ display: 'none' }}>
+          <Trans i18nKey="common.edit.button" />
+        </Text>
+      </DeprecatedButton>
     </Container>
   )
 }

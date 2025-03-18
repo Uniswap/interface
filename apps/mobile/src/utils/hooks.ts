@@ -1,5 +1,5 @@
-import { useFocusEffect } from '@react-navigation/core'
-import { useCallback, useEffect } from 'react'
+import { useFocusEffect, useIsFocused } from '@react-navigation/core'
+import { useCallback, useEffect, useRef } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 
@@ -16,6 +16,14 @@ export function usePollOnFocusOnly(
       }
     }, [startPolling, stopPolling, pollingInterval]),
   )
+}
+
+export function useSuspendUpdatesWhenBlured<T>(data: T): T {
+  const ref = useRef<T>(data)
+  if (useIsFocused()) {
+    ref.current = data
+  }
+  return ref.current
 }
 
 /**

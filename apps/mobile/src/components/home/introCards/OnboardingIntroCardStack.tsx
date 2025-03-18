@@ -1,8 +1,9 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
   NotificationPermission,
@@ -11,12 +12,15 @@ import {
 import { Flex } from 'ui/src'
 import { PUSH_NOTIFICATIONS_CARD_BANNER } from 'ui/src/assets'
 import { Buy, ShieldCheck } from 'ui/src/components/icons'
+import { UnichainIntroModal } from 'uniswap/src/components/unichain/UnichainIntroModal'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import {
@@ -27,6 +31,7 @@ import {
 } from 'wallet/src/components/introCards/IntroCard'
 import { INTRO_CARD_MIN_HEIGHT, IntroCardStack } from 'wallet/src/components/introCards/IntroCardStack'
 import { useSharedIntroCards } from 'wallet/src/components/introCards/useSharedIntroCards'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { selectHasViewedNotificationsCard } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasViewedNotificationsCard } from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -54,6 +59,8 @@ export function OnboardingIntroCardStack({
     notificationPermissionsEnabled === NotificationPermission.Disabled &&
     !hasViewedNotificationsCard
 
+  const { navigateToSwapFlow } = useWalletNavigation()
+
   const navigateToUnitagClaim = useCallback(() => {
     navigate(MobileScreens.UnitagStack, {
       screen: UnitagScreens.ClaimUnitag,
@@ -73,7 +80,11 @@ export function OnboardingIntroCardStack({
     )
   }, [dispatch, address])
 
+  const [showFundModal, setShowFundModal] = useState(false)
+  const [showUnichainIntroModal, setShowUnichainIntroModal] = useState(false)
+
   const { cards: sharedCards } = useSharedIntroCards({
+    showUnichainModal: () => setShowUnichainIntroModal(true),
     navigateToUnitagClaim,
     navigateToUnitagIntro,
   })
@@ -97,7 +108,7 @@ export function OnboardingIntroCardStack({
         description: t('onboarding.home.intro.fund.description'),
         cardType: CardType.Required,
         onPress: (): void => {
-          navigate(ModalName.FundWallet)
+          setShowFundModal(true)
           sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
             element: ElementName.OnboardingIntroCardFundWallet,
           })
@@ -166,12 +177,30 @@ export function OnboardingIntroCardStack({
     [cards],
   )
 
+  const UnichainIntroModalInstance = useMemo((): JSX.Element => {
+    return (
+      <UnichainIntroModal
+        openSwapFlow={() =>
+          navigateToSwapFlow({ openTokenSelector: CurrencyField.OUTPUT, outputChainId: UniverseChainId.Unichain })
+        }
+        onClose={() => setShowUnichainIntroModal(false)}
+      />
+    )
+  }, [navigateToSwapFlow])
+
   if (cards.length) {
     return (
       <Flex pt="$spacing12">
         {isLoading ? <Flex height={INTRO_CARD_MIN_HEIGHT} /> : <IntroCardStack cards={cards} onSwiped={handleSwiped} />}
+
+        {showFundModal && <FundWalletModal onClose={() => setShowFundModal(false)} />}
+        {showUnichainIntroModal && UnichainIntroModalInstance}
       </Flex>
     )
+  }
+
+  if (showUnichainIntroModal) {
+    return UnichainIntroModalInstance
   }
 
   return null

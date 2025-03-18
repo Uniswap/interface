@@ -1,4 +1,4 @@
-import { createTamagui } from 'ui/src'
+import { createTamagui } from '@tamagui/core'
 import { animations } from 'ui/src/theme/animations'
 import { TamaguiGroupNames, configWithoutAnimations } from 'ui/src/theme/config'
 

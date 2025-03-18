@@ -33,6 +33,9 @@ import { isAndroid, isIOS } from 'utilities/src/platform'
 import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
+export const NAV_BAR_HEIGHT_XS = 52
+export const NAV_BAR_HEIGHT_SM = 72
+
 const NAV_BAR_MARGIN_SIDES = 24
 const NAV_BAR_GAP = 12
 

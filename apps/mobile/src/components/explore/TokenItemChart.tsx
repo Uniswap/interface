@@ -9,7 +9,7 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/curren
 
 // Used to divide the number of data points for a smoother charts
 // Necessary because graphql query does not support a time resolution parameter
-const DATA_REDUCTION_FACTOR = 10
+export const DATA_REDUCTION_FACTOR = 10
 
 export function TokenItemChart({
   tokenItemData,

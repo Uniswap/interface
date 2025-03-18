@@ -1,14 +1,30 @@
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { ArrowDownCircle, Bank, SendAction } from 'ui/src/components/icons'
+import { Flex, GeneratedIcon, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { ArrowDownCircle, Bank, Buy, SendAction } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ElementNameType, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+
+export type QuickAction = {
+  /* Icon to display for the action */
+  Icon: GeneratedIcon
+  /* Event name to log when the action is triggered */
+  eventName?: MobileEventName
+  /* Label to display for the action */
+  label: string
+  /* Name of the element to log when the action is triggered */
+  name: ElementNameType
+  /* Callback to execute when the action is triggered */
+  onPress: () => void
+}
 
 /**
  * CTA buttons that appear at top of the screen showing actions such as
@@ -22,7 +38,9 @@ export function HomeScreenQuickActions({ onPressBuy }: { onPressBuy: () => void 
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { hapticFeedback } = useHapticFeedback()
-  const openReceiveModal = useOpenReceiveModal()
+  const cexTransferProviders = useCexTransferProviders()
+
+  const isOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
 
   const triggerHaptics = useCallback(async () => await hapticFeedback.light(), [hapticFeedback])
   const onPressSend = useCallback(async () => {
@@ -31,21 +49,28 @@ export function HomeScreenQuickActions({ onPressBuy }: { onPressBuy: () => void 
   }, [dispatch, triggerHaptics])
 
   const onPressReceive = useCallback(async () => {
-    openReceiveModal()
+    dispatch(
+      openModal(
+        cexTransferProviders.length > 0
+          ? { name: ModalName.ReceiveCryptoModal, initialState: cexTransferProviders }
+          : { name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr },
+      ),
+    )
     await triggerHaptics()
-  }, [openReceiveModal, triggerHaptics])
+  }, [dispatch, cexTransferProviders, triggerHaptics])
 
   // PR #4621 Necessary to declare these as direct dependencies due to race
   // condition with initializing react-i18next and useMemo
+  const buyLabel = t('home.label.buy')
   const forLabel = t('home.label.for')
   const sendLabel = t('home.label.send')
   const receiveLabel = t('home.label.receive')
   const actions = useMemo(
     () => [
       {
-        Icon: Bank,
+        Icon: isOffRampEnabled ? Bank : Buy,
         eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
-        label: forLabel,
+        label: isOffRampEnabled ? forLabel : buyLabel,
         name: ElementName.Buy,
         onPress: onPressBuy,
       },
@@ -62,7 +87,7 @@ export function HomeScreenQuickActions({ onPressBuy }: { onPressBuy: () => void 
         onPress: onPressReceive,
       },
     ],
-    [onPressBuy, onPressSend, onPressReceive, forLabel, sendLabel, receiveLabel],
+    [isOffRampEnabled, onPressBuy, onPressSend, onPressReceive, buyLabel, forLabel, sendLabel, receiveLabel],
   )
 
   return (

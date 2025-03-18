@@ -16,15 +16,9 @@ exports[`ContextMenu renders without error 1`] = `
   <div
     onContextMenu={[Function]}
   >
-    <View
-      style={
-        {
-          "flexDirection": "column",
-        }
-      }
-    >
+    <div>
       Trigger
-    </View>
+    </div>
   </div>
 </View>
 `;

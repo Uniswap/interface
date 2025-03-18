@@ -3,7 +3,7 @@ import { GlobalErrorEvent } from 'src/app/events/constants'
 import { globalEventEmitter } from 'src/app/events/global'
 import { logger } from 'utilities/src/logger/logger'
 
-const REMAINING_STORAGE_THRESHOLD_BYTES = 500000 // 500KB
+export const REMAINING_STORAGE_THRESHOLD_BYTES = 500000 // 500KB
 
 export function useCheckLowStorage({ isOnboarding }: { isOnboarding: boolean }): {
   showStorageWarning: boolean

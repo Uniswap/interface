@@ -2,7 +2,7 @@ import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
-import { ButtonGray } from 'components/Button/DeprecatedWebButtons'
+import { ButtonGray } from 'components/Button/buttons'
 import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
 import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -17,14 +17,15 @@ import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalanc
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import ms from 'ms'
+import { darken } from 'polished'
 import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
-import { Trans, useTranslation } from 'react-i18next'
+import { Trans } from 'react-i18next'
 import { useCurrencyBalance } from 'state/connection/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { AnimatePresence, Button, Flex, Text } from 'ui/src'
+import { AnimatePresence, Flex, Text } from 'ui/src'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -155,6 +156,11 @@ const LabelRow = styled.div`
   color: ${({ theme }) => theme.neutral2};
   font-size: 0.75rem;
   line-height: 1rem;
+
+  span:hover {
+    cursor: pointer;
+    color: ${({ theme }) => darken(0.2, theme.neutral2)};
+  }
 `
 
 const FiatRow = styled(LabelRow)`
@@ -185,6 +191,26 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size: 20px;
   font-weight: 535;
+`
+
+const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
+  background-color: transparent;
+  border: none;
+  color: ${({ theme }) => theme.accent1};
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 535;
+  opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
+  padding: 4px 6px;
+  pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
+
+  :hover {
+    opacity: ${({ disabled }) => (!disabled ? 0.8 : 0.4)};
+  }
+
+  :focus {
+    outline: none;
+  }
 `
 
 interface SwapCurrencyInputPanelProps {
@@ -250,7 +276,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined)
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
-    const { t } = useTranslation()
 
     const handleDismissSearch = useCallback(() => {
       setModalOpen(false)
@@ -271,8 +296,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const showCurrencyLoadingSpinner =
       initialCurrencyLoading && !otherCurrency && !isUserSelectedToken && currencyField === CurrencyField.INPUT
 
-    const isInputDisabled = Boolean(!chainAllowed || disabled || numericalInputSettings?.disabled)
-
     return (
       <InputPanel id={id} hideInput={hideInput} {...rest}>
         {locked && (
@@ -292,19 +315,18 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
           </Text>
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
             {!hideInput && (
-              <Flex fill onPress={handleDisabledNumericalInputClick}>
+              <div style={{ display: 'flex', flexGrow: 1 }} onClick={handleDisabledNumericalInputClick}>
                 <StyledNumericalInput
                   className="token-amount-input"
                   value={value}
                   onUserInput={onUserInput}
-                  disabled={isInputDisabled}
+                  disabled={!chainAllowed || disabled || numericalInputSettings?.disabled}
                   $loading={loading}
                   id={id}
                   ref={ref}
                   maxDecimals={currency?.decimals}
-                  style={{ width: '100%' }}
                 />
-              </Flex>
+              </div>
             )}
             <PrefetchBalancesWrapper>
               <MouseoverTooltip
@@ -408,17 +430,9 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                         eventOnTrigger={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
                         element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}
                       >
-                        <Button
-                          variant="branded"
-                          emphasis="secondary"
-                          size="xxsmall"
-                          py="$spacing4"
-                          ml="$spacing4"
-                          isDisabled={disabled}
-                          onPress={onMax}
-                        >
-                          {t('swap.button.max')}
-                        </Button>
+                        <StyledBalanceMax onClick={onMax}>
+                          <Trans i18nKey="common.max" />
+                        </StyledBalanceMax>
                       </Trace>
                     ) : null}
                   </RowFixed>

@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-elements */
 import { PropsWithChildren, SyntheticEvent, useEffect, useRef, useState } from 'react'
 import { Popover, PopperProps, Portal } from 'ui/src'
 import { Flex, FlexProps } from 'ui/src/components/layout'

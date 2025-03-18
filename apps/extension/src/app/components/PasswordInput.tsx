@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
 import { Input, InputProps } from 'src/app/components/Input'
-import { Flex, FlexProps, IconProps, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, FlexProps, IconProps, Text } from 'ui/src'
 import { Eye, EyeOff } from 'ui/src/components/icons'
 import { PasswordStrength, getPasswordStrengthTextAndColor } from 'wallet/src/utils/password'
 
@@ -34,17 +34,16 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(function 
         <StrengthIndicator strength={passwordStrength} />
       ) : (
         onToggleHideInput && (
-          <TouchableArea
+          <DeprecatedButton
             backgroundColor="$transparent"
             hoverStyle={hoverStyle}
             position="absolute"
             pressStyle={hoverStyle}
             right="$spacing8"
-            p="$spacing12"
             onPress={(): void => onToggleHideInput(!hideInput)}
           >
             {hideInput ? <Eye {...iconProps} /> : <EyeOff {...iconProps} />}
-          </TouchableArea>
+          </DeprecatedButton>
         )
       )}
     </Flex>

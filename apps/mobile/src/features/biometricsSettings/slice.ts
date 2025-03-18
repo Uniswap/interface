@@ -26,6 +26,7 @@ const slice = createSlice({
     setRequiredForTransactions: (state, action: PayloadAction<boolean>) => {
       state.requiredForTransactions = action.payload
     },
+    resetSettings: () => initialBiometricsSettingsState,
   },
   extraReducers: (builder) => {
     builder.addCase(setFinishedOnboarding, (state, action) => {
@@ -38,7 +39,7 @@ const slice = createSlice({
   },
 })
 
-export const { setRequiredForAppAccess, setRequiredForTransactions } = slice.actions
+export const { setRequiredForAppAccess, setRequiredForTransactions, resetSettings } = slice.actions
 
 export const biometricSettingsReducer = slice.reducer
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, SpinningLoader, useIsShortMobileDevice } from 'ui/src'
+import { DeprecatedButton, SpinningLoader, useIsShortMobileDevice } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 
 interface FiatOnRampCtaButtonProps {
@@ -23,19 +23,18 @@ export function FiatOnRampCtaButton({
   const buttonAvailable = eligible || isLoading
   const continueText = eligible ? continueButtonText : t('fiatOnRamp.error.unsupported')
   return (
-    <Button
+    <DeprecatedButton
+      color={buttonAvailable ? '$white' : '$neutral2'}
       isDisabled={disabled}
       icon={
         isLoading ? <SpinningLoader color="$white" /> : !eligible ? <InfoCircleFilled color="$neutral3" /> : undefined
       }
-      iconPosition="after"
+      height={isShortMobileDevice ? 38 : 55}
       size={isShortMobileDevice ? 'small' : 'large'}
-      emphasis={isLoading ? 'secondary' : buttonAvailable ? 'primary' : 'secondary'}
-      loading={isLoading}
-      variant="branded"
+      theme={buttonAvailable ? 'primary' : 'tertiary'}
       onPress={onPress}
     >
       {!isLoading && continueText}
-    </Button>
+    </DeprecatedButton>
   )
 }

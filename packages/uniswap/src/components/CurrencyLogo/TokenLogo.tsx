@@ -1,5 +1,5 @@
 import { memo, useState } from 'react'
-import { Flex, Loader, Text, UniversalImage, useColorSchemeFromSeed, useSporeColors } from 'ui/src'
+import { Flex, Text, UniversalImage, useColorSchemeFromSeed, useSporeColors } from 'ui/src'
 import { iconSizes, validColor, zIndexes } from 'ui/src/theme'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -15,7 +15,6 @@ interface TokenLogoProps {
   size?: number
   hideNetworkLogo?: boolean
   networkLogoBorderWidth?: number
-  loading?: boolean
 }
 
 const TESTNET_BORDER_DIVISOR = 15
@@ -29,7 +28,6 @@ export const TokenLogo = memo(function _TokenLogo({
   size = iconSizes.icon40,
   hideNetworkLogo,
   networkLogoBorderWidth = isMobileApp ? 2 : 1.5,
-  loading,
 }: TokenLogoProps): JSX.Element {
   const [showBackground, setShowBackground] = useState(false)
 
@@ -45,10 +43,6 @@ export const TokenLogo = memo(function _TokenLogo({
   const borderOffset = isTestnetToken ? BORDER_OFFSET : 0
 
   const tokenSize = size - borderWidth - borderOffset
-
-  if (loading) {
-    return <Loader.Box borderRadius="$roundedFull" height={size} width={size} />
-  }
 
   const fallback = (
     <Flex

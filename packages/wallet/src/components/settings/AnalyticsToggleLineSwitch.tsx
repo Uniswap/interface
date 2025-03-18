@@ -5,7 +5,7 @@ import { isMobileApp } from 'utilities/src/platform'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { setAllowAnalytics } from 'wallet/src/features/telemetry/slice'
 
-export function AnalyticsToggleLineSwitch(props: FlexProps): JSX.Element {
+export function AnalyticsToggleLineSwitch({ ...props }: FlexProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const analyticsAllowed = useSelector(selectAllowAnalytics)

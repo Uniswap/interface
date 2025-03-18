@@ -94,9 +94,8 @@ export function CreatePositionContextProvider({
 }
 
 export function PriceRangeContextProvider({ children }: { children: React.ReactNode }) {
-  const { positionState } = useCreatePositionContext()
-  const fullRange = positionState.initialPosition?.isOutOfRange ? false : true
-  const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>({ ...DEFAULT_PRICE_RANGE_STATE, fullRange })
+  const { derivedPositionInfo } = useCreatePositionContext()
+  const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(DEFAULT_PRICE_RANGE_STATE)
 
   const reset = useCallback(() => {
     setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
@@ -105,19 +104,19 @@ export function PriceRangeContextProvider({ children }: { children: React.ReactN
   useEffect(() => {
     // creatingPoolOrPair is calculated in the previous step of the create flow, so
     // it's safe to reset PriceRangeState to defaults when it changes.
-    setPriceRangeState({ ...DEFAULT_PRICE_RANGE_STATE, fullRange })
-  }, [fullRange])
+    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
+  }, [derivedPositionInfo.creatingPoolOrPair])
 
   useEffect(() => {
     // When the price is inverted, reset the state so that LiquidityChartRangeInput can redraw the default range if needed.
     setPriceRangeState((prevState) => {
       if (prevState.fullRange) {
-        return { ...prevState, fullRange, minPrice: '', maxPrice: '' }
+        return { ...prevState, fullRange: true, minPrice: '', maxPrice: '' }
       } else {
         return { ...prevState, fullRange: false, minPrice: undefined, maxPrice: undefined }
       }
     })
-  }, [priceRangeState.priceInverted, fullRange])
+  }, [priceRangeState.priceInverted])
 
   const derivedPriceRangeInfo = useDerivedPriceRangeInfo(priceRangeState)
 

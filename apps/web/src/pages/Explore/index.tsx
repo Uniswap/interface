@@ -203,13 +203,15 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 )
               })}
             </Flex>
-            <Flex row gap="$spacing8" justifyContent="flex-start">
+            <Flex row gap="$spacing8" height="$spacing40" justifyContent="flex-start">
               {currentKey === ExploreTab.Pools && (
-                <Flex row>
-                  <Button size="small" icon={<Plus />} onPress={() => navigate('/positions/create')}>
-                    {media.sm ? t('common.add.label') : t('common.addLiquidity')}
-                  </Button>
-                </Flex>
+                <Button
+                  size="small"
+                  icon={<Plus size={20} color="$surface1" />}
+                  onPress={() => navigate('/positions/create')}
+                >
+                  {media.sm ? t('common.add.label') : t('common.addLiquidity')}
+                </Button>
               )}
               <TableNetworkFilter showMultichainOption={currentKey !== ExploreTab.Transactions} />
               {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}

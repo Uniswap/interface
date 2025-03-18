@@ -181,7 +181,7 @@ export function decodeMessage(value: string): string {
  * See https://docs.walletconnect.com/2.0/advanced/rpc-reference/ethereum-rpc#personal_sign
  */
 // eslint-disable-next-line consistent-return
-function getAddressAndMessageToSign(
+export function getAddressAndMessageToSign(
   ethMethod: EthSignMethod,
   params: WalletKitTypes.SessionRequest['params']['request']['params'],
 ): { address: string; rawMessage: string; message: string | null } {

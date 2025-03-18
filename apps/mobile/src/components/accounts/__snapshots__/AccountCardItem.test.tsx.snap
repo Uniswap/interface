@@ -154,6 +154,7 @@ exports[`AccountCardItem renders correctly 1`] = `
           <View
             style={
               {
+                "alignItems": "flex-start",
                 "flexDirection": "column",
                 "flexShrink": 1,
                 "gap": 2,
@@ -163,8 +164,10 @@ exports[`AccountCardItem renders correctly 1`] = `
             <View
               style={
                 {
+                  "alignItems": "center",
                   "flexDirection": "row",
                   "gap": 12,
+                  "justifyContent": "center",
                 }
               }
             >
@@ -173,8 +176,8 @@ exports[`AccountCardItem renders correctly 1`] = `
                   {
                     "alignItems": "center",
                     "flexDirection": "row",
-                    "flexShrink": 1,
                     "gap": 4,
+                    "justifyContent": "center",
                   }
                 }
               >
@@ -197,6 +200,7 @@ exports[`AccountCardItem renders correctly 1`] = `
                       "fontSize": 19,
                       "fontWeight": "400",
                       "lineHeight": 24,
+                      "overflow": "hidden",
                     }
                   }
                   suppressHighlighting={true}

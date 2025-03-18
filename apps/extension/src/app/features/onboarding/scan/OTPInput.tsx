@@ -181,8 +181,7 @@ export function OTPInput(): JSX.Element {
         }
         nextButtonEnabled={false}
         nextButtonText={expiryText}
-        nextButtonVariant="default"
-        nextButtonEmphasis="secondary"
+        nextButtonTheme="secondary"
         subtitle={t('onboarding.scan.otp.subtitle')}
         title={t('onboarding.scan.otp.title')}
         onBack={resetFlowAndNavBack}

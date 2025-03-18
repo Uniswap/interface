@@ -7,7 +7,7 @@ import styled from 'lib/styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { breakpoints } from 'ui/src/theme'
 
-const IconWrapper = styled.div<{ size?: number }>`
+export const IconWrapper = styled.div<{ size?: number }>`
   position: relative;
   ${flexColumnNoWrap};
   align-items: center;

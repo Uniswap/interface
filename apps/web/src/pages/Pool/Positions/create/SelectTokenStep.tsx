@@ -1,7 +1,8 @@
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { ErrorCallout } from 'components/ErrorCallout'
+import { LoaderButton } from 'components/Button/LoaderButton'
 import { HookModal } from 'components/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { getDefaultFeeTiersWithData, hasLPFoTTransferError, isDynamicFeeTier } from 'components/Liquidity/utils'
@@ -20,10 +21,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
-import { TamaguiClickableStyle } from 'theme/components'
+import { ClickableTamaguiStyle, TamaguiClickableStyle } from 'theme/components'
 import { PositionField } from 'types/position'
-import { DeprecatedButton } from 'ui'
-import { Button, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
+import { DeprecatedButton, Flex, FlexProps, HeightAnimator, Text, TouchableArea, styled } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
@@ -57,7 +58,6 @@ export const CurrencySelector = ({
   const { t } = useTranslation()
   const currency = currencyInfo?.currency
 
-  // TODO: [Button] blocked by (WALL-5674)
   return (
     <DeprecatedButton
       flex={1}
@@ -462,25 +462,25 @@ export function SelectTokensStep({
                       <Trans i18nKey="fee.tier.label" />
                     </Text>
                   </Flex>
-                  <Button
-                    fill={false}
+                  <DeprecatedButton
                     isDisabled={!currencyInputs.TOKEN0 || !currencyInputs.TOKEN1}
-                    size="xsmall"
-                    maxWidth="fit-content"
-                    emphasis="secondary"
+                    size="small"
+                    px="$spacing12"
+                    my="auto"
+                    gap="$gap4"
+                    theme="secondary"
                     onPress={toggleShowMoreFeeTiersEnabled}
-                    $md={{ width: 32 }}
-                    icon={
-                      <RotatableChevron
-                        direction={isShowMoreFeeTiersEnabled ? 'up' : 'down'}
-                        width={iconSizes.icon20}
-                        height={iconSizes.icon20}
-                      />
-                    }
-                    iconPosition="after"
                   >
-                    {isShowMoreFeeTiersEnabled ? t('common.less') : t('common.more')}
-                  </Button>
+                    <Text variant="buttonLabel4" $md={{ display: 'none' }}>
+                      {isShowMoreFeeTiersEnabled ? t('common.less') : t('common.more')}
+                    </Text>
+                    <RotatableChevron
+                      direction={isShowMoreFeeTiersEnabled ? 'up' : 'down'}
+                      color="$neutral2"
+                      width={iconSizes.icon20}
+                      height={iconSizes.icon20}
+                    />
+                  </DeprecatedButton>
                 </Flex>
                 <HeightAnimator open={isShowMoreFeeTiersEnabled}>
                   <Flex flexDirection="column" display="flex" gap="$gap12">
@@ -517,17 +517,28 @@ export function SelectTokensStep({
               </Flex>
             )}
           </Flex>
-          <Flex row>
-            <Button
-              size="large"
-              key="SelectTokensStep-continue"
-              onPress={handleOnContinue}
-              loading={Boolean(!continueButtonEnabled && token0 && token1)}
-              isDisabled={!continueButtonEnabled || hasError}
-            >
-              {t('common.button.continue')}
-            </Button>
-          </Flex>
+          <LoaderButton
+            buttonKey="SelectTokensStep-continue"
+            flex={1}
+            py="$spacing16"
+            px="$spacing20"
+            backgroundColor="$accent3"
+            hoverStyle={{
+              backgroundColor: undefined,
+              opacity: 0.8,
+            }}
+            pressStyle={{
+              backgroundColor: undefined,
+            }}
+            onPress={handleOnContinue}
+            loading={Boolean(!continueButtonEnabled && token0 && token1)}
+            loaderColor="$surface1"
+            isDisabled={!continueButtonEnabled || hasError}
+          >
+            <Text variant="buttonLabel1" color="$surface1">
+              <Trans i18nKey="common.button.continue" />
+            </Text>
+          </LoaderButton>
         </Container>
 
         <CurrencySearchModal
@@ -555,41 +566,90 @@ function SelectStepError({
   const { setPositionState } = useCreatePositionContext()
 
   if (isV4UnsupportedTokenSelected) {
-    return <ErrorCallout errorMessage={true} title={t('position.migrate.v4unsupportedChain')} />
+    return (
+      <Flex row alignItems="center" gap="$spacing8" mt="$spacing12">
+        <AlertTriangleFilled size="$icon.24" color="$statusCritical" />
+        <Text variant="body3" color="$statusCritical">
+          {t('position.migrate.v4unsupportedChain')}
+        </Text>
+      </Flex>
+    )
   }
 
   if (wrappedNativeWarning) {
     return (
-      <ErrorCallout
-        isWarning
-        errorMessage={true}
-        title={t('position.wrapped.warning', { nativeToken: wrappedNativeWarning.nativeToken.symbol })}
-        description={t('position.wrapped.warning.info', {
-          nativeToken: wrappedNativeWarning.nativeToken.symbol,
-          wrappedToken: wrappedNativeWarning.wrappedToken.symbol,
-        })}
-        action={t('position.wrapped.unwrap', { wrappedToken: wrappedNativeWarning.wrappedToken.symbol })}
-        onPress={() => navigate(`/swap${wrappedNativeWarning.swapUrlParams}`)}
-      />
+      <Flex row gap="$gap12" backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
+        <Flex flexShrink={0}>
+          <AlertTriangleFilled size="$icon.20" color="$statusWarning" />
+        </Flex>
+        <Flex flex={1}>
+          <Text variant="body3" color="$statusWarning">
+            <Trans
+              i18nKey="position.wrapped.warning"
+              values={{ nativeToken: wrappedNativeWarning.nativeToken.symbol }}
+            />
+          </Text>
+          <Text variant="body3" color="$neutral2">
+            <Trans
+              i18nKey="position.wrapped.warning.info"
+              values={{
+                nativeToken: wrappedNativeWarning.nativeToken.symbol,
+                wrappedToken: wrappedNativeWarning.wrappedToken.symbol,
+              }}
+            />
+          </Text>
+          <TouchableArea
+            onPress={() => navigate(`/swap${wrappedNativeWarning.swapUrlParams}`)}
+            mt="$spacing2"
+            {...ClickableTamaguiStyle}
+          >
+            <Text variant="buttonLabel4">
+              <Trans
+                i18nKey="position.wrapped.unwrap"
+                values={{ wrappedToken: wrappedNativeWarning.wrappedToken.symbol }}
+              />
+            </Text>
+          </TouchableArea>
+        </Flex>
+      </Flex>
     )
   }
 
   if (fotToken) {
     return (
-      <ErrorCallout
-        errorMessage={true}
-        title={t('token.safety.warning.fotLow.title')}
-        description={t('position.fot.warning', { token: fotToken.currency.symbol })}
-        action={t('position.fot.warning.cta')}
-        onPress={() => {
-          navigate('/positions/create/v2')
-          setPositionState((prevState) => ({
-            ...DEFAULT_POSITION_STATE,
-            currencyInputs: prevState.currencyInputs,
-            protocolVersion: ProtocolVersion.V2,
-          }))
-        }}
-      />
+      <Flex row gap="$gap12" backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
+        <Flex flexShrink={0}>
+          <AlertTriangleFilled size="$icon.20" color="$statusCritical" />
+        </Flex>
+        <Flex flex={1}>
+          <Text variant="body3" color="$statusCritical">
+            {t('token.safety.warning.fotLow.title')}
+          </Text>
+          <Text variant="body3" color="$neutral2">
+            <Trans
+              i18nKey="position.fot.warning"
+              values={{
+                token: fotToken.currency.symbol,
+              }}
+            />
+          </Text>
+          <TouchableArea
+            onPress={() => {
+              navigate('/positions/create/v2')
+
+              setPositionState((prevState) => ({
+                ...DEFAULT_POSITION_STATE,
+                currencyInputs: prevState.currencyInputs,
+                protocolVersion: ProtocolVersion.V2,
+              }))
+            }}
+            mt="$spacing2"
+            {...ClickableTamaguiStyle}
+          >
+            <Text variant="buttonLabel4">{t('position.fot.warning.cta')}</Text>
+          </TouchableArea>
+        </Flex>
+      </Flex>
     )
   }
 

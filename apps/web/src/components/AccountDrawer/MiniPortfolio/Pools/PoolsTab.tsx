@@ -1,4 +1,5 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { PortfolioSkeleton, PortfolioTabWrapper } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'

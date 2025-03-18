@@ -20,7 +20,6 @@ export function MenuContent({ items, onItemClick, ...rest }: MenuContentProps): 
       borderColor="$surface3"
       {...rest}
     >
-      {/* eslint-disable-next-line react/forbid-elements */}
       <div
         // Prevent any right-click from bubbling up or showing default context menu
         onContextMenu={(e) => {

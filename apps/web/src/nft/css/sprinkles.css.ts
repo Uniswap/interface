@@ -1,6 +1,5 @@
 import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css'
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
-import { breakpoints } from 'ui/src/theme'
 
 const themeContractValues = {
   colors: {
@@ -43,6 +42,8 @@ const themeContractValues = {
     pressed: '0.4',
   },
 }
+
+export type Theme = typeof themeContractValues
 
 export const themeVars = createGlobalThemeContract(themeContractValues, (_, path) => `genie-${path.join('-')}`)
 
@@ -305,14 +306,23 @@ const borderWidth = ['0px', '0.5px', '1px', '1.5px', '2px', '3px', '4px']
 
 const borderStyle = ['none', 'solid'] as const
 
+export const breakpoints = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  xxl: 1536,
+  xxxl: 1920,
+}
+
 const layoutStyles = defineProperties({
   conditions: {
     sm: {},
-    md: { '@media': `screen and (min-width: ${breakpoints.md}px)` },
-    lg: { '@media': `screen and (min-width: ${breakpoints.lg}px)` },
-    xl: { '@media': `screen and (min-width: ${breakpoints.xl}px)` },
-    xxl: { '@media': `screen and (min-width: ${breakpoints.xxl}px)` },
-    xxxl: { '@media': `screen and (min-width: ${breakpoints.xxxl}px)` },
+    md: { '@media': `screen and (min-width: ${breakpoints.sm}px)` },
+    lg: { '@media': `screen and (min-width: ${breakpoints.md}px)` },
+    xl: { '@media': `screen and (min-width: ${breakpoints.lg}px)` },
+    xxl: { '@media': `screen and (min-width: ${breakpoints.xl}px)` },
+    xxxl: { '@media': `screen and (min-width: ${breakpoints.xxl}px)` },
   },
   defaultCondition: 'sm',
   properties: {
@@ -430,3 +440,4 @@ const unresponsiveProperties = defineProperties({
 })
 
 export const sprinkles = createSprinkles(layoutStyles, colorStyles, unresponsiveProperties)
+export type Sprinkles = Parameters<typeof sprinkles>[0]

@@ -9,7 +9,7 @@ import {
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { usePromptPushPermission } from 'src/features/notifications/hooks/usePromptPushPermission'
 import { openNotificationSettings } from 'src/utils/linking'
-import { Button, Flex } from 'ui/src'
+import { DeprecatedButton, Flex } from 'ui/src'
 import { BellOn } from 'ui/src/components/icons/BellOn'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -78,11 +78,9 @@ export function NotificationsOSSettingsModal({ navigation }: NotificationsOSSett
           <NotificationsBackgroundImage />
 
           <Trace logPress element={ElementName.Enable}>
-            <Flex row>
-              <Button variant="branded" testID="turn-on-notifications" onPress={onPressEnableNotifications}>
-                {t('settings.action.enableInSettings')}
-              </Button>
-            </Flex>
+            <DeprecatedButton testID="turn-on-notifications" onPress={onPressEnableNotifications}>
+              {t('settings.action.enableInSettings')}
+            </DeprecatedButton>
           </Trace>
         </Flex>
       </Flex>

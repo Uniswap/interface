@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
 import { Feedback, LikeSquare, MessageText, X } from 'ui/src/components/icons'
 import { IconSizeTokens, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -66,6 +66,7 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
       iconSize: '$icon.18' as IconSizeTokens,
       onSecondaryButtonPress: onRemindLater,
       onPrimaryButtonPress: (): void => {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         window.open(uniswapUrls.walletFeedbackForm)
         dispatch(setAppRating({ feedbackProvided: true }))
         sendAnalyticsEvent(WalletEventName.AppRating, {
@@ -85,6 +86,7 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
       iconSize: '$icon.24' as IconSizeTokens,
       onSecondaryButtonPress: onRemindLater,
       onPrimaryButtonPress: (): void => {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
         window.open(`https://chromewebstore.google.com/detail/uniswap-extension/${chrome.runtime.id}/reviews`)
         dispatch(setAppRating({ ratingProvided: true }))
         sendAnalyticsEvent(WalletEventName.AppRating, {
@@ -131,12 +133,12 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
           </Text>
         </Flex>
         <Flex row width="100%" gap="$spacing12">
-          <Button flexBasis={1} size="small" emphasis="secondary" onPress={onSecondaryButtonPress}>
+          <DeprecatedButton flex={1} flexBasis={1} size="small" theme="secondary" onPress={onSecondaryButtonPress}>
             {secondaryButtonText}
-          </Button>
-          <Button flexBasis={1} size="small" variant="branded" onPress={onPrimaryButtonPress}>
+          </DeprecatedButton>
+          <DeprecatedButton flex={1} flexBasis={1} size="small" theme="primary" onPress={onPrimaryButtonPress}>
             {primaryButtonText}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

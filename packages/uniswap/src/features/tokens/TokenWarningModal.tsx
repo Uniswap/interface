@@ -165,6 +165,7 @@ function TokenWarningModalContent({
       <Flex>
         <WarningModalContent
           modalName={ModalName.TokenWarningModal}
+          rejectButtonTheme="tertiary"
           captionComponent={
             <Text color="$neutral2" textAlign="center" variant="body3">
               {`${subtitleText} `}

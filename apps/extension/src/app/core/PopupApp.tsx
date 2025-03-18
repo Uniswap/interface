@@ -9,7 +9,7 @@ import { ErrorElement } from 'src/app/components/ErrorElement'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
-import { Button, Flex, Image, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Image, Text } from 'ui/src'
 import { CHROME_LOGO, UNISWAP_LOGO } from 'ui/src/assets'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
@@ -75,22 +75,19 @@ function PopupContent(): JSX.Element {
         <Flex fill />
 
         <Trace logPress element={ElementName.ExtensionPopupOpenButton}>
-          <Flex>
-            <Button
-              variant="branded"
-              emphasis="primary"
-              size="medium"
-              width="100%"
-              onPress={async () => {
-                if (windowIdNumber) {
-                  await chrome.sidePanel.open({ tabId: tabIdNumber, windowId: windowIdNumber })
-                  window.close()
-                }
-              }}
-            >
-              {t('extension.popup.chrome.button')}
-            </Button>
-          </Flex>
+          <DeprecatedButton
+            theme="primary"
+            width="100%"
+            onPress={async () => {
+              if (windowIdNumber) {
+                // eslint-disable-next-line security/detect-non-literal-fs-filename
+                await chrome.sidePanel.open({ tabId: tabIdNumber, windowId: windowIdNumber })
+                window.close()
+              }
+            }}
+          >
+            {t('extension.popup.chrome.button')}
+          </DeprecatedButton>
         </Trace>
       </Flex>
     </Trace>

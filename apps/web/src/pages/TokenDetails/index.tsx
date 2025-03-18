@@ -17,6 +17,7 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
+import { ThemeProvider } from 'theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -178,7 +179,7 @@ export default function TokenDetailsPage() {
   const metatags = useDynamicMetatags(metatagProperties)
 
   return (
-    <>
+    <ThemeProvider accent1={tokenColor ?? undefined}>
       <Helmet>
         <title>{getTokenPageTitle(t, currency, currencyChainId)}</title>
         {metatags.map((tag, index) => (
@@ -197,15 +198,9 @@ export default function TokenDetailsPage() {
         if (tokenQuery.loading) {
           return <TokenDetailsPageSkeleton />
         } else {
-          return (
-            <InvalidTokenDetails
-              tokenColor={tokenColor}
-              pageChainId={pageChainId}
-              isInvalidAddress={!isAddress(address)}
-            />
-          )
+          return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!isAddress(address)} />
         }
       })()}
-    </>
+    </ThemeProvider>
   )
 }

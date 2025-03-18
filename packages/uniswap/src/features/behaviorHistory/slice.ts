@@ -8,7 +8,6 @@ export interface UniswapBehaviorHistoryState {
   hasViewedBridgingBanner?: boolean
   hasDismissedBridgingWarning?: boolean
   hasDismissedLowNetworkTokenWarning?: boolean
-  hasViewedContractAddressExplainer?: boolean
   unichainPromotion?: {
     coldBannerDismissed?: boolean
     warmBannerDismissed?: boolean
@@ -24,7 +23,6 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasViewedBridgingBanner: false,
   hasDismissedBridgingWarning: false,
   hasDismissedLowNetworkTokenWarning: false,
-  hasViewedContractAddressExplainer: false,
   unichainPromotion: {
     coldBannerDismissed: false,
     warmBannerDismissed: false,
@@ -48,9 +46,6 @@ const slice = createSlice({
     },
     setHasDismissedLowNetworkTokenWarning: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedLowNetworkTokenWarning = action.payload
-    },
-    setHasViewedContractAddressExplainer: (state, action: PayloadAction<boolean>) => {
-      state.hasViewedContractAddressExplainer = action.payload
     },
     setHasDismissedUnichainColdBanner: (state, action: PayloadAction<boolean>) => {
       state.unichainPromotion ??= {}
@@ -99,7 +94,6 @@ export const {
   setIsFirstUnichainBridgeSelection,
   setHasSeenBridgingAnimation,
   resetUniswapBehaviorHistory,
-  setHasViewedContractAddressExplainer,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

@@ -52,7 +52,7 @@ export function FiatOnRampCurrencyModal({
         <Flex grow>
           <AutoSizer disableWidth>
             {({ height }: { height: number }) => (
-              <Flex data-testid="for-currency-list-wrapper">
+              <div data-testid="for-currency-list-wrapper">
                 <FixedSizeList
                   height={height}
                   width="100%"
@@ -82,7 +82,7 @@ export function FiatOnRampCurrencyModal({
                     )
                   }}
                 </FixedSizeList>
-              </Flex>
+              </div>
             )}
           </AutoSizer>
         </Flex>

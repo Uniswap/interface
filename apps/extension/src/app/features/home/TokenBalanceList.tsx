@@ -41,7 +41,7 @@ export const TokenBalanceList = memo(function _TokenBalanceList({ owner }: Token
   )
 })
 
-function TokenBalanceListInner(): JSX.Element {
+export function TokenBalanceListInner(): JSX.Element {
   const { t } = useTranslation()
 
   const { rows, balancesById, networkStatus, refetch, hiddenTokensExpanded } = useTokenBalanceListContext()
@@ -157,6 +157,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
         <InfoLinkModal
           showCloseButton
           buttonText={t('common.button.close')}
+          buttonTheme="tertiary"
           description={t('hidden.tokens.info.text.info')}
           icon={
             <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">

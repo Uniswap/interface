@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import {
   ALCHEMY_API_KEY,
   AMPLITUDE_PROXY_URL_OVERRIDE,

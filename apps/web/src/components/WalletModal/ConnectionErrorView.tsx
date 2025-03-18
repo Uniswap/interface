@@ -1,3 +1,4 @@
+import { ButtonEmpty, ButtonPrimary } from 'components/Button/buttons'
 import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
@@ -5,7 +6,6 @@ import { AlertTriangle } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Button, Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -54,14 +54,14 @@ export default function ConnectionErrorView() {
         <ThemedText.BodyPrimary fontSize={16} marginBottom={24} lineHeight="24px" textAlign="center">
           <Trans i18nKey="wallet.connectionFailed.message" />
         </ThemedText.BodyPrimary>
-        <Button theme="primary" variant="branded" size="large" onPress={retry}>
+        <ButtonPrimary $borderRadius="16px" onClick={retry}>
           <Trans i18nKey="common.tryAgain.error" />
-        </Button>
-        <Flex row>
-          <Button emphasis="text-only" variant="branded" width="fit-content" p="$none" mt="$spacing20">
+        </ButtonPrimary>
+        <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
+          <ThemedText.BodySecondary color="accent1" onClick={connection?.reset} marginBottom={12}>
             <Trans i18nKey="common.close" />
-          </Button>
-        </Flex>
+          </ThemedText.BodySecondary>
+        </ButtonEmpty>
       </Wrapper>
     </Modal>
   ) : null

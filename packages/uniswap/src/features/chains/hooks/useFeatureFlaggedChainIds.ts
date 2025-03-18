@@ -10,14 +10,16 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
   // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
   // IMPORTANT: Don't forget to also update getEnabledChainIdsSaga
   const monadTestnetEnabled = useFeatureFlag(FeatureFlags.MonadTestnet)
+  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
   const soneiumEnabled = useFeatureFlag(FeatureFlags.Soneium)
 
   return useMemo(
     () =>
       filterChainIdsByFeatureFlag({
         [UniverseChainId.MonadTestnet]: monadTestnetEnabled,
+        [UniverseChainId.Unichain]: unichainEnabled,
         [UniverseChainId.Soneium]: soneiumEnabled,
       }),
-    [monadTestnetEnabled, soneiumEnabled],
+    [monadTestnetEnabled, unichainEnabled, soneiumEnabled],
   )
 }

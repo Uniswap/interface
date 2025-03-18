@@ -14,6 +14,8 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
+import { OpacityHoverState } from 'components/Common/styles'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
@@ -25,14 +27,12 @@ import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
+import { ArrowDown, X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { useOrder } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { Button, Flex, TouchableArea } from 'ui/src'
-import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -74,8 +74,21 @@ const Wrapper = styled(AutoColumn).attrs({ gap: 'md', grow: true })`
   background-color: ${({ theme }) => theme.surface1};
 `
 
+const StyledXButton = styled(X)`
+  cursor: pointer;
+  justify-self: flex-end;
+
+  color: ${({ theme }) => theme.neutral1};
+  ${OpacityHoverState};
+`
+
 const OffchainModalDivider = styled(Divider)`
   margin: 28px 0;
+`
+
+const OffchainModalBottomButton = styled(ThemeButton)`
+  margin-top: 16px;
+  border-radius: 12px;
 `
 
 const InsufficientFundsCopyContainer = styled(Row)`
@@ -253,15 +266,13 @@ export function OrderContent({
         ))}
       </Column>
       {Boolean(isLimitCancellable(order) && order.encodedOrder) && (
-        <Flex mt="$spacing12" row>
-          <Button size="small" variant="default" emphasis="secondary" onPress={onCancel}>
-            {order.type === SignatureType.SIGN_LIMIT ? (
-              <Trans i18nKey="common.limit.cancel" count={1} />
-            ) : (
-              <Trans i18nKey="common.cancelOrder" />
-            )}
-          </Button>
-        </Flex>
+        <OffchainModalBottomButton emphasis={ButtonEmphasis.medium} onClick={onCancel} size={ButtonSize.medium}>
+          {order.type === SignatureType.SIGN_LIMIT ? (
+            <Trans i18nKey="common.limit.cancel" count={1} />
+          ) : (
+            <Trans i18nKey="common.cancelOrder" />
+          )}
+        </OffchainModalBottomButton>
       )}
       {order.status === UniswapXOrderStatus.INSUFFICIENT_FUNDS ? (
         <InsufficientFundsCopyContainer>
@@ -381,9 +392,7 @@ export function OffchainActivityModal() {
             <ThemedText.SubHeader fontWeight={500}>
               <Trans i18nKey="common.transactionDetails" />
             </ThemedText.SubHeader>
-            <TouchableArea onPress={reset}>
-              <X size="$icon.20" color="$neutral1" hoverColor="$neutral1Hovered" />
-            </TouchableArea>
+            <StyledXButton onClick={reset} />
           </Row>
           {syncedSelectedOrder && (
             <OrderContent

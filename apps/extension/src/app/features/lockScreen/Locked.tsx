@@ -7,7 +7,7 @@ import { InfoModal, ModalProps } from 'src/app/components/modal/InfoModal'
 import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
-import { Button, Flex, InputProps, Text } from 'ui/src'
+import { DeprecatedButton, Flex, InputProps, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled, Lock } from 'ui/src/components/icons'
 import { spacing, zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -20,7 +20,7 @@ import { EditAccountAction, editAccountActions } from 'wallet/src/features/walle
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { SagaStatus } from 'wallet/src/utils/saga'
 
-function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
+export function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
   const [value, setValue] = useState(defaultValue)
 
   const onChangeText: InputProps['onChangeText'] = (newValue): void => {
@@ -211,29 +211,28 @@ export function Locked(): JSX.Element {
         </Flex>
 
         <Flex gap="$spacing12" justifyContent="flex-end" zIndex={zIndexes.sticky}>
-          <Flex row>
-            <Button size="large" variant="branded" onPress={onPress}>
-              {t('extension.lock.button.submit')}
-            </Button>
-          </Flex>
+          <DeprecatedButton size="large" theme="primary" onPress={onPress}>
+            {t('extension.lock.button.submit')}
+          </DeprecatedButton>
 
-          <Flex row>
-            <Button
-              size="large"
-              variant="default"
-              emphasis="text-only"
+          <TouchableArea>
+            <Text
+              color="$neutral3"
+              hoverStyle={{ color: '$neutral2' }}
+              textAlign="center"
+              variant="body2"
               onPress={(): void => setForgotPasswordModalOpen(true)}
             >
               {t('extension.lock.button.forgot')}
-            </Button>
-          </Flex>
+            </Text>
+          </TouchableArea>
         </Flex>
       </Flex>
 
       <InfoModal
         showCloseButton
         buttonText={modalProps[modalStep].buttonText}
-        buttonEmphasis="secondary"
+        buttonTheme="tertiary"
         description={modalProps[modalStep].description}
         icon={modalProps[modalStep].icon}
         isOpen={forgotPasswordModalOpen}

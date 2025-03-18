@@ -1,4 +1,5 @@
 import { Currency, Token, WETH9 } from '@uniswap/sdk-core'
+// eslint-disable-next-line no-restricted-imports
 import type { ImageSourcePropType } from 'react-native'
 import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {

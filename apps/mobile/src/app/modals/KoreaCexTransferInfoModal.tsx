@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Action } from 'redux'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { Button, Flex, Image, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Image, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { CEX_TRANSFER_MODAL_BG_DARK, CEX_TRANSFER_MODAL_BG_LIGHT } from 'ui/src/assets'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -39,15 +39,14 @@ export function KoreaCexTransferInfoModal(): JSX.Element {
             {t('fiatOnRamp.cexTransferModal.description')}
           </Text>
         </Flex>
-        <Flex row width="100%" mt="$spacing8">
-          <Button
-            size="large"
-            emphasis="secondary"
-            onPress={() => openURL(uniswapUrls.helpArticleUrls.cexTransferKorea)}
-          >
-            {t('common.button.learn')}
-          </Button>
-        </Flex>
+        <DeprecatedButton
+          color="$neutral1"
+          mt="$spacing8"
+          theme="secondary"
+          onPress={() => openURL(uniswapUrls.helpArticleUrls.cexTransferKorea)}
+        >
+          {t('common.button.learn')}
+        </DeprecatedButton>
       </Flex>
     </Modal>
   )

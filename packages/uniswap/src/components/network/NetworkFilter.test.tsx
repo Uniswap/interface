@@ -8,6 +8,14 @@ ReactDOM.createPortal = jest.fn((element) => {
   return element as React.ReactPortal
 })
 
+jest.mock('uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility', () => {
+  return {
+    useUnichainTooltipVisibility: (): { shouldShowUnichainNetworkSelectorTooltip: boolean } => {
+      return { shouldShowUnichainNetworkSelectorTooltip: true }
+    },
+  }
+})
+
 describe(NetworkFilter, () => {
   beforeEach(() => {
     jest.useFakeTimers()

@@ -15,7 +15,7 @@ import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { hexToRGBString } from 'utilities/src/theme/colors'
 
 const meta = {
-  title: 'Spore/buttons/Button',
+  title: 'Spore/Button',
   component: Button,
 } satisfies Meta<typeof Button>
 
@@ -66,19 +66,13 @@ export const All: Story = {
           Button is our primary button component, mirrored with the Button from Spore Design System on Figma.
         </Text>
         <Spacer size="$spacing8" />
-        <Flex row>
-          <Anchor
-            href="https://www.figma.com/design/5j5YUUMWbrPIe8DMK9oyaC/%F0%9F%8D%84-Spore-Library?node-id=17556-18224&m=dev"
-            target="_blank"
-          >
-            <Text color="$blueVibrant">Go to Figma</Text>
-          </Anchor>
-        </Flex>
-        <SectionSeparator />
-        <SectionHeader title="The Default" />
-        <Flex row>
-          <Button>No Props</Button>
-        </Flex>
+        <Anchor
+          href="https://www.figma.com/design/5j5YUUMWbrPIe8DMK9oyaC/%F0%9F%8D%84-Spore-Library?node-id=17556-18224&m=dev"
+          target="_blank"
+        >
+          <Text color="$blueVibrant">Go to Figma</Text>
+        </Anchor>
+        <Spacer size="$spacing8" />
 
         <SectionSeparator />
         <SectionHeader title="Variants" />
@@ -89,21 +83,14 @@ export const All: Story = {
         <SectionHeader title="Emphasis" />
         <SectionSubHeader title="Primary" />
         <RowOfButtons emphasis="primary" />
-
         <Spacer size="$spacing16" />
-
         <SectionSubHeader title="Secondary" />
         <RowOfButtons emphasis="secondary" />
 
-        <Spacer size="$spacing16" />
+        <SectionSeparator />
 
         <SectionSubHeader title="Tertiary" />
         <RowOfButtons emphasis="tertiary" />
-
-        <Spacer size="$spacing16" />
-
-        <SectionSubHeader title="Text-Only" />
-        <RowOfButtons emphasis="text-only" />
 
         <SectionSeparator />
 
@@ -131,43 +118,10 @@ export const All: Story = {
         <SectionHeader title="Icon Position" />
         <SectionSubHeader title="Before" />
 
-        <RowOfButtons emphasis="secondary" size="small" icon={<Faceid />} iconPosition="before" />
+        <RowOfButtons size="small" icon={<Faceid />} iconPosition="before" />
         <Spacer size="$spacing16" />
         <SectionSubHeader title="After" />
         <RowOfButtons size="small" icon={<Heart />} iconPosition="after" />
-
-        <SectionSeparator />
-
-        <SectionHeader title="Custom Colors" />
-        <SectionSubHeader title="Background" />
-        <Flex row>
-          <Button backgroundColor="#24a47c">USDT</Button>
-        </Flex>
-
-        <Spacer size="$spacing16" />
-
-        <SectionSubHeader title="Text" />
-        <Flex row>
-          <Button>
-            <Button.Text color="$statusCritical">Custom Color Text</Button.Text>
-          </Button>
-        </Flex>
-
-        <Spacer size="$spacing16" />
-
-        <SectionSubHeader title="Icon" />
-        <Flex row>
-          <Button icon={<Faceid color="$statusCritical" />}>Custom Color Icon</Button>
-        </Flex>
-
-        <Spacer size="$spacing16" />
-
-        <SectionSubHeader title="Text & Icon" />
-        <Flex row>
-          <Button icon={<Faceid color="$statusCritical" />}>
-            <Button.Text color="$statusSuccess">Custom Color Text & Icon</Button.Text>
-          </Button>
-        </Flex>
 
         <SectionSeparator />
 
@@ -199,9 +153,9 @@ const argTypes = {
   },
   emphasis: {
     control: 'select',
-    options: ['primary', 'secondary', 'tertiary', 'text-only'] satisfies ButtonProps['emphasis'][],
+    options: ['primary', 'secondary', 'tertiary'] satisfies ButtonProps['emphasis'][],
   },
-  isDisabled: {
+  disabled: {
     control: 'boolean',
   },
   loading: {
@@ -228,7 +182,7 @@ const args = {
   variant: 'default',
   size: 'large',
   emphasis: 'primary',
-  isDisabled: false,
+  disabled: false,
   loading: false,
   children: 'Customize Me',
   fill: true,

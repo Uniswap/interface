@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import {
-  Button,
+  DeprecatedButton,
   Flex,
   InputProps,
   LinearGradient,
@@ -30,8 +30,6 @@ import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { normalizeTwitterUsername } from 'utilities/src/primitives/string'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { usePreviousWithLayoutEffect } from 'utilities/src/react/usePreviousWithLayoutEffect'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSelection'
 import { extensionNftModalProps } from 'wallet/src/features/unitags/ChooseNftModal'
@@ -66,9 +64,9 @@ function isFieldEdited(a: string | undefined, b: string | undefined): boolean {
 
   if (aNonValue && bNonValue) {
     return false
+  } else {
+    return a !== b
   }
-
-  return a !== b
 }
 
 export function EditUnitagProfileContent({
@@ -91,33 +89,21 @@ export function EditUnitagProfileContent({
   const { unitag: retrievedUnitag, loading } = useUnitagByAddress(address)
   const unitagMetadata = retrievedUnitag?.metadata
 
-  const { value: isSaving, setFalse: setIsNotSaving, setTrue: setIsSaving } = useBooleanState(false)
-
-  // Set the state values to the unitag metadata values
-  // We may have this if it's cached, which is persisted between sessions
-  const [twitterInput, setTwitterInput] = useState(unitagMetadata?.twitter)
-  const [avatarImageUri, setAvatarImageUri] = useState(unitagMetadata?.avatar)
+  const [twitterInput, setTwitterInput] = useState<string>()
+  const [avatarImageUri, setAvatarImageUri] = useState<string>()
   const [updateResponseLoading, setUpdateResponseLoading] = useState(false)
-  const [bioInput, setBioInput] = useState(unitagMetadata?.description)
-
+  const [bioInput, setBioInput] = useState<string>()
   const [showAvatarModal, setShowAvatarModal] = useState(false)
 
-  const prevUnitagMetadata = usePreviousWithLayoutEffect(unitagMetadata)
-
   useEffect(() => {
-    // Unfortunately, there's some race condition where when we save the unitag profile,
-    // unitagMetadata comes in once as the previous state, then again as the updated state
-    // So, we only want to call this effect when we just received unitag metadata
-    // Otherwise, the state is set before the first render in each `useState` call
-    const justGotMetadata = !prevUnitagMetadata && !!unitagMetadata
-
-    if (justGotMetadata) {
+    // Only want to set values on first time unitag loads, when we have not yet made the PUT request
+    if (unitagMetadata) {
       setAvatarImageUri(unitagMetadata.avatar)
       setBioInput(unitagMetadata.description)
       setTwitterInput(unitagMetadata.twitter)
       setUpdateResponseLoading(false)
     }
-  }, [unitagMetadata, prevUnitagMetadata])
+  }, [unitagMetadata])
 
   const { triggerRefetchUnitags } = useUnitagUpdater()
 
@@ -139,12 +125,7 @@ export function EditUnitagProfileContent({
     const normalizedInput = normalizeTwitterUsername(input)
     setTwitterInput(normalizedInput)
   }
-
-  const profileMetadataEdited = isProfileMetadataEdited(
-    updateResponseLoading || isSaving,
-    updatedMetadata,
-    unitagMetadata,
-  )
+  const profileMetadataEdited = isProfileMetadataEdited(updateResponseLoading, updatedMetadata, unitagMetadata)
 
   const { colors: avatarColors } = useExtractedColors(avatarImageUri)
 
@@ -181,8 +162,6 @@ export function EditUnitagProfileContent({
     dismissNativeKeyboard()
 
     // Try to upload avatar or skip avatar upload if not needed
-    setIsSaving()
-
     try {
       const { success, skipped } = await tryUploadAvatar({
         avatarImageUri,
@@ -192,7 +171,6 @@ export function EditUnitagProfileContent({
 
       // Display error if avatar upload failed
       if (!success) {
-        setIsNotSaving()
         handleUpdateError()
         return
       }
@@ -204,11 +182,6 @@ export function EditUnitagProfileContent({
         tags: { file: 'EditUnitagProfileScreen', function: 'onPressSaveChanges' },
       })
       handleUpdateError()
-    } finally {
-      // There's a bug with `unitagMetadata` when the profile is saved where it comes in twice:
-      // once as the an old cached value (for example, the bio description is one from 5-6 saves ago) then again as the correct state that was just updated
-      // This is a workaround to wait; otherwise, when tapped, the button will load > flash like it's enabled > then end in a disabled
-      setTimeout(setIsNotSaving, 250)
     }
   }
 
@@ -230,8 +203,6 @@ export function EditUnitagProfileContent({
       account,
       signerManager,
     })
-
-    setUpdateResponseLoading(false)
 
     if (!updateResponse.success) {
       handleUpdateError()
@@ -263,6 +234,7 @@ export function EditUnitagProfileContent({
   }
 
   const handleUpdateError = (): void => {
+    setUpdateResponseLoading(false)
     dispatch(
       pushNotification({
         type: AppNotificationType.Error,
@@ -408,18 +380,16 @@ export function EditUnitagProfileContent({
           </Flex>
         </Flex>
       </ScrollView>
-      <Button
-        loading={isSaving}
+      <DeprecatedButton
         isDisabled={!profileMetadataEdited}
         mt="$spacing12"
         mx={isExtension ? undefined : '$spacing24'}
-        size="large"
-        variant="branded"
-        fill={false}
+        size="medium"
+        theme="primary"
         onPress={onPressSaveChanges}
       >
         {t('common.button.save')}
-      </Button>
+      </DeprecatedButton>
       {showAvatarModal && (
         <ChoosePhotoOptionsModal
           address={address}

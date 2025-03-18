@@ -221,9 +221,9 @@ export default function TokenDetails() {
         <MobileBottomBar hide={isTouchDevice && scrollDirection === ScrollDirection.DOWN}>
           {/* TODO(WEB-4800): data-testid is not passed to ui/src elements when animation is set */}
           {/* Remove this extra div when WEB-4800 is fixed */}
-          <Flex data-testid="tdp-mobile-bottom-bar">
+          <div data-testid="tdp-mobile-bottom-bar">
             <TDPActionTabs />
-          </Flex>
+          </div>
         </MobileBottomBar>
       </TokenDetailsLayout>
     </TDPAnalytics>

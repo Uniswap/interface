@@ -134,6 +134,11 @@ export function getTokenDetailsURL({
   return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
+export function getPoolDetailsURL(address: string, chain: Chain) {
+  const chainName = chain.toLowerCase()
+  return `/explore/pools/${chainName}/${address}`
+}
+
 export function unwrapToken<
   T extends
     | {

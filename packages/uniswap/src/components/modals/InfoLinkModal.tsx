@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Button, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -16,6 +16,7 @@ interface InfoModalProps {
   title: string
   description: string
   buttonText: string
+  buttonTheme?: 'primary' | 'secondary' | 'tertiary'
   linkText?: string
   linkUrl?: string
   onDismiss?: () => void
@@ -32,6 +33,7 @@ export function InfoLinkModal({
   title,
   description,
   buttonText,
+  buttonTheme,
   linkText,
   linkUrl,
   onDismiss,
@@ -78,17 +80,24 @@ export function InfoLinkModal({
             {description}
           </Text>
         </Flex>
-        <Flex row width="100%">
-          <Button fill emphasis="secondary" size="large" onPress={onButtonPress}>
-            {buttonText}
-          </Button>
-        </Flex>
+        <DeprecatedButton theme={buttonTheme} width="100%" onPress={onButtonPress}>
+          {buttonText}
+        </DeprecatedButton>
         {linkText && linkUrl && (
-          <Flex row width="100%">
-            <Button fill emphasis="text-only" size="large" onPress={openUniswapURL}>
-              {linkText}
-            </Button>
-          </Flex>
+          <DeprecatedButton
+            alignSelf="center"
+            backgroundColor="transparent"
+            borderRadius="$rounded12"
+            color="$neutral2"
+            hoverStyle={{
+              backgroundColor: 'transparent',
+            }}
+            px="$spacing40"
+            theme="secondary"
+            onPress={openUniswapURL}
+          >
+            {linkText}
+          </DeprecatedButton>
         )}
       </Flex>
     </Modal>

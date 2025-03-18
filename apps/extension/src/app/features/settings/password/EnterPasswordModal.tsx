@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PasswordInput } from 'src/app/components/PasswordInput'
-import { Button, Flex, Square, Text, inputStyles, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Square, Text, inputStyles, useSporeColors } from 'ui/src'
 import { Lock } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -69,11 +69,9 @@ export function EnterPasswordModal({
         <Text color="$statusCritical" minHeight="$spacing24" textAlign="center" variant="body2">
           {showPasswordError ? t('setting.recoveryPhrase.remove.password.error') : ''}
         </Text>
-        <Flex row width="100%">
-          <Button isDisabled={!password.length} emphasis="secondary" onPress={checkPassword}>
-            {t('common.button.continue')}
-          </Button>
-        </Flex>
+        <DeprecatedButton isDisabled={!password.length} theme="secondary" width="100%" onPress={checkPassword}>
+          {t('common.button.continue')}
+        </DeprecatedButton>
       </Flex>
     </Modal>
   )

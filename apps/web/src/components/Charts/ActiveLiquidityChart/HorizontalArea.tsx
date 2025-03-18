@@ -1,4 +1,4 @@
-import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
+import { ChartEntry } from 'components/LiquidityChartRangeInput/types'
 import { ScaleLinear } from 'd3'
 import styled from 'lib/styled-components'
 

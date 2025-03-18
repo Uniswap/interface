@@ -5,3 +5,4 @@ export const EthereumRpcErrorSchema = z.object({
   code: z.number(),
   message: z.string(),
 })
+export type EthereumRpcError = z.infer<typeof EthereumRpcErrorSchema>

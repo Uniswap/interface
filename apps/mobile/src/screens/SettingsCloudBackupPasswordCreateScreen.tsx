@@ -5,10 +5,11 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { SafeKeyboardScreen } from 'src/components/layout/SafeKeyboardScreen'
 import { CloudBackupPassword } from 'src/features/CloudBackup/CloudBackupForm/CloudBackupPassword'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 
@@ -82,16 +83,12 @@ export function SettingsCloudBackupPasswordCreateScreen({
                 </Text>
               </Flex>
               <Flex centered row gap="$spacing12" pt="$spacing24">
-                <Flex row fill>
-                  <Button emphasis="secondary" size="large" onPress={(): void => navigation.goBack()}>
-                    {t('common.button.cancel')}
-                  </Button>
-                </Flex>
-                <Flex row fill>
-                  <Button variant="branded" size="large" onPress={(): void => setShowCloudBackupInfoModal(false)}>
-                    {t('common.button.continue')}
-                  </Button>
-                </Flex>
+                <DeprecatedButton fill theme="tertiary" onPress={(): void => navigation.goBack()}>
+                  {t('common.button.cancel')}
+                </DeprecatedButton>
+                <DeprecatedButton fill testID={TestID.Confirm} onPress={(): void => setShowCloudBackupInfoModal(false)}>
+                  {t('common.button.continue')}
+                </DeprecatedButton>
               </Flex>
             </Flex>
           </Modal>

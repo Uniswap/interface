@@ -14,7 +14,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
-import { Button, Flex } from 'ui/src'
+import { DeprecatedButton, Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { useIsSmartContractAddress } from 'utils/transfer'
@@ -193,26 +193,41 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
             eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
             element={InterfaceElementName.CONNECT_WALLET_BUTTON}
           >
-            <Flex row>
-              <Button variant="branded" emphasis="secondary" size="large" fill onPress={accountDrawer.open}>
+            <DeprecatedButton
+              animation="fast"
+              size="large"
+              borderRadius="$rounded16"
+              width="100%"
+              pressStyle={{ scale: 0.98 }}
+              opacity={1}
+              onPress={accountDrawer.open}
+              backgroundColor="$accent2"
+              hoverStyle={{
+                backgroundColor: '$accent2Hovered',
+              }}
+            >
+              <Text variant="buttonLabel1" color="$accent1">
                 <ConnectWalletButtonText />
-              </Button>
-            </Flex>
+              </Text>
+            </DeprecatedButton>
           </Trace>
         ) : (
           <Trace logPress element={InterfaceElementName.SEND_BUTTON}>
-            <Flex row>
-              <Button
-                variant="branded"
-                emphasis="primary"
-                size="large"
-                fill
-                isDisabled={buttonDisabled}
-                onPress={() => handleSendButton()}
-              >
+            <DeprecatedButton
+              animation="fast"
+              size="large"
+              borderRadius="$rounded16"
+              width="100%"
+              pressStyle={{ scale: 0.98 }}
+              isDisabled={buttonDisabled}
+              opacity={1}
+              onPress={() => handleSendButton()}
+              backgroundColor={buttonDisabled ? '$surface2' : '$accent1'}
+            >
+              <Text variant="buttonLabel1" color={buttonDisabled ? '$neutral2' : '$white'}>
                 {sendButtonState.label}
-              </Button>
-            </Flex>
+              </Text>
+            </DeprecatedButton>
           </Trace>
         )}
       </Column>

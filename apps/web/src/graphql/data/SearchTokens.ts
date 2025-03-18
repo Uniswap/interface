@@ -6,8 +6,6 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isBackendSupportedChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 // Filters out results that are undefined, or where the token's chain is not supported in explore.
 function isExploreSupportedToken(token: GqlSearchToken | undefined): token is Token {
@@ -16,11 +14,10 @@ function isExploreSupportedToken(token: GqlSearchToken | undefined): token is To
 
 export function useSearchTokens(searchQuery: string = '') {
   const { gqlChains: chains } = useEnabledChains()
-  const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
 
   const { data, loading, error } = useSearchTokensWebQuery({
     variables: { searchQuery, chains },
-    skip: searchQuery === '' || searchRevampEnabled, // if search revamp is enabled, we call useSearchTokens in `SearchModalResultsList` instead
+    skip: searchQuery === '',
   })
 
   return useMemo(() => {

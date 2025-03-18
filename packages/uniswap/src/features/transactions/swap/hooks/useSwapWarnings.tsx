@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import { Percent } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
 import isEqual from 'lodash/isEqual'
@@ -45,6 +44,7 @@ import { useMemoCompare } from 'utilities/src/react/hooks'
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
 const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%
 
+// eslint-disable-next-line complexity
 export function getSwapWarnings(
   t: TFunction,
   formatPercent: LocalizationContextState['formatPercent'],
@@ -62,17 +62,18 @@ export function getSwapWarnings(
   // token is blocked
   const isInputTokenBlocked = currencies[CurrencyField.INPUT]?.safetyInfo?.tokenList === TokenList.Blocked
   const isOutputTokenBlocked = currencies[CurrencyField.OUTPUT]?.safetyInfo?.tokenList === TokenList.Blocked
-  const inputTokenSymbol = currencies[CurrencyField.INPUT]?.currency.symbol
-  const outputTokenSymbol = currencies[CurrencyField.OUTPUT]?.currency.symbol
-  const buttonText = t('swap.warning.tokenBlocked.button', {
-    tokenSymbol: (isInputTokenBlocked ? inputTokenSymbol : outputTokenSymbol) ?? '',
-  })
   if (isInputTokenBlocked || isOutputTokenBlocked) {
     warnings.push({
       type: WarningLabel.BlockedToken,
       severity: WarningSeverity.Blocked,
       action: WarningAction.DisableReview,
-      buttonText: !inputTokenSymbol || !outputTokenSymbol ? t('swap.warning.tokenBlockedFallback.button') : buttonText,
+      buttonText: t('swap.warning.tokenBlocked.button', {
+        tokenSymbol:
+          (isInputTokenBlocked
+            ? // FIXME: Verify WALL-5906
+              currencies[CurrencyField.INPUT]?.currency.symbol ?? ''
+            : currencies[CurrencyField.OUTPUT]?.currency.symbol) ?? 'Token',
+      }),
     })
   }
 
@@ -80,6 +81,7 @@ export function getSwapWarnings(
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   const swapBalanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
+  // FIXME: Verify WALL-5906
   const currencySymbol = currencyAmountIn?.currency?.symbol ?? ''
 
   if (swapBalanceInsufficient) {
@@ -114,6 +116,7 @@ export function getSwapWarnings(
 
   // price impact warning
   const priceImpact = getPriceImpact(derivedSwapInfo)
+  // FIXME: Verify WALL-5906
   const priceImpactValue = (priceImpact && formatPriceImpact(priceImpact, formatPercent)) ?? ''
   if (priceImpact?.greaterThan(PRICE_IMPACT_THRESHOLD_MEDIUM)) {
     const highImpact = !priceImpact.lessThan(PRICE_IMPACT_THRESHOLD_HIGH)
@@ -131,7 +134,9 @@ export function getSwapWarnings(
       message: highImpact
         ? t('swap.warning.priceImpact.message.veryHigh', { priceImpactValue })
         : t('swap.warning.priceImpact.message', {
+            // FIXME: Verify WALL-5906
             outputCurrencySymbol: currencies[CurrencyField.OUTPUT]?.currency.symbol ?? '',
+            // FIXME: Verify WALL-5906
             inputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol ?? '',
           }),
       link: uniswapUrls.helpArticleUrls.priceImpact,

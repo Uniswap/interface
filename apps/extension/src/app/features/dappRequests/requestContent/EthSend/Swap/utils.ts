@@ -1,5 +1,6 @@
 /* eslint-disable max-depth */
 /* eslint-disable complexity */
+import { CommandType } from '@uniswap/universal-router-sdk'
 import { BigNumber, BigNumberish } from 'ethers'
 import { formatUnits as formatUnitsEthers } from 'ethers/lib/utils'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
@@ -16,6 +17,7 @@ import {
   AmountOutMinParam,
   AmountOutParam,
   Param,
+  UniversalRouterCall,
   UniversalRouterCommand,
   V4SwapExactInParamSchema,
   V4SwapExactInSingleParamSchema,
@@ -33,6 +35,53 @@ import {
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { assert } from 'utilities/src/errors'
+
+export type MinimalToken = {
+  address: string
+  symbol: string
+  decimals: number
+}
+export type TokenDetails = { [address: string]: MinimalToken }
+
+export type V3TokenInPath = {
+  tokenIn: string
+  tokenOut: string
+  fee: number
+}
+
+export function findErc20TokensToPrepare(urCall: UniversalRouterCall): string[] {
+  const tokenAddresses: string[] = []
+  urCall.commands.forEach((command) => {
+    switch (command.commandType) {
+      case CommandType.V2_SWAP_EXACT_IN:
+      case CommandType.V2_SWAP_EXACT_OUT: {
+        const tokensInPath: string[] | undefined = command.params.find((param) => param.name === 'path')?.value
+        tokensInPath?.forEach((tokenAddr: string) => tokenAddresses.push(tokenAddr))
+        break
+      }
+      case CommandType.V3_SWAP_EXACT_IN:
+      case CommandType.V3_SWAP_EXACT_OUT: {
+        const pools: V3TokenInPath[] | undefined = command.params.find((param) => param.name === 'path')?.value
+        pools?.forEach(({ tokenIn, tokenOut }) => {
+          tokenAddresses.push(tokenIn)
+          tokenAddresses.push(tokenOut)
+        })
+        break
+      }
+      case CommandType.PAY_PORTION:
+      case CommandType.SWEEP:
+      case CommandType.TRANSFER: {
+        const tokenAddr = command.params.find((param) => param.name === 'token')?.value
+        if (tokenAddr) {
+          tokenAddresses.push(tokenAddr)
+        }
+        break
+      }
+    }
+  })
+
+  return Array.from(new Set(tokenAddresses))
+}
 
 // Like ethers.formatUnits except it parses specific constants
 export function formatUnits(amount: BigNumberish, units: number): string {
@@ -153,11 +202,11 @@ function getTokenAmounts(commands: UniversalRouterCommand[]): {
 }
 
 // Predicate Functions
-function isAmountInOrMaxParam(param: Param): param is AmountInParam | AmountInMaxParam {
+export function isAmountInOrMaxParam(param: Param): param is AmountInParam | AmountInMaxParam {
   return isAmountInParam(param) || isAmountInMaxParam(param)
 }
 
-function isAmountOutMinOrOutParam(param: Param): param is AmountOutMinParam | AmountOutParam {
+export function isAmountOutMinOrOutParam(param: Param): param is AmountOutMinParam | AmountOutParam {
   return isAmountOutMinParam(param) || isAmountOutParam(param)
 }
 
@@ -199,7 +248,7 @@ function getTokenAddressesFromV2V3SwapCommands(command: UniversalRouterCommand):
   return { inputAddress, outputAddress }
 }
 
-function getTokenDetailsFromV4SwapCommands(command: UniversalRouterCommand): {
+export function getTokenDetailsFromV4SwapCommands(command: UniversalRouterCommand): {
   inputAddress?: string
   outputAddress?: string
   inputValue?: string

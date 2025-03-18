@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { Button, Flex } from 'ui/src'
+import { DeprecatedButton } from 'ui/src'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
@@ -87,18 +87,15 @@ export function SendFormButton({
     : t('send.button.review')
 
   return (
-    <Flex centered row>
-      <Button
-        isDisabled={actionButtonDisabled && !isViewOnlyWallet}
-        variant="branded"
-        // Override opacity only for view-only wallets
-        opacity={isViewOnlyWallet ? 0.4 : undefined}
-        size="large"
-        testID={TestID.ReviewTransfer}
-        onPress={onPressReview}
-      >
-        {buttonText}
-      </Button>
-    </Flex>
+    <DeprecatedButton
+      isDisabled={actionButtonDisabled && !isViewOnlyWallet}
+      // Override opacity only for view-only wallets
+      opacity={isViewOnlyWallet ? 0.4 : undefined}
+      size="large"
+      testID={TestID.ReviewTransfer}
+      onPress={onPressReview}
+    >
+      {buttonText}
+    </DeprecatedButton>
   )
 }

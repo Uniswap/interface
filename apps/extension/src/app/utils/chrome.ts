@@ -3,7 +3,7 @@
  * Will not work until stylesheets are loaded
  * @returns true if user is using arc browser
  */
-function isArcBrowser(): boolean {
+export function isArcBrowser(): boolean {
   return !!getComputedStyle(document.documentElement).getPropertyValue('--arc-palette-background')
 }
 

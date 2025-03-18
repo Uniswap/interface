@@ -6,7 +6,6 @@ import { Trans } from 'react-i18next'
 import { ClassicTrade, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { Separator, ThemedText } from 'theme/components'
-import { Flex } from 'ui/src'
 import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -38,7 +37,7 @@ function PriceImpactRow({ trade }: { trade: ClassicTrade }) {
     <ThemedText.BodySmall color="neutral2">
       <RowBetween>
         <Trans i18nKey="swap.priceImpact" />
-        <Flex>{formatPercent(trade.priceImpact)}</Flex>
+        <div>{formatPercent(trade.priceImpact)}</div>
       </RowBetween>
     </ThemedText.BodySmall>
   )

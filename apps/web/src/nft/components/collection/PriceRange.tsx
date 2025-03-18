@@ -1,6 +1,8 @@
 import 'rc-slider/assets/index.css'
 
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
+import styled, { useTheme } from 'lib/styled-components'
+import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/PriceRange.css'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -12,8 +14,12 @@ import { default as Slider } from 'rc-slider'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { darkDeprecatedTheme } from 'theme/deprecatedColors'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+
+const StyledSlider = styled(Slider)`
+  cursor: pointer;
+`
 
 export const PriceRange = () => {
   const [placeholderText, setPlaceholderText] = useState('')
@@ -27,7 +33,7 @@ export const PriceRange = () => {
   const setPriceRangeHigh = usePriceRange((statae) => statae.setPriceRangeHigh)
   const prevMinMax = usePriceRange((state) => state.prevMinMax)
   const setPrevMinMax = usePriceRange((state) => state.setPrevMinMax)
-  const colors = useSporeColors()
+  const theme = useTheme()
 
   const location = useLocation()
 
@@ -135,8 +141,8 @@ export const PriceRange = () => {
 
   return (
     <TraitsHeader title="Price range" index={TraitPosition.PRICE_RANGE_INDEX}>
-      <Flex row mt="$spacing12" justifyContent="space-between" alignItems="center">
-        <Flex position="relative">
+      <Row marginTop="12" color="neutral1" justifyContent="space-between">
+        <Row position="relative">
           <NumericInput
             width={126}
             className={styles.priceInput}
@@ -145,13 +151,10 @@ export const PriceRange = () => {
             value={minPrice}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            color="$neutral1"
           />
-        </Flex>
-        <Text color="$neutral1" variant="body2">
-          to
-        </Text>
-        <Flex row>
+        </Row>
+        <Text variant="body2">to</Text>
+        <Row position="relative">
           <NumericInput
             width={126}
             className={styles.priceInput}
@@ -160,27 +163,22 @@ export const PriceRange = () => {
             onChangeText={updateMaxPriceRange}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            color="$neutral1"
           />
-        </Flex>
-      </Flex>
+        </Row>
+      </Row>
 
-      <Flex mt="$spacing24" mb="$spacing12" pl="$spacing8" pr="$spacing8">
-        <Slider
+      <Row marginTop="24" marginBottom="12" paddingLeft="8" paddingRight="8">
+        <StyledSlider
           defaultValue={[0, 100]}
           min={0}
           max={100}
           range
           step={0.0001}
           value={prevMinMax}
-          style={{
-            cursor: 'pointer',
-          }}
           trackStyle={{
             top: '3px',
             height: '8px',
-            background: `${colors.accent1.val}`,
-            cursor: 'pointer',
+            background: `${theme.accent1}`,
           }}
           handleStyle={{
             top: '3px',
@@ -191,16 +189,15 @@ export const PriceRange = () => {
             borderRadius: '4px',
             border: 'none',
             boxShadow: darkDeprecatedTheme.deprecated_shallowShadow.slice(0, -1),
-            cursor: 'pointer',
           }}
           railStyle={{
             top: '3px',
             height: '8px',
-            backgroundColor: `${colors.accent2.val}`,
+            backgroundColor: `${theme.accent2}`,
           }}
           onChange={handleSliderLogic}
         />
-      </Flex>
+      </Row>
     </TraitsHeader>
   )
 }

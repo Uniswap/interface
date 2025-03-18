@@ -35,29 +35,39 @@ export function getQuickPollingInterval(orderStartTime: number) {
   return QUICK_POLL_MAX_INTERVAL
 }
 
+function isUniswapXOrder(order: UniswapXOrderDetails): boolean {
+  return (
+    order.type === SignatureType.SIGN_UNISWAPX_ORDER ||
+    order.type === SignatureType.SIGN_UNISWAPX_V2_ORDER ||
+    order.type === SignatureType.SIGN_UNISWAPX_V3_ORDER
+  )
+}
+
 async function fetchStatuses(
-  endpoint: 'limit-orders' | 'orders',
   orders: UniswapXOrderDetails[],
-  swapper: string,
+  filter: (order: UniswapXOrderDetails) => boolean,
+  path: (hashes: string[]) => string,
 ): Promise<UniswapXBackendOrder[]> {
-  const hashes = orders.map((order) => order.orderHash)
-  if (hashes.length === 0) {
+  const hashes = orders.filter(filter).map((order) => order.orderHash)
+  if (!hashes || hashes.length === 0) {
     return []
   }
-
-  const result = await global.fetch(`${UNISWAP_GATEWAY_DNS_URL}/${endpoint}?swapper=${swapper}&orderHashes=${hashes}`)
+  const baseURL = UNISWAP_GATEWAY_DNS_URL
+  const result = await global.fetch(`${baseURL}${path(hashes)}`)
   const statuses = (await result.json()) as OrderQueryResponse
   return statuses.orders
 }
 
 async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
-  const limitOrders = orders.filter((order) => order.type === SignatureType.SIGN_LIMIT)
-  return fetchStatuses('limit-orders', limitOrders, account)
+  return fetchStatuses(
+    orders,
+    (order) => order.type === SignatureType.SIGN_LIMIT,
+    (hashes) => `/limit-orders?swapper=${account}&orderHashes=${hashes}`,
+  )
 }
 
 async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
-  const uniswapXOrders = orders.filter((order) => order.type !== SignatureType.SIGN_LIMIT)
-  return fetchStatuses('orders', uniswapXOrders, account)
+  return fetchStatuses(orders, isUniswapXOrder, (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}`)
 }
 
 function updateOrders(
@@ -125,21 +135,31 @@ function useQuickPolling({
     let timeout: NodeJS.Timeout
 
     async function poll() {
-      const l2Orders = pendingOrders.filter((order) => isL2ChainId(order.chainId))
-      if (!account.address || l2Orders.length === 0) {
+      if (!account.address || pendingOrders.length === 0) {
         return
       }
 
-      if (l2Orders.every((order) => isFinalizedOrder(order))) {
+      const orders = pendingOrders.filter(
+        (order) =>
+          (isUniswapXOrder(order) && isL2ChainId(order.chainId)) || order.type === SignatureType.SIGN_PRIORITY_ORDER,
+      )
+      if (orders.length === 0) {
+        return
+      }
+
+      if (orders.every((order) => isFinalizedOrder(order))) {
         clearTimeout(timeout)
         return
       }
 
       try {
-        const statuses = await fetchOrderStatuses(account.address, l2Orders)
+        const statuses = await Promise.all([fetchOrderStatuses(account.address, orders.filter(isUniswapXOrder))]).then(
+          (results) => results.flat(),
+        )
+
         updateOrders(pendingOrders, statuses, onActivityUpdate)
 
-        const earliestOrder = l2Orders.find((order) => !isFinalizedOrder(order))
+        const earliestOrder = orders.find((order) => !isFinalizedOrder(order))
         if (earliestOrder) {
           const newDelay = getQuickPollingInterval(earliestOrder.addedTime)
           setDelay(newDelay)
@@ -179,20 +199,29 @@ function useStandardPolling({
     let timeout: NodeJS.Timeout
 
     async function poll() {
-      const mainnetOrders = pendingOrders.filter((order) => !isL2ChainId(order.chainId))
-      if (!account.address || mainnetOrders.length === 0) {
+      if (!account.address || pendingOrders.length === 0) {
         return
       }
 
-      if (mainnetOrders.every((order) => isFinalizedOrder(order))) {
+      const orders = pendingOrders.filter(
+        (order) => (isUniswapXOrder(order) && !isL2ChainId(order.chainId)) || order.type === SignatureType.SIGN_LIMIT,
+      )
+      if (orders.length === 0) {
+        return
+      }
+
+      if (orders.every((order) => isFinalizedOrder(order))) {
         clearTimeout(timeout)
         return
       }
 
       try {
         const statuses = await Promise.all([
-          fetchOrderStatuses(account.address, mainnetOrders),
-          fetchLimitStatuses(account.address, mainnetOrders),
+          fetchOrderStatuses(account.address, orders.filter(isUniswapXOrder)),
+          fetchLimitStatuses(
+            account.address,
+            orders.filter((order) => order.type === SignatureType.SIGN_LIMIT),
+          ),
         ]).then((results) => results.flat())
 
         updateOrders(pendingOrders, statuses, onActivityUpdate)
@@ -214,8 +243,17 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
   const account = useAccount()
   const pendingOrders = usePendingOrders()
 
-  useQuickPolling({ account, pendingOrders, onActivityUpdate })
-  useStandardPolling({ account, pendingOrders, onActivityUpdate })
+  useQuickPolling({
+    account,
+    pendingOrders,
+    onActivityUpdate,
+  })
+
+  useStandardPolling({
+    account,
+    pendingOrders,
+    onActivityUpdate,
+  })
 
   return null
 }

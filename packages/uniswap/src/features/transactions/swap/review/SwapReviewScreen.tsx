@@ -1,8 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Flex, SpinningLoader, isWeb, useIsShortMobileDevice } from 'ui/src'
-import { IconButton } from 'ui/src/components/buttons/IconButton/IconButton'
+import { DeprecatedButton, Flex, SpinningLoader, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
@@ -42,7 +41,6 @@ import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
-import { logger } from 'utilities/src/logger/logger'
 import { isInterface } from 'utilities/src/platform'
 
 interface SwapReviewScreenProps {
@@ -308,14 +306,8 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.INPUT] ||
     !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT]
   ) {
-    // This should never happen, but sometimes it does because tamagui renders the mobile web drawer when isModalOpen is false.
-    logger.error('Missing required props in `derivedSwapInfo` to render `SwapReview` screen.', {
-      tags: {
-        file: 'SwapReviewScreen',
-        function: 'render',
-      },
-    })
-    return null
+    // This should never happen. It's just to keep TS happy.
+    throw new Error('Missing required props in `derivedSwapInfo` to render `SwapReview` screen.')
   }
 
   if (submissionError) {
@@ -391,10 +383,10 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
         <TransactionModalFooterContainer>
           <Flex row gap="$spacing8">
             {!isWeb && !showUniswapXSubmittingUI && (
-              <IconButton
+              <DeprecatedButton
                 icon={<BackArrow />}
-                emphasis="secondary"
                 size={isShortMobileDevice ? 'medium' : 'large'}
+                theme="tertiary"
                 onPress={onPrev}
               />
             )}

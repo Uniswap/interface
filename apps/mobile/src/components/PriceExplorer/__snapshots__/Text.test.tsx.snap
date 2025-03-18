@@ -222,7 +222,7 @@ exports[`RelativeChangeText renders loading state 1`] = `
 <View
   style={
     {
-      "alignItems": "center",
+      "alignItems": "flex-end",
       "flexDirection": "row",
       "gap": 2,
       "marginTop": 2,
@@ -306,7 +306,7 @@ exports[`RelativeChangeText renders without error 1`] = `
 <View
   style={
     {
-      "alignItems": "center",
+      "alignItems": "flex-end",
       "flexDirection": "row",
       "gap": 2,
       "marginTop": 2,

@@ -1,4 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
+import { ButtonEmpty } from 'components/Button/buttons'
 import Card, { OutlineCard } from 'components/Card/cards'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoColumn } from 'components/deprecated/Column'
@@ -7,10 +8,10 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { Trans } from 'react-i18next'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Button, Flex, ModalCloseIcon, Text } from 'ui/src'
+import { ModalCloseIcon, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
@@ -37,6 +38,10 @@ const DetailsFooter = styled.div<{ show: boolean }>`
   text-align: center;
 `
 
+const StyledButtonEmpty = styled(ButtonEmpty)`
+  text-decoration: none;
+`
+
 const AddressText = styled(Text)`
   color: ${({ theme }) => theme.accent1};
   font-size: 12px;
@@ -53,7 +58,6 @@ export default function UnsupportedCurrencyFooter({
   show: boolean
   currencies: (Currency | undefined | null)[]
 }) {
-  const { t } = useTranslation()
   const { chainId } = useAccount()
   const [showDetails, setShowDetails] = useState(false)
 
@@ -93,11 +97,11 @@ export default function UnsupportedCurrencyFooter({
           </AutoColumn>
         </Card>
       </Modal>
-      <Flex centered>
-        <Button emphasis="secondary" onPress={() => setShowDetails(true)} data-testid="read-more-button">
-          {t('swap.unsupportedAssets.readMore')}
-        </Button>
-      </Flex>
+      <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)} data-testid="read-more-button">
+        <Text color="$accent1">
+          <Trans i18nKey="swap.unsupportedAssets.readMore" />
+        </Text>
+      </StyledButtonEmpty>
     </DetailsFooter>
   )
 }

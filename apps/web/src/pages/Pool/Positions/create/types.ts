@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -6,6 +7,7 @@ import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+
 export type FeeData = {
   feeAmount: number
   tickSpacing: number
@@ -34,12 +36,6 @@ export interface PositionState {
   fee: FeeData
   hook?: string
   userApprovedHook?: string // address of approved hook. If different from `hook`, user needs to reapprove the new hook
-  // Initial position is provided for migration purposes.
-  initialPosition?: {
-    tickLower: number
-    tickUpper: number
-    isOutOfRange: boolean
-  }
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
