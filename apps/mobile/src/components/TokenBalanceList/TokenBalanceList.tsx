@@ -61,7 +61,7 @@ export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenB
   },
 )
 
-export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
+const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
   function _TokenBalanceListInner(
     {
       empty,
@@ -208,9 +208,9 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
 const HeaderComponent = memo(function _HeaderComponent(): JSX.Element | null {
   const { t } = useTranslation()
   const { balancesById, networkStatus, refetch } = useTokenBalanceListContext()
-  const hasError = !!balancesById && networkStatus === NetworkStatus.error
+  const hasErrorWithCachedValues = !!balancesById && networkStatus === NetworkStatus.error
 
-  return hasError ? (
+  return hasErrorWithCachedValues ? (
     <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
       <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
     </AnimatedFlex>
@@ -225,10 +225,18 @@ const EmptyComponent = memo(function _EmptyComponent({
   const { t } = useTranslation()
   const { balancesById, networkStatus, refetch } = useTokenBalanceListContext()
 
-  const shouldShowLoaderSkeleton = isNonPollingRequestInFlight(networkStatus)
-  const hasError = isError(networkStatus, !!balancesById)
+  const isLoadingWithoutCachedValues = !balancesById && isNonPollingRequestInFlight(networkStatus)
+  const hasErrorWithoutCachedValues = isError(networkStatus, !!balancesById)
 
-  if (hasError) {
+  if (isLoadingWithoutCachedValues) {
+    return (
+      <Flex px="$spacing24">
+        <Loader.Token withPrice repeat={6} />
+      </Flex>
+    )
+  }
+
+  if (hasErrorWithoutCachedValues) {
     return (
       <Flex pt="$spacing24">
         <BaseCard.ErrorState
@@ -236,14 +244,6 @@ const EmptyComponent = memo(function _EmptyComponent({
           title={t('home.tokens.error.load')}
           onRetry={(): void | undefined => refetch?.()}
         />
-      </Flex>
-    )
-  }
-
-  if (shouldShowLoaderSkeleton) {
-    return (
-      <Flex px="$spacing24">
-        <Loader.Token withPrice repeat={6} />
       </Flex>
     )
   }
@@ -336,7 +336,6 @@ const HiddenTokensRowWrapper = memo(function HiddenTokensRowWrapper(): JSX.Eleme
       <InfoLinkModal
         showCloseButton
         buttonText={t('common.button.close')}
-        buttonTheme="tertiary"
         description={t('hidden.tokens.info.text.info')}
         icon={
           <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">

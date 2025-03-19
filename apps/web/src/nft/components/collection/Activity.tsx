@@ -1,10 +1,5 @@
-import { OpacityHoverState } from 'components/Common/styles'
-import { Box } from 'components/deprecated/Box'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import styled from 'lib/styled-components'
-import { Column, Row } from 'nft/components/Flex'
-import * as styles from 'nft/components/collection/Activity.css'
 import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from 'nft/components/collection/ActivityCells'
 import { HeaderRow } from 'nft/components/collection/ActivityHeaderRow'
 import { ActivityLoader, ActivityPageLoader } from 'nft/components/collection/ActivityLoader'
@@ -12,16 +7,10 @@ import { useBag, useNativeUsdPrice } from 'nft/hooks'
 import { ActivityEventType } from 'nft/types'
 import { useCallback, useReducer } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Link } from 'react-router-dom'
+import { ClickableTamaguiStyle } from 'theme/components'
+import { Anchor, Flex, Text, View } from 'ui/src'
 import { NftActivityType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-const FilterBox = styled.div<{ isActive: boolean }>`
-  display: flex;
-  color: ${({ isActive, theme }) => (isActive ? theme.neutral1 : theme.neutral1)};
-  background: ${({ isActive, theme }) => (isActive ? theme.surface3 : theme.surface1)};
-  border: ${({ isActive, theme }) => `1px solid ${isActive ? theme.surface3 : theme.surface3}`};
-  ${OpacityHoverState};
-`
 interface ActivityProps {
   contractAddress: string
   rarityVerified: boolean
@@ -72,27 +61,45 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
       const isActive = activeFilters[eventType]
 
       return (
-        <FilterBox className={styles.filter} isActive={isActive} onClick={() => filtersDispatch({ eventType })}>
+        <Text
+          variant="body3"
+          color={isActive ? '$neutral1' : '$neutral1'}
+          backgroundColor={isActive ? '$surface3' : '$surface1'}
+          borderColor="$surface3"
+          borderWidth={1}
+          onPress={() => filtersDispatch({ eventType })}
+          py="$spacing12"
+          px="$spacing16"
+          borderRadius="$rounded12"
+          {...ClickableTamaguiStyle}
+        >
           {eventType.charAt(0) + eventType.slice(1).toLowerCase() + 's'}
-        </FilterBox>
+        </Text>
       )
     },
     [activeFilters],
   )
 
   return (
-    <Box marginLeft={{ sm: '16', md: '48' }}>
-      <Row gap="8" paddingTop={{ sm: '0', md: '16' }}>
+    <Flex ml={48} $md={{ ml: '$spacing16' }}>
+      <Flex row gap="$gap8" pt="$spacing16" $md={{ pt: 0 }}>
         <Filter eventType={ActivityEventType.Listing} />
         <Filter eventType={ActivityEventType.Sale} />
         <Filter eventType={ActivityEventType.Transfer} />
-      </Row>
+      </Flex>
       {activitiesAreLoading ? (
         <ActivityLoader />
       ) : (
         nftActivity && (
-          <Column marginTop="36">
+          <Flex alignItems="center" mt="$spacing36" width="100%">
             <HeaderRow />
+            <style>
+              {`
+                .infinite-scroll-component__outerdiv {
+                  width: 100%;
+                }
+              `}
+            </style>
             <InfiniteScroll
               next={loadMoreActivities}
               hasMore={!!hasNextActivity}
@@ -103,50 +110,72 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
               {nftActivity.map(
                 (event, i) =>
                   event.eventType && (
-                    <Box
-                      as={Link}
-                      data-testid="nft-activity-row"
-                      // @ts-ignore Box component is not typed properly to typecheck
-                      // custom components' props and will incorrectly report `to` as invalid
-                      to={`/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`}
-                      className={styles.eventRow}
+                    <Anchor
                       key={i}
+                      textDecorationColor="$transparent"
+                      href={`/nfts/asset/${event.collectionAddress}/${event.tokenId}?origin=activity`}
+                      width="100%"
                     >
-                      <ItemCell
-                        event={event}
-                        rarityVerified={rarityVerified}
-                        collectionName={collectionName}
-                        eventTimestamp={event.eventTimestamp}
-                        isMobile={isMobile}
-                      />
-                      <EventCell
-                        eventType={event.eventType}
-                        eventTimestamp={event.eventTimestamp}
-                        eventTransactionHash={event.transactionHash}
-                        price={event.price}
-                        isMobile={isMobile}
-                      />
-                      <PriceCell marketplace={event.marketplace} price={event.price} />
-                      <AddressCell address={event.fromAddress} chainId={chainId} />
-                      <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
-                      <BuyCell
-                        event={event}
-                        collectionName={collectionName}
-                        selectAsset={addAssetsToBag}
-                        removeAsset={removeAssetsFromBag}
-                        itemsInBag={itemsInBag}
-                        cartExpanded={cartExpanded}
-                        toggleCart={toggleCart}
-                        isMobile={isMobile}
-                        ethPriceInUSD={ethPriceInUSD}
-                      />
-                    </Box>
+                      <View
+                        alignItems="center"
+                        data-testid="nft-activity-row"
+                        width="100%"
+                        my="$spacing20"
+                        {...ClickableTamaguiStyle}
+                        $platform-web={{
+                          display: 'grid',
+                          gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr 1fr',
+                          ...ClickableTamaguiStyle['$platform-web'],
+                        }}
+                        $lg={{
+                          '$platform-web': {
+                            gridTemplateColumns: '1.75fr 1.4fr 1.1fr 1fr 1fr 1fr',
+                            ...ClickableTamaguiStyle['$platform-web'],
+                          },
+                        }}
+                        $md={{
+                          '$platform-web': {
+                            gridTemplateColumns: '2.5fr 1fr',
+                            ...ClickableTamaguiStyle['$platform-web'],
+                          },
+                        }}
+                      >
+                        <ItemCell
+                          event={event}
+                          rarityVerified={rarityVerified}
+                          collectionName={collectionName}
+                          eventTimestamp={event.eventTimestamp}
+                          isMobile={isMobile}
+                        />
+                        <EventCell
+                          eventType={event.eventType}
+                          eventTimestamp={event.eventTimestamp}
+                          eventTransactionHash={event.transactionHash}
+                          price={event.price}
+                          isMobile={isMobile}
+                        />
+                        <PriceCell marketplace={event.marketplace} price={event.price} />
+                        <AddressCell address={event.fromAddress} chainId={chainId} />
+                        <AddressCell address={event.toAddress} chainId={chainId} desktopLBreakpoint />
+                        <BuyCell
+                          event={event}
+                          collectionName={collectionName}
+                          selectAsset={addAssetsToBag}
+                          removeAsset={removeAssetsFromBag}
+                          itemsInBag={itemsInBag}
+                          cartExpanded={cartExpanded}
+                          toggleCart={toggleCart}
+                          isMobile={isMobile}
+                          ethPriceInUSD={ethPriceInUSD}
+                        />
+                      </View>
+                    </Anchor>
                   ),
               )}
             </InfiniteScroll>
-          </Column>
+          </Flex>
         )
       )}
-    </Box>
+    </Flex>
   )
 }

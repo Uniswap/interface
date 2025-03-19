@@ -1,11 +1,35 @@
-import clsx from 'clsx'
-import * as styles from 'nft/components/collection/FilterButton.css'
 import { FilterIcon } from 'nft/components/icons'
-import { breakpoints } from 'nft/css/sprinkles.css'
 import { pluralize } from 'nft/utils'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, styled, useSporeColors } from 'ui/src'
+import { breakpoints } from 'ui/src/theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+const FilterButtonContainer = styled(Flex, {
+  ...ClickableTamaguiStyle,
+  row: true,
+  alignItems: 'center',
+  backgroundColor: '$accent2',
+  borderRadius: '$rounded12',
+  gap: '$gap8',
+  p: '$padding12',
+  width: 'auto',
+  height: 44,
+  '$platform-web': {
+    whiteSpace: 'nowrap',
+  },
+  variants: {
+    expanded: {
+      true: {
+        backgroundColor: '$surface1',
+        color: '$neutral1',
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '$surface3',
+      },
+    },
+  } as const,
+})
 
 export const FilterButton = ({
   onClick,
@@ -19,26 +43,19 @@ export const FilterButton = ({
   collectionCount?: number
 }) => {
   const { formatNumberOrString } = useFormatter()
-  const hideResultsCount = window.innerWidth >= breakpoints.sm && window.innerWidth < breakpoints.md
+  const hideResultsCount = window.innerWidth >= breakpoints.md && window.innerWidth < breakpoints.lg
+  const colors = useSporeColors()
 
   return (
-    <Flex
-      row
-      alignItems="center"
-      className={clsx(styles.filterButton, !isFiltersExpanded && styles.filterButtonExpanded)}
-      gap="$gap8"
-      borderRadius="$rounded12"
-      {...ClickableTamaguiStyle}
+    <FilterButtonContainer
       onPress={onClick}
-      p="$padding12"
       width={isMobile ? 44 : 'auto'}
-      height={44}
-      $platform-web={{ whiteSpace: 'nowrap' }}
+      expanded={isFiltersExpanded}
       data-testid="nft-filter"
     >
-      <FilterIcon />
+      <FilterIcon color={colors.accent1.val} />
       {!isMobile ? (
-        <Text variant="buttonLabel2">
+        <Text variant="buttonLabel2" color="$accent1">
           {!collectionCount || hideResultsCount
             ? 'Filter'
             : `Filter • ${formatNumberOrString({
@@ -47,6 +64,6 @@ export const FilterButton = ({
               })} result${pluralize(collectionCount)}`}
         </Text>
       ) : null}
-    </Flex>
+    </FilterButtonContainer>
   )
 }

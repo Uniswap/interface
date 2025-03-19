@@ -3,15 +3,15 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectHapticsEnabled, setHapticsUserSettingEnabled } from 'wallet/src/features/appearance/slice'
 
-export type HapticFeedbackStyle = ImpactFeedbackStyle | NotificationFeedbackType
+type HapticFeedbackStyle = ImpactFeedbackStyle | NotificationFeedbackType
 
-export type HapticFeedback = {
+type HapticFeedback = {
   impact: (style?: HapticFeedbackStyle) => Promise<void>
   light: () => Promise<void>
   success: () => Promise<void>
 }
 
-export const NO_HAPTIC_FEEDBACK: HapticFeedback = {
+const NO_HAPTIC_FEEDBACK: HapticFeedback = {
   impact: async () => Promise.resolve(),
   light: async () => Promise.resolve(),
   success: async () => Promise.resolve(),
@@ -30,7 +30,7 @@ function isImpactFeedbackStyle(style: HapticFeedbackStyle): style is ImpactFeedb
   return Object.values(ImpactFeedbackStyle).includes(style as ImpactFeedbackStyle)
 }
 
-export interface HapticFeedbackControl {
+interface HapticFeedbackControl {
   hapticFeedback: HapticFeedback
   hapticsEnabled: boolean
   setHapticsEnabled: (willBeEnabled: boolean) => void

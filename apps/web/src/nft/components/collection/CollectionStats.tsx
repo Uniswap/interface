@@ -1,7 +1,6 @@
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled, { css } from 'lib/styled-components'
-import * as styles from 'nft/components/collection/CollectionStats.css'
 import {
   DiscordIcon,
   EllipsisIcon,
@@ -13,14 +12,13 @@ import {
 } from 'nft/components/icons'
 import { body, bodySmall, headlineMedium, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset } from 'nft/css/loading.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useBag } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection, TokenType } from 'nft/types'
 import { roundWholePercentage } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { Anchor, Flex, FlexProps, Image, Shine, Text, useMedia } from 'ui/src'
+import { Anchor, Flex, FlexProps, Image, Shine, Text, styled as tamaguiStyled, useMedia, useSporeColors } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -53,6 +51,26 @@ const MobileSocialsOverflowIcon = styled.div`
   height: 28px;
 `
 
+const CollectionImage = tamaguiStyled(Flex, {
+  left: 0,
+  borderStyle: 'solid',
+  borderWidth: '4px',
+  borderColor: '$surface1',
+  borderRadius: '$roundedFull',
+  position: 'absolute',
+  width: 143,
+  height: 143,
+  verticalAlign: 'top',
+  top: -118,
+  boxShadow: 'var(--cardDropShadow)',
+  $sm: {
+    width: 60,
+    height: 60,
+    borderWidth: '2px',
+    top: -20,
+  },
+})
+
 const MobileSocialsIcon = ({ children, href }: { children: ReactNode; href: string }) => {
   return (
     <Anchor
@@ -79,13 +97,14 @@ const MobileSocialsPopover = ({
   collectionSocialsIsOpen: boolean
   toggleCollectionSocials: () => void
 }) => {
+  const colors = useSporeColors()
   return (
     <>
       <MobileSocialsOverflowIcon onClick={toggleCollectionSocials}>
         {collectionSocialsIsOpen ? (
-          <XMarkIcon width="28" height="28" fill={themeVars.colors.neutral2} />
+          <XMarkIcon width="28" height="28" fill={colors.neutral2.val} />
         ) : (
-          <EllipsisIcon width="28" height="20" fill={themeVars.colors.neutral2} />
+          <EllipsisIcon width="28" height="20" fill={colors.neutral2.val} />
         )}
       </MobileSocialsOverflowIcon>
       {collectionSocialsIsOpen && (
@@ -93,19 +112,14 @@ const MobileSocialsPopover = ({
           {collectionStats.discordUrl ? (
             <MobileSocialsIcon href={collectionStats.discordUrl}>
               <Flex m="auto" pt="$spacing4">
-                <DiscordIcon width={28} height={28} color={themeVars.colors.neutral2} />
+                <DiscordIcon width={28} height={28} color={colors.neutral2.val} />
               </Flex>
             </MobileSocialsIcon>
           ) : null}
           {collectionStats.twitterUrl ? (
             <MobileSocialsIcon href={'https://twitter.com/' + collectionStats.twitterUrl}>
               <Flex m="auto" pt="$spacing6">
-                <TwitterIcon
-                  fill={themeVars.colors.neutral2}
-                  color={themeVars.colors.neutral2}
-                  width="28px"
-                  height="28px"
-                />
+                <TwitterIcon fill={colors.neutral2.val} color={colors.neutral2.val} width="28px" height="28px" />
               </Flex>
             </MobileSocialsIcon>
           ) : null}
@@ -113,7 +127,7 @@ const MobileSocialsPopover = ({
           {collectionStats.instagram ? (
             <MobileSocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
               <Flex m="auto" pl="$spacing2" pt="$spacing4">
-                <InstagramIcon fill={themeVars.colors.neutral2} width="28px" height="28px" />
+                <InstagramIcon fill={colors.neutral2.val} width="28px" height="28px" />
               </Flex>
             </MobileSocialsIcon>
           ) : null}
@@ -121,7 +135,7 @@ const MobileSocialsPopover = ({
           {collectionStats.externalUrl ? (
             <MobileSocialsIcon href={collectionStats.externalUrl}>
               <Flex m="auto" pt="$spacing4">
-                <ExternalIcon fill={themeVars.colors.neutral2} width="28px" height="28px" />
+                <ExternalIcon fill={colors.neutral2.val} width="28px" height="28px" />
               </Flex>
             </MobileSocialsIcon>
           ) : null}
@@ -155,7 +169,7 @@ const CollectionName = ({
   toggleCollectionSocials: () => void
 }) => {
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
-
+  const colors = useSporeColors()
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Flex minWidth={0} row alignItems="center">
@@ -179,33 +193,23 @@ const CollectionName = ({
         >
           {collectionStats.discordUrl ? (
             <SocialsIcon href={collectionStats.discordUrl ?? ''}>
-              <DiscordIcon
-                fill={themeVars.colors.neutral2}
-                color={themeVars.colors.neutral2}
-                width="26px"
-                height="26px"
-              />
+              <DiscordIcon fill={colors.neutral2.val} color={colors.neutral2.val} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
           {collectionStats.twitterUrl ? (
             <SocialsIcon href={'https://twitter.com/' + collectionStats.twitterUrl}>
-              <TwitterIcon
-                fill={themeVars.colors.neutral2}
-                color={themeVars.colors.neutral2}
-                width="26px"
-                height="26px"
-              />
+              <TwitterIcon fill={colors.neutral2.val} color={colors.neutral2.val} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
 
           {collectionStats.instagram ? (
             <SocialsIcon href={'https://instagram.com/' + collectionStats.instagram}>
-              <InstagramIcon fill={themeVars.colors.neutral2} width="26px" height="26px" />
+              <InstagramIcon fill={colors.neutral2.val} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
           {collectionStats.externalUrl ? (
             <SocialsIcon href={collectionStats.externalUrl ?? ''}>
-              <ExternalIcon fill={themeVars.colors.neutral2} width="26px" height="26px" />
+              <ExternalIcon fill={colors.neutral2.val} width="26px" height="26px" />
             </SocialsIcon>
           ) : null}
         </Flex>
@@ -267,7 +271,15 @@ const ReadMore = styled.span`
 `
 
 const CollectionDescriptionLoading = () => (
-  <Flex mt="$spacing12" $lg={{ mt: '$spacing16' }} className={styles.descriptionLoading} />
+  <Shine>
+    <Flex
+      mt="$spacing12"
+      $lg={{ mt: '$spacing16' }}
+      height="$spacing20"
+      maxWidth="min(calc(100% - 112px), 600px)"
+      borderRadius="$rounded12"
+    />
+  </Shine>
 )
 
 const CollectionDescription = ({ description }: { description: string }) => {
@@ -333,8 +345,12 @@ const statsLoadingSkeleton = (isMobile: boolean) =>
       key={`statsLoadingSkeleton-key-${index}`}
       mb={isMobile ? '$spacing12' : '$spacing0'}
     >
-      <div className={styles.statsLabelLoading} />
-      <span className={styles.statsValueLoading} />
+      <Shine>
+        <Flex width={60} height={16} borderRadius="$rounded12" />
+      </Shine>
+      <Shine>
+        <Flex width={60} height={20} mt="$spacing8" borderRadius="$rounded12" />
+      </Shine>
     </Flex>
   ))
 
@@ -416,9 +432,19 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
 export const CollectionStatsLoading = ({ isMobile }: { isMobile: boolean }) => {
   return (
     <Flex width="100%">
-      <Flex className={styles.collectionImageIsLoading} />
-      <Flex className={styles.statsText}>
-        <Flex className={styles.nameTextLoading} />
+      <CollectionImage borderWidth={4} borderColor="$surface1" />
+      <Flex
+        mt="$spacing40"
+        mb="$spacing28"
+        $lg={{
+          mt: '$spacing8',
+          mb: '$spacing0',
+          ml: 68,
+        }}
+      >
+        <Shine>
+          <Flex height={32} width={236} borderRadius="$rounded12" />
+        </Shine>
         {!isMobile && (
           <>
             <CollectionDescriptionLoading />
@@ -452,11 +478,10 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
     >
       {isCollectionStatsLoading || !stats.imageUrl || imageError ? (
         <Shine disabled={!isCollectionStatsLoading}>
-          <Flex
+          <CollectionImage
             backgroundColor="$white"
             borderRadius="$roundedFull"
             position="absolute"
-            className={styles.collectionImage}
             borderWidth={4}
             borderColor="$surface3"
           />
@@ -474,7 +499,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
           borderWidth={4}
           borderColor="$surface1"
           left={0}
-          $md={{
+          $lg={{
             width: 60,
             height: 60,
             top: -20,
@@ -482,7 +507,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
           }}
         />
       )}
-      <Flex className={styles.statsText}>
+      <Flex mt={40} mb={28} $md={{ mt: 8, mb: 0, ml: 68 }}>
         <CollectionName
           collectionStats={stats}
           name={stats.name ?? ''}
@@ -499,6 +524,7 @@ export const CollectionStats = ({ stats, isMobile }: { stats: GenieCollection; i
       {(stats.description || isCollectionStatsLoading) && isMobile && (
         <CollectionDescription description={stats.description ?? ''} />
       )}
+      {/* eslint-disable-next-line react/forbid-elements */}
       <div id="nft-anchor-mobile" />
       <StatsRow isMobile display="none" $lg={{ display: 'flex' }} stats={stats} mt="$spacing20" mb="$spacing12" />
     </Flex>

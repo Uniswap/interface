@@ -16,7 +16,6 @@ import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
 import { SendFlow } from 'src/app/features/send/SendFlow'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
-import { SettingsPermissionsScreen } from 'src/app/features/settings/SettingsPermissionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
 import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseWallets'
 import { SettingsViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/ViewRecoveryPhraseScreen'
@@ -96,11 +95,6 @@ const router = createHashRouter([
               },
             ],
           },
-          {
-            path: SettingsRoutes.Privacy,
-            element: <SettingsPermissionsScreen />,
-          },
-          { path: SettingsRoutes.Permissions, element: <SettingsPermissionsScreen /> },
           {
             path: SettingsRoutes.ManageConnections,
             element: <SettingsManageConnectionsScreen />,

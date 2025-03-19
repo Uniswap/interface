@@ -14,6 +14,7 @@ import {
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
 import { OrderDirection } from 'graphql/data/util'
+import { useFilteredTransactions } from 'pages/Explore/tables/useFilterTransaction'
 import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, Text, styled } from 'ui/src'
@@ -48,6 +49,8 @@ const RecentTransactions = memo(function RecentTransactions() {
   const chainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
 
   const { transactions, loading, loadMore, errorV2, errorV3 } = useAllTransactions(chainInfo.backendChain.chain, filter)
+  const filteredTransactions = useFilteredTransactions(transactions)
+
   const combinedError =
     errorV2 && errorV3
       ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Transactions for chain: ${chainInfo.id}` })
@@ -221,7 +224,7 @@ const RecentTransactions = memo(function RecentTransactions() {
   return (
     <Table
       columns={columns}
-      data={transactions}
+      data={filteredTransactions}
       loading={allDataStillLoading}
       error={combinedError}
       loadMore={loadMore}

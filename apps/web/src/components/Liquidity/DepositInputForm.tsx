@@ -90,7 +90,7 @@ export function DepositInputForm({
             onSetExactAmount={handleUserInput(PositionField.TOKEN0)}
             onToggleIsFiatMode={() => undefined}
             usdValue={currencyAmountsUSDValue?.[PositionField.TOKEN0]}
-            onSetMax={handleOnSetMax(PositionField.TOKEN0)}
+            onSetPresetValue={handleOnSetMax(PositionField.TOKEN0)}
             value={formattedAmounts?.[PositionField.TOKEN0]}
             onPressIn={() => setFocusedInputField(PositionField.TOKEN0)}
             isLoading={amount0Loading}
@@ -116,7 +116,7 @@ export function DepositInputForm({
             onSetExactAmount={handleUserInput(PositionField.TOKEN1)}
             onToggleIsFiatMode={() => undefined}
             usdValue={currencyAmountsUSDValue?.[PositionField.TOKEN1]}
-            onSetMax={handleOnSetMax(PositionField.TOKEN1)}
+            onSetPresetValue={handleOnSetMax(PositionField.TOKEN1)}
             value={formattedAmounts?.[PositionField.TOKEN1]}
             onPressIn={() => setFocusedInputField(PositionField.TOKEN1)}
             isLoading={amount1Loading}

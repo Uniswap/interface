@@ -2,10 +2,11 @@ import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
 import { MobileAppsFlyerEvents, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
@@ -90,6 +91,7 @@ export function useLastBalancesReporter(): void {
         sendAnalyticsEvent(UniswapEventName.BalancesReportPerChain, {
           total_balances_usd_per_chain: totalBalancesUsdPerChain,
           wallet: account.address,
+          view_only: account.type === AccountType.Readonly,
         })
       }
       // record that a report has been sent

@@ -54,15 +54,15 @@
   "account.recoveryPhrase.subtitle.restoring": "أدخل عبارة الاسترداد أدناه، أو حاول البحث عن النسخ الاحتياطية مرة أخرى.",
   "account.recoveryPhrase.title.import": "أدخل عبارة الاسترداد الخاصة بك",
   "account.recoveryPhrase.title.restoring": "لم يتم العثور على نسخ احتياطية",
-  "account.wallet.action.copy": "انسخ عنوان المحفظة",
+  "account.wallet.action.copy": "نسخ العنوان",
+  "account.wallet.action.manageConnections": "إدارة الاتصالات",
   "account.wallet.action.report": "الملف الشخصي تقرير",
-  "account.wallet.action.settings": "إعدادات المحفظة",
   "account.wallet.action.viewExplorer": "عرض على {{blockExplorerName}}",
   "account.wallet.button.add": "أضف محفظة",
   "account.wallet.button.addViewOnly": "أضف محفظة للعرض فقط",
   "account.wallet.button.create": "إنشاء محفظة جديدة",
   "account.wallet.button.import": "استيراد محفظة جديدة",
-  "account.wallet.button.manage": "إدارة المحفظة",
+  "account.wallet.button.manage": "إعدادات المحفظة",
   "account.wallet.button.remove": "إزالة المحفظة",
   "account.wallet.button.restore": "استعادة محفظتك",
   "account.wallet.button.watch": "مشاهدة المحفظة",
@@ -70,10 +70,11 @@
   "account.wallet.edit.label.input.placeholder": "تسمية المحفظة",
   "account.wallet.header.button.disabled.title": "تعديل الملف الشخصي",
   "account.wallet.header.button.title": "تحرير التسمية",
-  "account.wallet.header.other": "محفظتك الأخرى",
   "account.wallet.header.viewOnly": "محافظ للعرض فقط",
+  "account.wallet.menu.claimUsername": "المطالبة باسم المستخدم",
   "account.wallet.menu.copy.title": "انسخ عنوان المحفظة",
   "account.wallet.menu.edit.title": "تحرير التسمية",
+  "account.wallet.menu.manageConnections": "إدارة اتصالات",
   "account.wallet.menu.remove.title": "إزالة المحفظة",
   "account.wallet.remove.check": "لقد قمت بعمل نسخة احتياطية من عبارة الاسترداد الخاصة بي وأدركت أن Uniswap Labs لا يمكنها مساعدتي في استعادة محفظتي إذا فشلت في القيام بذلك.",
   "account.wallet.remove.title": "إزالة {{name}}",
@@ -201,6 +202,7 @@
   "common.button.ok": "نعم",
   "common.button.paste": "معجون",
   "common.button.pay": "يدفع",
+  "common.button.proceed": "يتابع",
   "common.button.receive": "يستلم",
   "common.button.remove": "يزيل",
   "common.button.reset": "إعادة ضبط",
@@ -278,9 +280,6 @@
   "common.created.pool": "تجمع تم إنشاؤه",
   "common.creating.pool": "إنشاء تجمع",
   "common.currency": "عملة",
-  "common.currentPrice": "السعر الحالي",
-  "common.currentPrice.label": "السعر الحالي:",
-  "common.currentPrice.unavailable": "السعر الحالي غير متاح",
   "common.custom": "مخصص",
   "common.customRange": "مجموعة مخصصة",
   "common.dataOutdated": "قد تكون البيانات قديمة",
@@ -314,6 +313,7 @@
   "common.downloadUniswapApp": "قم بتحميل تطبيق يونيسواب",
   "common.dynamic": "متحرك",
   "common.edit.button": "يحرر",
+  "common.error.details": "تفاصيل الخطأ",
   "common.error.general": "هناك خطأ ما",
   "common.error.label": "خطأ",
   "common.error.request": "عذرًا، حدث خطأ أثناء معالجة طلبك. إذا طلبت الدعم، فتأكد من نسخ تفاصيل هذا الخطأ.",
@@ -408,6 +408,10 @@
   "common.lowPrice": "سعر منخفض",
   "common.manage": "يدير",
   "common.market.label": "سوق",
+  "common.marketPrice": "سعر السوق",
+  "common.marketPrice.fetching": "جاري جلب سعر السوق...",
+  "common.marketPrice.label": "سعر السوق:",
+  "common.marketPrice.unavailable": "لم يتم العثور على سعر السوق. يُرجى إجراء بحثك الخاص لتجنب خسارة الأموال.",
   "common.max": "الأعلى",
   "common.message": "رسالة",
   "common.migrate": "يهاجر",
@@ -513,7 +517,6 @@
   "common.resolveIssues_one": "حل المشكلة",
   "common.resolveIssues_other": "حل مشاكل {{count}}",
   "common.restricted.region": "المنطقة المحظورة",
-  "common.returnToTop": "العودة للقمة",
   "common.reverseRegistrar": "عكس المسجل",
   "common.revoke.approval.failed": "فشل إلغاء الموافقة",
   "common.revoked.approval": "تم إلغاء الموافقة",
@@ -656,7 +659,6 @@
   "common.withdrew": "انسحب",
   "common.withinRange": "في النطاق",
   "common.wrap": "التفاف {{symbol}}",
-  "common.wrap.button": "طَوّق",
   "common.wrap.cancelled": "تم إلغاء الالتفاف",
   "common.wrap.failed": "فشل الالتفاف",
   "common.wrapIn": "لف  {{symbol}} في المحفظة",
@@ -781,10 +783,9 @@
   "explore.wallets.favorite.action.remove": "إزالة المفضلة",
   "explore.wallets.favorite.title.default": "المحافظ المفضلة",
   "explore.wallets.favorite.title.edit": "تحرير المحافظ المفضلة",
+  "extension.connection.network": "شبكة",
   "extension.connection.networks": "الشبكات",
-  "extension.connection.popup": "محفظتك غير متصلة بهذا الموقع. ابحث عن زر \"Connect Wallet\" أو \"تسجيل الدخول\".",
   "extension.connection.popup.trouble": "هل تواجه مشكلة في الاتصال؟",
-  "extension.connection.popupWithButton": "محفظتك غير متصلة بهذا الموقع.",
   "extension.connection.titleConnected": "متصل",
   "extension.connection.titleNotConnected": "غير متصل",
   "extension.lock.button.forgot": "هل نسيت كلمة السر?",
@@ -916,6 +917,8 @@
   "home.banner.offline": "أنت في وضع غير متصل بالشبكة",
   "home.banner.testnetMode": "أنت في وضع الشبكة التجريبية",
   "home.banner.testnetMode.nav": "أنت في وضع الشبكة التجريبية. قم بإيقاف تشغيله في الإعدادات.",
+  "home.banner.testnetMode.outage.monad.description": "تم إيقاف الوصول إلى شبكة Monad التجريبية مؤقتًا عبر واجهة Uniswap بسبب مشاكل في استقرار الشبكة. لم تتأثر أموال الشبكة التجريبية. سيتم استعادة الوصول بعد حل هذه المشاكل.",
+  "home.banner.testnetMode.outage.monad.title": "تم إيقاف الموناد مؤقتًا",
   "home.explore.footer": "انقر هنا لاستكشاف الآلاف من الرموز المميزة والرموز غير القابلة للاستبدال (NFTs) والمزيد",
   "home.explore.title": "استكشاف الرموز",
   "home.extension.error": "حدث خطأ أثناء تحميل الحسابات",
@@ -1223,8 +1226,6 @@
   "onboarding.extension.unsupported.title": "هذا المتصفح غير مدعوم (حتى الآن)",
   "onboarding.home.intro.backup.description": "قم بإعداد خطة استرداد إذا فقدت هاتفك أو حصلت على هاتف جديد.",
   "onboarding.home.intro.backup.title": "قم بعمل نسخة احتياطية من محفظتك",
-  "onboarding.home.intro.bridging.description_one": "انقل ETH وUSDC والمزيد عبر شبكات {{count}}+.",
-  "onboarding.home.intro.bridging.description_other": "انقل ETH وUSDC والمزيد عبر شبكات {{count}}+.",
   "onboarding.home.intro.fund.description": "قم بتمويل محفظتك عن طريق شراء العملات المشفرة أو التحويل من حساب آخر.",
   "onboarding.home.intro.fund.title": "احصل على أول رمز مميز لك",
   "onboarding.home.intro.label.required": "مطلوب",
@@ -1286,7 +1287,6 @@
   "onboarding.resetPassword.complete.safety": "تعرف على المزيد حول سلامة المحفظة",
   "onboarding.resetPassword.complete.subtitle": "استخدم كلمة المرور الجديدة لفتح محفظتك.",
   "onboarding.resetPassword.complete.title": "إعادة تعيين كلمة المرور",
-  "onboarding.scan.button": "المسح باستخدام تطبيق Uniswap",
   "onboarding.scan.error": "حدث خطأ أثناء تحميل رمز الاستجابة السريعة",
   "onboarding.scan.otp.error": "الرمز الذي أرسلته غير صحيح، أو حدث خطأ أثناء الإرسال. حاول مرة اخرى.",
   "onboarding.scan.otp.failed": "المحاولات الفاشلة: {{number}}",
@@ -1316,7 +1316,7 @@
   "onboarding.wallet.defaultName": "المحفظة {{number}}",
   "onboarding.wallet.description.full": "هذه هي مساحتك الشخصية للرموز المميزة والرموز غير القابلة للاستبدال (NFTs) وجميع تداولاتك. قم بإنهاء إعداده للحفاظ على أمان أموالك.",
   "onboarding.wallet.title": "مرحبًا بك في محفظتك الجديدة",
-  "outageBanner.message": "{{chainName}} {{versionDescription}} البيانات غير متاحة حاليًا، ولكننا نتوقع أن يتم حل المشكلة قريبًا.",
+  "outageBanner.message": "{{chainName}}{{versionDescription}} البيانات غير متوفرة حاليًا، ولكننا نتوقع حل المشكلة قريبًا.",
   "outageBanner.message.sub": "لا يزال بإمكانك مبادلة وتوفير السيولة على هذه السلسلة دون مشكلة.",
   "outageBanner.title": "{{versionName}} سيعود قريبًا",
   "permit.approval.fail": "فشلت الموافقة على التصريح",
@@ -1393,11 +1393,13 @@
   "position.addingHook.hideProperties": "إخفاء الخصائص",
   "position.addingHook.invalidAddress": "أدخل عنوان ربط صالحًا",
   "position.addingHook.viewProperties": "عرض الخصائص",
-  "position.appearHere": "سوف يظهر موقفك هنا.",
   "position.create.invalidPrice": "سعر غير صالح",
   "position.create.invalidRange": "نطاق غير صالح",
   "position.create.modal.header": "إنشاء موقف",
   "position.currentValue": "قيمة الموضع الحالي",
+  "position.deposit.confirm.create.description.less": "السعر الأولي المُدخل أقل بنسبة {{value}}% من سعر السوق، وقد يُؤدي إلى خسارة أموالك. هل ترغب في المُتابعة؟",
+  "position.deposit.confirm.create.description.more": "السعر الأولي المُدخل أعلى بنسبة {{value}}% من سعر السوق، وقد يُؤدي إلى خسارة أموالك. هل ترغب في المُتابعة؟",
+  "position.deposit.confirm.create.title": "فرق كبير في السعر مع السوق",
   "position.deposit.description": "قم بتحديد المبالغ الرمزية لمساهمتك في السيولة.",
   "position.depositedCurrency": "تم الإيداع {{currencySymbol}}",
   "position.fot.warning": "{{token}} ورموز \"الرسوم على التحويل\" الأخرى مدعومة فقط بواسطة Uniswap v2.",
@@ -1411,19 +1413,25 @@
   "position.hook.warningInfo": "لقد حددنا المخاطر المحتملة المرتبطة بهذا الخطاف. يرجى التأكد من فهمك لكيفية عمل هذا الخطاف قبل اتخاذ قرار المتابعة.",
   "position.increase.fot": "لا يتم دعم إضافة السيولة لـ {{token}} وغيرها من رموز \"الرسوم عند التحويل\".",
   "position.initialPrice": "السعر المبدئي",
-  "position.initialPrice.info": "قم بتعيين سعر الصرف المبدئي بين الرمزين اللذين تقوم بتوفيرهما.",
+  "position.initialPrice.difference.negative": "{{ value }}أقل بنسبة % من سعر السوق",
+  "position.initialPrice.difference.positive": "{{ value }}أكثر من سعر السوق بنسبة %",
+  "position.initialPrice.info": "عند إنشاء تجمع جديد، يجب تحديد سعر الصرف الابتدائي لكلا الرمزين. سيعكس هذا السعر سعر السوق الأولي.",
+  "position.initialPrice.set": "تحديد السعر الأولي",
+  "position.initialPrice.useMarketPrice": "استخدم سعر السوق",
   "position.migrate.liquidity": "عند ترحيل المواضع، لا يمكنك تغيير زوج الرمز الخاص بك، ولكن يمكنك إضافة خطاف لتحسين الوظائف.",
   "position.migrate.v4unsupportedChain": "هذه السلسلة غير مدعومة لمجموعات v4.",
   "position.new": "موقف جديد",
   "position.new.protocol": "موضع جديد {{protocol}}",
-  "position.noLiquidity": "بيانات السيولة غير متوفرة.",
-  "position.noLiquidityData": "لا توجد بيانات السيولة.",
   "position.notFound": "لم يتم العثور على الموضع",
   "position.notFound.description": "التفاصيل المتعلقة بهذا الموضع غير متوفرة. يرجى التأكد من اتصالك بالمحفظة الصحيحة.",
   "position.protocol": "{{protocol}} الموضع",
   "position.provide.liquidity": "اختر الرموز التي تريد توفير السيولة لها. يمكنك تحديد الرموز على جميع الشبكات المدعومة.",
   "position.provide.liquidityDescription": "إن توفير السيولة الكاملة يضمن المشاركة المستمرة في السوق عبر جميع الأسعار الممكنة، مما يوفر البساطة ولكن مع إمكانية حدوث خسارة غير دائمة أكبر.",
+  "position.provide.liquidityDescription.creatingPool": "إن تحديد نطاق السيولة الكامل عند إنشاء تجمع يضمن المشاركة المستمرة في السوق عبر جميع الأسعار الممكنة، مما يوفر البساطة ولكن مع إمكانية حدوث خسارة غير دائمة أكبر.",
   "position.provide.liquidityDescription.custom": "يتيح لك النطاق المخصص التركيز على السيولة ضمن حدود سعرية محددة، مما يعزز كفاءة رأس المال وأرباح الرسوم ولكنه يتطلب إدارة أكثر نشاطًا.",
+  "position.provide.outOfRange.closePosition": "إغلاق الموضع",
+  "position.provide.outOfRange.description": "لا يمكن تعديل نطاق هذا الموضع أثناء الترحيل. لتعيين نطاق جديد، أغلق هذا الموضع وافتح موضع v4 جديد.",
+  "position.provide.outOfRange.title": "أنت تقوم بنقل موضع خارج النطاق",
   "position.removeHook": "إزالة الخطاف",
   "position.resetDescription": "سيتم إعادة تعيين اختيارات الرموز والسعر والنطاق الخاصة بك.",
   "position.setRange": "تحديد النطاق السعري",
@@ -1568,31 +1576,28 @@
   "setting.recoveryPhrase.warning.view.message": "يمكن لأي شخص يعرف عبارة الاسترداد الخاصة بك الوصول إلى محفظتك وأموالك.",
   "setting.recoveryPhrase.warning.view.title": "شاهد هذا في مكان خاص",
   "settings.action.enableInSettings": "تمكين في الإعدادات",
-  "settings.action.feedback": "مشاركة التعليقات",
+  "settings.action.feedback": "ارسل رأيك",
   "settings.action.help": "احصل على مساعدة",
   "settings.action.lock": "قفل المحفظة",
   "settings.action.privacy": "سياسة الخصوصية",
   "settings.action.terms": "شروط الخدمة",
   "settings.footer": "صُنع بكل حب، \nفريق Uniswap 🦄",
   "settings.hideSmallBalances": "إخفاء الأرصدة الصغيرة",
+  "settings.hideSmallBalances.subtitle": "سيتم إخفاء الأرصدة التي تقل عن 1 دولار أمريكي من محفظتك.",
   "settings.maxSlippage": "الأعلى. انزلاق",
-  "settings.screen.appearance.title": "مظهر",
   "settings.section.about": "عن",
   "settings.section.preferences": "التفضيلات",
   "settings.section.privacyAndSecurity": "الخصوصية والأمان",
   "settings.section.support": "يدعم",
-  "settings.section.wallet.button.viewAll": "عرض الكل",
-  "settings.section.wallet.button.viewLess": "عرض أقل",
-  "settings.section.wallet.label.viewOnly": "للاطلاع فقط",
-  "settings.section.wallet.title": "إعدادات المحفظة",
+  "settings.section.wallet.hidden.row.title": "{{numHidden}} محافظ أخرى",
   "settings.setting.appearance.option.auto": "آلي",
-  "settings.setting.appearance.option.dark.subtitle": "استخدم الوضع المظلم دائمًا",
-  "settings.setting.appearance.option.dark.title": "الوضع المظلم",
-  "settings.setting.appearance.option.device.subtitle": "الافتراضي لمظهر جهازك",
-  "settings.setting.appearance.option.device.title": "إعدادات الجهاز",
-  "settings.setting.appearance.option.light.subtitle": "استخدم الوضع الخفيف دائمًا",
-  "settings.setting.appearance.option.light.title": "وضع الضوء",
-  "settings.setting.appearance.title": "مظهر",
+  "settings.setting.appearance.option.dark.subtitle": "استخدم دائمًا المظهر الداكن.",
+  "settings.setting.appearance.option.dark.title": "مظلم",
+  "settings.setting.appearance.option.device.subtitle": "يتكيف مع إعدادات جهازك.",
+  "settings.setting.appearance.option.device.title": "آلي",
+  "settings.setting.appearance.option.light.subtitle": "استخدم دائمًا المظهر الفاتح.",
+  "settings.setting.appearance.option.light.title": "ضوء",
+  "settings.setting.appearance.title": "سمة",
   "settings.setting.backup.create.description": "سيؤدي تعيين كلمة مرور إلى تشفير النسخة الاحتياطية لعبارة الاسترداد، مما يضيف مستوى إضافيًا من الحماية في حالة تعرض حسابك {{cloudProviderName}} للاختراق.",
   "settings.setting.backup.create.title": "قم بالنسخ الاحتياطي إلى {{cloudProviderName}}",
   "settings.setting.backup.delete.confirm.message": "ونظرًا لأن هذه المحافظ تشترك في عبارة استرداد، فإنها ستحذف أيضًا النسخ الاحتياطية لهذه المحافظ أدناه",
@@ -1618,17 +1623,17 @@
   "settings.setting.backup.status.recoveryPhrase.backed": "استعيدت",
   "settings.setting.backup.status.title": "{{cloudProviderName}} النسخ الاحتياطي",
   "settings.setting.beta.tooltip": "قريباً",
-  "settings.setting.biometrics.appAccess.subtitle.android": "تتطلب القياسات الحيوية لفتح التطبيق",
-  "settings.setting.biometrics.appAccess.subtitle.ios": "يتطلب {{biometricsMethod}} لفتح التطبيق",
+  "settings.setting.biometrics.appAccess.subtitle.android": "يتطلب الوجه/بصمة الإصبع لفتح التطبيق.",
+  "settings.setting.biometrics.appAccess.subtitle.ios": "يتطلب {{biometricsMethod}} لفتح التطبيق.",
   "settings.setting.biometrics.appAccess.title": "الوصول إلى التطبيق",
   "settings.setting.biometrics.auth": "يرجى المصادقة",
   "settings.setting.biometrics.off.message.android": "تم إيقاف القياسات الحيوية حاليًا لـ Uniswap Wallet، ويمكنك تشغيلها في إعدادات النظام لديك.",
   "settings.setting.biometrics.off.message.ios": "{{biometricsMethod}} معطل حاليًا لـ Uniswap Wallet — يمكنك تشغيله في إعدادات النظام لديك.",
   "settings.setting.biometrics.off.title.android": "تم إيقاف القياسات الحيوية",
   "settings.setting.biometrics.off.title.ios": "تم إيقاف تشغيل {{biometricsMethod}}",
-  "settings.setting.biometrics.title": "القياسات الحيوية",
-  "settings.setting.biometrics.transactions.subtitle.android": "تتطلب القياسات الحيوية للمعاملة",
-  "settings.setting.biometrics.transactions.subtitle.ios": "يتطلب {{biometricsMethod}} للمعاملة",
+  "settings.setting.biometrics.title": "فتح القفل عن طريق الوجه/بصمة الإصبع",
+  "settings.setting.biometrics.transactions.subtitle.android": "يتطلب الوجه/بصمة الإصبع لإتمام المعاملات.",
+  "settings.setting.biometrics.transactions.subtitle.ios": "يتطلب {{biometricsMethod}} لإتمام المعاملة.",
   "settings.setting.biometrics.transactions.title": "المعاملات",
   "settings.setting.biometrics.unavailable.message.android": "لم يتم إعداد القياسات الحيوية على جهازك. لاستخدام القياسات الحيوية، قم بإعدادها أولاً في الإعدادات.",
   "settings.setting.biometrics.unavailable.message.ios": "{{biometricsMethod}} لم يتم إعداده على جهازك. لاستخدام {{biometricsMethod}}، قم بإعداده أولاً في الإعدادات.",
@@ -1644,7 +1649,7 @@
   "settings.setting.helpCenter.title": "مركز المساعدة",
   "settings.setting.language.button.navigate": "اذهب للاعدادات",
   "settings.setting.language.description.extension": "يتم تعيين Uniswap افتراضيًا على إعدادات لغة النظام لديك. لتغيير لغتك المفضلة، انتقل إلى إعدادات النظام لديك.",
-  "settings.setting.language.description.mobile": "يتم تعيين Uniswap افتراضيًا على إعدادات اللغة بجهازك. لتغيير لغتك المفضلة، انتقل إلى \"Uniswap\" في إعدادات جهازك وانقر على \"اللغة\".",
+  "settings.setting.language.description.mobile": "يُضبط Uniswap افتراضيًا على لغة جهازك. لتغيير لغتك المفضلة، انتقل إلى \"Uniswap\" في إعدادات جهازك وانقر على \"اللغة\".",
   "settings.setting.language.title": "لغة",
   "settings.setting.notifications.row.activity.description": "التحويلات والطلبات والأنشطة الأخرى",
   "settings.setting.notifications.row.activity.title": "نشاط المحفظة",
@@ -1656,14 +1661,17 @@
   "settings.setting.password.title": "تغيير كلمة المرور",
   "settings.setting.permissions.title": "الأذونات",
   "settings.setting.privacy.analytics.description": "نحن نستخدم بيانات استخدام مجهولة المصدر لتحسين تجربتك عبر منتجات Uniswap Labs. عند التعطيل، فإننا نتتبع الأخطاء والاستخدام الأساسي فقط.",
-  "settings.setting.privacy.analytics.title": "السماح بالتحليلات",
+  "settings.setting.privacy.analytics.title": "تحليلات التطبيق",
   "settings.setting.recoveryPhrase.password.title": "ادخل رقمك السري",
   "settings.setting.recoveryPhrase.title": "عبارة الاسترداد",
-  "settings.setting.smallBalances.title": "إخفاء الأرصدة الصغيرة",
+  "settings.setting.smallBalances.title": "رصيد المحفظة",
+  "settings.setting.unknownTokens.subtitle": "سيتم إخفاء رموز الاحتيال المحتملة من محفظتك.",
   "settings.setting.unknownTokens.title": "إخفاء الرموز غير المعروفة",
   "settings.setting.wallet.action.editLabel": "تحرير التسمية",
   "settings.setting.wallet.action.editProfile": "تعديل الملف الشخصي",
   "settings.setting.wallet.action.remove": "إزالة المحفظة",
+  "settings.setting.wallet.connection.banner.description": "يمكنك إدارة الاتصالات عبر إعدادات المحفظة، وذلك بالنقر على صورة ملفك الشخصي.",
+  "settings.setting.wallet.connection.banner.title": "لقد انتقلت الاتصالات",
   "settings.setting.wallet.connections.title": "الاتصالات",
   "settings.setting.wallet.editLabel.description": "التسميات ليست عامة. يتم تخزينها محليًا وتكون مرئية لك فقط.",
   "settings.setting.wallet.editLabel.save": "حفظ التغييرات",
@@ -1728,7 +1736,6 @@
   "swap.details.rate": "معدل",
   "swap.details.slippage": "أقصى انزلاق",
   "swap.details.uniswapFee": "مصاريف",
-  "swap.enterAmount": "أدخل {{sym}} المبلغ",
   "swap.error.default": "قد تحتاج إلى زيادة قدرتك على تحمل الانزلاق. ملاحظة: الرموز المميزة للرسوم عند النقل وإعادة الأساس غير متوافقة مع Uniswap V3.",
   "swap.error.expectedToFail": "من المتوقع أن تفشل المبادلة الخاصة بك.",
   "swap.error.fiatInputUnavailable": "{{fiatCurrencyCode}} الإدخال غير متاح",
@@ -1752,8 +1759,6 @@
   "swap.fetchingPrice": "جارٍ جلب السعر...",
   "swap.finalizingQuote": "الانتهاء من الاقتباس...",
   "swap.form.header": "تبديل",
-  "swap.form.insufficientLiquidity": "عدم كفاية السيولة لهذه التجارة.",
-  "swap.form.pocketUniverseExtension.warning": "ينتهك ملحق Pocket Universe <termsLink /> الخاص بنا عن طريق تعديل منتجنا بطريقة مضللة ويمكن أن تضر المستخدمين. الرجاء تعطيل الامتداد وإعادة تحميل الصفحة.",
   "swap.form.warning.output.fotFees": "نظرًا لرسوم الرمز المميز التي تبلغ {{fotCurrencySymbol}}، لا يمكن إدخال مبالغ المبادلة إلا باستخدام حقل الإدخال",
   "swap.form.warning.output.fotFees.fallback": "نظرًا لرسوم الرمز المميز، لا يمكن إدخال مبالغ المبادلة إلا باستخدام حقل الإدخال",
   "swap.form.warning.restore": "استعادة محفظتك للتبديل",
@@ -1821,9 +1826,6 @@
   "swap.slippageBelow.warning": "قد يؤدي الانزلاق تحت {{amt}} إلى فشل الصفقة",
   "swap.submitted": "تم تقديم المبادلة",
   "swap.success": "مبادلة النجاح!",
-  "swap.taxTooltip.label": "الإدخال الدقيق فقط",
-  "swap.taxTooltip.noTokenSelected": "لا تسمح الرسوم المفروضة على رمز الإخراج المحدد بمخرجات دقيقة ودقيقة. استخدم حقل \"البيع\" بدلاً من ذلك.",
-  "swap.taxTooltip.tokenSelected": "{{tokenSymbol}} الرسوم لا تسمح بمخرجات دقيقة ودقيقة. استخدم حقل \"البيع\" بدلاً من ذلك.",
   "swap.tokenOwnFees": "تأخذ بعض الرموز المميزة رسومًا عند شرائها أو بيعها، والتي يحددها مصدر الرمز المميز. لا يتلقى Uniswap أيًا من هذه الرسوم.",
   "swap.total": "المجموع",
   "swap.tradeRoutes": "طرق التجارة",
@@ -1855,7 +1857,6 @@
   "swap.warning.noRoutesFound.title": "لا توجد طرق متاحة",
   "swap.warning.offline.message": "ربما فقدت الاتصال بالإنترنت أو ربما تكون الشبكة معطلة. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.",
   "swap.warning.offline.title": "أنت غير متصل بالإنترنت",
-  "swap.warning.priceImpact": "ستؤدي هذه الصفقة إلى تأثير سعر <impact /> على سعر السوق لهذا المجمع. هل ترغب في الاستمرار؟",
   "swap.warning.priceImpact.message": "نظرًا لكمية {{outputCurrencySymbol}} السيولة المتاحة حاليًا، كلما حاولت المبادلة {{inputCurrencySymbol}} أكثر، كلما قلت {{outputCurrencySymbol}} التي ستحصل عليها.",
   "swap.warning.priceImpact.message.veryHigh": "ستؤدي هذه الصفقة إلى تأثير سعري بنسبة {{priceImpactValue}} على سعر السوق لهذا المجمع وسوف تؤدي إلى خسارة الأموال.",
   "swap.warning.priceImpact.title": "تأثير ارتفاع الأسعار ({{priceImpactValue}})",
@@ -1872,6 +1873,7 @@
   "swap.warning.router.message": "ربما فقدت الاتصال أو ربما تكون الشبكة معطلة. إذا استمرت المشكلة، يرجى المحاولة مرة أخرى لاحقًا.",
   "swap.warning.router.title": "لا يمكن إكمال هذه التجارة الآن",
   "swap.warning.tokenBlocked.button": "{{tokenSymbol}} محظور",
+  "swap.warning.tokenBlockedFallback.button": "تم حظر الرمز",
   "swap.warning.uniswapFee.message.default": "يتم تطبيق الرسوم لضمان أفضل تجربة مع Uniswap. لا توجد رسوم مرتبطة بهذا المبادلة.",
   "swap.warning.uniswapFee.message.included": "يتم تطبيق الرسوم لضمان أفضل تجربة مع Uniswap، وقد تم أخذها في الاعتبار بالفعل في هذا العرض.",
   "swap.warning.uniswapFee.title": "رسوم المبادلة",
@@ -1880,6 +1882,8 @@
   "tdp.balanceSummary.otherNetworks": "على الشبكات الأخرى",
   "tdp.balanceSummary.otherNetworksBalance": "التوازن على الشبكات الأخرى",
   "tdp.balanceSummary.title": "رصيدك",
+  "tdp.button.getToken": "احصل على {{ tokenSymbol }}",
+  "tdp.button.getTokenFallback": "احصل على الرمز",
   "tdp.invalidTokenPage.switchChainPrompt": "قم بالتبديل إلى {{network}}",
   "tdp.invalidTokenPage.title": "هذا الرمز غير موجود",
   "tdp.invalidTokenPage.titleWithChain": "هذا الرمز غير موجود على {{network}}",
@@ -1953,6 +1957,8 @@
   "token.safety.warning.alwaysDoYourResearch": "قم دائمًا بإجراء بحثك",
   "token.safety.warning.blocked.description.default_one": "لا يمكنك تداول هذا الرمز المميز باستخدام تطبيق Uniswap.",
   "token.safety.warning.blocked.description.default_other": "لا يمكنك تداول هذه الرموز المميزة باستخدام تطبيق Uniswap.",
+  "token.safety.warning.copyContractAddress.message": "هذا عنوان عقد يعمل كمعرف فريد للرموز على blockchain. سيتم فقد أي عملة مشفرة ترسلها إلى هذا العنوان.",
+  "token.safety.warning.copyContractAddress.title": "لا ترسل العملات المشفرة إلى هذا العنوان",
   "token.safety.warning.dontShowWarningAgain": "لا تظهر لي هذا التحذير مرة أخرى",
   "token.safety.warning.doYourOwnResearch": "قم دائمًا بإجراء البحث بنفسك قبل المتابعة.",
   "token.safety.warning.feeDescription": "يتم شحن <fee /> عند {{action}}",
@@ -1995,7 +2001,7 @@
   "token.symbol.input.fallback": "رمز الإدخال",
   "token.symbol.output.fallback": "رمز الإخراج",
   "token.wrap.fail.message": "يمكن أن تبدأ عمليات المبادلة على بروتوكول Uniswap وتنتهي بـ ETH. ومع ذلك، أثناء المبادلة، يتم تغليف ETH في WETH.",
-  "token.zeroNativeBalance.description": "للحصول على {{ tokenSymbol }}، تحتاج أولاً إلى {{ nativeTokenSymbol }} لدفع تكلفة الشبكة. ابدأ بتمويل محفظتك باستخدام {{ nativeTokenSymbol }}.",
+  "token.zeroNativeBalance.description": "للحصول على {{ tokenSymbol }}، تحتاج إلى {{ nativeTokenSymbol }} لتغطية تكاليف الشبكة.",
   "token.zeroNativeBalance.title": "أنت بحاجة إلى {{ nativeTokenName }} ",
   "tokens.action.hide": "إخفاء الرمز",
   "tokens.action.unhide": "إظهار الرمز المميز",
@@ -2040,6 +2046,7 @@
   "tokens.selector.section.yours": "الرموز الخاصة بك",
   "tokens.table.search.placeholder.pools": "بحث في حمامات السباحة",
   "tokens.table.search.placeholder.tokens": "رموز البحث",
+  "tokens.table.search.placeholder.transactions": "البحث عن المعاملات",
   "transaction.action.cancel.button": "إلغاء الصفقة",
   "transaction.action.cancel.description": "إذا قمت بإلغاء هذه المعاملة قبل معالجتها بواسطة الشبكة، فستدفع تكلفة شبكة جديدة بدلاً من التكلفة الأصلية.",
   "transaction.action.cancel.title": "هل تريد إلغاء هذه الصفقة؟",
@@ -2146,25 +2153,15 @@
   "transaction.summary.received": "{{tokenAmountWithSymbol}} إلى {{recipientAddress}}",
   "transaction.summary.sent": "{{tokenAmountWithSymbol}} من {{senderAddress}}",
   "transaction.warning.insufficientGas.modal.message": "تحتاج إلى ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) على {{networkName}} لتغطية تكلفة الشبكة لهذه المعاملة. قم بتبديل {{tokenSymbol}} من سلسلة أخرى أو قم بالشراء باستخدام بطاقتك للمتابعة.",
+  "transaction.warning.insufficientGas.modal.message.noAction": "أنت بحاجة إلى ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) على {{networkName}} لتغطية تكلفة الشبكة لهذه المعاملة.",
   "transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount": "لتبديل هذه الرمز، تحتاج إلى المزيد من {{tokenSymbol}} على {{networkName}}. قم بتبديل {{tokenSymbol}} من سلسلة أخرى أو قم بالشراء باستخدام بطاقتك للمتابعة.",
+  "transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount.noAction": "لتبديل هذا الرمز، تحتاج إلى المزيد من {{tokenSymbol}} على {{networkName}}.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "لا يكفي {{tokenSymbol}} على {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "لا يكفي {{tokenSymbol}}",
   "transaction.warning.maxNative.message": "أنت على وشك إنفاق معظم رصيد رمز الشبكة الخاص بك. وقد يؤدي هذا إلى عدم بقاء أموال كافية لتغطية تكاليف الشبكة في المستقبل.",
   "transaction.warning.maxNative.title": "رصيد رمز الشبكة منخفض",
   "transaction.watcher.error.cancel": "غير قادر على إلغاء المعاملة",
   "transaction.watcher.error.status": "حدث خطأ أثناء التحقق من حالة المعاملة",
-  "unichain.promotion.bridging.description": "التبديل إلى Unichain",
-  "unichain.promotion.bridging.tooltip.description": "قم بربط ETH الخاص بك للبدء في Unichain.",
-  "unichain.promotion.cold.description": "مبادلات أسرع ورسوم أقل. Unichain هي موطن DeFi.",
-  "unichain.promotion.cold.title": "تقديم Unichain",
-  "unichain.promotion.description": "مبادلات أسرع ورسوم أقل. تم تحسين Unichain لتكون موطنًا للسيولة عبر السلسلة.",
-  "unichain.promotion.modal.detail.costs": "انخفاض تكاليف إنشاء المجمعات وإدارة المواقف.",
-  "unichain.promotion.modal.detail.fees": "وفر ما يصل إلى 95% على الرسوم مقارنةً بإيثريوم.",
-  "unichain.promotion.modal.detail.instant": "التبديل على الفور.",
-  "unichain.promotion.tooltip.switch": "التبديل إلى Unichain",
-  "unichain.promotion.tooltip.title": "Unichain هنا",
-  "unichain.promotion.warm.description": "قم بتبديل الرموز المفضلة لديك بشكل أسرع وبتكاليف غاز أقل.",
-  "unichain.promotion.warm.title": "ابدأ بالتبديل على Unichain",
   "uniswapX.aggregatesLiquidity": "<logo /> تجميع مصادر السيولة للحصول على أسعار أفضل ومقايضات خالية من الغاز.",
   "uniswapx.description": "يقوم UniswapX بتجميع مصادر السيولة للحصول على أسعار أفضل ومقايضات خالية من الغاز.",
   "uniswapx.included": "يشمل <icon /> <gradient>UniswapX</gradient>",
@@ -2241,7 +2238,6 @@
   "wallet.other": "محافظ أخرى",
   "wallet.scanToConnect": "مسح رمز الاستجابة السريعة للاتصال",
   "wallet.wrongNet": "محفظتك متصلة بالشبكة الخاطئة.",
-  "walletConnect.dapps.connection": "<highlight>متصل بـ </highlight>{{dappNameOrUrl}}",
   "walletConnect.dapps.empty.description": "اتصل بأحد التطبيقات عن طريق مسح الرمز ضوئيًا عبر WalletConnect",
   "walletConnect.dapps.manage.empty.title": "لا توجد تطبيقات متصلة",
   "walletConnect.dapps.manage.title": "الاتصالات",
@@ -2261,7 +2257,6 @@
   "walletConnect.pending.button.connect": "يتصل",
   "walletConnect.pending.button.scrollDown": "قم بالتمرير لأسفل للاتصال",
   "walletConnect.pending.switchAccount": "تبديل الحساب",
-  "walletConnect.pending.switchNetwork": "تبديل الشبكة",
   "walletConnect.pending.title": "اتصل بـ {{dappName}}",
   "walletConnect.permissions.option.transferAssets": "نقل الأصول الخاصة بك دون موافقة",
   "walletConnect.permissions.option.viewTokenBalances": "عرض أرصدة الرمز المميز الخاص بك",

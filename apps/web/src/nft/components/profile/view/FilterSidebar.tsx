@@ -3,14 +3,13 @@ import styled from 'lib/styled-components'
 import { XMarkIcon } from 'nft/components/icons'
 import { Input } from 'nft/components/layout/Input'
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from 'nft/components/profile/view/ProfilePage'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
 import { CSSProperties, Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
-import { Flex, Image, LabeledCheckbox, Text, useMedia, useScrollbarStyles } from 'ui/src'
+import { Flex, Image, LabeledCheckbox, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import noop from 'utilities/src/react/noop'
 
 const COLLECTION_ROW_HEIGHT = 44
@@ -62,6 +61,7 @@ export const FilterSidebar = ({
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const media = useMedia()
   const showMobileHeader = media.lg
+  const colors = useSporeColors()
 
   const hideSearch = useMemo(
     () => (walletCollections && walletCollections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT) || isFetchingNextPage,
@@ -104,7 +104,7 @@ export const FilterSidebar = ({
             <XMarkIcon
               height={28}
               width={28}
-              fill={themeVars.colors.neutral1}
+              fill={colors.neutral1.val}
               onClick={() => setFiltersExpanded(false)}
               cursor="pointer"
             />

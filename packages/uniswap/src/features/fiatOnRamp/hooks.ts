@@ -332,9 +332,12 @@ export function useParseFiatOnRampError({
 export function useIsSupportedFiatOnRampCurrency(
   currencyId: string,
   skip: boolean = false,
-): FiatOnRampCurrency | undefined {
+): { currency: FiatOnRampCurrency | undefined; isLoading: boolean } {
   const fallbackCountryCode = getCountry()
-  const { currentData: ipCountryData } = useFiatOnRampAggregatorGetCountryQuery(undefined, { skip })
+  const { currentData: ipCountryData, isLoading: isCountryLoading } = useFiatOnRampAggregatorGetCountryQuery(
+    undefined,
+    { skip },
+  )
   const { meldSupportedFiatCurrency } = useMeldFiatCurrencySupportInfo(
     ipCountryData?.countryCode ?? fallbackCountryCode,
     skip,
@@ -349,13 +352,16 @@ export function useIsSupportedFiatOnRampCurrency(
     skip,
   })
 
-  if (supportedTokensLoading || supportedTokensError) {
-    return undefined
+  const isLoading = isCountryLoading || supportedTokensLoading || supportedTokensError
+
+  if (isLoading) {
+    return { currency: undefined, isLoading }
   }
+  const currency = supportedTokensList?.find(
+    (token) => token.currencyInfo?.currencyId.toLowerCase() === currencyId.toLowerCase(),
+  )
 
-  const foundToken = supportedTokensList?.find((token) => token.currencyInfo?.currencyId === currencyId)
-
-  return foundToken
+  return { currency, isLoading }
 }
 
 /**

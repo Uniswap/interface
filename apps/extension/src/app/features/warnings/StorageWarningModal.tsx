@@ -8,9 +8,10 @@ import { WarningModal } from 'uniswap/src/components/modals/WarningModal/Warning
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-export type StorageWarningModalProps = {
+type StorageWarningModalProps = {
   isOnboarding: boolean
 }
+
 export function StorageWarningModal({ isOnboarding }: StorageWarningModalProps): JSX.Element | null {
   const { t } = useTranslation()
   const { navigateTo } = useExtensionNavigation()

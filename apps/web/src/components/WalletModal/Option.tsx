@@ -10,6 +10,7 @@ import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isIFramed } from 'utils/isIFramed'
 import { Connector } from 'wagmi'
 
@@ -128,7 +129,17 @@ export function Option({ connector, detected }: { connector: Connector; detected
       >
         <OptionCardClickable
           disabled={isDisabled}
-          onClick={() => connection.connect({ connector })}
+          onClick={() => {
+            // This is a hack to ensure the connection runs in playwright
+            // TODO(WEB-4173): Look into removing setTimeout connection.connect({ connector })
+            if (isPlaywrightEnv()) {
+              setTimeout(() => {
+                connection.connect({ connector })
+              }, 1)
+            } else {
+              connection.connect({ connector })
+            }
+          }}
           selected={isPendingConnection}
           data-testid={`wallet-option-${connector.type}`}
         >

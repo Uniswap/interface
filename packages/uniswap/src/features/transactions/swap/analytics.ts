@@ -1,8 +1,12 @@
 import { SwapEventName } from '@uniswap/analytics-events'
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
+import { Pool as V3Pool } from '@uniswap/v3-sdk'
+import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { useEffect } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { Address, Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -12,11 +16,11 @@ import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCur
 import { getTokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
 import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
-import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -24,6 +28,115 @@ import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ITraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+
+type ProtocolVersion = 'V2' | 'V3' | 'V4' | 'unknown'
+
+export interface RouteInfo {
+  poolAddress: string
+  version: ProtocolVersion
+}
+
+export interface SwapRoutesAnalyticsData {
+  poolsCount?: number
+  // The complete route in order of execution
+  paths?: RouteInfo[][]
+  // Flags for which versions are used
+  v2Used: boolean
+  v3Used: boolean
+  v4Used: boolean
+  uniswapXUsed: boolean
+}
+
+const DEFAULT_RESULT = {
+  v2Used: false,
+  v3Used: false,
+  v4Used: false,
+  uniswapXUsed: false,
+}
+
+function getPoolAddress(pool: Pair | V3Pool | V4Pool): Address | undefined {
+  if (pool instanceof Pair) {
+    return Pair.getAddress(pool.token0, pool.token1)
+  } else if (pool instanceof V3Pool) {
+    return V3Pool.getAddress(pool.token0, pool.token1, pool.fee)
+  } else if (pool instanceof V4Pool) {
+    return pool.poolId
+  }
+  return undefined
+}
+
+function getClassicPoolProtocol(pool: Pair | V3Pool | V4Pool): ProtocolVersion | undefined {
+  if (pool instanceof Pair) {
+    return 'V2'
+  } else if (pool instanceof V3Pool) {
+    return 'V3'
+  } else if (pool instanceof V4Pool) {
+    return 'V4'
+  }
+  return undefined
+}
+
+/**
+ * Loops through all routes and returns an array of pools combinations.
+ */
+function getRoutings(routes: ClassicTrade['routes']): Array<Array<Pair | V3Pool | V4Pool>> {
+  return routes.map((route) => route.pools)
+}
+
+/**
+ * Extract route data from a trade for analytics purposes
+ * @param trade The trade object containing route information
+ * @returns Structured route data for analytics or undefined if route data is not available
+ */
+export function getRouteAnalyticsData({
+  routing,
+  routes,
+}: {
+  routing?: Routing
+  routes?: ClassicTrade['routes']
+}): SwapRoutesAnalyticsData | undefined {
+  if (!routing) {
+    return undefined
+  }
+
+  // For classic trades, we can extract detailed route information
+  if (isClassic({ routing }) && routes) {
+    const routings = getRoutings(routes)
+    const paths = routings.map((route) =>
+      route.map((pool) => ({
+        poolAddress: getPoolAddress(pool) ?? 'unknown',
+        version: getClassicPoolProtocol(pool) ?? 'unknown',
+      })),
+    )
+    // Determine which versions are used
+    const v2Used = paths.some((path) => path.some((pool) => pool.version === Protocol.V2))
+    const v3Used = paths.some((path) => path.some((pool) => pool.version === Protocol.V3))
+    const v4Used = paths.some((path) => path.some((pool) => pool.version === Protocol.V4))
+    const poolsCount = paths.reduce((acc, path) => acc + path.length, 0)
+
+    return {
+      poolsCount,
+      paths,
+      v2Used,
+      v3Used,
+      v4Used,
+      // For classic trades, X is not used
+      uniswapXUsed: false,
+    }
+  }
+
+  if (isUniswapX({ routing })) {
+    // For UniswapX trades, we don't have detailed route information in the same way
+    // But we can mark it as using X
+    return {
+      ...DEFAULT_RESULT,
+      uniswapXUsed: true,
+    }
+  }
+
+  // For other trade types or if extraction fails
+  return DEFAULT_RESULT
+}
 
 // hook-based analytics because this one is data-lifecycle dependent
 export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
@@ -141,6 +254,7 @@ export function getBaseTradeAnalyticsProperties({
     token_in_detected_tax: parseFloat(trade.inputTax.toFixed(2)),
     token_out_detected_tax: parseFloat(trade.outputTax.toFixed(2)),
     simulation_failure_reasons: isClassic(trade) ? trade.quote?.quote.txFailureReasons : undefined,
+    ...getRouteAnalyticsData(trade),
   }
 }
 

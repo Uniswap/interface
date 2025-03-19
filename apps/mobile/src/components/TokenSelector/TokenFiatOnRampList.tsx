@@ -5,7 +5,6 @@ import { ListRenderItemInfo } from 'react-native'
 import { Flex, Inset, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
-import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { FORCurrencyOrBalance, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { getUnsupportedFORTokensWithBalance, isSupportedFORCurrency } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -160,7 +159,6 @@ function _TokenFiatOnRampList({
       ref={flatListRef}
       ListEmptyComponent={<Flex />}
       ListFooterComponent={<Inset all="$spacing36" />}
-      focusHook={useBottomSheetFocusHook}
       keyExtractor={key}
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="always"

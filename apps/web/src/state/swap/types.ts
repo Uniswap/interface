@@ -29,7 +29,7 @@ type SwapContextType = {
   setSwapState: Dispatch<SetStateAction<SwapState>>
 }
 
-export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
+const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
   currencies: {},
   currencyBalances: {},
   inputTax: new Percent(0),
@@ -54,10 +54,6 @@ export const SwapContext = createContext<SwapContextType>({
 
 type SwapAndLimitContextType = {
   currencyState: CurrencyState
-  prefilledState: {
-    inputCurrency?: Currency
-    outputCurrency?: Currency
-  }
   setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
   currentTab: SwapTab
   setCurrentTab: Dispatch<SetStateAction<SwapTab>>
@@ -69,10 +65,6 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
     outputCurrency: undefined,
   },
   setCurrencyState: () => undefined,
-  prefilledState: {
-    inputCurrency: undefined,
-    outputCurrency: undefined,
-  },
   currentTab: SwapTab.Swap,
   setCurrentTab: () => undefined,
 })

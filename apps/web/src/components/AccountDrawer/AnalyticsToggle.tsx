@@ -1,7 +1,7 @@
 import { SettingsToggle } from 'components/AccountDrawer/SettingsToggle'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
 
 export function AnalyticsToggle() {

@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { MAX_FEE_TIER_DECIMALS, useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from 'components/Liquidity/utils'
@@ -13,7 +13,7 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { DeprecatedButton, Flex, ModalCloseIcon, Text } from 'ui/src'
+import { Button, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Plus } from 'ui/src/components/icons/Plus'
@@ -274,18 +274,8 @@ export function FeeTierSearchModal() {
             </Text> */}
             {/* TODO(WEB-4920): search existing fee tiers for close matches and optionally similar list */}
 
-            <DeprecatedButton
-              flex={1}
-              py="$spacing16"
-              px="$spacing20"
-              backgroundColor="$accent3"
-              hoverStyle={{
-                backgroundColor: undefined,
-                opacity: 0.8,
-              }}
-              pressStyle={{
-                backgroundColor: undefined,
-              }}
+            <Button
+              variant="default"
               isDisabled={!createFeeValue || createFeeValue === ''}
               onPress={() => {
                 setPositionState((prevState) => ({
@@ -304,10 +294,8 @@ export function FeeTierSearchModal() {
                 onClose()
               }}
             >
-              <Text variant="buttonLabel2" color="$surface1">
-                {feeTierData[feeHundredthsOfBips] ? t('fee.tier.select.existing.button') : t('fee.tier.create.button')}
-              </Text>
-            </DeprecatedButton>
+              {feeTierData[feeHundredthsOfBips] ? t('fee.tier.select.existing.button') : t('fee.tier.create.button')}
+            </Button>
           </Flex>
         ) : (
           <>
@@ -429,17 +417,15 @@ export function FeeTierSearchModal() {
               <Text variant="body3" color="$neutral2">
                 {t('fee.tier.missing.description')}
               </Text>
-              <DeprecatedButton
-                py="$spacing8"
-                px="$spacing12"
-                gap="$gap4"
-                theme="secondary"
+              <Button
+                emphasis="secondary"
                 size="small"
+                fill={false}
                 icon={<Plus size={16} color="$neutral1" />}
                 onPress={() => setCreateModeEnabled(true)}
               >
                 {t('fee.tier.create.button')}
-              </DeprecatedButton>
+              </Button>
             </Flex>
           </>
         )}

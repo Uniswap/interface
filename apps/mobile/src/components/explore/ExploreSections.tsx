@@ -34,6 +34,7 @@ import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
+import { useInitialLoadingState } from 'utilities/src/react/useInitialLoadingState'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
 import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
@@ -60,6 +61,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   const { data, isLoading, error, refetch, isFetching } = useTokenRankingsQuery({
     chainId: selectedNetwork?.toString() ?? ALL_NETWORKS_ARG,
   })
+  const isInitialLoading = useInitialLoadingState(isLoading)
 
   const topTokenItems = useTokenItems(data, orderBy)
 
@@ -115,7 +117,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           <ListHeaderComponent
             listRef={listRef}
             orderBy={uiOrderBy}
-            showLoading={isLoadingOrFetching}
+            showLoading={isInitialLoading}
             selectedNetwork={selectedNetwork}
             onSelectNetwork={onSelectNetwork}
             onOrderByChange={onOrderByChange}

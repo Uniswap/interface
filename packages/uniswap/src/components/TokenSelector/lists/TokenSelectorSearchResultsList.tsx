@@ -1,28 +1,12 @@
 import { memo, useMemo } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { useTranslation } from 'react-i18next'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
 import { useTokenSectionsForSearchResults } from 'uniswap/src/components/TokenSelector/hooks/useTokenSectionsForSearchResults'
-import { SectionHeader } from 'uniswap/src/components/TokenSelector/items/TokenSectionHeader'
-import { OnSelectCurrency, TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
+import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-
-function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
-  return (
-    <Flex>
-      <SectionHeader sectionKey={TokenOptionSection.SearchResults} />
-      <Text color="$neutral3" mt="$spacing16" mx="$spacing16" textAlign="center" variant="subheading2">
-        <Trans
-          components={{ highlight: <Text color="$neutral1" variant="subheading2" /> }}
-          i18nKey="tokens.selector.search.empty"
-          values={{ searchText: searchFilter }}
-        />
-      </Text>
-    </Flex>
-  )
-}
 
 function _TokenSelectorSearchResultsList({
   onSelectCurrency: parentOnSelectCurrency,
@@ -70,7 +54,7 @@ function _TokenSelectorSearchResultsList({
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)
 
   const emptyElement = useMemo(
-    () => (debouncedSearchFilter ? <EmptyResults searchFilter={debouncedSearchFilter} /> : undefined),
+    () => (debouncedSearchFilter ? <NoResultsFound searchFilter={debouncedSearchFilter} /> : undefined),
     [debouncedSearchFilter],
   )
   return (

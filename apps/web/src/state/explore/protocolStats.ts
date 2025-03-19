@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { TimestampedAmount } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { StackedLineData } from 'components/Charts/StackedLineChart'
 import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'

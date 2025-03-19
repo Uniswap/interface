@@ -35,7 +35,7 @@ export const test = base.extend<GraphqlFixture>({
       interceptConfigs.set(operationName, { mockPath, variables })
     }
 
-    await page.route(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, async (route) => {
+    await page.route(/(?:interface|beta).(gateway|api).uniswap.org\/v1\/graphql/, async (route) => {
       const request = route.request()
       const postData = request.postData()
       if (!postData) {

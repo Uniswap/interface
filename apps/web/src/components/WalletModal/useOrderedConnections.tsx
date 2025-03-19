@@ -2,6 +2,7 @@ import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
 import { useCallback, useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isMobileWeb } from 'utilities/src/platform'
 import { Connector } from 'wagmi'
 
@@ -109,6 +110,11 @@ export function useOrderedConnections(): InjectableConnector[] {
     )
     if (!coinbaseSdkConnector || !walletConnectConnector) {
       throw new Error('Expected connector(s) missing from wagmi context.')
+    }
+
+    if (isPlaywrightEnv()) {
+      const mockConnector = getConnectorWithId(connectors, CONNECTION_PROVIDER_IDS.MOCK_CONNECTOR_ID, SHOULD_THROW)
+      return [mockConnector]
     }
 
     // Special-case: Only display the injected connector for in-wallet browsers.

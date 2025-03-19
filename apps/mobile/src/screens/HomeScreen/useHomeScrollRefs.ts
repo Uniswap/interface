@@ -10,7 +10,7 @@ type FlashListAnyType = FlashList<any>
 type FlatListAnyType = FlatList<any>
 type ScrollRefType = FlashListAnyType | FlatListAnyType
 
-export interface ScrollRefs {
+interface ScrollRefs {
   tokensTabScrollValue: ReturnType<typeof useSharedValue<number>>
   nftsTabScrollValue: ReturnType<typeof useSharedValue<number>>
   activityTabScrollValue: ReturnType<typeof useSharedValue<number>>
@@ -62,7 +62,16 @@ export function useHomeScrollRefs(): ScrollRefs {
     nftsTabScrollRef.scrollRef.current?.scrollToOffset({ offset: 0, animated: true })
     activityTabScrollRef.scrollRef.current?.scrollToOffset({ offset: 0, animated: true })
     exploreTabScrollRef.scrollRef.current?.scrollToOffset({ offset: 0, animated: true })
-  }, [tokensTabScrollRef, nftsTabScrollRef, activityTabScrollRef, exploreTabScrollRef])
+  }, [
+    tokensTabScrollRef.scrollValue,
+    nftsTabScrollRef.scrollValue,
+    activityTabScrollRef.scrollValue,
+    exploreTabScrollRef.scrollValue,
+    tokensTabScrollRef.scrollRef,
+    nftsTabScrollRef.scrollRef,
+    activityTabScrollRef.scrollRef,
+    exploreTabScrollRef.scrollRef,
+  ])
 
   return {
     tokensTabScrollValue: tokensTabScrollRef.scrollValue,

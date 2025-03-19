@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-// eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { StyleProp, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
@@ -14,7 +13,11 @@ import { useTransactionSettingsContext } from 'uniswap/src/features/transactions
 
 const SLIPPAGE_INCREMENT = 0.1
 
-export function useSlippageSettings(saveOnBlur?: boolean): {
+export function useSlippageSettings(params?: {
+  saveOnBlur?: boolean
+  tradeAutoSlippage?: number
+  isBridgeTrade?: boolean
+}): {
   isEditingSlippage: boolean
   autoSlippageEnabled: boolean
   showSlippageWarning: boolean
@@ -29,6 +32,7 @@ export function useSlippageSettings(saveOnBlur?: boolean): {
   onBlurSlippageInput: () => void
   onPressPlusMinusButton: (type: PlusMinusButtonType) => void
 } {
+  const { saveOnBlur, tradeAutoSlippage: tradeSlippage } = params ?? {}
   const { t } = useTranslation()
 
   const {
@@ -46,14 +50,16 @@ export function useSlippageSettings(saveOnBlur?: boolean): {
 
   // Fall back to default slippage if there is no trade specified.
   // Separate from inputSlippageTolerance since autoSlippage updates when the trade quote updates
-  const autoSlippageTolerance = derivedAutoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
+  const autoSlippageTolerance = tradeSlippage ?? derivedAutoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
 
   // Determine numerical currentSlippage value to use based on inputSlippageTolerance string value
   // ex. if inputSlippageTolerance is '' or '.', currentSlippage is set to autoSlippageTolerance
   const parsedInputSlippageTolerance = parseFloat(inputSlippageTolerance)
-  const currentSlippageToleranceNum = isNaN(parsedInputSlippageTolerance)
-    ? autoSlippageTolerance
-    : parsedInputSlippageTolerance
+  const currentSlippageToleranceNum = params?.isBridgeTrade
+    ? 0
+    : isNaN(parsedInputSlippageTolerance)
+      ? autoSlippageTolerance
+      : parsedInputSlippageTolerance
 
   // Make input text the warning color if user is setting custom slippage higher than auto slippage value or 0
   const showSlippageWarning = parsedInputSlippageTolerance > autoSlippageTolerance
@@ -198,7 +204,9 @@ export function useSlippageSettings(saveOnBlur?: boolean): {
     isEditingSlippage,
     autoSlippageEnabled,
     showSlippageWarning,
-    inputSlippageTolerance,
+    inputSlippageTolerance: autoSlippageEnabled
+      ? currentSlippageToleranceNum.toFixed(2).toString()
+      : inputSlippageTolerance,
     inputWarning,
     autoSlippageTolerance,
     currentSlippageTolerance: currentSlippageToleranceNum,

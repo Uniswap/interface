@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, isWeb } from 'ui/src'
-import { opacify, validColor } from 'ui/src/theme'
+import { Button, Flex, isWeb } from 'ui/src'
+import { validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -21,12 +21,14 @@ export function BuyNativeTokenButton({
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const { foreground, background } = useNetworkColors(nativeCurrencyInfo.currency?.chainId ?? defaultChainId)
-  const primaryColor = validColor(foreground)
-  const backgroundColor = validColor(background)
-  const onPressColor = validColor(opacify(50, foreground))
+  const textColorFromChain = validColor(foreground)
+  const backgroundColorFromChain = validColor(background)
 
   const { navigateToFiatOnRamp } = useUniswapContext()
-  const fiatOnRampCurrency = useIsSupportedFiatOnRampCurrency(nativeCurrencyInfo?.currencyId ?? '', !nativeCurrencyInfo)
+  const { currency: fiatOnRampCurrency } = useIsSupportedFiatOnRampCurrency(
+    nativeCurrencyInfo?.currencyId ?? '',
+    !nativeCurrencyInfo,
+  )
 
   const onPressBuyFiatOnRamp = (): void => {
     navigateToFiatOnRamp({ prefilledCurrency: fiatOnRampCurrency })
@@ -35,24 +37,22 @@ export function BuyNativeTokenButton({
 
   return (
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
-      <DeprecatedButton
-        {...(canBridge
-          ? undefined
-          : {
-              backgroundColor,
-              color: primaryColor,
-              pressStyle: { backgroundColor: onPressColor },
-            })}
-        size={isWeb ? 'small' : 'medium'}
-        theme={canBridge ? 'secondary' : 'primary'}
-        width="100%"
-        onPress={onPressBuyFiatOnRamp}
-      >
-        {canBridge
-          ? t('swap.warning.insufficientGas.button.buyWithCard')
-          : // FIXME: Verify WALL-5906
-            t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol ?? '' })}
-      </DeprecatedButton>
+      <Flex row alignSelf="stretch">
+        <Button
+          backgroundColor={canBridge ? undefined : backgroundColorFromChain}
+          size={isWeb ? 'medium' : 'large'}
+          emphasis={canBridge ? 'secondary' : 'primary'}
+          onPress={onPressBuyFiatOnRamp}
+        >
+          {canBridge ? (
+            t('swap.warning.insufficientGas.button.buyWithCard')
+          ) : (
+            <Button.Text color={textColorFromChain}>
+              {t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol ?? '' })}
+            </Button.Text>
+          )}
+        </Button>
+      </Flex>
     </Trace>
   )
 }

@@ -149,7 +149,6 @@ function TDPSwapComponent() {
         initialOutputCurrency={currency}
         onCurrencyChange={handleCurrencyChange}
         tokenColor={tokenColor}
-        compact
       />
       <TokenWarningCard currencyInfo={currencyInfo} onPress={() => setShowWarningModal(true)} />
       {currencyInfo && (
@@ -221,9 +220,9 @@ export default function TokenDetails() {
         <MobileBottomBar hide={isTouchDevice && scrollDirection === ScrollDirection.DOWN}>
           {/* TODO(WEB-4800): data-testid is not passed to ui/src elements when animation is set */}
           {/* Remove this extra div when WEB-4800 is fixed */}
-          <div data-testid="tdp-mobile-bottom-bar">
+          <Flex data-testid="tdp-mobile-bottom-bar">
             <TDPActionTabs />
-          </div>
+          </Flex>
         </MobileBottomBar>
       </TokenDetailsLayout>
     </TDPAnalytics>

@@ -38,7 +38,7 @@ import {
   updateTransaction,
   upsertFiatOnRampTransaction,
 } from 'uniswap/src/features/transactions/slice'
-import { tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
@@ -613,6 +613,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       transactedUSDValue,
       ...swapProperties,
       ...bridgeProperties,
+      ...getRouteAnalyticsData(payload),
     }
 
     if (isUniswapX(payload)) {

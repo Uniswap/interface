@@ -1,18 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { closeModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
+import { AppStackScreenProp } from 'src/app/navigation/types'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { ExchangeTransferConnecting } from 'src/screens/ExchangeTransferConnecting'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-export function ExchangeTransferModal(): JSX.Element | null {
-  const dispatch = useDispatch()
-  const onClose = (): void => {
-    dispatch(closeModal({ name: ModalName.ExchangeTransferModal }))
-  }
-
-  const { initialState } = useSelector(selectModalState(ModalName.ExchangeTransferModal))
-  const serviceProvider = initialState?.serviceProvider
+export function ExchangeTransferModal({
+  route,
+}: AppStackScreenProp<typeof ModalName.ExchangeTransferModal>): JSX.Element | null {
+  const { onClose } = useReactNavigationModal()
+  const serviceProvider = route.params.initialState?.serviceProvider
 
   return serviceProvider ? (
     <Modal

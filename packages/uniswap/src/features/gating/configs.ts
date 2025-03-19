@@ -67,6 +67,8 @@ export enum ForceUpgradeConfigKey {
   Status = 'status',
 }
 
+export type ForceUpgradeStatus = 'recommended' | 'required' | 'not-required'
+
 export enum HomeScreenExploreTokensConfigKey {
   EthChainId = 'ethChainId',
   Tokens = 'tokens',

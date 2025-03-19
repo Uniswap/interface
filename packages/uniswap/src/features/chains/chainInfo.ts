@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import {
   ARBITRUM_LOGO,
@@ -894,8 +895,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     docs: 'https://docs.unichain.org',
     elementName: ElementName.ChainUnichain,
     explorer: {
-      name: 'Uniscan',
-      url: 'https://uniscan.xyz/',
+      name: 'Unichain Explorer',
+      url: 'https://explorer.unichain.org/',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/unichain',

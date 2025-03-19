@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { lpStatusConfig } from 'components/Liquidity/constants'

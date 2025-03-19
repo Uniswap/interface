@@ -9,6 +9,7 @@ import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { opacify } from 'theme/utils'
+import { Flex } from 'ui/src'
 
 const ChartErrorContainer = styled(Row)`
   position: absolute;
@@ -33,9 +34,9 @@ const ErrorTextColumn = styled(Column)`
 export function ChartErrorView({ children }: PropsWithChildren) {
   return (
     <ChartErrorContainer data-cy="chart-error-view">
-      <div>
+      <Flex>
         <MissingDataIcon />
-      </div>
+      </Flex>
       <ErrorTextColumn gap="xs">
         <ThemedText.SubHeader color="neutral1">
           <Trans i18nKey="chart.missingData" />

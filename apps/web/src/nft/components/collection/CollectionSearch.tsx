@@ -1,5 +1,3 @@
-import clsx from 'clsx'
-import * as styles from 'nft/components/collection/CollectionSearch.css'
 import { Input } from 'nft/components/layout/Input'
 import { useIsCollectionLoading } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
@@ -8,6 +6,10 @@ export const CollectionSearch = () => {
   const setSearchByNameText = useCollectionFilters((state) => state.setSearch)
   const searchByNameText = useCollectionFilters((state) => state.search)
   const iscollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
+
+  if (iscollectionStatsLoading) {
+    return null
+  }
 
   return (
     <Input
@@ -25,8 +27,10 @@ export const CollectionSearch = () => {
       placeholderTextColor="$neutral3"
       color="$neutral1"
       value={searchByNameText}
-      placeholder={iscollectionStatsLoading ? '' : 'Search by name'}
-      className={clsx(iscollectionStatsLoading && styles.filterButtonLoading)}
+      placeholder="Search by name"
+      $platform-web={{
+        userSelect: 'none',
+      }}
       onChangeText={(value) => {
         setSearchByNameText(value)
       }}

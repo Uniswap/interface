@@ -1,44 +1,29 @@
-import { useCurrency } from 'hooks/Tokens'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { ArrowUpRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from 'state/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { ClickableTamaguiStyle, ExternalLink } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
-import { UNICHAIN_BANNER_COLD, UNICHAIN_BANNER_WARM } from 'ui/src/assets'
 import { X } from 'ui/src/components/icons/X'
 import { opacify } from 'ui/src/theme'
 import { CardImage } from 'uniswap/src/components/cards/image'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
-import { UnichainIntroModal } from 'uniswap/src/components/unichain/UnichainIntroModal'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import {
-  setHasDismissedUnichainColdBanner,
-  setHasDismissedUnichainWarmBanner,
-} from 'uniswap/src/features/behaviorHistory/slice'
 import { useIsBridgingChain } from 'uniswap/src/features/bridging/hooks/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useUnichainPromoVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainPromoVisibility'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function SwapBottomCard() {
   const { chainId: oldFlowChainId } = useMultichainContext()
-  const { swapInputChainId: newFlowChainId, setIsSwapTokenSelectorOpen, setSwapOutputChainId } = useUniswapContext()
+  const { swapInputChainId: newFlowChainId } = useUniswapContext()
   const chainId = newFlowChainId ?? oldFlowChainId
 
   const isSupportedChain = useIsSupportedChainId(chainId)
 
   const isBridgingSupportedChain = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
-
-  const [showUnichainIntroModal, setShowUnichainIntroModal] = useState(false)
-  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainPromoVisibility()
 
   const isSwapPage = useIsPage(PageType.SWAP)
   const isSendPage = useIsPage(PageType.SEND)
@@ -50,89 +35,19 @@ export function SwapBottomCard() {
       return null
     }
 
-    if (shouldShowUnichainBannerCold) {
-      return <UnichainBannerCold showUnichainModal={() => setShowUnichainIntroModal(true)} />
-    } else if (shouldShowUnichainBannerWarm) {
-      return <UnichainBannerWarm />
-    } else if (!isBridgingSupportedChain) {
+    if (!isBridgingSupportedChain) {
       return <MaybeExternalBridgeCard chainId={chainId} />
     } else {
       return null
     }
-  }, [chainId, hideCard, isBridgingSupportedChain, shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm])
+  }, [chainId, hideCard, isBridgingSupportedChain])
 
-  return (
-    <>
-      {card}
-      {showUnichainIntroModal && (
-        <UnichainIntroModal
-          openSwapFlow={() => {
-            setSwapOutputChainId(UniverseChainId.Unichain)
-            setIsSwapTokenSelectorOpen(true)
-          }}
-          onClose={() => setShowUnichainIntroModal(false)}
-        />
-      )}
-    </>
-  )
+  return <>{card}</>
 }
 
-function UnichainBannerCold({ showUnichainModal }: { showUnichainModal: () => void }) {
-  const { t } = useTranslation()
-  const dispatch = useAppDispatch()
-
-  return (
-    <ImagePromoBanner
-      image={UNICHAIN_BANNER_COLD}
-      title={t('unichain.promotion.cold.title')}
-      onPress={showUnichainModal}
-      onDismiss={() => {
-        dispatch(setHasDismissedUnichainColdBanner(true))
-      }}
-      subtitle={t('unichain.promotion.cold.description')}
-      isNew
-    />
-  )
-}
-
-function UnichainBannerWarm() {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-  const { setIsSwapTokenSelectorOpen, setSwapOutputChainId } = useUniswapContext()
-  const unichainCurrency = useCurrency('ETH', UniverseChainId.Unichain)
-
-  const openUnichainTokenSelector = useCallback(() => {
-    navigate(
-      `/swap${serializeSwapStateToURLParameters({
-        inputCurrency: unichainCurrency,
-        chainId: UniverseChainId.Unichain,
-      })}`,
-    )
-    setSwapOutputChainId(UniverseChainId.Unichain)
-    // Web specific override to open token selector
-    setIsSwapTokenSelectorOpen(true)
-    // delay this redux change to avoid any visible UI jank when clicking in
-    setTimeout((): void => {
-      dispatch(setHasDismissedUnichainWarmBanner(true))
-    }, ONE_SECOND_MS / 2)
-  }, [dispatch, navigate, setIsSwapTokenSelectorOpen, setSwapOutputChainId, unichainCurrency])
-
-  return (
-    <ImagePromoBanner
-      image={UNICHAIN_BANNER_WARM}
-      title={t('unichain.promotion.warm.title')}
-      onPress={openUnichainTokenSelector}
-      onDismiss={() => {
-        dispatch(setHasDismissedUnichainWarmBanner(true))
-      }}
-      subtitle={t('unichain.promotion.warm.description')}
-      isNew
-    />
-  )
-}
-
-function ImagePromoBanner({
+// keeping this code for any future web banners
+// eslint-disable-next-line import/no-unused-modules
+export function ImagePromoBanner({
   title,
   subtitle,
   image,

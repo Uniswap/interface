@@ -3,7 +3,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { RefObject, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-// eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChangeEventData } from 'react-native'
 import { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
@@ -13,7 +12,8 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
-import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
+import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets'
+import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
@@ -26,6 +26,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
+import { DefaultTokenOptions } from 'uniswap/src/features/transactions/swap/form/DefaultTokenOptions'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -33,6 +34,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { isE2EMode } from 'utilities/src/environment/constants'
 import { NumberType } from 'utilities/src/format/types'
+import { isExtension, isInterfaceDesktop, isMobileWeb } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -49,7 +51,7 @@ type CurrencyInputPanelProps = {
   onPressIn?: () => void
   onSelectionChange?: (start: number, end: number) => void
   onSetExactAmount: (amount: string) => void
-  onSetMax?: (amount: string, currencyField: CurrencyField) => void
+  onSetPresetValue?: (amount: string, isLessThanMax?: boolean) => void
   onShowTokenSelector?: () => void
   onToggleIsFiatMode: (currencyField: CurrencyField) => void
   selection?: TextInputProps['selection']
@@ -92,7 +94,7 @@ export const CurrencyInputPanel = memo(
         onPressIn,
         onSelectionChange: selectionChange,
         onSetExactAmount,
-        onSetMax,
+        onSetPresetValue,
         onShowTokenSelector,
         onToggleIsFiatMode,
         showSoftInputOnFocus = false,
@@ -103,6 +105,13 @@ export const CurrencyInputPanel = memo(
         headerLabel,
         transactionType,
         tokenColor,
+        // We're intentionally taking these props off `rest` so the props of `rest` are correctly passed into `Flex`
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        isIndicativeLoading,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        isLoading,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        valueIsIndicative,
         ...rest
       } = props
 
@@ -114,6 +123,8 @@ export const CurrencyInputPanel = memo(
       const { formatCurrencyAmount } = useLocalizationContext()
       const { symbol: fiatCurrencySymbol, code: fiatCurrencyCode } = useAppFiatCurrencyInfo()
 
+      const isPresetsEnabled = useFeatureFlag(FeatureFlags.SwapPresets)
+      const showDefaultTokenOptions = isPresetsEnabled && currencyField === CurrencyField.OUTPUT && !currencyInfo
       const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
       const indicativeDisplay = useIndicativeTextDisplay(props)
       const legacyDisplay = useLegacyTextDisplay(props)
@@ -240,17 +251,20 @@ export const CurrencyInputPanel = memo(
         triggerShakeAnimation()
       }, [onPressDisabled, triggerShakeAnimation])
 
-      const handleSetMax = useCallback(
-        (amount: string) => {
-          onSetMax?.(amount, currencyField)
+      const handleSetPresetValue = useCallback(
+        (amount: string, isLessThanMax?: boolean) => {
+          onSetPresetValue?.(amount, isLessThanMax)
         },
-        [currencyField, onSetMax],
+        [onSetPresetValue],
       )
 
       const refetchAnimationStyle = useRefetchAnimationStyle(props)
+      const showBottomPresets =
+        isPresetsEnabled && (isExtension || isMobileWeb) && currencyField === CurrencyField.INPUT
 
       return (
         <TouchableArea
+          group
           disabled={enableInputOnly}
           disabledStyle={{
             cursor: 'default',
@@ -258,11 +272,25 @@ export const CurrencyInputPanel = memo(
           onPress={disabled ? onPressDisabledWithShakeAnimation : currencyInfo ? onPressIn : onShowTokenSelector}
         >
           <Flex {...rest} overflow="hidden" px="$spacing16" py={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
-            {headerLabel && (
-              <Text color="$neutral2" variant="subheading2" fontSize="$micro">
-                {headerLabel}
-              </Text>
-            )}
+            {headerLabel || showDefaultTokenOptions ? (
+              <Flex row justifyContent="space-between">
+                <Text color="$neutral2" variant="subheading2" fontSize="$micro">
+                  {headerLabel}
+                </Text>
+                {isPresetsEnabled && isInterfaceDesktop && currencyField === CurrencyField.INPUT && currencyBalance && (
+                  <AmountInputPresets
+                    animateOnHover="rtl"
+                    currencyAmount={currencyAmount}
+                    currencyBalance={currencyBalance}
+                    buttonProps={{ py: '$spacing4' }}
+                    onSetPresetValue={handleSetPresetValue}
+                  />
+                )}
+                {showDefaultTokenOptions && isInterfaceDesktop && (
+                  <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
+                )}
+              </Flex>
+            ) : null}
             <AnimatedFlex
               row
               alignItems="center"
@@ -336,6 +364,8 @@ export const CurrencyInputPanel = memo(
                       onSelectionChange={onSelectionChange}
                     />
                   </Flex>
+                ) : showDefaultTokenOptions && !isInterfaceDesktop ? (
+                  <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
                 ) : (
                   <TouchableArea onPress={onShowTokenSelector}>
                     <Text color="$neutral3" fontSize={fontSize} variant="heading2" style={{ lineHeight: fontSize }}>
@@ -353,8 +383,25 @@ export const CurrencyInputPanel = memo(
                 />
               </Flex>
             </AnimatedFlex>
-            {currencyInfo && (
-              <Flex row gap="$spacing8" justifyContent="space-between">
+            <Flex
+              row
+              alignItems="center"
+              gap="$spacing8"
+              mb={showBottomPresets ? '$spacing6' : undefined}
+              // maintain layout when balance is hidden
+              {...(!currencyInfo && { opacity: 0, pointerEvents: 'none' })}
+            >
+              {showBottomPresets && currencyBalance && !currencyAmount ? (
+                <Flex position="absolute">
+                  <AmountInputPresets
+                    animateOnHover={isExtension ? 'ltr' : undefined}
+                    buttonProps={{ py: '$spacing4' }}
+                    currencyAmount={currencyAmount}
+                    currencyBalance={currencyBalance}
+                    onSetPresetValue={handleSetPresetValue}
+                  />
+                </Flex>
+              ) : (
                 <TouchableArea
                   flexShrink={1}
                   onPress={disabled || isTestnetModeEnabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}
@@ -367,7 +414,9 @@ export const CurrencyInputPanel = memo(
                     </Flex>
                   )}
                 </TouchableArea>
-                <Flex row centered gap="$spacing4" justifyContent="flex-end">
+              )}
+              {currencyInfo && (
+                <Flex row centered ml="auto" gap="$spacing4" justifyContent="flex-end">
                   {!hideCurrencyBalance && (
                     <Text color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral2'} variant="body3">
                       {formatCurrencyAmount({
@@ -377,18 +426,18 @@ export const CurrencyInputPanel = memo(
                       {getSymbolDisplayText(currencyInfo.currency.symbol)}
                     </Text>
                   )}
-                  {showMaxButton && onSetMax && (
-                    <MaxAmountButton
+                  {!isPresetsEnabled && showMaxButton && onSetPresetValue && (
+                    <PresetAmountButton
                       currencyAmount={currencyAmount}
                       currencyBalance={currencyBalance}
                       currencyField={currencyField}
                       transactionType={transactionType}
-                      onSetMax={handleSetMax}
+                      onSetPresetValue={handleSetPresetValue}
                     />
                   )}
                 </Flex>
-              </Flex>
-            )}
+              )}
+            </Flex>
           </Flex>
         </TouchableArea>
       )

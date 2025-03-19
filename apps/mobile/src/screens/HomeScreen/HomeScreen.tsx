@@ -10,6 +10,7 @@ import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { useHomeScreenCustomAndroidBackButton } from 'src/app/navigation/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -262,11 +263,13 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       setIsTestnetWarningModalOpen(true)
       return
     }
-    dispatch(
-      openModal({
-        name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
-      }),
-    )
+    disableForKorea
+      ? navigate(ModalName.KoreaCexTransferInfoModal)
+      : dispatch(
+          openModal({
+            name: ModalName.FiatOnRampAggregator,
+          }),
+        )
   }, [dispatch, isTestnetModeEnabled, disableForKorea, triggerHaptics])
 
   // This hooks handles the logic for when to open the BackupReminderModal

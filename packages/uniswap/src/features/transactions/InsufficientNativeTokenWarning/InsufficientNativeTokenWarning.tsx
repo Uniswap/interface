@@ -9,6 +9,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -29,17 +30,17 @@ export function InsufficientNativeTokenWarning({
   flow: 'send' | 'swap'
   gasFee: GasFeeResult
 }): JSX.Element | null {
-  const parsedInsufficentNativeTokenWarning = useInsufficientNativeTokenWarning({
+  const parsedInsufficientNativeTokenWarning = useInsufficientNativeTokenWarning({
     warnings,
     flow,
     gasFee,
   })
 
-  const { nativeCurrency, nativeCurrencyInfo } = parsedInsufficentNativeTokenWarning ?? {}
+  const { nativeCurrency, nativeCurrencyInfo } = parsedInsufficientNativeTokenWarning ?? {}
 
   const address = useAccountMeta()?.address
 
-  if (!parsedInsufficentNativeTokenWarning || !nativeCurrencyInfo || !nativeCurrency) {
+  if (!parsedInsufficientNativeTokenWarning || !nativeCurrencyInfo || !nativeCurrency) {
     return null
   }
 
@@ -56,7 +57,7 @@ export function InsufficientNativeTokenWarning({
   return (
     <InsufficientNativeTokenWarningContent
       address={address}
-      parsedInsufficentNativeTokenWarning={parsedInsufficentNativeTokenWarning}
+      parsedInsufficientNativeTokenWarning={parsedInsufficientNativeTokenWarning}
       nativeCurrencyInfo={nativeCurrencyInfo}
       nativeCurrency={nativeCurrency}
     />
@@ -65,23 +66,24 @@ export function InsufficientNativeTokenWarning({
 
 function InsufficientNativeTokenWarningContent({
   address,
-  parsedInsufficentNativeTokenWarning,
+  parsedInsufficientNativeTokenWarning,
   nativeCurrencyInfo,
   nativeCurrency,
 }: {
   address: Address
-  parsedInsufficentNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
+  parsedInsufficientNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
   nativeCurrencyInfo: CurrencyInfo
   nativeCurrency: Currency
 }): JSX.Element {
   const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
+  const { isTestnetModeEnabled } = useEnabledChains()
 
-  const { networkName, modalOrTooltipMainMessage } = parsedInsufficentNativeTokenWarning
+  const { networkName, modalOrTooltipMainMessage } = parsedInsufficientNativeTokenWarning
 
   const currencyAddress = currencyIdToAddress(nativeCurrencyInfo.currencyId)
 
-  const bridgingTokenWithHighestBalance = useBridgingTokenWithHighestBalance({
+  const { data: bridgingTokenWithHighestBalance } = useBridgingTokenWithHighestBalance({
     address,
     currencyAddress,
     currencyChainId: nativeCurrencyInfo.currency.chainId,
@@ -97,7 +99,7 @@ function InsufficientNativeTokenWarningContent({
     <>
       <TouchableArea onPress={(): void => setShowModal(true)}>
         <InsufficientNativeTokenBaseComponent
-          parsedInsufficentNativeTokenWarning={parsedInsufficentNativeTokenWarning}
+          parsedInsufficientNativeTokenWarning={parsedInsufficientNativeTokenWarning}
         />
       </TouchableArea>
 
@@ -110,44 +112,44 @@ function InsufficientNativeTokenWarningContent({
           title={
             shouldShowNetworkName
               ? t('transaction.warning.insufficientGas.modal.title.withNetwork', {
-                  // FIXME: Verify WALL-5906
                   tokenSymbol: nativeCurrency.symbol ?? '',
                   networkName,
                 })
               : t('transaction.warning.insufficientGas.modal.title.withoutNetwork', {
-                  // FIXME: Verify WALL-5906
                   tokenSymbol: nativeCurrency.symbol ?? '',
                 })
           }
           onClose={onClose}
         >
-          <Flex centered gap="$spacing24" width="100%">
-            <Text color="$neutral2" textAlign="center" variant="body3">
-              {modalOrTooltipMainMessage}
-            </Text>
+          <Text color="$neutral2" textAlign="center" variant="body3">
+            {modalOrTooltipMainMessage}
+          </Text>
 
-            <LearnMoreLink
-              textColor="$accent3"
-              textVariant="buttonLabel3"
-              url={uniswapUrls.helpArticleUrls.networkFeeInfo}
-            />
+          <Flex width="100%" gap="$spacing12">
+            <Flex row alignSelf="stretch">
+              <LearnMoreLink
+                textColor="$neutral2"
+                componentType="Button"
+                url={uniswapUrls.helpArticleUrls.networkFeeInfo}
+              />
+            </Flex>
 
-            <Flex gap="$spacing8" width="100%">
-              {bridgingTokenWithHighestBalance && (
-                <BridgeTokenButton
-                  inputToken={bridgingTokenWithHighestBalance.currencyInfo}
-                  outputToken={nativeCurrencyInfo}
-                  outputNetworkName={networkName}
-                  onPress={onClose}
-                />
-              )}
+            {bridgingTokenWithHighestBalance && (
+              <BridgeTokenButton
+                inputToken={bridgingTokenWithHighestBalance.currencyInfo}
+                outputToken={nativeCurrencyInfo}
+                outputNetworkName={networkName}
+                onPress={onClose}
+              />
+            )}
 
+            {!isTestnetModeEnabled && (
               <BuyNativeTokenButton
                 nativeCurrencyInfo={nativeCurrencyInfo}
                 canBridge={!!bridgingTokenWithHighestBalance}
                 onPress={onClose}
               />
-            </Flex>
+            )}
           </Flex>
         </WarningModal>
       )}

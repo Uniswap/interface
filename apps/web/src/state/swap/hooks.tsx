@@ -25,66 +25,15 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
 import { getParsedChainId } from 'utils/chainParams'
 
 export function useSwapActionHandlers(): {
-  onCurrencySelection: (field: CurrencyField, currency?: Currency) => void
   onSwitchTokens: (options: { newOutputHasTax: boolean; previouslyEstimatedOutput: string }) => void
-  onUserInput: (field: CurrencyField, typedValue: string) => void
 } {
   const { swapState, setSwapState } = useSwapContext()
-  const { currencyState, setCurrencyState } = useSwapAndLimitContext()
-
-  const inputTokenProjects = useTokenProjects(
-    currencyState.inputCurrency ? [currencyId(currencyState.inputCurrency)] : [],
-  )
-  const outputTokenProjects = useTokenProjects(
-    currencyState.outputCurrency ? [currencyId(currencyState.outputCurrency)] : [],
-  )
-
-  const onCurrencySelection = useCallback(
-    (field: CurrencyField, currency?: Currency) => {
-      const [currentCurrencyKey, otherCurrencyKey]: (keyof CurrencyState)[] =
-        field === CurrencyField.INPUT ? ['inputCurrency', 'outputCurrency'] : ['outputCurrency', 'inputCurrency']
-      const otherCurrency = currencyState[otherCurrencyKey]
-      // the case where we have to swap the order
-      if (otherCurrency && currency?.equals(otherCurrency)) {
-        setCurrencyState({
-          [currentCurrencyKey]: currency,
-          [otherCurrencyKey]: currencyState[currentCurrencyKey],
-        })
-        setSwapState((swapState) => ({
-          ...swapState,
-          independentField:
-            swapState.independentField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT,
-        }))
-        // multichain ux case where we set input or output to different chain
-      } else if (currency && otherCurrency?.chainId !== currency.chainId) {
-        const otherCurrencyTokenProjects = field === CurrencyField.INPUT ? outputTokenProjects : inputTokenProjects
-        const otherCurrency = otherCurrencyTokenProjects?.data?.find(
-          (project) => project?.currency.chainId === currency?.chainId,
-        )
-        setCurrencyState((state) => ({
-          ...state,
-          [currentCurrencyKey]: currency,
-          [otherCurrencyKey]:
-            otherCurrency && currency && !areCurrencyIdsEqual(currencyId(currency), otherCurrency.currencyId)
-              ? otherCurrency.currency
-              : undefined,
-        }))
-      } else {
-        setCurrencyState((state) => ({
-          ...state,
-          [currentCurrencyKey]: currency,
-        }))
-      }
-    },
-    [currencyState, inputTokenProjects, outputTokenProjects, setCurrencyState, setSwapState],
-  )
+  const { setCurrencyState } = useSwapAndLimitContext()
 
   const onSwitchTokens = useCallback(
     ({
@@ -115,23 +64,8 @@ export function useSwapActionHandlers(): {
     [setCurrencyState, setSwapState, swapState.independentField],
   )
 
-  const onUserInput = useCallback(
-    (field: CurrencyField, typedValue: string) => {
-      setSwapState((state) => {
-        return {
-          ...state,
-          independentField: field,
-          typedValue,
-        }
-      })
-    },
-    [setSwapState],
-  )
-
   return {
     onSwitchTokens,
-    onCurrencySelection,
-    onUserInput,
   }
 }
 
@@ -465,7 +399,6 @@ export function useInitialCurrencyState(): {
   initialTypedValue?: string
   initialField?: CurrencyField
   initialChainId: UniverseChainId
-  initialCurrencyLoading: boolean
   triggerConnect: boolean
 } {
   const { setIsUserSelectedToken } = useMultichainContext()
@@ -551,7 +484,6 @@ export function useInitialCurrencyState(): {
     initialTypedValue,
     initialField,
     initialChainId,
-    initialCurrencyLoading: false,
     triggerConnect: !!parsedQs.connect,
   }
 }

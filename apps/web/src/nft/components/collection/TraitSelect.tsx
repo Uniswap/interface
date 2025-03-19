@@ -1,7 +1,5 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import useDebounce from 'hooks/useDebounce'
-import { Column, Row } from 'nft/components/Flex'
-import * as styles from 'nft/components/collection/Filters.css'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { Input } from 'nft/components/layout/Input'
 import { subheadSmall } from 'nft/css/common.css'
@@ -11,10 +9,11 @@ import { scrollToTop } from 'nft/utils/scrollToTop'
 import { CSSProperties, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { LabeledCheckbox, Text } from 'ui/src'
+import { Checkbox, Flex, Text, useScrollbarStyles } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 const TRAIT_ROW_HEIGHT = 44
+const MAX_FILTER_DROPDOWN_HEIGHT = 302
 
 const TraitItem = ({
   trait,
@@ -64,27 +63,30 @@ const TraitItem = ({
   const showFullTraitName = shouldShow && trait_type === trait.trait_type && trait_value === trait.trait_value
 
   return (
-    <Row
+    <Flex
+      row
+      alignItems="center"
       key={trait.trait_value}
-      maxWidth="full"
-      overflowX="hidden"
-      overflowY="hidden"
-      fontWeight="book"
-      className={`${subheadSmall} ${styles.subRowHover}`}
+      maxWidth="100%"
+      overflow="hidden"
+      className={`${subheadSmall}`}
+      hoverStyle={{
+        backgroundColor: '$surface3',
+      }}
       justifyContent="space-between"
       cursor="pointer"
-      paddingLeft="12"
-      paddingRight="16"
-      borderRadius="12"
+      pl="$padding12"
+      pr="$padding16"
+      borderRadius="$rounded12"
       style={{
         paddingBottom: '22px',
         paddingTop: '22px',
         ...style,
       }}
-      maxHeight="44"
+      maxHeight={44}
       onMouseEnter={handleHover}
       onMouseLeave={handleHover}
-      onClick={handleCheckbox}
+      onPress={handleCheckbox}
     >
       <Text
         variant="body2"
@@ -100,13 +102,8 @@ const TraitItem = ({
           ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
           : trait.trait_value}
       </Text>
-      <LabeledCheckbox
-        checked={isCheckboxSelected}
-        onCheckPressed={handleCheckbox}
-        text={showFullTraitName ? String(trait.trait_count) : ''}
-        variant="branded"
-      />
-    </Row>
+      <Checkbox checked={isCheckboxSelected} onCheckedChange={handleCheckbox} variant="branded" />
+    </Flex>
   )
 }
 
@@ -122,6 +119,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
   const selectedTraits = useCollectionFilters((state) => state.traits)
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search, 300)
+  const scrollbarStyles = useScrollbarStyles()
 
   const searchedTraits = useMemo(
     () => traits.filter((t) => t.trait_value?.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
@@ -152,16 +150,22 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
         value={search}
         onChangeText={(value: string) => setSearch(value)}
         placeholder="Search"
+        placeholderTextColor="$neutral2"
         mt="$spacing8"
         mb="$spacing8"
         autoComplete="off"
         position="static"
         width="full"
       />
-      <Column
-        className={styles.filterDropDowns}
+      <Flex
+        borderBottomColor="$surface3"
+        borderBottomWidth={1}
+        pl={0}
+        pb="$padding8"
+        maxHeight={MAX_FILTER_DROPDOWN_HEIGHT}
         style={{
-          height: `${Math.min(TRAIT_ROW_HEIGHT * searchedTraits.length, styles.MAX_FILTER_DROPDOWN_HEIGHT)}px`,
+          height: `${Math.min(TRAIT_ROW_HEIGHT * searchedTraits.length, MAX_FILTER_DROPDOWN_HEIGHT)}px`,
+          ...scrollbarStyles,
         }}
       >
         <AutoSizer disableWidth>
@@ -178,7 +182,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
             </FixedSizeList>
           )}
         </AutoSizer>
-      </Column>
+      </Flex>
     </TraitsHeader>
   ) : null
 }

@@ -1,10 +1,10 @@
 import { Percent } from '@uniswap/sdk-core'
-import { SwapForm } from 'pages/Swap/SwapForm'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
-import { render, screen } from 'test-utils/render'
+import { render } from 'test-utils/render'
+import { Flex } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -20,7 +20,7 @@ describe('Swap Context', () => {
     let swapContext
     const TestComponent = () => {
       swapContext = useSwapContext()
-      return <div />
+      return <Flex />
     }
 
     render(
@@ -67,7 +67,7 @@ describe('SwapAndLimitContext', () => {
     let swapAndLimitContext
     const TestComponent = () => {
       swapAndLimitContext = useSwapAndLimitContext()
-      return <div />
+      return <Flex />
     }
 
     render(
@@ -84,31 +84,10 @@ describe('SwapAndLimitContext', () => {
         inputCurrency: undefined,
         outputCurrency: undefined,
       },
-      prefilledState: {
-        inputCurrency: undefined,
-        outputCurrency: undefined,
-      },
       setCurrencyState: expect.any(Function),
       currentTab: SwapTab.Swap,
       setCurrentTab: expect.any(Function),
       isSwapAndLimitContext: true,
-    })
-  })
-
-  describe('SwapForm', () => {
-    beforeEach(() => {
-      window.history.pushState({}, '', '/swap')
-    })
-
-    test('multichain ux enabled', () => {
-      render(
-        <MultichainContextProvider initialChainId={UniverseChainId.Optimism}>
-          <SwapAndLimitContextProvider>
-            <SwapForm />
-          </SwapAndLimitContextProvider>
-        </MultichainContextProvider>,
-      )
-      expect(screen.getByTestId('swap-button')).toBeInTheDocument()
     })
   })
 })
@@ -119,7 +98,7 @@ describe('Combined contexts', () => {
 
     const TestComponent = () => {
       derivedSwapInfo = useSwapContext().derivedSwapInfo
-      return <div />
+      return <Flex />
     }
 
     render(
@@ -127,10 +106,6 @@ describe('Combined contexts', () => {
         value={{
           currencyState: {
             inputCurrency: nativeOnChain(UniverseChainId.Mainnet),
-            outputCurrency: undefined,
-          },
-          prefilledState: {
-            inputCurrency: undefined,
             outputCurrency: undefined,
           },
           setCurrencyState: expect.any(Function),

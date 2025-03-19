@@ -121,20 +121,20 @@ exports[`ProviderConnectionError should render the component and call callbacks 
                 Something went wrong connecting with Test Provider.
               </span>
             </div>
-            <span
-              class=" _dsp_contents"
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
             >
-              <span
-                class="t_sub_theme t_primary_Button _dsp_contents is_Theme"
+              <button
+                class=" is_Button  t_group_item"
+                style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(34, 34, 34); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
               >
-                <button
-                  class="is_Button _backgroundColor-0hover-accent3Hove112785 _backgroundColor-0active-backgroundP3496915 _opacity-0active-0--7 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _alignItems-center _justifyContent-center _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _backgroundColor-accent3 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-                  data-disable-theme="true"
+                <span
+                  class="font_button _color-_groupitem-hover_surface1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-surface1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
                 >
                   Try again
-                </button>
-              </span>
-            </span>
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

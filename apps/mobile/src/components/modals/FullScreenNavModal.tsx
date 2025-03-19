@@ -29,12 +29,11 @@ export function FullScreenNavModal({
   return (
     <Modal
       {...modalProps}
-      blurredBackground
       fullScreen
       hideKeyboardOnDismiss
       renderBehindBottomInset
       renderBehindTopInset
-      backgroundColor={colors.transparent.val}
+      backgroundColor={colors.surface1.val}
       hideHandlebar={true}
       name={name}
       onClose={onClose}

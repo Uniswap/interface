@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CHART_WIDTH } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
@@ -101,6 +100,8 @@ export function LiquidityPositionFeeStats({
       gap="$gap20"
       py="$spacing16"
       px="$spacing24"
+      borderBottomLeftRadius="$rounded20"
+      borderBottomRightRadius="$rounded20"
       backgroundColor={cardHovered ? '$surface2Hovered' : '$surface2'}
     >
       <Flex row gap="$gap20" grow $sm={{ row: false }}>

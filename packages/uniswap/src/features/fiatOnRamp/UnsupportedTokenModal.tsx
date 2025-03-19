@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, Text, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -46,12 +46,17 @@ export default function UnsupportedTokenModal({ isVisible, onBack, onClose, onAc
           </Text>
         </Flex>
         <Flex centered gap="$spacing12" mt="$spacing16" width="100%">
-          <DeprecatedButton theme="secondary" width="100%" onPress={onBack}>
-            {t('fiatOffRamp.unsupportedToken.back')}
-          </DeprecatedButton>
-          <DeprecatedButton theme="primary" width="100%" onPress={onAccept}>
-            {t('fiatOffRamp.unsupportedToken.swap')}
-          </DeprecatedButton>
+          <Flex row>
+            <Button emphasis="secondary" size="large" onPress={onBack}>
+              {t('fiatOffRamp.unsupportedToken.back')}
+            </Button>
+          </Flex>
+
+          <Flex row>
+            <Button size="large" variant="branded" onPress={onAccept}>
+              {t('fiatOffRamp.unsupportedToken.swap')}
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
     </Modal>

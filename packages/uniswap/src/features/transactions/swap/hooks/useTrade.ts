@@ -141,7 +141,6 @@ export function useTrade({
   const response = useTradingApiQuoteQuery({
     params: quoteRequestArgs,
     refetchInterval: internalPollInterval,
-    staleTime: internalPollInterval,
     // We set the `gcTime` to 15 seconds longer than the refetch interval so that there's more than enough time for a refetch to complete before we clear the stale data.
     // If the user loses internet connection (or leaves the app and comes back) for longer than this,
     // then we clear stale data and show a big loading spinner in the swap review screen.

@@ -2,6 +2,7 @@ import Popover, { PopoverProps } from 'components/Popover'
 import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { Fragment, PropsWithChildren, ReactNode, memo, useCallback, useEffect, useState } from 'react'
+import { Flex } from 'ui/src'
 import noop from 'utilities/src/react/noop'
 
 export enum TooltipSize {
@@ -96,9 +97,9 @@ export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverT
       show={forceShow || show}
       {...rest}
     >
-      <div onMouseEnter={disabled ? noop : open} onMouseLeave={disabled || timeout ? noop : close}>
+      <Flex onMouseEnter={disabled ? noop : open} onMouseLeave={disabled || timeout ? noop : close}>
         {children}
-      </div>
+      </Flex>
     </Popover>
   )
 })
@@ -136,7 +137,7 @@ export function MouseFollowTooltip(props: MouseFollowTooltipProps) {
   }, [disabled, handleMouseMove, show])
 
   return (
-    <div>
+    <>
       <CursorFollowerContainer
         style={{
           left: position.x ? `${position.x}px` : undefined,
@@ -145,9 +146,9 @@ export function MouseFollowTooltip(props: MouseFollowTooltipProps) {
       >
         <MouseoverTooltip {...rest} text={disabled ? null : text} forceShow={forceShow} />
       </CursorFollowerContainer>
-      <div onMouseEnter={disabled ? noop : open} onMouseLeave={disabled ? noop : close}>
+      <Flex onMouseEnter={disabled ? noop : open} onMouseLeave={disabled ? noop : close}>
         {children}
-      </div>
-    </div>
+      </Flex>
+    </>
   )
 }

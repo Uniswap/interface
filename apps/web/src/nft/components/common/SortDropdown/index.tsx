@@ -1,8 +1,5 @@
-import clsx from 'clsx'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import * as styles from 'nft/components/common/SortDropdown/SortDropdown.css'
 import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useCollectionFilters, useIsCollectionLoading } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
@@ -13,15 +10,11 @@ export { FilterSortDropdown } from './FilterSortDropdown'
 export const SortDropdown = ({
   dropDownOptions,
   inFilters,
-  mini,
-  miniPrompt,
   top,
   left,
 }: {
   dropDownOptions: DropDownOption[]
   inFilters?: boolean
-  mini?: boolean
-  miniPrompt?: string
   top?: number
   left?: number
 }) => {
@@ -49,7 +42,7 @@ export const SortDropdown = ({
     [selectedIndex, dropDownOptions],
   )
 
-  const width = isCollectionStatsLoading ? 220 : inFilters ? 'full' : mini ? 'min' : maxWidth ? maxWidth : '300px'
+  const width = isCollectionStatsLoading ? 220 : inFilters ? 'full' : maxWidth ? maxWidth : '300px'
 
   return (
     <Flex
@@ -61,22 +54,23 @@ export const SortDropdown = ({
     >
       <Flex
         borderRadius="$rounded12"
-        backgroundColor={mini ? '$transparent' : '$surface1'}
+        backgroundColor="$surface1"
         borderColor="$surface3"
         borderWidth={1}
         borderBottomLeftRadius={isOpen ? 0 : undefined}
         borderBottomRightRadius={isOpen ? 0 : undefined}
-        p={inFilters ? 12 : mini ? 0 : 8}
+        p={inFilters ? 12 : 8}
         $platform-web={{
           whiteSpace: 'nowrap',
         }}
         justifyContent="space-between"
         height={44}
         alignItems="center"
-        width={inFilters ? '100%' : 'auto'}
+        width={isCollectionStatsLoading ? 220 : inFilters ? '100%' : 'auto'}
         onPress={toggleOpen}
         cursor="pointer"
-        className={isCollectionStatsLoading ? styles.isLoadingDropdown : clsx(isOpen && !mini && styles.activeDropdown)}
+        borderBottomWidth={isOpen ? '$none' : 1}
+        borderTopWidth={1}
       >
         {!isCollectionStatsLoading && (
           <>
@@ -115,14 +109,11 @@ export const SortDropdown = ({
                 </Flex>
               )}
 
-              <Text ml={reversable ? 4 : 0} mr={mini ? 2 : 0} color="$neutral1" variant="buttonLabel2">
-                {mini ? miniPrompt : isOpen ? 'Sort by' : dropDownOptions[selectedIndex].displayText}
+              <Text ml={reversable ? 4 : 0} color="$neutral1" variant="buttonLabel2">
+                {isOpen ? 'Sort by' : dropDownOptions[selectedIndex].displayText}
               </Text>
             </Flex>
             <ChevronUpIcon
-              secondaryColor={mini ? themeVars.colors.neutral1 : undefined}
-              secondaryWidth={mini ? '20' : undefined}
-              secondaryHeight={mini ? '20' : undefined}
               style={{
                 transform: isOpen ? '' : 'rotate(180deg)',
               }}
@@ -140,20 +131,16 @@ export const SortDropdown = ({
         borderColor="$surface3"
         borderWidth={1}
         borderRadius={8}
-        borderTopLeftRadius={mini ? undefined : 0}
-        borderTopRightRadius={mini ? undefined : 0}
+        borderTopLeftRadius={0}
+        borderTopRightRadius={0}
         overflow="hidden"
         transition="250"
         display={isOpen || !maxWidth ? 'block' : 'none'}
         $platform-web={{
           visibility: maxWidth ? 'visible' : 'hidden',
         }}
-        mt={mini ? 12 : 0}
-        className={clsx(!mini && styles.activeDropDownItems)}
-        style={{
-          top: top ? `${top}px` : 'inherit',
-          left: inFilters ? '16px' : left ? `${left}px` : 'inherit',
-        }}
+        top={top ? top : 44}
+        left={inFilters ? '16px' : left ? left : 'inherit'}
       >
         {!maxWidth
           ? [
@@ -170,7 +157,6 @@ export const SortDropdown = ({
                   key={index}
                   option={option}
                   index={index}
-                  mini={mini}
                   onClick={() => {
                     dropDownOptions[index].onClick()
                     setSelectedIndex(index)
@@ -185,17 +171,7 @@ export const SortDropdown = ({
   )
 }
 
-const DropDownItem = ({
-  option,
-  index,
-  onClick,
-  mini,
-}: {
-  option: DropDownOption
-  index: number
-  onClick?: () => void
-  mini?: boolean
-}) => {
+const DropDownItem = ({ option, index, onClick }: { option: DropDownOption; index: number; onClick?: () => void }) => {
   return (
     <Flex
       borderWidth={0}
@@ -203,7 +179,6 @@ const DropDownItem = ({
       alignItems="center"
       py={10}
       pl={12}
-      pr={mini ? 20 : 0}
       width="full"
       backgroundColor="$surface1"
       hoverStyle={{ backgroundColor: '$surface3' }}

@@ -19,10 +19,13 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   CardLoggingName,
+  ConnectionCardLoggingName,
   DappRequestCardLoggingName,
   OnboardingCardLoggingName,
 } from 'uniswap/src/features/telemetry/types'
 import { isExtension } from 'utilities/src/platform'
+
+const DESCRIPTION_LENGTH_THRESHOLD = 66
 
 export enum CardType {
   Default = 0,
@@ -63,19 +66,19 @@ export type IntroCardProps = {
   isNew?: boolean
   loggingName: CardLoggingName
   containerProps?: FlexProps
-
+  iconColor?: string
   onPress?: () => void
   onClose?: () => void
 }
 
 export function isOnboardingCardLoggingName(
-  name: OnboardingCardLoggingName | DappRequestCardLoggingName,
+  name: OnboardingCardLoggingName | DappRequestCardLoggingName | ConnectionCardLoggingName,
 ): name is OnboardingCardLoggingName {
   return Object.values(OnboardingCardLoggingName).includes(name as OnboardingCardLoggingName)
 }
 
 export function isDappRequestCardLoggingName(
-  name: OnboardingCardLoggingName | DappRequestCardLoggingName,
+  name: OnboardingCardLoggingName | DappRequestCardLoggingName | ConnectionCardLoggingName,
 ): name is DappRequestCardLoggingName {
   return Object.values(DappRequestCardLoggingName).includes(name as DappRequestCardLoggingName)
 }
@@ -88,6 +91,7 @@ export function IntroCard({
   isNew = false,
   containerProps,
   loggingName,
+  iconColor = '$neutral1',
   onPress,
   onClose,
 }: IntroCardProps): JSX.Element {
@@ -134,7 +138,7 @@ export function IntroCard({
           p="$spacing8"
           {...graphic.iconContainerProps}
         >
-          <graphic.Icon color="$neutral1" size="$icon.20" {...graphic.iconProps} />
+          <graphic.Icon color={iconColor} size="$icon.20" {...graphic.iconProps} />
         </Flex>
       )
     } else {
@@ -144,7 +148,7 @@ export function IntroCard({
         </Flex>
       )
     }
-  }, [graphic, isDarkMode, isIcon])
+  }, [graphic, isDarkMode, isIcon, iconColor])
 
   const topRightElement = useMemo(() => {
     switch (cardType) {
@@ -208,7 +212,7 @@ export function IntroCard({
           {GraphicElement}
 
           <Flex fill gap="$spacing4" paddingStart={isIcon ? '$none' : '$spacing12'}>
-            <Flex row gap="$spacing12" justifyContent="space-between">
+            <Flex row justifyContent="space-between">
               <Flex fill>
                 <ElementAfterText
                   text={title}
@@ -220,7 +224,10 @@ export function IntroCard({
                 {topRightElement}
               </Flex>
             </Flex>
-            <Text color="$neutral2" variant={isExtension ? 'body4' : 'body2'}>
+            <Text
+              color="$neutral2"
+              variant={isExtension ? 'body4' : description.length > DESCRIPTION_LENGTH_THRESHOLD ? 'body3' : 'body2'}
+            >
               {description}
             </Text>
           </Flex>

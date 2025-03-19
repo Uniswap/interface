@@ -4,26 +4,6 @@ import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 
-export function Indicator({ stepCount, currentStep }: { stepCount: number; currentStep: number }): JSX.Element {
-  const { fullWidth } = useDeviceDimensions()
-  const indicatorWidth = (200 / 375) * fullWidth
-
-  return (
-    <Flex row alignItems="center" gap="$spacing8" justifyContent="space-evenly" width={indicatorWidth}>
-      {[...Array(stepCount)].map((_, i) => (
-        <Flex
-          key={`indicator-${i}`}
-          fill
-          backgroundColor="$neutral1"
-          borderRadius="$rounded16"
-          height={4}
-          opacity={i === currentStep ? 1 : 0.2}
-        />
-      ))}
-    </Flex>
-  )
-}
-
 export function AnimatedIndicator({
   scroll,
   stepCount,

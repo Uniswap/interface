@@ -16,6 +16,7 @@ import {
   tokenOptionDifference,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
+import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
@@ -26,7 +27,7 @@ import { isMobileApp } from 'utilities/src/platform'
 function useTokenSectionsForSwapInput({
   activeAccountAddress,
   chainFilter,
-}: TokenSectionsHookProps): GqlResult<TokenSection[]> {
+}: TokenSectionsHookProps): GqlResult<TokenSection<TokenSelectorItemTypes>[]> {
   const isTokenSelectorTrendingTokensEnabled = useFeatureFlag(FeatureFlags.TokenSelectorTrendingTokens)
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
   const {
@@ -116,7 +117,7 @@ function useTokenSectionsForSwapInput({
       // Extension & interface do not support favoriting but has a default list, so we can't rely on empty array check
       ...(isMobileApp ? favoriteSection ?? [] : []),
       ...(popularSection ?? []),
-    ] satisfies TokenSection[]
+    ] satisfies TokenSection<TokenSelectorItemTypes>[]
   }, [
     suggestedSection,
     favoriteSection,

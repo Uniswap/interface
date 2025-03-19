@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -28,6 +27,7 @@ import {
   OptionalCurrencyPrice,
   OptionalNumber,
   PositionState,
+  PriceDifference,
   PriceRangeInfo,
   PriceRangeState,
   V2PriceRangeInfo,
@@ -36,6 +36,7 @@ import {
 } from 'pages/Pool/Positions/create/types'
 import { tryParsePrice, tryParseTick } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   CheckApprovalLPRequest,
@@ -562,6 +563,11 @@ export function getV2PriceRangeInfo({
     getCurrencyWithWrap(currencies[0], ProtocolVersion.V2),
     getCurrencyWithWrap(currencies[1], ProtocolVersion.V2),
   )
+  const priceDifference = getPriceDifference({
+    initialPrice: state.initialPrice,
+    defaultInitialPrice: derivedPositionInfo.defaultInitialPrice,
+    priceInverted: state.priceInverted,
+  })
 
   const price = getInitialPrice({
     baseCurrency: baseToken,
@@ -578,6 +584,7 @@ export function getV2PriceRangeInfo({
     deposit0Disabled: false,
     deposit1Disabled: false,
     invertPrice,
+    priceDifference,
   } satisfies V2PriceRangeInfo
 }
 
@@ -604,6 +611,12 @@ export function getV3PriceRangeInfo({
     getCurrencyWithWrap(baseCurrency, protocolVersion),
     getCurrencyWithWrap(quoteCurrency, protocolVersion),
   ]
+
+  const priceDifference = getPriceDifference({
+    initialPrice: state.initialPrice,
+    defaultInitialPrice: derivedPositionInfo.defaultInitialPrice,
+    priceInverted: state.priceInverted,
+  })
 
   const initialPriceTokens = getInvertedTuple(
     [getCurrencyWithWrap(currencies[0], protocolVersion), getCurrencyWithWrap(currencies[1], protocolVersion)],
@@ -715,6 +728,7 @@ export function getV3PriceRangeInfo({
     prices,
     pricesAtTicks,
     pricesAtLimit,
+    priceDifference,
     tickSpaceLimits,
     invertPrice,
     invalidPrice,
@@ -768,13 +782,19 @@ export function getV4PriceRangeInfo({
   positionState: PositionState
   derivedPositionInfo: CreateV4PositionInfo
 }): V4PriceRangeInfo {
-  const { fee, hook } = positionState
+  const { fee, hook, initialPosition } = positionState
   const { protocolVersion, currencies, pool } = derivedPositionInfo
 
   const sortedCurrencies = getSortedCurrenciesTuple(currencies[0], currencies[1])
   const [sortedCurrency0, sortedCurrency1] = sortedCurrencies
   const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, state.priceInverted)
   const [initialPriceBaseCurrency] = getInvertedTuple(currencies, state.priceInverted)
+
+  const priceDifference = getPriceDifference({
+    initialPrice: state.initialPrice,
+    defaultInitialPrice: derivedPositionInfo.defaultInitialPrice,
+    priceInverted: state.priceInverted,
+  })
 
   const price = derivedPositionInfo.creatingPoolOrPair
     ? getInitialPrice({
@@ -798,23 +818,26 @@ export function getV4PriceRangeInfo({
   })
 
   const poolForPosition = pool ?? mockPool
-  const tickSpaceLimits: [OptionalNumber, OptionalNumber] = [
-    poolForPosition ? nearestUsableTick(TickMath.MIN_TICK, poolForPosition.tickSpacing) : undefined,
-    poolForPosition ? nearestUsableTick(TickMath.MAX_TICK, poolForPosition.tickSpacing) : undefined,
-  ]
+  const tickSpaceLimits: [OptionalNumber, OptionalNumber] =
+    initialPosition?.tickLower && initialPosition?.tickUpper
+      ? [initialPosition.tickLower, initialPosition.tickUpper]
+      : [
+          poolForPosition ? nearestUsableTick(TickMath.MIN_TICK, poolForPosition.tickSpacing) : undefined,
+          poolForPosition ? nearestUsableTick(TickMath.MAX_TICK, poolForPosition.tickSpacing) : undefined,
+        ]
 
   const invertPrice = Boolean(baseCurrency && sortedCurrency0 && !baseCurrency.equals(sortedCurrency0))
   const [baseRangeInput, quoteRangeInput] = invertPrice
     ? [state.maxPrice, state.minPrice]
     : [state.minPrice, state.maxPrice]
   const lowerTick =
-    baseRangeInput === ''
+    baseRangeInput === '' || initialPosition?.isOutOfRange
       ? tickSpaceLimits[0]
       : invertPrice
         ? tryParseV4Tick(sortedCurrency1, sortedCurrency0, state.maxPrice, poolForPosition?.tickSpacing)
         : tryParseV4Tick(sortedCurrency0, sortedCurrency1, state.minPrice, poolForPosition?.tickSpacing)
   const upperTick =
-    quoteRangeInput === ''
+    quoteRangeInput === '' || initialPosition?.isOutOfRange
       ? tickSpaceLimits[1]
       : invertPrice
         ? tryParseV4Tick(sortedCurrency1, sortedCurrency0, state.minPrice, poolForPosition?.tickSpacing)
@@ -879,6 +902,7 @@ export function getV4PriceRangeInfo({
     prices,
     pricesAtTicks,
     pricesAtLimit,
+    priceDifference,
     tickSpaceLimits,
     invertPrice,
     invalidPrice,
@@ -1253,4 +1277,46 @@ export function getCurrencyWithOptionalUnwrap({
   }
 
   return nativeOnChain(currency.chainId)
+}
+
+const WARNING_PRICE_DIFFERENCE_PERCENTAGE = 5
+const CRITICAL_PRICE_DIFFERENCE_PERCENTAGE = 10
+
+function getPriceDifference({
+  initialPrice,
+  defaultInitialPrice,
+  priceInverted,
+}: {
+  initialPrice: string
+  defaultInitialPrice?: Price<Currency, Currency>
+  priceInverted: boolean
+}): PriceDifference | undefined {
+  // Roughly estimate the price difference between the initialPrice (user input)
+  // and the defaultInitialPrice (derived from a quote) if we have both.
+  const initialPriceNumber = Number(initialPrice)
+  const defaultInitialPriceNumber = priceInverted
+    ? Number(defaultInitialPrice?.invert().toSignificant(8))
+    : Number(defaultInitialPrice?.toSignificant(8))
+
+  if (!initialPriceNumber || !defaultInitialPriceNumber) {
+    return undefined
+  }
+
+  const priceDifference = initialPriceNumber - defaultInitialPriceNumber
+  const priceDifferencePercentage = (priceDifference / defaultInitialPriceNumber) * 100
+  const priceDifferencePercentageRounded = Math.round(priceDifferencePercentage)
+  const priceDifferencePercentageAbsolute = Math.abs(priceDifferencePercentageRounded)
+
+  let warning: WarningSeverity | undefined
+  if (priceDifferencePercentageAbsolute > CRITICAL_PRICE_DIFFERENCE_PERCENTAGE) {
+    warning = WarningSeverity.High
+  } else if (priceDifferencePercentageAbsolute > WARNING_PRICE_DIFFERENCE_PERCENTAGE) {
+    warning = WarningSeverity.Medium
+  }
+
+  return {
+    value: priceDifferencePercentageRounded,
+    absoluteValue: priceDifferencePercentageAbsolute,
+    warning,
+  }
 }

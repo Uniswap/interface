@@ -11,15 +11,15 @@ export enum StringKey {
   ErrorInvalidPhrase = 'errorInvalidPhrase',
 }
 
-export type MnemonicStoredEvent = {
+type MnemonicStoredEvent = {
   mnemonicId: string
 }
 
-export type InputValidatedEvent = {
+type InputValidatedEvent = {
   canSubmit: boolean
 }
 
-export type HeightMeasuredEvent = {
+type HeightMeasuredEvent = {
   height: number
 }
 

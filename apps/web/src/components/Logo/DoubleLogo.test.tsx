@@ -3,6 +3,7 @@ import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
+import { Flex } from 'ui/src'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -86,7 +87,7 @@ describe('DoubleLogo', () => {
       <DoubleCurrencyLogo
         currencies={[mockCurrency1, mockCurrency2]}
         size={32}
-        customIcon={<div data-testid="custom-icon">Custom Icon</div>}
+        customIcon={<Flex data-testid="custom-icon">Custom Icon</Flex>}
       />,
     )
     expect(asFragment()).toMatchSnapshot()

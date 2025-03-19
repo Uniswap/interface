@@ -82,10 +82,9 @@ export function SwapAndLimitContextProvider({
       setCurrencyState,
       currentTab,
       setCurrentTab,
-      prefilledState,
       isSwapAndLimitContext: true,
     }
-  }, [currencyState, currentTab, prefilledState])
+  }, [currencyState, currentTab])
 
   useReportTotalBalancesUsdForAnalytics()
 

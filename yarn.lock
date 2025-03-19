@@ -10749,9 +10749,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shopify/react-native-skia@npm:1.7.2":
-  version: 1.7.2
-  resolution: "@shopify/react-native-skia@npm:1.7.2"
+"@shopify/react-native-skia@npm:1.6.0":
+  version: 1.6.0
+  resolution: "@shopify/react-native-skia@npm:1.6.0"
   dependencies:
     canvaskit-wasm: 0.39.1
     react-reconciler: 0.27.0
@@ -10766,7 +10766,7 @@ __metadata:
       optional: true
   bin:
     setup-skia-web: ./scripts/setup-canvaskit.js
-  checksum: b23ba33f23150199cdbf973b50580f756b94763d9331d129b0844cb8a6db618e2257df2759601b27ca91d7b8f41bf550f7965bb16f4ff8b15b07b082110da489
+  checksum: 88abc446541a2310143c346c29ab7dedd5b3b21bc85f3d54db35c14c96c084c70d7c487bc98ab4db510d8690f16ac68d62a2c022ebc6389a29eafb8f0089b4eb
   languageName: node
   linkType: hard
 
@@ -14461,7 +14461,7 @@ __metadata:
 
 "@tamagui/web@patch:@tamagui/web@npm%3A1.121.7#./.yarn/patches/@tamagui-web-npm-1.121.7-4de089c18f.patch::locator=universe%40workspace%3A.":
   version: 1.121.7
-  resolution: "@tamagui/web@patch:@tamagui/web@npm%3A1.121.7#./.yarn/patches/@tamagui-web-npm-1.121.7-4de089c18f.patch::version=1.121.7&hash=f17f9e&locator=universe%40workspace%3A."
+  resolution: "@tamagui/web@patch:@tamagui/web@npm%3A1.121.7#./.yarn/patches/@tamagui-web-npm-1.121.7-4de089c18f.patch::version=1.121.7&hash=fee43d&locator=universe%40workspace%3A."
   dependencies:
     "@tamagui/compose-refs": 1.121.7
     "@tamagui/constants": 1.121.7
@@ -14475,7 +14475,7 @@ __metadata:
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 8f6962bfc7ced18c91b91a4fd86a70b937c6580b805db63f6cfb53c3ca0c0d3e603bbe6b8be06c5a16dd409bfdaee7ab68685c4722d73d7f07d3b3ed184784ac
+  checksum: 4066ec731f534e8eaebf50c75624e68db838c0f755fe4b2fcfc8b38c7343578c33e5240f58090b2c15370d0aba2adc41f5ea0f22791df762d8de0021145c7337
   languageName: node
   linkType: hard
 
@@ -16614,6 +16614,7 @@ __metadata:
     dotenv-webpack: 8.0.1
     esbuild-loader: 3.2.0
     eslint: 8.44.0
+    eslint-plugin-rulesdir: 0.2.2
     ethers: 5.7.2
     eventemitter3: 5.0.1
     framer-motion: 10.17.6
@@ -16766,9 +16767,7 @@ __metadata:
     "@uniswap/v3-sdk": 3.25.2
     "@uniswap/v4-sdk": 1.21.2
     "@vanilla-extract/css": 1.14.0
-    "@vanilla-extract/dynamic": 2.1.0
     "@vanilla-extract/jest-transform": 1.1.1
-    "@vanilla-extract/sprinkles": 1.6.1
     "@vanilla-extract/webpack-plugin": 2.3.1
     "@vercel/og": 0.5.8
     "@visx/group": 2.17.0
@@ -16804,14 +16803,12 @@ __metadata:
     ethers: 5.7.2
     expo-crypto: 12.8.1
     fancy-canvas: 2.1.0
-    focus-visible: 5.2.0
     framer-motion: 10.17.6
     graphql: 16.6.0
     hardhat: 2.22.16
     http-server: 14.1.1
     husky: 8.0.3
     i18next: 23.10.0
-    immer: 9.0.6
     jest: 29.7.0
     jest-extended: 4.0.2
     jest-fail-on-console: 3.3.0
@@ -16872,7 +16869,6 @@ __metadata:
     storybook-addon-pseudo-states: 4.0.2
     styled-components: 5.3.11
     swc-loader: 0.2.6
-    tamagui: 1.121.7
     terser: 5.24.0
     terser-webpack-plugin: 5.3.9
     tiny-invariant: 1.3.1
@@ -16961,13 +16957,14 @@ __metadata:
     "@shopify/flash-list": 1.7.1
     "@shopify/react-native-performance": 4.1.2
     "@shopify/react-native-performance-navigation": 3.0.0
-    "@shopify/react-native-skia": 1.7.2
+    "@shopify/react-native-skia": 1.6.0
     "@sparkfabrik/react-native-idfa-aaid": 1.2.0
     "@storybook/addon-ondevice-controls": 8.5.2
     "@storybook/react": 8.5.2
     "@storybook/react-native": 8.5.2
     "@tamagui/babel-plugin": 1.121.7
     "@tanstack/react-query": 5.51.16
+    "@testing-library/react-hooks": 8.0.1
     "@testing-library/react-native": 13.0.0
     "@types/jest": 29.5.14
     "@types/react": 18.3.18
@@ -16995,6 +16992,7 @@ __metadata:
     d3-shape: 3.2.0
     dayjs: 1.11.7
     eslint: 8.44.0
+    eslint-plugin-rulesdir: 0.2.2
     ethers: 5.7.2
     expo: 52.0.9
     expo-blur: 14.0.3
@@ -17362,15 +17360,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vanilla-extract/dynamic@npm:2.1.0":
-  version: 2.1.0
-  resolution: "@vanilla-extract/dynamic@npm:2.1.0"
-  dependencies:
-    "@vanilla-extract/private": ^1.0.3
-  checksum: a6f129d096286cf7e2c7c868f12866d2da2967cd7591e071eb6420f0fafccce86c58e1d408864109fc894332399e731fe8ae67e2c92d456feb4b21c602287f6d
-  languageName: node
-  linkType: hard
-
 "@vanilla-extract/integration@npm:^6.0.0, @vanilla-extract/integration@npm:^6.2.0":
   version: 6.2.3
   resolution: "@vanilla-extract/integration@npm:6.2.3"
@@ -17406,15 +17395,6 @@ __metadata:
   version: 1.0.3
   resolution: "@vanilla-extract/private@npm:1.0.3"
   checksum: 866a71ba6804edeb0735684e7723ba78f5cf0bb40d4fb538fe6bf7d73928099e341312337b2a510ac0ce96ff8a4b39eb7f7a5fad0c842532353dd20e7278f29b
-  languageName: node
-  linkType: hard
-
-"@vanilla-extract/sprinkles@npm:1.6.1":
-  version: 1.6.1
-  resolution: "@vanilla-extract/sprinkles@npm:1.6.1"
-  peerDependencies:
-    "@vanilla-extract/css": ^1.0.0
-  checksum: 13c53a94b19f9226c2684b0da06b98022d2faaf504cb5a4a8e5a0abae499aaa7855c17aa6d88534800d9427696b3248f4fc1a5332bde336c445d837017569f3b
   languageName: node
   linkType: hard
 
@@ -28439,13 +28419,6 @@ __metadata:
   dependencies:
     tslib: ^2.0.3
   checksum: 85eb62534e8c0314026453c4f734bf6450054a19b248280f3f69c98b5d5481707124e2206d7dc515650a6f28da827a2de297455056a9c8f398e5f8ba5dba8419
-  languageName: node
-  linkType: hard
-
-"focus-visible@npm:5.2.0":
-  version: 5.2.0
-  resolution: "focus-visible@npm:5.2.0"
-  checksum: 876f646ef453680d3d34e9f9b23961527ffd5ccaed8690f423d4fbfa37ff023d98a490972bc1387850e37ec2e44958c81f6096ef95b67462e5c4b5404cf1dbb9
   languageName: node
   linkType: hard
 
@@ -46432,7 +46405,7 @@ __metadata:
     "@gorhom/bottom-sheet": 4.6.4
     "@react-native-masked-view/masked-view": 0.3.2
     "@shopify/flash-list": 1.7.1
-    "@shopify/react-native-skia": 1.7.2
+    "@shopify/react-native-skia": 1.6.0
     "@storybook/react": 8.5.2
     "@storybook/test": 8.5.2
     "@storybook/testing-library": 0.2.2
@@ -46462,6 +46435,7 @@ __metadata:
     jest-presets: "workspace:^"
     qrcode: 1.5.1
     react: 18.3.1
+    react-i18next: 14.1.0
     react-native: 0.76.6
     react-native-fast-image: 8.6.3
     react-native-gesture-handler: 2.21.2
@@ -46809,7 +46783,7 @@ __metadata:
     "@react-native-community/netinfo": 11.4.1
     "@reduxjs/toolkit": 1.9.3
     "@shopify/flash-list": 1.7.1
-    "@shopify/react-native-skia": 1.7.2
+    "@shopify/react-native-skia": 1.6.0
     "@simplewebauthn/browser": 11.0.0
     "@simplewebauthn/types": 11.0.0
     "@tanstack/query-async-storage-persister": 5.51.21
@@ -46896,7 +46870,6 @@ __metadata:
     utilities: "workspace:^"
     uuid: 9.0.0
     wagmi: 2.9.3
-    wcag-contrast: 3.0.0
     zod: 3.22.4
   languageName: unknown
   linkType: soft

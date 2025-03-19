@@ -5,19 +5,17 @@ import { OpacityHoverState } from 'components/Common/styles'
 import { UniIcon } from 'components/Logo/UniIcon'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
-import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/TransactionCompleteModal.css'
 import { Portal } from 'nft/components/common/Portal'
 import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, TwitterIcon } from 'nft/components/icons'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useNativeUsdPrice, useSendTransaction, useTransactionResponse } from 'nft/hooks'
 import { TxResponse, TxStateType } from 'nft/types'
 import { generateTweetForPurchase, getSuccessfulImageSize, parseTransactionResponse } from 'nft/utils'
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -56,6 +54,7 @@ const TxCompleteModal = () => {
   const txHashUrl = getExplorerLink(1, txHash, ExplorerDataType.TRANSACTION)
   const shouldShowModal = (txState === TxStateType.Success || txState === TxStateType.Failed) && txState
   const trace = useTrace({ modal: InterfaceModalName.NFT_TX_COMPLETE })
+  const colors = useSporeColors()
   const {
     nftsPurchased,
     nftsNotPurchased,
@@ -118,7 +117,7 @@ const TxCompleteModal = () => {
                     e.stopPropagation()
                   }}
                 >
-                  <UniIcon color={vars.color.pink400} width="36" height="36" className={styles.uniLogo} />
+                  <UniIcon color={colors.accent1.val} width="36" height="36" className={styles.uniLogo} />
                   <Flex flexWrap="wrap" width="100%" height="fit-content">
                     <h1 className={styles.title}>
                       <Trans i18nKey="nft.complete" />
@@ -128,7 +127,7 @@ const TxCompleteModal = () => {
                     </p>
                   </Flex>
                   <UploadLink onClick={shareTweet} target="_blank">
-                    <TwitterIcon width={32} height={32} color={themeVars.colors.neutral2} />
+                    <TwitterIcon width={32} height={32} color={colors.neutral2.val} />
                   </UploadLink>
                   <Flex
                     className={styles.successAssetsContainer}
@@ -165,7 +164,7 @@ const TxCompleteModal = () => {
                     className={styles.bottomBar}
                     justifyContent="space-between"
                   >
-                    <Row>
+                    <Flex row alignItems="center">
                       <Flex mr={16}>
                         {nftsPurchased.length} NFT{nftsPurchased.length === 1 ? '' : 's'}
                       </Flex>
@@ -176,7 +175,7 @@ const TxCompleteModal = () => {
                         })}{' '}
                         ETH
                       </Flex>
-                    </Row>
+                    </Flex>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                       <Text color="$neutral2" variant="body2">
                         <Trans i18nKey="common.etherscan.link" />

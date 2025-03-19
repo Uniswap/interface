@@ -14,12 +14,10 @@ import styled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { ReactNode, useCallback, useReducer, useState } from 'react'
 import { Plus, X } from 'react-feather'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ClickableStyle, ThemedText } from 'theme/components'
-import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
-import { Flex, useIsTouchDevice, useMedia } from 'ui/src'
+import { Button, Flex, useIsTouchDevice, useMedia } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { breakpoints } from 'ui/src/theme'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -51,30 +49,6 @@ const PoolDetailsStatsButtonsRow = styled(Row)`
       margin-right: auto;
     }
     z-index: ${Z_INDEX.sticky};
-  }
-`
-
-const PoolButton = styled.button<{ $open?: boolean; $fixedWidth?: boolean }>`
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  padding: 12px 16px 12px 12px;
-  border: unset;
-  border-radius: 900px;
-  gap: 8px;
-  color: ${({ theme, $open }) => ($open ? theme.neutral1 : theme.accent1)};
-  background-color: ${({ theme, $open }) => ($open ? theme.surface1 : opacify(12, theme.accent1))};
-  justify-content: center;
-  transition: ${({ theme }) => `width ${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
-  border: ${({ theme, $open }) => $open && `1px solid ${theme.surface3}`};
-  ${ClickableStyle}
-  @media (max-width: ${breakpoints.xl}px) {
-    width: ${({ $fixedWidth }) => $fixedWidth && '120px'};
-  }
-  @media (max-width: ${breakpoints.md}px) {
-    width: ${({ $fixedWidth }) => !$fixedWidth && '100%'};
-    background-color: ${({ theme, $open }) => ($open ? theme.surface1 : theme.accent1)};
-    color: ${({ theme, $open }) => ($open ? theme.neutral1 : theme.white)};
   }
 `
 
@@ -122,6 +96,28 @@ interface PoolDetailsStatsButtonsProps {
   loading?: boolean
 }
 
+interface PoolButtonProps {
+  isOpen?: boolean
+  icon?: JSX.Element
+  onPress?: () => void
+  children?: React.ReactNode
+  'data-testid'?: string
+}
+
+const PoolButton = ({ isOpen, icon, onPress, children, 'data-testid': dataTestId }: PoolButtonProps) => {
+  return (
+    <Button
+      onPress={onPress}
+      icon={icon}
+      variant={isOpen ? 'default' : 'branded'}
+      emphasis="secondary"
+      data-testid={dataTestId}
+    >
+      {children}
+    </Button>
+  )
+}
+
 function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?: Token, feeTier?: number) {
   return positions?.find(
     (position) =>
@@ -143,6 +139,7 @@ export function PoolDetailsStatsButtons({
   loading,
 }: PoolDetailsStatsButtonsProps) {
   const account = useAccount()
+  const { t } = useTranslation()
   const { positions: userOwnedPositions } = useMultiChainPositions(account.address ?? '')
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
@@ -200,31 +197,19 @@ export function PoolDetailsStatsButtons({
       <PoolButtonsWrapper isMobile={isMobile}>
         <Flex row justifyContent="center" gap={screenSizeLargerThanTablet ? '$spacing12' : '$spacing8'} width="100%">
           <PoolButton
-            onClick={toggleSwapModalOpen}
-            $open={swapModalOpen}
+            icon={swapModalOpen ? <X size="$icon.20" /> : <ArrowUpDown size="$icon.20" />}
+            onPress={toggleSwapModalOpen}
+            isOpen={swapModalOpen}
             data-testid={`pool-details-${swapModalOpen ? 'close' : 'swap'}-button`}
           >
-            {swapModalOpen ? (
-              <>
-                <X size={20} />
-                <ThemedText.BodyPrimary fontWeight={535} color="accentActive">
-                  <Trans i18nKey="common.close" />
-                </ThemedText.BodyPrimary>
-              </>
-            ) : (
-              <>
-                <ArrowUpDown color={isMobile ? '$white' : '$accent1'} size="$icon.20" />
-                <ThemedText.BodyPrimary fontWeight={535} color="accentActive">
-                  <Trans i18nKey="common.swap" />
-                </ThemedText.BodyPrimary>
-              </>
-            )}
+            {swapModalOpen ? t('common.close') : t('common.swap')}
           </PoolButton>
-          <PoolButton onClick={handleAddLiquidity} data-testid="pool-details-add-liquidity-button">
-            <Plus size={20} />
-            <ThemedText.BodyPrimary fontWeight={535} color="accentActive">
-              <Trans i18nKey="common.addLiquidity" />
-            </ThemedText.BodyPrimary>
+          <PoolButton
+            icon={<Plus size="$icon.20" />}
+            onPress={handleAddLiquidity}
+            data-testid="pool-details-add-liquidity-button"
+          >
+            {t('common.addLiquidity')}
           </PoolButton>
         </Flex>
       </PoolButtonsWrapper>
@@ -234,8 +219,6 @@ export function PoolDetailsStatsButtons({
           chainId={chainId}
           initialInputCurrency={currency0}
           initialOutputCurrency={currency1}
-          compact
-          disableTokenInputs={chainId !== account.chainId}
         />
         <TokenWarningCard currencyInfo={currencyInfo0} onPress={() => onWarningCardCtaPressed(currencyInfo0)} />
         <TokenWarningCard currencyInfo={currencyInfo1} onPress={() => onWarningCardCtaPressed(currencyInfo1)} />

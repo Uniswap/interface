@@ -1,9 +1,8 @@
 import { PropsWithChildren, ReactNode, useContext } from 'react'
-// eslint-disable-next-line no-restricted-imports -- type import is safe
 import type { ColorValue } from 'react-native'
-import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { ThemeNames, opacify } from 'ui/src/theme'
+import { opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -25,8 +24,6 @@ type WarningModalContentProps = {
   captionComponent?: ReactNode
   rejectText?: string
   acknowledgeText?: string
-  rejectButtonTheme?: ThemeNames
-  acknowledgeButtonTheme?: ThemeNames
   severity?: WarningSeverity
   icon?: ReactNode
   // when icon is undefined we default it to triangle, this allows us to hide it
@@ -52,9 +49,7 @@ export function WarningModalContent({
   caption,
   captionComponent,
   rejectText: rejectText,
-  rejectButtonTheme,
   acknowledgeText,
-  acknowledgeButtonTheme,
   severity = WarningSeverity.Medium,
   children,
   icon,
@@ -107,33 +102,24 @@ export function WarningModalContent({
       )}
       {captionComponent}
       {children}
-      <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
-        {rejectText && (
-          <Trace logPress element={ElementName.BackButton} modal={modalName} properties={analyticsProperties}>
-            <DeprecatedButton
-              flex={1}
-              flexBasis={1}
-              theme={rejectButtonTheme ?? 'secondary_Button'}
-              onPress={onReject ?? onClose}
-            >
-              {rejectText}
-            </DeprecatedButton>
-          </Trace>
-        )}
-        {acknowledgeText && (
-          <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
-            <DeprecatedButton
-              flex={1}
-              flexBasis={1}
-              testID={TestID.Confirm}
-              theme={acknowledgeButtonTheme ?? alertColor.buttonTheme}
-              onPress={onAcknowledge}
-            >
-              {acknowledgeText}
-            </DeprecatedButton>
-          </Trace>
-        )}
-      </Flex>
+      {(rejectText || acknowledgeText) && (
+        <Flex row alignSelf="stretch" gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
+          {rejectText && (
+            <Trace logPress element={ElementName.BackButton} modal={modalName} properties={analyticsProperties}>
+              <Button emphasis="secondary" onPress={onReject ?? onClose}>
+                {rejectText}
+              </Button>
+            </Trace>
+          )}
+          {acknowledgeText && (
+            <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
+              <Button testID={TestID.Confirm} onPress={onAcknowledge}>
+                {acknowledgeText}
+              </Button>
+            </Trace>
+          )}
+        </Flex>
+      )}
     </Flex>
   )
 }

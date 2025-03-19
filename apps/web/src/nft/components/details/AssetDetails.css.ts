@@ -1,26 +1,25 @@
 import { style } from '@vanilla-extract/css'
 import { center, subhead } from 'nft/css/common.css'
-import { sprinkles, vars } from 'nft/css/sprinkles.css'
 
-export const image = style([
-  sprinkles({ borderRadius: '20', height: 'full', alignSelf: 'center' }),
-  {
-    maxHeight: 'calc(90vh - 165px)',
-    minHeight: 400,
-    maxWidth: 780,
-    boxShadow: `0px 20px 50px var(--shadow), 0px 10px 50px rgba(70, 115, 250, 0.2)`,
-    '@media': {
-      '(max-width: 1024px)': {
-        maxHeight: '64vh',
-      },
-      '(max-width: 640px)': {
-        minHeight: 280,
-        maxHeight: '56vh',
-        maxWidth: '100%',
-      },
+export const image = style({
+  borderRadius: '20px',
+  height: '100%',
+  alignSelf: 'center',
+  maxHeight: 'calc(90vh - 165px)',
+  minHeight: '400px',
+  maxWidth: '780px',
+  boxShadow: `0px 20px 50px var(--shadow), 0px 10px 50px rgba(70, 115, 250, 0.2)`,
+  '@media': {
+    '(max-width: 1024px)': {
+      maxHeight: '64vh',
+    },
+    '(max-width: 640px)': {
+      minHeight: '280px',
+      maxHeight: '56vh',
+      maxWidth: '100%',
     },
   },
-])
+})
 
 export const embedContainer = style({
   position: 'relative',
@@ -33,10 +32,10 @@ export const embed = style([
   image,
   {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
+    top: '0',
+    left: '0',
+    bottom: '0',
+    right: '0',
     width: '100%',
     height: '100%',
   },
@@ -49,19 +48,25 @@ export const container = style([
   },
 ])
 
-export const marketplace = sprinkles({ borderRadius: '4' })
+export const marketplace = style({
+  borderRadius: '4px',
+})
 
 export const tab = style([
   subhead,
-  sprinkles({ color: 'neutral2', border: 'none', padding: '0', background: 'transparent', cursor: 'pointer' }),
   {
+    color: 'var(--neutral2)',
+    border: 'none',
+    padding: '0',
+    background: 'transparent',
+    cursor: 'pointer',
     selectors: {
       '&[data-active="true"]': {
         textDecoration: 'underline',
-        textDecorationColor: vars.color.accent1,
+        textDecorationColor: 'var(--accent1)',
         textUnderlineOffset: '8px',
         textDecorationThickness: '2px',
-        color: vars.color.neutral1,
+        color: 'var(--neutral1)',
       },
     },
   },
@@ -75,28 +80,36 @@ export const creator = style({
   },
 })
 
-export const columns = style([
-  sprinkles({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: 'full',
-    paddingLeft: { sm: '16', lg: '24', xl: '52' },
-    paddingRight: { sm: '16', lg: '24', xl: '52' },
-    paddingBottom: { sm: '16', lg: '24', xl: '52' },
-    paddingTop: '16',
-    gap: { sm: '32', lg: '28', xl: '52' },
-  }),
-  {
-    boxSizing: 'border-box',
-    '@media': {
-      '(max-width: 1024px)': {
-        flexDirection: 'column',
-        alignItems: 'center',
-      },
+export const columns = style({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  width: '100%',
+  paddingLeft: '52px',
+  paddingRight: '52px',
+  paddingBottom: '52px',
+  paddingTop: '16px',
+  gap: '52px',
+  boxSizing: 'border-box',
+  '@media': {
+    '(max-width: 1024px)': {
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    '(max-width: 960px)': {
+      paddingLeft: '24px',
+      paddingRight: '24px',
+      paddingBottom: '24px',
+      gap: '28px',
+    },
+    '(max-width: 640px)': {
+      paddingLeft: '16px',
+      paddingRight: '16px',
+      paddingBottom: '16px',
+      gap: '32px',
     },
   },
-])
+})
 
 export const column = style({
   alignSelf: 'center',

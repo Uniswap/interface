@@ -1,6 +1,6 @@
 import styled, { useTheme } from 'lib/styled-components'
-import { themeVars } from 'nft/css/sprinkles.css'
 import React from 'react'
+import { useSporeColors } from 'ui/src'
 
 // ESLint reports `fill` is missing, whereas it exists on an SVGProps type
 type SVGProps = React.SVGProps<SVGSVGElement> & {
@@ -15,28 +15,31 @@ export const ChevronUpIcon = ({
   secondaryWidth,
   secondaryHeight,
   ...props
-}: SVGProps & { secondaryWidth?: string; secondaryHeight?: string; secondaryColor?: string }) => (
-  <svg
-    width={secondaryWidth || '29'}
-    height={secondaryHeight || '28'}
-    viewBox="0 0 29 28"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
-    <g clipPath="url(#clip0_564_11230)">
-      <path
-        d="M7.2207 16.0615L13.9092 9.22363C14.1377 8.97754 14.4102 8.86328 14.7178 8.86328C15.0254 8.86328 15.3066 8.98633 15.5352 9.22363L22.2148 16.0615C22.4082 16.2549 22.5137 16.501 22.5137 16.791C22.5137 17.3799 22.0566 17.8369 21.4766 17.8369C21.1953 17.8369 20.9229 17.7314 20.7207 17.5205L14.7266 11.3594L8.71484 17.5205C8.52148 17.7227 8.24902 17.8369 7.95898 17.8369C7.37891 17.8369 6.92188 17.3799 6.92188 16.791C6.92188 16.5098 7.02734 16.2549 7.2207 16.0615Z"
-        fill={secondaryColor || themeVars.colors.neutral2}
-      />
-    </g>
-    <defs>
-      <clipPath id="clip0_564_11230">
-        <rect width="28" height="28" fill="white" transform="translate(0.716797)" />
-      </clipPath>
-    </defs>
-  </svg>
-)
+}: SVGProps & { secondaryWidth?: string; secondaryHeight?: string; secondaryColor?: string }) => {
+  const colors = useSporeColors()
+  return (
+    <svg
+      width={secondaryWidth || '29'}
+      height={secondaryHeight || '28'}
+      viewBox="0 0 29 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <g clipPath="url(#clip0_564_11230)">
+        <path
+          d="M7.2207 16.0615L13.9092 9.22363C14.1377 8.97754 14.4102 8.86328 14.7178 8.86328C15.0254 8.86328 15.3066 8.98633 15.5352 9.22363L22.2148 16.0615C22.4082 16.2549 22.5137 16.501 22.5137 16.791C22.5137 17.3799 22.0566 17.8369 21.4766 17.8369C21.1953 17.8369 20.9229 17.7314 20.7207 17.5205L14.7266 11.3594L8.71484 17.5205C8.52148 17.7227 8.24902 17.8369 7.95898 17.8369C7.37891 17.8369 6.92188 17.3799 6.92188 16.791C6.92188 16.5098 7.02734 16.2549 7.2207 16.0615Z"
+          fill={secondaryColor || colors.neutral2.val}
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_564_11230">
+          <rect width="28" height="28" fill="white" transform="translate(0.716797)" />
+        </clipPath>
+      </defs>
+    </svg>
+  )
+}
 
 export const BackArrowIcon = (props: SVGProps) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" {...props}>
@@ -60,14 +63,17 @@ export const VerifiedIcon = (props: SVGProps) => {
   )
 }
 
-export const XMarkIcon = (props: SVGProps) => (
-  <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path
-      fill={props.fill ?? themeVars.colors.neutral2}
-      d="M10.2706 27.2148C9.74321 27.7421 9.7181 28.6838 10.2831 29.2362C10.8356 29.7887 11.7773 29.7761 12.3046 29.2488L19.9887 21.5521L27.6855 29.2488C28.2254 29.7887 29.1545 29.7887 29.7069 29.2362C30.2468 28.6712 30.2594 27.7547 29.7069 27.2148L22.0228 19.518L29.7069 11.8339C30.2594 11.294 30.2594 10.3649 29.7069 9.81241C29.1419 9.27251 28.2254 9.25995 27.6855 9.79985L19.9887 17.4966L12.3046 9.79985C11.7773 9.27251 10.823 9.2474 10.2831 9.81241C9.73066 10.3649 9.74321 11.3065 10.2706 11.8339L17.9673 19.518L10.2706 27.2148Z"
-    />
-  </svg>
-)
+export const XMarkIcon = (props: SVGProps) => {
+  const colors = useSporeColors()
+  return (
+    <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        fill={props.fill ?? colors.neutral2.val}
+        d="M10.2706 27.2148C9.74321 27.7421 9.7181 28.6838 10.2831 29.2362C10.8356 29.7887 11.7773 29.7761 12.3046 29.2488L19.9887 21.5521L27.6855 29.2488C28.2254 29.7887 29.1545 29.7887 29.7069 29.2362C30.2468 28.6712 30.2594 27.7547 29.7069 27.2148L22.0228 19.518L29.7069 11.8339C30.2594 11.294 30.2594 10.3649 29.7069 9.81241C29.1419 9.27251 28.2254 9.25995 27.6855 9.79985L19.9887 17.4966L12.3046 9.79985C11.7773 9.27251 10.823 9.2474 10.2831 9.81241C9.73066 10.3649 9.74321 11.3065 10.2706 11.8339L17.9673 19.518L10.2706 27.2148Z"
+      />
+    </svg>
+  )
+}
 
 export const ExternalIcon = (props: SVGProps) => (
   <svg {...props} viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
@@ -356,8 +362,8 @@ export const ActivityTransferIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const ActivityExternalLinkIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const ActivityExternalLinkIcon = (props: SVGProps) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <mask id="path-1-outside-1_3799_46574" maskUnits="userSpaceOnUse" x="2" y="2" width="15" height="15" fill="black">
       <rect fill="white" x="2" y="2" width="15" height="15" />
       <path
@@ -480,12 +486,15 @@ export const CancelListingIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const ListingModalWindowActive = (props: SVGProps) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <circle cx="8" cy="8" r="8" fill={props.fill ? props.fill : themeVars.colors.accent1} fillOpacity="0.24" />
-    <circle cx="8" cy="8" r="5" fill={props.fill ? props.fill : themeVars.colors.accent1} />
-  </svg>
-)
+export const ListingModalWindowActive = (props: SVGProps) => {
+  const colors = useSporeColors()
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <circle cx="8" cy="8" r="8" fill={props.fill ? props.fill : colors.accent1.val} fillOpacity="0.24" />
+      <circle cx="8" cy="8" r="5" fill={props.fill ? props.fill : colors.accent1.val} />
+    </svg>
+  )
+}
 
 export const ListingModalWindowClosed = (props: SVGProps) => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

@@ -12,11 +12,13 @@ export const Input = (props: InputProps) => (
     borderWidth={1}
     borderStyle="solid"
     backgroundColor="$transparent"
-    borderRadius="$rounded12"
-    p="$padding12"
+    borderRadius="$rounded16"
+    px="$padding12"
+    py="$padding20"
     fontSize="14"
     fontWeight="book"
     focusStyle={{ borderColor: '$neutral3' }}
+    hoverStyle={{ borderColor: '$neutral3' }}
     {...props}
   />
 )

@@ -1,6 +1,5 @@
-import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
-/* eslint-disable-next-line no-restricted-imports */
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
 import V4_HOOK from 'assets/images/v4Hooks.png'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -23,7 +22,7 @@ import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Anchor, DeprecatedButton, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { Anchor, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
@@ -108,14 +107,11 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
           </Flex>
         </Flex>
         {isConnected && (
-          <DeprecatedButton
-            theme="secondary"
-            size="medium"
-            onPress={() => navigate('/explore/pools')}
-            $md={{ width: '100%' }}
-          >
-            <Text>{t('pools.explore')}</Text>
-          </DeprecatedButton>
+          <Flex centered row $md={{ width: '100%' }}>
+            <Button size="small" emphasis="secondary" onPress={() => navigate('/explore/pools')}>
+              {t('pools.explore')}
+            </Button>
+          </Flex>
         )}
       </Flex>
       <Flex gap="$gap24">
@@ -319,7 +315,7 @@ export default function Pool() {
                     style={{ textDecoration: 'none' }}
                     to={getPositionUrl(position)}
                   >
-                    <LiquidityPositionCard showVisibilityOption liquidityPosition={position} />
+                    <LiquidityPositionCard showVisibilityOption liquidityPosition={position} showMigrateButton />
                   </Link>
                 ))}
                 <HiddenPositions
@@ -340,9 +336,9 @@ export default function Pool() {
           )}
           {hasNextPage && (
             <Flex mx="auto">
-              <DeprecatedButton theme="outline" onPress={loadMorePositions} isDisabled={isFetching}>
-                <Text variant="buttonLabel3">{t('common.loadMore')}</Text>
-              </DeprecatedButton>
+              <Button emphasis="tertiary" size="small" onPress={loadMorePositions} isDisabled={isFetching}>
+                {t('common.loadMore')}
+              </Button>
             </Flex>
           )}
           {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
@@ -370,7 +366,7 @@ export default function Pool() {
               <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
             </Flex>
           )}
-          <Flex row centered mb="$spacing24" gap="$gap4">
+          <Flex row centered $sm={{ flexDirection: 'column', alignItems: 'flex-start' }} mb="$spacing24" gap="$gap4">
             <Text variant="body3" color="$neutral2">
               {t('pool.import.link.description')}
             </Text>

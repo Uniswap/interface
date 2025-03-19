@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-elements */
 /* eslint-disable import/no-unused-modules */
 import { ImageResponse } from '@vercel/og'
 

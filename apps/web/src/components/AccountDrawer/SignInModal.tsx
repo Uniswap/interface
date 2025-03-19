@@ -9,7 +9,14 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 export function SignInModal({ isOpen, close }: { isOpen: boolean; close: () => void }) {
   const { t } = useTranslation()
   return (
-    <Modal name={ModalName.SignIn} isModalOpen={isOpen} onClose={close} maxWidth={440} padding={0}>
+    <Modal
+      name={ModalName.SignIn}
+      isModalOpen={isOpen}
+      onClose={close}
+      maxWidth={440}
+      padding={0}
+      zIndex={zIndexes.modalBackdrop}
+    >
       <Flex position="relative">
         <Flex
           row
@@ -17,9 +24,9 @@ export function SignInModal({ isOpen, close }: { isOpen: boolean; close: () => v
           top={28}
           width="100%"
           justifyContent="flex-end"
-          zIndex={zIndexes.modal}
           pl="$spacing24"
           pr="$spacing24"
+          zIndex={zIndexes.default}
         >
           <ModalCloseIcon onClose={close} testId="sign-in-close-button" />
         </Flex>

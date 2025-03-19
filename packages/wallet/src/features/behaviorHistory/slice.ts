@@ -5,6 +5,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
  * We use this to show conditional UI, usually only for the first time a user views a new feature.
  */
 export interface BehaviorHistoryState {
+  hasViewedConnectionMigration?: boolean
   hasSkippedUnitagPrompt: boolean
   hasCompletedUnitagsIntroModal: boolean
   hasViewedNotificationsCard?: boolean
@@ -18,6 +19,7 @@ export interface BehaviorHistoryState {
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
+  hasViewedConnectionMigration: false,
   hasSkippedUnitagPrompt: false,
   hasCompletedUnitagsIntroModal: false,
   hasViewedNotificationsCard: false,
@@ -31,6 +33,9 @@ const slice = createSlice({
   name: 'behaviorHistory',
   initialState: initialBehaviorHistoryState,
   reducers: {
+    setHasViewedConnectionMigration: (state, action: PayloadAction<boolean>) => {
+      state.hasViewedConnectionMigration = action.payload
+    },
     setHasSkippedUnitagPrompt: (state, action: PayloadAction<boolean>) => {
       state.hasSkippedUnitagPrompt = action.payload
     },
@@ -63,6 +68,7 @@ const slice = createSlice({
 })
 
 export const {
+  setHasViewedConnectionMigration,
   setHasSkippedUnitagPrompt,
   setHasCompletedUnitagsIntroModal,
   setHasUsedExplore,

@@ -2,8 +2,6 @@
 import { ApolloError } from '@apollo/client'
 import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
 import { SerializedError } from '@reduxjs/toolkit'
-import { Currency, TradeType } from '@uniswap/sdk-core'
-// eslint-disable-next-line no-restricted-imports
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import {
   AppDownloadPlatform,
@@ -22,6 +20,7 @@ import {
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
@@ -256,17 +255,16 @@ export type InterfaceSearchResultSelectionProperties = {
 } & ITraceContext
 
 type WrapProperties = {
-  type?: WrapType
-  token_symbol?: string
-  token_address?: string
-  token_in_address?: string
-  token_out_address?: string
+  type: WrapType
+  token_in_address: string
+  token_out_address: string
   token_in_symbol?: string
   token_out_symbol?: string
-  chain_id?: number
+  chain_id: number
   amount?: number
   contract_address?: string
   contract_chain_id?: number
+  transaction_hash?: string
 }
 
 type NFTBagProperties = {
@@ -284,20 +282,21 @@ export enum DappRequestAction {
   Reject = 'Reject',
 }
 
-export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName
+export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName | ConnectionCardLoggingName
 
 export enum OnboardingCardLoggingName {
   FundWallet = 'fund_wallet',
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
-  BridgingBanner = 'bridging_banner',
-  UnichainBannerCold = 'unichain_banner_cold',
-  UnichainBannerWarm = 'unichain_banner_warm',
   EnablePushNotifications = 'enable_push_notifications',
 }
 
 export enum DappRequestCardLoggingName {
   BridgingBanner = 'dapp_request_bridging_banner',
+}
+
+export enum ConnectionCardLoggingName {
+  ConnectionBanner = 'connections_removed_banner',
 }
 
 export type FORAmountEnteredProperties = ITraceContext & {
@@ -614,6 +613,7 @@ export type UniverseEventProperties = {
     url: string
   }
   [MobileEventName.TokenDetailsOtherChainButtonPressed]: ITraceContext
+  [MobileEventName.TokenDetailsContextMenuAction]: ITraceContext & { action: string }
   [MobileEventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType
     eth_method?: EthMethod | UwULinkMethod
@@ -788,6 +788,7 @@ export type UniverseEventProperties = {
   [UniswapEventName.BalancesReportPerChain]: {
     total_balances_usd_per_chain: Record<string, number>
     wallet: string
+    view_only: boolean
   }
   [UniswapEventName.ConversionEventSubmitted]: {
     id: string

@@ -15,9 +15,6 @@ exports[`AccountList renders without error 1`] = `
     data={
       [
         {
-          "type": 0,
-        },
-        {
           "account": {
             "account": {
               "address": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
@@ -34,7 +31,7 @@ exports[`AccountList renders without error 1`] = `
             "isPortfolioValueLoading": false,
             "portfolioValue": 55,
           },
-          "type": 1,
+          "type": 0,
         },
       ]
     }
@@ -76,60 +73,12 @@ exports[`AccountList renders without error 1`] = `
         style={null}
       >
         <View
-          style={
-            {
-              "flex": 1,
-              "flexDirection": "column",
-              "paddingBottom": 8,
-              "paddingLeft": 24,
-              "paddingRight": 24,
-              "paddingTop": 8,
-            }
-          }
-        >
-          <Text
-            allowFontScaling={true}
-            maxFontSizeMultiplier={1.4}
-            style={
-              {
-                "color": {
-                  "dynamic": {
-                    "dark": "#9B9B9B",
-                    "light": "#7D7D7D",
-                  },
-                },
-                "fontFamily": "Basel Grotesk",
-                "fontSize": 17,
-                "fontWeight": "400",
-                "lineHeight": 24,
-              }
-            }
-            suppressHighlighting={true}
-          >
-            Your other wallets
-          </Text>
-        </View>
-      </View>
-      <View
-        onFocusCapture={[Function]}
-        onLayout={[Function]}
-        style={null}
-      >
-        <View
           actions={
             [
               {
+                "onPress": [Function],
                 "systemIcon": "doc.on.doc",
-                "title": "Copy wallet address",
-              },
-              {
-                "systemIcon": "gearshape",
-                "title": "Wallet settings",
-              },
-              {
-                "destructive": true,
-                "systemIcon": "trash",
-                "title": "Remove wallet",
+                "title": "Copy address",
               },
             ]
           }
@@ -258,8 +207,8 @@ exports[`AccountList renders without error 1`] = `
                         style={
                           {
                             "flexDirection": "column",
-                            "height": 36,
-                            "width": 36,
+                            "height": 32,
+                            "width": 32,
                           }
                         }
                       />
@@ -268,7 +217,6 @@ exports[`AccountList renders without error 1`] = `
                   <View
                     style={
                       {
-                        "alignItems": "flex-start",
                         "flexDirection": "column",
                         "flexShrink": 1,
                         "gap": 2,
@@ -278,10 +226,8 @@ exports[`AccountList renders without error 1`] = `
                     <View
                       style={
                         {
-                          "alignItems": "center",
                           "flexDirection": "row",
                           "gap": 12,
-                          "justifyContent": "center",
                         }
                       }
                     >
@@ -290,8 +236,8 @@ exports[`AccountList renders without error 1`] = `
                           {
                             "alignItems": "center",
                             "flexDirection": "row",
+                            "flexShrink": 1,
                             "gap": 4,
-                            "justifyContent": "center",
                           }
                         }
                       >
@@ -314,7 +260,6 @@ exports[`AccountList renders without error 1`] = `
                               "fontSize": 19,
                               "fontWeight": "400",
                               "lineHeight": 24,
-                              "overflow": "hidden",
                             }
                           }
                           suppressHighlighting={true}

@@ -22,9 +22,12 @@ export {
   TamaguiProvider,
   Theme,
   View,
+  VisuallyHidden,
   YGroup,
+  createTamagui,
   getToken,
   getTokenValue,
+  isTouchable,
   isWeb,
   styled,
   useComposedRefs,
@@ -40,6 +43,7 @@ export type {
   ColorTokens,
   GetProps,
   GetRef,
+  GetThemeValueForKey,
   ImageProps,
   InputProps,
   PopperProps,
@@ -48,6 +52,7 @@ export type {
   TabsTabProps,
   TamaguiElement,
   TamaguiProviderProps,
+  TextStyle,
   ThemeKeys,
   ThemeName,
   Tokens,
@@ -64,7 +69,9 @@ export * from './components/UniversalImage/UniversalImage'
 export * from './components/UniversalImage/types'
 export * from './components/UniversalImage/utils'
 export { Button } from './components/buttons/Button/Button'
+export type { ButtonEmphasis, ButtonProps, ButtonVariant } from './components/buttons/Button/types'
 export { DeprecatedButton, type DeprecatedButtonProps } from './components/buttons/DeprecatedButton'
+export { IconButton, type IconButtonProps } from './components/buttons/IconButton/IconButton'
 export * from './components/buttons/PlusMinusButton'
 export * from './components/checkbox'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'

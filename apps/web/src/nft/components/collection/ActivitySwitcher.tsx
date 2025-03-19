@@ -1,12 +1,11 @@
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import * as styles from 'nft/components/collection/ActivitySwitcher.css'
 import { useIsCollectionLoading } from 'nft/hooks'
 import { Flex, Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 export const ActivitySwitcherLoading = new Array(2)
   .fill(null)
-  .map((_, index) => <div className={styles.styledLoading} key={`ActivitySwitcherLoading-key-${index}`} />)
+  .map((_, index) => <Flex width={58} height={20} key={`ActivitySwitcherLoading-key-${index}`} />)
 
 export const ActivitySwitcher = ({
   showActivity,
@@ -25,7 +24,9 @@ export const ActivitySwitcher = ({
         <>
           <Text
             variant="buttonLabel1"
-            className={showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
+            cursor="pointer"
+            mb="$spacing8"
+            color={showActivity ? '$neutral2' : '$neutral1'}
             onPress={() => showActivity && toggleActivity()}
           >
             Items
@@ -37,7 +38,9 @@ export const ActivitySwitcher = ({
           >
             <Text
               variant="buttonLabel1"
-              className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
+              cursor="pointer"
+              mb="$spacing8"
+              color={!showActivity ? '$neutral2' : '$neutral1'}
               onPress={() => !showActivity && toggleActivity()}
               data-testid="nft-activity"
             >

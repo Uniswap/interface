@@ -12,7 +12,7 @@ import { createMigrate } from 'wallet/src/state/createMigrate'
 
 const storage = new MMKV()
 
-export const reduxStorage: Storage = {
+const reduxStorage: Storage = {
   setItem: (key, value) => {
     storage.set(key, value)
     return Promise.resolve(true)
@@ -53,7 +53,7 @@ if (isNonJestDev) {
 
 const middlewares: Middleware[] = [fiatOnRampAggregatorApi.middleware]
 
-export const setupStore = (
+const setupStore = (
   preloadedState?: PreloadedState<MobileState>,
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {

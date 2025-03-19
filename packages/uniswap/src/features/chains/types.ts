@@ -1,5 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
-// eslint-disable-next-line no-restricted-imports
 import type { ImageSourcePropType } from 'react-native'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'

@@ -164,7 +164,7 @@ export function Table<D extends Record<string, unknown>>({
                   disabled={column.disableSortBy}
                   key={index}
                 >
-                  <Flex row alignItems="center" justifyContent="flex-end">
+                  <Flex row alignItems="center" justifyContent={index === 0 ? 'flex-start' : 'flex-end'}>
                     {column.isSorted ? (
                       column.isSortedDesc ? (
                         <ArrowChangeUp color={colors.neutral2.val} width="16px" height="16px" />

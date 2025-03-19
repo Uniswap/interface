@@ -45,17 +45,17 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
   const relativeChange = useLineChartRelativeChange()
 
   const styles = useAnimatedStyle(() => ({
-    color: relativeChange.value.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val,
+    color: relativeChange.value.value >= 0 ? colors.statusSuccess.val : colors.statusCritical.val,
   }))
   const caretStyle = useAnimatedStyle(() => ({
-    color: relativeChange.value.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val,
-    transform: [{ rotate: relativeChange.value.value > 0 ? '180deg' : '0deg' }],
+    color: relativeChange.value.value >= 0 ? colors.statusSuccess.val : colors.statusCritical.val,
+    transform: [{ rotate: relativeChange.value.value >= 0 ? '180deg' : '0deg' }],
   }))
 
   return (
     <Flex
       row
-      alignItems={isAndroid ? 'center' : 'flex-end'}
+      alignItems="center"
       gap="$spacing2"
       mt={isAndroid ? '$none' : '$spacing2'}
       testID={TestID.RelativePriceChange}
@@ -73,7 +73,7 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
             style={[
               caretStyle,
               // fix vertical centering
-              { translateY: relativeChange.value.value > 0 ? -1 : 1 },
+              { translateY: relativeChange.value.value >= 0 ? -1 : 1 },
             ]}
           />
           <AnimatedText style={styles} testID="relative-change-text" text={relativeChange.formatted} variant="body1" />

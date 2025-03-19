@@ -56,10 +56,10 @@ const CopyIcon = styled(Copy)`
 
 const GridItem = ({ header, body }: { header: string; body: React.ReactNode }) => {
   return (
-    <div>
+    <>
       <Header>{header}</Header>
       <Body>{body}</Body>
-    </div>
+    </>
   )
 }
 

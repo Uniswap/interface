@@ -46,7 +46,8 @@
     "react-native-tab-view@3.5.2": "Fixes warning on profile screens with spreading key from props. Fixed in react-native-tab-view <4.0.0-alpha.7",
     "react-native-reanimated@3.16.7": "Fixes circular component rendering during tests while matching snapshots. See https://github.com/software-mansion/react-native-reanimated/issues/6645#issuecomment-2610994809",
     "react-scripts@5.0.1": "Fixes incompatibility with jest 28+",
-    "@react-native/assets-registry@0.76.6": "Fixes an issue with building on Web due to webpack's inability to handle Flow typings: https://github.com/facebook/react-native/issues/48349"
+    "@react-native/assets-registry@0.76.6": "Fixes an issue with building on Web due to webpack's inability to handle Flow typings: https://github.com/facebook/react-native/issues/48349",
+    "webpack@5.90.0": "Fixes issues with incompatible webpack typings in storybook"
   },
   "resolutions": {
     "@apollo/client": "3.10.4",

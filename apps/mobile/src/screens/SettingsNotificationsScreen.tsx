@@ -220,7 +220,6 @@ const AccountNotificationRow = memo(function AccountNotificationRow({
           showIconBackground
           address={address}
           showViewOnlyBadge={isViewOnly}
-          showViewOnlyLabel={isViewOnly}
           size={iconSizes.icon32}
           variant="subheading2"
           captionVariant="body3"

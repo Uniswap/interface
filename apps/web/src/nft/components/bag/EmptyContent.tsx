@@ -1,42 +1,35 @@
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import styled from 'lib/styled-components'
-import { Center, Column } from 'nft/components/Flex'
 import { BagIcon, LargeTagIcon } from 'nft/components/icons'
-import { subhead } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
-
-const StyledColumn = styled(Column)`
-  gap: 12px;
-  margin-top: 68px;
-`
+import { Flex, Text, useSporeColors } from 'ui/src'
 
 const EmptyState = () => {
   const isProfilePage = useIsPage(PageType.NFTS_PROFILE)
+  const colors = useSporeColors()
 
   return (
-    <StyledColumn>
-      <Center>
+    <Flex gap="$gap12" mt={68}>
+      <Flex justifyContent="center" alignItems="center">
         {isProfilePage ? (
-          <LargeTagIcon color={themeVars.colors.neutral3} />
+          <LargeTagIcon color={colors.neutral3.val} />
         ) : (
-          <BagIcon color={themeVars.colors.neutral3} height="96px" width="96px" strokeWidth="1px" />
+          <BagIcon color={colors.neutral3.val} height="96px" width="96px" strokeWidth="1px" />
         )}
-      </Center>
+      </Flex>
       {isProfilePage ? (
-        <Center data-testid="nft-no-nfts-selected" className={subhead}>
+        <Text textAlign="center" variant="subheading1" data-testid="nft-no-nfts-selected">
           No NFTs selected
-        </Center>
+        </Text>
       ) : (
-        <Column gap="16">
-          <Center data-testid="nft-empty-bag" className={subhead} style={{ lineHeight: '24px' }}>
+        <Flex gap="$gap16">
+          <Text textAlign="center" data-testid="nft-empty-bag" variant="subheading1">
             Your bag is empty
-          </Center>
-          <Center fontSize="12" fontWeight="book" color="neutral2" style={{ lineHeight: '16px' }}>
+          </Text>
+          <Text textAlign="center" variant="body3" color="$neutral2">
             Selected NFTs will appear here
-          </Center>
-        </Column>
+          </Text>
+        </Flex>
       )}
-    </StyledColumn>
+    </Flex>
   )
 }
 

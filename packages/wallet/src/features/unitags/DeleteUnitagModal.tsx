@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -32,7 +31,6 @@ export function DeleteUnitagModal({
   onSuccess?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const dispatch = useDispatch()
   const { triggerRefetchUnitags } = useUnitagUpdater()
   const account = useAccount(address)
@@ -108,16 +106,18 @@ export function DeleteUnitagModal({
         <Flex py="$spacing24">
           <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
         </Flex>
-        <Flex centered row width="100%">
-          <DeprecatedButton fill isDisabled={isDeleting} testID={TestID.Remove} theme="detrimental" onPress={onDelete}>
-            {isDeleting ? (
-              <Flex height={fonts.buttonLabel1.lineHeight}>
-                <ActivityIndicator color={colors.white.val} />
-              </Flex>
-            ) : (
-              t('common.button.delete')
-            )}
-          </DeprecatedButton>
+        <Flex row width="100%">
+          <Button
+            loading={isDeleting}
+            isDisabled={isDeleting}
+            testID={TestID.Remove}
+            variant="critical"
+            emphasis="secondary"
+            size="large"
+            onPress={onDelete}
+          >
+            {t('common.button.delete')}
+          </Button>
         </Flex>
       </Flex>
     </Modal>

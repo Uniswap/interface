@@ -3,6 +3,7 @@ import { PrefetchBalancesWrapper, useTokenBalancesQuery } from 'graphql/data/apo
 import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { render, renderHook } from 'test-utils/render'
+import { Flex } from 'ui/src'
 
 // TODO(WEB-5370): Remove this delay + waitFor once we've integrated wallet's refetch logic
 jest.setTimeout(10000)
@@ -30,7 +31,7 @@ describe('TokenBalancesProvider', () => {
   })
 
   it('TokenBalancesProvider should not fetch balances without calls to useOnAssetActivitySubscription', async () => {
-    render(<div />)
+    render(<Flex />)
     await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(0), { timeout: 3500 })
   })
 
@@ -79,7 +80,7 @@ describe('TokenBalancesProvider', () => {
     it('should fetch balances when a PrefetchBalancesWrapper is hovered', async () => {
       const { rerender } = render(
         <PrefetchBalancesWrapper>
-          <div>hi</div>
+          <>hi</>
         </PrefetchBalancesWrapper>,
       )
       const wrappedComponent = screen.getByText('hi')
@@ -87,7 +88,7 @@ describe('TokenBalancesProvider', () => {
       // Rerender to account for initial stale flag being set
       rerender(
         <PrefetchBalancesWrapper>
-          <div>hi</div>
+          <>hi</>
         </PrefetchBalancesWrapper>,
       )
 
@@ -108,7 +109,7 @@ describe('TokenBalancesProvider', () => {
       mocked(useAccount).mockReturnValue({ address: '0xaddress2', chainId: 1 } as any)
       rerender(
         <PrefetchBalancesWrapper>
-          <div>hi</div>
+          <>hi</>
         </PrefetchBalancesWrapper>,
       )
       await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(1), { timeout: 4000 })

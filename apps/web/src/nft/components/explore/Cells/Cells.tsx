@@ -2,11 +2,11 @@ import { formatEther } from '@ethersproject/units'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
-import * as styles from 'nft/components/explore/Cells/Cells.css'
 import { VerifiedIcon } from 'nft/components/icons'
 import { Denomination } from 'nft/types'
 import { ReactNode } from 'react'
 import { ThemedText } from 'theme/components'
+import { View } from 'ui/src'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TruncatedText = styled.div`
@@ -84,9 +84,15 @@ export const CollectionTitleCell = ({ value }: CellProps) => {
         )}
       </CollectionName>
       {value.isVerified && (
-        <span className={styles.verifiedBadge}>
+        <View
+          ml="$spacing4"
+          $platform-web={{ display: 'inline-block', textAlign: 'left' }}
+          pt="$spacing4"
+          height={28}
+          width={28}
+        >
           <VerifiedIcon />
-        </span>
+        </View>
       )}
     </CollectionNameContainer>
   )

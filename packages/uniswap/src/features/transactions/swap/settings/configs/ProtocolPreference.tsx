@@ -21,7 +21,7 @@ import {
   DEFAULT_PROTOCOL_OPTIONS,
   FrontendSupportedProtocol,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { isMobileApp } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
 
 function isDefaultOptions(selectedProtocols: FrontendSupportedProtocol[]): boolean {
   return new Set(selectedProtocols).size === new Set([...selectedProtocols, ...DEFAULT_PROTOCOL_OPTIONS]).size
@@ -29,7 +29,9 @@ function isDefaultOptions(selectedProtocols: FrontendSupportedProtocol[]): boole
 
 export const ProtocolPreference: SwapSettingConfig = {
   renderTitle: (t) => t('swap.settings.routingPreference.title'),
-  renderCloseButtonText: (t) => t('common.button.save'),
+  ...(!isInterface && {
+    renderCloseButtonText: (t) => t('common.button.save'),
+  }),
   Control() {
     const { t } = useTranslation()
     const { selectedProtocols } = useTransactionSettingsContext()
@@ -163,15 +165,9 @@ export function getProtocolTitle(preference: FrontendSupportedProtocol, t: TFunc
             >
               <Trans
                 components={{
-                  icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
+                  icon: <UniswapX size="$icon.16" />,
                   gradient: <UniswapXText height={18} variant="body3" />,
-                  info: (
-                    <InfoCircleFilled
-                      color="$neutral3"
-                      size="$icon.16"
-                      style={!isMobileApp && { transform: 'translateY(3px)' }}
-                    />
-                  ),
+                  info: <InfoCircleFilled color="$neutral3" size="$icon.16" />,
                 }}
                 i18nKey="uniswapx.item"
               />
@@ -267,7 +263,7 @@ function DefaultOptionDescription({
             >
               <Trans
                 components={{
-                  icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
+                  icon: <UniswapX size="$icon.16" />,
                   gradient: <UniswapXText height={18} variant="body3" />,
                 }}
                 i18nKey="uniswapx.included"

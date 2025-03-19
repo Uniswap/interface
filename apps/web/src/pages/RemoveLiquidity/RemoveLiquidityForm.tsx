@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import { LoaderButton } from 'components/Button/LoaderButton'
+import { ErrorCallout } from 'components/ErrorCallout'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { StyledPercentInput } from 'components/PercentInput'
@@ -8,13 +7,12 @@ import {
   useRemoveLiquidityModalContext,
 } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
-import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { canUnwrapCurrency } from 'pages/Pool/Positions/create/utils'
 import { ClickablePill } from 'pages/Swap/Buy/PredefinedAmount'
 import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from 'pages/Swap/common/shared'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Flex, Switch, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Switch, Text, useSporeColors } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import useResizeObserver from 'use-resize-observer'
 
@@ -140,19 +138,19 @@ export function RemoveLiquidityForm() {
         currency1Amount={currency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
-      <TradingAPIError errorMessage={error} refetch={refetch} />
-      <LoaderButton
-        isDisabled={percentInvalid || !txContext?.txRequest}
-        onPress={() => setStep(DecreaseLiquidityStep.Review)}
-        loading={!error && !percentInvalid && !txContext?.txRequest}
-        buttonKey="RemoveLiquidity-continue"
-      >
-        <Flex row alignItems="center" gap="$spacing8">
-          <Text variant="buttonLabel1" color="$white" animation="fastHeavy">
-            {t('common.button.remove')}
-          </Text>
-        </Flex>
-      </LoaderButton>
+      <ErrorCallout errorMessage={error} onPress={refetch} />
+      <Flex row>
+        <Button
+          isDisabled={percentInvalid || !txContext?.txRequest}
+          onPress={() => setStep(DecreaseLiquidityStep.Review)}
+          loading={!error && !percentInvalid && !txContext?.txRequest}
+          variant="branded"
+          key="LoaderButton-animation-RemoveLiquidity-continue"
+          size="large"
+        >
+          {t('common.button.remove')}
+        </Button>
+      </Flex>
     </Flex>
   )
 }

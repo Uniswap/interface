@@ -1,12 +1,11 @@
 import clsx from 'clsx'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { ReactNode, useEffect, useState } from 'react'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 
 interface TraitsHeaderProps {
   title: string
@@ -21,6 +20,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
   const traitsOpen = useTraitsOpen((state) => state.traitsOpen)
   const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
   const isMobile = useIsMobile()
+  const colors = useSporeColors()
 
   const prevTraitIsOpen = index !== undefined ? traitsOpen[index - 1] : false
   const showBorderTop = index !== TraitPosition.TRAIT_START_INDEX
@@ -35,7 +35,19 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
     <>
       {showBorderTop && (
         <Flex
-          className={clsx(subheadSmall, !isOpen && styles.rowHover, styles.detailsOpen)}
+          className={clsx(subheadSmall)}
+          borderTopColor="$surface3"
+          borderTopWidth={1}
+          overflow="hidden"
+          my="$spacing8"
+          hoverStyle={
+            isOpen
+              ? {}
+              : {
+                  backgroundColor: '$surface3',
+                  borderRadius: '$rounded12',
+                }
+          }
           opacity={!prevTraitIsOpen && isOpen && index !== 0 ? 1 : 0}
           mt={prevTraitIsOpen ? 0 : 8}
         />
@@ -60,8 +72,15 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
             <Text color="$neutral2" mr="12" variant="body2">
               {props.numTraits}
             </Text>
-            <Flex className={styles.chevronContainer} transform={`rotate(${isOpen ? 0 : 180}deg)`}>
-              <ChevronUpIcon className={styles.chevronIcon} />
+            <Flex
+              $platform-web={{ display: 'inline-block' }}
+              height="$spacing28"
+              width="$spacing28"
+              animation="fast"
+              mr={-1}
+              rotate={isOpen ? '0deg' : '180deg'}
+            >
+              <ChevronUpIcon fill={colors.neutral2.val} style={{ marginLeft: '-1px' }} />
             </Flex>
           </Flex>
         </Flex>

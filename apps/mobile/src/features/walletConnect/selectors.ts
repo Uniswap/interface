@@ -6,21 +6,6 @@ import {
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
 
-export const selectSessions =
-  (address: Maybe<string>) =>
-  (state: MobileState): WalletConnectSession[] | undefined => {
-    if (!address) {
-      return undefined
-    }
-
-    const wcAccount = state.walletConnect.byAccount[address]
-    if (!wcAccount) {
-      return undefined
-    }
-
-    return Object.values(wcAccount.sessions)
-  }
-
 export const makeSelectSessions = (): Selector<MobileState, WalletConnectSession[] | undefined, [Maybe<Address>]> =>
   createSelector(
     (state: MobileState) => state.walletConnect.byAccount,

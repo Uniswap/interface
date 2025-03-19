@@ -1,12 +1,11 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
-import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { getMarketplaceIcon } from 'nft/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { ClickableTamaguiStyle, ThemedText } from 'theme/components'
-import { Flex, LabeledCheckbox, Text } from 'ui/src'
+import { Checkbox, Flex, Text, useSporeColors } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 export const MARKETPLACE_ITEMS = {
@@ -80,12 +79,10 @@ const MarketplaceItem = ({
   }
 
   const checkbox = (
-    <LabeledCheckbox
-      variant="branded"
-      checked={isCheckboxSelected}
-      onCheckPressed={handleCheckbox}
-      text={String(count)}
-    />
+    <Flex row alignItems="center" gap="$gap8">
+      <Checkbox variant="branded" checked={isCheckboxSelected} onCheckedChange={handleCheckbox} />
+      <Text variant="body2">{String(count)}</Text>
+    </Flex>
   )
 
   const titleWithLogo = (
@@ -96,9 +93,9 @@ const MarketplaceItem = ({
   )
 
   return (
-    <div key={value}>
+    <Flex key={value}>
       <FilterItem title={titleWithLogo} element={checkbox} onClick={handleCheckbox} />
-    </div>
+    </Flex>
   )
 }
 
@@ -113,6 +110,7 @@ export const FilterDropdown = ({
   onClick: (e: any) => void
   isOpen: boolean
 }) => {
+  const colors = useSporeColors()
   return (
     <>
       <Flex
@@ -136,15 +134,18 @@ export const FilterDropdown = ({
           }}
         >
           <Text variant="body2">{title}</Text>
-          <Flex alignItems="center">
-            <Flex
-              className={styles.chevronContainer}
-              style={{
-                transform: `rotate(${isOpen ? 0 : 180}deg)`,
-              }}
-            >
-              <ChevronUpIcon className={styles.chevronIcon} />
-            </Flex>
+          <Flex
+            centered
+            $platform-web={{
+              display: 'inline-block',
+            }}
+            height="$spacing28"
+            width="$spacing28"
+            animation="fast"
+            rotate={isOpen ? '0deg' : '180deg'}
+            mr={-1}
+          >
+            <ChevronUpIcon fill={colors.neutral2.val} style={{ marginLeft: '-1px' }} />
           </Flex>
         </Flex>
         {isOpen && (

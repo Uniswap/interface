@@ -1,0 +1,144 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorCallout should not render errorMessage if true 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <span
+      class=" _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080 _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-pad1331704929 _pr-t-space-pad1331704929 _pb-t-space-pad1331704929 _pl-t-space-pad1331704929"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-statusCriti3045924 _pt-t-space-pad1331704929 _pr-t-space-pad1331704929 _pb-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _alignSelf-flex-start"
+          >
+            <svg
+              fill="currentColor"
+              stroke-width="8"
+              style="width: 20px; height: 20px; color: rgb(255, 95, 82);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M21.6074 17.1522L15.0004 4.79599C13.7204 2.40199 10.2814 2.40199 9.00042 4.79599L2.39349 17.1522C1.21949 19.3482 2.81353 22.0001 5.30853 22.0001H18.6923C21.1863 22.0001 22.7814 19.3472 21.6074 17.1522ZM11.2504 10.0001C11.2504 9.58609 11.5864 9.25009 12.0004 9.25009C12.4144 9.25009 12.7504 9.58609 12.7504 10.0001V14.0001C12.7504 14.4141 12.4144 14.7501 12.0004 14.7501C11.5864 14.7501 11.2504 14.4141 11.2504 14.0001V10.0001ZM12.0204 18.0001C11.4684 18.0001 11.0153 17.5521 11.0153 17.0001C11.0153 16.4481 11.4584 16.0001 12.0104 16.0001H12.0204C12.5734 16.0001 13.0204 16.4481 13.0204 17.0001C13.0204 17.5521 12.5724 18.0001 12.0204 18.0001Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _alignItems-flex-start _flexWrap-wrap _flexShrink-1 _gap-t-space-gap52"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-statusCriti98254 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            >
+              Something went wrong
+            </span>
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            >
+              There was an error fetching data required for your transaction.
+            </span>
+          </div>
+        </div>
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`ErrorCallout should render defaults 1`] = `
+<DocumentFragment>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <span
+      class=" _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334080 _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pt-t-space-pad1331704929 _pr-t-space-pad1331704929 _pb-t-space-pad1331704929 _pl-t-space-pad1331704929"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-statusCriti3045924 _pt-t-space-pad1331704929 _pr-t-space-pad1331704929 _pb-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _alignSelf-flex-start"
+          >
+            <svg
+              fill="currentColor"
+              stroke-width="8"
+              style="width: 20px; height: 20px; color: rgb(255, 95, 82);"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M21.6074 17.1522L15.0004 4.79599C13.7204 2.40199 10.2814 2.40199 9.00042 4.79599L2.39349 17.1522C1.21949 19.3482 2.81353 22.0001 5.30853 22.0001H18.6923C21.1863 22.0001 22.7814 19.3472 21.6074 17.1522ZM11.2504 10.0001C11.2504 9.58609 11.5864 9.25009 12.0004 9.25009C12.4144 9.25009 12.7504 9.58609 12.7504 10.0001V14.0001C12.7504 14.4141 12.4144 14.7501 12.0004 14.7501C11.5864 14.7501 11.2504 14.4141 11.2504 14.0001V10.0001ZM12.0204 18.0001C11.4684 18.0001 11.0153 17.5521 11.0153 17.0001C11.0153 16.4481 11.4584 16.0001 12.0104 16.0001H12.0204C12.5734 16.0001 13.0204 16.4481 13.0204 17.0001C13.0204 17.5521 12.5724 18.0001 12.0204 18.0001Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <div
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _alignItems-flex-start _flexWrap-wrap _flexShrink-1 _gap-t-space-gap52"
+          >
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-statusCriti98254 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            >
+              Something went wrong
+            </span>
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            >
+              There was an error fetching data required for your transaction.
+            </span>
+            <span
+              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral3 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+              data-disable-theme="true"
+            >
+              Error: test
+            </span>
+            <div
+              class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer _mt-t-space-spa94665587"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 16px; height: 16px; color: rgb(34, 34, 34);"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M14.6667 8C14.6667 11.676 11.676 14.6667 8.00004 14.6667C5.45204 14.6667 3.16399 13.248 2.02999 10.9634C1.86599 10.6334 2.00077 10.2333 2.33077 10.07C2.65944 9.90532 3.06067 10.0413 3.224 10.3706C4.13133 12.1986 5.96137 13.334 8.00004 13.334C10.9407 13.334 13.3334 10.9413 13.3334 8.00065C13.3334 5.05998 10.9407 2.66732 8.00004 2.66732C6.07537 2.66732 4.33143 3.71065 3.39343 5.33398H5.33337C5.70204 5.33398 6.00004 5.63265 6.00004 6.00065C6.00004 6.36865 5.70204 6.66732 5.33337 6.66732H2.00004C1.63137 6.66732 1.33337 6.36865 1.33337 6.00065V2.66732C1.33337 2.29932 1.63137 2.00065 2.00004 2.00065C2.36871 2.00065 2.66671 2.29932 2.66671 2.66732V4.00602C3.90204 2.35736 5.86471 1.33398 8.00004 1.33398C11.676 1.33332 14.6667 4.324 14.6667 8Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span
+                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+                  data-disable-theme="true"
+                >
+                  Try again
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
+  </span>
+</DocumentFragment>
+`;

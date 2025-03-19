@@ -4,7 +4,7 @@ import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import {
   GQL_MAINNET_CHAINS,
   GQL_TESTNET_CHAINS,
-  // eslint-disable-next-line no-restricted-imports
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   UNIVERSE_CHAIN_INFO,
   getChainInfo,
 } from 'uniswap/src/features/chains/chainInfo'
@@ -36,7 +36,7 @@ export function getChainLabel(chainId: UniverseChainId): string {
 }
 
 export function isTestnetChain(chainId: UniverseChainId): boolean {
-  return Boolean(getChainInfo(chainId).testnet)
+  return Boolean(getChainInfo(chainId)?.testnet)
 }
 
 export function getChainIdByInfuraPrefix(prefix: string): UniverseChainId | undefined {

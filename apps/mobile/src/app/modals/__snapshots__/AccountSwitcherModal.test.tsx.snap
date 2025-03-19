@@ -5,7 +5,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
   style={
     {
       "flexDirection": "column",
-      "maxHeight": NaN,
+      "maxHeight": 1298,
       "paddingBottom": 12,
     }
   }
@@ -15,6 +15,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
       {
         "flexDirection": "column",
         "gap": 16,
+        "marginLeft": 12,
+        "marginRight": 12,
         "paddingBottom": 16,
         "paddingTop": 12,
       }
@@ -92,7 +94,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
       <View
         style={
           {
-            "alignItems": "center",
             "flexDirection": "column",
             "flexShrink": 1,
             "gap": 0,
@@ -114,6 +115,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
+                "flexShrink": 1,
                 "gap": 4,
                 "justifyContent": "center",
               }
@@ -138,7 +140,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
                   "fontSize": 19,
                   "fontWeight": "400",
                   "lineHeight": 24,
-                  "overflow": "hidden",
                 }
               }
               suppressHighlighting={true}
@@ -282,16 +283,35 @@ exports[`AccountSwitcher renders correctly 1`] = `
     <View
       style={
         {
-          "flexDirection": "column",
-          "paddingLeft": 24,
-          "paddingRight": 24,
+          "flexDirection": "row",
+          "paddingLeft": 12,
+          "paddingRight": 12,
         }
       }
     >
       <View
+        collapsable={false}
+        focusVisibleStyle={
+          {
+            "backgroundColor": "rgba(34,34,34,0.09)",
+          }
+        }
+        forwardedRef={[Function]}
+        jestAnimatedStyle={
+          {
+            "value": {
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          }
+        }
         onBlur={[Function]}
         onClick={[Function]}
         onFocus={[Function]}
+        onLayout={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -301,77 +321,62 @@ exports[`AccountSwitcher renders correctly 1`] = `
         style={
           {
             "alignItems": "center",
-            "backgroundColor": {
-              "dynamic": {
-                "dark": "rgba(255,255,255,0.12)",
-                "light": "rgba(34,34,34,0.05)",
-              },
-            },
-            "borderBottomColor": {
-              "dynamic": {
-                "dark": "transparent",
-                "light": "transparent",
-              },
-            },
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
+            "alignSelf": "stretch",
+            "backgroundColor": "rgba(34,34,34,0.05)",
+            "borderBottomColor": "transparent",
+            "borderBottomLeftRadius": 16,
+            "borderBottomRightRadius": 16,
             "borderBottomWidth": 1,
-            "borderLeftColor": {
-              "dynamic": {
-                "dark": "transparent",
-                "light": "transparent",
-              },
-            },
+            "borderLeftColor": "transparent",
             "borderLeftWidth": 1,
-            "borderRightColor": {
-              "dynamic": {
-                "dark": "transparent",
-                "light": "transparent",
-              },
-            },
+            "borderRightColor": "transparent",
             "borderRightWidth": 1,
             "borderStyle": "solid",
-            "borderTopColor": {
-              "dynamic": {
-                "dark": "transparent",
-                "light": "transparent",
-              },
-            },
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
+            "borderTopColor": "transparent",
+            "borderTopLeftRadius": 16,
+            "borderTopRightRadius": 16,
             "borderTopWidth": 1,
+            "flex": 1,
+            "flexBasis": 0,
             "flexDirection": "row",
-            "gap": 4,
+            "gap": 8,
             "height": "auto",
             "justifyContent": "center",
-            "opacity": 1,
-            "paddingBottom": 8,
-            "paddingLeft": 8,
-            "paddingRight": 8,
-            "paddingTop": 8,
+            "paddingBottom": 12,
+            "paddingLeft": 16,
+            "paddingRight": 16,
+            "paddingTop": 12,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
           }
         }
         testID="wallet-settings"
       >
         <Text
           maxFontSizeMultiplier={1.2}
+          numberOfLines={1}
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "color": {
                 "dynamic": {
                   "dark": "#FFFFFF",
-                  "light": "#000000",
+                  "light": "#222222",
                 },
               },
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "500",
-              "lineHeight": 19.549999999999997,
+              "lineHeight": 21.849999999999998,
             }
           }
           suppressHighlighting={true}
         >
-          Manage wallet
+          Wallet settings
         </Text>
       </View>
     </View>
@@ -380,7 +385,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
     style={
       {
         "flexDirection": "column",
-        "maxHeight": NaN,
+        "maxHeight": 649,
       }
     }
   >
@@ -517,7 +522,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "borderTopRightRadius": 999999,
             "borderTopWidth": 1,
             "flexDirection": "column",
-            "height": 40,
+            "height": 32,
             "justifyContent": "center",
             "paddingBottom": 8,
             "paddingLeft": 8,
@@ -530,7 +535,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
             },
             "shadowOpacity": 0.050980392156862744,
             "shadowRadius": 10,
-            "width": 40,
+            "width": 32,
           }
         }
       >
@@ -599,8 +604,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
           {
             "color": {
               "dynamic": {
-                "dark": "#9B9B9B",
-                "light": "#7D7D7D",
+                "dark": "#FFFFFF",
+                "light": "#222222",
               },
             },
             "fontFamily": "Basel Grotesk",

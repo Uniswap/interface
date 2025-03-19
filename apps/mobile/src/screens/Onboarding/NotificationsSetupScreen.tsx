@@ -9,7 +9,7 @@ import { usePromptPushPermission } from 'src/features/notifications/hooks/usePro
 import { showNotificationSettingsAlert } from 'src/features/notifications/showNotificationSettingsAlert'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { DeprecatedButton, Flex } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { BellOn } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -61,9 +61,11 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
         <NotificationsBackgroundImage />
       </Flex>
       <Trace logPress element={ElementName.Enable}>
-        <DeprecatedButton size="large" testID="turn-on-notifications" onPress={onPressEnableNotifications}>
-          {t('common.button.enable')}
-        </DeprecatedButton>
+        <Flex centered row>
+          <Button variant="branded" size="large" testID="turn-on-notifications" onPress={onPressEnableNotifications}>
+            {t('common.button.enable')}
+          </Button>
+        </Flex>
       </Trace>
     </OnboardingScreen>
   )

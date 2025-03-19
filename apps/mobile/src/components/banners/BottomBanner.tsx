@@ -5,7 +5,7 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 export const BANNER_HEIGHT = 45
 
-export type BottomBannerProps = {
+type BottomBannerProps = {
   text: string
   icon?: JSX.Element
   backgroundColor?: ColorTokens

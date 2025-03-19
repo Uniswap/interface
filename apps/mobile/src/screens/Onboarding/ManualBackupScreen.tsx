@@ -11,7 +11,7 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpModal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { DeprecatedButton, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { EyeSlash, FileListLock, GraduationCap, Key, PapersText, Pen } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -155,14 +155,17 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               />
             </Flex>
             <Flex justifyContent="flex-end">
-              <DeprecatedButton
-                size="large"
-                isDisabled={!displayContinueButtonEnabled}
-                testID={TestID.Next}
-                onPress={fromCloudBackup ? finishCloudBackup : nextView}
-              >
-                {fromCloudBackup ? t('common.button.finish') : t('common.button.continue')}
-              </DeprecatedButton>
+              <Flex row>
+                <Button
+                  size="large"
+                  variant="branded"
+                  isDisabled={!displayContinueButtonEnabled}
+                  testID={TestID.Next}
+                  onPress={fromCloudBackup ? finishCloudBackup : nextView}
+                >
+                  {fromCloudBackup ? t('common.button.finish') : t('common.button.continue')}
+                </Button>
+              </Flex>
             </Flex>
           </Flex>
           {!seedWarningAcknowledged &&
@@ -192,14 +195,17 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               />
             </Flex>
             <Trace logPress element={ElementName.Continue} screen={ManualPageViewScreen.ConfirmRecoveryPhrase}>
-              <DeprecatedButton
-                isDisabled={!confirmContinueButtonEnabled}
-                size="large"
-                testID={TestID.Continue}
-                onPress={() => (onboardingExperimentEnabled ? setShowSpeedBumpModal(true) : onValidationSuccessful())}
-              >
-                {t('common.button.continue')}
-              </DeprecatedButton>
+              <Flex row>
+                <Button
+                  isDisabled={!confirmContinueButtonEnabled}
+                  size="large"
+                  variant="branded"
+                  testID={TestID.Continue}
+                  onPress={() => (onboardingExperimentEnabled ? setShowSpeedBumpModal(true) : onValidationSuccessful())}
+                >
+                  {t('common.button.continue')}
+                </Button>
+              </Flex>
             </Trace>
           </Flex>
 
@@ -237,17 +243,11 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
         <Text color="$neutral2" textAlign="center" variant="body2">
           {t('onboarding.recoveryPhrase.warning.final.message')}
         </Text>
-        <DeprecatedButton
-          flexGrow={1}
-          mt="$spacing16"
-          size="large"
-          testID={TestID.Confirm}
-          theme="primary"
-          width="100%"
-          onPress={onPress}
-        >
-          {t('onboarding.recoveryPhrase.warning.final.button')}
-        </DeprecatedButton>
+        <Flex row mt="$spacing16">
+          <Button size="large" testID={TestID.Confirm} variant="branded" onPress={onPress}>
+            {t('onboarding.recoveryPhrase.warning.final.button')}
+          </Button>
+        </Flex>
       </Flex>
     </Modal>
   )
@@ -312,14 +312,14 @@ function ManualBackWarningModal({ onBack, onContinue }: ManualBackWarningModalPr
 
         <Flex row gap="$spacing8">
           <Trace logPress element={ElementName.BackButton} modal={ModalName.SeedPhraseWarningModal}>
-            <DeprecatedButton fill size="large" theme="secondary" onPress={() => onBack()}>
+            <Button size="large" emphasis="secondary" onPress={() => onBack()}>
               {t('common.button.back')}
-            </DeprecatedButton>
+            </Button>
           </Trace>
           <Trace logPress element={ElementName.Continue} modal={ModalName.SeedPhraseWarningModal}>
-            <DeprecatedButton fill size="large" theme="primary" onPress={() => onContinue()}>
+            <Button size="large" variant="branded" emphasis="primary" onPress={() => onContinue()}>
               {t('common.button.continue')}
-            </DeprecatedButton>
+            </Button>
           </Trace>
         </Flex>
       </Flex>

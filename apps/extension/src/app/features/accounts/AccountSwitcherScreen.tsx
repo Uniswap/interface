@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { BaseSyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { ComingSoon } from 'src/app/components/ComingSoon'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { CreateWalletModal } from 'src/app/features/accounts/CreateWalletModal'
@@ -14,15 +13,13 @@ import { isConnectedAccount } from 'src/app/features/dapp/utils'
 import { PopupName, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { focusOrCreateUnitagTab } from 'src/app/navigation/utils'
-import { DeprecatedButton, Flex, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
-import { WalletFilled, X } from 'ui/src/components/icons'
+import { focusOrCreateUnitagTab, useExtensionNavigation } from 'src/app/navigation/utils'
+import { Button, Flex, Popover, ScrollView, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Ellipsis, Globe, Person, TrashFilled, WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -32,9 +29,11 @@ import { logger } from 'utilities/src/logger/logger'
 import { sleep } from 'utilities/src/time/timing'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
+import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { MenuContent } from 'wallet/src/components/menu/MenuContent'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
+import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import {
@@ -54,6 +53,7 @@ export function AccountSwitcherScreen(): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
+  const { navigateTo } = useExtensionNavigation()
   const activeAccount = useActiveAccountWithThrow()
   const activeAddress = activeAccount.address
   const isViewOnly = activeAccount.type === AccountType.Readonly
@@ -74,11 +74,14 @@ export function AccountSwitcherScreen(): JSX.Element {
   const [showEditLabelModal, setShowEditLabelModal] = useState(false)
 
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
+  const [showImportWalletModal, setShowImportWalletModal] = useState(false)
   const [showCreateWalletModal, setShowCreateWalletModal] = useState(false)
 
   const [pendingWallet, setPendingWallet] = useState<SignerMnemonicAccount>()
 
   const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
+
+  const { canClaimUnitag } = useCanActiveAddressClaimUnitag(activeAddress)
 
   useEffect(() => {
     const createOnboardingAccountAfterTransitionAnimation = async (): Promise<void> => {
@@ -96,6 +99,7 @@ export function AccountSwitcherScreen(): JSX.Element {
 
   const onNavigateToRemoveWallet = (): void => {
     setShowRemoveWalletModal(false)
+    setShowImportWalletModal(false)
     navigate(`/${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Wallets}`)
   }
 
@@ -145,7 +149,7 @@ export function AccountSwitcherScreen(): JSX.Element {
     },
     {
       label: t('account.wallet.button.import'),
-      onPress: (): void => setShowRemoveWalletModal(true),
+      onPress: (): void => setShowImportWalletModal(true),
     },
   ]
 
@@ -158,6 +162,41 @@ export function AccountSwitcherScreen(): JSX.Element {
     zIndex: 1,
   }
 
+  const menuOptions = useMemo((): MenuContentItem[] => {
+    return [
+      ...(canClaimUnitag
+        ? [
+            {
+              label: t('account.wallet.menu.claimUsername'),
+
+              onPress: async () => await focusOrCreateUnitagTab(activeAddress, UnitagClaimRoutes.ClaimIntro),
+
+              Icon: Person,
+            },
+          ]
+        : []),
+
+      {
+        label: t('account.wallet.menu.manageConnections'),
+        onPress: () => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`),
+        Icon: Globe,
+      },
+      {
+        label: t('account.wallet.menu.remove.title'),
+        onPress: (e: BaseSyntheticEvent): void => {
+          // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
+          // means that without it the TouchableArea handler will get called
+          e.preventDefault()
+          e.stopPropagation()
+          setShowRemoveWalletModal(true)
+        },
+        textProps: { color: '$statusCritical' },
+        Icon: TrashFilled,
+        iconProps: { color: '$statusCritical' },
+      },
+    ]
+  }, [canClaimUnitag, activeAddress, navigateTo, t])
+
   return (
     <Trace logImpression modal={ModalName.AccountSwitcher}>
       <EditLabelModal
@@ -166,15 +205,28 @@ export function AccountSwitcherScreen(): JSX.Element {
         onClose={() => setShowEditLabelModal(false)}
       />
       <WarningModal
-        caption={t('account.recoveryPhrase.remove.import.description')}
+        caption={
+          showImportWalletModal
+            ? t('account.recoveryPhrase.remove.import.description')
+            : t('account.recoveryPhrase.remove.mnemonic.description', {
+                walletNames: [activeAccountDisplayName?.name ?? ''],
+              })
+        }
         rejectText={t('common.button.cancel')}
         acknowledgeText={t('common.button.continue')}
         icon={<WalletFilled color="$statusCritical" size="$icon.24" />}
-        isOpen={showRemoveWalletModal}
+        isOpen={showImportWalletModal || showRemoveWalletModal}
         modalName={ModalName.RemoveWallet}
         severity={WarningSeverity.High}
-        title={t('account.wallet.button.import')}
-        onClose={() => setShowRemoveWalletModal(false)}
+        title={
+          showImportWalletModal
+            ? t('account.wallet.button.import')
+            : t('account.wallet.remove.title', { name: activeAccountDisplayName?.name ?? '' })
+        }
+        onClose={() => {
+          setShowImportWalletModal(false)
+          setShowRemoveWalletModal(false)
+        }}
         onAcknowledge={onNavigateToRemoveWallet}
       />
       <CreateWalletModal
@@ -185,38 +237,61 @@ export function AccountSwitcherScreen(): JSX.Element {
       />
       <Flex backgroundColor="$surface1" px="$spacing12" py="$spacing8">
         <ScreenHeader Icon={X} />
-        <Flex gap="$spacing16" pb="$spacing4" pt="$spacing8" px="$spacing12">
-          <AddressDisplay
-            showCopy
-            address={activeAddress}
-            captionVariant="body3"
-            direction="column"
-            displayNameTextAlign="center"
-            gapBetweenLines="$spacing8"
-            horizontalGap="$spacing8"
-            showViewOnlyBadge={isViewOnly}
-            size={spacing.spacing60 - spacing.spacing4}
-            variant="subheading1"
-          />
-          {activeAccountHasUnitag ? (
-            <UnitagActionButton />
-          ) : (
-            <DeprecatedButton
-              size="small"
-              testID={TestID.AccountCard}
-              theme="secondary"
-              onPress={() => setShowEditLabelModal(true)}
-            >
-              {t('account.wallet.header.button.title')}
-            </DeprecatedButton>
-          )}
+        <Flex pb="$spacing4" pt="$spacing8" px="$spacing12">
+          <Flex row alignSelf="stretch" width="100%" justifyContent="center">
+            <Flex flex={1} justifyContent="center" alignItems="center">
+              <AddressDisplay
+                showCopy
+                centered
+                address={activeAddress}
+                captionVariant="body3"
+                direction="column"
+                displayNameTextAlign="center"
+                horizontalGap="$spacing8"
+                showViewOnlyBadge={isViewOnly}
+                size={spacing.spacing60 - spacing.spacing4}
+                variant="subheading1"
+              />
+            </Flex>
+
+            <Flex alignItems="flex-start" justifyContent="flex-start">
+              <ContextMenu
+                closeOnClick
+                itemId="account-switcher-ellipsis-dropdown"
+                menuOptions={menuOptions}
+                placement="bottom"
+                onLeftClick
+              >
+                <TouchableArea
+                  hoverable
+                  borderRadius="$roundedFull"
+                  p="$spacing4"
+                  style={{ position: 'absolute', right: 0 }}
+                >
+                  <Ellipsis color="$neutral2" size="$icon.20" />
+                </TouchableArea>
+              </ContextMenu>
+            </Flex>
+          </Flex>
+
+          <Flex pt="$padding16">
+            {activeAccountHasUnitag ? (
+              <UnitagActionButton />
+            ) : (
+              <Flex row>
+                <Button
+                  size="small"
+                  testID={TestID.AccountCard}
+                  emphasis="secondary"
+                  onPress={() => setShowEditLabelModal(true)}
+                >
+                  {t('account.wallet.header.button.title')}
+                </Button>
+              </Flex>
+            )}
+          </Flex>
         </Flex>
         <ScrollView backgroundColor="$surface1" height="auto">
-          {accountAddresses.length > 0 && (
-            <Text color="$neutral2" mb="$spacing8" mt="$spacing16" px="$spacing12" variant="body2">
-              {t('account.wallet.header.other')}
-            </Text>
-          )}
           <Flex>
             {sortedAddressesByBalance.map(({ address, balance }) => {
               return (
@@ -248,7 +323,7 @@ export function AccountSwitcherScreen(): JSX.Element {
                 px="$spacing12"
               >
                 <PlusCircle />
-                <Text color="$neutral2" py="$spacing8" variant="buttonLabel2">
+                <Text color="$neutral1" py="$spacing8" variant="buttonLabel2">
                   {t('account.wallet.button.add')}
                 </Text>
               </Flex>
@@ -283,31 +358,16 @@ export function AccountSwitcherScreen(): JSX.Element {
 const UnitagActionButton = (): JSX.Element => {
   const { t } = useTranslation()
   const address = useActiveAccountAddressWithThrow()
-  const isClaimUnitagEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
 
   const onPressEditProfile = useCallback(async () => {
     await focusOrCreateUnitagTab(address, UnitagClaimRoutes.EditProfile)
   }, [address])
 
-  if (isClaimUnitagEnabled) {
-    return (
-      <DeprecatedButton
-        color="$neutral1"
-        size="small"
-        testID={TestID.AccountCard}
-        theme="tertiary"
-        onPress={onPressEditProfile}
-      >
-        {t('account.wallet.header.button.disabled.title')}
-      </DeprecatedButton>
-    )
-  }
-
   return (
-    <ComingSoon placement="top">
-      <DeprecatedButton color="$neutral2" isDisabled={true} size="small" testID={TestID.AccountCard} theme="secondary">
+    <Flex row>
+      <Button size="small" testID={TestID.AccountCard} emphasis="secondary" onPress={onPressEditProfile}>
         {t('account.wallet.header.button.disabled.title')}
-      </DeprecatedButton>
-    </ComingSoon>
+      </Button>
+    </Flex>
   )
 }

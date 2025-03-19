@@ -107,7 +107,7 @@ describe('BagFooter.tsx', () => {
 
     expect(buyButton).toBeInTheDocument()
     expect(buyButton.textContent).toBe('Pay')
-    expect(buyButton).not.toBeDisabled()
+    expect(buyButton.style.opacity).toBe('1')
   })
 
   it('wallet not connected', () => {
@@ -121,7 +121,7 @@ describe('BagFooter.tsx', () => {
 
     expect(buyButton).toBeInTheDocument()
     expect(buyButton.textContent).toBe('Connect wallet')
-    expect(buyButton).not.toBeDisabled()
+    expect(buyButton.style.opacity).toBe('1')
   })
 
   it('connected to wrong network', () => {
@@ -134,7 +134,7 @@ describe('BagFooter.tsx', () => {
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Switch networks')
-    expect(buyButton).not.toBeDisabled()
+    expect(buyButton.style.opacity).toBe('1')
   })
 
   it('insufficient balance', () => {
@@ -145,7 +145,7 @@ describe('BagFooter.tsx', () => {
     const buyButtonWarning = getBuyButtonWarning()
 
     expect(buyButtonWarning.textContent).toBe('Insufficient funds')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('transaction error', () => {
@@ -155,14 +155,14 @@ describe('BagFooter.tsx', () => {
       setBagExpanded: () => undefined,
       isLocked: false,
       itemsInBag: [],
-    }) as ReturnType<typeof useBag>
+    } as ReturnType<typeof useBag>)
 
     renderBagFooter()
     const buyButtonWarning = getBuyButtonWarning()
     const buyButton = getBuyButton()
 
     expect(buyButtonWarning.textContent).toBe('Something went wrong. Please try again.')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('is in wallet confirmation for fetching route', () => {
@@ -172,13 +172,13 @@ describe('BagFooter.tsx', () => {
       setBagExpanded: () => undefined,
       isLocked: false,
       itemsInBag: [],
-    }) as ReturnType<typeof useBag>
+    } as ReturnType<typeof useBag>)
 
     renderBagFooter()
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Proceed in wallet')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('is in wallet confirmation for confirming in wallet', () => {
@@ -194,7 +194,7 @@ describe('BagFooter.tsx', () => {
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Proceed in wallet')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('is in pending state while transaction pending', () => {
@@ -210,7 +210,7 @@ describe('BagFooter.tsx', () => {
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Transaction pending')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('insufficient funds for token trade', () => {
@@ -234,7 +234,7 @@ describe('BagFooter.tsx', () => {
     const buyButtonWarning = getBuyButtonWarning()
 
     expect(buyButtonWarning.textContent).toBe('Insufficient funds')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('invalid token trade', () => {
@@ -256,7 +256,7 @@ describe('BagFooter.tsx', () => {
     renderBagFooter()
     const buyButton = getBuyButton()
     expect(buyButton.textContent).toBe('Pay')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('no token route found', () => {
@@ -278,7 +278,7 @@ describe('BagFooter.tsx', () => {
     renderBagFooter()
     const buyButton = getBuyButton()
     expect(buyButton.textContent).toBe('Insufficient liquidity')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('fetching token route', () => {
@@ -300,7 +300,7 @@ describe('BagFooter.tsx', () => {
     renderBagFooter()
     const buyButton = getBuyButton()
     expect(buyButton.textContent).toBe('Fetching route')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('confirm price change', () => {
@@ -316,7 +316,7 @@ describe('BagFooter.tsx', () => {
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Pay')
-    expect(buyButton).not.toBeDisabled()
+    expect(buyButton.style.opacity).toBe('1')
   })
 
   it('loading allowance', () => {
@@ -328,7 +328,7 @@ describe('BagFooter.tsx', () => {
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Loading allowance')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('approval is loading', () => {
@@ -351,7 +351,7 @@ describe('BagFooter.tsx', () => {
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Approval pending')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('allowance to be confirmed in wallet', () => {
@@ -374,7 +374,7 @@ describe('BagFooter.tsx', () => {
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Approve in your wallet')
-    expect(buyButton).toBeDisabled()
+    expect(buyButton.style.opacity).toBe('0.6')
   })
 
   it('approve', () => {
@@ -397,7 +397,7 @@ describe('BagFooter.tsx', () => {
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Approve')
-    expect(buyButton).not.toBeDisabled()
+    expect(buyButton.style.opacity).toBe('1')
   })
 
   it('price impact high', () => {
@@ -413,7 +413,7 @@ describe('BagFooter.tsx', () => {
     const buyButton = getBuyButton()
 
     expect(buyButton.textContent).toBe('Pay Anyway')
-    expect(buyButton).not.toBeDisabled()
+    expect(buyButton.style.opacity).toBe('1')
   })
 
   it('should use the correct UR address', () => {

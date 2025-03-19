@@ -34,9 +34,12 @@ export const Slippage: SwapSettingConfig = {
     const { t } = useTranslation()
     const { formatPercent } = useLocalizationContext()
     const { derivedSwapInfo } = useSwapFormContext()
-    const { currentSlippageTolerance, autoSlippageEnabled } = useSlippageSettings()
+    const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
     const isBridgeTrade = derivedSwapInfo.trade.trade instanceof BridgeTrade
-    const currentSlippage = isBridgeTrade ? 0 : currentSlippageTolerance
+    const { currentSlippageTolerance, autoSlippageEnabled } = useSlippageSettings({
+      tradeAutoSlippage: acceptedTrade?.slippageTolerance,
+      isBridgeTrade,
+    })
 
     return (
       <Flex row gap="$spacing8">
@@ -48,7 +51,7 @@ export const Slippage: SwapSettingConfig = {
           </Flex>
         ) : null}
         <Text color="$neutral2" variant="subheading2">
-          {formatPercent(currentSlippage)}
+          {formatPercent(currentSlippageTolerance)}
         </Text>
       </Flex>
     )
@@ -56,15 +59,12 @@ export const Slippage: SwapSettingConfig = {
   Screen() {
     const { t } = useTranslation()
     const colors = useSporeColors()
-    const {
-      derivedSwapInfo: {
-        trade: { trade },
-      },
-    } = useSwapFormContext()
+    const { derivedSwapInfo } = useSwapFormContext()
+    const { trade } = derivedSwapInfo.trade
+    const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
 
     const {
       isEditingSlippage,
-      autoSlippageEnabled,
       showSlippageWarning,
       inputSlippageTolerance,
       inputWarning,
@@ -76,7 +76,7 @@ export const Slippage: SwapSettingConfig = {
       onFocusSlippageInput,
       onBlurSlippageInput,
       onPressPlusMinusButton,
-    } = useSlippageSettings()
+    } = useSlippageSettings({ tradeAutoSlippage: acceptedTrade?.slippageTolerance })
 
     const isBridgeTrade = trade instanceof BridgeTrade
 
@@ -152,7 +152,7 @@ export const Slippage: SwapSettingConfig = {
                     }),
                   }}
                   textAlign="center"
-                  value={autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance}
+                  value={inputSlippageTolerance}
                   onBlur={onBlurSlippageInput}
                   onChangeText={onChangeSlippageInput}
                   onFocus={onFocusSlippageInput}

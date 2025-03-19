@@ -9,7 +9,7 @@ import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorage
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { openSettings } from 'src/utils/linking'
-import { DeprecatedButton, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
@@ -96,10 +96,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-    navigate(MobileScreens.SettingsStack, {
-      screen: MobileScreens.SettingsWallet,
-      params: { address: activeAccountAddress },
-    })
+    dispatch(openModal({ name: ModalName.ManageWalletsModal, initialState: { address: activeAccountAddress } }))
   }
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
@@ -257,9 +254,10 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   return (
     <Flex $short={{ pb: '$none' }} maxHeight={fullScreenContentHeight} pb="$spacing12">
-      <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12">
+      <Flex gap="$spacing16" pb="$spacing16" pt="$spacing12" mx="$spacing12">
         <AddressDisplay
           showCopy
+          centered
           address={activeAccountAddress}
           direction="column"
           horizontalGap="$spacing8"
@@ -267,10 +265,10 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           size={spacing.spacing60 - spacing.spacing4}
           variant="subheading1"
         />
-        <Flex px="$spacing24">
-          <DeprecatedButton size="small" testID={TestID.WalletSettings} theme="secondary" onPress={onManageWallet}>
+        <Flex row px="$spacing12">
+          <Button size="medium" testID={TestID.WalletSettings} emphasis="secondary" onPress={onManageWallet}>
             {t('account.wallet.button.manage')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
       <Flex maxHeight={fullScreenContentHeight / 2}>
@@ -279,7 +277,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       <TouchableArea mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing8" ml="$spacing24">
           <PlusCircle />
-          <Text color="$neutral2" variant="buttonLabel2">
+          <Text color="$neutral1" variant="buttonLabel2">
             {t('account.wallet.button.add')}
           </Text>
         </Flex>

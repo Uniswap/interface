@@ -75,7 +75,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
   )
 
   return (
-    <div>
+    <Flex>
       <Trace modal={ModalName.NetworkSelector}>
         <DropdownSelector
           isOpen={isMenuOpen}
@@ -96,6 +96,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           buttonStyle={{ height: 40 }}
           dropdownStyle={StyledDropdown}
           adaptToSheet
+          allowFlip
           alignRight={!media.lg}
         >
           <ScrollView px="$spacing8">
@@ -116,7 +117,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           </ScrollView>
         </DropdownSelector>
       </Trace>
-    </div>
+    </Flex>
   )
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { getPermissions } from 'src/app/features/dappRequests/permissions'
 import {
@@ -23,6 +24,9 @@ import {
   EthSignTypedDataV4RequestSchema,
   PersonalSignRequest,
   PersonalSignRequestSchema,
+  WalletGetCapabilitiesRequest,
+  WalletGetCapabilitiesRequestSchema,
+  WalletGetCapabilitiesResponse,
   WalletGetPermissionsRequest,
   WalletGetPermissionsRequestSchema,
   WalletRequestPermissionsRequest,
@@ -251,6 +255,19 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
         await this.handleEthSendTransaction(parsedRequest, source)
         break
       }
+      case ExtensionEthMethods.wallet_getCapabilities: {
+        if (!this.isAuthorized()) {
+          postUnauthorizedError(source, request.requestId)
+          return
+        }
+        const parsedRequest = WalletGetCapabilitiesRequestSchema.parse(request)
+        if (!this.isValidRequestAddress(parsedRequest.address)) {
+          postUnauthorizedError(source, request.requestId)
+          return
+        }
+        await this.handleWalletGetCapabilities(parsedRequest, source)
+        break
+      }
       case ExtensionEthMethods.wallet_switchEthereumChain: {
         if (!this.isAuthorized()) {
           postUnauthorizedError(source, request.requestId)
@@ -373,7 +390,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     if (request.transaction.data && request.transaction.data !== '0x') {
       Object.assign(
         sendTransactionRequest,
-        getCalldataInfoFromTransaction(request.transaction.data, request.transaction.to),
+        getCalldataInfoFromTransaction(request.transaction.data, request.transaction.to, request.transaction.chainId),
       )
     }
 
@@ -473,6 +490,21 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
 
   private isValidRequestAddress(address: string): boolean {
     return (this.getConnectedAddresses() ?? []).some((connectedAddress) => areAddressesEqual(connectedAddress, address))
+  }
+
+  /**
+   * Handle wallet_getCapabilities request
+   * This returns the capabilities supported by the wallet for specific chains
+   */
+  async handleWalletGetCapabilities(
+    request: WalletGetCapabilitiesRequest,
+    source: MessageEventSource | null,
+  ): Promise<void> {
+    const capabilities: WalletGetCapabilitiesResponse = {} // For now, returning an empty object
+    source?.postMessage({
+      requestId: request.requestId,
+      result: capabilities,
+    })
   }
 }
 

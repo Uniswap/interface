@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { SpaceTokens } from '@tamagui/core'
 import { PropsWithChildren } from 'react'
 import { Flex } from 'ui/src/components/layout/Flex'

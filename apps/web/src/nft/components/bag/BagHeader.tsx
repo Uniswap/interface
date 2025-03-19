@@ -1,60 +1,9 @@
-import { OpacityHoverState } from 'components/Common/styles'
-import styled from 'lib/styled-components'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { ButtonText, ThemedText } from 'theme/components'
+import { TamaguiClickableStyle } from 'theme/components'
+import { Button, Flex, Text } from 'ui/src'
 
-const ClearButton = styled(ButtonText)`
-  color: ${({ theme }) => theme.neutral2};
-  cursor: pointer;
-  font-weight: 535;
-  font-size: 14px;
-  line-height: 16px;
-
-  :active {
-    text-decoration: none;
-  }
-`
-
-const IconWrapper = styled.button`
-  align-items: center;
-  background-color: transparent;
-  border-radius: 8px;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  margin-left: auto;
-  padding: 2px;
-  opacity: 1;
-
-  ${OpacityHoverState}
-`
-const CounterDot = styled.div<{ sizing: string }>`
-  align-items: center;
-  background-color: ${({ theme }) => theme.accent1};
-  border-radius: 100px;
-  font-weight: bold;
-  color: ${({ theme }) => theme.deprecated_accentTextLightPrimary};
-  display: flex;
-  font-size: 10px;
-  justify-content: center;
-  min-width: ${({ sizing }) => sizing};
-  min-height: ${({ sizing }) => sizing};
-  padding: 4px 6px;
-`
-const Wrapper = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  justify-content: flex-start;
-  margin: 16px 28px;
-  text-align: center;
-`
 interface BagHeaderProps {
   numberOfAssets: number
   closeBag: () => void
@@ -67,9 +16,6 @@ const INCREMENTAL_SIZING = 6
 
 const getCircleSizing = (numberOfAssets: number): string => {
   const numberOfCharacters = numberOfAssets.toString().length
-
-  // each digit adds 6px worth of width (approximately), so I set the height and width to be 6px larger for each digit added
-  // 1 digit => 14 + 6, 2 digit 14 + 12, etc.
   return `${BASE_SIZING + INCREMENTAL_SIZING * numberOfCharacters}px`
 }
 
@@ -77,21 +23,44 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
   const sizing = useMemo(() => getCircleSizing(numberOfAssets), [numberOfAssets])
 
   return (
-    <Wrapper>
-      <ThemedText.HeadlineSmall>
+    <Flex alignItems="center" row gap="$spacing8" justifyContent="flex-start" my="$spacing16" mx="$spacing28">
+      <Text variant="subheading1" fontSize={20} lineHeight={28} textAlign="center">
         {isProfilePage ? <Trans i18nKey="common.sell.label" /> : <Trans i18nKey="nft.bag" />}
-      </ThemedText.HeadlineSmall>
+      </Text>
       {numberOfAssets > 0 && (
         <>
-          <CounterDot sizing={sizing}>{numberOfAssets}</CounterDot>
-          <ClearButton onClick={resetFlow}>
+          <Flex
+            alignItems="center"
+            backgroundColor="$accent1"
+            borderRadius="$roundedFull"
+            justifyContent="center"
+            minWidth={sizing}
+            minHeight={sizing}
+            py="$spacing4"
+            px="$spacing6"
+          >
+            <Text variant="body3" fontSize={10} color="$white" lineHeight={10}>
+              {numberOfAssets}
+            </Text>
+          </Flex>
+          <Button fill={false} emphasis="text-only" onPress={resetFlow} {...TamaguiClickableStyle}>
             <Trans i18nKey="tokens.selector.button.clear" />
-          </ClearButton>
+          </Button>
         </>
       )}
-      <IconWrapper onClick={closeBag}>
-        <BagCloseIcon data-testid="nft-bag-close-icon" />
-      </IconWrapper>
-    </Wrapper>
+      <Button
+        fill={false}
+        emphasis="text-only"
+        backgroundColor="transparent"
+        borderRadius="$rounded8"
+        ml="auto"
+        p={0}
+        pt={2}
+        onPress={closeBag}
+        {...TamaguiClickableStyle}
+      >
+        <BagCloseIcon color="$neutral1" data-testid="nft-bag-close-icon" />
+      </Button>
+    </Flex>
   )
 }

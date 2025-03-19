@@ -10,6 +10,7 @@ export enum ExtensionEthMethods {
   wallet_getPermissions = 'wallet_getPermissions',
   wallet_requestPermissions = 'wallet_requestPermissions',
   wallet_revokePermissions = 'wallet_revokePermissions',
+  wallet_getCapabilities = 'wallet_getCapabilities',
   eth_signTypedData_v4 = 'eth_signTypedData_v4',
 }
 

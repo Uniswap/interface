@@ -1,11 +1,12 @@
 import React from 'react'
-import { Accordion, DeprecatedButton, Flex, Input, Separator, Switch, Text } from 'ui/src'
+import { Accordion, Flex, Input, Separator, Switch, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig, useExperiment } from 'uniswap/src/features/gating/sdk/statsig'
 import { isMobileApp } from 'utilities/src/platform'
+import { GatingButton } from 'wallet/src/components/gating/GatingButton'
 
 export function GatingOverrides(): JSX.Element {
   const featureFlagRows: JSX.Element[] = []
@@ -25,46 +26,45 @@ export function GatingOverrides(): JSX.Element {
   return (
     <>
       <Text variant="heading3">Gating</Text>
+      <Flex flexDirection="column">
+        <Accordion.Item value="feature-flags">
+          <AccordionHeader title="⛳️ Feature Flags" />
 
-      <Accordion.Item value="feature-flags">
-        <AccordionHeader title="⛳️ Feature Flags" />
+          <Accordion.Content>
+            <GatingButton onPress={() => Statsig.removeGateOverride()}>
+              Clear all local feature gate overrides
+            </GatingButton>
 
-        <Accordion.Content>
-          <DeprecatedButton p="$spacing4" theme="tertiary" onPress={() => Statsig.removeGateOverride()}>
-            <Text variant="body2">Clear all local feature gate overrides</Text>
-          </DeprecatedButton>
+            <Flex gap="$spacing12" mt="$spacing12">
+              {featureFlagRows}
+            </Flex>
+          </Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="experiments">
+          <AccordionHeader title="🔬 Experiments" />
 
-          <Flex gap="$spacing12" mt="$spacing12">
-            {featureFlagRows}
-          </Flex>
-        </Accordion.Content>
-      </Accordion.Item>
-      <Accordion.Item value="experiments">
-        <AccordionHeader title="🔬 Experiments" />
+          <Accordion.Content>
+            <GatingButton onPress={() => Statsig.removeConfigOverride()}>
+              Clear all local experiment/config overrides
+            </GatingButton>
 
-        <Accordion.Content>
-          <DeprecatedButton p="$spacing4" theme="tertiary" onPress={() => Statsig.removeConfigOverride()}>
-            <Text variant="body2">Clear all local experiment/config overrides</Text>
-          </DeprecatedButton>
+            <Flex gap="$spacing12" mt="$spacing12">
+              {experimentRows}
+            </Flex>
+          </Accordion.Content>
+        </Accordion.Item>
+      </Flex>
 
-          <Flex gap="$spacing12" mt="$spacing12">
-            {experimentRows}
-          </Flex>
-        </Accordion.Content>
-      </Accordion.Item>
-
-      <DeprecatedButton
+      <GatingButton
         mt="$spacing12"
-        p="$spacing4"
-        theme="tertiary"
         onPress={() => {
           Statsig.removeGateOverride()
           Statsig.removeConfigOverride()
           Statsig.removeLayerOverride()
         }}
       >
-        <Text variant="body2">Clear all gating overrides</Text>
-      </DeprecatedButton>
+        Clear all gating overrides
+      </GatingButton>
     </>
   )
 }

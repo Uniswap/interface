@@ -8,7 +8,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { WidgetEvent } from 'uniswap/src/types/widgets'
 import { isAndroid } from 'utilities/src/platform'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
@@ -29,17 +29,17 @@ type WidgetCacheData = {
   configuration: WidgetConfiguration[]
 }
 
-export type WidgetConfiguration = {
+type WidgetConfiguration = {
   kind: string
   family: string
 }
 
-export type WidgetI18nSettings = {
+type WidgetI18nSettings = {
   locale: string
   currency: string
 }
 
-export const setUserDefaults = async (data: object, key: string): Promise<void> => {
+async function setUserDefaults(data: object, key: string): Promise<void> {
   const dataJSON = JSON.stringify(data)
   await setItem(key, dataJSON, APP_GROUP)
   reloadAllTimelines()

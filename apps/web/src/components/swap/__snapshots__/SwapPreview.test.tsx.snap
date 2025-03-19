@@ -158,7 +158,9 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
                   <div
                     class="c9"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c7 c10 css-142zc9n"
                         cursor="help"
@@ -373,7 +375,9 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
                   <div
                     class="c9"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c7 c10 css-142zc9n"
                         cursor="help"
@@ -588,7 +592,9 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 sw
                   <div
                     class="c9"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c7 c10 css-142zc9n"
                         cursor="help"
@@ -784,7 +790,9 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
                   <div
                     class="c9"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c7 c10 css-142zc9n"
                         cursor="help"
@@ -980,7 +988,9 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
                   <div
                     class="c9"
                   >
-                    <div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    >
                       <div
                         class="c7 c10 css-142zc9n"
                         cursor="help"

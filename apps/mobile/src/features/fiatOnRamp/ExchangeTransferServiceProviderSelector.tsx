@@ -1,8 +1,7 @@
 import React, { useCallback } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
-import { openModal } from 'src/features/modals/modalSlice'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
@@ -68,19 +67,14 @@ export function ServiceProviderSelector({
   onClose: () => void
   serviceProviders: FORServiceProvider[]
 }): JSX.Element {
-  const dispatch = useDispatch()
-
   const onSelectServiceProvider = useCallback(
     (serviceProvider: FORServiceProvider) => {
-      dispatch(
-        openModal({
-          name: ModalName.ExchangeTransferModal,
-          initialState: { serviceProvider },
-        }),
-      )
+      navigate(ModalName.ExchangeTransferModal, {
+        initialState: { serviceProvider },
+      })
       onClose()
     },
-    [dispatch, onClose],
+    [onClose],
   )
 
   const renderItem = useCallback(

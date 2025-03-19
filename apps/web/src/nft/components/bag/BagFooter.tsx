@@ -8,8 +8,6 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
@@ -18,7 +16,6 @@ import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import JSBI from 'jsbi'
 import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
-import styled, { useTheme } from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from 'nft/components/bag/ButtonStates'
 import { useBag } from 'nft/hooks/useBag'
@@ -30,153 +27,17 @@ import { PriceImpact, usePriceImpact } from 'nft/hooks/usePriceImpact'
 import { useSubscribeTransactionState } from 'nft/hooks/useSubscribeTransactionState'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { BagStatus } from 'nft/types'
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, TradeFillType, TradeState } from 'state/routing/types'
-import { ThemedText } from 'theme/components'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-const FooterContainer = styled.div`
-  padding: 0px 12px;
-`
-
-const Footer = styled.div`
-  border-top: 1px solid ${({ theme }) => theme.surface3};
-  color: ${({ theme }) => theme.neutral1};
-  display: flex;
-  flex-direction: column;
-  margin: 0px 16px 8px;
-  padding: 12px 0px;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-`
-
-const FooterHeader = styled(Column)`
-  padding-top: 8px;
-  padding-bottom: 16px;
-`
-
-const CurrencyRow = styled(Row)`
-  justify-content: space-between;
-  align-items: start;
-  gap: 8px;
-`
-
-const TotalColumn = styled(Column)`
-  text-align: end;
-  overflow: hidden;
-`
-
-const WarningIcon = styled(AlertTriangle)`
-  width: 14px;
-  margin-right: 4px;
-  color: inherit;
-`
-const WarningText = styled(ThemedText.BodyPrimary)<{ $color: string }>`
-  align-items: center;
-  color: ${({ $color }) => $color};
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px !important;
-  text-align: center;
-`
-
-const HelperText = styled(ThemedText.BodySmall)<{ $color: string }>`
-  color: ${({ $color }) => $color};
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  margin-bottom: 10px !important;
-`
-
-const CurrencyInput = styled(Row)`
-  gap: 8px;
-  cursor: pointer;
-`
-
-const ActionButton = styled.button<{ $backgroundColor: string; $color: string }>`
-  display: flex;
-  background: ${({ $backgroundColor }) => $backgroundColor};
-  color: ${({ $color }) => $color};
-  font-weight: 535;
-  line-height: 24px;
-  font-size: 16px;
-  gap: 16px;
-  justify-content: center;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 0px;
-  cursor: pointer;
-  align-items: center;
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: auto;
-  }
-`
-const FiatLoadingBubble = styled(LoadingBubble)`
-  border-radius: 4px;
-  width: 4rem;
-  height: 20px;
-  align-self: end;
-`
-const PriceImpactContainer = styled(Row)`
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  justify-content: flex-end;
-`
-
-const PriceImpactRow = styled(Row)`
-  align-items: center;
-  gap: 8px;
-`
-
-const ValueText = styled(ThemedText.BodyPrimary)`
-  line-height: 20px;
-  font-weight: 535;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  scrollbar-width: none;
-
-  ::-webkit-scrollbar {
-    display: none;
-  }
-`
-
-interface HelperTextProps {
-  color: string
-}
-
-const Warning = ({ color, children }: PropsWithChildren<HelperTextProps>) => {
-  if (!children) {
-    return null
-  }
-  return (
-    <WarningText data-testid="nft-buy-button-warning" fontSize="14px" lineHeight="20px" $color={color}>
-      <WarningIcon />
-      {children}
-    </WarningText>
-  )
-}
-
-const Helper = ({ children, color }: PropsWithChildren<HelperTextProps>) => {
-  if (!children) {
-    return null
-  }
-  return (
-    <HelperText lineHeight="16px" $color={color}>
-      {children}
-    </HelperText>
-  )
-}
 
 const InputCurrencyValue = ({
   usingPayWithAnyToken,
@@ -195,25 +56,25 @@ const InputCurrencyValue = ({
 
   if (!usingPayWithAnyToken) {
     return (
-      <ThemedText.BodyPrimary lineHeight="20px" fontWeight="535">
+      <Text variant="buttonLabel2">
         {formatEther({ input: totalEthPrice.toString(), type: NumberType.NFTToken })}
         &nbsp;{activeCurrency?.symbol ?? 'ETH'}
-      </ThemedText.BodyPrimary>
+      </Text>
     )
   }
 
   if (tradeState === TradeState.LOADING && !trade) {
     return (
-      <ThemedText.BodyPrimary color="neutral3" lineHeight="20px" fontWeight="535">
+      <Text variant="body2" color="$neutral3">
         <Trans i18nKey="swap.fetchingPrice" />
-      </ThemedText.BodyPrimary>
+      </Text>
     )
   }
 
   return (
-    <ValueText color={tradeState === TradeState.LOADING ? 'neutral3' : 'neutral1'}>
+    <Text variant="body2" color={tradeState === TradeState.LOADING ? '$neutral3' : '$neutral1'} numberOfLines={1}>
       {formatNumberOrString({ input: trade?.inputAmount.toExact(), type: NumberType.NFTToken })}
-    </ValueText>
+    </Text>
   )
 }
 
@@ -235,28 +96,25 @@ const FiatValue = ({
     if (usingPayWithAnyToken && (tradeState === TradeState.INVALID || tradeState === TradeState.NO_ROUTE_FOUND)) {
       return null
     }
-
-    return <FiatLoadingBubble />
+    return <LoadingBubble width={4} height={20} borderRadius={4} alignSelf="flex-end" />
   }
 
   return (
-    <PriceImpactContainer>
+    <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
       {priceImpact && (
-        <>
-          <MouseoverTooltip text={t('swap.estimatedDifference.label')}>
-            <PriceImpactRow>
-              <AlertTriangle color={priceImpact.priceImpactSeverity.color} size="16px" />
-              <ThemedText.BodySmall style={{ color: priceImpact.priceImpactSeverity.color }} lineHeight="20px">
-                ({priceImpact.displayPercentage()})
-              </ThemedText.BodySmall>
-            </PriceImpactRow>
-          </MouseoverTooltip>
-        </>
+        <MouseoverTooltip text={t('swap.estimatedDifference.label')}>
+          <Flex row alignItems="center" gap="$spacing8">
+            <AlertTriangle color={priceImpact.priceImpactSeverity.color} size={16} />
+            <Text variant="body3" color={priceImpact.priceImpactSeverity.color} lineHeight={20}>
+              ({priceImpact.displayPercentage()})
+            </Text>
+          </Flex>
+        </MouseoverTooltip>
       )}
-      <ThemedText.BodySmall color="neutral3" lineHeight="20px">
-        {`${formatNumberOrString({ input: usdcValue?.toExact(), type: NumberType.FiatNFTToken })}`}
-      </ThemedText.BodySmall>
-    </PriceImpactContainer>
+      <Text variant="body3" color="$neutral3" lineHeight={20}>
+        {formatNumberOrString({ input: usdcValue?.toExact(), type: NumberType.FiatNFTToken })}
+      </Text>
+    </Flex>
   )
 }
 
@@ -274,7 +132,7 @@ interface BagFooterProps {
 
 export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
   const accountDrawer = useAccountDrawer()
-  const theme = useTheme()
+  const themeColors = useSporeColors()
   const account = useAccount()
   const isSupportedChain = useIsSupportedChainId(account.chainId)
   const connected = account.isConnected && account.chainId
@@ -381,15 +239,15 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   } = useMemo((): BuyButtonStateData => {
     if (connected && account.chainId !== UniverseChainId.Mainnet) {
       const handleClick = () => switchChain(UniverseChainId.Mainnet)
-      return getBuyButtonStateData(BuyButtonStates.NOT_SUPPORTED_CHAIN, theme, handleClick)
+      return getBuyButtonStateData(BuyButtonStates.NOT_SUPPORTED_CHAIN, themeColors, handleClick)
     }
 
     if (sufficientBalance === false) {
-      return getBuyButtonStateData(BuyButtonStates.INSUFFICIENT_BALANCE, theme)
+      return getBuyButtonStateData(BuyButtonStates.INSUFFICIENT_BALANCE, themeColors)
     }
 
     if (bagStatus === BagStatus.WARNING) {
-      return getBuyButtonStateData(BuyButtonStates.ERROR, theme)
+      return getBuyButtonStateData(BuyButtonStates.ERROR, themeColors)
     }
 
     if (!connected) {
@@ -397,61 +255,61 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         accountDrawer.open()
         setBagExpanded({ bagExpanded: false })
       }
-      return getBuyButtonStateData(BuyButtonStates.WALLET_NOT_CONNECTED, theme, handleClick)
+      return getBuyButtonStateData(BuyButtonStates.WALLET_NOT_CONNECTED, themeColors, handleClick)
     }
 
     if (bagStatus === BagStatus.FETCHING_FINAL_ROUTE || bagStatus === BagStatus.CONFIRMING_IN_WALLET) {
-      return getBuyButtonStateData(BuyButtonStates.IN_WALLET_CONFIRMATION, theme)
+      return getBuyButtonStateData(BuyButtonStates.IN_WALLET_CONFIRMATION, themeColors)
     }
 
     if (bagStatus === BagStatus.PROCESSING_TRANSACTION) {
-      return getBuyButtonStateData(BuyButtonStates.PROCESSING_TRANSACTION, theme)
+      return getBuyButtonStateData(BuyButtonStates.PROCESSING_TRANSACTION, themeColors)
     }
 
     if (usingPayWithAnyToken && tradeState !== TradeState.VALID) {
       if (tradeState === TradeState.INVALID) {
-        return getBuyButtonStateData(BuyButtonStates.INVALID_TOKEN_ROUTE, theme)
+        return getBuyButtonStateData(BuyButtonStates.INVALID_TOKEN_ROUTE, themeColors)
       }
 
       if (tradeState === TradeState.NO_ROUTE_FOUND) {
-        return getBuyButtonStateData(BuyButtonStates.NO_TOKEN_ROUTE_FOUND, theme)
+        return getBuyButtonStateData(BuyButtonStates.NO_TOKEN_ROUTE_FOUND, themeColors)
       }
 
-      return getBuyButtonStateData(BuyButtonStates.FETCHING_TOKEN_ROUTE, theme)
+      return getBuyButtonStateData(BuyButtonStates.FETCHING_TOKEN_ROUTE, themeColors)
     }
 
     const allowanceRequired = allowance.state === AllowanceState.REQUIRED
     const handleClick = () => allowanceRequired && allowance.approveAndPermit()
 
     if (loadingAllowance) {
-      return getBuyButtonStateData(BuyButtonStates.LOADING_ALLOWANCE, theme, handleClick)
+      return getBuyButtonStateData(BuyButtonStates.LOADING_ALLOWANCE, themeColors, handleClick)
     }
 
     if (allowanceRequired) {
       if (allowance.isApprovalPending) {
-        return getBuyButtonStateData(BuyButtonStates.IN_WALLET_ALLOWANCE_APPROVAL, theme, handleClick)
+        return getBuyButtonStateData(BuyButtonStates.IN_WALLET_ALLOWANCE_APPROVAL, themeColors, handleClick)
       } else if (allowance.isApprovalLoading) {
-        return getBuyButtonStateData(BuyButtonStates.PROCESSING_APPROVAL, theme, handleClick)
+        return getBuyButtonStateData(BuyButtonStates.PROCESSING_APPROVAL, themeColors, handleClick)
       } else {
-        return getBuyButtonStateData(BuyButtonStates.REQUIRE_APPROVAL, theme, handleClick)
+        return getBuyButtonStateData(BuyButtonStates.REQUIRE_APPROVAL, themeColors, handleClick)
       }
     }
 
     if (bagStatus === BagStatus.CONFIRM_QUOTE) {
-      return getBuyButtonStateData(BuyButtonStates.CONFIRM_UPDATED_PRICE, theme, fetchAssets)
+      return getBuyButtonStateData(BuyButtonStates.CONFIRM_UPDATED_PRICE, themeColors, fetchAssets)
     }
 
     if (priceImpact && priceImpact.priceImpactSeverity.type === 'error') {
       return getBuyButtonStateData(
         BuyButtonStates.PRICE_IMPACT_HIGH,
-        theme,
+        themeColors,
         fetchAssets,
         usingPayWithAnyToken,
         priceImpact,
       )
     }
 
-    return getBuyButtonStateData(BuyButtonStates.PAY, theme, fetchAssets, usingPayWithAnyToken)
+    return getBuyButtonStateData(BuyButtonStates.PAY, themeColors, fetchAssets, usingPayWithAnyToken)
   }, [
     connected,
     account.chainId,
@@ -462,7 +320,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     loadingAllowance,
     allowance,
     priceImpact,
-    theme,
+    themeColors,
     fetchAssets,
     switchChain,
     accountDrawer,
@@ -476,18 +334,32 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   }
 
   return (
-    <FooterContainer>
-      <Footer>
-        <FooterHeader gap="xs">
-          <CurrencyRow>
-            <Column gap="xs">
+    <Flex px="$spacing12">
+      <Flex
+        borderTopColor="$surface3"
+        borderWidth={0}
+        borderTopWidth={1}
+        borderStyle="solid"
+        mx="$spacing16"
+        mb="$spacing8"
+        py="$spacing12"
+        borderBottomLeftRadius="$rounded12"
+        borderBottomRightRadius="$rounded12"
+      >
+        <Flex pt="$spacing4" pb="$spacing16" gap="$spacing4">
+          <Flex row justifyContent="space-between" alignItems="flex-start" gap="$spacing8">
+            <Flex gap="$spacing4">
               {isSupportedChain && (
                 <>
-                  <ThemedText.SubHeaderSmall>
+                  <Text variant="body3" color="$neutral2">
                     <Trans i18nKey="swap.payWith" />
-                  </ThemedText.SubHeaderSmall>
-                  <CurrencyInput
-                    onClick={() => {
+                  </Text>
+                  <Flex
+                    row
+                    alignItems="center"
+                    gap="$spacing8"
+                    cursor="pointer"
+                    onPress={() => {
                       if (!bagIsLocked) {
                         setTokenSelectorOpen(true)
                         sendAnalyticsEvent(NFTEventName.NFT_BUY_TOKEN_SELECTOR_CLICKED)
@@ -495,18 +367,19 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                     }}
                   >
                     <CurrencyLogo currency={activeCurrency} size={24} />
-                    <ThemedText.HeadlineSmall fontWeight={535} lineHeight="24px">
+                    <Text variant="buttonLabel1" fontSize={20}>
                       {activeCurrency?.symbol}
-                    </ThemedText.HeadlineSmall>
-                    <ChevronDown size={20} color={theme.neutral2} />
-                  </CurrencyInput>
+                    </Text>
+                    <ChevronDown size={20} color={themeColors.neutral2.val} />
+                  </Flex>
                 </>
               )}
-            </Column>
-            <TotalColumn gap="xs">
-              <ThemedText.SubHeaderSmall>
+            </Flex>
+
+            <Flex gap="$spacing4" overflow="hidden">
+              <Text variant="body3" color="$neutral2" textAlign="right">
                 <Trans i18nKey="swap.total" />
-              </ThemedText.SubHeaderSmall>
+              </Text>
               <InputCurrencyValue
                 usingPayWithAnyToken={usingPayWithAnyToken}
                 totalEthPrice={totalEthPrice}
@@ -514,15 +387,17 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                 tradeState={tradeState}
                 trade={trade}
               />
-            </TotalColumn>
-          </CurrencyRow>
+            </Flex>
+          </Flex>
+
           <FiatValue
             usdcValue={usdcValue}
             priceImpact={priceImpact}
             tradeState={tradeState}
             usingPayWithAnyToken={usingPayWithAnyToken}
           />
-        </FooterHeader>
+        </Flex>
+
         <Trace
           logPress
           eventOnTrigger={NFTEventName.NFT_BUY_BAG_PAY}
@@ -530,20 +405,39 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
           properties={traceEventProperties}
           logImpression={connected && !disabled}
         >
-          <Warning color={warningTextColor}>{warningText}</Warning>
-          <Helper color={helperTextColor}>{helperText}</Helper>
-          <ActionButton
-            data-testid="nft-buy-button"
-            onClick={handleClick}
-            disabled={disabled || isPending}
-            $backgroundColor={buttonColor}
-            $color={buttonTextColor}
+          {warningText && (
+            <Flex row alignItems="center" justifyContent="center" mb={10} gap="$spacing4">
+              <AlertTriangle width={14} color={warningTextColor} />
+              <Text variant="body3" color={warningTextColor} testID="nft-buy-button-warning">
+                {warningText}
+              </Text>
+            </Flex>
+          )}
+
+          {helperText && (
+            <Text variant="body3" color={helperTextColor} textAlign="center" mb={10}>
+              {helperText}
+            </Text>
+          )}
+
+          <Button
+            size="large"
+            emphasis="primary"
+            onPress={handleClick}
+            isDisabled={disabled || isPending}
+            backgroundColor={buttonColor}
+            testID="nft-buy-button"
+            minHeight={48}
+            opacity={disabled || isPending ? 0.6 : 1}
           >
             {isPending && <Loader size="20px" stroke="white" />}
-            {buttonText}
-          </ActionButton>
+            <Text variant="buttonLabel2" color={buttonTextColor}>
+              {buttonText}
+            </Text>
+          </Button>
         </Trace>
-      </Footer>
+      </Flex>
+
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
         onDismiss={() => setTokenSelectorOpen(false)}
@@ -558,6 +452,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         }}
         selectedCurrency={activeCurrency ?? undefined}
       />
-    </FooterContainer>
+    </Flex>
   )
 }

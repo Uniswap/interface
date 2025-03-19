@@ -1,6 +1,5 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ButtonPrimary } from 'components/Button/buttons'
 import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
@@ -10,7 +9,7 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSendContext } from 'state/send/SendContext'
 import { Separator, ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
-import { Flex, styled } from 'ui/src'
+import { Button, Flex, styled } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -63,7 +62,7 @@ const SendModalHeader = ({
           {subheader}
         </ThemedText.BodySmall>
       </Flex>
-      <div style={{ height: '36px' }}>{image}</div>
+      <Flex height={36}>{image}</Flex>
     </Flex>
   )
 }
@@ -158,9 +157,11 @@ function SendReviewModalInner({ onConfirm, onDismiss }: SendModalInnerProps) {
         </Flex>
       </ReviewContentContainer>
       <Trace logPress element={InterfaceElementName.SEND_REVIEW_BUTTON}>
-        <ButtonPrimary onClick={onConfirm}>
-          <Trans i18nKey="common.confirmSend.button" />
-        </ButtonPrimary>
+        <Flex alignSelf="stretch" row>
+          <Button emphasis="primary" variant="branded" size="large" onPress={onConfirm}>
+            <Trans i18nKey="common.confirmSend.button" />
+          </Button>
+        </Flex>
       </Trace>
     </ModalWrapper>
   )

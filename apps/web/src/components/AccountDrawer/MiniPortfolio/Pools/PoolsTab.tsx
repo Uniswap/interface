@@ -1,5 +1,4 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { PortfolioSkeleton, PortfolioTabWrapper } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
@@ -13,8 +12,7 @@ import { useSwitchChain } from 'hooks/useSwitchChain'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { TouchableArea } from 'ui/src'
+import { Link, useNavigate } from 'react-router-dom'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -146,16 +144,23 @@ function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: Po
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
   const switchChain = useSwitchChain()
-  const onClick = useCallback(async () => {
-    if (account.chainId !== chainId) {
-      await switchChain(chainId)
-    }
+  const positionUrl = getPositionUrl(positionInfo)
 
-    accountDrawer.close()
+  const handleClick = useCallback(
+    async (event: React.MouseEvent<HTMLAnchorElement>) => {
+      // Prevent the Link’s default navigation until the switch chain logic completes
+      event.preventDefault()
 
-    const positionUrl = getPositionUrl(positionInfo)
-    navigate(positionUrl)
-  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, positionInfo])
+      if (account.chainId !== chainId) {
+        await switchChain(chainId)
+      }
+
+      accountDrawer.close()
+      navigate(positionUrl)
+    },
+    [account.chainId, chainId, accountDrawer, navigate, positionUrl, switchChain],
+  )
+
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,
@@ -169,14 +174,14 @@ function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: Po
 
   return (
     <Trace logPress element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW} properties={analyticsEventProperties}>
-      <TouchableArea onPress={onClick} m="$spacing16">
+      <Link to={positionUrl} onClick={handleClick} style={{ textDecoration: 'none', display: 'block', margin: '16px' }}>
         <LiquidityPositionCard
           isMiniVersion
           liquidityPosition={positionInfo}
           showVisibilityOption
           isVisible={isVisible}
         />
-      </TouchableArea>
+      </Link>
     </Trace>
   )
 }

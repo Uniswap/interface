@@ -15,7 +15,7 @@ import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { FiatOnRampCountryListModal } from 'src/features/fiatOnRamp/FiatOnRampCountryListModal'
 import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
 import { OffRampPopover } from 'src/features/fiatOnRamp/OffRampPopover'
-import { Flex, Text, isWeb, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
+import { Flex, isWeb, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
@@ -46,8 +46,6 @@ import {
   isSupportedFORCurrency,
   selectInitialQuote,
 } from 'uniswap/src/features/fiatOnRamp/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
@@ -86,7 +84,6 @@ const PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES = ['usd', 'eur', 'gbp', 'aud', 'ca
 const US_STATES_WITH_RESTRICTIONS = 'US-NY'
 
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
-  const isOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
   const [showUnsupportedTokenModal, setShowUnsupportedTokenModal] = useState(false)
   const [unsupportedCurrency, setUnsupportedCurrency] = useState<FiatOnRampCurrency>()
   const { t } = useTranslation()
@@ -483,32 +480,20 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       <AnimatedFlex row height="100%" pt="$spacing12">
         {isSheetReady && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing16" px="$spacing24" width="100%">
-            {isOffRampEnabled ? (
-              <Flex row justifyContent="center" mt={isShortMobileDevice ? 0 : '$spacing6'}>
-                <OffRampPopover
-                  triggerContent={
-                    <PillMultiToggle
-                      defaultOption={isOffRamp ? RampToggle.SELL : RampToggle.BUY}
-                      options={[
-                        { value: RampToggle.BUY, display: t('common.button.buy') },
-                        { value: RampToggle.SELL, display: t('common.button.sell') },
-                      ]}
-                      onSelectOption={onPillToggle}
-                    />
-                  }
-                />
-                <Flex position="absolute" right={0} top="$spacing6">
-                  <FiatOnRampCountryPicker
-                    countryCode={countryCode}
-                    onPress={(): void => {
-                      setSelectingCountry(true)
-                    }}
+            <Flex row justifyContent="center" mt={isShortMobileDevice ? 0 : '$spacing6'}>
+              <OffRampPopover
+                triggerContent={
+                  <PillMultiToggle
+                    defaultOption={isOffRamp ? RampToggle.SELL : RampToggle.BUY}
+                    options={[
+                      { value: RampToggle.BUY, display: t('common.button.buy') },
+                      { value: RampToggle.SELL, display: t('common.button.sell') },
+                    ]}
+                    onSelectOption={onPillToggle}
                   />
-                </Flex>
-              </Flex>
-            ) : (
-              <Flex row justifyContent="space-between">
-                <Text variant="subheading1">{t('common.button.buy')}</Text>
+                }
+              />
+              <Flex position="absolute" right={0} top="$spacing6">
                 <FiatOnRampCountryPicker
                   countryCode={countryCode}
                   onPress={(): void => {
@@ -516,7 +501,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
                   }}
                 />
               </Flex>
-            )}
+            </Flex>
             <FiatOnRampAmountSection
               ref={inputRef}
               appFiatCurrencySupported={appFiatCurrencySupportedInMeld}

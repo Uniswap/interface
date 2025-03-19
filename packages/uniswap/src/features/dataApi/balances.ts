@@ -10,6 +10,7 @@ import {
   PortfolioBalancesQuery,
   PortfolioBalancesQueryVariables,
   PortfolioValueModifier,
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult, SpamCode } from 'uniswap/src/data/types'
@@ -85,6 +86,8 @@ export function usePortfolioBalances({
     pollInterval: internalPollInterval,
     variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
     skip: !address || queryOptions?.skip,
+    // Prevents wiping out the cache with partial data on error.
+    errorPolicy: 'none',
   })
 
   const persistedError = usePersistedError(loading, error)
@@ -221,6 +224,8 @@ export function usePortfolioTotalValue({
     pollInterval: internalPollInterval,
     variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
     skip: !address,
+    // Prevents wiping out the cache with partial data on error.
+    errorPolicy: 'none',
   })
 
   const persistedError = usePersistedError(loading, error)

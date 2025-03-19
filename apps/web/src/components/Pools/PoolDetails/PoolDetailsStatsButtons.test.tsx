@@ -10,10 +10,10 @@ import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Currency, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 
@@ -21,14 +21,7 @@ jest.mock('hooks/useAccount')
 
 jest.mock('uniswap/src/contexts/UniswapContext')
 
-jest.mock('uniswap/src/features/gating/hooks', () => {
-  return {
-    useFeatureFlagWithLoading: jest.fn().mockReturnValue({
-      isLoading: false,
-      value: true,
-    }),
-  }
-})
+jest.mock('uniswap/src/features/transactions/swap/contexts/SwapFormContext')
 
 describe('PoolDetailsStatsButton', () => {
   const mockProps = {
@@ -56,14 +49,39 @@ describe('PoolDetailsStatsButton', () => {
     useProviderHook: () => undefined,
   }
 
+  const useSwapFormContextMock = useSwapFormContext as jest.Mock
+
   beforeEach(() => {
+    jest.clearAllMocks()
+
+    // Setup mocks
+    useSwapFormContextMock.mockReturnValue({
+      isFiatMode: false,
+      updateSwapForm: () => {},
+      exactAmountToken: '1',
+      exactAmountFiat: '10',
+      derivedSwapInfo: {
+        currencies: {
+          INPUT: {
+            currencyId: '0x',
+            currency: {} as Currency,
+          },
+        },
+        chainId: UniverseChainId.Mainnet,
+        trade: {
+          gasFee: {
+            value: '10',
+            loading: false,
+          },
+        },
+      },
+      exactCurrencyField: 'INPUT',
+    })
+
     mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
     mocked(useUniswapContext).mockReturnValue(useUniswapContextReturnValue)
-    mocked(useFeatureFlagWithLoading).mockReturnValue({
-      isLoading: false,
-      value: false,
-    })
+
     store.dispatch(
       dismissTokenWarning({
         token: {

@@ -3,7 +3,6 @@ import path from 'path'
 
 async function removeDtsFiles(dir: string): Promise<void> {
   try {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
     const files = await fs.readdir(dir, { withFileTypes: true })
 
     for (const file of files) {
@@ -12,7 +11,6 @@ async function removeDtsFiles(dir: string): Promise<void> {
       if (file.isDirectory()) {
         await removeDtsFiles(fullPath)
       } else if (file.isFile() && (file.name.endsWith('.d.ts') || file.name.endsWith('.d.ts.map'))) {
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
         await fs.unlink(fullPath)
       }
     }
