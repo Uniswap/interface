@@ -19,6 +19,7 @@ export function getSwapFee(quoteResponse?: DiscriminatedQuoteResponse): SwapFee 
       return undefined
     }
 
+    // TODO: verify if we can use a null amount to remove one command and 1 token transfer
     return {
       recipient: quote.portionRecipient,
       percent: new Percent(quote.portionBips, '10000'),
@@ -48,7 +49,7 @@ export function getSwapFee(quoteResponse?: DiscriminatedQuoteResponse): SwapFee 
   }
 
   return {
-    recipient: ulFee.recipient,
+    recipient: swapper, //ulFee.recipient,
     percent: new Percent(ulFee.bps, '10000'),
     amount: ulFee.amount,
   }

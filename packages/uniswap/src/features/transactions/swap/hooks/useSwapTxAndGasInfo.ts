@@ -31,6 +31,7 @@ export function useSwapTxAndGasInfo({
     trade: { trade, indicativeTrade },
   } = derivedSwapInfo
 
+  // Notice: skip flag is set to true
   const tokenApprovalInfo = useTokenApprovalInfo({
     account,
     chainId,
@@ -38,6 +39,7 @@ export function useSwapTxAndGasInfo({
     currencyInAmount: currencyAmounts[CurrencyField.INPUT],
     currencyOutAmount: currencyAmounts[CurrencyField.OUTPUT],
     routing: trade?.routing,
+    skip: true,
   })
 
   const { currencyBalances } = derivedSwapInfo
@@ -51,7 +53,7 @@ export function useSwapTxAndGasInfo({
     account,
     derivedSwapInfo,
     // Dont send transaction request if invalid or missing approval data, or if amount exceeds maximum
-    skip: !tokenApprovalInfo?.action || tokenApprovalInfo.action === ApprovalAction.Unknown || exceedsMaxAmount,
+    skip: /*!tokenApprovalInfo?.action || tokenApprovalInfo.action === ApprovalAction.Unknown ||*/ exceedsMaxAmount,
     tokenApprovalInfo,
   })
 
@@ -62,6 +64,7 @@ export function useSwapTxAndGasInfo({
     }
 
     // Gas fees for: swap from quote response directly, wrap from Gas Fee API, approvals from checkApprovalQuery
+    tokenApprovalInfo.action = ApprovalAction.None
     const gasFee = getTotalGasFee(trade, swapTxInfo.gasFeeResult, tokenApprovalInfo, account)
 
     const approveTxRequest = validateTransactionRequest(tokenApprovalInfo?.txRequest)
@@ -156,13 +159,14 @@ function getTotalGasFee(
   let error = swapGasResult.error ?? approvalError
 
   // If swap requires revocation we expect simulation error so set error to null
-  if (tokenApprovalInfo?.action === ApprovalAction.RevokeAndPermit2Approve) {
+  if (tokenApprovalInfo.action === ApprovalAction.RevokeAndPermit2Approve) {
     error = null
   }
 
   const isGaslessSwap = trade && isUniswapX(trade) && !trade.needsWrap
-  const noApprovalNeeded = !isConnected || tokenApprovalInfo?.action === ApprovalAction.None
-  const approvalGasFeeMissing = !tokenApprovalInfo
+  // Notice: we pass ApprovalAction.None for useTokenApprovalInfo to avoid this check
+  const noApprovalNeeded = !isConnected || tokenApprovalInfo.action === ApprovalAction.None
+  const approvalGasFeeMissing = !tokenApprovalInfo && isConnected && !noApprovalNeeded
   const swapGasFeeMissing = !swapGasResult.value && !isGaslessSwap
 
   // For UniswapX orders with no wrap and no approval, show total gas fee as 0.

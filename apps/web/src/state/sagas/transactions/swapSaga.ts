@@ -210,7 +210,7 @@ function* classicSwap(
         }
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
-          yield* call(handleSwapTransactionStep, { account, signature, step, setCurrentStep, trade, analytics })
+          yield* call(handleSwapTransactionStep, { account, signature: undefined, step, setCurrentStep, trade, analytics })
           break
         }
         default: {

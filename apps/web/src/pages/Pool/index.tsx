@@ -38,6 +38,7 @@ import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
+import { useActiveSmartPool } from 'state/application/hooks'
 
 const PAGE_SIZE = 25
 
@@ -181,8 +182,9 @@ export default function Pool() {
   const [statusFilter, setStatusFilter] = useAtom(statusFilterAtom)
   const [closedCTADismissed, setClosedCTADismissed] = useState(false)
 
+  const { address: smartPoolAddress } = useActiveSmartPool()
   const account = useAccount()
-  const { address, isConnected } = account
+  const { isConnected } = account
 
   const isPositionVisible = usePositionVisibilityCheck()
   const [showHiddenPositions, setShowHiddenPositions] = useState(false)
@@ -196,7 +198,7 @@ export default function Pool() {
   const { data, isPlaceholderData, refetch, isLoading, fetchNextPage, hasNextPage, isFetching } =
     useGetPositionsInfiniteQuery(
       {
-        address,
+        address: smartPoolAddress ?? undefined,
         chainIds: chainFilter ? [chainFilter] : currentModeChains,
         positionStatuses: statusFilter,
         protocolVersions: versionFilter,
@@ -211,6 +213,7 @@ export default function Pool() {
     return data?.pages.flatMap((positionsResponse) => positionsResponse.positions) || []
   }, [data])
 
+  // TODO: verify what are saved positions
   const savedPositions = useRequestPositionsForSavedPairs()
 
   const isLoadingPositions = !!account.address && (isLoading || !data)

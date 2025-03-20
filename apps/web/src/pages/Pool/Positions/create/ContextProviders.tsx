@@ -1,6 +1,7 @@
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DepositState } from 'components/Liquidity/types'
+//import { create } from 'domain'
 import {
   CreatePositionContext,
   CreateTxContext,
@@ -32,7 +33,7 @@ import {
 } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { useAccountMeta, useSigner } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
@@ -205,7 +206,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const createCalldataQueryParams = useMemo(() => {
     return generateCreateCalldataQueryParams({
       account,
-      approvalCalldata,
+      approvalCalldata, // TODO: remove this
       positionState,
       derivedPositionInfo,
       priceRangeState,
@@ -233,7 +234,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     !hasError &&
     !approvalLoading &&
     !approvalError &&
-    Boolean(approvalCalldata) &&
+    //Boolean(approvalCalldata) &&
     Boolean(createCalldataQueryParams)
   const {
     data: createCalldata,
@@ -246,6 +247,27 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     retry: false,
     enabled: isQueryEnabled,
   })
+  
+  const [signerAddress, setSignerAddress] = useState<string | undefined>(undefined)
+  const signerInstance = useSigner()
+  
+  useEffect(() => {
+    if (signerInstance) {
+      signerInstance.getAddress().then((address) => {
+        setSignerAddress(address)
+      })
+    }
+  }, [signerInstance])
+  
+  if (createCalldata && createCalldata.create) {
+    if (signerAddress) {
+      createCalldata.create.from = signerAddress
+    }
+    if (account?.address) {
+      createCalldata.create.to = account.address
+    }
+    createCalldata.create.value = '0x0'
+  }
 
   useEffect(() => {
     setHasCreateErrorResponse(!!createError)

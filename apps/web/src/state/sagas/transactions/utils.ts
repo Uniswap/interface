@@ -130,7 +130,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   setCurrentStep({ step, accepted: true })
 
   // Add transaction to local state to start polling for status
-  yield* put(addTransaction({ from: account.address, info, hash, nonce, chainId }))
+  yield* put(addTransaction({ from: step.txRequest.from ?? account.address, info, hash, nonce, chainId }))
 
   if (step.txRequest.data !== data && onModification) {
     yield* call(onModification, { hash, data, nonce })
@@ -172,7 +172,7 @@ function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: strin
 /** Submits a transaction and handles potential wallet errors */
 function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<VitalTxFields> {
   const { account, step } = params
-  const signer = yield* call(getSigner, account.address)
+  const signer = yield* call(getSigner, step.txRequest.from ?? account.address)
 
   try {
     const response = yield* call([signer, 'sendTransaction'], step.txRequest)

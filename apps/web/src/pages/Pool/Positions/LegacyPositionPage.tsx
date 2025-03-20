@@ -20,6 +20,7 @@ import { ArrowLeft } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
@@ -74,6 +75,7 @@ export function LegacyPositionPage() {
   const chainId = useChainIdFromUrlParam()
   const chainInfo = chainId ? getChainInfo(chainId) : undefined
   const account = useAccount()
+  const smartPool = useActiveSmartPool()
   const supportedAccountChainId = useSupportedChainId(account.chainId)
   const { pathname } = useLocation()
   const {
@@ -81,7 +83,7 @@ export function LegacyPositionPage() {
     isLoading: positionLoading,
     refetch,
   } = useGetPositionQuery({
-    owner: account?.address ?? ZERO_ADDRESS,
+    owner: smartPool?.address ?? ZERO_ADDRESS,
     protocolVersion: pathname.includes('v3')
       ? ProtocolVersion.V3
       : pathname.includes('v4')
@@ -167,7 +169,7 @@ export function LegacyPositionPage() {
   }
 
   const hasFees = feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || false
-  const isOwner = addressesAreEquivalent(positionInfo.owner, account?.address)
+  const isOwner = addressesAreEquivalent(positionInfo.owner, smartPool?.address)
 
   const showV4UnsupportedTooltip = isV4UnsupportedChain(positionInfo.chainId)
 

@@ -104,8 +104,8 @@ export function useUniversalRouterSwapCallback(
 
           trace.setData('slippageTolerance', options.slippageTolerance.toFixed(2))
 
-          // Notice: for now, we use the SwapRouter2 instead of the UniversalRouter supporting uniswap v3
-          const isLegacyRouter = true
+          // TODO: as v3 swap methods work correctly on universal router and use less gas, we can remove this flag and use the universal router
+          const isLegacyRouter = false
 
           // use the legacy router or the universal router based on flag
           const params = { data: '', value: '0' }

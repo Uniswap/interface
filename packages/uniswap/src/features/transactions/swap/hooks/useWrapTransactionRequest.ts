@@ -1,10 +1,13 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Contract, providers } from 'ethers/lib/ethers'
+import { Contract, providers, Signer } from 'ethers/lib/ethers'
 import { useCallback } from 'react'
-import { Weth } from 'uniswap/src/abis/types'
+import invariant from 'tiny-invariant'
+import { call } from 'typed-redux-saga'
+import { AUniswap, Weth } from 'uniswap/src/abis/types'
+import AUNISWAP_ABI from 'uniswap/src/abis/aUniswap.json'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { useProvider } from 'uniswap/src/contexts/UniswapContext'
+import { useProvider, useSigner } from 'uniswap/src/contexts/UniswapContext'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -16,6 +19,10 @@ export async function getWethContract(chainId: UniverseChainId, provider: provid
   return new Contract(getWrappedNativeAddress(chainId), WETH_ABI, provider) as Weth
 }
 
+export async function getWrapperContract(address: string, provider: providers.Provider): Promise<AUniswap> {
+  return new Contract(address, AUNISWAP_ABI, provider) as AUniswap
+}
+
 export function useWrapTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
   account?: AccountMeta,
@@ -24,9 +31,11 @@ export function useWrapTransactionRequest(
   const provider = useProvider(chainId)
   const isUniswapXWrap = Boolean(trade.trade && isUniswapX(trade.trade) && trade.trade.needsWrap)
 
+  const signer = useSigner();
+
   const transactionFetcher = useCallback(
     () =>
-      getWrapTransactionRequest(provider, isUniswapXWrap, chainId, account?.address, wrapType, currencyAmounts.input),
+      getWrapTransactionRequest(provider, signer, isUniswapXWrap, chainId, account?.address, wrapType, currencyAmounts.input),
     [provider, isUniswapXWrap, chainId, account, wrapType, currencyAmounts.input],
   )
 
@@ -35,23 +44,25 @@ export function useWrapTransactionRequest(
 
 export const getWrapTransactionRequest = async (
   provider: providers.Provider | undefined,
+  signer: Signer | undefined,
   isUniswapXWrap: boolean,
   chainId: UniverseChainId,
   address: Address | undefined,
   wrapType: WrapType,
   currencyAmountIn: Maybe<CurrencyAmount<Currency>>,
 ): Promise<providers.TransactionRequest | undefined> => {
-  if (!currencyAmountIn || !provider || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
+  if (!currencyAmountIn || !provider || !address || !signer || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
     return undefined
   }
-
-  const wethContract = await getWethContract(chainId, provider)
+  console.log('address', address)
+  
+  const signerAddress = await signer.getAddress()
+  const wrapperContract = await getWrapperContract(address, provider)
   const wethTx =
     wrapType === WrapType.Wrap || isUniswapXWrap
-      ? await wethContract.populateTransaction.deposit({
-          value: `0x${currencyAmountIn.quotient.toString(16)}`,
-        })
-      : await wethContract.populateTransaction.withdraw(`0x${currencyAmountIn.quotient.toString(16)}`)
+      ? await wrapperContract.populateTransaction.wrapETH(`0x${currencyAmountIn.quotient.toString(16)}`)
+      : await wrapperContract.populateTransaction.unwrapWETH9(`0x${currencyAmountIn.quotient.toString(16)}`)
 
-  return { ...wethTx, from: address, chainId }
+  // TODO: overwrite from with smart pool address
+  return { ...wethTx, from: signerAddress, chainId }
 }

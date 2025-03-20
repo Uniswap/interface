@@ -1,6 +1,8 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { providers } from 'ethers/lib/ethers'
-import { useEffect, useMemo, useRef } from 'react'
+import { BigNumber, providers } from 'ethers/lib/ethers'
+import { get } from 'lodash'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useSigner } from 'uniswap/src/contexts/UniswapContext'
 import { WithV4Flag } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
@@ -51,7 +53,7 @@ export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
 export const WRAP_FALLBACK_GAS_LIMIT_IN_GWEI = 45_000
 
-const FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS = 1000
+const FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS = 8000
 export interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
   permitSignature: string | undefined
@@ -78,6 +80,7 @@ export function useTransactionRequestInfo({
   const trace = useTrace()
   const activeGasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(derivedSwapInfo.chainId, 'general')
+  // TODO: make sure define true value for v4Enabled
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const transactionSettings = useTransactionSettingsContext()
 
@@ -85,22 +88,25 @@ export function useTransactionRequestInfo({
   const { trade } = tradeWithStatus || { trade: undefined }
 
   const isBridgeTrade = trade?.routing === Routing.BRIDGE
-  const permitData = trade?.quote?.permitData
+
+  // Notice: we do not pass permitData to api request, as otherwise unsigned permit error will be returned
+  const permitData = undefined //trade?.quote?.permitData
   // checks within functions for type of trade
   const swapQuote = getClassicQuoteFromResponse(trade?.quote) ?? getBridgeQuoteFromResponse(trade?.quote)
 
   // Quote indicates we need to include a signed permit message
-  const requiresPermit2Sig = !!permitData
+  const requiresPermit2Sig = false //!!permitData
 
   // On interface, we do not fetch signature until after swap is clicked, as it requires user interaction.
-  const signatureInfo = usePermit2SignatureWithData({ permitData, skip: skip || isInterface })
+  const signatureInfo = usePermit2SignatureWithData({ permitData, skip: true }) //skip || isInterface })
 
   /**
    * Simulate transactions to ensure they will not fail on-chain.
    * Do not simulate for bridge transactions or txs that need an approval
    * as those require Tenderly to simulate and it is not currently integrated into the gas servic
    */
-  const shouldSimulateTxn = isBridgeTrade ? false : tokenApprovalInfo?.action === ApprovalAction.None
+  // TODO: try simulate after debugging complete
+  const shouldSimulateTxn = false// isBridgeTrade ? false : tokenApprovalInfo?.action === ApprovalAction.None
   const missingSig = requiresPermit2Sig && !signatureInfo.signature
 
   // Format request args
@@ -136,6 +142,8 @@ export function useTransactionRequestInfo({
     v4Enabled,
   ])
 
+  // TODO: verify whether this is wrap for v3 swaps, so we do not need to manually encode wrap for v3 swaps instead of msg.value
+  // when wrap is applicable, we should encode the transaction and encode a wrap, unless it's a ETH -> WETH
   // Wrap transaction request
   const isUniswapXWrap = trade && isUniswapX(trade) && trade.needsWrap
   const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable || isUniswapXWrap
@@ -175,6 +183,15 @@ export function useTransactionRequestInfo({
     FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS,
   )
 
+  if (swapRequestArgs?.quote && isClassicQuote(swapRequestArgs.quote) && swapRequestArgs.quote.portionRecipient !== account?.address) {
+    swapRequestArgs.quote.portionRecipient = account?.address
+    swapRequestArgs.quote.aggregatedOutputs?.forEach((output) => {
+      output.recipient !== account?.address && (output.recipient = account?.address)
+    })
+  }
+  // TODO: verify if this reduces api calls
+  swapRequestArgs?.refreshGasPrice && (swapRequestArgs.refreshGasPrice = false)
+
   const {
     data,
     error,
@@ -187,6 +204,24 @@ export function useTransactionRequestInfo({
     // We add a small buffer in case connection is too slow
     immediateGcTime: tradingApiSwapRequestMs + ONE_SECOND_MS * 5,
   })
+  // Notice: We override from, to, value when routing to smart pool
+  const signerObj = useSigner()
+  const [signerAddress, setSignerAddress] = useState<string | undefined>(undefined)
+  useEffect(() => {
+    if (signerObj) {
+      signerObj.getAddress().then(address => setSignerAddress(address)).catch(() => setSignerAddress(undefined))
+    }
+  }, [signerObj])
+  if (signerAddress && account) {
+    // TODO: verify why resulting gasLimit is 100k higher than expected
+    data?.swap?.gasLimit && (data.swap.gasLimit = BigNumber.from(data.swap.gasLimit).mul(2).toString())
+    //data?.swap?.gasLimit && (data.swap.gasLimit = Number(400000).toString())
+    data?.swap?.from && (data.swap.from = signerAddress)
+    data?.swap?.to && (data.swap.to = account.address)
+    data?.swap?.value && (data.swap.value = '0x0')
+
+    // TODO: should we overwrite the data?.swap?.data fee recipient with the smart pool address?
+  }
 
   // We use the gasFee estimate from quote, as its more accurate
   const swapGasFee = useMemo(

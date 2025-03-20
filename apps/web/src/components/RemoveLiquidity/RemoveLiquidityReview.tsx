@@ -44,7 +44,8 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const currency0FiatAmount = useUSDCValue(positionInfo?.currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(positionInfo?.currency1Amount) ?? undefined
   const selectChain = useSelectChain()
-  const startChainId = useAccount().chainId
+  const signer = useAccount()
+  const startChainId = signer.chainId
   const account = useAccountMeta()
   const dispatch = useDispatch()
   const trace = useTrace()
@@ -119,6 +120,10 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const currency0CurrencyInfo = useCurrencyInfo(currency0Amount.currency)
   const currency1CurrencyInfo = useCurrencyInfo(currency1Amount.currency)
+
+  // we override the from and to addresses, as we want to route from the signer to the wallet
+  txContext?.txRequest.from && signer?.address && (txContext.txRequest.from = signer.address)
+  txContext?.txRequest.to && account?.address && (txContext.txRequest.to = account.address)
 
   const onDecreaseLiquidity = () => {
     const isValidTx = isValidLiquidityTxContext(txContext)

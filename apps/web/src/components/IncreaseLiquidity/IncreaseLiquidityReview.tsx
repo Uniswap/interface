@@ -30,7 +30,8 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const selectChain = useSelectChain()
-  const startChainId = useAccount().chainId
+  const signer = useAccount()
+  const startChainId = signer.chainId
   const account = useAccountMeta()
   const trace = useTrace()
 
@@ -39,6 +40,12 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep, setCurrentTransactionStep } =
     useIncreaseLiquidityContext()
   const { txInfo, gasFeeEstimateUSD, dependentAmount } = useIncreaseLiquidityTxContext()
+
+  // we override permit as rigoblock automatically sets permit2 approval
+  txInfo && (txInfo.permit = undefined)
+  txInfo?.txRequest?.from && account?.address && (txInfo.txRequest.to = account.address)
+  txInfo?.txRequest && (txInfo.txRequest.from = signer.address)
+  txInfo?.txRequest && (txInfo.txRequest.value = '0')
 
   const { exactField } = increaseLiquidityState
   const { currencyAmounts, currencyAmountsUSDValue, deposit0Disabled, deposit1Disabled } = derivedIncreaseLiquidityInfo

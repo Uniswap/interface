@@ -42,8 +42,9 @@ export function useRoutingAPIArguments({
     'CLASSIC' | 'DUTCH_V2' | 'DUTCH_V3'
   >(Experiments.ArbitrumXV2Sampling, ArbitrumXV2SamplingProperties.RoutingType, 'CLASSIC')
 
+  // TODO: we disable fee logic here, otherwise fee is taken from pool, which is rejected by protocol
   // Don't enable fee logic if this is a quote for pricing
-  const sendPortionEnabled = routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
+  const sendPortionEnabled = false //routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
 
   const chainId = tokenIn?.chainId
   const isUniswapXSupportedChain = useIsUniswapXSupportedChain(chainId)

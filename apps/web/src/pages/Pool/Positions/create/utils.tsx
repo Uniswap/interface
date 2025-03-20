@@ -1156,6 +1156,7 @@ export function generateCreatePositionTxRequest({
     return undefined
   }
 
+  approvalCalldata?.permitData && (approvalCalldata.permitData = undefined)
   const validatedPermitRequest = validatePermit(approvalCalldata?.permitData)
   if (approvalCalldata?.permitData && !validatedPermitRequest) {
     return undefined
@@ -1185,13 +1186,13 @@ export function generateCreatePositionTxRequest({
           ? derivedPositionInfo.pair?.liquidityToken
           : undefined,
     },
-    approveToken0Request: validatedApprove0Request,
-    approveToken1Request: validatedApprove1Request,
+    approveToken0Request: undefined, //validatedApprove0Request,
+    approveToken1Request: undefined, //validatedApprove1Request,
     txRequest,
     approvePositionTokenRequest: undefined,
     revokeToken0Request: validatedRevoke0Request,
     revokeToken1Request: validatedRevoke1Request,
-    permit: validatedPermitRequest,
+    permit: undefined, //validatedPermitRequest,
   } satisfies CreatePositionTxAndGasInfo
 }
 

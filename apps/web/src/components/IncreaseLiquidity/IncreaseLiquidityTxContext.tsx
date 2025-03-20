@@ -8,6 +8,7 @@ import { getProtocolItems, hasLPFoTTransferError } from 'components/Liquidity/ut
 import { ZERO_ADDRESS } from 'constants/misc'
 import { getCurrencyAddressForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { PositionField } from 'types/position'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
@@ -30,7 +31,6 @@ import { validatePermit, validateTransactionRequest } from 'uniswap/src/features
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useAccount } from 'wagmi'
 
 interface IncreasePositionContextType {
   txInfo?: IncreasePositionTxAndGasInfo
@@ -52,7 +52,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const { currencyAmounts, error } = derivedIncreaseLiquidityInfo
   const { exactField } = increaseLiquidityState
 
-  const account = useAccount()
+  const account = useActiveSmartPool()
 
   const increaseLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!positionInfo || !account.address || !currencyAmounts?.TOKEN0 || !currencyAmounts?.TOKEN1) {
@@ -80,6 +80,9 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     staleTime: 5 * ONE_SECOND_MS,
     enabled: !!increaseLiquidityApprovalParams && !error,
   })
+
+  // we override permitData as rigoblock automatically approves the tokens
+  increaseLiquidityTokenApprovals && (increaseLiquidityTokenApprovals.permitData = undefined)
 
   if (approvalError) {
     logger.info(
@@ -117,8 +120,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     gasFeePositionTokenApproval,
   )
 
-  const approvalsNeeded =
-    !approvalLoading && Boolean(permitData || token0Approval || token1Approval || positionTokenApproval)
+  //const approvalsNeeded =
+  //  !approvalLoading && Boolean(permitData || token0Approval || token1Approval || positionTokenApproval)
 
   const increaseCalldataQueryParams = useMemo((): IncreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
@@ -142,7 +145,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     const independentToken = exactField === PositionField.TOKEN0 ? IndependentToken.TOKEN_0 : IndependentToken.TOKEN_1
 
     return {
-      simulateTransaction: !approvalsNeeded,
+      simulateTransaction: false, //!approvalsNeeded,
       protocol: apiProtocolItems,
       tokenId: positionInfo.tokenId ? Number(positionInfo.tokenId) : undefined,
       walletAddress: account.address,
@@ -163,7 +166,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       },
       slippageTolerance: customSlippageTolerance,
     }
-  }, [account, positionInfo, currencyAmounts, approvalsNeeded, customSlippageTolerance, exactField])
+  }, [account, positionInfo, currencyAmounts, /*approvalsNeeded,*/ customSlippageTolerance, exactField])
 
   const currency0Info = useCurrencyInfo(
     positionInfo?.currency0Amount.currency ? currencyId(positionInfo.currency0Amount.currency) : undefined,
