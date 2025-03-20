@@ -357,7 +357,7 @@ export function generateTransactionSteps(
       ]
     }
 
-    const { action, approveToken0Request, approveToken1Request, approvePositionTokenRequest } = txContext
+    const { action, /*approveToken0Request, approveToken1Request,*/ approvePositionTokenRequest } = txContext
 
     const revokeToken0 = createRevocationTransactionStep(
       txContext.revokeToken0Request,
@@ -367,8 +367,9 @@ export function generateTransactionSteps(
       txContext.revokeToken1Request,
       action.currency1Amount.currency.wrapped,
     )
-    const approvalToken0 = createApprovalTransactionStep(approveToken0Request, action.currency0Amount)
-    const approvalToken1 = createApprovalTransactionStep(approveToken1Request, action.currency1Amount)
+    // TODO: verify we are correctly removing approval step here
+    //const approvalToken0 = createApprovalTransactionStep(approveToken0Request, action.currency0Amount)
+    //const approvalToken1 = createApprovalTransactionStep(approveToken1Request, action.currency1Amount)
     const approvalPositionToken = createApprovalTransactionStep(
       approvePositionTokenRequest,
       action.liquidityToken ? CurrencyAmount.fromRawAmount(action.liquidityToken, 1) : undefined,
@@ -408,8 +409,8 @@ export function generateTransactionSteps(
           return orderIncreaseLiquiditySteps({
             revokeToken0,
             revokeToken1,
-            approvalToken0,
-            approvalToken1,
+            //approvalToken0,
+            //approvalToken1,
             approvalPositionToken,
             permit: createPermit2SignatureStep(txContext.permit, action.currency0Amount.currency), // TODO: what about for multiple tokens
             increasePosition:
@@ -421,8 +422,8 @@ export function generateTransactionSteps(
           return orderIncreaseLiquiditySteps({
             revokeToken0,
             revokeToken1,
-            approvalToken0,
-            approvalToken1,
+            //approvalToken0,
+            //approvalToken1,
             approvalPositionToken,
             permit: undefined,
             increasePosition: createIncreasePositionStep(txContext.txRequest),
