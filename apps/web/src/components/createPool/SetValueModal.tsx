@@ -1,15 +1,11 @@
-import { parseUnits } from '@ethersproject/units'
 import { Trans } from 'react-i18next'
-import JSBI from 'jsbi'
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, /*useCallback,*/ useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
-
-import { PoolInfo } from 'state/buy/hooks'
 import { useSetValueCallback } from 'state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import { ButtonError } from 'components/Button/buttons'
@@ -17,7 +13,6 @@ import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import NameInputPanel from 'components/NameInputPanel'
 import { useAccount } from 'hooks/useAccount'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -34,24 +29,23 @@ const StyledClosed = styled(X)`
 interface SetValueModalProps {
   isOpen: boolean
   onDismiss: () => void
-  poolInfo: PoolInfo
   baseTokenSymbol: string
   title: ReactNode
 }
 
-export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSymbol, title }: SetValueModalProps) {
+export default function SetValueModal({ isOpen, onDismiss, baseTokenSymbol, title }: SetValueModalProps) {
   const account = useAccount()
 
   // state for create input
-  const [typed, setTyped] = useState('')
+  //const [typed, setTyped] = useState('')
 
   // wrapped onUserInput to clear signatures
-  const onUserInput = useCallback((typed: string) => {
-    const numberRegEx = RegExp(`^[0-9]*[.,]?[0-9]*$`)
-    if (numberRegEx.test(String(typed))) {
-      setTyped(typed)
-    }
-  }, [])
+  //const onUserInput = useCallback((typed: string) => {
+  //  const numberRegEx = RegExp(`^[0-9]*[.,]?[0-9]*$`)
+  //  if (numberRegEx.test(String(typed))) {
+  //    setTyped(typed)
+  //  }
+  //}, [])
 
   const setValueCallback = useSetValueCallback()
 
@@ -70,38 +64,16 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSy
     onDismiss()
   }
 
-  let parsedValue = ''
-  // TODO: use currency, as decimals are passed from parent
-  try {
-    parsedValue = parseUnits(typed, poolInfo.pool.decimals).toString()
-  } catch (error) {
-    const message = `failed to parse input amount: "${typed}"`
-    logger.debug('SetValueModal', 'wrappedOnDismiss', message, error)
-  }
-  //const parsedValue = typed
-  const isSameAsCurrent: boolean = JSBI.equal(
-    JSBI.BigInt(parsedValue),
-    poolInfo.poolPriceAmount?.quotient ?? JSBI.BigInt(0)
-  )
-  const isTooSmall: boolean = JSBI.lessThanOrEqual(
-    JSBI.BigInt(parsedValue),
-    JSBI.divide(poolInfo.poolPriceAmount?.quotient ?? JSBI.BigInt(0), JSBI.BigInt(5))
-  )
-  const isTooBig: boolean = JSBI.greaterThanOrEqual(
-    JSBI.BigInt(parsedValue),
-    JSBI.multiply(poolInfo.poolPriceAmount?.quotient ?? JSBI.BigInt(0), JSBI.BigInt(5))
-  )
-
   async function onSetValue() {
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account.address || !account.chainId || !setValueCallback || !parsedValue) {
+    if (!account.address || !account.chainId || !setValueCallback) {
       return
     }
 
     // try delegation and store hash
-    const hash = await setValueCallback(parsedValue)?.catch((error) => {
+    const hash = await setValueCallback()?.catch((error) => {
       setAttempting(false)
       logger.info('SetValueModal', 'onSetValue', error)
     })
@@ -120,34 +92,14 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSy
               <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
-            <ThemedText.DeprecatedBody>
-              <Trans>New value must be between 1/5th and 5 times the current value.</Trans>
-            </ThemedText.DeprecatedBody>
-            <ThemedText.DeprecatedBody>
-              <Trans>Pool base token balance must be at least 3% of new pool value.</Trans>
-            </ThemedText.DeprecatedBody>
-            <NameInputPanel
-              value={typed}
-              onChange={onUserInput}
-              label={`Unitary Value (${baseTokenSymbol})`}
-              placeholder="New Value"
-            />
             {/* TODO: display return error from hook */}
             <ButtonError
-              disabled={typed === '' || typed?.length > 10 || isSameAsCurrent || isTooSmall || isTooBig}
-              error={isSameAsCurrent || (typed && Number(parsedValue) !== 0 && isTooSmall) || isTooBig}
+              disabled={false}
+              error={false}
               onClick={onSetValue}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                {isSameAsCurrent ? (
-                  <Trans>Same as current</Trans>
-                ) : typed && Number(parsedValue) !== 0 && isTooSmall ? (
-                  <Trans>less than 20% of current</Trans>
-                ) : isTooBig ? (
-                  <Trans>more than 5x current</Trans>
-                ) : (
-                  <Trans>Update Value</Trans>
-                )}
+                <Trans>Update Value</Trans>
               </ThemedText.DeprecatedMediumHeader>
             </ButtonError>
           </AutoColumn>
@@ -172,7 +124,7 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSy
                 </ThemedText.DeprecatedLargeHeader>
                 <ThemedText.DeprecatedBody fontSize={20}>
                   <Trans>
-                    Setting value to {typed} {baseTokenSymbol}
+                    Updating Nav {baseTokenSymbol}
                   </Trans>
                 </ThemedText.DeprecatedBody>
               </>
@@ -183,7 +135,7 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSy
                 </ThemedText.DeprecatedLargeHeader>
                 <ThemedText.DeprecatedBody fontSize={20}>
                   <Trans>
-                    Value set to {typed} {baseTokenSymbol}
+                    Updated Nav {baseTokenSymbol}
                   </Trans>
                 </ThemedText.DeprecatedBody>
               </>

@@ -171,7 +171,7 @@ export function Swap({
 
   // TODO(WEB-5078): Remove this once we upgrade swap e2e tests to use the new swap flow
   const waitForLoading = isLoading && !isTestEnv()
-  const shouldUseLegacyRouter = true
+  const shouldUseLegacyRouter = false
 
   if ((universalSwapFlow || isTestnetModeEnabled || waitForLoading) && !shouldUseLegacyRouter) {
     return (

@@ -392,7 +392,6 @@ export default function PoolPositionPage() {
               <SetValueModal
                 isOpen={showSetValueModal}
                 onDismiss={() => setShowSetValueModal(false)}
-                poolInfo={poolInfo}
                 baseTokenSymbol={baseTokenSymbol}
                 title={<Trans>Set Value</Trans>}
               />

@@ -288,7 +288,7 @@ export function useSetSpreadCallback(): (spread: string | undefined) => undefine
   )
 }
 
-export function useSetValueCallback(): (value: string | undefined) => undefined | Promise<string> {
+export function useSetValueCallback(): () => undefined | Promise<string> {
   const account = useAccount()
   const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
@@ -297,16 +297,16 @@ export function useSetValueCallback(): (value: string | undefined) => undefined 
   const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
 
   return useCallback(
-    (value: string | undefined) => {
+    () => {
       if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!poolContract) {
         throw new Error('No Pool Contract!')
       }
-      return poolContract.estimateGas.setUnitaryValue(value, {}).then((estimatedGasLimit) => {
+      return poolContract.estimateGas.updateUnitaryValue().then((estimatedGasLimit) => {
         return poolContract
-          .setUnitaryValue(value, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .updateUnitaryValue({ value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.SET_VALUE,
