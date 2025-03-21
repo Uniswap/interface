@@ -6,7 +6,7 @@ import {
 import { AutoRow } from "components/Row";
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from "components/Tokens/constants";
 import { Trans } from "i18n";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { StyledInternalLink, ThemedText } from "theme/components";
@@ -22,6 +22,7 @@ import Incentives from "components/Incentives";
 import Create from "components/Create";
 import FAQ from "components/FAQ";
 import EndedIncentives from "components/Incentives/EndedIncentives";
+import { IncentivesDataProvider } from "components/Incentives/IncentivesDataProvider";
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -218,7 +219,9 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
             })}
           </TabBar>
         </NavWrapper>
-        <Page />
+        <IncentivesDataProvider>
+          <Page />
+        </IncentivesDataProvider>
       </ExploreContainer>
     </Trace>
   );

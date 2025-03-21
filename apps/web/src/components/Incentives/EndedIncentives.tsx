@@ -3,38 +3,19 @@ import Row from "components/Row";
 import { Table } from "components/Table";
 import { Cell } from "components/Table/Cell";
 import { Trans } from "i18n";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { ThemedText } from "theme/components";
-import { TARAXA_MAINNET_LIST } from "../../constants/lists";
-import {
-  TokenInfoDetails,
-  PoolInfo,
-  Incentive,
-  indexerTaraswap,
-  INCENTIVES_QUERY,
-  POOL_QUERY,
-  TaraxaMainnetListResponse,
-  findTokenByAddress,
-  PoolResponse,
-  calculateApy,
-  calculateApy24hrs,
-} from "./types";
+import { TokenInfoDetails, PoolInfo } from "./types";
 import { TokenLogoImage } from "../DoubleLogo";
 import blankTokenUrl from "assets/svg/blank_token.svg";
-import { useV3Positions } from "../../hooks/useV3Positions";
 import { useAccount } from "../../hooks/useAccount";
-import { useChainId } from "wagmi";
-import { formatUnits } from "viem/utils";
 import { MouseoverTooltip } from "components/Tooltip";
 import styled from "styled-components";
 import { Info, Star } from "react-feather";
-import { useV3StakerContract } from "../../hooks/useV3StakerContract";
-import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
-import { ZERO_ADDRESS } from "constants/misc";
 import { LightCard } from "components/Card";
-import { buildIncentiveIdFromIncentive, RewardInfo } from "hooks/usePosition";
 import ChoosePositionModal, { SaveButton } from "./ChoosePositionModal";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useIncentivesData } from "./IncentivesDataProvider";
 
 const LOGO_DEFAULT_SIZE = 30;
 
@@ -45,375 +26,137 @@ const StyledInfoIcon = styled(Info)`
   stroke: ${({ theme }) => theme.neutral2};
 `;
 
-const PoolTokenImage = ({
-  pool,
-}: {
+interface PoolTokenImageProps {
   pool: {
     token0: TokenInfoDetails | undefined;
     token1: TokenInfoDetails | undefined;
   };
-}) => {
+}
+
+const PoolTokenImage = ({ pool }: PoolTokenImageProps) => {
   return (
-    <Row gap="4px">
-      {pool.token0?.logoURI && (
-        <TokenLogoImage
-          size={LOGO_DEFAULT_SIZE}
-          src={pool.token0?.logoURI ?? blankTokenUrl}
-        />
-      )}
-      {pool.token1?.logoURI && (
-        <TokenLogoImage
-          size={LOGO_DEFAULT_SIZE}
-          src={pool.token1?.logoURI ?? blankTokenUrl}
-        />
-      )}
-      {pool.token0?.symbol}/{pool.token1?.symbol}
-    </Row>
+    <StyledPoolRow gap="4px">
+      <TokenContainer>
+        {pool.token0?.logoURI && (
+          <TokenLogoImage
+            size={LOGO_DEFAULT_SIZE}
+            src={pool.token0?.logoURI ?? blankTokenUrl}
+          />
+        )}
+        {pool.token1?.logoURI && (
+          <TokenLogoImage
+            size={LOGO_DEFAULT_SIZE}
+            src={pool.token1?.logoURI ?? blankTokenUrl}
+          />
+        )}
+      </TokenContainer>
+      <SymbolText>
+        {pool.token0?.symbol}/{pool.token1?.symbol}
+      </SymbolText>
+    </StyledPoolRow>
   );
 };
 
+const StyledDepositButton = styled(SaveButton)`
+  width: 130px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 8px 0;
+  font-size: 14px;
+`;
+
+const StyledPoolRow = styled(Row)`
+  align-items: center;
+  margin-left: 4px;
+`;
+
+const TokenContainer = styled.div`
+  display: flex;
+  margin-right: 8px;
+`;
+
+const SymbolText = styled(ThemedText.BodyPrimary)`
+  font-size: 14px;
+  white-space: nowrap;
+`;
+
+const StyledRewardRow = styled(Row)`
+  width: 100%;
+  height: 40px;
+`;
+
+const RewardSymbolText = styled(ThemedText.BodySecondary)`
+  font-size: 14px;
+  white-space: nowrap;
+`;
+
+const RewardAmountText = styled(ThemedText.BodyPrimary)`
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export default function EndedIncentives() {
   const account = useAccount();
-  const chainId = useChainId();
-  const v3StakerContract = useV3StakerContract(true);
-  const [tokenList, setTokenList] = useState<TokenInfoDetails[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [showPositionsModal, setShowPositionsModal] = useState(false);
-  const [rawIncentivesData, setRawIncentivesData] = useState<Incentive[]>([]);
-  const [poolTransactionTableValues, setPoolTransactionTableValues] = useState<
-    PoolInfo[]
-  >([]);
-  const [userPositionsGql, setUserPositionsGql] = useState<PositionsResponse[]>(
-    []
-  );
-  const { positions, loading: positionsLoading } = useV3Positions(
-    account.address || ZERO_ADDRESS
-  );
-  const { getPositionsWithDepositsOfUser, isLoading: isLoadingDepositData } =
-    useTotalPositions();
+  const navigate = useNavigate();
+  const hasRefreshed = useRef(false);
+  const hasDisplayedDebugInfo = useRef(false);
 
-  const positionsKey = positions
-    ?.map((pos) => pos.tokenId)
-    .sort()
-    .join("-");
+  const [stableLoading, setStableLoading] = useState(true);
+  const initialRenderComplete = useRef(false);
 
-  const location = useLocation();
+  const {
+    poolInfoEndedIncentives,
+    endedIncentives,
+    userPositions,
+    isLoading,
+    isLoadingIncentives,
+    isLoadingPoolInfo,
+    isLoadingPositions,
+    refetchIncentives,
+    tokenList,
+  } = useIncentivesData();
 
-  const getUserPositionsGql = useCallback(async () => {
-    if (!account || !account.address) return;
-
-    const positions = await getPositionsWithDepositsOfUser(account.address);
-    setUserPositionsGql(positions);
-  }, [getPositionsWithDepositsOfUser, account.address]);
+  const isLoadingData =
+    isLoading || isLoadingIncentives || isLoadingPoolInfo || isLoadingPositions;
 
   useEffect(() => {
-    if (account.isConnected) {
-      getUserPositionsGql();
-    }
-  }, [account.isConnected, location]);
-
-  const userPositions = useMemo(() => {
-    if (
-      isLoadingDepositData ||
-      !userPositionsGql ||
-      userPositionsGql.length == 0
-    )
-      return [];
-    return userPositionsGql.map((position) => {
-      return {
-        poolAddress: position.pool.id,
-        poolFeeTier: position.pool.feeTier,
-        tokenId: position.id.toString(),
-        liquidity: position.liquidity.toString(),
-        depositedToken0: (
-          parseFloat(position.depositedToken0) -
-          parseFloat(position.withdrawnToken0)
-        ).toFixed(4),
-        depositedToken1: (
-          parseFloat(position.depositedToken1) -
-          parseFloat(position.withdrawnToken1)
-        ).toFixed(4),
-        tickLower: position.tickLower.toString(),
-        tickUpper: position.tickUpper.toString(),
-      };
-    });
-  }, [
-    positionsLoading,
-    isLoadingDepositData,
-    userPositionsGql,
-    positionsKey,
-    chainId,
-  ]);
-
-  const fetchCoinDetails = useCallback(async () => {
-    const response = await fetch(TARAXA_MAINNET_LIST);
-    const data: TaraxaMainnetListResponse =
-      (await response.json()) as TaraxaMainnetListResponse;
-    if (data && data.tokens) {
-      setTokenList(data.tokens);
-    }
-  }, []);
-
-  const fetchTokensForPool = async (
-    poolId: string
-  ): Promise<PoolResponse | null> => {
-    if (!indexerTaraswap || !poolId) {
-      return null;
-    }
-    const response = await fetch(indexerTaraswap, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: POOL_QUERY,
-        variables: { id: poolId },
-      }),
-    });
-    const data = await response.json();
-    if (data && data.data && data.data.pools) {
-      return data.data.pools[0];
-    }
-    return null;
-  };
-
-  const fetchIncentivesData = useCallback(async () => {
-    if (!indexerTaraswap) {
+    if (!initialRenderComplete.current) {
+      initialRenderComplete.current = true;
       return;
     }
-    const response = await fetch(indexerTaraswap, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ query: INCENTIVES_QUERY }),
-    });
-    const data = await response.json();
-    if (data && data.data && data.data.incentives) {
-      let incentivesData: Incentive[] = data.data.incentives;
-      // .filter(
-      //   (incentive: Incentive) => incentive.ended === false
-      // );
-      setRawIncentivesData(incentivesData);
-    }
-  }, [indexerTaraswap]);
 
-  useEffect(() => {
-    if (account.isConnected) {
-      fetchIncentivesData();
+    if (isLoadingData) {
+      setStableLoading(true);
+      return;
     }
-  }, [account.isConnected]);
 
-  const processIncentives = useCallback(
-    async (
-      userPositionsParam: {
-        poolAddress: string;
-        poolFeeTier: number;
-        tokenId: string;
-        depositedToken0: string;
-        depositedToken1: string;
-        liquidity: string;
-        tickLower: string;
-        tickUpper: string;
-      }[]
-    ) => {
-      if (!account.isConnected) {
-        return [];
+    const timer = setTimeout(() => {
+      if (poolInfoEndedIncentives && poolInfoEndedIncentives.length > 0) {
+        setStableLoading(false);
+      } else if (!isLoadingData) {
+        setStableLoading(false);
       }
-      setIsLoading(true);
+    }, 300);
 
-      const poolInfo = await Promise.all(
-        rawIncentivesData.map(async (incentive) => {
-          const poolDetails = await fetchTokensForPool(incentive.pool.id);
-          let pendingRewards = "0";
-          if (poolDetails && poolDetails.token0 && poolDetails.token1) {
-            // Extract necessary data
-            const totalPoolLiquidity = parseFloat(
-              poolDetails.totalValueLockedUSD
-            );
-            // Format the value reward
-            const totalRewardsToken = incentive.ended
-              ? "0"
-              : formatUnits(
-                  BigInt(incentive.reward),
-                  incentive.rewardToken.decimals
-                );
-            if (v3StakerContract) {
-              const allRewards = await v3StakerContract?.rewards(
-                incentive.rewardToken.id,
-                account.address
-              );
-              pendingRewards = formatUnits(
-                BigInt(allRewards),
-                incentive.rewardToken.decimals
-              );
-            }
-
-            const apr24hrs = await calculateApy24hrs(
-              incentive,
-              totalRewardsToken
-            );
-
-            console.log("apr24hrs", apr24hrs);
-
-            const poolPosition = userPositionsParam.filter((userPosition) => {
-              return (
-                userPosition.poolAddress.toLowerCase() ===
-                  poolDetails.id.toLowerCase() &&
-                userPosition.poolFeeTier === poolDetails.feeTier
-              );
-            });
-
-            const relevantPosition = userPositionsGql.find(
-              (pos) =>
-                pos.pool.id.toLowerCase() === poolDetails.id.toLowerCase() &&
-                pos.pool.feeTier === poolDetails.feeTier
-            );
-
-            const relevantPositions = userPositionsGql.filter(
-              (pos) =>
-                pos.pool.id.toLowerCase() === poolDetails.id.toLowerCase() &&
-                pos.pool.feeTier === poolDetails.feeTier
-            );
-
-            const multipleRelevantPositions = relevantPositions.length > 1;
-
-            let unifiedTokenId = poolPosition[0]
-              ? poolPosition[0].tokenId
-              : relevantPosition?.id;
-
-            const totalDeposit = poolPosition[0]
-              ? poolPosition[0].liquidity
-              : relevantPosition
-              ? relevantPosition.liquidity.toString()
-              : "0";
-
-            const positionId = poolPosition[0]
-              ? poolPosition[0].tokenId
-              : relevantPosition
-              ? relevantPosition.id
-              : "";
-
-            if (v3StakerContract) {
-              const incentiveId = buildIncentiveIdFromIncentive(incentive);
-              try {
-                const rewardInfo: RewardInfo =
-                  await v3StakerContract?.getRewardInfo(
-                    incentiveId,
-                    positionId
-                  );
-
-                const pendingRewardsForPosition = formatUnits(
-                  BigInt(rewardInfo.reward.toString()),
-                  incentive.rewardToken.decimals
-                );
-                pendingRewards = pendingRewardsForPosition;
-              } catch (e) {
-                console.warn(e);
-                pendingRewards = "0";
-              }
-            }
-
-            const token0 = findTokenByAddress(tokenList, poolDetails.token0.id);
-            const token1 = findTokenByAddress(tokenList, poolDetails.token1.id);
-
-            const depositDisplay = relevantPosition
-              ? `${parseFloat(relevantPosition.depositedToken0 ?? "0").toFixed(
-                  4
-                )} ${token0?.symbol} + ${parseFloat(
-                  relevantPosition.depositedToken1 ?? "0"
-                ).toFixed(4)} ${token1?.symbol}`
-              : "-";
-
-            const tokenRewardLogoUri = findTokenByAddress(
-              tokenList,
-              incentive.rewardToken.id
-            )?.logoURI;
-
-            return {
-              ...poolDetails,
-              address: poolDetails.id,
-              incentiveId: incentive.id,
-              pool: {
-                token0: token0,
-                token1: token1,
-              },
-              feeTier: poolDetails.feeTier,
-              tvl: poolDetails.totalValueLockedUSD,
-              totalDeposit: totalDeposit,
-              positionId: positionId,
-              totalrewards: totalRewardsToken,
-              tokenreward: incentive.rewardToken.symbol,
-              tokenRewardLogoUri: tokenRewardLogoUri,
-              depositedToken0: relevantPosition
-                ? relevantPosition.depositedToken0
-                : 0,
-              depositedToken1: relevantPosition
-                ? relevantPosition.depositedToken1
-                : 0,
-              tickLower: poolPosition[0] ? poolPosition[0].tickLower : "0",
-              tickUpper: poolPosition[0] ? poolPosition[0].tickUpper : "0",
-              apy: apr24hrs * 365,
-              eligible:
-                (poolPosition[0] && poolPosition[0].tokenId) || relevantPosition
-                  ? true
-                  : false,
-              link: multipleRelevantPositions
-                ? undefined
-                : (poolPosition[0] && poolPosition[0].tokenId) ||
-                  relevantPosition
-                ? `/pool/${unifiedTokenId}?incentive=${incentive.id}`
-                : `/add/${poolDetails.token0.id}/${poolDetails.token1.id}`,
-              pendingRewards,
-              displayedTotalDeposit: depositDisplay,
-              hasMultipleRelevantPositions: multipleRelevantPositions,
-              userPositions: relevantPositions,
-            } as PoolInfo;
-          }
-          return null;
-        })
-      );
-      setIsLoading(false);
-      let filteredData = poolInfo.filter((pool) => pool !== null) as PoolInfo[];
-      return filteredData;
-    },
-    [rawIncentivesData, userPositionsGql, userPositions, account.isConnected]
-  );
+    return () => clearTimeout(timer);
+  }, [isLoadingData, poolInfoEndedIncentives]);
 
   useEffect(() => {
-    if (
-      account.isConnected &&
-      rawIncentivesData &&
-      rawIncentivesData.length > 0 &&
-      tokenList?.length > 0
-    ) {
-      processIncentives(userPositions).then((data) => {
-        if (data) {
-          const eligiblePools = data
-            .filter(
-              (pool) => pool.eligible || pool.hasMultipleRelevantPositions
-            )
-            .sort((a, b) => b.apy - a.apy);
-          setPoolTransactionTableValues(Array.from([...eligiblePools]));
-        }
-      });
+    if (account.isConnected && !hasRefreshed.current) {
+      hasRefreshed.current = true;
+      refetchIncentives();
     }
-  }, [
-    rawIncentivesData,
-    tokenList,
-    userPositions,
-    userPositionsGql,
-    account.isConnected,
-    location,
-  ]);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (account.isConnected) {
-      fetchCoinDetails();
-    }
-  }, [fetchCoinDetails, account.isConnected]);
+    return undefined;
+  }, [account.isConnected, refetchIncentives]);
 
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolInfo>();
@@ -422,7 +165,7 @@ export default function EndedIncentives() {
         id: "pool",
         header: (pool) => (
           <Cell
-            minWidth={200}
+            width={220}
             justifyContent="flex-start"
             grow
             key={pool.column.id}
@@ -445,8 +188,8 @@ export default function EndedIncentives() {
         ),
         cell: (pool) => (
           <Cell
-            loading={isLoading}
-            minWidth={200}
+            loading={isLoadingData}
+            width={220}
             justifyContent="flex-start"
             grow
             key={pool?.row?.original?.address}
@@ -454,7 +197,7 @@ export default function EndedIncentives() {
             <>
               <Star
                 color="#c7a912"
-                size={20}
+                size={pool?.row?.original?.eligible ? 20 : 0}
                 fill="#c7a912"
                 style={{
                   visibility: pool?.row?.original?.eligible
@@ -470,10 +213,11 @@ export default function EndedIncentives() {
           </Cell>
         ),
       }),
+
       columnHelper.accessor("apy", {
         id: "apy",
         header: (apy) => (
-          <Cell minWidth={200} key={apy.column.id}>
+          <Cell minWidth={120} key={apy.column.id}>
             <ThemedText.BodyPrimary>
               <Row gap="4px">
                 <Trans i18nKey="common.incentives.apy" />
@@ -489,8 +233,8 @@ export default function EndedIncentives() {
         ),
         cell: (apy) => (
           <Cell
-            loading={isLoading}
-            minWidth={200}
+            loading={isLoadingData}
+            minWidth={120}
             key={apy?.row?.original?.address}
           >
             <ThemedText.BodyPrimary>
@@ -503,25 +247,20 @@ export default function EndedIncentives() {
           </Cell>
         ),
       }),
+
       columnHelper.accessor("tvl", {
         id: "tvl",
         header: (tvl) => (
-          <Cell minWidth={200} key={tvl.column.id}>
+          <Cell minWidth={150} key={tvl.column.id}>
             <ThemedText.BodyPrimary>
               <Trans i18nKey="common.incentives.pool.tvl" />
             </ThemedText.BodyPrimary>
           </Cell>
         ),
         cell: (tvl) => {
-          // Get the raw value
           const tvlValue = tvl.getValue?.();
+          if (!tvlValue) return null;
 
-          // Safeguard against undefined values
-          if (!tvlValue) {
-            return null;
-          }
-
-          // Parse and format the value
           const tvlNumber = parseFloat(tvlValue);
           const tvlFormatted = tvlNumber.toLocaleString("en-US", {
             minimumFractionDigits: 2,
@@ -530,8 +269,8 @@ export default function EndedIncentives() {
 
           return (
             <Cell
-              loading={isLoading}
-              minWidth={200}
+              loading={isLoadingData}
+              minWidth={150}
               key={tvl?.row?.original?.address}
             >
               <ThemedText.BodyPrimary>{tvlFormatted}$</ThemedText.BodyPrimary>
@@ -539,10 +278,11 @@ export default function EndedIncentives() {
           );
         },
       }),
+
       columnHelper.accessor("pendingRewards", {
         id: "pendingRewards",
         header: (pendingRewards) => (
-          <Cell minWidth={200} key={pendingRewards.column.id}>
+          <Cell minWidth={150} key={pendingRewards.column.id}>
             <ThemedText.BodyPrimary>
               <Row gap="4px">
                 <Trans i18nKey="common.incentives.pending.reward" />
@@ -560,21 +300,24 @@ export default function EndedIncentives() {
         ),
         cell: (pendingRewards) => (
           <Cell
-            loading={isLoading}
-            minWidth={200}
+            loading={isLoadingData}
+            minWidth={150}
+            justifyContent="center"
             key={pendingRewards?.row?.original?.address}
           >
-            <ThemedText.BodyPrimary>
-              {parseFloat(pendingRewards.getValue?.() || "0").toFixed(2)}&nbsp;
+            <RewardAmountText>
+              {parseFloat(pendingRewards.getValue?.() || "0").toFixed(2)}
+              &nbsp;
               {pendingRewards.row?.original?.tokenreward}
-            </ThemedText.BodyPrimary>
+            </RewardAmountText>
           </Cell>
         ),
       }),
+
       columnHelper.accessor("hasMultipleRelevantPositions", {
         id: "choosePosition",
         header: (hasMultipleRelevantPositions) => (
-          <Cell minWidth={200} key={hasMultipleRelevantPositions.column.id}>
+          <Cell minWidth={150} key={hasMultipleRelevantPositions.column.id}>
             <ThemedText.BodyPrimary>
               <Row gap="4px">
                 <Trans i18nKey="common.incentives.choose.position" />
@@ -591,55 +334,71 @@ export default function EndedIncentives() {
             </ThemedText.BodyPrimary>
           </Cell>
         ),
-        cell: (hasMultipleRelevantPositions) => (
-          <Cell
-            loading={isLoading}
-            minWidth={200}
-            key={hasMultipleRelevantPositions?.row?.original?.address}
-          >
-            <SaveButton
-              onClick={() => {
-                setShowPositionsModal(true);
-              }}
-              style={{ textAlign: "center" }}
-              disabled={
-                hasMultipleRelevantPositions?.row?.original?.eligible
-                  ? false
-                  : true
-              }
+        cell: (hasMultipleRelevantPositions) => {
+          const hasPositions =
+            (hasMultipleRelevantPositions?.row?.original?.userPositions
+              ?.length ?? 0) > 0;
+
+          return (
+            <Cell
+              loading={isLoadingData}
+              minWidth={150}
+              key={hasMultipleRelevantPositions?.row?.original?.address}
+              justifyContent="center"
             >
-              {hasMultipleRelevantPositions.getValue?.() ? (
-                <Trans i18nKey="common.incentives.choose.position" />
-              ) : (
-                <Trans i18nKey="common.incentives.withdraw" />
-              )}
-            </SaveButton>
-            {showPositionsModal &&
-              hasMultipleRelevantPositions?.row?.original?.userPositions && (
-                <ChoosePositionModal
-                  show={showPositionsModal}
-                  onHide={() => {
-                    setShowPositionsModal(false);
-                  }}
-                  onSelectPosition={(positionId: number) =>
-                    navigate(
-                      `/pool/${positionId}?incentive=${hasMultipleRelevantPositions?.row?.original?.incentiveId}`
-                    )
+              <StyledDepositButton
+                onClick={() => {
+                  if (hasPositions) {
+                    setShowPositionsModal(true);
+                  } else {
+                    const pool = hasMultipleRelevantPositions?.row?.original;
+                    if (pool && pool.pool.token0 && pool.pool.token1) {
+                      navigate(
+                        `/add/${pool.pool.token0.address}/${pool.pool.token1.address}`
+                      );
+                    }
                   }
-                  positionIds={
-                    hasMultipleRelevantPositions?.row?.original?.userPositions?.map(
-                      (p) => p.id
-                    ) || []
-                  }
-                />
-              )}
-          </Cell>
-        ),
+                }}
+                disabled={!account.isConnected}
+              >
+                {hasPositions ? (
+                  hasMultipleRelevantPositions.getValue?.() ? (
+                    <Trans i18nKey="common.incentives.choose.position" />
+                  ) : (
+                    <Trans i18nKey="common.incentives.withdraw" />
+                  )
+                ) : (
+                  "Deposit LP"
+                )}
+              </StyledDepositButton>
+              {showPositionsModal &&
+                hasMultipleRelevantPositions?.row?.original?.userPositions && (
+                  <ChoosePositionModal
+                    show={showPositionsModal}
+                    onHide={() => {
+                      setShowPositionsModal(false);
+                    }}
+                    onSelectPosition={(positionId: number) =>
+                      navigate(
+                        `/pool/${positionId}?incentive=${hasMultipleRelevantPositions?.row?.original?.incentiveId}`
+                      )
+                    }
+                    positionIds={
+                      hasMultipleRelevantPositions?.row?.original?.userPositions?.map(
+                        (p) => p.id
+                      ) || []
+                    }
+                  />
+                )}
+            </Cell>
+          );
+        },
       }),
+
       columnHelper.accessor("tokenreward", {
         id: "tokenreward",
         header: (tokenreward) => (
-          <Cell minWidth={200} key={tokenreward.column.id}>
+          <Cell minWidth={150} key={tokenreward.column.id}>
             <ThemedText.BodySecondary>
               <Trans i18nKey="common.incentives.token.reward" />
             </ThemedText.BodySecondary>
@@ -647,62 +406,56 @@ export default function EndedIncentives() {
         ),
         cell: (tokenreward) => (
           <Cell
-            loading={isLoading}
-            minWidth={200}
+            loading={isLoadingData}
+            minWidth={150}
+            justifyContent="center"
             key={tokenreward?.row?.original?.address}
           >
-            {tokenreward.row?.original?.tokenRewardLogoUri && (
-              <>
+            <StyledRewardRow gap="8px" justify="center" align="center">
+              {tokenreward.row?.original?.tokenRewardLogoUri && (
                 <TokenLogoImage
-                  size={LOGO_DEFAULT_SIZE}
+                  size={24}
                   src={tokenreward.row?.original?.tokenRewardLogoUri}
                 />
-                &nbsp;&nbsp;&nbsp;
-              </>
-            )}
-            <ThemedText.BodySecondary>
-              {tokenreward.getValue?.()}
-            </ThemedText.BodySecondary>
+              )}
+              <RewardSymbolText>{tokenreward.getValue?.()}</RewardSymbolText>
+            </StyledRewardRow>
           </Cell>
         ),
       }),
+
       columnHelper.accessor("displayedTotalDeposit", {
         id: "displayedTotalDeposit",
         header: (displayedTotalDeposit) => (
-          <Cell minWidth={200} key={displayedTotalDeposit.column.id}>
+          <Cell minWidth={150} key={displayedTotalDeposit.column.id}>
             <ThemedText.BodySecondary>
               <Trans i18nKey="common.incentives.total.deposits" />
             </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (displayedTotalDeposit) => (
-          <Cell loading={isLoading} minWidth={200} justifyContent="center">
-            <ThemedText.BodySecondarySmall style={{ textAlign: "right" }}>
+          <Cell loading={isLoadingData} minWidth={150} justifyContent="center">
+            <ThemedText.BodySecondarySmall style={{ textAlign: "center" }}>
               {displayedTotalDeposit.getValue?.()}
             </ThemedText.BodySecondarySmall>
           </Cell>
         ),
       }),
+
       columnHelper.accessor("feeTier", {
         id: "feeTier",
         header: (feeTier) => (
-          <Cell
-            minWidth={200}
-            justifyContent="flex-end"
-            grow
-            key={feeTier.column.id}
-          >
-            <Row gap="4px" justify="flex-end">
-              <ThemedText.BodySecondary>
-                <Trans i18nKey="common.incentives.pool.feeTier" />
-              </ThemedText.BodySecondary>
-            </Row>
+          <Cell minWidth={120} justifyContent="center" key={feeTier.column.id}>
+            <ThemedText.BodySecondary>
+              <Trans i18nKey="common.incentives.pool.feeTier" />
+            </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (feeTier) => (
           <Cell
-            loading={isLoading}
-            minWidth={200}
+            loading={isLoadingData}
+            minWidth={120}
+            justifyContent="center"
             key={feeTier?.row?.original?.address}
           >
             <ThemedText.BodySecondary>
@@ -714,23 +467,19 @@ export default function EndedIncentives() {
           </Cell>
         ),
       }),
+
       columnHelper.accessor("totalrewards", {
         id: "totalrewards",
         header: (totalrewards) => (
-          <Cell minWidth={200} key={totalrewards.column.id}>
+          <Cell minWidth={150} key={totalrewards.column.id}>
             <ThemedText.BodySecondary>
               <Trans i18nKey="common.incentives.total.program.rewards" />
             </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (totalrewards) => {
-          // Get the raw value
           const totalrewardsValue = totalrewards.getValue?.();
-
-          // Safeguard against undefined values
-          if (!totalrewardsValue) {
-            return null;
-          }
+          if (!totalrewardsValue) return null;
 
           const totalrewardsFormatted = Number(
             totalrewardsValue
@@ -741,8 +490,9 @@ export default function EndedIncentives() {
 
           return (
             <Cell
-              loading={isLoading}
-              minWidth={200}
+              loading={isLoadingData}
+              minWidth={150}
+              justifyContent="center"
               key={totalrewards?.row?.original?.address}
             >
               <ThemedText.BodySecondary>
@@ -753,16 +503,62 @@ export default function EndedIncentives() {
         },
       }),
     ];
-  }, [isLoading, showPositionsModal, poolTransactionTableValues]);
+  }, [stableLoading, showPositionsModal, navigate]);
+
+  useEffect(() => {
+    if (!hasDisplayedDebugInfo.current) {
+      hasDisplayedDebugInfo.current = true;
+    }
+  }, [endedIncentives, poolInfoEndedIncentives, tokenList]);
 
   return account.isConnected ? (
-    <Table
-      columns={columns}
-      data={poolTransactionTableValues}
-      loading={isLoading}
-      maxWidth={1200}
-      key={poolTransactionTableValues.map((p) => p.address).join("-")}
-    />
+    <>
+      {stableLoading ? (
+        <StyledLightCard>
+          <ThemedText.BodySecondary>
+            Loading ended incentives data...
+          </ThemedText.BodySecondary>
+        </StyledLightCard>
+      ) : poolInfoEndedIncentives?.length > 0 ? (
+        <>
+          <Table
+            columns={columns}
+            data={poolInfoEndedIncentives}
+            loading={false}
+            maxWidth={1200}
+            key={poolInfoEndedIncentives.map((p) => p.address).join("-")}
+          />
+          {userPositions?.length === 0 && (
+            <StyledInfoCard>
+              <ThemedText.BodySecondary>
+                You don't have any positions yet. Add liquidity to participate
+                in incentives.
+              </ThemedText.BodySecondary>
+            </StyledInfoCard>
+          )}
+        </>
+      ) : (
+        <StyledLightCard>
+          <ThemedText.BodySecondary>
+            {endedIncentives?.length > 0 ? (
+              <>
+                No ended incentives are currently available.
+                <br />
+                <br />
+                Debug information:
+                <ul>
+                  <li>Raw ended incentives: {endedIncentives?.length || 0}</li>
+                  <li>User positions: {userPositions?.length || 0}</li>
+                  <li>Token list: {tokenList?.length || 0} tokens</li>
+                </ul>
+              </>
+            ) : (
+              "No incentives data available. Please try again later."
+            )}
+          </ThemedText.BodySecondary>
+        </StyledLightCard>
+      )}
+    </>
   ) : (
     <StyledLightCard>
       <ThemedText.BodySecondary>
@@ -771,9 +567,18 @@ export default function EndedIncentives() {
     </StyledLightCard>
   );
 }
+
 const StyledLightCard = styled(LightCard)`
   padding: 20px;
   margin: 20px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const StyledInfoCard = styled(LightCard)`
+  padding: 12px;
+  margin: 12px 0;
+  background-color: rgba(var(--info-light), 0.2);
+  border: 1px solid rgba(var(--info), 0.4);
   text-align: center;
 `;
