@@ -92,7 +92,8 @@ export function useDerivedSwapInfo({
     return undefined
   }, [exactAmountToken, isWrap, otherCurrency])
 
-  const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
+  // TODO: we disable fee logic here, otherwise protocol will revert
+  const sendPortionEnabled = false //useFeatureFlag(FeatureFlags.PortionFields)
 
   const tradeParams = {
     account,

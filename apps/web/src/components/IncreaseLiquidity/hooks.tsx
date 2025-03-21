@@ -8,12 +8,14 @@ import { useAccount } from 'hooks/useAccount'
 import { UseDepositInfoProps, useDepositInfo } from 'pages/Pool/Positions/create/hooks'
 import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 
 export function useDerivedIncreaseLiquidityInfo(
   state: IncreaseLiquidityState,
   unwrapNativeCurrency: boolean,
 ): IncreaseLiquidityDerivedInfo {
-  const account = useAccount()
+  const signer = useAccount()
+  const account = useActiveSmartPool()
   const { position: positionInfo, exactAmount, exactField } = state
 
   if (!positionInfo) {
@@ -37,7 +39,7 @@ export function useDerivedIncreaseLiquidityInfo(
       return {
         protocolVersion: ProtocolVersion.V2,
         pair: positionInfo.pair,
-        address: account.address,
+        address: account?.address ?? signer.address,
         token0: currency0,
         token1: currency1,
         exactField,
@@ -60,7 +62,7 @@ export function useDerivedIncreaseLiquidityInfo(
       return {
         protocolVersion: ProtocolVersion.V3,
         pool: positionInfo.pool,
-        address: account.address,
+        address: account?.address ?? signer.address,
         tickLower,
         tickUpper,
         token0: currency0,
@@ -78,7 +80,7 @@ export function useDerivedIncreaseLiquidityInfo(
       return {
         protocolVersion: ProtocolVersion.V4,
         pool: positionInfo.pool,
-        address: account.address,
+        address: account?.address ?? signer.address,
         tickLower,
         tickUpper,
         token0: currency0,
@@ -97,7 +99,7 @@ export function useDerivedIncreaseLiquidityInfo(
       exactField,
       exactAmounts: {},
     }
-  }, [account.address, exactAmount, exactField, positionInfo, currency0, currency1])
+  }, [account.address, signer.address, exactAmount, exactField, positionInfo, currency0, currency1])
 
   const depositInfo = useDepositInfo(depositInfoProps)
 

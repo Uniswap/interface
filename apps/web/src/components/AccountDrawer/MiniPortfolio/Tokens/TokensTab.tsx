@@ -15,6 +15,7 @@ import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletConten
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Text, Tooltip } from 'ui/src'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
@@ -28,12 +29,13 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export default function Tokens() {
   const accountDrawer = useAccountDrawer()
-  const account = useAccount()
+  const signer = useAccount()
+  const account = useActiveSmartPool()
 
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { data: sortedPortfolioBalances, loading } = useSortedPortfolioBalances({
-    address: account?.address,
+    address: account?.address ?? signer?.address,
   })
 
   const isLoading = loading && !sortedPortfolioBalances
