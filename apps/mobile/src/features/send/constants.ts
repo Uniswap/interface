@@ -1,1 +1,0 @@
-export const SEND_CONTENT_RENDER_DELAY_MS = 25

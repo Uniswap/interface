@@ -1,6 +1,0 @@
-ignores: [
-    # Dependencies that depcheck thinks are missing but are actually present
-    ## Internal packages / workspaces
-    "tsconfig",
-    "utilities",
-  ]

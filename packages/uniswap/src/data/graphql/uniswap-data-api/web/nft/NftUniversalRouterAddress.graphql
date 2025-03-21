@@ -1,5 +1,0 @@
-query NftUniversalRouterAddress($chain: Chain = ETHEREUM) {
-  nftRoute(chain: $chain, senderAddress: "", nftTrades: []) {
-    toAddress
-  }
-}

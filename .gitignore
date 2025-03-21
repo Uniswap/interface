@@ -1,20 +1,24 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-node_modules
-.pnp
-.pnp.js
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # testing
-coverage
-
-# utility script output
-scripts/dist
+/coverage
 
 # next.js
-.next/
-out/
-build
+/.next/
+/out/
+
+# production
+/build
 
 # misc
 .DS_Store
@@ -26,31 +30,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
-.env
-.env.defaults.local
+# env files (can opt-in for committing if needed)
+.env*
 
-# turbo
-.turbo
-
-# .yarn files
-.yarn/cache
-.yarn/versions
-.yarn/install-state.gz
-
-dist/out-tsc/*
-
-# Locale backup/generated files
-packages/uniswap/src/i18n/locales/source/*_old.json
-
-# ci
-.ci-cache/
-
-# JetBrains
-.idea/
-
-# Vercel
+# vercel
 .vercel
 
-# CodeTours Extension
-.tours/*
+# typescript
+*.tsbuildinfo
+next-env.d.ts

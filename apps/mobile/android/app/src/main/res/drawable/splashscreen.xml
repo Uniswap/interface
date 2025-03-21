@@ -1,8 +1,0 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:drawable="@color/splashscreen_background" />
-  <item
-    android:drawable="@drawable/uniswap_logo"
-    android:width="150dp"
-    android:height="150dp"
-    android:gravity="center" />
-</layer-list>

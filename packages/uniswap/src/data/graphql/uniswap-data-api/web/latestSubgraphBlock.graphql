@@ -1,3 +1,0 @@
-query isV3SubgraphStale($chain: Chain!) {
-  isV3SubgraphStale(chain: $chain) 
-}
