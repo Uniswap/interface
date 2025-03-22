@@ -6,6 +6,7 @@ import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { useIncreasePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getProtocolItems, hasLPFoTTransferError } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { useAccount } from 'hooks/useAccount'
 import { getCurrencyAddressForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useActiveSmartPool } from 'state/application/hooks'
@@ -52,6 +53,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const { currencyAmounts, error } = derivedIncreaseLiquidityInfo
   const { exactField } = increaseLiquidityState
 
+  const signer = useAccount()
   const account = useActiveSmartPool()
 
   const increaseLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
@@ -190,6 +192,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     Boolean(increaseCalldataQueryParams) &&
     !fotErrorToken
 
+  // TODO: verify if should override from, to and value here. Probably not needed as long as we do not simulate transaction
   const {
     data: increaseCalldata,
     isLoading: isCalldataLoading,
@@ -206,6 +209,13 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   useEffect(() => {
     setHasIncreaseErrorResponse(!!calldataError)
   }, [calldataError, increaseCalldataQueryParams])
+
+  increaseCalldata?.increase?.from && signer.address && (increaseCalldata.increase.from = signer.address)
+  increaseCalldata?.increase?.to && account.address && (increaseCalldata.increase.to = account.address)
+  increaseCalldata?.increase?.value && (increaseCalldata.increase.value = '0x0')
+
+  // TODO: we hardcode the gas limit because the estimate is slightly underpriced, resulting in failed transactions
+  increaseCalldata?.increase && (increaseCalldata.increase.gasLimit = Number(250000).toString())
 
   const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
 

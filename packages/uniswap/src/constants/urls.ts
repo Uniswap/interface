@@ -71,8 +71,8 @@ export const uniswapUrls = {
     walletSecurityMeasures: `${helpUrl}/articles/28278904584077-Uniswap-Wallet-Security-Measures`,
     wethExplainer: `${helpUrl}/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH`,
   },
-  termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
-  privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
+  termsOfServiceUrl: 'https://rigoblock.com/legal',
+  privacyPolicyUrl: 'https://rigoblock.com/legal',
   chromeExtension: 'http://uniswap.org/ext',
 
   // Core API Urls

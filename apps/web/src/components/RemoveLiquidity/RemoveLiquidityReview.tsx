@@ -11,6 +11,7 @@ import {
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
+import { BigNumber } from 'ethers/lib/ethers'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
@@ -124,6 +125,8 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   // we override the from and to addresses, as we want to route from the signer to the wallet
   txContext?.txRequest.from && signer?.address && (txContext.txRequest.from = signer.address)
   txContext?.txRequest.to && account?.address && (txContext.txRequest.to = account.address)
+  // TODO: verify add 100k to gas limit
+  txContext?.txRequest?.gasLimit && (txContext.txRequest.gasLimit = BigNumber.from(txContext.txRequest.gasLimit).add(100000).toString())
 
   const onDecreaseLiquidity = () => {
     const isValidTx = isValidLiquidityTxContext(txContext)

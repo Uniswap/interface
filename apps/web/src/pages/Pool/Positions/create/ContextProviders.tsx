@@ -1,6 +1,7 @@
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DepositState } from 'components/Liquidity/types'
+import { BigNumber } from 'ethers/lib/ethers'
 //import { create } from 'domain'
 import {
   CreatePositionContext,
@@ -262,6 +263,8 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   createCalldata?.create && signerAddress && (createCalldata.create.from = signerAddress)
   createCalldata?.create && account?.address && (createCalldata.create.to = account.address)
   createCalldata?.create && (createCalldata.create.value = '0x0')
+  // TODO: verify add 100k to gas limit
+  createCalldata?.create?.gasLimit && (createCalldata.create.gasLimit = BigNumber.from(createCalldata?.create.gasLimit).add(100000).toString())
 
   useEffect(() => {
     setHasCreateErrorResponse(!!createError)

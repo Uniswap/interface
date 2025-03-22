@@ -141,7 +141,7 @@ export default function Stake() {
       .sort(biggestOwnStakeFirst)
   }, [allPools, stakingPools, userStakeBalances])
 
-  // TODO: check as we always return at least []
+  // Notice: poolsWithStats will only display pools that have a positive poolOwnStake
   const [stakedPools, nonStakedPools] = poolsWithStats?.reduce<[PoolRegisteredLog[], PoolRegisteredLog[]]>(
     (acc, p) => {
       acc[p.userHasStake ? 1 : 0].push(p)

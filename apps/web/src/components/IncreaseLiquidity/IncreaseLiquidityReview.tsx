@@ -6,6 +6,7 @@ import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useGetPoolTokenPercentage, usePositionCurrentPrice } from 'components/Liquidity/hooks'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
+import { BigNumber } from 'ethers/lib/ethers'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useMemo, useState } from 'react'
@@ -45,7 +46,8 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   txInfo && (txInfo.permit = undefined)
   txInfo?.txRequest?.from && account?.address && (txInfo.txRequest.to = account.address)
   txInfo?.txRequest && (txInfo.txRequest.from = signer.address)
-  txInfo?.txRequest && (txInfo.txRequest.value = '0')
+  // TODO: verify add 100k to gas limit
+  txInfo?.txRequest?.gasLimit && (txInfo.txRequest.gasLimit = BigNumber.from(txInfo.txRequest.gasLimit).add(100000).toString())
 
   const { exactField } = increaseLiquidityState
   const { currencyAmounts, currencyAmountsUSDValue, deposit0Disabled, deposit1Disabled } = derivedIncreaseLiquidityInfo
