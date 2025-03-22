@@ -15,7 +15,7 @@ import {
   getSwapTransactionInfo,
   handleApprovalTransactionStep,
   handleOnChainStep,
-  handleSignatureStep,
+  //handleSignatureStep,
 } from 'state/sagas/transactions/utils'
 import { handleWrapStep } from 'state/sagas/transactions/wrapSaga'
 import { VitalTxFields } from 'state/transactions/types'
@@ -205,12 +205,12 @@ function* classicSwap(
           break
         }
         case TransactionStepType.Permit2Signature: {
-          signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
+          signature = undefined //yield* call(handleSignatureStep, { account, step, setCurrentStep })
           break
         }
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
-          yield* call(handleSwapTransactionStep, { account, signature: undefined, step, setCurrentStep, trade, analytics })
+          yield* call(handleSwapTransactionStep, { account, signature, step, setCurrentStep, trade, analytics })
           break
         }
         default: {

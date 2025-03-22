@@ -5,7 +5,7 @@ import {
   HandleOnChainStepParams,
   handleApprovalTransactionStep,
   handleOnChainStep,
-  handleSignatureStep,
+  //handleSignatureStep,
 } from 'state/sagas/transactions/utils'
 import {
   CollectFeesTransactionInfo,
@@ -164,7 +164,7 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
           break
         }
         case TransactionStepType.Permit2Signature: {
-          signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
+          signature = undefined //yield* call(handleSignatureStep, { account, step, setCurrentStep })
           break
         }
         case TransactionStepType.IncreasePositionTransaction:
