@@ -44,6 +44,7 @@ import {
 import { ParsedQs } from 'qs'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { PositionField } from 'types/position'
@@ -334,11 +335,12 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
 
 export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   const account = useAccount()
+  const smartPool = useActiveSmartPool()
   const { protocolVersion, address, token0, token1, exactField, exactAmounts, deposit0Disabled, deposit1Disabled } =
     state
 
-  const { balance: token0Balance } = useOnChainCurrencyBalance(token0, address)
-  const { balance: token1Balance } = useOnChainCurrencyBalance(token1, address)
+  const { balance: token0Balance } = useOnChainCurrencyBalance(token0, smartPool?.address ?? address)
+  const { balance: token1Balance } = useOnChainCurrencyBalance(token1, smartPool?.address ?? address)
   const token0MaxAmount = useMaxAmountSpend({ currencyAmount: token0Balance })
   const token1MaxAmount = useMaxAmountSpend({ currencyAmount: token1Balance })
 

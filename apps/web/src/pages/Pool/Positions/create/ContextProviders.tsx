@@ -259,15 +259,9 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     }
   }, [signerInstance])
   
-  if (createCalldata && createCalldata.create) {
-    if (signerAddress) {
-      createCalldata.create.from = signerAddress
-    }
-    if (account?.address) {
-      createCalldata.create.to = account.address
-    }
-    createCalldata.create.value = '0x0'
-  }
+  createCalldata?.create && signerAddress && (createCalldata.create.from = signerAddress)
+  createCalldata?.create && account?.address && (createCalldata.create.to = account.address)
+  createCalldata?.create && (createCalldata.create.value = '0x0')
 
   useEffect(() => {
     setHasCreateErrorResponse(!!createError)
