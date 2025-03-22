@@ -1,14 +1,14 @@
 import { ChartType } from 'components/Charts/utils'
+import { MissingDataIcon } from 'components/Table/icons'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { MissingDataIcon } from 'components/Table/icons'
 import styled, { useTheme } from 'lib/styled-components'
 import { lighten } from 'polished'
 import { PropsWithChildren, ReactNode } from 'react'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { opacify } from 'theme/utils'
-import { Trans } from 'uniswap/src/i18n'
 
 const ChartErrorContainer = styled(Row)`
   position: absolute;
@@ -24,12 +24,13 @@ const ChartErrorContainer = styled(Row)`
   padding: 12px 20px 12px 12px;
   gap: 12px;
   ${textFadeIn};
+  z-index: 1;
 `
 const ErrorTextColumn = styled(Column)`
   white-space: normal;
 `
 
-function ChartErrorView({ children }: PropsWithChildren) {
+export function ChartErrorView({ children }: PropsWithChildren) {
   return (
     <ChartErrorContainer data-cy="chart-error-view">
       <div>

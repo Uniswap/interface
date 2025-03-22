@@ -1,14 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LearnMoreLink renders without error 1`] = `
-<View
+<Text
+  allowFontScaling={true}
   cancelable={true}
   disabled={false}
   focusable={true}
-  hitSlop={[Function]}
+  maxFontSizeMultiplier={1.2}
   minPressDuration={0}
-  onBlur={[Function]}
-  onFocus={[Function]}
   onMouseEnter={[Function]}
   onMouseLeave={[Function]}
   onPress={[Function]}
@@ -16,31 +15,15 @@ exports[`LearnMoreLink renders without error 1`] = `
   onPressOut={[Function]}
   style={
     {
-      "flexDirection": "column",
-      "opacity": 1,
-      "transform": [
-        {
-          "scale": 1,
-        },
-      ],
+      "color": "#FC72FF",
+      "fontFamily": "Basel Grotesk",
+      "fontSize": 17,
+      "fontWeight": "500",
+      "lineHeight": 19.549999999999997,
     }
   }
+  suppressHighlighting={true}
 >
-  <Text
-    allowFontScaling={false}
-    maxFontSizeMultiplier={1.2}
-    style={
-      {
-        "color": "#FC72FF",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 16,
-        "fontWeight": "500",
-        "lineHeight": 18.4,
-      }
-    }
-    suppressHighlighting={true}
-  >
-    Learn more
-  </Text>
-</View>
+  Learn more
+</Text>
 `;

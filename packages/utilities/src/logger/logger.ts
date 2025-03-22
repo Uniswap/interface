@@ -1,9 +1,9 @@
 import { Extras } from '@sentry/types'
-import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/Datadog'
+import { datadogEnabled, localDevDatadogEnabled } from 'utilities/src/environment/constants'
+import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { Sentry } from 'utilities/src/logger/Sentry'
-import { LogLevel, LoggerErrorContext, OverridesSentryFingerprint } from 'utilities/src/logger/types'
-import { isInterface, isWeb } from 'utilities/src/platform'
-
+import { LoggerErrorContext, LogLevel, OverridesSentryFingerprint } from 'utilities/src/logger/types'
+import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
 //   - in web app env.d.ts and polyfills.ts files
@@ -41,7 +41,7 @@ export const logger = {
     logMessage('warn', fileName, functionName, message, ...args),
   error: (error: unknown, captureContext: LoggerErrorContext): void => logException(error, captureContext),
   setWalletDatadogEnabled: (enabled: boolean): void => {
-    walletDatadogEnabled = enabled
+    walletDatadogEnabled = enabled || localDevDatadogEnabled
   },
 }
 
@@ -54,17 +54,27 @@ function logMessage(
 ): void {
   // Log to console directly for dev builds or interface for debugging
   if (__DEV__ || isInterface) {
-    // eslint-disable-next-line no-console
-    console[level](...formatMessage(level, fileName, functionName, message), ...args)
+    if (isMobileApp && ['log', 'debug', 'warn'].includes(level)) {
+      // `log`, `debug`, and `warn` are all logged with `console.log` on mobile
+      // because `console.debug` and `console.warn` only support one single argument in Reactotron.
+      // Alternatively, we could improve this in the future by removing the Reactotron log plugin and instead
+      // manually call `Reactotron.display(...)` here with some custom formatting.
+      // eslint-disable-next-line no-console
+      console.log(...formatMessage(level, fileName, functionName, message), ...args)
+    } else {
+      // eslint-disable-next-line no-console
+      console[level](...formatMessage(level, fileName, functionName, message), ...args)
+    }
   }
 
-  // Skip sentry logs for dev builds
-  if (__DEV__) {
+  if (!datadogEnabled) {
     return
   }
 
   if (level === 'warn') {
-    Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
+    if (isInterface) {
+      Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
+    }
     if (walletDatadogEnabled) {
       logWarningToDatadog(message, {
         level,
@@ -74,7 +84,9 @@ function logMessage(
       })
     }
   } else if (level === 'info') {
-    Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
+    if (isInterface) {
+      Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
+    }
     if (walletDatadogEnabled) {
       logToDatadog(message, {
         level,
@@ -101,11 +113,10 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
   // Log to console directly for dev builds or interface for debugging
   if (__DEV__ || isInterface) {
     // eslint-disable-next-line no-console
-    console.error(error)
+    console.error(error, captureContext)
   }
 
-  // Skip sentry logs for dev builds
-  if (__DEV__) {
+  if (!datadogEnabled) {
     return
   }
 
@@ -118,7 +129,9 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
     }
   }
 
-  Sentry.captureException(error, updatedContext)
+  if (isInterface) {
+    Sentry.captureException(error, updatedContext)
+  }
   if (isInterface || walletDatadogEnabled) {
     logErrorToDatadog(error instanceof Error ? error : new Error(`${error}`), updatedContext)
   }

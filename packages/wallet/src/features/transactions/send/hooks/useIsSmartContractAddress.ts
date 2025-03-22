@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useProvider } from 'wallet/src/features/wallet/context'
 

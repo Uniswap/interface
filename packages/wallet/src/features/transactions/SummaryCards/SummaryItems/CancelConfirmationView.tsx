@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, FlexLoader, Separator, Skeleton, Text, isWeb, useHapticFeedback } from 'ui/src'
+import { DeprecatedButton, Flex, FlexLoader, Separator, Skeleton, Text, isWeb } from 'ui/src'
 import { SlashCircle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
@@ -27,10 +27,12 @@ export function CancelConfirmationView({
 }): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const { hapticFeedback } = useHapticFeedback()
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
-  const { value: gasFeeUSD } = useUSDValueOfGasFee(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee)
+  const { value: gasFeeUSD } = useUSDValueOfGasFee(
+    transactionDetails.chainId,
+    cancelationGasFeeInfo?.cancelationGasFeeDisplayValue,
+  )
   const gasFee = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onCancelConfirm = useCallback(() => {
@@ -42,13 +44,12 @@ export function CancelConfirmationView({
   }, [cancelationGasFeeInfo, onCancel])
 
   const onPressCancel = useCallback(async () => {
-    await hapticFeedback.success()
     if (authTrigger) {
       await authTrigger({ successCallback: onCancelConfirm, failureCallback: () => {} })
     } else {
       onCancelConfirm()
     }
-  }, [hapticFeedback, authTrigger, onCancelConfirm])
+  }, [authTrigger, onCancelConfirm])
 
   // We don't currently support cancelling orders made from another device.
   const isRemoteOrder =
@@ -94,12 +95,12 @@ export function CancelConfirmationView({
         )}
       </Flex>
       <Flex row gap="$spacing8" width="100%">
-        <Button fill size="small" theme="tertiary" width="50%" onPress={onBack}>
+        <DeprecatedButton fill size="small" theme="tertiary" width="50%" onPress={onBack}>
           {t('common.button.back')}
-        </Button>
-        <Button
+        </DeprecatedButton>
+        <DeprecatedButton
           fill
-          disabled={disableConfirmationButton}
+          isDisabled={disableConfirmationButton}
           size="small"
           testID={TestID.Cancel}
           theme="detrimental"
@@ -107,7 +108,7 @@ export function CancelConfirmationView({
           onPress={onPressCancel}
         >
           {t('common.button.confirm')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </Flex>
   )

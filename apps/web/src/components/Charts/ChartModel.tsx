@@ -1,8 +1,6 @@
 import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from 'components/Charts/types'
 import { formatTickMarks } from 'components/Charts/utils'
 import { MissingDataBars } from 'components/Table/icons'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
@@ -19,13 +17,17 @@ import {
   createChart,
 } from 'lightweight-charts'
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Flex, TamaguiElement, assertWebElement, styled } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
+import { Flex, TamaguiElement, assertWebElement, styled, useMedia } from 'ui/src'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useFormatter } from 'utils/formatNumbers'
 import { v4 as uuidv4 } from 'uuid'
 
 export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
+
+export const DEFAULT_TOP_PRICE_SCALE_MARGIN = 0.32
+export const DEFAULT_BOTTOM_PRICE_SCALE_MARGIN = 0.15
 
 interface ChartUtilParams<TDataType extends SeriesDataItemType> {
   locale: string
@@ -194,8 +196,8 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
         visible: isLargeScreen,
         borderVisible: false,
         scaleMargins: {
-          top: 0.32,
-          bottom: 0.15,
+          top: DEFAULT_TOP_PRICE_SCALE_MARGIN,
+          bottom: DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
         },
         autoScale: true,
       },
@@ -265,8 +267,9 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   const [crosshairData, setCrosshairData] = useState<TDataType | undefined>(undefined)
   const format = useFormatter()
   const theme = useTheme()
-  const locale = useActiveLocale()
-  const { md: isLargeScreen } = useScreenSize()
+  const locale = useCurrentLocale()
+  const media = useMedia()
+  const isLargeScreen = !media.lg
   const modelParams = useMemo(
     () => ({ ...params, format, theme, locale, isLargeScreen, onCrosshairMove: setCrosshairData }),
     [format, isLargeScreen, locale, params, theme],

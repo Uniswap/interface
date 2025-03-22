@@ -1,9 +1,4 @@
-import {
-  PortfolioBalancesQueryResult,
-  PortfolioTokenBalancePartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-export type PortfolioToken = NonNullable<PortfolioTokenBalancePartsFragment['token']>
+import { PortfolioBalancesQueryResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 type PortfolioBalances = NonNullable<NonNullable<NonNullable<PortfolioBalancesQueryResult['data']>['portfolios']>[0]>
 

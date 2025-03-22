@@ -1,26 +1,38 @@
-import { BarCodeScanner } from 'expo-barcode-scanner'
-import { BarCodeScanningResult, Camera, CameraType } from 'expo-camera'
+import { BarcodeScanningResult, CameraView, CameraViewProps } from 'expo-camera'
 import { PermissionStatus } from 'expo-modules-core'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
-import { Button, Flex, SpinningLoader, Text, useSporeColors } from 'ui/src'
+import RNQRGenerator from 'rn-qr-generator'
+import { useCameraPermission } from 'src/components/QRCodeScanner/hooks/useCameraPermission'
+import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeName, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { Global, PhotoStacked } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { iconSizes, spacing } from 'ui/src/theme'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
-import { Sentry } from 'utilities/src/logger/Sentry'
-import { DevelopmentOnly } from 'wallet/src/components/DevelopmentOnly/DevelopmentOnly'
+import { logger } from 'utilities/src/logger/logger'
 import { openSettings } from 'wallet/src/utils/linking'
+
+enum BarcodeType {
+  QR = 'qr',
+}
+
+enum CameraType {
+  Front = 'front',
+  Back = 'back',
+}
 
 type QRCodeScannerProps = {
   onScanCode: (data: string) => void
   shouldFreezeCamera: boolean
+  theme?: ThemeName
 }
 interface WCScannerProps extends QRCodeScannerProps {
   numConnections: number
@@ -38,23 +50,22 @@ const SCAN_ICON_MASK_OFFSET_RATIO = 0.02 // used for mask to match spacing in Ca
 const LOADER_SIZE = iconSizes.icon40
 
 export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.Element {
-  const { onScanCode, shouldFreezeCamera } = props
+  const { onScanCode, shouldFreezeCamera, theme } = props
   const isWalletConnectModal = isWalletConnect(props)
 
   const { t } = useTranslation()
-  const colors = useSporeColors()
-  const dimensions = useDeviceDimensions()
+  const colors = useSporeColorsForTheme(theme)
 
-  const [permissionResponse, requestPermissionResponse] = Camera.useCameraPermissions()
-  const permissionStatus = permissionResponse?.status
+  const dimensions = useDeviceDimensions()
+  const [permission, requestPermission] = useCameraPermission()
 
   const [isReadingImageFile, setIsReadingImageFile] = useState(false)
   const [overlayLayout, setOverlayLayout] = useState<LayoutRectangle | null>()
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
   const [bottomLayout, setBottomLayout] = useState<LayoutRectangle | null>()
 
-  const handleBarCodeScanned = useCallback(
-    (result: BarCodeScanningResult): void => {
+  const handleBarcodeScanned = useCallback(
+    (result: BarcodeScanningResult): void => {
       if (shouldFreezeCamera) {
         return
       }
@@ -84,58 +95,73 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       return
     }
 
-    const result = (await BarCodeScanner.scanFromURLAsync(uri, [BarCodeScanner.Constants.BarCodeType.qr]))[0]
+    // TODO (WALL-6014): Migrate to expo-camera once Android issue is fixed
+    try {
+      const results = await RNQRGenerator.detect({ uri })
 
-    if (!result) {
+      if (results.values[0]) {
+        const data = results.values[0]
+        onScanCode(data)
+      } else {
+        Alert.alert(t('qrScanner.error.none'))
+      }
+    } catch (error) {
+      logger.error(`Cannot detect QR code in image: ${error}`, {
+        tags: { file: 'QRCodeScanner.tsx', function: 'onPickImageFilePress' },
+      })
       Alert.alert(t('qrScanner.error.none'))
+    } finally {
       setIsReadingImageFile(false)
-      return
     }
-
-    handleBarCodeScanned(result)
-  }, [handleBarCodeScanned, isReadingImageFile, t])
+  }, [isReadingImageFile, onScanCode, t])
 
   useEffect(() => {
-    Sentry.addBreadCrumb({
-      level: 'info',
-      category: 'camera',
-      message: 'QRCodeScannera camera permission status',
-      data: {
-        permissionStatus,
-      },
+    const handlePermissionStatus = async (): Promise<void> => {
+      if (permission?.granted) {
+        return
+      }
+      const { status } = await requestPermission()
+
+      if ([PermissionStatus.UNDETERMINED, PermissionStatus.DENIED].includes(status)) {
+        Alert.alert(t('qrScanner.error.camera.title'), t('qrScanner.error.camera.message'), [
+          { text: t('common.navigation.systemSettings'), onPress: openSettings },
+          {
+            text: t('common.button.notNow'),
+          },
+        ])
+      }
+    }
+
+    handlePermissionStatus().catch((error) => {
+      logger.error(error, {
+        tags: { file: 'QRCodeScanner.tsx', function: 'handlePermissionStatus' },
+      })
     })
-
-    if (permissionStatus === PermissionStatus.UNDETERMINED) {
-      requestPermissionResponse().catch(() => {})
-    }
-
-    if (permissionStatus === PermissionStatus.DENIED) {
-      Alert.alert(t('qrScanner.error.camera.title'), t('qrScanner.error.camera.message'), [
-        { text: t('common.navigation.systemSettings'), onPress: openSettings },
-        {
-          text: t('common.button.notNow'),
-        },
-      ])
-    }
-  }, [permissionStatus, requestPermissionResponse, t])
+  }, [permission?.granted, t, requestPermission])
 
   const overlayWidth = (overlayLayout?.height ?? 0) / CAMERA_ASPECT_RATIO
   const cameraWidth = dimensions.fullWidth
   const cameraHeight = CAMERA_ASPECT_RATIO * cameraWidth
   const scannerSize = Math.min(overlayWidth, cameraWidth) * SCAN_ICON_WIDTH_RATIO
 
+  const disableMicPrompt: CameraViewProps = {
+    mute: true,
+    mode: 'picture',
+  }
+
   return (
-    <AnimatedFlex grow borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
+    <AnimatedFlex grow theme={theme} borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
         <Flex height={cameraHeight} overflow="hidden" width={cameraWidth}>
-          {permissionStatus === PermissionStatus.GRANTED && !isReadingImageFile && (
-            <Camera
-              barCodeScannerSettings={{
-                barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+          {permission?.granted && !isReadingImageFile && (
+            <CameraView
+              {...disableMicPrompt}
+              barcodeScannerSettings={{
+                barcodeTypes: [BarcodeType.QR],
               }}
+              facing={CameraType.Back}
               style={StyleSheet.absoluteFillObject}
-              type={CameraType.back}
-              onBarCodeScanned={handleBarCodeScanned}
+              onBarcodeScanned={handleBarcodeScanned}
             />
           )}
         </Flex>
@@ -165,7 +191,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             width="100%"
             onLayout={(event: LayoutChangeEvent): void => setInfoLayout(event.nativeEvent.layout)}
           >
-            <Text color="$neutral1" variant="heading3">
+            <Text color={colors.neutral1.val} variant="heading3">
               {t('qrScanner.title')}
             </Text>
           </Flex>
@@ -190,27 +216,23 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               </Flex>
             </Flex>
           )}
-          <DevelopmentOnly>
-            {/* when in development mode AND there's no camera (using iOS Simulator), add a paste button */}
-            {!shouldFreezeCamera ? (
-              <Flex centered height={scannerSize} style={[StyleSheet.absoluteFill]} width={scannerSize}>
-                <Flex
-                  backgroundColor="$surface2"
-                  borderRadius="$rounded16"
-                  gap="$spacing24"
-                  m="$spacing12"
-                  opacity={0.6}
-                  p="$spacing12"
-                >
-                  <Text color="$neutral1" textAlign="center" variant="body1">
-                    This paste button will only show up in development mode
-                  </Text>
-                  <PasteButton onPress={onScanCode} />
-                </Flex>
+          {DeviceInfo.isEmulatorSync() && !shouldFreezeCamera && (
+            <Flex centered height={scannerSize} style={[StyleSheet.absoluteFill]} width={scannerSize}>
+              <Flex
+                backgroundColor="$surface2"
+                borderRadius="$rounded16"
+                gap="$spacing24"
+                m="$spacing12"
+                opacity={0.6}
+                p="$spacing12"
+              >
+                <Text color="$neutral1" textAlign="center" variant="body1">
+                  This paste button will only show up in development mode
+                </Text>
+                <PasteButton onPress={onScanCode} />
               </Flex>
-            ) : null}
-          </DevelopmentOnly>
-
+            </Flex>
+          )}
           <Flex
             alignItems="center"
             bottom={0}
@@ -240,14 +262,15 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             </Flex>
 
             {isWalletConnectModal && props.numConnections > 0 && (
-              <Button
+              <DeprecatedButton
                 fontFamily="$body"
-                icon={<Global color="$neutral2" />}
-                theme="secondary"
+                icon={<Global color={colors.neutral2.val} />}
+                backgroundColor={colors.surface3.val}
+                color={colors.neutral1.val}
                 onPress={props.onPressConnections}
               >
                 {t('qrScanner.button.connections', { count: props.numConnections })}
-              </Button>
+              </DeprecatedButton>
             )}
           </Flex>
         </Flex>

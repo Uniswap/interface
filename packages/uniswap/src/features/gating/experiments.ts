@@ -4,33 +4,18 @@
  * These must match parameter names on Statsig within an experiment
  */
 export enum Experiments {
-  ArbitrumXV2OpenOrders = 'arbitrum_uniswapx_openorders_v2',
-  OnboardingRedesignHomeScreen = 'onboarding-redesign-home-screen',
-  OnboardingRedesignRecoveryBackup = 'onboarding-redesign-recovery-backup',
+  ArbitrumXV2Sampling = 'arbitrum_uniswapx_sampling',
   AccountCTAs = 'signin_login_connect_ctas',
 }
 
-export enum ArbitrumXV2ExperimentGroup {
-  Test = 'Test',
-  Control = 'Control',
+export enum ArbitrumXV2SamplingGroup {
+  Classic = 'Classic',
+  DutchV2 = 'DutchV2',
+  DutchV3 = 'DutchV3',
 }
 
-export enum ArbitrumXV2OpenOrderProperties {
-  PriceImprovementBps = 'priceImprovementBps',
-  ForceOpenOrders = 'forceOpenOrders',
-  DeadlineBufferSecs = 'deadlineBufferSecs',
-  SlippageTolerance = 'slippageTolerance',
-}
-
-export enum OnboardingRedesignHomeScreenProperties {
-  Enabled = 'enabled',
-  ExploreEthChainId = 'exploreEthChainId',
-  ExploreTokens = 'exploreTokens',
-}
-
-export enum OnboardingRedesignRecoveryBackupProperties {
-  Enabled = 'enabled',
-  BackupReminderDelaySecs = 'backupReminderDelaySecs',
+export enum ArbitrumXV2SamplingProperties {
+  RoutingType = 'routingType',
 }
 
 export enum AccountCTAsExperimentGroup {
@@ -40,7 +25,5 @@ export enum AccountCTAsExperimentGroup {
 }
 
 export type ExperimentProperties = {
-  [Experiments.ArbitrumXV2OpenOrders]: ArbitrumXV2OpenOrderProperties
-  [Experiments.OnboardingRedesignHomeScreen]: OnboardingRedesignHomeScreenProperties
-  [Experiments.OnboardingRedesignRecoveryBackup]: OnboardingRedesignRecoveryBackupProperties
+  [Experiments.ArbitrumXV2Sampling]: ArbitrumXV2SamplingProperties
 }

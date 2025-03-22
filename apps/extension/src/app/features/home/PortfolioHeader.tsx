@@ -15,15 +15,16 @@ import { animationPresets } from 'ui/src/animations'
 import { CopyAlt, Globe, RotatableChevron, Settings } from 'ui/src/components/icons'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { shortenAddress } from 'utilities/src/addresses'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
@@ -192,7 +193,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
                 animation="quicker"
                 borderColor="$surface2"
                 borderRadius="$rounded20"
-                borderWidth={1}
+                borderWidth="$spacing1"
                 disableRemoveScroll={false}
                 zIndex="$default"
                 {...animationPresets.fadeInDownOutUp}
@@ -258,7 +259,7 @@ function ConnectionStatusIcon({
         <Circle
           backgroundColor="$statusSuccess"
           borderColor="$surface1"
-          borderWidth={2}
+          borderWidth="$spacing2"
           height={iconSizes.icon12}
           mr="$spacing8"
           position="absolute"

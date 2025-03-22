@@ -1,5 +1,4 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { CurrencyIdToVisibility, NFTKeyToVisibility } from 'uniswap/src/features/favorites/slice'
 import { UniswapRootState } from 'uniswap/src/state'
 import { unique } from 'utilities/src/primitives/array'
 
@@ -18,8 +17,3 @@ const selectWatchedAddresses = (state: UniswapRootState): string[] => state.favo
 export const selectWatchedAddressSet = createSelector(selectWatchedAddresses, (watched) => new Set(watched))
 
 export const selectHasWatchedWallets = createSelector(selectWatchedAddresses, (watched) => Boolean(watched?.length > 0))
-
-export const selectNftsVisibility = (state: UniswapRootState): NFTKeyToVisibility => state.favorites.nftsVisibility
-
-export const selectTokensVisibility = (state: UniswapRootState): CurrencyIdToVisibility =>
-  state.favorites.tokensVisibility

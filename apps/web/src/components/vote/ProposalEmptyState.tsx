@@ -1,8 +1,8 @@
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { Trans } from 'react-i18next'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.neutral2};

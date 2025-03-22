@@ -1,11 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '@uniswap/sdk-core'
 import { Pool } from '@uniswap/v3-sdk'
+import { useAccount } from 'hooks/useAccount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useState } from 'react'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { unwrappedToken } from 'utils/unwrappedToken'
+import { assume0xAddress } from 'utils/wagmi'
+import { erc721Abi } from 'viem'
+import { useReadContract } from 'wagmi'
 
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 
@@ -16,8 +20,15 @@ export function useV3PositionFees(
   asWETH = false,
 ): [CurrencyAmount<Currency>, CurrencyAmount<Currency>] | [undefined, undefined] {
   const positionManager = useV3NFTPositionManagerContract(false)
-  const owner: string | undefined = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId])
-    .result?.[0]
+
+  const { chainId } = useAccount()
+
+  const { data: owner } = useReadContract({
+    address: assume0xAddress(NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId ?? UniverseChainId.Mainnet]),
+    abi: erc721Abi,
+    functionName: 'ownerOf',
+    args: tokenId ? [tokenId.toBigInt()] : undefined,
+  })
 
   const tokenIdHexString = tokenId?.toHexString()
   const latestBlockNumber = useBlockNumber()

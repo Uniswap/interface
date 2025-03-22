@@ -1,7 +1,9 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
-import { useBiometricAppSettings, useBiometricPrompt, useOsBiometricAuthEnabled } from 'src/features/biometrics/hooks'
+import { useBiometricsIcon } from 'src/components/icons/useBiometricsIcon'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometricAuthEnabled'
+import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { SendFormScreen } from 'src/features/send/SendFormScreen'
@@ -30,11 +32,13 @@ export function SendFlow(): JSX.Element {
   const isBiometricAuthEnabled = useOsBiometricAuthEnabled()
   const { requiredForTransactions } = useBiometricAppSettings()
   const { trigger: biometricsTrigger } = useBiometricPrompt()
-  const SendBiometricsIcon = isBiometricAuthEnabled && requiredForTransactions ? <BiometricsIcon /> : null
+  const useBiometricIcon = useBiometricsIcon()
+  const renderBiometricsIcon =
+    isBiometricAuthEnabled && requiredForTransactions && useBiometricIcon ? useBiometricIcon : null
 
   return (
     <TransactionModal
-      BiometricsIcon={SendBiometricsIcon}
+      renderBiometricsIcon={renderBiometricsIcon}
       authTrigger={requiredForTransactions ? biometricsTrigger : undefined}
       modalName={ModalName.Send}
       openWalletRestoreModal={openWalletRestoreModal}
@@ -42,15 +46,19 @@ export function SendFlow(): JSX.Element {
       onClose={onClose}
     >
       <SendContextProvider prefilledTransactionState={initialState}>
-        <CurrentScreen />
+        <CurrentScreen screenOverride={initialState?.sendScreen} />
       </SendContextProvider>
     </TransactionModal>
   )
 }
 
-function CurrentScreen(): JSX.Element {
-  const { screen } = useTransactionModalContext()
+function CurrentScreen({ screenOverride }: { screenOverride?: TransactionScreen }): JSX.Element {
+  const { screen, setScreen } = useTransactionModalContext()
   const { recipient } = useSendContext()
+
+  if (screenOverride) {
+    setScreen(screenOverride)
+  }
 
   // If no recipient, force full screen recipient select. Need to render this outside of `SendFormScreen` to ensure that
   // the modals are rendered correctly, and animations can properly measure the available space for the decimal pad.

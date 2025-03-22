@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react'
 import { SpaceTokens, getToken } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions/useDeviceDimensions'
 import { FlexLoader, FlexLoaderProps } from 'ui/src/loading/FlexLoader'
 import { NftCardLoader } from 'ui/src/loading/NftCardLoader'
 import { Skeleton } from 'ui/src/loading/Skeleton'
@@ -22,6 +22,13 @@ const Transaction = memo(function _Transaction({ repeat = 1 }: { repeat?: number
       </Flex>
     </Skeleton>
   )
+})
+
+/**
+ * Loader used for search results e.g. search, recipient etc...
+ */
+const SearchResult = memo(function _SearchResult({ repeat = 1 }: { repeat?: number }): JSX.Element {
+  return <Transaction repeat={repeat} />
 })
 
 const TransferInstitution = memo(function _TransferInstitution({
@@ -130,6 +137,7 @@ export const Loader = {
   Box,
   NFT,
   Image,
+  SearchResult,
   Token,
   TransferInstitution,
   Transaction,

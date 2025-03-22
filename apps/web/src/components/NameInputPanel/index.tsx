@@ -1,7 +1,8 @@
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import styled, { useTheme } from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Trans, t } from 'uniswap/src/i18n'
+import i18n from 'uniswap/src/i18n'
 
 import { ThemedText } from 'theme/components/text'
 import { AutoColumn } from 'components/deprecated/Column'
@@ -114,7 +115,7 @@ export default function NameInputPanel({
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder={placeholder ?? t`max 32 characters`}
+              placeholder={placeholder ?? i18n.t(`max 32 characters`)}
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}

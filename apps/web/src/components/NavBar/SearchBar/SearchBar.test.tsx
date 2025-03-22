@@ -1,43 +1,21 @@
 import { SearchBar } from 'components/NavBar/SearchBar'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
-import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
-import { mocked } from 'test-utils/mocked'
+import mockMediaSize from 'test-utils/mockMediaSize'
 import { render, screen } from 'test-utils/render'
-import { useTranslation } from 'uniswap/src/i18n'
 
-jest.mock('hooks/useDisableNFTRoutes')
-jest.mock('hooks/screenSize/useScreenSize')
-jest.mock('nft/hooks/useIsNavSearchInputVisible')
+jest.mock('tamagui', () => ({
+  ...jest.requireActual('tamagui'),
+  useMedia: jest.fn(),
+}))
 
 describe('disable nft on searchbar', () => {
   beforeEach(() => {
-    mocked(useScreenSize).mockReturnValue({
-      xs: true,
-      sm: true,
-      md: true,
-      lg: true,
-      xl: false,
-      xxl: false,
-      xxxl: false,
-      navSearchInputVisible: false,
-      navDropdownMobileDrawer: true,
-    })
-    mocked(useIsNavSearchInputVisible).mockReturnValue(true)
+    mockMediaSize('xxl')
   })
 
-  it('should render text with nfts', () => {
-    mocked(useDisableNFTRoutes).mockReturnValue(false)
+  it('should render searchbar on larger screen', () => {
     const { container } = render(<SearchBar />)
     expect(container).toMatchSnapshot()
-    const { t } = useTranslation()
-    expect(screen.queryByPlaceholderText(t('common.searchTokensNFT'))).toBeVisible()
-  })
-  it('should render text without nfts', () => {
-    mocked(useDisableNFTRoutes).mockReturnValue(true)
-    const { container } = render(<SearchBar />)
-    expect(container).toMatchSnapshot()
-    const { t } = useTranslation()
-    expect(screen.queryByPlaceholderText(t('smartPools.selector.search.placeholder'))).toBeVisible()
+    const input = screen.getByTestId('nav-search-input')
+    expect(input).toBeInTheDocument()
   })
 })

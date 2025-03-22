@@ -5,16 +5,16 @@ import { useTranslation } from 'react-i18next'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { Button, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
+import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
-import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
-import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
@@ -24,7 +24,6 @@ import {
   useCreateOnboardingAccountIfNone,
   useOnboardingContext,
 } from 'wallet/src/features/onboarding/OnboardingContext'
-import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
@@ -46,19 +45,14 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const media = useMedia()
+  const isRightToLeft = i18next.dir() === 'rtl'
 
   const walletName = useDisplayName(onboardingAccountAddress)
   const { data: avatar } = useENSAvatar(onboardingAccountAddress)
 
   const onPressNext = (): void => {
-    const onboardingExperimentEnabled = getExperimentValue(
-      Experiments.OnboardingRedesignRecoveryBackup,
-      OnboardingRedesignRecoveryBackupProperties.Enabled,
-      false,
-    )
-
     navigation.navigate({
-      name: onboardingExperimentEnabled ? OnboardingScreens.Notifications : OnboardingScreens.Backup,
+      name: OnboardingScreens.Notifications,
       merge: true,
       params,
     })
@@ -92,6 +86,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
           <AnimatedNumber
             balance={0}
             colorIndicationDuration={0}
+            isRightToLeft={isRightToLeft}
             loading={false}
             loadingPlaceholderText="0.00"
             shouldFadeDecimals={true}
@@ -121,8 +116,8 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
         </Flex>
       </Flex>
       <Trace logPress element={ElementName.Next}>
-        <Button
-          disabled={!onboardingAccountAddress}
+        <DeprecatedButton
+          isDisabled={!onboardingAccountAddress}
           icon={
             <Flex grow row alignItems="center" justifyContent="space-between">
               <Flex row alignItems="center" gap="$spacing8">

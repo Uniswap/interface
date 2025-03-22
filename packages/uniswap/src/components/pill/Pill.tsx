@@ -30,7 +30,7 @@ export function Pill({
       alignItems="center"
       borderColor={!customBorderColor ? '$transparent' : undefined}
       borderRadius={borderRadius}
-      borderWidth={1}
+      borderWidth="$spacing1"
       flexDirection={flexDirection}
       gap="$spacing8"
       justifyContent="center"

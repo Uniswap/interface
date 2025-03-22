@@ -3,10 +3,10 @@ import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import { changeChain } from 'src/app/features/dapp/changeChain'
 import { dappStore } from 'src/app/features/dapp/store'
 import { DappResponseType } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 // Mock dependencies
 jest.mock('@ethersproject/providers')

@@ -2,29 +2,20 @@ import { Status } from 'components/AccountDrawer/Status'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
 import { useAccount } from 'hooks/useAccount'
-import useENSName from 'hooks/useENSName'
 import { useTheme } from 'lib/styled-components'
+import { useTranslation } from 'react-i18next'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { CopyToClipboard } from 'theme/components'
-import {
-  Button,
-  Flex,
-  GeneratedIcon,
-  HeightAnimator,
-  ImpactFeedbackStyle,
-  Separator,
-  Text,
-  TouchableArea,
-} from 'ui/src'
+import { DeprecatedButton, Flex, GeneratedIcon, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { useTranslation } from 'uniswap/src/i18n'
 
 const ICON_SIZE = 32
 const ICON_BORDER_RADIUS = 100
@@ -33,7 +24,7 @@ function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
   const theme = useTheme()
   const activeStyle = { backgroundColor: theme.surface3 }
   return (
-    <Button
+    <DeprecatedButton
       backgroundColor="$surface3"
       hoverStyle={activeStyle}
       pressStyle={activeStyle}
@@ -43,14 +34,14 @@ function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
       p={0}
     >
       <Icon color="$neutral2" size={iconSizes.icon16} />
-    </Button>
+    </DeprecatedButton>
   )
 }
 
 function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   const account = useAccount()
   const { unitag } = useUnitagByAddress(account.address)
-  const { ENSName } = useENSName(account.address)
+  const { data: ENSName } = useENSName(account.address)
   const openAddressQRModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO_QR })
 
   const onPressShowWalletQr = (): void => {
@@ -81,7 +72,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
           <CopyToClipboard toCopy={account.address!}>
             <ActionIcon Icon={CopySheets} />
           </CopyToClipboard>
-          <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressShowWalletQr}>
+          <TouchableArea onPress={onPressShowWalletQr}>
             <ActionIcon Icon={QrCode} />
           </TouchableArea>
         </Flex>

@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 describe('formatCurrencySymbol', () => {
   it('should return undefined if currency is undefined', () => {

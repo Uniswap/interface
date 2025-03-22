@@ -11,7 +11,7 @@ import UnstakeModal from 'components/earn/UnstakeModal'
 import Loader from 'components/Icons/LoadingSpinner'
 import PoolPositionList from 'components/PoolPositionList'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 import JSBI from 'jsbi'
 import { Center } from 'nft/components/Flex'
 import { useMemo, useState } from 'react'
@@ -141,7 +141,7 @@ export default function Stake() {
       .sort(biggestOwnStakeFirst)
   }, [allPools, stakingPools, userStakeBalances])
 
-  // TODO: check as we always return at least []
+  // Notice: poolsWithStats will only display pools that have a positive poolOwnStake
   const [stakedPools, nonStakedPools] = poolsWithStats?.reduce<[PoolRegisteredLog[], PoolRegisteredLog[]]>(
     (acc, p) => {
       acc[p.userHasStake ? 1 : 0].push(p)

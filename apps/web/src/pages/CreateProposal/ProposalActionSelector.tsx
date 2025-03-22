@@ -1,13 +1,14 @@
 import { ButtonDropdownLight } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
-import Modal from 'components/Modal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { RowBetween } from 'components/deprecated/Row'
 import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styled'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { Text } from 'rebass'
-import { CloseIcon } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
+import { ModalCloseIcon } from 'ui/src'
+import { Trans } from 'react-i18next'
+import { ModalName} from 'uniswap/src/features/telemetry/constants'
 
 export enum ProposalAction {
   TRANSFER_TOKEN = 'Transfer Token',
@@ -104,14 +105,14 @@ export function ProposalActionSelectorModal({
   )
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss}>
+    <Modal name={ModalName.DappRequest} isModalOpen={isOpen} isDismissible onClose={onDismiss}>
       <ContentWrapper>
         <PaddedColumn gap="16px">
           <RowBetween>
             <Text fontWeight={535} fontSize={16}>
               <Trans i18nKey="common.selectAction.label" />
             </Text>
-            <CloseIcon onClick={onDismiss} />
+            <ModalCloseIcon onClose={onDismiss} />
           </RowBetween>
         </PaddedColumn>
         <Separator />

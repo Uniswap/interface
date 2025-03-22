@@ -74,10 +74,9 @@ export function shouldReportBalances(
   lastBalancesReportValue: number | undefined,
   signerAccountAddresses: string[],
   signerAccountValues: number[],
+  signerAccountsTotalBalance: number,
 ): boolean {
-  const currentBalance = signerAccountValues.reduce((a, b) => a + b, 0)
-
-  const didWalletGetFunded = currentBalance > 0 && lastBalancesReportValue === 0
+  const didWalletGetFunded = signerAccountsTotalBalance > 0 && lastBalancesReportValue === 0
   const balanceReportDue = (lastBalancesReport ?? 0) + balanceReportFrequency < Date.now()
   const validAccountInfo = signerAccountAddresses.length === signerAccountValues.length
 

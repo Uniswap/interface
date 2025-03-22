@@ -1,21 +1,18 @@
-import { SharedEventName } from '@uniswap/analytics-events'
 import { PropsWithChildren, memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { AnimatePresence, ContextMenu, Flex, Loader } from 'ui/src'
+import { AnimatePresence, Flex, Loader } from 'ui/src'
 import { ShieldCheck } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { ElementName, ModalName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
+import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
 import { PortfolioEmptyState } from 'wallet/src/features/portfolio/PortfolioEmptyState'
@@ -35,25 +32,9 @@ type TokenBalanceListProps = {
 }
 
 export const TokenBalanceList = memo(function _TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element {
-  const { navigateToTokenDetails } = useWalletNavigation()
-
-  const { isTestnetModeEnabled } = useEnabledChains()
-
-  const onPressToken = (currencyId: string): void => {
-    if (isTestnetModeEnabled) {
-      return
-    }
-
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.TokenItem,
-      section: SectionName.HomeTokensTab,
-    })
-    navigateToTokenDetails(currencyId)
-  }
-
   return (
     <Flex grow>
-      <TokenBalanceListContextProvider isExternalProfile={false} owner={owner} onPressToken={onPressToken}>
+      <TokenBalanceListContextProvider isExternalProfile={false} owner={owner} onPressToken={() => {}}>
         <TokenBalanceListInner />
       </TokenBalanceListContextProvider>
     </Flex>
@@ -211,7 +192,12 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
 
   return (
     <TokenContextMenu portfolioBalance={portfolioBalance}>
-      <TokenBalanceItem isLoading={isWarmLoading} portfolioBalance={portfolioBalance} onPressToken={onPressToken} />
+      <TokenBalanceItem
+        isLoading={isWarmLoading}
+        portfolioBalanceId={portfolioBalance.id}
+        currencyInfo={portfolioBalance.currencyInfo}
+        onPressToken={onPressToken}
+      />
     </TokenContextMenu>
   )
 })
@@ -224,7 +210,7 @@ function TokenContextMenu({
 }>): JSX.Element {
   const contextMenu = useTokenContextMenu({
     currencyId: portfolioBalance.currencyInfo.currencyId,
-    isBlocked: portfolioBalance.currencyInfo.safetyLevel === SafetyLevel.Blocked,
+    isBlocked: portfolioBalance.currencyInfo.safetyInfo?.tokenList === TokenList.Blocked,
     tokenSymbolForNotification: portfolioBalance?.currencyInfo?.currency?.symbol,
     portfolioBalance,
   })
@@ -240,7 +226,13 @@ function TokenContextMenu({
   const itemId = `${portfolioBalance.currencyInfo.currencyId}-${portfolioBalance.isHidden}`
 
   return (
-    <ContextMenu itemId={itemId} menuOptions={menuOptions} menuStyleProps={{ minWidth: MIN_CONTEXT_MENU_WIDTH }}>
+    <ContextMenu
+      closeOnClick
+      itemId={itemId}
+      menuOptions={menuOptions}
+      menuStyleProps={{ minWidth: MIN_CONTEXT_MENU_WIDTH }}
+      onLeftClick
+    >
       {children}
     </ContextMenu>
   )

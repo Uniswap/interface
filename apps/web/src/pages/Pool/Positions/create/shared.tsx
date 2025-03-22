@@ -1,14 +1,15 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PriceRangeInfo } from 'pages/Pool/Positions/create/types'
-import { Flex, GeneratedIcon, Text, TouchableArea, styled } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { ClickableTamaguiStyle } from 'theme/components'
+import { Flex, GeneratedIcon, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 
 export const Container = styled(Flex, {
@@ -19,6 +20,9 @@ export const Container = styled(Flex, {
   borderColor: '$surface3',
   overflow: 'hidden',
   width: '100%',
+  $lg: {
+    p: '$spacing16',
+  },
 })
 
 export function AdvancedButton({
@@ -26,81 +30,76 @@ export function AdvancedButton({
   tooltipText,
   Icon,
   onPress,
+  elementName,
 }: {
   title: string
   tooltipText?: string
   Icon: GeneratedIcon
   onPress: () => void
+  elementName?: ElementNameType
 }) {
   const { t } = useTranslation()
   return (
     <Flex row gap="$spacing8" alignItems="center">
       <Flex row gap="$spacing4" alignItems="center">
         <Icon size={iconSizes.icon16} color="$neutral2" />
-        <Text
-          variant="body3"
-          color="$neutral2"
-          textDecorationLine="underline"
-          textDecorationStyle="dashed"
-          cursor="pointer"
-          onPress={onPress}
-        >
-          {title}
-        </Text>
+        <Trace logPress={!!elementName} element={elementName}>
+          <Text
+            variant="body3"
+            color="$neutral2"
+            textDecorationLine="underline"
+            textDecorationStyle="dashed"
+            onPress={onPress}
+            {...ClickableTamaguiStyle}
+          >
+            {title}
+          </Text>
+        </Trace>
       </Flex>
       <Text variant="body3" color="$neutral3">
         ({t('common.advanced')})
       </Text>
       {tooltipText && (
-        <MouseoverTooltip text={tooltipText} placement="auto">
-          <InfoCircleFilled size={iconSizes.icon16} color="$neutral3" />
+        <MouseoverTooltip text={tooltipText} placement="auto" style={{ maxHeight: '16px' }}>
+          <Flex>
+            <InfoCircleFilled size={iconSizes.icon16} color="$neutral3" />
+          </Flex>
         </MouseoverTooltip>
       )}
     </Flex>
   )
 }
 
-export function CreatingPoolInfo() {
-  const { derivedPositionInfo, createPoolInfoDismissed, setCreatePoolInfoDismissed } = useCreatePositionContext()
-
-  if (!derivedPositionInfo.creatingPoolOrPair || createPoolInfoDismissed) {
-    return null
-  }
-
-  return (
-    <Container row gap="$spacing12">
-      <InfoCircleFilled flexShrink={0} size={iconSizes.icon20} color="$neutral2" />
-      <Flex flexWrap="wrap" flexShrink={1}>
-        <Text variant="subheading1">
-          <Trans i18nKey="pool.create" />
-        </Text>
-        <Text variant="body3" color="$neutral2">
-          <Trans i18nKey="pool.create.info" />
-        </Text>
-      </Flex>
-      <TouchableArea onPress={() => setCreatePoolInfoDismissed(true)}>
-        <X flexShrink={0} size={iconSizes.icon20} color="$neutral2" />
-      </TouchableArea>
-    </Container>
-  )
-}
-
 export function formatPrices(
   derivedPriceRangeInfo: PriceRangeInfo,
   formatter: (input: FormatNumberOrStringInput) => string,
-) {
+): {
+  formattedPrices: [string, string]
+  isFullRange: boolean
+} {
   if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
-    return ['', '']
+    return { formattedPrices: ['', ''], isFullRange: true }
   }
 
-  const { ticksAtLimit, isSorted, prices } = derivedPriceRangeInfo
+  const { ticksAtLimit, isSorted, prices, invertPrice } = derivedPriceRangeInfo
 
-  const lowerPriceFormatted = ticksAtLimit[isSorted ? 0 : 1]
+  const isLowerAtLimit = ticksAtLimit[isSorted ? 0 : 1]
+  const [lowerPrice, upperPrice] = isSorted ? [prices?.[0], prices?.[1]] : [prices?.[1], prices?.[0]]
+
+  const lowerPriceFormatted = isLowerAtLimit
     ? '0'
-    : formatter({ value: prices?.[0]?.toSignificant(), type: NumberType.TokenTx })
-  const upperPriceFormatted = ticksAtLimit[isSorted ? 1 : 0]
-    ? '∞'
-    : formatter({ value: prices?.[1]?.toSignificant(), type: NumberType.TokenTx })
+    : formatter({
+        value: (invertPrice ? lowerPrice?.invert() : lowerPrice)?.toSignificant(),
+        type: NumberType.TokenTx,
+      })
 
-  return [lowerPriceFormatted, upperPriceFormatted]
+  const isUpperAtLimit = ticksAtLimit[isSorted ? 1 : 0]
+  const upperPriceFormatted = isUpperAtLimit
+    ? '∞'
+    : formatter({
+        value: (invertPrice ? upperPrice?.invert() : upperPrice)?.toSignificant(),
+        type: NumberType.TokenTx,
+      })
+
+  return { formattedPrices: [lowerPriceFormatted, upperPriceFormatted], isFullRange: isLowerAtLimit && isUpperAtLimit }
 }

@@ -1,24 +1,30 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
+import { useIsExtraLargeScreen } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/HorizontalTokenList/HorizontalTokenList'
-import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
+import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
+import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
+import { SectionFooter, TokenSectionFooterProps } from 'uniswap/src/components/TokenSelector/items/TokenSectionFooter'
+import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/items/TokenSectionHeader'
+import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
 import {
   TokenSectionBaseList,
   TokenSectionBaseListRef,
-} from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
-import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList.web'
-import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
+} from 'uniswap/src/components/TokenSelector/lists/TokenSectionBaseList/TokenSectionBaseList'
 import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
+import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
+import { isInterface } from 'utilities/src/platform'
 
 function isHorizontalListTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
@@ -49,9 +55,7 @@ const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
 
   const { isTestnetModeEnabled } = useEnabledChains()
 
-  const { tokenWarningDismissed, onDismissTokenWarning: dismissWarningCallback } = useDismissedTokenWarnings(
-    tokenOption.currencyInfo.currency,
-  )
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(tokenOption.currencyInfo.currency)
 
   const tokenBalance = formatNumberOrString({
     value: tokenOption.quantity,
@@ -66,7 +70,6 @@ const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
   return (
     <TokenOptionItem
       balance={title}
-      dismissWarningCallback={dismissWarningCallback}
       isKeyboardOpen={isKeyboardOpen}
       option={tokenOption}
       quantity={tokenOption.quantity}
@@ -120,6 +123,14 @@ function _TokenSelectorList({
   const { t } = useTranslation()
   const sectionListRef = useRef<TokenSectionBaseListRef>()
   const [expandedItems, setExpandedItems] = useState<string[]>([])
+  const { shouldShowUnichainBridgingTooltip } = useUnichainTooltipVisibility()
+  const isExtraLargeScreen = useIsExtraLargeScreen()
+  const isXLInterface = isInterface && isExtraLargeScreen
+  const shouldRenderUnichainInlineBridgingTooltip =
+    shouldShowUnichainBridgingTooltip && !isXLInterface && chainFilter === UniverseChainId.Unichain
+
+  usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])
+
   useEffect(() => {
     if (sections?.length) {
       sectionListRef.current?.scrollToLocation({
@@ -182,9 +193,22 @@ function _TokenSelectorList({
         endElement={section.endElement}
         sectionKey={section.sectionKey}
         name={section.name}
+        chainId={chainFilter}
       />
     ),
-    [],
+    [chainFilter],
+  )
+
+  const renderSectionFooter = useCallback(
+    ({ section }: { section: TokenSectionFooterProps }): JSX.Element => (
+      <SectionFooter
+        rightElement={section.rightElement}
+        sectionKey={section.sectionKey}
+        name={section.name}
+        chainId={chainFilter}
+      />
+    ),
+    [chainFilter],
   )
 
   if (hasError) {
@@ -222,6 +246,7 @@ function _TokenSelectorList({
         keyExtractor={key}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
+        renderSectionFooter={shouldRenderUnichainInlineBridgingTooltip ? renderSectionFooter : undefined}
         sectionListRef={sectionListRef}
         sections={sections ?? []}
         expandedItems={expandedItems}

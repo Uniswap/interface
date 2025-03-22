@@ -1,6 +1,5 @@
 #import "AppDelegate.h"
 
-#import "RNFBAppCheckModule.h"
 #import <Firebase.h>
 
 #import "Uniswap-Swift.h"
@@ -8,7 +7,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <ReactNativePerformance/ReactNativePerformance.h>
 #import <RCTAppSetupUtils.h>
-#import "RNSplashScreen.h"
+#import <RNBootSplash.h>
 
 @implementation AppDelegate
 
@@ -17,8 +16,6 @@
   // Must be first line in startup routine
   [ReactNativePerformance onAppStarted];
 
-  // Must be before [FIRApp configure], initializes RNFBAppCheckModule 
-  [RNFBAppCheckModule sharedInstance];
   [FIRApp configure];
 
   // This is needed so universal links opened from OneSignal notifications navigate to the proper page.
@@ -48,14 +45,18 @@
   
   [super application:application didFinishLaunchingWithOptions:newLaunchOptions];
   
-  [RNSplashScreen show];
-  
   [[RCTI18nUtil sharedInstance] allowRTL:NO];
+  [RNBootSplash initWithStoryboard:@"SplashScreen" rootView:self.window.rootViewController.view];
 
   return YES;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+  return [self bundleURL];
+}
+
+- (NSURL *)bundleURL
 {
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];

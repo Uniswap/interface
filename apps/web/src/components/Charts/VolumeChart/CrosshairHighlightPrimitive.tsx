@@ -2,6 +2,7 @@
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/highlight-bar-crosshair/highlight-bar-crosshair.ts.
  * Modifications are called out with comments.
  */
+import { roundRect } from 'components/Charts/utils'
 import { CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CrosshairMode,
@@ -83,7 +84,6 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
       const crosshairXPosition = crosshairPos.position + margin
 
       // Modification: use centered 2px wide line to top
-      ctx.beginPath()
       if (this._data.useThinCrosshair) {
         ctx.fillRect(
           crosshairXPosition + crosshairPos.length / 2,
@@ -92,14 +92,14 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
           scope.bitmapSize.height - crosshairYPosition,
         )
       } else {
-        ctx.roundRect(
+        roundRect(
+          ctx,
           crosshairXPosition,
           crosshairYPosition,
           crosshairPos.length,
           scope.bitmapSize.height - crosshairYPosition,
           9,
         )
-        ctx.fill()
       }
 
       // Modification: lower opacity of all content outside the highlight bar

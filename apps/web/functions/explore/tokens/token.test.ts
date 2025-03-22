@@ -16,7 +16,7 @@ const tokens = [
   {
     address: NATIVE_CHAIN_ID,
     network: 'polygon',
-    tokenData: { symbol: 'MATIC' },
+    tokenData: { symbol: 'POL' },
     image: 'http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE',
   },
   {

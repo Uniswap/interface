@@ -1,18 +1,23 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
+import { FeeData } from 'pages/Pool/Positions/create/types'
 import { Dispatch, ReactNode, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export interface DepositState {
   exactField: PositionField
-  exactAmount?: string
+  exactAmounts: {
+    [field in PositionField]?: string
+  }
 }
 
 export type DepositContextType = {
+  reset: () => void
   depositState: DepositState
   setDepositState: Dispatch<SetStateAction<DepositState>>
   derivedDepositInfo: DepositInfo
@@ -31,6 +36,8 @@ interface BasePositionInfo {
   version: ProtocolVersion
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
+  chainId: UniverseChainId
+  poolId: string // Refers to pool contract address for v2 & v3, and poolId for v4
   tokenId?: string
   tickLower?: string
   tickUpper?: string
@@ -41,6 +48,8 @@ interface BasePositionInfo {
   liquidityAmount?: CurrencyAmount<Currency>
   token0UncollectedFees?: string
   token1UncollectedFees?: string
+  apr?: number
+  isHidden?: boolean
 }
 
 type V2PairInfo = BasePositionInfo & {
@@ -49,6 +58,7 @@ type V2PairInfo = BasePositionInfo & {
   liquidityToken: Token
   feeTier: undefined
   v4hook: undefined
+  owner: undefined
 }
 
 export type V3PositionInfo = BasePositionInfo & {
@@ -58,6 +68,7 @@ export type V3PositionInfo = BasePositionInfo & {
   feeTier?: FeeAmount
   position?: V3Position
   v4hook: undefined
+  owner: string
 }
 
 type V4PositionInfo = BasePositionInfo & {
@@ -67,6 +78,17 @@ type V4PositionInfo = BasePositionInfo & {
   position?: V4Position
   feeTier?: string
   v4hook?: string
+  owner: string
 }
 
 export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo
+
+export type FeeTierData = {
+  id?: string
+  fee: FeeData
+  formattedFee: string
+  totalLiquidityUsd: number
+  percentage: Percent
+  tvl: string
+  created: boolean
+}

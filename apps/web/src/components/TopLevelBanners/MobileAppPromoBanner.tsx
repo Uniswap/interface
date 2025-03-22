@@ -1,47 +1,40 @@
 import { ReactComponent as UniswapLogo } from 'assets/svg/uniswap_app_logo.svg'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import styled, { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { X } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { hideMobileAppPromoBannerAtom } from 'state/application/atoms'
-import { BREAKPOINTS } from 'theme'
-import { ThemedText } from 'theme/components'
-import { Z_INDEX } from 'theme/zIndex'
-import { Text } from 'ui/src'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { Anchor, Flex, Text, styled, useSporeColors } from 'ui/src'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { getWalletMeta } from 'utils/walletMeta'
 
-const Wrapper = styled.div`
-  height: 56px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.accent2};
-  padding: 10px 16px 10px 12px;
-  z-index: ${Z_INDEX.sticky};
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+const Wrapper = styled(Flex, {
+  height: 56,
+  width: '100%',
+  backgroundColor: '$accent2',
+  pl: '$spacing12',
+  pr: '$spacing16',
+  zIndex: '$sticky',
+  row: true,
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  display: 'none',
+  $md: { display: 'flex' },
+})
 
-  display: none;
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    display: flex;
-  }
-`
-
-const StyledButton = styled.a`
-  height: 28px;
-  background: ${({ theme }) => theme.accent1};
-  border-radius: 16px;
-  padding: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
-`
+const StyledButton = styled(Anchor, {
+  height: '$spacing28',
+  background: '$accent1',
+  borderRadius: '$rounded16',
+  p: '$spacing8',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  whiteSpace: 'nowrap',
+  textDecorationLine: 'none',
+})
 
 /**
  * We show the mobile app promo banner if:
@@ -87,9 +80,9 @@ function getDownloadLink(userAgent: string, peerWalletAgent?: string): string {
 export function MobileAppPromoBanner() {
   const { t } = useTranslation()
   const [isVisible, setIsVisible] = useState(true)
-  const theme = useTheme()
   const mobileAppPromoBannerEligible = useMobileAppPromoBannerEligible()
   const [, setHideMobileAppPromoBanner] = useAtom(hideMobileAppPromoBannerAtom)
+  const colors = useSporeColors()
 
   const provider = useEthersWeb3Provider()
 
@@ -101,28 +94,26 @@ export function MobileAppPromoBanner() {
 
   return (
     <Wrapper>
-      <Row gap="sm">
+      <Flex shrink row gap="$spacing8" alignItems="center">
         <X
           data-testid="mobile-promo-banner-close-button"
           size={20}
-          color={theme.neutral2}
+          color={colors.neutral2.val}
           onClick={() => {
             setIsVisible(false)
             setHideMobileAppPromoBanner(true)
           }}
         />
         <UniswapLogo width="32px" height="32px" />
-        <Column>
-          <ThemedText.BodySmall>
-            <Trans i18nKey="mobileAppPromo.banner.title" />
-          </ThemedText.BodySmall>
-          <ThemedText.Caption color="neutral2">
-            <Trans i18nKey="mobileAppPromo.banner.getTheApp.link" />
-          </ThemedText.Caption>
-        </Column>
-      </Row>
+        <Flex shrink>
+          <Text variant="body3">{t('mobileAppPromo.banner.title')}</Text>
+          <Text variant="body4" color="$neutral2">
+            {t('mobileAppPromo.banner.getTheApp.link')}
+          </Text>
+        </Flex>
+      </Flex>
       <StyledButton href={getDownloadLink(navigator.userAgent, peerWalletAgent)}>
-        <Text variant="buttonLabel3" color="white" whiteSpace="nowrap" lineHeight="20px">
+        <Text variant="buttonLabel3" color="white" whiteSpace="nowrap">
           {t('common.getApp')}
         </Text>
       </StyledButton>

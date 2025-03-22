@@ -1,23 +1,21 @@
-import React, { memo, useMemo } from 'react'
+import React, { PropsWithChildren, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { borderRadii } from 'ui/src/theme'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 
-export const TokenBalanceItemContextMenu = memo(function _TokenBalanceItem({
+export const TokenBalanceItemContextMenu = memo(function _TokenBalanceItemContextMenu({
   portfolioBalance,
   children,
-}: {
+}: PropsWithChildren<{
   portfolioBalance: PortfolioBalance
-  children: React.ReactNode
-}) {
+}>) {
   const { t } = useTranslation()
 
   const { menuActions, onContextMenuPress } = useTokenContextMenu({
     currencyId: portfolioBalance.currencyInfo.currencyId,
-    isBlocked: portfolioBalance.currencyInfo.safetyLevel === SafetyLevel.Blocked,
+    isBlocked: portfolioBalance.currencyInfo.safetyInfo?.tokenList === TokenList.Blocked,
     portfolioBalance,
     tokenSymbolForNotification: t('walletConnect.request.details.label.token'),
   })

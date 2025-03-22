@@ -1,35 +1,72 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { LinkButton, LinkButtonType } from 'src/components/TokenDetails/LinkButton'
+import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, Text } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
 import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isDefaultNativeAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { currencyIdToAddress, currencyIdToChain, isDefaultNativeAddress } from 'wallet/src/utils/currencyId'
 import { getTwitterLink } from 'wallet/src/utils/linking'
 
-export function TokenDetailsLinks({
-  currencyId,
-  data,
-}: {
-  currencyId: string
-  data: TokenDetailsScreenQuery | undefined
-}): JSX.Element {
+export function TokenDetailsLinks(): JSX.Element {
   const { t } = useTranslation()
-  const { defaultChainId } = useEnabledChains()
 
-  const { homepageUrl, twitterName } = data?.token?.project ?? {}
-  const chainId = currencyIdToChain(currencyId) ?? defaultChainId
-  const address = currencyIdToAddress(currencyId)
+  const { address, chainId, currencyId } = useTokenDetailsContext()
+
+  const { homepageUrl, twitterName } = useTokenProjectUrlsPartsFragment({ currencyId }).data.project ?? {}
+
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
-  const explorerName = UNIVERSE_CHAIN_INFO[chainId].explorer.name
+  const explorerName = getChainInfo(chainId).explorer.name
+
+  const links = useMemo(() => {
+    return [
+      {
+        Icon: getBlockExplorerIcon(chainId),
+        buttonType: LinkButtonType.Link,
+        element: ElementName.TokenLinkEtherscan,
+        label: explorerName,
+        testID: TestID.TokenLinkEtherscan,
+        value: explorerLink,
+      },
+      homepageUrl
+        ? {
+            Icon: GlobeIcon,
+            buttonType: LinkButtonType.Link,
+            element: ElementName.TokenLinkWebsite,
+            label: t('token.links.website'),
+            testID: TestID.TokenLinkWebsite,
+            value: homepageUrl,
+          }
+        : null,
+      twitterName
+        ? {
+            Icon: TwitterIcon,
+            buttonType: LinkButtonType.Link,
+            element: ElementName.TokenLinkTwitter,
+            label: t('token.links.twitter'),
+            testID: TestID.TokenLinkTwitter,
+            value: getTwitterLink(twitterName),
+          }
+        : null,
+      !isDefaultNativeAddress(address)
+        ? {
+            buttonType: LinkButtonType.Copy,
+            element: ElementName.Copy,
+            label: t('common.text.contract'),
+            testID: TestID.TokenLinkCopy,
+            value: address,
+          }
+        : null,
+    ].filter((item): item is NonNullable<typeof item> => Boolean(item))
+  }, [chainId, address, homepageUrl, twitterName, explorerName, explorerLink, t])
 
   return (
     <View style={{ marginHorizontal: -14 }}>
@@ -37,47 +74,15 @@ export function TokenDetailsLinks({
         <Text color="$neutral2" mx="$spacing16" variant="subheading2">
           {t('token.links.title')}
         </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Flex row gap="$spacing8" px="$spacing16">
-            <LinkButton
-              Icon={getBlockExplorerIcon(chainId)}
-              buttonType={LinkButtonType.Link}
-              element={ElementName.TokenLinkEtherscan}
-              label={explorerName}
-              testID={TestID.TokenLinkEtherscan}
-              value={explorerLink}
-            />
-            {homepageUrl && (
-              <LinkButton
-                Icon={GlobeIcon}
-                buttonType={LinkButtonType.Link}
-                element={ElementName.TokenLinkWebsite}
-                label={t('token.links.website')}
-                testID={TestID.TokenLinkWebsite}
-                value={homepageUrl}
-              />
-            )}
-            {twitterName && (
-              <LinkButton
-                Icon={TwitterIcon}
-                buttonType={LinkButtonType.Link}
-                element={ElementName.TokenLinkTwitter}
-                label={t('token.links.twitter')}
-                testID={TestID.TokenLinkTwitter}
-                value={getTwitterLink(twitterName)}
-              />
-            )}
-            {!isDefaultNativeAddress(address) && (
-              <LinkButton
-                buttonType={LinkButtonType.Copy}
-                element={ElementName.Copy}
-                label={t('common.text.contract')}
-                testID={TestID.TokenLinkCopy}
-                value={address}
-              />
-            )}
-          </Flex>
-        </ScrollView>
+        <Flex row gap="$spacing8" px="$spacing16">
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={links}
+            renderItem={({ item }) => <LinkButton {...item} />}
+            keyExtractor={(item) => item.testID}
+          />
+        </Flex>
       </Flex>
     </View>
   )

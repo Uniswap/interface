@@ -8,22 +8,23 @@ import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
 import { RowBetween } from 'components/deprecated/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { darken } from 'polished'
 import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useAppSelector } from 'state/hooks'
 import { flexRowNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { breakpoints } from 'ui/src/theme'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupNameWithLoading } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useExperimentGroupNameWithLoading, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 
 // https://stackoverflow.com/a/31617326
@@ -84,7 +85,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{
     }
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xl}px`}) {
     width: ${({ pending }) => !pending && '36px'};
 
     ${IconWrapper} {
@@ -104,7 +105,7 @@ const AddressAndChevronContainer = styled.div<{ $loading?: boolean }>`
   opacity: ${({ $loading, theme }) => $loading && theme.opacity.disabled};
   align-items: center;
 
-  @media only screen and (max-width: ${navSearchInputVisibleSize}px) {
+  @media only screen and (max-width: ${breakpoints.xl}px) {
     display: none;
   }
 `
@@ -136,8 +137,10 @@ function ExistingUserCTAButton() {
   const { t } = useTranslation()
 
   const { value: accountsCTAExperimentGroup } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp || isEmbeddedWalletEnabled
+  const isLogIn =
+    accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount && !isEmbeddedWalletEnabled
 
   return (
     <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
@@ -223,7 +226,7 @@ function Web3StatusInner() {
       >
         <Web3StatusConnectWrapper
           tabIndex={0}
-          onKeyPress={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
+          onKeyDown={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
           onClick={handleWalletDropdownClick}
           ref={ref}
         >

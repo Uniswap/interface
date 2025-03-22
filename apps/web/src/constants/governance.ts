@@ -5,7 +5,7 @@ import {
   TIMELOCK_ADDRESSES,
   UNI_ADDRESSES,
 } from '@uniswap/sdk-core'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 import { GOVERNANCE_PROXY_ADDRESSES } from 'constants/addresses'
 // TODO: remove deprecated governances

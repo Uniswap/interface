@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Text, TextProps, TouchableArea } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 
 interface SectionHeaderTextProps {
   title: string
@@ -14,7 +14,7 @@ export const SectionHeaderText = ({
   afterIcon,
   onPress,
   ...rest
-}: SectionHeaderTextProps & TextProps): JSX.Element => {
+}: SectionHeaderTextProps & FlexProps): JSX.Element => {
   return (
     <TouchableArea disabled={!onPress} onPress={onPress}>
       <Flex row alignItems="center" gap="$spacing4" mb="$spacing4" mx="$spacing20" {...rest}>

@@ -5,8 +5,8 @@ import store from 'state'
 import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe('PoolDetailsHeader', () => {
   beforeEach(() => {

@@ -1,0 +1,8 @@
+appId: com.uniswap.mobile.dev
+---
+- launchApp:
+    permissions:
+      contacts: unset
+      notifications: unset
+    clearState: true
+    clearKeychain: true # optional: clear *entire* iOS keychain

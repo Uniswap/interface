@@ -60,13 +60,6 @@ export const AnimatedFlatList = forwardRef<Animated.FlatList<any>, ReanimatedFla
  */
 export const AnimatedBottomSheetFlatList = forwardRef<Animated.FlatList<any>, ReanimatedFlatlistProps<any>>(
   function _AnimatedBottomSheetFlatList(props, ref) {
-    return (
-      <AnimatedFlatList
-        sentry-label="AnimatedBottomSheetFlatList"
-        {...props}
-        ref={ref}
-        FlatListComponent={ReanimatedBottomSheetFlatList}
-      />
-    )
+    return <AnimatedFlatList {...props} ref={ref} FlatListComponent={ReanimatedBottomSheetFlatList} />
   },
 )

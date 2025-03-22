@@ -1,7 +1,7 @@
 import { setupAmplitude } from 'tracing/amplitude'
 import { getEnvName } from 'tracing/env'
 import { setupSentry } from 'tracing/sentry'
-import { setupDatadog } from 'utilities/src/logger/Datadog'
+import { setupDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { isRemoteReportingEnabled } from 'utils/env'
 
 // we do not collect analytics atm

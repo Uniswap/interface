@@ -7,7 +7,7 @@ import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const mockOrderDetails: UniswapXOrderDetails = {
   type: SignatureType.SIGN_UNISWAPX_ORDER,
@@ -39,6 +39,15 @@ jest.mock('hooks/useTransactionGasFee', () => ({
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Activity/utils', () => ({
   useCreateCancelTransactionRequest: jest.fn(),
+}))
+
+jest.mock('utilities/src/logger/logger', () => ({
+  logger: {
+    error: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  },
 }))
 
 describe('CancelOrdersDialog', () => {

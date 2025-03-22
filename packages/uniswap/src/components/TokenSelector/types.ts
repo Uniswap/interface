@@ -1,6 +1,7 @@
+import { ReactNode } from 'react'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { FiatNumberType } from 'utilities/src/format/types'
 
 export type TokenOption = {
@@ -46,4 +47,13 @@ export type ConvertFiatAmountFormattedCallback = (
 export enum TokenSelectorFlow {
   Swap,
   Send,
+}
+
+export interface TokenItemWrapperProps {
+  children: ReactNode
+  tokenInfo: {
+    address: string
+    chain: number
+    isNative: boolean
+  }
 }

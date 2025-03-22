@@ -11,7 +11,6 @@ plugins {
 def nodeModulesPath = "../../../../node_modules"
 def rnRoot = "../.."
 
-
 def keystorePropertiesFile = rootProject.file("keystore.properties");
 def keystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) {
@@ -25,6 +24,8 @@ react {
     cliFile = file("$nodeModulesPath/react-native/cli.js")
     debuggableVariants = ["devDebug", "betaDebug", "prodDebug"]
     hermesCommand = "../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc" // This is relative to the project root.
+    /* Autolinking */
+    autolinkLibrariesWithApp()
 }
 /**
  * Set this to true to create four separate APKs instead of one,
@@ -63,36 +64,17 @@ def reactNativeArchitectures() {
 }
 
 boolean isCI = System.getenv('CI') != null
-boolean isDetox = System.getenv('DETOX_MODE') != null
-boolean sentryPropertiesAvailable = System.getenv('SENTRY_AUTH_TOKEN') != null && System.getenv('SENTRY_PROJECT') != null && System.getenv('SENTRY_ORG') != null
-
-if (isCI && sentryPropertiesAvailable && !isDetox) {
-  project.ext.sentryCli = [
-    logLevel: "info",
-  ]
-
-  apply from: "../../../../node_modules/@sentry/react-native/sentry.gradle"
-  apply plugin: "io.sentry.android.gradle"
-
-  sentry {
-    uploadNativeSymbols = true
-    includeNativeSources = true
-
-    autoInstallation {
-      enabled = false
-    }
-  }
-}
+boolean isE2E = System.getenv('E2E_MODE') != null
 
 boolean datadogPropertiesAvailable = System.getenv('DATADOG_API_KEY') != null
 
-if (isCI && datadogPropertiesAvailable && !isDetox) {
+if (isCI && datadogPropertiesAvailable && !isE2E) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.38"
-def betaVersionName = "1.38"
-def prodVersionName = "1.38"
+def devVersionName = "1.47"
+def betaVersionName = "1.47"
+def prodVersionName = "1.47"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -105,9 +87,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
-        testBuildType System.getProperty('testBuildType', 'debug')
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     splits {
         abi {
@@ -189,11 +168,17 @@ android {
       pickFirst 'lib/armeabi-v7a/libc++_shared.so'
       pickFirst 'lib/arm64-v8a/libc++_shared.so'
     }
+
+    androidResources {
+        ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
+    }
+
     buildFeatures {
         compose true
     }
+    
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.6"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     sourceSets {
@@ -209,9 +194,6 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation "com.facebook.react:react-android"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-
-    // Used to deal with Flipper/OkHttp issues with DevSupportManager
-    implementation "androidx.multidex:multidex:$multidexVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerialization"
@@ -256,16 +238,15 @@ dependencies {
     implementation("androidx.core:core-performance:$corePerf")
     implementation("androidx.core:core-performance-play-services:$corePerf")
 
-    implementation("com.facebook.react:flipper-integration")
+    implementation 'com.onesignal:OneSignal:4.8.9'
+    implementation 'com.github.statsig-io:android-sdk:4.36.0'
+
+    // For animated GIF support
+    implementation 'com.facebook.fresco:animated-gif:3.6.0'
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
-    androidTestImplementation('com.wix:detox:+') {
-      exclude module: "protobuf-lite"
-    }
 }
-
-apply from: file("${nodeModulesPath}/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

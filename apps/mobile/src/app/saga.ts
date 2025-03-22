@@ -1,9 +1,15 @@
 import { PersistState } from 'redux-persist'
+import { monitoredSagas } from 'src/app/monitoredSagas'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { appRatingWatcherSaga } from 'src/features/appRating/saga'
+import { appStateSaga } from 'src/features/appState/appStateSaga'
+import { biometricsSaga } from 'src/features/biometrics/biometricsSaga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
+import { lockScreenSaga } from 'src/features/lockScreen/lockScreenSaga'
 import { modalWatcher } from 'src/features/modals/saga'
+import { pushNotificationsWatcherSaga } from 'src/features/notifications/saga'
+import { splashScreenSaga } from 'src/features/splashScreen/splashScreenSaga'
 import { telemetrySaga } from 'src/features/telemetry/saga'
 import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
@@ -11,27 +17,7 @@ import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
 import { call, delay, select, spawn } from 'typed-redux-saga'
 import { appLanguageWatcherSaga } from 'uniswap/src/features/language/saga'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
-import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
-import {
-  tokenWrapActions,
-  tokenWrapReducer,
-  tokenWrapSaga,
-  tokenWrapSagaName,
-} from 'wallet/src/features/transactions/swap/wrapSaga'
 import { transactionWatcher } from 'wallet/src/features/transactions/transactionWatcherSaga'
-import {
-  editAccountActions,
-  editAccountReducer,
-  editAccountSaga,
-  editAccountSagaName,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import {
-  createAccountsActions,
-  createAccountsReducer,
-  createAccountsSaga,
-  createAccountsSagaName,
-} from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { MonitoredSaga, getMonitoredSagaReducers } from 'wallet/src/state/saga'
 
 const REHYDRATION_STATUS_POLLING_INTERVAL = 50
 
@@ -43,41 +29,16 @@ const sagas = [
   deepLinkWatcher,
   firebaseDataWatcher,
   modalWatcher,
+  pushNotificationsWatcherSaga,
   restoreMnemonicCompleteWatcher,
   signWcRequestSaga,
   telemetrySaga,
   walletConnectSaga,
+  appStateSaga,
+  splashScreenSaga,
+  biometricsSaga,
+  lockScreenSaga,
 ]
-
-// All monitored sagas must be included here
-export const monitoredSagas: Record<string, MonitoredSaga> = {
-  [createAccountsSagaName]: {
-    name: createAccountsSagaName,
-    wrappedSaga: createAccountsSaga,
-    reducer: createAccountsReducer,
-    actions: createAccountsActions,
-  },
-  [editAccountSagaName]: {
-    name: editAccountSagaName,
-    wrappedSaga: editAccountSaga,
-    reducer: editAccountReducer,
-    actions: editAccountActions,
-  },
-  [swapSagaName]: {
-    name: swapSagaName,
-    wrappedSaga: swapSaga,
-    reducer: swapReducer,
-    actions: swapActions,
-  },
-  [tokenWrapSagaName]: {
-    name: tokenWrapSagaName,
-    wrappedSaga: tokenWrapSaga,
-    reducer: tokenWrapReducer,
-    actions: tokenWrapActions,
-  },
-}
-
-export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
 
 export function* rootMobileSaga() {
   // wait until redux-persist has finished rehydration

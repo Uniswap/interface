@@ -10,8 +10,13 @@ import { closeModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalFiatToUSDConverter } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
-import { useFiatOnRampAggregatorWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import {
+  useFiatOnRampAggregatorOffRampWidgetQuery,
+  useFiatOnRampAggregatorWidgetQuery,
+} from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -21,7 +26,6 @@ import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { FiatOffRampEventName, FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -40,6 +44,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
   const { addFiatSymbolToNumber } = useLocalizationContext()
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
   const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const fiatToUSDConverter = useLocalFiatToUSDConverter()
 
   const {
     isOffRamp,
@@ -49,7 +54,8 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     countryState,
     baseCurrencyInfo,
     quoteCurrency,
-    amount,
+    fiatAmount,
+    tokenAmount,
   } = useFiatOnRampContext()
   const serviceProvider = selectedQuote?.serviceProviderDetails
 
@@ -74,12 +80,12 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     isLoading: widgetLoading,
     error: widgetError,
   } = useFiatOnRampAggregatorWidgetQuery(
-    serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && amount
+    !isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && fiatAmount
       ? {
           serviceProvider: serviceProvider.serviceProvider,
           countryCode,
           destinationCurrencyCode: quoteCurrency.meldCurrencyCode,
-          sourceAmount: amount,
+          sourceAmount: fiatAmount,
           sourceCurrencyCode: baseCurrencyInfo.code,
           walletAddress: activeAccountAddress,
           externalSessionId: externalTransactionId,
@@ -88,12 +94,31 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       : skipToken,
   )
 
+  const {
+    data: offRampWidgetData,
+    isLoading: offRampWidgetLoading,
+    error: offRampWidgetError,
+  } = useFiatOnRampAggregatorOffRampWidgetQuery(
+    isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && tokenAmount
+      ? {
+          serviceProvider: serviceProvider.serviceProvider,
+          countryCode,
+          baseCurrencyCode: quoteCurrency.meldCurrencyCode,
+          sourceAmount: tokenAmount,
+          quoteCurrencyCode: baseCurrencyInfo.code,
+          refundWalletAddress: activeAccountAddress,
+          externalCustomerId: activeAccountAddress,
+          externalSessionId: externalTransactionId,
+          redirectUrl: `${uniswapUrls.redirectUrlBase}?screen=transaction&fiatOffRamp=true&userAddress=${activeAccountAddress}&externalTransactionId=${externalTransactionId}`,
+        }
+      : skipToken,
+  )
   useTimeout(() => {
     setTimeoutElapsed(true)
   }, CONNECTING_TIMEOUT)
 
   useEffect(() => {
-    if (!baseCurrencyInfo || !serviceProvider || widgetError) {
+    if (!baseCurrencyInfo || !serviceProvider || widgetError || offRampWidgetError) {
       onError()
       return
     }
@@ -110,23 +135,33 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
             countryState,
             fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),
             cryptoCurrency: quoteCurrency.meldCurrencyCode.toLowerCase(),
+            chainId: quoteCurrency.currencyInfo?.currency.chainId,
+            currencyAmount: tokenAmount,
+            amountUSD: fiatToUSDConverter(fiatAmount ?? 0),
           },
         )
       }
-      dispatchAddTransaction()
-      await openUri(widgetUrl).catch(onError)
-      dispatch(forceFetchFiatOnRampTransactions())
+      await dispatchAddTransaction({ isOffRamp })
+      await dispatch(forceFetchFiatOnRampTransactions())
+      openUri(widgetUrl).catch(onError)
     }
 
-    if (timeoutElapsed && !widgetLoading && widgetData) {
+    if (!isOffRamp && timeoutElapsed && !widgetLoading && widgetData) {
       navigateToWidget(widgetData.widgetUrl).catch(() => undefined)
+    }
+
+    if (isOffRamp && timeoutElapsed && !offRampWidgetLoading && offRampWidgetData) {
+      navigateToWidget(offRampWidgetData.widgetUrl).catch(() => undefined)
     }
   }, [
     navigation,
     timeoutElapsed,
     widgetData,
+    offRampWidgetData,
     widgetLoading,
+    offRampWidgetLoading,
     widgetError,
+    offRampWidgetError,
     onError,
     dispatchAddTransaction,
     baseCurrencyInfo,
@@ -138,6 +173,10 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     countryCode,
     countryState,
     isOffRamp,
+    fiatAmount,
+    fiatToUSDConverter,
+    tokenAmount,
+    quoteCurrency,
   ])
 
   const isDarkMode = useIsDarkMode()
@@ -149,7 +188,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
         <>
           <FiatOnRampConnectingView
             amount={addFiatSymbolToNumber({
-              value: amount,
+              value: fiatAmount,
               currencyCode: baseCurrencyInfo?.code,
               currencySymbol: baseCurrencyInfo?.symbol,
             })}

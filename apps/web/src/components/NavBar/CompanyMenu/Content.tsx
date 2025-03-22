@@ -1,4 +1,4 @@
-import { useTranslation } from 'uniswap/src/i18n'
+import { useTranslation } from 'react-i18next'
 
 export interface MenuItem {
   label: string

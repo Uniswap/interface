@@ -1,11 +1,12 @@
 /* eslint-disable max-lines */
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
-import { setupWalletCache } from 'uniswap/src/data/cache'
+import { setupSharedApolloCache } from 'uniswap/src/data/cache'
 import {
   Chain,
   PortfolioBalancesDocument,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { filterChainIdsByFeatureFlag, getEnabledChains } from 'uniswap/src/features/chains/utils'
 import {
   sortPortfolioBalances,
@@ -19,8 +20,8 @@ import {
   useTokenBalancesGroupedByVisibility,
 } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { FavoritesState, initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { UserSettingsState, initialUserSettingsState } from 'uniswap/src/features/settings/slice'
+import { CurrencyIdToVisibility, VisibilityState, initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import {
   ARBITRUM_CURRENCY,
   BASE_CURRENCY,
@@ -40,7 +41,6 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { createArray } from 'uniswap/src/test/utils'
 import { queryResolvers } from 'uniswap/src/test/utils/resolvers'
-import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { ACCOUNT, ACCOUNT2 } from 'wallet/src/test/fixtures'
 import { act, renderHook, waitFor } from 'wallet/src/test/test-utils'
@@ -70,10 +70,10 @@ describe(usePortfolioValueModifiers, () => {
     ...overrideSettings,
   })
 
-  const mockFavoritesState = (overrideTokensVisibility?: FavoritesState['tokensVisibility']): FavoritesState => ({
-    ...initialFavoritesState,
-    tokensVisibility: {
-      ...initialFavoritesState.tokensVisibility,
+  const mockVisibilityState = (overrideTokensVisibility?: CurrencyIdToVisibility): VisibilityState => ({
+    ...initialVisibilityState,
+    tokens: {
+      ...initialVisibilityState.tokens,
       ...overrideTokensVisibility,
     },
   })
@@ -150,7 +150,7 @@ describe(usePortfolioValueModifiers, () => {
   describe('token overrides', () => {
     it('does not include token overrides in the result if tokensVisibility does not contain addresses visibility settings', () => {
       const { result } = renderHook(() => usePortfolioValueModifiers(SAMPLE_SEED_ADDRESS_1), {
-        preloadedState: { favorites: mockFavoritesState() },
+        preloadedState: { visibility: mockVisibilityState() },
       })
 
       expect(result.current).toEqual([
@@ -170,7 +170,7 @@ describe(usePortfolioValueModifiers, () => {
             ...initialWalletState,
             accounts: { [SAMPLE_SEED_ADDRESS_1]: ACCOUNT, [SAMPLE_SEED_ADDRESS_2]: ACCOUNT2 },
           },
-          favorites: mockFavoritesState({
+          visibility: mockVisibilityState({
             [SAMPLE_CURRENCY_ID_1]: { isVisible: false },
             [SAMPLE_CURRENCY_ID_2]: { isVisible: true },
           }),
@@ -373,7 +373,7 @@ describe(usePortfolioTotalValue, () => {
     })
   })
 
-  it('retruns undefined when no balances for the specified address are found', async () => {
+  it('returns undefined when no balances for the specified address are found', async () => {
     const { resolvers } = queryResolvers({
       portfolios: () => [],
     })
@@ -539,6 +539,7 @@ describe(sortPortfolioBalances, () => {
   ]
   const tokenBalances: ArrayOfLength<2, PortfolioBalance> = [
     {
+      id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       cacheId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       quantity: 100,
       balanceUSD: null,
@@ -560,6 +561,7 @@ describe(sortPortfolioBalances, () => {
       },
     },
     {
+      id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       cacheId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       quantity: 100,
       balanceUSD: null,
@@ -654,7 +656,7 @@ describe(sortPortfolioBalances, () => {
 })
 
 describe(usePortfolioCacheUpdater, () => {
-  const cache = setupWalletCache()
+  const cache = setupSharedApolloCache()
   const modifyMock = jest.spyOn(cache, 'modify')
   const balance = portfolioBalance()
 
@@ -664,10 +666,9 @@ describe(usePortfolioCacheUpdater, () => {
 
     const enabledChains = getEnabledChains({
       isTestnetModeEnabled: false,
-      connectedWalletChainIds: COMBINED_CHAIN_IDS,
-      featureFlaggedChainIds: filterChainIdsByFeatureFlag({
-        [UniverseChainId.WorldChain]: false,
-      }),
+      connectedWalletChainIds: ALL_CHAIN_IDS,
+      // Doesn't include Unichain while feature flagged
+      featureFlaggedChainIds: filterChainIdsByFeatureFlag({ [UniverseChainId.Unichain]: false }),
     })
 
     cache.writeQuery({

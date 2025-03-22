@@ -16,6 +16,7 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
+    "local-rules",
     "check-file",
     "unused-imports",
     "import",
@@ -127,6 +128,17 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
       "error",
       {
         "unusedExports": true,
+      },
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
       },
     ],
     "no-array-constructor": [
@@ -380,6 +392,7 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
+    "local-rules",
     "check-file",
     "unused-imports",
     "import",
@@ -537,6 +550,17 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     ],
     "jest/valid-title": [
       "error",
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
+      },
     ],
     "no-array-constructor": [
       "off",
@@ -794,6 +818,7 @@ exports[`should have a correct configuration for a React file 1`] = `
     "unused-imports",
     "import",
     "@typescript-eslint",
+    "local-rules",
     "no-relative-import-paths",
     "react-hooks",
     "react",
@@ -863,8 +888,15 @@ exports[`should have a correct configuration for a React file 1`] = `
             "importNames": [
               "usePortfolioValueModifiers",
             ],
-            "message": "Use the wrapper hooks \`usePortfolioTotalValue\`, \`useAccountList\` or \`usePortfolioBalances\` instead of \`usePortfolioValueModifiers\` directly.",
+            "message": "Use the wrapper hooks \`usePortfolioTotalValue\`, \`useAccountListData\` or \`usePortfolioBalances\` instead of \`usePortfolioValueModifiers\` directly.",
             "name": "uniswap/src/features/dataApi/balances",
+          },
+          {
+            "importNames": [
+              "t",
+            ],
+            "message": "Please avoid direct imports of t, using \`useTranslation\` and \`i18n.t\` when absolutely needed outside of a React context",
+            "name": "i18next",
           },
           {
             "message": "Use via \`useLocalizationContext\` instead.",
@@ -903,6 +935,13 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "lodash",
           },
           {
+            "importNames": [
+              "UNIVERSE_CHAIN_INFO",
+            ],
+            "message": "Use useChainInfo or helpers in packages/uniswap/src/features/chains/utils.ts when possible!",
+            "name": "uniswap/src/features/chains/chainInfo",
+          },
+          {
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },
@@ -913,6 +952,10 @@ exports[`should have a correct configuration for a React file 1`] = `
           {
             "message": "Please import logos directly from their respective files, e.g. \`ui/src/components/logos/SpecificLogo\`. This is to avoid importing the entire logos folder when only some logos are needed, which increases bundle size",
             "name": "ui/src/components/logos",
+          },
+          {
+            "message": "Please import Modal from \`uniswap/src/components/modals/Modal\` instead. Modal uses AdaptiveWebModal under the hood but has extra logic for handling animation, mounting, and dismounting.",
+            "name": "ui/src/components/modal/AdaptiveWebModal",
           },
         ],
         "patterns": [
@@ -988,6 +1031,17 @@ exports[`should have a correct configuration for a React file 1`] = `
       "error",
       {
         "unusedExports": true,
+      },
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
       },
     ],
     "no-array-constructor": [
@@ -1321,6 +1375,7 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
+    "local-rules",
     "check-file",
     "unused-imports",
     "import",
@@ -1419,6 +1474,17 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
       "error",
       {
         "unusedExports": true,
+      },
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
       },
     ],
     "no-array-constructor": [

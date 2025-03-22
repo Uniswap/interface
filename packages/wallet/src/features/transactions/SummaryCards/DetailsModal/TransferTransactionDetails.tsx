@@ -14,10 +14,10 @@ import {
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
 import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function TransferTransactionDetails({
   transactionDetails,
@@ -97,7 +97,9 @@ export function CurrencyTransferContent({
         {headingIsLoading ? (
           <Loader.Box height={fonts.heading2.lineHeight} width={iconSizes.icon100} />
         ) : (
-          <Text variant="heading2">{headingText}</Text>
+          <Text variant="heading2" textAlign="center">
+            {headingText}
+          </Text>
         )}
         <Flex centered row gap="$spacing8">
           <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon20} />

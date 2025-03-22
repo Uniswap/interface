@@ -1,8 +1,8 @@
 import { OpacityHoverState } from 'components/Common/styles'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
-import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { breakpoints } from 'ui/src/theme'
 
 export const PopupContainer = styled.div<{ show: boolean }>`
   ${({ show }) => !show && 'display: none'};
@@ -19,11 +19,11 @@ export const PopupContainer = styled.div<{ show: boolean }>`
   height: 92px;
   border: 1.3px solid ${({ theme }) => theme.surface3};
 
-  @media only screen and (max-width: ${BREAKPOINTS.md}px) {
+  @media only screen and (max-width: ${breakpoints.lg}px) {
     bottom: 62px;
   }
 
-  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+  @media only screen and (max-width: ${breakpoints.xs}px) {
     width: unset;
     right: 10px;
     left: 10px;
@@ -41,7 +41,7 @@ export const StyledXButton = styled(X)`
   color: ${({ theme }) => theme.neutral2};
   ${OpacityHoverState};
 
-  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+  @media only screen and (max-width: ${breakpoints.xs}px) {
     top: 8px;
     right: 8px;
   }
@@ -67,7 +67,7 @@ export const TextContainer = styled.div`
   padding: 10px 0px 10px;
   line-height: 16px;
 
-  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
+  @media only screen and (max-width: ${breakpoints.xs}px) {
     width: 220px;
   }
 `

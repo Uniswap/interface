@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
-import { ColorTokens, Flex, Unicon } from 'ui/src'
+import { ColorTokens, Flex, FlexProps, Unicon } from 'ui/src'
 import { Eye } from 'ui/src/components/icons'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
@@ -14,7 +14,7 @@ export interface AccountIconProps {
   avatarUri?: string | null
   showBackground?: boolean // Display images with solid background.
   showBorder?: boolean // Display border stroke around image
-  borderWidth?: number
+  borderWidth?: FlexProps['borderWidth']
   borderColor?: ColorTokens
 }
 
@@ -26,7 +26,7 @@ export function AccountIcon({
   showBackground,
   showBorder,
   borderColor = '$surface1',
-  borderWidth = 2,
+  borderWidth = '$spacing2',
 }: AccountIconProps): JSX.Element {
   // scale eye icon to be a portion of container size
   const eyeIconSize = size * EYE_ICON_SCALING_FACTOR
@@ -42,7 +42,7 @@ export function AccountIcon({
       backgroundColor={showBackground ? '$surface1' : '$transparent'}
       borderColor={showBorder ? borderColor : '$transparent'}
       borderRadius="$roundedFull"
-      borderWidth={showBorder ? borderWidth : 0}
+      borderWidth={showBorder ? borderWidth : '$none'}
       position="relative"
       testID="account-icon"
     >
@@ -64,7 +64,7 @@ export function AccountIcon({
           backgroundColor="$surface2"
           borderColor="$surface1"
           borderRadius="$roundedFull"
-          borderWidth={2}
+          borderWidth="$spacing2"
           bottom={-4}
           justifyContent="center"
           position="absolute"

@@ -1,12 +1,12 @@
 import styled from 'lib/styled-components'
 import { useCallback, useMemo } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from 'ui/src/assets'
 import { ArrowDownCircle } from 'ui/src/components/icons/ArrowDownCircle'
 import { Buy as BuyIcon } from 'ui/src/components/icons/Buy'
 import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { Trans, t } from 'uniswap/src/i18n'
 
 export const EmptyWallet = ({
   handleBuyCryptoClick,
@@ -15,6 +15,7 @@ export const EmptyWallet = ({
   handleBuyCryptoClick: () => void
   handleReceiveCryptoClick: () => void
 }) => {
+  const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
   const BackgroundImageWrapperCallback = useCallback(
@@ -46,7 +47,7 @@ export const EmptyWallet = ({
         onPress: handleReceiveCryptoClick,
       },
     ],
-    [BackgroundImageWrapperCallback, handleBuyCryptoClick, handleReceiveCryptoClick],
+    [BackgroundImageWrapperCallback, handleBuyCryptoClick, handleReceiveCryptoClick, t],
   )
 
   return (

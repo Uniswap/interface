@@ -5,7 +5,7 @@ import { migration2 } from 'state/migrations/2'
 import { PersistAppStateV3, migration3 } from 'state/migrations/3'
 import { RouterPreference } from 'state/routing/types'
 import { SlippageTolerance } from 'state/user/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const previousState: PersistAppStateV3 = {
   user: {

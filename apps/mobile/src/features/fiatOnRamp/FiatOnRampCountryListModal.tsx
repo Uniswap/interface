@@ -5,6 +5,7 @@ import { ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SvgUri } from 'react-native-svg'
 import { Loader } from 'src/components/loading/loaders'
+import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -14,7 +15,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
-import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORCountry, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -38,7 +39,11 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
   const insets = useAppInsets()
   const colors = useSporeColors()
 
-  const { data, isLoading } = useFiatOnRampAggregatorCountryListQuery()
+  const { isOffRamp } = useFiatOnRampContext()
+
+  const { data, isLoading } = useFiatOnRampAggregatorCountryListQuery({
+    rampDirection: isOffRamp ? RampDirection.OFFRAMP : RampDirection.ONRAMP,
+  })
 
   const [searchText, setSearchText] = useState('')
 

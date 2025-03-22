@@ -1,8 +1,8 @@
 import { AssetType } from 'uniswap/src/entities/assets'
+import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
-import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import {
   DappLogoWithTxStatus,
@@ -98,6 +98,7 @@ describe(LogoWithTxStatus, () => {
         TransactionType.Send,
         TransactionType.OnRampPurchase,
         TransactionType.OnRampTransfer,
+        TransactionType.OffRampSale,
         TransactionType.Receive,
         TransactionType.NFTMint,
         TransactionType.Unknown,
@@ -147,7 +148,6 @@ describe(LogoWithTxStatus, () => {
           expect(queryByTestId('status-icon')).toBeFalsy()
           expect(consoleWarnMock).toHaveBeenCalledWith(
             expect.anything(),
-            expect.anything(),
             expect.stringContaining('Could not find icon for transaction type:'),
             txType,
           )
@@ -169,7 +169,6 @@ describe(LogoWithTxStatus, () => {
 
           expect(queryByTestId('status-icon')).toBeFalsy()
           expect(consoleWarnMock).toHaveBeenCalledWith(
-            expect.anything(),
             expect.anything(),
             expect.stringContaining('Could not find icon for transaction type:'),
             TransactionType.NFTTrade,
@@ -274,14 +273,14 @@ describe(DappLogoWithWCBadge, () => {
     it('renders dapp icon placeholder if dappImageUrl is not provided', () => {
       const { queryByTestId } = render(<DappLogoWithWCBadge {...props} dappImageUrl={undefined} />)
 
-      expect(queryByTestId('dapp-image')).toBeFalsy()
+      expect(queryByTestId('img-dapp-image')).toBeFalsy()
       expect(queryByTestId('dapp-icon-placeholder')).toBeTruthy()
     })
 
     it('renders dapp image if dappImageUrl is provided', () => {
       const { queryByTestId } = render(<DappLogoWithWCBadge {...props} />)
 
-      expect(queryByTestId('dapp-image')).toBeTruthy()
+      expect(queryByTestId('img-dapp-image')).toBeTruthy()
       expect(queryByTestId('dapp-icon-placeholder')).toBeFalsy()
     })
   })

@@ -10,13 +10,13 @@ import {
   TransactionDirection,
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   NFTTradeType,
   TransactionListQueryResponse,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
@@ -553,6 +553,7 @@ const MOCK_ONRAMP_PURCHASE: TransactionListQueryResponse = {
   },
 }
 
+// TODO: WALL-5532 - Add equivalent tests for offramp transactions
 describe(parseOnRampTransaction, () => {
   it('OnRampTransfer : handle empty asset changes', () => {
     expect(parseOnRampTransaction(RESPONSE_BASE)).toBeUndefined()
@@ -675,6 +676,7 @@ const RESPONSE_PENDING_ONRAMP_PURCHASE = {
   },
 }
 
+// TODO: WALL-5532 - Add equivalent tests for offramp transactions
 describe(extractOnRampTransactionDetails, () => {
   it('Empty transaction', () => {
     expect(extractOnRampTransactionDetails(undefined)).toEqual(null)

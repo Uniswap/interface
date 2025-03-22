@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { Flex, Input, Text } from 'ui/src'
-import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
+import { SwapSettingConfig, SwapSettingId } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import { useDeadlineSettings } from 'uniswap/src/features/transactions/swap/settings/useDeadlineSettings'
 
 const INPUT_MIN_WIDTH = 44
 
 export const Deadline: SwapSettingConfig = {
-  renderTitle: (t) => t('swap.deadline.settings.title'),
+  settingId: SwapSettingId.DEADLINE,
+  renderTitle: (t) => t('swap.deadline.settings.title.short'),
+  renderTooltip: (t) => t('swap.settings.deadline.tooltip'),
   Control() {
     const [inputWidth] = useState(INPUT_MIN_WIDTH)
     const { isEditingDeadline, inputDeadline, onChangeDeadlineInput, onFocusDeadlineInput, onBlurDeadlineInput } =
@@ -29,7 +31,7 @@ export const Deadline: SwapSettingConfig = {
           backgroundColor={backgroundColor}
           borderColor={isEditingDeadline ? '$DEP_accentSoft' : '$surface3'}
           borderRadius="$rounded16"
-          borderWidth={1}
+          borderWidth="$spacing1"
           gap="$spacing8"
           p="$spacing4"
           onPress={onFocusDeadlineInput}
@@ -42,6 +44,7 @@ export const Deadline: SwapSettingConfig = {
                 color="$neutral1"
                 editable={true}
                 fontFamily="$subHeading"
+                fontWeight="normal"
                 fontSize="$small"
                 height="100%"
                 keyboardType="numeric"

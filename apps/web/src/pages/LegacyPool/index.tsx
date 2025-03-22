@@ -1,11 +1,10 @@
 import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonPrimary, ButtonText } from 'components/Button/buttons'
-import { AutoColumn } from 'components/deprecated/Column'
 import { DropdownSelector } from 'components/DropdownSelector'
 import PositionList from 'components/PositionList'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { useIsSupportedChainId } from 'constants/chains'
+import { AutoColumn } from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
@@ -15,28 +14,29 @@ import CTACards from 'pages/LegacyPool/CTACards'
 import { PoolVersionMenu } from 'pages/LegacyPool/shared'
 import { LoadingRows } from 'pages/LegacyPool/styled'
 import { useMemo, useState } from 'react'
-import { AlertTriangle, BookOpen /*, ChevronsRight*/, Inbox /*, Layers*/ } from 'react-feather'
+import { AlertTriangle, BookOpen , /*ChevronsRight,*/ Inbox /*, Layers*/ } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import { HideSmall, ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
-import { Anchor, Flex, styled, Text } from 'ui/src'
+import { Anchor, Flex, Text, styled } from 'ui/src'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { t, useTranslation } from 'uniswap/src/i18n'
 
 const PageWrapper = deprecatedStyled(AutoColumn)`
   padding: 68px 8px 0px;
   max-width: 870px;
   width: 100%;
 
-  @media (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     max-width: 800px;
     padding-top: 48px;
   }
 
-  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     max-width: 500px;
     padding-top: 20px;
   }
@@ -86,7 +86,7 @@ const ResponsiveButtonPrimary = deprecatedStyled(ButtonPrimary)`
   font-size: 16px;
   padding: 6px 8px;
   white-space: nowrap;
-  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     flex: 1 1 auto;
     width: 50%;
   }
@@ -122,6 +122,7 @@ function PositionsLoadingPlaceholder() {
 }
 
 function WrongNetworkCard() {
+  const { t } = useTranslation()
   return (
     <>
       <PageWrapper>
@@ -160,7 +161,7 @@ export default function Pool() {
 
   // we query pool address from application state
   const { address: smartPoolAddress } = useActiveSmartPool()
-  const { positions, loading: positionsLoading } = useV3Positions(smartPoolAddress)
+  const { positions, loading: positionsLoading } = useV3Positions(smartPoolAddress as `0x${string}`)
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
@@ -185,21 +186,6 @@ export default function Pool() {
 
   // we use this flag to prevent display of learn about liquidity and redirect to top pools
   const shoudDisplayCTACards: boolean = false
-
-  const menuItems = [
-    //<PoolMenuItem href="/migrate/v2" key="migrate">
-    //  {t('common.migrate')}
-    //  <ChevronsRight size={16} />
-    //</PoolMenuItem>,
-    //<PoolMenuItem href="/pools/v2" key="v2-liquidity">
-    //  {t('pool.v2liquidity')}
-    //  <Layers size={16} />
-    //</PoolMenuItem>,
-    <PoolMenuItem href="https://docs.rigoblock.com/" key="learn">
-      {t('pool.learn')}
-      <BookOpen size={16} />
-    </PoolMenuItem>,
-  ]
 
   return (
     <Trace logImpression page={InterfacePageName.POOL_PAGE}>
@@ -226,12 +212,23 @@ export default function Pool() {
                     <DropdownSelector
                       isOpen={isMenuOpen}
                       toggleOpen={toggleMenu}
-                      menuLabel={<>{t('common.more')}</>}
-                      internalMenuItems={<>{...menuItems}</>}
+                      menuLabel={t('common.more')}
                       buttonStyle={{ height: 40, justifyContent: 'center' }}
-                      dropdownStyle={{ width: 200, top: 'calc(100% + 20px)' }}
-                      adaptToSheet={false}
-                    />
+                      dropdownStyle={{ width: 200 }}
+                    >
+                      {/*<PoolMenuItem href="/migrate/v2" key="migrate">
+                        {t('common.migrate')}
+                        <ChevronsRight size={16} />
+                      </PoolMenuItem>
+                      <PoolMenuItem href="/pools/v2" key="v2-liquidity">
+                        {t('pool.v2liquidity')}
+                        <Layers size={16} />
+                      </PoolMenuItem>*/}
+                      <PoolMenuItem href="https://docs.rigoblock.com/" key="learn">
+                        {t('pool.learn')}
+                        <BookOpen size={16} />
+                      </PoolMenuItem>
+                    </DropdownSelector>
                   </Flex>
                 )}
                 <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">

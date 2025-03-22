@@ -1,5 +1,5 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
-import { useIsNftProfilePage } from 'hooks/useIsNftPage'
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import styled from 'lib/styled-components'
 import { BagIcon, HundredsOverflowIcon, TagIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
@@ -23,7 +23,7 @@ const CounterDot = styled.div`
 export const Bag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const isProfilePage = useIsNftProfilePage()
+  const isProfilePage = useIsPage(PageType.NFTS_PROFILE)
 
   const { bagExpanded, setBagExpanded } = useBag(({ bagExpanded, setBagExpanded }) => ({ bagExpanded, setBagExpanded }))
 

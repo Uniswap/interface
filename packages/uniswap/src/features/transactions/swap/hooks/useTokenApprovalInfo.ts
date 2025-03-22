@@ -3,16 +3,21 @@ import { useMemo } from 'react'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
 import { ApprovalRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import {
+  convertGasFeeToDisplayValue,
+  useActiveGasStrategy,
+  useShadowGasStrategies,
+} from 'uniswap/src/features/gas/hooks'
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   getTokenAddressForApi,
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -28,7 +33,9 @@ export interface TokenApprovalInfoParams {
 
 interface TokenApprovalGasInfo {
   gasFee?: string
+  displayGasFee?: string
   cancelGasFee?: string
+  displayCancelGasFee?: string
   gasEstimates?: GasFeeEstimates
   isLoading: boolean
 }
@@ -39,8 +46,9 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenAppr
   const isWrap = wrapType !== WrapType.NotApplicable
 
   const address = account?.address
+  const inputWillBeWrapped = routing && isUniswapX({ routing })
   // Off-chain orders must have wrapped currencies approved, rather than natives.
-  const currencyIn = routing === Routing.DUTCH_V2 ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
+  const currencyIn = inputWillBeWrapped ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()
 
   const tokenInAddress = getTokenAddressForApi(currencyIn)
@@ -49,6 +57,9 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenAppr
   const isBridge = routing === Routing.BRIDGE
   const currencyOut = currencyOutAmount?.currency
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
+
+  const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
+  const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
 
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
     const tokenInChainId = toTradingApiSupportedChainId(chainId)
@@ -69,17 +80,25 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenAppr
       includeGasInfo: true,
       tokenOut: tokenOutAddress,
       tokenOutChainId,
+      gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
     }
-  }, [address, amount, chainId, currencyIn, currencyOut?.chainId, isBridge, tokenInAddress, tokenOutAddress])
+  }, [
+    activeGasStrategy,
+    address,
+    amount,
+    chainId,
+    currencyIn,
+    currencyOut?.chainId,
+    isBridge,
+    tokenInAddress,
+    tokenOutAddress,
+    shadowGasStrategies,
+  ])
 
   const shouldSkip = skip || !approvalRequestArgs || isWrap || !address
-  const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
-  const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
 
   const { data, isLoading, error } = useCheckApprovalQuery({
-    params: shouldSkip
-      ? undefined
-      : { ...approvalRequestArgs, gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])] },
+    params: shouldSkip ? undefined : approvalRequestArgs,
     staleTime: 15 * ONE_SECOND_MS,
     immediateGcTime: ONE_MINUTE_MS,
   })
@@ -113,16 +132,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenAppr
           isLoading,
         }
       }
-      if (data.approval && data.cancel) {
-        return {
-          action: ApprovalAction.RevokeAndPermit2Approve,
-          txRequest: data.approval,
-          gasFee: data.gasFee,
-          cancelTxRequest: data.cancel,
-          cancelGasFee: data.cancelGasFee,
-          isLoading,
-        }
-      }
+
       if (data.approval) {
         const activeEstimate = data.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
 
@@ -134,10 +144,25 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenAppr
           }
         }
 
+        if (data.cancel) {
+          return {
+            action: ApprovalAction.RevokeAndPermit2Approve,
+            txRequest: data.approval,
+            gasFee: data.gasFee,
+            displayGasFee: convertGasFeeToDisplayValue(data.gasFee, activeGasStrategy),
+            cancelTxRequest: data.cancel,
+            cancelGasFee: data.cancelGasFee,
+            displayCancelGasFee: convertGasFeeToDisplayValue(data.cancelGasFee, activeGasStrategy),
+            isLoading,
+            gasEstimates,
+          }
+        }
+
         return {
           action: ApprovalAction.Permit2Approve,
           txRequest: data.approval,
           gasFee: data.gasFee,
+          displayGasFee: convertGasFeeToDisplayValue(data.gasFee, activeGasStrategy),
           gasEstimates,
           cancelTxRequest: null,
           isLoading,

@@ -1,4 +1,3 @@
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCallback, useMemo, useRef } from 'react'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
@@ -8,10 +7,16 @@ import {
   Token,
   V2PairTransactionsQuery,
   V3PoolTransactionsQuery,
+  V4PoolTransactionsQuery,
   useV2PairTransactionsQuery,
   useV3PoolTransactionsQuery,
+  useV4PoolTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export enum PoolTableTransactionType {
   BUY = 'Buy',
@@ -25,11 +30,11 @@ export interface PoolTableTransaction {
   transaction: string
   pool: {
     token0: {
-      id: string
+      id: string | null
       symbol: string
     }
     token1: {
-      id: string
+      id: string | null
       symbol: string
     }
   }
@@ -56,13 +61,31 @@ export function usePoolTransactions(
   protocolVersion: ProtocolVersion = ProtocolVersion.V3,
   first = PoolTransactionDefaultQuerySize,
 ) {
+  const { defaultChainId } = useEnabledChains()
+  const variables = { first, chain: toGraphQLChain(chainId ?? defaultChainId) }
+  const v4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const {
+    loading: loadingV4,
+    error: errorV4,
+    data: dataV4,
+    fetchMore: fetchMoreV4,
+  } = useV4PoolTransactionsQuery({
+    variables: {
+      ...variables,
+      poolId: address,
+    },
+    skip: !v4DataEnabled || protocolVersion !== ProtocolVersion.V4,
+  })
   const {
     loading: loadingV3,
     error: errorV3,
     data: dataV3,
     fetchMore: fetchMoreV3,
   } = useV3PoolTransactionsQuery({
-    variables: { first, chain: chainIdToBackendChain({ chainId, withFallback: true }), address },
+    variables: {
+      ...variables,
+      address,
+    },
     skip: protocolVersion !== ProtocolVersion.V3,
   })
   const {
@@ -71,14 +94,19 @@ export function usePoolTransactions(
     data: dataV2,
     fetchMore: fetchMoreV2,
   } = useV2PairTransactionsQuery({
-    variables: { first, chain: chainIdToBackendChain({ chainId, withFallback: true }), address },
+    variables: {
+      ...variables,
+      address,
+    },
     skip: !chainId || protocolVersion !== ProtocolVersion.V2,
   })
   const loadingMore = useRef(false)
   const { transactions, loading, fetchMore, error } =
-    protocolVersion === ProtocolVersion.V3
-      ? { transactions: dataV3?.v3Pool?.transactions, loading: loadingV3, fetchMore: fetchMoreV3, error: errorV3 }
-      : { transactions: dataV2?.v2Pair?.transactions, loading: loadingV2, fetchMore: fetchMoreV2, error: errorV2 }
+    protocolVersion === ProtocolVersion.V4
+      ? { transactions: dataV4?.v4Pool?.transactions, loading: loadingV4, fetchMore: fetchMoreV4, error: errorV4 }
+      : protocolVersion === ProtocolVersion.V3
+        ? { transactions: dataV3?.v3Pool?.transactions, loading: loadingV3, fetchMore: fetchMoreV3, error: errorV3 }
+        : { transactions: dataV2?.v2Pair?.transactions, loading: loadingV2, fetchMore: fetchMoreV2, error: errorV2 }
 
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
@@ -92,29 +120,40 @@ export function usePoolTransactions(
         },
         updateQuery: (prev, { fetchMoreResult }: any) => {
           if (!fetchMoreResult) {
+            loadingMore.current = false
             return prev
           }
           onComplete?.()
           const mergedData =
-            protocolVersion === ProtocolVersion.V3
+            protocolVersion === ProtocolVersion.V4
               ? {
-                  v3Pool: {
-                    ...fetchMoreResult.v3Pool,
+                  v4Pool: {
+                    ...fetchMoreResult.v4Pool,
                     transactions: [
-                      ...((prev as V3PoolTransactionsQuery).v3Pool?.transactions ?? []),
-                      ...fetchMoreResult.v3Pool.transactions,
+                      ...((prev as V4PoolTransactionsQuery).v4Pool?.transactions ?? []),
+                      ...fetchMoreResult.v4Pool.transactions,
                     ],
                   },
                 }
-              : {
-                  v2Pair: {
-                    ...fetchMoreResult.v2Pair,
-                    transactions: [
-                      ...((prev as V2PairTransactionsQuery).v2Pair?.transactions ?? []),
-                      ...fetchMoreResult.v2Pair.transactions,
-                    ],
-                  },
-                }
+              : protocolVersion === ProtocolVersion.V3
+                ? {
+                    v3Pool: {
+                      ...fetchMoreResult.v3Pool,
+                      transactions: [
+                        ...((prev as V3PoolTransactionsQuery).v3Pool?.transactions ?? []),
+                        ...fetchMoreResult.v3Pool.transactions,
+                      ],
+                    },
+                  }
+                : {
+                    v2Pair: {
+                      ...fetchMoreResult.v2Pair,
+                      transactions: [
+                        ...((prev as V2PairTransactionsQuery).v2Pair?.transactions ?? []),
+                        ...fetchMoreResult.v2Pair.transactions,
+                      ],
+                    },
+                  }
           loadingMore.current = false
           return mergedData
         },
@@ -151,11 +190,11 @@ export function usePoolTransactions(
           transaction: tx.hash,
           pool: {
             token0: {
-              id: tx.token0.address ?? '',
+              id: tx.token0.address ?? null,
               symbol: tx.token0.symbol ?? '',
             },
             token1: {
-              id: tx.token1.address ?? '',
+              id: tx.token1.address ?? null,
               symbol: tx.token1.symbol ?? '',
             },
           },

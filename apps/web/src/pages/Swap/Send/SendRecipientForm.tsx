@@ -3,13 +3,13 @@ import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
-import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import styled, { css, keyframes } from 'lib/styled-components'
 import { ChangeEvent, ForwardedRef, KeyboardEvent, forwardRef, useCallback, useRef, useState } from 'react'
 import { X } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { useSendContext } from 'state/send/SendContext'
 import { RecipientData } from 'state/send/hooks'
 import { ClickableStyle, ThemedText } from 'theme/components'
@@ -17,8 +17,8 @@ import { AnimationType } from 'theme/components/FadePresence'
 import { capitalize } from 'tsafe'
 import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { Plural, Trans, t, useTranslation } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const StyledConfirmedRecipientRow = styled(Row)`
@@ -121,11 +121,12 @@ const AutocompleteRow = ({
   numberOfTransfers: number
   selectRecipient: (recipient: RecipientData) => void
 }) => {
+  const { t } = useTranslation()
   const account = useAccount()
   const { unitag } = useUnitagByAddress(address)
-  const { ENSName } = useENSName(address)
+  const { data: ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
-  const formattedAddress = shortenAddress(address, 8, 8)
+  const formattedAddress = shortenAddress(address, 8)
   const shouldShowAddress = !unitag?.username && !cachedEnsName
 
   const boundSelectRecipient = useCallback(
@@ -164,8 +165,7 @@ const AutocompleteRow = ({
       </Row>
       {account.isConnected && (
         <StyledTransferText>
-          {numberOfTransfers}{' '}
-          <Plural value={numberOfTransfers} one={t('common.transfer')} other={t('common.transfers')} />
+          {numberOfTransfers} {t('common.transfer', { count: numberOfTransfers })}
         </StyledTransferText>
       )}
     </StyledAutocompleteRow>
@@ -180,6 +180,7 @@ interface AutocompleteFlyoutProps {
 
 const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { transfers, validatedRecipientData, selectRecipient } = props
+  const { t } = useTranslation()
 
   if (validatedRecipientData) {
     return (
@@ -200,9 +201,7 @@ const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: Forw
 
   return (
     <MenuFlyout ref={ref}>
-      <ThemedText.SubHeaderSmall>
-        <Trans i18nKey="sendRecipientForm.recentAddresses.label" />
-      </ThemedText.SubHeaderSmall>
+      <ThemedText.SubHeaderSmall>{t('sendRecipientForm.recentAddresses.label')}</ThemedText.SubHeaderSmall>
       {Object.keys(transfers)
         .slice(0, 3)
         .map((address) => (

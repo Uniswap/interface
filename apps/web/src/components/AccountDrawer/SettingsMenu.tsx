@@ -6,17 +6,19 @@ import { SpamToggle } from 'components/AccountDrawer/SpamToggle'
 import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLanguage } from 'hooks/useActiveLocale'
+import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
+import { Trans } from 'react-i18next'
+import { useOpenModal } from 'state/application/hooks'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { Trans } from 'uniswap/src/i18n'
+import { LockedDocument } from 'ui/src/components/icons/LockedDocument'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const Container = styled(Column)`
   height: 100%;
@@ -48,17 +50,19 @@ const SettingsButton = ({
   currentState,
   onClick,
   testId,
+  showArrow = true,
 }: {
   title: ReactNode
   currentState: ReactNode
   onClick: () => void
   testId?: string
+  showArrow?: boolean
 }) => (
   <SettingsButtonWrapper data-testid={testId} align="center" justify="space-between" onClick={onClick}>
     <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
     <LanguageLabel gap="xs" align="center" width="min-content">
       <ThemedText.LabelSmall color="textPrimary">{currentState}</ThemedText.LabelSmall>
-      <StyledChevron size={20} />
+      {showArrow && <StyledChevron size={20} />}
     </LanguageLabel>
   </SettingsButtonWrapper>
 )
@@ -72,10 +76,12 @@ export default function SettingsMenu({
   openLanguageSettings: () => void
   openLocalCurrencySettings: () => void
 }) {
-  const activeLanguage = useActiveLanguage()
-  const activeLocalCurrency = useActiveLocalCurrency()
+  const activeLanguage = useCurrentLanguage()
+  const activeLocalCurrency = useAppFiatCurrency()
   const languageInfo = useLanguageInfo(activeLanguage)
-  const isTestnetFeatureFlagOn = useFeatureFlag(FeatureFlags.TestnetMode)
+  const openRecoveryPhraseModal = useOpenModal({ name: ModalName.RecoveryPhrase })
+  const connectedWithEmbeddedWallet =
+    useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
 
   // we do not collect analytics atm
   const shouldAllowAnalytics = false
@@ -89,7 +95,7 @@ export default function SettingsMenu({
             <SmallBalanceToggle />
             <SpamToggle />
             {shouldAllowAnalytics && <AnalyticsToggle />}
-            {isTestnetFeatureFlagOn && <TestnetsToggle />}
+            <TestnetsToggle />
           </ToggleWrapper>
 
           <Column>
@@ -105,6 +111,14 @@ export default function SettingsMenu({
               onClick={openLocalCurrencySettings}
               testId="local-currency-settings-button"
             />
+            {connectedWithEmbeddedWallet && (
+              <SettingsButton
+                title="View Recovery Phrase"
+                currentState={<LockedDocument size="$icon.24" />}
+                onClick={openRecoveryPhraseModal}
+                showArrow={false}
+              />
+            )}
           </Column>
         </div>
         <GitVersionRow />

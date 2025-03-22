@@ -2,8 +2,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import { DAI, DAI_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)

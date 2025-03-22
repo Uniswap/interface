@@ -1,19 +1,11 @@
 import { Percent } from '@uniswap/sdk-core'
-import Row from 'components/deprecated/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import styled from 'lib/styled-components'
 import { useMemo } from 'react'
-import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
+import { Flex, Text } from 'ui/src'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { warningSeverity } from 'utils/prices'
-
-const FiatLoadingBubble = styled(LoadingBubble)`
-  border-radius: 4px;
-  width: 4rem;
-  height: 1rem;
-`
 
 export function FiatValue({
   fiatValue,
@@ -31,25 +23,25 @@ export function FiatValue({
       return undefined
     }
     if (priceImpact.lessThan('0')) {
-      return 'success'
+      return '$statusSuccess'
     }
     const severity = warningSeverity(priceImpact)
     if (severity < 1) {
-      return 'neutral3'
+      return '$neutral3'
     }
     if (severity < 3) {
-      return 'deprecated_yellow1'
+      return '$statusWarning'
     }
-    return 'critical'
+    return '$statusCritical'
   }, [priceImpact])
 
   if (fiatValue.isLoading) {
-    return <FiatLoadingBubble />
+    return <LoadingBubble borderRadius="$rounded4" width={64} height={14} />
   }
 
   return (
-    <Row gap="sm">
-      <ThemedText.BodySmall color="neutral2" data-testid={testId}>
+    <Flex row gap="$gap8">
+      <Text variant="body3" color="$neutral2" data-testid={testId}>
         {fiatValue.data ? (
           formatNumber({
             input: fiatValue.data,
@@ -58,14 +50,14 @@ export function FiatValue({
         ) : (
           <MouseoverTooltip text={<Trans i18nKey="liquidity.notEnough.label" />}>-</MouseoverTooltip>
         )}
-      </ThemedText.BodySmall>
+      </Text>
       {priceImpact && (
-        <ThemedText.BodySmall color={priceImpactColor}>
+        <Text variant="body3" color={priceImpactColor}>
           <MouseoverTooltip placement="right" text={<Trans i18nKey="swap.estimatedDifference.label" />}>
             ({formatPercent(priceImpact.multiply(-1))})
           </MouseoverTooltip>
-        </ThemedText.BodySmall>
+        </Text>
       )}
-    </Row>
+    </Flex>
   )
 }

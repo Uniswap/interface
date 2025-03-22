@@ -3,6 +3,7 @@ import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   addTransaction,
@@ -20,12 +21,12 @@ import {
   transactionDetails,
 } from 'uniswap/src/test/fixtures'
 import { mockApolloClient } from 'uniswap/src/test/mocks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { sleep } from 'utilities/src/time/timing'
-import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { fetchFORTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
   deleteTransaction,
+  logTransactionTimeout,
   transactionWatcher,
   waitForBridgeSendCompleted,
   waitForSameNonceFinalized,
@@ -33,6 +34,7 @@ import {
   watchTransaction,
 } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { getTxProvidersMocks } from 'wallet/src/test/mocks'
 
 const {
@@ -55,6 +57,9 @@ describe(transactionWatcher, () => {
       from: ACTIVE_ACCOUNT_ADDRESS,
     })
 
+    const hash1 = faker.datatype.uuid()
+    const hash2 = faker.datatype.uuid()
+
     return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
       .withState({
         transactions: {
@@ -75,14 +80,14 @@ describe(transactionWatcher, () => {
         transaction: approveTxDetailsPending,
         apolloClient: mockApolloClient,
       })
-      .dispatch(addTransaction(approveTxDetailsPending))
+      .dispatch(addTransaction({ ...approveTxDetailsPending, hash: hash1 }))
       .fork(watchTransaction, {
-        transaction: approveTxDetailsPending,
+        transaction: { ...approveTxDetailsPending, hash: hash1 },
         apolloClient: mockApolloClient,
       })
-      .dispatch(updateTransaction(approveTxDetailsPending))
+      .dispatch(updateTransaction({ ...approveTxDetailsPending, hash: hash2 }))
       .fork(watchTransaction, {
-        transaction: approveTxDetailsPending,
+        transaction: { ...approveTxDetailsPending, hash: hash2 },
         apolloClient: mockApolloClient,
       })
       .silentRun()
@@ -191,6 +196,35 @@ describe(watchTransaction, () => {
       .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))
       .silentRun()
   })
+
+  it('Logs timeout event without when transaction is pending for too long', () => {
+    const receiptProvider = {
+      waitForTransaction: jest.fn(async () => {
+        await sleep(1000)
+        return null
+      }),
+    }
+
+    const transaction = {
+      ...txDetailsPending,
+      options: { ...txDetailsPending.options, timeoutTimestampMs: Date.now() },
+    }
+
+    return expectSaga(watchTransaction, {
+      transaction,
+      apolloClient: mockApolloClient,
+    })
+      .withState({
+        wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+        userSettings: { isTestnetModeEnabled: false },
+      })
+      .provide([
+        [call(getProvider, chainId), receiptProvider],
+        [call(logTransactionTimeout, transaction), undefined],
+      ])
+      .call(logTransactionTimeout, transaction)
+      .silentRun()
+  })
 })
 
 describe(watchFiatOnRampTransaction, () => {
@@ -199,8 +233,9 @@ describe(watchFiatOnRampTransaction, () => {
     return (
       expectSaga(watchFiatOnRampTransaction, txDetailsPending)
         .provide([
-          [call(fetchFiatOnRampTransaction, txDetailsPending, false), staleTx],
+          [call(fetchFORTransaction, txDetailsPending, false, null), staleTx],
           [matchers.call.fn(sendAnalyticsEvent), undefined],
+          [matchers.select(selectActiveAccountAddress), null],
         ])
         .put(
           transactionActions.deleteTransaction({
@@ -226,7 +261,7 @@ describe(watchFiatOnRampTransaction, () => {
         .provide([
           {
             call(effect): TransactionDetails | undefined {
-              if (effect.fn === fetchFiatOnRampTransaction) {
+              if (effect.fn === fetchFORTransaction) {
                 switch (fetchCalledCount++) {
                   case 0:
                   case 1:
@@ -240,6 +275,7 @@ describe(watchFiatOnRampTransaction, () => {
             },
           },
           [delay(PollingInterval.Fast), Promise.resolve(() => undefined)],
+          [matchers.select(selectActiveAccountAddress), null],
         ])
         .delay(PollingInterval.Fast)
         // only called once
@@ -259,7 +295,7 @@ describe(watchFiatOnRampTransaction, () => {
         .provide([
           {
             call(effect): TransactionDetails | undefined {
-              if (effect.fn === fetchFiatOnRampTransaction) {
+              if (effect.fn === fetchFORTransaction) {
                 switch (fetchCalledCount++) {
                   case 0:
                   case 1:
@@ -272,6 +308,7 @@ describe(watchFiatOnRampTransaction, () => {
               return undefined
             },
           },
+          [matchers.select(selectActiveAccountAddress), null],
         ])
         .dispatch(forceFetchFiatOnRampTransactions())
         .dispatch(forceFetchFiatOnRampTransactions())
@@ -286,8 +323,9 @@ describe(watchFiatOnRampTransaction, () => {
     const confirmedTx = { ...txDetailsPending, status: TransactionStatus.Success }
     return expectSaga(watchFiatOnRampTransaction, txDetailsPending)
       .provide([
-        [call(fetchFiatOnRampTransaction, txDetailsPending, false), confirmedTx],
+        [call(fetchFORTransaction, txDetailsPending, false, null), confirmedTx],
         [matchers.call.fn(sendAnalyticsEvent), undefined],
+        [matchers.select(selectActiveAccountAddress), null],
       ])
       .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
       .not.call.fn(sleep)

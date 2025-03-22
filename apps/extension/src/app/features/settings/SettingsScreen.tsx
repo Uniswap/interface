@@ -4,12 +4,13 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SCREEN_ITEM_HORIZONTAL_PAD } from 'src/app/constants'
+import { useAllDappConnectionsForActiveAccount } from 'src/app/features/dapp/hooks'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import {
-  Button,
   ColorTokens,
+  DeprecatedButton,
   Flex,
   GeneratedIcon,
   ScrollView,
@@ -32,20 +33,16 @@ import {
   RotatableChevron,
   Settings,
   ShieldQuestion,
+  Wrench,
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import {
   setCurrentFiatCurrency,
   setHideSmallBalances,
@@ -70,6 +67,7 @@ export function SettingsScreen(): JSX.Element {
   const { navigateTo, navigateBack } = useExtensionNavigation()
   const currentLanguageInfo = useCurrentLanguageInfo()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
+  const dappUrls = useAllDappConnectionsForActiveAccount()
 
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
   const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
@@ -91,12 +89,12 @@ export function SettingsScreen(): JSX.Element {
     await dispatch(setHideSmallBalances(!hideSmallBalances))
   }
 
-  const isTestnetModeFlagEnabled = useFeatureFlag(FeatureFlags.TestnetMode)
   const { isTestnetModeEnabled } = useEnabledChains()
   const handleTestnetModeToggle = async (isChecked: boolean): Promise<void> => {
     const fireAnalytic = (): void => {
       sendAnalyticsEvent(WalletEventName.TestnetModeToggled, {
         enabled: isChecked,
+        location: 'settings',
       })
     }
 
@@ -189,26 +187,18 @@ export function SettingsScreen(): JSX.Element {
             <SettingsItem
               Icon={Globe}
               title={t('settings.setting.wallet.connections.title')}
+              count={dappUrls.length}
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)}
             />
-            <SettingsItem
-              Icon={LineChartDots}
-              title={t('settings.setting.privacy.title')}
-              onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
+            <SettingsToggleRow
+              Icon={Wrench}
+              checked={isTestnetModeEnabled}
+              title={t('settings.setting.wallet.testnetMode.title')}
+              onCheckedChange={handleTestnetModeToggle}
             />
-            <>
-              {isTestnetModeFlagEnabled && (
-                <SettingsToggleRow
-                  Icon={ShieldQuestion}
-                  checked={isTestnetModeEnabled}
-                  title={t('settings.setting.wallet.testnetMode.title')}
-                  onCheckedChange={handleTestnetModeToggle}
-                />
-              )}
-            </>
           </SettingsSection>
           <SettingsSectionSeparator />
-          <SettingsSection title={t('settings.section.security')}>
+          <SettingsSection title={t('settings.section.privacyAndSecurity')}>
             <SettingsItem
               Icon={Key}
               title={t('settings.setting.password.title')}
@@ -218,6 +208,11 @@ export function SettingsScreen(): JSX.Element {
               Icon={FileListLock}
               title={t('settings.setting.recoveryPhrase.title')}
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
+            />
+            <SettingsItem
+              Icon={LineChartDots}
+              title={t('settings.setting.permissions.title')}
+              onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
             />
           </SettingsSection>
           <SettingsSectionSeparator />
@@ -230,9 +225,9 @@ export function SettingsScreen(): JSX.Element {
             <Text color="$neutral3" px="$spacing12" py="$spacing4" variant="body4">{`Version ${manifestVersion}`}</Text>
           </SettingsSection>
         </ScrollView>
-        <Button icon={<Lock />} theme="secondary" onPress={onPressLockWallet}>
+        <DeprecatedButton icon={<Lock />} theme="secondary" onPress={onPressLockWallet}>
           {t('settings.action.lock')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </>
   )
@@ -245,6 +240,7 @@ function SettingsItem({
   iconProps,
   themeProps,
   url,
+  count,
   hideChevron = false,
 }: {
   Icon: GeneratedIcon
@@ -255,6 +251,7 @@ function SettingsItem({
   // TODO: do this with a wrapping Theme, "detrimental" wasn't working
   themeProps?: { color?: string; hoverColor?: string }
   url?: string
+  count?: number
 }): JSX.Element {
   const colors = useSporeColors()
   const hoverColor = themeProps?.hoverColor ?? colors.surface2.val
@@ -265,7 +262,7 @@ function SettingsItem({
       borderRadius="$rounded12"
       flexDirection="row"
       flexGrow={1}
-      gap="$spacing16"
+      gap="$spacing12"
       hoverStyle={{
         backgroundColor: hoverColor as ColorTokens,
       }}
@@ -274,15 +271,22 @@ function SettingsItem({
       py="$spacing8"
       onPress={onPress}
     >
-      <Flex row gap="$spacing12">
-        <Icon
-          color={themeProps?.color ?? '$neutral2'}
-          size={iconSizes.icon24}
-          strokeWidth={iconProps?.strokeWidth ?? undefined}
-        />
-        <Text style={{ color: themeProps?.color ?? colors.neutral1.val }} variant="subheading2">
-          {title}
-        </Text>
+      <Flex row justifyContent="space-between" flexGrow={1}>
+        <Flex row gap="$spacing12">
+          <Icon
+            color={themeProps?.color ?? '$neutral2'}
+            size={iconSizes.icon24}
+            strokeWidth={iconProps?.strokeWidth ?? undefined}
+          />
+          <Text style={{ color: themeProps?.color ?? colors.neutral1.val }} variant="subheading2">
+            {title}
+          </Text>
+        </Flex>
+        {count !== undefined && (
+          <Text alignSelf="center" color="$neutral2" variant="subheading2">
+            {count}
+          </Text>
+        )}
       </Flex>
       {!hideChevron && (
         <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />

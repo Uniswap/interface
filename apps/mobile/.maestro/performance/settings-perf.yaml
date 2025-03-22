@@ -1,0 +1,22 @@
+appId: com.uniswap.mobile.dev
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: 'account-header-settings-icon'
+    timeout: 10000
+- tapOn:
+    id: 'account-header-settings-icon'
+- 'scroll'
+- 'scroll'
+- 'back'
+- tapOn:
+    id: 'account-header-settings-icon'
+- 'scroll'
+- 'scroll'
+- 'back'
+- tapOn:
+    id: 'account-header-settings-icon'
+- 'scroll'
+- 'scroll'
+- 'back'

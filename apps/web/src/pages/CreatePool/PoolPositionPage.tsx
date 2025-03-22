@@ -37,7 +37,7 @@ import JSBI from 'jsbi'
 //import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled /*, { useTheme }*/ from 'lib/styled-components'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 import { useCallback, useMemo, /*useRef,*/ useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
@@ -52,7 +52,7 @@ import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 //import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 //import { formatTickPrice } from 'utils/formatTickPrice'
 //import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -392,7 +392,6 @@ export default function PoolPositionPage() {
               <SetValueModal
                 isOpen={showSetValueModal}
                 onDismiss={() => setShowSetValueModal(false)}
-                poolInfo={poolInfo}
                 baseTokenSymbol={baseTokenSymbol}
                 title={<Trans>Set Value</Trans>}
               />

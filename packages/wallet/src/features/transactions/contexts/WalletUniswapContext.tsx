@@ -1,6 +1,8 @@
 import { ethers } from 'ethers'
-import { PropsWithChildren, useEffect, useState } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { logger } from 'utilities/src/logger/logger'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/hooks/useShowSwapNetworkNotification'
@@ -37,14 +39,27 @@ function useWalletSigner(): ethers.Signer | undefined {
 export function WalletUniswapProvider({ children }: PropsWithChildren): JSX.Element {
   const account = useActiveAccount() ?? undefined
   const signer = useWalletSigner()
-  const { navigateToBuyOrReceiveWithEmptyWallet, navigateToFiatOnRamp } = useWalletNavigation()
+  const { navigateToBuyOrReceiveWithEmptyWallet, navigateToFiatOnRamp, navigateToSwapFlow } = useWalletNavigation()
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
+
+  const navigateToSwapFromCurrencyIds = useCallback(
+    ({ inputCurrencyId, outputCurrencyId }: { inputCurrencyId?: string; outputCurrencyId?: string }) => {
+      const initialState = prepareSwapFormState({
+        inputCurrencyId,
+        outputCurrencyId,
+        defaultChainId: UniverseChainId.Mainnet,
+      })
+      navigateToSwapFlow({ initialState })
+    },
+    [navigateToSwapFlow],
+  )
 
   return (
     <UniswapProvider
       account={account}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
+      navigateToSwapFlow={navigateToSwapFromCurrencyIds}
       signer={signer}
       useProviderHook={useWalletProvider}
       onSwapChainsChanged={showSwapNetworkNotification}

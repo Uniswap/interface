@@ -199,37 +199,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "SelfCustodyTransfer",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "pool",
         "type": "address"
       },
@@ -456,6 +425,35 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "amountIn",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amountOutMin",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "tokenOut",
+        "type": "address"
+      }
+    ],
+    "name": "burnForToken",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "netRevenue",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "proposalId",
         "type": "uint256"
       },
@@ -553,6 +551,40 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "targetToken",
+        "type": "address"
+      },
+      {
+        "internalType": "int24",
+        "name": "ethToTargetTokenTick",
+        "type": "int24"
+      }
+    ],
+    "name": "convertTokenAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -862,7 +894,114 @@
   },
   {
     "inputs": [],
+    "name": "getActiveApplications",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "packedApplications",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getActiveTokens",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address[]",
+            "name": "activeTokens",
+            "type": "address[]"
+          },
+          {
+            "internalType": "address",
+            "name": "baseToken",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct ISmartPoolState.ActiveTokens",
+        "name": "tokens",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "packedApplications",
+        "type": "uint256"
+      }
+    ],
+    "name": "getAppTokenBalances",
+    "outputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "internalType": "int256",
+                "name": "amount",
+                "type": "int256"
+              }
+            ],
+            "internalType": "struct AppTokenBalance[]",
+            "name": "balances",
+            "type": "tuple[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "appType",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ExternalApp[]",
+        "name": "appBalances",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getAuthority",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getBeacon",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOracleAddress",
     "outputs": [
       {
         "internalType": "address",
@@ -905,7 +1044,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IRigoblockV3PoolState.ReturnedPool",
+        "internalType": "struct ISmartPoolState.ReturnedPool",
         "name": "",
         "type": "tuple"
       }
@@ -945,7 +1084,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IRigoblockV3PoolState.PoolParams",
+        "internalType": "struct ISmartPoolState.PoolParams",
         "name": "",
         "type": "tuple"
       }
@@ -985,7 +1124,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IRigoblockV3PoolState.ReturnedPool",
+        "internalType": "struct ISmartPoolState.ReturnedPool",
         "name": "poolInitParams",
         "type": "tuple"
       },
@@ -1017,7 +1156,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IRigoblockV3PoolState.PoolParams",
+        "internalType": "struct ISmartPoolState.PoolParams",
         "name": "poolVariables",
         "type": "tuple"
       },
@@ -1034,7 +1173,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IRigoblockV3PoolState.PoolTokens",
+        "internalType": "struct ISmartPoolState.PoolTokens",
         "name": "poolTokensInfo",
         "type": "tuple"
       }
@@ -1059,7 +1198,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct IRigoblockV3PoolState.PoolTokens",
+        "internalType": "struct ISmartPoolState.PoolTokens",
         "name": "",
         "type": "tuple"
       }
@@ -1114,6 +1253,38 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "getTwap",
+    "outputs": [
+      {
+        "internalType": "int24",
+        "name": "twap",
+        "type": "int24"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getUniV4TokenIds",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "tokenIds",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_who",
         "type": "address"
       }
@@ -1133,7 +1304,7 @@
             "type": "uint48"
           }
         ],
-        "internalType": "struct IRigoblockV3PoolState.UserAccount",
+        "internalType": "struct ISmartPoolState.UserAccount",
         "name": "",
         "type": "tuple"
       }
@@ -1142,13 +1313,19 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "grgVault",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "token",
         "type": "address"
+      }
+    ],
+    "name": "hasPriceFeed",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -1457,25 +1634,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "poolAddress",
-        "type": "address"
-      }
-    ],
-    "name": "poolGrgShortfall",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "components": [
           {
             "internalType": "address",
@@ -1504,6 +1662,13 @@
       }
     ],
     "name": "propose",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "purgeInactiveTokensAndApps",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1563,19 +1728,6 @@
       }
     ],
     "name": "setTransactionFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "unitaryValue",
-        "type": "uint256"
-      }
-    ],
-    "name": "setUnitaryValue",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1845,35 +1997,6 @@
   {
     "inputs": [
       {
-        "internalType": "address payable",
-        "name": "selfCustodyAccount",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "transferToSelfCustody",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "shortfall",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -2007,6 +2130,13 @@
   },
   {
     "inputs": [],
+    "name": "updateUnitaryValue",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "upgradeImplementation",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -2056,6 +2186,19 @@
     "name": "wrapETH",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "wrappedNative",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

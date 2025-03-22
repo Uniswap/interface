@@ -3,17 +3,27 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { call, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
+import { formatEther } from 'ethers/lib/utils'
+import { call, cancel, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
-import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
-import { findGasStrategyName } from 'uniswap/src/features/gas/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
+import { findLocalGasStrategy } from 'uniswap/src/features/gas/utils'
+import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { pushNotification, setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { refetchGQLQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchGQLQueriesSaga'
+import {
+  FLASHBOTS_DEFAULT_BLOCK_RANGE,
+  waitForFlashbotsProtectReceipt,
+} from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
   makeSelectTransaction,
   selectIncompleteTransactions,
@@ -36,29 +46,29 @@ import {
   BridgeTransactionDetails,
   FinalizedTransactionDetails,
   QueuedOrderStatus,
+  TEMPORARY_TRANSACTION_STATUSES,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
   isFinalizedTx,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import i18n from 'uniswap/src/i18n/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import i18n from 'uniswap/src/i18n'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { fetchFORTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { OrderWatcher } from 'wallet/src/features/transactions/orderWatcherSaga'
-import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import {
   getDiff,
   getFinalizedTransactionStatus,
   getPercentageError,
-  isOnRampTransaction,
+  isFORTransaction,
   receiptFromEthersReceipt,
 } from 'wallet/src/features/transactions/utils'
 import { getProvider } from 'wallet/src/features/wallet/context'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export const SWAP_STATUS_TO_TX_STATUS: { [key in SwapStatus]: TransactionStatus } = {
   [SwapStatus.PENDING]: TransactionStatus.Pending,
@@ -81,8 +91,8 @@ export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClie
   // This allows us to detect completions if a user closed the app before a tx finished
   const incompleteTransactions = yield* select(selectIncompleteTransactions)
   for (const transaction of incompleteTransactions) {
-    if (isOnRampTransaction(transaction)) {
-      yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
+    if (isFORTransaction(transaction)) {
+      yield* fork(watchFiatOnRampTransaction, transaction as FORTransactionDetails)
     } else {
       // If the transaction was a queued UniswapX order that never became submitted, update UI to show failure
       if (isUniswapX(transaction) && transaction.queueStatus === QueuedOrderStatus.Waiting) {
@@ -102,8 +112,8 @@ export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClie
       updateTransaction.type,
     ])
     try {
-      if (isOnRampTransaction(transaction)) {
-        yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
+      if (isFORTransaction(transaction)) {
+        yield* fork(watchFiatOnRampTransaction, transaction as FORTransactionDetails)
       } else {
         yield* fork(watchTransaction, { transaction, apolloClient })
       }
@@ -127,11 +137,15 @@ export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClie
   }
 }
 
-export function* fetchUpdatedFiatOnRampTransaction(transaction: FiatOnRampTransactionDetails, forceFetch: boolean) {
-  return yield* call(fetchFiatOnRampTransaction, transaction, forceFetch)
+export function* fetchUpdatedFORTransaction(
+  transaction: FORTransactionDetails,
+  forceFetch: boolean,
+  activeAccountAddress: Address | null,
+) {
+  return yield* call(fetchFORTransaction, transaction, forceFetch, activeAccountAddress)
 }
 
-export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDetails) {
+export function* watchFiatOnRampTransaction(transaction: FORTransactionDetails) {
   const { id } = transaction
   let forceFetch = false
 
@@ -139,7 +153,8 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
 
   try {
     while (true) {
-      const updatedTransaction = yield* fetchUpdatedFiatOnRampTransaction(transaction, forceFetch)
+      const activeAddress = yield* select(selectActiveAccountAddress)
+      const updatedTransaction = yield* fetchUpdatedFORTransaction(transaction, forceFetch, activeAddress)
 
       forceFetch = false
       // We've got an invalid response from backend
@@ -154,7 +169,10 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
       }
 
       // Transaction has been found
-      if (updatedTransaction.typeInfo.type !== TransactionType.LocalOnRamp) {
+      if (
+        updatedTransaction.typeInfo.type !== TransactionType.LocalOnRamp &&
+        updatedTransaction.typeInfo.type !== TransactionType.LocalOffRamp
+      ) {
         logger.debug(
           'transactionWatcherSaga',
           'watchFiatOnRampTransaction',
@@ -205,22 +223,26 @@ export function* watchTransaction({
 
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
-
   const options = isUniswapX(transaction) ? undefined : transaction.options
-  const { updatedTransaction, cancel, replace, invalidated, timeout } = yield* race({
+  const timeoutTask = yield* fork(handleTimeout, transaction)
+
+  const { updatedTransaction, cancelTx, replace, invalidated } = yield* race({
     updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
-    cancel: call(waitForCancellation, chainId, id),
+    cancelTx: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
     invalidated: call(waitForTxnInvalidated, chainId, id, options?.request.nonce),
-    ...(options?.timeoutTimestampMs ? { timeout: call(waitForTimeout, options.timeoutTimestampMs) } : {}),
   })
 
-  // `cancel` and `updatedTransaction` conditions apply to both Classic and UniswapX transactions
-  if (cancel) {
+  if (timeoutTask.isRunning()) {
+    yield* cancel(timeoutTask)
+  }
+
+  // `cancelTx` and `updatedTransaction` conditions apply to both Classic and UniswapX transactions
+  if (cancelTx) {
     // reset watcher for the current txn, as it can still be mined (or invalidated by the new txn)
     yield* fork(watchTransaction, { transaction, apolloClient })
     // Cancel the current txn, which submits a new txn on chain and monitored in state
-    yield* call(attemptCancelTransaction, transaction, cancel)
+    yield* call(attemptCancelTransaction, transaction, cancelTx)
     return
   }
 
@@ -262,16 +284,6 @@ export function* watchTransaction({
     }
     return
   }
-
-  if (timeout && transaction.status === TransactionStatus.Pending) {
-    logger.warn('transactionWatcherSaga', 'watchTransaction', 'Timeout for pending tx', {
-      hash,
-      chainId,
-      id,
-    })
-    yield* call(maybeLogGasEstimateAccuracy, transaction)
-    return
-  }
 }
 
 export async function waitForReceipt(
@@ -285,14 +297,30 @@ export async function waitForReceipt(
   return txReceipt
 }
 
-function* waitForTimeout(timeoutTimestampMs: number) {
-  const currentTime = Date.now()
-  const delayTime = timeoutTimestampMs - currentTime
-  if (delayTime <= 0) {
-    return true
+function* handleTimeout(transaction: TransactionDetails) {
+  if (
+    isUniswapX(transaction) ||
+    !transaction.options?.timeoutTimestampMs ||
+    transaction.options.timeoutLogged ||
+    !TEMPORARY_TRANSACTION_STATUSES.includes(transaction.status)
+  ) {
+    return
   }
-  yield* delay(delayTime)
-  return true
+
+  const delayToTimeout = transaction.options.timeoutTimestampMs - Date.now()
+  if (delayToTimeout > 0) {
+    yield* delay(delayToTimeout)
+  }
+
+  yield* call(logTransactionTimeout, transaction)
+  yield* call(maybeLogGasEstimateAccuracy, transaction)
+  // Mark as logged so we don't log it again
+  yield* put(
+    transactionActions.updateTransactionWithoutWatch({
+      ...transaction,
+      options: { ...transaction.options, timeoutLogged: true },
+    }),
+  )
 }
 
 function* waitForRemoteUpdate(transaction: TransactionDetails, provider: providers.Provider) {
@@ -311,6 +339,12 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
+  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options?.submittedTimestampMs) {
+    // Transaction was not submitted yet, ignore it for now
+    // Once it's submitted, it'll be updated and the watcher will pick it up
+    return undefined
+  }
+
   // At this point, the tx should either be a classic / bridge tx or a filled order, both of which have hashes
   if (!hash) {
     logger.error(new Error('Watching for tx with no hash'), {
@@ -323,25 +357,71 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     return undefined
   }
 
+  if (isClassic(transaction) && transaction.options?.submitViaPrivateRpc) {
+    try {
+      // Flashbots transactions won't return a receipt until they're included, and will fail silently.
+      // We need to use Flashbots Protect API to get a status update until the tx is included or fails.
+      // @see {@link https://protect.flashbots.net/tx/docs}
+      const flashbotsReceipt = yield* call(waitForFlashbotsProtectReceipt, hash)
+
+      switch (flashbotsReceipt.status) {
+        case 'FAILED':
+          logger.warn(
+            'transactionWatcherSaga',
+            'waitForRemoteUpdate',
+            `Flashbots Protect transaction failed with simulation error: ${flashbotsReceipt.simError}`,
+            { transaction, flashbotsReceipt },
+          )
+          return { ...transaction, status: TransactionStatus.Failed }
+        case 'CANCELLED':
+          return { ...transaction, status: TransactionStatus.Canceled }
+        case 'UNKNOWN': // Transaction not found by Flashbots Protect, might have been submitted by another provider
+        case 'INCLUDED': // Transaction successfully included in a block
+        default:
+        // Continue with the regular logic, which will try to fetch the ethers receipt
+      }
+    } catch (error) {
+      logger.error('Error fetching Flashbots Protect transaction status', {
+        tags: {
+          file: 'transactionWatcherSaga',
+          function: 'waitForRemoteUpdate',
+        },
+        extra: { transaction, error },
+      })
+    }
+  }
+
   const ethersReceipt = yield* call(waitForReceipt, hash, provider)
   const receipt = receiptFromEthersReceipt(ethersReceipt)
+  const nativeCurrency = NativeCurrency.onChain(transaction.chainId)
 
-  if (isBridge(transaction)) {
-    status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
-    if (status === TransactionStatus.Success) {
-      // Only the send part was successful, wait for receive part to be confirmed on chain.
-      // Bridge swaps become non-cancellable after the send transaction is confirmed on chain.
-      if (!transaction.sendConfirmed) {
-        const updatedTransaction: BridgeTransactionDetails = { ...transaction, sendConfirmed: true }
-        yield* put(transactionActions.updateTransaction(updatedTransaction))
-        // Updating the transaction will trigger a new watch.
-        // Return undefined to break out of the current watcher.
-        return undefined
+  const networkFee = {
+    quantity: formatEther(ethersReceipt.effectiveGasPrice.mul(ethersReceipt.gasUsed)),
+    tokenSymbol: nativeCurrency.symbol,
+    tokenAddress: nativeCurrency.address,
+    chainId: transaction.chainId,
+  }
+
+  if (
+    isBridge(transaction) &&
+    getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status) === TransactionStatus.Success
+  ) {
+    // Only the send part was successful, wait for receive part to be confirmed on chain.
+    // Bridge swaps become non-cancellable after the send transaction is confirmed on chain.
+    if (!transaction.sendConfirmed) {
+      const updatedTransaction: BridgeTransactionDetails = {
+        ...transaction,
+        sendConfirmed: true,
+        networkFee,
       }
-
-      // Send part was successful, poll for bridging status from BE
-      status = yield* call(waitForBridgingStatus, transaction)
+      yield* put(transactionActions.updateTransaction(updatedTransaction))
+      // Updating the transaction will trigger a new watch.
+      // Return undefined to break out of the current watcher.
+      return undefined
     }
+
+    // Send part was successful, poll for bridging status from BE
+    status = yield* call(waitForBridgingStatus, transaction)
   }
 
   // Classic transaction status is based on receipt, while UniswapX status is based backend response.
@@ -349,7 +429,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
   }
 
-  return { ...transaction, status, receipt, hash }
+  return { ...transaction, status, receipt, hash, networkFee }
 }
 
 function* waitForBridgingStatus(transaction: TransactionDetails) {
@@ -506,6 +586,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
             slippageTolerance: typeInfo.slippageTolerance,
             route: typeInfo.routeString,
             protocol: typeInfo.protocol,
+            simulation_failure_reasons: typeInfo.simulationFailureReasons,
           }
         : undefined
 
@@ -555,8 +636,8 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
         sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, properties)
       }
     } else {
-      // All classic swaps should be tracked in redux with a tx hash.
-      if (!hash) {
+      // All successful classic swaps should be tracked in redux with a tx hash.
+      if (status !== TransactionStatus.Failed && !hash) {
         logger.error(new Error('Attempting to log swap event without a hash'), {
           tags: {
             file: 'transactionWatcherSaga',
@@ -566,11 +647,11 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
         })
         return
       }
-      const properties = { ...baseProperties, hash }
+
       if (status === TransactionStatus.Success) {
-        logSwapSuccess(properties)
+        logSwapSuccess({ ...baseProperties, hash })
       } else {
-        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, properties)
+        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, { ...baseProperties, hash })
       }
     }
   }
@@ -590,6 +671,43 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
   }
 
   maybeLogGasEstimateAccuracy(payload)
+}
+
+export function logTransactionTimeout(transaction: TransactionDetails) {
+  const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
+    DynamicConfigs.MainnetPrivateRpc,
+    MainnetPrivateRpcConfigKey.UseFlashbots,
+    false,
+  )
+
+  const flashbotsBlockRange = getDynamicConfigValue<
+    DynamicConfigs.MainnetPrivateRpc,
+    MainnetPrivateRpcConfigKey,
+    number
+  >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.FlashbotsBlockRange, FLASHBOTS_DEFAULT_BLOCK_RANGE)
+
+  const sendAuthenticationHeader = getDynamicConfigValue<
+    DynamicConfigs.MainnetPrivateRpc,
+    MainnetPrivateRpcConfigKey,
+    boolean
+  >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
+
+  sendAnalyticsEvent(WalletEventName.PendingTransactionTimeout, {
+    use_flashbots: useFlashbots,
+    flashbots_block_range: flashbotsBlockRange,
+    send_authentication_header: sendAuthenticationHeader,
+    chain_id: transaction.chainId,
+    tx_hash: transaction.hash,
+    private_rpc: (isClassic(transaction) && transaction.options.submitViaPrivateRpc) ?? false,
+  })
+
+  logger.warn('transactionWatcherSaga', 'logTransactionTimeout', 'Transaction timed out', {
+    chain_id: transaction.chainId,
+    use_flashbots: useFlashbots,
+    flashbots_block_range: flashbotsBlockRange,
+    send_authentication_header: sendAuthenticationHeader,
+    transaction,
+  })
 }
 
 function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
@@ -613,13 +731,17 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
   for (const estimate of [gasEstimates.activeEstimate, ...(gasEstimates.shadowEstimates || [])]) {
     const gasUseDiff = getDiff(estimate.gasLimit, transaction.receipt?.gasUsed)
     const gasPriceDiff = getDiff(getGasPrice(estimate), transaction.receipt?.effectiveGasPrice)
+    const localGasStrategy = findLocalGasStrategy(
+      estimate,
+      transaction.typeInfo.type === TransactionType.Swap ? 'swap' : 'general',
+    )
 
     sendAnalyticsEvent(WalletEventName.GasEstimateAccuracy, {
       tx_hash: transaction.hash,
       transaction_type: transaction.typeInfo.type,
       chain_id: transaction.chainId,
       final_status: transaction.status,
-      time_to_confirmed_ms: getDiff(transaction.receipt?.confirmedTime, transaction.addedTime),
+      time_to_confirmed_ms: getDiff(Date.now(), transaction.addedTime),
       blocks_to_confirmed: getDiff(transaction.receipt?.blockNumber, gasEstimates.blockSubmitted),
       gas_use_diff: gasUseDiff,
       gas_use_diff_percentage: getPercentageError(gasUseDiff, estimate.gasLimit),
@@ -631,7 +753,8 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
       out_of_gas,
       private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc ?? false : false,
       is_shadow: estimate !== gasEstimates.activeEstimate,
-      name: findGasStrategyName(estimate),
+      name: localGasStrategy?.conditions.name,
+      display_limit_inflation_factor: localGasStrategy?.strategy.displayLimitInflationFactor,
       timed_out,
     })
   }
@@ -649,7 +772,12 @@ export function* finalizeTransaction({
   // Flip status to true so we can render Notification badge on home
   yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
   // Refetch data when a local tx has confirmed
-  yield* refetchGQLQueries({ transaction, apolloClient })
+  const activeAddress = yield* select(selectActiveAccountAddress)
+  yield* refetchGQLQueries({
+    transaction,
+    apolloClient,
+    activeAddress,
+  })
 
   if (transaction.typeInfo.type === TransactionType.Swap || transaction.typeInfo.type === TransactionType.Bridge) {
     const hasDoneOneSwap = (yield* select(selectSwapTransactionsCount)) === 1

@@ -14,7 +14,7 @@ import { TransactionDetails, TransactionType } from 'uniswap/src/features/transa
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { openOnRampSupportLink } from 'wallet/src/utils/linking'
+import { openFORSupportLink } from 'wallet/src/utils/linking'
 
 function renderOptionItem(label: string, textColorOverride?: ColorTokens): () => JSX.Element {
   return function OptionItem(): JSX.Element {
@@ -59,7 +59,8 @@ export default function TransactionActionsModal({
 
     const onRampProviderName =
       transactionDetails.typeInfo.type === TransactionType.OnRampPurchase ||
-      transactionDetails.typeInfo.type === TransactionType.OnRampTransfer
+      transactionDetails.typeInfo.type === TransactionType.OnRampTransfer ||
+      transactionDetails.typeInfo.type === TransactionType.OffRampSale
         ? transactionDetails.typeInfo.serviceProvider?.name
         : undefined
 
@@ -137,7 +138,8 @@ export async function openSupportLink(transactionDetails: TransactionDetails): P
   switch (transactionDetails.typeInfo.type) {
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
-      return openOnRampSupportLink(transactionDetails.typeInfo.serviceProvider)
+    case TransactionType.OffRampSale:
+      return openFORSupportLink(transactionDetails.typeInfo.serviceProvider)
     default:
       params.append('tf_11041337007757', transactionDetails.ownerAddress ?? '') // Wallet Address
       params.append('tf_7005922218125', isWeb ? 'uniswap_extension_issue' : 'uw_ios_app') // Report Type Dropdown
@@ -154,6 +156,8 @@ export function getTransactionId(transactionDetails: TransactionDetails): string
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
       return transactionDetails.typeInfo.id
+    case TransactionType.OffRampSale:
+      return transactionDetails.typeInfo.providerTransactionId
     default:
       return transactionDetails.hash
   }

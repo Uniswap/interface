@@ -5,12 +5,12 @@ import { ButtonConfirmed, ButtonPrimary } from 'components/Button/buttons'
 import { LightCard } from 'components/Card/cards'
 import { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow, RowBetween } from 'components/deprecated/Row'
-import Modal from 'components/Modal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import Slider from 'components/Slider'
 import { GRG_TRANSFER_PROXY_ADDRESSES } from 'constants/addresses'
 import { useAccount } from 'hooks/useAccount'
-import useENS from 'hooks/useENS'
+import { useENS } from 'uniswap/src/features/ens/useENS'
 import JSBI from 'jsbi'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo, useState } from 'react'
@@ -25,11 +25,12 @@ import {
 import { ThemedText } from 'theme/components'
 import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 import { logger } from 'utilities/src/logger/logger'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
@@ -37,7 +38,7 @@ import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styl
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -82,7 +83,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   // monitor for self delegation or input for third part delegate
   // default is self delegation
   const activeDelegate = poolInfo?.pool?.address ?? typed ?? account.address
-  const { address: parsedAddress } = useENS(activeDelegate)
+  const { address: parsedAddress } = useENS({ nameOrAddress: activeDelegate })
 
   // TODO: in the context of pool grg balance is balance of pool
   // get the number of votes available to delegate
@@ -130,7 +131,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     }
     return {
       amount: parsedAmount?.quotient.toString(),
-      pool: parsedAddress,
+      pool: parsedAddress ?? null,
       poolId,
       poolContract: usingDelegate ? poolContract : null,
       stakingPoolExists,
@@ -202,7 +203,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
+    <Modal name={ModalName.DappRequest} isModalOpen={isOpen} isDismissible onClose={wrappedOnDismiss} maxHeight="90vh">
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

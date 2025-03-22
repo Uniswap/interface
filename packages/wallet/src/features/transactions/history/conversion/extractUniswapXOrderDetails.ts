@@ -4,6 +4,7 @@ import {
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
   ConfirmedSwapTransactionInfo,
@@ -14,7 +15,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { deriveCurrencyAmountFromAssetResponse } from 'wallet/src/features/transactions/history/utils'
 
@@ -24,7 +24,6 @@ export function extractUniswapXOrderDetails(transaction: TransactionListQueryRes
   }
 
   const typeInfo = parseUniswapXOrderTransaction(transaction)
-  // TODO: does not support parsing priority orders yet since priority orders are not supported in the trading API
   const routing = transaction.details.swapOrderType === SwapOrderType.Limit ? Routing.DUTCH_LIMIT : Routing.DUTCH_V2
 
   // TODO (MOB-3609): Parse and show pending limit orders in Activity feed

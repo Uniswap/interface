@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { getTokensOrderByMenuLabel, getTokensOrderBySelectedLabel } from 'src/features/explore/utils'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import {
@@ -15,20 +14,20 @@ import {
 import { iconSizes } from 'ui/src/theme'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
+import { CustomRankingType, RankingType } from 'uniswap/src/data/types'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
-import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
-import { CustomRankingType, ExploreOrderBy, RankingType } from 'wallet/src/features/wallet/types'
+import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 
 const MIN_MENU_ITEM_WIDTH = 220
 
 interface FilterGroupProps {
   orderBy: ExploreOrderBy
+  onOrderByChange: (orderBy: ExploreOrderBy) => void
 }
 
-function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
-  const dispatch = useDispatch()
+function _SortButton({ orderBy, onOrderByChange }: FilterGroupProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -85,6 +84,16 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
     )
   }, [])
 
+  const handleOrderByChange = useCallback(
+    (newOrderBy: ExploreOrderBy) => {
+      onOrderByChange(newOrderBy)
+      sendAnalyticsEvent(MobileEventName.ExploreFilterSelected, {
+        filter_type: newOrderBy,
+      })
+    },
+    [onOrderByChange],
+  )
+
   const options = useMemo<MenuItemProp[]>(() => {
     return menuActions.map((option, index) => {
       return {
@@ -97,15 +106,12 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
             })
             return
           }
-          dispatch(setTokensOrderBy({ newTokensOrderBy: option.orderBy }))
-          sendAnalyticsEvent(MobileEventName.ExploreFilterSelected, {
-            filter_type: selectedMenuAction.orderBy,
-          })
+          handleOrderByChange(selectedMenuAction.orderBy)
         },
         render: () => <MenuItem active={option.active} icon={option.icon} label={option.title} />,
       }
     })
-  }, [MenuItem, dispatch, menuActions])
+  }, [MenuItem, menuActions, handleOrderByChange])
 
   return (
     <ActionSheetDropdown options={options} showArrow={false} styles={{ alignment: 'right' }}>
@@ -119,7 +125,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         pr="$spacing8"
         py="$spacing8"
       >
-        <Text ellipse color="$neutral1" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
+        <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
           {getTokensOrderBySelectedLabel(orderBy, t)}
         </Text>
         <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />

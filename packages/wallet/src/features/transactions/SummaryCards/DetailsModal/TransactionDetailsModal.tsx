@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, ContextMenu, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
+import { DeprecatedButton, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
 import { AnglesDownUp, Ellipsis, SortVertical, UniswapX } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
@@ -15,10 +15,13 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { ApproveTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/ApproveTransactionDetails'
 import { BridgeTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/BridgeTransactionDetails'
 import { HeaderLogo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/HeaderLogo'
 import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
+import { OffRampPendingSupportCard } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OffRampPendingSupportCard'
+import { OffRampTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OffRampTransactionDetails'
 import { OnRampTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OnRampTransactionDetails'
 import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
 import { TransactionDetailsInfoRows } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsInfoRows'
@@ -30,6 +33,7 @@ import {
   isNFTApproveTransactionInfo,
   isNFTMintTransactionInfo,
   isNFTTradeTransactionInfo,
+  isOffRampSaleTransactionInfo,
   isOnRampPurchaseTransactionInfo,
   isOnRampTransferTransactionInfo,
   isReceiveTokenTransactionInfo,
@@ -79,17 +83,19 @@ export function TransactionDetailsHeader({
           </Text>
         </Flex>
       </Flex>
-      {isWeb ? (
-        <ContextMenu closeOnClick itemId={transactionDetails.id} menuOptions={menuItems} onLeftClick>
-          <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing4">
+      {menuItems.length > 0 ? (
+        isWeb ? (
+          <ContextMenu closeOnClick itemId={transactionDetails.id} menuOptions={menuItems} onLeftClick>
+            <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing4">
+              <Ellipsis color="$neutral2" size="$icon.20" />
+            </TouchableArea>
+          </ContextMenu>
+        ) : (
+          <TouchableArea onPress={openActionsModal}>
             <Ellipsis color="$neutral2" size="$icon.20" />
           </TouchableArea>
-        </ContextMenu>
-      ) : (
-        <TouchableArea onPress={openActionsModal}>
-          <Ellipsis color="$neutral2" size="$icon.20" />
-        </TouchableArea>
-      )}
+        )
+      ) : null}
     </Flex>
   )
 }
@@ -126,6 +132,8 @@ export function TransactionDetailsContent({
       return <WrapTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
     } else if (isOnRampPurchaseTransactionInfo(typeInfo) || isOnRampTransferTransactionInfo(typeInfo)) {
       return <OnRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+    } else if (isOffRampSaleTransactionInfo(typeInfo)) {
+      return <OffRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
     } else {
       return null
     }
@@ -156,7 +164,7 @@ export function TransactionDetailsModal({
   transactionDetails,
 }: TransactionDetailsModalProps): JSX.Element {
   const { t } = useTranslation()
-  const { typeInfo } = transactionDetails
+  const { typeInfo, status, addedTime } = transactionDetails
   const [isShowingMore, setIsShowingMore] = useState(false)
   const hasMoreInfoRows = [TransactionType.Swap, TransactionType.Bridge].includes(transactionDetails.typeInfo.type)
 
@@ -179,7 +187,7 @@ export function TransactionDetailsModal({
   const buttons: JSX.Element[] = []
   if (isCancelable) {
     buttons.push(
-      <Button
+      <DeprecatedButton
         backgroundColor="$DEP_accentCriticalSoft"
         color="$statusCritical"
         size="small"
@@ -187,16 +195,20 @@ export function TransactionDetailsModal({
         onPress={openCancelModal}
       >
         {t('transaction.action.cancel.button')}
-      </Button>,
+      </DeprecatedButton>,
     )
   }
   if (isWeb) {
     buttons.push(
-      <Button size="small" theme="secondary" onPress={onClose}>
+      <DeprecatedButton size="small" theme="secondary" onPress={onClose}>
         {t('common.button.close')}
-      </Button>,
+      </DeprecatedButton>,
     )
   }
+
+  const OFFRAMP_PENDING_STALE_TIME_IN_MINUTES = 20
+  const isTransactionStale = dayjs().diff(dayjs(addedTime), 'minute') >= OFFRAMP_PENDING_STALE_TIME_IN_MINUTES
+  const showOffRampPendingCard = isOffRampSaleTransactionInfo(typeInfo) && status === 'pending' && isTransactionStale
 
   return (
     <>
@@ -212,8 +224,10 @@ export function TransactionDetailsModal({
           <TransactionDetailsInfoRows
             isShowingMore={isShowingMore}
             transactionDetails={transactionDetails}
+            pt={!hideBottomSeparator && !hasMoreInfoRows ? '$spacing8' : undefined}
             onClose={onClose}
           />
+          {showOffRampPendingCard && <OffRampPendingSupportCard />}
           {buttons.length > 0 && (
             <Flex gap="$spacing8" pt="$spacing8">
               {buttons}

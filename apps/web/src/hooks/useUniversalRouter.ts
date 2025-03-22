@@ -1,11 +1,11 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
-import { MulticallExtended, PaymentsExtended, SwapRouter } from '@uniswap/router-sdk'
+import { MulticallExtended, PaymentsExtended, SwapRouter as SwapRouter2 } from '@uniswap/router-sdk'
 import { Percent } from '@uniswap/sdk-core'
 import {
   FlatFeeOptions,
-  //SwapRouter,
+  SwapRouter,
   //UNIVERSAL_ROUTER_ADDRESS,
   //UniversalRouterVersion,
 } from '@uniswap/universal-router-sdk'
@@ -19,12 +19,13 @@ import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { t } from 'uniswap/src/i18n'
+import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -36,7 +37,7 @@ import { getWalletMeta } from 'utils/walletMeta'
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
 class GasEstimationError extends Error {
   constructor() {
-    super(t('swap.error.expectedToFail'))
+    super(i18n.t('swap.error.expectedToFail'))
   }
 }
 
@@ -46,7 +47,7 @@ class GasEstimationError extends Error {
  */
 class ModifiedSwapError extends Error {
   constructor() {
-    super(t('swap.error.modifiedByWallet'))
+    super(i18n.t('swap.error.modifiedByWallet'))
   }
 }
 
@@ -63,11 +64,12 @@ export function useUniversalRouterSwapCallback(
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
   options: SwapOptions,
 ) {
+  const { t } = useTranslation()
   const account = useAccount()
   const accountRef = useRef(account)
   accountRef.current = account
 
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
   const provider = useEthersWeb3Provider({ chainId })
   const providerRef = useRef(provider)
   providerRef.current = provider
@@ -101,16 +103,36 @@ export function useUniversalRouterSwapCallback(
           const deadline = await getDeadline()
 
           trace.setData('slippageTolerance', options.slippageTolerance.toFixed(2))
-          const { calldata: data, value } = SwapRouter.swapCallParameters(trade, {
-            slippageTolerance: options.slippageTolerance,
-            deadlineOrPreviousBlockhash: deadline?.toString(),
-            fee: options.feeOptions,
-            recipient: account.address,
-          })
+
+          // TODO: as v3 swap methods work correctly on universal router and use less gas, we can remove this flag and use the universal router
+          const isLegacyRouter = false
+
+          // use the legacy router or the universal router based on flag
+          const params = { data: '', value: '0' }
+          if (isLegacyRouter) {
+            const { calldata: data, value } = SwapRouter2.swapCallParameters(trade, {
+              slippageTolerance: options.slippageTolerance,
+              deadlineOrPreviousBlockhash: deadline?.toString(),
+              fee: options.feeOptions,
+              recipient: account.address,
+            })
+            params.data = data
+            params.value = value
+          } else {
+            const { calldata: data /*, value*/ } = SwapRouter.swapCallParameters(trade, {
+              slippageTolerance: options.slippageTolerance,
+              deadlineOrPreviousBlockhash: deadline?.toString(),
+              inputTokenPermit: options.permit,
+              fee: options.feeOptions,
+              recipient: options.smartPoolAddress,
+              flatFee: options.flatFeeOptions,
+            })
+            params.data = data
+          }
           const tx = {
             from: account.address,
             to: options.smartPoolAddress,
-            data: MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(value)), data]),
+            data: isLegacyRouter ? MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(params.value)), params.data]) : params.data,
             value: '0x0',
           }
 
@@ -144,7 +166,7 @@ export function useUniversalRouterSwapCallback(
               } catch (error) {
                 if (didUserReject(error)) {
                   walletTrace.setStatus('cancelled')
-                  throw new UserRejectedRequestError(swapErrorToUserReadableMessage(error))
+                  throw new UserRejectedRequestError(swapErrorToUserReadableMessage(t, error))
                 } else {
                   throw error
                 }
@@ -159,8 +181,8 @@ export function useUniversalRouterSwapCallback(
               fiatValues,
               txHash: response.hash,
               portfolioBalanceUsd,
+              trace: analyticsContext,
             }),
-            ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
             [CustomUserProperties.WALLET_ADDRESS]: account.address,
             [CustomUserProperties.WALLET_TYPE]: account.connector.name,
@@ -189,14 +211,17 @@ export function useUniversalRouterSwapCallback(
             throw error
           } else {
             trace.setError(error)
-            throw Error(swapErrorToUserReadableMessage(error))
+            throw Error(swapErrorToUserReadableMessage(t, error))
           }
         }
       }),
     [
       trade,
+      t,
       chainId,
       getDeadline,
+      options.flatFeeOptions,
+      options.permit,
       options.slippageTolerance,
       options.feeOptions,
       options.smartPoolAddress,

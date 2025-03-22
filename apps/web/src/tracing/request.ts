@@ -1,7 +1,7 @@
-import { INFURA_PREFIX_TO_CHAIN_ID, chainIdToBackendChain } from 'constants/chains'
 import { isTracing, trace } from 'tracing/trace'
 import { TraceContext } from 'tracing/types'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainIdByInfuraPrefix, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 export function patchFetch(api: Pick<typeof globalThis, 'fetch'>) {
   const apiFetch = api.fetch
@@ -95,8 +95,11 @@ export function getTraceContext(url: URL, init?: RequestInit, force = false): Tr
     try {
       const body = JSON.parse(Buffer.from(init?.body as Uint8Array).toString())
       method = body.method
-      const chainId = INFURA_PREFIX_TO_CHAIN_ID[url.host.split('.')[0]]
-      chain = chainId && chainIdToBackendChain({ chainId })
+
+      const chainId = getChainIdByInfuraPrefix(url.host.split('.')[0])
+      if (chainId) {
+        chain = toGraphQLChain(chainId)
+      }
     } catch {
       // ignore the error
     }

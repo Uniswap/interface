@@ -1,11 +1,12 @@
 import { parseUnits } from '@ethersproject/units'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 
 import { useSetLockupCallback } from 'state/pool/hooks'
@@ -13,7 +14,7 @@ import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/ho
 import { ButtonError } from 'components/Button/buttons'
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
-import Modal from 'components/Modal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import NameInputPanel from 'components/NameInputPanel'
 import { useAccount } from 'hooks/useAccount'
@@ -102,7 +103,7 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
   const isLockupTooBig: boolean = JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={480}>
+    <Modal name={ModalName.DappRequest} isModalOpen={isOpen} isDismissible onClose={wrappedOnDismiss} maxHeight={480}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

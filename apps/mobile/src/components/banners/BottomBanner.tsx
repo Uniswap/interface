@@ -33,7 +33,7 @@ export function BottomBanner({ text, icon, backgroundColor, translateY }: Bottom
       backgroundColor={backgroundColor ? backgroundColor : '$accent1'}
       borderColor="$surface3"
       borderRadius="$rounded8"
-      borderWidth={1}
+      borderWidth="$spacing1"
       bottom={0}
       entering={FadeIn}
       exiting={FadeOut}

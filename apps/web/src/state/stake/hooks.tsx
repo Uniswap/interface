@@ -24,7 +24,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { DAI, GRG, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import POP_ABI from 'uniswap/src/abis/pop.json'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -91,7 +91,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   const account = useAccount()
 
   // detect if staking is ended
-  const currentBlockTimestamp = useCurrentBlockTimestamp(NEVER_RELOAD)
+  const currentBlockTimestamp = useCurrentBlockTimestamp({ refetchInterval: false })
 
   const info = useMemo(
     () =>
@@ -212,7 +212,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         // compare period end timestamp vs current block timestamp (in seconds)
         const active =
-          periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
+          periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > Number(currentBlockTimestamp) : true
 
         memo.push({
           stakingRewardAddress: rewardsAddress,

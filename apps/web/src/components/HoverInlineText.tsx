@@ -1,6 +1,5 @@
-import Tooltip from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import styled from 'lib/styled-components'
-import { useState } from 'react'
 
 const TextWrapper = styled.span<{
   margin: boolean
@@ -35,18 +34,14 @@ const HoverInlineText = ({
   textColor?: string
   link?: boolean
 }) => {
-  const [showHover, setShowHover] = useState(false)
-
   if (!text) {
     return <span />
   }
 
   if (text.length > maxCharacters) {
     return (
-      <Tooltip text={text} show={showHover}>
+      <MouseoverTooltip text={text}>
         <TextWrapper
-          onMouseEnter={() => setShowHover(true)}
-          onMouseLeave={() => setShowHover(false)}
           margin={margin}
           adjustSize={adjustSize}
           textColor={textColor}
@@ -56,7 +51,7 @@ const HoverInlineText = ({
         >
           {' ' + text.slice(0, maxCharacters - 1) + '...'}
         </TextWrapper>
-      </Tooltip>
+      </MouseoverTooltip>
     )
   }
 

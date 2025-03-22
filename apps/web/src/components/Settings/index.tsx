@@ -1,31 +1,32 @@
 import { Percent } from '@uniswap/sdk-core'
-import { Scrim } from 'components/AccountDrawer'
-import AnimatedDropdown from 'components/AnimatedDropdown'
-import Column, { AutoColumn } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
+import { Scrim } from 'components/AccountDrawer/Scrim'
 import MaxSlippageSettings from 'components/Settings/MaxSlippageSettings'
 import MenuButton from 'components/Settings/MenuButton'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
 import RouterPreferenceSettings from 'components/Settings/RouterPreferenceSettings'
 import TransactionDeadlineSettings from 'components/Settings/TransactionDeadlineSettings'
-import { useIsSupportedChainId, useIsUniswapXSupportedChain } from 'constants/chains'
+import Column, { AutoColumn } from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import useDisableScrolling from 'hooks/useDisableScrolling'
+import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { useCallback, useMemo, useRef } from 'react'
 import { X } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useCloseModal, useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { Divider, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { HeightAnimator } from 'ui/src'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { Trans } from 'uniswap/src/i18n'
 
 const CloseButton = styled.button`
   background: transparent;
@@ -148,13 +149,13 @@ export default function SettingsTab({
             <RouterPreferenceSettings />
           </AutoColumn>
         )}
-        <AnimatedDropdown open={!isUniswapXTrade(trade)}>
+        <HeightAnimator open={!isUniswapXTrade(trade)}>
           <ExpandColumn $padTop={showRoutingSettings}>
             {showRoutingSettings && <Divider />}
             <MaxSlippageSettings autoSlippage={autoSlippage} />
             {showDeadlineSettings && <TransactionDeadlineSettings />}
           </ExpandColumn>
-        </AnimatedDropdown>
+        </HeightAnimator>
         {multipleRoutingOptionsEnabled && (
           <>
             {!isUniswapXTrade(trade) && <StyledDivider />}

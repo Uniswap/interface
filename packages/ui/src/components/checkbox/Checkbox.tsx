@@ -7,9 +7,10 @@ import {
   getTokenValue,
 } from 'tamagui'
 import { Check } from 'ui/src/components/icons'
-import { Flex } from 'ui/src/components/layout'
+import { Flex, FlexProps } from 'ui/src/components/layout'
 import { SporeComponentVariant } from 'ui/src/components/types'
 import { IconSizeTokens } from 'ui/src/theme'
+import { isTestEnv } from 'utilities/src/environment/env'
 import { v4 as uuid } from 'uuid'
 
 type CheckboxSizes = {
@@ -41,6 +42,8 @@ type CheckboxProps = {
   size?: CheckboxSizeTokens
 } & Omit<TamaguiCheckboxPops, 'size'>
 
+const animationProp = isTestEnv() ? undefined : ({ animation: 'simple' } satisfies FlexProps['animation'])
+
 /**
  * Spore Checkbox
  *
@@ -61,13 +64,14 @@ export function Checkbox({ checked, variant = 'default', size = '$icon.20', ...r
     // This outer ring is only shown when the button is focused.
     <Flex
       alignItems="center"
-      animation="simple"
+      {...animationProp}
       borderColor={getFocusedRingColor(variant, isFocused, checked, accentColor)}
       borderRadius="$rounded6"
       borderWidth="$spacing1"
       height={sizes.FocusRing}
       justifyContent="center"
       width={sizes.FocusRing}
+      testID={rest.testID}
     >
       <TamaguiCheckbox
         {...rest}

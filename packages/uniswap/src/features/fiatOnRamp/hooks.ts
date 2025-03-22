@@ -1,13 +1,14 @@
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency } from '@uniswap/sdk-core'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
-import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks'
+import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -23,6 +24,7 @@ import {
   FORSupportedToken,
   FiatCurrencyInfo,
   FiatOnRampCurrency,
+  RampDirection,
 } from 'uniswap/src/features/fiatOnRamp/types'
 import {
   createOnRampTransactionId,
@@ -39,7 +41,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -67,32 +68,35 @@ export function useFiatOnRampTransactionCreator(
   serviceProvider?: string,
 ): {
   externalTransactionId: string
-  dispatchAddTransaction: () => void
+  dispatchAddTransaction: ({ isOffRamp }: { isOffRamp: boolean }) => void
 } {
   const dispatch = useDispatch()
 
   const externalTransactionId = useRef(createOnRampTransactionId(serviceProvider))
 
-  const dispatchAddTransaction = useCallback(() => {
-    // Adds a LocalOnRampTransaction to track the transaction
-    // Later we will query the transaction details for that id
-    const transactionDetail: TransactionDetails = {
-      routing: Routing.CLASSIC,
-      chainId,
-      id: externalTransactionId.current,
-      from: ownerAddress,
-      typeInfo: {
-        type: TransactionType.LocalOnRamp,
-      },
-      status: TransactionStatus.Pending,
-      addedTime: Date.now(),
-      hash: '',
-      options: { request: {} },
-      transactionOriginType: TransactionOriginType.Internal,
-    }
-    // use addTransaction action so transactionWatcher picks it up
-    dispatch(addTransaction(transactionDetail))
-  }, [chainId, ownerAddress, dispatch])
+  const dispatchAddTransaction = useCallback(
+    ({ isOffRamp }: { isOffRamp: boolean }) => {
+      // Adds a local FOR transaction to track the transaction
+      // Later we will query the transaction details for that id
+      const transactionDetail: TransactionDetails = {
+        routing: Routing.CLASSIC,
+        chainId,
+        id: externalTransactionId.current,
+        from: ownerAddress,
+        typeInfo: {
+          type: isOffRamp ? TransactionType.LocalOffRamp : TransactionType.LocalOnRamp,
+        },
+        status: TransactionStatus.Pending,
+        addedTime: Date.now(),
+        hash: '',
+        options: { request: {} },
+        transactionOriginType: TransactionOriginType.Internal,
+      }
+      // use addTransaction action so transactionWatcher picks it up
+      dispatch(addTransaction(transactionDetail))
+    },
+    [chainId, ownerAddress, dispatch],
+  )
 
   return { externalTransactionId: externalTransactionId.current, dispatchAddTransaction }
 }
@@ -100,6 +104,7 @@ export function useFiatOnRampTransactionCreator(
 export function useMeldFiatCurrencySupportInfo(
   countryCode: string,
   skip: boolean = false,
+  rampDirection?: RampDirection,
 ): {
   appFiatCurrencySupportedInMeld: boolean
   meldSupportedFiatCurrency: FiatCurrencyInfo
@@ -111,7 +116,7 @@ export function useMeldFiatCurrencySupportInfo(
   const appFiatCurrencyCode = appFiatCurrencyInfo.code.toLowerCase()
 
   const { data: supportedFiatCurrencies } = useFiatOnRampAggregatorSupportedFiatCurrenciesQuery(
-    { countryCode },
+    { countryCode, rampDirection },
     { skip },
   )
 
@@ -142,10 +147,12 @@ export function useFiatOnRampSupportedTokens({
   sourceCurrencyCode,
   countryCode,
   skip = false,
+  rampDirection,
 }: {
   sourceCurrencyCode: string
   countryCode: string
   skip?: boolean
+  rampDirection?: RampDirection
 }): {
   error: boolean
   list: FiatOnRampCurrency[] | undefined
@@ -157,7 +164,10 @@ export function useFiatOnRampSupportedTokens({
     isLoading: supportedTokensLoading,
     error: supportedTokensError,
     refetch: refetchSupportedTokens,
-  } = useFiatOnRampAggregatorSupportedTokensQuery({ fiatCurrency: sourceCurrencyCode, countryCode }, { skip })
+  } = useFiatOnRampAggregatorSupportedTokensQuery(
+    { fiatCurrency: sourceCurrencyCode, countryCode, rampDirection },
+    { skip },
+  )
 
   const supportedTokensById: Record<string, FORSupportedToken> = useMemo(
     () =>
@@ -212,12 +222,16 @@ export function useFiatOnRampQuotes({
   quoteCurrencyCode,
   countryCode,
   countryState,
+  rampDirection,
+  balanceError,
 }: {
   baseCurrencyAmount?: number
   baseCurrencyCode: string | undefined
   quoteCurrencyCode: string | undefined
   countryCode: string | undefined
   countryState: string | undefined
+  rampDirection: RampDirection
+  balanceError?: boolean
 }): {
   loading: boolean
   error?: FetchBaseQueryError | SerializedError
@@ -231,14 +245,15 @@ export function useFiatOnRampQuotes({
     isFetching: quotesFetching,
     error: quotesError,
   } = useFiatOnRampAggregatorCryptoQuoteQuery(
-    baseCurrencyAmount && countryCode && quoteCurrencyCode && baseCurrencyCode
+    baseCurrencyAmount && countryCode && quoteCurrencyCode && baseCurrencyCode && !balanceError
       ? {
           sourceAmount: baseCurrencyAmount,
-          sourceCurrencyCode: baseCurrencyCode,
-          destinationCurrencyCode: quoteCurrencyCode,
+          sourceCurrencyCode: rampDirection === RampDirection.OFFRAMP ? quoteCurrencyCode : baseCurrencyCode,
+          destinationCurrencyCode: rampDirection === RampDirection.OFFRAMP ? baseCurrencyCode : quoteCurrencyCode,
           countryCode,
           walletAddress: walletAddress ?? undefined,
           state: countryState,
+          rampDirection,
         }
       : skipToken,
     {
@@ -258,16 +273,33 @@ export function useFiatOnRampQuotes({
   }
 }
 
-export function useParseFiatOnRampError(
-  error: unknown,
-  currencyCode: string,
-): {
+export function useParseFiatOnRampError({
+  error,
+  currencyCode,
+  tokenCode,
+  balanceError,
+  noQuotesReturned,
+}: {
+  error: unknown
+  currencyCode: string
+  tokenCode?: string
+  balanceError: boolean
+  noQuotesReturned: boolean
+}): {
   errorText: string | undefined
 } {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
 
   let errorText
+
+  if (balanceError) {
+    errorText = t('fiatOffRamp.error.balance')
+  }
+  if (noQuotesReturned) {
+    errorText = t('fiatOnRamp.error.noQuotes')
+  }
+
   if (!error) {
     return { errorText }
   }
@@ -275,20 +307,22 @@ export function useParseFiatOnRampError(
   errorText = t('fiatOnRamp.error.default')
 
   if (isFiatOnRampApiError(error)) {
+    const formatMinMaxError = (amount: number, unit?: string): string => {
+      return (
+        formatNumberOrString({
+          value: amount,
+          type: unit === 'token' ? NumberType.TokenTx : NumberType.FiatStandard,
+          currencyCode,
+        }) + (unit === 'token' ? ` ${tokenCode}` : '')
+      )
+    }
+
     if (isInvalidRequestAmountTooLow(error)) {
-      const formattedAmount = formatNumberOrString({
-        value: error.data.context.minimumAllowed,
-        type: NumberType.FiatStandard,
-        currencyCode,
-      })
-      errorText = t('fiatOnRamp.error.min', { amount: formattedAmount })
+      const { minimumAllowed, unit } = error.data.context
+      errorText = t('fiatOnRamp.error.min', { amount: formatMinMaxError(minimumAllowed, unit) })
     } else if (isInvalidRequestAmountTooHigh(error)) {
-      const formattedAmount = formatNumberOrString({
-        value: error.data.context.maximumAllowed,
-        type: NumberType.FiatStandard,
-        currencyCode,
-      })
-      errorText = t('fiatOnRamp.error.max', { amount: formattedAmount })
+      const { maximumAllowed, unit } = error.data.context
+      errorText = t('fiatOnRamp.error.max', { amount: formatMinMaxError(maximumAllowed, unit) })
     }
   }
 
@@ -322,4 +356,39 @@ export function useIsSupportedFiatOnRampCurrency(
   const foundToken = supportedTokensList?.find((token) => token.currencyInfo?.currencyId === currencyId)
 
   return foundToken
+}
+
+/**
+ * Determines loading state when fetching FOR quotes.
+ * We debounce the amounts so theres some additional logic to consider
+ * The useEffects help fix a race condition that otherwise results in some flickering
+ */
+export function useIsFORLoading({
+  hasValidAmount,
+  debouncedAmountsMatch,
+  quotesLoading,
+  exceedsBalanceError,
+}: {
+  hasValidAmount: boolean
+  debouncedAmountsMatch: boolean
+  quotesLoading: boolean
+  exceedsBalanceError: boolean
+}): boolean {
+  const [isWaitingForNewQuotes, setIsWaitingForNewQuotes] = useState(false)
+
+  useEffect(() => {
+    // When amount changes, mark that we're waiting for new quotes
+    if (!debouncedAmountsMatch) {
+      setIsWaitingForNewQuotes(true)
+    }
+  }, [debouncedAmountsMatch])
+
+  useEffect(() => {
+    // When we get new quotes or an error, mark that we're no longer waiting
+    if (!quotesLoading) {
+      setIsWaitingForNewQuotes(false)
+    }
+  }, [quotesLoading])
+
+  return hasValidAmount && isWaitingForNewQuotes && !exceedsBalanceError
 }

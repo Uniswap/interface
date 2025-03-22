@@ -232,6 +232,9 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
             radius="16"
           />
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

@@ -3,12 +3,12 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { useWindowSize } from 'hooks/screenSize/useWindowSize'
 import styled from 'lib/styled-components'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { breakpoints } from 'ui/src/theme'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -19,9 +19,9 @@ const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
 `
 
 const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextProps>) => {
-  const { width } = useWindowSize()
+  const { fullWidth: width } = useDeviceDimensions()
 
-  if (width && width < BREAKPOINTS.xs) {
+  if (width && width < breakpoints.xs) {
     return <ThemedText.HeadlineMedium {...textProps}>{children}</ThemedText.HeadlineMedium>
   }
 
@@ -67,7 +67,7 @@ export function SwapModalHeaderAmount({
         <Column gap="xs">
           <ResponsiveHeadline
             data-testid={`${field}-amount`}
-            color={isLoading ? 'neutral2' : undefined}
+            color={isLoading ? 'neutral2' : 'neutral1'}
             {...headerTextProps}
           >
             {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}

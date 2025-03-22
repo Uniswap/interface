@@ -1,21 +1,24 @@
 import { PropsWithChildren, useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
+import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
-import { useTranslation } from 'uniswap/src/i18n'
 
 interface SwapSettingRowProps {
   setting: SwapSettingConfig
   setSelectedSetting: (setting: SwapSettingConfig) => void
+  warning?: JSX.Element | undefined
 }
 
-export function SwapSettingRow({ setting, setSelectedSetting }: SwapSettingRowProps): JSX.Element | null {
-  const { renderTitle, Control, Description, Screen, InfoModal, featureFlag } = setting
+export function SwapSettingRow({ setting, setSelectedSetting, warning }: SwapSettingRowProps): JSX.Element | null {
+  const { renderTitle, renderTooltip, Control, Description, Screen, InfoModal, featureFlag } = setting
   const { t } = useTranslation()
+
   const [showInfoModal, setShowInfoModal] = useState(false)
 
   const onPressControl = useCallback(() => {
@@ -27,21 +30,32 @@ export function SwapSettingRow({ setting, setSelectedSetting }: SwapSettingRowPr
 
   const row = (
     <>
-      <Flex py="$spacing4">
-        <Flex centered row gap="$spacing16" justifyContent="space-between">
+      <Flex>
+        <Flex centered row columnGap="$spacing16" justifyContent="space-between">
           <TouchableArea onPress={(): void => setShowInfoModal(true)}>
-            <Flex gap="$spacing4">
+            <Flex gap="$spacing2" justifyContent="center" minHeight={48}>
               <Flex row alignItems="center" gap="$spacing4">
                 <Text color="$neutral1" variant="subheading2">
                   {renderTitle(t)}
                 </Text>
                 {InfoModal && <InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />}
+                {!!renderTooltip && (
+                  <InfoTooltip
+                    trigger={
+                      <TouchableArea>
+                        <InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
+                      </TouchableArea>
+                    }
+                    text={renderTooltip(t)}
+                  />
+                )}
               </Flex>
               {Description && (
                 <Text color="$neutral2" variant="body3">
                   <Description />
                 </Text>
               )}
+              {warning}
             </Flex>
           </TouchableArea>
           <TouchableArea flexShrink={1} onPress={onPressControl}>

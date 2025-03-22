@@ -1,16 +1,14 @@
 import { Interface } from '@ethersproject/abi'
+// eslint-disable-next-line no-restricted-imports
 import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
-import { useContractMultichain } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
-import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import { IUniswapV3PoolStateInterface } from 'uniswap/src/abis/types/v3/IUniswapV3PoolState'
-import { UniswapV3Pool } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateJSON.abi) as IUniswapV3PoolStateInterface
@@ -51,7 +49,7 @@ export class PoolCache {
         tokenA,
         tokenB,
         fee,
-        chainId: UNIVERSE_CHAIN_INFO[chainId].sdkId,
+        chainId: getChainInfo(chainId).sdkId,
       }),
     }
     this.addresses.unshift(address)
@@ -98,9 +96,8 @@ export enum PoolState {
 
 export function usePools(
   poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][],
+  chainId: UniverseChainId | undefined,
 ): [PoolState, Pool | null][] {
-  const { chainId } = useAccount()
-
   const poolTokens: ([Token, Token, FeeAmount] | undefined)[] = useMemo(() => {
     if (!chainId) {
       return new Array(poolKeys.length)
@@ -195,43 +192,5 @@ export function usePool(
     [currencyA, currencyB, feeAmount],
   )
 
-  return usePools(poolKeys)[0]
-}
-
-export function usePoolMultichain(
-  tokenA: Token | undefined,
-  tokenB: Token | undefined,
-  fee: number | undefined,
-  chainId: UniverseChainId,
-): [PoolState, Pool | null] {
-  const poolData = useRef<[PoolState, Pool | null]>([PoolState.LOADING, null])
-  const poolAddress =
-    tokenA && tokenB && fee
-      ? PoolCache.getPoolAddress(V3_CORE_FACTORY_ADDRESSES[chainId], tokenA, tokenB, fee, chainId)
-      : undefined
-
-  const contractMap = useMemo(() => (poolAddress ? { [chainId]: poolAddress } : {}), [chainId, poolAddress])
-  const contract = useContractMultichain<UniswapV3Pool>(contractMap, IUniswapV3PoolStateJSON.abi)[chainId]
-
-  useEffect(() => {
-    async function getPool() {
-      try {
-        if (!tokenA || !tokenB || !fee || !poolAddress || !contract) {
-          poolData.current = [PoolState.INVALID, null]
-          return
-        }
-
-        const slot0 = await contract.slot0()
-        const liquidity = await contract.liquidity()
-        poolData.current = [PoolState.NOT_EXISTS, null]
-
-        const pool = new Pool(tokenA, tokenB, fee, slot0.sqrtPriceX96.toString(), liquidity.toString(), slot0.tick)
-        poolData.current = [PoolState.EXISTS, pool]
-      } catch (e) {
-        poolData.current = [PoolState.INVALID, null]
-      }
-    }
-    getPool()
-  }, [contract, fee, poolAddress, tokenA, tokenB])
-  return poolData.current
+  return usePools(poolKeys, currencyA?.chainId)[0]
 }

@@ -7,6 +7,7 @@ import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { useOnMobileAppState } from 'utilities/src/device/appState'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
+import { isMobileWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
 export const numericInputRegex = RegExp('^\\d*(\\.\\d*)?$') // Matches only numeric values without commas
@@ -62,22 +63,29 @@ export function parseValue({
   // Replace all non-numeric characters, leaving the decimal and thousand separators.
   parsedValue = parsedValue.replace(/[^0-9.,]/g, '')
 
-  // TODO(MOB-2385): replace this temporary solution for native keyboard.
-  if (showSoftInputOnFocus && nativeKeyboardDecimalSeparator !== decimalSeparator) {
+  if (isMobileWeb) {
+    // Override decimal handling in mweb since 'react-native-localize' provides unreliable native decimal separators in this specific env.
+    // This isn't an ideal long-term solution (as it limits copy/paste flexibility), but it's necessary
+    // to unblock users in various locales who are currently unable to input amounts correctly.
+    parsedValue = parsedValue.replace(/,/g, '.')
+  } else {
+    // TODO(MOB-2385): replace this temporary solution for native keyboard.
+    if (showSoftInputOnFocus && nativeKeyboardDecimalSeparator !== decimalSeparator) {
+      parsedValue = replaceSeparators({
+        value: parsedValue,
+        decimalSeparator: nativeKeyboardDecimalSeparator,
+        decimalOverride: decimalSeparator,
+      })
+    }
+
     parsedValue = replaceSeparators({
       value: parsedValue,
-      decimalSeparator: nativeKeyboardDecimalSeparator,
-      decimalOverride: decimalSeparator,
+      groupingSeparator,
+      decimalSeparator,
+      groupingOverride: '',
+      decimalOverride: '.',
     })
   }
-
-  parsedValue = replaceSeparators({
-    value: parsedValue,
-    groupingSeparator,
-    decimalSeparator,
-    groupingOverride: '',
-    decimalOverride: '.',
-  })
 
   if (maxDecimals === undefined) {
     return parsedValue

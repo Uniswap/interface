@@ -2,6 +2,7 @@
  * Event names that occur in this specific application
  */
 export enum ExtensionEventName {
+  BackgroundAttemptedToOpenSidebar = 'Background Attempted To Open Sidebar',
   ChangeLockedState = 'Change Locked State',
   DappChangeChain = 'Dapp Change Chain',
   DappConnect = 'Dapp Connect',

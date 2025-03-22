@@ -1,5 +1,5 @@
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 
 /*
@@ -66,7 +66,7 @@ export const BRIDGING_DAPP_URLS = [
 export function getCanonicalBridgingDappUrls(chainIds: UniverseChainId[]): string[] {
   const canonicalUrls = chainIds
     .map((chainId) => {
-      const chainInfo = UNIVERSE_CHAIN_INFO[chainId]
+      const chainInfo = getChainInfo(chainId)
       return chainInfo?.bridge ? extractBaseUrl(chainInfo.bridge) : undefined
     })
     .filter((url): url is string => url !== undefined)

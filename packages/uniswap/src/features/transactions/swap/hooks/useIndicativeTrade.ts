@@ -9,7 +9,6 @@ interface UseIndicativeTradeParams {
   quoteRequestArgs?: QuoteRequest
   currencyIn?: Currency | null
   currencyOut?: Currency | null
-  customSlippageTolerance?: number
   skip?: boolean
 }
 

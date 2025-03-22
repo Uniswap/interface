@@ -1,8 +1,8 @@
 import { Currency, Token, TradeType } from '@uniswap/sdk-core'
-import { GetQuoteArgs, PoolType, RouterPreference, TokenInRoute } from 'state/routing/types'
+import { GetQuoteArgs, PoolType, RouterPreference, TokenInRoute, URAQuoteType } from 'state/routing/types'
 import { computeRoutes } from 'state/routing/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', undefined, false)
 const USDC_IN_ROUTE = toTokenInRoute(USDC)
@@ -26,7 +26,7 @@ const BASE_ARGS = {
   sendPortionEnabled: true,
 }
 
-function constructArgs(currencyIn: Currency, currencyOut: Currency, isXv2?: boolean): GetQuoteArgs {
+function constructArgs(currencyIn: Currency, currencyOut: Currency, routingType: URAQuoteType): GetQuoteArgs {
   return {
     ...BASE_ARGS,
     tokenInAddress: currencyIn.isNative ? 'ETH' : currencyIn.address,
@@ -37,14 +37,7 @@ function constructArgs(currencyIn: Currency, currencyOut: Currency, isXv2?: bool
     tokenOutChainId: currencyOut.chainId,
     tokenOutDecimals: currencyOut.decimals,
     tokenOutSymbol: currencyOut.symbol,
-    isXv2: isXv2 ?? false,
-    isXv2Arbitrum: false,
-    priceImprovementBps: 0,
-    forceOpenOrders: false,
-    deadlineBufferSecs: 30,
-    arbitrumXV2SlippageTolerance: '0.5',
-    isPriorityOrder: false,
-    isUniswapXSupportedChain: true,
+    routingType,
   }
 }
 
@@ -61,12 +54,12 @@ function toTokenInRoute(token: Token): TokenInRoute {
 
 describe('#useRoute', () => {
   it('handles empty edges and nodes', () => {
-    const result = computeRoutes(constructArgs(USDC, DAI), [])
+    const result = computeRoutes(constructArgs(USDC, DAI, URAQuoteType.CLASSIC), [])
     expect(result).toEqual([])
   })
 
   it('handles a single route trade from DAI to USDC from v3', () => {
-    const result = computeRoutes(constructArgs(DAI, USDC), [
+    const result = computeRoutes(constructArgs(DAI, USDC, URAQuoteType.CLASSIC), [
       [
         {
           type: 'v3-pool',
@@ -96,7 +89,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a single route trade from DAI to USDC from v2', () => {
-    const result = computeRoutes(constructArgs(DAI, USDC), [
+    const result = computeRoutes(constructArgs(DAI, USDC, URAQuoteType.CLASSIC), [
       [
         {
           type: 'v2-pool',
@@ -130,7 +123,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a multi-route trade from DAI to USDC', () => {
-    const result = computeRoutes(constructArgs(DAI, USDC), [
+    const result = computeRoutes(constructArgs(DAI, USDC, URAQuoteType.CLASSIC), [
       [
         {
           type: 'v2-pool',
@@ -197,7 +190,7 @@ describe('#useRoute', () => {
   })
 
   it('handles a single route trade with same token pair, different fee tiers', () => {
-    const result = computeRoutes(constructArgs(DAI, USDC), [
+    const result = computeRoutes(constructArgs(DAI, USDC, URAQuoteType.CLASSIC), [
       [
         {
           type: 'v3-pool',
@@ -237,7 +230,7 @@ describe('#useRoute', () => {
   })
 
   it('computes mixed routes correctly', () => {
-    const result = computeRoutes(constructArgs(DAI, MKR), [
+    const result = computeRoutes(constructArgs(DAI, MKR, URAQuoteType.CLASSIC), [
       [
         {
           type: PoolType.V3Pool,
@@ -282,7 +275,7 @@ describe('#useRoute', () => {
     it('outputs native ETH as input currency', () => {
       const WETH = ETH.wrapped
 
-      const result = computeRoutes(constructArgs(ETH, USDC), [
+      const result = computeRoutes(constructArgs(ETH, USDC, URAQuoteType.CLASSIC), [
         [
           {
             type: 'v3-pool',
@@ -309,7 +302,7 @@ describe('#useRoute', () => {
 
     it('outputs native ETH as output currency', () => {
       const WETH = new Token(1, ETH.wrapped.address, 18, 'WETH')
-      const result = computeRoutes(constructArgs(USDC, ETH), [
+      const result = computeRoutes(constructArgs(USDC, ETH, URAQuoteType.CLASSIC), [
         [
           {
             type: 'v3-pool',
@@ -336,7 +329,7 @@ describe('#useRoute', () => {
     it('outputs native ETH as input currency for v2 routes', () => {
       const WETH = ETH.wrapped
 
-      const result = computeRoutes(constructArgs(ETH, USDC), [
+      const result = computeRoutes(constructArgs(ETH, USDC, URAQuoteType.CLASSIC), [
         [
           {
             type: 'v2-pool',
@@ -367,7 +360,7 @@ describe('#useRoute', () => {
 
     it('outputs native ETH as output currency for v2 routes', () => {
       const WETH = new Token(1, ETH.wrapped.address, 18, 'WETH')
-      const result = computeRoutes(constructArgs(USDC, ETH), [
+      const result = computeRoutes(constructArgs(USDC, ETH, URAQuoteType.CLASSIC), [
         [
           {
             type: 'v2-pool',
@@ -399,12 +392,12 @@ describe('#useRoute', () => {
 
 describe('#useRoute X v2', () => {
   it('handles empty edges and nodes', () => {
-    const result = computeRoutes(constructArgs(USDC, DAI, true), [])
+    const result = computeRoutes(constructArgs(USDC, DAI, URAQuoteType.DUTCH_V2), [])
     expect(result).toEqual([])
   })
 
   it('handles a single route trade from DAI to USDC from v3', () => {
-    const result = computeRoutes(constructArgs(DAI, USDC, true), [
+    const result = computeRoutes(constructArgs(DAI, USDC, URAQuoteType.DUTCH_V2), [
       [
         {
           type: 'v3-pool',
@@ -434,7 +427,7 @@ describe('#useRoute X v2', () => {
   })
 
   it('handles a single route trade from DAI to USDC from v2', () => {
-    const result = computeRoutes(constructArgs(DAI, USDC, true), [
+    const result = computeRoutes(constructArgs(DAI, USDC, URAQuoteType.DUTCH_V2), [
       [
         {
           type: 'v2-pool',
@@ -468,7 +461,7 @@ describe('#useRoute X v2', () => {
   })
 
   it('handles a multi-route trade from DAI to USDC', () => {
-    const result = computeRoutes(constructArgs(DAI, USDC, true), [
+    const result = computeRoutes(constructArgs(DAI, USDC, URAQuoteType.DUTCH_V2), [
       [
         {
           type: 'v2-pool',
@@ -535,7 +528,7 @@ describe('#useRoute X v2', () => {
   })
 
   it('handles a single route trade with same token pair, different fee tiers', () => {
-    const result = computeRoutes(constructArgs(DAI, USDC, true), [
+    const result = computeRoutes(constructArgs(DAI, USDC, URAQuoteType.DUTCH_V2), [
       [
         {
           type: 'v3-pool',
@@ -575,7 +568,7 @@ describe('#useRoute X v2', () => {
   })
 
   it('computes mixed routes correctly', () => {
-    const result = computeRoutes(constructArgs(DAI, MKR, true), [
+    const result = computeRoutes(constructArgs(DAI, MKR, URAQuoteType.DUTCH_V2), [
       [
         {
           type: PoolType.V3Pool,
@@ -620,7 +613,7 @@ describe('#useRoute X v2', () => {
     it('outputs native ETH as input currency', () => {
       const WETH = ETH.wrapped
 
-      const result = computeRoutes(constructArgs(ETH, USDC, true), [
+      const result = computeRoutes(constructArgs(ETH, USDC, URAQuoteType.DUTCH_V2), [
         [
           {
             type: 'v3-pool',
@@ -647,7 +640,7 @@ describe('#useRoute X v2', () => {
 
     it('outputs native ETH as output currency', () => {
       const WETH = new Token(1, ETH.wrapped.address, 18, 'WETH')
-      const result = computeRoutes(constructArgs(USDC, ETH, true), [
+      const result = computeRoutes(constructArgs(USDC, ETH, URAQuoteType.DUTCH_V2), [
         [
           {
             type: 'v3-pool',
@@ -674,7 +667,7 @@ describe('#useRoute X v2', () => {
     it('outputs native ETH as input currency for v2 routes', () => {
       const WETH = ETH.wrapped
 
-      const result = computeRoutes(constructArgs(ETH, USDC, true), [
+      const result = computeRoutes(constructArgs(ETH, USDC, URAQuoteType.DUTCH_V2), [
         [
           {
             type: 'v2-pool',
@@ -705,7 +698,7 @@ describe('#useRoute X v2', () => {
 
     it('outputs native ETH as output currency for v2 routes', () => {
       const WETH = new Token(1, ETH.wrapped.address, 18, 'WETH')
-      const result = computeRoutes(constructArgs(USDC, ETH, true), [
+      const result = computeRoutes(constructArgs(USDC, ETH, URAQuoteType.DUTCH_V2), [
         [
           {
             type: 'v2-pool',

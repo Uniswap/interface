@@ -71,6 +71,9 @@ exports[`ResizableTextArea renders correctly 1`] = `
         >
           My test input
         </textarea>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -149,6 +152,9 @@ exports[`TextInput renders correctly 1`] = `
             value="My test input"
           />
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

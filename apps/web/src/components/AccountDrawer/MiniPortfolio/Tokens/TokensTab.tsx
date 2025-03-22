@@ -8,48 +8,46 @@ import PortfolioRow, {
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import Row from 'components/deprecated/Row'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { PortfolioBalance, PortfolioToken } from 'graphql/data/portfolios'
-import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
+import { useAccount } from 'hooks/useAccount'
+import { useTokenContextMenu } from 'hooks/useTokenContextMenu'
 import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Text, Tooltip } from 'ui/src'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
+import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useSortedPortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useTranslation } from 'uniswap/src/i18n'
-import { logger } from 'utilities/src/logger/logger'
+import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 export default function Tokens() {
   const accountDrawer = useAccountDrawer()
-  const hideSmallBalances = useHideSmallBalancesSetting()
-  const hideSpam = useHideSpamTokensSetting()
+  const signer = useAccount()
+  const account = useActiveSmartPool()
+
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
-  const { isTestnetModeEnabled } = useEnabledChains()
+  const { data: sortedPortfolioBalances, loading } = useSortedPortfolioBalances({
+    address: account?.address ?? signer?.address,
+  })
 
-  const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
+  const isLoading = loading && !sortedPortfolioBalances
 
-  const tokenBalances = data?.portfolios?.[0]?.tokenBalances
+  const hiddenBalances = sortedPortfolioBalances?.hiddenBalances ?? []
+  const visibleBalances = sortedPortfolioBalances?.balances ?? []
 
-  const { visibleTokens, hiddenTokens } = useMemo(
-    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances, hideSpam, isTestnetModeEnabled }),
-    [hideSmallBalances, tokenBalances, hideSpam, isTestnetModeEnabled],
-  )
-
-  if (!data) {
+  if (isLoading) {
     return <PortfolioSkeleton />
   }
 
-  if (tokenBalances?.length === 0) {
+  if (hiddenBalances.length === 0 && visibleBalances.length === 0) {
     // TODO: consider launching moonpay here instead of just closing the drawer
     return <EmptyWalletModule type="token" onNavigateClick={accountDrawer.close} />
   }
@@ -58,15 +56,13 @@ export default function Tokens() {
 
   return (
     <PortfolioTabWrapper>
-      {visibleTokens.map(
-        (tokenBalance) =>
-          tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />,
-      )}
-      <ExpandoRow isExpanded={showHiddenTokens} toggle={toggleHiddenTokens} numItems={hiddenTokens.length}>
-        {hiddenTokens.map(
-          (tokenBalance) =>
-            tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />,
-        )}
+      {visibleBalances.map((tokenBalance) => (
+        <TokenRow key={tokenBalance.id} tokenBalance={tokenBalance} />
+      ))}
+      <ExpandoRow isExpanded={showHiddenTokens} toggle={toggleHiddenTokens} numItems={hiddenBalances.length}>
+        {hiddenBalances.map((tokenBalance) => (
+          <TokenRow key={tokenBalance.id} tokenBalance={tokenBalance} />
+        ))}
       </ExpandoRow>
     </PortfolioTabWrapper>
   )
@@ -79,19 +75,21 @@ const TokenNameText = styled(ThemedText.SubHeader)`
   ${EllipsisStyle}
 `
 
-function TokenRow({
-  token,
-  quantity,
-  denominatedValue,
-  tokenProjectMarket,
-}: PortfolioBalance & { token: PortfolioToken }) {
+function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
   const { t } = useTranslation()
-  const { formatDelta } = useFormatter()
+  const { formatDelta, formatNumber } = useFormatter()
   const { isTestnetModeEnabled } = useEnabledChains()
-  const percentChange = tokenProjectMarket?.relativeChange24?.value ?? 0
-
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
+
+  const menuItems = useTokenContextMenu({
+    tokenBalance,
+  })
+
+  const currency = tokenBalance.currencyInfo.currency
+  const { chainId, name, symbol, isNative } = currency
+  const percentChange24 = tokenBalance.relativeChange24 ?? 0
+  const tokenAddress = isNative ? NATIVE_TOKEN_PLACEHOLDER : currency.address
 
   // TODO: remove when exposing '/explore' route.
   const isExploreRouteActive = false
@@ -100,50 +98,42 @@ function TokenRow({
     if (isTestnetModeEnabled || !isExploreRouteActive) {
       return
     }
-  
-    navigate(getTokenDetailsURL({ ...token }))
-    accountDrawer.close()
-  }, [navigate, token, accountDrawer, isTestnetModeEnabled, isExploreRouteActive])
-  const { formatNumber } = useFormatter()
 
-  const currency = gqlToCurrency(token)
-  if (!currency) {
-    logger.error(new Error('Token from unsupported chain received from Mini Portfolio Token Balance Query'), {
-      tags: {
-        file: 'RecentlySearchedAssets',
-        function: 'useRecentlySearchedAssets',
-      },
-      extra: { token },
-    })
-    return null
-  }
+    navigate(
+      getTokenDetailsURL({
+        address: tokenAddress,
+        chain: chainId,
+      }),
+    )
+    accountDrawer.close()
+  }, [accountDrawer, isTestnetModeEnabled, navigate, tokenAddress, chainId, isExploreRouteActive])
 
   const portfolioRow = (
     <PortfolioRow
-      left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
-      title={<TokenNameText>{token?.name ?? token?.project?.name}</TokenNameText>}
+      left={<PortfolioLogo chainId={chainId} currencies={[currency]} size={40} />}
+      title={<TokenNameText>{name}</TokenNameText>}
       descriptor={
         <TokenBalanceText>
           {formatNumber({
-            input: quantity,
+            input: tokenBalance.quantity,
             type: NumberType.TokenNonTx,
           })}{' '}
-          {token?.symbol}
+          {symbol}
         </TokenBalanceText>
       }
       onClick={navigateToTokenDetails}
       right={
-        denominatedValue && (
+        tokenBalance.balanceUSD && (
           <>
             <ThemedText.SubHeader>
               {formatNumber({
-                input: denominatedValue?.value,
+                input: tokenBalance.balanceUSD,
                 type: NumberType.PortfolioBalance,
               })}
             </ThemedText.SubHeader>
             <Row justify="flex-end">
-              <DeltaArrow delta={percentChange} />
-              <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
+              <DeltaArrow delta={percentChange24} />
+              <ThemedText.BodySecondary>{formatDelta(percentChange24)}</ThemedText.BodySecondary>
             </Row>
           </>
         )
@@ -156,9 +146,9 @@ function TokenRow({
       logPress
       element={InterfaceElementName.MINI_PORTFOLIO_TOKEN_ROW}
       properties={{
-        chain_id: currency.chainId,
-        token_name: token?.name ?? token?.project?.name,
-        address: token?.address,
+        chain_id: chainId,
+        token_name: name,
+        address: tokenAddress,
       }}
     >
       {isTestnetModeEnabled ? (
@@ -170,7 +160,9 @@ function TokenRow({
           <Tooltip.Trigger>{portfolioRow}</Tooltip.Trigger>
         </Tooltip>
       ) : (
-        portfolioRow
+        <ContextMenu menuStyleProps={{ minWidth: '200px' }} menuItems={menuItems} alignContentLeft>
+          {portfolioRow}
+        </ContextMenu>
       )}
     </Trace>
   )

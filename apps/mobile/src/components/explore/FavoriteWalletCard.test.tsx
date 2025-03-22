@@ -1,4 +1,3 @@
-import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
 import FavoriteWalletCard, { FavoriteWalletCardProps } from 'src/components/explore/FavoriteWalletCard'
 import { preloadedMobileState } from 'src/test/fixtures'
@@ -7,7 +6,8 @@ import * as ensHooks from 'uniswap/src/features/ens/api'
 import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
 import { ON_PRESS_EVENT_PAYLOAD, SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { preloadedWalletReducerState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const mockedNavigation = {
@@ -27,9 +27,7 @@ const mockStore = configureMockStore()
 
 const defaultProps: FavoriteWalletCardProps = {
   address: SAMPLE_SEED_ADDRESS_1,
-  pressProgress: makeMutable(0),
   isEditing: false,
-  dragActivationProgress: makeMutable(0),
   setIsEditing: jest.fn(),
 }
 

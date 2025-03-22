@@ -67,7 +67,6 @@ export function LinkButton({
   return (
     <Trace logPress element={element}>
       <TouchableArea
-        hapticFeedback
         backgroundColor="$surface2"
         borderRadius="$rounded20"
         px="$spacing12"

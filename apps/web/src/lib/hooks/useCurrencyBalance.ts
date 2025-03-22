@@ -8,45 +8,12 @@ import { useMultipleContractSingleData, useSingleContractMultipleData } from 'li
 import { useMemo } from 'react'
 import ERC20ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isAddress } from 'utilities/src/addresses'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { currencyKey } from 'utils/currencyKey'
-
-/**
- * Returns a map of the given addresses to their eventually consistent ETH balances.
- */
-function useNativeCurrencyBalances(uncheckedAddresses?: (string | undefined)[]): {
-  [address: string]: CurrencyAmount<Currency> | undefined
-} {
-  const { chainId } = useAccount()
-  const multicallContract = useInterfaceMulticall()
-
-  const validAddressInputs: [string][] = useMemo(
-    () =>
-      uncheckedAddresses
-        ? uncheckedAddresses
-            .map(isAddress)
-            .filter((a): a is string => a !== false)
-            .sort()
-            .map((addr) => [addr])
-        : [],
-    [uncheckedAddresses],
-  )
-
-  const results = useSingleContractMultipleData(multicallContract, 'getEthBalance', validAddressInputs)
-
-  return useMemo(
-    () =>
-      validAddressInputs.reduce<{ [address: string]: CurrencyAmount<Currency> }>((memo, [address], i) => {
-        const value = results?.[i]?.result?.[0]
-        if (value && chainId) {
-          memo[address] = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), JSBI.BigInt(value.toString()))
-        }
-        return memo
-      }, {}),
-    [validAddressInputs, chainId, results],
-  )
-}
+import { assume0xAddress } from 'utils/wagmi'
+import { useBalance } from 'wagmi'
 
 const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
 const tokenBalancesGasRequirement = { gasRequired: 185_000 }
@@ -68,7 +35,7 @@ export function useCurrencyBalancesMultipleAccounts(
       uncheckedAddresses
         ? uncheckedAddresses
             .map(isAddress)
-            .filter((a): a is string => a !== false)
+            .filter((a): a is `0x${string}` => a !== false)
             .sort()
             .map((addr) => [addr])
         : [],
@@ -169,7 +136,11 @@ function useRpcCurrencyBalances(
   const { chainId } = useAccount()
   const tokenBalances = useRpcTokenBalances(account, tokens)
   const containsETH: boolean = useMemo(() => currencies?.some((currency) => currency?.isNative) ?? false, [currencies])
-  const ethBalance = useNativeCurrencyBalances(useMemo(() => (containsETH ? [account] : []), [containsETH, account]))
+  const { data: nativeBalance } = useBalance({
+    address: assume0xAddress(account),
+    chainId,
+    query: { enabled: containsETH && !!account },
+  })
 
   return useMemo(
     () =>
@@ -180,12 +151,12 @@ function useRpcCurrencyBalances(
         if (currency.isToken) {
           return tokenBalances[currency.address]
         }
-        if (currency.isNative) {
-          return ethBalance[account]
+        if (currency.isNative && nativeBalance?.value) {
+          return CurrencyAmount.fromRawAmount(currency, nativeBalance.value.toString())
         }
         return undefined
       }) ?? [],
-    [account, chainId, currencies, ethBalance, tokenBalances],
+    [account, chainId, currencies, nativeBalance?.value, tokenBalances],
   )
 }
 
@@ -214,8 +185,15 @@ function useGqlCurrencyBalances(
       const balance = balanceMap[key]
 
       if (balance) {
-        const balanceQuantityRaw = JSBI.BigInt(Math.floor(balance.balance * Math.pow(10, currency.decimals ?? 18)))
-        return CurrencyAmount.fromRawAmount(currency, balanceQuantityRaw)
+        const currencyAmount = getCurrencyAmount({
+          value: balance.balance.toString(),
+          valueType: ValueType.Exact,
+          currency,
+        })
+        if (!currencyAmount) {
+          return undefined
+        }
+        return currencyAmount
       } else {
         return CurrencyAmount.fromRawAmount(currency, 0)
       }

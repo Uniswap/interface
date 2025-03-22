@@ -1,4 +1,4 @@
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type AddressMap = { [chainId: number]: string }
 
@@ -37,7 +37,7 @@ export const GOVERNANCE_PROXY_ADDRESSES: AddressMap = {
 /* Staking Proxy Addresses */
 export const STAKING_PROXY_ADDRESSES: AddressMap = {
   [UniverseChainId.Mainnet]: '0x730dDf7b602dB822043e0409d8926440395e07fE',
-  [UniverseChainId.Sepolia]: '0x6C4594aa0CBcb8315E88EFdb11675c09A7a5f444',
+  [UniverseChainId.Sepolia]: '0xD40edcc947fF35637233d765CB9efCFc10fC8c22',
   [UniverseChainId.Optimism]: '0xB844bDCC64a748fDC8c9Ee74FA4812E4BC28FD70',
   [UniverseChainId.ArbitrumOne]: '0xD495296510257DAdf0d74846a8307bf533a0fB48',
   [UniverseChainId.Polygon]: '0xC87d1B952303ae3A9218727692BAda6723662dad',
@@ -63,7 +63,6 @@ export const GRG_TRANSFER_PROXY_ADDRESSES: AddressMap = {
 export const RB_FACTORY_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x8DE8895ddD702d9a216E640966A98e08c9228f24', [
     UniverseChainId.Mainnet,
-    UniverseChainId.Sepolia,
     UniverseChainId.Optimism,
     UniverseChainId.ArbitrumOne,
     UniverseChainId.Polygon,
@@ -76,7 +75,6 @@ export const RB_FACTORY_ADDRESSES: AddressMap = {
 export const RB_REGISTRY_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0x06767e8090bA5c4Eca89ED00C3A719909D503ED6', [
     UniverseChainId.Mainnet,
-    UniverseChainId.Sepolia,
     UniverseChainId.Optimism,
     UniverseChainId.ArbitrumOne,
     UniverseChainId.Polygon,

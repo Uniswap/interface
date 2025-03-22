@@ -21,10 +21,10 @@ import {
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { UseAccountReturnType } from 'wagmi'
 
@@ -56,7 +56,7 @@ export const TEST_TOKEN_3_INFO: CurrencyInfo = {
   safetyInfo: benignSafetyInfo,
 }
 export const ETH_MAINNET = nativeOnChain(UniverseChainId.Mainnet)
-
+export const ETH_SEPOLIA = nativeOnChain(UniverseChainId.Sepolia)
 export const TEST_POOL_12 = new Pool(
   TEST_TOKEN_1,
   TEST_TOKEN_2,

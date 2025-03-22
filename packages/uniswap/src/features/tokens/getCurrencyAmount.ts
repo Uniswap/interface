@@ -40,9 +40,6 @@ export function getCurrencyAmount<T extends Currency>({
 
     if (valueType === ValueType.Exact) {
       parsedValue = parseUnits(parsedValue, currency.decimals).toString()
-      if (parsedValue === '0') {
-        return null
-      }
     }
 
     return CurrencyAmount.fromRawAmount(currency, parsedValue)

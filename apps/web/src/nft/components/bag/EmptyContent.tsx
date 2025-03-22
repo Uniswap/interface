@@ -1,4 +1,4 @@
-import { useIsNftProfilePage } from 'hooks/useIsNftPage'
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import styled from 'lib/styled-components'
 import { Center, Column } from 'nft/components/Flex'
 import { BagIcon, LargeTagIcon } from 'nft/components/icons'
@@ -11,7 +11,7 @@ const StyledColumn = styled(Column)`
 `
 
 const EmptyState = () => {
-  const isProfilePage = useIsNftProfilePage()
+  const isProfilePage = useIsPage(PageType.NFTS_PROFILE)
 
   return (
     <StyledColumn>

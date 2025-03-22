@@ -1,22 +1,20 @@
 import React from 'react'
 import { SvgProps } from 'react-native-svg'
-import { useIsDarkMode } from 'ui/src'
 import { IconSizeTokens } from 'ui/src/theme'
-import { UNIVERSE_CHAIN_LOGO } from 'uniswap/src/assets/chainLogos'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-type IconComponentProps = SvgProps & { size?: IconSizeTokens | number }
+type IconComponentProps = SvgProps & { size?: IconSizeTokens | number | { width: number; height: number } }
 
 const iconsCache = new Map<UniverseChainId, React.FC<IconComponentProps>>()
 
 function buildIconComponent(chainId: UniverseChainId): React.FC<IconComponentProps> {
-  const explorer = UNIVERSE_CHAIN_INFO[chainId].explorer
-  const exlorerLogos = UNIVERSE_CHAIN_LOGO[chainId].explorer
+  const explorer = getChainInfo(chainId).explorer
 
   const Component = ({ size }: IconComponentProps): JSX.Element => {
-    const isDarkMode = useIsDarkMode()
-    return isDarkMode ? <exlorerLogos.logoDark size={size} /> : <exlorerLogos.logoLight size={size} />
+    const Logo = useBlockExplorerLogo(chainId)
+    return <Logo size={size} />
   }
   Component.displayName = `BlockExplorerIcon_${explorer.name}`
   iconsCache.set(chainId, Component)

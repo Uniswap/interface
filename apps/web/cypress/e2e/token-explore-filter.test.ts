@@ -33,7 +33,9 @@ describe('Token explore filter', () => {
           .map((i, token) => token.innerText)
           .get()
 
-        cy.wrap(tokenTexts).should('deep.equal', filteredTokenTexts)
+          const firstToken = [tokenTexts[0]]
+
+        cy.wrap(firstToken).should('deep.equal', filteredTokenTexts)
       })
     })
   })

@@ -3,9 +3,9 @@ import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
-import { useGasFeeFormattedAmounts } from 'uniswap/src/features/gas/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isMobileApp } from 'utilities/src/platform'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 
@@ -25,7 +25,7 @@ export function NetworkFeeFooter({
   const { t } = useTranslation()
   const variant = isMobileApp ? 'body3' : 'body4'
 
-  const { gasFeeFormatted } = useGasFeeFormattedAmounts({
+  const { gasFeeFormatted } = useGasFeeFormattedDisplayAmounts({
     gasFee,
     chainId,
     placeholder: '-',

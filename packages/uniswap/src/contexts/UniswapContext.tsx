@@ -2,8 +2,8 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { Signer } from 'ethers/lib/ethers'
 import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Connector } from 'wagmi'
 
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */
@@ -12,12 +12,15 @@ interface UniswapContext {
   connector?: Connector
   navigateToBuyOrReceiveWithEmptyWallet?: () => void
   navigateToFiatOnRamp: (args: { prefilledCurrency?: FiatOnRampCurrency }) => void
+  navigateToSwapFlow: (args: { inputCurrencyId?: string; outputCurrencyId?: string }) => void
   onSwapChainsChanged: (args: {
     chainId: UniverseChainId
     prevChainId?: UniverseChainId
     outputChainId?: UniverseChainId
   }) => void
   swapInputChainId?: UniverseChainId
+  setSwapOutputChainId: (chainId: UniverseChainId) => void
+  swapOutputChainId?: UniverseChainId
   signer: Signer | undefined
   useProviderHook: (chainId: number) => JsonRpcProvider | undefined
   // Used for triggering wallet connection on web
@@ -35,12 +38,16 @@ export function UniswapProvider({
   connector,
   navigateToBuyOrReceiveWithEmptyWallet,
   navigateToFiatOnRamp,
+  navigateToSwapFlow,
   onSwapChainsChanged,
   signer,
   useProviderHook,
   onConnectWallet,
-}: PropsWithChildren<Omit<UniswapContext, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen'>>): JSX.Element {
+}: PropsWithChildren<
+  Omit<UniswapContext, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen' | 'setSwapOutputChainId'>
+>): JSX.Element {
   const [swapInputChainId, setSwapInputChainId] = useState<UniverseChainId>()
+  const [swapOutputChainId, setSwapOutputChainId] = useState<UniverseChainId>()
   const [isSwapTokenSelectorOpen, setIsSwapTokenSelectorOpen] = useState<boolean>(false)
 
   const value: UniswapContext = useMemo(
@@ -48,6 +55,8 @@ export function UniswapProvider({
       account,
       connector,
       navigateToBuyOrReceiveWithEmptyWallet,
+      navigateToFiatOnRamp,
+      navigateToSwapFlow,
       onSwapChainsChanged: ({
         chainId,
         prevChainId,
@@ -59,12 +68,14 @@ export function UniswapProvider({
       }): void => {
         onSwapChainsChanged({ chainId, prevChainId, outputChainId })
         setSwapInputChainId(chainId)
+        setSwapOutputChainId(outputChainId)
       },
       signer,
       useProviderHook,
-      navigateToFiatOnRamp,
       onConnectWallet,
       swapInputChainId,
+      swapOutputChainId,
+      setSwapOutputChainId,
       isSwapTokenSelectorOpen,
       setIsSwapTokenSelectorOpen: (open: boolean) => setIsSwapTokenSelectorOpen(open),
     }),
@@ -72,11 +83,13 @@ export function UniswapProvider({
       account,
       connector,
       navigateToBuyOrReceiveWithEmptyWallet,
+      navigateToFiatOnRamp,
+      navigateToSwapFlow,
       signer,
       useProviderHook,
-      navigateToFiatOnRamp,
       onConnectWallet,
       swapInputChainId,
+      swapOutputChainId,
       onSwapChainsChanged,
       isSwapTokenSelectorOpen,
       setIsSwapTokenSelectorOpen,

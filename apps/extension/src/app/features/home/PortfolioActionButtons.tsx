@@ -5,8 +5,8 @@ import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Flex, Text, getTokenValue, useMedia } from 'ui/src'
-import { ArrowDownCircle, Buy, CoinConvert, SendAction } from 'ui/src/components/icons'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { ArrowDownCircle, Bank, CoinConvert, SendAction } from 'ui/src/components/icons'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
@@ -124,7 +124,7 @@ export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): J
       />
       <Flex row shrink gap="$spacing8" width={isGrid ? '100%' : '50%'}>
         <ActionButton Icon={<CoinConvert />} label={t('home.label.swap')} onClick={onSwapClick} />
-        <ActionButton Icon={<Buy />} label={t('home.label.buy')} onClick={onBuyClick} />
+        <ActionButton Icon={<Bank />} label={t('home.label.buy')} onClick={onBuyClick} />
       </Flex>
       <Flex row shrink gap="$spacing8" width={isGrid ? '100%' : '50%'}>
         <ActionButton Icon={<SendAction />} label={t('home.label.send')} onClick={onSendClick} />

@@ -55,7 +55,7 @@ export function CloudPasswordInput(): JSX.Element {
 
 function PasswordStrengthText({ strength }: { strength: PasswordStrength }): JSX.Element {
   const { t } = useTranslation()
-  const { color } = getPasswordStrengthTextAndColor(strength)
+  const { color } = getPasswordStrengthTextAndColor(t, strength)
 
   const hasPassword = strength !== PasswordStrength.NONE
   let strengthText: string = ''

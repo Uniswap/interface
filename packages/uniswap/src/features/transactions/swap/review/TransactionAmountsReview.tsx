@@ -1,19 +1,13 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Flex, isWeb, Loader, ModalCloseIcon, Text, useMedia, useSporeColors } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
-import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
-import { X } from 'ui/src/components/icons/X'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/hooks/getTradeAmounts'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -23,8 +17,8 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
-import { openUri } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,
@@ -39,14 +33,12 @@ export function TransactionAmountsReview({
   const colors = useSporeColors()
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
 
-  const isBridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
-
   const {
     exactCurrencyField,
     trade: { trade, indicativeTrade },
   } = acceptedDerivedSwapInfo
   const displayTrade = trade ?? indicativeTrade
-  const isBridgeTrade = (isBridgingEnabled && trade && isBridge(trade)) ?? false
+  const isBridgeTrade = (trade && isBridge(trade)) ?? false
 
   const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo)
 
@@ -85,12 +77,21 @@ export function TransactionAmountsReview({
   )
 
   if (!currencyInInfo || !currencyOutInfo) {
-    // This should never happen. It's just to keep TS happy.
-    throw new Error('Missing required props in `derivedSwapInfo` to render `TransactionAmountsReview` screen.')
-  }
-
-  const onPressGetHelp = async (): Promise<void> => {
-    await openUri(uniswapUrls.rigoblockDiscordUrl)
+    // This should never happen given that all the data required to get these two objects should be readily available in the Review screen.
+    // This might be happening because the `Token` query is somehow not in the cache,
+    // which only started happening on mobile 1.43 and we don't know why.
+    // As a temporary fix, we've added a Skeleton UI to this component,
+    // but ideally this should not be necessary.
+    logger.warn(
+      'TransactionAmountsReview.tsx',
+      'TransactionAmountsReview',
+      'Missing required `currencyInInfo` or `currencyOutInfo` when rendering `TransactionAmountsReview`',
+      {
+        acceptedDerivedSwapInfo,
+        inputCurrencyAmount,
+        outputCurrencyAmount,
+      },
+    )
   }
 
   return (
@@ -103,54 +104,44 @@ export function TransactionAmountsReview({
         </Flex>
         {isWeb && (
           <Flex row centered gap="$spacing12">
-            <TouchableArea
-              hoverable
-              p="$padding6"
-              borderColor="$surface3"
-              borderWidth={1}
-              borderRadius="$rounded12"
-              onPress={onPressGetHelp}
-            >
-              <Flex row centered gap="$spacing4">
-                <HelpCenter color="$neutral1" size="$icon.16" />{' '}
-                <Text variant="body4" color="$neutral1">
-                  {t('common.getHelp.button')}
-                </Text>
-              </Flex>
-            </TouchableArea>
-            <Button
-              backgroundColor="$transparent"
-              color="$neutral2"
-              icon={<X size="$icon.20" />}
-              p="$none"
-              theme="secondary"
-              onPress={onClose}
-            />
+            <ModalCloseIcon size="$icon.20" onClose={onClose} />
           </Flex>
         )}
       </Flex>
 
-      <CurrencyValueWithIcon
-        currencyInfo={currencyInInfo}
-        formattedFiatAmount={formattedFiatAmountIn}
-        formattedTokenAmount={formattedTokenAmountIn}
-        indicative={isInputIndicative}
-        shouldDim={shouldDimInput}
-        isBridgeTrade={isBridgeTrade}
-      />
+      {!currencyInInfo ? (
+        <CurrencyValueWithIconSkeleton />
+      ) : (
+        <CurrencyValueWithIcon
+          currencyInfo={currencyInInfo}
+          formattedFiatAmount={formattedFiatAmountIn}
+          formattedTokenAmount={formattedTokenAmountIn}
+          indicative={isInputIndicative}
+          shouldDim={shouldDimInput}
+          isBridgeTrade={isBridgeTrade}
+        />
+      )}
 
       <ArrowDown color={colors.neutral3.get()} size={20} />
 
-      <CurrencyValueWithIcon
-        currencyInfo={currencyOutInfo}
-        formattedFiatAmount={formattedFiatAmountOut}
-        formattedTokenAmount={formattedTokenAmountOut}
-        indicative={isOutputIndicative}
-        shouldDim={shouldDimOutput}
-        isBridgeTrade={isBridgeTrade}
-      />
+      {!currencyOutInfo ? (
+        <CurrencyValueWithIconSkeleton />
+      ) : (
+        <CurrencyValueWithIcon
+          currencyInfo={currencyOutInfo}
+          formattedFiatAmount={formattedFiatAmountOut}
+          formattedTokenAmount={formattedTokenAmountOut}
+          indicative={isOutputIndicative}
+          shouldDim={shouldDimOutput}
+          isBridgeTrade={isBridgeTrade}
+        />
+      )}
     </Flex>
   )
+}
+
+function CurrencyValueWithIconSkeleton(): JSX.Element {
+  return <Loader.Box height={60} />
 }
 
 function CurrencyValueWithIcon({
@@ -174,14 +165,16 @@ function CurrencyValueWithIcon({
 
   const chainId = toSupportedChainId(currencyInfo.currency.chainId) ?? defaultChainId
   const networkColors = useNetworkColors(chainId)
-  const networkLabel = UNIVERSE_CHAIN_INFO[chainId].label
+  const networkLabel = getChainLabel(chainId)
   const networkColor = validColor(networkColors.foreground)
+  const media = useMedia()
 
+  // If you modify this UI, make sure to also modify the height of `CurrencyValueWithIconSkeleton`.
   return (
     <Flex centered grow row>
       <Flex grow gap="$spacing4">
         {isBridgeTrade && (
-          <Flex row gap="$spacing4" alignItems="center">
+          <Flex row mt={media.sm ? '$spacing8' : undefined} gap="$spacing4" alignItems="center">
             <NetworkLogo chainId={currencyInfo.currency.chainId} size={iconSizes.icon16} />
             <Text color={networkColor} variant="buttonLabel3">
               {networkLabel}

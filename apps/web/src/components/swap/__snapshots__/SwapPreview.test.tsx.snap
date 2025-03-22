@@ -83,19 +83,12 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c10 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c9 {
   color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c11 {
+.c10 {
   cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
@@ -146,7 +139,7 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
                   class="c5"
                 >
                   <div
-                    class="c10 css-15popx1"
+                    class="c8 css-15popx1"
                     data-testid="input-amount"
                   >
                     &lt;0.00001 ABC
@@ -173,7 +166,7 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
                   >
                     <div>
                       <div
-                        class="c8 c11 css-142zc9n"
+                        class="c8 c10 css-142zc9n"
                         cursor="help"
                       >
                         Buy
@@ -185,7 +178,7 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
                   class="c5"
                 >
                   <div
-                    class="c10 css-15popx1"
+                    class="c8 css-15popx1"
                     data-testid="output-amount"
                   >
                     &lt;0.00001 DEF
@@ -200,6 +193,9 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -289,19 +285,12 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
   letter-spacing: -0.01em;
 }
 
-.c10 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c9 {
   color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c11 {
+.c10 {
   cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
@@ -352,7 +341,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
                   class="c5"
                 >
                   <div
-                    class="c10 css-15popx1"
+                    class="c8 css-15popx1"
                     data-testid="input-amount"
                   >
                     &lt;0.00001 ETH
@@ -362,6 +351,25 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
                   >
                     -
                   </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="eth-logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
                 </div>
               </div>
             </div>
@@ -379,7 +387,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
                   >
                     <div>
                       <div
-                        class="c8 c11 css-142zc9n"
+                        class="c8 c10 css-142zc9n"
                         cursor="help"
                       >
                         Buy
@@ -391,7 +399,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
                   class="c5"
                 >
                   <div
-                    class="c10 css-15popx1"
+                    class="c8 css-15popx1"
                     data-testid="output-amount"
                   >
                     &lt;0.00001 DEF
@@ -406,6 +414,9 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -495,19 +506,12 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 sw
   letter-spacing: -0.01em;
 }
 
-.c10 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c9 {
   color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c11 {
+.c10 {
   cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
@@ -558,7 +562,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 sw
                   class="c5"
                 >
                   <div
-                    class="c10 css-15popx1"
+                    class="c8 css-15popx1"
                     data-testid="input-amount"
                   >
                     &lt;0.00001 ETH
@@ -568,6 +572,25 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 sw
                   >
                     -
                   </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                data-testid="token-logo"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                  data-testid="img-token-image"
+                >
+                  <img
+                    height="36"
+                    src="eth-logo.png"
+                    style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                    width="36"
+                  />
                 </div>
               </div>
             </div>
@@ -585,7 +608,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 sw
                   >
                     <div>
                       <div
-                        class="c8 c11 css-142zc9n"
+                        class="c8 c10 css-142zc9n"
                         cursor="help"
                       >
                         Buy
@@ -597,7 +620,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 sw
                   class="c5"
                 >
                   <div
-                    class="c10 css-15popx1"
+                    class="c8 css-15popx1"
                     data-testid="output-amount"
                   >
                     &lt;0.00001 DEF
@@ -612,6 +635,9 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 sw
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -701,19 +727,12 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c10 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c9 {
   color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c11 {
+.c10 {
   cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
@@ -764,7 +783,7 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
                   class="c5"
                 >
                   <div
-                    class="c10 css-15popx1"
+                    class="c8 css-15popx1"
                     data-testid="input-amount"
                   >
                     &lt;0.00001 DEF
@@ -791,7 +810,7 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
                   >
                     <div>
                       <div
-                        class="c8 c11 css-142zc9n"
+                        class="c8 c10 css-142zc9n"
                         cursor="help"
                       >
                         Buy
@@ -818,6 +837,9 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -907,19 +929,12 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c10 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c9 {
   color: #7D7D7D;
   margin-right: 8px;
 }
 
-.c11 {
+.c10 {
   cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
@@ -970,7 +985,7 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
                   class="c5"
                 >
                   <div
-                    class="c10 css-15popx1"
+                    class="c8 css-15popx1"
                     data-testid="input-amount"
                   >
                     &lt;0.00001 ABC
@@ -997,7 +1012,7 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
                   >
                     <div>
                       <div
-                        class="c8 c11 css-142zc9n"
+                        class="c8 c10 css-142zc9n"
                         cursor="help"
                       >
                         Buy
@@ -1009,7 +1024,7 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
                   class="c5"
                 >
                   <div
-                    class="c10 css-15popx1"
+                    class="c8 css-15popx1"
                     data-testid="output-amount"
                   >
                     &lt;0.00001 GHI
@@ -1024,6 +1039,9 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

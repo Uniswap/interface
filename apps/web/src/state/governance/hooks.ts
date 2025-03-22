@@ -26,8 +26,8 @@ import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
 import STAKING_ABI from 'uniswap/src/abis/staking-impl.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
 import { GRG } from 'uniswap/src/constants/tokens'
-import { t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import i18n from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 function useGovernanceProxyContract(): Contract | null {
@@ -342,8 +342,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
         // TODO: amend block to time
         return {
           id: (i + 1).toString(), //formattedLogs[i]?.proposalId?.toString(),
-          title: title ?? t('common.untitled'),
-          description: description ?? t('common.noDescription'),
+          title: title ?? i18n.t('common.untitled'),
+          description: description ?? i18n.t('common.noDescription'),
           proposer: formattedLogs[i]?.proposer, //proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
           forCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.proposalWrapper?.proposal?.votesFor),

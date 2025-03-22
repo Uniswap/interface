@@ -4,6 +4,7 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import styled from 'lib/styled-components'
 import React, { useCallback, useEffect, useState } from 'react';
 import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/hooks';
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types';
 
 const PoolSelectButton = styled(ButtonGray)<{
     visible: boolean
@@ -82,6 +83,19 @@ const PoolSelect: React.FC<PoolSelectProps> = ({ operatedPools }) => {
     }
   }, [activePoolExistsOnChain, activeSmartPool?.name, operatedPools, onPoolSelect])
 
+  const poolsAsCurrrencies = operatedPools.map((pool: Token) => {
+    return {
+      currency: pool,
+      currencyId: pool.address,
+      safetyLevel: null,
+      safetyInfo: null,
+      spamCode: null,
+      logoUrl: null,
+      isSpam: null
+    }
+  }
+  ) as CurrencyInfo[];
+
   const handleSelectPool = useCallback((pool: Currency) => {
     onPoolSelect(pool);
     setShowModal(false);
@@ -108,7 +122,7 @@ const PoolSelect: React.FC<PoolSelectProps> = ({ operatedPools }) => {
           isOpen={showModal}
           onDismiss={() => setShowModal(false)}
           onCurrencySelect={handleSelectPool}
-          operatedPools={operatedPools as Token[]}
+          operatedPools={poolsAsCurrrencies}
           shouldDisplayPoolsOnly={true}
         />
     </>

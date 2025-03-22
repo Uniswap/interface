@@ -1,7 +1,8 @@
 import { Dialog } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import styled from 'lib/styled-components'
-import { Trans } from 'uniswap/src/i18n'
+import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
+import { useTranslation } from 'react-i18next'
 
 const StyledAlertIcon = styled(AlertTriangleFilled)`
   path {
@@ -9,27 +10,22 @@ const StyledAlertIcon = styled(AlertTriangleFilled)`
   }
 `
 
-export const SmartContractSpeedBumpModal = ({
-  onCancel,
-  onConfirm,
-}: {
-  onCancel: () => void
-  onConfirm: () => void
-}) => {
+export const SmartContractSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendModalProps) => {
+  const { t } = useTranslation()
   return (
     <Dialog
-      isVisible={true}
+      isVisible={isOpen}
       icon={<StyledAlertIcon size="28px" />}
-      title={<Trans i18nKey="speedBump.smartContractAddress.warning.title">Is this a wallet address?</Trans>}
-      description={<Trans i18nKey="speedBump.smartContractAddress.warning.description" />}
-      onCancel={onCancel}
+      title={t('speedBump.smartContractAddress.warning.title')}
+      description={t('speedBump.smartContractAddress.warning.description')}
+      onCancel={onDismiss}
       buttonsConfig={{
         left: {
-          title: <Trans i18nKey="common.button.cancel" />,
-          onClick: onCancel,
+          title: t('common.button.cancel'),
+          onClick: onDismiss,
         },
         right: {
-          title: <Trans i18nKey="common.button.continue" />,
+          title: t('common.button.continue'),
           onClick: onConfirm,
         },
       }}

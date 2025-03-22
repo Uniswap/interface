@@ -1,11 +1,12 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount /*, Token*/ } from '@uniswap/sdk-core'
 //import { useWeb3React } from '@web3-react/core'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'lib/styled-components'
-import { CloseIcon, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ModalCloseIcon } from 'ui/src'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { PoolInfo, useDerivedPoolInfo } from 'state/buy/hooks'
@@ -19,7 +20,8 @@ import { /*ButtonConfirmed,*/ ButtonError } from 'components/Button/buttons'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
-import Modal from 'components/Modal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import ProgressCircles from 'components/ProgressSteps'
 
@@ -152,7 +154,7 @@ export default function SellModal({
   }, [maxAmountInput, onUserInput])
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={480}>
+    <Modal name={ModalName.DappRequest} isModalOpen={isOpen} isDismissible onClose={wrappedOnDismiss} maxHeight={480}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           {userBaseTokenBalance && poolInfo && (
@@ -163,7 +165,7 @@ export default function SellModal({
                     Sell {poolInfo.pool?.symbol ?? null} Receive {userBaseTokenBalance.currency?.symbol}
                   </Trans>
                 </ThemedText.DeprecatedMediumHeader>
-                <CloseIcon onClick={wrappedOnDismiss} />
+                <ModalCloseIcon onClose={wrappedOnDismiss} />
               </RowBetween>
               <CurrencyInputPanel
                 value={typedValue}

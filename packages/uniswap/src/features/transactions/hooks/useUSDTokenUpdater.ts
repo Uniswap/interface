@@ -1,9 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useEffect, useRef } from 'react'
+import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { NumberType } from 'utilities/src/format/types'
 
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2
@@ -35,11 +35,12 @@ export function useUSDTokenUpdater({
   }, [isFiatInput])
 
   useEffect(() => {
-    if (!currency || !price) {
+    if (!currency || !price || !isUniverseChainId(currency.chainId)) {
       return undefined
     }
 
-    const exactAmountUSD = (parseFloat(exactAmountFiat) / conversionRate).toFixed(NUM_DECIMALS_USD)
+    const _exactAmountFiat = exactAmountFiat === '.' ? '0' : exactAmountFiat || '0'
+    const exactAmountUSD = (parseFloat(_exactAmountFiat) / conversionRate).toFixed(NUM_DECIMALS_USD)
 
     if (shouldUseUSDRef.current) {
       const stablecoinAmount = getCurrencyAmount({
@@ -50,13 +51,7 @@ export function useUSDTokenUpdater({
 
       const currencyAmount = stablecoinAmount ? price?.invert().quote(stablecoinAmount) : undefined
 
-      return onTokenAmountUpdated(
-        formatCurrencyAmount({
-          value: currencyAmount,
-          type: NumberType.SwapTradeAmount,
-          placeholder: '',
-        }),
-      )
+      return onTokenAmountUpdated(currencyAmount?.toExact() ?? '')
     }
 
     const exactCurrencyAmount = getCurrencyAmount({

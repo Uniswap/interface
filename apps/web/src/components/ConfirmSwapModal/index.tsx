@@ -5,13 +5,12 @@ import { SwapHead } from 'components/ConfirmSwapModal/Head'
 import { SwapModal } from 'components/ConfirmSwapModal/Modal'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import SwapProgressIndicator from 'components/ConfirmSwapModal/ProgressIndicator'
-import { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { AutoColumn } from 'components/deprecated/Column'
 import { SwapDetails } from 'components/swap/SwapDetails'
 import { SwapPreview } from 'components/swap/SwapPreview'
 import { useConfirmModalState } from 'hooks/useConfirmModalState'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
-import { SwapResult } from 'hooks/useSwapCallback'
+import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useSuppressPopups } from 'state/application/hooks'
@@ -19,10 +18,11 @@ import { PopupType } from 'state/application/reducer'
 import { InterfaceTrade } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
-import { useSwapTransactionStatus } from 'state/transactions/hooks'
 import { ThemeProvider } from 'theme'
 import { FadePresence } from 'theme/components/FadePresence'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+// eslint-disable-next-line no-restricted-imports
+import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -77,7 +77,7 @@ export function ConfirmSwapModal({
   clearSwapState: () => void
   onAcceptChanges?: () => void
   onConfirm: () => void
-  onCurrencySelection: (field: CurrencyField, currency: Currency) => void
+  onCurrencySelection: (field: CurrencyField, currency: Currency, isResettingWETHAfterWrap?: boolean) => void
   onDismiss: () => void
   onXV2RetryWithClassic?: () => void
 }) {
@@ -193,7 +193,7 @@ export function ConfirmSwapModal({
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
       onCancel()
-    }, MODAL_TRANSITION_DURATION)
+    }, ADAPTIVE_MODAL_ANIMATION_DURATION)
     // Popups are suppressed when modal is open; re-enable them on dismissal
     unsuppressPopups()
   }, [confirmModalState, doesTradeDiffer, onCancel, onDismiss, priceUpdate, unsuppressPopups, trade])
@@ -201,7 +201,7 @@ export function ConfirmSwapModal({
   return (
     // Wrapping in a new theme provider resets any color extraction overriding on the current page. Swap modal should use default/non-overridden theme.
     <ThemeProvider>
-      <SwapModal confirmModalState={confirmModalState} onDismiss={onModalDismiss}>
+      <SwapModal onDismiss={onModalDismiss}>
         {/* Head section displays title, help button, close icon */}
         <Container $height="24px" $padding="6px 12px 4px 12px">
           <SwapHead
@@ -226,6 +226,7 @@ export function ConfirmSwapModal({
                     suppressPopups()
                     startSwapFlow()
                   }}
+                  inputCurrency={inputCurrency}
                   trade={trade}
                   allowance={allowance}
                   swapResult={swapResult}

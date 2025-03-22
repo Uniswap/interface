@@ -2,6 +2,7 @@
 
 exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
 <View
+  pointerEvents="auto"
   style={
     {
       "alignItems": "center",
@@ -29,7 +30,7 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
         "position": "absolute",
         "top": "2%",
         "width": "96%",
-        "zIndex": -1,
+        "zIndex": 0,
       }
     }
   />
@@ -51,6 +52,7 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
           "aspectRatio": undefined,
           "borderRadius": 20,
           "objectFit": "contain",
+          "zIndex": 1,
         }
       }
       width={40}
@@ -63,6 +65,7 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
         "flexDirection": "column",
         "position": "absolute",
         "right": -3,
+        "zIndex": 10,
       }
     }
   >
@@ -70,33 +73,28 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
       style={
         {
           "borderColor": "#131313",
-          "borderRadius": 6.8999999999999995,
+          "borderRadius": 6.6,
           "borderStyle": "solid",
-          "borderWidth": 1.5,
+          "borderWidth": 2,
           "flexDirection": "column",
-          "height": 23,
+          "height": 22,
           "overflow": "hidden",
-          "width": 23,
+          "width": 22,
+          "zIndex": 10,
         }
       }
       testID="network-logo"
     >
-      <div
-        className="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
-        dir={null}
+      <Image
+        resizeMode="contain"
+        source="mock-asset-ARBITRUM_LOGO.png"
         style={
           {
-            "height": "20px",
-            "width": "20px",
+            "height": 18,
+            "width": 18,
           }
         }
-      >
-        <div
-          className="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
-          dir={null}
-          suppressHydrationWarning={true}
-        />
-      </div>
+      />
     </View>
   </View>
 </View>
@@ -104,6 +102,7 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
 
 exports[`CurrencyLogo renders without error 1`] = `
 <View
+  pointerEvents="auto"
   style={
     {
       "alignItems": "center",
@@ -131,7 +130,7 @@ exports[`CurrencyLogo renders without error 1`] = `
         "position": "absolute",
         "top": "2%",
         "width": "96%",
-        "zIndex": -1,
+        "zIndex": 0,
       }
     }
   />
@@ -153,6 +152,7 @@ exports[`CurrencyLogo renders without error 1`] = `
           "aspectRatio": undefined,
           "borderRadius": 20,
           "objectFit": "contain",
+          "zIndex": 1,
         }
       }
       width={40}

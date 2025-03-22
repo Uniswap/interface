@@ -3,7 +3,7 @@ import AddressInputPanel from 'components/AddressInputPanel'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import styled from 'lib/styled-components'
 import { ProposalAction } from 'pages/CreateProposal/ProposalActionSelector'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 
 enum ProposalActionDetailField {
   ADDRESS,

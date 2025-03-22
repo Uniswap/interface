@@ -2,7 +2,7 @@
 /* helpful when dealing with deeply nested state objects */
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers/lib/ethers'
-import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   ChainIdToTxIdToDetails,
@@ -45,11 +45,14 @@ const slice = createSlice({
       state[from]![chainId]![id] = transaction
     },
     finalizeTransaction: (state, { payload: transaction }: PayloadAction<FinalizedTransactionDetails>) => {
-      const { chainId, id, status, receipt, from, hash } = transaction
+      const { chainId, id, status, receipt, from, hash, networkFee } = transaction
       assert(state?.[from]?.[chainId]?.[id], `finalizeTransaction: Attempted to finalize a missing tx with id ${id}`)
       state[from]![chainId]![id]!.status = status
       if (receipt) {
         state[from]![chainId]![id]!.receipt = receipt
+      }
+      if (networkFee) {
+        state[from]![chainId]![id]!.networkFee = networkFee
       }
       if (isUniswapX(transaction) && status === TransactionStatus.Success) {
         assert(hash, `finalizeTransaction: Attempted to finalize an order without providing the fill tx hash`)
@@ -96,8 +99,8 @@ const slice = createSlice({
       state[address]![chainId]![id]!.status = TransactionStatus.Replacing
     },
     resetTransactions: () => initialTransactionsState,
-    // fiat onramp transactions re-use this slice to store (off-chain) pending txs
-    upsertFiatOnRampTransaction: (state, { payload: transaction }: PayloadAction<FiatOnRampTransactionDetails>) => {
+    // FOR transactions re-use this slice to store (off-chain) pending txs
+    upsertFiatOnRampTransaction: (state, { payload: transaction }: PayloadAction<FORTransactionDetails>) => {
       const {
         chainId,
         id,
@@ -107,9 +110,11 @@ const slice = createSlice({
 
       assert(
         type === TransactionType.LocalOnRamp ||
+          type === TransactionType.LocalOffRamp ||
           type === TransactionType.OnRampPurchase ||
-          type === TransactionType.OnRampTransfer,
-        `only on-ramp transactions can be upserted`,
+          type === TransactionType.OnRampTransfer ||
+          type === TransactionType.OffRampSale,
+        `only FOR transactions can be upserted`,
       )
 
       state[from] ??= {}

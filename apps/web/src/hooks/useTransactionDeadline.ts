@@ -5,14 +5,17 @@ import { useInterfaceMulticall } from 'hooks/useContract'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useCallback, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 
 export default function useTransactionDeadline(): BigNumber | undefined {
   const { chainId } = useAccount()
   const ttl = useAppSelector((state) => state.user.userDeadline)
   const blockTimestamp = useCurrentBlockTimestamp()
-  return useMemo(() => timestampToDeadline(chainId, blockTimestamp, ttl), [blockTimestamp, chainId, ttl])
+  return useMemo(
+    () => timestampToDeadline(chainId, BigNumber.from(blockTimestamp), ttl),
+    [blockTimestamp, chainId, ttl],
+  )
 }
 
 /**
@@ -20,7 +23,7 @@ export default function useTransactionDeadline(): BigNumber | undefined {
  * Should be used for any submitted transactions, as it uses an on-chain timestamp instead of a client timestamp.
  */
 export function useGetTransactionDeadline(): () => Promise<BigNumber | undefined> {
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
   const ttl = useAppSelector((state) => state.user.userDeadline)
   const multicall = useInterfaceMulticall(chainId)
   return useCallback(async () => {

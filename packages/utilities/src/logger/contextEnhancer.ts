@@ -1,8 +1,5 @@
-import { addSentryContextBreadcrumb } from 'utilities/src/logger/breadcrumbs'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
-export function logContextUpdate(contextName: string, newState: unknown, _isDatadogEnabled: boolean): void {
-  if (__DEV__) {
-    return
-  }
-  addSentryContextBreadcrumb(contextName, newState)
+export function logContextUpdate(_contextName: string, _newState: unknown, _isDatadogEnabled: boolean): void {
+  throw new PlatformSplitStubError('logContextUpdate')
 }

@@ -1,6 +1,6 @@
+import { Trans } from 'react-i18next'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { useExperimentGroupName, useExperimentGroupNameWithLoading } from 'uniswap/src/features/gating/hooks'
-import { Trans } from 'uniswap/src/i18n'
 
 export function useIsAccountCTAExperimentControl() {
   const { value: experimentGroupName, isLoading } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)

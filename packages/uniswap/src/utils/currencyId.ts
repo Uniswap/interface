@@ -1,11 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 
 export function currencyId(tradeableAsset: TradeableAsset): CurrencyId
 export function currencyId(currency: Currency): CurrencyId
@@ -20,6 +20,20 @@ export function currencyId(currencyOrTradeableAsset: Currency | TradeableAsset):
 
 export function buildCurrencyId(chainId: UniverseChainId, address: string): string {
   return `${chainId}-${address}`
+}
+
+/**
+ * Checks if a currencyId is valid by checking the chainId and address.
+ */
+export function isCurrencyIdValid(_currencyId: CurrencyId): boolean {
+  try {
+    const [chainId, address] = _currencyId.split('-')
+    const validAddress = getValidAddress(address)
+    const validChainId = toSupportedChainId(chainId)
+    return !!validChainId && !!validAddress
+  } catch (error) {
+    return false
+  }
 }
 
 export function buildNativeCurrencyId(chainId: UniverseChainId): string {

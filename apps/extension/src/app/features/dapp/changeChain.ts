@@ -6,10 +6,10 @@ import {
   DappResponseType,
   ErrorResponse,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function changeChain({
   activeConnectedAddress,

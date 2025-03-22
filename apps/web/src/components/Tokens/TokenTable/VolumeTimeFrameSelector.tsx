@@ -1,13 +1,12 @@
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { TimePeriod } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAtom } from 'jotai'
 import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Check } from 'react-feather'
-import { FlexProps } from 'ui/src'
-import { useTranslation } from 'uniswap/src/i18n'
+import { useTranslation } from 'react-i18next'
+import { useMedia } from 'ui/src'
 
 export enum TimePeriodDisplay {
   HOUR = '1H',
@@ -49,15 +48,6 @@ export const ORDERED_TIMES: TimePeriod[] = [
   TimePeriod.YEAR,
 ]
 
-const StyledDropdown = {
-  maxHeight: 300,
-  right: 0,
-  top: 'calc(100% + 20px)',
-  $xl: {
-    left: 0,
-  },
-} satisfies FlexProps
-
 // TODO: change this to reflect data pipeline
 export default function VolumeTimeFrameSelector() {
   const { t } = useTranslation()
@@ -65,42 +55,37 @@ export default function VolumeTimeFrameSelector() {
   const [isMenuOpen, toggleMenu] = useState(false)
   const [activeTime, setTime] = useAtom(filterTimeAtom)
 
-  const screenSize = useScreenSize()
-  const isLargeScreen = screenSize['lg']
+  const media = useMedia()
+  const isLargeScreen = !media.xl
 
   return (
     <div>
       <DropdownSelector
         isOpen={isMenuOpen}
         toggleOpen={toggleMenu}
-        menuLabel={
-          <>
-            {DISPLAYS[activeTime]} {isLargeScreen && t('common.volume').toLowerCase()}
-          </>
-        }
-        internalMenuItems={
-          <>
-            {ORDERED_TIMES.map((time) => (
-              <InternalMenuItem
-                key={DISPLAYS[time]}
-                data-testid={DISPLAYS[time]}
-                onPress={() => {
-                  setTime(time)
-                  toggleMenu(false)
-                }}
-              >
-                <div>
-                  {DISPLAYS[time]} {t('common.volume').toLowerCase()}
-                </div>
-                {time === activeTime && <Check color={theme.accent1} size={16} />}
-              </InternalMenuItem>
-            ))}
-          </>
-        }
+        menuLabel={`${DISPLAYS[activeTime]} ${isLargeScreen ? t('common.volume').toLowerCase() : ''}`}
         dataTestId="time-selector"
         buttonStyle={{ height: 40 }}
-        dropdownStyle={StyledDropdown}
-      />
+        dropdownStyle={{ maxHeight: 300 }}
+        adaptToSheet
+        alignRight={!media.lg}
+      >
+        {ORDERED_TIMES.map((time) => (
+          <InternalMenuItem
+            key={DISPLAYS[time]}
+            data-testid={DISPLAYS[time]}
+            onPress={() => {
+              setTime(time)
+              toggleMenu(false)
+            }}
+          >
+            <div>
+              {DISPLAYS[time]} {t('common.volume').toLowerCase()}
+            </div>
+            {time === activeTime && <Check color={theme.accent1} size={16} />}
+          </InternalMenuItem>
+        ))}
+      </DropdownSelector>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { revertHardhat, setupHardhat } from '../utils'
 
 export function registerSetupTests() {

@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint160, MaxUint256 } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 
-import { DAI, USDC_MAINNET, USDT } from 'uniswap/src/constants/tokens'
+import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { HARDHAT_TIMEOUT, setupHardhat } from '../utils'
 
 /** Initiates a swap. */
@@ -57,7 +57,7 @@ describe('Permit2', () => {
     after(() => cy.hardhat({ automine: true }))
 
     it('swaps after completing full permit2 approval process', () => {
-      setupInputs(DAI, USDC_MAINNET)
+      setupInputs(DAI, USDT)
       initiateSwap('Approve and swap')
 
       // verify that the modal retains its state when the window loses focus
@@ -79,7 +79,7 @@ describe('Permit2', () => {
     })
 
     it('swaps with existing permit approval and missing token approval', () => {
-      setupInputs(DAI, USDC_MAINNET)
+      setupInputs(DAI, USDT)
       cy.hardhat().then({ timeout: HARDHAT_TIMEOUT }, async (hardhat) => {
         await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: DAI })
         await hardhat.mine()
@@ -115,7 +115,7 @@ describe('Permit2', () => {
         await hardhat.mine()
       })
 
-      setupInputs(USDT, USDC_MAINNET)
+      setupInputs(USDT, DAI)
       cy.get('#swap-currency-input .token-amount-input').clear().type('2')
       initiateSwap('Approve and swap')
 
@@ -145,7 +145,7 @@ describe('Permit2', () => {
       await hardhat.approval.setTokenAllowanceForPermit2({ owner: hardhat.wallet, token: DAI })
       await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: DAI })
     })
-    setupInputs(DAI, USDC_MAINNET)
+    setupInputs(DAI, USDT)
     initiateSwap()
 
     // Verify transaction
@@ -153,7 +153,7 @@ describe('Permit2', () => {
   })
 
   it('swaps after handling user rejection of both approval and signature', () => {
-    setupInputs(DAI, USDC_MAINNET)
+    setupInputs(DAI, USDT)
     const USER_REJECTION = { code: 4001 }
     cy.hardhat().then((hardhat) => {
       // Reject token approval
@@ -194,7 +194,7 @@ describe('Permit2', () => {
   })
 
   it('prompts token approval when existing approval amount is too low', () => {
-    setupInputs(DAI, USDC_MAINNET)
+    setupInputs(DAI, USDT)
     cy.hardhat().then({ timeout: HARDHAT_TIMEOUT }, async (hardhat) => {
       await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: DAI })
       await hardhat.approval.setTokenAllowanceForPermit2({ owner: hardhat.wallet, token: DAI }, 1)
@@ -213,7 +213,7 @@ describe('Permit2', () => {
         await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: DAI }, expiredAllowance)
       })
       .then(() => {
-        setupInputs(DAI, USDC_MAINNET)
+        setupInputs(DAI, USDT)
         initiateSwap('Sign and swap')
       })
 
@@ -231,7 +231,7 @@ describe('Permit2', () => {
         await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: DAI }, smallAllowance)
       })
       .then(() => {
-        setupInputs(DAI, USDC_MAINNET)
+        setupInputs(DAI, USDT)
         initiateSwap('Sign and swap')
       })
 

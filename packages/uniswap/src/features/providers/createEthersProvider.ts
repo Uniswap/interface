@@ -1,9 +1,12 @@
 import { Signer, providers as ethersProviders } from 'ethers/lib/ethers'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
-import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
-import { RPCType, UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import {
+  FLASHBOTS_DEFAULT_BLOCK_RANGE,
+  FlashbotsRpcProvider,
+} from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { logger } from 'utilities/src/logger/logger'
 
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)
@@ -14,28 +17,48 @@ export function createEthersProvider(
 ): ethersProviders.JsonRpcProvider | null {
   try {
     if (rpcType === RPCType.Private) {
-      const privateRPCUrl = UNIVERSE_CHAIN_INFO[chainId].rpcUrls?.[RPCType.Private]?.http[0]
+      const privateRPCUrl = getChainInfo(chainId).rpcUrls?.[RPCType.Private]?.http[0]
       if (!privateRPCUrl) {
         throw new Error(`No private RPC available for chain ${chainId}`)
       }
 
-      const useFlashbots =
-        chainId === UniverseChainId.Mainnet && Statsig.checkGate(getFeatureFlagName(FeatureFlags.FlashbotsPrivateRpc))
-      if (useFlashbots) {
-        return new FlashbotsRpcProvider(signer)
+      const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
+        DynamicConfigs.MainnetPrivateRpc,
+        MainnetPrivateRpcConfigKey.UseFlashbots,
+        false,
+      )
+
+      if (chainId === UniverseChainId.Mainnet && useFlashbots) {
+        const sendAuthenticationHeader = getDynamicConfigValue<
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey,
+          boolean
+        >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
+
+        const flashbotsBlockRange = getDynamicConfigValue<
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey,
+          number
+        >(
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey.FlashbotsBlockRange,
+          FLASHBOTS_DEFAULT_BLOCK_RANGE,
+        )
+
+        return new FlashbotsRpcProvider(flashbotsBlockRange, sendAuthenticationHeader ? signer : undefined)
       }
 
       return new ethersProviders.JsonRpcProvider(privateRPCUrl)
     }
 
     try {
-      const publicRPCUrl = UNIVERSE_CHAIN_INFO[chainId].rpcUrls?.[RPCType.Public]?.http[0]
+      const publicRPCUrl = getChainInfo(chainId).rpcUrls?.[RPCType.Public]?.http[0]
       if (publicRPCUrl) {
         return new ethersProviders.JsonRpcProvider(publicRPCUrl)
       }
       throw new Error(`No public RPC available for chain ${chainId}`)
     } catch (error) {
-      const altPublicRPCUrl = UNIVERSE_CHAIN_INFO[chainId].rpcUrls?.[RPCType.PublicAlt]?.http[0]
+      const altPublicRPCUrl = getChainInfo(chainId).rpcUrls?.[RPCType.PublicAlt]?.http[0]
       return new ethersProviders.JsonRpcProvider(altPublicRPCUrl)
     }
   } catch (error) {

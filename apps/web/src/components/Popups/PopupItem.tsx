@@ -4,17 +4,18 @@ import {
   UniswapXOrderPopupContent,
 } from 'components/Popups/PopupContent'
 import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
-import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
+import { TFunction } from 'i18next'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRemovePopup } from 'state/application/hooks'
 import { PopupContent, PopupType } from 'state/application/reducer'
 import { Flex, Text } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export default function PopupItem({
@@ -26,6 +27,7 @@ export default function PopupItem({
   content: PopupContent
   popKey: string
 }) {
+  const { t } = useTranslation()
   const removePopup = useRemovePopup()
   const onClose = () => removePopup(popKey)
 
@@ -63,7 +65,7 @@ export default function PopupItem({
         <ToastRegularSimple
           onDismiss={onClose}
           icon={<NetworkLogo chainId={content.chainId} />}
-          text={getSwitchNetworkTitle(content.action, content.chainId as UniverseChainId)}
+          text={getSwitchNetworkTitle(t, content.action, content.chainId as UniverseChainId)}
         />
       )
     }
@@ -78,8 +80,8 @@ export default function PopupItem({
   }
 }
 
-function getSwitchNetworkTitle(action: SwapTab, chainId: UniverseChainId) {
-  const { label } = UNIVERSE_CHAIN_INFO[chainId]
+function getSwitchNetworkTitle(t: TFunction, action: SwapTab, chainId: UniverseChainId) {
+  const { label } = getChainInfo(chainId)
 
   switch (action) {
     case SwapTab.Swap:
@@ -98,8 +100,8 @@ function BridgeToast({
   inputChainId: UniverseChainId
   outputChainId: UniverseChainId
 }): JSX.Element {
-  const originChain = UNIVERSE_CHAIN_INFO[inputChainId]
-  const targetChain = UNIVERSE_CHAIN_INFO[outputChainId]
+  const originChain = getChainInfo(inputChainId)
+  const targetChain = getChainInfo(outputChainId)
   return (
     <Flex row gap="$gap8">
       <Flex row gap="$gap4">

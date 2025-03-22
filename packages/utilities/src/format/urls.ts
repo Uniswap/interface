@@ -101,12 +101,13 @@ function parseUrl(url?: string): URL | undefined {
 
 /**
  * Formats the app url by only returning the host url. If the url is not
- * secure, the base url is shown instead.
+ * secure, the base url is shown instead. If the url is not a valid url, the
+ * a shortened version of the invalid string is shown instead.
  *
  * See tests for examples.
  */
 export function formatDappURL(url: string): string {
-  return parseUrl(url)?.origin?.replace('https://', '') ?? ''
+  return parseUrl(url)?.origin?.replace('https://', '') ?? url?.slice(0, 20)
 }
 
 /** Returns the url host (doesn't include http or https) */

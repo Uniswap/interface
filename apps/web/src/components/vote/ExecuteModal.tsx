@@ -2,14 +2,15 @@ import Circle from 'assets/images/blue-loader.svg'
 import { ButtonPrimary } from 'components/Button/buttons'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
-import Modal from 'components/Modal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import { useExecuteCallback } from 'state/governance/hooks'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
+import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
@@ -77,7 +78,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
+    <Modal name={ModalName.DappRequest} isModalOpen={isOpen} isDismissible onClose={wrappedOnDismiss} maxHeight="90vh">
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
@@ -142,7 +143,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
                 style={{ marginLeft: '4px' }}
               >
                 <ThemedText.DeprecatedSubHeader>
-                  <Trans i18nKey="common.viewTransactionExplorer.link" />
+                  <Trans i18nKey="common.explorer.link" />
                 </ThemedText.DeprecatedSubHeader>
               </ExternalLink>
             )}

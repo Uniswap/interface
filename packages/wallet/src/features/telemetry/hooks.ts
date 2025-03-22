@@ -4,16 +4,16 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
 import { usePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { MobileAppsFlyerEvents, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { areSameDays } from 'utilities/src/time/date'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
-import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { useAccountBalances } from 'wallet/src/features/accounts/useAccountListData'
 import {
   selectAllowAnalytics,
   selectLastBalancesReport,
@@ -45,7 +45,7 @@ export function useLastBalancesReporter(): void {
       .map((a) => a.address)
   }, [accounts])
 
-  const { data } = useAccountList({
+  const { balances: signerAccountBalances, totalBalance: signerAccountsTotalBalance } = useAccountBalances({
     addresses: signerAccountAddresses,
     fetchPolicy: 'cache-first',
   })
@@ -59,39 +59,30 @@ export function useLastBalancesReporter(): void {
   })
   const totalBalancesUsdPerChain = useTotalBalancesUsdPerChain(portfolioBalancesQuery)
 
-  const signerAccountValues = useMemo(() => {
-    const valuesUnfiltered = data?.portfolios
-      ?.map((p) => p?.tokensTotalDenominatedValue?.value)
-      .filter((v) => v !== undefined)
-
-    if (valuesUnfiltered === undefined) {
-      return []
-    }
-
-    return valuesUnfiltered as number[]
-  }, [data?.portfolios])
-
   useEffect(() => {
-    const sumOfFunds = signerAccountValues.reduce((a, b) => a + b, 0)
-    if (!walletIsFunded && sumOfFunds) {
+    if (!walletIsFunded && signerAccountsTotalBalance) {
       // Only trigger the first time a funded wallet is detected
       dispatch(recordWalletFunded())
-      sendAppsFlyerEvent(MobileAppsFlyerEvents.WalletFunded, { sumOfFunds }).catch((error) =>
-        logger.debug('hooks', 'useLastBalancesReporter', error),
+      sendAppsFlyerEvent(MobileAppsFlyerEvents.WalletFunded, { sumOfFunds: signerAccountsTotalBalance }).catch(
+        (error) => logger.debug('hooks', 'useLastBalancesReporter', error),
       )
     }
-  }, [dispatch, signerAccountValues, walletIsFunded])
+  }, [dispatch, signerAccountsTotalBalance, walletIsFunded])
 
   const reporter = (): void => {
     if (
-      shouldReportBalances(lastBalancesReport, lastBalancesReportValue, signerAccountAddresses, signerAccountValues)
+      shouldReportBalances(
+        lastBalancesReport,
+        lastBalancesReportValue,
+        signerAccountAddresses,
+        signerAccountBalances,
+        signerAccountsTotalBalance,
+      )
     ) {
-      const totalBalance = signerAccountValues.reduce((a, b) => a + b, 0)
-
       sendAnalyticsEvent(UniswapEventName.BalancesReport, {
-        total_balances_usd: totalBalance,
+        total_balances_usd: signerAccountsTotalBalance,
         wallets: signerAccountAddresses,
-        balances: signerAccountValues,
+        balances: signerAccountBalances,
       })
 
       // Send a report per chain
@@ -102,7 +93,7 @@ export function useLastBalancesReporter(): void {
         })
       }
       // record that a report has been sent
-      dispatch(recordBalancesReport({ totalBalance }))
+      dispatch(recordBalancesReport({ totalBalance: signerAccountsTotalBalance }))
     }
   }
 

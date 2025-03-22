@@ -27,7 +27,7 @@ export const ActionCard = ({
       backgroundColor={BackgroundImageWrapperCallback ? undefined : '$surface1'}
       borderColor="$surface3"
       borderRadius="$rounded24"
-      borderWidth={1}
+      borderWidth="$spacing1"
       overflow="hidden"
       onPress={onPress}
     >

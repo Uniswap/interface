@@ -4,20 +4,14 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Check, Info } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { FlexProps } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const StyledDropdownButton = {
   borderRadius: 20,
   width: '100%',
   height: 36,
-} satisfies FlexProps
-
-const StyledMenuFlyout = {
-  minWidth: 130,
-  borderRadius: '$rounded16',
-  right: 0,
 } satisfies FlexProps
 
 interface ChartTypeSelectorOption<T extends ChartType | PriceChartType> {
@@ -57,40 +51,39 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
       isOpen={isMenuOpen}
       toggleOpen={toggleMenu}
       menuLabel={menuLabel ?? CHART_TYPE_LABELS[currentChartType]}
-      internalMenuItems={
-        <>
-          {options.map((option) => {
-            const { value: chartType, display } = getChartTypeSelectorOption(option)
-            const disabled = chartType === disabledOption
-            return (
-              <MouseoverTooltip
-                key={chartType}
-                text={disabled && <Trans i18nKey="chart.settings.unavailable.label" />}
-                placement={!isMobileWeb ? 'right' : undefined}
-              >
-                <InternalMenuItem
-                  onPress={() => {
-                    if (disabled) {
-                      return
-                    }
-                    onSelectOption(chartType)
-                    toggleMenu(false)
-                  }}
-                  disabled={disabled}
-                >
-                  {display ?? CHART_TYPE_LABELS[chartType]}
-                  {chartType === currentChartType && <Check size={20} color={theme.accent1} />}
-                  {disabled && <Info size={20} color="$neutral2" />}
-                </InternalMenuItem>
-              </MouseoverTooltip>
-            )
-          })}
-        </>
-      }
       tooltipText={tooltipText}
       buttonStyle={StyledDropdownButton}
-      dropdownStyle={StyledMenuFlyout}
-      adaptToSheet={false}
-    />
+      dropdownStyle={{ minWidth: 130 }}
+      alignRight
+    >
+      {options.map((option) => {
+        const { value: chartType, display } = getChartTypeSelectorOption(option)
+        const disabled = chartType === disabledOption
+        return (
+          <MouseoverTooltip
+            key={chartType}
+            text={disabled && <Trans i18nKey="chart.settings.unavailable.label" />}
+            placement={!isMobileWeb ? 'right' : undefined}
+            // disable tooltip if option is not disabled, therefore tooltip is not shown
+            disabled={!disabled}
+          >
+            <InternalMenuItem
+              onPress={() => {
+                if (disabled) {
+                  return
+                }
+                onSelectOption(chartType)
+                toggleMenu(false)
+              }}
+              disabled={disabled}
+            >
+              {display ?? CHART_TYPE_LABELS[chartType]}
+              {chartType === currentChartType && <Check size={20} color={theme.accent1} />}
+              {disabled && <Info size={20} color="$neutral2" />}
+            </InternalMenuItem>
+          </MouseoverTooltip>
+        )
+      })}
+    </DropdownSelector>
   )
 }

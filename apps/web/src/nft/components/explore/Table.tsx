@@ -4,7 +4,6 @@ import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { Box } from 'components/deprecated/Box'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { useWindowSize } from 'hooks/screenSize/useWindowSize'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { ColumnHeaders } from 'nft/components/explore/CollectionTable'
@@ -14,6 +13,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
 import { ThemedText } from 'theme/components'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 // Default table cell max width
@@ -27,7 +27,7 @@ const RankCellContainer = styled.div`
   align-items: center;
   padding-left: 24px;
   gap: 12px;
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-left: 8px;
   }
 `
@@ -103,7 +103,7 @@ export function Table<D extends Record<string, unknown>>({
 }: TableProps<D>) {
   const theme = useTheme()
   const { chainId } = useAccount()
-  const { width } = useWindowSize()
+  const { fullWidth: width } = useDeviceDimensions()
   const isMobile = useIsMobile()
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, setHiddenColumns, visibleColumns } =
@@ -131,11 +131,11 @@ export function Table<D extends Record<string, unknown>>({
       return
     }
 
-    if (width <= theme.breakpoint.sm) {
+    if (width <= theme.breakpoint.md) {
       setHiddenColumns(smallHiddenColumns)
-    } else if (width <= theme.breakpoint.md) {
-      setHiddenColumns(mediumHiddenColumns)
     } else if (width <= theme.breakpoint.lg) {
+      setHiddenColumns(mediumHiddenColumns)
+    } else if (width <= theme.breakpoint.xl) {
       setHiddenColumns(largeHiddenColumns)
     } else {
       setHiddenColumns([])

@@ -10,19 +10,19 @@ import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { Input as NumericalInput } from 'components/NumericalInput'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
-import { useIsSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
+import { breakpoints } from 'ui/src/theme'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -135,7 +135,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   font-size: 20px;
   white-space: nowrap;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     font-size: 16px;
   }
 `

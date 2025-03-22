@@ -10,6 +10,9 @@ import {
   UnsignedPriorityOrderInfoJSON,
   UnsignedV2DutchOrderInfo,
   UnsignedV2DutchOrderInfoJSON,
+  UnsignedV3DutchOrderInfo,
+  UnsignedV3DutchOrderInfoJSON,
+  V3DutchOutputJSON,
 } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
@@ -38,11 +41,13 @@ import {
   TradeResult,
   URADutchOrderQuoteData,
   URADutchOrderV2QuoteData,
+  URADutchOrderV3QuoteData,
   URAPriorityOrderQuoteData,
   URAQuoteResponse,
   URAQuoteType,
   V2DutchOrderTrade,
   V2PoolInRoute,
+  V3DutchOrderTrade,
   V3PoolInRoute,
   isClassicQuoteResponse,
 } from 'state/routing/types'
@@ -147,6 +152,35 @@ function toUnsignedV2DutchOrderInfo(orderInfoJSON: UnsignedV2DutchOrderInfoJSON)
   }
 }
 
+function toUnsignedV3DutchOrderInfo(orderInfoJSON: UnsignedV3DutchOrderInfoJSON): UnsignedV3DutchOrderInfo {
+  const { nonce, input, outputs, startingBaseFee } = orderInfoJSON
+  return {
+    ...orderInfoJSON,
+    nonce: BigNumber.from(nonce),
+    startingBaseFee: BigNumber.from(startingBaseFee),
+    input: {
+      ...input,
+      startAmount: BigNumber.from(input.startAmount),
+      maxAmount: BigNumber.from(input.maxAmount),
+      adjustmentPerGweiBaseFee: BigNumber.from(input.adjustmentPerGweiBaseFee),
+      curve: {
+        relativeBlocks: input.curve.relativeBlocks,
+        relativeAmounts: input.curve.relativeAmounts.map((amount) => BigNumber.from(amount).toBigInt()),
+      },
+    },
+    outputs: outputs.map((output: V3DutchOutputJSON) => ({
+      ...output,
+      startAmount: BigNumber.from(output.startAmount),
+      minAmount: BigNumber.from(output.minAmount),
+      adjustmentPerGweiBaseFee: BigNumber.from(output.adjustmentPerGweiBaseFee),
+      curve: {
+        relativeBlocks: output.curve.relativeBlocks,
+        relativeAmounts: output.curve.relativeAmounts.map((amount) => BigNumber.from(amount).toBigInt()),
+      },
+    })),
+  }
+}
+
 function toUnsignedPriorityOrderInfo(orderInfoJSON: UnsignedPriorityOrderInfoJSON): UnsignedPriorityOrderInfo {
   const { nonce, auctionStartBlock, baselinePriorityFeeWei, input, outputs } = orderInfoJSON
 
@@ -223,7 +257,12 @@ function getTradeCurrencies(
 }
 
 function getSwapFee(
-  data: ClassicQuoteData | URADutchOrderQuoteData | URADutchOrderV2QuoteData | URAPriorityOrderQuoteData,
+  data:
+    | ClassicQuoteData
+    | URADutchOrderQuoteData
+    | URADutchOrderV2QuoteData
+    | URADutchOrderV3QuoteData
+    | URAPriorityOrderQuoteData,
 ): SwapFeeInfo | undefined {
   const { portionAmount, portionBips, portionRecipient } = data
 
@@ -288,11 +327,12 @@ export async function transformQuoteToTrade(
   data: URAQuoteResponse,
   quoteMethod: QuoteMethod,
 ): Promise<TradeResult> {
-  const { tradeType, needsWrapIfUniswapX, isXv2, routerPreference, account, amount } = args
+  const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount, routingType } = args
 
   const showUniswapXTrade =
-    ((isXv2 ? data.routing === URAQuoteType.DUTCH_V2 : data.routing === URAQuoteType.DUTCH_V1) ||
-      data.routing === URAQuoteType.PRIORITY) &&
+    (routingType === URAQuoteType.DUTCH_V2 ||
+      routingType === URAQuoteType.DUTCH_V3 ||
+      routingType === URAQuoteType.PRIORITY) &&
     routerPreference === RouterPreference.X
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
@@ -345,12 +385,34 @@ export async function transformQuoteToTrade(
   const isUniswapXBetter =
     data.routing === URAQuoteType.DUTCH_V1 ||
     data.routing === URAQuoteType.DUTCH_V2 ||
+    data.routing === URAQuoteType.DUTCH_V3 ||
     data.routing === URAQuoteType.PRIORITY
   if (isUniswapXBetter) {
     const swapFee = getSwapFee(data.quote)
     const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
 
-    if (data.routing === URAQuoteType.DUTCH_V2) {
+    if (data.routing === URAQuoteType.DUTCH_V3) {
+      const orderInfo = toUnsignedV3DutchOrderInfo(data.quote.orderInfo)
+      const uniswapXv3Trade = new V3DutchOrderTrade({
+        currencyIn,
+        currenciesOut: [currencyOut],
+        orderInfo,
+        tradeType,
+        quoteId: data.quote.quoteId,
+        requestId: data.quote.requestId,
+        classicGasUseEstimateUSD: classicTrade.totalGasUseEstimateUSD,
+        wrapInfo,
+        approveInfo,
+        deadlineBufferSecs: data.quote.deadlineBufferSecs,
+        slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
+        swapFee,
+      })
+
+      return {
+        state: QuoteState.SUCCESS,
+        trade: uniswapXv3Trade,
+      }
+    } else if (data.routing === URAQuoteType.DUTCH_V2) {
       const orderInfo = toUnsignedV2DutchOrderInfo(data.quote.orderInfo)
       const uniswapXv2Trade = new V2DutchOrderTrade({
         currencyIn,
@@ -365,7 +427,6 @@ export async function transformQuoteToTrade(
         deadlineBufferSecs: data.quote.deadlineBufferSecs,
         slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
         swapFee,
-        forceOpenOrder: args.isXv2Arbitrum,
       })
 
       return {
@@ -483,24 +544,29 @@ export function isSubmittableTrade(trade?: InterfaceTrade): trade is Submittable
 /* Returns true if trade uses UniswapX protocol. Includes both X swaps and limit orders. */
 export function isUniswapXTradeType(
   tradeType?: TradeFillType,
-): tradeType is TradeFillType.UniswapX | TradeFillType.UniswapXv2 {
-  return tradeType === TradeFillType.UniswapX || tradeType === TradeFillType.UniswapXv2
+): tradeType is TradeFillType.UniswapX | TradeFillType.UniswapXv2 | TradeFillType.UniswapXv3 {
+  return (
+    tradeType === TradeFillType.UniswapX ||
+    tradeType === TradeFillType.UniswapXv2 ||
+    tradeType === TradeFillType.UniswapXv3
+  )
 }
 
 export function isUniswapXTrade(
   trade?: InterfaceTrade,
-): trade is DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade | PriorityOrderTrade {
+): trade is DutchOrderTrade | V2DutchOrderTrade | V3DutchOrderTrade | LimitOrderTrade | PriorityOrderTrade {
   return isUniswapXTradeType(trade?.fillType)
 }
 
 /* Returns true if trade is a SWAP on UniswapX, not a limit order */
 export function isUniswapXSwapTrade(
   trade?: InterfaceTrade,
-): trade is DutchOrderTrade | V2DutchOrderTrade | PriorityOrderTrade {
+): trade is DutchOrderTrade | V2DutchOrderTrade | V3DutchOrderTrade | PriorityOrderTrade {
   return (
     isUniswapXTrade(trade) &&
     (trade?.offchainOrderType === OffchainOrderType.DUTCH_AUCTION ||
       trade?.offchainOrderType === OffchainOrderType.DUTCH_V2_AUCTION ||
+      trade?.offchainOrderType === OffchainOrderType.DUTCH_V3_AUCTION ||
       trade?.offchainOrderType === OffchainOrderType.PRIORITY_ORDER)
   )
 }

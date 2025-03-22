@@ -2,8 +2,8 @@ import { ComponentProps } from 'react'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { Pill } from 'uniswap/src/components/pill/Pill'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 
 export type NetworkPillProps = {
@@ -22,7 +22,7 @@ export function NetworkPill({
   iconSize = iconSizes.icon16,
   ...rest
 }: NetworkPillProps): JSX.Element {
-  const info = UNIVERSE_CHAIN_INFO[chainId]
+  const label = getChainLabel(chainId)
   const colors = useNetworkColors(chainId)
 
   return (
@@ -31,7 +31,7 @@ export function NetworkPill({
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
       foregroundColor={colors.foreground}
       icon={showIcon ? <NetworkLogo chainId={chainId} size={iconSize} /> : null}
-      label={info.label}
+      label={label}
       {...rest}
     />
   )

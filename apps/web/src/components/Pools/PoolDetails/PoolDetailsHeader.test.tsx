@@ -6,7 +6,7 @@ import { PoolsDetailsChartType } from 'components/Pools/PoolDetails/ChartSection
 import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import store from 'state'
 import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
-import { act, render, screen } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
 describe('PoolDetailsHeader', () => {
@@ -90,7 +90,7 @@ describe('PoolDetailsHeader', () => {
   it('calls toggleReversed when arrows are clicked', async () => {
     render(<PoolDetailsHeader {...mockHeaderProps} />)
 
-    await act(() => userEvent.click(screen.getByTestId('toggle-tokens-reverse-arrows')))
+    await userEvent.click(screen.getByTestId('toggle-tokens-reverse-arrows'))
 
     expect(mockHeaderProps.toggleReversed).toHaveBeenCalledTimes(1)
   })

@@ -1,38 +1,22 @@
 import { ReactComponent as CandlestickChartIcon } from 'assets/svg/candlestick-chart-icon.svg'
 import { ReactComponent as LineChartIcon } from 'assets/svg/line-chart-icon.svg'
-import { CHART_TYPE_LABELS, PriceChartType } from 'components/Charts/utils'
-import Row from 'components/deprecated/Row'
-import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import styled from 'lib/styled-components'
-import { EllipsisStyle } from 'theme/components'
-import { t } from 'uniswap/src/i18n'
+import { PriceChartType } from 'components/Charts/utils'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { useTranslation } from 'react-i18next'
+import { ColorTokens, Flex, SegmentedControl, useMedia, useSporeColors } from 'ui/src'
 
-const ChartTypeRow = styled(Row)`
-  ${EllipsisStyle}
-`
-const ADVANCED_PRICE_CHART_OPTIONS = [
-  {
-    value: PriceChartType.LINE,
-    icon: <LineChartIcon width={20} height={20} />,
-    display: (
-      <ChartTypeRow gap="md">
-        <LineChartIcon width={20} height={20} />
-        {CHART_TYPE_LABELS[PriceChartType.LINE]}
-      </ChartTypeRow>
-    ),
-  },
-  {
-    value: PriceChartType.CANDLESTICK,
-    icon: <CandlestickChartIcon width={20} height={20} />,
-    display: (
-      <ChartTypeRow gap="md">
-        <CandlestickChartIcon width={20} height={20} />
-        {CHART_TYPE_LABELS[PriceChartType.CANDLESTICK]}
-      </ChartTypeRow>
-    ),
-  },
-]
+const CandlestickIcon = ({ color, isDisabled }: { color: ColorTokens; isDisabled?: boolean }) => {
+  return (
+    <Flex row centered width={20}>
+      <CandlestickChartIcon
+        color={color}
+        width={16}
+        height={16}
+        style={isDisabled ? { opacity: 0.2, cursor: 'not-allowed' } : {}}
+      />
+    </Flex>
+  )
+}
 
 export const AdvancedPriceChartToggle = ({
   currentChartType,
@@ -43,18 +27,45 @@ export const AdvancedPriceChartToggle = ({
   onChartTypeChange: (c: PriceChartType) => void
   disableCandlestickUI?: boolean
 }) => {
-  const screenSize = useScreenSize()
-  const isMobileScreen = !screenSize['sm']
-  const currentChartTypeDisplayOptions = ADVANCED_PRICE_CHART_OPTIONS.find((o) => o.value === currentChartType)
+  const { t } = useTranslation()
+  const media = useMedia()
+  const colors = useSporeColors()
+  const iconColor = colors.neutral1.val
+
+  const options = [
+    {
+      value: PriceChartType.LINE,
+      display: <LineChartIcon color={iconColor} width={20} height={20} />,
+    },
+    {
+      value: PriceChartType.CANDLESTICK,
+      // TODO: WEB-6733 -- update segmented control to support disabled options + tooltip
+      display: (
+        <MouseoverTooltip
+          text={t('token.chart.candlestick.unavailable')}
+          placement="auto"
+          disabled={!disableCandlestickUI}
+          style={{ marginTop: 9 }}
+        >
+          <CandlestickIcon color={iconColor} isDisabled={disableCandlestickUI} />
+        </MouseoverTooltip>
+      ),
+    },
+  ]
 
   return (
-    <ChartTypeDropdown
-      options={ADVANCED_PRICE_CHART_OPTIONS}
-      disabledOption={disableCandlestickUI ? PriceChartType.CANDLESTICK : undefined}
-      menuLabel={isMobileScreen ? currentChartTypeDisplayOptions?.display : currentChartTypeDisplayOptions?.icon}
-      currentChartType={currentChartType}
-      onSelectOption={onChartTypeChange}
-      tooltipText={!isMobileScreen ? t('common.chartType') : undefined}
+    <SegmentedControl
+      fullWidth={media.md}
+      options={options}
+      selectedOption={currentChartType}
+      onSelectOption={(selectedValue) => {
+        if (disableCandlestickUI && selectedValue === PriceChartType.CANDLESTICK) {
+          // ignore the click if candlestick is disabled
+          return
+        }
+        onChartTypeChange(selectedValue as PriceChartType)
+      }}
+      size="default"
     />
   )
 }

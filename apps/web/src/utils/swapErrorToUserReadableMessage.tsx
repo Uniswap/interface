@@ -1,4 +1,4 @@
-import { t } from 'uniswap/src/i18n'
+import { TFunction } from 'i18next'
 import { logger } from 'utilities/src/logger/logger'
 import { UserRejectedRequestError } from 'utils/errors'
 
@@ -41,7 +41,7 @@ export function didUserReject(error: any): boolean {
  * This object seems to be undocumented by ethers.
  * @param error - An error from the ethers provider
  */
-export function swapErrorToUserReadableMessage(error: any): string {
+export function swapErrorToUserReadableMessage(t: TFunction, error: any): string {
   if (didUserReject(error)) {
     return t('swap.error.rejected')
   }
@@ -70,7 +70,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'TF':
       return t('swap.error.v3.transferOutput')
     case 'AUNISWAP_TOKEN_NOT_WHITELISTED_ERROR':
-      return t`The token you are trying to buy is not whitelisted yet. Make a token whitelisting request.`
+      return t(`The token does not have a price feed.`)
     default:
       if (reason?.indexOf('undefined is not an object') !== -1) {
         logger.warn(

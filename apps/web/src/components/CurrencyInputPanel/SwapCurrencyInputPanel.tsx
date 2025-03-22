@@ -10,10 +10,9 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import Tooltip from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
-import { useIsSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
@@ -21,14 +20,15 @@ import ms from 'ms'
 import { darken } from 'polished'
 import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { AnimatePresence, Flex, Text } from 'ui/src'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -274,7 +274,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
     const account = useAccount()
-    const { chainId, isUserSelectedToken } = useSwapAndLimitContext()
+    const { chainId, isUserSelectedToken } = useMultichainContext()
     const chainAllowed = useIsSupportedChainId(chainId)
     const { address: smartPoolAddress } = useActiveSmartPool()
     // TODO: check if should invert definition and modify swap currency input panel
@@ -337,8 +337,9 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
               </div>
             )}
             <PrefetchBalancesWrapper>
-              <Tooltip
-                show={tooltipVisible && !modalOpen}
+              <MouseoverTooltip
+                disabled
+                forceShow={tooltipVisible && !modalOpen}
                 placement="bottom"
                 offsetY={14}
                 text={numericalInputSettings?.disabledTooltipBody}
@@ -395,7 +396,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                     {onCurrencySelect && <StyledDropDown selected={!!currency} />}
                   </Aligner>
                 </CurrencySelect>
-              </Tooltip>
+              </MouseoverTooltip>
             </PrefetchBalancesWrapper>
           </InputRow>
           {Boolean(!hideInput && !hideBalance) && (

@@ -23,7 +23,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import { ProposalData, ProposalState, useAllProposalData, useProposalThreshold, useUserVotes } from 'state/governance/hooks'
 import { ExternalLink, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 //import { shortenAddress } from 'utilities/src/addresses'
 //import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 

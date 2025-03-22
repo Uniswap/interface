@@ -3,10 +3,15 @@ import 'test-utils/tokens/mocks'
 import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
 import { enableNetConnect } from 'nock'
 import store from 'state'
+import mockMediaSize from 'test-utils/mockMediaSize'
 import { validPoolDataResponse } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
-import { BREAKPOINTS } from 'theme'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
+
+jest.mock('tamagui', () => ({
+  ...jest.requireActual('tamagui'),
+  useMedia: jest.fn(),
+}))
 
 describe('PoolDetailsStats', () => {
   const mockProps = {
@@ -43,11 +48,7 @@ describe('PoolDetailsStats', () => {
   })
 
   it('renders stats text correctly', async () => {
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: BREAKPOINTS.xl,
-    })
+    mockMediaSize('xxl')
 
     const { asFragment } = render(<PoolDetailsStats {...mockProps} />)
     // After the first render, the extracted color is updated to an a11y compliant color
@@ -68,11 +69,7 @@ describe('PoolDetailsStats', () => {
   })
 
   it('pool balance chart not visible on mobile', async () => {
-    Object.defineProperty(window, 'innerWidth', {
-      writable: true,
-      configurable: true,
-      value: BREAKPOINTS.lg,
-    })
+    mockMediaSize('xl')
     const { asFragment } = render(<PoolDetailsStats {...mockProps} />)
     await act(async () => {
       await asFragment

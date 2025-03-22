@@ -1,5 +1,6 @@
-import { t } from 'i18next'
+import { TFunction } from 'i18next'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ColorTokens } from 'ui/src'
 import { useDebounce } from 'utilities/src/time/timing'
 import zxcvbn from 'zxcvbn'
@@ -44,7 +45,10 @@ export function getPasswordStrength(password: string): PasswordStrength {
   }
 }
 
-export function getPasswordStrengthTextAndColor(strength: PasswordStrength): {
+export function getPasswordStrengthTextAndColor(
+  t: TFunction,
+  strength: PasswordStrength,
+): {
   text: string
   color: ColorTokens
 } {
@@ -80,6 +84,7 @@ export function usePasswordForm(): {
   checkSubmit: () => boolean
   onPasswordBlur: () => void
 } {
+  const { t } = useTranslation()
   const [lostPasswordFocus, setLostPasswordFocused] = useState(false)
   const onPasswordBlur = (): void => setLostPasswordFocused(true)
 
@@ -144,7 +149,7 @@ export function usePasswordForm(): {
       return t('common.input.password.error.mismatch')
     }
     return ''
-  }, [error])
+  }, [t, error])
 
   const checkSubmit = (): boolean => {
     const isValid = !isWeakPassword && !doPasswordsDiffer(password, confirmPassword)

@@ -8,7 +8,7 @@ interface TransactionLoaderProps {
 
 export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Element {
   return (
-    <Flex opacity={opacity} overflow="hidden" sentry-label="TransactionLoader">
+    <Flex opacity={opacity} overflow="hidden">
       <Flex grow row alignItems="flex-start" gap="$spacing16" justifyContent="space-between" py="$spacing12">
         <Flex row shrink alignItems="center" gap="$spacing12" height="100%" justifyContent="flex-start">
           <Flex

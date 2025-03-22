@@ -2,34 +2,29 @@ import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '
 import { Token } from '@uniswap/sdk-core'
 import { ScrollBarStyles } from 'components/Common/styles'
 import { NavIcon } from 'components/NavBar/NavIcon'
-import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
 import Row from 'components/deprecated/Row'
-import { chainIdToBackendChain } from 'constants/chains'
 import { GqlSearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
-import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
-import { useIsNftPage } from 'hooks/useIsNftPage'
-import { KeyAction, useKeyPress } from 'hooks/useKeyPress'
+import { KeyAction, useKeyDown } from 'hooks/useKeyPress'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import styled, { css, useTheme } from 'lib/styled-components'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
-import { organizeSearchResults } from 'lib/utils/searchBar'
+import styled, { css, useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Search, X } from 'react-feather'
+import { Search } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { useAllPoolsData } from 'state/pool/hooks'
-import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { Input } from 'ui/src'
+import { Input, useMedia } from 'ui/src'
+import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
+import { breakpoints } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useTranslation } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useAccount } from 'wagmi'
+import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 const NAV_SEARCH_MAX_WIDTH = '400px'
 const NAV_SEARCH_MIN_WIDTH = '280px'
@@ -125,7 +120,7 @@ const SearchInput = styled(Row)<{ $isOpen: boolean; $fullScreen: boolean }>`
   ${({ $fullScreen }) => $fullScreen && FullScreenSearchInput}
   ${({ $isOpen }) => !$isOpen && ClosedSearchInputHover}
 
-  @media screen and (max-width: ${BREAKPOINTS.xs}px) {
+  @media screen and (max-width: ${breakpoints.xs}px) {
     border: none;
   }
 `
@@ -147,16 +142,10 @@ const SearchBarDropdownContainer = styled.div<{ $isOpen: boolean; $fullScreen: b
   overflow-y: auto;
   ${({ $isOpen }) => $isOpen && OpenSearchDropdown}
   ${({ $fullScreen }) => $fullScreen && FullScreenSearchDropdown}
-  @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {
+  @media screen and (max-width: ${breakpoints.sm}px) {
     border: none;
   }
   ${ScrollBarStyles}
-`
-const CloseIcon = styled(X)`
-  width: 25px;
-  height: 25px;
-  stroke: ${({ theme }) => theme.neutral2};
-  cursor: pointer;
 `
 const SearchIcon = styled.div`
   width: 20px;
@@ -178,8 +167,8 @@ export const SearchBar = ({
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<any>(null)
   const { pathname } = useLocation()
-  const isNavSearchInputVisible = useScreenSize()['lg']
-  const shouldDisableNFTRoutes = useDisableNFTRoutes()
+  const media = useMedia()
+  const isNavSearchInputVisible = !media.xl
   const theme = useTheme()
   const { t } = useTranslation() // subscribe to locale changes
 
@@ -193,24 +182,23 @@ export const SearchBar = ({
 
   useOnClickOutside(searchRef, () => isOpen && toggleOpen())
 
-  useKeyPress({
+  useKeyDown({
     callback: toggleOpen,
     keys: ['/'],
     disabled: isOpen,
     preventDefault: !isOpen,
   })
-  useKeyPress({
+  useKeyDown({
     callback: toggleOpen,
     keys: ['Escape'],
     keyAction: KeyAction.UP,
     disabled: !isOpen,
   })
 
-  const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
-
-  const account = useAccount()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue)
+  const reducedTokens = tokens?.slice(0, 8) ?? []
   const allPools = useAllPoolsData().data
+  const account = useAccount()
 
   const smartPools: Token[] = useMemo(() => {
     //const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
@@ -229,7 +217,7 @@ export const SearchBar = ({
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])
-  const chain = chainIdToBackendChain({ chainId: account.chainId })
+  const chain: GqlChainId | undefined = account.chainId ? toGraphQLChain(account.chainId) : undefined
   // TODO: check using a different struct for pools
   const searchPools: GqlSearchToken[] | undefined = useMemo(() => {
     if (!chain) {
@@ -259,13 +247,7 @@ export const SearchBar = ({
     })
   }, [chain, filteredPools])
 
-  const isNFTPage = useIsNftPage()
-  const [reducedPools, reducedTokens, reducedCollections] = organizeSearchResults(
-    isNFTPage,
-    searchPools ?? [],
-    tokens ?? [],
-    collections ?? []
-  )
+  const reducedPools = searchPools?.slice(0, 8) ?? []
 
   // clear searchbar when changing pages
   useEffect(() => {
@@ -287,7 +269,7 @@ export const SearchBar = ({
     ...trace,
   }
 
-  const placeholderText = shouldDisableNFTRoutes ? t('smartPools.selector.search.placeholder') : t('common.searchTokensNFT')
+  const placeholderText = t('smartPools.selector.search.placeholder')
 
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
@@ -301,7 +283,7 @@ export const SearchBar = ({
           $fullScreen={fullScreen}
         >
           {(!!isNavSearchInputVisible || isOpen) && (
-            <SearchInput $isOpen={isOpen} $fullScreen={fullScreen}>
+            <SearchInput $isOpen={isOpen} $fullScreen={fullScreen} data-testid="nav-search-input">
               <SearchIcon data-cy="nav-search-icon">
                 <Search width="20px" height="20px" color={theme.neutral2} />
               </SearchIcon>
@@ -330,7 +312,7 @@ export const SearchBar = ({
                   value={searchValue}
                 />
               </Trace>
-              {fullScreen && isOpen && <CloseIcon onClick={toggleOpen} />}
+              {fullScreen && isOpen && <CloseIconWithHover onClose={toggleOpen} />}
               {!isOpen && <KeyShortcut>/</KeyShortcut>}
             </SearchInput>
           )}
@@ -340,10 +322,9 @@ export const SearchBar = ({
                 toggleOpen={toggleOpen}
                 pools={reducedPools}
                 tokens={reducedTokens}
-                collections={reducedCollections}
                 queryText={debouncedSearchValue}
                 hasInput={debouncedSearchValue.length > 0}
-                isLoading={tokensAreLoading || collectionsAreLoading}
+                isLoading={tokensAreLoading}
               />
             </SearchBarDropdownContainer>
           )}

@@ -1,7 +1,6 @@
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { Box, BoxProps } from 'components/deprecated/Box'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { css } from 'lib/styled-components'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/CollectionStats.css'
@@ -24,6 +23,7 @@ import { roundWholePercentage } from 'nft/utils/numbers'
 import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { ThemedText } from 'theme/components'
+import { useMedia } from 'ui/src'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PercentChange = styled.div<{ isNegative: boolean }>`
@@ -377,8 +377,8 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const floorChangeStr = formatDelta(Math.round(Math.abs(stats?.stats?.one_day_floor_change ?? 0)))
 
   const isBagExpanded = useBag((state) => state.bagExpanded)
-  const isScreenSize = useScreenSize()
-  const isSmallContainer = isMobile || (!isScreenSize['lg'] && isBagExpanded)
+  const media = useMedia()
+  const isSmallContainer = isMobile || (media.xl && isBagExpanded)
 
   return (
     <Row gap={{ sm: '24', md: '36', lg: '48', xl: '60' }} {...props}>

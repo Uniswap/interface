@@ -1,13 +1,24 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
-import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+import { InterfacePageName, LiquidityEventName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import {
+  Currency,
+  CurrencyAmount,
+  Fraction,
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  Percent,
+  Price,
+  Token,
+} from '@uniswap/sdk-core'
+import { FeeAmount, NonfungiblePositionManager, Pool, Position, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary, SmallButtonPrimary } from 'components/Button/buttons'
 import { DarkCard, LightCard } from 'components/Card/cards'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -18,7 +29,6 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from 'componen
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { Dots } from 'components/swap/styled'
-import { chainIdToBackendChain, useIsSupportedChainId, useSupportedChainId } from 'constants/chains'
 import { getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -27,15 +37,14 @@ import { useEthersSigner } from 'hooks/useEthersSigner'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled, { useTheme } from 'lib/styled-components'
 import { LoadingRows } from 'pages/LegacyPool/styled'
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { Trans, useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { Bound } from 'state/mint/v3/actions'
@@ -43,17 +52,24 @@ import { useIsTransactionPending, useTransactionAdder } from 'state/transactions
 import { TransactionType } from 'state/transactions/types'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
 import { Switch, Text } from 'ui/src'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans, t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
+import { assume0xAddress } from 'utils/wagmi'
+import { erc721Abi } from 'viem'
+import { useReadContract } from 'wagmi'
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;
@@ -69,12 +85,12 @@ const PageWrapper = styled.div`
   min-width: 800px;
   max-width: 960px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     min-width: 100%;
     padding: 16px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     min-width: 100%;
     padding: 16px;
   }
@@ -118,7 +134,7 @@ const DoubleArrow = styled.span`
   margin: 0 1rem;
 `
 const ResponsiveRow = styled(RowBetween)`
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     flex-direction: column;
     align-items: flex-start;
     row-gap: 16px;
@@ -130,7 +146,7 @@ const ActionButtonResponsiveRow = styled(ResponsiveRow)`
   width: 50%;
   justify-content: flex-end;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     width: 100%;
     flex-direction: row;
     * {
@@ -145,11 +161,11 @@ const ResponsiveButtonConfirmed = styled(ButtonConfirmed)`
   width: fit-content;
   font-size: 16px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     width: fit-content;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     width: fit-content;
   }
 `
@@ -205,7 +221,7 @@ const TokenLink = ({
   chainId,
   address,
 }: PropsWithChildren<{ chainId: UniverseChainId; address: string }>) => {
-  const tokenLink = getTokenDetailsURL({ address, chain: chainIdToBackendChain({ chainId }) })
+  const tokenLink = getTokenDetailsURL({ address, chain: toGraphQLChain(chainId) })
   return <StyledRouterLink to={tokenLink}>{children}</StyledRouterLink>
 }
 
@@ -327,6 +343,8 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 }
 
 function PositionPageContent() {
+  const { t } = useTranslation()
+  const trace = useTrace()
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const account = useAccount()
   const supportedChain = useSupportedChainId(account.chainId)
@@ -334,9 +352,10 @@ function PositionPageContent() {
   const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatTickPrice } = useFormatter()
 
+  const { defaultChainId } = useEnabledChains()
+
   // we query pool address from application state
   const { address: smartPoolAddress } = useActiveSmartPool()
-
   const parsedTokenId = parseTokenId(tokenIdFromUrl)
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
 
@@ -378,7 +397,7 @@ function PositionPageContent() {
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+  const tickAtLimit = useIsTickAtLimit(TICK_SPACINGS[feeAmount as FeeAmount], tickLower, tickUpper)
 
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position)
   const [manuallyInverted, setManuallyInverted] = useState(false)
@@ -419,28 +438,30 @@ function PositionPageContent() {
   const [showConfirm, setShowConfirm] = useState(false)
 
   // usdc prices always in terms of tokens
-  const { price: price0 } = useStablecoinPrice(token0 ?? undefined)
-  const { price: price1 } = useStablecoinPrice(token1 ?? undefined)
+  const { price: price0 } = useUSDCPrice(token0 ?? undefined)
+  const { price: price1 } = useUSDCPrice(token1 ?? undefined)
 
-  const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
-    if (!price0 || !price1 || !feeValue0 || !feeValue1) {
+  const feeValue0Usd = useMemo(() => {
+    if (!price0 || !feeValue0) {
       return null
     }
-
     // we wrap because it doesn't matter, the quote returns a USDC amount
-    const feeValue0Wrapped = feeValue0?.wrapped
-    const feeValue1Wrapped = feeValue1?.wrapped
+    const feeValue0Wrapped = feeValue0.wrapped
+    return price0.quote(feeValue0Wrapped)
+  }, [price0, feeValue0])
 
-    if (!feeValue0Wrapped || !feeValue1Wrapped) {
+  const feeValue1Usd = useMemo(() => {
+    if (!price1 || !feeValue1) {
       return null
     }
+    // we wrap because it doesn't matter, the quote returns a USDC amount
+    const feeValue1Wrapped = feeValue1.wrapped
+    return price1.quote(feeValue1Wrapped)
+  }, [price1, feeValue1])
 
-    const amount0 = price0.quote(feeValue0Wrapped)
-    const amount1 = price1.quote(feeValue1Wrapped)
-    return amount0.add(amount1)
-  }, [price0, price1, feeValue0, feeValue1])
+  const fiatValueOfTotalFees = feeValue0Usd && feeValue1Usd ? feeValue0Usd.add(feeValue1Usd) : null
 
-  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
+  const fiatValueOfLiquidity: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !position) {
       return null
     }
@@ -499,20 +520,27 @@ function PositionPageContent() {
           setCollecting(false)
 
           sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
-            source: LiquiditySource.V3,
-            label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
-            type: LiquiditySource.V3,
-            fee_tier: feeAmount,
+            transaction_hash: response.hash,
+            ...getLPBaseAnalyticsProperties({
+              trace,
+              fee: feeAmount,
+              currency0: currency0ForFeeCollectionPurposes,
+              currency1: currency1ForFeeCollectionPurposes,
+              version: ProtocolVersion.V3,
+              poolId: poolAddress,
+              currency0AmountUsd: feeValue0Usd,
+              currency1AmountUsd: feeValue1Usd,
+            }),
           })
 
           addTransaction(response, {
             type: TransactionType.COLLECT_FEES,
-            currencyId0: currencyId(currency0ForFeeCollectionPurposes),
-            currencyId1: currencyId(currency1ForFeeCollectionPurposes),
-            expectedCurrencyOwed0:
+            token0CurrencyId: currencyId(currency0ForFeeCollectionPurposes),
+            token1CurrencyId: currencyId(currency1ForFeeCollectionPurposes),
+            token0CurrencyAmountRaw:
               feeValue0?.quotient.toString() ??
               CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
-            expectedCurrencyOwed1:
+            token1CurrencyAmountRaw:
               feeValue1?.quotient.toString() ??
               CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
           })
@@ -538,11 +566,22 @@ function PositionPageContent() {
     signer,
     feeValue0,
     feeValue1,
+    trace,
     feeAmount,
+    poolAddress,
+    feeValue0Usd,
+    feeValue1Usd,
     addTransaction,
   ])
 
-  const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const { data: owner } = useReadContract({
+    address: assume0xAddress(NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]),
+    abi: erc721Abi,
+    functionName: 'ownerOf',
+    args: tokenId ? [tokenId.toBigInt()] : undefined,
+    query: { enabled: !!tokenId },
+  })
+
   const ownsNFT = owner === smartPoolAddress || positionDetails?.operator === smartPoolAddress
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1
@@ -659,9 +698,7 @@ function PositionPageContent() {
                   <StyledPoolLink
                     to={
                       poolAddress
-                        ? getPoolDetailsURL(
-                            poolAddress,
-                          )
+                        ? getPoolDetailsURL(poolAddress, toGraphQLChain(supportedChain ?? defaultChainId))
                         : ''
                     }
                   >
@@ -809,9 +846,9 @@ function PositionPageContent() {
                           <Label>
                             <Trans i18nKey="pool.uncollectedFees" />
                           </Label>
-                          {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
+                          {fiatValueOfTotalFees?.greaterThan(new Fraction(1, 100)) ? (
                             <ThemedText.DeprecatedLargeHeader color={theme.success} fontSize="36px" fontWeight={535}>
-                              {formatCurrencyAmount({ amount: fiatValueOfFees, type: NumberType.FiatTokenPrice })}
+                              {formatCurrencyAmount({ amount: fiatValueOfTotalFees, type: NumberType.FiatTokenPrice })}
                             </ThemedText.DeprecatedLargeHeader>
                           ) : (
                             <ThemedText.DeprecatedLargeHeader color={theme.neutral1} fontSize="36px" fontWeight={535}>

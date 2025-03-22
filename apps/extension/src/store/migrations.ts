@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
+import { unchecksumDismissedTokenWarningKeys } from 'uniswap/src/state/uniswapMigrations'
 import {
   activatePendingAccounts,
   addCreatedOnboardingRedesignAccountBehaviorHistory,
@@ -11,10 +12,13 @@ import {
   deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
   deleteHoldToSwapBehaviorHistory,
+  deleteWelcomeWalletCardBehaviorHistory,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
   moveLanguageSetting,
+  moveTokenAndNFTVisibility,
   moveUserSettings,
+  removeCreatedOnboardingRedesignAccountBehaviorHistory,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
   updateExploreOrderByType,
@@ -40,6 +44,10 @@ export const migrations = {
   14: moveLanguageSetting,
   15: moveCurrencySetting,
   16: updateExploreOrderByType,
+  17: removeCreatedOnboardingRedesignAccountBehaviorHistory,
+  18: unchecksumDismissedTokenWarningKeys,
+  19: deleteWelcomeWalletCardBehaviorHistory,
+  20: moveTokenAndNFTVisibility,
 }
 
-export const EXTENSION_STATE_VERSION = 16
+export const EXTENSION_STATE_VERSION = 20

@@ -5,6 +5,7 @@
 
 import dayjs from 'dayjs'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
@@ -15,7 +16,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { unchecksumDismissedTokenWarningKeys } from 'uniswap/src/state/uniswapMigrations'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -29,10 +30,13 @@ import {
   deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
   deleteHoldToSwapBehaviorHistory,
+  deleteWelcomeWalletCardBehaviorHistory,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
   moveLanguageSetting,
+  moveTokenAndNFTVisibility,
   moveUserSettings,
+  removeCreatedOnboardingRedesignAccountBehaviorHistory,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
   updateExploreOrderByType,
@@ -951,6 +955,33 @@ export const migrations = {
   79: moveCurrencySetting,
 
   80: updateExploreOrderByType,
+
+  81: removeCreatedOnboardingRedesignAccountBehaviorHistory,
+
+  82: unchecksumDismissedTokenWarningKeys,
+
+  83: function addPushNotifications(state: any) {
+    // Enabling new notifications unless they have all wallet activity notifs disabled
+    const hasAllWalletNotifsDisabled = Object.values(state.wallet.accounts).every(
+      (account) =>
+        account &&
+        typeof account === 'object' &&
+        'pushNotificationsEnabled' in account &&
+        !account.pushNotificationsEnabled,
+    )
+
+    return {
+      ...state,
+      pushNotifications: {
+        generalUpdatesEnabled: !hasAllWalletNotifsDisabled,
+        priceAlertsEnabled: !hasAllWalletNotifsDisabled,
+      },
+    }
+  },
+
+  84: deleteWelcomeWalletCardBehaviorHistory,
+
+  85: moveTokenAndNFTVisibility,
 }
 
-export const MOBILE_STATE_VERSION = 80
+export const MOBILE_STATE_VERSION = 85

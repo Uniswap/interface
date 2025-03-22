@@ -12,8 +12,9 @@ import { DownloadAlt, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { FORMAT_DATE_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
+import { shortenAddress } from 'utilities/src/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 
@@ -52,7 +53,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                 backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
                 borderColor="$surface3"
                 borderRadius="$rounded20"
-                borderWidth={1}
+                borderWidth="$spacing1"
                 p="$spacing16"
                 shadowColor="$surface3"
                 shadowRadius={!isDarkMode ? '$spacing4' : undefined}
@@ -65,7 +66,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                       <Text adjustsFontSizeToFit variant="subheading1">
                         {sanitizeAddressText(shortenAddress(mnemonicId))}
                       </Text>
-                      <Text adjustsFontSizeToFit color="$neutral2" variant="buttonLabel2">
+                      <Text adjustsFontSizeToFit color="$neutral2" variant="body3">
                         {localizedDayjs.unix(createdAt).format(FORMAT_DATE_TIME_SHORT)}
                       </Text>
                     </Flex>

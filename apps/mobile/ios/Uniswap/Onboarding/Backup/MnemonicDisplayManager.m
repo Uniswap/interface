@@ -19,6 +19,7 @@ RCT_EXPORT_SWIFTUI_PROPERTY(mnemonicId, NSString, MnemonicDisplayView);
 RCT_EXPORT_SWIFTUI_PROPERTY(copyText, NSString, MnemonicDisplayView);
 RCT_EXPORT_SWIFTUI_PROPERTY(copiedText, NSString, MnemonicDisplayView);
 RCT_EXPORT_SWIFTUI_CALLBACK(onHeightMeasured,  RCTDirectEventBlock, MnemonicDisplayView)
+RCT_EXPORT_SWIFTUI_CALLBACK(onEmptyMnemonic,  RCTDirectEventBlock, MnemonicDisplayView)
 
 - (UIView *)view {
   MnemonicDisplayView *proxy = [[MnemonicDisplayView alloc] init];

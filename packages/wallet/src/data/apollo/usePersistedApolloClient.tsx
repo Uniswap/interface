@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloLink, from, NormalizedCacheObject } from '@apollo/client'
+import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
 import { PersistentStorage } from 'apollo3-cache-persist/lib/types'
-import { useCallback, useEffect, useState } from 'react'
-import { MMKV } from 'react-native-mmkv'
+import { useCallback, useState } from 'react'
 import {
   CustomEndpoint,
   getCustomGraphqlHttpLink,
@@ -10,10 +10,10 @@ import {
   getPerformanceLink,
   getRestLink,
 } from 'uniswap/src/data/links'
+import { getInstantTokenBalanceUpdateApolloLink } from 'uniswap/src/features/portfolio/portfolioUpdates/getInstantTokenBalanceUpdateApolloLink'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isNonJestDev } from 'utilities/src/environment/constants'
-import { getDatadogApolloLink } from 'utilities/src/logger/datadogLink'
+import { getDatadogApolloLink } from 'utilities/src/logger/datadog/datadogLink'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -61,21 +61,17 @@ export const apolloClientRef: ApolloClientRef = ((): ApolloClientRef => {
   return ref
 })()
 
-const mmkv = new MMKV()
-if (isNonJestDev && isMobileApp) {
-  // requires Flipper plugin `react-native-mmkv` to be installed
-  require('react-native-mmkv-flipper-plugin').initializeMMKVFlipper({ default: mmkv })
-}
-
 // ONLY for use once in App.tsx! If you add this in other places you will go to JAIL!
 export const usePersistedApolloClient = ({
   storageWrapper,
   maxCacheSizeInBytes,
   customEndpoint,
+  reduxStore,
 }: {
   storageWrapper: PersistentStorage<string>
   maxCacheSizeInBytes: number
   customEndpoint?: CustomEndpoint
+  reduxStore: ToolkitStore
 }): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
   const signerManager = useWalletSigners()
@@ -102,8 +98,8 @@ export const usePersistedApolloClient = ({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getPerformanceLink((args: any) => sendAnalyticsEvent(WalletEventName.PerformanceGraphql, args)),
       getOnRampAuthLink(accounts, signerManager),
+      getInstantTokenBalanceUpdateApolloLink({ reduxStore }),
       restLink,
-      apolloLink,
     ]
     if (isMobileApp) {
       linkList.push(getDatadogApolloLink())
@@ -111,7 +107,8 @@ export const usePersistedApolloClient = ({
 
     const newClient = new ApolloClient({
       assumeImmutableResults: true,
-      link: from(linkList),
+      // our main ApolloLink must be last in the chain so that other links can modify the request
+      link: from(linkList.concat(apolloLink)),
       cache,
       defaultOptions: {
         watchQuery: {
@@ -134,13 +131,5 @@ export const usePersistedApolloClient = ({
   }, [])
 
   useAsyncData(init)
-
-  useEffect(() => {
-    if (isNonJestDev) {
-      // requires Flipper plugin `react-native-apollo-devtools` to be installed
-      require('react-native-apollo-devtools-client').apolloDevToolsInit(client)
-    }
-  }, [client])
-
   return client
 }

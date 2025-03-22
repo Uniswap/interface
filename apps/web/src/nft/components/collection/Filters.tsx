@@ -37,7 +37,12 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
       <Column marginTop="8">
         <Flex row width="100%" justifyContent="space-between" px="$spacing12">
           <Text>Buy now</Text>
-          <Checkbox checked={buyNow} onPress={handleBuyNowToggle} variant="branded" />
+          <Checkbox
+            testID="nft-collection-filter-buy-now"
+            checked={buyNow}
+            onPress={handleBuyNowToggle}
+            variant="branded"
+          />
         </Flex>
         {isMobileWeb && <FilterSortDropdown sortDropDownOptions={sortDropDownOptions} />}
         <MarketplaceSelect />

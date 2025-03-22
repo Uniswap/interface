@@ -10,7 +10,3 @@ export const calculateFirstCardIndex = (
 ) => {
   return idx(i - firstVis + firstVisIdx)
 }
-
-export const calculateRank = (firstVis: number, firstVisIdx: number, position: number, l: number, y: number) => {
-  return firstVis - (y < 0 ? l : 0) + position - firstVisIdx + (y < 0 && firstVis === 0 ? l : 0)
-}

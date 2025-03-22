@@ -30,6 +30,10 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
 
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
 
+    // ImageResponse cannot handle webp images: https://github.com/vercel/satori/issues/273#issuecomment-1296323042
+    // TODO: remove this check logic once @vercel/og supports webp, which appears to be in-progress https://github.com/vercel/satori/pull/622
+    const ogImage = data.ogImage?.includes('.webp') ? undefined : data.ogImage
+
     return new ImageResponse(
       (
         <div
@@ -60,8 +64,8 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 color: 'white',
               }}
             >
-              {data.ogImage ? (
-                <img src={data.ogImage} width="144px" style={{ borderRadius: '100%' }}>
+              {ogImage ? (
+                <img src={ogImage} width="144px" style={{ borderRadius: '100%' }}>
                   {networkLogo != '' && (
                     <img
                       src={networkLogo}

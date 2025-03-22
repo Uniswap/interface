@@ -193,6 +193,18 @@
       "dependsOn": [
         "^build"
       ]
+    },
+    "storybook:test:standalone": {
+      "cache": false,
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "storybook:build": {
+      "cache": false,
+      "dependsOn": [
+        "^build"
+      ]
     }
   }
 }

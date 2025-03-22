@@ -54,9 +54,6 @@ const tabs = [{
   }, {
     label: 'Transactions',
     path: '/explore/transactions'
-  }, {
-    label: 'NFTs',
-    path: '/nfts'
   }]
 }, {
   label: 'Pool',
@@ -143,9 +140,7 @@ describe('Mobile navigation', () => {
   })
 
   it('tabs are accessible in mobile drawer', () => {
-    const nftLink = { label: 'NFTs', path: '/nfts' }
-    const tabsPlusNftLink = [...tabs, nftLink]
-    tabsPlusNftLink.forEach((tab) => {
+    tabs.forEach((tab) => {
       cy.get(getTestSelector('nav-company-menu')).should('be.visible').click()
       cy.get(getTestSelector('company-menu-mobile-drawer')).should('be.visible').within(() => {
         cy.contains(tab.label).should('be.visible').click()
@@ -157,7 +152,7 @@ describe('Mobile navigation', () => {
   it('display settings are visible in mobile menu', () => {
     cy.get(getTestSelector('nav-company-menu')).should('be.visible').click()
     cy.contains('Display settings').should('be.visible').click()
-    const settings = ['Theme', 'Language', 'Currency']
+    const settings = ['Language', 'Currency']
     settings.forEach((label) => {
       cy.contains(label).should('be.visible')
     })

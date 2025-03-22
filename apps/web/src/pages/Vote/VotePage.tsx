@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button/buttons'
 import { GrayCard } from 'components/Card/cards'
@@ -18,7 +17,6 @@ import {
   DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
 } from 'constants/governance'
 import { useAccount } from 'hooks/useAccount'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -29,6 +27,7 @@ import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
+import { Trans, useTranslation } from 'react-i18next'
 import {
   useModalIsOpen,
   useToggleDelegateModal,
@@ -49,8 +48,8 @@ import { VoteOption } from 'state/governance/types'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { GRG } from 'uniswap/src/constants/tokens'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
 
@@ -198,24 +197,24 @@ export default function VotePage() {
   const toggleExecuteModal = useToggleExecuteModal()
 
   // get and format date from data
-  const currentTimestamp = useCurrentBlockTimestamp(NEVER_RELOAD)
+  const currentTimestamp = useCurrentBlockTimestamp({ refetchInterval: false })
   const currentBlock = useBlockNumber()
   const startDate = getDateFromBlockOrTime(
     proposalData?.startBlock,
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp,
+    BigNumber.from(currentTimestamp),
     true,
   )
   const endDate = getDateFromBlockOrTime(
     proposalData?.endBlock,
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp,
+    BigNumber.from(currentTimestamp),
     true,
   )
   const now = new Date()
-  const locale = useActiveLocale()
+  const locale = useCurrentLocale()
   const dateFormat: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',

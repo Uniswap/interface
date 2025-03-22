@@ -3,24 +3,13 @@
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import PopupApp from 'src/app/PopupApp'
-import { initializeSentry, SentryAppNameTag } from 'src/app/sentry'
+import PopupApp from 'src/app/core/PopupApp'
 import { initializeReduxStore } from 'src/store/store'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
 ;(globalThis as any).regeneratorRuntime = undefined // eslint-disable-line @typescript-eslint/no-explicit-any
 // The globalThis.regeneratorRuntime = undefined addresses a potentially unsafe-eval problem
 // see https://github.com/facebook/regenerator/issues/378#issuecomment-802628326
 
-getUniqueId()
-  .then((userId) => {
-    initializeSentry(SentryAppNameTag.Popup, userId)
-  })
-  .catch((error) => {
-    logger.error(error, {
-      tags: { file: 'popup.tsx', function: 'getUniqueId' },
-    })
-  })
 async function initPopup(): Promise<void> {
   await initializeReduxStore({ readOnly: true })
 

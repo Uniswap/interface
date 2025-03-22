@@ -1,6 +1,6 @@
 import UniswapXRouterLabel, { UnswapXRouterLabelProps } from 'components/RouterLabel/UniswapXRouterLabel'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 type UniswapXBrandMarkProps = Omit<UnswapXRouterLabelProps, 'children' | 'fontWeight'> & {
   fontWeight?: 'bold'

@@ -18,7 +18,7 @@ import { promiseMinDelay } from 'utilities/src/time/timing'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useSignerAccountIfExists } from 'wallet/src/features/wallet/hooks'
+import { useSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = {
   accountAddress: Address
@@ -42,7 +42,7 @@ export function CloudBackupProcessingAnimation({
   const dispatch = useDispatch()
   const { addBackupMethod, getOnboardingOrImportedAccount } = useOnboardingContext()
   const onboardingContextAccount = getOnboardingOrImportedAccount()
-  const activeAccount = useSignerAccountIfExists(accountAddress)
+  const activeAccount = useSignerAccount(accountAddress)
 
   const account = activeAccount || onboardingContextAccount
 

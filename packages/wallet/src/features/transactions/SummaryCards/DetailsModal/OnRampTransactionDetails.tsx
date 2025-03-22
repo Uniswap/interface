@@ -9,11 +9,11 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { CurrencyTransferContent } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransferTransactionDetails'
 import { isOnRampPurchaseTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function OnRampTransactionDetails({
   transactionDetails,

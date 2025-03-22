@@ -1,4 +1,4 @@
-import { RankingType } from 'wallet/src/features/wallet/types'
+import { RankingType } from 'uniswap/src/data/types'
 
 // only add fields that are persisted
 export const initialSchema = {
@@ -194,4 +194,41 @@ export const v16Schema = {
   wallet: { ...v15Schema.wallet, settings: { ...v15Schema.wallet.settings, tokensOrderBy: RankingType.Volume } },
 }
 
-export const getSchema = (): typeof v16Schema => v16Schema
+const v17SchemaIntermediate = {
+  ...v16Schema,
+  behaviorHistory: {
+    ...v16Schema.behaviorHistory,
+    createdOnboardingRedesignAccount: undefined,
+  },
+}
+delete v17SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
+export const v17Schema = v17SchemaIntermediate
+
+const v18SchemaIntermediate = {
+  ...v17Schema,
+  behaviorHistory: {
+    ...v17Schema.behaviorHistory,
+    hasViewedWelcomeWalletCard: undefined,
+  },
+}
+delete v18SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
+export const v18Schema = v18SchemaIntermediate
+
+const v19SchemaIntermediate = {
+  ...v18Schema,
+  visibility: {
+    positions: {},
+    tokens: v18Schema.favorites.tokensVisibility,
+    nfts: v18Schema.favorites.nftsVisibility,
+  },
+  favorites: {
+    ...v18Schema.favorites,
+    tokensVisibility: undefined,
+    nftsVisibility: undefined,
+  },
+}
+delete v19SchemaIntermediate.favorites.tokensVisibility
+delete v19SchemaIntermediate.favorites.nftsVisibility
+export const v19Schema = v19SchemaIntermediate
+
+export const getSchema = (): typeof v19Schema => v19Schema

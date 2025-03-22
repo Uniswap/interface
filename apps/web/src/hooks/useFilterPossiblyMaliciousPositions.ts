@@ -1,5 +1,4 @@
 import { useQueries } from '@tanstack/react-query'
-import { chainIdToBackendChain } from 'constants/chains'
 import { apolloClient } from 'graphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { apolloQueryOptions } from 'graphql/data/util'
@@ -8,12 +7,14 @@ import { useTokenContractsConstant } from 'hooks/useTokenContractsConstant'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import {
-  SafetyLevel,
   Token,
   TokenDocument,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { hasURL } from 'utils/urlChecks'
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
@@ -22,7 +23,7 @@ function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[]
   )
 }
 
-function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId?: UniverseChainId) {
+function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId: UniverseChainId) {
   return apolloQueryOptions({
     queryKey: ['positionCurrencyInfo', position],
     queryFn: async () => {
@@ -31,7 +32,7 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
           query: TokenDocument,
           variables: {
             address: position.token0,
-            chain: chainIdToBackendChain({ chainId }),
+            chain: toGraphQLChain(chainId),
           },
           fetchPolicy: 'cache-first',
         }),
@@ -39,7 +40,7 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
           query: TokenDocument,
           variables: {
             address: position.token1,
-            chain: chainIdToBackendChain({ chainId }),
+            chain: toGraphQLChain(chainId),
           },
           fetchPolicy: 'cache-first',
         }),
@@ -67,10 +68,11 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
  */
 export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]): PositionDetails[] {
   const { chainId } = useAccount()
+  const { defaultChainId } = useEnabledChains()
   const nonListPositionTokenAddresses = useMemo(() => getUniqueAddressesFromPositions(positions), [positions])
 
   const positionCurrencyInfos = useQueries({
-    queries: positions.map((position) => getPositionCurrencyInfosQueryOptions(position, chainId)),
+    queries: positions.map((position) => getPositionCurrencyInfosQueryOptions(position, chainId ?? defaultChainId)),
   })
   const symbolCallStates = useTokenContractsConstant(nonListPositionTokenAddresses, 'symbol')
 
@@ -96,10 +98,10 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
 
         const { currency0Info, currency1Info, position } = result.data
         let tokensInListCount = 0
-        if (!currency0Info?.isSpam && currency0Info?.safetyLevel === SafetyLevel.Verified) {
+        if (!currency0Info?.isSpam && currency0Info?.safetyInfo?.tokenList === TokenList.Default) {
           tokensInListCount++
         }
-        if (!currency1Info?.isSpam && currency1Info?.safetyLevel === SafetyLevel.Verified) {
+        if (!currency1Info?.isSpam && currency1Info?.safetyInfo?.tokenList === TokenList.Default) {
           tokensInListCount++
         }
         // if both tokens are in the list, then we let both have url symbols (so we don't check)

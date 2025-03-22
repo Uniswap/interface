@@ -1,6 +1,7 @@
 import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
@@ -10,7 +11,6 @@ import {
   SendTokenTransactionInfo,
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
@@ -82,7 +82,7 @@ export function NftTransactionContent({
         borderBottomLeftRadius="$rounded20"
         borderBottomRightRadius="$rounded20"
         borderColor="$surface3"
-        borderWidth={1}
+        borderWidth="$spacing1"
         borderTopWidth={0}
         p="$spacing12"
       >
