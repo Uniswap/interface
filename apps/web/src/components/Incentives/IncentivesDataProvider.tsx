@@ -468,8 +468,16 @@ export const IncentivesDataProvider: React.FC<React.PropsWithChildren<{}>> = ({
             ...(chunkPoolInfo.filter(Boolean) as PoolInfo[]),
           ];
         }
+        const uniquePools = [
+          ...new Set(
+            allPoolInfo.filter(Boolean).map((pool) => {
+              const key = pool.id.toLowerCase();
+              return allPoolInfo.find((p) => p.id.toLowerCase() === key);
+            })
+          ),
+        ];
 
-        return allPoolInfo;
+        return uniquePools;
       } catch (error) {
         console.error("Error processing incentives:", error);
         setPoolInfoError(
@@ -574,12 +582,14 @@ export const IncentivesDataProvider: React.FC<React.PropsWithChildren<{}>> = ({
             currentUserPositions
           );
 
-          const sortedActivePoolInfo = [...activePoolInfo].sort((a, b) => {
-            if (a.eligible !== b.eligible) {
-              return a.eligible ? -1 : 1;
-            }
-            return b.apy - a.apy;
-          });
+          const sortedActivePoolInfo = [...activePoolInfo]
+            .filter((pool): pool is PoolInfo => pool !== undefined)
+            .sort((a, b) => {
+              if (a.eligible !== b.eligible) {
+                return a.eligible ? -1 : 1;
+              }
+              return b.apy - a.apy;
+            });
 
           setPoolInfoActiveIncentives(sortedActivePoolInfo);
         }
@@ -590,9 +600,11 @@ export const IncentivesDataProvider: React.FC<React.PropsWithChildren<{}>> = ({
             currentUserPositions
           );
 
-          const sortedEndedPoolInfo = [...endedPoolInfo].sort((a, b) =>
-            a.eligible === b.eligible ? 0 : a.eligible ? -1 : 1
-          );
+          const sortedEndedPoolInfo = [...endedPoolInfo]
+            .filter((pool): pool is PoolInfo => pool !== undefined)
+            .sort((a, b) => {
+              return a.eligible === b.eligible ? 0 : a.eligible ? -1 : 1;
+            });
 
           setPoolInfoEndedIncentives(sortedEndedPoolInfo);
         }
