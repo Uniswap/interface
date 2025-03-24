@@ -130,27 +130,25 @@ export default function Home() {
 
       <div className="mt-[200px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-12">
         <Card className="p-6 bg-gray-800 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold text-white">Lorem Ipsum</h3>
+          <h3 className="text-xl font-semibold text-white">
+            Keep the security of your chain.
+          </h3>
           <p className="text-white">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Using the wire protocol, your tokens stay on their native chain,
+            retaining all security features.
           </p>
         </Card>
         <Card className="p-6 bg-gray-800 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold text-white">Lorem Ipsum</h3>
+          <h3 className="text-xl font-semibold text-white">No Fees.</h3>
           <p className="text-white">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Offered exclusively on ZeroFlow, there are no required fees for
+            trading. This includes GAS fees.
           </p>
         </Card>
         <Card className="p-6 bg-gray-800 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold text-white">Lorem Ipsum</h3>
+          <h3 className="text-xl font-semibold text-white">Cross-stake.</h3>
           <p className="text-white">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </p>
-        </Card>
-        <Card className="p-6 bg-gray-800 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold text-white">Lorem Ipsum</h3>
-          <p className="text-white">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Stake any token, receive rewards in any token.
           </p>
         </Card>
       </div>
