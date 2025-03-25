@@ -40,7 +40,7 @@ export default function Home() {
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
       if (cardRef.current) {
-        console.log('testing')
+        console.log('testing again')
         const { clientX, clientY } = event;
         const { innerWidth, innerHeight } = window;
         let xRotation = (clientY / innerHeight - 0.5) * 20; // Slower rotation factor
