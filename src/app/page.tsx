@@ -5,13 +5,14 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import Link from "next/link";
 
 export default function Home() {
   const [sellValue, setSellValue] = useState("");
@@ -66,27 +67,31 @@ export default function Home() {
       <header className="absolute top-0 left-0 p-4 flex space-x-4">
         <h2 className="text-xl font-semibold text-white">ZeroFlow</h2>
         <div className="flex justify-center w-full">
-          <Button variant="default" className="text-white mr-2">
+          {/* <Button variant="default" className="text-white mr-2">
             Trade
           </Button>
           <Button variant="default" className="text-white">
             Pool
-          </Button>
+          </Button> */}
+          <NavigationMenu className="gap-3 list-none">
+            <NavigationMenuItem>
+              <Link href="/trade" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Trade</NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/pool" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Pool</NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          </NavigationMenu>
         </div>
       </header>
-      <Button
-        variant="default"
-        className="absolute top-0 right-0 m-4 text-white"
-      >
+      <Button variant="secondary" className="absolute top-0 right-0 m-4 text-white cursor-pointer">
         Connect Wallet
       </Button>
-      <h1 className="text-4xl mt-[200px] font-bold mb-8 text-white">
-        Swap with no fees.
-      </h1>
-      <Card
-        ref={cardRef}
-        className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-lg"
-      >
+      <h1 className="text-4xl mt-[200px] font-bold mb-8 text-white">Swap with no fees.</h1>
+      <Card ref={cardRef} className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-lg">
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-center">
             <p className="text-lg text-white">Sell</p>
@@ -124,33 +129,26 @@ export default function Home() {
         </div>
       </Card>
       <p className="mt-8 text-center text-white">
-        The first zero-gas DEX with no bridging. Buy and sell crypto on Ethereum
-        and many other chains.
+        The first zero-gas DEX with no bridging. Buy and sell crypto on Ethereum and many other chains.
       </p>
       <p className="mt-4 text-center text-gray-400">Scroll to learn more</p>
 
       <div className="mt-[200px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-12">
         <Card className="p-6 bg-gray-800 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold text-white">
-            Keep the security of your chain.
-          </h3>
+          <h3 className="text-xl font-semibold text-white">Keep the security of your chain.</h3>
           <p className="text-white">
-            Using the wire protocol, your tokens stay on their native chain,
-            retaining all security features.
+            Using the wire protocol, your tokens stay on their native chain, retaining all security features.
           </p>
         </Card>
         <Card className="p-6 bg-gray-800 rounded-lg shadow-lg">
           <h3 className="text-xl font-semibold text-white">No Fees.</h3>
           <p className="text-white">
-            Offered exclusively on ZeroFlow, there are no required fees for
-            trading. This includes GAS fees.
+            Offered exclusively on ZeroFlow, there are no required fees for trading. This includes GAS fees.
           </p>
         </Card>
         <Card className="p-6 bg-gray-800 rounded-lg shadow-lg">
           <h3 className="text-xl font-semibold text-white">Cross-stake.</h3>
-          <p className="text-white">
-            Stake any token, receive rewards in any token.
-          </p>
+          <p className="text-white">Stake any token, receive rewards in any token.</p>
         </Card>
       </div>
     </div>
