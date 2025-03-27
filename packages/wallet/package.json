@@ -32,7 +32,7 @@
     "@uniswap/universal-router-sdk": "4.17.0",
     "@uniswap/v3-sdk": "3.24.0",
     "apollo3-cache-persist": "0.14.1",
-    "axios": "1.6.5",
+    "axios": "1.8.3",
     "dayjs": "1.11.7",
     "ethers": "5.7.2",
     "expo-web-browser": "13.0.3",
