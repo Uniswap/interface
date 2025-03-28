@@ -318,6 +318,7 @@ export const colorsLight = {
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
   chain_1: sporeLight.neutral1,
+  chain_10000: sporeLight.neutral1,
   chain_130: networkColors.unichain.light,
   chain_10: networkColors.optimism.light,
   chain_137: networkColors.polygon.light,
@@ -406,6 +407,7 @@ export const colorsDark = {
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
   chain_1: sporeDark.neutral1,
+  chain_10000: sporeDark.neutral1,
   chain_130: networkColors.unichain.dark,
   chain_10: networkColors.optimism.dark,
   chain_137: networkColors.polygon.dark,

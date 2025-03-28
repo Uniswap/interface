@@ -54,10 +54,10 @@ export function BlockNumberProvider({ children }: PropsWithChildren) {
     setChainBlock((chainBlock) => {
       if (chainBlock.chainId === chainId) {
         if (!chainBlock.block || chainBlock.block < block) {
-          const mainnetBlock = chainId === UniverseChainId.Mainnet ? block : chainBlock.mainnetBlock
+          const mainnetBlock = chainId === UniverseChainId.SmartBCH ? block : chainBlock.mainnetBlock
           return { chainId, block, mainnetBlock }
         }
-      } else if (chainId === UniverseChainId.Mainnet) {
+      } else if (chainId === UniverseChainId.SmartBCH) {
         if (!chainBlock.mainnetBlock || chainBlock.mainnetBlock < block) {
           return { ...chainBlock, mainnetBlock: block }
         }

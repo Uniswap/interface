@@ -10,10 +10,11 @@ export function isUniverseChainId(chainId?: number | UniverseChainId | null): ch
 }
 
 export enum UniverseChainId {
+  Mainnet = 1,
   SmartBCH = 10000,
 }
 
-export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.SmartBCH]
+export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.Mainnet,UniverseChainId.SmartBCH]
 
 export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = []
 

@@ -1,4 +1,5 @@
 export const ALL_NETWORKS_LOGO = require('./logos/png/all-networks-icon.png')
+export const BCH_LOGO = require('./logos/png/bch-logo.png')
 export const ETHEREUM_LOGO = require('./logos/png/ethereum-logo.png')
 export const OPTIMISM_LOGO = require('./logos/png/optimism-logo.png')
 export const ARBITRUM_LOGO = require('./logos/png/arbitrum-logo.png')

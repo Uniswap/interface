@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
-import { ETH_LOGO, SMARTBCH_LOGO } from 'ui/src/assets'
+import { BCH_LOGO, ETHEREUM_LOGO, ETH_LOGO, SMARTBCH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { FLEX_USD } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -14,7 +14,10 @@ import {
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { isPlaywrightEnv } from 'utilities/src/environment/env'
+import { isInterface } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { mainnet } from 'wagmi/chains'
 
 const LOCAL_MAINNET_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8545'
 const LOCAL_BASE_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8546'
@@ -26,7 +29,7 @@ export const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 10, minWait: 250, maxWai
 export const DEFAULT_MS_BEFORE_WARNING = ONE_MINUTE_MS * 10
 
 export function getChainInfo(chainId: UniverseChainId): UniverseChainInfo {
-  return UNIVERSE_CHAIN_INFO[chainId] ?? UNIVERSE_CHAIN_INFO[10000]
+  return UNIVERSE_CHAIN_INFO[chainId]
 }
 
 // Source: https://marketplace.quicknode.com/chains_and_networks
@@ -72,10 +75,30 @@ export const UNIVERSE_CHAIN_INFO: Partial<Record<UniverseChainId, UniverseChainI
     sdkId: 10000 as UniswapSDKChainId,
     rpcUrls: {
       [RPCType.Default]: {
-        http: ['https://smartbch.greyh.at'],
+        http: [
+          'https://smartbch.greyh.at',
+          'https://rpc.smartbch.org',
+          'https://global.uat.cash',
+          'https://smartbch.fountainhead.cash/mainnet ',
+        ],
       },
       [RPCType.Interface]: {
-        http: ['https://smartbch.greyh.at'],
+        http: [
+          'https://smartbch.greyh.at',
+          'https://rpc.smartbch.org',
+          'https://global.uat.cash',
+          'https://smartbch.fountainhead.cash/mainnet ',
+          'https://smartbch.greyh.at',
+        ],
+      },
+      [RPCType.Public]: {
+        http: [
+          'https://smartbch.greyh.at',
+          'https://rpc.smartbch.org',
+          'https://global.uat.cash',
+          'https://smartbch.fountainhead.cash/mainnet ',
+          'https://smartbch.greyh.at',
+        ],
       },
     },
     assetRepoNetworkName: 'smartbch',
@@ -92,9 +115,9 @@ export const UNIVERSE_CHAIN_INFO: Partial<Record<UniverseChainId, UniverseChainI
     docs: 'https://offchainlabs.com/',
     elementName: ElementName.ChainArbitrum,
     explorer: {
-      name: 'Arbiscan',
-      url: 'https://arbiscan.io/',
-      apiURL: 'https://api.arbiscan.io',
+      name: 'SmartScout',
+      url: 'https://www.smartscout.cash/',
+      apiURL: 'https://api.smartscout.cash',
     },
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     infoLink: 'https://app.uniswap.org/explore/tokens/arbitrum',
@@ -106,10 +129,10 @@ export const UNIVERSE_CHAIN_INFO: Partial<Record<UniverseChainId, UniverseChainI
     nativeCurrency: {
       name: 'Bitcoin Cash',
       symbol: 'BCH',
-      decimals: 8,
+      decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://www.smartscout.cash',
-      logo: ETH_LOGO,
+      logo: BCH_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -122,11 +145,84 @@ export const UNIVERSE_CHAIN_INFO: Partial<Record<UniverseChainId, UniverseChainI
     urlParam: 'smartbch',
     wrappedNativeCurrency: {
       name: 'Bitcoin Cash',
-      symbol: 'BCH',
+      symbol: 'WBCH',
       decimals: 8,
       address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     },
   },
+  [UniverseChainId.Mainnet]: {
+    ...mainnet,
+    id: UniverseChainId.Mainnet,
+    sdkId: UniswapSDKChainId.MAINNET,
+    assetRepoNetworkName: 'ethereum',
+    backendChain: {
+      chain: BackendChainId.Ethereum as GqlChainId,
+      backendSupported: true,
+      isSecondaryChain: false,
+      nativeTokenBackendAddress: undefined,
+    },
+    blockPerMainnetEpochForChainId: 1,
+    blockWaitMsBeforeWarning: isInterface ? DEFAULT_MS_BEFORE_WARNING : ONE_MINUTE_MS,
+    bridge: undefined,
+    docs: 'https://docs.uniswap.org/',
+    elementName: ElementName.ChainEthereum,
+    explorer: {
+      name: 'Etherscan',
+      url: 'https://etherscan.io/',
+      apiURL: 'https://api.etherscan.io',
+    },
+    helpCenterUrl: undefined,
+    infoLink: 'https://app.uniswap.org/explore',
+    infuraPrefix: 'mainnet',
+    interfaceName: 'mainnet',
+    label: 'Ethereum',
+    logo: ETHEREUM_LOGO,
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+      explorerLink: 'https://etherscan.io/chart/etherprice',
+      logo: ETH_LOGO,
+    },
+    networkLayer: NetworkLayer.L1,
+    pendingTransactionsRetryOptions: undefined,
+    rpcUrls: isPlaywrightEnv()
+      ? getPlaywrightRpcUrls(LOCAL_MAINNET_PLAYWRIGHT_RPC_URL)
+      : {
+          [RPCType.Private]: {
+            http: ['https://rpc.mevblocker.io/?referrer=uniswapwallet'],
+          },
+          [RPCType.Public]: {
+            http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+          },
+          [RPCType.Default]: {
+            http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+          },
+          [RPCType.Fallback]: {
+            http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
+          },
+          [RPCType.Interface]: {
+            http: [
+              `https://mainnet.infura.io/v3/${config.infuraKey}`,
+              getQuicknodeEndpointUrl(UniverseChainId.Mainnet),
+            ],
+          },
+        },
+    urlParam: 'ethereum',
+    statusPage: undefined,
+    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(FLEX_USD, 100_000e6),
+    stablecoins: [],
+    supportsInterfaceClientSideRouting: true,
+    supportsGasEstimates: true,
+    supportsV4: true,
+    wrappedNativeCurrency: {
+      name: 'Wrapped Ether',
+      symbol: 'WETH',
+      decimals: 18,
+      address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+    },
+  } as const satisfies UniverseChainInfo,
 }
 
 export const GQL_MAINNET_CHAINS = Object.values(UNIVERSE_CHAIN_INFO)

@@ -838,7 +838,7 @@ class ExtendedEther extends NativeCurrency {
   }
 
   protected constructor(chainId: number) {
-    super(chainId, 18, 'ETH', 'Ethereum')
+    super(chainId, 18, 'BCH', 'Bitcoin Cash')
   }
 
   private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {}

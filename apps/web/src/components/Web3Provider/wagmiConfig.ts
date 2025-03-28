@@ -61,6 +61,7 @@ export const wagmiConfig = createConfig({
   chains: [getChainInfo(UniverseChainId.SmartBCH)],
   connectors,
   client({ chain }) {
+    console.log('chain', chain)
     return createClient({
       chain,
       batch: { multicall: true },

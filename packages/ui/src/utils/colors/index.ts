@@ -28,8 +28,6 @@ export const SPECIAL_CASE_TOKEN_COLORS: { [key: string]: string } = {
     '#EFBA09',
   // AI-X
   'https://s2.coinmarketcap.com/static/img/coins/64x64/26984.png': '#29A1F1',
-  // ETH
-  'https://token-icons.s3.amazonaws.com/eth.png': '#4970D5',
   // HARRYPOTTERSHIBAINUBITCOIN
   'https://assets.coingecko.com/coins/images/30323/large/hpos10i_logo_casino_night-dexview.png?1684117567': '#DE3110',
   // PEPE
