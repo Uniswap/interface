@@ -100,23 +100,12 @@ export function getExplorerLink(chainId: UniverseChainId, data: string, type: Ex
       return `${prefix}token/${data}`
 
     case ExplorerDataType.BLOCK:
-      if (chainId === UniverseChainId.Optimism) {
-        return `${prefix}tx/${data}`
-      }
       return `${prefix}block/${data}`
 
     case ExplorerDataType.ADDRESS:
       return `${prefix}address/${data}`
 
     case ExplorerDataType.NFT:
-      if (chainId === UniverseChainId.Zora) {
-        // Zora Energy Explorer uses a different URL format of [blockExplorerUrl]/token/[contractAddress]/instance/[tokenId]
-        // We need to split the data to get the contract address and token ID
-        const splitData = data.split('/')
-        const contractAddress = splitData[0] ?? ''
-        const tokenAddress = splitData[1] ?? ''
-        return `${prefix}token/${contractAddress}/instance/${tokenAddress}`
-      }
       return `${prefix}nft/${data}`
 
     default:
