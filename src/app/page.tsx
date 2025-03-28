@@ -1,64 +1,62 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
+import * as React from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export default function Home() {
-  const [sellValue, setSellValue] = useState("");
-  const [selectedToken, setSelectedToken] = useState("eth");
-  const [coinAmount, setCoinAmount] = useState(0);
-  const [exchangeRate, setExchangeRate] = useState(0.00051); // Initial mock exchange rate
-  const cardRef = useRef<HTMLDivElement>(null);
+  const [sellValue, setSellValue] = useState('')
+  const [selectedToken, setSelectedToken] = useState('eth')
+  const [coinAmount, setCoinAmount] = useState(0)
+  const [exchangeRate, setExchangeRate] = useState(0.00051) // Initial mock exchange rate
+  const cardRef = useRef<HTMLDivElement>(null)
 
   const handleSellInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/^\$+/, ""); // Remove any leading $
-    setSellValue(`$${value}`); // Add $ back to the start
-    const numericValue = parseFloat(value) || 0;
-    setCoinAmount(numericValue * exchangeRate);
-  };
+    const value = e.target.value.replace(/^\$+/, '') // Remove any leading $
+    setSellValue(`$${value}`) // Add $ back to the start
+    const numericValue = parseFloat(value) || 0
+    setCoinAmount(numericValue * exchangeRate)
+  }
 
   const handleTokenChange = (value: string) => {
-    setSelectedToken(value);
+    setSelectedToken(value)
     // Recalculate the exchange rate randomly whenever the token changes
-    const newExchangeRate = Math.random() * 0.001; // Random exchange rate for demonstration
-    setExchangeRate(newExchangeRate);
+    const newExchangeRate = Math.random() * 0.001 // Random exchange rate for demonstration
+    setExchangeRate(newExchangeRate)
     // Recalculate coin amount with the new exchange rate
-    const numericValue = parseFloat(sellValue.replace(/^\$+/, "")) || 0;
-    setCoinAmount(numericValue * newExchangeRate);
-  };
+    const numericValue = parseFloat(sellValue.replace(/^\$+/, '')) || 0
+    setCoinAmount(numericValue * newExchangeRate)
+  }
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
       if (cardRef.current) {
         console.log('testing again')
-        const { clientX, clientY } = event;
-        const { innerWidth, innerHeight } = window;
-        let xRotation = (clientY / innerHeight - 0.5) * 20; // Slower rotation factor
-        let yRotation = (clientX / innerWidth - 0.5) * 20; // Slower rotation factor
+        const { clientX, clientY } = event
+        const { innerWidth, innerHeight } = window
+        let xRotation = (clientY / innerHeight - 0.5) * 20 // Slower rotation factor
+        let yRotation = (clientX / innerWidth - 0.5) * 20 // Slower rotation factor
 
         // Clamp the rotation to at most 5 degrees in every axis
-        xRotation = Math.max(-5, Math.min(5, xRotation));
-        yRotation = Math.max(-5, Math.min(5, yRotation));
+        xRotation = Math.max(-5, Math.min(5, xRotation))
+        yRotation = Math.max(-5, Math.min(5, yRotation))
 
-        cardRef.current.style.transition = "transform 0.2s ease-out"; // Smooth transition
-        cardRef.current.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
+        cardRef.current.style.transition = 'transform 0.2s ease-out' // Smooth transition
+        cardRef.current.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg)`
       }
-    };
+    }
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove)
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black to-gray-900 text-white p-8">
- 
       <h1 className="text-4xl mt-[200px] font-bold mb-8 text-white">Swap with no fees.</h1>
       <Card ref={cardRef} className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-lg">
         <div className="flex flex-col gap-4">
@@ -102,7 +100,7 @@ export default function Home() {
       </p>
       <p className="mt-4 text-center text-gray-400">Scroll to learn more</p>
 
-      <div className="mt-[200px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-12">
         <Card className="p-6 bg-gray-800 rounded-lg shadow-lg">
           <h3 className="text-xl font-semibold text-white">Keep the security of your chain.</h3>
           <p className="text-white">
@@ -121,5 +119,5 @@ export default function Home() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

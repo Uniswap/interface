@@ -1,7 +1,11 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
+
+.SelectTrigger[data-placeholder] {
+  color: black;
+}
 
 @theme inline {
   --color-background: var(--background);
