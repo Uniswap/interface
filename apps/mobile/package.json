@@ -174,7 +174,7 @@
     "@babel/plugin-proposal-export-namespace-from": "7.18.9",
     "@babel/plugin-proposal-logical-assignment-operators": "7.16.7",
     "@babel/plugin-proposal-numeric-separator": "7.16.7",
-    "@babel/runtime": "7.26.0",
+    "@babel/runtime": "7.26.10",
     "@datadog/datadog-ci": "2.39.0",
     "@faker-js/faker": "7.6.0",
     "@react-native-community/datetimepicker": "8.2.0",
