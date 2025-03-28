@@ -29,7 +29,8 @@ export function Navbar() {
       </header>
       <Button
         variant="secondary"
-        className="absolute top-0 right-0 m-4 text-white cursor-pointer rounded-xl bg-violet-800"
+        className="absolute top-0 right-0 m-4 text-white cursor-pointer rounded-xl bg-violet-800
+                    px-3 py-1 text-[10px] md:px-4 md:py-2 md:text-base"
       >
         Connect Wallet
       </Button>
