@@ -6,13 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import Link from "next/link";
+
 
 export default function Home() {
   const [sellValue, setSellValue] = useState("");
@@ -64,32 +58,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black to-gray-900 text-white p-8">
-      <header className="absolute top-0 left-0 p-4 flex space-x-4">
-        <h2 className="text-xl font-semibold text-white">ZeroFlow</h2>
-        <div className="flex justify-center w-full">
-          {/* <Button variant="default" className="text-white mr-2">
-            Trade
-          </Button>
-          <Button variant="default" className="text-white">
-            Pool
-          </Button> */}
-          <NavigationMenu className="gap-3 list-none">
-            <NavigationMenuItem>
-              <Link href="/trade" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Trade</NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link href="/pool" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>Pool</NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          </NavigationMenu>
-        </div>
-      </header>
-      <Button variant="secondary" className="absolute top-0 right-0 m-4 text-white cursor-pointer">
-        Connect Wallet
-      </Button>
+ 
       <h1 className="text-4xl mt-[200px] font-bold mb-8 text-white">Swap with no fees.</h1>
       <Card ref={cardRef} className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-lg">
         <div className="flex flex-col gap-4">
