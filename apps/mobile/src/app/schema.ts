@@ -13,9 +13,7 @@ export const initialSchema = {
   chains: {
     byChainId: {
       '1': { isActive: true },
-      '10': { isActive: true },
-      '137': { isActive: true },
-      '42161': { isActive: true },
+      '10000': { isActive: true },
     },
   },
   favorites: {

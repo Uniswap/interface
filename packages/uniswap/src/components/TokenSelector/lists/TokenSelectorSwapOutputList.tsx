@@ -24,6 +24,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isMobileApp } from 'utilities/src/platform'
+import { smartBCHTokenOptions } from './smartBCH'
 
 // eslint-disable-next-line complexity
 function useTokenSectionsForSwapOutput({
@@ -210,7 +211,12 @@ function _TokenSelectorSwapOutputList({
       isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
-      sections={sections}
+      sections={[
+        {
+          data: smartBCHTokenOptions,
+          sectionKey: TokenOptionSection.SuggestedTokens,
+        },
+      ]}
       showTokenWarnings={true}
       onSelectCurrency={onSelectCurrency}
     />

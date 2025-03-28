@@ -23,6 +23,7 @@ import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isMobileApp } from 'utilities/src/platform'
+import { smartBCHTokenOptions } from './smartBCH'
 
 function useTokenSectionsForSwapInput({
   activeAccountAddress,
@@ -165,7 +166,12 @@ function _TokenSelectorSwapInputList({
       isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
-      sections={sections}
+      sections={[
+        {
+          data: smartBCHTokenOptions,
+          sectionKey: TokenOptionSection.SuggestedTokens,
+        },
+      ]}
       showTokenWarnings={true}
       onSelectCurrency={onSelectCurrency}
     />

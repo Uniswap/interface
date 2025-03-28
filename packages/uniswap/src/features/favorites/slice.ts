@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Ether } from '@uniswap/sdk-core'
-import { WBTC } from 'uniswap/src/constants/tokens'
+
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId as idFromCurrency } from 'uniswap/src/utils/currencyId'
@@ -12,11 +12,10 @@ export interface FavoritesState {
 }
 
 // Default currency ids, need to be in lowercase to match slice add and remove behavior
-const WBTC_CURRENCY_ID = idFromCurrency(WBTC).toLowerCase()
 const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(UniverseChainId.Mainnet)).toLowerCase()
 
 export const initialFavoritesState: FavoritesState = {
-  tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
+  tokens: [ETH_CURRENCY_ID],
   watchedAddresses: [],
 }
 

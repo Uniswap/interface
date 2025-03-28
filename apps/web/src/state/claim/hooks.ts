@@ -8,7 +8,7 @@ import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
-import { UNI } from 'uniswap/src/constants/tokens'
+import { FLEX_USD } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -186,14 +186,10 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
 
-  const uni = chainId ? (UNI as { [chainId: number]: Token })[chainId] : undefined
-  if (!uni) {
-    return undefined
-  }
   if (!canClaim || !userClaimData) {
-    return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(0))
+    return CurrencyAmount.fromRawAmount(FLEX_USD, JSBI.BigInt(0))
   }
-  return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(userClaimData.amount))
+  return CurrencyAmount.fromRawAmount(FLEX_USD, JSBI.BigInt(userClaimData.amount))
 }
 
 export function useClaimCallback(address: string | null | undefined): {

@@ -96,11 +96,11 @@ export function currencyIdToAddress(_currencyId: string): Address {
 }
 
 function isPolygonChain(chainId: number): chainId is UniverseChainId.Polygon {
-  return chainId === UniverseChainId.Polygon
+  return false
 }
 
 function isCeloChain(chainId: number): chainId is UniverseChainId.Celo {
-  return chainId === UniverseChainId.Celo
+  return false
 }
 
 // Similar to `currencyIdToAddress`, except native addresses are `null`.
