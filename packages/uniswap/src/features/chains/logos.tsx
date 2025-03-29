@@ -14,11 +14,12 @@ export function useBlockExplorerLogo(chainId?: UniverseChainId): GeneratedIcon {
   return isDarkMode ? BLOCK_EXPLORER_LOGOS_DARK[chainId] : BLOCK_EXPLORER_LOGOS_LIGHT[chainId]
 }
 
-const BLOCK_EXPLORER_LOGOS_LIGHT: Partial<Record<UniverseChainId, GeneratedIcon>> = {
+const BLOCK_EXPLORER_LOGOS_LIGHT: Record<UniverseChainId, GeneratedIcon> = {
   [UniverseChainId.Mainnet]: EtherscanLogoLight,
+  [UniverseChainId.SmartBCH]: EtherscanLogoLight,
 }
 
-const BLOCK_EXPLORER_LOGOS_DARK: Partial<Record<UniverseChainId, GeneratedIcon>> = {
+const BLOCK_EXPLORER_LOGOS_DARK: Record<UniverseChainId, GeneratedIcon> = {
   ...BLOCK_EXPLORER_LOGOS_LIGHT,
   [UniverseChainId.Mainnet]: EtherscanLogoDark,
 }

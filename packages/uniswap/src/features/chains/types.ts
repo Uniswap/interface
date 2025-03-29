@@ -14,7 +14,7 @@ export enum UniverseChainId {
   SmartBCH = 10000,
 }
 
-export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.Mainnet,UniverseChainId.SmartBCH]
+export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.Mainnet, UniverseChainId.SmartBCH]
 
 export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = []
 

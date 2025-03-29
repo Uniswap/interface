@@ -69,7 +69,7 @@ function getPlaywrightRpcUrls(url: string): { [key in RPCType]: { http: string[]
   }
 }
 
-export const UNIVERSE_CHAIN_INFO: Partial<Record<UniverseChainId, UniverseChainInfo>> = {
+export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
   [UniverseChainId.SmartBCH]: {
     id: UniverseChainId.SmartBCH,
     sdkId: 10000 as UniswapSDKChainId,
