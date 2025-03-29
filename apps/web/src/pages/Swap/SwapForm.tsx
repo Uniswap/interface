@@ -227,13 +227,36 @@ export function SwapForm({
     ],
     [trade, tradeState]
   );
-
   const fiatValueTradeInput = useUSDPrice(trade?.inputAmount);
   const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount);
   const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount);
+
+  // Add this check to validate if USD prices are in sync with trade amounts
+  const usdPricesAreStale = useMemo(() => {
+    if (!trade?.inputAmount || !trade?.outputAmount) return false;
+
+    const inputAmountDecimal = parseFloat(trade.inputAmount.toFixed(2));
+    const outputAmountDecimal = parseFloat(trade.outputAmount.toFixed(2));
+
+    // If either USD price is missing, prices are stale
+    if (!fiatValueTradeInput.data || !fiatValueTradeOutput.data) return true;
+
+    // Check if the ratio between USD prices is significantly different from the ratio between amounts
+    const tradeRatio = inputAmountDecimal / outputAmountDecimal;
+    const usdRatio = fiatValueTradeInput.data / fiatValueTradeOutput.data;
+
+    // Allow for some small deviation (e.g., 5%)
+    return Math.abs(tradeRatio - usdRatio) > tradeRatio * 0.05;
+  }, [
+    trade?.inputAmount,
+    trade?.outputAmount,
+    fiatValueTradeInput.data,
+    fiatValueTradeOutput.data,
+  ]);
+
   const [stablecoinPriceImpact, preTaxStablecoinPriceImpact] = useMemo(
     () =>
-      routeIsSyncing || !isClassicTrade(trade) || showWrap
+      routeIsSyncing || !isClassicTrade(trade) || showWrap || usdPricesAreStale
         ? [undefined, undefined]
         : [
             computeFiatValuePriceImpact(
@@ -252,6 +275,7 @@ export function SwapForm({
       routeIsSyncing,
       trade,
       showWrap,
+      usdPricesAreStale, // Add to dependencies
     ]
   );
 
@@ -476,17 +500,29 @@ export function SwapForm({
 
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
-    if (!isClassicTrade(trade)) {
+    if (!trade || !isClassicTrade(trade)) {
       return { priceImpactSeverity: 0, largerPriceImpact: undefined };
     }
 
-    const marketPriceImpact = trade?.priceImpact
+    // Only calculate price impact if we have a valid trade with stable values
+    const marketPriceImpact = trade.priceImpact
       ? computeRealizedPriceImpact(trade)
       : undefined;
+
+    if (!marketPriceImpact) {
+      return { priceImpactSeverity: 0, largerPriceImpact: undefined };
+    }
+
+    // Skip calculation if values are unreasonable (>90% impact is likely incorrect)
+    if (marketPriceImpact.greaterThan(90)) {
+      return { priceImpactSeverity: 0, largerPriceImpact: undefined };
+    }
+
     const largerPriceImpact = largerPercentValue(
       marketPriceImpact,
       preTaxStablecoinPriceImpact
     );
+
     return {
       priceImpactSeverity: warningSeverity(largerPriceImpact),
       largerPriceImpact,
