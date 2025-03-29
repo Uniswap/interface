@@ -8,8 +8,6 @@ import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import {
-  DAI_ARBITRUM_INFO,
-  DAI_INFO,
   NATIVE_INFO,
   TEST_TOKEN_1,
   TEST_TOKEN_1_INFO,
@@ -17,15 +15,10 @@ import {
   TEST_TOKEN_2_INFO,
   TEST_TOKEN_3,
   TEST_TOKEN_3_INFO,
-  USDC_ARBITRUM_INFO,
-  USDC_INFO,
-  USDT_INFO,
-  WBTC_INFO,
   WETH_INFO,
 } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
-import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isSameAddress } from 'utilities/src/addresses'
 
@@ -35,27 +28,11 @@ beforeEach(() => {
     if (currencyId?.toLowerCase() === 'eth') {
       return NATIVE_INFO?.currency
     }
-    if (isSameAddress(currencyId, DAI.address)) {
-      return DAI_INFO?.currency
-    }
-    if (isSameAddress(currencyId, USDC_MAINNET.address)) {
-      return USDC_INFO?.currency
-    }
+
     if (isSameAddress(currencyId, WETH9[UniverseChainId.Mainnet].address)) {
       return WETH_INFO?.currency
     }
-    if (isSameAddress(currencyId, USDT.address)) {
-      return USDT_INFO?.currency
-    }
-    if (isSameAddress(currencyId, WBTC.address)) {
-      return WBTC_INFO?.currency
-    }
-    if (isSameAddress(currencyId, DAI_ARBITRUM_ONE.address)) {
-      return DAI_ARBITRUM_INFO?.currency
-    }
-    if (isSameAddress(currencyId, USDC_ARBITRUM.address)) {
-      return USDC_ARBITRUM_INFO?.currency
-    }
+
     if (isSameAddress(currencyId, TEST_TOKEN_1.address)) {
       return TEST_TOKEN_1_INFO?.currency
     }
@@ -73,26 +50,8 @@ beforeEach(() => {
     if (address?.toLowerCase() === 'eth') {
       return NATIVE_INFO?.currency
     }
-    if (isSameAddress(address, DAI.address)) {
-      return DAI_INFO?.currency
-    }
-    if (isSameAddress(address, USDC_MAINNET.address)) {
-      return USDC_INFO?.currency
-    }
     if (isSameAddress(address, WETH9[UniverseChainId.Mainnet].address)) {
       return WETH_INFO?.currency
-    }
-    if (isSameAddress(address, USDT.address)) {
-      return USDT_INFO?.currency
-    }
-    if (isSameAddress(address, WBTC.address)) {
-      return WBTC_INFO?.currency
-    }
-    if (isSameAddress(address, DAI_ARBITRUM_ONE.address)) {
-      return DAI_ARBITRUM_INFO?.currency
-    }
-    if (isSameAddress(address, USDC_ARBITRUM.address)) {
-      return USDC_ARBITRUM_INFO?.currency
     }
     if (isSameAddress(address, TEST_TOKEN_1.address)) {
       return TEST_TOKEN_1_INFO?.currency
@@ -112,27 +71,11 @@ beforeEach(() => {
       return NATIVE_INFO
     }
     const address = typeof currency === 'string' ? currency : currency?.address
-    if (isSameAddress(address, DAI.address)) {
-      return DAI_INFO
-    }
-    if (isSameAddress(address, USDC_MAINNET.address)) {
-      return USDC_INFO
-    }
+
     if (isSameAddress(address, WETH9[UniverseChainId.Mainnet].address)) {
       return WETH_INFO
     }
-    if (isSameAddress(address, USDT.address)) {
-      return USDT_INFO
-    }
-    if (isSameAddress(address, WBTC.address)) {
-      return WBTC_INFO
-    }
-    if (isSameAddress(address, DAI_ARBITRUM_ONE.address)) {
-      return DAI_ARBITRUM_INFO
-    }
-    if (isSameAddress(address, USDC_ARBITRUM.address)) {
-      return USDC_ARBITRUM_INFO
-    }
+
     if (isSameAddress(address, TEST_TOKEN_1.address)) {
       return TEST_TOKEN_1_INFO
     }

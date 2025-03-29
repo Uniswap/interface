@@ -135,7 +135,7 @@ export function getEnabledChains({
     return {
       chains: supportedTestnetChainIds,
       gqlChains: GQL_TESTNET_CHAINS,
-      defaultChainId: UniverseChainId.Sepolia as UniverseChainId,
+      defaultChainId: UniverseChainId.SmartBCH as UniverseChainId,
       isTestnetModeEnabled,
     }
   }
