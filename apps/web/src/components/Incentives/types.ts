@@ -448,11 +448,8 @@ export const calculateApy24hrs = async (
   // Daily rewards in USD
   // need to divide this by number of stakers later
   const dailyRewards = dailyRewardTokens * rewardTokenUsdPrice;
-  console.log("dailyRewards", dailyRewards);
   const dailyRewardUsd =
     (dailyRewardTokens * rewardTokenUsdPrice) / stakedLiquidity;
-
-  console.log("dailyRewardUsd", dailyRewardUsd);
 
   return dailyRewardUsd;
 };
