@@ -1,30 +1,20 @@
-# Uniswap Labs Interface
+# Permissionless Uniswap Interface by cp0x
 
-[![Unit Tests](https://github.com/Uniswap/interface/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/unit-tests.yaml)
-[![Integration Tests](https://github.com/Uniswap/interface/actions/workflows/integration-tests.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/integration-tests.yaml)
-[![Lint](https://github.com/Uniswap/interface/actions/workflows/lint.yml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/lint.yml)
-[![Release](https://github.com/Uniswap/interface/actions/workflows/release.yaml/badge.svg)](https://github.com/Uniswap/interface/actions/workflows/release.yaml)
-[![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface)
+An open-source, permissionless interface for Uniswap, based on the official Uniswap repository (tag [v4.101.0](https://github.com/Uniswap/interface/tree/v4.101.0)), designed to be fully permissionless and allow direct, unrestricted interaction with smart contracts.
 
-An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
+## Application Links
+- Website: [pi.cp0x.com](https://pi.cp0x.com/)
+- Interface: [uniswap.cp0x.com](https://uniswap.cp0x.com)
+- Twitter: [@cp0xdotcom](https://x.com/cp0xdotcom)
 
-- Website: [uniswap.org](https://uniswap.org/)
-- Interface: [app.uniswap.org](https://app.uniswap.org)
+## Docs
+
 - Docs: [uniswap.org/docs/](https://docs.uniswap.org/)
-- Twitter: [@Uniswap](https://twitter.com/Uniswap)
-- Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
-- Email: [contact@uniswap.org](mailto:contact@uniswap.org)
-- Discord: [Uniswap](https://discord.gg/FCfyBSbCU5)
 - Whitepapers:
   - [V1](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
   - [V2](https://uniswap.org/whitepaper.pdf)
   - [V3](https://uniswap.org/whitepaper-v3.pdf)
 
-## Accessing the Uniswap Interface
-
-To access the Uniswap Interface, use an IPFS gateway link from the
-[latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
-or visit [app.uniswap.org](https://app.uniswap.org).
 
 ## Unsupported tokens
 
@@ -40,12 +30,8 @@ For steps on local deployment, development, and code contribution, please see [C
 
 The Uniswap Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Uniswap protocol V2.
 
-- Swap on Uniswap V2: https://app.uniswap.org/#/swap?use=v2
-- View V2 liquidity: https://app.uniswap.org/#/pool/v2
-- Add V2 liquidity: https://app.uniswap.org/#/add/v2
-- Migrate V2 liquidity to V3: https://app.uniswap.org/#/migrate/v2
+- Swap on Uniswap V2: https://uniswap.cp0x.com/#/swap?use=v2
+- View V2 liquidity: https://uniswap.cp0x.com/#/pool/v2
+- Add V2 liquidity: https://uniswap.cp0x.com/#/add/v2
+- Migrate V2 liquidity to V3: https://uniswap.cp0x.com/#/migrate/v2
 
-## Accessing Uniswap V1
-
-The Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways
-linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/releases/tag/v1.0.0).
