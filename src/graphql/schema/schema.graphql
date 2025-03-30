@@ -11,6 +11,11 @@ directive @entity on OBJECT
 """Defined a Subgraph ID for an object type"""
 directive @subgraphId(id: String!) on OBJECT
 
+enum Aggregation_interval {
+  hour
+  day
+}
+
 scalar BigDecimal
 
 scalar BigInt
@@ -50,6 +55,8 @@ input Bundle_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Bundle_filter]
+  or: [Bundle_filter]
 }
 
 enum Bundle_orderBy {
@@ -178,12 +185,20 @@ input Burn_filter {
   timestamp_not_in: [BigInt!]
   owner: Bytes
   owner_not: Bytes
+  owner_gt: Bytes
+  owner_lt: Bytes
+  owner_gte: Bytes
+  owner_lte: Bytes
   owner_in: [Bytes!]
   owner_not_in: [Bytes!]
   owner_contains: Bytes
   owner_not_contains: Bytes
   origin: Bytes
   origin_not: Bytes
+  origin_gt: Bytes
+  origin_lt: Bytes
+  origin_gte: Bytes
+  origin_lte: Bytes
   origin_in: [Bytes!]
   origin_not_in: [Bytes!]
   origin_contains: Bytes
@@ -247,14 +262,78 @@ input Burn_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Burn_filter]
+  or: [Burn_filter]
 }
 
 enum Burn_orderBy {
   id
   transaction
+  transaction__id
+  transaction__blockNumber
+  transaction__timestamp
+  transaction__gasUsed
+  transaction__gasPrice
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   token0
+  token0__id
+  token0__symbol
+  token0__name
+  token0__decimals
+  token0__totalSupply
+  token0__volume
+  token0__volumeUSD
+  token0__untrackedVolumeUSD
+  token0__feesUSD
+  token0__txCount
+  token0__poolCount
+  token0__totalValueLocked
+  token0__totalValueLockedUSD
+  token0__totalValueLockedUSDUntracked
+  token0__derivedETH
   token1
+  token1__id
+  token1__symbol
+  token1__name
+  token1__decimals
+  token1__totalSupply
+  token1__volume
+  token1__volumeUSD
+  token1__untrackedVolumeUSD
+  token1__feesUSD
+  token1__txCount
+  token1__poolCount
+  token1__totalValueLocked
+  token1__totalValueLockedUSD
+  token1__totalValueLockedUSDUntracked
+  token1__derivedETH
   timestamp
   owner
   origin
@@ -344,6 +423,10 @@ input Collect_filter {
   pool_: Pool_filter
   owner: Bytes
   owner_not: Bytes
+  owner_gt: Bytes
+  owner_lt: Bytes
+  owner_gte: Bytes
+  owner_lte: Bytes
   owner_in: [Bytes!]
   owner_not_in: [Bytes!]
   owner_contains: Bytes
@@ -399,13 +482,47 @@ input Collect_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Collect_filter]
+  or: [Collect_filter]
 }
 
 enum Collect_orderBy {
   id
   transaction
+  transaction__id
+  transaction__blockNumber
+  transaction__timestamp
+  transaction__gasUsed
+  transaction__gasPrice
   timestamp
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   owner
   amount0
   amount1
@@ -539,6 +656,8 @@ input Factory_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Factory_filter]
+  or: [Factory_filter]
 }
 
 enum Factory_orderBy {
@@ -633,12 +752,20 @@ input Flash_filter {
   pool_: Pool_filter
   sender: Bytes
   sender_not: Bytes
+  sender_gt: Bytes
+  sender_lt: Bytes
+  sender_gte: Bytes
+  sender_lte: Bytes
   sender_in: [Bytes!]
   sender_not_in: [Bytes!]
   sender_contains: Bytes
   sender_not_contains: Bytes
   recipient: Bytes
   recipient_not: Bytes
+  recipient_gt: Bytes
+  recipient_lt: Bytes
+  recipient_gte: Bytes
+  recipient_lte: Bytes
   recipient_in: [Bytes!]
   recipient_not_in: [Bytes!]
   recipient_contains: Bytes
@@ -694,13 +821,47 @@ input Flash_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Flash_filter]
+  or: [Flash_filter]
 }
 
 enum Flash_orderBy {
   id
   transaction
+  transaction__id
+  transaction__blockNumber
+  transaction__timestamp
+  transaction__gasUsed
+  transaction__gasPrice
   timestamp
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   sender
   recipient
   amount0
@@ -710,6 +871,9 @@ enum Flash_orderBy {
   amount1Paid
   logIndex
 }
+
+"8 bytes signed integer\n"
+scalar Int8
 
 type Mint {
   id: ID!
@@ -833,18 +997,30 @@ input Mint_filter {
   token1_: Token_filter
   owner: Bytes
   owner_not: Bytes
+  owner_gt: Bytes
+  owner_lt: Bytes
+  owner_gte: Bytes
+  owner_lte: Bytes
   owner_in: [Bytes!]
   owner_not_in: [Bytes!]
   owner_contains: Bytes
   owner_not_contains: Bytes
   sender: Bytes
   sender_not: Bytes
+  sender_gt: Bytes
+  sender_lt: Bytes
+  sender_gte: Bytes
+  sender_lte: Bytes
   sender_in: [Bytes!]
   sender_not_in: [Bytes!]
   sender_contains: Bytes
   sender_not_contains: Bytes
   origin: Bytes
   origin_not: Bytes
+  origin_gt: Bytes
+  origin_lt: Bytes
+  origin_gte: Bytes
+  origin_lte: Bytes
   origin_in: [Bytes!]
   origin_not_in: [Bytes!]
   origin_contains: Bytes
@@ -908,15 +1084,79 @@ input Mint_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Mint_filter]
+  or: [Mint_filter]
 }
 
 enum Mint_orderBy {
   id
   transaction
+  transaction__id
+  transaction__blockNumber
+  transaction__timestamp
+  transaction__gasUsed
+  transaction__gasPrice
   timestamp
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   token0
+  token0__id
+  token0__symbol
+  token0__name
+  token0__decimals
+  token0__totalSupply
+  token0__volume
+  token0__volumeUSD
+  token0__untrackedVolumeUSD
+  token0__feesUSD
+  token0__txCount
+  token0__poolCount
+  token0__totalValueLocked
+  token0__totalValueLockedUSD
+  token0__totalValueLockedUSDUntracked
+  token0__derivedETH
   token1
+  token1__id
+  token1__symbol
+  token1__name
+  token1__decimals
+  token1__totalSupply
+  token1__volume
+  token1__volumeUSD
+  token1__untrackedVolumeUSD
+  token1__feesUSD
+  token1__txCount
+  token1__poolCount
+  token1__totalValueLocked
+  token1__totalValueLockedUSD
+  token1__totalValueLockedUSDUntracked
+  token1__derivedETH
   owner
   sender
   origin
@@ -1174,12 +1414,41 @@ input PoolDayData_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [PoolDayData_filter]
+  or: [PoolDayData_filter]
 }
 
 enum PoolDayData_orderBy {
   id
   date
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   liquidity
   sqrtPrice
   token0Price
@@ -1399,12 +1668,41 @@ input PoolHourData_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [PoolHourData_filter]
+  or: [PoolHourData_filter]
 }
 
 enum PoolHourData_orderBy {
   id
   periodStartUnix
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   liquidity
   sqrtPrice
   token0Price
@@ -1693,6 +1991,8 @@ input Pool_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Pool_filter]
+  or: [Pool_filter]
 }
 
 enum Pool_orderBy {
@@ -1700,7 +2000,37 @@ enum Pool_orderBy {
   createdAtTimestamp
   createdAtBlockNumber
   token0
+  token0__id
+  token0__symbol
+  token0__name
+  token0__decimals
+  token0__totalSupply
+  token0__volume
+  token0__volumeUSD
+  token0__untrackedVolumeUSD
+  token0__feesUSD
+  token0__txCount
+  token0__poolCount
+  token0__totalValueLocked
+  token0__totalValueLockedUSD
+  token0__totalValueLockedUSDUntracked
+  token0__derivedETH
   token1
+  token1__id
+  token1__symbol
+  token1__name
+  token1__decimals
+  token1__totalSupply
+  token1__volume
+  token1__volumeUSD
+  token1__untrackedVolumeUSD
+  token1__feesUSD
+  token1__txCount
+  token1__poolCount
+  token1__totalValueLocked
+  token1__totalValueLockedUSD
+  token1__totalValueLockedUSDUntracked
+  token1__derivedETH
   feeTier
   liquidity
   sqrtPrice
@@ -1784,6 +2114,10 @@ input PositionSnapshot_filter {
   id_not_in: [ID!]
   owner: Bytes
   owner_not: Bytes
+  owner_gt: Bytes
+  owner_lt: Bytes
+  owner_gte: Bytes
+  owner_lte: Bytes
   owner_in: [Bytes!]
   owner_not_in: [Bytes!]
   owner_contains: Bytes
@@ -1942,13 +2276,53 @@ input PositionSnapshot_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [PositionSnapshot_filter]
+  or: [PositionSnapshot_filter]
 }
 
 enum PositionSnapshot_orderBy {
   id
   owner
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   position
+  position__id
+  position__owner
+  position__liquidity
+  position__depositedToken0
+  position__depositedToken1
+  position__withdrawnToken0
+  position__withdrawnToken1
+  position__collectedFeesToken0
+  position__collectedFeesToken1
+  position__feeGrowthInside0LastX128
+  position__feeGrowthInside1LastX128
   blockNumber
   timestamp
   liquidity
@@ -1959,6 +2333,11 @@ enum PositionSnapshot_orderBy {
   collectedFeesToken0
   collectedFeesToken1
   transaction
+  transaction__id
+  transaction__blockNumber
+  transaction__timestamp
+  transaction__gasUsed
+  transaction__gasPrice
   feeGrowthInside0LastX128
   feeGrowthInside1LastX128
 }
@@ -1974,6 +2353,10 @@ input Position_filter {
   id_not_in: [ID!]
   owner: Bytes
   owner_not: Bytes
+  owner_gt: Bytes
+  owner_lt: Bytes
+  owner_gte: Bytes
+  owner_lte: Bytes
   owner_in: [Bytes!]
   owner_not_in: [Bytes!]
   owner_contains: Bytes
@@ -2179,16 +2562,115 @@ input Position_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Position_filter]
+  or: [Position_filter]
 }
 
 enum Position_orderBy {
   id
   owner
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   token0
+  token0__id
+  token0__symbol
+  token0__name
+  token0__decimals
+  token0__totalSupply
+  token0__volume
+  token0__volumeUSD
+  token0__untrackedVolumeUSD
+  token0__feesUSD
+  token0__txCount
+  token0__poolCount
+  token0__totalValueLocked
+  token0__totalValueLockedUSD
+  token0__totalValueLockedUSDUntracked
+  token0__derivedETH
   token1
+  token1__id
+  token1__symbol
+  token1__name
+  token1__decimals
+  token1__totalSupply
+  token1__volume
+  token1__volumeUSD
+  token1__untrackedVolumeUSD
+  token1__feesUSD
+  token1__txCount
+  token1__poolCount
+  token1__totalValueLocked
+  token1__totalValueLockedUSD
+  token1__totalValueLockedUSDUntracked
+  token1__derivedETH
   tickLower
+  tickLower__id
+  tickLower__poolAddress
+  tickLower__tickIdx
+  tickLower__liquidityGross
+  tickLower__liquidityNet
+  tickLower__price0
+  tickLower__price1
+  tickLower__volumeToken0
+  tickLower__volumeToken1
+  tickLower__volumeUSD
+  tickLower__untrackedVolumeUSD
+  tickLower__feesUSD
+  tickLower__collectedFeesToken0
+  tickLower__collectedFeesToken1
+  tickLower__collectedFeesUSD
+  tickLower__createdAtTimestamp
+  tickLower__createdAtBlockNumber
+  tickLower__liquidityProviderCount
+  tickLower__feeGrowthOutside0X128
+  tickLower__feeGrowthOutside1X128
   tickUpper
+  tickUpper__id
+  tickUpper__poolAddress
+  tickUpper__tickIdx
+  tickUpper__liquidityGross
+  tickUpper__liquidityNet
+  tickUpper__price0
+  tickUpper__price1
+  tickUpper__volumeToken0
+  tickUpper__volumeToken1
+  tickUpper__volumeUSD
+  tickUpper__untrackedVolumeUSD
+  tickUpper__feesUSD
+  tickUpper__collectedFeesToken0
+  tickUpper__collectedFeesToken1
+  tickUpper__collectedFeesUSD
+  tickUpper__createdAtTimestamp
+  tickUpper__createdAtBlockNumber
+  tickUpper__liquidityProviderCount
+  tickUpper__feeGrowthOutside0X128
+  tickUpper__feeGrowthOutside1X128
   liquidity
   depositedToken0
   depositedToken1
@@ -2197,6 +2679,11 @@ enum Position_orderBy {
   collectedFeesToken0
   collectedFeesToken1
   transaction
+  transaction__id
+  transaction__blockNumber
+  transaction__timestamp
+  transaction__gasUsed
+  transaction__gasPrice
   feeGrowthInside0LastX128
   feeGrowthInside1LastX128
 }
@@ -3534,18 +4021,30 @@ input Swap_filter {
   token1_: Token_filter
   sender: Bytes
   sender_not: Bytes
+  sender_gt: Bytes
+  sender_lt: Bytes
+  sender_gte: Bytes
+  sender_lte: Bytes
   sender_in: [Bytes!]
   sender_not_in: [Bytes!]
   sender_contains: Bytes
   sender_not_contains: Bytes
   recipient: Bytes
   recipient_not: Bytes
+  recipient_gt: Bytes
+  recipient_lt: Bytes
+  recipient_gte: Bytes
+  recipient_lte: Bytes
   recipient_in: [Bytes!]
   recipient_not_in: [Bytes!]
   recipient_contains: Bytes
   recipient_not_contains: Bytes
   origin: Bytes
   origin_not: Bytes
+  origin_gt: Bytes
+  origin_lt: Bytes
+  origin_gte: Bytes
+  origin_lte: Bytes
   origin_in: [Bytes!]
   origin_not_in: [Bytes!]
   origin_contains: Bytes
@@ -3601,15 +4100,79 @@ input Swap_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Swap_filter]
+  or: [Swap_filter]
 }
 
 enum Swap_orderBy {
   id
   transaction
+  transaction__id
+  transaction__blockNumber
+  transaction__timestamp
+  transaction__gasUsed
+  transaction__gasPrice
   timestamp
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   token0
+  token0__id
+  token0__symbol
+  token0__name
+  token0__decimals
+  token0__totalSupply
+  token0__volume
+  token0__volumeUSD
+  token0__untrackedVolumeUSD
+  token0__feesUSD
+  token0__txCount
+  token0__poolCount
+  token0__totalValueLocked
+  token0__totalValueLockedUSD
+  token0__totalValueLockedUSDUntracked
+  token0__derivedETH
   token1
+  token1__id
+  token1__symbol
+  token1__name
+  token1__decimals
+  token1__totalSupply
+  token1__volume
+  token1__volumeUSD
+  token1__untrackedVolumeUSD
+  token1__feesUSD
+  token1__txCount
+  token1__poolCount
+  token1__totalValueLocked
+  token1__totalValueLockedUSD
+  token1__totalValueLockedUSDUntracked
+  token1__derivedETH
   sender
   recipient
   origin
@@ -3786,13 +4349,62 @@ input TickDayData_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [TickDayData_filter]
+  or: [TickDayData_filter]
 }
 
 enum TickDayData_orderBy {
   id
   date
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   tick
+  tick__id
+  tick__poolAddress
+  tick__tickIdx
+  tick__liquidityGross
+  tick__liquidityNet
+  tick__price0
+  tick__price1
+  tick__volumeToken0
+  tick__volumeToken1
+  tick__volumeUSD
+  tick__untrackedVolumeUSD
+  tick__feesUSD
+  tick__collectedFeesToken0
+  tick__collectedFeesToken1
+  tick__collectedFeesUSD
+  tick__createdAtTimestamp
+  tick__createdAtBlockNumber
+  tick__liquidityProviderCount
+  tick__feeGrowthOutside0X128
+  tick__feeGrowthOutside1X128
   liquidityGross
   liquidityNet
   volumeToken0
@@ -3926,13 +4538,62 @@ input TickHourData_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [TickHourData_filter]
+  or: [TickHourData_filter]
 }
 
 enum TickHourData_orderBy {
   id
   periodStartUnix
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   tick
+  tick__id
+  tick__poolAddress
+  tick__tickIdx
+  tick__liquidityGross
+  tick__liquidityNet
+  tick__price0
+  tick__price1
+  tick__volumeToken0
+  tick__volumeToken1
+  tick__volumeUSD
+  tick__untrackedVolumeUSD
+  tick__feesUSD
+  tick__collectedFeesToken0
+  tick__collectedFeesToken1
+  tick__collectedFeesUSD
+  tick__createdAtTimestamp
+  tick__createdAtBlockNumber
+  tick__liquidityProviderCount
+  tick__feeGrowthOutside0X128
+  tick__feeGrowthOutside1X128
   liquidityGross
   liquidityNet
   volumeToken0
@@ -4138,6 +4799,8 @@ input Tick_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Tick_filter]
+  or: [Tick_filter]
 }
 
 enum Tick_orderBy {
@@ -4145,6 +4808,33 @@ enum Tick_orderBy {
   poolAddress
   tickIdx
   pool
+  pool__id
+  pool__createdAtTimestamp
+  pool__createdAtBlockNumber
+  pool__feeTier
+  pool__liquidity
+  pool__sqrtPrice
+  pool__feeGrowthGlobal0X128
+  pool__feeGrowthGlobal1X128
+  pool__token0Price
+  pool__token1Price
+  pool__tick
+  pool__observationIndex
+  pool__volumeToken0
+  pool__volumeToken1
+  pool__volumeUSD
+  pool__untrackedVolumeUSD
+  pool__feesUSD
+  pool__txCount
+  pool__collectedFeesToken0
+  pool__collectedFeesToken1
+  pool__collectedFeesUSD
+  pool__totalValueLockedToken0
+  pool__totalValueLockedToken1
+  pool__totalValueLockedETH
+  pool__totalValueLockedUSD
+  pool__totalValueLockedUSDUntracked
+  pool__liquidityProviderCount
   liquidityGross
   liquidityNet
   price0
@@ -4163,6 +4853,9 @@ enum Tick_orderBy {
   feeGrowthOutside0X128
   feeGrowthOutside1X128
 }
+
+"A string representation of microseconds UNIX timestamp (16 digits)\n"
+scalar Timestamp
 
 type Token {
   id: ID!
@@ -4330,12 +5023,29 @@ input TokenDayData_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [TokenDayData_filter]
+  or: [TokenDayData_filter]
 }
 
 enum TokenDayData_orderBy {
   id
   date
   token
+  token__id
+  token__symbol
+  token__name
+  token__decimals
+  token__totalSupply
+  token__volume
+  token__volumeUSD
+  token__untrackedVolumeUSD
+  token__feesUSD
+  token__txCount
+  token__poolCount
+  token__totalValueLocked
+  token__totalValueLockedUSD
+  token__totalValueLockedUSDUntracked
+  token__derivedETH
   volume
   volumeUSD
   untrackedVolumeUSD
@@ -4495,12 +5205,29 @@ input TokenHourData_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [TokenHourData_filter]
+  or: [TokenHourData_filter]
 }
 
 enum TokenHourData_orderBy {
   id
   periodStartUnix
   token
+  token__id
+  token__symbol
+  token__name
+  token__decimals
+  token__totalSupply
+  token__volume
+  token__volumeUSD
+  token__untrackedVolumeUSD
+  token__feesUSD
+  token__txCount
+  token__poolCount
+  token__totalValueLocked
+  token__totalValueLockedUSD
+  token__totalValueLockedUSDUntracked
+  token__derivedETH
   volume
   volumeUSD
   untrackedVolumeUSD
@@ -4670,6 +5397,8 @@ input Token_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Token_filter]
+  or: [Token_filter]
 }
 
 enum Token_orderBy {
@@ -4754,6 +5483,8 @@ input Transaction_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [Transaction_filter]
+  or: [Transaction_filter]
 }
 
 enum Transaction_orderBy {
@@ -4848,6 +5579,8 @@ input UniswapDayData_filter {
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
+  and: [UniswapDayData_filter]
+  or: [UniswapDayData_filter]
 }
 
 enum UniswapDayData_orderBy {
@@ -4867,6 +5600,12 @@ type _Block_ {
 
   """The block number"""
   number: Int!
+
+  """Integer representation of the timestamp stored in blocks for the chain"""
+  timestamp: Int
+
+  """The hash of the parent block"""
+  parentHash: Bytes
 }
 
 """The type for the top-level _meta field"""

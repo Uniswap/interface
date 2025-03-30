@@ -8,24 +8,10 @@ import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/loca
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { FunctionComponent, PropsWithChildren, useEffect, useRef, useState } from 'react'
-import {
-  BookOpen,
-  Check,
-  ChevronLeft,
-  Coffee,
-  FileText,
-  Flag,
-  Globe,
-  HelpCircle,
-  Info,
-  MessageCircle,
-  Moon,
-  Sun,
-} from 'react-feather'
+import { Check, ChevronLeft, Globe, Info, MessageCircle, Moon, Sun } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
-import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -216,8 +202,8 @@ export default function Menu() {
   const open = useModalIsOpen(ApplicationModal.MENU)
   const toggleMenu = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggleMenu : undefined)
-  const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
-  const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
+  // const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
+  // const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
 
@@ -246,27 +232,15 @@ export default function Menu() {
               default:
                 return (
                   <MenuFlyout>
-                    <MenuItem href="https://uniswap.org/">
+                    <MenuItem href="https://pi.cp0x.com/">
                       <div>
-                        <Trans>About</Trans>
+                        <Trans>About cp0x</Trans>
                       </div>
                       <Info opacity={0.6} size={16} />
                     </MenuItem>
-                    <MenuItem href="https://help.uniswap.org/">
+                    <MenuItem href="https://t.me/cp0xdotcom">
                       <div>
-                        <Trans>Help Center</Trans>
-                      </div>
-                      <HelpCircle opacity={0.6} size={16} />
-                    </MenuItem>
-                    <MenuItem href="https://uniswap.canny.io/feature-requests">
-                      <div>
-                        <Trans>Request Features</Trans>
-                      </div>
-                      <Coffee opacity={0.6} size={16} />
-                    </MenuItem>
-                    <MenuItem href="https://discord.gg/FCfyBSbCU5">
-                      <div>
-                        <Trans>Discord</Trans>
+                        <Trans>Telegram</Trans>
                       </div>
                       <MessageCircle opacity={0.6} size={16} />
                     </MenuItem>
@@ -280,23 +254,11 @@ export default function Menu() {
                       <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
                       {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
                     </ToggleMenuItem>
-                    <MenuItem href="https://docs.uniswap.org/">
-                      <div>
-                        <Trans>Docs</Trans>
-                      </div>
-                      <BookOpen opacity={0.6} size={16} />
-                    </MenuItem>
-                    <ToggleMenuItem onClick={() => togglePrivacyPolicy()}>
-                      <div>
-                        <Trans>Legal & Privacy</Trans>
-                      </div>
-                      <FileText opacity={0.6} size={16} />
-                    </ToggleMenuItem>
-                    {(isDevelopmentEnv() || isStagingEnv()) && (
-                      <ToggleMenuItem onClick={openFeatureFlagsModal}>
-                        Feature Flags <Flag opacity={0.6} size={16} />
-                      </ToggleMenuItem>
-                    )}
+                    {/*{(isDevelopmentEnv() || isStagingEnv()) && (*/}
+                    {/*  <ToggleMenuItem onClick={openFeatureFlagsModal}>*/}
+                    {/*    Feature Flags <Flag opacity={0.6} size={16} />*/}
+                    {/*  </ToggleMenuItem>*/}
+                    {/*)}*/}
                     {showUNIClaimOption && (
                       <UNIbutton
                         onClick={openClaimModal}

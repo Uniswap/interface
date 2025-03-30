@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { initializeAnalytics, sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
 import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
@@ -23,6 +24,7 @@ import Polling from '../components/Header/Polling'
 import Navbar from '../components/NavBar'
 import Popups from '../components/Popups'
 import { useIsExpertMode } from '../state/user/hooks'
+import { ThemedText } from '../theme'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
@@ -104,6 +106,14 @@ const LazyLoadSpinner = () => (
     />
   </SpinnerSVG>
 )
+
+const Container = styled(ThemedText.DeprecatedSmall)`
+  opacity: 0.6;
+  :hover {
+    opacity: 1;
+  }
+  margin-top: 1rem !important;
+`
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
@@ -217,6 +227,9 @@ export default function App() {
               ) : (
                 <Loader />
               )}
+              <Container>
+                <Trans>Permissionless Uniswap Interface by cp0x</Trans>
+              </Container>
             </Suspense>
             <Marginer />
           </BodyWrapper>

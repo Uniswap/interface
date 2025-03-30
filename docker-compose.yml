@@ -1,0 +1,9 @@
+services:
+  pi-uniswap:
+    image: philpher/uniswap-interface:latest
+    container_name: pi-uniswap-interface
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env

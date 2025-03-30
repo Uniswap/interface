@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
+// import { SupportedChainId } from 'constants/chains'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { darken } from 'polished'
 import { NavLink, useLocation } from 'react-router-dom'
@@ -11,18 +11,18 @@ import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/ho
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
-import { useDarkModeManager } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 
-import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
-import { ExternalLink, ThemedText } from '../../theme'
+import { ReactComponent as Cp0xLogo } from '../../assets/svg/cp0x_logo.svg'
+import { ReactComponent as Cp0xUniLogo } from '../../assets/svg/logo_uni_cp0x.svg'
+import { ThemedText } from '../../theme'
 import ClaimModal from '../claim/ClaimModal'
 import { CardNoise } from '../earn/styled'
 import Menu from '../Menu'
 import Row from '../Row'
 import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
-import HolidayOrnament from './HolidayOrnament'
+// import HolidayOrnament from './HolidayOrnament'
 import NetworkSelector from './NetworkSelector'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
@@ -217,40 +217,12 @@ const StyledNavLink = styled(NavLink)`
   }
 `
 
-const StyledExternalLink = styled(ExternalLink)`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.deprecated_text2};
-  font-size: 1rem;
-  width: fit-content;
-  margin: 0 12px;
-  font-weight: 500;
-
-  &.${activeClassName} {
-    border-radius: 14px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.deprecated_text1};
-  }
-
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.deprecated_text1)};
-    text-decoration: none;
-  }
-`
-
 export default function Header() {
   const tokensFlag = useTokensFlag()
 
   const { account, chainId } = useWeb3React()
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
-  const [darkMode] = useDarkModeManager()
-  const { deprecated_white, deprecated_black } = useTheme()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -265,7 +237,7 @@ export default function Header() {
   const { pathname } = useLocation()
 
   const {
-    infoLink,
+    // infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
   } = getChainInfoOrDefault(chainId)
 
@@ -282,9 +254,9 @@ export default function Header() {
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
       <Title href=".">
-        <UniIcon>
-          <Logo fill={darkMode ? deprecated_white : deprecated_black} width="24px" height="100%" title="logo" />
-          <HolidayOrnament />
+        <Cp0xLogo height="30px" />
+        <UniIcon style={{ marginLeft: '8px' }}>
+          <Cp0xUniLogo height="20px" title="logo" />
         </UniIcon>
       </Title>
       <HeaderLinks>
@@ -304,17 +276,12 @@ export default function Header() {
         >
           <Trans>Pool</Trans>
         </StyledNavLink>
-        {(!chainId || chainId === SupportedChainId.MAINNET) && (
-          <StyledNavLink id={`vote-nav-link`} to={'/vote'}>
-            <Trans>Vote</Trans>
-          </StyledNavLink>
-        )}
-        <StyledExternalLink id={`charts-nav-link`} href={infoLink}>
-          <Trans>Charts</Trans>
-          <sup>↗</sup>
-        </StyledExternalLink>
+        {/*{(!chainId || chainId === SupportedChainId.MAINNET) && (*/}
+        {/*  <StyledNavLink id={`vote-nav-link`} to={'/vote'}>*/}
+        {/*    <Trans>Vote</Trans>*/}
+        {/*  </StyledNavLink>*/}
+        {/*)}*/}
       </HeaderLinks>
-
       <HeaderControls>
         <HeaderElement>
           <NetworkSelector />
