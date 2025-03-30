@@ -3232,12 +3232,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:23.10.0":
-  version: 23.10.0
-  resolution: "i18next@npm:23.10.0"
+"i18next-resources-for-ts@npm:1.5.0":
+  version: 1.5.0
+  resolution: "i18next-resources-for-ts@npm:1.5.0"
+  dependencies:
+    "@babel/runtime": ^7.23.7
+    yaml: ^2.3.4
+  bin:
+    i18next-resources-for-ts: bin/i18next-resources-for-ts.js
+  checksum: e07bff1421f42f9d6ec8a0f8d47beb4c70fbe13f73a8a891848dec356bd5e743773998a9e56efb6c14175379b9bb74a3d33bc775e3a1378888791771b444c6ba
+  languageName: node
+  linkType: hard
+
+"i18next-resources-to-backend@npm:1.2.1":
+  version: 1.2.1
+  resolution: "i18next-resources-to-backend@npm:1.2.1"
   dependencies:
     "@babel/runtime": ^7.23.2
-  checksum: 7b476071787c2b909517c86828b17ca7a7ae98c848a052a1c55f9cff114c2307975dcf8dcc30e43ca64389fb24cd2b76382d002d5c3ed0a9a900563813f61863
+  checksum: a2f338c4eec8d5ba09846ae1abdd23afb72086f6395d6160c748d010c82f5c28c30133f6487f0fd3a65e710231d7750b324785f15cac4baf6d24b33227840341
   languageName: node
   linkType: hard
 
@@ -5889,7 +5901,7 @@ __metadata:
     depcheck: 1.4.7
     dotenv-cli: 7.1.0
     husky: 8.0.3
-    i18next: 23.10.0
+    i18next: 24.2.2
     i18next-parser: 8.6.0
     js-yaml: 4.1.0
     moti: 0.29.0
