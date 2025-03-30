@@ -1,0 +1,46 @@
+# Node modules
+node_modules/
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript compiled output
+dist/
+build/
+*.js
+*.js.map
+*.d.ts
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+node_repl_history
+
+# TypeScript configuration
+tsconfig.tsbuildinfo
+
+# Log files
+*.log
+logs/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*~
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
