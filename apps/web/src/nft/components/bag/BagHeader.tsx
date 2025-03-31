@@ -1,7 +1,7 @@
 import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { TamaguiClickableStyle } from 'theme/components'
+import { TamaguiClickableStyle } from 'theme/components/styles'
 import { Button, Flex, Text } from 'ui/src'
 
 interface BagHeaderProps {

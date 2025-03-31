@@ -78,6 +78,21 @@ export type GasEstimateAccuracyProperties = {
   display_limit_inflation_factor?: number
 }
 
+type KeyringMissingMnemonicProperties = {
+  mnemonicId: string
+  timeImportedMsFirst?: number
+  timeImportedMsLast?: number
+  keyringMnemonicIds: string[]
+  // We're only logging the public addresses of the user accounts,
+  // nothing actually private.
+  keyringPrivateKeyAddresses: string[]
+  signerMnemonicAccounts: {
+    mnemonicId: string
+    address: string
+    timeImportedMs: number
+  }[]
+}
+
 export type PendingTransactionTimeoutProperties = {
   use_flashbots: boolean
   flashbots_block_range: number
@@ -301,6 +316,9 @@ export enum ConnectionCardLoggingName {
 
 export type FORAmountEnteredProperties = ITraceContext & {
   source: 'chip' | 'textInput' | 'changeAsset' | 'maxButton'
+  // In order to track funnel metrics, we need to be able to associate this event to the FOR transaction.
+  // However, `externalTransactionId` must be unique for each transaction, so we pre-generate the suffix only.
+  externalTransactionIdSuffix?: string
   amountUSD?: number
   amount?: number
   chainId?: number
@@ -309,7 +327,14 @@ export type FORAmountEnteredProperties = ITraceContext & {
   isTokenInputMode?: boolean
 }
 
-export type FORTokenSelectedProperties = ITraceContext & { token: string; isUnsupported?: boolean; chainId?: number }
+export type FORTokenSelectedProperties = ITraceContext & {
+  token: string
+  // In order to track funnel metrics, we need to be able to associate this event to the FOR transaction.
+  // However, `externalTransactionId` must be unique for each transaction, so we pre-generate the suffix only.
+  externalTransactionIdSuffix?: string
+  isUnsupported?: boolean
+  chainId?: number
+}
 
 export type FORUnsupportedTokenSelectedProperties = ITraceContext & { token?: string }
 
@@ -853,6 +878,7 @@ export type UniverseEventProperties = {
     url: string
   }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
+  [WalletEventName.KeyringMissingMnemonic]: KeyringMissingMnemonicProperties
   [WalletEventName.LowNetworkTokenInfoModalOpened]: {
     location: 'send' | 'swap'
   }

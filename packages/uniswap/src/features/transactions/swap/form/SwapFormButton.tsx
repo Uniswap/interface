@@ -317,13 +317,7 @@ export function SwapFormButton({
               })
             }
           >
-            {buttonTextColor ? (
-              <Button.Text customBackgroundColor={buttonBackgroundColor} color={buttonTextColor}>
-                {buttonText}
-              </Button.Text>
-            ) : (
-              buttonText
-            )}
+            {buttonTextColor ? <Button.Text color={buttonTextColor}>{buttonText}</Button.Text> : buttonText}
           </Button>
         </Flex>
       </Trace>

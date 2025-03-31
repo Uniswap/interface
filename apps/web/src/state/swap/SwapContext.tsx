@@ -1,13 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useReportTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useReportTotalBalancesUsdForAnalytics'
-import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
-import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from 'state/swap/types'
+import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 
@@ -89,35 +86,4 @@ export function SwapAndLimitContextProvider({
   useReportTotalBalancesUsdForAnalytics()
 
   return <SwapAndLimitContext.Provider value={value}>{children}</SwapAndLimitContext.Provider>
-}
-
-export function SwapContextProvider({
-  initialTypedValue,
-  initialIndependentField,
-  children,
-}: {
-  initialTypedValue?: string
-  initialIndependentField?: CurrencyField
-  children: React.ReactNode
-}) {
-  const [swapState, setSwapState] = useState<SwapState>({
-    typedValue: initialTypedValue ?? initialSwapState.typedValue,
-    independentField: initialIndependentField ?? initialSwapState.independentField,
-  })
-  const derivedSwapInfo = useDerivedSwapInfo(swapState)
-
-  const { chainId: connectedChainId } = useAccount()
-  const previousConnectedChainId = usePrevious(connectedChainId)
-
-  const { chainId: swapChainId } = useMultichainContext()
-  const previousSwapChainId = usePrevious(swapChainId)
-
-  useEffect(() => {
-    const swapChainIdChanged = previousSwapChainId && previousSwapChainId !== swapChainId
-    if (swapChainIdChanged) {
-      setSwapState((prev) => ({ ...prev, typedValue: '' }))
-    }
-  }, [connectedChainId, previousConnectedChainId, swapChainId, previousSwapChainId])
-
-  return <SwapContext.Provider value={{ swapState, setSwapState, derivedSwapInfo }}>{children}</SwapContext.Provider>
 }

@@ -10,6 +10,7 @@ exports[`CopyTextButton renders without error 1`] = `
 >
   <View
     collapsable={false}
+    dd-action-name="Copy"
     focusVisibleStyle={
       {
         "backgroundColor": "rgba(34,34,34,0.09)",

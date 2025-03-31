@@ -1,5 +1,6 @@
 import { expect, test } from 'playwright/fixtures'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/anvil'
+import { gotoAndWait } from 'playwright/utils'
 import { USDT } from 'uniswap/src/constants/tokens'
 import { assume0xAddress } from 'utils/wagmi'
 import { parseEther } from 'viem'
@@ -67,4 +68,12 @@ test('should swap ETH to USDC', async ({ page, anvil }) => {
   })
 
   expect(ethBalance).toBeLessThan(parseEther('9999.90'))
+})
+
+test('should load swap settings with correct deadline title', async ({ page }) => {
+  await gotoAndWait(page, '/swap')
+  await expect(page.getByTestId('swap-settings')).toBeVisible()
+  await page.getByTestId('swap-settings').click()
+  await page.waitForTimeout(800)
+  await expect(page.getByText('Swap deadline')).toBeVisible()
 })

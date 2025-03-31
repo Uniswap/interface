@@ -39,9 +39,13 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 // The default "Urgent" strategy that was previously hardcoded in the gas service
 export const DEFAULT_GAS_STRATEGY: GasStrategy = {
   limitInflationFactor: 1.15,
-  displayLimitInflationFactor: 1.15,
+  displayLimitInflationFactor: 1,
   priceInflationFactor: 1.5,
   percentileThresholdFor1559Fee: 75,
+  thresholdToInflateLastBlockBaseFee: 0,
+  baseFeeMultiplier: 1.05,
+  baseFeeHistoryWindow: 100,
+  minPriorityFeeRatioOfBaseFee: undefined,
   minPriorityFeeGwei: 2,
   maxPriorityFeeGwei: 9,
 }

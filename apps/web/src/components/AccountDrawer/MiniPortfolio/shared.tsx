@@ -3,7 +3,8 @@ import Row from 'components/deprecated/Row'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ArrowRight } from 'react-feather'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ClickableStyle } from 'theme/components/styles'
 import { Text } from 'ui/src'
 
 const Container = styled.button`

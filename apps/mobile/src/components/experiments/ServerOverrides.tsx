@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Accordion, Flex, Text } from 'ui/src'
+import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
+import { AccordionHeader } from 'uniswap/src/components/gating/GatingOverrides'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { GatingButton } from 'wallet/src/components/gating/GatingButton'
-import { AccordionHeader } from 'wallet/src/components/gating/GatingOverrides'
 
 export function ServerOverrides(): JSX.Element {
   const dispatch = useDispatch()

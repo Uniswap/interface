@@ -11,7 +11,7 @@ import appsFlyer from 'react-native-appsflyer'
 import DeviceInfo from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
-import OneSignal from 'react-native-onesignal'
+import { OneSignal } from 'react-native-onesignal'
 import { configureReanimatedLogger } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
@@ -27,6 +27,7 @@ import { persistor, store } from 'src/app/store'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
+import { useLogMissingMnemonic } from 'src/features/analytics/useLogMissingMnemonic'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
@@ -263,7 +264,7 @@ function AppOuter(): JSX.Element | null {
       const notificationsPriceAlertsEnabled = getFeatureFlag(FeatureFlags.NotificationPriceAlertsIOS)
       const notificationsUnfundedWalletEnabled = getFeatureFlag(FeatureFlags.NotificationUnfundedWalletsIOS)
 
-      OneSignal.sendTags({
+      OneSignal.User.addTags({
         [OneSignalUserTagField.GatingPriceAlertsEnabled]: notificationsPriceAlertsEnabled ? 'true' : 'false',
         [OneSignalUserTagField.GatingUnfundedWalletsEnabled]: notificationsUnfundedWalletEnabled ? 'true' : 'false',
       })
@@ -344,6 +345,8 @@ function AppInner(): JSX.Element {
     // after updating RN to 0.72.0 or higher)
     NativeModules.ThemeModule.setColorScheme(themeSetting)
   }, [themeSetting])
+
+  useLogMissingMnemonic()
 
   return (
     <>

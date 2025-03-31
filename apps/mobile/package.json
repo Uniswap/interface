@@ -83,7 +83,7 @@
     "@shopify/flash-list": "1.7.1",
     "@shopify/react-native-performance": "4.1.2",
     "@shopify/react-native-performance-navigation": "3.0.0",
-    "@shopify/react-native-skia": "1.6.0",
+    "@shopify/react-native-skia": "1.7.2",
     "@sparkfabrik/react-native-idfa-aaid": "1.2.0",
     "@tanstack/react-query": "5.51.16",
     "@testing-library/react-hooks": "8.0.1",
@@ -136,7 +136,7 @@
     "react-native-localize": "2.2.6",
     "react-native-markdown-display": "7.0.0-alpha.2",
     "react-native-mmkv": "2.10.1",
-    "react-native-onesignal": "4.5.2",
+    "react-native-onesignal": "5.2.9",
     "react-native-pager-view": "6.5.1",
     "react-native-permissions": "4.1.5",
     "react-native-reanimated": "3.16.7",
@@ -160,6 +160,7 @@
     "typed-redux-saga": "1.5.0",
     "uniswap": "workspace:^",
     "utilities": "workspace:^",
+    "uuid": "9.0.0",
     "wallet": "workspace:^"
   },
   "devDependencies": {

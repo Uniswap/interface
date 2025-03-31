@@ -140,6 +140,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     isOffRamp,
     isTokenInputMode,
     setIsTokenInputMode,
+    externalTransactionIdSuffix,
   } = useFiatOnRampContext()
 
   const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency, supportedFiatCurrencies } =
@@ -288,6 +289,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
         fiatCurrency: meldSupportedFiatCurrency.code,
         chainId: quoteCurrency.currencyInfo?.currency.chainId,
         isTokenInputMode,
+        externalTransactionIdSuffix,
       },
     )
 
@@ -392,6 +394,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
           token: currency.currencyInfo.currency.symbol.toLowerCase(),
           isUnsupported: !isSupportedFORCurrency(currency),
           chainId: currency.currencyInfo?.currency.chainId,
+          externalTransactionIdSuffix,
         },
       )
     }

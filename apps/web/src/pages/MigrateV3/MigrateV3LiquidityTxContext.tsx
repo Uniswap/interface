@@ -12,6 +12,7 @@ import {
   CheckApprovalLPRequest,
   MigrateLPPositionRequest,
   ProtocolItems,
+  UniversalRouterVersion,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import {
   LiquidityTransactionType,
@@ -76,7 +77,7 @@ export function MigrateV3PositionTxContextProvider({
   } = useCheckLpApprovalQuery({
     params: increaseLiquidityApprovalParams,
     headers: {
-      'x-universal-router-version': '2.0',
+      'x-universal-router-version': UniversalRouterVersion._2_0,
     },
     staleTime: 5 * ONE_SECOND_MS,
     enabled: Boolean(increaseLiquidityApprovalParams),

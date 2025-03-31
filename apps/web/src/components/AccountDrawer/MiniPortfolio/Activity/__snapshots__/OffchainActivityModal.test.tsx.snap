@@ -43,22 +43,6 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 12px;
 }
 
-.c4 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c5 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c15 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -76,14 +60,6 @@ exports[`OrderContent should render without error, filled order 1`] = `
 
 .c15:active {
   opacity: 0.4;
-}
-
-.c6 {
-  width: 100%;
-  height: 1px;
-  border-width: 0;
-  margin: 0;
-  background-color: #22222212;
 }
 
 .c0 {
@@ -143,6 +119,30 @@ exports[`OrderContent should render without error, filled order 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
+}
+
+.c4 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c5 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c6 {
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: #22222212;
 }
 
 .c12 {
@@ -537,22 +537,6 @@ exports[`OrderContent should render without error, limit order 1`] = `
   gap: 12px;
 }
 
-.c4 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c5 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c17 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -570,14 +554,6 @@ exports[`OrderContent should render without error, limit order 1`] = `
 
 .c17:active {
   opacity: 0.4;
-}
-
-.c6 {
-  width: 100%;
-  height: 1px;
-  border-width: 0;
-  margin: 0;
-  background-color: #22222212;
 }
 
 .c0 {
@@ -637,6 +613,30 @@ exports[`OrderContent should render without error, limit order 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
+}
+
+.c4 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c5 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c6 {
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: #22222212;
 }
 
 .c12 {
@@ -1075,30 +1075,6 @@ exports[`OrderContent should render without error, open order 1`] = `
   gap: 12px;
 }
 
-.c4 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c5 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c6 {
-  width: 100%;
-  height: 1px;
-  border-width: 0;
-  margin: 0;
-  background-color: #22222212;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1156,6 +1132,30 @@ exports[`OrderContent should render without error, open order 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
+}
+
+.c4 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c5 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c6 {
+  width: 100%;
+  height: 1px;
+  border-width: 0;
+  margin: 0;
+  background-color: #22222212;
 }
 
 .c12 {

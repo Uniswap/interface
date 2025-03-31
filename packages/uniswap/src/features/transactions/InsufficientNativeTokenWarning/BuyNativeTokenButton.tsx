@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, isWeb } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -11,12 +11,14 @@ import { useNetworkColors } from 'uniswap/src/utils/colors'
 
 export function BuyNativeTokenButton({
   nativeCurrencyInfo,
-  canBridge,
   onPress,
+  usesStaticText,
+  usesStaticTheme,
 }: {
   nativeCurrencyInfo: CurrencyInfo
-  canBridge: boolean
   onPress?: () => void
+  usesStaticText?: boolean
+  usesStaticTheme?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
@@ -39,18 +41,17 @@ export function BuyNativeTokenButton({
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
       <Flex row alignSelf="stretch">
         <Button
-          backgroundColor={canBridge ? undefined : backgroundColorFromChain}
-          size={isWeb ? 'medium' : 'large'}
-          emphasis={canBridge ? 'secondary' : 'primary'}
+          backgroundColor={usesStaticTheme ? undefined : backgroundColorFromChain}
+          borderColor="$transparent"
+          size="medium"
+          emphasis={usesStaticTheme ? 'secondary' : 'primary'}
           onPress={onPressBuyFiatOnRamp}
         >
-          {canBridge ? (
-            t('swap.warning.insufficientGas.button.buyWithCard')
-          ) : (
-            <Button.Text color={textColorFromChain}>
-              {t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol ?? '' })}
-            </Button.Text>
-          )}
+          <Button.Text color={usesStaticTheme ? undefined : textColorFromChain}>
+            {usesStaticText
+              ? t('swap.warning.insufficientGas.button.buyWithCard')
+              : t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol ?? '' })}
+          </Button.Text>
         </Button>
       </Flex>
     </Trace>

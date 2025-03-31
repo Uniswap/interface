@@ -1,7 +1,7 @@
 import isEqual from 'lodash/isEqual'
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
-import { Flex, GeneratedIcon, Portal, Text, TouchableArea, useWindowDimensions } from 'ui/src'
+import { AnimatePresence, Flex, GeneratedIcon, Portal, Text, TouchableArea, useWindowDimensions } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -14,6 +14,7 @@ const MENU_PADDING = 8
 
 // used for animation
 const ANIMATION_START_POINT = 10
+const ANIMATION_TIME = 200
 
 function MenuOption({
   title,
@@ -54,6 +55,7 @@ type StyledContextMenuProps = {
   actions: StyledContextMenuAction[]
   children: JSX.Element
   isAboveTrigger?: boolean
+  isLeftOfTrigger?: boolean
   isOpen: boolean
   closeMenu: () => void
   openMenu?: () => void
@@ -82,6 +84,7 @@ export function StyledContextMenu({
   closeMenu,
   openMenu,
   isAboveTrigger = false,
+  isLeftOfTrigger = false,
 }: StyledContextMenuProps): JSX.Element {
   const { width: screenWidth } = useWindowDimensions()
 
@@ -94,16 +97,24 @@ export function StyledContextMenu({
 
   const recalculateMenuPosition = useCallback((): void => {
     if (triggerRef.current) {
-      triggerRef.current.measure((_fx, _fy, _triggerWidth, triggerHeight, triggerX, triggerY) => {
+      triggerRef.current.measure((_fx, _fy, triggerWidth, triggerHeight, triggerX, triggerY) => {
         const maxUsableWidth = screenWidth - MIN_MENU_PADDING
-        const pxOverflowRight = triggerX + CONTEXT_MENU_WIDTH - maxUsableWidth
-        const left = pxOverflowRight > 0 ? triggerX - pxOverflowRight : triggerX
+
+        const getLeft = (): number => {
+          if (isLeftOfTrigger) {
+            return triggerX - CONTEXT_MENU_WIDTH + triggerWidth
+          } else {
+            const pxOverflowRight = triggerX + CONTEXT_MENU_WIDTH - maxUsableWidth
+            return pxOverflowRight > 0 ? triggerX - pxOverflowRight : triggerX
+          }
+        }
 
         // lazy eval to avoid unnecessary calculations
         const estimatedMenuHeight =
           actions.length * MENU_OPTION_HEIGHT + MENU_OPTION_GAP * (actions.length - 1) + MENU_PADDING * 2
 
         const top = isAboveTrigger ? triggerY - estimatedMenuHeight - MIN_MENU_PADDING : triggerY + triggerHeight
+        const left = getLeft()
 
         setPosition((prev) => {
           const updated = { ...prev }
@@ -120,7 +131,22 @@ export function StyledContextMenu({
         })
       })
     }
-  }, [screenWidth, isAboveTrigger, actions.length])
+  }, [screenWidth, isAboveTrigger, isLeftOfTrigger, actions.length])
+
+  // used to delay unmount of the menu until the animation is done
+  const [isMenuVisible, setIsMenuVisible] = useState(false)
+  useEffect(() => {
+    if (isOpen) {
+      setIsMenuVisible(true)
+    }
+  }, [isOpen])
+
+  const handleMenuClose = useCallback(() => {
+    closeMenu()
+    setTimeout(() => {
+      setIsMenuVisible(false)
+    }, ANIMATION_TIME)
+  }, [closeMenu, setIsMenuVisible])
 
   useLayoutEffect(() => {
     if (isOpen) {
@@ -132,7 +158,7 @@ export function StyledContextMenu({
     const action = actions?.[index]
 
     if (!action) {
-      return closeMenu
+      return handleMenuClose
     }
 
     const { title, onPress: onPressAction } = action
@@ -147,7 +173,7 @@ export function StyledContextMenu({
         })
       } finally {
         // close the menu no matter what
-        closeMenu()
+        handleMenuClose()
       }
     }
   }
@@ -157,7 +183,16 @@ export function StyledContextMenu({
   // since only one of them can be pressed at a time, we don't have to worry about the event being propagated
   return (
     <>
-      <Portal display={isOpen ? 'flex' : 'none'} contain="none" position="unset" onPress={(e) => e.stopPropagation()}>
+      <Portal
+        display={isOpen || isMenuVisible ? 'flex' : 'none'}
+        contain="none"
+        position="unset"
+        // pass events through if menu is fading out
+        pointerEvents={!isOpen ? 'none' : 'auto'}
+        onPress={(e) => {
+          e.stopPropagation()
+        }}
+      >
         <Flex
           height="100%"
           width="100%"
@@ -166,52 +201,54 @@ export function StyledContextMenu({
           backgroundColor="transparent"
           style={{ position: 'fixed' }}
           zIndex={zIndexes.overlay}
-          onPress={closeMenu}
+          onPress={handleMenuClose}
         >
-          {isOpen && (
-            <TouchableArea
-              flex={1}
-              justifyContent="flex-start"
-              alignItems="flex-start"
-              backgroundColor="$transparent"
-              top={position.top}
-              left={position.left}
-              position="absolute"
-              animation="200ms"
-              enterStyle={{
-                opacity: 0,
-                y: isAboveTrigger ? ANIMATION_START_POINT : -ANIMATION_START_POINT,
-              }}
-              exitStyle={{
-                opacity: 0,
-                y: isAboveTrigger ? ANIMATION_START_POINT : -ANIMATION_START_POINT,
-              }}
-            >
-              <Flex
-                backgroundColor="$surface1"
-                p={MENU_PADDING}
-                borderRadius="$rounded20"
-                borderColor="$surface3"
-                borderWidth="$spacing1"
-                gap={MENU_OPTION_GAP}
+          <AnimatePresence>
+            {isOpen && (
+              <TouchableArea
+                flex={1}
+                justifyContent="flex-start"
                 alignItems="flex-start"
-                width={CONTEXT_MENU_WIDTH}
-                shadowRadius="$spacing4"
-                shadowColor="$shadowColor"
+                backgroundColor="$transparent"
+                top={position.top}
+                left={position.left}
+                position="absolute"
+                animation="200ms"
+                enterStyle={{
+                  opacity: 0,
+                  y: isAboveTrigger ? ANIMATION_START_POINT : -ANIMATION_START_POINT,
+                }}
+                exitStyle={{
+                  opacity: 0,
+                  y: isAboveTrigger ? ANIMATION_START_POINT : -ANIMATION_START_POINT,
+                }}
               >
-                {actions?.map((action, index) => (
-                  <MenuOption
-                    key={action.title}
-                    title={action.title}
-                    icon={action.icon}
-                    iconColor={action.iconColor}
-                    destructive={action.destructive}
-                    onPress={createPressHandler(index)}
-                  />
-                ))}
-              </Flex>
-            </TouchableArea>
-          )}
+                <Flex
+                  backgroundColor="$surface1"
+                  p={MENU_PADDING}
+                  borderRadius="$rounded20"
+                  borderColor="$surface3"
+                  borderWidth="$spacing1"
+                  gap={MENU_OPTION_GAP}
+                  alignItems="flex-start"
+                  width={CONTEXT_MENU_WIDTH}
+                  shadowRadius="$spacing4"
+                  shadowColor="$shadowColor"
+                >
+                  {actions?.map((action, index) => (
+                    <MenuOption
+                      key={action.title}
+                      title={action.title}
+                      icon={action.icon}
+                      iconColor={action.iconColor}
+                      destructive={action.destructive}
+                      onPress={createPressHandler(index)}
+                    />
+                  ))}
+                </Flex>
+              </TouchableArea>
+            )}
+          </AnimatePresence>
         </Flex>
       </Portal>
 

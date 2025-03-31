@@ -58,9 +58,7 @@ end
 
 target 'OneSignalNotificationServiceExtension' do
   use_frameworks! :linkage => :static
-  pod 'OneSignalXCFramework', '3.12.6'
-
-  pod 'Statsig', '1.49.0'
+  pod 'OneSignalXCFramework', '>= 5.0.0', '< 6.0'
 end
 
 def prepare_target_commons

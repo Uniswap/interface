@@ -6,6 +6,7 @@
 export enum Experiments {
   ArbitrumXV2Sampling = 'arbitrum_uniswapx_sampling',
   AccountCTAs = 'signin_login_connect_ctas',
+  SwapPresets = 'swap_presets',
 }
 
 export enum ArbitrumXV2SamplingGroup {
@@ -24,6 +25,12 @@ export enum AccountCTAsExperimentGroup {
   LogInCreateAccount = 'LogIn-CreateAccount',
 }
 
+export enum SwapPresetsProperties {
+  InputEnabled = 'inputEnabled',
+  OutputEnabled = 'outputEnabled',
+}
+
 export type ExperimentProperties = {
   [Experiments.ArbitrumXV2Sampling]: ArbitrumXV2SamplingProperties
+  [Experiments.SwapPresets]: SwapPresetsProperties
 }

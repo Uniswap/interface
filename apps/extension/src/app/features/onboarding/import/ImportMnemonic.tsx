@@ -255,7 +255,12 @@ export function ImportMnemonic(): JSX.Element {
                 }
                 iconPosition="after"
                 emphasis="text-only"
-                onPress={(): void => setExpanded(!expanded)}
+                onPress={(): void => {
+                  if (expanded) {
+                    setMnemonic([...mnemonic.slice(0, 12), ...Array(12).fill('')])
+                  }
+                  setExpanded(!expanded)
+                }}
               >
                 {expanded
                   ? t('onboarding.importMnemonic.button.default')

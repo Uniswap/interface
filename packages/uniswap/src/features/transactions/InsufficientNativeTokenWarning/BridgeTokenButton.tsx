@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, isWeb } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -49,12 +49,12 @@ export function BridgeTokenButton({
           hoverStyle={{
             borderColor: primaryColor,
           }}
-          size={isWeb ? 'medium' : 'large'}
+          size="medium"
           emphasis="text-only"
           primary-color={primaryColor}
           onPress={onPressBridgeToken}
         >
-          <Button.Text customBackgroundColor={backgroundColor} color={primaryColor}>
+          <Button.Text color={primaryColor}>
             {t('swap.warning.insufficientGas.button.bridge', {
               tokenSymbol: outputToken.currency.symbol,
               networkName: outputNetworkName,

@@ -4,7 +4,7 @@ import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
 import { WalletOneLinkQR } from 'components/WalletOneLinkQR'
 import styled from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
-import { ExternalLink } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { Flex } from 'ui/src'
 
 const BadgeLink = styled(ExternalLink)`

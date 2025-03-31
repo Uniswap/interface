@@ -19,7 +19,7 @@ import {
 } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import {
   Button,
   Flex,

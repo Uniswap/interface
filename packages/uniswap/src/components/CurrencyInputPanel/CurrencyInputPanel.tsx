@@ -20,8 +20,9 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { Experiments, SwapPresetsProperties } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
@@ -123,8 +124,19 @@ export const CurrencyInputPanel = memo(
       const { formatCurrencyAmount } = useLocalizationContext()
       const { symbol: fiatCurrencySymbol, code: fiatCurrencyCode } = useAppFiatCurrencyInfo()
 
-      const isPresetsEnabled = useFeatureFlag(FeatureFlags.SwapPresets)
-      const showDefaultTokenOptions = isPresetsEnabled && currencyField === CurrencyField.OUTPUT && !currencyInfo
+      const isInputPresetsEnabled = useExperimentValue<
+        Experiments.SwapPresets,
+        SwapPresetsProperties.InputEnabled,
+        boolean
+      >(Experiments.SwapPresets, SwapPresetsProperties.InputEnabled, false)
+      const isOutputPresetsEnabled = useExperimentValue<
+        Experiments.SwapPresets,
+        SwapPresetsProperties.OutputEnabled,
+        boolean
+      >(Experiments.SwapPresets, SwapPresetsProperties.OutputEnabled, false)
+
+      const showDefaultTokenOptions = isOutputPresetsEnabled && currencyField === CurrencyField.OUTPUT && !currencyInfo
+
       const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
       const indicativeDisplay = useIndicativeTextDisplay(props)
       const legacyDisplay = useLegacyTextDisplay(props)
@@ -260,7 +272,7 @@ export const CurrencyInputPanel = memo(
 
       const refetchAnimationStyle = useRefetchAnimationStyle(props)
       const showBottomPresets =
-        isPresetsEnabled && (isExtension || isMobileWeb) && currencyField === CurrencyField.INPUT
+        isInputPresetsEnabled && (isExtension || isMobileWeb) && currencyField === CurrencyField.INPUT
 
       return (
         <TouchableArea
@@ -277,15 +289,18 @@ export const CurrencyInputPanel = memo(
                 <Text color="$neutral2" variant="subheading2" fontSize="$micro">
                   {headerLabel}
                 </Text>
-                {isPresetsEnabled && isInterfaceDesktop && currencyField === CurrencyField.INPUT && currencyBalance && (
-                  <AmountInputPresets
-                    animateOnHover="rtl"
-                    currencyAmount={currencyAmount}
-                    currencyBalance={currencyBalance}
-                    buttonProps={{ py: '$spacing4' }}
-                    onSetPresetValue={handleSetPresetValue}
-                  />
-                )}
+                {isInputPresetsEnabled &&
+                  isInterfaceDesktop &&
+                  currencyField === CurrencyField.INPUT &&
+                  currencyBalance && (
+                    <AmountInputPresets
+                      animateOnHover="rtl"
+                      currencyAmount={currencyAmount}
+                      currencyBalance={currencyBalance}
+                      buttonProps={{ py: '$spacing4' }}
+                      onSetPresetValue={handleSetPresetValue}
+                    />
+                  )}
                 {showDefaultTokenOptions && isInterfaceDesktop && (
                   <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
                 )}
@@ -426,7 +441,7 @@ export const CurrencyInputPanel = memo(
                       {getSymbolDisplayText(currencyInfo.currency.symbol)}
                     </Text>
                   )}
-                  {!isPresetsEnabled && showMaxButton && onSetPresetValue && (
+                  {!isInputPresetsEnabled && showMaxButton && onSetPresetValue && (
                     <PresetAmountButton
                       currencyAmount={currencyAmount}
                       currencyBalance={currencyBalance}

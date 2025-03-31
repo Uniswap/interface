@@ -114,8 +114,9 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
   }, [menuActions, isVisible, colors.neutral2])
 
   return (
-    <AnimatedFlex row alignItems="center" entering={FadeIn} gap="$spacing20">
+    <AnimatedFlex row alignItems="center" entering={FadeIn} gap="$spacing12">
       <StyledContextMenu
+        isLeftOfTrigger
         actions={actionsWithIcons}
         isOpen={isMenuOpen}
         closeMenu={closeMenu}
@@ -128,7 +129,7 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
       >
         <Flex
           hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
-          style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}
+          style={{ padding: spacing.spacing8 }}
           testID={TestID.TokenDetailsMoreButton}
         >
           <EllipsisIcon color={ellipsisColor} height={iconSizes.icon16} width={iconSizes.icon16} />

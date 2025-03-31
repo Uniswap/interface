@@ -95,9 +95,12 @@ export function setupSharedApolloCache(): InMemoryCache {
           },
         },
       },
-      // Disable normalization for these types.
-      // Given that we would never query these objects directly, we want these to be stored by their parent instead of being normalized.
-      Amount: { keyFields: false },
+      // Disable normalization for these types since we want them stored by their parent.
+      Amount: {
+        keyFields: false,
+        // Add merge functions to suppress "Cache data may be lost" warnings
+        merge: true,
+      },
       AmountChange: { keyFields: false },
       Dimensions: { keyFields: false },
       TimestampedAmount: { keyFields: false },

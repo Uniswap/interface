@@ -4,7 +4,7 @@ import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/type
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
-export type SwapInfo = {
+type SwapInfo = {
   currencies: { [field in CurrencyField]?: Currency }
   currencyBalances: { [field in CurrencyField]?: CurrencyAmount<Currency> }
   inputTax: Percent
@@ -41,7 +41,7 @@ const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
   },
 })
 
-export const initialSwapState: SwapState = {
+const initialSwapState: SwapState = {
   typedValue: '',
   independentField: CurrencyField.INPUT,
 }

@@ -1,5 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
 import { TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
@@ -150,7 +150,27 @@ export function useTrade({
     retry: 1,
   })
 
-  const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt } = response
+  const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt, fetchStatus } = response
+
+  // Measure and report quote latency
+  const [lastReqStart, setLastReqStart] = useState<number | undefined>()
+  useEffect(() => {
+    // Don't log USD quotes
+    if (isUSDQuote) {
+      return
+    }
+
+    // record start of fetching
+    if (fetchStatus === 'fetching' && lastReqStart === undefined) {
+      setLastReqStart(Date.now())
+    }
+
+    // log end of fetching
+    if (fetchStatus === 'idle' && lastReqStart) {
+      logger.info('useTrade', 'useTrade', 'Quote Latency', { quoteLatency: Date.now() - lastReqStart })
+      setLastReqStart(undefined)
+    }
+  }, [fetchStatus, lastReqStart, isUSDQuote])
 
   const errorRef = useRef<Error | null>(error)
 

@@ -4,7 +4,7 @@ import { DetailLineItem, LineItemData } from 'components/swap/DetailLineItem'
 import TradePrice from 'components/swap/TradePrice'
 import { Trans } from 'react-i18next'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { ExternalLink } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { ellipseMiddle } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

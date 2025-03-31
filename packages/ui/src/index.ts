@@ -17,6 +17,7 @@ export {
   ScrollView,
   Select,
   Sheet,
+  Spacer,
   Square,
   Tabs,
   TamaguiProvider,

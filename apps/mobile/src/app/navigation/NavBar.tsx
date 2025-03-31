@@ -253,6 +253,8 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
     onLayout(e)
   }
 
+  const Wrapper = isIOS ? BlurView : Flex
+
   return (
     <TouchableArea activeOpacity={1} style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}>
       <TestnetModeModal unsupported isOpen={isTestnetWarningModalOpen} onClose={handleTestnetWarningModalClose} />
@@ -264,7 +266,7 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
           width={isNarrow ? height : undefined}
           onLayout={internalOnLayout}
         >
-          <BlurView intensity={isIOS ? 100 : 0}>
+          <Wrapper {...(isIOS ? { intensity: 100 } : {})}>
             <Flex
               {...contentProps}
               fill
@@ -294,7 +296,7 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
                 </Text>
               )}
             </Flex>
-          </BlurView>
+          </Wrapper>
         </AnimatedFlex>
       </TapGestureHandler>
     </TouchableArea>

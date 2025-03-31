@@ -20,14 +20,9 @@ import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import {
-  ClickableStyle,
-  ClickableTamaguiStyle,
-  EllipsisStyle,
-  ExternalLink,
-  TamaguiClickableStyle,
-  ThemedText,
-} from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
+import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle, TamaguiClickableStyle } from 'theme/components/styles'
 import { textFadeIn } from 'theme/styles'
 import { Flex, TouchableArea, useIsTouchDevice, useMedia } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'

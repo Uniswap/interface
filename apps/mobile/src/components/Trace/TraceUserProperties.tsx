@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { NativeModules } from 'react-native'
-import OneSignal from 'react-native-onesignal'
+import { OneSignal } from 'react-native-onesignal'
 import { useSelector } from 'react-redux'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
@@ -125,7 +125,7 @@ export function TraceUserProperties(): null {
   }, [allowAnalytics, isTestnetModeEnabled])
 
   useEffect(() => {
-    OneSignal.sendTag(OneSignalUserTagField.AccountIsUnfunded, signerAccountsTotalBalance === 0 ? 'true' : 'false')
+    OneSignal.User.addTag(OneSignalUserTagField.AccountIsUnfunded, signerAccountsTotalBalance === 0 ? 'true' : 'false')
   }, [signerAccountsTotalBalance])
 
   return null

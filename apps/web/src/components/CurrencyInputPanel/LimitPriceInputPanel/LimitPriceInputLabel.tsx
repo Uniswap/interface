@@ -4,7 +4,8 @@ import Row from 'components/deprecated/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ClickableStyle } from 'theme/components/styles'
 import { Text } from 'ui/src'
 
 const CurrencySymbolContainer = styled.span`

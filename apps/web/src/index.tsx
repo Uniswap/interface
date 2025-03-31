@@ -20,6 +20,7 @@ import { PropsWithChildren, StrictMode, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { I18nextProvider } from 'react-i18next'
+import { configureReanimatedLogger } from 'react-native-reanimated'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import store from 'state'
@@ -42,13 +43,19 @@ import { LocalizationContextProvider } from 'uniswap/src/features/language/Local
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
-import { isDevEnv } from 'utilities/src/environment/env'
+import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
+}
+
+if (__DEV__ && !isTestEnv()) {
+  configureReanimatedLogger({
+    strict: false,
+  })
 }
 
 function Updaters() {

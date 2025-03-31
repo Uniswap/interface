@@ -5,7 +5,8 @@ import { ReactNode } from 'react'
 import { Check } from 'react-feather'
 import type { To } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ClickableStyle } from 'theme/components/styles'
 import { breakpoints } from 'ui/src/theme'
 
 const InternalLinkMenuItem = styled(Link)`

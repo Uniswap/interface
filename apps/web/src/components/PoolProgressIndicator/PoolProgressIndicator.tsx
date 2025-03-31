@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 import { Trans } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { assert } from 'utilities/src/errors'
 

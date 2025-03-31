@@ -13,7 +13,7 @@ import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSel
 import { ChoosePhotoOptionsModal, ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
-import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useClaimUnitag } from 'wallet/src/features/unitags/hooks/useClaimUnitag'
 
 function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): UnitagClaimSource {
   switch (entryPoint) {
@@ -131,7 +131,7 @@ export function UnitagChooseProfilePicContent({
         )}
       </Flex>
       {isMobileApp && <Flex fill />}
-      <Flex>
+      <Flex row>
         <Button
           loading={isClaiming}
           testID={TestID.Continue}

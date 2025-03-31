@@ -68,7 +68,8 @@ export async function initializeDatadog(appName: string): Promise<void> {
     clientToken: config.datadogClientToken,
     service: isInterface ? `web-${getDatadogEnvironment()}` : `extension-${getDatadogEnvironment()}`,
     env: getDatadogEnvironment(),
-    release: process.env.REACT_APP_GIT_COMMIT_HASH,
+    // Web uses the git commit hash to indicate release version.
+    version: isExtension ? process.env.VERSION : process.env.REACT_APP_GIT_COMMIT_HASH,
     trackingConsent: undefined,
   }
 

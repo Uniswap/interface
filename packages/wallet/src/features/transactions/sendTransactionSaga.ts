@@ -58,7 +58,7 @@ export interface SendTransactionParams {
 // All outgoing transactions should go through here
 
 export function* sendTransaction(params: SendTransactionParams) {
-  const { chainId, account, options } = params
+  const { chainId, account, options, typeInfo } = params
   let request = options.request
 
   logger.debug('sendTransaction', '', `Sending tx on ${getChainLabel(chainId)} to ${request.to}`)
@@ -125,13 +125,21 @@ export function* sendTransaction(params: SendTransactionParams) {
         errorCategory = 'rate_limited'
       }
 
+      const logExtra = {
+        category: errorCategory,
+        chainId,
+        transactionType: typeInfo.type,
+        calculatedNonce,
+        ...options,
+      }
+
+      // Log warning for alerting
+      logger.warn('sendTransactionSaga', 'sendTransaction', 'RPC Failure', { errorMessage: error.message, ...logExtra })
+
+      // Log error for full error details
       logger.error(error, {
         tags: { file: 'sendTransactionSaga', function: 'sendTransaction' },
-        extra: {
-          category: errorCategory,
-          calculatedNonce,
-          ...options,
-        },
+        extra: logExtra,
       })
 
       throw new Error(`Failed to send transaction: ${errorCategory}`, {
@@ -238,7 +246,7 @@ export function* updateSubmittedTransaction(
       // Don't expect swaps from WC or Dapps to always provide analytics object
       if (transaction.transactionOriginType === TransactionOriginType.Internal) {
         logger.error(new Error('Missing `analytics` for swap when calling `addTransaction`'), {
-          tags: { file: 'sendTransaction', function: 'addTransaction' },
+          tags: { file: 'sendTransactionSaga', function: 'addTransaction' },
           extra: { transaction },
         })
       }
@@ -308,7 +316,7 @@ export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: Univer
     }
   } catch (error) {
     logger.error(error, {
-      tags: { file: 'sendTransaction', function: 'tryGetNonce' },
+      tags: { file: 'sendTransactionSaga', function: 'tryGetNonce' },
     })
     return undefined
   }

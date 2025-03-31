@@ -30,25 +30,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c14 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c14:hover {
-  opacity: 0.6;
-}
-
-.c14:active {
-  opacity: 0.4;
-}
-
 .c11 {
   z-index: 1070;
   pointer-events: none;
@@ -195,6 +176,25 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 .c3 {
   text-align: right;
   overflow-wrap: break-word;
+}
+
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
 }
 
 .c13 {
@@ -709,25 +709,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c14 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c14:hover {
-  opacity: 0.6;
-}
-
-.c14:active {
-  opacity: 0.4;
-}
-
 .c11 {
   z-index: 1070;
   pointer-events: none;
@@ -874,6 +855,25 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
 .c3 {
   text-align: right;
   overflow-wrap: break-word;
+}
+
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
 }
 
 .c13 {
@@ -1391,25 +1391,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
 .c11 {
   z-index: 1070;
   pointer-events: none;
@@ -1588,6 +1569,25 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
+}
+
+.c13 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:active {
+  opacity: 0.4;
 }
 
 .c8 {
@@ -2103,25 +2103,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
 .c11 {
   z-index: 1070;
   pointer-events: none;
@@ -2300,6 +2281,25 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
+}
+
+.c13 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:active {
+  opacity: 0.4;
 }
 
 .c8 {
@@ -2815,25 +2815,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
 .c11 {
   z-index: 1070;
   pointer-events: none;
@@ -3012,6 +2993,25 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
+}
+
+.c13 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:active {
+  opacity: 0.4;
 }
 
 .c8 {
@@ -3572,25 +3572,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
 .c11 {
   z-index: 1070;
   pointer-events: none;
@@ -3769,6 +3750,25 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
+}
+
+.c13 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:active {
+  opacity: 0.4;
 }
 
 .c8 {
@@ -4342,25 +4342,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
 .c11 {
   z-index: 1070;
   pointer-events: none;
@@ -4539,6 +4520,25 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
+}
+
+.c13 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:active {
+  opacity: 0.4;
 }
 
 .c8 {
@@ -5110,25 +5110,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c8 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c8:hover {
-  opacity: 0.6;
-}
-
-.c8:active {
-  opacity: 0.4;
-}
-
 .c5 {
   z-index: 1070;
   pointer-events: none;
@@ -5254,6 +5235,25 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 .c3 {
   text-align: right;
   overflow-wrap: break-word;
+}
+
+.c8 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c8:hover {
+  opacity: 0.6;
+}
+
+.c8:active {
+  opacity: 0.4;
 }
 
 .c12 {

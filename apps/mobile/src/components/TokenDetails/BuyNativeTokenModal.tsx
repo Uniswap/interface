@@ -80,7 +80,12 @@ export function BuyNativeTokenModal({
               onPress={onClose}
             />
           )}
-          <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} canBridge={true} onPress={onClose} />
+          <BuyNativeTokenButton
+            usesStaticText
+            usesStaticTheme={false}
+            nativeCurrencyInfo={nativeCurrencyInfo}
+            onPress={onClose}
+          />
           {!bridgingTokenWithHighestBalance && <ReceiveButton onPress={onClose} />}
         </Flex>
       </Flex>

@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
-import { ClickableTamaguiStyle, CopyHelper } from 'theme/components'
+import { CopyHelper } from 'theme/components/CopyHelper'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Loader, Text, styled } from 'ui/src'
 import { EyeSlash } from 'ui/src/components/icons/EyeSlash'
 import { LockedDocument } from 'ui/src/components/icons/LockedDocument'
@@ -17,10 +18,6 @@ const StyledX = styled(X, {
   color: '$neutral2',
   zIndex: 1,
   ...ClickableTamaguiStyle,
-})
-
-const StyledModal = styled(Modal, {
-  position: 'relative',
 })
 
 function Seed({ seed, position, revealed }: { seed?: string; position: number; revealed?: boolean }) {
@@ -83,7 +80,13 @@ export function RecoveryPhraseModal() {
   }, [isOpen])
 
   return (
-    <StyledModal name={ModalName.RecoveryPhrase} isModalOpen={isOpen} onClose={handleClose} maxWidth={464}>
+    <Modal
+      position="relative"
+      name={ModalName.RecoveryPhrase}
+      isModalOpen={isOpen}
+      onClose={handleClose}
+      maxWidth={464}
+    >
       <Flex position="absolute" top="32px" right="32px">
         <StyledX onClick={handleClose} />
       </Flex>
@@ -183,6 +186,6 @@ export function RecoveryPhraseModal() {
           )}
         </Flex>
       </ModalContent>
-    </StyledModal>
+    </Modal>
   )
 }

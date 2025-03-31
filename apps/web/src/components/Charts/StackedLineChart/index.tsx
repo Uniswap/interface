@@ -25,7 +25,7 @@ interface TVLChartParams extends ChartModelParams<StackedLineData> {
   gradients?: { start: string; end: string }[]
 }
 
-export class TVLChartModel extends ChartModel<StackedLineData> {
+class TVLChartModel extends ChartModel<StackedLineData> {
   protected series: ISeriesApi<'Custom'>
 
   private hoveredLogicalIndex: Logical | null | undefined

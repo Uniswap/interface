@@ -896,7 +896,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     elementName: ElementName.ChainUnichain,
     explorer: {
       name: 'Unichain Explorer',
-      url: 'https://explorer.unichain.org/',
+      url: 'https://uniscan.xyz/',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/unichain',

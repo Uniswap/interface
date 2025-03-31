@@ -22,8 +22,8 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Experiments, SwapPresetsProperties } from 'uniswap/src/features/gating/experiments'
+import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
@@ -141,7 +141,11 @@ function SwapFormContent({
   const colors = useSporeColors()
   const isShortMobileDevice = useIsShortMobileDevice()
   const { walletNeedsRestore, openWalletRestoreModal, screen } = useTransactionModalContext()
-  const isSwapPresetsEnabled = useFeatureFlag(FeatureFlags.SwapPresets)
+  const isInputPresetsEnabled = useExperimentValue<
+    Experiments.SwapPresets,
+    SwapPresetsProperties.InputEnabled,
+    boolean
+  >(Experiments.SwapPresets, SwapPresetsProperties.InputEnabled, false)
 
   const trace = useTrace()
 
@@ -722,7 +726,7 @@ function SwapFormContent({
             right={0}
           >
             <Flex grow justifyContent="flex-end">
-              {isSwapPresetsEnabled && currencyBalances[CurrencyField.INPUT] && (
+              {isInputPresetsEnabled && currencyBalances[CurrencyField.INPUT] && (
                 <AmountInputPresets
                   flex={1}
                   px="$spacing24"

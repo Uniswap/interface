@@ -19,15 +19,30 @@ const enum ViewStep {
   Reveal = 2,
 }
 
-export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
+/**
+ * This screen is rendered both as a settings route and as a modal in the force upgrade prompt.
+ * When making UI changes, please verify both versions look good.
+ */
+export function ViewRecoveryPhraseScreen({
+  mnemonicId: mnemonicIdProp,
+  showRemoveButton = true,
+  onBackClick,
+}: {
+  mnemonicId?: string
+  showRemoveButton?: boolean
+  onBackClick?: () => void
+}): JSX.Element {
   const { t } = useTranslation()
 
   const [viewStep, setViewStep] = useState(ViewStep.Warning)
 
   const mnemonicAccounts = useSignerAccounts()
   const mnemonicAccount = mnemonicAccounts[0]
-  if (!mnemonicAccount) {
-    throw new Error('Screen should not be accessed unless mnemonic account exists')
+
+  const mnemonicId = mnemonicIdProp ?? mnemonicAccount?.mnemonicId
+
+  if (!mnemonicId) {
+    throw new Error('Invalid render of `ViewRecoveryPhraseScreen` without `mnemonicId`')
   }
 
   const showPasswordModal = (): void => {
@@ -49,7 +64,8 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
 
   return (
     <Flex grow backgroundColor="$surface1">
-      <ScreenHeader title={t('settings.setting.recoveryPhrase.title')} />
+      <ScreenHeader title={t('settings.setting.recoveryPhrase.title')} onBackClick={onBackClick} />
+
       {viewStep !== ViewStep.Reveal ? (
         <SettingsRecoveryPhrase
           icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
@@ -65,6 +81,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
             onClose={() => setViewStep(ViewStep.Warning)}
             onNext={() => setViewStep(ViewStep.Reveal)}
           />
+
           <Flex
             alignItems="flex-start"
             borderColor="$surface3"
@@ -72,6 +89,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
             borderWidth="$spacing1"
             gap="$spacing24"
             p="$spacing12"
+            mb="$spacing12"
           >
             <Flex row alignItems="center" gap="$spacing12">
               <Flex p={6}>
@@ -81,6 +99,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
                 {t('setting.recoveryPhrase.view.warning.message2')}
               </Text>
             </Flex>
+
             <Flex row alignItems="center" gap="$spacing12" width="100%">
               <Flex p={6}>
                 <Key color="$statusCritical" size="$icon.24" />
@@ -89,6 +108,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
                 {t('setting.recoveryPhrase.view.warning.message3')}
               </Text>
             </Flex>
+
             <Flex row alignItems="center" gap="$spacing12">
               <Flex p={6}>
                 <Laptop color="$statusCritical" size="$icon.24" />
@@ -101,28 +121,32 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
         </SettingsRecoveryPhrase>
       ) : (
         <Flex fill gap="$spacing24" pt="$spacing36">
-          <SeedPhraseDisplay mnemonicId={mnemonicAccount.mnemonicId} />
+          <SeedPhraseDisplay mnemonicId={mnemonicId} />
+
           <Flex alignItems="center" gap="$spacing8">
             <Text color="$neutral2" textAlign="center" variant="body3">
               {t('setting.recoveryPhrase.warning.view.message')}
             </Text>
           </Flex>
-          <Flex fill justifyContent="flex-end">
-            <Flex row>
-              <Button
-                variant="critical"
-                emphasis="secondary"
-                onPress={(): void =>
-                  navigate(
-                    `${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Wallets}`,
-                    { replace: true },
-                  )
-                }
-              >
-                {t('setting.recoveryPhrase.remove')}
-              </Button>
+
+          {showRemoveButton && (
+            <Flex fill justifyContent="flex-end">
+              <Flex row>
+                <Button
+                  variant="critical"
+                  emphasis="secondary"
+                  onPress={(): void =>
+                    navigate(
+                      `${AppRoutes.Settings}/${SettingsRoutes.RemoveRecoveryPhrase}/${RemoveRecoveryPhraseRoutes.Wallets}`,
+                      { replace: true },
+                    )
+                  }
+                >
+                  {t('setting.recoveryPhrase.remove')}
+                </Button>
+              </Flex>
             </Flex>
-          </Flex>
+          )}
         </Flex>
       )}
     </Flex>

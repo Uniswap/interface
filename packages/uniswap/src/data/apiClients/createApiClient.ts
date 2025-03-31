@@ -9,6 +9,13 @@ export const BASE_UNISWAP_HEADERS = {
   ...(isMobileApp ? { Origin: uniswapUrls.apiOrigin } : {}),
 }
 
+type StandardFetchOptions = Parameters<typeof fetch>[1]
+
+type CustomOptions = StandardFetchOptions & {
+  params?: Record<string, string | number | boolean | undefined | null>
+  on404?: () => void
+}
+
 export function createApiClient({
   baseUrl,
   includeBaseUniswapHeaders = true,
@@ -18,20 +25,15 @@ export function createApiClient({
   includeBaseUniswapHeaders?: boolean
   additionalHeaders?: HeadersInit
 }): {
-  readonly fetch: (path: string, options: Parameters<typeof fetch>[1]) => Promise<Response>
-  readonly get: <T>(
-    path: string,
-    options?: Parameters<typeof fetch>[1] & {
-      params?: Record<string, string | number | boolean | undefined | null>
-    },
-  ) => Promise<T>
-  readonly post: <T>(path: string, options: Parameters<typeof fetch>[1]) => Promise<T>
+  readonly fetch: (path: string, options: StandardFetchOptions) => Promise<Response>
+  readonly get: <T>(path: string, options?: CustomOptions) => Promise<T>
+  readonly post: <T>(path: string, options: CustomOptions) => Promise<T>
 } {
   const headers = includeBaseUniswapHeaders ? { ...BASE_UNISWAP_HEADERS, ...additionalHeaders } : additionalHeaders
 
   return {
     get fetch() {
-      return (path: string, options: Parameters<typeof fetch>[1]) => {
+      return (path: string, options: StandardFetchOptions) => {
         return fetch(`${baseUrl}${path}`, {
           ...options,
           headers: {
@@ -43,12 +45,7 @@ export function createApiClient({
     },
 
     get get() {
-      return async <T>(
-        path: string,
-        options?: Parameters<typeof fetch>[1] & {
-          params?: Record<string, string | number | boolean | undefined | null>
-        },
-      ): Promise<T> => {
+      return async <T>(path: string, options?: CustomOptions): Promise<T> => {
         if (options?.params) {
           const searchParams = new URLSearchParams()
           for (const [key, value] of Object.entries(options.params)) {
@@ -59,7 +56,13 @@ export function createApiClient({
           path += '?' + searchParams.toString()
         }
 
-        const response = await this.fetch(path, options)
+        const { on404, ...standardOptions } = options ?? {}
+
+        const response = await this.fetch(path, standardOptions)
+
+        if (on404 && response.status === 404) {
+          on404()
+        }
 
         if (!response.ok) {
           let data: object | undefined
@@ -76,7 +79,7 @@ export function createApiClient({
     },
 
     get post() {
-      return async <T>(path: string, options?: Parameters<typeof fetch>[1]): Promise<T> => {
+      return async <T>(path: string, options?: CustomOptions): Promise<T> => {
         const _options = options ?? {}
 
         _options.headers = {

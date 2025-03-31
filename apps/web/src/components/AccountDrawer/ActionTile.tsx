@@ -6,7 +6,7 @@ import styled from 'lib/styled-components'
 import { ReactNode, useReducer } from 'react'
 import { Info } from 'react-feather'
 import { Text } from 'rebass'
-import { ExternalLink } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { ThemedText } from 'theme/components/text'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 

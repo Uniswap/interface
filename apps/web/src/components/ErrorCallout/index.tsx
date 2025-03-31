@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'

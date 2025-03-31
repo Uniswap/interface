@@ -1,7 +1,8 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import StatusIcon from 'components/Identicon/StatusIcon'
 import styled from 'lib/styled-components'
-import { CopyHelper, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { CopyHelper } from 'theme/components/CopyHelper'
 import { Text } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
 

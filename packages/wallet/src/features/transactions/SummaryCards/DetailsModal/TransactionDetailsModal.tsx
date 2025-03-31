@@ -70,9 +70,9 @@ export function TransactionDetailsHeader({
 
   return (
     <Flex centered row justifyContent="space-between">
-      <Flex centered row gap="$spacing12">
+      <Flex centered row gap="$spacing12" flexShrink={1}>
         <HeaderLogo transactionDetails={transactionDetails} />
-        <Flex flexDirection="column">
+        <Flex flexDirection="column" flexShrink={1}>
           <Flex centered row gap="$spacing4" justifyContent="flex-start">
             {(transactionDetails.routing === Routing.DUTCH_V2 ||
               transactionDetails.routing === Routing.DUTCH_LIMIT) && <UniswapX size="$icon.16" />}
@@ -91,7 +91,7 @@ export function TransactionDetailsHeader({
             </TouchableArea>
           </ContextMenu>
         ) : (
-          <TouchableArea onPress={openActionsModal}>
+          <TouchableArea flexGrow={0} ml="$spacing12" onPress={openActionsModal}>
             <Ellipsis color="$neutral2" size="$icon.20" />
           </TouchableArea>
         )

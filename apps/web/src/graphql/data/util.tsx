@@ -193,9 +193,6 @@ export function getProtocolColor(priceSource: PriceSource, theme: DefaultTheme):
 export function getProtocolName(priceSource: PriceSource): string {
   return PROTOCOL_META[priceSource].name
 }
-export function getProtocolGradient(priceSource: PriceSource): { start: string; end: string } {
-  return PROTOCOL_META[priceSource].gradient
-}
 
 export enum OrderDirection {
   Asc = 'asc',
