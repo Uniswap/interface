@@ -98,7 +98,7 @@ import {
 
 // Mapping of token addresses to logoURIs (extracted from the original list)
 const logoUriMap = {
-  '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee':
+  '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE':
     'https://raw.githubusercontent.com/tangoswap-cash/assets/master/blockchains/smartbch/info/logo.png',
   '0x7b2B3C5308ab5b2a1d9a94d20D35CCDf61e05b72':
     'https://raw.githubusercontent.com/tangoswap-cash/assets/master/blockchains/smartbch/assets/0x7b2B3C5308ab5b2a1d9a94d20D35CCDf61e05b72/logo.png',
