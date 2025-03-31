@@ -1,9 +1,8 @@
 /* eslint-disable max-lines */
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import { BCH_LOGO, ETHEREUM_LOGO, ETH_LOGO, SMARTBCH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { FLEX_USD } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   GqlChainId,
@@ -18,6 +17,14 @@ import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isInterface } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { mainnet } from 'wagmi/chains'
+
+const FLEX_USD = new Token(
+  UniverseChainId.SmartBCH,
+  '0x7b2B3C5308ab5b2a1d9a94d20D35CCDf61e05b72',
+  18,
+  'flexUSD',
+  'flexUSD',
+)
 
 const LOCAL_MAINNET_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8545'
 const LOCAL_BASE_PLAYWRIGHT_RPC_URL = 'http://127.0.0.1:8546'

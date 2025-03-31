@@ -74,6 +74,7 @@ import {
   PUMP_PARROTS,
   RBCH_TOKEN,
   REWARD_LAMBO,
+  SBCH,
   SHIBA_CASH,
   SMARTBCH_TOKEN_OBSERVER,
   SMART_BUSD,
@@ -97,6 +98,8 @@ import {
 
 // Mapping of token addresses to logoURIs (extracted from the original list)
 const logoUriMap = {
+  '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee':
+    'https://raw.githubusercontent.com/tangoswap-cash/assets/master/blockchains/smartbch/info/logo.png',
   '0x7b2B3C5308ab5b2a1d9a94d20D35CCDf61e05b72':
     'https://raw.githubusercontent.com/tangoswap-cash/assets/master/blockchains/smartbch/assets/0x7b2B3C5308ab5b2a1d9a94d20D35CCDf61e05b72/logo.png',
   '0x4524cE998c2551CdA6d5763E0AD74153059B6207':
@@ -302,6 +305,7 @@ function toTokenOption(token: Token, logoUrl: string): TokenOption {
 
 // List of all Token objects from the previous result
 export const SMARTBCH_TOKENS = [
+  SBCH,
   FLEX_USD,
   KI,
   ORB,

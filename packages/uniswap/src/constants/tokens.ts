@@ -2,6 +2,7 @@
 import { Currency, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UNIVERSE_CHAIN_INFO } from '../features/chains/chainInfo'
 
 export const FLEX_USD = new Token(
   UniverseChainId.SmartBCH,
@@ -695,6 +696,14 @@ export const CRUDE_OIL = new Token(
   18,
   'OIL',
   'Crude Oil',
+)
+
+export const SBCH = new Token(
+  UniverseChainId.SmartBCH,
+  UNIVERSE_CHAIN_INFO[UniverseChainId.SmartBCH].nativeCurrency.address,
+  UNIVERSE_CHAIN_INFO[UniverseChainId.SmartBCH].nativeCurrency.decimals,
+  UNIVERSE_CHAIN_INFO[UniverseChainId.SmartBCH].nativeCurrency.symbol,
+  UNIVERSE_CHAIN_INFO[UniverseChainId.SmartBCH].nativeCurrency.name,
 )
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
