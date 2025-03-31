@@ -340,22 +340,35 @@ export const INCENTIVES_QUERY = `
   query incentives {
     incentives(subgraphError: deny) {
       id
-      ended
       reward
-      contract
+      rewardToken {
+        id
+        symbol
+        decimals
+      }
+      pool {
+        id
+        feeTier
+        token0 {
+          id
+          symbol
+          name
+        }
+        token1 {
+          id
+          symbol
+          name
+        }
+        liquidity
+        totalValueLockedUSD
+        feesUSD
+        volumeUSD
+      }
       startTime
       endTime
       vestingPeriod
-      rewardToken {
-        id
-        decimals
-        symbol
-      }
-      pool{
-        id
-        feeTier
-      }
       refundee
+      ended
     }
   }
 `;
