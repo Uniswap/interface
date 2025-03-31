@@ -127,9 +127,32 @@ export function IncentivesDataProvider({
   const [userPositions, setUserPositions] = useState<UserPosition[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [storedBalances, setStoredBalances] = useState<
+    Record<string, { balance: number }>
+  >({});
   const { getPositionsWithDepositsOfUser } = useTotalPositions();
 
   const { tokenList, isLoadingTokenList } = useTokenList();
+
+  const [incentivesData, setIncentivesData] = useState<IncentiveData[]>([]);
+
+  const tokenAddresses = useMemo(() => {
+    const addresses = new Set<string>();
+    incentivesData.forEach((incentive) => {
+      addresses.add(incentive.pool.token0.id.toLowerCase());
+      addresses.add(incentive.pool.token1.id.toLowerCase());
+    });
+    return Array.from(addresses);
+  }, [incentivesData]);
+
+  const { balances, isBalancesLoading } =
+    useMultipleTokenBalances(tokenAddresses);
+
+  useEffect(() => {
+    if (!isBalancesLoading && balances) {
+      setStoredBalances(balances);
+    }
+  }, [balances, isBalancesLoading]);
 
   useEffect(() => {
     if (account.address) {
@@ -137,25 +160,13 @@ export function IncentivesDataProvider({
     }
   }, [account.address]);
 
-  const tokenAddresses = useMemo(() => {
-    const addresses = new Set<string>();
-    activeIncentives.forEach((incentive) => {
-      addresses.add(incentive.token0Address.toLowerCase());
-      addresses.add(incentive.token1Address.toLowerCase());
-    });
-    return Array.from(addresses);
-  }, [activeIncentives]);
-
-  const { balances, isBalancesLoading } =
-    useMultipleTokenBalances(tokenAddresses);
-  console.log("balances", balances);
-
   const fetchData = async () => {
     if (!account.address) return;
 
     try {
       setIsLoading(true);
       setError(null);
+
       const [positions, incentivesResponse] = await Promise.all([
         getPositionsWithDepositsOfUser(account.address),
         fetch("https://indexer.lswap.app/subgraphs/name/taraxa/uniswap-v3/", {
@@ -173,22 +184,29 @@ export function IncentivesDataProvider({
         throw new Error(incentivesData.errors[0].message);
       }
 
+      // Store incentives data first to trigger token addresses calculation
+      setIncentivesData(incentivesData.data.incentives);
+
       // Wait for balances to be loaded
       if (isBalancesLoading) {
         return;
       }
 
-      const incentives = incentivesData.data.incentives.map(
-        (inc: IncentiveData) => processIncentive(inc, positions)
-      );
+      // Process incentives only when we have balances
+      if (Object.keys(storedBalances).length > 0) {
+        const incentives = incentivesData.data.incentives.map(
+          (inc: IncentiveData) =>
+            processIncentive(inc, positions, storedBalances)
+        );
 
-      setActiveIncentives(
-        incentives.filter((inc: ProcessedIncentive) => !inc.ended)
-      );
-      setEndedIncentives(
-        incentives.filter((inc: ProcessedIncentive) => inc.ended)
-      );
-      setUserPositions(incentivesData.data.userPositions);
+        setActiveIncentives(
+          incentives.filter((inc: ProcessedIncentive) => !inc.ended)
+        );
+        setEndedIncentives(
+          incentives.filter((inc: ProcessedIncentive) => inc.ended)
+        );
+        setUserPositions(incentivesData.data.userPositions);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(error);
@@ -197,10 +215,35 @@ export function IncentivesDataProvider({
     }
   };
 
+  // Add effect to process incentives when balances are ready
+  useEffect(() => {
+    if (
+      !isBalancesLoading &&
+      Object.keys(storedBalances).length > 0 &&
+      incentivesData.length > 0 &&
+      account.address
+    ) {
+      const processIncentives = async () => {
+        const positions = await getPositionsWithDepositsOfUser(
+          account.address as string
+        );
+        const incentives = incentivesData.map((inc) =>
+          processIncentive(inc, positions, storedBalances)
+        );
+
+        setActiveIncentives(incentives.filter((inc) => !inc.ended));
+        setEndedIncentives(incentives.filter((inc) => inc.ended));
+      };
+
+      processIncentives();
+    }
+  }, [storedBalances, isBalancesLoading, incentivesData, account.address]);
+
   const processIncentive = useCallback(
     (
       incentive: IncentiveData,
-      userPositions: PositionsResponse[]
+      userPositions: PositionsResponse[],
+      currentBalances: Record<string, { balance: number }>
     ): ProcessedIncentive => {
       const userPosition = userPositions.find(
         (pos) => pos.pool.id.toLowerCase() === incentive.pool.id.toLowerCase()
@@ -223,23 +266,16 @@ export function IncentivesDataProvider({
       const apr24h =
         volume24h > 0 ? ((rewardInTokens * 365) / volume24h) * 100 : 0;
       const userHasTokensToDeposit =
-        balances[incentive.pool.token0.id.toLowerCase()]?.balance > 0 &&
-        balances[incentive.pool.token1.id.toLowerCase()]?.balance > 0;
-      console.log("balances", balances);
-      console.log(
-        "balances[incentive.pool.token1.id.toLowerCase()]",
-        balances[incentive.pool.token1.id]
-      );
-      console.log(
-        "incentive.pool.token0.id.toLowerCase(",
-        incentive.pool.token0.id.toLowerCase()
-      );
+        currentBalances[incentive.pool.token0.id.toLowerCase()]?.balance > 0 &&
+        currentBalances[incentive.pool.token1.id.toLowerCase()]?.balance > 0;
       console.log(
         "incentive.pool.token1.id.toLowerCase()",
         incentive.pool.token1.id.toLowerCase()
       );
+      console.log("currentBalances", currentBalances);
       console.log("userHasTokensToDeposit", userHasTokensToDeposit);
 
+      console.log("userPosition", userPosition);
       return {
         id: incentive.id,
         poolId: userPosition?.id,
@@ -266,7 +302,7 @@ export function IncentivesDataProvider({
         userHasTokensToDeposit,
       };
     },
-    [balances, tokenList]
+    [tokenList]
   );
 
   const value = {
@@ -278,7 +314,7 @@ export function IncentivesDataProvider({
     refetch: fetchData,
   };
 
-  if (isLoadingTokenList || isBalancesLoading) {
+  if (isLoadingTokenList || (isBalancesLoading && incentivesData.length > 0)) {
     return null;
   }
 

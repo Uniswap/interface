@@ -13,7 +13,10 @@ interface TokenBalance {
 
 const ERC20Interface = new Interface(ERC20ABI);
 
-export function useMultipleTokenBalances(tokenAddresses: string[]) {
+export function useMultipleTokenBalances(tokenAddresses: string[]): {
+  balances: Record<string, { balance: number }>;
+  isBalancesLoading: boolean;
+} {
   const { address: account, chainId } = useAccount();
   const [isBalancesLoading, setIsBalancesLoading] = useState(false);
 
@@ -36,14 +39,15 @@ export function useMultipleTokenBalances(tokenAddresses: string[]) {
 
   const balances = useMemo(() => {
     return validTokenAddresses.reduce((acc, address, index) => {
-      acc[address.toLowerCase()] = {
-        balance: balanceResults[index]?.result?.[0]
-          ? Number(balanceResults[index]?.result?.[0])
-          : 0,
-        usdValue: 0,
-      };
+      const balance = balanceResults[index]?.result?.[0]
+        ? Number(balanceResults[index]?.result?.[0])
+        : 0;
+
+      if (balance > 0) {
+        acc[address.toLowerCase()] = { balance };
+      }
       return acc;
-    }, {} as Record<string, TokenBalance>);
+    }, {} as Record<string, { balance: number }>);
   }, [validTokenAddresses, balanceResults]);
 
   return {

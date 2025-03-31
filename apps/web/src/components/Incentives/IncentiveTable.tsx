@@ -263,6 +263,8 @@ export const IncentiveTable = ({
         if (data.ended) {
           return <Cell minWidth={200} />;
         }
+        console.log("data.hasUserPosition", data.hasUserPosition);
+        console.log("data", data);
 
         if (!data.hasUserPosition && !data.userHasTokensToDeposit) {
           return (
