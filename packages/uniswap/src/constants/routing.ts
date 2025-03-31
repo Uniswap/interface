@@ -55,7 +55,6 @@ function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSource
 }
 
 export function buildPartialCurrencyInfo(commonBase: Currency): CurrencyInfo {
-  console.log('commonBase', commonBase)
   const logoUrl = commonBase.isNative
     ? getNativeLogoURI(commonBase.chainId)
     : getTokenLogoURI(commonBase.chainId, commonBase.address)
