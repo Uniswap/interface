@@ -268,14 +268,7 @@ export function IncentivesDataProvider({
       const userHasTokensToDeposit =
         currentBalances[incentive.pool.token0.id.toLowerCase()]?.balance > 0 &&
         currentBalances[incentive.pool.token1.id.toLowerCase()]?.balance > 0;
-      console.log(
-        "incentive.pool.token1.id.toLowerCase()",
-        incentive.pool.token1.id.toLowerCase()
-      );
-      console.log("currentBalances", currentBalances);
-      console.log("userHasTokensToDeposit", userHasTokensToDeposit);
 
-      console.log("userPosition", userPosition);
       return {
         id: incentive.id,
         poolId: userPosition?.id,

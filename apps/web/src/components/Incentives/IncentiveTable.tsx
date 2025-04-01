@@ -13,6 +13,7 @@ import { Swap } from "components/Icons/Swap";
 import { Trans } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { getAddress } from "ethers/lib/utils";
+import { PoolFeeDetails } from "./PoolFeeDetails";
 
 const StyledPoolRow = styled(Row)`
   align-items: center;
@@ -164,7 +165,7 @@ export const IncentiveTable = ({
     columnHelper.accessor("poolName", {
       id: "pool",
       header: () => (
-        <Cell minWidth={300} justifyContent="flex-start">
+        <Cell minWidth={200} justifyContent="flex-start">
           <ThemedText.BodyPrimary>Pool</ThemedText.BodyPrimary>
         </Cell>
       ),
@@ -172,7 +173,7 @@ export const IncentiveTable = ({
         const data = pool?.row?.original;
         if (!data) return null;
         return (
-          <Cell minWidth={300} justifyContent="flex-start">
+          <Cell minWidth={200} justifyContent="flex-start">
             <StyledPoolRow gap="12px">
               <PoolTokenImage pool={data} />
               <PoolNameContainer>
@@ -186,7 +187,7 @@ export const IncentiveTable = ({
     }),
     columnHelper.accessor("liquidity", {
       header: () => (
-        <Cell minWidth={150}>
+        <Cell minWidth={50}>
           <ThemedText.BodyPrimary>Liquidity</ThemedText.BodyPrimary>
         </Cell>
       ),
@@ -194,7 +195,7 @@ export const IncentiveTable = ({
         const data = pool?.row?.original;
         if (!data) return null;
         return (
-          <Cell minWidth={150}>
+          <Cell minWidth={50}>
             <ThemedText.BodyPrimary>
               {formatValue(data.liquidity)}
             </ThemedText.BodyPrimary>
@@ -204,7 +205,7 @@ export const IncentiveTable = ({
     }),
     columnHelper.accessor("volume24h", {
       header: () => (
-        <Cell minWidth={150}>
+        <Cell minWidth={50}>
           <ThemedText.BodyPrimary>Volume 24H</ThemedText.BodyPrimary>
         </Cell>
       ),
@@ -212,7 +213,7 @@ export const IncentiveTable = ({
         const data = pool?.row?.original;
         if (!data) return null;
         return (
-          <Cell minWidth={150}>
+          <Cell minWidth={50}>
             <ThemedText.BodyPrimary>
               {formatValue(data.volume24h)}
             </ThemedText.BodyPrimary>
@@ -222,7 +223,7 @@ export const IncentiveTable = ({
     }),
     columnHelper.accessor("feesUSD", {
       header: () => (
-        <Cell minWidth={150}>
+        <Cell minWidth={50}>
           <ThemedText.BodyPrimary>Fees 24H</ThemedText.BodyPrimary>
         </Cell>
       ),
@@ -230,7 +231,7 @@ export const IncentiveTable = ({
         const data = pool?.row?.original;
         if (!data) return null;
         return (
-          <Cell minWidth={150}>
+          <Cell minWidth={50}>
             <ThemedText.BodyPrimary>
               {formatValue(data.feesUSD)}
             </ThemedText.BodyPrimary>
@@ -240,7 +241,7 @@ export const IncentiveTable = ({
     }),
     columnHelper.accessor("apr24h", {
       header: () => (
-        <Cell minWidth={150}>
+        <Cell minWidth={50}>
           <ThemedText.BodyPrimary>APR 24H</ThemedText.BodyPrimary>
         </Cell>
       ),
@@ -248,31 +249,29 @@ export const IncentiveTable = ({
         const data = pool?.row?.original;
         if (!data) return null;
         return (
-          <Cell minWidth={150}>
+          <Cell minWidth={50}>
             <ThemedText.BodyPrimary>{data.apr24h}</ThemedText.BodyPrimary>
           </Cell>
         );
       },
     }),
     columnHelper.accessor("id", {
-      header: () => <Cell minWidth={200} style={{ marginLeft: "20px" }} />,
+      header: () => <Cell minWidth={150} />,
       cell: (pool) => {
         const data = pool?.row?.original;
         if (!data) return null;
 
         if (data.ended) {
-          return <Cell minWidth={200} />;
+          return <Cell minWidth={150} />;
         }
-        console.log("data.hasUserPosition", data.hasUserPosition);
-        console.log("data", data);
 
         if (!data.hasUserPosition && !data.userHasTokensToDeposit) {
           return (
-            <Cell minWidth={200}>
+            <Cell minWidth={150}>
               {" "}
               <ActionButtons>
                 <div
-                  style={{ cursor: "pointer", marginLeft: "20px" }}
+                  style={{ cursor: "pointer" }}
                   onClick={() => redirectToSwap(data)}
                 >
                   <Swap />
@@ -283,7 +282,7 @@ export const IncentiveTable = ({
         }
 
         return (
-          <Cell minWidth={200} style={{ marginLeft: "20px" }}>
+          <Cell minWidth={150}>
             <ActionButtons>
               <div
                 style={{ cursor: "pointer" }}
@@ -303,6 +302,22 @@ export const IncentiveTable = ({
                 )}
               </ActionButton>
             </ActionButtons>
+          </Cell>
+        );
+      },
+    }),
+    columnHelper.accessor("reward", {
+      header: () => <Cell minWidth={150} />,
+      cell: (pool) => {
+        const data = pool?.row?.original;
+        if (!data) return null;
+        return (
+          <Cell minWidth={150}>
+            <PoolFeeDetails
+              poolId={data.poolAddress}
+              rewardTokenImage={data.token1LogoURI}
+              rewardTokenSymbol={data.token1Symbol}
+            />
           </Cell>
         );
       },
