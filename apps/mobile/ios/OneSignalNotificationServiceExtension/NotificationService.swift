@@ -54,7 +54,7 @@ class NotificationService: UNNotificationServiceExtension {
         sdkKey: statsigSdkKey,
         user: statsigUser,
         options: StatsigOptions(
-          environment: StatsigEnvironment(tier: getStatsigEnvironmentTier()),
+          environment: StatsigEnvironment(tier: getStatsigEnvironemntTier()),
           initializationURL: URL(string: "\(Constants.statsigProxyHost)/v1/statsig-proxy/initialize"),
           eventLoggingURL: URL(string: "\(Constants.statsigProxyHost)/v1/statsig-proxy/rgstr")
       )) { _errorMessage in
@@ -65,7 +65,7 @@ class NotificationService: UNNotificationServiceExtension {
     }
   }
   
-  func getStatsigEnvironmentTier() -> String {
+  func getStatsigEnvironemntTier() -> String {
     let bundleSuffix = Bundle.main.object(forInfoDictionaryKey: "BUNDLE_ID_SUFFIX") as? String
     
     switch bundleSuffix {
