@@ -1,3 +1,4 @@
+import { getAddress } from "ethers/lib/utils";
 import React from "react";
 import styled from "styled-components";
 
@@ -7,6 +8,7 @@ interface FeeDistributionBarProps {
   daily24hAPR: number;
   rewardTokenImage: string;
   rewardTokenSymbol: string;
+  rewardTokenAddress: string;
 }
 
 const BarContainer = styled.div`
@@ -60,8 +62,15 @@ const TokenRewardsBar = styled.div<{ width: string; offset: string }>`
   border-radius: 0 4px 4px 0;
 `;
 
+const TokenIconLink = styled.a`
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
 const TokenIcon = styled.img`
-  width: 20 px;
+  width: 20px;
   height: 20px;
   border-radius: 50%;
 `;
@@ -71,6 +80,7 @@ export const FeeDistributionBar: React.FC<FeeDistributionBarProps> = ({
   tradeFeesPercentage,
   rewardTokenImage,
   rewardTokenSymbol,
+  rewardTokenAddress,
   daily24hAPR,
 }) => {
   return (
@@ -85,7 +95,15 @@ export const FeeDistributionBar: React.FC<FeeDistributionBarProps> = ({
           />
         </ProgressBarContainer>
       </BarSection>
-      <TokenIcon src={rewardTokenImage} alt={rewardTokenSymbol} />
+      <TokenIconLink
+        href={`https://www.taraswap.info/#/tokens/${getAddress(
+          rewardTokenAddress
+        )}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <TokenIcon src={rewardTokenImage} alt={rewardTokenSymbol} />
+      </TokenIconLink>
     </BarContainer>
   );
 };

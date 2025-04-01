@@ -258,7 +258,8 @@ export function IncentivesDataProvider({
         );
 
         setActiveIncentives(incentives.filter((inc) => !inc.ended));
-        setEndedIncentives(incentives.filter((inc) => inc.ended));
+        // setEndedIncentives(incentives.filter((inc) => inc.ended));
+        setEndedIncentives([]);
       };
 
       processIncentives();
@@ -322,12 +323,6 @@ export function IncentivesDataProvider({
       const userHasTokensToDeposit =
         currentBalances[incentive.pool.token0.id.toLowerCase()]?.balance > 0 &&
         currentBalances[incentive.pool.token1.id.toLowerCase()]?.balance > 0;
-      console.log(
-        "(totalAPR / 365).toFixed(2) data provider",
-        (totalAPR / 365).toFixed(2)
-      );
-      console.log("totalAPR data provider", totalAPR);
-
       return {
         id: incentive.id,
         poolId: userPosition?.id,

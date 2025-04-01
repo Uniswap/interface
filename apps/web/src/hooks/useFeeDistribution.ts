@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const FEE_DISTRIBUTION_QUERY = `
   query getFeeDistribution($incentiveId: ID!) {
@@ -47,16 +47,42 @@ interface FeeDistributionResult {
   data: FeeDistributionData | null;
 }
 
+// Cache to store results
+const cache = new Map<
+  string,
+  { data: FeeDistributionData; timestamp: number }
+>();
+const CACHE_DURATION = 30000; // 30 seconds cache duration
+
 export function useFeeDistribution(incentiveId: string): FeeDistributionResult {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [data, setData] = useState<FeeDistributionData | null>(null);
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
+      // Check cache first
+      const cached = cache.get(incentiveId);
+      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        if (isMounted.current) {
+          setData(cached.data);
+          setLoading(false);
+        }
+        return;
+      }
+
       try {
-        setLoading(true);
-        setError(null);
+        if (isMounted.current) {
+          setLoading(true);
+          setError(null);
+        }
 
         const response = await fetch(
           "https://indexer.lswap.app/subgraphs/name/taraxa/uniswap-v3/",
@@ -126,19 +152,30 @@ export function useFeeDistribution(incentiveId: string): FeeDistributionResult {
         const tokenRewardsPercentage =
           totalAPR > 0 ? (tokenRewardsAPR / totalAPR) * 100 : 0;
 
-        setData({
+        const newData = {
           tradeFees: tradingFeeAPR,
           tokenRewards: tokenRewardsAPR,
           totalAPR,
           tradeFeesPercentage,
           tokenRewardsPercentage,
           daily24hAPR: totalAPR / 365,
-        });
+        };
+
+        // Update cache
+        cache.set(incentiveId, { data: newData, timestamp: Date.now() });
+
+        if (isMounted.current) {
+          setData(newData);
+        }
       } catch (err) {
         console.error("Error fetching fee distribution:", err);
-        setError(err instanceof Error ? err : new Error("An error occurred"));
+        if (isMounted.current) {
+          setError(err instanceof Error ? err : new Error("An error occurred"));
+        }
       } finally {
-        setLoading(false);
+        if (isMounted.current) {
+          setLoading(false);
+        }
       }
     };
 

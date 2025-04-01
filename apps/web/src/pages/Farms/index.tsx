@@ -21,7 +21,6 @@ import { TitleRow } from "nft/components/profile/list/shared";
 import Incentives from "components/Incentives";
 import Create from "components/Create";
 import FAQ from "components/FAQ";
-import EndedIncentives from "components/Incentives/EndedIncentives";
 import { IncentivesDataProvider } from "components/Incentives/IncentivesDataProvider";
 
 const ExploreContainer = styled.div`

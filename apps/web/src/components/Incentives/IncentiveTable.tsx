@@ -14,6 +14,7 @@ import { Trans } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { getAddress } from "ethers/lib/utils";
 import { PoolFeeDetails } from "./PoolFeeDetails";
+import { useMemo } from "react";
 
 const StyledPoolRow = styled(Row)`
   align-items: center;
@@ -85,19 +86,6 @@ const FeeLabel = styled(ThemedText.BodySecondary)`
   margin-top: 4px;
 `;
 
-const StyledSwap = styled(Swap)`
-  path {
-    fill: ${({ theme }) => theme.neutral1};
-  }
-  background: transparent !important;
-  rect,
-  circle {
-    fill: transparent !important;
-  }
-  * {
-    background: transparent !important;
-  }
-`;
 interface IncentiveTableProps {
   incentives: ProcessedIncentive[];
   isLoading: boolean;
@@ -130,12 +118,24 @@ const PoolTokenImage = ({ pool }: { pool: ProcessedIncentive }) => {
     <TokenContainer>
       <TokenImageWrapper $hasImage={!!pool.token0LogoURI}>
         {pool.token0LogoURI && (
-          <TokenLogoImage size={LOGO_DEFAULT_SIZE} src={pool.token0LogoURI} />
+          <a
+            href={`https://www.taraswap.info/#/tokens/${pool.token0Address}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <TokenLogoImage size={LOGO_DEFAULT_SIZE} src={pool.token0LogoURI} />
+          </a>
         )}
       </TokenImageWrapper>
       <TokenImageWrapper $hasImage={!!pool.token1LogoURI}>
         {pool.token1LogoURI && (
-          <TokenLogoImage size={LOGO_DEFAULT_SIZE} src={pool.token1LogoURI} />
+          <a
+            href={`https://www.taraswap.info/#/tokens/${pool.token1Address}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <TokenLogoImage size={LOGO_DEFAULT_SIZE} src={pool.token1LogoURI} />
+          </a>
         )}
       </TokenImageWrapper>
     </TokenContainer>
@@ -149,179 +149,194 @@ export const IncentiveTable = ({
 }: IncentiveTableProps) => {
   const columnHelper = createColumnHelper<ProcessedIncentive>();
   const navigate = useNavigate();
-  const redirectToSwap = (data: ProcessedIncentive) => {
-    navigate(
-      `/swap?inputCurrency=${getAddress(
-        data.token0Address
-      )}&outputCurrency=${getAddress(data.token1Address)}&chain=taraxa`
-    );
-  };
-  const columns = [
-    columnHelper.accessor("poolName", {
-      id: "pool",
-      header: () => (
-        <Cell minWidth={250} justifyContent="flex-start">
-          <ThemedText.BodyPrimary>Pool</ThemedText.BodyPrimary>
-        </Cell>
-      ),
-      cell: (pool) => {
-        const data = pool?.row?.original;
-        if (!data) return null;
-        return (
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("poolName", {
+        id: "pool",
+        header: () => (
           <Cell minWidth={250} justifyContent="flex-start">
-            <StyledPoolRow gap="12px">
-              <PoolTokenImage pool={data} />
-              <PoolNameContainer>
-                <PoolName>{data.poolName}</PoolName>
-                <FeeLabel>{data.feeTier}</FeeLabel>
-              </PoolNameContainer>
-            </StyledPoolRow>
+            <ThemedText.BodyPrimary>Pool</ThemedText.BodyPrimary>
           </Cell>
-        );
-      },
-    }),
-    columnHelper.accessor("liquidity", {
-      header: () => (
-        <Cell minWidth={130} justifyContent="flex-end">
-          <ThemedText.BodyPrimary>Liquidity</ThemedText.BodyPrimary>
-        </Cell>
-      ),
-      cell: (pool) => {
-        const data = pool?.row?.original;
-        if (!data) return null;
-        return (
-          <Cell minWidth={130} justifyContent="flex-end">
-            <ThemedText.BodyPrimary>
-              {formatValue(data.liquidity)}
-            </ThemedText.BodyPrimary>
-          </Cell>
-        );
-      },
-    }),
-    columnHelper.accessor("volume24h", {
-      header: () => (
-        <Cell minWidth={130} justifyContent="flex-end">
-          <ThemedText.BodyPrimary>Volume 24H</ThemedText.BodyPrimary>
-        </Cell>
-      ),
-      cell: (pool) => {
-        const data = pool?.row?.original;
-        if (!data) return null;
-        return (
-          <Cell minWidth={130} justifyContent="flex-end">
-            <ThemedText.BodyPrimary>
-              {formatValue(data.volume24h)}
-            </ThemedText.BodyPrimary>
-          </Cell>
-        );
-      },
-    }),
-    columnHelper.accessor("feesUSD", {
-      header: () => (
-        <Cell minWidth={130} justifyContent="flex-end">
-          <ThemedText.BodyPrimary>Fees 24H</ThemedText.BodyPrimary>
-        </Cell>
-      ),
-      cell: (pool) => {
-        const data = pool?.row?.original;
-        if (!data) return null;
-        return (
-          <Cell minWidth={130} justifyContent="flex-end">
-            <ThemedText.BodyPrimary>
-              {formatValue(data.feesUSD)}
-            </ThemedText.BodyPrimary>
-          </Cell>
-        );
-      },
-    }),
-    columnHelper.accessor("apr24h", {
-      header: () => (
-        <Cell minWidth={100} justifyContent="flex-end">
-          <ThemedText.BodyPrimary>APR 24H</ThemedText.BodyPrimary>
-        </Cell>
-      ),
-      cell: (pool) => {
-        const data = pool?.row?.original;
-        if (!data) return null;
-        return (
-          <Cell minWidth={100} justifyContent="flex-end">
-            <ThemedText.BodyPrimary>{data.apr24h}</ThemedText.BodyPrimary>
-          </Cell>
-        );
-      },
-    }),
-    columnHelper.accessor("id", {
-      header: () => <Cell minWidth={120} />,
-      cell: (pool) => {
-        const data = pool?.row?.original;
-        if (!data) return null;
-
-        if (data.ended) {
-          return <Cell minWidth={120} />;
-        }
-
-        if (!data.hasUserPosition && !data.userHasTokensToDeposit) {
+        ),
+        cell: (pool) => {
+          const data = pool?.row?.original;
+          if (!data) return null;
           return (
-            <Cell minWidth={120}>
-              {" "}
+            <Cell minWidth={250} justifyContent="flex-start">
+              <StyledPoolRow gap="12px">
+                <PoolTokenImage pool={data} />
+                <PoolNameContainer>
+                  <PoolName>{data.poolName}</PoolName>
+                  <FeeLabel>{data.feeTier}</FeeLabel>
+                </PoolNameContainer>
+              </StyledPoolRow>
+            </Cell>
+          );
+        },
+      }),
+      columnHelper.accessor("liquidity", {
+        header: () => (
+          <Cell minWidth={130} justifyContent="flex-end">
+            <ThemedText.BodyPrimary>Liquidity</ThemedText.BodyPrimary>
+          </Cell>
+        ),
+        cell: (pool) => {
+          const data = pool?.row?.original;
+          if (!data) return null;
+          return (
+            <Cell minWidth={130} justifyContent="flex-end">
+              <ThemedText.BodyPrimary>
+                {formatValue(data.liquidity)}
+              </ThemedText.BodyPrimary>
+            </Cell>
+          );
+        },
+      }),
+      columnHelper.accessor("volume24h", {
+        header: () => (
+          <Cell minWidth={130} justifyContent="flex-end">
+            <ThemedText.BodyPrimary>Volume 24H</ThemedText.BodyPrimary>
+          </Cell>
+        ),
+        cell: (pool) => {
+          const data = pool?.row?.original;
+          if (!data) return null;
+          return (
+            <Cell minWidth={130} justifyContent="flex-end">
+              <ThemedText.BodyPrimary>
+                {formatValue(data.volume24h)}
+              </ThemedText.BodyPrimary>
+            </Cell>
+          );
+        },
+      }),
+      columnHelper.accessor("feesUSD", {
+        header: () => (
+          <Cell minWidth={130} justifyContent="flex-end">
+            <ThemedText.BodyPrimary>Fees 24H</ThemedText.BodyPrimary>
+          </Cell>
+        ),
+        cell: (pool) => {
+          const data = pool?.row?.original;
+          if (!data) return null;
+          return (
+            <Cell minWidth={130} justifyContent="flex-end">
+              <ThemedText.BodyPrimary>
+                {formatValue(data.feesUSD)}
+              </ThemedText.BodyPrimary>
+            </Cell>
+          );
+        },
+      }),
+      columnHelper.accessor("apr24h", {
+        header: () => (
+          <Cell minWidth={100} justifyContent="flex-end">
+            <ThemedText.BodyPrimary>APR 24H</ThemedText.BodyPrimary>
+          </Cell>
+        ),
+        cell: (pool) => {
+          const data = pool?.row?.original;
+          if (!data) return null;
+          return (
+            <Cell minWidth={100} justifyContent="flex-end">
+              <ThemedText.BodyPrimary>{data.apr24h}</ThemedText.BodyPrimary>
+            </Cell>
+          );
+        },
+      }),
+      columnHelper.accessor("id", {
+        header: () => <Cell minWidth={120} />,
+        cell: (pool) => {
+          const data = pool?.row?.original;
+          if (!data) return null;
+
+          if (data.ended) {
+            return <Cell minWidth={120} />;
+          }
+
+          if (!data.hasUserPosition && !data.userHasTokensToDeposit) {
+            return (
+              <Cell minWidth={120}>
+                {" "}
+                <ActionButtons>
+                  <div
+                    style={{ cursor: "pointer" }}
+                    onClick={() =>
+                      navigate(
+                        `/swap?inputCurrency=${getAddress(
+                          data.token0Address
+                        )}&outputCurrency=${getAddress(
+                          data.token1Address
+                        )}&chain=taraxa`
+                      )
+                    }
+                  >
+                    <Swap />
+                  </div>
+                </ActionButtons>
+              </Cell>
+            );
+          }
+
+          return (
+            <Cell minWidth={120} justifyContent="flex-end">
               <ActionButtons>
                 <div
                   style={{ cursor: "pointer" }}
-                  onClick={() => redirectToSwap(data)}
+                  onClick={() =>
+                    navigate(
+                      `/swap?inputCurrency=${getAddress(
+                        data.token0Address
+                      )}&outputCurrency=${getAddress(
+                        data.token1Address
+                      )}&chain=taraxa`
+                    )
+                  }
                 >
                   <Swap />
                 </div>
+                <ActionButton
+                  $variant="primary"
+                  onClick={() => onDeposit?.(data)}
+                  style={{ marginLeft: "5px" }}
+                >
+                  {data.hasUserPosition ? (
+                    <Trans i18nKey="common.incentives.position" />
+                  ) : (
+                    <Trans i18nKey="common.incentives.deposit" />
+                  )}
+                </ActionButton>
               </ActionButtons>
             </Cell>
           );
-        }
+        },
+      }),
+      columnHelper.accessor("reward", {
+        header: () => <Cell minWidth={150} />,
+        cell: (pool) => {
+          const data = pool?.row?.original;
+          if (!data) return null;
 
-        return (
-          <Cell minWidth={120} justifyContent="flex-end">
-            <ActionButtons>
-              <div
-                style={{ cursor: "pointer" }}
-                onClick={() => redirectToSwap(data)}
-              >
-                <Swap />
-              </div>
-              <ActionButton
-                $variant="primary"
-                onClick={() => onDeposit?.(data)}
-                style={{ marginLeft: "5px" }}
-              >
-                {data.hasUserPosition ? (
-                  <Trans i18nKey="common.incentives.position" />
-                ) : (
-                  <Trans i18nKey="common.incentives.deposit" />
-                )}
-              </ActionButton>
-            </ActionButtons>
-          </Cell>
-        );
-      },
-    }),
-    columnHelper.accessor("reward", {
-      header: () => <Cell minWidth={150} />,
-      cell: (pool) => {
-        const data = pool?.row?.original;
-        if (!data) return null;
-
-        if (data.ended) {
-          return <Cell minWidth={150} />;
-        }
-        return (
-          <Cell minWidth={150}>
-            <PoolFeeDetails
-              incentiveId={data.id}
-              rewardTokenImage={data.token1LogoURI}
-              rewardTokenSymbol={data.token1Symbol}
-            />
-          </Cell>
-        );
-      },
-    }),
-  ];
+          if (data.ended) {
+            return <Cell minWidth={150} />;
+          }
+          return (
+            <Cell minWidth={150}>
+              <PoolFeeDetails
+                key={data.id}
+                incentiveId={data.id}
+                rewardTokenImage={data.token1LogoURI}
+                rewardTokenSymbol={data.token1Symbol}
+                rewardTokenAddress={data.token1Address}
+              />
+            </Cell>
+          );
+        },
+      }),
+    ],
+    [columnHelper, navigate, onDeposit]
+  );
 
   return (
     <Table
