@@ -3232,17 +3232,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:24.2.2":
-  version: 24.2.2
-  resolution: "i18next@npm:24.2.2"
+"i18next-resources-for-ts@npm:1.5.0":
+  version: 1.5.0
+  resolution: "i18next-resources-for-ts@npm:1.5.0"
+  dependencies:
+    "@babel/runtime": ^7.23.7
+    yaml: ^2.3.4
+  bin:
+    i18next-resources-for-ts: bin/i18next-resources-for-ts.js
+  checksum: e07bff1421f42f9d6ec8a0f8d47beb4c70fbe13f73a8a891848dec356bd5e743773998a9e56efb6c14175379b9bb74a3d33bc775e3a1378888791771b444c6ba
+  languageName: node
+  linkType: hard
+
+"i18next-resources-to-backend@npm:1.2.1":
+  version: 1.2.1
+  resolution: "i18next-resources-to-backend@npm:1.2.1"
   dependencies:
     "@babel/runtime": ^7.23.2
-  peerDependencies:
-    typescript: ^5
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: dc87ff61c45366a1197c9732c4b36cd20bbae3ae14b7672e5d7d3d1ec21ec1cd2edc25cbfd10dc776d2a8c24b88d123f3c32369ac4eb50ba5c8f9cbcf3c14ec9
+  checksum: a2f338c4eec8d5ba09846ae1abdd23afb72086f6395d6160c748d010c82f5c28c30133f6487f0fd3a65e710231d7750b324785f15cac4baf6d24b33227840341
   languageName: node
   linkType: hard
 
@@ -5707,12 +5714,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo-ignore@npm:1.11.3":
-  version: 1.11.3
-  resolution: "turbo-ignore@npm:1.11.3"
+"turbo-ignore@npm:2.4.2":
+  version: 2.4.2
+  resolution: "turbo-ignore@npm:2.4.2"
+  dependencies:
+    json5: ^2.2.3
   bin:
     turbo-ignore: dist/cli.js
-  checksum: f57862ba5f2cc759a54877c395a03a3ea52396d57b01a418377abe6b677abfd78941b6c7e9db26b728ed8a7c63135490eea075d1603efb6e4834b24474aa0379
+  checksum: d714687ae53eff4ac9748cd8099badbb7954f903e29d9c985f8db1719fe5a505f3b214f94964dace1954cb6ddf3771b87c61367cb61d2d413f9e28817142f322
   languageName: node
   linkType: hard
 
@@ -5900,7 +5909,7 @@ __metadata:
     prettier-plugin-organize-imports: 3.2.4
     syncpack: 8.5.14
     turbo: 1.13.4
-    turbo-ignore: 1.11.3
+    turbo-ignore: 2.4.2
   languageName: unknown
   linkType: soft
 
