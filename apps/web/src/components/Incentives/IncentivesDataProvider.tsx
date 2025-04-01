@@ -23,6 +23,7 @@ interface IncentiveData {
     id: string;
     symbol: string;
     decimals: number;
+    derivedETH: string;
   };
   pool: {
     id: string;
@@ -36,11 +37,17 @@ interface IncentiveData {
       id: string;
       symbol: string;
       name: string;
+      derivedETH: string;
+      decimals: number;
     };
     liquidity: string;
     totalValueLockedUSD: string;
     feesUSD: string;
     volumeUSD: string;
+    poolDayData: {
+      feesUSD: string;
+      volumeUSD: string;
+    }[];
   };
   startTime: string;
   endTime: string;
@@ -83,6 +90,11 @@ export interface ProcessedIncentive {
   volume24h: string;
   feesUSD: string;
   apr24h: string;
+  tradingFeeAPR: number;
+  tokenRewardsAPR: number;
+  totalAPR: number;
+  tradeFeesPercentage: number;
+  tokenRewardsPercentage: number;
   hasUserPosition: boolean;
   ended: boolean;
   reward: string;
@@ -103,13 +115,11 @@ interface IncentivesContextType {
 
 const IncentivesContext = createContext<IncentivesContextType | null>(null);
 
-interface TokenInfoDetails {
-  chainId: number;
-  address: string;
-  name: string;
-  symbol: string;
-  decimals: number;
-  logoURI: string;
+interface IncentivesResponse {
+  incentives: IncentiveData[];
+  bundle: {
+    ethPriceUSD: string;
+  };
 }
 
 export function IncentivesDataProvider({
@@ -184,29 +194,32 @@ export function IncentivesDataProvider({
         throw new Error(incentivesData.errors[0].message);
       }
 
-      // Store incentives data first to trigger token addresses calculation
-      setIncentivesData(incentivesData.data.incentives);
-
-      // Wait for balances to be loaded
-      if (isBalancesLoading) {
+      if (!incentivesData.data?.incentives?.length) {
+        console.error("No incentives data found");
         return;
       }
 
-      // Process incentives only when we have balances
-      if (Object.keys(storedBalances).length > 0) {
-        const incentives = incentivesData.data.incentives.map(
-          (inc: IncentiveData) =>
-            processIncentive(inc, positions, storedBalances)
-        );
+      setIncentivesData(incentivesData.data.incentives);
+      const ethPriceUSD = parseFloat(incentivesData.data.bundle.ethPriceUSD);
+      const incentives = incentivesData.data.incentives.map(
+        (inc: IncentiveData) => {
+          if (!inc.rewardToken?.decimals) {
+            inc.rewardToken = {
+              ...inc.rewardToken,
+              decimals: 18,
+            };
+          }
+          return processIncentive(inc, positions, storedBalances, ethPriceUSD);
+        }
+      );
 
-        setActiveIncentives(
-          incentives.filter((inc: ProcessedIncentive) => !inc.ended)
-        );
-        setEndedIncentives(
-          incentives.filter((inc: ProcessedIncentive) => inc.ended)
-        );
-        setUserPositions(incentivesData.data.userPositions);
-      }
+      setActiveIncentives(
+        incentives.filter((inc: ProcessedIncentive) => !inc.ended)
+      );
+      setEndedIncentives(
+        incentives.filter((inc: ProcessedIncentive) => inc.ended)
+      );
+      setUserPositions(incentivesData.data.userPositions);
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(error);
@@ -215,7 +228,6 @@ export function IncentivesDataProvider({
     }
   };
 
-  // Add effect to process incentives when balances are ready
   useEffect(() => {
     if (
       !isBalancesLoading &&
@@ -227,12 +239,29 @@ export function IncentivesDataProvider({
         const positions = await getPositionsWithDepositsOfUser(
           account.address as string
         );
+        const response = await fetch(
+          "https://indexer.lswap.app/subgraphs/name/taraxa/uniswap-v3/",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              query: INCENTIVES_QUERY,
+              variables: { userAddress: account.address },
+            }),
+          }
+        );
+        const data = await response.json();
+        const ethPriceUSD = parseFloat(data.data.bundle.ethPriceUSD);
+
         const incentives = incentivesData.map((inc) =>
-          processIncentive(inc, positions, storedBalances)
+          processIncentive(inc, positions, storedBalances, ethPriceUSD)
         );
 
         setActiveIncentives(incentives.filter((inc) => !inc.ended));
-        setEndedIncentives(incentives.filter((inc) => inc.ended));
+        setEndedIncentives(
+          []
+          // incentives.filter((inc) => inc.ended
+        );
       };
 
       processIncentives();
@@ -243,7 +272,8 @@ export function IncentivesDataProvider({
     (
       incentive: IncentiveData,
       userPositions: PositionsResponse[],
-      currentBalances: Record<string, { balance: number }>
+      currentBalances: Record<string, { balance: number }>,
+      ethPriceUSD: number
     ): ProcessedIncentive => {
       const userPosition = userPositions.find(
         (pos) => pos.pool.id.toLowerCase() === incentive.pool.id.toLowerCase()
@@ -259,15 +289,47 @@ export function IncentivesDataProvider({
         incentive.pool.token1.id
       );
 
-      const rewardInTokens = parseFloat(
-        formatUnits(BigInt(incentive.reward), incentive.rewardToken.decimals)
+      const dailyFees = parseFloat(
+        incentive.pool.poolDayData[0]?.feesUSD || "0"
       );
-      const volume24h = parseFloat(incentive.pool.volumeUSD);
-      const apr24h =
-        volume24h > 0 ? ((rewardInTokens * 365) / volume24h) * 100 : 0;
+      const dailyVolume = parseFloat(
+        incentive.pool.poolDayData[0]?.volumeUSD || "1"
+      );
+      const tvlUSD = parseFloat(incentive.pool.totalValueLockedUSD || "1");
+      const annualizedFees = dailyFees * 365;
+      const tradingFeeAPR = (annualizedFees / dailyVolume) * 100;
+
+      const timeRange =
+        parseInt(incentive.endTime) - parseInt(incentive.startTime);
+      const rewardPerSecond = parseFloat(incentive.reward) / timeRange;
+
+      const rewardToken = incentive.pool.token1;
+      const rewardTokenPriceUSD =
+        parseFloat(rewardToken.derivedETH || "0") * ethPriceUSD;
+
+      const dailyRewardRate = rewardPerSecond * 86400;
+      const decimals = rewardToken.decimals || 18;
+      const adjustedDailyReward = dailyRewardRate / Math.pow(10, decimals);
+
+      const dailyRewardsUSD = adjustedDailyReward * rewardTokenPriceUSD;
+      const annualizedRewardsUSD = dailyRewardsUSD * 365;
+      const tokenRewardsAPR =
+        tvlUSD > 0 ? (annualizedRewardsUSD / tvlUSD) * 100 : 0;
+
+      const totalAPR = tradingFeeAPR + tokenRewardsAPR;
+      const tradeFeesPercentage =
+        totalAPR > 0 ? (tradingFeeAPR / totalAPR) * 100 : 0;
+      const tokenRewardsPercentage =
+        totalAPR > 0 ? (tokenRewardsAPR / totalAPR) * 100 : 0;
+
       const userHasTokensToDeposit =
         currentBalances[incentive.pool.token0.id.toLowerCase()]?.balance > 0 &&
         currentBalances[incentive.pool.token1.id.toLowerCase()]?.balance > 0;
+      console.log(
+        "(totalAPR / 365).toFixed(2) data provider",
+        (totalAPR / 365).toFixed(2)
+      );
+      console.log("totalAPR data provider", totalAPR);
 
       return {
         id: incentive.id,
@@ -276,7 +338,12 @@ export function IncentivesDataProvider({
         feeTier: `${(incentive.pool.feeTier / 10000).toFixed(2)}%`,
         liquidity: incentive.pool.totalValueLockedUSD,
         volume24h: incentive.pool.volumeUSD,
-        apr24h: `${apr24h.toFixed(2)}%`,
+        apr24h: `${(totalAPR / 365).toFixed(2)}%`,
+        tradingFeeAPR,
+        tokenRewardsAPR,
+        totalAPR,
+        tradeFeesPercentage,
+        tokenRewardsPercentage,
         reward: formatUnits(
           BigInt(incentive.reward),
           incentive.rewardToken.decimals

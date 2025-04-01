@@ -2,29 +2,34 @@ import React from "react";
 import styled from "styled-components";
 
 interface FeeDistributionBarProps {
-  tradeFees: number;
-  tokenRewards: number;
-  totalAPR: number;
+  tokenRewardsPercentage: number;
+  tradeFeesPercentage: number;
+  daily24hAPR: number;
   rewardTokenImage: string;
   rewardTokenSymbol: string;
 }
 
 const BarContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 12px;
   width: 100%;
+  padding-bottom: 4px;
 `;
 
 const BarSection = styled.div`
   flex: 1;
+  position: relative;
+  margin-top: 20px;
 `;
 
-const TotalAPR = styled.div`
-  font-size: 12px;
-  font-weight: 600;
+const APR = styled.div`
+  font-size: 16px;
   color: #fff;
-  margin-bottom: 4px;
+  white-space: nowrap;
+  position: absolute;
+  right: 0;
+  top: -24px;
 `;
 
 const ProgressBarContainer = styled.div`
@@ -62,19 +67,16 @@ const TokenIcon = styled.img`
 `;
 
 export const FeeDistributionBar: React.FC<FeeDistributionBarProps> = ({
-  tradeFees,
-  tokenRewards,
+  tokenRewardsPercentage,
+  tradeFeesPercentage,
   rewardTokenImage,
   rewardTokenSymbol,
-  totalAPR,
+  daily24hAPR,
 }) => {
-  const tradeFeesPercentage = (tradeFees / totalAPR) * 100;
-  const tokenRewardsPercentage = (tokenRewards / totalAPR) * 100;
-
   return (
     <BarContainer>
       <BarSection>
-        <TotalAPR>{totalAPR.toFixed(2)}%</TotalAPR>
+        <APR>{daily24hAPR.toFixed(2)}%</APR>
         <ProgressBarContainer>
           <TradeFeesBar width={`${tradeFeesPercentage}%`} />
           <TokenRewardsBar

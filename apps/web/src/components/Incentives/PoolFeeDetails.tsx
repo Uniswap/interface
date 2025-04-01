@@ -4,7 +4,7 @@ import { FeeDistributionBar } from "./FeeDistributionBar";
 import { useFeeDistribution } from "hooks/useFeeDistribution";
 
 interface PoolFeeDetailsProps {
-  poolId: string;
+  incentiveId: string;
   rewardTokenImage: string;
   rewardTokenSymbol: string;
 }
@@ -15,35 +15,35 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+  min-height: 48px;
 `;
 
-const LoadingText = styled.div`
-  color: #fff;
-  text-align: center;
-  padding: 20px;
+const PlaceholderBar = styled.div`
+  width: 100%;
+  height: 24px;
 `;
 
 export const PoolFeeDetails: React.FC<PoolFeeDetailsProps> = ({
-  poolId,
+  incentiveId,
   rewardTokenImage,
   rewardTokenSymbol,
 }) => {
-  const { data, loading, error } = useFeeDistribution(poolId);
+  const { data, loading, error } = useFeeDistribution(incentiveId);
 
-  if (loading) {
-    return <></>;
-  }
-  console.log("data", data);
-  if (error || !data) {
-    return <></>;
+  if (loading || error || !data) {
+    return (
+      <Container>
+        <PlaceholderBar />
+      </Container>
+    );
   }
 
   return (
     <Container>
       <FeeDistributionBar
-        tradeFees={data.tradeFees}
-        tokenRewards={data.tokenRewards}
-        totalAPR={data.totalAPR}
+        tradeFeesPercentage={data.tradeFeesPercentage}
+        tokenRewardsPercentage={data.tokenRewardsPercentage}
+        daily24hAPR={data.daily24hAPR}
         rewardTokenImage={rewardTokenImage}
         rewardTokenSymbol={rewardTokenSymbol}
       />
