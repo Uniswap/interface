@@ -1,15 +1,15 @@
 import React from "react";
 import {
-  ProcessedIncentive,
   useIncentivesData,
+  ProcessedIncentive,
 } from "./IncentivesDataProvider";
 import { IncentiveTable } from "./IncentiveTable";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { LightCard } from "components/Card";
 import styled from "styled-components";
 import { ThemedText } from "theme/components";
 import { useAccount } from "../../hooks/useAccount";
-import { IncentivesDataProvider } from "components/Incentives/IncentivesDataProvider";
+import { LiquidityTab } from "../../pages/Farms";
 
 const StyledLightCard = styled(LightCard)`
   padding: 20px;
@@ -19,15 +19,19 @@ const StyledLightCard = styled(LightCard)`
 `;
 
 export default function Incentives() {
-  const { activeIncentives, isLoading } = useIncentivesData();
+  const { activeIncentives, endedIncentives, isLoading } = useIncentivesData();
   const navigate = useNavigate();
+  const location = useLocation();
   const account = useAccount();
+
+  const isEndedTab = location.pathname.includes(LiquidityTab.EndedIncentives);
+  const incentivesToShow = isEndedTab ? endedIncentives : activeIncentives;
 
   const handleDeposit = (incentive: ProcessedIncentive) => {
     if (incentive.hasUserPosition) {
-      navigate(`#/pool/${incentive.poolId}`);
+      navigate(`/pool/${incentive.id}`);
     } else {
-      navigate(`#/add/${incentive.token0Address}/${incentive.token1Address}`);
+      navigate(`/add/${incentive.token0Address}/${incentive.token1Address}`);
     }
   };
 
@@ -42,12 +46,10 @@ export default function Incentives() {
   }
 
   return (
-    <IncentivesDataProvider>
-      <IncentiveTable
-        incentives={activeIncentives}
-        isLoading={isLoading}
-        onDeposit={handleDeposit}
-      />
-    </IncentivesDataProvider>
+    <IncentiveTable
+      incentives={incentivesToShow}
+      isLoading={isLoading}
+      onDeposit={handleDeposit}
+    />
   );
 }

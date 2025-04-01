@@ -99,7 +99,7 @@ const Pages: Array<Page> = [
   {
     title: <Trans i18nKey="common.incentives.ended" />,
     key: LiquidityTab.EndedIncentives,
-    component: EndedIncentives,
+    component: Incentives,
     loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
   },
   {
