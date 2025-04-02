@@ -9,8 +9,8 @@ import CeloLogo from "../../assets/svg/celo_logo.svg";
 import MaticLogo from "../../assets/svg/matic-token-icon.svg";
 import TaraxaLogo from "../../assets/svg/taraxa_logo.svg";
 import {
+  ETH_TARAXA,
   PORTAL_ETH_CELO,
-  USDT_TARAXA_TESTNET,
   isCelo,
   isTaraxa,
   nativeOnChain,
@@ -50,6 +50,9 @@ export function getTokenLogoURI(
       isNativeCurrency(address))
   ) {
     return TaraxaLogo;
+  }
+  if (isTaraxa(chainId) && isSameAddress(address, ETH_TARAXA.address)) {
+    return EthereumLogo;
   }
   if (
     isCelo(chainId) &&
