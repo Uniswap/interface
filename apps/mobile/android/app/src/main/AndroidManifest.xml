@@ -31,9 +31,6 @@
       android:name="com.onesignal.NotificationAccentColor.DEFAULT"
       android:value="@string/notification_accent_color" />
 
-    <meta-data android:name="com.onesignal.NotificationServiceExtension"
-      android:value="com.uniswap.notifications.NotificationExtension" />
-
     <!-- We use FCM for WalletConnect push notifications -->
 
     <meta-data

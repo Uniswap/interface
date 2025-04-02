@@ -1,0 +1,11 @@
+# this flow should be used at the beginning of every flow that tests the app
+# it will generate the test ids and launch the app consistently across all flows
+appId: com.uniswap.mobile.dev
+---
+- runScript: ../scripts/testIds.js
+- launchApp:
+    permissions:
+      contacts: unset
+      notifications: unset
+    clearState: true
+    clearKeychain: true # optional: clear *entire* iOS keychain

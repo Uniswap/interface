@@ -5,7 +5,7 @@ import { Stats } from 'pages/Landing/sections/Stats'
 import { forwardRef } from 'react'
 import { Flex } from 'ui/src'
 
-const Fold = forwardRef<HTMLDivElement>(function Fold(props, scrollAnchor) {
+const Fold = forwardRef<HTMLDivElement>(function Fold(_props, scrollAnchor) {
   return (
     <Flex
       gap={120}

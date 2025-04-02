@@ -11,6 +11,11 @@ module.exports = {
     '!src/**/*.stories.**',
     '!**/node_modules/**',
   ],
+  moduleNameMapper: {
+    ...preset.moduleNameMapper,
+    '@tamagui/core': '@tamagui/core/native-test',
+    '@tamagui/web': '@tamagui/core/native-test',
+  },
   coverageThreshold: {
     global: {
       lines: 0,

@@ -12,6 +12,17 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
 """
 Tells the service this field/object has access authorized by an OIDC token.
 """
@@ -25,22 +36,6 @@ directive @aws_cognito_user_pools(
   cognito_groups: [String]
 ) on OBJECT | FIELD_DEFINITION
 
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
-
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
   """
@@ -50,20 +45,26 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
+Tells the service this field/object has access authorized by an API key.
 """
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
  These are colocated to highlight the relationship between some types and their inputs.
 """
-union ActivityDetails = TransactionDetails | SwapOrderDetails | OnRampTransactionDetails
+union ActivityDetails = TransactionDetails | SwapOrderDetails | OnRampTransactionDetails | OffRampTransactionDetails
 
 input ActivityDetailsInput {
   transactionDetails: TransactionDetailsInput
   swapOrderDetails: SwapOrderDetailsInput
   onRampTransactionDetails: OnRampTransactionDetailsInput
+  offRampTransactionDetails: OffRampTransactionDetailsInput
 }
 
 """
@@ -93,6 +94,7 @@ enum ActivityType {
   UNSTAKE
   SWAP_ORDER
   ON_RAMP
+  OFF_RAMP
 }
 
 type Amount implements IAmount {
@@ -150,7 +152,7 @@ enum AssetActivitySwitch {
   LEGACY
 }
 
-union AssetChange = TokenTransfer | NftTransfer | OnRampTransfer | TokenApproval | NftApproval | NftApproveForAll
+union AssetChange = TokenTransfer | NftTransfer | OnRampTransfer | TokenApproval | NftApproval | NftApproveForAll | OffRampTransfer
 
 input AssetChangeInput {
   tokenTransfer: TokenTransferInput
@@ -159,6 +161,7 @@ input AssetChangeInput {
   nftApproval: NftApprovalInput
   nftApproveForAll: NftApproveForAllInput
   onRampTransfer: OnRampTransferInput
+  offRampTransfer: OffRampTransferInput
 }
 
 """
@@ -794,6 +797,66 @@ input NftTransferInput {
   direction: TransactionDirection!
 }
 
+type OffRampServiceProvider {
+  id: ID!
+  serviceProvider: String!
+  name: String!
+  url: String!
+  logoLightUrl: String!
+  logoDarkUrl: String!
+  supportUrl: String
+}
+
+input OffRampServiceProviderInput {
+  serviceProvider: String!
+  name: String!
+  url: String!
+  logoLightUrl: String!
+  logoDarkUrl: String!
+  supportUrl: String
+}
+
+type OffRampTransactionDetails {
+  id: ID!
+  status: TransactionStatus!
+  senderAddress: String!
+  offRampTransfer: OffRampTransfer!
+}
+
+input OffRampTransactionDetailsInput {
+  status: TransactionStatus!
+  senderAddress: String!
+  offRampTransfer: OffRampTransferInput!
+}
+
+type OffRampTransfer {
+  id: ID!
+  token: Token!
+  tokenStandard: TokenStandard!
+  amount: Float!
+  destinationCurrency: String
+  destinationAmount: Float!
+  serviceProvider: OffRampServiceProvider!
+  transactionReferenceId: String!
+  externalSessionId: String!
+  networkFee: Float
+  transactionFee: Float
+  totalFee: Float
+}
+
+input OffRampTransferInput {
+  token: TokenAssetInput!
+  tokenStandard: TokenStandard!
+  amount: Float!
+  destinationCurrency: String
+  destinationAmount: Float!
+  serviceProvider: OffRampServiceProviderInput!
+  transactionReferenceId: String!
+  networkFee: Float
+  transactionFee: Float
+  totalFee: Float
+}
+
 type OnRampServiceProvider {
   id: ID!
   serviceProvider: String!
@@ -972,6 +1035,7 @@ enum ProtectionAttackType {
   UNSTABLE_TOKEN_PRICE
   RUGPULL
   HIGH_FEES
+  HONEYPOT
 }
 
 type ProtectionInfo {
@@ -1031,7 +1095,7 @@ type Query {
   """
   token(chain: Chain!, address: String): Token
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
-  searchTokens(searchQuery: String!, chains: [Chain!]): [Token]
+  searchTokens(searchQuery: String!, chains: [Chain!], tokenSearchV2Enabled: Boolean): [Token]
   portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], fungibleIds: [String!], valueModifiers: [PortfolioValueModifier!]): [Portfolio]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
   topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int): NftCollectionConnection
@@ -1393,6 +1457,7 @@ enum TransactionType {
   UNSTAKE
   WITHDRAW
   ON_RAMP
+  OFF_RAMP
 }
 
 type V2Pair implements IPool {

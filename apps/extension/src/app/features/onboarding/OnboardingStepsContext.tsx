@@ -10,6 +10,10 @@ export enum CreateOnboardingSteps {
   Complete = 'complete',
 }
 
+export enum SelectImportMethodSteps {
+  SelectMethod = 'selectMethod',
+}
+
 export enum ImportOnboardingSteps {
   Mnemonic = 'mnemonic',
   Password = 'password',
@@ -41,7 +45,13 @@ export enum ClaimUnitagSteps {
   Confirmation = 'confirmation',
 }
 
-export type Step = CreateOnboardingSteps | ImportOnboardingSteps | ResetSteps | ScanOnboardingSteps | ClaimUnitagSteps
+export type Step =
+  | CreateOnboardingSteps
+  | ImportOnboardingSteps
+  | ResetSteps
+  | ScanOnboardingSteps
+  | ClaimUnitagSteps
+  | SelectImportMethodSteps
 
 export type OnboardingStepsContextState = {
   step: Step

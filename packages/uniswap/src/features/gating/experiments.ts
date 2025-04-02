@@ -9,6 +9,10 @@ export enum Experiments {
   SwapPresets = 'swap_presets',
 }
 
+export enum Layers {
+  SwapPage = 'swap-page',
+}
+
 export enum ArbitrumXV2SamplingGroup {
   Classic = 'Classic',
   DutchV2 = 'DutchV2',

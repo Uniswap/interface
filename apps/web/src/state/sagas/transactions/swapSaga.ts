@@ -1,4 +1,3 @@
-/* eslint-disable rulesdir/no-undefined-or */
 import { SwapEventName } from '@uniswap/analytics-events'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
@@ -66,7 +65,7 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
   step: SwapTransactionStep | SwapTransactionStepAsync
-  signature: string | undefined
+  signature?: string
   trade: ClassicTrade | BridgeTrade
   analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
 }
@@ -219,7 +218,7 @@ function* classicSwap(
       }
     } catch (error) {
       const displayableError = getDisplayableError(error, step)
-      if (displayableError && displayableError.logToSentry) {
+      if (displayableError) {
         logger.error(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
       }
       onFailure(displayableError)
@@ -269,7 +268,7 @@ function* uniswapXSwap(
       }
     } catch (error) {
       const displayableError = getDisplayableError(error, step)
-      if (displayableError && displayableError.logToSentry) {
+      if (displayableError) {
         logger.error(displayableError, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
       }
       onFailure(displayableError)
@@ -323,6 +322,8 @@ export function useSwapCallback(): SwapCallback {
         onFailure,
         currencyInAmountUSD,
         currencyOutAmountUSD,
+        presetPercentage,
+        preselectAsset,
         isAutoSlippage,
         isFiatInputMode,
         setCurrentStep,
@@ -335,6 +336,8 @@ export function useSwapCallback(): SwapCallback {
         trade,
         currencyInAmountUSD,
         currencyOutAmountUSD,
+        presetPercentage,
+        preselectAsset,
         portfolioBalanceUsd,
         trace,
       })

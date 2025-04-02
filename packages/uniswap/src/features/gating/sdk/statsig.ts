@@ -14,5 +14,6 @@ export {
   useExperimentWithExposureLoggingDisabled,
   useGate,
   useGateWithExposureLoggingDisabled,
+  useLayer,
 } from 'statsig-react'
 export { statsig as Statsig, statsigContext as StatsigContext }

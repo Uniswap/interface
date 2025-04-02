@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
-import { OnSelectCurrency, TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { formatSearchResults, useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { PoolOption, SearchModalItemTypes } from 'uniswap/src/components/lists/types'
@@ -99,17 +98,16 @@ function _SearchModalResultsList({
   searchFilter,
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
-  onSelectCurrency,
+  onSelect,
 }: {
   chainFilter: UniverseChainId | null
   parsedChainFilter: UniverseChainId | null
   searchFilter: string
   debouncedSearchFilter: string | null
   debouncedParsedSearchFilter: string | null
-  onSelectCurrency: OnSelectCurrency
+  onSelect: (item: SearchModalItemTypes) => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const { registerSearch } = useAddToSearchHistory()
   const {
     data: sections,
     loading,
@@ -126,6 +124,7 @@ function _SearchModalResultsList({
     () => (debouncedSearchFilter ? <NoResultsFound searchFilter={debouncedSearchFilter} /> : undefined),
     [debouncedSearchFilter],
   )
+
   return (
     <SearchModalList
       chainFilter={chainFilter}
@@ -135,10 +134,7 @@ function _SearchModalResultsList({
       loading={userIsTyping || loading}
       refetch={refetch}
       sections={sections}
-      onSelectCurrency={(currencyInfo, section, index) => {
-        onSelectCurrency(currencyInfo, section, index)
-        registerSearch(currencyInfo)
-      }}
+      onSelect={onSelect}
     />
   )
 }

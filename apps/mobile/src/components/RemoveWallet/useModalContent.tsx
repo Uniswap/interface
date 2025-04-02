@@ -5,7 +5,6 @@ import { Text, ThemeKeys } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import TrashIcon from 'ui/src/assets/icons/trash.svg'
 import WalletIcon from 'ui/src/assets/icons/wallet-filled.svg'
-import { ThemeNames } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -30,7 +29,6 @@ interface ModalContentResult {
   Icon: React.ComponentType<SvgProps>
   iconColorLabel: ThemeKeys
   actionButtonLabel?: string
-  actionButtonTheme?: ThemeNames
 }
 
 export const useModalContent = ({
@@ -61,7 +59,6 @@ export const useModalContent = ({
         Icon: TrashIcon,
         iconColorLabel: 'statusCritical',
         actionButtonLabel: t('common.button.continue'),
-        actionButtonTheme: 'detrimental',
       }
     }
 
@@ -73,7 +70,6 @@ export const useModalContent = ({
         Icon: WalletIcon,
         iconColorLabel: 'neutral2',
         actionButtonLabel: t('common.button.continue'),
-        actionButtonTheme: 'secondary',
       }
     }
 
@@ -124,7 +120,6 @@ export const useModalContent = ({
         Icon: TrashIcon,
         iconColorLabel: 'statusCritical',
         actionButtonLabel: t('common.button.remove'),
-        actionButtonTheme: 'detrimental',
       }
     }
 
@@ -146,7 +141,6 @@ export const useModalContent = ({
         Icon: TrashIcon,
         iconColorLabel: 'neutral2',
         actionButtonLabel: t('common.button.remove'),
-        actionButtonTheme: 'secondary',
       }
     }
 

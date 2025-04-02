@@ -1,7 +1,6 @@
+import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
@@ -15,8 +14,15 @@ const BACKUP_REMINDER_MIN_TIMEOUT_MS = 2 * ONE_SECOND_MS
 export function useOpenBackupReminderModal(activeAccount: Account): void {
   const dispatch = useDispatch()
   const txns = useSelectAddressTransactions(activeAccount.address)
-  const { isOpen: isBackupReminderModalOpen } = useSelector(selectModalState(ModalName.BackupReminder))
-  const { isOpen: isBackupReminderWarningModalOpen } = useSelector(selectModalState(ModalName.BackupReminderWarning))
+  const navigation = useNavigation()
+
+  const isBackupReminderModalOpen = navigation
+    .getState()
+    .routes.some((route) => route.name === ModalName.BackupReminder)
+  const isBackupReminderWarningModalOpen = navigation
+    .getState()
+    .routes.some((route) => route.name === ModalName.BackupReminderWarning)
+
   const backupReminderLastSeenTs = useSelector(selectBackupReminderLastSeenTs)
 
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
@@ -36,12 +42,12 @@ export function useOpenBackupReminderModal(activeAccount: Account): void {
         BACKUP_REMINDER_MIN_TIMEOUT_MS,
       )
       const timeoutId = setTimeout(() => {
-        dispatch(openModal({ name: ModalName.BackupReminder }))
+        navigation.navigate(ModalName.BackupReminder as never)
       }, remainingTimeMs)
 
       return () => clearTimeout(timeoutId)
     }
 
     return undefined
-  }, [dispatch, shouldOpenBackupReminderModal, backupReminderLastSeenTs, txns])
+  }, [dispatch, shouldOpenBackupReminderModal, backupReminderLastSeenTs, txns, navigation])
 }

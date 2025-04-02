@@ -1,0 +1,18 @@
+appId: com.uniswap.mobile.dev
+---
+- runFlow: ../../shared-flows/start.yaml
+- tapOn:
+    id: ${output.testIds.CreateAccount}
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.Skip} # unitag
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.Skip} # notifications
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.Skip} # faceid
+- runFlow: ../../shared-flows/biometrics-confirm.yaml
+# home screen
+- assertVisible:
+    id: ${output.testIds.AccountHeaderAvatar}

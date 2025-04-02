@@ -6,7 +6,7 @@ rulesDirPlugin.RULES_DIR = 'eslint_rules'
 
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/react', 'plugin:storybook/recommended'],
+  extends: ['@uniswap/eslint-config/interface', 'plugin:storybook/recommended'],
   plugins: ['rulesdir'],
 
   rules: {
@@ -46,6 +46,17 @@ module.exports = {
           {
             allowSameFolder: false,
             rootDir: 'src',
+          },
+        ],
+        'import/no-restricted-paths': [
+          'error',
+          {
+            zones: [
+              {
+                target: ['src/**/*[!.test].ts', 'src/**/*[!.test].tsx'],
+                from: 'src/test-utils',
+              },
+            ],
           },
         ],
       },
@@ -89,6 +100,11 @@ module.exports = {
             selector: `:matches(Literal[value='NATIVE'])`,
             message:
               "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
+          },
+          {
+            selector:
+              'ImportDeclaration[source.value="src/nft/components/icons"], ImportDeclaration[source.value="nft/components/icons"]',
+            message: 'Please import icons from nft/components/iconExports instead of directly from icons.tsx',
           },
           // TODO(WEB-4251) - remove useWeb3React rules once web3 react is removed
           {

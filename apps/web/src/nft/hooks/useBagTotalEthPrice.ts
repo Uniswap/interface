@@ -5,7 +5,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
 import { BagItemStatus } from 'nft/types'
 import { useMemo } from 'react'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 
 export function useBagTotalEthPrice(): BigNumber {
   const itemsInBag = useBag((state) => state.itemsInBag)

@@ -4,8 +4,10 @@ import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
+  parseGetCapabilitiesRequest,
 } from 'src/features/walletConnect/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EthMethod } from 'uniswap/src/types/walletConnect'
 
 const EIP155_MAINNET = 'eip155:1'
 const EIP155_POLYGON = 'eip155:137'
@@ -88,5 +90,64 @@ describe('decodeMessage', () => {
     const plainText = 'This is a plain text message'
     const result = decodeMessage(plainText)
     expect(result).toBe(plainText)
+  })
+})
+
+describe(parseGetCapabilitiesRequest, () => {
+  const mockTopic = 'test-topic'
+  const mockInternalId = 123
+  const mockDapp = {
+    name: 'Test Dapp',
+    description: 'Test Dapp Description',
+    url: 'https://test.com',
+    icons: ['https://test.com/icon.png'],
+  }
+
+  it('handles request with address only', () => {
+    const result = parseGetCapabilitiesRequest(EthMethod.GetCapabilities, mockTopic, mockInternalId, mockDapp, [
+      TEST_ADDRESS,
+    ])
+
+    expect(result).toEqual({
+      account: TEST_ADDRESS,
+      request: {
+        type: EthMethod.GetCapabilities,
+        sessionId: mockTopic,
+        internalId: String(mockInternalId),
+        account: TEST_ADDRESS,
+        chainIds: undefined,
+        dapp: {
+          name: mockDapp.name,
+          url: mockDapp.url,
+          icon: mockDapp.icons[0],
+          source: 'walletconnect',
+        },
+      },
+    })
+  })
+
+  it('handles request with address and chain IDs', () => {
+    const chainIds = [UniverseChainId.Mainnet, UniverseChainId.Polygon]
+    const result = parseGetCapabilitiesRequest(EthMethod.GetCapabilities, mockTopic, mockInternalId, mockDapp, [
+      TEST_ADDRESS,
+      chainIds.map((c) => c.toString()),
+    ])
+
+    expect(result).toEqual({
+      account: TEST_ADDRESS,
+      request: {
+        type: EthMethod.GetCapabilities,
+        sessionId: mockTopic,
+        internalId: String(mockInternalId),
+        account: TEST_ADDRESS,
+        chainIds,
+        dapp: {
+          name: mockDapp.name,
+          url: mockDapp.url,
+          icon: mockDapp.icons[0],
+          source: 'walletconnect',
+        },
+      },
+    })
   })
 })

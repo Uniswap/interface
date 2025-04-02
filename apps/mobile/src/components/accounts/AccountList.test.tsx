@@ -16,9 +16,16 @@ const { resolvers } = queryResolvers({
 
 const formatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 
+const defaultProps = {
+  onPress: jest.fn(),
+  onClose: jest.fn(),
+}
+
 describe(AccountList, () => {
   it('renders without error', async () => {
-    const tree = render(<AccountList accounts={[ACCOUNT]} onPress={jest.fn()} />, { resolvers })
+    const tree = render(<AccountList {...defaultProps} accounts={[ACCOUNT]} />, {
+      resolvers,
+    })
 
     expect(
       await screen.findByText(
@@ -34,7 +41,7 @@ describe(AccountList, () => {
 
   it('handles press on card items', async () => {
     const onPressSpy = jest.fn()
-    render(<AccountList accounts={[ACCOUNT]} onPress={onPressSpy} />, {
+    render(<AccountList {...defaultProps} accounts={[ACCOUNT]} onPress={onPressSpy} />, {
       resolvers,
     })
     // go to success state
@@ -56,7 +63,9 @@ describe(AccountList, () => {
   describe('signer accounts', () => {
     it('renders signer accounts section if there are signer accounts', () => {
       const signerAccounts = createArray(3, signerMnemonicAccount)
-      render(<AccountList accounts={signerAccounts} onPress={jest.fn()} />, { resolvers })
+      render(<AccountList {...defaultProps} accounts={signerAccounts} />, {
+        resolvers,
+      })
 
       signerAccounts.forEach((account) => {
         const address = sanitizeAddressText(shortenAddress(account.address))
@@ -68,7 +77,9 @@ describe(AccountList, () => {
     })
 
     it('does not render signer accounts section if there are no signer accounts', () => {
-      render(<AccountList accounts={[readOnlyAccount()]} onPress={jest.fn()} />, { resolvers })
+      render(<AccountList {...defaultProps} accounts={[readOnlyAccount()]} />, {
+        resolvers,
+      })
 
       expect(screen.queryByText('Your other wallets')).toBeFalsy()
       cleanup()
@@ -78,7 +89,9 @@ describe(AccountList, () => {
   describe('view only accounts', () => {
     it('renders view only accounts section if there are view only accounts', () => {
       const viewOnlyAccounts = createArray(3, readOnlyAccount)
-      render(<AccountList accounts={viewOnlyAccounts} onPress={jest.fn()} />, { resolvers })
+      render(<AccountList {...defaultProps} accounts={viewOnlyAccounts} />, {
+        resolvers,
+      })
 
       expect(screen.queryByText('View-only wallets')).toBeTruthy()
 
@@ -92,7 +105,7 @@ describe(AccountList, () => {
     })
 
     it('does not render view only accounts section if there are no view only accounts', () => {
-      render(<AccountList accounts={[signerMnemonicAccount()]} onPress={jest.fn()} />, {
+      render(<AccountList {...defaultProps} accounts={[signerMnemonicAccount()]} />, {
         resolvers,
       })
 

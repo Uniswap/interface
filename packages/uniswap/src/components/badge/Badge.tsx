@@ -6,19 +6,41 @@ export enum BadgeVariant {
 }
 
 const Badge = styled(Text, {
+  display: 'flex',
+  flexDirection: 'row',
   alignItems: 'center',
-  borderRadius: '$rounded8',
-  display: 'inline-flex',
-  py: '$spacing4',
+  gap: '$spacing2',
+  py: '$spacing2',
   px: '$spacing6',
   justifyContent: 'center',
-  backgroundColor: '$surface2',
+  backgroundColor: '$surface3',
   fontWeight: '500',
   color: '$neutral2',
+  variant: 'body3',
+
   variants: {
-    variant: {
+    badgeVariant: {
       [BadgeVariant.SOFT]: { backgroundColor: '$accent2', color: '$accent1' },
       [BadgeVariant.WARNING]: { backgroundColor: '$DEP_accentWarning', color: '$surface1' },
+    },
+    size: {
+      small: {
+        variant: 'body4',
+      },
+    },
+    placement: {
+      start: {
+        borderTopLeftRadius: '$rounded4',
+        borderBottomLeftRadius: '$rounded4',
+      },
+      middle: {},
+      end: {
+        borderTopRightRadius: '$rounded4',
+        borderBottomRightRadius: '$rounded4',
+      },
+      only: {
+        borderRadius: '$rounded4',
+      },
     },
   } as const,
 })

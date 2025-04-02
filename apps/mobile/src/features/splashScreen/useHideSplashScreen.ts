@@ -1,6 +1,6 @@
-import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { hideSplashScreen } from 'src/features/splashScreen/splashScreenSlice'
+import { useEvent } from 'utilities/src/react/hooks'
 
 /**
  * Custom wrapped function to hide the splash screen.
@@ -9,7 +9,7 @@ import { hideSplashScreen } from 'src/features/splashScreen/splashScreenSlice'
 export function useHideSplashScreen(): () => void {
   const dispatch = useDispatch()
 
-  return useCallback(() => {
+  return useEvent(() => {
     dispatch(hideSplashScreen())
-  }, [dispatch])
+  })
 }

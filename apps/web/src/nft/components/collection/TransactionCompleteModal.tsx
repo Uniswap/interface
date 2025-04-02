@@ -1,13 +1,11 @@
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
-import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common/styles'
 import { UniIcon } from 'components/Logo/UniIcon'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
-import * as styles from 'nft/components/collection/TransactionCompleteModal.css'
 import { Portal } from 'nft/components/common/Portal'
-import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, TwitterIcon } from 'nft/components/icons'
+import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, TwitterIcon } from 'nft/components/iconExports'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { useNativeUsdPrice, useSendTransaction, useTransactionResponse } from 'nft/hooks'
 import { TxResponse, TxStateType } from 'nft/types'
@@ -15,7 +13,8 @@ import { generateTweetForPurchase, getSuccessfulImageSize, parseTransactionRespo
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Image, Text, useSporeColors } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -96,7 +95,40 @@ const TxCompleteModal = () => {
       {shouldShowModal && (
         <Portal>
           <Overlay onClick={closeTxCompleteScreen} />
-          <Flex className={styles.modalContainer} onPress={closeTxCompleteScreen}>
+          <style>
+            {`
+              .hideWebkitScrollbar {
+                ::-webkit-scrollbar {
+                  display: none;
+                }
+              }
+            `}
+          </style>
+          <Flex
+            height="100%"
+            width="min-content"
+            left="50%"
+            ml={-320}
+            top={0}
+            zIndex={zIndexes.modal}
+            overflow="scroll"
+            pt={72}
+            pb={72}
+            px="$padding12"
+            justifyContent="center"
+            gap="$gap24"
+            $md={{
+              width: '100%',
+              left: 0,
+              ml: 'unset',
+            }}
+            $platform-web={{
+              position: 'fixed',
+              scrollbarWidth: 'none',
+            }}
+            className="hideWebkitScrollbar"
+            onPress={closeTxCompleteScreen}
+          >
             {/* Successfully purchased NFTs */}
             {showPurchasedModal && (
               <Trace
@@ -112,36 +144,103 @@ const TxCompleteModal = () => {
                 }}
               >
                 <Flex
-                  className={styles.successModal}
+                  backgroundColor="$surface1"
+                  borderRadius="$rounded20"
+                  flexWrap="wrap"
+                  height="min-content"
+                  position="relative"
+                  width="min-content"
+                  minWidth={640}
+                  $md={{
+                    width: '100%',
+                    minWidth: 'unset',
+                  }}
+                  py={28}
+                  boxShadow="$dropShadow"
+                  $platform-web={{
+                    boxSizing: 'border-box',
+                  }}
                   onPress={(e) => {
                     e.stopPropagation()
                   }}
                 >
-                  <UniIcon color={colors.accent1.val} width="36" height="36" className={styles.uniLogo} />
+                  <UniIcon
+                    color={colors.accent1.val}
+                    width="36"
+                    height="36"
+                    style={{
+                      position: 'absolute',
+                      left: 12,
+                      top: 16,
+                      ['@media' as string]: {
+                        'screen and (min-width: 656px)': {
+                          left: 32,
+                          top: 20,
+                        },
+                      },
+                    }}
+                  />
                   <Flex flexWrap="wrap" width="100%" height="fit-content">
-                    <h1 className={styles.title}>
+                    <Text
+                      tag="h1"
+                      color="$neutral1"
+                      ml="auto"
+                      mr="auto"
+                      $md={{ mb: 8 }}
+                      mt={0}
+                      variant="heading1"
+                      mb={4}
+                    >
                       <Trans i18nKey="nft.complete" />
-                    </h1>
-                    <p className={styles.subHeading}>
+                    </Text>
+                    <Text
+                      tag="p"
+                      color="$neutral2"
+                      variant="body3"
+                      width="100%"
+                      ml="auto"
+                      mr="auto"
+                      textAlign="center"
+                      mt={0}
+                      mb={20}
+                    >
                       <Trans i18nKey="nft.wishGranted" />
-                    </p>
+                    </Text>
                   </Flex>
                   <UploadLink onClick={shareTweet} target="_blank">
                     <TwitterIcon width={32} height={32} color={colors.neutral2.val} />
                   </UploadLink>
                   <Flex
-                    className={styles.successAssetsContainer}
+                    $platform-web={{
+                      flexWrap: 'wrap',
+                    }}
+                    width="100%"
+                    overflow="scroll"
+                    justifyContent="center"
+                    height="min-content"
+                    scrollbarWidth="none"
+                    className="hideWebkitScrollbar"
                     style={{
                       maxHeight: nftsPurchased.length > 32 ? (isMobile ? '172px' : '292px') : 'min-content',
                     }}
                   >
                     {[...nftsPurchased].map((nft, index) => (
                       <img
-                        className={clsx(
-                          styles.successAssetImage,
-                          nftsPurchased.length > 1 && styles.successAssetImageGrid,
-                        )}
                         style={{
+                          borderRadius: 12,
+                          flexShrink: 0,
+                          height: 'auto',
+                          width: 'auto',
+                          boxSizing: 'border-box',
+                          objectFit: 'contain',
+                          marginRight: nftsPurchased.length > 1 ? 8 : 0,
+                          marginBottom: nftsPurchased.length > 1 ? 8 : 0,
+                          ['@media' as string]: {
+                            'screen and (max-width: 656px)': {
+                              marginRight: nftsPurchased.length ? 4 : 0,
+                              marginBottom: nftsPurchased.length ? 4 : 0,
+                            },
+                          },
                           maxHeight: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,
                           maxWidth: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,
                         }}
@@ -151,7 +250,17 @@ const TxCompleteModal = () => {
                       />
                     ))}
                   </Flex>
-                  {nftsPurchased.length > 32 && <Flex className={styles.overflowFade} />}
+                  {nftsPurchased.length > 32 && (
+                    <Flex
+                      height={20}
+                      width={576}
+                      ml="$spacing32"
+                      mt={-20}
+                      $platform-web={{
+                        backgroundImage: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, var(--surface1) 100%)',
+                      }}
+                    />
+                  )}
                   <Flex
                     width="100%"
                     height="fit-content"
@@ -161,20 +270,19 @@ const TxCompleteModal = () => {
                     alignItems="center"
                     pr={40}
                     pl={40}
-                    className={styles.bottomBar}
                     justifyContent="space-between"
                   >
                     <Flex row alignItems="center">
-                      <Flex mr={16}>
+                      <Text variant="body3" color="$neutral1" mr={16}>
                         {nftsPurchased.length} NFT{nftsPurchased.length === 1 ? '' : 's'}
-                      </Flex>
-                      <Flex>
+                      </Text>
+                      <Text variant="body3" color="$neutral1">
                         {formatEther({
                           input: totalPurchaseValue.toString(),
                           type: NumberType.NFTToken,
                         })}{' '}
                         ETH
-                      </Flex>
+                      </Text>
                     </Flex>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                       <Text color="$neutral2" variant="body2">
@@ -201,7 +309,26 @@ const TxCompleteModal = () => {
                   }}
                 >
                   <Flex
-                    className={styles.mixedRefundModal}
+                    backgroundColor="$surface1"
+                    borderRadius="$rounded20"
+                    flexWrap="wrap"
+                    height="min-content"
+                    position="relative"
+                    mt={8}
+                    boxShadow="$dropShadow"
+                    py={32}
+                    pr={24}
+                    pl={32}
+                    width="100%"
+                    minWidth={640}
+                    $md={{
+                      pt: 24,
+                      pr: 16,
+                      pl: 24,
+                      pb: 0,
+                      width: '100%',
+                      minWidth: 'unset',
+                    }}
                     onPress={(e) => {
                       e.stopPropagation()
                     }}
@@ -217,8 +344,10 @@ const TxCompleteModal = () => {
                       }}
                     >
                       <LightningBoltIcon color="pink" />
-                      <p className={styles.subtitle}>Instant Refund</p>
-                      <p className={styles.interStd}>
+                      <Text tag="p" variant="body2" color="$neutral1" ml={4} mr="auto" mt={2} mb="auto" $md={{ mb: 0 }}>
+                        Instant Refund
+                      </Text>
+                      <Text tag="p" color="$neutral1" variant="body3" width="100%" ml="auto" mr="auto" mt={10} mb={16}>
                         Uniswap returned{' '}
                         <span style={{ fontWeight: 535 }}>
                           {formatEther({
@@ -228,7 +357,7 @@ const TxCompleteModal = () => {
                           ETH
                         </span>{' '}
                         back to your wallet for unavailable items.
-                      </p>
+                      </Text>
                       <Flex
                         flexWrap="wrap"
                         bottom={24}
@@ -239,26 +368,25 @@ const TxCompleteModal = () => {
                           position: 'static',
                         }}
                       >
-                        <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
+                        <Text tag="p" variant="body3" color="$neutral2" mb={2} mt={1}>
                           {formatEther({
                             input: totalRefundValue.toString(),
                             type: NumberType.NFTToken,
                           })}{' '}
                           ETH
-                        </p>
-                        <p className={styles.totalUsdRefund}>
+                        </Text>
+                        <Text tag="p" variant="body4" color="$neutral2" mb={2} mt={3} ml={4}>
                           {formatNumberOrString({ input: totalUSDRefund, type: NumberType.FiatNFTToken })}
-                        </p>
-                        <p className={styles.totalEthCost} style={{ width: '100%' }}>
+                        </Text>
+                        <Text tag="p" variant="body3" width="100%" mb={0} mt={1} color="$neutral2">
                           for {nftsNotPurchased.length} unavailable item
                           {nftsNotPurchased.length === 1 ? '' : 's'}.
-                        </p>
+                        </Text>
                         <Flex
                           position="absolute"
                           right={0}
                           bottom={0}
                           justifyContent="flex-end"
-                          $platform-web={{ textAlign: 'right' }}
                           flexShrink={0}
                           mr={40}
                           width="50%"
@@ -273,21 +401,64 @@ const TxCompleteModal = () => {
                           }}
                         >
                           <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-                            <Text variant="body2" mt={16} color="$neutral2" className={styles.totalEthCost}>
+                            <Text variant="body3" my="$spacing16" color="$neutral2">
                               View on Etherscan
                             </Text>
                           </a>
                         </Flex>
                       </Flex>
                     </Flex>
-                    <Flex className={styles.refundAssetsContainer}>
+                    <Flex
+                      height="100%"
+                      width="50%"
+                      flexWrap="wrap"
+                      overflow="scroll"
+                      row
+                      display="inline-flex"
+                      maxHeight={152}
+                      scrollbarWidth="none"
+                      className="hideWebkitScrollbar"
+                      $md={{
+                        width: '100%',
+                        height: '100%',
+                        pl: '$padding16',
+                      }}
+                    >
                       {nftsNotPurchased.map((nft, index) => (
                         <Flex flexWrap="wrap" height="fit-content" width={52} key={index}>
-                          <img className={styles.refundAssetImage} src={nft.imageUrl} alt={nft.name} key={index} />
+                          <Image
+                            height={52}
+                            width={52}
+                            src={nft.imageUrl}
+                            alt={nft.name}
+                            key={index}
+                            borderRadius="$rounded8"
+                            mr={4}
+                            mb={1}
+                            borderColor="$surface1"
+                            borderWidth={2}
+                            $platform-web={{
+                              filter: 'grayscale(100%)',
+                              boxSizing: 'border-box',
+                            }}
+                          />
                         </Flex>
                       ))}
                     </Flex>
-                    <Flex className={styles.refundOverflowFade} />
+                    <Flex
+                      width="50%"
+                      ml="auto"
+                      zIndex={zIndexes.default}
+                      $platform-web={{
+                        backgroundImage: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, var(--surface1) 100%)',
+                      }}
+                      height={30}
+                      mr={18}
+                      mt={-20}
+                      $md={{
+                        width: '100%',
+                      }}
+                    />
                   </Flex>
                 </Trace>
               ) : (
@@ -303,22 +474,39 @@ const TxCompleteModal = () => {
                   }}
                 >
                   <Flex
-                    className={styles.fullRefundModal}
+                    backgroundColor="$surface1"
+                    borderRadius="$rounded20"
+                    flexWrap="wrap"
+                    ml={100}
+                    $md={{
+                      ml: 'auto',
+                    }}
+                    mr="auto"
+                    boxShadow="$dropShadow"
+                    width={344}
+                    height="min-content"
+                    $platform-web={{
+                      textAlign: 'center',
+                    }}
                     onPress={(e) => {
                       e.stopPropagation()
                     }}
                   >
-                    <Flex ml="auto" mr="auto">
+                    <Flex ml="auto" mr="auto" mt="$spacing16" mb="$spacing8">
                       {txState === TxStateType.Success ? (
                         <>
                           <LightningBoltIcon />
-                          <h1 className={styles.title}>Instant Refund</h1>
+                          <Text tag="h1" variant="heading1" mb={4} $md={{ mb: 0 }}>
+                            Instant Refund
+                          </Text>
                         </>
                       ) : (
-                        <h1 className={styles.title}>Failed Transaction</h1>
+                        <Text tag="h1" variant="heading2" mb={4} $md={{ mb: 0 }}>
+                          Failed Transaction
+                        </Text>
                       )}
                     </Flex>
-                    <p className={styles.bodySmall}>
+                    <Text tag="p" color="$neutral1" variant="body3" ml="auto" mr="auto" mt={4} mb={22}>
                       {txState === TxStateType.Success &&
                         `Selected item${
                           nftsPurchased.length === 1 ? ' is' : 's are'
@@ -326,16 +514,42 @@ const TxCompleteModal = () => {
                       {formatNumberOrString({ input: txFeeFiat, type: NumberType.FiatNFTToken })} was used for gas in
                       attempt to complete this transaction. For support, please visit our{' '}
                       <a href="https://discord.gg/FCfyBSbCU5">Discord</a>
-                    </p>
-                    <Flex className={styles.allUnavailableAssets}>
+                    </Text>
+                    <Flex
+                      width="100%"
+                      $platform-web={{
+                        overflow: 'auto',
+                      }}
+                      maxHeight={210}
+                      minHeight={58}
+                    >
                       {nftsNotPurchased.length >= 3 && (
-                        <Flex className={styles.toggleUnavailable} onPress={() => toggleShowUnavailable()}>
+                        <Flex
+                          backgroundColor="$surface1"
+                          borderRadius="$rounded8"
+                          height={52}
+                          flexWrap="wrap"
+                          mt={1}
+                          mb={1}
+                          cursor="pointer"
+                          onPress={() => toggleShowUnavailable()}
+                        >
                           {!showUnavailable && (
                             <Flex pl="20" pt="8" pb="8">
                               {nftsNotPurchased.slice(0, 3).map((asset, index) => (
-                                <img
+                                <Image
                                   style={{ zIndex: 2 - index }}
-                                  className={styles.unavailableAssetPreview}
+                                  height={36}
+                                  width={36}
+                                  borderRadius="$rounded4"
+                                  position="relative"
+                                  borderColor="$surface1"
+                                  borderWidth={2}
+                                  ml={-16}
+                                  $platform-web={{
+                                    boxSizing: 'border-box',
+                                    filter: 'grayscale(100%)',
+                                  }}
                                   src={asset.imageUrl}
                                   alt={asset.name}
                                   key={index}
@@ -343,30 +557,56 @@ const TxCompleteModal = () => {
                               ))}
                             </Flex>
                           )}
-                          <Flex row className={styles.unavailableText}>
+                          <Flex row py="$padding8" pl="$padding12" $platform-web={{ fontStyle: 'normal' }}>
                             <Text variant="body2" color={showUnavailable ? '$neutral1' : '$neutral2'}>
                               Unavailable
                             </Text>
-                            <Text
-                              variant="body2"
-                              color={showUnavailable ? '$neutral1' : '$neutral2'}
-                              className={styles.unavailableItems}
-                            >
+                            <Text variant="body3" color={showUnavailable ? '$neutral1' : '$neutral2'}>
                               {nftsNotPurchased.length} item{nftsNotPurchased.length === 1 ? '' : 's'}
                             </Text>
                           </Flex>
-                          <ChevronUpIcon className={`${!showUnavailable && styles.chevronDown} ${styles.chevron}`} />
+                          <ChevronUpIcon
+                            style={{
+                              marginBottom: 'auto',
+                              marginLeft: '0',
+                              marginRight: 'auto',
+                              height: 20,
+                              width: 20,
+                              marginTop: 7,
+                              transform: !showUnavailable ? 'rotate(180deg)' : 'none',
+                            }}
+                          />
                         </Flex>
                       )}
                       {(showUnavailable || nftsNotPurchased.length < 3) &&
                         nftsNotPurchased.map((asset, index) => (
                           <Flex backgroundColor="$surface1" p={4} mb={1} borderRadius="$rounded8" key={index}>
-                            <Flex className={styles.assetContainer}>
-                              <img className={styles.fullRefundImage} src={asset.imageUrl} alt={asset.name} />
+                            <Flex
+                              height={48}
+                              width={48}
+                              flexShrink={0}
+                              mr={4}
+                              justifyContent="center"
+                              alignItems="center"
+                            >
+                              <img
+                                style={{
+                                  borderRadius: 4,
+                                  height: 'auto',
+                                  maxHeight: 36,
+                                  width: 'auto',
+                                  maxWidth: 36,
+                                  objectFit: 'contain',
+                                  boxSizing: 'border-box',
+                                  filter: 'grayscale(100%)',
+                                }}
+                                src={asset.imageUrl}
+                                alt={asset.name}
+                              />
                             </Flex>
                             <Flex flexWrap="wrap" mt="4">
                               <Flex ml={4} width="100%">
-                                <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
+                                <Text tag="p" mb={2} variant="body3" color="$neutral2" mt={1}>
                                   {formatEther({
                                     input: asset.updatedPriceInfo
                                       ? asset.updatedPriceInfo.ETHPrice
@@ -374,45 +614,62 @@ const TxCompleteModal = () => {
                                     type: NumberType.NFTToken,
                                   })}{' '}
                                   ETH
-                                </p>
+                                </Text>
                               </Flex>
-                              <Text variant="body2" color="$neutral1" className={styles.totalUsdRefund}>
+                              <Text variant="body4" color="$neutral2" ml={4} mt={3} mb={2}>
                                 {txState === TxStateType.Success ? 'Refunded' : asset.name}
                               </Text>
                             </Flex>
                           </Flex>
                         ))}
                     </Flex>
-                    {showUnavailable && <Flex className={styles.fullRefundOverflowFade} />}
-                    <p className={styles.totalEthCost} style={{ marginBottom: '2px' }}>
+                    {showUnavailable && (
+                      <Flex
+                        width={266}
+                        height={20}
+                        mt={-20}
+                        mb={20}
+                        position="relative"
+                        $platform-web={{
+                          backgroundImage: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, var(--surface1) 100%)',
+                        }}
+                      />
+                    )}
+                    <Text tag="p" mb={2} variant="body3" color="$neutral2" mt={1}>
                       {formatEther({
                         input: totalRefundValue.toString(),
                         type: NumberType.NFTToken,
                       })}{' '}
                       ETH
-                    </p>
-                    <p className={styles.totalUsdRefund}>
+                    </Text>
+                    <Text tag="p" variant="body4" color="$neutral2" ml={4} mt={3} mb={2}>
                       {formatNumberOrString({ input: totalUSDRefund, type: NumberType.FiatNFTToken })}
-                    </p>
-                    <Flex className={styles.walletAddress} ml="auto" mr="0">
+                    </Text>
+                    <Text tag="p" variant="body3" color="$neutral2" mt={1}>
+                      for {nftsNotPurchased.length} unavailable item
+                      {nftsNotPurchased.length === 1 ? '' : 's'}.
+                    </Text>
+                    <Flex mx="auto" alignItems="center" height="min-content" my="$spacing4">
                       <a href={txHashUrl} target="_blank" rel="noreferrer">
-                        <Text variant="body2" className={styles.addressHash}>
+                        <Text variant="body2" color="$neutral2" my="$spacing12" letterSpacing={0.04}>
                           View on Etherscan
                         </Text>
                       </a>
                     </Flex>
-                    <p className={styles.totalEthCost}>
-                      for {nftsNotPurchased.length} unavailable item
-                      {nftsNotPurchased.length === 1 ? '' : 's'}.
-                    </p>
                     <Flex
                       row
                       backgroundColor="$accent1"
                       cursor="pointer"
-                      className={styles.returnButton}
+                      height={40}
+                      alignItems="center"
+                      ml="auto"
+                      mr="auto"
+                      my="$spacing16"
+                      width={276}
+                      borderRadius="$roundedFull"
                       onPress={() => closeTxCompleteScreen()}
                     >
-                      <BackArrowIcon className={styles.fullRefundBackArrow} />
+                      <BackArrowIcon fill="white" style={{ marginLeft: 12, marginRight: 28 }} />
                       <Text variant="buttonLabel2" color="$neutral1">
                         Return to Marketplace
                       </Text>

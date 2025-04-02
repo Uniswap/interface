@@ -11,10 +11,33 @@
 
 @implementation AppDelegate
 
+static NSString *const hasLaunchedOnceKey = @"HasLaunchedOnce";
+
+/**
+ * Handles keychain cleanup on first run of the app. 
+ * A migration flag is persisted in the keychain to avoid clearing the keychain for existing users, while the first run flag is saved in NSUserDefaults, which is cleared every install. 
+ */
+- (void)handleKeychainCleanup {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    BOOL isFirstRun = ![defaults boolForKey:hasLaunchedOnceKey];
+    BOOL canClearKeychainOnReinstall = [KeychainUtils getCanClearKeychainOnReinstall];
+    
+    if (canClearKeychainOnReinstall && isFirstRun) {
+        [KeychainUtils clearKeychain];
+    }
+    
+    if (!canClearKeychainOnReinstall || isFirstRun) {
+        [defaults setBool:YES forKey:hasLaunchedOnceKey];
+        [KeychainUtils setCanClearKeychainOnReinstall];
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   // Must be first line in startup routine
   [ReactNativePerformance onAppStarted];
+
+  [self handleKeychainCleanup];
 
   [FIRApp configure];
 

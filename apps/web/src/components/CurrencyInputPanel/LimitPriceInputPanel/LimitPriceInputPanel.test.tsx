@@ -4,7 +4,7 @@ import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceIn
 import { LimitContext } from 'state/limit/LimitContext'
 import { MultichainContext } from 'state/multichain/types'
 import { SwapAndLimitContext } from 'state/swap/types'
-import { render, screen } from 'test-utils/render'
+import { act, render, screen } from 'test-utils/render'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
@@ -47,16 +47,18 @@ const mockLimitContextValue = {
 }
 
 describe('LimitPriceInputPanel', () => {
-  it('should render the component with no currencies selected', () => {
+  it('should render the component with no currencies selected', async () => {
     const onCurrencySelect = jest.fn()
-    const { container } = render(<LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />)
+    const result = await act(async () => {
+      return render(<LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />)
+    })
     expect(screen.getByText('Limit price')).toBeVisible()
     expect(screen.getByPlaceholderText('0')).toBeVisible()
     expect(screen.getByText('Market')).toBeVisible()
     expect(screen.getByText('+1%')).toBeVisible()
     expect(screen.getByText('+5%')).toBeVisible()
     expect(screen.getByText('+10%')).toBeVisible()
-    expect(container.firstChild).toMatchSnapshot()
+    expect(result.container.firstChild).toMatchSnapshot()
   })
 
   it('should render correct subheader with inputCurrency defined, but no price', () => {

@@ -1,5 +1,5 @@
 import { USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
-import { IndependentToken, ProtocolItems, Routing, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
+import { IndependentToken, LPprotocolItems, Routing, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import {
   IncreasePositionTxAndGasInfo,
   LiquidityTransactionType,
@@ -289,7 +289,7 @@ describe('Liquidity', () => {
     },
     increasePositionRequestArgs: {
       simulateTransaction: true,
-      protocol: ProtocolItems.V3,
+      protocol: LPprotocolItems.V3,
       tokenId: 1000000,
       walletAddress: '0x18d058a7E0486E632f7DfC473BC76D72CD201cAd',
       chainId: 1,

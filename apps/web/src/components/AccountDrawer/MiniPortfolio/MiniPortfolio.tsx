@@ -51,7 +51,7 @@ const NavItem = styled(ThemedText.SubHeader)<{ active?: boolean }>`
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} color`};
 
   &:hover {
-    ${({ theme, active }) => !active && `color: ${theme.neutral2}`};
+    color: ${({ theme, active }) => (active ? theme.neutral1Hovered : theme.neutral2Hovered)};
   }
 `
 

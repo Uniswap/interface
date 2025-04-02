@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { LiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { WrappedLiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPositionAmountRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
@@ -166,11 +166,11 @@ function PositionPage() {
     return [
       {
         value: 'chart',
-        display: <Text variant="buttonLabel4">{t('common.chart')}</Text>,
+        display: <Text variant="buttonLabel3">{t('common.chart')}</Text>,
       },
       {
         value: 'nft',
-        display: <Text variant="buttonLabel4">{t('common.nft')}</Text>,
+        display: <Text variant="buttonLabel3">{t('common.nft')}</Text>,
       },
     ] as const
   }, [t])
@@ -286,6 +286,7 @@ function PositionPage() {
                         size="small"
                         emphasis="secondary"
                         $sm={{ width: '100%' }}
+                        fill={false}
                         isDisabled={showV4UnsupportedTooltip}
                         opacity={showV4UnsupportedTooltip ? 0.5 : 1}
                         onPress={() => {
@@ -300,6 +301,7 @@ function PositionPage() {
                   size="small"
                   emphasis="secondary"
                   $sm={{ width: '100%' }}
+                  fill={false}
                   onPress={() => {
                     dispatch(
                       setOpenModal({
@@ -314,6 +316,8 @@ function PositionPage() {
                 {status !== PositionStatus.CLOSED && (
                   <Button
                     size="small"
+                    emphasis="secondary"
+                    fill={false}
                     $sm={{ width: '100%' }}
                     onPress={() => {
                       dispatch(
@@ -331,6 +335,7 @@ function PositionPage() {
                   <Button
                     size="small"
                     maxWidth="fit-content"
+                    fill={false}
                     onPress={() => {
                       if (hasFees) {
                         dispatch(
@@ -373,13 +378,10 @@ function PositionPage() {
               $lg={{ width: '100%' }}
               borderWidth={0}
               borderColor="$surface3"
-              borderBottomRightRadius="$rounded20"
-              borderBottomWidth={mainView === 'chart' ? 1 : 0}
-              borderRightWidth={mainView === 'chart' ? 1 : 0}
               pb="$padding12"
             >
               {mainView === 'chart' ? (
-                <LiquidityPositionRangeChart
+                <WrappedLiquidityPositionRangeChart
                   version={positionInfo.version}
                   currency0={priceInverted ? currency1Amount.currency : currency0Amount.currency}
                   currency1={priceInverted ? currency0Amount.currency : currency1Amount.currency}
@@ -404,6 +406,7 @@ function PositionPage() {
                   showXAxis
                   showYAxis
                   showLiquidityBars
+                  showChartBorder
                   crosshairEnabled={false}
                 />
               ) : (

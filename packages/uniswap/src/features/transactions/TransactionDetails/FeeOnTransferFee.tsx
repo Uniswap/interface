@@ -6,7 +6,7 @@ import {
   FoTFeeType,
   TokenFeeInfo,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils'
+import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils/getFeeSeverity'
 import { FeeOnTransferWarning } from 'uniswap/src/features/transactions/swap/modals/FeeOnTransferWarning'
 
 export function FeeOnTransferFeeGroup({

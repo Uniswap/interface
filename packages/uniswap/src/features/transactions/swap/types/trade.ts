@@ -84,7 +84,11 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
     tradeType: TradeType
   }) {
     const orderInfo = transformToV3DutchOrderInfo(quote.quote.orderInfo)
-    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
+    const { expectedAmountIn, expectedAmountOut} = quote.quote
+    const expectedAmounts = expectedAmountIn && expectedAmountOut ? { expectedAmountIn, expectedAmountOut  } : undefined
+
+    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType, expectedAmounts })
+
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
     this.swapFee = getSwapFee(quote)
@@ -260,12 +264,7 @@ export enum ApprovalAction {
   // either native token or allowance is sufficient, no approval or permit needed
   None = 'none',
 
-  // not enough allowance and token cannot be approved through .permit instead
-  Approve = 'approve',
-
-  // not enough allowance but token can be approved through permit signature
-  Permit = 'permit',
-
+  // erc20 approval is needed for the permit2 contract
   Permit2Approve = 'permit2-approve',
 
   // revoke required before token can be approved
@@ -277,19 +276,19 @@ export enum ApprovalAction {
 
 export type TokenApprovalInfo =
   | {
-      action: ApprovalAction.None | ApprovalAction.Permit | ApprovalAction.Unknown
-      txRequest: null
-      cancelTxRequest: null
+    action: ApprovalAction.None | ApprovalAction.Unknown
+    txRequest: null
+    cancelTxRequest: null
     }
   | {
-      action: ApprovalAction.Approve | ApprovalAction.Permit2Approve
-      txRequest: providers.TransactionRequest
-      cancelTxRequest: null
-    } | {
-      action: ApprovalAction.RevokeAndPermit2Approve
-      txRequest: providers.TransactionRequest
-      cancelTxRequest: providers.TransactionRequest
-    }
+    action: ApprovalAction.Permit2Approve
+    txRequest: providers.TransactionRequest
+    cancelTxRequest: null
+  } | {
+    action: ApprovalAction.RevokeAndPermit2Approve
+    txRequest: providers.TransactionRequest
+    cancelTxRequest: providers.TransactionRequest
+  }
 
 // Converts from BE type to SDK type
 function transformToV2DutchOrderInfo(orderInfo: DutchOrderInfoV2): UnsignedV2DutchOrderInfo {

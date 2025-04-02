@@ -1,0 +1,10 @@
+# mutiple flows have the biometrics confirm step, so we abstract it here
+appId: com.uniswap.mobile.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.Confirm}
+    timeout: 10000
+- tapOn:
+    id: ${output.testIds.Confirm} # are you sure?
+- waitForAnimationToEnd

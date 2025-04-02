@@ -35,7 +35,7 @@ interface ImportMnemonicArgs {
 
 interface GenerateImportedAccountsArgs {
   mnemonicId: string
-  backupType: BackupType.Cloud | BackupType.Manual
+  backupType?: BackupType.Cloud | BackupType.Manual
 }
 
 export interface OnboardingContext {
@@ -43,7 +43,10 @@ export interface OnboardingContext {
   generateOnboardingAccount: (password?: string) => Promise<void>
   generateInitialAddresses: () => Promise<void>
   generateAdditionalAddresses: () => Promise<void>
-  generateImportedAccounts: ({ mnemonicId, backupType }: GenerateImportedAccountsArgs) => Promise<void>
+  generateImportedAccounts: ({
+    mnemonicId,
+    backupType,
+  }: GenerateImportedAccountsArgs) => Promise<SignerMnemonicAccount[]>
   generateAccountsAndImportAddresses: (selectedAddresses: string[]) => Promise<SignerMnemonicAccount[] | undefined>
   addBackupMethod: (backupMethod: BackupType) => void
   hasBackup: (address: string, backupType?: BackupType) => boolean | undefined
@@ -82,7 +85,7 @@ const initialOnboardingContext: OnboardingContext = {
   generateOnboardingAccount: async () => undefined,
   generateInitialAddresses: async () => undefined,
   generateAdditionalAddresses: async () => undefined,
-  generateImportedAccounts: async () => undefined,
+  generateImportedAccounts: async () => [],
   generateAccountsAndImportAddresses: async () => [],
   addBackupMethod: () => undefined,
   hasBackup: () => undefined,
@@ -298,10 +301,15 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
    * @param mnemonicId Required to generate a wallet address
    * @param backupType Backup type for generated accounts
    */
-  const generateImportedAccounts = async ({ mnemonicId, backupType }: GenerateImportedAccountsArgs): Promise<void> => {
+  const generateImportedAccounts = async ({
+    mnemonicId,
+    backupType,
+  }: GenerateImportedAccountsArgs): Promise<SignerMnemonicAccount[]> => {
     setImportedAccounts(undefined)
     setOnboardingAccount(undefined)
-    setImportedAccounts(await createImportedAccounts(mnemonicId, backupType))
+    const accounts = await createImportedAccounts(mnemonicId, backupType)
+    setImportedAccounts(accounts)
+    return accounts
   }
 
   const getImportedAccounts = (): SignerMnemonicAccount[] | undefined => {

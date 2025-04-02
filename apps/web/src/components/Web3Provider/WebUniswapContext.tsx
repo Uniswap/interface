@@ -9,6 +9,7 @@ import { serializeSwapAddressesToURLParameters } from 'state/swap/hooks'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { Connector } from 'wagmi'
 
 // Adapts useEthersProvider to fit uniswap context hook shape
@@ -59,6 +60,17 @@ export function WebUniswapProvider({ children }: PropsWithChildren) {
     [navigate],
   )
 
+  const navigateToTokenDetails = useCallback(
+    (currencyId: string) => {
+      const url = getTokenDetailsURL({
+        address: currencyIdToAddress(currencyId),
+        chain: currencyIdToChain(currencyId) ?? undefined,
+      })
+      navigate(url)
+    },
+    [navigate],
+  )
+
   return (
     <UniswapProvider
       account={account}
@@ -68,6 +80,7 @@ export function WebUniswapProvider({ children }: PropsWithChildren) {
       onSwapChainsChanged={showSwapNetworkNotification}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToSwapFlow={navigateToSwapFlow}
+      navigateToTokenDetails={navigateToTokenDetails}
       onConnectWallet={accountDrawer.open}
     >
       {children}

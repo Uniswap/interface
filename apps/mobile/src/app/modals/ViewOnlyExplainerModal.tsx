@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { Button, Flex, Text, useIsDarkMode } from 'ui/src'
 import ViewOnlyWalletDark from 'ui/src/assets/graphics/view-only-wallet-dark.svg'
 import ViewOnlyWalletLight from 'ui/src/assets/graphics/view-only-wallet-light.svg'
@@ -16,24 +15,21 @@ const WALLET_IMAGE_ASPECT_RATIO = 327 / 215
 export function ViewOnlyExplainerModal(): JSX.Element {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddress()
-  const dispatch = useDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const isDarkMode = useIsDarkMode()
 
-  const onClose = (): void => {
-    dispatch(closeModal({ name: ModalName.ViewOnlyExplainer }))
-  }
+  const { onClose } = useReactNavigationModal()
 
   const onPressImportWallet = (): void => {
+    onClose()
     if (hasImportedSeedPhrase && activeAccountAddress) {
-      dispatch(openModal({ name: ModalName.RemoveWallet }))
+      navigate(ModalName.RemoveWallet)
     } else {
       navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.SeedPhraseInput,
         params: { importType: ImportType.SeedPhrase, entryPoint: OnboardingEntryPoint.Sidebar },
       })
     }
-    onClose()
   }
 
   const WalletImage = isDarkMode ? ViewOnlyWalletDark : ViewOnlyWalletLight

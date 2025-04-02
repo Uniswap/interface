@@ -1,5 +1,5 @@
 import deprecatedStyled from 'lib/styled-components'
-import { TamaguiClickableStyle } from 'theme/components/styles'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { TextProps } from 'ui/src'
 
 export const ActionButtonStyle = {
@@ -11,7 +11,7 @@ export const ActionButtonStyle = {
   borderRadius: 20,
   borderWidth: 0,
   width: 'maxContent',
-  ...TamaguiClickableStyle,
+  ...ClickableTamaguiStyle,
 
   hoverStyle: {
     backgroundColor: '$surface2Hovered',

@@ -31,6 +31,7 @@ export enum ExtensionOnboardingScreens {
   ConfirmSeedPhrase = 'ConfirmSeedPhrase',
 
   // Import Flow
+  SelectImportMethod = 'SelectImportMethod',
   SeedPhraseInput = 'SeedPhraseInput',
   SelectWallet = 'SelectWallet',
 

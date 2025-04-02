@@ -1,14 +1,16 @@
 import { memo, useCallback } from 'react'
-import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
+import { TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { ItemRowInfo } from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
 import { PoolOptionItem } from 'uniswap/src/components/lists/items/pools/PoolOptionItem'
 import { TokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
 import { SearchModalItemTypes, isPoolOption } from 'uniswap/src/components/lists/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { logger } from 'utilities/src/logger/logger'
 
 interface SearchModalListProps {
-  onSelectCurrency: OnSelectCurrency
+  onSelect: (item: SearchModalItemTypes) => void
   sections?: TokenSection<SearchModalItemTypes>[]
   chainFilter?: UniverseChainId | null
   refetch?: () => void
@@ -19,6 +21,7 @@ interface SearchModalListProps {
 }
 
 function _SearchModalList({
+  onSelect,
   sections,
   chainFilter,
   refetch,
@@ -27,36 +30,64 @@ function _SearchModalList({
   emptyElement,
   errorText,
 }: SearchModalListProps): JSX.Element {
-  const renderItem = useCallback(({ item, section, index }: ItemRowInfo<SearchModalItemTypes>) => {
-    if (isPoolOption(item)) {
+  const { registerSearch } = useAddToSearchHistory()
+
+  const renderItem = useCallback(
+    ({ item, section, index }: ItemRowInfo<SearchModalItemTypes>) => {
+      if (isPoolOption(item)) {
+        return (
+          <PoolOptionItem
+            token0CurrencyInfo={item.token0CurrencyInfo}
+            token1CurrencyInfo={item.token1CurrencyInfo}
+            poolId={item.poolId}
+            chainId={item.chainId}
+            protocolVersion={item.protocolVersion}
+            hookAddress={item.hookAddress}
+            feeTier={item.feeTier}
+            onPress={() => {
+              // TODO(WEB-6810): add pool to recent searches
+              // registerSearch(currencyInfo)
+
+              onSelect(item)
+
+              // TODO(WEB-6771): add analytics event when pool option is selected -- see InterfaceEventName.NAVBAR_RESULT_SELECTED
+              logger.debug(
+                'SearchModalList',
+                'renderItem',
+                'logging analytics event for pool option item',
+                item,
+                section,
+                index,
+              )
+            }}
+          />
+        )
+      }
+
       return (
-        <PoolOptionItem
-          token0CurrencyInfo={item.token0CurrencyInfo}
-          token1CurrencyInfo={item.token1CurrencyInfo}
-          poolId={item.poolId}
-          chainId={item.chainId}
-          protocolVersion={item.protocolVersion}
-          hookAddress={item.hookAddress}
-          feeTier={item.feeTier}
+        <TokenOptionItem
+          showTokenAddress
+          option={item}
           onPress={() => {
-            // eslint-disable-next-line no-console
-            console.log('pool option item', item, section, index)
+            registerSearch(item.currencyInfo)
+
+            onSelect(item)
+
+            // TODO(WEB-6771): add analytics event when token option is selected -- see InterfaceEventName.NAVBAR_RESULT_SELECTED
+            logger.debug(
+              'SearchModalList',
+              'renderItem',
+              'logging analytics event for token option item',
+              item,
+              section,
+              index,
+            )
           }}
         />
       )
-    }
-
-    return (
-      <TokenOptionItem
-        showTokenAddress
-        option={item}
-        onPress={() =>
-          // eslint-disable-next-line no-console
-          console.log('token option item', item, section, index)
-        }
-      />
-    )
-  }, [])
+    },
+    [onSelect, registerSearch],
+  )
 
   return (
     <SelectorBaseList<SearchModalItemTypes>

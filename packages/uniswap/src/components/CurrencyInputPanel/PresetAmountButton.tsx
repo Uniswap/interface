@@ -1,4 +1,3 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { memo, useCallback, useMemo, useRef, useState } from 'react'
@@ -7,14 +6,14 @@ import { Button, TouchableAreaEvent } from 'ui/src'
 import { ButtonProps } from 'ui/src/components/buttons/Button/types'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { MaxBalanceInfoModal } from 'uniswap/src/features/transactions/modals/MaxBalanceInfoModal'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-const PRESET_MAX = 100
+export const PRESET_MAX = 100
 export type PresetPercentage = 25 | 50 | 75 | 100
 
 /**
@@ -50,8 +49,9 @@ function getPercentageOfCurrencyAmount({
 interface PresetAmountButtonProps {
   currencyAmount: CurrencyAmount<Currency> | null | undefined
   currencyBalance: CurrencyAmount<Currency> | null | undefined
-  onSetPresetValue: (amount: string, isLessThanMax?: boolean) => void
+  onSetPresetValue: (amount: string, percentage: PresetPercentage) => void
   currencyField: CurrencyField
+  elementName?: ElementNameType
   percentage?: PresetPercentage
   transactionType?: TransactionType
   buttonProps?: ButtonProps
@@ -61,6 +61,7 @@ export function PresetAmountButton({
   currencyAmount,
   currencyBalance,
   percentage = 100,
+  elementName,
   onSetPresetValue,
   currencyField,
   transactionType,
@@ -107,7 +108,7 @@ export function PresetAmountButton({
         // We use `maxPresetAmountRef` instead of `maxPresetAmount` so that we can get the latest value
         // and avoid this callback function having to depend on `maxPresetAmount` because that would mean
         // it would recreate this function on every render (which would cause the button to re-render and ignore the `memo`).
-        onSetPresetValue(presetValueAmountRef.current.toExact(), percentage < PRESET_MAX)
+        onSetPresetValue(presetValueAmountRef.current.toExact(), percentage)
       }
     },
     [disablePresetButton, onSetPresetValue, isNativeAsset, percentage],
@@ -120,6 +121,7 @@ export function PresetAmountButton({
       isShowingMaxNativeBalanceModal={isShowingMaxNativeBalanceModal}
       disabled={disablePresetButton}
       currencyField={currencyField}
+      elementName={elementName}
       isNativeAsset={isNativeAsset}
       currencySymbol={currencyBalance?.currency.symbol}
       setIsShowingMaxNativeBalanceModal={setIsShowingMaxNativeBalanceModal}
@@ -137,12 +139,13 @@ const PresetButtonContent = memo(function _PresetButtonContent({
   isShowingMaxNativeBalanceModal,
   isNativeAsset,
   currencySymbol,
+  elementName,
   setIsShowingMaxNativeBalanceModal,
   size = 'xxsmall',
   variant = 'branded',
   emphasis = 'secondary',
   fill = false,
-  py,
+  ...rest
 }: {
   percentage: PresetPercentage
   disabled: boolean
@@ -150,6 +153,7 @@ const PresetButtonContent = memo(function _PresetButtonContent({
   currencyField: CurrencyField
   isShowingMaxNativeBalanceModal: boolean
   isNativeAsset: boolean
+  elementName?: ElementNameType
   currencySymbol?: string
   setIsShowingMaxNativeBalanceModal: (value: boolean) => void
 } & ButtonProps): JSX.Element {
@@ -162,33 +166,43 @@ const PresetButtonContent = memo(function _PresetButtonContent({
   const isMax = percentage === PRESET_MAX
 
   return (
-    <Trace
-      logPress
-      eventOnTrigger={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
-      element={currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput}
+    <MaxBalanceInfoModal
+      isMax={isMax}
+      // triggers on tap (mob)
+      isModalOpen={isShowingMaxNativeBalanceModal}
+      // triggers on hover (ext/web)
+      isTooltipEnabled={isNativeAsset && disabled}
+      currencySymbol={currencySymbol}
+      onClose={handleMaxBalanceInfoModalClose}
     >
-      <MaxBalanceInfoModal
-        isMax={isMax}
-        // triggers on tap (mob)
-        isModalOpen={isShowingMaxNativeBalanceModal}
-        // triggers on hover (ext/web)
-        isTooltipEnabled={isNativeAsset && disabled}
-        currencySymbol={currencySymbol}
-        onClose={handleMaxBalanceInfoModalClose}
+      <Trace
+        logPress
+        element={
+          elementName ??
+          (currencyField === CurrencyField.INPUT ? ElementName.SetPercentageInput : ElementName.SetPercentageOutput)
+        }
+        properties={{ percentage }}
       >
         <Button
           fill={fill}
-          py={py}
           variant={variant}
           emphasis={emphasis}
           size={size}
           isDisabled={disabled}
           testID={currencyField === CurrencyField.INPUT ? TestID.SetMaxInput : TestID.SetMaxOutput}
+          borderColor="$surface3"
+          pressStyle={{
+            scale: 0.99,
+          }}
+          hoverStyle={{
+            scale: 1.02,
+          }}
           onPress={onPress}
+          {...rest}
         >
           {isMax ? t('swap.button.max') : `${percentage}%`}
         </Button>
-      </MaxBalanceInfoModal>
-    </Trace>
+      </Trace>
+    </MaxBalanceInfoModal>
   )
 })

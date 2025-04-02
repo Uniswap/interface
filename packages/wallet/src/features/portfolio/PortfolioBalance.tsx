@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Flex, Shine } from 'ui/src'
+import { Flex, Shine, useIsDarkMode } from 'ui/src'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
@@ -24,6 +24,9 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
     // No need to be super aggressive with polling here.
     pollInterval: PollingInterval.Normal,
   })
+
+  // Ensure component switches theme
+  useIsDarkMode()
 
   const currency = useAppFiatCurrency()
   const currencyComponents = useAppFiatCurrencyInfo()

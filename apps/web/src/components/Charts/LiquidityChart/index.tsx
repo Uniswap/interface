@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool as PoolV3, TICK_SPACINGS, TickMath as TickMathV3, tickToPrice } from '@uniswap/v3-sdk'
@@ -10,7 +11,6 @@ import {
   LiquidityBarSeriesOptions,
 } from 'components/Charts/LiquidityChart/renderer'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { BigNumber } from 'ethers/lib/ethers'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'

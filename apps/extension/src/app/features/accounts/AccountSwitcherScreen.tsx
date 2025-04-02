@@ -265,7 +265,7 @@ export function AccountSwitcherScreen(): JSX.Element {
                 <TouchableArea
                   hoverable
                   borderRadius="$roundedFull"
-                  p="$spacing4"
+                  p="$spacing8"
                   style={{ position: 'absolute', right: 0 }}
                 >
                   <Ellipsis color="$neutral2" size="$icon.20" />
@@ -292,7 +292,7 @@ export function AccountSwitcherScreen(): JSX.Element {
           </Flex>
         </Flex>
         <ScrollView backgroundColor="$surface1" height="auto">
-          <Flex>
+          <Flex pt="$padding20">
             {sortedAddressesByBalance.map(({ address, balance }) => {
               return (
                 <AccountItem

@@ -1,4 +1,4 @@
-import { FilterIcon } from 'nft/components/icons'
+import { FilterIcon } from 'nft/components/iconExports'
 import { pluralize } from 'nft/utils'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled, useSporeColors } from 'ui/src'

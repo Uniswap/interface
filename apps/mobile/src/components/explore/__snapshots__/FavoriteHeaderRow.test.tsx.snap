@@ -21,14 +21,14 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#9B9B9B",
-            "light": "#7D7D7D",
+            "dark": "rgba(255, 255, 255, 0.65)",
+            "light": "rgba(19, 19, 19, 0.63)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 20,
       }
     }
     suppressHighlighting={true}
@@ -65,8 +65,8 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
         {
           "color": {
             "dynamic": {
-              "dark": "#FC72FF",
-              "light": "#FC72FF",
+              "dark": "#FF37C7",
+              "light": "#FF37C7",
             },
           },
           "fontFamily": "Basel Grotesk",
@@ -105,14 +105,14 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#9B9B9B",
-            "light": "#7D7D7D",
+            "dark": "rgba(255, 255, 255, 0.65)",
+            "light": "rgba(19, 19, 19, 0.63)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 20,
       }
     }
     suppressHighlighting={true}
@@ -161,7 +161,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
             "borderWidth": 0,
           },
           {
-            "color": "#7D7D7D",
+            "color": "rgba(19, 19, 19, 0.63)",
             "height": 20,
             "width": 20,
           },
@@ -176,7 +176,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
       vbWidth={18}
     >
       <RNSVGGroup
-        color="#7D7D7D"
+        color="rgba(19, 19, 19, 0.63)"
         fill={null}
         propList={
           [

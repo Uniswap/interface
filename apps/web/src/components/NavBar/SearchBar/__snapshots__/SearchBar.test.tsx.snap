@@ -38,8 +38,8 @@ exports[`disable nft on searchbar should render searchbar on larger screen 1`] =
 }
 
 .c6 {
-  background-color: #22222212;
-  color: #7D7D7D;
+  background-color: rgba(34,34,34,0.05);
+  color: rgba(19,19,19,0.63);
   padding: 0px 8px;
   width: 20px;
   height: 20px;
@@ -67,7 +67,7 @@ exports[`disable nft on searchbar should render searchbar on larger screen 1`] =
 .c4 {
   grid-area: input;
   background-color: #F9F9F9;
-  border: 1px solid #22222212;
+  border: 1px solid rgba(34,34,34,0.05);
   min-width: 280px;
   max-width: 400px;
   width: 100vw;
@@ -86,7 +86,7 @@ exports[`disable nft on searchbar should render searchbar on larger screen 1`] =
 }
 
 .c4:hover {
-  background-color: #F5F5F5;
+  background-color: #FCFCFC;
 }
 
 .c5 {
@@ -105,83 +105,75 @@ exports[`disable nft on searchbar should render searchbar on larger screen 1`] =
     class=""
     style="display: contents;"
   >
-    <span
-      class=" _dsp_contents"
+    <div
+      class="c0"
+      data-cy="nav-search-container"
     >
-      <span
-        class=" t_light _dsp_contents is_Theme"
+      <div
+        class="c1"
       >
         <div
-          class="c0"
-          data-cy="nav-search-container"
+          class="c2 c3 c4"
+          data-testid="nav-search-input"
         >
           <div
-            class="c1"
+            class="c5"
+            data-cy="nav-search-icon"
           >
-            <div
-              class="c2 c3 c4"
-              data-testid="nav-search-input"
+            <svg
+              fill="none"
+              height="20px"
+              stroke="rgba(19, 19, 19, 0.63)"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20px"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <div
-                class="c5"
-                data-cy="nav-search-icon"
-              >
-                <svg
-                  fill="none"
-                  height="20px"
-                  stroke="#7D7D7D"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="20px"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle
-                    cx="11"
-                    cy="11"
-                    r="8"
-                  />
-                  <line
-                    x1="21"
-                    x2="16.65"
-                    y1="21"
-                    y2="16.65"
-                  />
-                </svg>
-              </div>
-              <span
-                class="_dsp_contents"
-              >
-                <input
-                  autocapitalize="sentences"
-                  autocomplete="on"
-                  autocorrect="on"
-                  class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _width-10037"
-                  data-disable-theme="true"
-                  dir="auto"
-                  placeholder="Search tokens"
-                  rows="1"
-                  spellcheck="true"
-                  style="--placeholderTextColor: #7D7D7D;"
-                  tabindex="0"
-                  value=""
-                  virtualkeyboardpolicy="auto"
-                />
-              </span>
-              <div
-                class="c6"
-              >
-                /
-              </div>
-            </div>
+              <circle
+                cx="11"
+                cy="11"
+                r="8"
+              />
+              <line
+                x1="21"
+                x2="16.65"
+                y1="21"
+                y2="16.65"
+              />
+            </svg>
+          </div>
+          <span
+            class="_dsp_contents"
+          >
+            <input
+              autocapitalize="sentences"
+              autocomplete="on"
+              autocorrect="on"
+              class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _width-10037"
+              data-disable-theme="true"
+              dir="auto"
+              placeholder="Search tokens"
+              rows="1"
+              spellcheck="true"
+              style="--placeholderTextColor: rgba(19, 19, 19, 0.63);"
+              tabindex="0"
+              value=""
+              virtualkeyboardpolicy="auto"
+            />
+          </span>
+          <div
+            class="c6"
+          >
+            /
           </div>
         </div>
-        <div
-          style="display: contents;"
-        />
-      </span>
-    </span>
+      </div>
+    </div>
+    <div
+      style="display: contents;"
+    />
   </span>
 </div>
 `;

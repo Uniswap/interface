@@ -127,7 +127,7 @@ export function WalletConnectRequestModalContent({
 
         {!netInfo.isInternetReachable ? (
           <BaseCard.InlineErrorState
-            backgroundColor="$DEP_accentWarningSoft"
+            backgroundColor="$statusWarning2"
             icon={
               <AlertTriangleFilled
                 color={colors.DEP_accentWarning.val}

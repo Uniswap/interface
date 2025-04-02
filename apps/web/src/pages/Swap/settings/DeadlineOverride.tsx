@@ -1,5 +1,5 @@
-import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline.web'
-import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
+import { Deadline } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Deadline/Deadline.web'
+import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
 
 // default deadline setting is overridden to use a custom title
 export const DeadlineOverride: SwapSettingConfig = {

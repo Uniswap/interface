@@ -1,6 +1,6 @@
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { RemoveAssetButton } from 'nft/components/bag/BagRow'
-import { VerifiedIcon } from 'nft/components/icons'
+import { VerifiedIcon } from 'nft/components/iconExports'
 import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useState } from 'react'

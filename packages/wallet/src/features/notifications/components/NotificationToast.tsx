@@ -242,7 +242,6 @@ function NotificationContent({
             <Flex shrink alignItems="flex-start" flexDirection="column">
               <ElementAfterText
                 textProps={{
-                  adjustsFontSizeToFit: true,
                   numberOfLines: subtitle ? 1 : 2,
                   testID: TestID.NotificationToastTitle,
                   variant: 'subheading2',
@@ -251,7 +250,7 @@ function NotificationContent({
                 element={postCaptionElement}
               />
               {subtitle && (
-                <Text adjustsFontSizeToFit color="$neutral2" numberOfLines={1} variant="body3">
+                <Text color="$neutral2" numberOfLines={1} variant="body3">
                   {subtitle}
                 </Text>
               )}

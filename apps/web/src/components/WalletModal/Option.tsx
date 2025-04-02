@@ -81,7 +81,7 @@ const Wrapper = styled.div<{ disabled: boolean }>`
 `
 
 export const RecentBadge = () => (
-  <Badge variant={BadgeVariant.SOFT} borderRadius={4} p={1} px={4}>
+  <Badge badgeVariant={BadgeVariant.SOFT} borderRadius={4} p={1} px={4}>
     <ThemedText.LabelMicro color="accent1">
       <Trans i18nKey="common.recent" />
     </ThemedText.LabelMicro>

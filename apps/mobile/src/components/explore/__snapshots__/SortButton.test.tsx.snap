@@ -79,8 +79,8 @@ exports[`SortButton renders without error 1`] = `
             {
               "color": {
                 "dynamic": {
-                  "dark": "#9B9B9B",
-                  "light": "#7D7D7D",
+                  "dark": "rgba(255, 255, 255, 0.65)",
+                  "light": "rgba(19, 19, 19, 0.63)",
                 },
               },
               "flexShrink": 1,
@@ -234,7 +234,7 @@ exports[`SortButton renders without error 1`] = `
                   "borderWidth": 0,
                 },
                 {
-                  "color": "#7D7D7D",
+                  "color": "rgba(19, 19, 19, 0.63)",
                   "height": 20,
                   "width": 20,
                 },
@@ -249,7 +249,7 @@ exports[`SortButton renders without error 1`] = `
             vbWidth={24}
           >
             <RNSVGGroup
-              color="#7D7D7D"
+              color="rgba(19, 19, 19, 0.63)"
               fill={null}
               propList={
                 [

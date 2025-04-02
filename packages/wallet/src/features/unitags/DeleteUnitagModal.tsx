@@ -9,12 +9,12 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
 import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
-import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { deleteUnitag } from 'wallet/src/features/unitags/api'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
@@ -89,7 +89,7 @@ export function DeleteUnitagModal({
       <Flex centered gap="$spacing12" pb="$spacing12" pt={isExtension ? '$spacing24' : '$spacing12'} px="$spacing24">
         <Flex
           centered
-          backgroundColor="$DEP_accentCriticalSoft"
+          backgroundColor="$statusCritical2"
           borderRadius="$rounded12"
           height="$spacing48"
           mb="$spacing8"

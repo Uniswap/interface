@@ -106,7 +106,7 @@ export function useUpdatePermitAllowance(
             permit2Address(token?.chainId),
             account.chainId,
           )
-          const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
+          const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async () => {
             try {
               const signer = signerRef.current
               if (!signer) {
@@ -115,7 +115,6 @@ export function useUpdatePermitAllowance(
               return await signTypedData(signer, domain, types, values)
             } catch (error) {
               if (didUserReject(error)) {
-                walletTrace.setStatus('cancelled')
                 const symbol = token?.symbol ?? 'Token'
                 throw new UserRejectedRequestError(`${symbol} permit allowance failed: User rejected signature`)
               } else {
@@ -127,7 +126,6 @@ export function useUpdatePermitAllowance(
           return
         } catch (error: unknown) {
           if (error instanceof UserRejectedRequestError) {
-            trace.setStatus('cancelled')
             throw error
           } else {
             const symbol = token?.symbol ?? 'Token'

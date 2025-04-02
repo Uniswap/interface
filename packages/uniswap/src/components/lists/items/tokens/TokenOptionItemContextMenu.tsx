@@ -1,16 +1,13 @@
 import React, { ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { openURL } from 'uniswap/src/utils/link'
-import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
-import { isExtension } from 'utilities/src/platform'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 interface TokenOptionItemContextMenuProps {
   children: ReactNode
@@ -23,24 +20,18 @@ interface TokenOptionItemContextMenuProps {
 
 function _TokenOptionItemContextMenu({ children, tokenInfo }: TokenOptionItemContextMenuProps): JSX.Element {
   const { t } = useTranslation()
-  const navigate = useNavigate()
+  const { navigateToTokenDetails } = useUniswapContext()
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const [copied, setCopied] = useState(false)
 
-  const onNavigateToTokenDetails = useCallback(async () => {
+  const onNavigateToTokenDetails = useCallback(() => {
     if (isTestnetModeEnabled) {
       return
     }
 
-    const url = getTokenDetailsURL(tokenInfo)
-
-    if (isExtension) {
-      await openURL(`${UNISWAP_WEB_URL}${url}`)
-    } else {
-      navigate(url)
-    }
-  }, [navigate, tokenInfo, isTestnetModeEnabled])
+    navigateToTokenDetails(buildCurrencyId(tokenInfo.chain, tokenInfo.address))
+  }, [isTestnetModeEnabled, navigateToTokenDetails, tokenInfo.chain, tokenInfo.address])
 
   const onCopyAddress = useCallback(async (): Promise<void> => {
     await setClipboard(tokenInfo.address)

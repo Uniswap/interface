@@ -54,7 +54,6 @@ export const quickRouteApi = createApi({
                 data: { state: QuoteState.NOT_FOUND, latencyMs: trace.now() },
               }
             } else {
-              trace.setError(response.error)
               return { error: response.error }
             }
           }

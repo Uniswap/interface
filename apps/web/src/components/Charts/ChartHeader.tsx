@@ -1,7 +1,6 @@
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { PROTOCOL_LEGEND_ELEMENT_ID } from 'components/Charts/types'
 import { getProtocolColor, getProtocolName } from 'graphql/data/util'
-import { useTheme } from 'lib/styled-components'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
@@ -37,7 +36,6 @@ const ProtocolLegendWrapper = styled(Flex, {
 
 function ProtocolLegend({ protocolData }: { protocolData?: ChartHeaderProtocolInfo[] }) {
   const { formatFiatPrice } = useFormatter()
-  const theme = useTheme()
 
   return (
     <ProtocolLegendWrapper id={PROTOCOL_LEGEND_ELEMENT_ID} hover={true}>
@@ -51,12 +49,7 @@ function ProtocolLegend({ protocolData }: { protocolData?: ChartHeaderProtocolIn
                   {getProtocolName(protocol)}
                 </Text>
 
-                <Flex
-                  borderRadius="$rounded4"
-                  width={12}
-                  height={12}
-                  backgroundColor={getProtocolColor(protocol, theme)}
-                />
+                <Flex borderRadius="$rounded4" width={12} height={12} backgroundColor={getProtocolColor(protocol)} />
                 <Text variant="body4" textAlign="right" lineHeight={12} {...EllipsisTamaguiStyle}>
                   {display}
                 </Text>

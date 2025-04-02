@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import '@testing-library/jest-dom' // jest custom assertions
-import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills' // add polyfills
 import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
@@ -18,6 +17,9 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { TextDecoder, TextEncoder } from 'util'
+
+// Mock EXPO_OS environment variable
+process.env.EXPO_OS = 'web'
 
 setupi18n()
 

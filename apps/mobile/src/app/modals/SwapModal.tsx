@@ -11,7 +11,7 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
-import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
+import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { WalletSwapFlow } from 'wallet/src/features/transactions/swap/WalletSwapFlow'
 
 /* Need to track the swap modal manually until it's integrated in to react-navigation */

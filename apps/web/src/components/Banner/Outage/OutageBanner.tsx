@@ -10,7 +10,7 @@ import { Flex, Text, styled as tamaguiStyled } from 'ui/src'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getChainUrlParam } from 'utils/chainParams'
 
 export function getOutageBannerSessionStorageKey(chainId: UniverseChainId) {
   return `hideOutageBanner-${chainId}`
@@ -34,7 +34,7 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
   const theme = useTheme()
   const versionName = version ? version.toString().toLowerCase() + ' data' : 'Data'
   const { defaultChainId } = useEnabledChains()
-  const chainName = capitalize(toGraphQLChain(chainId ?? defaultChainId).toLowerCase())
+  const chainName = capitalize(getChainUrlParam(chainId ?? defaultChainId))
   const versionDescription = version ? ' ' + version.toString().toLowerCase() : ''
 
   if (hidden) {
@@ -65,7 +65,7 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
         left: 10,
       }}
     >
-      <Flex row p="$spacing10" borderRadius="$rounded20" height="100%">
+      <Flex row p="$spacing8" borderRadius="$rounded20" height="100%">
         <Flex
           centered
           m={12}

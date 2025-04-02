@@ -1,0 +1,42 @@
+appId: com.uniswap.mobile.dev
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+---
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+# Start of swap flow
+- tapOn:
+    id: ${output.testIds.Swap}
+- tapOn:
+    id: ${output.testIds.ChooseOutputToken}
+- tapOn:
+    id: ${output.testIds.ExploreSearchInput}
+- inputText: btc
+- tapOn:
+    id: 'token-option-8453-cbBTC' # TODO: Replace with id for token
+- tapOn:
+    id: ${output.testIds.AmountInputOut}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadDecimal}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber0}
+- tapOn:
+    id: ${output.testIds.DecimalPadNumber1}
+- tapOn:
+    id: ${output.testIds.ReviewSwap}
+- tapOn: Show more
+- tapOn:
+    id: ${output.testIds.Swap}
+# - extendedWaitUntil:
+#     visible: 'Swapped' # TODO: Replace with id for toast
+#     timeout: 60000

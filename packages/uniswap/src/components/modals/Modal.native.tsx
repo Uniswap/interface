@@ -98,6 +98,7 @@ function BottomSheetModalContents({
   hideScrim = false,
   analyticsProperties,
   skipLogImpression,
+  zIndex,
 }: ModalProps): JSX.Element {
   const dimensions = useDeviceDimensions()
   const insets = useAppInsets()
@@ -137,14 +138,14 @@ function BottomSheetModalContents({
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
-        style={[props.style, { zIndex: fullScreen ? undefined : zIndexes.modalBackdrop }]}
+        style={[props.style, { zIndex: fullScreen ? undefined : zIndex ? zIndex - 1 : zIndexes.modalBackdrop }]}
         appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
         disappearsOnIndex={DISAPPEARS_ON_INDEX}
         opacity={hideScrim ? 0 : blurredBackground ? 0.2 : 0.4}
         pressBehavior={isDismissible ? 'close' : 'none'}
       />
     ),
-    [blurredBackground, hideScrim, isDismissible, fullScreen],
+    [fullScreen, zIndex, hideScrim, blurredBackground, isDismissible],
   )
 
   const renderHandleBar = useCallback(
@@ -261,10 +262,11 @@ function BottomSheetModalContents({
       {...background}
       {...backdrop}
       ref={modalRef}
+      accessible={false}
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}
-      containerStyle={{ zIndex: fullScreen ? undefined : zIndexes.modal }}
+      containerStyle={{ zIndex: fullScreen ? undefined : zIndex ? zIndex : zIndexes.modal }}
       enableContentPanningGesture={isDismissible}
       enableDynamicSizing={!snapPoints || enableDynamicSizing}
       enableHandlePanningGesture={isDismissible}

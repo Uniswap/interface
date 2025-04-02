@@ -29,9 +29,10 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
   backButton?: JSX.Element
+  selectedAddress?: string
 }
 
-export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps): JSX.Element {
+export function ConnectedDappsList({ backButton, sessions, selectedAddress }: ConnectedDappsProps): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { fullHeight } = useDeviceDimensions()
@@ -119,9 +120,11 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
               }}
             />
           ) : (
-            <TouchableArea onPress={onPressScan}>
-              <Scan color="$neutral2" size="$icon.20" />
-            </TouchableArea>
+            address === selectedAddress && (
+              <TouchableArea onPress={onPressScan}>
+                <Scan color="$neutral2" size="$icon.20" />
+              </TouchableArea>
+            )
           )}
         </Flex>
       </Flex>

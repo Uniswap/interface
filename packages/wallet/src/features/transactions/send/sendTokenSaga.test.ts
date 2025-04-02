@@ -1,5 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { call } from '@redux-saga/core/effects'
-import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'

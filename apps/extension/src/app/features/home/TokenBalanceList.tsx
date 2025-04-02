@@ -5,13 +5,10 @@ import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { AnimatePresence, Flex, Loader } from 'ui/src'
-import { ShieldCheck } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
-import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/HiddenTokenInfoModal'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
 import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
@@ -152,12 +149,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     setModalVisible(false)
   }
 
-  const handleAnalytics = (): void => {
-    sendAnalyticsEvent(WalletEventName.ExternalLinkOpened, {
-      url: uniswapUrls.helpArticleUrls.hiddenTokenInfo,
-    })
-  }
-
   if (item === HIDDEN_TOKEN_BALANCES_ROW) {
     return (
       <>
@@ -174,24 +165,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
           </Flex>
         )}
 
-        <InfoLinkModal
-          showCloseButton
-          buttonText={t('common.button.close')}
-          description={t('hidden.tokens.info.text.info')}
-          icon={
-            <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
-              <ShieldCheck color="$neutral1" size="$icon.24" />
-            </Flex>
-          }
-          isOpen={isModalVisible}
-          linkText={t('common.button.learn')}
-          linkUrl={uniswapUrls.helpArticleUrls.hiddenTokenInfo}
-          name={ModalName.HiddenTokenInfoModal}
-          title={t('hidden.tokens.info.text.title')}
-          onAnalyticsEvent={handleAnalytics}
-          onButtonPress={closeModal}
-          onDismiss={closeModal}
-        />
+        <HiddenTokenInfoModal onClose={closeModal} isOpen={isModalVisible} />
       </>
     )
   }

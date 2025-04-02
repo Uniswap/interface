@@ -32,6 +32,8 @@ import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import {
   NFTCollectionSearchResult,
@@ -54,6 +56,7 @@ export function SearchResultsSection({
 }): JSX.Element {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
+  const tokenSearchV2Enabled = useFeatureFlag(FeatureFlags.TokenSearchV2)
 
   // Search for matching tokens
   const {
@@ -66,6 +69,7 @@ export function SearchResultsSection({
       searchQuery,
       nftCollectionsFilter: { nameQuery: searchQuery },
       chains: selectedChain ? [toGraphQLChain(selectedChain)] : undefined,
+      tokenSearchV2Enabled,
     },
   })
 

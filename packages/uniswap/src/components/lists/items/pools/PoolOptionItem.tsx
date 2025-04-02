@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import Badge from 'uniswap/src/components/badge/Badge'
 import { OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
 import { PoolOptionItemContextMenu } from 'uniswap/src/components/lists/items/pools/PoolOptionItemContextMenu'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
@@ -52,11 +53,18 @@ function _PoolOptionItem({
         ) : undefined
       }
       badge={
-        // TODO: add protocolVersion, hookAddress, and feeTier badge
-        <Flex row gap="$gap4" alignItems="center">
-          <Text variant="body4" color="$neutral3">
-            {protocolVersion.toLowerCase()} {shortenAddress(hookAddress, 0)} {feeTier / BIPS_BASE}%
-          </Text>
+        <Flex row gap="$spacing2" alignItems="center">
+          <Badge size="small" placement="start">
+            {protocolVersion.toLowerCase()}
+          </Badge>
+          {hookAddress && (
+            <Badge size="small" placement="middle">
+              {shortenAddress(hookAddress, 4)}
+            </Badge>
+          )}
+          <Badge size="small" placement="end">
+            {feeTier / BIPS_BASE}%
+          </Badge>
         </Flex>
       }
       onPress={onPress}

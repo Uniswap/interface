@@ -90,14 +90,14 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         placeholderTextColor={
           {
             "dynamic": {
-              "dark": "#5E5E5E",
-              "light": "#BFBFBF",
+              "dark": "rgba(255, 255, 255, 0.38)",
+              "light": "rgba(19, 19, 19, 0.35)",
             },
           }
         }
         returnKeyType="done"
         scrollEnabled={false}
-        selectionColor="#BFBFBF"
+        selectionColor="rgba(19, 19, 19, 0.35)"
         spellCheck={false}
         style={
           {
@@ -143,7 +143,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "color": {
               "dynamic": {
                 "dark": "#FFFFFF",
-                "light": "#222222",
+                "light": "#131313",
               },
             },
             "flexShrink": 1,
@@ -185,8 +185,8 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           {
             "color": {
               "dynamic": {
-                "dark": "#9B9B9B",
-                "light": "#7D7D7D",
+                "dark": "rgba(255, 255, 255, 0.65)",
+                "light": "rgba(19, 19, 19, 0.63)",
               },
             },
             "fontFamily": "Basel Grotesk",
@@ -244,8 +244,8 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             {
               "backgroundColor": {
                 "dynamic": {
-                  "dark": "#361A37",
-                  "light": "#FEF4FF",
+                  "dark": "rgba(255, 55, 199, 0.08)",
+                  "light": "rgba(255, 55, 199, 0.08)",
                 },
               },
               "borderBottomLeftRadius": 12,
@@ -283,8 +283,8 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
                 {
                   "color": {
                     "dynamic": {
-                      "dark": "#FC72FF",
-                      "light": "#FC72FF",
+                      "dark": "#FF37C7",
+                      "light": "#FF37C7",
                     },
                   },
                   "fontFamily": "Basel Grotesk",
@@ -314,7 +314,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
                     "borderWidth": 0,
                   },
                   {
-                    "color": "#FC72FF",
+                    "color": "#FF37C7",
                     "height": 16,
                     "width": 16,
                   },
@@ -329,7 +329,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               vbWidth={16}
             >
               <RNSVGGroup
-                color="#FC72FF"
+                color="#FF37C7"
                 fill={
                   {
                     "type": 2,

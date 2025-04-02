@@ -1,63 +1,39 @@
 import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import styled from 'lib/styled-components'
 import { PropsWithChildren, ReactNode, forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { CheckCircle, Copy, Icon } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { ClickableStyle, EllipsisStyle } from 'theme/components/styles'
-import { Z_INDEX } from 'theme/zIndex'
-import { Flex, isTouchable } from 'ui/src'
+import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
+import { Flex, Text, isTouchable } from 'ui/src'
 
 const TOOLTIP_WIDTH = 60
 
-const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean; tooltipX?: number }>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: absolute;
-  left: ${({ isCopyContractTooltip, tooltipX }) =>
-    isCopyContractTooltip && (tooltipX ? `${tooltipX - TOOLTIP_WIDTH / 2}px` : '50%')};
-  transform: translate(5px, 32px);
-  z-index: ${Z_INDEX.tooltip};
-`
-
-const StyledTooltipTriangle = styled(TooltipTriangle)`
-  path {
-    fill: ${({ theme }) => theme.black};
-  }
-`
-
-const CopiedTooltip = styled.div<{ isCopyContractTooltip?: boolean }>`
-  background-color: ${({ theme }) => theme.black};
-  text-align: center;
-  justify-content: center;
-  width: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && `${TOOLTIP_WIDTH}px`};
-  height: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && '32px'};
-  line-height: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && '32px'};
-
-  padding: ${({ isCopyContractTooltip }) => isCopyContractTooltip && '8px'};
-  border-radius: 8px;
-
-  color: ${({ theme }) => theme.white};
-  font-size: 12px;
-`
-
 function Tooltip({ isCopyContractTooltip, tooltipX }: { isCopyContractTooltip: boolean; tooltipX?: number }) {
   return (
-    <ToolTipWrapper isCopyContractTooltip={isCopyContractTooltip} tooltipX={tooltipX}>
-      <StyledTooltipTriangle />
-      <CopiedTooltip isCopyContractTooltip={isCopyContractTooltip}>Copied</CopiedTooltip>
-    </ToolTipWrapper>
+    <Flex
+      alignItems="center"
+      position="absolute"
+      left={isCopyContractTooltip && tooltipX ? `${tooltipX - TOOLTIP_WIDTH / 2}px` : '50%'}
+      transform="translate(5px, 32px)"
+      zIndex="$tooltip"
+    >
+      <TooltipTriangle path="black" />
+      <Text
+        color="$white"
+        variant="body3"
+        borderRadius="$rounded8"
+        backgroundColor="$black"
+        textAlign="center"
+        justifyContent="center"
+        width={!isCopyContractTooltip ? `${TOOLTIP_WIDTH}px` : 'auto'}
+        height={!isCopyContractTooltip ? '32px' : 'auto'}
+        lineHeight={!isCopyContractTooltip ? '32px' : 'auto'}
+      >
+        <Trans i18nKey="common.copied" />
+      </Text>
+    </Flex>
   )
 }
-
-const CopyIconWrapper = styled.div`
-  text-decoration: none;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-`
 
 export function CopyToClipboard({ toCopy, children }: PropsWithChildren<{ toCopy: string }>) {
   const [isCopied, setCopied] = useCopyClipboard()
@@ -65,32 +41,21 @@ export function CopyToClipboard({ toCopy, children }: PropsWithChildren<{ toCopy
     setCopied(toCopy)
   }, [toCopy, setCopied])
   return (
-    <CopyIconWrapper onClick={copy}>
+    <Flex
+      row
+      onPress={copy}
+      justifyContent="center"
+      alignItems="center"
+      {...ClickableTamaguiStyle}
+      $platform-web={{
+        textDecoration: 'none',
+      }}
+    >
       {children}
       {isCopied && <Tooltip isCopyContractTooltip={false} />}
-    </CopyIconWrapper>
+    </Flex>
   )
 }
-
-const CopyHelperContainer = styled.div<{ clicked: boolean; color?: string; gap: number }>`
-  ${ClickableStyle}
-  display: flex;
-  flex-direction: row;
-  gap: ${({ gap }) => gap + 'px'};
-  align-items: center;
-  color: ${({ color }) => color ?? 'inherit'};
-`
-
-const CopyHelperText = styled.div<{ fontSize?: number; offset: number }>`
-  ${EllipsisStyle}
-  ${({ fontSize }) => (fontSize ? 'font-size: ' + fontSize + 'px' : 'inherit')};
-  max-width: calc(100% - ${({ offset }) => offset + 'px'});
-`
-
-const StyledCheckCircle = styled(CheckCircle)`
-  color: ${({ theme }) => theme.success};
-  stroke-width: 1.5px;
-`
 
 function isEllipsisActive(element: HTMLDivElement | null) {
   return Boolean(element && element.offsetWidth < element.scrollWidth)
@@ -115,7 +80,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
   (
     {
       InitialIcon = Copy,
-      CopiedIcon = StyledCheckCircle,
+      CopiedIcon = (props) => <CheckCircle {...props} color="var(--statusSuccess)" strokeWidth={1.5} />,
       toCopy,
       color,
       fontSize,
@@ -153,21 +118,38 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
     const Icon = isCopied ? CopiedIcon : showIcon ? InitialIcon : null
     const offset = showIcon ? gap + iconSize : 0
     return (
-      <CopyHelperContainer
-        onClick={copy}
-        color={color}
-        clicked={isCopied}
+      <Flex
+        row
+        onPress={copy}
         gap={displayGap}
         onMouseEnter={onHover}
         onMouseLeave={offHover}
+        {...ClickableTamaguiStyle}
+        alignItems="center"
+        $platform-web={{
+          color: color ?? 'inherit',
+        }}
       >
         {iconPosition === 'left' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
-        <CopyHelperText ref={textRef} fontSize={fontSize} offset={offset}>
-          {isCopied && iconPosition === 'left' ? <Trans i18nKey="common.copied" /> : children}
-        </CopyHelperText>
+        <Flex
+          ref={textRef}
+          maxWidth={`calc(100% - ${offset + 'px'})`}
+          {...EllipsisTamaguiStyle}
+          $platform-web={{
+            fontSize: fontSize ? fontSize : 'inherit',
+          }}
+        >
+          {isCopied && iconPosition === 'left' ? (
+            <Text>
+              <Trans i18nKey="common.copied" />
+            </Text>
+          ) : (
+            children
+          )}
+        </Flex>
         <Flex $platform-web={{ clear: 'both' }} />
         {iconPosition === 'right' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
-      </CopyHelperContainer>
+      </Flex>
     )
   },
 )

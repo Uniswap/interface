@@ -125,7 +125,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
     mute: true,
     mode: 'picture',
   }
-
   return (
     <AnimatedFlex grow theme={theme} borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
@@ -245,6 +244,10 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             )}
           </Flex>
         </Flex>
+        {/* Adjusts the center point of the QR code scanner upward to prevent content overflow on devices with smaller screens
+            Should be removed after rewriting to flex, having: https://github.com/Uniswap/universe/pull/4762 in mind
+        */}
+        <Flex />
       </Flex>
     </AnimatedFlex>
   )

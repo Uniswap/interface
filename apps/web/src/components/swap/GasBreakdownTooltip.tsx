@@ -7,13 +7,14 @@ import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
-import { Divider, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { Divider } from 'theme/components/Dividers'
 import { ExternalLink } from 'theme/components/Links'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Container = styled(AutoColumn)`
@@ -88,7 +89,7 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
 function NetworkCostDescription({ native }: { native: Currency }) {
   const supportedChain = useSupportedChainId(native.chainId)
   const { defaultChainId } = useEnabledChains()
-  const chainName = toGraphQLChain(supportedChain ?? defaultChainId)
+  const chainName = getChainLabel(supportedChain ?? defaultChainId)
 
   return (
     <ThemedText.LabelMicro>

@@ -39,7 +39,7 @@ export function LPRequestContent({
         p="$spacing16"
       >
         {dappRequest.parsedCalldata.commands.map((command) => (
-          <Text color="$neutral2" variant="body4">
+          <Text color="$neutral2" variant="body4" key={command.commandName}>
             {command.commandName}
           </Text>
         ))}

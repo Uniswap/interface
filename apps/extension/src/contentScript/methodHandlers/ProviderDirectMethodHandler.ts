@@ -1,5 +1,5 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { BigNumber } from 'ethers'
 import { BaseMethodHandler } from 'src/contentScript/methodHandlers/BaseMethodHandler'
 import { ProviderDirectMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { WindowEthereumRequest } from 'src/contentScript/types'

@@ -15,7 +15,7 @@ export function ResetComplete(): JSX.Element {
   return (
     <>
       <Flex centered gap="$spacing24">
-        <Flex backgroundColor="$DEP_accentSuccessSoft" borderRadius="$roundedFull" p="$spacing16">
+        <Flex backgroundColor="$statusSuccess2" borderRadius="$roundedFull" p="$spacing16">
           <Check color="$statusSuccess" size="$icon.36" />
         </Flex>
         <Flex alignItems="center" gap="$spacing4">

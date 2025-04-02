@@ -15,8 +15,6 @@ jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsS
 
 jest.mock('@walletconnect/react-native-compat', () => ({}))
 
-jest.mock('src/lib/RNEthersRs')
-
 // Mock OneSignal package
 jest.mock('react-native-onesignal', () => {
   return {

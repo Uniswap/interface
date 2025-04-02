@@ -22,10 +22,10 @@ import {
 } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/SwapArrowButton'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/body/SwapArrowButton'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -261,6 +261,7 @@ export function SendTokenForm(): JSX.Element {
             <Flex borderColor="$surface3" borderRadius="$rounded20" borderWidth="$spacing1" justifyContent="center">
               <CurrencyInputPanel
                 ref={currencyInputPanelRef}
+                showMaxButtonOnly
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
                 currencyField={CurrencyField.INPUT}
@@ -388,7 +389,11 @@ export function SendTokenForm(): JSX.Element {
 
         {!nftIn && (
           <>
-            <DecimalPadCalculateSpace id={DecimalPadCalculatedSpaceId.Send} decimalPadRef={decimalPadRef} />
+            <DecimalPadCalculateSpace
+              id={DecimalPadCalculatedSpaceId.Send}
+              decimalPadRef={decimalPadRef}
+              additionalElementsHeight={0}
+            />
 
             <Flex
               animation="quick"

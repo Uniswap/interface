@@ -1,5 +1,5 @@
 import styled from 'lib/styled-components'
-import { CrossIcon } from 'nft/components/icons'
+import { CrossIcon } from 'nft/components/iconExports'
 
 const TraitChipWrap = styled.div`
   display: flex;

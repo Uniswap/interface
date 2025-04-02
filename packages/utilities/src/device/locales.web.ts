@@ -7,7 +7,7 @@ export function getDeviceLocales(): DeviceLocale[] {
     return [{ languageCode: language, languageTag: language }]
   } catch (e) {
     logger.error(e, {
-      level: 'warning',
+      level: 'warn',
       tags: { file: 'utils.ts', function: 'getDeviceLocales' },
     })
   }

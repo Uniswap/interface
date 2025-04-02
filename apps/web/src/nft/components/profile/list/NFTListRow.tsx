@@ -1,7 +1,7 @@
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import styled, { css, useTheme } from 'lib/styled-components'
-import { VerifiedIcon } from 'nft/components/icons'
+import { VerifiedIcon } from 'nft/components/iconExports'
 import { MarketplaceRow } from 'nft/components/profile/list/MarketplaceRow'
 import { SetPriceMethod } from 'nft/components/profile/list/shared'
 import { useSellAsset } from 'nft/hooks'

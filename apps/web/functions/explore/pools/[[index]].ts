@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import getPool from 'utils/getPool'
 import { transformResponse } from '../../utils/transformResponse'
 

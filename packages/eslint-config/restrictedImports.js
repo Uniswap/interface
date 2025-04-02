@@ -143,9 +143,15 @@ const nativeRules = {
       name: 'expo-haptics',
       message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'mobile/src'`",
     },
+    {
+      name: 'react-router-dom',
+      message: 'Do not import react-router-dom in native code. Use react-navigation instead.',
+    },
   ],
   patterns: sharedRules.patterns,
 }
+
+const reactNativeRuleMessage = "React Native modules should not be imported outside of .native.ts files unless they are only types (import type { ... }). If the file isn't used outside of native usage, add it to the excluded files in webPlatform.js."
 
 // Rules that should apply to any code that's run on the web (interface) platform
 const webPlatformRules = {
@@ -160,10 +166,6 @@ const webPlatformRules = {
     {
       name: 'ui/src/components/icons',
       message: "Please import icons directly from their respective files, e.g. `ui/src/components/icons/SpecificIcon`. This is to avoid importing the entire icons folder when only some icons are needed, which increases bundle size",
-    },
-    {
-      name: 'ui/src/components/logos',
-      message: "Please import logos directly from their respective files, e.g. `ui/src/components/logos/SpecificLogo`. This is to avoid importing the entire logos folder when only some logos are needed, which increases bundle size",
     },
     {
       name: 'ui/src/components/modal/AdaptiveWebModal',
@@ -183,10 +185,20 @@ const webPlatformRules = {
         '!react-native-localize',
       ],
       allowTypeImports: true,
-      message:
-        "React Native modules should not be imported outside of .native.ts files unless they are only types. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the excluded files in webPlatform.js.",
-    },
+      message: reactNativeRuleMessage,
+    }
   ],
+}
+
+const extensionRules = {
+  paths: [
+    // Allow general icon path in extension
+    ...webPlatformRules.paths.filter((p) => p.name !== 'ui/src/components/icons')
+  ],
+  patterns: [
+    // Remove react native rules for extension
+    ...webPlatformRules.patterns.filter((p) => p.message !== reactNativeRuleMessage)
+  ]
 }
 
 // Rules that should apply to the web interface only
@@ -262,7 +274,13 @@ const interfaceRules = {
   patterns: webPlatformRules.patterns
 }
 
+// Universal
 exports.shared = sharedRules
+
+// Platform
 exports.native = nativeRules
 exports.webPlatform = webPlatformRules
+
+// App Specific
 exports.interface = interfaceRules
+exports.extension = extensionRules

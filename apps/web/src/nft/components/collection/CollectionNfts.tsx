@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import clsx from 'clsx'
 import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
@@ -16,9 +15,7 @@ import { Sweep } from 'nft/components/collection/Sweep'
 import { TraitChip } from 'nft/components/collection/TraitChip'
 import { ClearAllButton } from 'nft/components/collection/shared'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
-import { SweepIcon } from 'nft/components/icons'
-import { bodySmall, buttonTextMedium } from 'nft/css/common.css'
-import { loadingAsset } from 'nft/css/loading.css'
+import { SweepIcon } from 'nft/components/iconExports'
 import {
   CollectionFilters,
   SortBy,
@@ -53,7 +50,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
+import { Flex, Shine, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import {
   NftAssetTraitInput,
@@ -180,16 +177,15 @@ export const CollectionNftsAndMenuLoading = () => (
   <InfiniteScrollWrapper>
     <Flex alignItems="flex-start" position="relative" width="100%">
       <Flex row my="$spacing12" gap="$gap12" mb="$spacing40">
-        <Flex className={loadingAsset} borderRadius="$rounded12" width={100} $md={{ width: 44 }} height={44} />
-        <Flex
-          className={loadingAsset}
-          borderRadius="$rounded12"
-          height={44}
-          display="flex"
-          $md={{ display: 'none' }}
-          width={220}
-        />
-        <Flex className={loadingAsset} borderRadius="$rounded12" height={44} width={332} $md={{ width: 276 }} />
+        <Shine>
+          <Flex borderRadius="$rounded12" width={100} $md={{ width: 44 }} height={44} />
+        </Shine>
+        <Shine>
+          <Flex borderRadius="$rounded12" height={44} display="flex" $md={{ display: 'none' }} width={220} />
+        </Shine>
+        <Shine>
+          <Flex borderRadius="$rounded12" height={44} width={332} $md={{ width: 276 }} />
+        </Shine>
       </Flex>
       <CollectionNftsLoading />
     </Flex>
@@ -538,7 +534,6 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             <SweepButton
               toggled={sweepIsOpen}
               disabled={hasErc1155s}
-              className={buttonTextMedium}
               onPress={handleSweepClick}
               data-testid="nft-sweep-button"
               {...ClickableTamaguiStyle}
@@ -624,14 +619,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 <Text variant="heading2" color="$neutral2" textAlign="center">
                   No NFTS found
                 </Text>
-                <Text
-                  variant="body2"
-                  onPress={reset}
-                  className={clsx(bodySmall, buttonTextMedium)}
-                  color="$accent1"
-                  cursor="pointer"
-                  textAlign="center"
-                >
+                <Text variant="body2" onPress={reset} color="$accent1" cursor="pointer" textAlign="center">
                   View full collection
                 </Text>
               </Flex>

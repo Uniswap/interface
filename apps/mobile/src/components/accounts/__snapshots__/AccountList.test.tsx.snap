@@ -252,14 +252,14 @@ exports[`AccountList renders without error 1`] = `
                               "color": {
                                 "dynamic": {
                                   "dark": "#FFFFFF",
-                                  "light": "#222222",
+                                  "light": "#131313",
                                 },
                               },
                               "flexShrink": 1,
                               "fontFamily": "Basel Grotesk",
                               "fontSize": 19,
                               "fontWeight": "400",
-                              "lineHeight": 24,
+                              "lineHeight": 24.7,
                             }
                           }
                           suppressHighlighting={true}
@@ -279,14 +279,14 @@ exports[`AccountList renders without error 1`] = `
                   {
                     "color": {
                       "dynamic": {
-                        "dark": "#9B9B9B",
-                        "light": "#7D7D7D",
+                        "dark": "rgba(255, 255, 255, 0.65)",
+                        "light": "rgba(19, 19, 19, 0.63)",
                       },
                     },
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",
-                    "lineHeight": 24,
+                    "lineHeight": 20,
                   }
                 }
                 suppressHighlighting={true}

@@ -8,17 +8,21 @@ import {
   priceToClosestTick,
 } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
+import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
 
 export function tryParsePrice<T extends Currency>(baseToken?: T, quoteToken?: T, value?: string) {
   if (!baseToken || !quoteToken || !value) {
     return undefined
   }
 
-  if (!value.match(/^\d*\.?\d+$/)) {
+  // Convert scientific notation to decimal format
+  const decimalValue = convertScientificNotationToNumber(value)
+
+  if (!decimalValue.match(/^\d*\.?\d*$/)) {
     return undefined
   }
 
-  const [whole, fraction] = value.split('.')
+  const [whole, fraction] = decimalValue.split('.')
 
   const decimals = fraction?.length ?? 0
   const withoutDecimals = JSBI.BigInt((whole ?? '') + (fraction ?? ''))

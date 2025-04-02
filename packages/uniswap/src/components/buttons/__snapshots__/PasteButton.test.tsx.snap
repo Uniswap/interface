@@ -57,7 +57,7 @@ exports[`SplitLogo inline renders inline button 1`] = `
             "borderWidth": 0,
           },
           {
-            "color": "#9B9B9B",
+            "color": "rgba(255, 255, 255, 0.65)",
             "height": 16,
             "width": 16,
           },
@@ -72,7 +72,7 @@ exports[`SplitLogo inline renders inline button 1`] = `
       vbWidth={16}
     >
       <RNSVGGroup
-        color="#9B9B9B"
+        color="rgba(255, 255, 255, 0.65)"
         fill={null}
         propList={
           [
@@ -102,7 +102,7 @@ exports[`SplitLogo inline renders inline button 1`] = `
       maxFontSizeMultiplier={1.2}
       style={
         {
-          "color": "#9B9B9B",
+          "color": "rgba(255, 255, 255, 0.65)",
           "fontFamily": "Basel Grotesk",
           "fontSize": 17,
           "fontWeight": "500",
@@ -133,7 +133,7 @@ exports[`SplitLogo renders without error 1`] = `
   onPressOut={[Function]}
   style={
     {
-      "backgroundColor": "#361A37",
+      "backgroundColor": "rgba(255, 55, 199, 0.08)",
       "borderBottomLeftRadius": 12,
       "borderBottomRightRadius": 12,
       "borderTopLeftRadius": 12,
@@ -167,7 +167,7 @@ exports[`SplitLogo renders without error 1`] = `
       maxFontSizeMultiplier={1.2}
       style={
         {
-          "color": "#FC72FF",
+          "color": "#FF37C7",
           "fontFamily": "Basel Grotesk",
           "fontSize": 15,
           "fontWeight": "500",
@@ -195,7 +195,7 @@ exports[`SplitLogo renders without error 1`] = `
             "borderWidth": 0,
           },
           {
-            "color": "#FC72FF",
+            "color": "#FF37C7",
             "height": 16,
             "width": 16,
           },
@@ -210,7 +210,7 @@ exports[`SplitLogo renders without error 1`] = `
       vbWidth={16}
     >
       <RNSVGGroup
-        color="#FC72FF"
+        color="#FF37C7"
         fill={
           {
             "type": 2,

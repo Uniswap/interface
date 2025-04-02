@@ -8,14 +8,10 @@ import {
   TransactionStep,
   TransactionStepType,
 } from 'uniswap/src/features/transactions/swap/types/steps'
-import { Sentry } from 'utilities/src/logger/Sentry'
-import { OverridesSentryFingerprint } from 'utilities/src/logger/types'
 import { isInterface } from 'utilities/src/platform'
 
 /** Superclass used to differentiate categorized/known transaction errors from generic/unknown errors. */
-export abstract class TransactionError extends Error {
-  logToSentry = true
-}
+export abstract class TransactionError extends Error {}
 
 /** Thrown in code paths that should be unreachable, serving both typechecking and critical alarm purposes. */
 export class UnexpectedTransactionStateError extends TransactionError {
@@ -26,14 +22,13 @@ export class UnexpectedTransactionStateError extends TransactionError {
 }
 
 /** Thrown when a transaction step fails for an unknown reason. */
-export class TransactionStepFailedError extends TransactionError implements OverridesSentryFingerprint {
+export class TransactionStepFailedError extends TransactionError {
   step: TransactionStep
   isBackendRejection: boolean
   originalError?: Error
 
-  // string fields for Sentry
   originalErrorStringified?: string
-  originalErrorString?: string // originalErrorStringified error may get cut off by sentry size limits; this acts as minimal backup
+  originalErrorString?: string // originalErrorStringified error may get cut off by size limits; this acts as minimal backup
   stepStringified?: string
 
   constructor({
@@ -89,15 +84,6 @@ export class TransactionStepFailedError extends TransactionError implements Over
             errorMessage: e instanceof Error ? e.message : undefined,
           },
         })
-
-        Sentry.addBreadCrumb({
-          level: 'info',
-          category: 'transaction',
-          message: `problem determining fingerprint for ${this.step.type}`,
-          data: {
-            errorMessage: e instanceof Error ? e.message : undefined,
-          },
-        })
       }
     }
 
@@ -106,7 +92,7 @@ export class TransactionStepFailedError extends TransactionError implements Over
 }
 
 export class ApprovalEditedInWalletError extends TransactionStepFailedError {
-  logToSentry = false
+  logError = false
 
   constructor({ step }: { step: TokenApprovalTransactionStep | TokenRevocationTransactionStep }) {
     super({ message: 'Approval decreased to insufficient amount in wallet', step })

@@ -18,6 +18,7 @@ export enum TokenOptionSection {
   SearchResults = 'searchResults',
   SuggestedTokens = 'suggestedTokens',
   BridgingTokens = 'bridgingTokens',
+  OtherChainsTokens = 'otherNetworksTokens',
 }
 
 export type TokenSection<T extends ItemType> = {

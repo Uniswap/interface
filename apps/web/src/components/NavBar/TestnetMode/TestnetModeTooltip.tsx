@@ -1,4 +1,4 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useAtom } from 'jotai'
 import { useTranslation } from 'react-i18next'
@@ -29,7 +29,7 @@ export default function TestnetModeTooltip() {
           <Wrench color="$statusSuccess" size="$icon.16" />
         </Flex>
       </Tooltip.Trigger>
-      <Tooltip.Content>
+      <Tooltip.Content animationDirection="right">
         <Text variant="body4">{t('home.banner.testnetMode.nav')}</Text>
         <Tooltip.Arrow />
       </Tooltip.Content>

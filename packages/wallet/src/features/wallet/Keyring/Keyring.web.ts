@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import { HDKey } from '@scure/bip32'
+import { Buffer } from 'buffer'
 import { Signature, Wallet, utils } from 'ethers'
 import { SigningKey, defaultPath, joinSignature } from 'ethers/lib/utils'
 import { logger } from 'utilities/src/logger/logger'
@@ -38,6 +39,8 @@ enum ErrorType {
  * @link https://github.com/Uniswap/universe/blob/main/apps/mobile/ios/RNEthersRS.swift
  */
 export class WebKeyring implements IKeyring {
+  private keysMap: Map<string, CryptoKeyPair>
+
   constructor(
     private storage = new PersistedStorage('local'),
     private session = new PersistedStorage('session'),
@@ -56,6 +59,40 @@ export class WebKeyring implements IKeyring {
     this.storeNewMnemonic = this.storeNewMnemonic.bind(this)
     this.unlock = this.unlock.bind(this)
     this.lock = this.lock.bind(this)
+    this.keysMap = new Map()
+  }
+
+  async generateKeyPairForPasskeyWallet(): Promise<string> {
+    const keyPair = await crypto.subtle.generateKey(
+      {
+        name: 'RSA-OAEP',
+        modulusLength: 2048,
+        publicExponent: new Uint8Array([1, 0, 1]), // 65537
+        hash: 'SHA-256',
+      },
+      true, // extractable
+      ['encrypt', 'decrypt'],
+    )
+    // Export the public key in 'spki' format to match BE expectations
+    const publicKeySpki = await crypto.subtle.exportKey('spki', keyPair.publicKey)
+    const publicKeyBase64 = Buffer.from(publicKeySpki).toString('base64')
+    this.keysMap.set(publicKeyBase64, keyPair)
+    return publicKeyBase64
+  }
+
+  async decryptMnemonicForPasskey(encryptedMnemonic: string, publicKeyBase64: string): Promise<string> {
+    const keyPair = this.keysMap.get(publicKeyBase64)
+    if (!keyPair) {
+      throw new Error('No key pair found')
+    }
+    const decryptedMnemonic = await crypto.subtle.decrypt(
+      {
+        name: 'RSA-OAEP',
+      },
+      keyPair.privateKey,
+      Buffer.from(encryptedMnemonic, 'base64'),
+    )
+    return new TextDecoder().decode(decryptedMnemonic)
   }
 
   /**
@@ -156,7 +193,7 @@ export class WebKeyring implements IKeyring {
       const passwordPasswordEncryptionKey = await getEncryptionKeyFromPassword(password, secretPayload)
       const passwordPasswordBase64String = await exportKey(passwordPasswordEncryptionKey)
       return currentPasswordBase64String === passwordPasswordBase64String
-    } catch (_e) {
+    } catch (e) {
       return false
     }
   }

@@ -6,12 +6,7 @@ import { MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
 import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
-import {
-  OnSelectCurrency,
-  TokenOptionSection,
-  TokenSection,
-  TokenSectionsHookProps,
-} from 'uniswap/src/components/TokenSelector/types'
+import { TokenOptionSection, TokenSection, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
 import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { PoolOption, SearchModalItemTypes } from 'uniswap/src/components/lists/types'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -114,10 +109,10 @@ function useSectionsForNoQuerySearch({
 
 export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
   chainFilter,
-  onSelectCurrency,
+  onSelect,
 }: {
   chainFilter: UniverseChainId | null
-  onSelectCurrency: OnSelectCurrency
+  onSelect: (item: SearchModalItemTypes) => void
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -130,7 +125,7 @@ export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
       loading={loading}
       refetch={refetch}
       sections={sections}
-      onSelectCurrency={onSelectCurrency}
+      onSelect={onSelect}
     />
   )
 })

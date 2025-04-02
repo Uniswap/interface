@@ -1,6 +1,6 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { BagIcon, TagIcon } from 'nft/components/icons'
+import { BagIcon, TagIcon } from 'nft/components/iconExports'
 import { useBag, useSellAsset } from 'nft/hooks'
 import { useCallback } from 'react'
 import { Flex, Text, styled } from 'ui/src'

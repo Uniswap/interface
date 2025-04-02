@@ -27,14 +27,14 @@ exports[`DatetimeText renders without error 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#9B9B9B",
-            "light": "#7D7D7D",
+            "dark": "rgba(255, 255, 255, 0.65)",
+            "light": "rgba(19, 19, 19, 0.63)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
         "padding": 0,
       }
     }
@@ -68,11 +68,11 @@ exports[`PriceText renders loading state 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#222222",
+        "color": "#131313",
         "fontFamily": "Basel Grotesk",
         "fontSize": 106,
         "fontWeight": "400",
-        "lineHeight": 60,
+        "lineHeight": 50.879999999999995,
         "padding": 0,
       }
     }
@@ -107,11 +107,11 @@ exports[`PriceText renders without error 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#222222",
+        "color": "#131313",
         "fontFamily": "Basel Grotesk",
         "fontSize": 106,
         "fontWeight": "400",
-        "lineHeight": 60,
+        "lineHeight": 50.879999999999995,
         "padding": 0,
       }
     }
@@ -127,7 +127,7 @@ exports[`PriceText renders without error 1`] = `
     jestAnimatedStyle={
       {
         "value": {
-          "color": "#BFBFBF",
+          "color": "rgba(19, 19, 19, 0.35)",
           "fontSize": 106,
         },
       }
@@ -135,11 +135,11 @@ exports[`PriceText renders without error 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#BFBFBF",
+        "color": "rgba(19, 19, 19, 0.35)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 106,
         "fontWeight": "400",
-        "lineHeight": 60,
+        "lineHeight": 50.879999999999995,
         "padding": 0,
       }
     }
@@ -174,11 +174,11 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#222222",
+        "color": "#131313",
         "fontFamily": "Basel Grotesk",
         "fontSize": 106,
         "fontWeight": "400",
-        "lineHeight": 60,
+        "lineHeight": 50.879999999999995,
         "padding": 0,
       }
     }
@@ -194,7 +194,7 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     jestAnimatedStyle={
       {
         "value": {
-          "color": "#222222",
+          "color": "#131313",
           "fontSize": 106,
         },
       }
@@ -202,11 +202,11 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#222222",
+        "color": "#131313",
         "fontFamily": "Basel Grotesk",
         "fontSize": 106,
         "fontWeight": "400",
-        "lineHeight": 60,
+        "lineHeight": 50.879999999999995,
         "padding": 0,
       }
     }
@@ -266,7 +266,7 @@ exports[`RelativeChangeText renders loading state 1`] = `
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
-              "lineHeight": 24,
+              "lineHeight": 24.7,
               "opacity": 0,
             }
           }
@@ -280,7 +280,7 @@ exports[`RelativeChangeText renders loading state 1`] = `
           {
             "backgroundColor": {
               "dynamic": {
-                "dark": "#1B1B1B",
+                "dark": "#1F1F1F",
                 "light": "#F9F9F9",
               },
             },
@@ -332,14 +332,7 @@ exports[`RelativeChangeText renders without error 1`] = `
           "borderWidth": 0,
         },
         {
-          "color": "#FF5F52",
           "height": 16,
-          "transform": [
-            {
-              "rotate": "0deg",
-            },
-          ],
-          "translateY": 1,
           "width": 16,
         },
         {
@@ -349,29 +342,11 @@ exports[`RelativeChangeText renders without error 1`] = `
         },
       ]
     }
-    transform={
-      [
-        {
-          "rotate": "0deg",
-        },
-      ]
-    }
     vbHeight={24}
     vbWidth={24}
   >
     <RNSVGGroup
-      color="#FF5F52"
       fill={null}
-      matrix={
-        [
-          1,
-          0,
-          -0,
-          1,
-          0,
-          1,
-        ]
-      }
       propList={
         [
           "fill",
@@ -402,18 +377,18 @@ exports[`RelativeChangeText renders without error 1`] = `
     jestAnimatedStyle={
       {
         "value": {
-          "color": "#FF5F52",
+          "color": "#E10F0F",
         },
       }
     }
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#FF5F52",
+        "color": "#E10F0F",
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
         "padding": 0,
       }
     }

@@ -9,7 +9,7 @@ import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { WarningModalInfoContainer } from 'uniswap/src/features/tokens/WarningInfoModalContainer'
 import { getFeeColor, useModalHeaderText, useModalSubtitleText } from 'uniswap/src/features/tokens/safetyUtils'
 import { FoTFeeType, TokenFeeInfo } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils'
+import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils/getFeeSeverity'
 import { isInterface } from 'utilities/src/platform'
 
 export function FeeOnTransferWarning({

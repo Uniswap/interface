@@ -84,6 +84,7 @@ export function PillMultiToggle({
               width={activeAt.width}
               x={activeAt.x}
               y={activeAt.y}
+              zIndex="$mask"
             />
           )}
         </AnimatePresence>
@@ -94,6 +95,7 @@ export function PillMultiToggle({
               <Tabs.Tab
                 key={value}
                 unstyled
+                borderRadius="$rounded12"
                 px="$spacing12"
                 py="$spacing6"
                 value={value}

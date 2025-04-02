@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
-  LiquidityPositionRangeChart,
+  WrappedLiquidityPositionRangeChart,
   getLiquidityRangeChartProps,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { ErrorCallout } from 'components/ErrorCallout'
@@ -212,7 +212,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             {(protocolVersion === ProtocolVersion.V3 || protocolVersion === ProtocolVersion.V4) && (
               <>
                 {!creatingPoolOrPair && !!liquidityRangeChartProps && (
-                  <LiquidityPositionRangeChart width="100%" {...liquidityRangeChartProps} />
+                  <WrappedLiquidityPositionRangeChart width="100%" {...liquidityRangeChartProps} />
                 )}
                 <Flex row>
                   <Flex fill gap="$gap4">

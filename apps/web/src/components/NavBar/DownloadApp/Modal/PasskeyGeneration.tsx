@@ -5,13 +5,13 @@ import { Dispatch, SetStateAction, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCloseModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { TamaguiClickableStyle } from 'theme/components/styles'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, Flex, Text } from 'ui/src'
 import { MultiDevice } from 'ui/src/components/icons/MultiDevice'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { PasskeyFingerprint } from 'ui/src/components/icons/PasskeyFingerprint'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { createNewEmbeddedWallet } from 'uniswap/src/data/rest/embeddedWallet'
+import { createNewEmbeddedWallet } from 'uniswap/src/features/passkey/embeddedWallet'
 import { useConnect } from 'wagmi'
 
 export function PasskeyGenerationModal({ setPage }: { setPage: Dispatch<SetStateAction<Page>> }) {
@@ -34,7 +34,7 @@ export function PasskeyGenerationModal({ setPage }: { setPage: Dispatch<SetState
     }
   }, [closeModal, connect, connector, setPage])
   return (
-    <ModalContent title={t('onboarding.passkey.create')} logo={<Passkey size={56} pt="$spacing12" />}>
+    <ModalContent title={t('onboarding.passkey.create')} logo={<Passkey color="$neutral1" size={56} pt="$spacing12" />}>
       <Flex gap="$gap16" alignItems="center">
         <Flex
           flexDirection="row"
@@ -71,7 +71,7 @@ export function PasskeyGenerationModal({ setPage }: { setPage: Dispatch<SetState
           mt="$spacing24"
           variant="buttonLabel3"
           color="$neutral2"
-          {...TamaguiClickableStyle}
+          {...ClickableTamaguiStyle}
           onPress={() => setPage(Page.GetApp)}
         >
           {t('onboarding.passkey.use.recovery.phrase')}

@@ -22,7 +22,7 @@ import { ALL_CHAIN_IDS, UniverseChainId, UniverseChainInfo } from 'uniswap/src/f
 import { isBackendSupportedChainId, isTestnetChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useChainIdFromUrlParam } from 'utils/chainParams'
+import { getChainUrlParam, useChainIdFromUrlParam } from 'utils/chainParams'
 
 const NetworkLabel = styled(Flex, {
   flexDirection: 'row',
@@ -138,6 +138,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
   const isNew = chainId && newChains.includes(chainId)
 
   const chainName = chainId ? toGraphQLChain(chainId) : 'All networks'
+  const chainUrlParam = chainId ? getChainUrlParam(chainId) : ''
 
   const isCurrentChain = isAllNetworks ? !currentChainInfo : currentChainInfo?.id === chainId && exploreParams.chainName
 
@@ -155,8 +156,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
         data-testid={`tokens-network-filter-option-${chainName.toLowerCase()}`}
         disabled={unsupported}
         onPress={() => {
-          !unsupported &&
-            navigate(`/explore/${tab ?? ExploreTab.Tokens}${!isAllNetworks ? `/${chainName.toLowerCase()}` : ''}`)
+          !unsupported && navigate(`/explore/${tab ?? ExploreTab.Tokens}${!isAllNetworks ? `/${chainUrlParam}` : ''}`)
           toggleMenu(false)
         }}
       >

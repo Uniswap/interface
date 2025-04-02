@@ -106,7 +106,7 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
           <Flex alignItems="center" gap="$spacing12">
             <PasswordInput
               autoFocus
-              backgroundColor={showPasswordError ? '$DEP_accentCriticalSoft' : '$surface1'}
+              backgroundColor={showPasswordError ? '$statusCritical2' : '$surface1'}
               focusStyle={inputStyles.inputFocus}
               hideInput={hideInput}
               placeholder={t('common.input.password.placeholder')}

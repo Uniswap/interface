@@ -28,6 +28,8 @@ export enum MobileUserPropertyName {
   WalletSignerCount = 'wallet_signer_count',
   WalletSwapProtectionSetting = 'wallet_swap_protection_setting',
   WalletViewOnlyCount = 'wallet_view_only_count',
+  WindowHeight = 'window_height',
+  WindowWidth = 'window_width',
   // alphabetize additional values.
 }
 

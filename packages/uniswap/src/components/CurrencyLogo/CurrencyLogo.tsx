@@ -9,7 +9,7 @@ interface CurrencyLogoProps {
   networkLogoBorderWidth?: number
 }
 
-export const STATUS_RATIO = 0.45
+export const STATUS_RATIO = 0.4
 
 export function CurrencyLogo({
   currencyInfo,
