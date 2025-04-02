@@ -13,35 +13,38 @@ interface FeeDistributionBarProps {
 }
 
 const BarContainer = styled.div`
+  width: 100%;
   display: flex;
+  justify-content: flex-end;
   align-items: center;
   gap: 8px;
-  width: 100%;
   min-width: 150px;
 `;
 
 const ProgressBarSection = styled.div`
   position: relative;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `;
 
 const APR = styled.div`
   font-size: 16px;
   color: #fff;
   white-space: nowrap;
-  position: absolute;
-  right: 0;
-  top: -24px;
+  margin-bottom: 4px;
 `;
 
 const ProgressBarContainer = styled.div`
-  width: 100%;
+  width: 90px;
   height: 4px;
   background: #333;
   border-radius: 4px;
   position: relative;
   overflow: hidden;
   min-width: 80px;
+  max-width: 150px;
 `;
 
 const TradeFeesBar = styled.div<{ width: string }>`
@@ -96,41 +99,35 @@ export const FeeDistributionBar: React.FC<FeeDistributionBarProps> = ({
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Ensure we have valid percentage values
   const tradeFees = Math.min(
     Math.max(0, Number(tradeFeesPercentage) || 0),
-    100
+    100,
   );
   const tokenRewards = Math.min(
     Math.max(0, Number(tokenRewardsPercentage) || 0),
-    100
+    100,
   );
 
   return (
     <BarContainer>
-      <Tooltip
-        text={`${tradeFees}% from trading fees, ${tokenRewards}% from ${rewardTokenSymbol} rewards`}
-        show={showTooltip}
+      <BarAndAPRContainer
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
       >
-        <BarAndAPRContainer
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
-        >
-          <ProgressBarSection>
-            <APR>{daily24hAPR.toFixed(2)}%</APR>
-            <ProgressBarContainer>
-              <TradeFeesBar width={`${tradeFees}%`} />
-              <TokenRewardsBar
-                width={`${tokenRewards}%`}
-                offset={`${tradeFees}%`}
-              />
-            </ProgressBarContainer>
-          </ProgressBarSection>
-        </BarAndAPRContainer>
-      </Tooltip>
+        <ProgressBarSection>
+          <APR>{daily24hAPR.toFixed(2)}%</APR>
+          <ProgressBarContainer>
+            <TradeFeesBar width={`${tradeFees}%`} />
+            <TokenRewardsBar
+              width={`${tokenRewards}%`}
+              offset={`${tradeFees}%`}
+            />
+          </ProgressBarContainer>
+        </ProgressBarSection>
+      </BarAndAPRContainer>
       <TokenIconLink
         href={`https://www.taraswap.info/#/tokens/${getAddress(
-          rewardTokenAddress
+          rewardTokenAddress,
         )}`}
         target="_blank"
         rel="noopener noreferrer"

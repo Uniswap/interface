@@ -98,7 +98,7 @@ export function useFeeDistribution(incentiveId: string): FeeDistributionResult {
               query: FEE_DISTRIBUTION_QUERY,
               variables: { incentiveId },
             }),
-          }
+          },
         );
 
         if (!response.ok) {

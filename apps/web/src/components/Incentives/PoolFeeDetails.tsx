@@ -15,12 +15,10 @@ interface PoolFeeDetailsProps {
 }
 
 const Container = styled.div`
-  width: 100%;
+  padding-top: 0;
   display: flex;
-  align-items: center;
-  min-width: 150px;
-  position: relative;
-  padding-top: 24px;
+  justify-content: flex-end;
+  width: 100%;
 `;
 
 const PlaceholderBar = styled.div`
@@ -127,6 +125,12 @@ const EndDate = styled.div`
   text-align: right;
 `;
 
+const FullWidthDistributionBar = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+`;
+
 export const PoolFeeDetails: React.FC<PoolFeeDetailsProps> = React.memo(
   ({
     incentiveId,
@@ -166,7 +170,9 @@ export const PoolFeeDetails: React.FC<PoolFeeDetailsProps> = React.memo(
                   Trade fees
                 </LegendLabel>
                 <LegendValue>
-                  {formatDelta(data.tradeFeesPercentage)}
+                  {formatDelta(
+                    (data.tradeFeesPercentage * data.daily24hAPR) / 100,
+                  )}
                 </LegendValue>
               </LegendItem>
               <LegendItem>
@@ -175,7 +181,9 @@ export const PoolFeeDetails: React.FC<PoolFeeDetailsProps> = React.memo(
                   {rewardTokenSymbol}
                 </LegendLabel>
                 <LegendValue>
-                  {formatDelta(data.tokenRewardsPercentage)}
+                  {formatDelta(
+                    (data.tokenRewardsPercentage * data.daily24hAPR) / 100,
+                  )}
                 </LegendValue>
               </LegendItem>
             </LegendContainer>
@@ -196,7 +204,7 @@ export const PoolFeeDetails: React.FC<PoolFeeDetailsProps> = React.memo(
               )
             </WeeklyRewardsValue>
           </WeeklyRewards>
-          <EndDate>Ends 05/09/25</EndDate>
+          {/* <EndDate>Ends 05/09/25</EndDate> */}
         </TooltipContent>
       );
     }, [data, rewardTokenSymbol, rewardTokenImage, formatDelta, formatNumber]);
@@ -213,14 +221,16 @@ export const PoolFeeDetails: React.FC<PoolFeeDetailsProps> = React.memo(
       return (
         <MouseoverTooltip text={tooltipContent} placement="top">
           <Container>
-            <FeeDistributionBar
-              tradeFeesPercentage={data.tradeFeesPercentage}
-              tokenRewardsPercentage={data.tokenRewardsPercentage}
-              daily24hAPR={data.daily24hAPR}
-              rewardTokenImage={rewardTokenImage}
-              rewardTokenSymbol={rewardTokenSymbol}
-              rewardTokenAddress={rewardTokenAddress}
-            />
+            <FullWidthDistributionBar>
+              <FeeDistributionBar
+                tradeFeesPercentage={data.tradeFeesPercentage}
+                tokenRewardsPercentage={data.tokenRewardsPercentage}
+                daily24hAPR={data.daily24hAPR}
+                rewardTokenImage={rewardTokenImage}
+                rewardTokenSymbol={rewardTokenSymbol}
+                rewardTokenAddress={rewardTokenAddress}
+              />
+            </FullWidthDistributionBar>
           </Container>
         </MouseoverTooltip>
       );
@@ -235,5 +245,5 @@ export const PoolFeeDetails: React.FC<PoolFeeDetailsProps> = React.memo(
     ]);
 
     return content;
-  }
+  },
 );
