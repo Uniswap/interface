@@ -1,20 +1,23 @@
-import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import searchIcon from 'assets/svg/search.svg'
-import xIcon from 'assets/svg/x.svg'
-import useDebounce from 'hooks/useDebounce'
-import { t } from 'i18n'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
-import { exploreSearchStringAtom } from '../state'
-const ICON_SIZE = '20px'
+import {
+  InterfaceElementName,
+  InterfaceEventName,
+} from "@uniswap/analytics-events";
+import searchIcon from "assets/svg/search.svg";
+import xIcon from "assets/svg/x.svg";
+import { useDebounce } from "hooks/useDebounce";
+import { t } from "i18n";
+import { useAtomValue, useUpdateAtom } from "jotai/utils";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { MEDIUM_MEDIA_BREAKPOINT } from "../constants";
+import { exploreSearchStringAtom } from "../state";
+const ICON_SIZE = "20px";
 
 const SearchBarContainer = styled.div`
   display: flex;
   flex: 1;
-`
+`;
 const SearchInput = styled.input<{ isOpen?: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: url(${searchIcon});
@@ -24,7 +27,7 @@ const SearchInput = styled.input<{ isOpen?: boolean }>`
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
   height: 100%;
-  width: ${({ isOpen }) => (isOpen ? '200px' : '0')};
+  width: ${({ isOpen }) => (isOpen ? "200px" : "0")};
   font-size: 16px;
   font-weight: 485;
   padding-left: 40px;
@@ -58,35 +61,35 @@ const SearchInput = styled.input<{ isOpen?: boolean }>`
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    width: ${({ isOpen }) => (isOpen ? 'min(100%, 200px)' : '0')};
+    width: ${({ isOpen }) => (isOpen ? "min(100%, 200px)" : "0")};
   }
-`
+`;
 
 export default function SearchBar({ tab }: { tab?: string }) {
-  const currentString = useAtomValue(exploreSearchStringAtom)
-  const [localFilterString, setLocalFilterString] = useState(currentString)
-  const setFilterString = useUpdateAtom(exploreSearchStringAtom)
-  const debouncedLocalFilterString = useDebounce(localFilterString, 300)
-  const [isOpen, setIsOpen] = useState(false)
+  const currentString = useAtomValue(exploreSearchStringAtom);
+  const [localFilterString, setLocalFilterString] = useState(currentString);
+  const setFilterString = useUpdateAtom(exploreSearchStringAtom);
+  const debouncedLocalFilterString = useDebounce(localFilterString, 300);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setLocalFilterString(currentString)
+    setLocalFilterString(currentString);
     if (currentString) {
-      setIsOpen(true)
+      setIsOpen(true);
     }
-  }, [currentString])
+  }, [currentString]);
 
   useEffect(() => {
-    setFilterString(debouncedLocalFilterString)
-  }, [debouncedLocalFilterString, setFilterString])
+    setFilterString(debouncedLocalFilterString);
+  }, [debouncedLocalFilterString, setFilterString]);
 
-  const handleFocus = () => setIsOpen(true)
+  const handleFocus = () => setIsOpen(true);
 
   const handleBlur = () => {
-    if (localFilterString === '') {
-      setIsOpen(false)
+    if (localFilterString === "") {
+      setIsOpen(false);
     }
-  }
+  };
 
   return (
     <SearchBarContainer>
@@ -99,7 +102,9 @@ export default function SearchBar({ tab }: { tab?: string }) {
         <SearchInput
           data-testid="explore-tokens-search-input"
           type="search"
-          placeholder={tab === 'tokens' ? t('Search tokens') : t('Search pools')}
+          placeholder={
+            tab === "tokens" ? t("Search tokens") : t("Search pools")
+          }
           id="searchBar"
           autoComplete="off"
           value={localFilterString}
@@ -110,5 +115,5 @@ export default function SearchBar({ tab }: { tab?: string }) {
         />
       </Trace>
     </SearchBarContainer>
-  )
+  );
 }

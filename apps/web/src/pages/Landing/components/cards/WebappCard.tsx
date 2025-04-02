@@ -2,10 +2,12 @@ import { ChainId } from "@taraswap/sdk-core";
 import { PortfolioLogo } from "components/AccountDrawer/MiniPortfolio/PortfolioLogo";
 import { DeltaArrow } from "components/Tokens/TokenDetails/Delta";
 import {
+  CHDPU_TARAXA,
   LARA_TARAXA,
   NATIVE_CHAIN_ID,
   TSWAP_TARAXA,
   USDT_TARAXA,
+  WRAPPED_STTARA_TARAXA,
 } from "constants/tokens";
 import { getTokenDetailsURL } from "graphql/data/util";
 import { useCurrency } from "hooks/Tokens";
@@ -196,6 +198,14 @@ const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
   {
     chainId: ChainId.TARAXA,
     address: TSWAP_TARAXA.address,
+  },
+  {
+    chainId: ChainId.TARAXA,
+    address: CHDPU_TARAXA.address,
+  },
+  {
+    chainId: ChainId.TARAXA,
+    address: WRAPPED_STTARA_TARAXA.address,
   },
 ];
 

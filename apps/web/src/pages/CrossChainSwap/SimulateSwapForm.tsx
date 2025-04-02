@@ -22,9 +22,8 @@ import {
 } from "components/CurrencyInputPanel/SwapCurrencyInputPanel";
 import { CrossChainCurrency } from "types/tokens";
 import { ArrowDown } from "react-feather";
-import { Box, H1, H2, H3 } from "pages/Landing/components/Generics";
 import { useSimulateSwap } from "hooks/useSimulateSwap";
-import useDebounce from "hooks/useDebounce";
+import { useDebounce } from "hooks/useDebounce";
 import { ButtonLight } from "components/Button";
 import { Text } from "ui/src";
 import { useExecuteCrossChainSwap } from "hooks/useExecuteCrossChainSwap";

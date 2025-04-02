@@ -616,6 +616,7 @@ export function SwapForm({
   );
 
   const inputCurrency = currencies[Field.INPUT] ?? undefined;
+  const outputCurrency = currencies[Field.OUTPUT] ?? undefined;
   const selectChain = useSelectChain();
   const switchingChain = useAppSelector(
     (state) => state.wallets.switchingChain
@@ -834,11 +835,19 @@ export function SwapForm({
               data-testid="wrap-button"
             >
               {wrapInputError ? (
-                <WrapErrorText wrapInputError={wrapInputError} />
+                <WrapErrorText
+                  wrapInputError={wrapInputError}
+                  tokenSymbolBase={inputCurrency?.symbol ?? ""}
+                  tokenSymbolWrapped={outputCurrency?.symbol ?? ""}
+                />
               ) : wrapType === WrapType.WRAP ? (
                 <Trans i18nKey="common.wrap.button" />
               ) : wrapType === WrapType.UNWRAP ? (
                 <Trans i18nKey="common.unwrap.button" />
+              ) : wrapType === WrapType.APPROVE_AND_WRAP ? (
+                <Trans i18nKey="common.approveAndWrap.button" />
+              ) : wrapType === WrapType.APPROVE_AND_UNWRAP ? (
+                <Trans i18nKey="common.approveAndUnwrap.button" />
               ) : null}
             </ButtonPrimary>
           ) : routeNotFound &&

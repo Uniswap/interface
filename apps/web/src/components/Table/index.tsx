@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-table";
 import Loader from "components/Icons/LoadingSpinner";
 import { ErrorModal } from "components/Table/ErrorBox";
-import useDebounce from "hooks/useDebounce";
+import { useDebounce } from "hooks/useDebounce";
 import { Trans } from "i18n";
 import { useEffect, useRef, useState } from "react";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";

@@ -1,4 +1,4 @@
-import { Currency } from "@taraswap/sdk-core";
+import { Currency, Token, MaxUint256 } from "@taraswap/sdk-core";
 import { InterfaceEventName } from "@uniswap/analytics-events";
 import { useAccount } from "hooks/useAccount";
 import { Trans } from "i18n";
@@ -10,11 +10,20 @@ import { trace } from "tracing/trace";
 import { sendAnalyticsEvent } from "uniswap/src/features/telemetry/send";
 import { WrapType } from "uniswap/src/types/wrap";
 import { logger } from "utilities/src/logger/logger";
-import { WRAPPED_NATIVE_CURRENCY } from "../constants/tokens";
+import {
+  WRAPPED_NATIVE_CURRENCY,
+  STTARA_TARAXA,
+  WRAPPED_STTARA_TARAXA,
+} from "../constants/tokens";
 import { useCurrencyBalance } from "../state/connection/hooks";
 import { useTransactionAdder } from "../state/transactions/hooks";
 import { TransactionType } from "../state/transactions/types";
-import { useWETHContract } from "./useContract";
+import {
+  useWETHContract,
+  useERC4626Contract,
+  useTokenContract,
+} from "./useContract";
+import { useTokenAllowance } from "./useTokenAllowance";
 
 const NOT_APPLICABLE = { wrapType: WrapType.NOT_APPLICABLE };
 
@@ -28,40 +37,51 @@ enum WrapInputError {
 
 export function WrapErrorText({
   wrapInputError,
+  tokenSymbolBase,
+  tokenSymbolWrapped,
 }: {
   wrapInputError: WrapInputError;
+  tokenSymbolBase: string;
+  tokenSymbolWrapped: string;
 }) {
-  const { chainId } = useAccount();
-  const native = useNativeCurrency(chainId);
-  const wrapped = native?.wrapped;
-
   switch (wrapInputError) {
     case WrapInputError.NO_ERROR:
       return null;
     case WrapInputError.ENTER_NATIVE_AMOUNT:
       return (
-        <Trans i18nKey="swap.enterAmount" values={{ sym: native?.symbol }} />
+        <Trans i18nKey="swap.enterAmount" values={{ sym: tokenSymbolBase }} />
       );
     case WrapInputError.ENTER_WRAPPED_AMOUNT:
       return (
-        <Trans i18nKey="swap.enterAmount" values={{ sym: wrapped?.symbol }} />
+        <Trans
+          i18nKey="swap.enterAmount"
+          values={{ sym: tokenSymbolWrapped }}
+        />
       );
 
     case WrapInputError.INSUFFICIENT_NATIVE_BALANCE:
       return (
         <Trans
           i18nKey="common.insufficientTokenBalance.error"
-          values={{ tokenSymbol: native?.symbol }}
+          values={{ tokenSymbol: tokenSymbolBase }}
         />
       );
     case WrapInputError.INSUFFICIENT_WRAPPED_BALANCE:
       return (
         <Trans
           i18nKey="common.insufficientTokenBalance.error"
-          values={{ tokenSymbol: wrapped?.symbol }}
+          values={{ tokenSymbol: tokenSymbolWrapped }}
         />
       );
   }
+}
+
+export interface WrapState {
+  wrapType: WrapType;
+  execute?: () => Promise<string | undefined>;
+  inputError?: WrapInputError;
+  isApprovalNeeded?: boolean;
+  isApproving?: boolean;
 }
 
 /**
@@ -74,51 +94,55 @@ export default function useWrapCallback(
   inputCurrency: Currency | undefined | null,
   outputCurrency: Currency | undefined | null,
   typedValue: string | undefined
-): {
-  wrapType: WrapType;
-  execute?: () => Promise<string | undefined>;
-  inputError?: WrapInputError;
-} {
+): WrapState {
   const account = useAccount();
   const wethContract = useWETHContract();
-  // console.log("wethContract", wethContract);
+  const wstTaraContract = useERC4626Contract(WRAPPED_STTARA_TARAXA.address);
+  const stTaraContract = useTokenContract(STTARA_TARAXA.address);
+
+  const [isApproving, setIsApproving] = useState(false);
+
   const balance = useCurrencyBalance(
     account.address,
     inputCurrency ?? undefined
   );
-  // console.log("balance", balance);
-  // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, inputCurrency ?? undefined),
     [inputCurrency, typedValue]
   );
-  // console.log("inputAmount", inputAmount);
-  const addTransaction = useTransactionAdder();
 
-  // This allows an async error to propagate within the React lifecycle.
-  // Without rethrowing it here, it would not show up in the UI - only the dev console.
+  // Check allowance for stTARA -> wstTARA wrapping
+  const stTaraAllowance = useTokenAllowance(
+    STTARA_TARAXA,
+    account.address ?? undefined,
+    WRAPPED_STTARA_TARAXA.address
+  );
+
+  const addTransaction = useTransactionAdder();
   const [error, setError] = useState<Error>();
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   return useMemo(() => {
-    if (
-      !wethContract ||
-      !account.chainId ||
-      !inputCurrency ||
-      !outputCurrency
-    ) {
-      return NOT_APPLICABLE;
-    }
-    const weth = WRAPPED_NATIVE_CURRENCY[account.chainId];
-    if (!weth) {
+    if (!account.chainId || !inputCurrency || !outputCurrency) {
       return NOT_APPLICABLE;
     }
 
+    const weth = WRAPPED_NATIVE_CURRENCY[account.chainId];
+    const stTara = STTARA_TARAXA;
+    const wstTara = WRAPPED_STTARA_TARAXA;
+
     const hasInputAmount = Boolean(inputAmount?.greaterThan("0"));
+    const isWrappingTaraOrStTara =
+      (inputCurrency.isNative && weth?.equals(outputCurrency)) ||
+      stTara.equals(inputCurrency);
     const sufficientBalance =
       inputAmount && balance && !balance.lessThan(inputAmount);
+
+    // Check if approval is needed for stTARA -> wstTARA wrap
+    const isApprovalNeeded =
+      stTara.equals(inputCurrency) &&
+      wstTara.equals(outputCurrency) &&
+      stTaraAllowance?.tokenAllowance?.lessThan(inputAmount ?? "0");
 
     const eventProperties = {
       token_in_address: getTokenAddress(inputCurrency),
@@ -131,7 +155,11 @@ export default function useWrapCallback(
         : undefined,
     };
 
-    if (inputCurrency.isNative && weth.equals(outputCurrency)) {
+    // Handle ETH <-> WETH
+    if (inputCurrency.isNative && weth?.equals(outputCurrency)) {
+      if (!wethContract) {
+        return NOT_APPLICABLE;
+      }
       return {
         wrapType: WrapType.WRAP,
         execute:
@@ -185,10 +213,15 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
         inputError: sufficientBalance
           ? undefined
           : hasInputAmount
-          ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE
+          ? isWrappingTaraOrStTara
+            ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE
+            : WrapInputError.INSUFFICIENT_WRAPPED_BALANCE
           : WrapInputError.ENTER_NATIVE_AMOUNT,
       };
-    } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
+    } else if (weth?.equals(inputCurrency) && outputCurrency.isNative) {
+      if (!wethContract) {
+        return NOT_APPLICABLE;
+      }
       return {
         wrapType: WrapType.UNWRAP,
         execute:
@@ -231,19 +264,113 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
         inputError: sufficientBalance
           ? undefined
           : hasInputAmount
-          ? WrapInputError.INSUFFICIENT_WRAPPED_BALANCE
+          ? isWrappingTaraOrStTara
+            ? WrapInputError.INSUFFICIENT_WRAPPED_BALANCE
+            : WrapInputError.INSUFFICIENT_NATIVE_BALANCE
           : WrapInputError.ENTER_WRAPPED_AMOUNT,
       };
-    } else {
-      return NOT_APPLICABLE;
     }
+    // Handle stTARA <-> wstTARA
+    else if (stTara.equals(inputCurrency) && wstTara.equals(outputCurrency)) {
+      if (!wstTaraContract) {
+        return NOT_APPLICABLE;
+      }
+      return {
+        wrapType: WrapType.APPROVE_AND_WRAP,
+        isApprovalNeeded,
+        isApproving,
+        execute:
+          sufficientBalance && inputAmount && wstTaraContract && stTaraContract
+            ? async () => {
+                try {
+                  // Handle approval if needed
+                  if (isApprovalNeeded) {
+                    setIsApproving(true);
+                    const approvalTx = await stTaraContract.approve(
+                      WRAPPED_STTARA_TARAXA.address,
+                      `0x${inputAmount.quotient.toString(16)}`
+                    );
+                    await approvalTx.wait();
+                    setIsApproving(false);
+                  }
+
+                  // Proceed with wrap
+                  const txReceipt = await wstTaraContract.deposit(
+                    `0x${inputAmount.quotient.toString(16)}`,
+                    account.address
+                  );
+                  addTransaction(txReceipt, {
+                    type: TransactionType.WRAP,
+                    unwrapped: false,
+                    currencyAmountRaw: inputAmount?.quotient.toString(),
+                    chainId: account.chainId,
+                  });
+                  return txReceipt.hash;
+                } catch (error) {
+                  setIsApproving(false);
+                  logger.error(error, {
+                    tags: { file: "useWrapCallback", function: "wrap" },
+                  });
+                  throw error;
+                }
+              }
+            : undefined,
+        inputError: sufficientBalance
+          ? undefined
+          : hasInputAmount
+          ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE
+          : WrapInputError.ENTER_NATIVE_AMOUNT,
+      };
+    } else if (wstTara.equals(inputCurrency) && stTara.equals(outputCurrency)) {
+      return {
+        wrapType: WrapType.APPROVE_AND_UNWRAP,
+        execute:
+          sufficientBalance && inputAmount && wstTaraContract
+            ? async () => {
+                try {
+                  const txReceipt = await wstTaraContract.redeem(
+                    `0x${inputAmount.quotient.toString(16)}`,
+                    account.address,
+                    account.address
+                  );
+                  addTransaction(txReceipt, {
+                    type: TransactionType.WRAP,
+                    unwrapped: true,
+                    currencyAmountRaw: inputAmount?.quotient.toString(),
+                    chainId: account.chainId,
+                  });
+                  return txReceipt.hash;
+                } catch (error) {
+                  logger.error(error, {
+                    tags: { file: "useWrapCallback", function: "unwrap" },
+                  });
+                  throw error;
+                }
+              }
+            : undefined,
+        inputError: sufficientBalance
+          ? undefined
+          : hasInputAmount
+          ? isWrappingTaraOrStTara
+            ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE
+            : WrapInputError.INSUFFICIENT_WRAPPED_BALANCE
+          : WrapInputError.ENTER_WRAPPED_AMOUNT,
+      };
+    }
+
+    return NOT_APPLICABLE;
   }, [
-    wethContract,
     account.chainId,
+    account.address,
     inputCurrency,
     outputCurrency,
     inputAmount,
     balance,
+    wethContract,
+    wstTaraContract,
+    stTaraContract,
+    stTaraAllowance,
+    isApproving,
     addTransaction,
   ]);
 }
