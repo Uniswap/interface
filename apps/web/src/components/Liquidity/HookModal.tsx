@@ -2,7 +2,7 @@ import { FlagWarning, getFlagWarning, getFlagsFromContractAddress } from 'compon
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CopyHelper } from 'theme/components'
+import { CopyHelper } from 'theme/components/CopyHelper'
 import { Button, Checkbox, Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction'

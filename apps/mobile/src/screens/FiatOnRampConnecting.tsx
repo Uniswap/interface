@@ -56,6 +56,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     quoteCurrency,
     fiatAmount,
     tokenAmount,
+    externalTransactionIdSuffix,
   } = useFiatOnRampContext()
   const serviceProvider = selectedQuote?.serviceProviderDetails
 
@@ -63,6 +64,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     activeAccountAddress,
     quoteCurrency.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
     serviceProvider?.serviceProvider,
+    externalTransactionIdSuffix,
   )
 
   const onError = useCallback((): void => {

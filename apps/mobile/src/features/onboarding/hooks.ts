@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import OneSignal from 'react-native-onesignal'
+import { OneSignal } from 'react-native-onesignal'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
@@ -35,7 +35,7 @@ export function useCompleteOnboardingCallback({
 
     // Initializes notification settings
     dispatch(initNotifsForNewUser())
-    OneSignal.sendTags({
+    OneSignal.User.addTags({
       [OneSignalUserTagField.OnboardingWalletAddress]: onboardingAddresses[0] ?? '',
       [OneSignalUserTagField.OnboardingCompletedAt]: Math.floor(Date.now() / ONE_SECOND_MS).toString(),
       [OneSignalUserTagField.OnboardingImportType]: importType,

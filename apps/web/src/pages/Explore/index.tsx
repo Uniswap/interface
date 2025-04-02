@@ -9,15 +9,15 @@ import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getTokenExploreURL } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
+import ExploreStatsSection from 'pages/Explore/ExploreStatsSection'
 import ProtocolFilter from 'pages/Explore/ProtocolFilter'
-import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
 import { useExploreParams } from 'pages/Explore/redirects'
 import RecentTransactions from 'pages/Explore/tables/RecentTransactions'
 import { NamedExoticComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
-import { TamaguiClickableStyle } from 'theme/components'
+import { TamaguiClickableStyle } from 'theme/components/styles'
 import { Button, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -160,12 +160,12 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     >
       <ExploreContextProvider chainId={chainInfo?.id}>
         <Flex width="100%" minWidth={320} py="$spacing48" px="$spacing40" $md={{ p: '$spacing16' }}>
-          <ExploreChartsSection />
+          <ExploreStatsSection />
           <Flex
             ref={tabNavRef}
             row
             maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
-            mt={0}
+            mt={60}
             mx="auto"
             mb="$spacing4"
             alignItems="center"

@@ -125,15 +125,15 @@ function InsufficientNativeTokenWarningContent({
             {modalOrTooltipMainMessage}
           </Text>
 
-          <Flex width="100%" gap="$spacing12">
-            <Flex row alignSelf="stretch">
-              <LearnMoreLink
-                textColor="$neutral2"
-                componentType="Button"
-                url={uniswapUrls.helpArticleUrls.networkFeeInfo}
-              />
-            </Flex>
+          <Flex row py="$spacing12">
+            <LearnMoreLink
+              textColor="$accent3"
+              textVariant="buttonLabel3"
+              url={uniswapUrls.helpArticleUrls.networkFeeInfo}
+            />
+          </Flex>
 
+          <Flex width="100%" gap="$spacing12">
             {bridgingTokenWithHighestBalance && (
               <BridgeTokenButton
                 inputToken={bridgingTokenWithHighestBalance.currencyInfo}
@@ -146,7 +146,8 @@ function InsufficientNativeTokenWarningContent({
             {!isTestnetModeEnabled && (
               <BuyNativeTokenButton
                 nativeCurrencyInfo={nativeCurrencyInfo}
-                canBridge={!!bridgingTokenWithHighestBalance}
+                usesStaticText={!!bridgingTokenWithHighestBalance}
+                usesStaticTheme={!!bridgingTokenWithHighestBalance}
                 onPress={onClose}
               />
             )}

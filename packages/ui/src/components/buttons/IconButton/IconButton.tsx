@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 import { styled, type TamaguiElement } from 'tamagui'
-import { CustomButtonFrame } from 'ui/src/components/buttons/Button/components/CustomButtonFrame'
+import { CustomButtonFrame } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/CustomButtonFrame'
 import { ThemedIcon } from 'ui/src/components/buttons/Button/components/ThemedIcon'
 import { ThemedSpinningLoader } from 'ui/src/components/buttons/Button/components/ThemedSpinnerLoader'
 import { useButtonAnimationOnChange } from 'ui/src/components/buttons/Button/hooks/useButtonAnimationOnChange'
@@ -48,7 +48,7 @@ const IconButtonFrame = styled(CustomButtonFrame, {
         borderRadius: '$rounded20',
       },
     },
-  },
+  } as const,
 })
 
 export const IconButton = forwardRef<TamaguiElement, IconButtonProps>(function IconButton(

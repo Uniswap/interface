@@ -4,7 +4,7 @@ import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { ReactNode, useEffect, useState } from 'react'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, useSporeColors } from 'ui/src'
 
 interface TraitsHeaderProps {

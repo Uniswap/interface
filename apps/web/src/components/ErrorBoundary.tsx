@@ -3,7 +3,9 @@ import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
 import { PropsWithChildren, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CopyToClipboard, ExternalLink, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { CopyToClipboard } from 'theme/components/CopyHelper'
+import { ExternalLink } from 'theme/components/Links'
 import { Button, Flex, TouchableArea } from 'ui/src'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -13,12 +15,13 @@ const Code = styled.code`
   font-weight: 485;
   font-size: 12px;
   line-height: 16px;
-  word-sentry.wrap: break-word;
+  word-wrap: break-word;
   width: 100%;
   color: ${({ theme }) => theme.neutral1};
   font-family: ${({ theme }) => theme.fonts.code};
   overflow: scroll;
   max-height: calc(100vh - 450px);
+  -webkit-overflow-scrolling: touch;
 `
 
 const Separator = styled.div`
@@ -27,37 +30,38 @@ const Separator = styled.div`
 
 const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) => {
   const { t } = useTranslation()
+  const isMobile = useIsMobile()
 
   const errorDetails = error.stack || error.message
 
   return (
-    <Flex width="100vw" height="100vh">
-      <Flex width="100%" p="$spacing1" maxWidth={500} centered m="auto">
-        <Flex gap="$gap24">
-          <ErrorDetailsSection errorDetails={errorDetails} eventId={eventId} />
-          <Flex row gap="$gap12">
+    <Flex height="100%" width="100%" position="absolute" centered top={0} left={0} right={0} bottom={0}>
+      <Flex
+        gap="$gap24"
+        width="100%"
+        p={isMobile ? '$spacing16' : '$spacing1'}
+        maxWidth={isMobile ? '100%' : 500}
+        centered
+      >
+        <ErrorDetailsSection errorDetails={errorDetails} eventId={eventId} />
+        <Flex width="100%" row gap="$gap12">
+          <Flex row flexBasis={0} flexGrow={1}>
             <Button emphasis="primary" size="small" variant="branded" onPress={() => window.location.reload()}>
               {t('common.reload.label')}
             </Button>
-            <ExternalLink
-              style={{ flexGrow: 1, flexBasis: 0 }}
-              id="get-support-on-discord"
-              href={uniswapUrls.helpRequestUrl}
-              target="_blank"
-            >
-              <Flex row>
-                <Button
-                  alignSelf="stretch"
-                  emphasis="secondary"
-                  size="small"
-                  variant="branded"
-                  onPress={() => window.location.reload()}
-                >
-                  {t('common.getSupport.button')}
-                </Button>
-              </Flex>
-            </ExternalLink>
           </Flex>
+          <ExternalLink
+            style={{ flexGrow: 1, flexBasis: 0 }}
+            id="get-support-on-discord"
+            href={uniswapUrls.helpRequestUrl}
+            target="_blank"
+          >
+            <Flex row>
+              <Button emphasis="secondary" size="small" variant="branded">
+                {t('common.getSupport.button')}
+              </Button>
+            </Flex>
+          </ExternalLink>
         </Flex>
       </Flex>
     </Flex>
@@ -82,7 +86,13 @@ function ErrorDetailsSection({ errorDetails, eventId }: { errorDetails: string; 
           {eventId ? t('error.request.provideId') : t('common.error.request')}
         </Description>
       </Flex>
-      <Flex backgroundColor="$surface2" gap="$spacing8" p="$spacing24" borderRadius="$rounded24">
+      <Flex
+        alignSelf="stretch"
+        backgroundColor="$surface2"
+        gap="$spacing8"
+        p={isMobile ? '$spacing16' : '$spacing24'}
+        borderRadius="$rounded24"
+      >
         <Flex row gap="$gap16" alignItems="center" justifyContent="space-between">
           <ThemedText.SubHeader>
             {eventId ? t('error.id', { eventId }) : t('common.error.details')}

@@ -11,7 +11,8 @@
   "compilerOptions": {
     "types": [
       "chrome",
-      "jest"
+      "jest",
+      "cypress"
     ]
   }
 }

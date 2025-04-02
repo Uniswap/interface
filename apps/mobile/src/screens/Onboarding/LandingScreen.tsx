@@ -24,7 +24,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { LANDING_ANIMATION_DURATION, LandingBackground } from 'wallet/src/components/landing/LandingBackground'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 

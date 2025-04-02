@@ -90,6 +90,7 @@ module.exports = {
     plugins: [
       new DefinePlugin({
         __DEV__: isDev,
+        'process.env.EXPO_OS': '"web"',
       }),
       // Webpack 5 does not polyfill node globals, so we do so for those necessary:
       new ProvidePlugin({

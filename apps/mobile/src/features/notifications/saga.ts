@@ -1,4 +1,4 @@
-import OneSignal from 'react-native-onesignal'
+import { OneSignal } from 'react-native-onesignal'
 import { NotifSettingType, OneSignalUserTagField } from 'src/features/notifications/constants'
 import { selectAllPushNotificationSettings } from 'src/features/notifications/selectors'
 import { initNotifsForNewUser, updateNotifSettings } from 'src/features/notifications/slice'
@@ -28,7 +28,7 @@ function* syncWithOneSignal() {
   if (finishedOnboarding) {
     const { generalUpdatesEnabled, priceAlertsEnabled } = yield* select(selectAllPushNotificationSettings)
 
-    yield* call(OneSignal.sendTags, {
+    yield* call(OneSignal.User.addTags, {
       [NotifSettingType.GeneralUpdates]: generalUpdatesEnabled.toString(),
       [NotifSettingType.PriceAlerts]: priceAlertsEnabled.toString(),
     })
@@ -36,7 +36,7 @@ function* syncWithOneSignal() {
 }
 
 function* initNewUser() {
-  yield* call(OneSignal.sendTags, {
+  yield* call(OneSignal.User.addTags, {
     [NotifSettingType.GeneralUpdates]: 'true',
     [NotifSettingType.PriceAlerts]: 'true',
   })
@@ -47,7 +47,7 @@ function* processFinalizedTx(action: ReturnType<typeof finalizeTransaction>) {
     action.payload.typeInfo.type === TransactionType.Swap && action.payload.status === TransactionStatus.Success
   if (isSuccessfulSwap) {
     yield* call(
-      OneSignal.sendTag,
+      OneSignal.User.addTag,
       OneSignalUserTagField.SwapLastCompletedAt,
       Math.floor(Date.now() / ONE_SECOND_MS).toString(),
     )

@@ -1,7 +1,7 @@
 import styled, { useTheme } from 'lib/styled-components'
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans, useTranslation } from 'react-i18next'
-import { ExternalLink } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'

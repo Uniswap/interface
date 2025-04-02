@@ -3,7 +3,7 @@ import { TransactionsTable } from 'components/Tokens/TokenDetails/tables/Transac
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useState } from 'react'
 import { Trans } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, styled, Text } from 'ui/src'
 
 const Container = styled(Flex, {

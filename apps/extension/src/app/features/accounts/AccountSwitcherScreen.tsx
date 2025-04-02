@@ -33,7 +33,7 @@ import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { MenuContent } from 'wallet/src/components/menu/MenuContent'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
-import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanActiveAddressClaimUnitag'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import {

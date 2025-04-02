@@ -18,7 +18,7 @@ import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
 import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseWallets'
-import { SettingsViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/ViewRecoveryPhraseScreen'
+import { ViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/ViewRecoveryPhraseScreen'
 import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
 import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenWrapper'
 import { SettingsChangePasswordScreen } from 'src/app/features/settings/password/SettingsChangePasswordScreen'
@@ -80,7 +80,7 @@ const router = createHashRouter([
             : {},
           {
             path: SettingsRoutes.ViewRecoveryPhrase,
-            element: <SettingsViewRecoveryPhraseScreen />,
+            element: <ViewRecoveryPhraseScreen />,
           },
           {
             path: SettingsRoutes.RemoveRecoveryPhrase,

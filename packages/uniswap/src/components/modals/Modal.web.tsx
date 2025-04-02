@@ -26,6 +26,7 @@ export function Modal({
   paddingY,
   analyticsProperties,
   skipLogImpression,
+  position,
   flex,
   zIndex,
   isDismissible = true,
@@ -57,6 +58,7 @@ export function Modal({
     <Trace logImpression={skipLogImpression ? false : isModalOpen} modal={name} properties={analyticsProperties}>
       {(isModalOpen || !fullyClosed) && (
         <ModalComponent
+          position={position}
           bottomAttachment={bottomAttachment}
           shadowOpacity={isExtension ? 0 : undefined}
           borderWidth={isExtension ? 0 : undefined}

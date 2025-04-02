@@ -55,22 +55,6 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   gap: 4px;
 }
 
-.c4 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c5 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -88,12 +72,6 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
 
 .c0:active {
   opacity: 0.4;
-}
-
-.c9 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
 }
 
 .c1 {
@@ -118,6 +96,28 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
 
 .c1:hover path {
   fill: #222222;
+}
+
+.c4 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c5 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 <div
@@ -405,22 +405,6 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   gap: 4px;
 }
 
-.c4 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c5 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -438,12 +422,6 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
 
 .c0:active {
   opacity: 0.4;
-}
-
-.c9 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
 }
 
 .c1 {
@@ -468,6 +446,28 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
 
 .c1:hover path {
   fill: #222222;
+}
+
+.c4 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c5 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 <div

@@ -6,7 +6,7 @@ import { SwapResult } from 'hooks/useSwapCallback'
 import { Trans } from 'react-i18next'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
-import { ExternalLink } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 

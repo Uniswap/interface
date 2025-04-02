@@ -25,7 +25,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 4px;
 }
 
-.c17 {
+.c16 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -41,22 +41,6 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   -ms-flex-pack: center;
   justify-content: center;
   gap: 12px;
-}
-
-.c13 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c15 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c4 {
@@ -132,7 +116,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 16px;
 }
 
-.c12 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -153,6 +137,22 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.c12 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c14 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c2 {
@@ -181,14 +181,14 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   border-radius: 12px;
 }
 
-.c14 {
+.c13 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c16 {
+.c15 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -210,10 +210,6 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
 
 .c10 path {
   background: #7D7D7D;
-  fill: #7D7D7D;
-}
-
-.c11 path {
   fill: #7D7D7D;
 }
 
@@ -354,7 +350,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
                           class="c9"
                         >
                           <svg
-                            class="c10 c11"
+                            class="c10"
                             fill="#7D7D7D"
                             viewBox="0 0 28 28"
                             xmlns="http://www.w3.org/2000/svg"
@@ -366,25 +362,26 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
                           </svg>
                         </div>
                         <div
-                          class="c12 c1"
+                          class="c11 c1"
                         >
                           <div
-                            class="c13 c14 css-4kpdx7"
+                            class="c12 c13 css-4kpdx7"
                           >
                             Is this a wallet address?
                           </div>
                           <div
-                            class="c15 c16 css-1urox24"
+                            class="c14 c15 css-1urox24"
                           >
                             You’re about to send tokens to a special type of address - a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.
                           </div>
                         </div>
                       </div>
                       <div
-                        class="c6 c17"
+                        class="c6 c16"
                       >
                         <button
                           class=" is_Button  t_group_item"
+                          dd-action-name="Cancel"
                           style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                         >
                           <span
@@ -395,6 +392,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
                         </button>
                         <button
                           class=" is_Button  t_group_item"
+                          dd-action-name="Continue"
                           style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                         >
                           <span

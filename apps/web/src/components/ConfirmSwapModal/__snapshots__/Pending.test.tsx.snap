@@ -85,22 +85,6 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   justify-content: center;
 }
 
-.c10 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -156,6 +140,22 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c2 {
@@ -410,22 +410,6 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   justify-content: center;
 }
 
-.c10 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -481,6 +465,22 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c2 {
@@ -755,22 +755,6 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   justify-content: center;
 }
 
-.c12 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -807,6 +791,22 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.c12 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c13 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c2 {
@@ -1030,22 +1030,6 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   gap: 8px;
 }
 
-.c10 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1082,6 +1066,22 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c2 {
@@ -1357,22 +1357,6 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   justify-content: center;
 }
 
-.c10 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -1428,6 +1412,22 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c2 {
@@ -1740,22 +1740,6 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   justify-content: center;
 }
 
-.c12 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1792,6 +1776,22 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.c12 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c13 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c2 {

@@ -7,7 +7,7 @@ import { useBag, useNativeUsdPrice } from 'nft/hooks'
 import { ActivityEventType } from 'nft/types'
 import { useCallback, useReducer } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Flex, Text, View } from 'ui/src'
 import { NftActivityType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 

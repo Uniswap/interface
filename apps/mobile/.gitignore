@@ -119,3 +119,5 @@ ios/WidgetsCore/MobileSchema/*
 ios/WidgetsCore/Env.swift
 ios/OneSignalNotificationServiceExtension/Env.swift
 
+# Expo
+.expo/

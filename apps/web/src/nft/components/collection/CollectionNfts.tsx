@@ -52,7 +52,7 @@ import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParam
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import {

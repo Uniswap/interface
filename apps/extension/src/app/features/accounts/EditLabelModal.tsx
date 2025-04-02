@@ -14,7 +14,7 @@ import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/const
 import { shortenAddress } from 'utilities/src/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { CardType, IntroCard, IntroCardGraphicType } from 'wallet/src/components/introCards/IntroCard'
-import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanActiveAddressClaimUnitag'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'

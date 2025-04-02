@@ -66,13 +66,14 @@ export function useFiatOnRampTransactionCreator(
   ownerAddress: string,
   chainId: UniverseChainId,
   serviceProvider?: string,
+  idSuffix?: string,
 ): {
   externalTransactionId: string
   dispatchAddTransaction: ({ isOffRamp }: { isOffRamp: boolean }) => void
 } {
   const dispatch = useDispatch()
 
-  const externalTransactionId = useRef(createOnRampTransactionId(serviceProvider))
+  const externalTransactionId = useRef(createOnRampTransactionId(serviceProvider, idSuffix))
 
   const dispatchAddTransaction = useCallback(
     ({ isOffRamp }: { isOffRamp: boolean }) => {

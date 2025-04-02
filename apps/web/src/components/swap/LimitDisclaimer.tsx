@@ -1,7 +1,8 @@
 import Column from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
-import { ExternalLink, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 
 const Container = styled(Column)`
   background-color: ${({ theme }) => theme.surface2};

@@ -298,7 +298,9 @@ export const colorsLight = {
   statusCritical2: sporeLight.statusCritical2,
   statusCritical2Hovered: sporeLight.statusCritical2Hovered,
   statusWarning: sporeLight.statusWarning,
+  statusWarningHovered: sporeLight.statusWarningHovered,
   statusWarning2: sporeLight.statusWarning2,
+  statusWarning2Hovered: sporeLight.statusWarning2Hovered,
 
   DEP_backgroundBranded: '#FCF7FF',
   DEP_backgroundOverlay: opacifyRaw(60, colors.white),
@@ -385,7 +387,9 @@ export const colorsDark = {
   statusCritical2: sporeDark.statusCritical2,
   statusCritical2Hovered: sporeDark.statusCritical2Hovered,
   statusWarning: sporeDark.statusWarning,
+  statusWarningHovered: sporeDark.statusWarningHovered,
   statusWarning2: sporeDark.statusWarning2,
+  statusWarning2Hovered: sporeDark.statusWarning2Hovered,
 
   DEP_backgroundBranded: '#100D1C',
   DEP_backgroundOverlay: opacifyRaw(10, colors.white),

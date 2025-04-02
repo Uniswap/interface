@@ -4,12 +4,13 @@ import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hook
 import { OnSelectCurrency, TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { formatSearchResults, useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
-import { SearchModalItemTypes } from 'uniswap/src/components/lists/types'
+import { PoolOption, SearchModalItemTypes } from 'uniswap/src/components/lists/types'
+import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { SearchModalList } from 'uniswap/src/features/search/SearchModal/SearchModalList'
-import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
+import { isWeb } from 'utilities/src/platform'
 
 export function useSectionsForSearchResults(
   chainFilter: UniverseChainId | null,
@@ -26,10 +27,47 @@ export function useSectionsForSearchResults(
     return formatSearchResults(searchResultCurrencies, undefined, searchFilter)
   }, [searchFilter, searchResultCurrencies])
 
-  const searchResultsSections = useTokenOptionsSection({
+  const searchTokensSection = useTokenOptionsSection({
     sectionKey: TokenOptionSection.SearchResults,
     tokenOptions: searchResults,
   })
+
+  // on web, add search results sections for pools
+  const MOCK_POOLS_SECTION: TokenSection<PoolOption>[] = useMemo(
+    () => [
+      {
+        sectionKey: TokenOptionSection.PopularTokens, // temp
+        data: [
+          {
+            poolId: '0x1234567890123456789012345678901234567890',
+            chainId: UniverseChainId.Unichain,
+            token0CurrencyInfo: {
+              currency: {
+                chainId: UniverseChainId.Unichain,
+                address: '0x1234567890123456789012345678901234567890',
+                decimals: 18,
+                name: 'Unichain',
+                symbol: 'UNI',
+              },
+            },
+            token1CurrencyInfo: {
+              currency: {
+                chainId: UniverseChainId.Unichain,
+                address: '0x1234567890123456789012345678901234567890',
+                decimals: 18,
+                name: 'Unichain',
+                symbol: 'UNI',
+              },
+            },
+            hookAddress: '0x1234567890123456789012345678901234567890',
+            protocolVersion: ProtocolVersion.V3,
+            feeTier: 3000,
+          } as PoolOption,
+        ],
+      },
+    ],
+    [],
+  )
 
   // on mobile, add search results sections for wallet & NFT
 
@@ -39,14 +77,19 @@ export function useSectionsForSearchResults(
     refetchSearchTokens?.()
   }, [refetchSearchTokens])
 
+  const sections = useMemo(
+    () => [...(searchTokensSection ?? []), ...(isWeb ? MOCK_POOLS_SECTION : [])],
+    [MOCK_POOLS_SECTION, searchTokensSection],
+  )
+
   return useMemo(
     () => ({
-      data: searchResultsSections,
+      data: sections,
       loading,
       error: error || undefined,
       refetch: refetchAll,
     }),
-    [error, loading, refetchAll, searchResultsSections],
+    [error, loading, refetchAll, sections],
   )
 }
 
@@ -66,7 +109,6 @@ function _SearchModalResultsList({
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
   const { t } = useTranslation()
-  const isKeyboardOpen = useIsKeyboardOpen()
   const { registerSearch } = useAddToSearchHistory()
   const {
     data: sections,
@@ -86,16 +128,13 @@ function _SearchModalResultsList({
   )
   return (
     <SearchModalList
-      showTokenAddress
       chainFilter={chainFilter}
       emptyElement={emptyElement}
       errorText={t('token.selector.search.error')}
       hasError={Boolean(error)}
-      isKeyboardOpen={isKeyboardOpen}
       loading={userIsTyping || loading}
       refetch={refetch}
       sections={sections}
-      showTokenWarnings={true}
       onSelectCurrency={(currencyInfo, section, index) => {
         onSelectCurrency(currencyInfo, section, index)
         registerSearch(currencyInfo)

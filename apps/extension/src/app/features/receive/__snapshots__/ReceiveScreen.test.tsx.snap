@@ -6011,6 +6011,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                     <button
                       aria-label="Networks"
                       class=" is_Button  t_group_item"
+                      dd-action-name="Networks"
                       style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; outline-color: rgba(0, 0, 0, 0); padding: 4px 6px 4px 6px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 4px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                     >
                       <span
@@ -12048,6 +12049,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                   <button
                     aria-label="Networks"
                     class=" is_Button  t_group_item"
+                    dd-action-name="Networks"
                     style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; outline-color: rgba(0, 0, 0, 0); padding: 4px 6px 4px 6px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 4px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                   >
                     <span

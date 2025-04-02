@@ -1,6 +1,6 @@
 import { FilterIcon } from 'nft/components/icons'
 import { pluralize } from 'nft/utils'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled, useSporeColors } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'

@@ -9,6 +9,7 @@ import { PageType, useIsPage } from 'hooks/useIsPage'
 import { BuyForm } from 'pages/Swap/Buy/BuyForm'
 import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
 import { SendForm } from 'pages/Swap/Send/SendForm'
+import { DeadlineOverride } from 'pages/Swap/settings/DeadlineOverride'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -35,7 +36,6 @@ import { TransactionSettingKey } from 'uniswap/src/features/transactions/setting
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
-import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
 import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
@@ -264,7 +264,7 @@ function UniversalSwapFlow({
       {currentTab === SwapTab.Swap && (
         <Flex gap="$spacing16">
           <SwapFlow
-            settings={[Slippage, Deadline, ProtocolPreference]}
+            settings={[Slippage, DeadlineOverride, ProtocolPreference]}
             hideHeader={hideHeader}
             hideFooter={hideFooter}
             onClose={noop}

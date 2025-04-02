@@ -93,8 +93,12 @@ function _DefaultTokenOptions({ currencyField }: { currencyField: CurrencyField 
       row
       mx={extraMarginForHoverAnimation}
       gap={isInterfaceDesktop ? '$gap4' : '$gap8'}
-      opacity={0}
-      $group-hover={{ opacity: 1 }}
+      {...(isHoverable && {
+        opacity: 0,
+        '$group-hover': {
+          opacity: 1,
+        },
+      })}
     >
       <TokenOptions />
     </Flex>

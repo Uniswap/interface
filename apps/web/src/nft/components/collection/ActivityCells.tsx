@@ -24,7 +24,8 @@ import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { getTimeDifference } from 'nft/utils/date'
 import { ReactNode, useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { ClickableTamaguiStyle, ExternalLink } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, GetThemeValueForKey, Image, Text, styled as tamaguiStyled } from 'ui/src'
 import {
   NftActivityType,

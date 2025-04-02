@@ -1,5 +1,5 @@
 import { useStyle } from 'tamagui'
-import { CustomButtonText } from 'ui/src/components/buttons/Button/components/CustomButtonText'
+import { CustomButtonText } from 'ui/src/components/buttons/Button/components/CustomButtonText/CustomButtonText'
 import type { TypeOfButton } from 'ui/src/components/buttons/Button/components/types'
 import { useIconSizes } from 'ui/src/components/buttons/Button/hooks/useIconSizes'
 import type { ButtonVariantProps } from 'ui/src/components/buttons/Button/types'

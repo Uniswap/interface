@@ -19,14 +19,27 @@ export function areEqualGasStrategies(a?: GasStrategy, b?: GasStrategy): boolean
     return false
   }
 
-  // displayLimitInflationFactor is not returned by the server, so it's ignored here
-  return (
+  const optionalFieldMatch = <T>(fieldA: T | undefined | null, fieldB: T | undefined | null): boolean => {
+    return fieldA == null || fieldB == null || fieldA === fieldB
+  }
+
+  // Required fields must be exactly equal
+  const requiredFieldsEqual =
     a.limitInflationFactor === b.limitInflationFactor &&
     a.priceInflationFactor === b.priceInflationFactor &&
-    a.percentileThresholdFor1559Fee === b.percentileThresholdFor1559Fee &&
-    a.minPriorityFeeGwei === b.minPriorityFeeGwei &&
-    a.maxPriorityFeeGwei === b.maxPriorityFeeGwei
-  )
+    a.percentileThresholdFor1559Fee === b.percentileThresholdFor1559Fee
+
+  // Optional fields can be undefined on either side or equal if both defined
+  const optionalFieldsMatch =
+    optionalFieldMatch(a.thresholdToInflateLastBlockBaseFee, b.thresholdToInflateLastBlockBaseFee) &&
+    optionalFieldMatch(a.baseFeeMultiplier, b.baseFeeMultiplier) &&
+    optionalFieldMatch(a.baseFeeHistoryWindow, b.baseFeeHistoryWindow) &&
+    optionalFieldMatch(a.minPriorityFeeRatioOfBaseFee, b.minPriorityFeeRatioOfBaseFee) &&
+    optionalFieldMatch(a.minPriorityFeeGwei, b.minPriorityFeeGwei) &&
+    optionalFieldMatch(a.maxPriorityFeeGwei, b.maxPriorityFeeGwei)
+
+  // displayLimitInflationFactor is not returned by the server, so it's ignored here
+  return requiredFieldsEqual && optionalFieldsMatch
 }
 
 export function getGasPrice(estimate: GasEstimate): string {

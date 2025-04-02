@@ -1,4 +1,4 @@
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Flex, Main, Text, styled } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { TextVariantTokens, fonts, iconSizes } from 'ui/src/theme'

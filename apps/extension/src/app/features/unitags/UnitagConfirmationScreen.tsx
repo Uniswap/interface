@@ -49,12 +49,16 @@ export function UnitagConfirmationScreen(): JSX.Element {
           </Text>
         </Flex>
         <Flex gap="$spacing12" pt="$spacing12">
-          <Button size="medium" variant="branded" emphasis="primary" onPress={closeCurrentTab}>
-            {t('common.button.done')}
-          </Button>
-          <Button size="medium" emphasis="secondary" onPress={onPressCustomize}>
-            {t('unitags.claim.confirmation.customize')}
-          </Button>
+          <Flex row>
+            <Button size="medium" variant="branded" emphasis="primary" onPress={closeCurrentTab}>
+              {t('common.button.done')}
+            </Button>
+          </Flex>
+          <Flex row>
+            <Button size="medium" emphasis="secondary" onPress={onPressCustomize}>
+              {t('unitags.claim.confirmation.customize')}
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
     </OnboardingScreen>

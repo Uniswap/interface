@@ -107,6 +107,7 @@ export function TokenDetailsActionButtons({
         {userHasBalance && !disabled && (
           <StyledContextMenu
             isAboveTrigger
+            isLeftOfTrigger
             actions={actionsWithIcons}
             isOpen={actionMenuOpen}
             closeMenu={closeActionMenu}

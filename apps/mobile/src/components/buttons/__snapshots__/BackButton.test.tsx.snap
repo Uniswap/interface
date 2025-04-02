@@ -36,6 +36,23 @@ exports[`BackButton renders without error 1`] = `
     }
   >
     <View
+      collapsable={false}
+      forwardedRef={[Function]}
+      jestAnimatedStyle={
+        {
+          "value": {
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "transform": [
+              {
+                "rotate": "0deg",
+              },
+            ],
+          },
+        }
+      }
       style={
         {
           "alignItems": "center",

@@ -3,7 +3,8 @@ import Row from 'components/deprecated/Row'
 import styled, { css } from 'lib/styled-components'
 import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ClickableStyle } from 'theme/components/styles'
 import { useFormatter } from 'utils/formatNumbers'
 
 interface LimitPriceButtonProps {

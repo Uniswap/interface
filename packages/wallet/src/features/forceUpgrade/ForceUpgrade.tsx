@@ -137,7 +137,7 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
             </Text>
           </Flex>
           <Flex centered gap="$spacing8" pb={isWeb ? '$none' : '$spacing12'} width="100%">
-            <Flex row>
+            <Flex row width="100%">
               <Button size="medium" variant="branded" onPress={onPressConfirm}>
                 {isMobileApp ? t('forceUpgrade.action.confirm') : t('forceUpgrade.action.learn')}
               </Button>
@@ -145,14 +145,14 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
 
             {upgradeStatus === UpgradeStatus.Required ? (
               mnemonicId && (
-                <Flex row>
+                <Flex row width="100%">
                   <Button size="medium" emphasis="secondary" onPress={onPressViewRecovery}>
                     {t('forceUpgrade.action.recoveryPhrase')}
                   </Button>
                 </Flex>
               )
             ) : (
-              <Flex row>
+              <Flex row width="100%">
                 <Button size="medium" emphasis="secondary" onPress={onClose}>
                   {t('common.button.notNow')}
                 </Button>
@@ -161,6 +161,7 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
           </Flex>
         </Flex>
       </Modal>
+
       {mnemonicId && showSeedPhrase && (
         <Modal
           alignment="top"

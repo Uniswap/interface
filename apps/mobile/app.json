@@ -11,7 +11,6 @@
     },
     "plugins": [
       "expo-localization",
-      "expo-barcode-scanner",
       "expo-camera",
       "expo-local-authentication"
     ]

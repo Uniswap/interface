@@ -29,7 +29,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function ManageWalletsModal(): JSX.Element {
