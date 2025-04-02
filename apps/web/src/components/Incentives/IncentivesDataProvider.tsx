@@ -258,8 +258,7 @@ export function IncentivesDataProvider({
         );
 
         setActiveIncentives(incentives.filter((inc) => !inc.ended));
-        // setEndedIncentives(incentives.filter((inc) => inc.ended));
-        setEndedIncentives([]);
+        setEndedIncentives(incentives.filter((inc) => inc.ended));
       };
 
       processIncentives();

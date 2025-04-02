@@ -39,6 +39,8 @@ interface FeeDistributionData {
   tradeFeesPercentage: number;
   tokenRewardsPercentage: number;
   daily24hAPR: number;
+  weeklyRewards: number;
+  weeklyRewardsUSD: number;
 }
 
 interface FeeDistributionResult {
@@ -152,6 +154,10 @@ export function useFeeDistribution(incentiveId: string): FeeDistributionResult {
         const tokenRewardsPercentage =
           totalAPR > 0 ? (tokenRewardsAPR / totalAPR) * 100 : 0;
 
+        // Calculate weekly rewards
+        const weeklyRewards = adjustedDailyReward * 7;
+        const weeklyRewardsUSD = dailyRewardsUSD * 7;
+
         const newData = {
           tradeFees: tradingFeeAPR,
           tokenRewards: tokenRewardsAPR,
@@ -159,6 +165,8 @@ export function useFeeDistribution(incentiveId: string): FeeDistributionResult {
           tradeFeesPercentage,
           tokenRewardsPercentage,
           daily24hAPR: totalAPR / 365,
+          weeklyRewards,
+          weeklyRewardsUSD,
         };
 
         // Update cache

@@ -44,6 +44,8 @@ const TokenImageWrapper = styled.div<{ $hasImage?: boolean }>`
 
 const ActionButtons = styled(Row)`
   gap: 8px;
+  width: 100%;
+  justify-content: flex-end;
 `;
 
 const ActionButton = styled.button<{ $variant?: "primary" }>`
@@ -155,7 +157,7 @@ export const IncentiveTable = ({
       columnHelper.accessor("poolName", {
         id: "pool",
         header: () => (
-          <Cell minWidth={250} justifyContent="flex-start">
+          <Cell minWidth={200} justifyContent="flex-start">
             <ThemedText.BodyPrimary>Pool</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -163,7 +165,7 @@ export const IncentiveTable = ({
           const data = pool?.row?.original;
           if (!data) return null;
           return (
-            <Cell minWidth={250} justifyContent="flex-start">
+            <Cell minWidth={200} justifyContent="flex-start">
               <StyledPoolRow gap="12px">
                 <PoolTokenImage pool={data} />
                 <PoolNameContainer>
@@ -177,7 +179,7 @@ export const IncentiveTable = ({
       }),
       columnHelper.accessor("liquidity", {
         header: () => (
-          <Cell minWidth={130} justifyContent="flex-end">
+          <Cell minWidth={100} justifyContent="flex-end">
             <ThemedText.BodyPrimary>Liquidity</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -185,7 +187,7 @@ export const IncentiveTable = ({
           const data = pool?.row?.original;
           if (!data) return null;
           return (
-            <Cell minWidth={130} justifyContent="flex-end">
+            <Cell minWidth={100} justifyContent="flex-end">
               <ThemedText.BodyPrimary>
                 {formatValue(data.liquidity)}
               </ThemedText.BodyPrimary>
@@ -195,7 +197,7 @@ export const IncentiveTable = ({
       }),
       columnHelper.accessor("volume24h", {
         header: () => (
-          <Cell minWidth={130} justifyContent="flex-end">
+          <Cell minWidth={100} justifyContent="flex-end">
             <ThemedText.BodyPrimary>Volume 24H</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -203,7 +205,7 @@ export const IncentiveTable = ({
           const data = pool?.row?.original;
           if (!data) return null;
           return (
-            <Cell minWidth={130} justifyContent="flex-end">
+            <Cell minWidth={100} justifyContent="flex-end">
               <ThemedText.BodyPrimary>
                 {formatValue(data.volume24h)}
               </ThemedText.BodyPrimary>
@@ -213,7 +215,7 @@ export const IncentiveTable = ({
       }),
       columnHelper.accessor("feesUSD", {
         header: () => (
-          <Cell minWidth={130} justifyContent="flex-end">
+          <Cell minWidth={100} justifyContent="flex-end">
             <ThemedText.BodyPrimary>Fees 24H</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -221,7 +223,7 @@ export const IncentiveTable = ({
           const data = pool?.row?.original;
           if (!data) return null;
           return (
-            <Cell minWidth={130} justifyContent="flex-end">
+            <Cell minWidth={100} justifyContent="flex-end">
               <ThemedText.BodyPrimary>
                 {formatValue(data.feesUSD)}
               </ThemedText.BodyPrimary>
@@ -231,7 +233,7 @@ export const IncentiveTable = ({
       }),
       columnHelper.accessor("apr24h", {
         header: () => (
-          <Cell minWidth={100} justifyContent="flex-end">
+          <Cell minWidth={80} justifyContent="flex-end">
             <ThemedText.BodyPrimary>APR 24H</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -239,26 +241,25 @@ export const IncentiveTable = ({
           const data = pool?.row?.original;
           if (!data) return null;
           return (
-            <Cell minWidth={100} justifyContent="flex-end">
+            <Cell minWidth={80} justifyContent="flex-end">
               <ThemedText.BodyPrimary>{data.apr24h}</ThemedText.BodyPrimary>
             </Cell>
           );
         },
       }),
       columnHelper.accessor("id", {
-        header: () => <Cell minWidth={120} />,
+        header: () => <Cell minWidth={90} />,
         cell: (pool) => {
           const data = pool?.row?.original;
           if (!data) return null;
 
           if (data.ended) {
-            return <Cell minWidth={120} />;
+            return <Cell minWidth={90} />;
           }
 
           if (!data.hasUserPosition && !data.userHasTokensToDeposit) {
             return (
-              <Cell minWidth={120}>
-                {" "}
+              <Cell minWidth={90}>
                 <ActionButtons>
                   <div
                     style={{ cursor: "pointer" }}
@@ -280,7 +281,7 @@ export const IncentiveTable = ({
           }
 
           return (
-            <Cell minWidth={120} justifyContent="flex-end">
+            <Cell minWidth={90}>
               <ActionButtons>
                 <div
                   style={{ cursor: "pointer" }}
@@ -343,7 +344,7 @@ export const IncentiveTable = ({
       columns={columns}
       data={incentives || []}
       loading={isLoading}
-      maxWidth={1200}
+      maxWidth={900}
     />
   );
 };
