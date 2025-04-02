@@ -289,7 +289,7 @@ export const CHAIN_NATIVE_TOKEN_SYMBOL: { [chainId: number]: string } = {
   [SupportedChainId.ARBITRUM_ONE]: 'ETH',
   [SupportedChainId.MAINNET]: 'ETH',
   [SupportedChainId.BASE]: 'ETH',
-  [SupportedChainId.POLYGON]: 'MATIC',
+  [SupportedChainId.POLYGON]: 'POLY',
 }
 
 export const NATIVE_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
@@ -401,7 +401,7 @@ function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | Support
 class MaticNativeCurrency extends NativeCurrency {
   public constructor(chainId: number) {
     if (!isMatic(chainId)) throw new Error('Not matic')
-    super(chainId, 18, 'MATIC', 'Polygon Matic')
+    super(chainId, 18, 'POLY', 'Polygon Matic')
   }
 
   get wrapped(): Token {

@@ -239,7 +239,7 @@ export default function Header() {
         </Title>
         <NavigationLinks />
         <HeaderControls>
-          <HeaderElement>
+          {/* <HeaderElement>
             {chainId && (
               <ExternalLink href={pools[chainId]} style={{ textDecoration: 'none' }}>
                 {kromPrice ? (
@@ -250,7 +250,7 @@ export default function Header() {
                 ) : null}
               </ExternalLink>
             )}
-          </HeaderElement>
+          </HeaderElement> */}
           <HeaderElement>
             <NetworkSelector />
           </HeaderElement>
