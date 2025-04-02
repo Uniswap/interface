@@ -290,6 +290,12 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                       WRAPPED_STTARA_TARAXA.address,
                       `0x${inputAmount.quotient.toString(16)}`
                     );
+                    addTransaction(approvalTx, {
+                      type: TransactionType.APPROVAL,
+                      tokenAddress: stTara.address,
+                      spender: WRAPPED_STTARA_TARAXA.address,
+                      amount: `0x${inputAmount.quotient.toString(16)}`,
+                    });
                     await approvalTx.wait();
                     setIsApproving(false);
                   }
@@ -300,7 +306,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     account.address
                   );
                   addTransaction(txReceipt, {
-                    type: TransactionType.WRAP,
+                    type: TransactionType.STAKED_WRAP,
                     unwrapped: false,
                     currencyAmountRaw: inputAmount?.quotient.toString(),
                     chainId: account.chainId,
@@ -334,7 +340,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     account.address
                   );
                   addTransaction(txReceipt, {
-                    type: TransactionType.WRAP,
+                    type: TransactionType.STAKED_WRAP,
                     unwrapped: true,
                     currencyAmountRaw: inputAmount?.quotient.toString(),
                     chainId: account.chainId,

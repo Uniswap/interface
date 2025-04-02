@@ -23,6 +23,7 @@ import { Field } from "components/swap/constants";
 import {
   ArrowContainer,
   ArrowWrapper,
+  Dots,
   OutputSwapSection,
   SwapSection,
 } from "components/swap/styled";
@@ -169,6 +170,7 @@ export function SwapForm({
     wrapType,
     execute: onWrap,
     inputError: wrapInputError,
+    isApproving,
   } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -845,9 +847,21 @@ export function SwapForm({
               ) : wrapType === WrapType.UNWRAP ? (
                 <Trans i18nKey="common.unwrap.button" />
               ) : wrapType === WrapType.APPROVE_AND_WRAP ? (
-                <Trans i18nKey="common.approveAndWrap.button" />
+                isApproving ? (
+                  <Dots>
+                    <Trans i18nKey="common.approving" />
+                  </Dots>
+                ) : (
+                  <Trans i18nKey="common.approveAndWrap.button" />
+                )
               ) : wrapType === WrapType.APPROVE_AND_UNWRAP ? (
-                <Trans i18nKey="common.approveAndUnwrap.button" />
+                isApproving ? (
+                  <Dots>
+                    <Trans i18nKey="common.approving" />
+                  </Dots>
+                ) : (
+                  <Trans i18nKey="common.approveAndUnwrap.button" />
+                )
               ) : null}
             </ButtonPrimary>
           ) : routeNotFound &&
