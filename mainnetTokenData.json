@@ -38,6 +38,14 @@
     },
     {
       "chainId": 841,
+      "address": "0x39b1fc930c43606af5c353e90a55db10bcaf4087",
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/taraswap/taraswap-interface/main/packages/ui/src/assets/logos/png/eth-logo.png"
+    },
+    {
+      "chainId": 841,
       "address": "0x5d0fa4c5668e5809c83c95a7cef3a9dd7c68d4fe",
       "name": "Wrapped TARA",
       "symbol": "WTARA",

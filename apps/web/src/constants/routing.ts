@@ -14,6 +14,7 @@ import {
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH_BSC,
+  ETH_TARAXA,
   nativeOnChain,
   OP,
   PORTAL_ETH_CELO,
@@ -220,6 +221,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDM_TARAXA,
     TSWAP_TARAXA,
     STTARA_TARAXA,
+    ETH_TARAXA,
   ].map(buildCurrencyInfo),
 };
 
