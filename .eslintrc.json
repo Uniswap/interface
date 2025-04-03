@@ -26,12 +26,18 @@
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
+<<<<<<< HEAD
     "prettier/prettier": [
       "error",
       {
         "endOfLine": "auto"
       }
     ],
+=======
+    "prettier/prettier":["error", {
+      "endOfLine": "auto"
+    }],
+>>>>>>> f338a006894e34a6bfec334c1fe8713cb9bad510
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-ts-ignore": "off",

@@ -133,10 +133,17 @@
     "@walletconnect/ethereum-provider": "1.7.1"
   },
   "scripts": {
+<<<<<<< HEAD
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 './node_modules/@uniswap/v3-core/artifacts/contracts/**/*.json' & typechain --target ethers-v5 --out-dir src/types/v3 './node_modules/@uniswap/v3-periphery/artifacts/contracts/**/*.json'",
     "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
     "prei18n:extract": "mkdir src/locales 2> nul & type nul > src/locales/en-US.po",
+=======
+    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+    "contracts:compile:v3":"typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/v3-core/artifacts/contracts/**/*.json\" \"./node_modules/@uniswap/v3-periphery/artifacts/contracts/**/*.json\"",
+    "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
+    "prei18n:extract": "node scripts/createlocale.js",
+>>>>>>> f338a006894e34a6bfec334c1fe8713cb9bad510
     "i18n:extract": "lingui extract --locale en-US",
     "i18n:compile": "yarn i18n:extract && lingui compile",
     "postinstall": "yarn contracts:compile && yarn i18n:compile",
