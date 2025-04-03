@@ -8,7 +8,7 @@ import {
   useCurrencySearchResults,
   useCrossChainCurrencySearchResults,
 } from "components/SearchModal/useCurrencySearchResults";
-import useDebounce from "hooks/useDebounce";
+import { useDebounce } from "hooks/useDebounce";
 import { useOnClickOutside } from "hooks/useOnClickOutside";
 import useSelectChain from "hooks/useSelectChain";
 import useToggle from "hooks/useToggle";

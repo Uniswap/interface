@@ -572,6 +572,8 @@
   "common.untitled": "Untitled",
   "common.unwrap.button": "Unwrap",
   "common.unwrap.failed": "Unwrap failed",
+  "common.approveAndWrap.button": "Approve and wrap",
+  "common.approveAndUnwrap.button": "Approve and unwrap",
   "common.unwrapped": "Unwrapped",
   "common.unwrapping": "Unwrapping",
   "common.v2": "v2",

@@ -3,4 +3,6 @@ export enum WrapType {
   NOT_APPLICABLE,
   WRAP,
   UNWRAP,
+  APPROVE_AND_WRAP,
+  APPROVE_AND_UNWRAP,
 }

@@ -10,7 +10,7 @@ import { useSearchTokens } from "graphql/data/SearchTokens";
 import { useCollectionSearch } from "graphql/data/nft/CollectionSearch";
 import { useIsMobile, useIsTablet } from "hooks/screenSize";
 import { useAccount } from "hooks/useAccount";
-import useDebounce from "hooks/useDebounce";
+import { useDebounce } from "hooks/useDebounce";
 import { useDisableNFTRoutes } from "hooks/useDisableNFTRoutes";
 import { useIsNftPage } from "hooks/useIsNftPage";
 import { useOnClickOutside } from "hooks/useOnClickOutside";

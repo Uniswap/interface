@@ -87,10 +87,10 @@ export const useGetStakedLiqudityForPool = async (
       Number(unstake.position.depositedToken1)
     );
 
-    const priceToken0 = await useTokenUsdPrice(
+    const priceToken0 = useTokenUsdPrice(
       data.data.stakes[0]?.position?.token0?.id
     );
-    const priceToken1 = await useTokenUsdPrice(
+    const priceToken1 = useTokenUsdPrice(
       data.data.stakes[0]?.position?.token1?.id
     );
 

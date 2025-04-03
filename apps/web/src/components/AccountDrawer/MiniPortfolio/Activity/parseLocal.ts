@@ -1,11 +1,23 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@taraswap/sdk-core'
-import UniswapXBolt from 'assets/svg/bolt.svg'
-import { nativeOnChain } from 'constants/tokens'
-import { t } from 'i18n'
-import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
-import { SignatureDetails, SignatureType } from 'state/signatures/types'
-import { isConfirmedTx, useMultichainTransactions } from 'state/transactions/hooks'
+import { BigNumber } from "@ethersproject/bignumber";
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  TradeType,
+} from "@taraswap/sdk-core";
+import UniswapXBolt from "assets/svg/bolt.svg";
+import {
+  nativeOnChain,
+  STTARA_TARAXA,
+  WRAPPED_STTARA_TARAXA,
+} from "constants/tokens";
+import { t } from "i18n";
+import { isOnChainOrder, useAllSignatures } from "state/signatures/hooks";
+import { SignatureDetails, SignatureType } from "state/signatures/types";
+import {
+  isConfirmedTx,
+  useMultichainTransactions,
+} from "state/transactions/hooks";
 import {
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
@@ -17,22 +29,28 @@ import {
   MigrateV2LiquidityToV3TransactionInfo,
   RemoveLiquidityV3TransactionInfo,
   SendTransactionInfo,
+  StakedWrapTransactionInfo,
   TransactionDetails,
   TransactionType,
   WrapTransactionInfo,
-} from 'state/transactions/types'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { isAddress } from 'utilities/src/addresses'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+} from "state/transactions/types";
+import { TransactionStatus } from "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks";
+import { isAddress } from "utilities/src/addresses";
+import { NumberType, useFormatter } from "utils/formatNumbers";
 
-import { queryOptions, useQuery } from '@tanstack/react-query'
-import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
-import { SupportedInterfaceChainId } from 'constants/chains'
-import { logger } from 'utilities/src/logger/logger'
-import { CancelledTransactionTitleTable, LimitOrderTextTable, OrderTextTable, getActivityTitle } from '../constants'
-import { Activity, ActivityMap } from './types'
+import { queryOptions, useQuery } from "@tanstack/react-query";
+import { getCurrency } from "components/AccountDrawer/MiniPortfolio/Activity/getCurrency";
+import { SupportedInterfaceChainId } from "constants/chains";
+import { logger } from "utilities/src/logger/logger";
+import {
+  CancelledTransactionTitleTable,
+  LimitOrderTextTable,
+  OrderTextTable,
+  getActivityTitle,
+} from "../constants";
+import { Activity, ActivityMap } from "./types";
 
-type FormatNumberFunctionType = ReturnType<typeof useFormatter>['formatNumber']
+type FormatNumberFunctionType = ReturnType<typeof useFormatter>["formatNumber"];
 
 function buildCurrencyDescriptor(
   currencyA: Currency | undefined,
@@ -40,23 +58,29 @@ function buildCurrencyDescriptor(
   currencyB: Currency | undefined,
   amtB: string,
   formatNumber: FormatNumberFunctionType,
-  delimiter = t('for')
+  delimiter = t("for")
 ) {
   const formattedA = currencyA
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()),
+        input: parseFloat(
+          CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()
+        ),
         type: NumberType.TokenNonTx,
       })
-    : t('common.unknown')
-  const symbolA = currencyA?.symbol ?? ''
+    : t("common.unknown");
+  const symbolA = currencyA?.symbol ?? "";
   const formattedB = currencyB
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
+        input: parseFloat(
+          CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()
+        ),
         type: NumberType.TokenNonTx,
       })
-    : t('common.unknown')
-  const symbolB = currencyB?.symbol ?? ''
-  return [formattedA, symbolA, delimiter, formattedB, symbolB].filter(Boolean).join(' ')
+    : t("common.unknown");
+  const symbolB = currencyB?.symbol ?? "";
+  return [formattedA, symbolA, delimiter, formattedB, symbolB]
+    .filter(Boolean)
+    .join(" ");
 }
 
 async function parseSwap(
@@ -67,40 +91,79 @@ async function parseSwap(
   const [tokenIn, tokenOut] = await Promise.all([
     getCurrency(swap.inputCurrencyId, chainId),
     getCurrency(swap.outputCurrencyId, chainId),
-  ])
+  ]);
   const [inputRaw, outputRaw] =
     swap.tradeType === TradeType.EXACT_INPUT
-      ? [swap.inputCurrencyAmountRaw, swap.settledOutputCurrencyAmountRaw ?? swap.expectedOutputCurrencyAmountRaw]
-      : [swap.expectedInputCurrencyAmountRaw, swap.outputCurrencyAmountRaw]
+      ? [
+          swap.inputCurrencyAmountRaw,
+          swap.settledOutputCurrencyAmountRaw ??
+            swap.expectedOutputCurrencyAmountRaw,
+        ]
+      : [swap.expectedInputCurrencyAmountRaw, swap.outputCurrencyAmountRaw];
 
   return {
-    descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw, formatNumber, undefined),
+    descriptor: buildCurrencyDescriptor(
+      tokenIn,
+      inputRaw,
+      tokenOut,
+      outputRaw,
+      formatNumber,
+      undefined
+    ),
     currencies: [tokenIn, tokenOut],
     prefixIconSrc: swap.isUniswapXOrder ? UniswapXBolt : undefined,
-  }
+  };
 }
 
 function parseWrap(
-  wrap: WrapTransactionInfo,
+  wrap: WrapTransactionInfo | StakedWrapTransactionInfo,
   chainId: ChainId,
   status: TransactionStatus,
   formatNumber: FormatNumberFunctionType
 ): Partial<Activity> {
-  const native = nativeOnChain(chainId)
-  const wrapped = native.wrapped
-  const [input, output] = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
+  if (wrap.type === TransactionType.STAKED_WRAP) {
+    const stTara = STTARA_TARAXA;
+    const wstTARA = WRAPPED_STTARA_TARAXA;
+    const [input, output] = wrap.unwrapped
+      ? [wstTARA, stTara]
+      : [stTara, wstTARA];
+    const descriptor = buildCurrencyDescriptor(
+      input,
+      wrap.currencyAmountRaw,
+      output,
+      wrap.currencyAmountRaw,
+      formatNumber
+    );
+    const title = getActivityTitle(
+      TransactionType.STAKED_WRAP,
+      status,
+      wrap.unwrapped
+    );
+    const currencies = wrap.unwrapped ? [wstTARA, stTara] : [stTara, wstTARA];
+    return { title, descriptor, currencies };
+  } else {
+    const native = nativeOnChain(chainId);
+    const wrapped = native.wrapped;
+    const [input, output] = wrap.unwrapped
+      ? [wrapped, native]
+      : [native, wrapped];
 
-  const descriptor = buildCurrencyDescriptor(
-    input,
-    wrap.currencyAmountRaw,
-    output,
-    wrap.currencyAmountRaw,
-    formatNumber
-  )
-  const title = getActivityTitle(TransactionType.WRAP, status, wrap.unwrapped)
-  const currencies = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
+    const descriptor = buildCurrencyDescriptor(
+      input,
+      wrap.currencyAmountRaw,
+      output,
+      wrap.currencyAmountRaw,
+      formatNumber
+    );
+    const title = getActivityTitle(
+      TransactionType.WRAP,
+      status,
+      wrap.unwrapped
+    );
+    const currencies = wrap.unwrapped ? [wrapped, native] : [native, wrapped];
 
-  return { title, descriptor, currencies }
+    return { title, descriptor, currencies };
+  }
 }
 
 async function parseApproval(
@@ -108,8 +171,8 @@ async function parseApproval(
   chainId: SupportedInterfaceChainId,
   status: TransactionStatus
 ): Promise<Partial<Activity>> {
-  const currency = await getCurrency(approval.tokenAddress, chainId)
-  const descriptor = currency?.symbol ?? currency?.name ?? t('common.unknown')
+  const currency = await getCurrency(approval.tokenAddress, chainId);
+  const descriptor = currency?.symbol ?? currency?.name ?? t("common.unknown");
   return {
     title: getActivityTitle(
       TransactionType.APPROVAL,
@@ -118,13 +181,15 @@ async function parseApproval(
     ),
     descriptor,
     currencies: [currency],
-  }
+  };
 }
 
 type GenericLPInfo = Omit<
-  AddLiquidityV3PoolTransactionInfo | RemoveLiquidityV3TransactionInfo | AddLiquidityV2PoolTransactionInfo,
-  'type'
->
+  | AddLiquidityV3PoolTransactionInfo
+  | RemoveLiquidityV3TransactionInfo
+  | AddLiquidityV2PoolTransactionInfo,
+  "type"
+>;
 async function parseLP(
   lp: GenericLPInfo,
   chainId: SupportedInterfaceChainId,
@@ -133,18 +198,21 @@ async function parseLP(
   const [baseCurrency, quoteCurrency] = await Promise.all([
     getCurrency(lp.baseCurrencyId, chainId),
     getCurrency(lp.quoteCurrencyId, chainId),
-  ])
-  const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
+  ]);
+  const [baseRaw, quoteRaw] = [
+    lp.expectedAmountBaseRaw,
+    lp.expectedAmountQuoteRaw,
+  ];
   const descriptor = buildCurrencyDescriptor(
     baseCurrency,
     baseRaw,
     quoteCurrency,
     quoteRaw,
     formatNumber,
-    t('common.and')
-  )
+    t("common.and")
+  );
 
-  return { descriptor, currencies: [baseCurrency, quoteCurrency] }
+  return { descriptor, currencies: [baseCurrency, quoteCurrency] };
 }
 
 async function parseCollectFees(
@@ -158,12 +226,17 @@ async function parseCollectFees(
     currencyId1: quoteCurrencyId,
     expectedCurrencyOwed0: expectedAmountBaseRaw,
     expectedCurrencyOwed1: expectedAmountQuoteRaw,
-  } = collect
+  } = collect;
   return parseLP(
-    { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },
+    {
+      baseCurrencyId,
+      quoteCurrencyId,
+      expectedAmountBaseRaw,
+      expectedAmountQuoteRaw,
+    },
     chainId,
     formatNumber
-  )
+  );
 }
 
 async function parseMigrateCreateV3(
@@ -173,12 +246,15 @@ async function parseMigrateCreateV3(
   const [baseCurrency, quoteCurrency] = await Promise.all([
     getCurrency(lp.baseCurrencyId, chainId),
     getCurrency(lp.quoteCurrencyId, chainId),
-  ])
-  const baseSymbol = baseCurrency?.symbol ?? t('common.unknown')
-  const quoteSymbol = quoteCurrency?.symbol ?? t('common.unknown')
-  const descriptor = t(`{{baseSymbol}} and {{quoteSymbol}}`, { baseSymbol, quoteSymbol })
+  ]);
+  const baseSymbol = baseCurrency?.symbol ?? t("common.unknown");
+  const quoteSymbol = quoteCurrency?.symbol ?? t("common.unknown");
+  const descriptor = t(`{{baseSymbol}} and {{quoteSymbol}}`, {
+    baseSymbol,
+    quoteSymbol,
+  });
 
-  return { descriptor, currencies: [baseCurrency, quoteCurrency] }
+  return { descriptor, currencies: [baseCurrency, quoteCurrency] };
 }
 
 async function parseSend(
@@ -186,20 +262,22 @@ async function parseSend(
   chainId: SupportedInterfaceChainId,
   formatNumber: FormatNumberFunctionType
 ): Promise<Partial<Activity>> {
-  const { currencyId, amount, recipient } = send
-  const currency = await getCurrency(currencyId, chainId)
+  const { currencyId, amount, recipient } = send;
+  const currency = await getCurrency(currencyId, chainId);
   const formattedAmount = currency
     ? formatNumber({
-        input: parseFloat(CurrencyAmount.fromRawAmount(currency, amount).toSignificant()),
+        input: parseFloat(
+          CurrencyAmount.fromRawAmount(currency, amount).toSignificant()
+        ),
         type: NumberType.TokenNonTx,
       })
-    : t('common.unknown')
+    : t("common.unknown");
 
   return {
-    descriptor: `${formattedAmount} ${currency?.symbol} ${t('common.to')} `,
+    descriptor: `${formattedAmount} ${currency?.symbol} ${t("common.to")} `,
     otherAccount: isAddress(recipient) || undefined,
     currencies: [currency],
-  }
+  };
 }
 
 export async function transactionToActivity(
@@ -208,7 +286,7 @@ export async function transactionToActivity(
   formatNumber: FormatNumberFunctionType
 ): Promise<Activity | undefined> {
   if (!details) {
-    return undefined
+    return undefined;
   }
   try {
     const defaultFields = {
@@ -216,45 +294,57 @@ export async function transactionToActivity(
       chainId,
       title: getActivityTitle(details.info.type, details.status),
       status: details.status,
-      timestamp: (isConfirmedTx(details) ? details.confirmedTime : details.addedTime) / 1000,
+      timestamp:
+        (isConfirmedTx(details) ? details.confirmedTime : details.addedTime) /
+        1000,
       from: details.from,
       nonce: details.nonce,
       cancelled: details.cancelled,
-    }
+    };
 
-    let additionalFields: Partial<Activity> = {}
-    const info = details.info
+    let additionalFields: Partial<Activity> = {};
+    const info = details.info;
     if (info.type === TransactionType.SWAP) {
-      additionalFields = await parseSwap(info, chainId, formatNumber)
+      additionalFields = await parseSwap(info, chainId, formatNumber);
     } else if (info.type === TransactionType.APPROVAL) {
-      additionalFields = await parseApproval(info, chainId, details.status)
+      additionalFields = await parseApproval(info, chainId, details.status);
     } else if (info.type === TransactionType.WRAP) {
-      additionalFields = parseWrap(info, chainId, details.status, formatNumber)
+      additionalFields = parseWrap(info, chainId, details.status, formatNumber);
+    } else if (info.type === TransactionType.STAKED_WRAP) {
+      additionalFields = parseWrap(info, chainId, details.status, formatNumber);
     } else if (
       info.type === TransactionType.ADD_LIQUIDITY_V3_POOL ||
       info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
       info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
     ) {
-      additionalFields = await parseLP(info, chainId, formatNumber)
+      additionalFields = await parseLP(info, chainId, formatNumber);
     } else if (info.type === TransactionType.COLLECT_FEES) {
-      additionalFields = await parseCollectFees(info, chainId, formatNumber)
-    } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
-      additionalFields = await parseMigrateCreateV3(info, chainId)
+      additionalFields = await parseCollectFees(info, chainId, formatNumber);
+    } else if (
+      info.type === TransactionType.MIGRATE_LIQUIDITY_V3 ||
+      info.type === TransactionType.CREATE_V3_POOL
+    ) {
+      additionalFields = await parseMigrateCreateV3(info, chainId);
     } else if (info.type === TransactionType.SEND) {
-      additionalFields = await parseSend(info, chainId, formatNumber)
+      additionalFields = await parseSend(info, chainId, formatNumber);
     }
 
-    const activity = { ...defaultFields, ...additionalFields }
+    const activity = { ...defaultFields, ...additionalFields };
 
     if (details.cancelled) {
-      activity.title = CancelledTransactionTitleTable[details.info.type]
-      activity.status = TransactionStatus.Confirmed
+      activity.title = CancelledTransactionTitleTable[details.info.type];
+      activity.status = TransactionStatus.Confirmed;
     }
 
-    return activity
+    return activity;
   } catch (error) {
-    logger.warn('parseLocal', 'transactionToActivity', `Failed to parse transaction ${details.hash}`, error)
-    return undefined
+    logger.warn(
+      "parseLocal",
+      "transactionToActivity",
+      `Failed to parse transaction ${details.hash}`,
+      error
+    );
+    return undefined;
   }
 }
 
@@ -264,9 +354,10 @@ export function getTransactionToActivityQueryOptions(
   formatNumber: FormatNumberFunctionType
 ) {
   return queryOptions({
-    queryKey: ['transactionToActivity', transaction, chainId],
-    queryFn: async () => transactionToActivity(transaction, chainId, formatNumber),
-  })
+    queryKey: ["transactionToActivity", transaction, chainId],
+    queryFn: async () =>
+      transactionToActivity(transaction, chainId, formatNumber),
+  });
 }
 
 export function getSignatureToActivityQueryOptions(
@@ -274,18 +365,18 @@ export function getSignatureToActivityQueryOptions(
   formatNumber: FormatNumberFunctionType
 ) {
   return queryOptions({
-    queryKey: ['signatureToActivity', signature],
+    queryKey: ["signatureToActivity", signature],
     queryFn: async () => signatureToActivity(signature, formatNumber),
-  })
+  });
 }
 
 function convertToSecTimestamp(timestamp: number) {
   // UNIX timestamp in ms for Jan 1, 2100
-  const threshold: number = 4102444800000
+  const threshold: number = 4102444800000;
   if (timestamp >= threshold) {
-    return Math.floor(timestamp / 1000)
+    return Math.floor(timestamp / 1000);
   } else {
-    return timestamp
+    return timestamp;
   }
 }
 
@@ -294,7 +385,7 @@ export async function signatureToActivity(
   formatNumber: FormatNumberFunctionType
 ): Promise<Activity | undefined> {
   if (!signature) {
-    return undefined
+    return undefined;
   }
   switch (signature.type) {
     case SignatureType.SIGN_UNISWAPX_ORDER:
@@ -302,13 +393,13 @@ export async function signatureToActivity(
     case SignatureType.SIGN_LIMIT: {
       // Only returns Activity items for orders that don't have an on-chain counterpart
       if (isOnChainOrder(signature.status)) {
-        return undefined
+        return undefined;
       }
 
       const { title, statusMessage, status } =
         signature.type === SignatureType.SIGN_LIMIT
           ? LimitOrderTextTable[signature.status]
-          : OrderTextTable[signature.status]
+          : OrderTextTable[signature.status];
 
       return {
         hash: signature.orderHash,
@@ -320,37 +411,46 @@ export async function signatureToActivity(
         from: signature.offerer,
         statusMessage,
         prefixIconSrc: UniswapXBolt,
-        ...(await parseSwap(signature.swapInfo, signature.chainId, formatNumber)),
-      }
+        ...(await parseSwap(
+          signature.swapInfo,
+          signature.chainId,
+          formatNumber
+        )),
+      };
     }
     default:
-      return undefined
+      return undefined;
   }
 }
 
 export function useLocalActivities(account: string): ActivityMap {
-  const allTransactions = useMultichainTransactions()
-  const allSignatures = useAllSignatures()
-  const { formatNumber } = useFormatter()
+  const allTransactions = useMultichainTransactions();
+  const allSignatures = useAllSignatures();
+  const { formatNumber } = useFormatter();
 
   const { data } = useQuery({
-    queryKey: ['localActivities', account],
+    queryKey: ["localActivities", account],
     queryFn: async () => {
       const transactions = Object.values(allTransactions)
         .filter(([transaction]) => transaction.from === account)
-        .map(([transaction, chainId]) => transactionToActivity(transaction, chainId, formatNumber))
+        .map(([transaction, chainId]) =>
+          transactionToActivity(transaction, chainId, formatNumber)
+        );
       const signatures = Object.values(allSignatures)
         .filter((signature) => signature.offerer === account)
-        .map((signature) => signatureToActivity(signature, formatNumber))
+        .map((signature) => signatureToActivity(signature, formatNumber));
 
-      return (await Promise.all([...transactions, ...signatures])).reduce((acc, activity) => {
-        if (activity) {
-          acc[activity.hash] = activity
-        }
-        return acc
-      }, {} as ActivityMap)
+      return (await Promise.all([...transactions, ...signatures])).reduce(
+        (acc, activity) => {
+          if (activity) {
+            acc[activity.hash] = activity;
+          }
+          return acc;
+        },
+        {} as ActivityMap
+      );
     },
-  })
+  });
 
-  return data ?? {}
+  return data ?? {};
 }

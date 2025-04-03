@@ -117,7 +117,8 @@ export function findTokenByAddress(
   );
 }
 
-export const indexerTaraswap = process.env.REACT_APP_INDEXER_SUBGRAPH_TARASWAP;
+export const indexerTaraswap =
+  process.env.REACT_APP_INDEXER_SUBGRAPH_TARASWAP || "";
 
 export const POSITIONS_QUERY = `
 query positions{

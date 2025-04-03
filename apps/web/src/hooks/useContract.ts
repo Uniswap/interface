@@ -27,6 +27,7 @@ import ERC1155_ABI from "uniswap/src/abis/erc1155.json";
 import ERC20_ABI from "uniswap/src/abis/erc20.json";
 import ERC20_BYTES32_ABI from "uniswap/src/abis/erc20_bytes32.json";
 import ERC721_ABI from "uniswap/src/abis/erc721.json";
+import ERC4626Abi from "./ERC4626ABI.json";
 import {
   ArgentWalletDetector,
   EnsPublicResolver,
@@ -46,14 +47,13 @@ import WETH_ABI from "uniswap/src/abis/weth.json";
 import { sendAnalyticsEvent } from "uniswap/src/features/telemetry/send";
 import { getContract } from "utilities/src/contracts/getContract";
 import { logger } from "utilities/src/logger/logger";
-import AppJsonRpcProvider from "rpc/AppJsonRpcProvider";
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson;
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json;
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson;
 const { abi: NFTPositionManagerABI } = NonfungiblePositionManagerJson;
 const { abi: V2MigratorABI } = V3MigratorJson;
-
+const { abi: ERC4626ABI } = ERC4626Abi;
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
@@ -251,4 +251,8 @@ export function useV3NFTPositionManagerContract(
     }
   }, [account.isConnected, account.chainId, contract, withSignerIfPossible]);
   return contract;
+}
+
+export function useERC4626Contract(address?: string) {
+  return useContract(address, ERC4626ABI);
 }
