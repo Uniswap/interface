@@ -1,15 +1,10 @@
-// IncentivesDataProvider.tsx
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-} from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAccount } from "hooks/useAccount";
 import { formatUnits } from "viem/utils";
-import { findTokenByAddress, INCENTIVES_QUERY } from "./types";
+import {
+  findTokenByAddress,
+  INCENTIVES_QUERY,
+} from "components/Incentives/types";
 import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
 import { useTokenList } from "hooks/useTokenList";
 import { useMultipleTokenBalances } from "hooks/useMultipleTokenBalances";
@@ -54,7 +49,7 @@ interface IncentiveData {
   ended: boolean;
 }
 
-interface UserPosition {
+export interface UserPosition {
   id: string;
   minter: { id: string };
   owner: { id: string };
@@ -105,17 +100,6 @@ export interface ProcessedIncentive {
   weeklyRewardsUSD: number;
 }
 
-interface IncentivesContextType {
-  activeIncentives: ProcessedIncentive[];
-  endedIncentives: ProcessedIncentive[];
-  userPositions: UserPosition[];
-  isLoading: boolean;
-  error: Error | null;
-  refetch: () => Promise<void>;
-}
-
-const IncentivesContext = createContext<IncentivesContextType | null>(null);
-
 interface IncentivesResponse {
   incentives: IncentiveData[];
   bundle: {
@@ -123,11 +107,7 @@ interface IncentivesResponse {
   };
 }
 
-export function IncentivesDataProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function useIncentivesData() {
   const account = useAccount();
   const [activeIncentives, setActiveIncentives] = useState<
     ProcessedIncentive[]
@@ -142,9 +122,7 @@ export function IncentivesDataProvider({
     Record<string, { balance: number }>
   >({});
   const { getPositionsWithDepositsOfUser } = useTotalPositions();
-
   const { tokenList, isLoadingTokenList } = useTokenList();
-
   const [incentivesData, setIncentivesData] = useState<IncentiveData[]>([]);
 
   const tokenAddresses = useMemo(() => {
@@ -365,7 +343,18 @@ export function IncentivesDataProvider({
     [tokenList]
   );
 
-  const value = {
+  if (isLoadingTokenList || (isBalancesLoading && incentivesData.length > 0)) {
+    return {
+      activeIncentives: [],
+      endedIncentives: [],
+      userPositions: [],
+      isLoading: true,
+      error: null,
+      refetch: fetchData,
+    };
+  }
+
+  return {
     activeIncentives,
     endedIncentives,
     userPositions,
@@ -373,24 +362,4 @@ export function IncentivesDataProvider({
     error,
     refetch: fetchData,
   };
-
-  if (isLoadingTokenList || (isBalancesLoading && incentivesData.length > 0)) {
-    return null;
-  }
-
-  return (
-    <IncentivesContext.Provider value={value}>
-      {children}
-    </IncentivesContext.Provider>
-  );
-}
-
-export function useIncentivesData() {
-  const context = useContext(IncentivesContext);
-  if (!context) {
-    throw new Error(
-      "useIncentivesData must be used within an IncentivesDataProvider"
-    );
-  }
-  return context;
 }

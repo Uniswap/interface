@@ -1,8 +1,5 @@
 import React from "react";
-import {
-  useIncentivesData,
-  ProcessedIncentive,
-} from "./IncentivesDataProvider";
+import { ProcessedIncentive, useIncentivesData } from "hooks/useIncentivesData";
 import { IncentiveTable } from "./IncentiveTable";
 import { useNavigate, useLocation } from "react-router-dom";
 import { LightCard } from "components/Card";

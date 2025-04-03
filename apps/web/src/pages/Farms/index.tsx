@@ -21,7 +21,6 @@ import { TitleRow } from "nft/components/profile/list/shared";
 import Incentives from "components/Incentives";
 import Create from "components/Create";
 import FAQ from "components/FAQ";
-import { IncentivesDataProvider } from "components/Incentives/IncentivesDataProvider";
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -218,9 +217,7 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
             })}
           </TabBar>
         </NavWrapper>
-        <IncentivesDataProvider>
-          <Page />
-        </IncentivesDataProvider>
+        <Page />
       </ExploreContainer>
     </Trace>
   );
