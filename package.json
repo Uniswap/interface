@@ -133,10 +133,10 @@
     "@walletconnect/ethereum-provider": "1.7.1"
   },
   "scripts": {
-    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
-    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
+    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+    "contracts:compile:v3":"typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/v3-core/artifacts/contracts/**/*.json\" \"./node_modules/@uniswap/v3-periphery/artifacts/contracts/**/*.json\"",
     "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
-    "prei18n:extract": "touch src/locales/en-US.po",
+    "prei18n:extract": "node scripts/createlocale.js",
     "i18n:extract": "lingui extract --locale en-US",
     "i18n:compile": "yarn i18n:extract && lingui compile",
     "postinstall": "yarn contracts:compile && yarn i18n:compile",
