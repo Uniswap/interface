@@ -279,48 +279,53 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
         wrapType: WrapType.APPROVE_AND_WRAP,
         isApprovalNeeded,
         isApproving,
-        execute:
-          sufficientBalance && inputAmount && wstTaraContract && stTaraContract
-            ? async () => {
-                try {
-                  // Handle approval if needed
-                  if (isApprovalNeeded) {
-                    setIsApproving(true);
-                    const approvalTx = await stTaraContract.approve(
-                      WRAPPED_STTARA_TARAXA.address,
-                      `0x${inputAmount.quotient.toString(16)}`
-                    );
-                    addTransaction(approvalTx, {
-                      type: TransactionType.APPROVAL,
-                      tokenAddress: stTara.address,
-                      spender: WRAPPED_STTARA_TARAXA.address,
-                      amount: `0x${inputAmount.quotient.toString(16)}`,
-                    });
-                    await approvalTx.wait();
-                    setIsApproving(false);
-                  }
+        execute: async () => {
+          if (
+            !sufficientBalance ||
+            !inputAmount ||
+            !wstTaraContract ||
+            !stTaraContract
+          ) {
+            return;
+          }
+          try {
+            // Handle approval if needed
+            if (isApprovalNeeded) {
+              setIsApproving(true);
+              const approvalTx = await stTaraContract.approve(
+                WRAPPED_STTARA_TARAXA.address,
+                `0x${inputAmount.quotient.toString(16)}`
+              );
+              addTransaction(approvalTx, {
+                type: TransactionType.APPROVAL,
+                tokenAddress: stTara.address,
+                spender: WRAPPED_STTARA_TARAXA.address,
+                amount: `0x${inputAmount.quotient.toString(16)}`,
+              });
+              await approvalTx.wait();
+              setIsApproving(false);
+            }
 
-                  // Proceed with wrap
-                  const txReceipt = await wstTaraContract.deposit(
-                    `0x${inputAmount.quotient.toString(16)}`,
-                    account.address
-                  );
-                  addTransaction(txReceipt, {
-                    type: TransactionType.STAKED_WRAP,
-                    unwrapped: false,
-                    currencyAmountRaw: inputAmount?.quotient.toString(),
-                    chainId: account.chainId,
-                  });
-                  return txReceipt.hash;
-                } catch (error) {
-                  setIsApproving(false);
-                  logger.error(error, {
-                    tags: { file: "useWrapCallback", function: "wrap" },
-                  });
-                  throw error;
-                }
-              }
-            : undefined,
+            // Proceed with wrap
+            const txReceipt = await wstTaraContract.deposit(
+              `0x${inputAmount.quotient.toString(16)}`,
+              account.address
+            );
+            addTransaction(txReceipt, {
+              type: TransactionType.STAKED_WRAP,
+              unwrapped: false,
+              currencyAmountRaw: inputAmount?.quotient.toString(),
+              chainId: account.chainId,
+            });
+            return txReceipt.hash;
+          } catch (error) {
+            setIsApproving(false);
+            logger.error(error, {
+              tags: { file: "useWrapCallback", function: "wrap" },
+            });
+            throw error;
+          }
+        },
         inputError: sufficientBalance
           ? undefined
           : hasInputAmount
@@ -330,30 +335,30 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
     } else if (wstTara.equals(inputCurrency) && stTara.equals(outputCurrency)) {
       return {
         wrapType: WrapType.APPROVE_AND_UNWRAP,
-        execute:
-          sufficientBalance && inputAmount && wstTaraContract
-            ? async () => {
-                try {
-                  const txReceipt = await wstTaraContract.redeem(
-                    `0x${inputAmount.quotient.toString(16)}`,
-                    account.address,
-                    account.address
-                  );
-                  addTransaction(txReceipt, {
-                    type: TransactionType.STAKED_WRAP,
-                    unwrapped: true,
-                    currencyAmountRaw: inputAmount?.quotient.toString(),
-                    chainId: account.chainId,
-                  });
-                  return txReceipt.hash;
-                } catch (error) {
-                  logger.error(error, {
-                    tags: { file: "useWrapCallback", function: "unwrap" },
-                  });
-                  throw error;
-                }
-              }
-            : undefined,
+        execute: async () => {
+          if (!sufficientBalance || !inputAmount || !wstTaraContract) {
+            return;
+          }
+          try {
+            const txReceipt = await wstTaraContract.redeem(
+              `0x${inputAmount.quotient.toString(16)}`,
+              account.address,
+              account.address
+            );
+            addTransaction(txReceipt, {
+              type: TransactionType.STAKED_WRAP,
+              unwrapped: true,
+              currencyAmountRaw: inputAmount?.quotient.toString(),
+              chainId: account.chainId,
+            });
+            return txReceipt.hash;
+          } catch (error) {
+            logger.error(error, {
+              tags: { file: "useWrapCallback", function: "unwrap" },
+            });
+            throw error;
+          }
+        },
         inputError: sufficientBalance
           ? undefined
           : hasInputAmount
