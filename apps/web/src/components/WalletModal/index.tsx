@@ -4,7 +4,6 @@ import { ExpandIcon } from 'components/Icons/Expand'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import { Option } from 'components/WalletModal/Option'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
-import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
 import Column from 'components/deprecated/Column'
 import Row, { AutoRow } from 'components/deprecated/Row'
@@ -12,7 +11,7 @@ import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import styled, { css } from 'lib/styled-components'
 import { useReducer } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Flex, Text } from 'ui/src'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
@@ -93,24 +92,6 @@ export default function WalletModal() {
           </Text>
         </AutoRow>
       )}
-      <UniswapWalletOptions />
-      <Flex
-        row
-        alignItems="center"
-        py={8}
-        userSelect="none"
-        onPress={() => isUniExtensionAvailable && toggleShowOtherWallets()}
-        {...(isUniExtensionAvailable ? ClickableTamaguiStyle : {})}
-      >
-        <Line />
-        <Flex row alignItems="center" mx={18}>
-          <Text variant="body3" color="$neutral2" whiteSpace="nowrap">
-            <Trans i18nKey="wallet.other" />
-          </Text>
-          {isUniExtensionAvailable ? showOtherWallets ? <StyledExpandIcon /> : <StyledCollapsedIcon /> : null}
-        </Flex>
-        <Line />
-      </Flex>
       <Column gap="md" flex="1">
         <Row flex="1" align="flex-start">
           <OptionGrid data-testid="option-grid" closed={isUniExtensionAvailable && !showOtherWallets}>

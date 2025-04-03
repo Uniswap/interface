@@ -117,10 +117,6 @@ export default function Navbar() {
           {areTabsVisible && <Tabs />}
         </Left>
 
-        <SearchContainer>
-          {!collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
-        </SearchContainer>
-
         <Right>
           {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
           {isNFTPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}

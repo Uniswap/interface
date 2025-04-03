@@ -28,7 +28,7 @@ export function SwapBottomCard() {
   const isSwapPage = useIsPage(PageType.SWAP)
   const isSendPage = useIsPage(PageType.SEND)
 
-  const hideCard = !isSupportedChain || !(isSwapPage || isSendPage)
+  const hideCard = true || !isSupportedChain || !(isSwapPage || isSendPage)
 
   const card = useMemo(() => {
     if (hideCard) {

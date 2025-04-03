@@ -62,21 +62,6 @@ export const useTabsContent = (): TabsSection[] => {
       ],
     },
     {
-      title: t('common.explore'),
-      href: '/explore',
-      isActive: pathname.startsWith('/explore') || pathname.startsWith('/nfts'),
-      items: [
-        { label: t('common.tokens'), quickKey: 'T', href: '/explore/tokens', internal: true },
-        { label: t('common.pools'), quickKey: 'P', href: '/explore/pools', internal: true },
-        {
-          label: t('common.transactions'),
-          quickKey: 'X',
-          href: '/explore/transactions',
-          internal: true,
-        },
-      ],
-    },
-    {
       title: t('common.pool'),
       href: '/positions',
       isActive: pathname.startsWith('/positions'),

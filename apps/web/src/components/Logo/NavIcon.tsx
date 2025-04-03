@@ -1,5 +1,4 @@
 import { SVGProps } from 'components/Logo/UniIcon'
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, useSporeColors } from 'ui/src'
 
@@ -149,21 +148,10 @@ type NavIconProps = SVGProps & {
 
 export const NavIcon = ({ clickable, onClick }: NavIconProps) => {
   const colors = useSporeColors()
-  const showHolidayUni = useMemo(() => {
-    const date = new Date()
-    // months in javascript are 0 indexed...
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    return month === 12 || (month === 1 && day <= 7)
-  }, [])
 
   return (
     <Container clickable={clickable}>
-      {showHolidayUni ? (
-        <HolidayLogo color={colors.accent1.val} onClick={onClick} />
-      ) : (
-        <Logo color={colors.accent1.val} onClick={onClick} />
-      )}
+      <Logo color={colors.accent1.val} onClick={onClick} />
     </Container>
   )
 }

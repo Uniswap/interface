@@ -1,5 +1,4 @@
 import { MenuItem, MenuSection, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
-import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
 import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
@@ -105,7 +104,6 @@ export function MenuDropdown({ close }: { close?: () => void }) {
             />
           ))}
           <Separator />
-          <DownloadApp onClick={close} />
           <Socials iconSize="25px" />
           {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={close} />}
         </Flex>
