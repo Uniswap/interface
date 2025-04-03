@@ -160,7 +160,6 @@ export const IncentiveTable = ({
   const columnHelper = createColumnHelper<ProcessedIncentive>();
   const navigate = useNavigate();
 
-  // Check if all incentives have ended
   const allIncentivesEnded = useMemo(
     () =>
       incentives.length > 0 && incentives.every((incentive) => incentive.ended),
@@ -292,7 +291,6 @@ export const IncentiveTable = ({
       }),
     ];
 
-    // Define ID column - only used when !allIncentivesEnded
     const idColumn = columnHelper.accessor("id", {
       header: () => <Cell minWidth={125} />,
       cell: (pool) => {

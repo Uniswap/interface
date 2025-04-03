@@ -23,7 +23,6 @@ const DonutChart: React.FC<DonutChartProps> = ({
   const circumference = 2 * Math.PI * (radius - thickness / 2);
   let currentOffset = 0;
 
-  // Calculate total for percentages
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
   return (

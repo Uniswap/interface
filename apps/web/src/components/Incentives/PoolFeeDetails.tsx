@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { FeeDistributionBar } from "./FeeDistributionBar";
 import { MouseoverTooltip } from "components/Tooltip";
 import { useFormatter } from "utils/formatNumbers";
-import DonutChart from "./DonutChart";
 import { NumberType } from "utils/formatNumbers";
+import DonutChart from "components/DonutChart";
 
 interface PoolFeeDetailsProps {
   incentiveId: string;
@@ -23,11 +23,6 @@ const Container = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 100%;
-`;
-
-const PlaceholderBar = styled.div`
-  width: 100%;
-  height: 24px;
 `;
 
 const TooltipContent = styled.div`
@@ -121,12 +116,6 @@ const TokenIcon = styled.img`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-`;
-
-const EndDate = styled.div`
-  color: ${({ theme }) => theme.neutral2};
-  font-size: 12px;
-  text-align: right;
 `;
 
 const FullWidthDistributionBar = styled.div`

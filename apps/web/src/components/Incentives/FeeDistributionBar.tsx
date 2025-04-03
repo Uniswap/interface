@@ -1,7 +1,6 @@
 import { getAddress } from "ethers/lib/utils";
 import React, { useState } from "react";
 import styled from "styled-components";
-import Tooltip from "components/Tooltip";
 
 interface FeeDistributionBarProps {
   tokenRewardsPercentage: number;
@@ -101,11 +100,11 @@ export const FeeDistributionBar: React.FC<FeeDistributionBarProps> = ({
 
   const tradeFees = Math.min(
     Math.max(0, Number(tradeFeesPercentage) || 0),
-    100,
+    100
   );
   const tokenRewards = Math.min(
     Math.max(0, Number(tokenRewardsPercentage) || 0),
-    100,
+    100
   );
 
   return (
@@ -127,7 +126,7 @@ export const FeeDistributionBar: React.FC<FeeDistributionBarProps> = ({
       </BarAndAPRContainer>
       <TokenIconLink
         href={`https://www.taraswap.info/#/tokens/${getAddress(
-          rewardTokenAddress,
+          rewardTokenAddress
         )}`}
         target="_blank"
         rel="noopener noreferrer"
