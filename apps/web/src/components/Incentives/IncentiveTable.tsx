@@ -42,10 +42,19 @@ const TokenImageWrapper = styled.div<{ $hasImage?: boolean }>`
   `}
 `;
 
-const ActionButtons = styled(Row)`
+const ActionButtons = styled(Row)<{ $leftAlign?: boolean }>`
   gap: 8px;
   width: 100%;
-  justify-content: flex-end;
+  justify-content: ${({ $leftAlign }) =>
+    $leftAlign ? "flex-start" : "flex-end"};
+`;
+
+const SwapButton = styled.div`
+  cursor: pointer;
+  transform: rotate(90deg);
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
 `;
 
 const ActionButton = styled.button<{ $variant?: "primary" }>`
@@ -99,7 +108,7 @@ const formatValue = (value: string) => {
     return formatCurrencyAmount({
       amount: CurrencyAmount.fromRawAmount(
         new Token(1, "0x0000000000000000000000000000000000000000", 18, "USD"),
-        Math.floor(parseFloat(value) * 1e18).toString(),
+        Math.floor(parseFloat(value) * 1e18).toString()
       ),
       type: NumberType.FiatTokenPrice,
     });
@@ -156,16 +165,19 @@ export const IncentiveTable = ({
   const allIncentivesEnded = useMemo(
     () =>
       incentives.length > 0 && incentives.every((incentive) => incentive.ended),
-    [incentives],
+    [incentives]
   );
 
   const columns = useMemo(() => {
-    // Define all columns except APR and ID
     const baseColumns = [
       columnHelper.accessor("poolName", {
         id: "pool",
         header: () => (
-          <Cell minWidth={250} justifyContent="flex-start">
+          <Cell
+            minWidth={230}
+            justifyContent="flex-start"
+            style={{ padding: allIncentivesEnded ? "12px 4px" : undefined }}
+          >
             <ThemedText.BodyPrimary>Pool</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -173,7 +185,11 @@ export const IncentiveTable = ({
           const data = pool?.row?.original;
           if (!data) return null;
           return (
-            <Cell minWidth={250} justifyContent="flex-start">
+            <Cell
+              minWidth={230}
+              justifyContent="flex-start"
+              style={{ padding: allIncentivesEnded ? "12px 4px" : undefined }}
+            >
               <StyledPoolRow gap="12px">
                 <PoolTokenImage pool={data} />
                 <PoolNameContainer>
@@ -184,11 +200,13 @@ export const IncentiveTable = ({
             </Cell>
           );
         },
-        size: 30,
       }),
       columnHelper.accessor("liquidity", {
         header: () => (
-          <Cell minWidth={130} justifyContent="flex-end">
+          <Cell
+            minWidth={130}
+            style={{ padding: allIncentivesEnded ? "12px 4px" : undefined }}
+          >
             <ThemedText.BodyPrimary>Liquidity</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -196,18 +214,23 @@ export const IncentiveTable = ({
           const data = pool?.row?.original;
           if (!data) return null;
           return (
-            <Cell minWidth={130} justifyContent="flex-end">
+            <Cell
+              minWidth={130}
+              style={{ padding: allIncentivesEnded ? "12px 4px" : undefined }}
+            >
               <ThemedText.BodyPrimary>
                 {formatValue(data.liquidity)}
               </ThemedText.BodyPrimary>
             </Cell>
           );
         },
-        size: 15,
       }),
       columnHelper.accessor("volume24h", {
         header: () => (
-          <Cell minWidth={130} justifyContent="flex-end">
+          <Cell
+            minWidth={130}
+            style={{ padding: allIncentivesEnded ? "12px 4px" : undefined }}
+          >
             <ThemedText.BodyPrimary>Volume 24H</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -215,42 +238,127 @@ export const IncentiveTable = ({
           const data = pool?.row?.original;
           if (!data) return null;
           return (
-            <Cell minWidth={130} justifyContent="flex-end">
+            <Cell
+              minWidth={130}
+              style={{ padding: allIncentivesEnded ? "12px 4px" : undefined }}
+            >
               <ThemedText.BodyPrimary>
                 {formatValue(data.volume24h)}
               </ThemedText.BodyPrimary>
             </Cell>
           );
         },
-        size: 15,
       }),
       columnHelper.accessor("feesUSD", {
         header: () => (
-          <Cell minWidth={130} justifyContent="flex-end">
+          <Cell minWidth={130}>
             <ThemedText.BodyPrimary>Fees 24H</ThemedText.BodyPrimary>
           </Cell>
         ),
         cell: (pool) => {
           const data = pool?.row?.original;
           if (!data) return null;
+
+          if (allIncentivesEnded) {
+            return (
+              <Cell minWidth={10}>
+                <ThemedText.BodyPrimary style={{ marginLeft: "70px" }}>
+                  {formatValue(data.feesUSD)}
+                </ThemedText.BodyPrimary>
+                <SwapButton
+                  onClick={() =>
+                    navigate(
+                      `/swap?inputCurrency=${getAddress(
+                        data.token0Address
+                      )}&outputCurrency=${getAddress(
+                        data.token1Address
+                      )}&chain=taraxa`
+                    )
+                  }
+                >
+                  <Swap />
+                </SwapButton>
+              </Cell>
+            );
+          }
+
           return (
-            <Cell minWidth={130} justifyContent="flex-end">
+            <Cell minWidth={130} style={{ marginRight: "20px" }}>
               <ThemedText.BodyPrimary>
                 {formatValue(data.feesUSD)}
               </ThemedText.BodyPrimary>
             </Cell>
           );
         },
-        size: 15,
       }),
     ];
 
-    // Add APR column if not all incentives have ended
+    // Define ID column - only used when !allIncentivesEnded
+    const idColumn = columnHelper.accessor("id", {
+      header: () => <Cell minWidth={125} />,
+      cell: (pool) => {
+        const data = pool?.row?.original;
+        if (!data) return null;
+
+        if (!data.hasUserPosition && !data.userHasTokensToDeposit) {
+          return (
+            <Cell minWidth={125} justifyContent="flex-end">
+              <ActionButtons>
+                <SwapButton
+                  onClick={() =>
+                    navigate(
+                      `/swap?inputCurrency=${getAddress(
+                        data.token0Address
+                      )}&outputCurrency=${getAddress(
+                        data.token1Address
+                      )}&chain=taraxa`
+                    )
+                  }
+                >
+                  <Swap />
+                </SwapButton>
+              </ActionButtons>
+            </Cell>
+          );
+        }
+
+        return (
+          <Cell minWidth={255} justifyContent="flex-end">
+            <ActionButtons>
+              <SwapButton
+                onClick={() =>
+                  navigate(
+                    `/swap?inputCurrency=${getAddress(
+                      data.token0Address
+                    )}&outputCurrency=${getAddress(
+                      data.token1Address
+                    )}&chain=taraxa`
+                  )
+                }
+              >
+                <Swap />
+              </SwapButton>
+              <ActionButton
+                $variant="primary"
+                onClick={() => onDeposit?.(data)}
+              >
+                {data.hasUserPosition ? (
+                  <Trans i18nKey="common.incentives.position" />
+                ) : (
+                  <Trans i18nKey="common.incentives.deposit" />
+                )}
+              </ActionButton>
+            </ActionButtons>
+          </Cell>
+        );
+      },
+    });
+
     if (!allIncentivesEnded) {
       baseColumns.push(
         columnHelper.accessor("apr24h", {
           header: () => (
-            <Cell minWidth={150} justifyContent="flex-start">
+            <Cell minWidth={150} justifyContent="flex-end">
               <ThemedText.BodyPrimary>APR 24H</ThemedText.BodyPrimary>
             </Cell>
           ),
@@ -262,123 +370,26 @@ export const IncentiveTable = ({
               return <Cell minWidth={150} />;
             }
             return (
-              <Cell minWidth={150} justifyContent="flex-end">
+              <Cell minWidth={150} justifyContent="flex-start">
                 <PoolFeeDetails
                   key={data.id}
                   incentiveId={data.id}
                   rewardTokenImage={data.token1LogoURI}
                   rewardTokenSymbol={data.token1Symbol}
                   rewardTokenAddress={data.token1Address}
+                  tradeFeesPercentage={data.tradeFeesPercentage}
+                  tokenRewardsPercentage={data.tokenRewardsPercentage}
+                  daily24hAPR={data.daily24hAPR}
+                  weeklyRewards={data.weeklyRewards}
+                  weeklyRewardsUSD={data.weeklyRewardsUSD}
                 />
               </Cell>
             );
           },
-          size: 15,
-        }),
+        })
       );
+      baseColumns.push(idColumn);
     }
-
-    // Always add ID column last
-    baseColumns.push(
-      columnHelper.accessor("id", {
-        header: () => <Cell minWidth={125} />,
-        cell: (pool) => {
-          const data = pool?.row?.original;
-          if (!data) return null;
-
-          if (data.ended) {
-            return (
-              <Cell minWidth={125} justifyContent="flex-end">
-                <ActionButtons>
-                  <div
-                    style={{
-                      cursor: "pointer",
-                      transform: "rotate(90deg)",
-                      width: "40px",
-                      height: "40px",
-                    }}
-                    onClick={() =>
-                      navigate(
-                        `/swap?inputCurrency=${getAddress(
-                          data.token0Address,
-                        )}&outputCurrency=${getAddress(
-                          data.token1Address,
-                        )}&chain=taraxa`,
-                      )
-                    }
-                  >
-                    <Swap />
-                  </div>
-                </ActionButtons>
-              </Cell>
-            );
-          }
-
-          if (!data.hasUserPosition && !data.userHasTokensToDeposit) {
-            return (
-              <Cell minWidth={125} justifyContent="flex-end">
-                <ActionButtons>
-                  <div
-                    style={{
-                      cursor: "pointer",
-                      marginRight: "5px",
-                      transform: "rotate(90deg)",
-                    }}
-                    onClick={() =>
-                      navigate(
-                        `/swap?inputCurrency=${getAddress(
-                          data.token0Address,
-                        )}&outputCurrency=${getAddress(
-                          data.token1Address,
-                        )}&chain=taraxa`,
-                      )
-                    }
-                  >
-                    <Swap />
-                  </div>
-                </ActionButtons>
-              </Cell>
-            );
-          }
-
-          return (
-            <Cell minWidth={125} justifyContent="flex-end">
-              <ActionButtons>
-                <div
-                  style={{
-                    cursor: "pointer",
-                    marginRight: "5px",
-                    transform: "rotate(90deg)",
-                  }}
-                  onClick={() =>
-                    navigate(
-                      `/swap?inputCurrency=${getAddress(
-                        data.token0Address,
-                      )}&outputCurrency=${getAddress(
-                        data.token1Address,
-                      )}&chain=taraxa`,
-                    )
-                  }
-                >
-                  <Swap />
-                </div>
-                <ActionButton
-                  $variant="primary"
-                  onClick={() => onDeposit?.(data)}
-                >
-                  {data.hasUserPosition ? (
-                    <Trans i18nKey="common.incentives.position" />
-                  ) : (
-                    <Trans i18nKey="common.incentives.deposit" />
-                  )}
-                </ActionButton>
-              </ActionButtons>
-            </Cell>
-          );
-        },
-        size: 10,
-      }),
-    );
 
     return baseColumns;
   }, [columnHelper, navigate, onDeposit, allIncentivesEnded]);

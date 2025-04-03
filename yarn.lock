@@ -40702,6 +40702,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"styled@npm:1.0.0":
+  version: 1.0.0
+  resolution: "styled@npm:1.0.0"
+  checksum: 31a8d0885b672c7702506c27e6765c354fbc820ee3aea3277deb81615a521f0e34773f8d007bb105362fcc8730ff1e504e67ea224ce704bb46d451aae76a7b9b
+  languageName: node
+  linkType: hard
+
 "stylehacks@npm:^5.1.1":
   version: 5.1.1
   resolution: "stylehacks@npm:5.1.1"
@@ -42893,6 +42900,7 @@ __metadata:
     husky: ^8.0.3
     i18next: 23.10.0
     i18next-parser: 8.6.0
+    styled: 1.0.0
     syncpack: ^8.5.14
     turbo: 1.10.16
     turbo-ignore: ^1.11.3

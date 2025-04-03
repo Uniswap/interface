@@ -13,6 +13,7 @@
     "husky": "^8.0.3",
     "i18next": "23.10.0",
     "i18next-parser": "8.6.0",
+    "styled": "1.0.0",
     "syncpack": "^8.5.14",
     "turbo": "1.10.16",
     "turbo-ignore": "^1.11.3"

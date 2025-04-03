@@ -12,13 +12,14 @@ const Container = styled.div<{
   ${({ $width }) => $width && `width: ${$width}px`};
   ${({ $minWidth }) => $minWidth && `min-width: ${$minWidth}px`};
   ${({ $maxWidth }) => $maxWidth && `max-width: ${$maxWidth}px`};
-  flex: ${({ $grow }) => ($grow ? "1" : "0")};
+  flex: ${({ $grow }) => ($grow ? "1" : "0 0 auto")};
   display: flex;
   justify-content: ${({ $justifyContent }) => $justifyContent ?? "flex-end"};
   align-items: center;
   font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
+  box-sizing: border-box;
 `;
 const LoadingDataBubble = styled(LoadingBubble)`
   width: 75%;

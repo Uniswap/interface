@@ -10,9 +10,7 @@ import React, {
 import { useAccount } from "hooks/useAccount";
 import { formatUnits } from "viem/utils";
 import { findTokenByAddress, INCENTIVES_QUERY } from "./types";
-import { TARAXA_MAINNET_LIST } from "constants/lists";
 import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
-import { useTokenBalances } from "hooks/useTokenBalances";
 import { useTokenList } from "hooks/useTokenList";
 import { useMultipleTokenBalances } from "hooks/useMultipleTokenBalances";
 
@@ -102,6 +100,9 @@ export interface ProcessedIncentive {
   poolAddress: string;
   poolId?: number;
   userHasTokensToDeposit: boolean;
+  daily24hAPR: number;
+  weeklyRewards: number;
+  weeklyRewardsUSD: number;
 }
 
 interface IncentivesContextType {
@@ -322,6 +323,11 @@ export function IncentivesDataProvider({
       const userHasTokensToDeposit =
         currentBalances[incentive.pool.token0.id.toLowerCase()]?.balance > 0 &&
         currentBalances[incentive.pool.token1.id.toLowerCase()]?.balance > 0;
+
+      const daily24hAPR = totalAPR / 365;
+      const weeklyRewards = adjustedDailyReward * 7;
+      const weeklyRewardsUSD = dailyRewardsUSD * 7;
+
       return {
         id: incentive.id,
         poolId: userPosition?.id,
@@ -351,6 +357,9 @@ export function IncentivesDataProvider({
         feesUSD: incentive.pool.feesUSD,
         ended: Number(incentive.endTime) < Math.floor(Date.now() / 1000),
         userHasTokensToDeposit,
+        daily24hAPR,
+        weeklyRewards,
+        weeklyRewardsUSD,
       };
     },
     [tokenList]
