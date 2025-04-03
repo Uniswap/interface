@@ -7,7 +7,7 @@ import { AutoRow } from "components/Row";
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from "components/Tokens/constants";
 import { Trans } from "i18n";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { StyledInternalLink, ThemedText } from "theme/components";
 
@@ -155,19 +155,24 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
 
   const [currentTab, setCurrentTab] = useState(initialKey);
 
-  // to allow backward navigation between tabs
-  const { tab: tabName } = useExploreParams();
-  const tab = tabName ?? LiquidityTab.Incentives;
+  // Get the current path and set the tab accordingly
+  const { pathname } = useLocation();
   const chain = useChainFromUrlParam() ?? CHAIN_INFO[ChainId.MAINNET];
+
   useEffect(() => {
-    const tabIndex = Pages.findIndex((page) => page.key === tab);
-    if (tabIndex !== -1) {
-      setCurrentTab(tabIndex);
-    }
+    const path = pathname.split("/").pop();
+    setCurrentTab(Pages.findIndex((page) => page.key === path));
     resetManualOutage();
-  }, [resetManualOutage, tab]);
+  }, [pathname, resetManualOutage]);
 
   const { component: Page, key: currentKey } = Pages[currentTab];
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (currentKey && pathname !== `/farms/${currentKey}`) {
+      navigate(`/farms/${currentKey}`, { replace: true });
+    }
+  }, [currentKey, pathname, navigate]);
 
   return (
     <Trace
