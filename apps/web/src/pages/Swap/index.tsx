@@ -6,9 +6,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { PageWrapper } from 'components/swap/styled'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { BuyForm } from 'pages/Swap/Buy/BuyForm'
 import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
-import { SendForm } from 'pages/Swap/Send/SendForm'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -167,20 +165,16 @@ export function Swap({
   )
 }
 
-const SWAP_TABS = [SwapTab.Swap, SwapTab.Limit, SwapTab.Send, SwapTab.Buy]
+const SWAP_TABS = [SwapTab.Swap, SwapTab.Limit]
 
 const TAB_TYPE_TO_LABEL = {
   [SwapTab.Swap]: (t: AppTFunction) => t('swap.form.header'),
   [SwapTab.Limit]: (t: AppTFunction) => t('swap.limit'),
-  [SwapTab.Send]: (t: AppTFunction) => t('send.title'),
-  [SwapTab.Buy]: (t: AppTFunction) => t('common.buy.label'),
 }
 
 const PATHNAME_TO_TAB: { [key: string]: SwapTab } = {
   '/swap': SwapTab.Swap,
-  '/send': SwapTab.Send,
   '/limit': SwapTab.Limit,
-  '/buy': SwapTab.Buy,
 }
 
 function UniversalSwapFlow({
@@ -222,6 +216,10 @@ function UniversalSwapFlow({
   const onTabClick = useCallback(
     (tab: SwapTab) => {
       sendAnalyticsEvent(InterfaceEventNameLocal.SwapTabClicked, { tab })
+      if (tab === SwapTab.Limit) {
+        window.location.href = 'https://tangoswap.cash/limit-order'
+        return
+      }
       if (syncTabToUrl) {
         navigate(`/${tab}`, { replace: true })
       } else {
@@ -232,7 +230,7 @@ function UniversalSwapFlow({
   )
 
   const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(() => {
-    return SWAP_TABS.filter((tab) => !(isIFramed() && tab === SwapTab.Send)).map((tab) => ({
+    return SWAP_TABS.map((tab) => ({
       value: tab,
       display: (
         <Text
@@ -279,10 +277,6 @@ function UniversalSwapFlow({
         </Flex>
       )}
       {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-      {currentTab === SwapTab.Send && (
-        <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
-      )}
-      {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} initialCurrency={prefilledState?.output} />}
     </Flex>
   )
 }
