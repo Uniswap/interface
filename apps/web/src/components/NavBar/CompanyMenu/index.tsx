@@ -62,12 +62,11 @@ export function CompanyMenu() {
             <NavIcon />
             {isLargeScreen && (
               <Text variant="subheading1" color="$accent1" userSelect="none">
-                Uniswap
+                TANGOswap
               </Text>
             )}
           </UniIcon>
           {(media.md || isTouchDevice) && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
-          {!media.md && !isTouchDevice && <ArrowDown $isActive={isOpen} width="12px" height="12px" />}
         </Trigger>
       </Popover.Trigger>
       {isMobileDrawer ? <MobileMenuDrawer isOpen={isOpen} closeMenu={closeMenu} /> : <MenuDropdown close={closeMenu} />}
