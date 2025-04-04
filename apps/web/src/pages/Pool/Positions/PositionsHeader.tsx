@@ -10,7 +10,6 @@ import { Flex, LabeledCheckbox, Text, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -118,6 +117,10 @@ export function PositionsHeader({
             p="$spacing8"
             {...ClickableTamaguiStyle}
             onPress={() => {
+              if (version === ProtocolVersion.V2) {
+                window.location.href = 'https://tangoswap.cash/pool'
+                return
+              }
               navigate(`/positions/create/${protocolVersionLabel}`)
             }}
           >
@@ -203,34 +206,6 @@ export function PositionsHeader({
             >
               {statusFilterOptions}
             </DropdownSelector>
-            <DropdownSelector
-              isOpen={statusDropdownOpen}
-              toggleOpen={() => setStatusDropdownOpen((prev) => !prev)}
-              menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
-              dropdownStyle={{ width: 160 }}
-              buttonStyle={StyledDropdownButton}
-            >
-              {versionFilterOptions}
-            </DropdownSelector>
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              backgroundColor="$surface3"
-              borderRadius="$rounded16"
-              px="$padding12"
-              height="100%"
-              {...ClickableTamaguiStyle}
-            >
-              <NetworkFilter
-                includeAllNetworks
-                selectedChain={selectedChain}
-                onPressChain={onChainChange}
-                chainIds={chains}
-                styles={{
-                  buttonPaddingY: '$spacing8',
-                }}
-              />
-            </Flex>
           </Flex>
         )}
       </Flex>

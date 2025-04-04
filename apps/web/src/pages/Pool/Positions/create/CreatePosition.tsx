@@ -1,7 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { DropdownSelector } from 'components/DropdownSelector'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { getProtocolVersionLabel, parseProtocolVersion } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
@@ -282,21 +281,6 @@ const Toolbar = ({
 
       <ToolbarContainer>
         <ResetButton onClickReset={() => setShowResetModal(true)} isDisabled={isFormUnchanged} />
-        <DropdownSelector
-          containerStyle={{ width: 'auto' }}
-          buttonStyle={{ py: '$spacing8', px: '$spacing12' }}
-          dropdownStyle={{ width: 200, borderRadius: '$rounded16' }}
-          menuLabel={
-            <Text variant="buttonLabel3" lineHeight="16px">
-              {t('position.protocol', { protocol: getProtocolVersionLabel(protocolVersion) })}
-            </Text>
-          }
-          isOpen={versionDropdownOpen}
-          toggleOpen={() => setVersionDropdownOpen(!versionDropdownOpen)}
-          alignRight
-        >
-          {versionOptions}
-        </DropdownSelector>
         <Flex
           borderRadius="$rounded12"
           borderWidth="$spacing1"

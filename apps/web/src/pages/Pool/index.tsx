@@ -1,32 +1,26 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
-import V4_HOOK from 'assets/images/v4Hooks.png'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool as PoolIcon } from 'components/Icons/Pool'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getPositionUrl, parseRestPosition } from 'components/Liquidity/utils'
-import { TopPoolTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
+import { sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
 import { OrderDirection } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
-import { TopPools } from 'pages/Pool/Positions/TopPools'
-import { ExternalArrowLink } from 'pages/Pool/Positions/shared'
 import { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
-import { ClickableTamaguiStyle } from 'theme/components'
 import { Anchor, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
@@ -108,24 +102,11 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
         </Flex>
         {isConnected && (
           <Flex centered row $md={{ width: '100%' }}>
-            <Button size="small" emphasis="secondary" onPress={() => navigate('/explore/pools')}>
-              {t('pools.explore')}
+            <Button size="small" emphasis="secondary" onPress={() => navigate('/create/v3')}>
+              {t('pool.newSpecificPosition', { symbol: 'v3' })}
             </Button>
           </Flex>
         )}
-      </Flex>
-      <Flex gap="$gap24">
-        <Text variant="subheading1">
-          <Trans i18nKey="pool.top.tvl" />
-        </Text>
-        <TopPoolTable
-          topPoolData={{ topPools, isLoading: exploreStatsLoading, isError: !!exploreStatsError }}
-          pageSize={10}
-          staticSize
-        />
-        <ExternalArrowLink href="/explore/pools" openInNewTab={false}>
-          {t('explore.more.pools')}
-        </ExternalArrowLink>
       </Flex>
     </Flex>
   )
@@ -366,39 +347,6 @@ export default function Pool() {
               <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
             </Flex>
           )}
-          <Flex row centered $sm={{ flexDirection: 'column', alignItems: 'flex-start' }} mb="$spacing24" gap="$gap4">
-            <Text variant="body3" color="$neutral2">
-              {t('pool.import.link.description')}
-            </Text>
-            <Anchor href="/pools/v2/find" textDecorationLine="none">
-              <Text variant="body3" color="$neutral1" {...ClickableTamaguiStyle}>
-                {t('pool.import.positions.v2')}
-              </Text>
-            </Anchor>
-          </Flex>
-        </Flex>
-        <Flex gap="$gap32" pt={64} $xl={{ pt: '$spacing12' }}>
-          {!media.xl && !showingEmptyPositions && !isLoading && <TopPools chainId={chainFilter} />}
-          <Flex gap="$gap20" mb="$spacing24">
-            <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
-            <Flex gap="$gap12">
-              <LearnMoreTile
-                img={PROVIDE_LIQUIDITY}
-                text={t('liquidity.provideOnProtocols')}
-                link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
-              />
-              {isV4DataEnabled && (
-                <LearnMoreTile
-                  img={V4_HOOK}
-                  text={t('liquidity.hooks')}
-                  link={uniswapUrls.helpArticleUrls.v4HooksInfo}
-                />
-              )}
-            </Flex>
-            <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>
-              {t('common.button.learn')}
-            </ExternalArrowLink>
-          </Flex>
         </Flex>
       </Flex>
     </Trace>
