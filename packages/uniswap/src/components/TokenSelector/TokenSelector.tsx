@@ -5,7 +5,6 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text, isWeb, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { zIndexes } from 'ui/src/theme'
 import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/useFilterCallbacks'
 import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
 import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
@@ -14,11 +13,9 @@ import { TokenSelectorSwapInputList } from 'uniswap/src/components/TokenSelector
 import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapOutputList'
 import { TokenOptionSection, TokenSection, TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
-import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -34,7 +31,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
-import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
+import { isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -275,22 +272,6 @@ export function TokenSelectorContent({
             <SearchTextInput
               autoFocus={shouldAutoFocusSearch}
               backgroundColor="$surface2"
-              endAdornment={
-                <Flex row alignItems="center">
-                  {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
-                  <NetworkFilter
-                    includeAllNetworks={!isTestnetModeEnabled}
-                    chainIds={chainIds || enabledChains}
-                    selectedChain={chainFilter}
-                    styles={isExtension ? { dropdownZIndex: zIndexes.overlay } : undefined}
-                    onDismiss={dismissNativeKeyboard}
-                    onPressChain={(newChainId) => {
-                      onChangeChainFilter(newChainId)
-                      onSelectChain?.(newChainId)
-                    }}
-                  />
-                </Flex>
-              }
               placeholder={t('tokens.selector.search.placeholder')}
               px="$spacing16"
               py="$none"
