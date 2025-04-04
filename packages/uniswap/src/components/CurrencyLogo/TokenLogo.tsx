@@ -39,7 +39,7 @@ export const TokenLogo = memo(function _TokenLogo({
   const isTestnetToken = chainId && isTestnetChain(chainId)
   const borderWidth = isTestnetToken ? size / TESTNET_BORDER_DIVISOR : 0
 
-  const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== UniverseChainId.Mainnet
+  const showNetworkLogo = false ?? (!hideNetworkLogo && chainId && chainId !== UniverseChainId.Mainnet)
   const networkLogoSize = Math.round(size * STATUS_RATIO)
 
   const borderOffset = isTestnetToken ? BORDER_OFFSET : 0
