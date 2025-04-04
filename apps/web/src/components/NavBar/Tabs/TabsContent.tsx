@@ -28,6 +28,11 @@ export const useTabsContent = (): TabsSection[] => {
       isActive: pathname.startsWith('/swap') || pathname.startsWith('/limit') || pathname.startsWith('/send'),
     },
     {
+      title: t('common.trade') + 'ᵛ²',
+      href: 'https://tangoswap.cash/swap',
+      isActive: false,
+    },
+    {
       title: t('common.pool'),
       href: '/positions',
       isActive: pathname.startsWith('/positions'),
