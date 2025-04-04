@@ -306,6 +306,7 @@ function toTokenOption(token: Token, logoUrl: string): TokenOption {
 // List of all Token objects from the previous result
 export const SMARTBCH_TOKENS = [
   SBCH,
+  TANGO,
   FLEX_USD,
   KI,
   ORB,
@@ -315,7 +316,6 @@ export const SMARTBCH_TOKENS = [
   CASH_CATS,
   HONK,
   FLEX_COIN,
-  TANGO,
   X_TANGO,
   MIST,
   X_MIST,
