@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { DdRumReactNavigationTracking } from '@datadog/mobile-react-navigation'
 import {
   NavigationContainer,
@@ -12,14 +11,9 @@ import React, { useEffect } from 'react'
 import { DevSettings } from 'react-native'
 import { INCLUDE_PROTOTYPE_FEATURES } from 'react-native-dotenv'
 import { useSelector } from 'react-redux'
-import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
-import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
-import { BackupWarningModal } from 'src/app/modals/BackupWarningModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoModal'
 import { NotificationsOSSettingsModal } from 'src/app/modals/NotificationsOSSettingsModal'
-import { TokenWarningModalWrapper } from 'src/app/modals/TokenWarningModalWrapper'
-import { ViewOnlyExplainerModal } from 'src/app/modals/ViewOnlyExplainerModal'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import {
@@ -31,20 +25,10 @@ import {
   SettingsStackParamList,
   useAppStackNavigation,
 } from 'src/app/navigation/types'
-import { RemoveWalletModal } from 'src/components/RemoveWallet/RemoveWalletModal'
-import { RestoreWalletModal } from 'src/components/RestoreWalletModal/RestoreWalletModal'
-import { BuyNativeTokenModal } from 'src/components/TokenDetails/BuyNativeTokenModal'
 import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
-import { HiddenTokenInfoModalScreen } from 'src/components/modals/ReactNavigationModals/HiddenTokenInfoModalScreen'
-import { PasskeyHelpModalScreen } from 'src/components/modals/ReactNavigationModals/PasskeyHelpModalScreen'
-import { TestnetModeModalScreen } from 'src/components/modals/ReactNavigationModals/TestnetModeModalScreen'
-import { UnitagsIntroModal } from 'src/components/unitags/UnitagsIntroModal'
 import { ExchangeTransferModal } from 'src/features/fiatOnRamp/ExchangeTransferModal'
 import { FiatOnRampProvider } from 'src/features/fiatOnRamp/FiatOnRampContext'
-import { ScreenshotWarningModal } from 'src/features/onboarding/ScreenshotWarningModal'
-import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
-import { TestnetSwitchModal } from 'src/features/testnetMode/TestnetSwitchModal'
 import { ClaimUnitagScreen } from 'src/features/unitags/ClaimUnitagScreen'
 import { EditUnitagProfileScreen } from 'src/features/unitags/EditUnitagProfileScreen'
 import { UnitagChooseProfilePicScreen } from 'src/features/unitags/UnitagChooseProfilePicScreen'
@@ -67,7 +51,6 @@ import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupS
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
-import { WelcomeSplashScreen } from 'src/screens/Import/WelcomeSplashScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTItemScreen } from 'src/screens/NFTItemScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
@@ -79,7 +62,6 @@ import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { WelcomeWalletScreen } from 'src/screens/Onboarding/WelcomeWalletScreen'
-import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCloudBackupPasswordConfirmScreen'
 import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
 import { SettingsCloudBackupProcessingScreen } from 'src/screens/SettingsCloudBackupProcessingScreen'
@@ -105,7 +87,7 @@ import {
   UnitagScreens,
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
-import { datadogEnabledBuild } from 'utilities/src/environment/constants'
+import { datadogEnabled } from 'utilities/src/environment/constants'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -151,8 +133,6 @@ function SettingsStackGroup(): JSX.Element {
       <SettingsStack.Screen component={SettingsNotificationsScreen} name={MobileScreens.SettingsNotifications} />
       <SettingsStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
         <SettingsStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
-        <SettingsStack.Screen component={UnitagsIntroModal} name={ModalName.UnitagsIntro} />
-        <SettingsStack.Screen component={RestoreWalletModal} name={ModalName.RestoreWallet} />
       </SettingsStack.Group>
     </SettingsStack.Navigator>
   )
@@ -178,7 +158,7 @@ const navRefs = [exploreNavigationRef, fiatOnRampNavigationRef, navigationRef]
 const startTracking = (
   navRefToStartTracking: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>,
 ): void => {
-  if (!datadogEnabledBuild) {
+  if (!datadogEnabled) {
     return
   }
   navRefs.forEach((navRef) => {
@@ -194,7 +174,7 @@ const startTracking = (
  * https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/integrated_libraries/reactnative/#track-view-navigation
  */
 const stopTracking = (state: NavigationState | undefined): void => {
-  if (!datadogEnabledBuild) {
+  if (!datadogEnabled) {
     return
   }
   const navContainerIsClosing = !state || state.routes.length === 0
@@ -316,7 +296,6 @@ function OnboardingStackNavigator(): JSX.Element {
           <OnboardingStack.Screen component={SecuritySetupScreen} name={OnboardingScreens.Security} />
           <OnboardingStack.Screen component={ManualBackupScreen} name={OnboardingScreens.BackupManual} />
           <OnboardingStack.Screen component={WelcomeWalletScreen} name={OnboardingScreens.WelcomeWallet} />
-          <OnboardingStack.Screen component={WelcomeSplashScreen} name={OnboardingScreens.WelcomeSplash} />
           <OnboardingStack.Screen
             component={CloudBackupProcessingScreen}
             name={OnboardingScreens.BackupCloudProcessing}
@@ -452,22 +431,6 @@ export function AppStackNavigator(): JSX.Element {
         <AppStack.Screen component={FundWalletModal} name={ModalName.FundWallet} />
         <AppStack.Screen component={KoreaCexTransferInfoModal} name={ModalName.KoreaCexTransferInfoModal} />
         <AppStack.Screen component={ExchangeTransferModal} name={ModalName.ExchangeTransferModal} />
-        <AppStack.Screen component={TestnetSwitchModal} name={ModalName.TestnetSwitchModal} />
-        <AppStack.Screen component={TokenWarningModalWrapper} name={ModalName.TokenWarning} />
-        <AppStack.Screen component={ViewOnlyExplainerModal} name={ModalName.ViewOnlyExplainer} />
-        <AppStack.Screen component={UnitagsIntroModal} name={ModalName.UnitagsIntro} />
-        <AppStack.Screen component={RestoreWalletModal} name={ModalName.RestoreWallet} />
-        <AppStack.Screen component={AccountSwitcherModal} name={ModalName.AccountSwitcher} />
-        <AppStack.Screen component={ScantasticModal} name={ModalName.Scantastic} />
-        <AppStack.Screen component={BackupReminderModal} name={ModalName.BackupReminder} />
-        <AppStack.Screen component={BackupWarningModal} name={ModalName.BackupReminderWarning} />
-        <AppStack.Screen component={RemoveWalletModal} name={ModalName.RemoveWallet} />
-        <AppStack.Screen component={ReceiveCryptoModal} name={ModalName.ReceiveCryptoModal} />
-        <AppStack.Screen component={TestnetModeModalScreen} name={ModalName.TestnetMode} />
-        <AppStack.Screen component={BuyNativeTokenModal} name={ModalName.BuyNativeToken} />
-        <AppStack.Screen component={HiddenTokenInfoModalScreen} name={ModalName.HiddenTokenInfoModal} />
-        <AppStack.Screen component={ScreenshotWarningModal} name={ModalName.ScreenshotWarning} />
-        <AppStack.Screen component={PasskeyHelpModalScreen} name={ModalName.PasskeysHelp} />
         {enabledInEnvOrDev &&
           ((): JSX.Element => {
             return <AppStack.Screen component={ExperimentsModal} name={ModalName.Experiments} />

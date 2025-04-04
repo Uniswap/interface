@@ -4,7 +4,12 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { isAddress } from 'utilities/src/addresses'
 
-export function getInitialLogoUrl(address?: string | null, chainId?: number | null, backupImg?: string | null) {
+export function getInitialLogoUrl(
+  address?: string | null,
+  chainId?: number | null,
+  isNative?: boolean,
+  backupImg?: string | null,
+) {
   const networkName = isUniverseChainId(chainId) ? getChainInfo(chainId).assetRepoNetworkName ?? 'ethereum' : 'ethereum'
   const checksummedAddress = isAddress(address)
 

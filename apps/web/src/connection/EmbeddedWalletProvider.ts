@@ -1,10 +1,10 @@
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   signMessagesWithPasskey,
   signTransactionWithPasskey,
   signTypedDataWithPasskey,
-} from 'uniswap/src/features/passkey/embeddedWallet'
+} from 'uniswap/src/data/rest/embeddedWallet'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 import { Account, Hash, SignableMessage, createPublicClient, fallback, http } from 'viem'
 

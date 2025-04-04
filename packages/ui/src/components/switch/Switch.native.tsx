@@ -1,5 +1,5 @@
-import { memo, useEffect, useMemo } from 'react'
-import { Pressable, StyleSheet, type PressableProps, type StyleProp, type ViewStyle } from 'react-native'
+import { memo, useEffect } from 'react'
+import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { Check } from 'ui/src/components/icons'
 import {
@@ -8,19 +8,13 @@ import {
   SWITCH_TRACK_HEIGHT,
   SWITCH_TRACK_WIDTH,
 } from 'ui/src/components/switch/shared'
-import type { SwitchProps } from 'ui/src/components/switch/types'
+import { SwitchProps } from 'ui/src/components/switch/types'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { useEvent } from 'utilities/src/react/hooks'
 
 const ANIMATION_CONFIG = {
   duration: 80,
   easing: Easing.inOut(Easing.quad),
 } as const
-
-type CustomSwitchProps = Pick<
-  SwitchProps,
-  'checked' | 'defaultChecked' | 'onCheckedChange' | 'disabled' | 'variant' | 'testID'
-> & { style?: StyleProp<ViewStyle>; pointerEvents?: Extract<SwitchProps['pointerEvents'], 'none'> }
 
 export const Switch = memo(function Switch({
   checked,
@@ -31,7 +25,7 @@ export const Switch = memo(function Switch({
   style,
   testID,
   pointerEvents,
-}: CustomSwitchProps): JSX.Element {
+}: Omit<SwitchProps, 'style'> & { style?: StyleProp<ViewStyle> }): JSX.Element {
   const colors = useSporeColors()
   const isBranded = variant === 'branded'
   const progress = useSharedValue(checked ?? defaultChecked ? 1 : 0)
@@ -72,7 +66,7 @@ export const Switch = memo(function Switch({
     }
   })
 
-  const handlePress = useEvent((): void => {
+  const handlePress = (): void => {
     if (disabled) {
       return
     }
@@ -81,15 +75,16 @@ export const Switch = memo(function Switch({
     requestAnimationFrame(() => {
       onCheckedChange?.(newValue)
     })
-  })
-
-  const containerStyle: PressableProps['style'] = useMemo(
-    () => (pointerEvents === 'none' ? { pointerEvents: 'none' } : {}),
-    [pointerEvents],
-  )
+  }
 
   return (
-    <Pressable disabled={disabled} hitSlop={12} style={containerStyle} testID={testID} onPress={handlePress}>
+    <Pressable
+      disabled={disabled}
+      hitSlop={12}
+      style={[styles.container, pointerEvents === 'none' ? { pointerEvents: 'none' } : {}]}
+      testID={testID}
+      onPress={handlePress}
+    >
       <Animated.View style={[styles.track, style, trackStyle]}>
         <Animated.View style={[styles.thumb, thumbStyle]}>
           <Animated.View style={[styles.iconContainer, iconStyle]}>
@@ -148,6 +143,11 @@ function getIconColor(
 }
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    minHeight: SWITCH_TRACK_HEIGHT + SWITCH_THUMB_PADDING * 2,
+    minWidth: SWITCH_TRACK_WIDTH + SWITCH_THUMB_PADDING * 2,
+  },
   iconContainer: {
     alignItems: 'center',
     height: '100%',

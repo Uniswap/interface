@@ -1,5 +1,5 @@
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { BagIcon, LargeTagIcon } from 'nft/components/iconExports'
+import { BagIcon, LargeTagIcon } from 'nft/components/icons'
 import { Flex, Text, useSporeColors } from 'ui/src'
 
 const EmptyState = () => {

@@ -21,7 +21,6 @@ import {
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
@@ -163,8 +162,6 @@ export type SwapTradeBaseProperties = {
   token_in_detected_tax?: number
   token_out_detected_tax?: number
   minimum_output_after_slippage?: string
-  preset_percentage?: PresetPercentage
-  preselect_asset?: boolean
   fee_amount?: string
   // `requestId` is the same as `ura_request_id`. We should eventually standardize on one or the other.
   requestId?: string
@@ -752,13 +749,7 @@ export type UniverseEventProperties = {
     address: string
   }
   [SharedEventName.NAVBAR_CLICKED]: undefined
-  [SwapEventName.SWAP_PRESET_TOKEN_AMOUNT_SELECTED]: {
-    percentage: number
-  }
-  [SwapEventName.SWAP_PRESELECT_ASSET_SELECTED]: {
-    chain_id: UniverseChainId
-    token_symbol: string | undefined
-  }
+  [SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED]: undefined
   [SwapEventName.SWAP_PRICE_IMPACT_ACKNOWLEDGED]: SwapPriceImpactActionProperties
   [SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED]: SwapPriceUpdateActionProperties
   [SwapEventName.SWAP_TRANSACTION_COMPLETED]:
@@ -835,8 +826,7 @@ export type UniverseEventProperties = {
         AssetDetailsBaseProperties &
         SearchResultContextProperties & {
           field: CurrencyField
-          tokenSection?: TokenOptionSection
-          preselect_asset: boolean
+          tokenSection: TokenOptionSection
         })
     | InterfaceTokenSelectedProperties
   [UniswapEventName.BlockaidFeesMismatch]: {
@@ -875,7 +865,7 @@ export type UniverseEventProperties = {
   }
 
   [WalletEventName.BackupMethodAdded]: {
-    backupMethodType: 'manual' | 'cloud' | 'passkey'
+    backupMethodType: 'manual' | 'cloud'
     newBackupCount: number
   }
   [WalletEventName.BackupMethodRemoved]: {

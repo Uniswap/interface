@@ -1,5 +1,5 @@
 import styled from 'lib/styled-components'
-import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/iconExports'
+import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex } from 'nft/utils'
 import { ReactNode, useCallback, useEffect, useRef } from 'react'
 

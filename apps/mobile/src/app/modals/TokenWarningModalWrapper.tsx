@@ -1,5 +1,7 @@
-import { AppStackScreenProp } from 'src/app/navigation/types'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { closeModal } from 'src/features/modals/modalSlice'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -8,13 +10,12 @@ import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hoo
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
-export function TokenWarningModalWrapper({
-  route,
-}: AppStackScreenProp<typeof ModalName.TokenWarning>): JSX.Element | null {
+export function TokenWarningModalWrapper(): JSX.Element | null {
+  const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
-  const { onClose } = useReactNavigationModal()
+  const modalState = useSelector(selectModalState(ModalName.TokenWarning))
 
-  const { currencyId, onAcknowledge } = route.params.initialState ?? {}
+  const { currencyId, onAcknowledge } = modalState.initialState ?? {}
   const currencyChainId = (currencyId && currencyIdToChain(currencyId)) || defaultChainId
   const currencyAddress = currencyId ? currencyIdToAddress(currencyId) : undefined
   const currencyInfo = useCurrencyInfo(currencyId)
@@ -25,15 +26,19 @@ export function TokenWarningModalWrapper({
     isNativeCurrency || !currencyAddress ? undefined : { chainId: currencyChainId, address: currencyAddress },
   )
 
+  const onClose = useCallback(() => {
+    dispatch(closeModal({ name: ModalName.TokenWarning }))
+  }, [dispatch])
+
   // Return null if modal state is malformed
-  if (!route.params.initialState) {
+  if (!modalState.isOpen || !modalState.initialState) {
     return null
   }
 
   // If no currency info found, skip warning and proceed to SwapFlow
   if (!currencyInfo) {
-    onClose()
     onAcknowledge?.()
+    onClose()
     return null
   }
 
@@ -42,25 +47,18 @@ export function TokenWarningModalWrapper({
 
   // If token is verified or warning was dismissed and not blocked, skip warning and proceed to SwapFlow
   if (!isBlocked && (tokenList === TokenList.Default || tokenWarningDismissed)) {
-    onClose()
     onAcknowledge?.()
+    onClose()
     return null
   }
 
   return (
     <TokenWarningModal
-      isVisible
+      isVisible={modalState.isOpen}
       currencyInfo0={currencyInfo}
       isInfoOnlyWarning={isBlocked}
       closeModalOnly={onClose}
-      onAcknowledge={
-        isBlocked
-          ? onClose
-          : (): void => {
-              onClose()
-              onAcknowledge?.()
-            }
-      }
+      onAcknowledge={isBlocked ? onClose : onAcknowledge || onClose}
     />
   )
 }

@@ -2,11 +2,7 @@ import { WalletKitTypes } from '@reown/walletkit'
 import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
 import { utils } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
-import {
-  SignRequest,
-  TransactionRequest,
-  WalletCapabilitiesRequest,
-} from 'src/features/walletConnect/walletConnectSlice'
+import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod, EthSignMethod } from 'uniswap/src/types/walletConnect'
@@ -152,46 +148,6 @@ export const parseTransactionRequest = (
       },
       account: from,
       chainId,
-      dapp: {
-        name: dapp.name,
-        url: dapp.url,
-        icon: dapp.icons[0] ?? null,
-        source: 'walletconnect',
-      },
-    },
-  }
-}
-
-/**
- * Formats WalletCapabilitiesRequest object from parameters
- *
- * @param {EthMethod.GetCapabilities} method type of method
- * @param {string} topic id for the WalletConnect session
- * @param {number} internalId id for the WalletConnect request
- * @param {SignClientTypes.Metadata} dapp metadata for the dapp requesting capabilities
- * @param {[string, string[]?]} requestParams parameters of the request [Wallet Address, [Chain IDs]?]
- * @returns {{account: Address, request: WalletCapabilitiesRequest}} formatted request object
- */
-export const parseGetCapabilitiesRequest = (
-  method: EthMethod.GetCapabilities,
-  topic: string,
-  internalId: number,
-  dapp: SignClientTypes.Metadata,
-  requestParams: [string, string[]?],
-): { account: Address; request: WalletCapabilitiesRequest } => {
-  const [address, chainIds] = requestParams
-  const parsedChainIds = chainIds
-    ?.map((chainId) => toSupportedChainId(chainId))
-    .filter((c): c is UniverseChainId => Boolean(c))
-
-  return {
-    account: address,
-    request: {
-      type: method,
-      sessionId: topic,
-      internalId: String(internalId),
-      account: address,
-      chainIds: parsedChainIds,
       dapp: {
         name: dapp.name,
         url: dapp.url,

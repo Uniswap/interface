@@ -6,7 +6,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled, useMedia } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -52,7 +52,7 @@ function WrapChildrenForMediaSize({ children }: { children: React.ReactNode }) {
 
 function FeeStat({ children }: { children: React.ReactNode }) {
   return (
-    <Flex flex={1} flexBasis={0} $sm={{ flexBasis: 'auto' }}>
+    <Flex gap="$gap4" flex={1} flexBasis={0} $sm={{ flexBasis: 'auto' }}>
       {children}
     </Flex>
   )
@@ -209,9 +209,7 @@ export function MinMaxRange({
             <SecondaryText color="$neutral1" display="flex" alignItems="center" gap="$gap4">
               <span
                 style={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
+                  ...EllipsisTamaguiStyle,
                 }}
               >
                 {maxPrice}

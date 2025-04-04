@@ -14,9 +14,9 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/swap/modals/LowNativeBalanceModal'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'

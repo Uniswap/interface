@@ -1,92 +1,100 @@
 import { memo, useCallback } from 'react'
-import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
-import { TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
+import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { ItemRowInfo } from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
-import { PoolOptionItem } from 'uniswap/src/components/lists/items/pools/PoolOptionItem'
-import { TokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
-import { SearchModalItemTypes, isPoolOption } from 'uniswap/src/components/lists/types'
+import { SearchModalItemTypes, TokenOption } from 'uniswap/src/components/lists/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { logger } from 'utilities/src/logger/logger'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
+import { CurrencyId } from 'uniswap/src/types/currency'
+
+const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
+  tokenOption,
+  onSelectCurrency,
+  section,
+  index,
+  showWarnings,
+  showTokenAddress,
+  isKeyboardOpen,
+}: {
+  tokenOption: TokenOption
+  section: TokenSection<TokenOption>
+  index: number
+  showWarnings: boolean
+  showTokenAddress?: boolean
+  isKeyboardOpen?: boolean
+  onSelectCurrency: OnSelectCurrency
+}): JSX.Element {
+  const onPress = useCallback(
+    () => onSelectCurrency(tokenOption.currencyInfo, section, index),
+    [index, onSelectCurrency, section, tokenOption.currencyInfo],
+  )
+
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(tokenOption.currencyInfo.currency)
+
+  return (
+    <TokenOptionItem
+      isKeyboardOpen={isKeyboardOpen}
+      option={tokenOption}
+      showTokenAddress={showTokenAddress}
+      showWarnings={showWarnings}
+      tokenWarningDismissed={tokenWarningDismissed}
+      quantity={null}
+      balance="" // change tokenoptionitem to allow undefined balance/quantity
+      onPress={onPress}
+    />
+  )
+})
 
 interface SearchModalListProps {
-  onSelect: (item: SearchModalItemTypes) => void
+  onSelectCurrency: OnSelectCurrency
   sections?: TokenSection<SearchModalItemTypes>[]
   chainFilter?: UniverseChainId | null
+  showTokenWarnings: boolean
   refetch?: () => void
   loading?: boolean
   hasError?: boolean
   emptyElement?: JSX.Element
   errorText?: string
+  showTokenAddress?: boolean
+  isKeyboardOpen?: boolean
 }
 
 function _SearchModalList({
-  onSelect,
+  onSelectCurrency,
   sections,
   chainFilter,
+  showTokenWarnings,
+  isKeyboardOpen,
   refetch,
   loading,
   hasError,
   emptyElement,
   errorText,
+  showTokenAddress,
 }: SearchModalListProps): JSX.Element {
-  const { registerSearch } = useAddToSearchHistory()
-
   const renderItem = useCallback(
     ({ item, section, index }: ItemRowInfo<SearchModalItemTypes>) => {
-      if (isPoolOption(item)) {
-        return (
-          <PoolOptionItem
-            token0CurrencyInfo={item.token0CurrencyInfo}
-            token1CurrencyInfo={item.token1CurrencyInfo}
-            poolId={item.poolId}
-            chainId={item.chainId}
-            protocolVersion={item.protocolVersion}
-            hookAddress={item.hookAddress}
-            feeTier={item.feeTier}
-            onPress={() => {
-              // TODO(WEB-6810): add pool to recent searches
-              // registerSearch(currencyInfo)
-
-              onSelect(item)
-
-              // TODO(WEB-6771): add analytics event when pool option is selected -- see InterfaceEventName.NAVBAR_RESULT_SELECTED
-              logger.debug(
-                'SearchModalList',
-                'renderItem',
-                'logging analytics event for pool option item',
-                item,
-                section,
-                index,
-              )
-            }}
-          />
-        )
-      }
-
+      // if (isTokenItem(item)) {
+      //   // return token option item wrapper
+      // } else if (isNFTItem(item)) {
+      //   // return nft item wrapper
+      // } else if (isWalletItem(item)) {
+      //   // return wallet item wrapper
+      // }
       return (
-        <TokenOptionItem
-          showTokenAddress
-          option={item}
-          onPress={() => {
-            registerSearch(item.currencyInfo)
-
-            onSelect(item)
-
-            // TODO(WEB-6771): add analytics event when token option is selected -- see InterfaceEventName.NAVBAR_RESULT_SELECTED
-            logger.debug(
-              'SearchModalList',
-              'renderItem',
-              'logging analytics event for token option item',
-              item,
-              section,
-              index,
-            )
-          }}
+        <TokenOptionItemWrapper
+          index={index}
+          isKeyboardOpen={isKeyboardOpen}
+          section={section}
+          showTokenAddress={showTokenAddress}
+          showWarnings={showTokenWarnings}
+          tokenOption={item}
+          onSelectCurrency={onSelectCurrency}
         />
       )
     },
-    [onSelect, registerSearch],
+    [isKeyboardOpen, onSelectCurrency, showTokenAddress, showTokenWarnings],
   )
 
   return (
@@ -104,11 +112,8 @@ function _SearchModalList({
   )
 }
 
-function key(item: SearchModalItemTypes): string {
-  if (isPoolOption(item)) {
-    return `pool-${item.chainId}-${item.poolId}-${item.protocolVersion}-${item.hookAddress}-${item.feeTier}`
-  }
-  return `token-${item.currencyInfo.currency.chainId}-${item.currencyInfo.currencyId}`
+function key(item: SearchModalItemTypes): CurrencyId {
+  return item.currencyInfo.currencyId
 }
 
 export const SearchModalList = memo(_SearchModalList)

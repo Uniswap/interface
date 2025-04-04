@@ -1,10 +1,17 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
+import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
+import { BackupWarningModal } from 'src/app/modals/BackupWarningModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
 import { LazyModalRenderer } from 'src/app/modals/LazyModalRenderer'
 import { SendTokenModal } from 'src/app/modals/SendTokenModal'
 import { SwapModal } from 'src/app/modals/SwapModal'
+import { TokenWarningModalWrapper } from 'src/app/modals/TokenWarningModalWrapper'
+import { ViewOnlyExplainerModal } from 'src/app/modals/ViewOnlyExplainerModal'
+import { RemoveWalletModal } from 'src/components/RemoveWallet/RemoveWalletModal'
 import { WalletConnectModals } from 'src/components/Requests/WalletConnectModals'
+import { RestoreWalletModal } from 'src/components/RestoreWalletModal/RestoreWalletModal'
 import { ConnectionsDappListModal } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappListModal'
 import { EditLabelSettingsModal } from 'src/components/Settings/EditWalletModal/EditLabelSettingsModal'
 import { EditProfileSettingsModal } from 'src/components/Settings/EditWalletModal/EditProfileSettingsModal'
@@ -12,25 +19,19 @@ import { ManageWalletsModal } from 'src/components/Settings/ManageWalletsModal'
 import { SettingsAppearanceModal } from 'src/components/Settings/SettingsAppearanceModal'
 import { SettingsBiometricModal } from 'src/components/Settings/SettingsBiometricModal'
 import { ForceUpgradeModal } from 'src/components/forceUpgrade/ForceUpgradeModal'
+import { UnitagsIntroModal } from 'src/components/unitags/UnitagsIntroModal'
 import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
 import { LockScreenModal } from 'src/features/lockScreen/LockScreenModal'
 import { closeModal } from 'src/features/modals/modalSlice'
+import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
+import { TestnetSwitchModal } from 'src/features/testnetMode/TestnetSwitchModal'
+import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { PermissionsModal } from 'wallet/src/components/settings/permissions/PermissionsModal'
 import { PortfolioBalanceModal } from 'wallet/src/components/settings/portfolioBalance/PortfolioBalanceModal'
 import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
-
-/**
- * *********** DEPRECATION NOTICE ***********
- *
- * This modal system is deprecated in favor of React Navigation.
- * Please do not add any new modals to this redux slice.
- * See apps/mobile/src/app/navigation/navigation.tsx
- *
- * *********** DEPRECATION NOTICE ***********
- */
 
 export function AppModals(): JSX.Element {
   const dispatch = useDispatch()
@@ -53,6 +54,10 @@ export function AppModals(): JSX.Element {
         <FiatOnRampAggregatorModal />
       </LazyModalRenderer>
 
+      <LazyModalRenderer name={ModalName.ReceiveCryptoModal}>
+        <ReceiveCryptoModal />
+      </LazyModalRenderer>
+
       <LazyModalRenderer name={ModalName.Explore}>
         <ExploreModal />
       </LazyModalRenderer>
@@ -60,6 +65,10 @@ export function AppModals(): JSX.Element {
       <ForceUpgradeModal />
 
       <LockScreenModal />
+
+      <LazyModalRenderer name={ModalName.Scantastic}>
+        <ScantasticModal />
+      </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.Swap}>
         <SwapModal />
@@ -71,11 +80,19 @@ export function AppModals(): JSX.Element {
 
       <WalletConnectModals />
 
+      <LazyModalRenderer name={ModalName.AccountSwitcher}>
+        <AccountSwitcherModal />
+      </LazyModalRenderer>
+
       <LazyModalRenderer name={ModalName.ManageWalletsModal}>
         <ManageWalletsModal />
       </LazyModalRenderer>
 
       <QueuedOrderModal />
+
+      <LazyModalRenderer name={ModalName.RemoveWallet}>
+        <RemoveWalletModal />
+      </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.ConnectionsDappListModal}>
         <ConnectionsDappListModal />
@@ -87,6 +104,10 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.EditProfileSettingsModal}>
         <EditProfileSettingsModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.RestoreWallet}>
+        <RestoreWalletModal />
       </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.LanguageSelector}>
@@ -111,6 +132,30 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.FiatCurrencySelector}>
         <SettingsFiatCurrencyModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.UnitagsIntro}>
+        <UnitagsIntroModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.ViewOnlyExplainer}>
+        <ViewOnlyExplainerModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.BackupReminder}>
+        <BackupReminderModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.BackupReminderWarning}>
+        <BackupWarningModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.TokenWarning}>
+        <TokenWarningModalWrapper />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.TestnetSwitchModal}>
+        <TestnetSwitchModal />
       </LazyModalRenderer>
     </>
   )

@@ -1,4 +1,4 @@
-# Logging Best Practices
+# Sentry Logging Best Practices
 
 ## Log Errors Over Strings
 
@@ -7,7 +7,7 @@ If you're manually logging an error, make sure you log an actual error object an
 Don't use: `logger.error('Invalid input')`
 Do use: `logger.error(new Error('Invalid input')`
 
-The reason is that new Error() helps us know exactly where this was called. Otherwise, the stack trace is useless.
+The reason is that new Error() makes it so that Sentry knows exactly where this was called. Otherwise, the stack trace is useless.
 
 ## Try/Catch
 

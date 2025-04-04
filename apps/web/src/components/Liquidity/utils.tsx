@@ -22,10 +22,10 @@ import { Pools } from 'ui/src/components/icons/Pools'
 import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { LPprotocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { getChainUrlParam } from 'utils/chainParams'
 
 export function hasLPFoTTransferError(
   currencyInfo: Maybe<CurrencyInfo>,
@@ -59,14 +59,14 @@ export function getProtocolVersionLabel(version: ProtocolVersion): string | unde
   }
 }
 
-export function getProtocolItems(version: ProtocolVersion | undefined): LPprotocolItems | undefined {
+export function getProtocolItems(version: ProtocolVersion | undefined): ProtocolItems | undefined {
   switch (version) {
     case ProtocolVersion.V2:
-      return LPprotocolItems.V2
+      return ProtocolItems.V2
     case ProtocolVersion.V3:
-      return LPprotocolItems.V3
+      return ProtocolItems.V3
     case ProtocolVersion.V4:
-      return LPprotocolItems.V4
+      return ProtocolItems.V4
   }
   return undefined
 }
@@ -97,13 +97,13 @@ export function parseProtocolVersion(version: string | undefined): ProtocolVersi
 }
 
 export function getPositionUrl(position: PositionInfo): string {
-  const chainUrlParam = getChainUrlParam(position.chainId)
+  const chainInfo = getChainInfo(position.chainId)
   if (position.version === ProtocolVersion.V2) {
-    return `/positions/v2/${chainUrlParam}/${position.liquidityToken.address}`
+    return `/positions/v2/${chainInfo.urlParam}/${position.liquidityToken.address}`
   } else if (position.version === ProtocolVersion.V3) {
-    return `/positions/v3/${chainUrlParam}/${position.tokenId}`
+    return `/positions/v3/${chainInfo.urlParam}/${position.tokenId}`
   }
-  return `/positions/v4/${chainUrlParam}/${position.tokenId}`
+  return `/positions/v4/${chainInfo.urlParam}/${position.tokenId}`
 }
 
 function parseV3FeeTier(feeTier: string | undefined): FeeAmount | undefined {

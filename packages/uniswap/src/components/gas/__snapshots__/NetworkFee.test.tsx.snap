@@ -53,12 +53,12 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         numberOfLines={3}
         style={
           {
-            "color": "rgba(255, 255, 255, 0.65)",
+            "color": "#9B9B9B",
             "flexShrink": 1,
             "fontFamily": "Basel Grotesk",
             "fontSize": 15,
             "fontWeight": "400",
-            "lineHeight": 19.5,
+            "lineHeight": 20,
           }
         }
         suppressHighlighting={true}
@@ -82,7 +82,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
               "borderWidth": 0,
             },
             {
-              "color": "rgba(255, 255, 255, 0.38)",
+              "color": "#5E5E5E",
               "height": 16,
               "width": 16,
             },
@@ -97,7 +97,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         vbWidth={16}
       >
         <RNSVGGroup
-          color="rgba(255, 255, 255, 0.38)"
+          color="#5E5E5E"
           fill={null}
           propList={
             [
@@ -204,12 +204,12 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         numberOfLines={3}
         style={
           {
-            "color": "rgba(255, 255, 255, 0.65)",
+            "color": "#9B9B9B",
             "flexShrink": 1,
             "fontFamily": "Basel Grotesk",
             "fontSize": 15,
             "fontWeight": "400",
-            "lineHeight": 19.5,
+            "lineHeight": 20,
           }
         }
         suppressHighlighting={true}
@@ -233,7 +233,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
               "borderWidth": 0,
             },
             {
-              "color": "rgba(255, 255, 255, 0.38)",
+              "color": "#5E5E5E",
               "height": 16,
               "width": 16,
             },
@@ -248,7 +248,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         vbWidth={16}
       >
         <RNSVGGroup
-          color="rgba(255, 255, 255, 0.38)"
+          color="#5E5E5E"
           fill={null}
           propList={
             [
@@ -316,11 +316,11 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "color": "rgba(255, 255, 255, 0.65)",
+          "color": "#9B9B9B",
           "fontFamily": "Basel Grotesk",
           "fontSize": 15,
           "fontWeight": "400",
-          "lineHeight": 19.5,
+          "lineHeight": 20,
         }
       }
       suppressHighlighting={true}
@@ -384,12 +384,12 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         numberOfLines={3}
         style={
           {
-            "color": "rgba(255, 255, 255, 0.65)",
+            "color": "#9B9B9B",
             "flexShrink": 1,
             "fontFamily": "Basel Grotesk",
             "fontSize": 15,
             "fontWeight": "400",
-            "lineHeight": 19.5,
+            "lineHeight": 20,
           }
         }
         suppressHighlighting={true}
@@ -413,7 +413,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
               "borderWidth": 0,
             },
             {
-              "color": "rgba(255, 255, 255, 0.38)",
+              "color": "#5E5E5E",
               "height": 16,
               "width": 16,
             },
@@ -428,7 +428,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         vbWidth={16}
       >
         <RNSVGGroup
-          color="rgba(255, 255, 255, 0.38)"
+          color="#5E5E5E"
           fill={null}
           propList={
             [
@@ -500,7 +500,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
           "fontFamily": "Basel Grotesk",
           "fontSize": 15,
           "fontWeight": "400",
-          "lineHeight": 19.5,
+          "lineHeight": 20,
         }
       }
       suppressHighlighting={true}

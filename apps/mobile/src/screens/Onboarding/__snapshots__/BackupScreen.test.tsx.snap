@@ -116,7 +116,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     "borderWidth": 0,
                   },
                   {
-                    "color": "#131313",
+                    "color": "#222222",
                     "height": 18,
                     "width": 18,
                   },
@@ -131,7 +131,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               vbWidth={19}
             >
               <RNSVGGroup
-                color="#131313"
+                color="#222222"
                 fill={null}
                 propList={
                   [
@@ -166,7 +166,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               "color": {
                 "dynamic": {
                   "dark": "#FFFFFF",
-                  "light": "#131313",
+                  "light": "#222222",
                 },
               },
               "fontFamily": "Basel Grotesk",
@@ -188,14 +188,14 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             {
               "color": {
                 "dynamic": {
-                  "dark": "rgba(255, 255, 255, 0.65)",
-                  "light": "rgba(19, 19, 19, 0.63)",
+                  "dark": "#9B9B9B",
+                  "light": "#7D7D7D",
                 },
               },
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
-              "lineHeight": 20,
+              "lineHeight": 24,
               "textAlign": "center",
             }
           }
@@ -336,8 +336,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         "alignItems": "center",
                         "backgroundColor": {
                           "dynamic": {
-                            "dark": "rgba(255, 55, 199, 0.08)",
-                            "light": "rgba(255, 55, 199, 0.08)",
+                            "dark": "#361A37",
+                            "light": "#FEF4FF",
                           },
                         },
                         "borderBottomLeftRadius": 999999,
@@ -345,10 +345,10 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         "borderTopLeftRadius": 999999,
                         "borderTopRightRadius": 999999,
                         "flexDirection": "column",
-                        "height": 32,
+                        "height": 28,
                         "justifyContent": "center",
                         "marginTop": 4,
-                        "width": 32,
+                        "width": 28,
                       }
                     }
                   >
@@ -369,7 +369,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             "borderWidth": 0,
                           },
                           {
-                            "color": "#FF37C7",
+                            "color": "#FC72FF",
                             "height": 16,
                             "width": 16,
                           },
@@ -384,7 +384,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       vbWidth={16}
                     >
                       <RNSVGGroup
-                        color="#FF37C7"
+                        color="#FC72FF"
                         fill={null}
                         propList={
                           [
@@ -465,13 +465,13 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                                 "color": {
                                   "dynamic": {
                                     "dark": "#FFFFFF",
-                                    "light": "#131313",
+                                    "light": "#222222",
                                   },
                                 },
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 17,
                                 "fontWeight": "400",
-                                "lineHeight": 22.1,
+                                "lineHeight": 24,
                               }
                             }
                             suppressHighlighting={true}
@@ -510,8 +510,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                               {
                                 "color": {
                                   "dynamic": {
-                                    "dark": "#FF37C7",
-                                    "light": "#FF37C7",
+                                    "dark": "#FC72FF",
+                                    "light": "#FC72FF",
                                   },
                                 },
                                 "fontFamily": "Basel Grotesk",
@@ -534,14 +534,14 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           {
                             "color": {
                               "dynamic": {
-                                "dark": "rgba(255, 255, 255, 0.65)",
-                                "light": "rgba(19, 19, 19, 0.63)",
+                                "dark": "#9B9B9B",
+                                "light": "#7D7D7D",
                               },
                             },
                             "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
                             "fontWeight": "400",
-                            "lineHeight": 19.5,
+                            "lineHeight": 20,
                           }
                         }
                         suppressHighlighting={true}
@@ -642,8 +642,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         "alignItems": "center",
                         "backgroundColor": {
                           "dynamic": {
-                            "dark": "rgba(255, 55, 199, 0.08)",
-                            "light": "rgba(255, 55, 199, 0.08)",
+                            "dark": "#361A37",
+                            "light": "#FEF4FF",
                           },
                         },
                         "borderBottomLeftRadius": 999999,
@@ -651,9 +651,9 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         "borderTopLeftRadius": 999999,
                         "borderTopRightRadius": 999999,
                         "flexDirection": "column",
-                        "height": 32,
+                        "height": 28,
                         "justifyContent": "center",
-                        "width": 32,
+                        "width": 28,
                       }
                     }
                   >
@@ -674,7 +674,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             "borderWidth": 0,
                           },
                           {
-                            "color": "#FF37C7",
+                            "color": "#FC72FF",
                             "height": 12,
                             "width": 12,
                           },
@@ -689,7 +689,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       vbWidth={19}
                     >
                       <RNSVGGroup
-                        color="#FF37C7"
+                        color="#FC72FF"
                         fill={null}
                         propList={
                           [
@@ -760,13 +760,13 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                                 "color": {
                                   "dynamic": {
                                     "dark": "#FFFFFF",
-                                    "light": "#131313",
+                                    "light": "#222222",
                                   },
                                 },
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 17,
                                 "fontWeight": "400",
-                                "lineHeight": 22.1,
+                                "lineHeight": 24,
                               }
                             }
                             suppressHighlighting={true}
@@ -782,14 +782,14 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           {
                             "color": {
                               "dynamic": {
-                                "dark": "rgba(255, 255, 255, 0.65)",
-                                "light": "rgba(19, 19, 19, 0.63)",
+                                "dark": "#9B9B9B",
+                                "light": "#7D7D7D",
                               },
                             },
                             "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
                             "fontWeight": "400",
-                            "lineHeight": 19.5,
+                            "lineHeight": 20,
                           }
                         }
                         suppressHighlighting={true}
@@ -863,7 +863,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "borderWidth": 0,
                     },
                     {
-                      "color": "rgba(19, 19, 19, 0.35)",
+                      "color": "#BFBFBF",
                       "height": 20,
                       "width": 20,
                     },
@@ -878,7 +878,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 vbWidth={24}
               >
                 <RNSVGGroup
-                  color="rgba(19, 19, 19, 0.35)"
+                  color="#BFBFBF"
                   fill={null}
                   propList={
                     [
@@ -910,14 +910,14 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   {
                     "color": {
                       "dynamic": {
-                        "dark": "rgba(255, 255, 255, 0.38)",
-                        "light": "rgba(19, 19, 19, 0.35)",
+                        "dark": "#5E5E5E",
+                        "light": "#BFBFBF",
                       },
                     },
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",
-                    "lineHeight": 22.1,
+                    "lineHeight": 24,
                   }
                 }
                 suppressHighlighting={true}
@@ -1049,7 +1049,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     "borderWidth": 0,
                   },
                   {
-                    "color": "#131313",
+                    "color": "#222222",
                     "height": 18,
                     "width": 18,
                   },
@@ -1064,7 +1064,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               vbWidth={19}
             >
               <RNSVGGroup
-                color="#131313"
+                color="#222222"
                 fill={null}
                 propList={
                   [
@@ -1099,7 +1099,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               "color": {
                 "dynamic": {
                   "dark": "#FFFFFF",
-                  "light": "#131313",
+                  "light": "#222222",
                 },
               },
               "fontFamily": "Basel Grotesk",
@@ -1121,14 +1121,14 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             {
               "color": {
                 "dynamic": {
-                  "dark": "rgba(255, 255, 255, 0.65)",
-                  "light": "rgba(19, 19, 19, 0.63)",
+                  "dark": "#9B9B9B",
+                  "light": "#7D7D7D",
                 },
               },
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
-              "lineHeight": 20,
+              "lineHeight": 24,
               "textAlign": "center",
             }
           }
@@ -1269,8 +1269,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         "alignItems": "center",
                         "backgroundColor": {
                           "dynamic": {
-                            "dark": "rgba(255, 55, 199, 0.08)",
-                            "light": "rgba(255, 55, 199, 0.08)",
+                            "dark": "#361A37",
+                            "light": "#FEF4FF",
                           },
                         },
                         "borderBottomLeftRadius": 999999,
@@ -1278,10 +1278,10 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         "borderTopLeftRadius": 999999,
                         "borderTopRightRadius": 999999,
                         "flexDirection": "column",
-                        "height": 32,
+                        "height": 28,
                         "justifyContent": "center",
                         "marginTop": 4,
-                        "width": 32,
+                        "width": 28,
                       }
                     }
                   >
@@ -1302,7 +1302,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             "borderWidth": 0,
                           },
                           {
-                            "color": "#FF37C7",
+                            "color": "#FC72FF",
                             "height": 16,
                             "width": 16,
                           },
@@ -1317,7 +1317,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       vbWidth={16}
                     >
                       <RNSVGGroup
-                        color="#FF37C7"
+                        color="#FC72FF"
                         fill={null}
                         propList={
                           [
@@ -1398,13 +1398,13 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                                 "color": {
                                   "dynamic": {
                                     "dark": "#FFFFFF",
-                                    "light": "#131313",
+                                    "light": "#222222",
                                   },
                                 },
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 17,
                                 "fontWeight": "400",
-                                "lineHeight": 22.1,
+                                "lineHeight": 24,
                               }
                             }
                             suppressHighlighting={true}
@@ -1443,8 +1443,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                               {
                                 "color": {
                                   "dynamic": {
-                                    "dark": "#FF37C7",
-                                    "light": "#FF37C7",
+                                    "dark": "#FC72FF",
+                                    "light": "#FC72FF",
                                   },
                                 },
                                 "fontFamily": "Basel Grotesk",
@@ -1467,14 +1467,14 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           {
                             "color": {
                               "dynamic": {
-                                "dark": "rgba(255, 255, 255, 0.65)",
-                                "light": "rgba(19, 19, 19, 0.63)",
+                                "dark": "#9B9B9B",
+                                "light": "#7D7D7D",
                               },
                             },
                             "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
                             "fontWeight": "400",
-                            "lineHeight": 19.5,
+                            "lineHeight": 20,
                           }
                         }
                         suppressHighlighting={true}
@@ -1575,8 +1575,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         "alignItems": "center",
                         "backgroundColor": {
                           "dynamic": {
-                            "dark": "rgba(255, 55, 199, 0.08)",
-                            "light": "rgba(255, 55, 199, 0.08)",
+                            "dark": "#361A37",
+                            "light": "#FEF4FF",
                           },
                         },
                         "borderBottomLeftRadius": 999999,
@@ -1584,9 +1584,9 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         "borderTopLeftRadius": 999999,
                         "borderTopRightRadius": 999999,
                         "flexDirection": "column",
-                        "height": 32,
+                        "height": 28,
                         "justifyContent": "center",
-                        "width": 32,
+                        "width": 28,
                       }
                     }
                   >
@@ -1607,7 +1607,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             "borderWidth": 0,
                           },
                           {
-                            "color": "#FF37C7",
+                            "color": "#FC72FF",
                             "height": 12,
                             "width": 12,
                           },
@@ -1622,7 +1622,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       vbWidth={19}
                     >
                       <RNSVGGroup
-                        color="#FF37C7"
+                        color="#FC72FF"
                         fill={null}
                         propList={
                           [
@@ -1693,13 +1693,13 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                                 "color": {
                                   "dynamic": {
                                     "dark": "#FFFFFF",
-                                    "light": "#131313",
+                                    "light": "#222222",
                                   },
                                 },
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 17,
                                 "fontWeight": "400",
-                                "lineHeight": 22.1,
+                                "lineHeight": 24,
                               }
                             }
                             suppressHighlighting={true}
@@ -1715,14 +1715,14 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           {
                             "color": {
                               "dynamic": {
-                                "dark": "rgba(255, 255, 255, 0.65)",
-                                "light": "rgba(19, 19, 19, 0.63)",
+                                "dark": "#9B9B9B",
+                                "light": "#7D7D7D",
                               },
                             },
                             "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
                             "fontWeight": "400",
-                            "lineHeight": 19.5,
+                            "lineHeight": 20,
                           }
                         }
                         suppressHighlighting={true}
@@ -1796,7 +1796,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "borderWidth": 0,
                     },
                     {
-                      "color": "rgba(19, 19, 19, 0.35)",
+                      "color": "#BFBFBF",
                       "height": 20,
                       "width": 20,
                     },
@@ -1811,7 +1811,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 vbWidth={24}
               >
                 <RNSVGGroup
-                  color="rgba(19, 19, 19, 0.35)"
+                  color="#BFBFBF"
                   fill={null}
                   propList={
                     [
@@ -1843,14 +1843,14 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   {
                     "color": {
                       "dynamic": {
-                        "dark": "rgba(255, 255, 255, 0.38)",
-                        "light": "rgba(19, 19, 19, 0.35)",
+                        "dark": "#5E5E5E",
+                        "light": "#BFBFBF",
                       },
                     },
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",
-                    "lineHeight": 22.1,
+                    "lineHeight": 24,
                   }
                 }
                 suppressHighlighting={true}

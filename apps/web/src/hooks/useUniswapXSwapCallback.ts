@@ -195,9 +195,13 @@ export function useUniswapXSwapCallback({
               .nonce(updatedNonce ?? order.info.nonce)
               .build()
             ;({ domain, types, values } = updatedOrder.permitData())
-          }
 
-          const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async () => {
+            trace.setData('startTime', startTime)
+            trace.setData('endTime', endTime)
+          }
+          trace.setData('deadline', deadline)
+
+          const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
             try {
               const provider = providerRef.current
               if (!provider) {
@@ -207,6 +211,7 @@ export function useUniswapXSwapCallback({
               return await signTypedData(provider.getSigner(account.address), domain, types, values)
             } catch (error) {
               if (didUserReject(error)) {
+                walletTrace.setStatus('cancelled')
                 throw new UserRejectedRequestError(swapErrorToUserReadableMessage(t, error))
               } else {
                 throw error
@@ -325,10 +330,13 @@ export function useUniswapXSwapCallback({
           }
         } catch (error) {
           if (error instanceof UserRejectedRequestError) {
+            trace.setStatus('cancelled')
             throw error
           } else if (error instanceof SignatureExpiredError || error instanceof UniswapXv2HardQuoteError) {
+            trace.setStatus('unknown_error')
             throw error
           } else {
+            trace.setError(error)
             throw new Error(swapErrorToUserReadableMessage(t, error))
           }
         }

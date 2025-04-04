@@ -8,7 +8,7 @@ import {
   ActivityTransferIcon,
   CancelListingIcon,
   RarityVerifiedIcon,
-} from 'nft/components/iconExports'
+} from 'nft/components/icons'
 import {
   ActivityEvent,
   ActivityEventTypeDisplay,

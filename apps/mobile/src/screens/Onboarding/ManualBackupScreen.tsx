@@ -16,6 +16,7 @@ import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { EyeSlash, FileListLock, GraduationCap, Key, PapersText, Pen } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -56,6 +57,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
 
   const mnemonicId = account.mnemonicId
 
+  const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [showSpeedBumpModal, setShowSpeedBumpModal] = useState(false)
 
   const [view, nextView] = useReducer((curView: View) => curView + 1, View.SeedPhrase)
@@ -91,11 +93,9 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
       return undefined
     }
 
-    const listener = addScreenshotListener(() =>
-      navigate(ModalName.ScreenshotWarning, { acknowledgeText: t('common.button.ok') }),
-    )
+    const listener = addScreenshotListener(() => setShowScreenShotWarningModal(true))
     return () => listener?.remove()
-  }, [view, t])
+  }, [view])
 
   useEffect(() => {
     if (confirmContinueButtonPressed && account?.backups?.includes(BackupType.Manual)) {
@@ -135,6 +135,14 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               : t('onboarding.recoveryPhrase.view.title')
           }
         >
+          <WarningModal
+            caption={t('onboarding.recoveryPhrase.warning.screenshot.message')}
+            acknowledgeText={t('common.button.ok')}
+            isOpen={showScreenShotWarningModal}
+            modalName={ModalName.ScreenshotWarning}
+            title={t('onboarding.recoveryPhrase.warning.screenshot.title')}
+            onAcknowledge={(): void => setShowScreenShotWarningModal(false)}
+          />
           <Flex grow justifyContent="space-between">
             <Flex grow>
               <MnemonicDisplay

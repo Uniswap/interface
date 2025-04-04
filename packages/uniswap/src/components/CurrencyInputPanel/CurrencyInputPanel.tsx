@@ -13,22 +13,22 @@ import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets'
-import { PresetAmountButton, PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
+import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { Experiments, Layers, SwapPresetsProperties } from 'uniswap/src/features/gating/experiments'
+import { Experiments, SwapPresetsProperties } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useExperimentValueFromLayer, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { DefaultTokenOptions } from 'uniswap/src/features/transactions/swap/form/body/DefaultTokenOptions/DefaultTokenOptions'
+import { DefaultTokenOptions } from 'uniswap/src/features/transactions/swap/form/DefaultTokenOptions'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -49,12 +49,10 @@ type CurrencyInputPanelProps = {
   isIndicativeLoading?: boolean
   focus?: boolean
   isFiatMode?: boolean
-  /** Only show a single max button rather than all percentage preset options. */
-  showMaxButtonOnly?: boolean
   onPressIn?: () => void
   onSelectionChange?: (start: number, end: number) => void
   onSetExactAmount: (amount: string) => void
-  onSetPresetValue?: (amount: string, percentage: PresetPercentage) => void
+  onSetPresetValue?: (amount: string, isLessThanMax?: boolean) => void
   onShowTokenSelector?: () => void
   onToggleIsFiatMode: (currencyField: CurrencyField) => void
   selection?: TextInputProps['selection']
@@ -66,6 +64,7 @@ type CurrencyInputPanelProps = {
   headerLabel?: string
   disabled?: boolean
   onPressDisabled?: () => void
+  enableInputOnly?: boolean // only allow the input field to be changed. Clicking elsewhere has no effect
   resetSelection?: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
   tokenColor?: string
 } & FlexProps
@@ -93,7 +92,6 @@ export const CurrencyInputPanel = memo(
         currencyInfo,
         focus,
         isFiatMode = false,
-        showMaxButtonOnly = false,
         onPressIn,
         onSelectionChange: selectionChange,
         onSetExactAmount,
@@ -104,6 +102,7 @@ export const CurrencyInputPanel = memo(
         resetSelection,
         disabled = false,
         onPressDisabled,
+        enableInputOnly,
         headerLabel,
         transactionType,
         tokenColor,
@@ -125,16 +124,18 @@ export const CurrencyInputPanel = memo(
       const { formatCurrencyAmount } = useLocalizationContext()
       const { symbol: fiatCurrencySymbol, code: fiatCurrencyCode } = useAppFiatCurrencyInfo()
 
-      const isInputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>(
-        Layers.SwapPage,
+      const isInputPresetsEnabled = useExperimentValue<
+        Experiments.SwapPresets,
         SwapPresetsProperties.InputEnabled,
-        false,
-      )
-      const isOutputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>(
-        Layers.SwapPage,
+        boolean
+      >(Experiments.SwapPresets, SwapPresetsProperties.InputEnabled, false)
+      const isOutputPresetsEnabled = useExperimentValue<
+        Experiments.SwapPresets,
         SwapPresetsProperties.OutputEnabled,
-        false,
-      )
+        boolean
+      >(Experiments.SwapPresets, SwapPresetsProperties.OutputEnabled, false)
+
+      const showDefaultTokenOptions = isOutputPresetsEnabled && currencyField === CurrencyField.OUTPUT && !currencyInfo
 
       const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
       const indicativeDisplay = useIndicativeTextDisplay(props)
@@ -246,13 +247,7 @@ export const CurrencyInputPanel = memo(
       // Hide balance if panel is output, and no balance
       const hideCurrencyBalance = (isOutput && currencyBalance?.equalTo(0)) || !account
 
-      const showMaxButton = (!isInputPresetsEnabled || showMaxButtonOnly) && !isOutput && account
-      const showDefaultTokenOptions = isOutputPresetsEnabled && currencyField === CurrencyField.OUTPUT && !currencyInfo
-      const showPercentagePresetOptions =
-        isInputPresetsEnabled && !showMaxButtonOnly && currencyField === CurrencyField.INPUT
-
-      const showPercentagePresetsOnBottom =
-        showPercentagePresetOptions && (isExtension || isMobileWeb || (isInterfaceDesktop && !headerLabel))
+      const showMaxButton = !isOutput && account
 
       // In fiat mode, show equivalent token amount. In token mode, show equivalent fiat amount
       const inputPanelFormattedValue = useTokenAndFiatDisplayAmounts({
@@ -269,17 +264,20 @@ export const CurrencyInputPanel = memo(
       }, [onPressDisabled, triggerShakeAnimation])
 
       const handleSetPresetValue = useCallback(
-        (amount: string, percentage: PresetPercentage) => {
-          onSetPresetValue?.(amount, percentage)
+        (amount: string, isLessThanMax?: boolean) => {
+          onSetPresetValue?.(amount, isLessThanMax)
         },
         [onSetPresetValue],
       )
 
       const refetchAnimationStyle = useRefetchAnimationStyle(props)
+      const showBottomPresets =
+        isInputPresetsEnabled && (isExtension || isMobileWeb) && currencyField === CurrencyField.INPUT
 
       return (
         <TouchableArea
           group
+          disabled={enableInputOnly}
           disabledStyle={{
             cursor: 'default',
           }}
@@ -288,27 +286,23 @@ export const CurrencyInputPanel = memo(
           <Flex {...rest} overflow="hidden" px="$spacing16" py={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
             {headerLabel || showDefaultTokenOptions ? (
               <Flex row justifyContent="space-between">
-                {/* IMPORTANT: $micro crashes on mobile */}
-                <Text color="$neutral2" variant="subheading2" fontSize={isWeb ? '$micro' : '$small'}>
+                <Text color="$neutral2" variant="subheading2" fontSize="$micro">
                   {headerLabel}
                 </Text>
                 {isInputPresetsEnabled &&
                   isInterfaceDesktop &&
                   currencyField === CurrencyField.INPUT &&
                   currencyBalance && (
-                    <Flex position="absolute" right={0} top={-spacing.spacing2}>
-                      <AmountInputPresets
-                        currencyAmount={currencyAmount}
-                        currencyBalance={currencyBalance}
-                        buttonProps={{ py: '$spacing4' }}
-                        onSetPresetValue={handleSetPresetValue}
-                      />
-                    </Flex>
+                    <AmountInputPresets
+                      animateOnHover="rtl"
+                      currencyAmount={currencyAmount}
+                      currencyBalance={currencyBalance}
+                      buttonProps={{ py: '$spacing4' }}
+                      onSetPresetValue={handleSetPresetValue}
+                    />
                   )}
                 {showDefaultTokenOptions && isInterfaceDesktop && (
-                  <Flex position="absolute" right={0} top={-spacing.spacing4}>
-                    <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
-                  </Flex>
+                  <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
                 )}
               </Flex>
             ) : null}
@@ -408,14 +402,14 @@ export const CurrencyInputPanel = memo(
               row
               alignItems="center"
               gap="$spacing8"
-              mb={showPercentagePresetsOnBottom ? '$spacing6' : undefined}
+              mb={showBottomPresets ? '$spacing6' : undefined}
               // maintain layout when balance is hidden
               {...(!currencyInfo && { opacity: 0, pointerEvents: 'none' })}
             >
-              {showPercentagePresetsOnBottom && currencyBalance && !currencyAmount ? (
+              {showBottomPresets && currencyBalance && !currencyAmount ? (
                 <Flex position="absolute">
                   <AmountInputPresets
-                    hoverLtr
+                    animateOnHover={isExtension ? 'ltr' : undefined}
                     buttonProps={{ py: '$spacing4' }}
                     currencyAmount={currencyAmount}
                     currencyBalance={currencyBalance}
@@ -447,7 +441,7 @@ export const CurrencyInputPanel = memo(
                       {getSymbolDisplayText(currencyInfo.currency.symbol)}
                     </Text>
                   )}
-                  {showMaxButton && onSetPresetValue && (
+                  {!isInputPresetsEnabled && showMaxButton && onSetPresetValue && (
                     <PresetAmountButton
                       currencyAmount={currencyAmount}
                       currencyBalance={currencyBalance}

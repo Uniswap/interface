@@ -1,192 +1,136 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AccountDetails renders address display name without error 1`] = `
-[
-  <View
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+    }
+  }
+>
+  <Text
+    allowFontScaling={false}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
     style={
       {
-        "alignItems": "center",
-        "flexDirection": "row",
+        "color": "#222222",
+        "flexShrink": 1,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 16,
+        "fontWeight": "400",
+        "lineHeight": 24,
       }
     }
+    suppressHighlighting={true}
   >
-    <Text
-      allowFontScaling={false}
-      maxFontSizeMultiplier={1.4}
-      numberOfLines={1}
-      style={
-        {
-          "color": {
-            "dynamic": {
-              "dark": "#FFFFFF",
-              "light": "#131313",
-            },
-          },
-          "flexShrink": 1,
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 16,
-          "fontWeight": "400",
-          "lineHeight": 20.8,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      0x82D56A352367453f74FC0dC7B071b311da373Fa6
-    </Text>
-  </View>,
-  <div
-    style={
-      {
-        "display": "contents",
-      }
-    }
-  />,
-]
+    0x82D56A352367453f74FC0dC7B071b311da373Fa6
+  </Text>
+</View>
 `;
 
 exports[`AccountDetails renders ens display name without error 1`] = `
-[
-  <View
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+    }
+  }
+>
+  <Text
+    allowFontScaling={false}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
     style={
       {
-        "alignItems": "center",
-        "flexDirection": "row",
+        "color": "#222222",
+        "flexShrink": 1,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 16,
+        "fontWeight": "400",
+        "lineHeight": 24,
       }
     }
+    suppressHighlighting={true}
   >
-    <Text
-      allowFontScaling={false}
-      maxFontSizeMultiplier={1.4}
-      numberOfLines={1}
-      style={
-        {
-          "color": {
-            "dynamic": {
-              "dark": "#FFFFFF",
-              "light": "#131313",
-            },
-          },
-          "flexShrink": 1,
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 16,
-          "fontWeight": "400",
-          "lineHeight": 20.8,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      vitalik.eth
-    </Text>
-  </View>,
-  <div
-    style={
-      {
-        "display": "contents",
-      }
-    }
-  />,
-]
+    vitalik.eth
+  </Text>
+</View>
 `;
 
 exports[`AccountDetails renders local display name without error 1`] = `
-[
-  <View
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+    }
+  }
+>
+  <Text
+    allowFontScaling={false}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
     style={
       {
-        "alignItems": "center",
-        "flexDirection": "row",
+        "color": "#222222",
+        "flexShrink": 1,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 16,
+        "fontWeight": "400",
+        "lineHeight": 24,
       }
     }
+    suppressHighlighting={true}
   >
-    <Text
-      allowFontScaling={false}
-      maxFontSizeMultiplier={1.4}
-      numberOfLines={1}
-      style={
-        {
-          "color": {
-            "dynamic": {
-              "dark": "#FFFFFF",
-              "light": "#131313",
-            },
-          },
-          "flexShrink": 1,
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 16,
-          "fontWeight": "400",
-          "lineHeight": 20.8,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      Wallet 1
-    </Text>
-  </View>,
-  <div
-    style={
-      {
-        "display": "contents",
-      }
-    }
-  />,
-]
+    Wallet 1
+  </Text>
+</View>
 `;
 
 exports[`AccountDetails renders unitag without error 1`] = `
-[
-  <View
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+    }
+  }
+>
+  <Text
+    allowFontScaling={false}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
     style={
       {
-        "alignItems": "center",
-        "flexDirection": "row",
+        "color": "#222222",
+        "flexShrink": 1,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 16,
+        "fontWeight": "400",
+        "lineHeight": 24,
       }
     }
+    suppressHighlighting={true}
   >
-    <Text
-      allowFontScaling={false}
-      maxFontSizeMultiplier={1.4}
-      numberOfLines={1}
+    luni
+    <View
       style={
         {
-          "color": {
-            "dynamic": {
-              "dark": "#FFFFFF",
-              "light": "#131313",
+          "bottom": 2,
+          "display": "inline",
+          "flexDirection": "column",
+          "paddingLeft": 4,
+          "transform": [
+            {
+              "translateY": 1,
             },
-          },
-          "flexShrink": 1,
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 16,
-          "fontWeight": "400",
-          "lineHeight": 20.8,
+          ],
         }
       }
-      suppressHighlighting={true}
-    >
-      luni
-      <View
-        style={
-          {
-            "bottom": 2,
-            "display": "inline",
-            "flexDirection": "column",
-            "paddingLeft": 4,
-            "transform": [
-              {
-                "translateY": 1,
-              },
-            ],
-          }
-        }
-      />
-    </Text>
-  </View>,
-  <div
-    style={
-      {
-        "display": "contents",
-      }
-    }
-  />,
-]
+    />
+  </Text>
+</View>
 `;

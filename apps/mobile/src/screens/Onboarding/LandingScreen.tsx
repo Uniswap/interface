@@ -12,8 +12,6 @@ import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -86,8 +84,6 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
     })
   }
 
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-
   return (
     <ReactNavigationPerformanceView interactive screenName={OnboardingScreens.Landing}>
       <Screen backgroundColor="$surface1" edges={['bottom']} onLayout={hideSplashScreen}>
@@ -111,9 +107,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                     testID={TestID.CreateAccount}
                     onPress={onPressCreateWallet}
                   >
-                    {isEmbeddedWalletEnabled
-                      ? t('onboarding.landing.button.createAccount')
-                      : t('onboarding.landing.button.create')}
+                    {t('onboarding.landing.button.create')}
                   </Button>
                 </Flex>
               </Trace>
@@ -134,9 +128,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                     color="$accent1"
                     variant="buttonLabel1"
                   >
-                    {isEmbeddedWalletEnabled
-                      ? t('onboarding.intro.button.signInOrImport')
-                      : t('onboarding.landing.button.add')}
+                    {t('onboarding.landing.button.add')}
                   </Text>
                 </TouchableArea>
               </Trace>

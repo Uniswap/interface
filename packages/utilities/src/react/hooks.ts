@@ -158,7 +158,7 @@ export function useOnClickOutside<T extends HTMLElement>(
  *
  * @see {@link https://www.schiener.io/2024-03-03/react-closures}
  * @see {@link https://github.com/facebook/react/issues/14099}
- * @see {@link https://github.com/stutrek/use-callback-stable}
+ * @see {@link https://github.com/stutrek/use-callback-stable
  */
 export function useEvent<T extends unknown[], U>(callback: (...args: T) => U): (...args: T) => U {
   const callbackRef = useRef(callback)

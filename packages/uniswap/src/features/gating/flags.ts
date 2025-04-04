@@ -26,7 +26,6 @@ export enum FeatureFlags {
   UniswapXPriorityOrdersBase,
   UniswapXPriorityOrdersOptimism,
   UniswapXPriorityOrdersUnichain,
-  TokenSearchV2,
 
   // Wallet
   DisableFiatOnRampKorea,
@@ -79,7 +78,6 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.SearchRevamp, 'search_revamp'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
   [FeatureFlags.Soneium, 'soneium'],
-  [FeatureFlags.TokenSearchV2, 'token_search_v2'],
   [FeatureFlags.TokenSelectorTrendingTokens, 'token_selector_trending_tokens'],
   [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
   [FeatureFlags.UniswapX, 'uniswapx'],

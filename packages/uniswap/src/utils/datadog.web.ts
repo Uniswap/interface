@@ -13,9 +13,8 @@ import { WALLET_FEATURE_FLAG_NAMES, WEB_FEATURE_FLAG_NAMES } from 'uniswap/src/f
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
-import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
-import { logger } from 'utilities/src/logger/logger'
+import { datadogEnabled, localDevDatadogEnabled } from 'utilities/src/environment/constants'
+import { getDatadogEnvironment, logger } from 'utilities/src/logger/logger'
 import { isExtension, isInterface } from 'utilities/src/platform'
 
 // In case Statsig is not available
@@ -51,7 +50,7 @@ function beforeSend(event: RumEvent): boolean {
 }
 
 export async function initializeDatadog(appName: string): Promise<void> {
-  if (!datadogEnabledBuild) {
+  if (!datadogEnabled) {
     return
   }
 
@@ -100,7 +99,7 @@ export async function initializeDatadog(appName: string): Promise<void> {
       site: 'datadoghq.com',
       forwardErrorsToLogs: false,
     })
-    logger.setDatadogEnabled(true)
+    logger.setWalletDatadogEnabled(true)
   }
 
   try {

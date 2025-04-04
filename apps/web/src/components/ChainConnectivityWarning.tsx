@@ -4,10 +4,9 @@ import useMachineTimeMs from 'hooks/useMachineTime'
 import styled from 'lib/styled-components'
 import ms from 'ms'
 import { useMemo, useState } from 'react'
-import { X } from 'react-feather'
+import { AlertTriangle, X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
-import { CautionTriangle } from 'theme/components/icons/CautionTriangle'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, styled as tamaguiStyled } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -17,13 +16,16 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 const BodyRow = styled.div`
   color: ${({ theme }) => theme.neutral1};
   font-weight: 485;
   font-size: 14px;
   line-height: 20px;
+`
+const CautionTriangle = styled(AlertTriangle)`
+  color: ${({ theme }) => theme.deprecated_accentWarning};
 `
 const Link = styled(ExternalLink)`
   color: ${({ theme }) => theme.black};

@@ -63,17 +63,7 @@ export interface TokenSelectorProps {
   isLimits?: boolean
   onClose: () => void
   onSelectChain?: (chainId: UniverseChainId | null) => void
-  onSelectCurrency: ({
-    currency,
-    field,
-    forceIsBridgePair,
-    isPreselectedAsset,
-  }: {
-    currency: Currency
-    field: CurrencyField
-    forceIsBridgePair: boolean
-    isPreselectedAsset: boolean
-  }) => void
+  onSelectCurrency: (currency: Currency, currencyField: CurrencyField, isBridgePair: boolean) => void
 }
 
 export function TokenSelectorContent({
@@ -91,7 +81,7 @@ export function TokenSelectorContent({
   onSelectCurrency,
 }: Omit<TokenSelectorProps, 'isModalOpen'>): JSX.Element {
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
-    useFilterCallbacks(chainId ?? null, flowToModalName(flow))
+    useFilterCallbacks(chainId ?? null, flow)
   const debouncedSearchFilter = useDebounce(searchFilter)
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
   const scrollbarStyles = useScrollbarStyles()
@@ -157,16 +147,10 @@ export function TokenSelectorContent({
         suggestion_count: searchContext.suggestionCount,
         query: searchContext.query,
         tokenSection: section.sectionKey,
-        preselect_asset: false,
       })
 
-      const forceIsBridgePair = section.sectionKey === TokenOptionSection.BridgingTokens
-      onSelectCurrency({
-        currency: currencyInfo.currency,
-        field: currencyField,
-        forceIsBridgePair,
-        isPreselectedAsset: false,
-      })
+      const isBridgePair = section.sectionKey === TokenOptionSection.BridgingTokens
+      onSelectCurrency(currencyInfo.currency, currencyField, isBridgePair)
     },
     [flow, page, currencyField, onSelectCurrency, debouncedSearchFilter],
   )
@@ -298,7 +282,7 @@ export function TokenSelectorContent({
                     includeAllNetworks={!isTestnetModeEnabled}
                     chainIds={chainIds || enabledChains}
                     selectedChain={chainFilter}
-                    styles={isExtension || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}
+                    styles={isExtension ? { dropdownZIndex: zIndexes.overlay } : undefined}
                     onDismiss={dismissNativeKeyboard}
                     onPressChain={(newChainId) => {
                       onChangeChainFilter(newChainId)

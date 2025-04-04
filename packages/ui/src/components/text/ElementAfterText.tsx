@@ -23,8 +23,8 @@ export function ElementAfterText({ element, text, wrapperProps, textProps }: Ele
       <Flex row alignItems="center" {...wrapperProps}>
         <Text {...DEFAULT_TEXT_PROPS} {...textProps}>
           {text}
+          {element}
         </Text>
-        {element}
       </Flex>
     )
   } else {

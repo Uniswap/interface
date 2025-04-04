@@ -393,7 +393,14 @@ function* handleScantasticDeepLink(scantasticQueryParams: string): Generator {
 
 function* launchScantastic(params: ScantasticParams): Generator {
   yield* put(closeAllModals())
-  yield* call(navigate, ModalName.Scantastic, { params })
+  yield* put(
+    openModal({
+      name: ModalName.Scantastic,
+      initialState: {
+        params,
+      },
+    }),
+  )
 }
 
 function* handleUwuLinkDeepLink(uri: string): Generator {

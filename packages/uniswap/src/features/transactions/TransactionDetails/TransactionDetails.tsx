@@ -20,9 +20,9 @@ import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/TransactionSettingsModal/TransactionSettingsModal'
-import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/SlippageUpdate/SlippageUpdate'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
+import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap/settings/TransactionSettingsModal'
+import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/settings/configs/SlippageUpdate'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isInterface } from 'utilities/src/platform'

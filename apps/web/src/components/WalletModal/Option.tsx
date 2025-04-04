@@ -1,4 +1,5 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import Badge, { BadgeVariant } from 'components/Badge/Badge'
 import Loader from 'components/Icons/LoadingSpinner'
 import { DetectedBadge } from 'components/WalletModal/shared'
 import { CONNECTOR_ICON_OVERRIDE_MAP, useRecentConnectorId } from 'components/Web3Provider/constants'
@@ -8,7 +9,6 @@ import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isIFramed } from 'utils/isIFramed'
@@ -80,12 +80,17 @@ const Wrapper = styled.div<{ disabled: boolean }>`
   }
 `
 
+const StyledBadge = styled(Badge)`
+  border-radius: 4px;
+  padding: 1px 4px;
+`
+
 export const RecentBadge = () => (
-  <Badge badgeVariant={BadgeVariant.SOFT} borderRadius={4} p={1} px={4}>
+  <StyledBadge variant={BadgeVariant.SOFT}>
     <ThemedText.LabelMicro color="accent1">
       <Trans i18nKey="common.recent" />
     </ThemedText.LabelMicro>
-  </Badge>
+  </StyledBadge>
 )
 
 export function Option({ connector, detected }: { connector: Connector; detected?: boolean }) {

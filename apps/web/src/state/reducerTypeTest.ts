@@ -19,7 +19,6 @@ import { LocalWebTransactionState } from 'state/transactions/reducer'
 import { TransactionDetails } from 'state/transactions/types'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
-import { WalletCapabilitiesState } from 'state/walletCapabilities/reducer'
 import { ConnectedWalletsState } from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
@@ -86,7 +85,6 @@ type ExpectedAppState = CombinedState<{
   readonly userSettings: UserSettingsState
   readonly portfolio: PortfolioState
   readonly visibility: VisibilityState
-  readonly walletCapabilities: WalletCapabilitiesState
 }>
 
 assert<Equals<InterfaceState, ExpectedAppState>>()

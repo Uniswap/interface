@@ -7,12 +7,12 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TabProps } from 'src/components/layout/TabHelpers'
-import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex } from 'ui/src'
 import { NoTokens } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -45,7 +45,7 @@ export const TokensTab = memo(
     const dispatch = useDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
     const startProfilerTimer = useStartProfiler()
-    const onPressReceive = useOpenReceiveModal()
+    const cexTransferProviders = useCexTransferProviders()
 
     const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
@@ -71,9 +71,25 @@ export const TokensTab = memo(
           )
     }, [disableForKorea, dispatch])
 
+    const onPressReceive = useCallback(() => {
+      dispatch(
+        openModal(
+          cexTransferProviders.length > 0
+            ? {
+                name: ModalName.ReceiveCryptoModal,
+                initialState: cexTransferProviders,
+              }
+            : {
+                name: ModalName.WalletConnectScan,
+                initialState: ScannerModalState.WalletQr,
+              },
+        ),
+      )
+    }, [cexTransferProviders, dispatch])
+
     const onPressImport = useCallback(() => {
-      navigate(ModalName.AccountSwitcher)
-    }, [])
+      dispatch(openModal({ name: ModalName.AccountSwitcher }))
+    }, [dispatch])
 
     const renderEmpty = useMemo((): JSX.Element => {
       // Show different empty state on external profile pages

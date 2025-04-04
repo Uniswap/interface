@@ -72,9 +72,10 @@ export function SwitchNetworksModal({ onPress }: SwitchNetworksModalProps): JSX.
       <Flex shrink $platform-web={{ overflow: 'auto' }}>
         {enabledChains.map((chain: UniverseChainId) => {
           return (
-            <Popover.Close asChild key={chain}>
+            <Popover.Close asChild>
               {/* TODO(WALL-5883): Use new component */}
               <TouchableArea
+                key={chain}
                 borderRadius="$rounded12"
                 hoverStyle={{ backgroundColor: '$surface2' }}
                 justifyContent="space-between"

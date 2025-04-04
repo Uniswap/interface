@@ -63,19 +63,6 @@ export function TokenBalanceListContextProvider({
   const { shownTokens, hiddenTokens } = useTokenBalancesGroupedByVisibility({
     balancesById,
   })
-  // Hides balances for spam tokens so sorts them last
-  const sortedHiddenTokens = useMemo(
-    () =>
-      hiddenTokens?.sort((a, b) => {
-        if (a.currencyInfo.isSpam && !b.currencyInfo.isSpam) {
-          return 1
-        } else if (b.currencyInfo.isSpam && !a.currencyInfo.isSpam) {
-          return -1
-        }
-        return 0
-      }),
-    [hiddenTokens],
-  )
 
   const shouldShowHiddenTokens = !shownTokens?.length && !!hiddenTokens?.length
 
@@ -91,8 +78,8 @@ export function TokenBalanceListContextProvider({
       ...(isTestnetModeEnabled
         ? sortPortfolioBalances({ balances: shownTokensArray, isTestnetModeEnabled })
         : shownTokensArray),
-      ...(sortedHiddenTokens?.length ? [HIDDEN_TOKEN_BALANCES_ROW] : []),
-      ...(hiddenTokensExpanded && sortedHiddenTokens ? sortedHiddenTokens : []),
+      ...(hiddenTokens?.length ? [HIDDEN_TOKEN_BALANCES_ROW] : []),
+      ...(hiddenTokensExpanded && hiddenTokens ? hiddenTokens : []),
     ].map((token) => {
       if (token === HIDDEN_TOKEN_BALANCES_ROW) {
         return token
@@ -107,7 +94,7 @@ export function TokenBalanceListContextProvider({
     }
 
     return rowsRef.current
-  }, [sortedHiddenTokens, hiddenTokensExpanded, shownTokens, isTestnetModeEnabled])
+  }, [hiddenTokens, hiddenTokensExpanded, shownTokens, isTestnetModeEnabled])
 
   const isWarmLoading = !!balancesById && isWarmLoadingStatus(networkStatus) && !isExternalProfile
 

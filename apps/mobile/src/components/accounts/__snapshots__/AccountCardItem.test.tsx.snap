@@ -181,14 +181,14 @@ exports[`AccountCardItem renders correctly 1`] = `
                       "color": {
                         "dynamic": {
                           "dark": "#FFFFFF",
-                          "light": "#131313",
+                          "light": "#222222",
                         },
                       },
                       "flexShrink": 1,
                       "fontFamily": "Basel Grotesk",
                       "fontSize": 19,
                       "fontWeight": "400",
-                      "lineHeight": 24.7,
+                      "lineHeight": 24,
                     }
                   }
                   suppressHighlighting={true}
@@ -208,14 +208,14 @@ exports[`AccountCardItem renders correctly 1`] = `
           {
             "color": {
               "dynamic": {
-                "dark": "rgba(255, 255, 255, 0.65)",
-                "light": "rgba(19, 19, 19, 0.63)",
+                "dark": "#9B9B9B",
+                "light": "#7D7D7D",
               },
             },
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "400",
-            "lineHeight": 20,
+            "lineHeight": 24,
           }
         }
         suppressHighlighting={true}

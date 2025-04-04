@@ -103,7 +103,7 @@ function CurrentChainBalance({
         </Text>
         <Flex row gap="$spacing8" alignItems="flex-end">
           <Text variant="heading3">{isTestnetModeEnabled ? tokenBalance : fiatBalance}</Text>
-          <Text color="$neutral2" variant="body2" lineHeight="$large">
+          <Text color="$neutral2" variant="body2">
             {!isTestnetModeEnabled && tokenBalance}
           </Text>
         </Flex>

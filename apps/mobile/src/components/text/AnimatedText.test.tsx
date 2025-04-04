@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react-native'
+import { fireEvent, render } from '@testing-library/react-native'
 import React from 'react'
 import { makeMutable } from 'react-native-reanimated'
 import { act } from 'react-test-renderer'
@@ -7,7 +7,7 @@ import { renderWithProviders } from 'src/test/render'
 
 describe(AnimatedText, () => {
   it('renders without error', () => {
-    const tree = renderWithProviders(<AnimatedText text={makeMutable('Rendered')} />)
+    const tree = render(<AnimatedText text={makeMutable('Rendered')} />)
 
     expect(tree).toMatchSnapshot()
   })

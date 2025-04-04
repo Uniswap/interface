@@ -13,7 +13,6 @@ export enum EthMethod {
   SignTypedData = 'eth_signTypedData',
   SignTypedDataV4 = 'eth_signTypedData_v4',
   SwitchChain = 'wallet_switchEthereumChain',
-  GetCapabilities = 'wallet_getCapabilities',
   AddChain = 'wallet_addEthereumChain',
   PersonalSign = 'personal_sign',
 }

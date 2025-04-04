@@ -5,7 +5,6 @@ import { KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from '
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { Button, Flex, Text } from 'ui/src'
@@ -13,7 +12,6 @@ import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
@@ -28,11 +26,9 @@ export function EditLabelSettingsModal(): JSX.Element {
   const { t } = useTranslation()
   const { initialState } = useSelector(selectModalState(ModalName.EditLabelSettingsModal))
   const address = initialState?.address ?? ''
-  const entryPoint = initialState?.accessPoint ?? MobileScreens.SettingsWallet
 
   const displayName = useDisplayName(address)
   const [nickname, setNickname] = useState(displayName?.name)
-  const [isUpdatingWalletLabel, setIsUpdatingWalletLabel] = useState(false)
 
   const accountNameIsEditable =
     displayName?.type === DisplayNameType.Local || displayName?.type === DisplayNameType.Address
@@ -46,7 +42,6 @@ export function EditLabelSettingsModal(): JSX.Element {
   }
 
   const onPressSaveChanges = (): void => {
-    setIsUpdatingWalletLabel(true)
     onFinishEditing()
     dispatch(
       editAccountActions.trigger({
@@ -59,10 +54,6 @@ export function EditLabelSettingsModal(): JSX.Element {
 
   const onPressBack = (): void => {
     dispatch(closeModal({ name: ModalName.EditLabelSettingsModal }))
-
-    if (!isUpdatingWalletLabel) {
-      navigateBackFromEditingWallet(dispatch, entryPoint, address)
-    }
   }
 
   return (

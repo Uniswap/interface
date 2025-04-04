@@ -28,29 +28,12 @@
         "^prepare"
       ]
     },
-    "uniswap#tradingapi:generate:openapi": {
+    "uniswap#tradingapi:generate": {
       "inputs": [
         "src/data/tradingApi/api.json"
       ],
       "outputs": [
-        "src/data/tradingApi/__generated__/**"
-      ]
-    },
-    "uniswap#tradingapi:add-local-types": {
-      "inputs": [
-        "src/data/tradingApi/modifyTradingApiTypes.mts",
-        "src/data/tradingApi/__generated__/models/*.ts"
-      ],
-      "outputs": [
-        "src/data/tradingApi/__generated__/models/*.ts"
-      ],
-      "dependsOn": [
-        "uniswap#tradingapi:generate:openapi"
-      ]
-    },
-    "uniswap#tradingapi:generate": {
-      "dependsOn": [
-        "uniswap#tradingapi:add-local-types"
+        "src/**/__generated__/**"
       ]
     },
     "uniswap#contracts": {

@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { UniswapXText, isWeb } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
-import { colors, opacify, zIndexes } from 'ui/src/theme'
+import { colors, opacify } from 'ui/src/theme'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
@@ -33,7 +33,6 @@ export function UniswapXInfo({
         modalName: ModalName.UniswapXInfo,
         severity: WarningSeverity.None,
         titleComponent: <UniswapXText variant={isWeb ? 'subheading2' : 'body1'}>{t('uniswapx.label')}</UniswapXText>,
-        zIndex: zIndexes.popover,
       }}
       tooltipProps={{
         text: t('uniswapx.description'),

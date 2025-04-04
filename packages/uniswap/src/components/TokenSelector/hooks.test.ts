@@ -11,13 +11,13 @@ import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/u
 import { usePopularTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/usePopularTokensOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { Chain, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import {
   SAMPLE_SEED_ADDRESS_1,
@@ -188,7 +188,7 @@ describe(useFavoriteCurrencies, () => {
 
 describe(useFilterCallbacks, () => {
   it('returns correct initial state', () => {
-    const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+    const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
 
     expect(result.current).toEqual({
       chainFilter: null,
@@ -203,7 +203,7 @@ describe(useFilterCallbacks, () => {
 
   describe('search filter', () => {
     it('updates search filter when text changes', async () => {
-      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+      const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
 
       expect(result.current.searchFilter).toEqual(null)
 
@@ -215,7 +215,7 @@ describe(useFilterCallbacks, () => {
     })
 
     it('clears search filter onClearSearchFilter is called', async () => {
-      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+      const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
 
       expect(result.current.searchFilter).toEqual(null)
 
@@ -233,7 +233,7 @@ describe(useFilterCallbacks, () => {
     })
 
     it('parses chain from search filter', async () => {
-      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+      const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
 
       expect(result.current.parsedSearchFilter).toEqual(null)
 
@@ -249,7 +249,7 @@ describe(useFilterCallbacks, () => {
 
     it('does not parse chain when chainFilter is set', async () => {
       const { result } = renderHook(useFilterCallbacks, {
-        initialProps: [UniverseChainId.ArbitrumOne, ModalName.Swap],
+        initialProps: [UniverseChainId.ArbitrumOne, TokenSelectorFlow.Swap],
       })
 
       expect(result.current.parsedSearchFilter).toEqual(null)
@@ -265,7 +265,7 @@ describe(useFilterCallbacks, () => {
     })
 
     it('does not parse unsupported chains', async () => {
-      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+      const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
 
       expect(result.current.parsedSearchFilter).toEqual(null)
 
@@ -280,7 +280,7 @@ describe(useFilterCallbacks, () => {
     })
 
     it('only parses after the first space', async () => {
-      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+      const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
 
       expect(result.current.parsedSearchFilter).toEqual(null)
 
@@ -298,7 +298,7 @@ describe(useFilterCallbacks, () => {
   describe('chain filter', () => {
     it('returns initial chain filter corresponding to the chainId', () => {
       const { result } = renderHook(useFilterCallbacks, {
-        initialProps: [UniverseChainId.ArbitrumOne, ModalName.Swap],
+        initialProps: [UniverseChainId.ArbitrumOne, TokenSelectorFlow.Swap],
       })
 
       expect(result.current.chainFilter).toEqual(UniverseChainId.ArbitrumOne)
@@ -306,20 +306,20 @@ describe(useFilterCallbacks, () => {
 
     it('updates chain filter when chainId property changes', async () => {
       const { result, rerender } = renderHook(useFilterCallbacks, {
-        initialProps: [UniverseChainId.ArbitrumOne, ModalName.Swap],
+        initialProps: [UniverseChainId.ArbitrumOne, TokenSelectorFlow.Swap],
       })
 
       expect(result.current.chainFilter).toEqual(UniverseChainId.ArbitrumOne)
 
       await act(() => {
-        rerender([UniverseChainId.Base, ModalName.Swap])
+        rerender([UniverseChainId.Base, TokenSelectorFlow.Swap])
       })
 
       expect(result.current.chainFilter).toEqual(UniverseChainId.Base)
     })
 
     it('updates chain filter when onChangeChainFilter is called', async () => {
-      const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+      const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
 
       expect(result.current.chainFilter).toEqual(null)
 

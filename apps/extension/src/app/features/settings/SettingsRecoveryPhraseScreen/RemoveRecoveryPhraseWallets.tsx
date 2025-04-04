@@ -62,7 +62,6 @@ function AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Elem
       <ScrollView bounces={false}>
         {sortedAddressesByBalance.map(({ address, balance }, index) => (
           <AssociatedAccountRow
-            key={address}
             address={address}
             balance={balance}
             index={index}

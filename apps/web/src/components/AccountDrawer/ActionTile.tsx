@@ -1,15 +1,16 @@
 import { ButtonEmphasis, ThemeButton } from 'components/Button/DeprecatedWebButtons'
-import { MouseoverTooltip } from 'components/Tooltip'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
+import { MouseoverTooltip } from 'components/Tooltip'
 import styled from 'lib/styled-components'
 import { ReactNode, useReducer } from 'react'
 import { Info } from 'react-feather'
 import { Text } from 'rebass'
 import { ExternalLink } from 'theme/components/Links'
-import { SpinnerSVG } from 'theme/components/icons/spinner'
 import { ThemedText } from 'theme/components/text'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+
+import { SpinnerSVG } from 'theme/components'
 
 const LoadingButtonSpinner = (props: React.ComponentPropsWithoutRef<'svg'>) => (
   <SpinnerSVG width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -38,17 +39,6 @@ const Tile = styled(ThemeButton)`
   border-radius: 16px;
   border-style: solid;
   border-width: 1px;
-  transition: background-color 150ms ease;
-
-  /* Override the default hover behavior to use accent2Hovered instead of the overlay */
-  &:hover {
-    background-color: ${({ theme }) => theme.accent2Hovered};
-
-    /* Remove the default overlay hover effect */
-    & > div:first-child {
-      background-color: transparent;
-    }
-  }
 `
 const StyledLoadingButtonSpinner = styled(LoadingButtonSpinner)`
   height: 28px;

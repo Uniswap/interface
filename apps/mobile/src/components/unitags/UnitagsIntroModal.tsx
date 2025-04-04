@@ -2,10 +2,10 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { AppStackScreenProp } from 'src/app/navigation/types'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { closeModal } from 'src/features/modals/modalSlice'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { Button, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
@@ -17,15 +17,17 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { setHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/slice'
 
-export function UnitagsIntroModal({ route }: AppStackScreenProp<typeof ModalName.UnitagsIntro>): JSX.Element {
+export function UnitagsIntroModal(): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
   const appDispatch = useDispatch()
-  const { onClose } = useReactNavigationModal()
+  const modalState = useSelector(selectModalState(ModalName.UnitagsIntro)).initialState
+  const address = modalState?.address
+  const entryPoint = modalState?.entryPoint
 
-  const params = route.params
-  const address = params?.address
-  const entryPoint = params?.entryPoint
+  const onClose = (): void => {
+    appDispatch(closeModal({ name: ModalName.UnitagsIntro }))
+  }
 
   const onPressClaimOneNow = (): void => {
     if (!entryPoint) {
@@ -33,7 +35,6 @@ export function UnitagsIntroModal({ route }: AppStackScreenProp<typeof ModalName
     }
 
     appDispatch(setHasCompletedUnitagsIntroModal(true))
-    onClose()
     navigate(MobileScreens.UnitagStack, {
       screen: UnitagScreens.ClaimUnitag,
       params: {
@@ -44,6 +45,7 @@ export function UnitagsIntroModal({ route }: AppStackScreenProp<typeof ModalName
     if (address) {
       sendAnalyticsEvent(SharedEventName.TERMS_OF_SERVICE_ACCEPTED, { address })
     }
+    onClose()
   }
 
   return (

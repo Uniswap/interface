@@ -76,6 +76,7 @@ export function DepositInputForm({
       {!deposit0Disabled && (
         <Flex gap={2}>
           <CurrencyInputPanel
+            enableInputOnly
             focus={focusedInputField === PositionField.TOKEN0}
             borderTopLeftRadius="$rounded20"
             borderTopRightRadius="$rounded20"
@@ -100,6 +101,7 @@ export function DepositInputForm({
       {!deposit1Disabled && (
         <Flex gap={2}>
           <CurrencyInputPanel
+            enableInputOnly
             focus={focusedInputField === PositionField.TOKEN1}
             py="$spacing16"
             borderTopLeftRadius="$rounded20"

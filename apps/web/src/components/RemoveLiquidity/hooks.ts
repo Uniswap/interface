@@ -12,9 +12,8 @@ import { useDecreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/
 import {
   CheckApprovalLPRequest,
   DecreaseLPPositionRequest,
-  LPprotocolItems,
+  ProtocolItems,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -43,7 +42,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
       return undefined
     }
     return {
-      protocol: LPprotocolItems.V2,
+      protocol: ProtocolItems.V2,
       walletAddress: account,
       chainId: positionInfo.liquidityToken.chainId,
       positionToken: positionInfo.liquidityToken.address,
@@ -175,10 +174,8 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
 
   const { value: estimatedGasFee } = useTransactionGasFee(decreaseCalldata?.decrease, !!decreaseCalldata?.gasFee)
   const decreaseGasFeeUsd =
-    useUSDCurrencyAmountOfGasFee(
-      toSupportedChainId(decreaseCalldata?.decrease?.chainId) ?? undefined,
-      decreaseCalldata?.gasFee || estimatedGasFee,
-    ) ?? undefined
+    useUSDCurrencyAmountOfGasFee(decreaseCalldata?.decrease?.chainId, decreaseCalldata?.gasFee || estimatedGasFee) ??
+    undefined
 
   const totalGasFeeEstimate = v2ApprovalGasFeeUSD ? decreaseGasFeeUsd?.add(v2ApprovalGasFeeUSD) : decreaseGasFeeUsd
 

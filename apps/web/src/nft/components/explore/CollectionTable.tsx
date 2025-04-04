@@ -10,7 +10,7 @@ import { Table } from 'nft/components/explore/Table'
 import { CollectionTableColumn, TimePeriod } from 'nft/types'
 import { useMemo } from 'react'
 import { CellProps, Column, Row } from 'react-table'
-import { Flex } from 'ui/src'
+import { MediumOnly } from 'theme/components'
 
 export enum ColumnHeaders {
   Volume = 'Volume',
@@ -81,9 +81,9 @@ const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; 
                 usdPrice={cell.row.original.usdPrice}
               />
               {timePeriod !== TimePeriod.AllTime && (
-                <Flex $lg={{ display: 'none' }}>
+                <MediumOnly>
                   <ChangeCell change={cell.row.original.floor.change} />
-                </Flex>
+                </MediumOnly>
               )}
             </>
           )

@@ -33,20 +33,18 @@ export function NetworkFeeFooter({
 
   return (
     <Flex px="$spacing8">
-      {gasFee?.displayValue && (
-        <ContentRow label={t('transaction.networkCost.label')} variant={variant}>
-          <Flex centered row gap="$spacing4">
-            {showNetworkLogo && <NetworkLogo chainId={chainId} size={iconSizes.icon16} />}
-            {isUniswapX ? (
-              <UniswapXFee gasFee={gasFeeFormatted} />
-            ) : (
-              <Text color="$neutral1" variant={variant}>
-                {gasFeeFormatted}
-              </Text>
-            )}
-          </Flex>
-        </ContentRow>
-      )}
+      <ContentRow label={t('transaction.networkCost.label')} variant={variant}>
+        <Flex centered row gap="$spacing4">
+          {showNetworkLogo && <NetworkLogo chainId={chainId} size={iconSizes.icon16} />}
+          {isUniswapX ? (
+            <UniswapXFee gasFee={gasFeeFormatted} />
+          ) : (
+            <Text color="$neutral1" variant={variant}>
+              {gasFeeFormatted}
+            </Text>
+          )}
+        </Flex>
+      </ContentRow>
     </Flex>
   )
 }

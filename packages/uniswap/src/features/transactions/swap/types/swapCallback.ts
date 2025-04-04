@@ -1,5 +1,4 @@
 import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
-import { PresetPercentage } from "uniswap/src/components/CurrencyInputPanel/PresetAmountButton";
 import { SignerMnemonicAccountMeta } from "uniswap/src/features/accounts/types"
 import { TransactionStep } from "uniswap/src/features/transactions/swap/types/steps";
 import { ValidatedSwapTxContext } from "uniswap/src/features/transactions/swap/types/swapTxAndGasInfo"
@@ -12,8 +11,6 @@ export interface SwapCallbackParams {
   currencyInAmountUSD: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD: Maybe<CurrencyAmount<Currency>>
   isAutoSlippage: boolean
-  presetPercentage?: PresetPercentage
-  preselectAsset?: boolean
   onSuccess: () => void
   onFailure: (error?: Error) => void
   txId?: string

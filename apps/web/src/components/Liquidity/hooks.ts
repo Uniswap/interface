@@ -21,7 +21,7 @@ import { useAppSelector } from 'state/hooks'
 import { Bound } from 'state/mint/v3/actions'
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 function getPriceOrderingFromPositionForUI(position?: V3Position | V4Position): PriceOrdering {

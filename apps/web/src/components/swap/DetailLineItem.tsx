@@ -61,11 +61,6 @@ function ValueWrapper({ children, lineItem, labelHovered, syncing }: ValueWrappe
 
 export function DetailLineItem({ LineItem, syncing }: { LineItem: LineItemData; syncing?: boolean }) {
   const [labelHovered, hoverProps] = useHoverProps()
-
-  if (!LineItem || !LineItem.Label || !LineItem.Value) {
-    return null
-  }
-
   return (
     <Flex row alignItems="center" justifyContent="space-between" width="100%">
       <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">

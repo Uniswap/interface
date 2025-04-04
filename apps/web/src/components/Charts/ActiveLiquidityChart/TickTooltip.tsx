@@ -4,7 +4,7 @@ import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export function TickTooltip({

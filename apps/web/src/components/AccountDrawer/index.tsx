@@ -8,7 +8,7 @@ import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
-import { useAtom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { transitions } from 'theme/styles'
@@ -37,6 +37,17 @@ const DRAWER_SPECS = {
 }
 
 export const MODAL_WIDTH = '368px'
+
+export enum MenuState {
+  DEFAULT = 'default',
+  SETTINGS = 'settings',
+  LANGUAGE_SETTINGS = 'language_settings',
+  LOCAL_CURRENCY_SETTINGS = 'local_currency_settings',
+  LIMITS = 'limits',
+  POOLS = 'pools',
+}
+
+export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)
 
 const AccountDrawerScrollWrapper = styled(Flex, {
   '$platform-web': {

@@ -197,7 +197,7 @@ exports[`AccountHeader renders correctly 1`] = `
                       "color": {
                         "dynamic": {
                           "dark": "#FFFFFF",
-                          "light": "#131313",
+                          "light": "#222222",
                         },
                       },
                       "flexShrink": 1,
@@ -261,14 +261,14 @@ exports[`AccountHeader renders correctly 1`] = `
                       {
                         "color": {
                           "dynamic": {
-                            "dark": "rgba(255, 255, 255, 0.65)",
-                            "light": "rgba(19, 19, 19, 0.63)",
+                            "dark": "#9B9B9B",
+                            "light": "#7D7D7D",
                           },
                         },
                         "fontFamily": "Basel Grotesk",
                         "fontSize": 17,
                         "fontWeight": "400",
-                        "lineHeight": 22.1,
+                        "lineHeight": 24,
                       }
                     }
                     suppressHighlighting={true}
@@ -292,7 +292,7 @@ exports[`AccountHeader renders correctly 1`] = `
                           "borderWidth": 0,
                         },
                         {
-                          "color": "rgba(19, 19, 19, 0.35)",
+                          "color": "#BFBFBF",
                           "height": 16,
                           "width": 16,
                         },
@@ -307,7 +307,7 @@ exports[`AccountHeader renders correctly 1`] = `
                     vbWidth={16}
                   >
                     <RNSVGGroup
-                      color="rgba(19, 19, 19, 0.35)"
+                      color="#BFBFBF"
                       fill={null}
                       propList={
                         [
@@ -402,7 +402,7 @@ exports[`AccountHeader renders correctly 1`] = `
                   "borderWidth": 0,
                 },
                 {
-                  "color": "rgba(19, 19, 19, 0.63)",
+                  "color": "#7D7D7D",
                   "height": 28,
                   "width": 28,
                 },
@@ -417,7 +417,7 @@ exports[`AccountHeader renders correctly 1`] = `
             vbWidth={28}
           >
             <RNSVGGroup
-              color="rgba(19, 19, 19, 0.63)"
+              color="#7D7D7D"
               fill={null}
               propList={
                 [
@@ -497,7 +497,7 @@ exports[`AccountHeader renders correctly 1`] = `
                   "borderWidth": 0,
                 },
                 {
-                  "color": "rgba(19, 19, 19, 0.63)",
+                  "color": "#7D7D7D",
                   "height": 28,
                   "width": 28,
                 },
@@ -512,7 +512,7 @@ exports[`AccountHeader renders correctly 1`] = `
             vbWidth={28}
           >
             <RNSVGGroup
-              color="rgba(19, 19, 19, 0.63)"
+              color="#7D7D7D"
               fill={null}
               propList={
                 [

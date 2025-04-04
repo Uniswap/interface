@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -8,7 +7,7 @@ import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSwapAnalytics } from 'uniswap/src/features/transactions/swap/analytics'
-import { useDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useDerivedSwapInfo'
+import { useDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/hooks/useDerivedSwapInfo'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -32,8 +31,6 @@ export type SwapFormState = {
   txId?: string
   isFiatMode: boolean
   isMax: boolean
-  presetPercentage?: PresetPercentage
-  preselectAsset?: boolean
   isSubmitting: boolean
   hideFooter?: boolean
   hideSettings?: boolean
@@ -250,8 +247,6 @@ export function SwapFormContextProvider({
       input: swapForm.input,
       isFiatMode: swapForm.isFiatMode,
       isMax: swapForm.isMax,
-      presetPercentage: swapForm.presetPercentage,
-      preselectAsset: swapForm.preselectAsset,
       isSubmitting: swapForm.isSubmitting,
       output: swapForm.output,
       selectingCurrencyField: swapForm.selectingCurrencyField,
@@ -274,8 +269,6 @@ export function SwapFormContextProvider({
       swapForm.input,
       swapForm.isFiatMode,
       swapForm.isMax,
-      swapForm.presetPercentage,
-      swapForm.preselectAsset,
       swapForm.isSubmitting,
       swapForm.output,
       swapForm.selectingCurrencyField,

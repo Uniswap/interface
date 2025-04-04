@@ -17,7 +17,6 @@ export enum TokenProtectionWarning {
   MaliciousImpersonator = 7,
   FotHigh = 6, // [5, 80)% fot
   MaliciousGeneral = 5,
-  PotentialHoneypot = 4.5, // Between SpamAirdrop (4) and MaliciousGeneral (5)
   SpamAirdrop = 4,
   FotLow = 3, // (0, 5)% fot
   NonDefault = 2,
@@ -115,8 +114,6 @@ export function getTokenProtectionWarning(currencyInfo?: Maybe<CurrencyInfo>): T
     return TokenProtectionWarning.FotHigh
   } else if (protectionResult === ProtectionResult.Malicious && attackType === AttackType.Other) {
     return TokenProtectionWarning.MaliciousGeneral
-  } else if (attackType === AttackType.Honeypot) {
-    return TokenProtectionWarning.PotentialHoneypot
   } else if (protectionResult === ProtectionResult.Spam && attackType === AttackType.Airdrop) {
     return TokenProtectionWarning.SpamAirdrop
   } else if (feeOnTransfer && feeOnTransfer > 0 && feeOnTransfer < TOKEN_PROTECTION_FOT_FEE_BREAKPOINT) {
@@ -171,7 +168,6 @@ export function getSeverityFromTokenProtectionWarning(tokenProtectionWarning: To
     case TokenProtectionWarning.FotVeryHigh:
     case TokenProtectionWarning.FotHigh:
       return WarningSeverity.High
-    case TokenProtectionWarning.PotentialHoneypot:
     case TokenProtectionWarning.SpamAirdrop:
     case TokenProtectionWarning.FotLow:
       return WarningSeverity.Medium
@@ -235,8 +231,6 @@ export function useModalHeaderText({
       return t('token.safety.warning.fotHigh.title')
     case TokenProtectionWarning.MaliciousGeneral:
       return t('token.safety.warning.malicious.title')
-    case TokenProtectionWarning.PotentialHoneypot:
-      return t('token.safety.warning.potentialHoneypot.title')
     case TokenProtectionWarning.SpamAirdrop:
       return t('token.safety.warning.spam.title')
     case TokenProtectionWarning.FotLow:
@@ -290,8 +284,6 @@ export function useModalSubtitleText({
       )
     case TokenProtectionWarning.MaliciousImpersonator:
       return t('token.safety.warning.malicious.impersonator.message', { tokenSymbol: tokenSymbolWithFallback })
-    case TokenProtectionWarning.PotentialHoneypot:
-      return t('token.safety.warning.potentialHoneypot.modal.message', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.SpamAirdrop:
       return (
         t('token.safety.warning.spam.message', { tokenSymbol: tokenSymbolWithFallback }) +
@@ -381,8 +373,6 @@ export function useCardHeaderText({
       return t('token.safety.warning.fotHigh.title')
     case TokenProtectionWarning.MaliciousGeneral:
       return t('token.safety.warning.malicious.title')
-    case TokenProtectionWarning.PotentialHoneypot:
-      return t('token.safety.warning.potentialHoneypot.title')
     case TokenProtectionWarning.SpamAirdrop:
       return t('token.safety.warning.spam.title')
     case TokenProtectionWarning.FotLow:
@@ -423,8 +413,6 @@ export function useCardSubtitleText({
       return t('token.safety.warning.malicious.general.message', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.MaliciousImpersonator:
       return t('token.safety.warning.malicious.impersonator.message.short', { tokenSymbol: tokenSymbolWithFallback })
-    case TokenProtectionWarning.PotentialHoneypot:
-      return t('token.safety.warning.potentialHoneypot.card.message', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.SpamAirdrop:
       return t('token.safety.warning.spam.message', { tokenSymbol: tokenSymbolWithFallback })
     case TokenProtectionWarning.FotVeryHigh:

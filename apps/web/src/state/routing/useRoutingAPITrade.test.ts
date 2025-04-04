@@ -11,7 +11,7 @@ import { useRouterPreference } from 'state/user/hooks'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
 

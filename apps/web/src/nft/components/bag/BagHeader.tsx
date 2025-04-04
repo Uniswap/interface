@@ -1,6 +1,7 @@
-import { BagCloseIcon } from 'nft/components/iconExports'
+import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
+import { TamaguiClickableStyle } from 'theme/components/styles'
 import { Button, Flex, Text } from 'ui/src'
 
 interface BagHeaderProps {
@@ -42,7 +43,7 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
               {numberOfAssets}
             </Text>
           </Flex>
-          <Button fill={false} emphasis="text-only" onPress={resetFlow}>
+          <Button fill={false} emphasis="text-only" onPress={resetFlow} {...TamaguiClickableStyle}>
             <Trans i18nKey="tokens.selector.button.clear" />
           </Button>
         </>
@@ -56,6 +57,7 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
         p={0}
         pt={2}
         onPress={closeBag}
+        {...TamaguiClickableStyle}
       >
         <BagCloseIcon color="$neutral1" data-testid="nft-bag-close-icon" />
       </Button>

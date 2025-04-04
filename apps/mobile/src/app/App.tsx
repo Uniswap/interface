@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client'
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
-import { DdRum, RumActionType } from '@datadog/mobile-react-native'
+import { DdRum, DdSdkReactNative, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
@@ -17,6 +17,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
 import { useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import { DatadogProviderWrapper, MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE } from 'src/app/DatadogProviderWrapper'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { AppModals } from 'src/app/modals/AppModals'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
@@ -27,11 +28,6 @@ import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { useLogMissingMnemonic } from 'src/features/analytics/useLogMissingMnemonic'
-import {
-  DatadogProviderWrapper,
-  MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
-} from 'src/features/datadog/DatadogProviderWrapper'
-import { setDatadogUserWithUniqueId } from 'src/features/datadog/user'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
@@ -75,7 +71,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { datadogEnabledBuild, isE2EMode } from 'utilities/src/environment/constants'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import { datadogEnabled, isE2EMode } from 'utilities/src/environment/constants'
 import { isTestEnv } from 'utilities/src/environment/env'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
@@ -128,8 +125,12 @@ function App(): JSX.Element | null {
   }, [])
 
   // We want to ensure deviceID is used as the identifier to link with analytics
-  const fetchAndSetDeviceId = useCallback(async (): Promise<string> => {
-    return setDatadogUserWithUniqueId(undefined)
+  const fetchAndSetDeviceId = useCallback(async () => {
+    const uniqueId = await getUniqueId()
+    DdSdkReactNative.setUser({
+      id: uniqueId,
+    }).catch(() => undefined)
+    return uniqueId
   }, [])
 
   const deviceId = useAsyncData(fetchAndSetDeviceId).data
@@ -224,7 +225,7 @@ function AppOuter(): JSX.Element | null {
    * RenderPassReport. We then forward this report to Datadog, Amplitude, etc.
    */
   const onReportPrepared = useCallback(async (report: RenderPassReport) => {
-    if (datadogEnabledBuild) {
+    if (datadogEnabled) {
       const shouldLogJsBundleLoaded = report.timeToBootJsMillis && !jsBundleLoadedRef.current
       if (shouldLogJsBundleLoaded) {
         await DdRum.addAction(RumActionType.CUSTOM, DDRumAction.ApplicationStartJs, {

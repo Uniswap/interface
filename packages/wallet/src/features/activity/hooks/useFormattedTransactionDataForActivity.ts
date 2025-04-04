@@ -1,7 +1,6 @@
 import { ApolloError, NetworkStatus, QueryHookOptions } from '@apollo/client'
 import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import {
   TransactionListQuery,
@@ -43,7 +42,6 @@ export function useFormattedTransactionDataForActivity({
   keyExtractor: (item: TransactionDetails | SectionHeader | LoadingItem) => string
   onRetry: () => void
 } {
-  const { t } = useTranslation()
   const { gqlChains } = useEnabledChains()
 
   const {
@@ -92,7 +90,7 @@ export function useFormattedTransactionDataForActivity({
 
   // Format transactions for section list
   const localizedDayjs = useLocalizedDayjs()
-  const { pending, todayTransactionList, yesterdayTransactionList, priorByMonthTransactionList } = useMemo(
+  const { pending, last24hTransactionList, priorByMonthTransactionList } = useMemo(
     () => formatTransactionsByDate(transactions, localizedDayjs),
     [transactions, localizedDayjs],
   )
@@ -116,39 +114,21 @@ export function useFormattedTransactionDataForActivity({
     }
 
     return [
-      // Add Today section if it has transactions (including pending)
-      ...(todayTransactionList.length > 0 || pending.length > 0
-        ? [
-            { itemType: 'HEADER' as const, title: t('common.today') },
-            ...pending, // Show pending transactions first
-            ...todayTransactionList,
-          ]
-        : []),
-      // Add Yesterday section if it has transactions
-      ...(yesterdayTransactionList.length > 0
-        ? [{ itemType: 'HEADER' as const, title: t('common.yesterday') }, ...yesterdayTransactionList]
-        : []),
+      ...pending,
+      ...last24hTransactionList,
       // for each month prior, detect length and render if includes transactions
       ...Object.keys(priorByMonthTransactionList).reduce(
         (accum: (TransactionDetails | SectionHeader | LoadingItem)[], month) => {
           const transactionList = priorByMonthTransactionList[month]
           if (transactionList && transactionList.length > 0) {
-            accum.push({ itemType: 'HEADER' as const, title: month }, ...transactionList)
+            accum.push({ itemType: 'HEADER', title: month }, ...transactionList)
           }
           return accum
         },
         [],
       ),
     ]
-  }, [
-    showLoading,
-    hasTransactions,
-    pending,
-    todayTransactionList,
-    yesterdayTransactionList,
-    priorByMonthTransactionList,
-    t,
-  ])
+  }, [showLoading, hasTransactions, pending, last24hTransactionList, priorByMonthTransactionList])
 
   const memoizedSectionDataRef = useRef<typeof sectionData | undefined>(undefined)
 

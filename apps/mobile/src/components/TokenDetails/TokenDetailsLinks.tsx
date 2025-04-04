@@ -11,7 +11,7 @@ import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/unisw
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isDefaultNativeAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { isDefaultNativeAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { getTwitterLink } from 'wallet/src/utils/linking'
 
@@ -31,20 +31,16 @@ export function TokenDetailsLinks(): JSX.Element {
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
   const explorerName = getChainInfo(chainId).explorer.name
 
-  const isNativeCurrency = isNativeCurrencyAddress(chainId, address)
-
   const links = useMemo((): LinkButtonProps[] => {
     return [
-      !isNativeCurrency
-        ? {
-            Icon: getBlockExplorerIcon(chainId),
-            buttonType: LinkButtonType.Link,
-            element: ElementName.TokenLinkEtherscan,
-            label: explorerName,
-            testID: TestID.TokenLinkEtherscan,
-            value: explorerLink,
-          }
-        : null,
+      {
+        Icon: getBlockExplorerIcon(chainId),
+        buttonType: LinkButtonType.Link,
+        element: ElementName.TokenLinkEtherscan,
+        label: explorerName,
+        testID: TestID.TokenLinkEtherscan,
+        value: explorerLink,
+      },
       homepageUrl
         ? {
             Icon: GlobeIcon,
@@ -75,7 +71,7 @@ export function TokenDetailsLinks(): JSX.Element {
           }
         : null,
     ].filter((item): item is NonNullable<typeof item> => Boolean(item))
-  }, [chainId, address, isNativeCurrency, homepageUrl, twitterName, explorerName, explorerLink, t])
+  }, [chainId, address, homepageUrl, twitterName, explorerName, explorerLink, t])
 
   return (
     <Flex gap="$spacing8">

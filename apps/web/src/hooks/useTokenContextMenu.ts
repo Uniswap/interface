@@ -13,12 +13,12 @@ import { SendAction } from 'ui/src/components/icons/SendAction'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
-import { getChainUrlParam } from 'utils/chainParams'
 
 interface TokenMenuParams {
   tokenBalance: PortfolioBalance
@@ -49,7 +49,7 @@ export function useTokenContextMenu({ tokenBalance }: TokenMenuParams): MenuOpti
   const { chainId, isNative } = currencyInfo.currency
   const tokenAddress = isNative ? NATIVE_TOKEN_PLACEHOLDER : currencyInfo.currency.address
 
-  const chainUrlParam = getChainUrlParam(chainId)
+  const chain = toGraphQLChain(chainId).toLowerCase()
   const isVisible = !isHidden
 
   const hasTokenBalance = quantity > 0 && !!balanceUSD && balanceUSD > 0
@@ -64,12 +64,12 @@ export function useTokenContextMenu({ tokenBalance }: TokenMenuParams): MenuOpti
   }, [tokenAddress])
 
   const onNavigateToSend = useCallback(() => {
-    navigate(`/send?chain=${chainUrlParam}&inputCurrency=${tokenAddress}`)
-  }, [navigate, tokenAddress, chainUrlParam])
+    navigate(`/send?chain=${chain}&inputCurrency=${tokenAddress}`)
+  }, [navigate, tokenAddress, chain])
 
   const onNavigateToSwap = useCallback(() => {
-    navigate(`/swap?chain=${chainUrlParam}&inputCurrency=${tokenAddress}`)
-  }, [navigate, tokenAddress, chainUrlParam])
+    navigate(`/swap?chain=${chain}&inputCurrency=${tokenAddress}`)
+  }, [navigate, tokenAddress, chain])
 
   const onNavigateToTokenDetails = useCallback(() => {
     if (isTestnetModeEnabled) {
@@ -77,12 +77,11 @@ export function useTokenContextMenu({ tokenBalance }: TokenMenuParams): MenuOpti
     }
 
     const url = getTokenDetailsURL({
-      chainUrlParam,
       chain: chainId,
       address: tokenAddress,
     })
     navigate(url)
-  }, [isTestnetModeEnabled, navigate, tokenAddress, chainId, chainUrlParam])
+  }, [isTestnetModeEnabled, navigate, tokenAddress, chainId])
 
   const onToggleTokenVisibility = useCallback(() => {
     onUpdateCache(isVisible, tokenBalance)

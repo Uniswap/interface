@@ -1,10 +1,6 @@
 declare module 'react-native' {
   interface NativeModulesStatic {
     RNEthersRS: IKeyring
-    EmbeddedWallet: {
-      generateKeyPair: () => Promise<string>
-      decryptMnemonicForPublicKey: (encryptedMnemonic: string, publicKeyBase64: string) => Promise<string>
-    }
   }
 }
 
@@ -12,7 +8,7 @@ import { NativeModules } from 'react-native'
 import { NotImplementedError } from 'utilities/src/errors'
 import { IKeyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
-const { RNEthersRS, EmbeddedWallet } = NativeModules
+const { RNEthersRS } = NativeModules
 
 /**
  * Simple wrapper around RNEthersRS
@@ -108,14 +104,6 @@ class NativeKeyring implements IKeyring {
 
   signHashForAddress(address: string, hash: string, chainId: number): Promise<string> {
     return RNEthersRS.signHashForAddress(address, hash, chainId)
-  }
-
-  generateKeyPairForPasskeyWallet(): Promise<string> {
-    return EmbeddedWallet.generateKeyPair()
-  }
-
-  decryptMnemonicForPasskey(encryptedMnemonic: string, publicKeyBase64: string): Promise<string> {
-    return EmbeddedWallet.decryptMnemonicForPublicKey(encryptedMnemonic, publicKeyBase64)
   }
 }
 

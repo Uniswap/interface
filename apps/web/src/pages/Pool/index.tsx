@@ -122,7 +122,6 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
           topPoolData={{ topPools, isLoading: exploreStatsLoading, isError: !!exploreStatsError }}
           pageSize={10}
           staticSize
-          forcePinning
         />
         <ExternalArrowLink href="/explore/pools" openInNewTab={false}>
           {t('explore.more.pools')}
@@ -137,10 +136,9 @@ function LearnMoreTile({ img, text, link }: { img: string; text: string; link?: 
     <Anchor
       href={link}
       textDecorationLine="none"
+      hoverStyle={{ textDecorationLine: 'underline' }}
       target="_blank"
       rel="noopener noreferrer"
-      {...ClickableTamaguiStyle}
-      hoverStyle={{ backgroundColor: '$surface1Hovered', borderColor: '$surface3Hovered' }}
     >
       <Flex
         row
@@ -272,15 +270,15 @@ export default function Pool() {
     <Trace logImpression page={InterfacePageNameLocal.Positions}>
       <Flex
         row
-        justifyContent="space-between"
         $xl={{ flexDirection: 'column', gap: '$gap16' }}
         width="100%"
-        gap={20}
+        maxWidth={1200}
+        gap={80}
         py="$spacing24"
         px="$spacing40"
         $lg={{ px: '$spacing20' }}
       >
-        <Flex grow shrink gap="$spacing24" maxWidth={700} $xl={{ maxWidth: '100%' }}>
+        <Flex grow shrink gap="$spacing24">
           <PositionsHeader
             showFilters={account.isConnected}
             selectedChain={chainFilter}
@@ -421,7 +419,6 @@ function HiddenPositions({ showHiddenPositions, setShowHiddenPositions, hiddenPo
       toggle={() => setShowHiddenPositions(!showHiddenPositions)}
       numItems={hiddenPositions.length}
       title={t('common.hidden')}
-      enableOverflow
     >
       <Flex gap="$gap16">
         {hiddenPositions.map((position) => (

@@ -6,9 +6,17 @@ exports[`Bag.tsx matches base snapshot 1`] = `
     class=""
     style="display: contents;"
   >
-    <div
-      style="display: contents;"
-    />
+    <span
+      class=" _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      >
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </span>
 </DocumentFragment>
 `;

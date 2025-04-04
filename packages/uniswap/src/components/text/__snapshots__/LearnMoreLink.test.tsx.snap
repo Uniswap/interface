@@ -15,7 +15,7 @@ exports[`LearnMoreLink renders without error 1`] = `
   onPressOut={[Function]}
   style={
     {
-      "color": "#FF37C7",
+      "color": "#FC72FF",
       "fontFamily": "Basel Grotesk",
       "fontSize": 17,
       "fontWeight": "500",

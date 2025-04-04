@@ -5,7 +5,7 @@ import { PositionField } from 'types/position'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
 import { CreateLPPositionRequest, IncreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useIncreasePositionDependentAmountFallback(

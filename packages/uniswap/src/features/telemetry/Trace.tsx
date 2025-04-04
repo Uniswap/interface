@@ -60,6 +60,4 @@ function _Trace<EventName extends keyof UniverseEventProperties | undefined>({
 
 const typedMemo: <T>(c: T) => T = memo
 const Trace = typedMemo(_Trace)
-
-export { Trace }
 export default Trace

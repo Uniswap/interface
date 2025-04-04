@@ -147,14 +147,6 @@ class MockKeyring implements IKeyring {
   async signHashForAddress(): Promise<string> {
     throw new Error('Not implemented')
   }
-
-  generateKeyPairForPasskeyWallet(): Promise<string> {
-    throw new Error('Not implemented')
-  }
-
-  decryptMnemonicForPasskey(_encryptedMnemonic: string, _publicKeyBase64: string): Promise<string> {
-    throw new Error('Not implemented')
-  }
 }
 
 export const Keyring = new MockKeyring()

@@ -36,8 +36,8 @@ export function TestnetModeBanner(props: FlexProps): JSX.Element | null {
       borderColor="$surface3"
       {...props}
     >
-      <Wrench color="$statusSuccess" size="$icon.20" />
-      <Text color="$statusSuccess" variant="body3">
+      <Wrench color="$greenBase" size="$icon.20" />
+      <Text color="$greenBase" variant="body3">
         {t('home.banner.testnetMode')}
       </Text>
     </Flex>

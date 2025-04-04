@@ -193,10 +193,7 @@ export default function FeatureFlagModal() {
             flag={FeatureFlags.TokenSelectorTrendingTokens}
             label="Enable 24h volume trending tokens in Token Selector"
           />
-          <FeatureFlagGroup name="Search">
-            <FeatureFlagOption flag={FeatureFlags.SearchRevamp} label="Enable search revamp" />
-            <FeatureFlagOption flag={FeatureFlags.TokenSearchV2} label="Enable new token search gql query results" />
-          </FeatureFlagGroup>
+          <FeatureFlagOption flag={FeatureFlags.SearchRevamp} label="Enable search revamp" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
             <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />

@@ -1,4 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber } from 'ethers'
 import { BigNumberMax, isZero, toStringish } from 'wallet/src/utils/number'
 
 describe(isZero, () => {

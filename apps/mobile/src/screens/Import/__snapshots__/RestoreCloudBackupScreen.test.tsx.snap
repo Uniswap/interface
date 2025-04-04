@@ -116,7 +116,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                     "borderWidth": 0,
                   },
                   {
-                    "color": "#131313",
+                    "color": "#222222",
                     "height": 18,
                     "width": 18,
                   },
@@ -131,7 +131,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
               vbWidth={19}
             >
               <RNSVGGroup
-                color="#131313"
+                color="#222222"
                 fill={null}
                 propList={
                   [
@@ -166,7 +166,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
               "color": {
                 "dynamic": {
                   "dark": "#FFFFFF",
-                  "light": "#131313",
+                  "light": "#222222",
                 },
               },
               "fontFamily": "Basel Grotesk",
@@ -188,14 +188,14 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
             {
               "color": {
                 "dynamic": {
-                  "dark": "rgba(255, 255, 255, 0.65)",
-                  "light": "rgba(19, 19, 19, 0.63)",
+                  "dark": "#9B9B9B",
+                  "light": "#7D7D7D",
                 },
               },
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
-              "lineHeight": 20,
+              "lineHeight": 24,
               "textAlign": "center",
             }
           }

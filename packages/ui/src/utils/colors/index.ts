@@ -347,4 +347,3 @@ export function getHoverCssFilter({
 }
 
 export * from './getContrastPassingTextColor'
-export * from './useColorsFromTokenColor'

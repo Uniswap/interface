@@ -20,94 +20,102 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
     class=""
     style="display: contents;"
   >
-    <div
-      class="c0"
+    <span
+      class=" _dsp_contents"
     >
-      <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-40px _width-40px"
+          class="c0"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-19px"
-            data-testid="input-currency-logo-container"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
           >
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-40px _justifyContent-center _pointerEvents-auto _width-40px _position-relative"
-              data-testid="token-logo"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-40px _width-40px"
             >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
-              />
-              <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                data-testid="img-token-image"
-              >
-                <img
-                  height="40"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1/logo.png"
-                  style="object-fit: contain; border-radius: 20px; z-index: 1;"
-                  width="40"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-19px"
-            data-testid="output-currency-logo-container"
-          >
-            <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-40px _justifyContent-center _pointerEvents-auto _width-40px _position-relative"
-              data-testid="token-logo"
-            >
-              <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
-              />
-              <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                data-testid="img-token-image"
-              >
-                <img
-                  height="40"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png"
-                  style="object-fit: contain; border-radius: 20px; z-index: 1;"
-                  width="40"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _bottom--4px _position-absolute _right--4px _zIndex-10"
-          >
-            <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
-              data-testid="network-logo"
-              style="width: 19px; height: 19px; border-radius: 5.7px; border-width: 1.5px; border-color: #ffffff; border-style: solid;"
-            >
-              <div
-                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
-                style="width: 16px; height: 16px;"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-19px"
+                data-testid="input-currency-logo-container"
               >
                 <div
-                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
-                  style="background-image: url(arbitrum-logo.png);"
-                />
-                <img
-                  alt=""
-                  class="css-accessibilityImage-9pa8cd"
-                  draggable="false"
-                  src="arbitrum-logo.png"
-                />
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-40px _justifyContent-center _pointerEvents-auto _width-40px _position-relative"
+                  data-testid="token-logo"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
+                  >
+                    <img
+                      height="40"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1/logo.png"
+                      style="object-fit: contain; border-radius: 20px; z-index: 1;"
+                      width="40"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-19px"
+                data-testid="output-currency-logo-container"
+              >
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-40px _justifyContent-center _pointerEvents-auto _width-40px _position-relative"
+                  data-testid="token-logo"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
+                  >
+                    <img
+                      height="40"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png"
+                      style="object-fit: contain; border-radius: 20px; z-index: 1;"
+                      width="40"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _bottom--4px _position-absolute _right--4px _zIndex-10"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+                  data-testid="network-logo"
+                  style="width: 21px; height: 21px; border-radius: 6.3px; border-width: 1.5px; border-color: #ffffff; border-style: solid;"
+                >
+                  <div
+                    class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                    style="width: 18px; height: 18px;"
+                  >
+                    <div
+                      class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                      style="background-image: url(arbitrum-logo.png);"
+                    />
+                    <img
+                      alt=""
+                      class="css-accessibilityImage-9pa8cd"
+                      draggable="false"
+                      src="arbitrum-logo.png"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      style="display: contents;"
-    />
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </span>
 </div>
 `;
@@ -132,69 +140,77 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
     class=""
     style="display: contents;"
   >
-    <div
-      class="c0"
+    <span
+      class=" _dsp_contents"
     >
-      <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-40px _width-40px"
+          class="c0"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-19px"
-            data-testid="input-currency-logo-container"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
           >
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-40px _justifyContent-center _pointerEvents-auto _width-40px _position-relative"
-              data-testid="token-logo"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-40px _width-40px"
             >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
-              />
-              <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                data-testid="img-token-image"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-19px"
+                data-testid="input-currency-logo-container"
               >
-                <img
-                  height="40"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  style="object-fit: contain; border-radius: 20px; z-index: 1;"
-                  width="40"
-                />
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-40px _justifyContent-center _pointerEvents-auto _width-40px _position-relative"
+                  data-testid="token-logo"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
+                  >
+                    <img
+                      height="40"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                      style="object-fit: contain; border-radius: 20px; z-index: 1;"
+                      width="40"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-19px"
-            data-testid="output-currency-logo-container"
-          >
-            <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-40px _justifyContent-center _pointerEvents-auto _width-40px _position-relative"
-              data-testid="token-logo"
-            >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
-              />
-              <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                data-testid="img-token-image"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-19px"
+                data-testid="output-currency-logo-container"
               >
-                <img
-                  height="40"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                  style="object-fit: contain; border-radius: 20px; z-index: 1;"
-                  width="40"
-                />
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-40px _justifyContent-center _pointerEvents-auto _width-40px _position-relative"
+                  data-testid="token-logo"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
+                  >
+                    <img
+                      height="40"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      style="object-fit: contain; border-radius: 20px; z-index: 1;"
+                      width="40"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      style="display: contents;"
-    />
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </span>
 </div>
 `;

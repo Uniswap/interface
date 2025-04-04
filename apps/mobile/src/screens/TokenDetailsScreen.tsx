@@ -4,10 +4,10 @@ import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { StyledContextMenuAction } from 'src/components/ContextMenu/StyledContextMenu'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
+import { BuyNativeTokenModal } from 'src/components/TokenDetails/BuyNativeTokenModal'
 import { ContractAddressExplainerModal } from 'src/components/TokenDetails/ContractAddressExplainerModal'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButtons'
@@ -46,6 +46,7 @@ import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRam
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -172,7 +173,7 @@ const TokenDetailsErrorCard = memo(function _TokenDetailsErrorCard(): JSX.Elemen
     setError(undefined)
     apolloClient
       .refetchQueries({ include: [GQLQueries.TokenDetailsScreen, GQLQueries.TokenPriceHistory] })
-      .catch((e) => setError(e))
+      .catch((_error) => setError(_error))
   }, [apolloClient, setError])
 
   return error ? (
@@ -183,16 +184,22 @@ const TokenDetailsErrorCard = memo(function _TokenDetailsErrorCard(): JSX.Elemen
 })
 
 const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
+  const { t } = useTranslation()
   const { navigateToSwapFlow } = useWalletNavigation()
 
   const {
+    currencyId,
     chainId,
     address,
     activeTransactionType,
     currencyInfo,
+    isBuyNativeTokenModalOpen,
     isTokenWarningModalOpen,
+    isTestnetWarningModalOpen,
     isContractAddressExplainerModalOpen,
     closeTokenWarningModal,
+    closeBuyNativeTokenModal,
+    closeTestnetWarningModal,
     closeContractAddressExplainerModal,
     copyAddressToClipboard,
   } = useTokenDetailsContext()
@@ -220,6 +227,18 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
         />
       )}
 
+      {isTestnetWarningModalOpen && (
+        <TestnetModeModal
+          unsupported
+          isOpen={isTestnetWarningModalOpen}
+          descriptionCopy={t('tdp.noTestnetSupportDescription')}
+          onClose={closeTestnetWarningModal}
+        />
+      )}
+
+      {isBuyNativeTokenModalOpen && (
+        <BuyNativeTokenModal chainId={chainId} currencyId={currencyId} onClose={closeBuyNativeTokenModal} />
+      )}
       {isContractAddressExplainerModalOpen && (
         <ContractAddressExplainerModal
           onAcknowledge={async () => {
@@ -238,8 +257,17 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
   const activeAddress = useActiveAccountAddressWithThrow()
   const { isTestnetModeEnabled } = useEnabledChains()
 
-  const { currencyId, chainId, address, currencyInfo, openTokenWarningModal, tokenColorLoading, navigation } =
-    useTokenDetailsContext()
+  const {
+    currencyId,
+    chainId,
+    address,
+    currencyInfo,
+    openTestnetWarningModal,
+    openTokenWarningModal,
+    openBuyNativeTokenModal,
+    tokenColorLoading,
+    navigation,
+  } = useTokenDetailsContext()
 
   const { navigateToFiatOnRamp, navigateToSwapFlow, navigateToSend, navigateToReceive } = useWalletNavigation()
 
@@ -292,11 +320,8 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
   )
 
   const onPressGet = useCallback(() => {
-    navigate(ModalName.BuyNativeToken, {
-      chainId,
-      currencyId,
-    })
-  }, [chainId, currencyId])
+    openBuyNativeTokenModal()
+  }, [openBuyNativeTokenModal])
 
   const onPressSend = useCallback(() => {
     navigateToSend({ currencyAddress: address, chainId })
@@ -340,15 +365,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
         ctaButton={getCTAVariant}
         actionMenuOptions={actionMenuOptions}
         userHasBalance={hasTokenBalance}
-        onPressDisabled={
-          isTestnetModeEnabled
-            ? (): void =>
-                navigate(ModalName.TestnetMode, {
-                  unsupported: true,
-                  descriptionCopy: t('tdp.noTestnetSupportDescription'),
-                })
-            : openTokenWarningModal
-        }
+        onPressDisabled={isTestnetModeEnabled ? openTestnetWarningModal : openTokenWarningModal}
       />
     </AnimatedFlex>
   )

@@ -36,7 +36,7 @@ export function registerSetupTests() {
       )
 
       Cypress.env('amplitudeEventCache').push(...req.body.events)
-    })
+    }).intercept('https://*.sentry.io', { statusCode: 200 })
 
     // Mock statsig to allow us to mock flags.
     cy.intercept(/statsig/, { statusCode: 409 })

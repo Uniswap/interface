@@ -9,4 +9,4 @@ export const isNonJestDev = isRNDev() && !isJestRun
  * sent from your local development.
  */
 export const localDevDatadogEnabled = false
-export const datadogEnabledBuild = (localDevDatadogEnabled || !isRNDev()) && !isJestRun
+export const datadogEnabled = (localDevDatadogEnabled || !isRNDev()) && !isJestRun

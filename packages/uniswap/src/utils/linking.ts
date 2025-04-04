@@ -138,13 +138,10 @@ export function getTokenDetailsURL({
   inputAddress,
 }: {
   address: string
-  chain?: number
+  chain: number
   chainUrlParam?: string
   inputAddress?: string | null
 }): string {
-  if (!chain) {
-    return '/not-found'
-  }
   const chainInfo = toGraphQLChain(chain)
 
   const chainName = chainUrlParam || String(chainInfo)?.toLowerCase() || Chain.Ethereum.toLowerCase()

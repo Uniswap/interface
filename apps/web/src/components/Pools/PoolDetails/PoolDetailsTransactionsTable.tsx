@@ -2,19 +2,20 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
-import { FilterHeaderRow, TableText, TimestampCell } from 'components/Table/styled'
+import { FilterHeaderRow, HeaderArrow, HeaderSortText, TimestampCell } from 'components/Table/styled'
+import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import {
   PoolTableTransaction,
   PoolTableTransactionType,
   usePoolTransactions,
 } from 'graphql/data/pools/usePoolTransactions'
-import { supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { OrderDirection, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import styled from 'lib/styled-components'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
+import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
-import { Flex, Text, useMedia } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -43,9 +44,9 @@ enum PoolTransactionColumn {
 }
 
 const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {
-  [PoolTransactionColumn.Timestamp]: 80,
-  [PoolTransactionColumn.Type]: 90,
-  [PoolTransactionColumn.MakerAddress]: 125,
+  [PoolTransactionColumn.Timestamp]: 120,
+  [PoolTransactionColumn.Type]: 144,
+  [PoolTransactionColumn.MakerAddress]: 100,
   [PoolTransactionColumn.FiatValue]: 125,
   [PoolTransactionColumn.InputAmount]: 125,
   [PoolTransactionColumn.OutputAmount]: 125,
@@ -96,18 +97,22 @@ export function PoolDetailsTransactionsTable({
     return [
       columnHelper.accessor((row) => row, {
         id: 'timestamp',
-        size: PoolTransactionColumnWidth[PoolTransactionColumn.Timestamp],
         header: () => (
-          <Cell justifyContent="flex-start">
-            <Flex row gap="4px">
-              <Text variant="body3" color="$neutral1">
+          <Cell minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Timestamp]} justifyContent="flex-start">
+            <Row gap="4px">
+              <HeaderArrow direction={OrderDirection.Desc} />
+              <HeaderSortText active>
                 <Trans i18nKey="common.time" />
-              </Text>
-            </Flex>
+              </HeaderSortText>
+            </Row>
           </Cell>
         ),
         cell: (row) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Timestamp]}
+            justifyContent="flex-start"
+          >
             <TimestampCell
               timestamp={Number(row.getValue?.().timestamp)}
               link={getExplorerLink(chainId, row.getValue?.().transaction, ExplorerDataType.TRANSACTION)}
@@ -119,7 +124,7 @@ export function PoolDetailsTransactionsTable({
         (row) => {
           let color, text
           if (row.type === PoolTableTransactionType.BUY) {
-            color = '$statusSuccess'
+            color = 'success'
             text = (
               <span>
                 <Trans i18nKey="common.buy.label" />
@@ -127,7 +132,7 @@ export function PoolDetailsTransactionsTable({
               </span>
             )
           } else if (row.type === PoolTableTransactionType.SELL) {
-            color = '$statusCritical'
+            color = 'critical'
             text = (
               <span>
                 <Trans i18nKey="common.sell.label" />
@@ -135,7 +140,7 @@ export function PoolDetailsTransactionsTable({
               </span>
             )
           } else {
-            color = row.type === PoolTableTransactionType.ADD ? '$statusSuccess' : '$statusCritical'
+            color = row.type === PoolTableTransactionType.ADD ? 'success' : 'critical'
             text =
               row.type === PoolTableTransactionType.ADD ? (
                 <Trans i18nKey="common.add.label" />
@@ -143,13 +148,12 @@ export function PoolDetailsTransactionsTable({
                 <Trans i18nKey="common.remove.label" />
               )
           }
-          return <TableText color={color}>{text}</TableText>
+          return <ThemedText.BodyPrimary color={color}>{text}</ThemedText.BodyPrimary>
         },
         {
           id: 'swap-type',
-          size: PoolTransactionColumnWidth[PoolTransactionColumn.Type],
           header: () => (
-            <Cell justifyContent="flex-start">
+            <Cell minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Type]} justifyContent="flex-start">
               <FilterHeaderRow clickable={filterModalIsOpen} onPress={() => toggleFilterModal()} ref={filterAnchorRef}>
                 <Filter
                   allFilters={Object.values(PoolTableTransactionType)}
@@ -159,14 +163,18 @@ export function PoolDetailsTransactionsTable({
                   toggleFilterModal={toggleFilterModal}
                   anchorRef={filterAnchorRef}
                 />
-                <Text variant="body3" color="$neutral1">
+                <ThemedText.BodySecondary>
                   <Trans i18nKey="common.type.label" />
-                </Text>
+                </ThemedText.BodySecondary>
               </FilterHeaderRow>
             </Cell>
           ),
           cell: (PoolTransactionTableType) => (
-            <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
+            <Cell
+              loading={showLoadingSkeleton}
+              minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Type]}
+              justifyContent="flex-start"
+            >
               {PoolTransactionTableType.getValue?.()}
             </Cell>
           ),
@@ -174,70 +182,94 @@ export function PoolDetailsTransactionsTable({
       ),
       columnHelper.accessor((row) => row.amountUSD, {
         id: 'fiat-value',
-        maxSize: PoolTransactionColumnWidth[PoolTransactionColumn.FiatValue],
         header: () => (
-          <Cell justifyContent="flex-end" grow>
-            <Text variant="body3" color="$neutral1">
-              {activeLocalCurrency}
-            </Text>
+          <Cell minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.FiatValue]} justifyContent="flex-end" grow>
+            <ThemedText.BodySecondary>{activeLocalCurrency}</ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (fiat) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <TableText>{formatFiatPrice({ price: fiat.getValue?.() })}</TableText>
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.FiatValue]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodyPrimary>{formatFiatPrice({ price: fiat.getValue?.() })}</ThemedText.BodyPrimary>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, token0) ? row.amount0 : row.amount1), {
         id: 'input-amount',
-        maxSize: PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount],
         header: () => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <Text variant="body3" color="$neutral1">
-              {token0?.symbol}
-            </Text>
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodySecondary>{token0?.symbol}</ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (inputTokenAmount) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <TableText>
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodyPrimary>
               {formatNumber({ input: Math.abs(inputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
-            </TableText>
+            </ThemedText.BodyPrimary>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, token0) ? row.amount1 : row.amount0), {
         id: 'output-amount',
-        maxSize: PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount],
         header: () => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <Text variant="body3" color="$neutral1">
-              {token1?.symbol}
-            </Text>
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodySecondary>{token1?.symbol}</ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (outputTokenAmount) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <TableText>
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodyPrimary>
               {formatNumber({ input: Math.abs(outputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
-            </TableText>
+            </ThemedText.BodyPrimary>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => row.maker, {
         id: 'maker-address',
-        maxSize: PoolTransactionColumnWidth[PoolTransactionColumn.MakerAddress],
         header: () => (
-          <Cell justifyContent="flex-end" grow>
-            <Text variant="body3" color="$neutral1">
+          <Cell
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.MakerAddress]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodySecondary>
               <Trans i18nKey="common.wallet.label" />
-            </Text>
+            </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (makerAddress) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.MakerAddress]}
+            justifyContent="flex-end"
+            grow
+          >
             <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
-              <TableText>{shortenAddress(makerAddress.getValue?.(), 0)}</TableText>
+              <ThemedText.BodyPrimary>{shortenAddress(makerAddress.getValue?.(), 0)}</ThemedText.BodyPrimary>
             </StyledExternalLink>
           </Cell>
         ),
@@ -255,8 +287,6 @@ export function PoolDetailsTransactionsTable({
     token1?.symbol,
   ])
 
-  const media = useMedia()
-
   return (
     <TableWrapper data-testid="pool-details-transactions-table">
       <Table
@@ -266,8 +296,6 @@ export function PoolDetailsTransactionsTable({
         error={error}
         loadMore={loadMore}
         maxHeight={600}
-        defaultPinnedColumns={['timestamp', 'swap-type']}
-        forcePinning={media.xxl}
       />
     </TableWrapper>
   )

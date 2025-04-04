@@ -19,9 +19,9 @@ import { Connector } from 'wagmi'
 function useConnectorWithCatch(): Connector | undefined {
   try {
     return useConnector()
-  } catch (e) {
+  } catch (_e) {
     if (isInterface && !isTestEnv()) {
-      logger.error(e, {
+      logger.error(_e, {
         tags: { file: 'src/features/settings/hooks', function: 'useConnectorWithCatch' },
       })
     }

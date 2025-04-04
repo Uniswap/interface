@@ -1,7 +1,7 @@
 import { useAccount } from 'hooks/useAccount'
 import { Navigate, useParams } from 'react-router-dom'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { getChainUrlParam } from 'utils/chainParams'
 
 export default function AddLiquidityV3WithTokenRedirects() {
   const { currencyIdA, currencyIdB, tokenId } = useParams<{
@@ -14,8 +14,8 @@ export default function AddLiquidityV3WithTokenRedirects() {
   const { defaultChainId } = useEnabledChains()
 
   if (tokenId) {
-    const chainUrlParam = getChainUrlParam(connectedChainId ?? defaultChainId)
-    return <Navigate to={`/positions/v3/${chainUrlParam}/${tokenId}`} replace />
+    const chainName = getChainInfo(connectedChainId ?? defaultChainId)?.urlParam
+    return <Navigate to={`/positions/v3/${chainName}/${tokenId}`} replace />
   }
 
   const url = new URL('/positions/create/v3', window.location.origin)

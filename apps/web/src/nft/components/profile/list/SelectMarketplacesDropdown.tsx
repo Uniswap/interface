@@ -1,6 +1,6 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled from 'lib/styled-components'
-import { ChevronUpIcon } from 'nft/components/iconExports'
+import { ChevronUpIcon } from 'nft/components/icons'
 import { ListingMarket } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'

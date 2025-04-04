@@ -1,5 +1,5 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
-import { ChevronUpIcon } from 'nft/components/iconExports'
+import { ChevronUpIcon } from 'nft/components/icons'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { getMarketplaceIcon } from 'nft/utils'

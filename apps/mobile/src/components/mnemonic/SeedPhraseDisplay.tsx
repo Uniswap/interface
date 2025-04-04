@@ -2,7 +2,6 @@ import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePrevious } from 'react-native-wagmi-charts'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
@@ -22,6 +21,7 @@ type Props = {
 export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }: Props): JSX.Element {
   const { t } = useTranslation()
   const { isModalOpen: isWalletRestoreModalOpen } = useWalletRestore({ openModalImmediately: true })
+  const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
   const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(!walletNeedsRestore)
 
@@ -53,11 +53,9 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
   const { trigger: biometricTrigger } = useBiometricPrompt(onShowSeedPhraseConfirmed)
 
   useEffect(() => {
-    const listener = addScreenshotListener(() =>
-      navigate(ModalName.ScreenshotWarning, { acknowledgeText: t('common.button.close') }),
-    )
+    const listener = addScreenshotListener(() => setShowScreenShotWarningModal(showSeedPhrase))
     return () => listener?.remove()
-  }, [showSeedPhrase, t])
+  }, [showSeedPhrase])
 
   return (
     <>
@@ -97,6 +95,14 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
           onAcknowledge={onConfirmWarning}
         />
       )}
+      <WarningModal
+        caption={t('setting.recoveryPhrase.warning.screenshot.message')}
+        acknowledgeText={t('common.button.close')}
+        isOpen={showScreenShotWarningModal}
+        modalName={ModalName.ScreenshotWarning}
+        title={t('setting.recoveryPhrase.warning.screenshot.title')}
+        onAcknowledge={(): void => setShowScreenShotWarningModal(false)}
+      />
     </>
   )
 }

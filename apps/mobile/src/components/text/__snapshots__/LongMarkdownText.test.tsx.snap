@@ -57,10 +57,10 @@ exports[`LongMarkdownText renders without error 1`] = `
               style={
                 [
                   {
-                    "color": "#131313",
+                    "color": "#222222",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
-                    "lineHeight": 22.1,
+                    "lineHeight": 24,
                   },
                   {},
                 ]
@@ -100,10 +100,10 @@ exports[`LongMarkdownText renders without error 1`] = `
             style={
               [
                 {
-                  "color": "#131313",
+                  "color": "#222222",
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 17,
-                  "lineHeight": 22.1,
+                  "lineHeight": 24,
                 },
                 {},
               ]

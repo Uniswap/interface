@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { ModalNameType, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 export function useFilterCallbacks(
   chainId: UniverseChainId | null,
-  modalName?: ModalNameType,
+  flow: TokenSelectorFlow,
 ): {
   chainFilter: UniverseChainId | null
   parsedChainFilter: UniverseChainId | null
@@ -56,10 +58,10 @@ export function useFilterCallbacks(
       setChainFilter(newChainFilter)
       sendAnalyticsEvent(WalletEventName.NetworkFilterSelected, {
         chain: newChainFilter ?? 'All',
-        modal: modalName,
+        modal: flowToModalName(flow),
       })
     },
-    [modalName],
+    [flow],
   )
 
   const onClearSearchFilter = useCallback(() => {

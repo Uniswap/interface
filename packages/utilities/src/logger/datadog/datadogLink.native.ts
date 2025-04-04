@@ -1,9 +1,10 @@
+import type { Operation } from '@apollo/client'
 import { ApolloLink } from '@apollo/client'
 import {
   DATADOG_GRAPH_QL_OPERATION_NAME_HEADER,
   DATADOG_GRAPH_QL_OPERATION_TYPE_HEADER,
 } from '@datadog/mobile-react-native'
-import { getOperationName, getOperationType } from 'utilities/src/logger/datadog/datadogLinkUtils'
+import type { DefinitionNode, OperationDefinitionNode } from 'graphql'
 
 export const getDatadogApolloLink = (): ApolloLink => {
   return new DatadogLink()
@@ -38,5 +39,30 @@ class DatadogLink extends ApolloLink {
 
       return forward(operation)
     })
+  }
+}
+
+// Below helpers copy/pasted from https://github.com/DataDog/dd-sdk-reactnative/blob/75a7d291ebe477a58e9d1239883b2b6b45d4117d/packages/react-native-apollo-client/src/helpers.ts
+
+export const getOperationName = (operation: Operation): string | null => {
+  if (operation.operationName) {
+    return operation.operationName
+  }
+  return null
+}
+
+const getOperationDefinitionNode = (definition: DefinitionNode): definition is OperationDefinitionNode => {
+  return definition.kind === 'OperationDefinition' && !!definition.operation
+}
+
+export const getOperationType = (operation: Operation): 'query' | 'mutation' | 'subscription' | null => {
+  try {
+    return (
+      operation.query.definitions.filter(getOperationDefinitionNode).map((operationDefinitionNode) => {
+        return operationDefinitionNode.operation
+      })[0] || null
+    )
+  } catch (e) {
+    return null
   }
 }

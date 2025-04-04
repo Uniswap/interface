@@ -23,7 +23,8 @@ const mockSessionStorage = (): unknown => {
     get: async (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       key: string | string[] | { [key: string]: any } | null,
-      _callback: (items: { [key: string]: unknown }) => void,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+      callback: (items: { [key: string]: any }) => void,
     ): Promise<Record<string, unknown>> => {
       if (key === null) {
         return Promise.resolve(store)
@@ -54,16 +55,15 @@ const mockSessionStorage = (): unknown => {
 
       return Promise.resolve({})
     },
-    set: async (
-      obj: { [prop: string]: unknown },
-      _walletConnectcallback: (items: { [key: string]: unknown }) => void,
-    ): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    set: async (obj: { [prop: string]: unknown }, callback: (items: { [key: string]: any }) => void): Promise<void> => {
       for (const [key, value] of Object.entries(obj)) {
         store[key] = value
       }
       return Promise.resolve()
     },
-    remove: async (key: string | string[], _callback: (items: { [key: string]: unknown }) => void): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    remove: async (key: string | string[], callback: (items: { [key: string]: any }) => void): Promise<void> => {
       if (Array.isArray(key)) {
         key.forEach((k) => {
           delete store[k]

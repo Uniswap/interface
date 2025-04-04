@@ -1,7 +1,7 @@
 import { Networkish } from '@ethersproject/networks'
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 export default class ConfiguredJsonRpcProvider extends StaticJsonRpcProvider {
   constructor(

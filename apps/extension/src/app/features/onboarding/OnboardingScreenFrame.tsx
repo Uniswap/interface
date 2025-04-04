@@ -3,7 +3,6 @@ import { OnboardingScreenProps } from 'src/app/features/onboarding/OnboardingScr
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
 import i18n from 'uniswap/src/i18n'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function OnboardingScreenFrame({
   Icon,
@@ -53,7 +52,6 @@ export function OnboardingScreenFrame({
             py="$spacing4"
             right="$none"
             top="$none"
-            testID={TestID.Skip}
             onPress={onSkip}
           >
             <Text color="$neutral2" variant="buttonLabel2">

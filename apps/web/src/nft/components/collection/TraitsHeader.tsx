@@ -1,5 +1,7 @@
+import clsx from 'clsx'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { ChevronUpIcon } from 'nft/components/iconExports'
+import { ChevronUpIcon } from 'nft/components/icons'
+import { subheadSmall } from 'nft/css/common.css'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { ReactNode, useEffect, useState } from 'react'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -33,6 +35,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
     <>
       {showBorderTop && (
         <Flex
+          className={clsx(subheadSmall)}
           borderTopColor="$surface3"
           borderTopWidth={1}
           overflow="hidden"

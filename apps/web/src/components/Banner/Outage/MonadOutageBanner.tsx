@@ -38,7 +38,7 @@ export function MonadOutageBanner() {
         left: 10,
       }}
     >
-      <Flex row p="$spacing8" borderRadius="$rounded20" height="100%">
+      <Flex row p="$spacing10" borderRadius="$rounded20" height="100%">
         <Flex
           centered
           m={12}

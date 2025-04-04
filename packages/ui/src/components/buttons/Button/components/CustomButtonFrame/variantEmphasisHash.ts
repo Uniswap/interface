@@ -36,6 +36,7 @@ export const variantEmphasisHash: ButtonStyleLookup = {
       backgroundColor: '$surface3',
       hoverStyle: {
         backgroundColor: '$surface3Hovered',
+        borderColor: '$surface3Hovered',
       },
       focusVisibleStyle: {
         backgroundColor: '$surface3Hovered',

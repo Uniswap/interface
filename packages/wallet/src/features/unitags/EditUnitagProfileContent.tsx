@@ -76,13 +76,11 @@ export function EditUnitagProfileContent({
   unitag,
   entryPoint,
   onNavigate,
-  onButtonClick,
 }: {
   address: string
   unitag: string
   entryPoint: UnitagScreens.UnitagConfirmation | MobileScreens.SettingsWallet | UnitagScreens.EditProfile
   onNavigate?: () => void
-  onButtonClick?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const account = useAccount(address)
@@ -262,9 +260,6 @@ export function EditUnitagProfileContent({
     if (entryPoint === UnitagScreens.UnitagConfirmation) {
       onNavigate?.()
     }
-
-    // Tracks back button to re open the manage wallets modal
-    onButtonClick?.()
   }
 
   const handleUpdateError = (): void => {

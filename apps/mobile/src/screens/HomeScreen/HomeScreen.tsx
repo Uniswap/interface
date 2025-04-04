@@ -31,6 +31,7 @@ import {
   TabLabelProps,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
+import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { DevAIAssistantOverlay } from 'src/features/openai/DevAIGate'
 import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
@@ -40,15 +41,20 @@ import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
 import { useHomeScreenTracking } from 'src/screens/HomeScreen/useHomeScreenTracking'
 import { useHomeScrollRefs } from 'src/screens/HomeScreen/useHomeScrollRefs'
+import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
 import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { ModalName, SectionName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
+import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -230,10 +236,43 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
 
-  const onPressViewOnlyLabel = useCallback(() => navigate(ModalName.ViewOnlyExplainer), [])
+  // Shows an info modal instead of FOR flow if country is listed behind this flag
+  const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
+
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const { hapticFeedback } = useHapticFeedback()
+
+  const triggerHaptics = useCallback(async () => {
+    await hapticFeedback.light()
+  }, [hapticFeedback])
+
+  const onPressViewOnlyLabel = useCallback(() => dispatch(openModal({ name: ModalName.ViewOnlyExplainer })), [dispatch])
 
   // Hide actions when active account isn't a signer account.
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
+
+  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
+
+  const handleTestnetWarningModalClose = useCallback(() => {
+    setIsTestnetWarningModalOpen(false)
+  }, [])
+
+  // TODO: when TestnetModeModal is moved to react-navigation, this can be moved
+  // to the HomeScreenQuickActions component
+  const onPressBuy = useCallback(async (): Promise<void> => {
+    await triggerHaptics()
+    if (isTestnetModeEnabled) {
+      setIsTestnetWarningModalOpen(true)
+      return
+    }
+    disableForKorea
+      ? navigate(ModalName.KoreaCexTransferInfoModal)
+      : dispatch(
+          openModal({
+            name: ModalName.FiatOnRampAggregator,
+          }),
+        )
+  }, [dispatch, isTestnetModeEnabled, disableForKorea, triggerHaptics])
 
   // This hooks handles the logic for when to open the BackupReminderModal
   useOpenBackupReminderModal(activeAccount)
@@ -248,12 +287,18 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const contentHeader = useMemo(() => {
     return (
       <Flex backgroundColor="$surface1" pb={showEmptyWalletState ? '$spacing8' : '$spacing16'} px="$spacing12">
+        <TestnetModeModal
+          unsupported
+          isOpen={isTestnetWarningModalOpen}
+          descriptionCopy={t('tdp.noTestnetSupportDescription')}
+          onClose={handleTestnetWarningModalClose}
+        />
         <AccountHeader />
         <Flex py="$spacing20" px="$spacing12">
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
         {isSignerAccount ? (
-          <HomeScreenQuickActions />
+          <HomeScreenQuickActions onPressBuy={onPressBuy} />
         ) : (
           <TouchableArea mt="$spacing8" onPress={onPressViewOnlyLabel}>
             <Flex centered row backgroundColor="$surface2" borderRadius="$rounded12" minHeight={40} p="$spacing8">
@@ -266,7 +311,18 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         {promoBanner}
       </Flex>
     )
-  }, [showEmptyWalletState, activeAccount.address, isSignerAccount, onPressViewOnlyLabel, viewOnlyLabel, promoBanner])
+  }, [
+    showEmptyWalletState,
+    isTestnetWarningModalOpen,
+    t,
+    handleTestnetWarningModalClose,
+    activeAccount.address,
+    isSignerAccount,
+    onPressViewOnlyLabel,
+    viewOnlyLabel,
+    promoBanner,
+    onPressBuy,
+  ])
 
   const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyWalletState ? 0 : TAB_STYLES.tabListInner.paddingTop)
   const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12

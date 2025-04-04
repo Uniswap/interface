@@ -1,20 +1,12 @@
 import { forwardRef, useCallback, useMemo, useRef } from 'react'
 import type { GestureResponderEvent } from 'react-native'
-import { YStack, type TamaguiElement, type YStackProps } from 'tamagui'
+import { TamaguiElement, YStack } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
-import type { TouchableAreaProps } from 'ui/src/components/touchable/types'
+import { TouchableAreaProps } from 'ui/src/components/touchable/types'
 import { defaultHitslopInset } from 'ui/src/theme'
 import { isTestEnv } from 'utilities/src/environment/env'
 
 export type TouchableAreaEvent = GestureResponderEvent
-
-// TODO(MOB-2826): tests are picking up weird animationStyle on snapshots...
-const animationProps: Partial<YStackProps> = isTestEnv()
-  ? {}
-  : {
-      animation: 'simple',
-      animateOnly: ['transform', 'opacity'],
-    }
 
 /**
  * If you are trying to implement a standard button DO NOT USE this component. Use the Button component instead with the desired size and emphasis.
@@ -24,17 +16,7 @@ const animationProps: Partial<YStackProps> = isTestEnv()
  *  - custom elements that are clickable (e.g. rows, cards, headers)
  */
 export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(function TouchableArea(
-  {
-    ignoreDragEvents = false,
-    scaleTo,
-    onPress,
-    children,
-    hoverable = true,
-    activeOpacity = 0.75,
-    pressStyle: pressStyleProp,
-    hoverStyle: hoverStyleProp,
-    ...restProps
-  },
+  { ignoreDragEvents = false, scaleTo, onPress, children, hoverable, activeOpacity = 0.75, ...restProps },
   ref,
 ): JSX.Element {
   const touchActivationPositionRef = useRef<Pick<GestureResponderEvent['nativeEvent'], 'pageX' | 'pageY'> | null>(null)
@@ -69,34 +51,29 @@ export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(func
     }
   }, [])
 
-  const pressStyle: YStackProps['pressStyle'] = useMemo(() => {
-    return {
-      opacity: activeOpacity,
-      scale: scaleTo ?? 1,
-      ...pressStyleProp,
-    }
-  }, [activeOpacity, scaleTo, pressStyleProp])
-
-  const hoverStyle: YStackProps['hoverStyle'] = useMemo(() => {
-    if (!hoverable || !hoverStyleProp) {
-      return {}
-    }
-
-    return {
-      backgroundColor: '$backgroundHover',
-      ...hoverStyleProp,
-    }
-  }, [hoverable, hoverStyleProp])
-
   return (
     <YStack
       ref={ref}
-      {...animationProps}
+      // TODO(MOB-2826): tests are picking up weird animationStyle on snapshots...
+      {...(!isTestEnv() && {
+        animation: 'simple',
+        // TODO(MOB-3059): fixes crash caused by animating shadowOffset, should be fixed in tamagui
+        animateOnly: ['transform', 'opacity'],
+      })}
       cursor="pointer"
       hitSlop={defaultHitslopInset}
       {...restProps}
-      pressStyle={pressStyle}
-      hoverStyle={hoverStyle}
+      pressStyle={{
+        opacity: activeOpacity,
+        scale: scaleTo ?? 1,
+        ...restProps.pressStyle,
+      }}
+      {...(hoverable && {
+        hoverStyle: {
+          backgroundColor: '$backgroundHover',
+          ...restProps.hoverStyle,
+        },
+      })}
       onPress={onPressHandler}
       onPressIn={onPressInHandler}
     >

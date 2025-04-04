@@ -29,7 +29,7 @@ import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import { getRPCErrorCategory, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
+import { getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
 import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
@@ -110,7 +110,20 @@ export function* sendTransaction(params: SendTransactionParams) {
     yield* put(transactionActions.finalizeTransaction({ ...unsubmittedTransaction, status: TransactionStatus.Failed }))
 
     if (error instanceof Error) {
-      const errorCategory = getRPCErrorCategory(error)
+      let errorCategory = 'unknown'
+      if (error.message.includes('nonce') || error.message.includes('future transaction tries to replace pending')) {
+        errorCategory = 'nonce_error'
+      } else if (error.message.includes('Failed in pending block with: Reverted')) {
+        errorCategory = 'reverted'
+      } else if (
+        error.message.includes('intrinsic gas too low') ||
+        error.message.includes('max fee per gas less than block base fee') ||
+        error.message.includes('transaction underpriced')
+      ) {
+        errorCategory = 'gas_too_low'
+      } else if (error.message.includes('Too Many Requests')) {
+        errorCategory = 'rate_limited'
+      }
 
       const logExtra = {
         category: errorCategory,

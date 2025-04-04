@@ -147,7 +147,6 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
   const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
-  const { navigate } = useAppStackNavigation()
 
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
@@ -162,17 +161,21 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
 
       // Show warning modal for prefilled tokens, which will handle token safety checks
       const currencyId = buildCurrencyId(args.currencyChainId, args.currencyAddress)
-      navigate(ModalName.TokenWarning, {
-        initialState: {
-          currencyId,
-          onAcknowledge: () => {
-            dispatch(closeModal({ name: ModalName.Swap }))
-            dispatch(openModal({ name: ModalName.Swap, initialState }))
+      dispatch(
+        openModal({
+          name: ModalName.TokenWarning,
+          initialState: {
+            currencyId,
+            onAcknowledge: () => {
+              dispatch(closeModal({ name: ModalName.TokenWarning }))
+              dispatch(closeModal({ name: ModalName.Swap }))
+              dispatch(openModal({ name: ModalName.Swap, initialState }))
+            },
           },
-        },
-      })
+        }),
+      )
     },
-    [dispatch, defaultChainId, navigate],
+    [dispatch, defaultChainId],
   )
 }
 

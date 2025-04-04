@@ -7,7 +7,6 @@ import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Person } from 'ui/src/components/icons'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ClaimUnitagContent } from 'uniswap/src/features/unitags/ClaimUnitagContent'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import {
   MobileScreens,
@@ -20,6 +19,7 @@ import {
   useCreateOnboardingAccountIfNone,
   useOnboardingContext,
 } from 'wallet/src/features/onboarding/OnboardingContext'
+import { ClaimUnitagContent } from 'wallet/src/features/unitags/ClaimUnitagContent'
 
 type Props = NativeStackScreenProps<UnitagStackParamList, UnitagScreens.ClaimUnitag>
 

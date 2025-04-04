@@ -118,10 +118,19 @@ const UnlockButton = memo(function UnlockButton(): JSX.Element {
   const { t } = useTranslation()
   const renderBiometricsIcon = useBiometricsIcon()
   const onPress = useBiometricAuth()
+  const isDarkMode = useIsDarkMode()
 
   return (
     <AnimatedFlex centered row px="$spacing24" entering={fadeIn} exiting={fadeOut}>
-      <Button icon={renderBiometricsIcon?.({})} size="large" emphasis="primary" variant="branded" onPress={onPress}>
+      <Button
+        icon={
+          renderBiometricsIcon ? renderBiometricsIcon({ color: isDarkMode ? '$neutral1' : '$surface1' }) : undefined
+        }
+        size="large"
+        emphasis="primary"
+        variant="branded"
+        onPress={onPress}
+      >
         {t('common.button.unlock')}
       </Button>
     </AnimatedFlex>

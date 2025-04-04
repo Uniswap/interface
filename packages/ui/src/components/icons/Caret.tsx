@@ -22,7 +22,9 @@ export function _Caret({ size = '$icon.24', color, direction = 'n' }: Props): JS
       throw new Error(`Invalid arrow direction ${direction}`)
   }
 
-  return <ArrowChange color={color ?? '$black'} size={size} strokeWidth={2} rotate={degree} />
+  return (
+    <ArrowChange color={color ?? '$black'} size={size} strokeWidth={2} style={{ transform: [{ rotate: degree }] }} />
+  )
 }
 
 export const Caret = memo(_Caret)

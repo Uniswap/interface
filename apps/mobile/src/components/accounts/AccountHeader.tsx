@@ -96,8 +96,8 @@ export function AccountHeader(): JSX.Element {
   }, [displayName?.type])
 
   const onPressAccountHeader = useCallback(() => {
-    navigate(ModalName.AccountSwitcher)
-  }, [])
+    dispatch(openModal({ name: ModalName.AccountSwitcher }))
+  }, [dispatch])
 
   const onPressSettings = (): void => {
     navigate(MobileScreens.SettingsStack, { screen: MobileScreens.Settings })

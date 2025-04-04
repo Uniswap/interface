@@ -75,7 +75,7 @@ export function useUpdateTokenAllowance(
           }
 
           const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
-          const response = await trace.child({ name: 'Approve', op: 'wallet.approve' }, async () => {
+          const response = await trace.child({ name: 'Approve', op: 'wallet.approve' }, async (walletTrace) => {
             const contract = contractRef.current
             try {
               if (!contract) {
@@ -84,6 +84,7 @@ export function useUpdateTokenAllowance(
               return await contract.approve(spender, allowance)
             } catch (error) {
               if (didUserReject(error)) {
+                walletTrace.setStatus('cancelled')
                 const symbol = amount?.currency.symbol ?? 'Token'
                 throw new UserRejectedRequestError(`${symbol} token allowance failed: User rejected`)
               } else {
@@ -108,6 +109,7 @@ export function useUpdateTokenAllowance(
           }
         } catch (error: unknown) {
           if (error instanceof UserRejectedRequestError) {
+            trace.setStatus('cancelled')
             throw error
           } else {
             const symbol = amount?.currency.symbol ?? 'Token'

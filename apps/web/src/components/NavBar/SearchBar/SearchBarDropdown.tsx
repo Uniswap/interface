@@ -1,4 +1,5 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
+import Badge from 'components/Badge/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import {
   InterfaceRemoteSearchHistoryItem,
@@ -12,12 +13,12 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import useSearchTrendingTokensGql from 'graphql/data/SearchTrendingTokens'
 import { useAccount } from 'hooks/useAccount'
+import deprecatedStyled from 'lib/styled-components'
 import { useEffect, useMemo, useState } from 'react'
 import { Clock, TrendingUp } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Flex, Text, styled, useScrollbarStyles } from 'ui/src'
-import Badge from 'uniswap/src/components/badge/Badge'
+import { Flex, Text, useScrollbarStyles } from 'ui/src'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -85,16 +86,19 @@ function SearchBarDropdownSection({
   )
 }
 
-const ChainComingSoonBadge = styled(Badge, {
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  opacity: 1,
-  p: '$8',
-  m: '$16 $16 $4',
-  width: 'calc(100% - 32px)',
-  gap: '$8',
-})
+const ChainComingSoonBadge = deprecatedStyled(Badge)`
+  align-items: center;
+  background-color: ${({ theme }) => theme.surface2};
+  color: ${({ theme }) => theme.neutral2};
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  opacity: 1;
+  padding: 8px;
+  margin: 16px 16px 4px;
+  width: calc(100% - 32px);
+  gap: 8px;
+`
 
 interface SearchBarDropdownProps {
   toggleOpen: () => void

@@ -162,7 +162,9 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         backgroundColor="$surface1"
         borderRadius="$rounded16"
         cursor="pointer"
-        p="$padding12"
+        pt="$padding20"
+        pb="$spacing12"
+        px="$spacing12"
         onPress={onAccountSelect}
       >
         <Flex centered fill group row gap="$spacing8" justifyContent="space-between">
@@ -184,8 +186,9 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
                 hoverStyle={{ backgroundColor: '$surface2Hovered' }}
                 opacity={0}
                 position="absolute"
-                p="$spacing8"
+                p="$spacing4"
                 right={0}
+                top={0}
               >
                 <Ellipsis color="$neutral2" size="$icon.16" />
               </Flex>

@@ -1,6 +1,6 @@
 /* eslint-disable max-depth */
 /* eslint-disable complexity */
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import { BigNumber, BigNumberish } from 'ethers'
 import { formatUnits as formatUnitsEthers } from 'ethers/lib/utils'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import {

@@ -1,20 +1,18 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { Cell } from 'components/Table/Cell'
-import { useTableSize } from 'components/Table/TableSizeProvider'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
+import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import deprecatedStyled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
-import { ArrowDown } from 'react-feather'
+import { ArrowDown, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ClickableStyle, ClickableTamaguiStyle } from 'theme/components/styles'
+import { ThemedText } from 'theme/components'
+import { ClickableStyle, ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { Anchor, Flex, Text, TextProps, View, styled } from 'ui/src'
-import { breakpoints, zIndexes } from 'ui/src/theme'
+import { Anchor, Flex, Text, View, styled } from 'ui/src'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -29,20 +27,38 @@ export const TableContainer = styled(Flex, {
   className: 'scrollbar-hidden',
 })
 
-export const TableHead = (props: PropsWithChildren<{ $isSticky: boolean; $top: number }>): JSX.Element => (
-  <Flex
-    width="100%"
-    zIndex={zIndexes.dropdown - 2}
-    top={props.$isSticky ? props.$top : 'unset'}
-    justifyContent="flex-end"
-    backgroundColor="$surface1"
-    className="scrollbar-hidden"
-    $platform-web={props.$isSticky ? { position: 'sticky' } : {}}
-  >
-    {props.$isSticky && <Flex height={12} />}
-    {props.children}
-  </Flex>
-)
+export const TableHead = (props: PropsWithChildren<{ $isSticky: boolean; $top: number }>): JSX.Element => {
+  if (props.$isSticky) {
+    return (
+      <Flex
+        width="100%"
+        top={props.$top}
+        zIndex={Z_INDEX.under_dropdown}
+        justifyContent="flex-end"
+        backgroundColor="$surface1"
+        className="scrollbar-hidden"
+        $platform-web={{
+          position: 'sticky',
+        }}
+      >
+        {props.$isSticky && <Flex height={12} />}
+        {props.children}
+      </Flex>
+    )
+  } else {
+    return (
+      <Flex
+        width="100%"
+        position="relative"
+        justifyContent="flex-end"
+        backgroundColor="$surface1"
+        className="scrollbar-hidden"
+      >
+        {props.children}
+      </Flex>
+    )
+  }
+}
 
 export const TableBodyContainer = styled(View, {
   width: '100%',
@@ -86,30 +102,20 @@ export const LoadingIndicator = styled(Flex, {
 const TableRow = styled(Flex, {
   row: true,
   alignItems: 'center',
+  px: '$padding12',
   width: 'fit-content',
   minWidth: '100%',
-  height: '100%',
+  minHeight: 64,
 })
 
 export const DataRow = styled(TableRow, {
   hoverStyle: {
-    backgroundColor: '$surface1Hovered',
+    backgroundColor: '$surface3',
   },
 })
 
 export const NoDataFoundTableRow = styled(TableRow, {
   justifyContent: 'center',
-})
-
-export const TableScrollMask = styled(View, {
-  position: 'absolute',
-  zIndex: zIndexes.default,
-  top: 0,
-  bottom: 0,
-  right: 1,
-  width: 20,
-  pointerEvents: 'none',
-  background: `linear-gradient(to right, transparent, var(--surface1))`,
 })
 
 export const HeaderRow = styled(TableRow, {
@@ -119,7 +125,8 @@ export const HeaderRow = styled(TableRow, {
   borderTopRightRadius: '$rounded20',
   borderTopLeftRadius: '$rounded20',
   width: 'unset',
-  backgroundColor: '$surface1Hovered',
+  minHeight: 52,
+  backgroundColor: '$surface2',
   scrollbarWidth: 'none',
   className: 'scrollbar-hidden',
 
@@ -170,32 +177,16 @@ export const ClickableHeaderRow = styled(Flex, {
   ...ClickableTamaguiStyle,
 })
 
-export const HeaderArrow = styled(ArrowDown, {
-  height: 14,
-  width: 14,
-  color: '$neutral1',
-  transform: 'rotate(0deg)',
-  transition: 'opacity 0.08s ease-in-out',
-  '$group-hover': {
-    opacity: 0.5,
-  },
-
-  variants: {
-    orderDirection: {
-      asc: {
-        transform: 'rotate(180deg)',
-      },
-      desc: {
-        transform: 'rotate(0deg)',
-      },
-    },
-  },
-})
+export const HeaderArrow = deprecatedStyled(ArrowDown)<{ direction: OrderDirection }>`
+  height: 16px;
+  width: 16px;
+  color: ${({ theme }) => theme.neutral1};
+  transform: ${({ direction }) => (direction === 'asc' ? 'rotate(180deg)' : 'rotate(0deg)')};
+`
 
 export const HeaderSortText = styled(Text, {
-  variant: 'body3',
+  variant: 'body2',
   color: '$neutral2',
-  whiteSpace: 'nowrap',
 
   variants: {
     active: {
@@ -222,40 +213,22 @@ export const FilterHeaderRow = styled(Flex, {
   } as const,
 })
 
-const StyledTimestampRow = styled(StyledExternalLink, {
-  group: true,
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: '$gap8',
-  width: '100%',
-  whiteSpace: 'nowrap',
-  hoverStyle: {
-    opacity: 1,
-  },
-})
-
-export const TableText = ({ children, ...props }: PropsWithChildren<TextProps>) => {
-  const { width } = useTableSize()
-
-  return (
-    <Text {...props} variant={width <= breakpoints.lg ? 'body3' : 'body2'} color="$neutral1">
-      {children}
-    </Text>
-  )
-}
-
-export const EllipsisText = ({ children, ...props }: PropsWithChildren<TextProps>) => {
-  return (
-    <TableText {...props} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-      {children}
-    </TableText>
-  )
-}
-
-export const HeaderCell = styled(Cell, {
-  py: '$spacing12',
-})
+const StyledTimestampRow = deprecatedStyled(StyledExternalLink)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+`
+const StyledExternalLinkIcon = deprecatedStyled(ExternalLinkIcon)`
+  display: none;
+  height: 16px;
+  width: 16px;
+  color: ${({ theme }) => theme.neutral2};
+  ${StyledTimestampRow}:hover & {
+    display: block;
+  }
+`
 
 /**
  * Converts the given timestamp to an abbreviated format (s,m,h) for timestamps younger than 1 day
@@ -285,18 +258,25 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
   return (
     <StyledTimestampRow href={link}>
       <MouseoverTooltip text={fullDate} placement="top" size={TooltipSize.Max}>
-        <TableText>{abbreviatedTime}</TableText>
+        <ThemedText.BodySecondary>{abbreviatedTime}</ThemedText.BodySecondary>
       </MouseoverTooltip>
+      <StyledExternalLinkIcon />
     </StyledTimestampRow>
   )
 }
+
+const TokenSymbolText = styled(Text, {
+  variant: 'body2',
+  color: '$neutral1',
+  ...EllipsisTamaguiStyle,
+})
 
 /**
  * Given a token displays the Token's Logo and Symbol with a link to its TDP
  * @param token
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
-export const TokenLinkCell = ({ token, hideLogo }: { token: Token; hideLogo?: boolean }) => {
+export const TokenLinkCell = ({ token }: { token: Token }) => {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const chainId = fromGraphQLChain(token.chain) ?? defaultChainId
@@ -310,16 +290,14 @@ export const TokenLinkCell = ({ token, hideLogo }: { token: Token; hideLogo?: bo
         chain: token.chain,
       })}
     >
-      <Flex row gap="$gap8" maxWidth="100px" alignItems="center">
-        <EllipsisText>{unwrappedToken?.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
-        {!hideLogo && (
-          <PortfolioLogo
-            chainId={chainId}
-            size={20}
-            images={isNative ? undefined : [token.project?.logo?.url]}
-            currencies={isNative ? [nativeCurrency] : undefined}
-          />
-        )}
+      <Flex row gap="$gap4" maxWidth="68px">
+        <PortfolioLogo
+          chainId={chainId}
+          size={16}
+          images={isNative ? undefined : [token.project?.logo?.url]}
+          currencies={isNative ? [nativeCurrency] : undefined}
+        />
+        <TokenSymbolText>{unwrappedToken?.symbol ?? t('common.unknown').toUpperCase()}</TokenSymbolText>
       </Flex>
     </StyledInternalLink>
   )

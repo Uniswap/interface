@@ -131,7 +131,7 @@ export function Locked(): JSX.Element {
       linkText: t('extension.lock.password.reset.speedbump.help'),
       linkUrl: uniswapUrls.helpArticleUrls.recoveryPhraseForgotten,
       icon: (
-        <Flex backgroundColor="$statusCritical2" borderRadius="$rounded12" p="$spacing12">
+        <Flex backgroundColor="$DEP_accentCriticalSoft" borderRadius="$rounded12" p="$spacing12">
           <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
         </Flex>
       ),

@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src/'
-import { TokenCard } from 'uniswap/src/components/TokenSelector/items/tokens/TokenCard'
+import { TokenCard } from 'uniswap/src/components/TokenSelector/items/TokenCard'
 import { HorizontalTokenListProps } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
 
 const MAX_CARDS_PER_ROW = 5

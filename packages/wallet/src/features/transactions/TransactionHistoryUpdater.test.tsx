@@ -117,7 +117,7 @@ describe(TransactionHistoryUpdater, () => {
       preloadedState: reduxState,
     })
 
-    expect(tree.toJSON()).toMatchSnapshot()
+    expect(tree.toJSON()).toEqual(null)
   })
 
   it('updates notification status when there are new transactions', async () => {

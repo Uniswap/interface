@@ -95,7 +95,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 .c5 {
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -103,11 +103,17 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 .c6 {
-  color: #131313;
+  color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c3 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 .c15 {
@@ -125,18 +131,12 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 
 .c7 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
 }
 
 .c9 {
   text-align: right;
   overflow-wrap: break-word;
-}
-
-.c3 {
-  width: 100%;
-  height: 1px;
-  background-color: rgba(34,34,34,0.05);
 }
 
 .c18 {
@@ -145,7 +145,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 .c18 > * {
-  fill: rgba(19,19,19,0.35);
+  fill: #CECECE;
 }
 
 .c10 {
@@ -189,9 +189,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  background: rgba(34,34,34,0.05);
+  background: #22222212;
   border-radius: 8px;
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
   -webkit-align-items: center;
@@ -245,257 +245,265 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
     class=""
     style="display: contents;"
   >
-    <div
-      class="c0 c1"
+    <span
+      class=" _dsp_contents"
     >
-      <button
-        class="c2"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c3"
-        />
-        <div
-          class="c4"
+          class="c0 c1"
         >
-          <div
-            class="c5 css-142zc9n"
-          >
-            Show more
-          </div>
-          <svg>
-            expando-icon-closed.svg
-          </svg>
-        </div>
-        <div
-          class="c3"
-        />
-      </button>
-      <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-      >
-        <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-        >
-          <div
-            class="c6 c7 css-142zc9n"
-            data-testid="swap-li-label"
-          >
-            Rate
-          </div>
-          <div
-            class="c8"
+          <button
+            class="c2"
           >
             <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              class="c3"
+            />
+            <div
+              class="c4"
             >
               <div
-                class="c6 c9 css-142zc9n"
+                class="c5 css-142zc9n"
               >
-                <button
-                  class="c10"
-                  title="1 DEF = 1.00 ABC "
+                Show more
+              </div>
+              <svg>
+                expando-icon-closed.svg
+              </svg>
+            </div>
+            <div
+              class="c3"
+            />
+          </button>
+          <div
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+            >
+              <div
+                class="c6 c7 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Rate
+              </div>
+              <div
+                class="c8"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <div
-                    class="c6 css-142zc9n"
+                    class="c6 c9 css-142zc9n"
                   >
-                    1 DEF = 1.00 ABC 
+                    <button
+                      class="c10"
+                      title="1 DEF = 1.00 ABC "
+                    >
+                      <div
+                        class="c6 css-142zc9n"
+                      >
+                        1 DEF = 1.00 ABC 
+                      </div>
+                       
+                    </button>
                   </div>
-                   
-                </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div
-        data-disable-theme="true"
-        style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
-      >
-        <div
-          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
-        >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+            data-disable-theme="true"
+            style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
           >
             <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
             >
               <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
               >
                 <div
-                  class="c6 c7 css-142zc9n"
-                  data-testid="swap-li-label"
-                >
-                  Price impact
-                </div>
-                <div
-                  class="c8"
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
                   >
                     <div
-                      class="c6 c9 css-142zc9n"
+                      class="c6 c7 css-142zc9n"
+                      data-testid="swap-li-label"
                     >
-                      <span
-                        class="c11"
+                      Price impact
+                    </div>
+                    <div
+                      class="c8"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                       >
-                        5%
-                      </span>
+                        <div
+                          class="c6 c9 css-142zc9n"
+                        >
+                          <span
+                            class="c11"
+                          >
+                            5%
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
-            >
-              <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-              >
                 <div
-                  class="c6 c7 css-142zc9n"
-                  data-testid="swap-li-label"
-                >
-                  Max. slippage
-                </div>
-                <div
-                  class="c8"
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
                   >
                     <div
-                      class="c6 c9 css-142zc9n"
+                      class="c6 c7 css-142zc9n"
+                      data-testid="swap-li-label"
+                    >
+                      Max. slippage
+                    </div>
+                    <div
+                      class="c8"
                     >
                       <div
-                        class="c12 c13"
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                       >
                         <div
-                          class="c5 c14 css-1lgneq0"
+                          class="c6 c9 css-142zc9n"
                         >
-                          Auto
+                          <div
+                            class="c12 c13"
+                          >
+                            <div
+                              class="c5 c14 css-1lgneq0"
+                            >
+                              Auto
+                            </div>
+                             2%
+                          </div>
                         </div>
-                         2%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                >
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                  >
+                    <div
+                      class="c6 c7 css-142zc9n"
+                      data-testid="swap-li-label"
+                    >
+                      Receive at least
+                    </div>
+                    <div
+                      class="c8"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
+                        <div
+                          class="c6 c9 css-142zc9n"
+                        >
+                          0.00000000000000098 DEF
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+          >
             <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                class="c6 c7 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Fee 
+              </div>
+              <div
+                class="c8"
               >
                 <div
-                  class="c6 c7 css-142zc9n"
-                  data-testid="swap-li-label"
-                >
-                  Receive at least
-                </div>
-                <div
-                  class="c8"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="c6 c9 css-142zc9n"
                   >
-                    <div
-                      class="c6 c9 css-142zc9n"
-                    >
-                      0.00000000000000098 DEF
-                    </div>
+                    0 DEF
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-      >
-        <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-        >
           <div
-            class="c6 c7 css-142zc9n"
-            data-testid="swap-li-label"
-          >
-            Fee 
-          </div>
-          <div
-            class="c8"
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
           >
             <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="c6 c9 css-142zc9n"
+                class="c6 c7 css-142zc9n"
+                data-testid="swap-li-label"
               >
-                0 DEF
+                Network cost
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-      >
-        <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-        >
-          <div
-            class="c6 c7 css-142zc9n"
-            data-testid="swap-li-label"
-          >
-            Network cost
-          </div>
-          <div
-            class="c8"
-          >
-            <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-            >
               <div
-                class="c6 c9 css-142zc9n"
+                class="c8"
               >
                 <div
-                  class="c8"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="c6 c9 css-142zc9n"
                   >
                     <div
-                      class="c15"
+                      class="c8"
                     >
                       <div
-                        class="c12 c16 c17"
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                       >
-                        <svg
-                          class="c18"
-                          fill="none"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          width="24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            clip-rule="evenodd"
-                            d="M15.3078 1.77827C15.7064 1.39599 16.3395 1.40923 16.7217 1.80783L20.9689 6.23633C21.2428 6.47474 21.4729 6.76205 21.6459 7.08464C21.8481 7.43172 22 7.84819 22 8.32698V16.7012C22 18.2484 20.7455 19.5 19.2 19.5C17.6536 19.5 16.4 18.2464 16.4 16.7V14.3999C16.4 13.8476 15.9523 13.3999 15.4 13.3999H14V20.5C14 20.569 13.9965 20.6372 13.9897 20.7045C13.9515 21.08 13.8095 21.4249 13.5927 21.7098C13.2274 22.19 12.6499 22.5 12 22.5H4C3.30964 22.5 2.70098 22.1502 2.34157 21.6182C2.12592 21.299 2.00001 20.9142 2 20.5V5.4999C2 3.84305 3.34315 2.4999 5 2.4999H11C12.6569 2.4999 14 3.84305 14 5.4999V11.3999H15.4C17.0569 11.3999 18.4 12.7431 18.4 14.3999V16.7C18.4 17.1418 18.7582 17.5 19.2 17.5C19.6427 17.5 20 17.1422 20 16.7012V11.3292C19.6872 11.4397 19.3506 11.4999 19 11.4999C17.3431 11.4999 16 10.1568 16 8.4999C16 7.28851 16.718 6.24482 17.7517 5.77117L15.2783 3.19217C14.896 2.79357 14.9092 2.16055 15.3078 1.77827ZM19.6098 7.70731C19.441 7.57725 19.2296 7.4999 19 7.4999C18.4477 7.4999 18 7.94762 18 8.4999C18 9.05219 18.4477 9.4999 19 9.4999C19.5523 9.4999 20 9.05219 20 8.4999C20 8.34084 19.9629 8.19045 19.8968 8.05693C19.8303 7.95164 19.7349 7.83559 19.6098 7.70731ZM5.21572 4.72463C4.66343 4.72463 4.21572 5.17235 4.21572 5.72463V9.72463C4.21572 10.2769 4.66343 10.7246 5.21572 10.7246H10.7157C11.268 10.7246 11.7157 10.2769 11.7157 9.72463V5.72463C11.7157 5.17235 11.268 4.72463 10.7157 4.72463H5.21572Z"
-                            fill="currentColor"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
                         <div
-                          class="c5 css-142zc9n"
+                          class="c15"
                         >
                           <div
-                            class="c12 c13"
+                            class="c12 c16 c17"
                           >
-                            $1.00
+                            <svg
+                              class="c18"
+                              fill="none"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                clip-rule="evenodd"
+                                d="M15.3078 1.77827C15.7064 1.39599 16.3395 1.40923 16.7217 1.80783L20.9689 6.23633C21.2428 6.47474 21.4729 6.76205 21.6459 7.08464C21.8481 7.43172 22 7.84819 22 8.32698V16.7012C22 18.2484 20.7455 19.5 19.2 19.5C17.6536 19.5 16.4 18.2464 16.4 16.7V14.3999C16.4 13.8476 15.9523 13.3999 15.4 13.3999H14V20.5C14 20.569 13.9965 20.6372 13.9897 20.7045C13.9515 21.08 13.8095 21.4249 13.5927 21.7098C13.2274 22.19 12.6499 22.5 12 22.5H4C3.30964 22.5 2.70098 22.1502 2.34157 21.6182C2.12592 21.299 2.00001 20.9142 2 20.5V5.4999C2 3.84305 3.34315 2.4999 5 2.4999H11C12.6569 2.4999 14 3.84305 14 5.4999V11.3999H15.4C17.0569 11.3999 18.4 12.7431 18.4 14.3999V16.7C18.4 17.1418 18.7582 17.5 19.2 17.5C19.6427 17.5 20 17.1422 20 16.7012V11.3292C19.6872 11.4397 19.3506 11.4999 19 11.4999C17.3431 11.4999 16 10.1568 16 8.4999C16 7.28851 16.718 6.24482 17.7517 5.77117L15.2783 3.19217C14.896 2.79357 14.9092 2.16055 15.3078 1.77827ZM19.6098 7.70731C19.441 7.57725 19.2296 7.4999 19 7.4999C18.4477 7.4999 18 7.94762 18 8.4999C18 9.05219 18.4477 9.4999 19 9.4999C19.5523 9.4999 20 9.05219 20 8.4999C20 8.34084 19.9629 8.19045 19.8968 8.05693C19.8303 7.95164 19.7349 7.83559 19.6098 7.70731ZM5.21572 4.72463C4.66343 4.72463 4.21572 5.17235 4.21572 5.72463V9.72463C4.21572 10.2769 4.66343 10.7246 5.21572 10.7246H10.7157C11.268 10.7246 11.7157 10.2769 11.7157 9.72463V5.72463C11.7157 5.17235 11.268 4.72463 10.7157 4.72463H5.21572Z"
+                                fill="currentColor"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                            <div
+                              class="c5 css-142zc9n"
+                            >
+                              <div
+                                class="c12 c13"
+                              >
+                                $1.00
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -506,28 +514,28 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      class="c12 c19 c20"
-    >
-      <button
-        class=" is_Button  t_group_item"
-        data-testid="confirm-swap-button"
-        dd-action-name="Confirm swap"
-        id="confirm-swap-or-send"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(255, 55, 199); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
-      >
-        <span
-          class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+        <div
+          class="c12 c19 c20"
         >
-          Confirm swap
-        </span>
-      </button>
-    </div>
-    <div
-      style="display: contents;"
-    />
+          <button
+            class=" is_Button  t_group_item"
+            data-testid="confirm-swap-button"
+            dd-action-name="Confirm swap"
+            id="confirm-swap-or-send"
+            style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(252, 114, 255); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+          >
+            <span
+              class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+            >
+              Confirm swap
+            </span>
+          </button>
+        </div>
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </span>
 </DocumentFragment>
 `;
@@ -601,7 +609,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 }
 
 .c5 {
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -609,11 +617,17 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 }
 
 .c6 {
-  color: #131313;
+  color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c3 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
 }
 
 .c15 {
@@ -621,7 +635,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   animation: fAQEyV 1.5s infinite;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
-  background: linear-gradient( to left, #FFFFFF 25%, rgba(34,34,34,0.05) 50%, #FFFFFF 75% );
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
   background-size: 400%;
   will-change: background-position;
   border-radius: 12px;
@@ -636,23 +650,17 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 
 .c7 {
   cursor: auto;
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
 }
 
 .c10 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
 }
 
 .c8 {
   text-align: right;
   overflow-wrap: break-word;
-}
-
-.c3 {
-  width: 100%;
-  height: 1px;
-  background-color: rgba(34,34,34,0.05);
 }
 
 .c9 {
@@ -692,9 +700,9 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  background: rgba(34,34,34,0.05);
+  background: #22222212;
   border-radius: 8px;
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
   -webkit-align-items: center;
@@ -748,178 +756,154 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
     class=""
     style="display: contents;"
   >
-    <div
-      class="c0 c1"
+    <span
+      class=" _dsp_contents"
     >
-      <button
-        class="c2"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c3"
-        />
-        <div
-          class="c4"
+          class="c0 c1"
         >
-          <div
-            class="c5 css-142zc9n"
-          >
-            Show more
-          </div>
-          <svg>
-            expando-icon-closed.svg
-          </svg>
-        </div>
-        <div
-          class="c3"
-        />
-      </button>
-      <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-      >
-        <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-        >
-          <div
-            class="c6 c7 css-142zc9n"
-            data-testid="swap-li-label"
-          >
-            Rate
-          </div>
-          <div
-            class="c6 c8 css-142zc9n"
-          >
-            <button
-              class="c9"
-              title="1 DEF = 1.00 ABC "
-            >
-              <div
-                class="c6 css-142zc9n"
-              >
-                1 DEF = 1.00 ABC 
-              </div>
-               
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        data-disable-theme="true"
-        style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
-      >
-        <div
-          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
-        >
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+          <button
+            class="c2"
           >
             <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+              class="c3"
+            />
+            <div
+              class="c4"
             >
               <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                class="c5 css-142zc9n"
               >
-                <div
-                  class="c6 c10 css-142zc9n"
-                  data-testid="swap-li-label"
-                >
-                  Max. slippage
-                </div>
-                <div
-                  class="c11"
+                Show more
+              </div>
+              <svg>
+                expando-icon-closed.svg
+              </svg>
+            </div>
+            <div
+              class="c3"
+            />
+          </button>
+          <div
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+            >
+              <div
+                class="c6 c7 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Rate
+              </div>
+              <div
+                class="c6 c8 css-142zc9n"
+              >
+                <button
+                  class="c9"
+                  title="1 DEF = 1.00 ABC "
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="c6 css-142zc9n"
+                  >
+                    1 DEF = 1.00 ABC 
+                  </div>
+                   
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            data-disable-theme="true"
+            style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
+          >
+            <div
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+              >
+                <div
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                >
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
                   >
                     <div
-                      class="c6 c8 css-142zc9n"
+                      class="c6 c10 css-142zc9n"
+                      data-testid="swap-li-label"
+                    >
+                      Max. slippage
+                    </div>
+                    <div
+                      class="c11"
                     >
                       <div
-                        class="c12 c13"
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                       >
                         <div
-                          class="c5 c14 css-1lgneq0"
+                          class="c6 c8 css-142zc9n"
                         >
-                          Auto
+                          <div
+                            class="c12 c13"
+                          >
+                            <div
+                              class="c5 c14 css-1lgneq0"
+                            >
+                              Auto
+                            </div>
+                             2%
+                          </div>
                         </div>
-                         2%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                >
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                  >
+                    <div
+                      class="c6 c10 css-142zc9n"
+                      data-testid="swap-li-label"
+                    >
+                      Receive at least
+                    </div>
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
+                        <div
+                          class="c6 c8 css-142zc9n"
+                        >
+                          0.00000000000000098 DEF
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+          >
             <div
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
             >
               <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                class="c6 c7 css-142zc9n"
+                data-testid="swap-li-label"
               >
-                <div
-                  class="c6 c10 css-142zc9n"
-                  data-testid="swap-li-label"
-                >
-                  Receive at least
-                </div>
-                <div
-                  class="c11"
-                >
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                  >
-                    <div
-                      class="c6 c8 css-142zc9n"
-                    >
-                      0.00000000000000098 DEF
-                    </div>
-                  </div>
-                </div>
+                Fee
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-      >
-        <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-        >
-          <div
-            class="c6 c7 css-142zc9n"
-            data-testid="swap-li-label"
-          >
-            Fee
-          </div>
-          <div
-            class="c6 c8 css-142zc9n"
-          >
-            <div
-              class="c15"
-              data-testid="loading-row"
-              height="15"
-              width="50"
-            />
-          </div>
-        </div>
-      </div>
-      <div
-        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-      >
-        <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
-        >
-          <div
-            class="c6 c10 css-142zc9n"
-            data-testid="swap-li-label"
-          >
-            Network cost
-          </div>
-          <div
-            class="c11"
-          >
-            <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-            >
               <div
                 class="c6 c8 css-142zc9n"
               >
@@ -932,21 +916,51 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
               </div>
             </div>
           </div>
+          <div
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+            >
+              <div
+                class="c6 c10 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Network cost
+              </div>
+              <div
+                class="c11"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
+                  <div
+                    class="c6 c8 css-142zc9n"
+                  >
+                    <div
+                      class="c15"
+                      data-testid="loading-row"
+                      height="15"
+                      width="50"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    <div
-      class="c12 c16 c17"
-    >
-      <button
-        class=" is_Button  t_group_item"
-        data-testid="confirm-swap-button"
-        dd-action-name="Finalizing quote..."
-        id="confirm-swap-or-send"
-        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(249, 249, 249); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; pointer-events: none; user-select: none; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid;"
-      >
-        <style>
-          
+        <div
+          class="c12 c16 c17"
+        >
+          <button
+            class=" is_Button  t_group_item"
+            data-testid="confirm-swap-button"
+            dd-action-name="Finalizing quote..."
+            id="confirm-swap-or-send"
+            style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(249, 249, 249); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; pointer-events: none; user-select: none; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid;"
+          >
+            <style>
+              
   @keyframes rotate360 {
       from {
           transform: rotate(0deg);
@@ -961,41 +975,43 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
       transform-origin: center center;
   }
 
-        </style>
-        <div
-          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column RotateElement"
-        >
-          <svg
-            fill="none"
-            stroke-width="8"
-            style="width: 20.7px; height: 20.7px;"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"
-              opacity="0.1"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="3"
-            />
-            <path
-              d="M21 12C21 7.02944 16.9706 3 12 3"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="3"
-            />
-          </svg>
+            </style>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column RotateElement"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="width: 20.7px; height: 20.7px;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"
+                  opacity="0.1"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                />
+                <path
+                  d="M21 12C21 7.02944 16.9706 3 12 3"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                />
+              </svg>
+            </div>
+            <span
+              class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+            >
+              Finalizing quote...
+            </span>
+          </button>
         </div>
-        <span
-          class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-        >
-          Finalizing quote...
-        </span>
-      </button>
-    </div>
-    <div
-      style="display: contents;"
-    />
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </span>
 </DocumentFragment>
 `;
@@ -1008,8 +1024,8 @@ exports[`SwapDetails.tsx renders slippage tooltip 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
+  color: #FC72FF;
+  stroke: #FC72FF;
   font-weight: 500;
 }
 
@@ -1025,19 +1041,27 @@ exports[`SwapDetails.tsx renders slippage tooltip 1`] = `
     class=""
     style="display: contents;"
   >
-    The maximum price movement before your transaction will revert.
-    <br />
-    <a
-      class="c0"
-      href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-      rel="noopener noreferrer"
-      target="_blank"
+    <span
+      class=" _dsp_contents"
     >
-      Learn more
-    </a>
-    <div
-      style="display: contents;"
-    />
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      >
+        The maximum price movement before your transaction will revert.
+        <br />
+        <a
+          class="c0"
+          href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Learn more
+        </a>
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </span>
 </DocumentFragment>
 `;

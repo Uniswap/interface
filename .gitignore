@@ -54,6 +54,3 @@ packages/uniswap/src/i18n/locales/source/*_old.json
 
 # CodeTours Extension
 .tours/*
-
-# auto-generated test ids
-apps/mobile/.maestro/scripts/testIds.js

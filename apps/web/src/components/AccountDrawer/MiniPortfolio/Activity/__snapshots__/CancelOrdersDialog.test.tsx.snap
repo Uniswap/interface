@@ -1,6 +1,91 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CancelOrdersDialog should render limit order text 1`] = `
+.c6 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c17 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.c4 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c4:hover {
+  opacity: 0.6;
+}
+
+.c4:active {
+  opacity: 0.4;
+}
+
+.c5 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  border-radius: 16px;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 485;
+  line-height: 20px;
+  background: #F9F9F9;
+  color: #7D7D7D;
+  stroke: none;
+}
+
+.c5:hover {
+  background: #22222212;
+  color: #222222;
+  opacity: unset;
+}
+
+.c5:hover path {
+  fill: #222222;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -16,7 +101,7 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
   gap: 24px;
 }
 
-.c4 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -31,7 +116,7 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
   gap: 16px;
 }
 
-.c6 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -54,40 +139,16 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
   align-items: center;
 }
 
-.c13 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c14 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.c7 {
-  color: #131313;
+.c11 {
+  color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
-.c9 {
-  color: rgba(19,19,19,0.63);
+.c13 {
+  color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -101,12 +162,12 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
   width: 100%;
 }
 
-.c5 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  background-color: rgba(34,34,34,0.05);
+  background-color: #22222212;
   width: 48px;
   height: 48px;
   -webkit-box-pack: center;
@@ -120,14 +181,14 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
   border-radius: 12px;
 }
 
-.c8 {
+.c12 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c10 {
+.c14 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -142,12 +203,12 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
   padding: 4px 0px;
 }
 
-.c11 {
+.c15 {
   cursor: auto;
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
 }
 
-.c12 {
+.c16 {
   text-align: right;
   overflow-wrap: break-word;
 }
@@ -164,18 +225,26 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
       style="display: contents;"
     >
       <span
-        class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+        class=" _dsp_contents"
       >
-        <h2
-          class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
-          data-disable-theme="true"
-          id="title-:r18:"
-          role="heading"
-        />
+        <span
+          class=" t_light _dsp_contents is_Theme"
+        >
+          <span
+            class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+          >
+            <h2
+              class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
+              data-disable-theme="true"
+              id="title-:r7:"
+              role="heading"
+            />
+          </span>
+          <div
+            style="display: contents;"
+          />
+        </span>
       </span>
-      <div
-        style="display: contents;"
-      />
     </span>
   </div>
   <div
@@ -188,7 +257,7 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
         class="t_sub_theme t_light _dsp_contents is_Theme"
       >
         <div
-          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-fixed _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _top-0px _left-0px _right-0px _bottom-0px _maxHeight-100vh _pointerEvents-auto _zIndex-1060"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-fixed _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _top-0px _left-0px _right-0px _bottom-0px _zIndex-1060 _maxHeight-100vh _pointerEvents-auto"
         >
           <div
             aria-hidden="true"
@@ -208,11 +277,11 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
                 style="display: contents; pointer-events: auto;"
               >
                 <dialog
-                  aria-describedby="description-:r18:"
-                  aria-labelledby="title-:r18:"
+                  aria-describedby="description-:r7:"
+                  aria-labelledby="title-:r7:"
                   class=" is_DialogContent "
                   data-state="open"
-                  id="content-:r18:"
+                  id="content-:r7:"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 0px 0px 0px 0px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: auto; overflow-y: auto; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
                   tabindex="-1"
                 >
@@ -226,32 +295,27 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
                         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
                       >
                         <a
+                          class="c4 c5"
                           href="https://support.uniswap.org/hc/en-us"
-                          style="text-decoration: none;"
+                          rel="noopener noreferrer"
                           target="_blank"
                         >
                           <div
-                            class="_backgroundColor-0hover-surface2Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-fit-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-4px _alignItems-center"
+                            class="c6 c7"
                           >
                             <svg
-                              fill="rgba(19, 19, 19, 0.63)"
+                              fill="none"
                               height="16"
-                              stroke="none"
                               viewBox="0 0 16 16"
                               width="16"
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
                                 d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                                fill="rgba(19, 19, 19, 0.63)"
+                                fill="#9B9B9B"
                               />
                             </svg>
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-                              data-disable-theme="true"
-                            >
-                              Get help
-                            </span>
+                            Get help
                           </div>
                         </a>
                         <div
@@ -264,7 +328,7 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
                             <svg
                               fill="none"
                               stroke-width="8"
-                              style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                              style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
                               viewBox="0 0 16 16"
                             >
                               <path
@@ -280,10 +344,10 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
                       class="c0 c1"
                     >
                       <div
-                        class="c4 c1"
+                        class="c8 c1"
                       >
                         <div
-                          class="c5"
+                          class="c9"
                         >
                           <svg
                             fill="none"
@@ -310,15 +374,15 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
                           </svg>
                         </div>
                         <div
-                          class="c6 c1"
+                          class="c10 c1"
                         >
                           <div
-                            class="c7 c8 css-4kpdx7"
+                            class="c11 c12 css-4kpdx7"
                           >
                             Cancel limit
                           </div>
                           <div
-                            class="c9 c10 css-1urox24"
+                            class="c13 c14 css-1urox24"
                           >
                             <div
                               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
@@ -336,13 +400,13 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
                                   class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
                                 >
                                   <div
-                                    class="c7 c11 css-142zc9n"
+                                    class="c11 c15 css-142zc9n"
                                     data-testid="swap-li-label"
                                   >
                                     Network cost
                                   </div>
                                   <div
-                                    class="c7 c12 css-142zc9n"
+                                    class="c11 c16 css-142zc9n"
                                   >
                                     <span>
                                       -
@@ -355,7 +419,7 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c13 c14"
+                        class="c6 c17"
                       >
                         <button
                           class=" is_Button  t_group_item"
@@ -369,7 +433,7 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
                         </button>
                         <button
                           class=" is_Button  t_group_item"
-                          style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(225, 15, 15); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+                          style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(255, 95, 82); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                         >
                           <span
                             class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"
@@ -392,6 +456,91 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
 `;
 
 exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
+.c6 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c17 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.c4 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c4:hover {
+  opacity: 0.6;
+}
+
+.c4:active {
+  opacity: 0.4;
+}
+
+.c5 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  border-radius: 16px;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 485;
+  line-height: 20px;
+  background: #F9F9F9;
+  color: #7D7D7D;
+  stroke: none;
+}
+
+.c5:hover {
+  background: #22222212;
+  color: #222222;
+  opacity: unset;
+}
+
+.c5:hover path {
+  fill: #222222;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -407,7 +556,7 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
   gap: 24px;
 }
 
-.c4 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -422,7 +571,7 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
   gap: 16px;
 }
 
-.c6 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -445,40 +594,16 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
   align-items: center;
 }
 
-.c13 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c14 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.c7 {
-  color: #131313;
+.c11 {
+  color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
-.c9 {
-  color: rgba(19,19,19,0.63);
+.c13 {
+  color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -492,12 +617,12 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
   width: 100%;
 }
 
-.c5 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  background-color: rgba(34,34,34,0.05);
+  background-color: #22222212;
   width: 48px;
   height: 48px;
   -webkit-box-pack: center;
@@ -511,14 +636,14 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
   border-radius: 12px;
 }
 
-.c8 {
+.c12 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c10 {
+.c14 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -533,12 +658,12 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
   padding: 4px 0px;
 }
 
-.c11 {
+.c15 {
   cursor: auto;
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
 }
 
-.c12 {
+.c16 {
   text-align: right;
   overflow-wrap: break-word;
 }
@@ -555,18 +680,26 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
       style="display: contents;"
     >
       <span
-        class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+        class=" _dsp_contents"
       >
-        <h2
-          class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
-          data-disable-theme="true"
-          id="title-:r3:"
-          role="heading"
-        />
+        <span
+          class=" t_light _dsp_contents is_Theme"
+        >
+          <span
+            class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+          >
+            <h2
+              class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
+              data-disable-theme="true"
+              id="title-:r1:"
+              role="heading"
+            />
+          </span>
+          <div
+            style="display: contents;"
+          />
+        </span>
       </span>
-      <div
-        style="display: contents;"
-      />
     </span>
   </div>
   <div
@@ -579,7 +712,7 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
         class="t_sub_theme t_light _dsp_contents is_Theme"
       >
         <div
-          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-fixed _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _top-0px _left-0px _right-0px _bottom-0px _maxHeight-100vh _pointerEvents-auto _zIndex-1060"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-fixed _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _top-0px _left-0px _right-0px _bottom-0px _zIndex-1060 _maxHeight-100vh _pointerEvents-auto"
         >
           <div
             aria-hidden="true"
@@ -599,11 +732,11 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
                 style="display: contents; pointer-events: auto;"
               >
                 <dialog
-                  aria-describedby="description-:r3:"
-                  aria-labelledby="title-:r3:"
+                  aria-describedby="description-:r1:"
+                  aria-labelledby="title-:r1:"
                   class=" is_DialogContent "
                   data-state="open"
-                  id="content-:r3:"
+                  id="content-:r1:"
                   style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 0px 0px 0px 0px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: auto; overflow-y: auto; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
                   tabindex="-1"
                 >
@@ -617,32 +750,27 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
                         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
                       >
                         <a
+                          class="c4 c5"
                           href="https://support.uniswap.org/hc/en-us"
-                          style="text-decoration: none;"
+                          rel="noopener noreferrer"
                           target="_blank"
                         >
                           <div
-                            class="_backgroundColor-0hover-surface2Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-fit-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-4px _alignItems-center"
+                            class="c6 c7"
                           >
                             <svg
-                              fill="rgba(19, 19, 19, 0.63)"
+                              fill="none"
                               height="16"
-                              stroke="none"
                               viewBox="0 0 16 16"
                               width="16"
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
                                 d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                                fill="rgba(19, 19, 19, 0.63)"
+                                fill="#9B9B9B"
                               />
                             </svg>
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-                              data-disable-theme="true"
-                            >
-                              Get help
-                            </span>
+                            Get help
                           </div>
                         </a>
                         <div
@@ -655,7 +783,7 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
                             <svg
                               fill="none"
                               stroke-width="8"
-                              style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                              style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
                               viewBox="0 0 16 16"
                             >
                               <path
@@ -671,10 +799,10 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
                       class="c0 c1"
                     >
                       <div
-                        class="c4 c1"
+                        class="c8 c1"
                       >
                         <div
-                          class="c5"
+                          class="c9"
                         >
                           <svg
                             fill="none"
@@ -701,15 +829,15 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
                           </svg>
                         </div>
                         <div
-                          class="c6 c1"
+                          class="c10 c1"
                         >
                           <div
-                            class="c7 c8 css-4kpdx7"
+                            class="c11 c12 css-4kpdx7"
                           >
                             Cancel order
                           </div>
                           <div
-                            class="c9 c10 css-1urox24"
+                            class="c13 c14 css-1urox24"
                           >
                             <div
                               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037"
@@ -727,13 +855,13 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
                                   class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
                                 >
                                   <div
-                                    class="c7 c11 css-142zc9n"
+                                    class="c11 c15 css-142zc9n"
                                     data-testid="swap-li-label"
                                   >
                                     Network cost
                                   </div>
                                   <div
-                                    class="c7 c12 css-142zc9n"
+                                    class="c11 c16 css-142zc9n"
                                   >
                                     <span>
                                       -
@@ -746,7 +874,7 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c13 c14"
+                        class="c6 c17"
                       >
                         <button
                           class=" is_Button  t_group_item"
@@ -760,7 +888,7 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
                         </button>
                         <button
                           class=" is_Button  t_group_item"
-                          style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(225, 15, 15); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
+                          style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(255, 95, 82); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; height: 40px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                         >
                           <span
                             class="font_button _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-smal108 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1269072494"

@@ -21,9 +21,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { TamaguiClickableStyle } from 'theme/components/styles'
 import { PositionField } from 'types/position'
-import { Button, DropdownButton, DropdownButtonProps, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
+import { DeprecatedButton } from 'ui'
+import { Button, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
@@ -50,17 +51,34 @@ interface WrappedNativeWarning {
 export const CurrencySelector = ({
   currencyInfo,
   onPress,
-  emphasis,
 }: {
   currencyInfo: Maybe<CurrencyInfo>
   onPress: () => void
-  emphasis?: DropdownButtonProps['emphasis']
 }) => {
   const { t } = useTranslation()
   const currency = currencyInfo?.currency
 
+  // TODO: [Button] blocked by (WALL-5674)
   return (
-    <DropdownButton emphasis={emphasis} onPress={onPress} elementPositioning="grouped" isExpanded={false}>
+    <DeprecatedButton
+      flex={1}
+      width="100%"
+      onPress={onPress}
+      py="$spacing12"
+      pr="$spacing12"
+      pl="$spacing16"
+      theme="primary"
+      backgroundColor={currency ? '$surface3' : '$accent3'}
+      justifyContent="space-between"
+      gap="$spacing8"
+      hoverStyle={{
+        backgroundColor: undefined,
+        opacity: 0.8,
+      }}
+      pressStyle={{
+        backgroundColor: undefined,
+      }}
+    >
       <Flex row gap="$spacing8" alignItems="center">
         {currency && (
           <TokenLogo
@@ -75,7 +93,8 @@ export const CurrencySelector = ({
           {currency ? currency.symbol : t('fiatOnRamp.button.chooseToken')}
         </Text>
       </Flex>
-    </DropdownButton>
+      <RotatableChevron direction="down" color="$neutral2" width={iconSizes.icon24} height={iconSizes.icon24} />
+    </DeprecatedButton>
   )
 }
 
@@ -95,7 +114,7 @@ const FeeTierContainer = styled(Flex, {
   borderWidth: 1,
   borderColor: '$surface3',
   position: 'relative',
-  ...ClickableTamaguiStyle,
+  ...TamaguiClickableStyle,
 })
 
 const FeeTier = ({
@@ -365,12 +384,10 @@ export function SelectTokensStep({
               ) : (
                 <Flex row gap="$gap16" $md={{ flexDirection: 'column' }}>
                   <CurrencySelector
-                    emphasis={token0CurrencyInfo ? undefined : 'primary'}
                     currencyInfo={token0CurrencyInfo}
                     onPress={() => setCurrencySearchInputState(PositionField.TOKEN0)}
                   />
                   <CurrencySelector
-                    emphasis={token1CurrencyInfo ? undefined : 'primary'}
                     currencyInfo={token1CurrencyInfo}
                     onPress={() => setCurrencySearchInputState(PositionField.TOKEN1)}
                   />

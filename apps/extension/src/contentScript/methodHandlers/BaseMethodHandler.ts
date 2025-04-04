@@ -11,5 +11,6 @@ export abstract class BaseMethodHandler<T extends WindowEthereumRequest> {
     protected readonly setConnectedAddressesAndMaybeEmit: (newConnectedAddresses: Address[]) => void,
   ) {}
 
-  handleRequest(_request: T, _source: MessageEventSource | null): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  handleRequest(request: T, source: MessageEventSource | null): void {}
 }

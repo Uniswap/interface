@@ -26,8 +26,8 @@ exports[`RemoveButton renders without error 1`] = `
       "alignItems": "center",
       "backgroundColor": {
         "dynamic": {
-          "dark": "rgba(255, 255, 255, 0.38)",
-          "light": "rgba(19, 19, 19, 0.35)",
+          "dark": "#5E5E5E",
+          "light": "#BFBFBF",
         },
       },
       "borderBottomLeftRadius": 999999,

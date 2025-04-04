@@ -56,7 +56,7 @@ export function EnterPasswordModal({
         </Text>
         <PasswordInput
           autoFocus
-          backgroundColor={showPasswordError ? '$statusCritical2' : '$surface1'}
+          backgroundColor={showPasswordError ? '$DEP_accentCriticalSoft' : '$surface1'}
           focusStyle={inputStyles.inputFocus}
           hideInput={hideInput}
           placeholder={t('common.input.password.placeholder')}

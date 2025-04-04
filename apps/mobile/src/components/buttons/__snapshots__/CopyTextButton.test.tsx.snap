@@ -13,7 +13,7 @@ exports[`CopyTextButton renders without error 1`] = `
     dd-action-name="Copy"
     focusVisibleStyle={
       {
-        "backgroundColor": "rgba(19, 19, 19, 0.1)",
+        "backgroundColor": "rgba(34,34,34,0.09)",
       }
     }
     forwardedRef={[Function]}
@@ -79,7 +79,7 @@ exports[`CopyTextButton renders without error 1`] = `
         {
           "dynamic": {
             "dark": "#FFFFFF",
-            "light": "#131313",
+            "light": "#222222",
           },
         }
       }
@@ -97,7 +97,7 @@ exports[`CopyTextButton renders without error 1`] = `
           "color": {
             "dynamic": {
               "dark": "#FFFFFF",
-              "light": "#131313",
+              "light": "#222222",
             },
           },
           "fontFamily": "Basel Grotesk",

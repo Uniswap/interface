@@ -37,11 +37,11 @@ exports[`EmptyState renders without error 1`] = `
         maxFontSizeMultiplier={1.4}
         style={
           {
-            "color": "rgba(255, 255, 255, 0.65)",
+            "color": "#9B9B9B",
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "400",
-            "lineHeight": 22.1,
+            "lineHeight": 24,
             "textAlign": "center",
           }
         }
@@ -104,11 +104,11 @@ exports[`ErrorState renders without error 1`] = `
         maxFontSizeMultiplier={1.4}
         style={
           {
-            "color": "rgba(255, 255, 255, 0.65)",
+            "color": "#9B9B9B",
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "400",
-            "lineHeight": 22.1,
+            "lineHeight": 24,
             "textAlign": "center",
           }
         }
@@ -193,11 +193,11 @@ exports[`Header renders without error 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": "rgba(255, 255, 255, 0.65)",
+              "color": "#9B9B9B",
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
-              "lineHeight": 20,
+              "lineHeight": 24,
             }
           }
           suppressHighlighting={true}
@@ -258,7 +258,7 @@ exports[`Header renders without error 1`] = `
               "borderWidth": 0,
             },
             {
-              "color": "rgba(255, 255, 255, 0.65)",
+              "color": "#9B9B9B",
               "height": 20,
               "width": 24,
             },
@@ -273,7 +273,7 @@ exports[`Header renders without error 1`] = `
         vbWidth={24}
       >
         <RNSVGGroup
-          color="rgba(255, 255, 255, 0.65)"
+          color="#9B9B9B"
           fill={null}
           propList={
             [
@@ -311,7 +311,7 @@ exports[`InlineErrorState renders without error 1`] = `
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#1F1F1F",
+      "backgroundColor": "#1B1B1B",
       "borderBottomLeftRadius": 16,
       "borderBottomRightRadius": 16,
       "borderTopLeftRadius": 16,
@@ -355,7 +355,7 @@ exports[`InlineErrorState renders without error 1`] = `
             "borderWidth": 0,
           },
           {
-            "color": "rgba(255, 255, 255, 0.38)",
+            "color": "#5E5E5E",
             "height": 16,
             "width": 16,
           },
@@ -371,7 +371,7 @@ exports[`InlineErrorState renders without error 1`] = `
       vbWidth={24}
     >
       <RNSVGGroup
-        color="rgba(255, 255, 255, 0.38)"
+        color="#5E5E5E"
         fill={
           {
             "type": 2,
@@ -411,7 +411,7 @@ exports[`InlineErrorState renders without error 1`] = `
           "fontFamily": "Basel Grotesk",
           "fontSize": 17,
           "fontWeight": "400",
-          "lineHeight": 20,
+          "lineHeight": 24,
           "textAlign": "center",
         }
       }

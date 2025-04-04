@@ -13,7 +13,7 @@ import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } 
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { UnavailableCollectionPage } from 'nft/components/collection/UnavailableCollectionPage'
-import { BagCloseIcon } from 'nft/components/iconExports'
+import { BagCloseIcon } from 'nft/components/icons'
 import { breakpointPaddingsCss } from 'nft/css/breakpoints'
 import { useBag, useCollectionFilters, useFiltersExpanded } from 'nft/hooks'
 import { useDynamicBlocklistedNftCollections } from 'nft/utils'

@@ -8,7 +8,7 @@ import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { Button, Flex } from 'ui/src'
+import { Button } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const Image = styled.img`
@@ -67,11 +67,9 @@ export default function NotFound({ title, subtitle, actionButton }: NotFoundProp
           <Image src={isDarkMode ? darkImage : lightImage} alt="Liluni" />
         </Header>
         {actionButton ?? (
-          <Flex row alignSelf="stretch">
-            <Button onPress={() => navigate('/')} variant="branded">
-              <Trans i18nKey="notFound.oops" />
-            </Button>
-          </Flex>
+          <Button size="small" onPress={() => navigate('/')} variant="branded">
+            <Trans i18nKey="notFound.oops" />
+          </Button>
         )}
       </Trace>
     </PageWrapper>

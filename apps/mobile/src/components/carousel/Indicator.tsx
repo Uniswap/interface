@@ -14,7 +14,7 @@ export function AnimatedIndicator({
   return (
     <Flex centered row gap="$spacing12" px="$spacing24">
       {[...Array(stepCount)].map((_, i) => (
-        <AnimatedIndicatorPill key={i} index={i} scroll={scroll} />
+        <AnimatedIndicatorPill index={i} scroll={scroll} />
       ))}
     </Flex>
   )

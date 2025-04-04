@@ -2,8 +2,8 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pool
 import {
   CHART_HEIGHT,
   CHART_WIDTH,
+  LiquidityPositionRangeChart,
   LiquidityPositionRangeChartLoader,
-  WrappedLiquidityPositionRangeChart,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { AdaptiveDropdown } from 'components/DropdownSelector/AdaptiveDropdown'
 import {
@@ -42,7 +42,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { togglePositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
@@ -331,7 +331,7 @@ export function LiquidityPositionCard({
               isMiniVersion={isSmallScreen}
               showMigrateButton={showMigrateButton}
             />
-            <WrappedLiquidityPositionRangeChart
+            <LiquidityPositionRangeChart
               version={liquidityPosition.version}
               chainId={liquidityPosition.chainId}
               currency0={

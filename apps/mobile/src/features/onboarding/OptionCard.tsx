@@ -46,9 +46,9 @@ export function OptionCard({
             alignItems="center"
             backgroundColor="$accent2"
             borderRadius="$roundedFull"
-            height={iconSizes.icon32}
+            height={iconSizes.icon28}
             justifyContent="center"
-            width={iconSizes.icon32}
+            width={iconSizes.icon28}
             {...(badgeText && { mt: '$spacing4' })}
           >
             {icon}

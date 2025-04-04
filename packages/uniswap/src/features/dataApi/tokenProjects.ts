@@ -26,8 +26,5 @@ export function useTokenProjects(currencyIds: CurrencyId[]): GqlResult<CurrencyI
 
   const retry = useCallback(() => refetch({ contracts }), [contracts, refetch])
 
-  return useMemo(
-    () => ({ data: formattedData, loading, refetch: retry, error }),
-    [formattedData, loading, retry, error],
-  )
+  return { data: formattedData, loading, refetch: retry, error }
 }

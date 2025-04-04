@@ -12,7 +12,7 @@ import {
   SquareRaribleMarketplaceIcon,
   SquareSudoSwapMarketplaceIcon,
   SquareZoraMarketplaceIcon,
-} from 'nft/components/iconExports'
+} from 'nft/components/icons'
 import { DetailsOrigin, GenieAsset, Listing, Markets, UpdatedGenieAsset, WalletAsset } from 'nft/types'
 import { v4 as uuidv4 } from 'uuid'
 

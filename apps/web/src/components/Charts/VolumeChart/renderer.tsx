@@ -143,11 +143,6 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       // Determine if bar is being hovered by checking if the cursor is without the bounds of the bar
       const isHovered = hoveredXPos && hoveredXPos >= stack.x - width / 4 && hoveredXPos <= stack.x + width / 4 + 1
       stack.ys.forEach((y, index) => {
-        // Skip bars with no volume
-        if (y === previousY) {
-          return
-        }
-
         const color = this._colors[this._colors.length - 1 - index] // color v2, then v3
         const stackBoxPositions = positionsBox(previousY, y, renderingScope.verticalPixelRatio)
         ctx.fillStyle = color

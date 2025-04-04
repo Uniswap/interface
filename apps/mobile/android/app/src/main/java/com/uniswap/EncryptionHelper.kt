@@ -1,18 +1,11 @@
 import com.lambdapioneer.argon2kt.Argon2Kt
 import com.lambdapioneer.argon2kt.Argon2KtResult
 import com.lambdapioneer.argon2kt.Argon2Mode
-import javax.crypto.spec.OAEPParameterSpec
-import javax.crypto.spec.PSource
 import javax.crypto.spec.SecretKeySpec
 import java.security.SecureRandom
 import android.util.Base64;
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
-import java.security.KeyPair
-import java.security.KeyPairGenerator
-import java.security.spec.MGF1ParameterSpec
-import java.security.spec.RSAKeyGenParameterSpec
-import java.math.BigInteger
 
 /**
  * Encrypts a string using an AES/GCM cipher and a key derived from a password and salt.
@@ -143,47 +136,4 @@ fun generateNonce(length: Int): ByteArray {
     val secureRandom = SecureRandom()
     secureRandom.nextBytes(bytes)
     return bytes
-}
-
-/**
- * Generates an RSA key pair for encrypting/decrypting seed phrases.
- * Matches the web implementation using RSA-OAEP with SHA-256.
- *
- * @return A Pair containing the Base64 encoded public key in SPKI format (first)
- *         and the KeyPair object (second) for later decryption
- */
-fun generateRsaKeyPair(): Pair<String, KeyPair> {
-    val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
-    val parameterSpec = RSAKeyGenParameterSpec(
-        2048, // modulusLength
-        BigInteger.valueOf(65537) // publicExponent (same as [1, 0, 1] in web)
-    )
-
-    keyPairGenerator.initialize(parameterSpec)
-    val keyPair = keyPairGenerator.generateKeyPair()
-
-    // Export public key in SPKI
-    val publicKeyEncoded = keyPair.public.encoded
-    val publicKeyBase64 = Base64.encodeToString(publicKeyEncoded, Base64.NO_WRAP)
-
-    return Pair(publicKeyBase64, keyPair)
-}
-
-val oaepParams = OAEPParameterSpec(
-    "SHA-256",  // digest algorithm
-    "MGF1",     // mask generation function
-    MGF1ParameterSpec.SHA256,  // MGF digest
-    PSource.PSpecified.DEFAULT  // source of encoding input
-)
-
-/**
- * Decrypts an encrypted seed phrase response using an RSA key pair.
- */
-fun decryptMnemonic(encryptedMnemonic: String, keyPair: KeyPair): String {
-    val cipher = Cipher.getInstance("RSA/None/OAEPPadding")
-    cipher.init(Cipher.DECRYPT_MODE, keyPair.private, oaepParams)
-
-    val encryptedBytes = Base64.decode(encryptedMnemonic, Base64.DEFAULT)
-    val decryptedBytes = cipher.doFinal(encryptedBytes)
-    return String(decryptedBytes, Charsets.UTF_8)
 }

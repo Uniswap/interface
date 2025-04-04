@@ -821,8 +821,8 @@ query TopTokens(
   }
 }
 
-query SearchTokens($searchQuery: String!, $chains: [Chain!]!, $tokenSearchV2Enabled: Boolean) {
-  searchTokens(searchQuery: $searchQuery, chains: $chains, tokenSearchV2Enabled: $tokenSearchV2Enabled) {
+query SearchTokens($searchQuery: String!, $chains: [Chain!]!) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains) {
     ...TokenParts
   }
 }
@@ -831,9 +831,8 @@ query ExploreSearch(
   $searchQuery: String!
   $nftCollectionsFilter: NftCollectionsFilterInput!
   $chains: [Chain!]
-  $tokenSearchV2Enabled: Boolean
 ) {
-  searchTokens(searchQuery: $searchQuery, chains: $chains, tokenSearchV2Enabled: $tokenSearchV2Enabled) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains) {
     chain
     address
     decimals

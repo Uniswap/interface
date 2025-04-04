@@ -13,7 +13,6 @@ import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
-  parseGetCapabilitiesRequest,
   parseSignRequest,
   parseTransactionRequest,
 } from 'src/features/walletConnect/utils'
@@ -212,7 +211,6 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
             EthMethod.PersonalSign,
             EthMethod.SignTypedData,
             EthMethod.SignTypedDataV4,
-            EthMethod.GetCapabilities,
           ],
           events: [EthEvent.AccountsChanged, EthEvent.ChainChanged],
           accounts,
@@ -295,36 +293,6 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
         }),
       )
 
-      break
-    }
-    case EthMethod.GetCapabilities: {
-      const namespaces = Object.values(requestSession.namespaces)
-      const eip155Account = namespaces[0]?.accounts[0]
-      const accountAddress = eip155Account ? getAccountAddressFromEIP155String(eip155Account) : undefined
-
-      const { account } = parseGetCapabilitiesRequest(method, topic, id, dapp, requestParams)
-      if (account !== accountAddress) {
-        // Reject unauthorized wallet_getCapabilities request
-        logger.warn('WalletConnectSaga', 'sessionRequestHandler', `Session request method is unauthorized: ${method}`)
-        yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
-          topic,
-          response: {
-            id,
-            jsonrpc: '2.0',
-            error: getSdkError('UNAUTHORIZED_METHOD'),
-          },
-        })
-      } else {
-        yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
-          topic,
-          response: {
-            id,
-            jsonrpc: '2.0',
-            // TODO: This would be where we add any changes in capabilities object (when decided)
-            result: {},
-          },
-        })
-      }
       break
     }
     default:

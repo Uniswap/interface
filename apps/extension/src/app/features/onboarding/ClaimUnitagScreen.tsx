@@ -8,9 +8,9 @@ import { Flex, Square } from 'ui/src'
 import { Person } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ClaimUnitagContent } from 'uniswap/src/features/unitags/ClaimUnitagContent'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
+import { ClaimUnitagContent } from 'wallet/src/features/unitags/ClaimUnitagContent'
 
 export function ClaimUnitagScreen(): JSX.Element {
   const { t } = useTranslation()

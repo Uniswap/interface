@@ -1,4 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber } from 'ethers'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'

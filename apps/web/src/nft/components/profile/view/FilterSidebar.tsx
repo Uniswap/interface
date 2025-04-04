@@ -1,4 +1,6 @@
-import { XMarkIcon } from 'nft/components/iconExports'
+import { LoadingBubble } from 'components/Tokens/loading'
+import styled from 'lib/styled-components'
+import { XMarkIcon } from 'nft/components/icons'
 import { Input } from 'nft/components/layout/Input'
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from 'nft/components/profile/view/ProfilePage'
 import { useFiltersExpanded, useWalletCollections } from 'nft/hooks'
@@ -7,21 +9,28 @@ import { CSSProperties, Dispatch, SetStateAction, useCallback, useEffect, useMem
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
-import { Flex, Image, LabeledCheckbox, Shine, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
+import { Flex, Image, LabeledCheckbox, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import noop from 'utilities/src/react/noop'
 
 const COLLECTION_ROW_HEIGHT = 44
 
+const LongLoadingBubble = styled(LoadingBubble)`
+  min-height: 15px;
+  width: 75%;
+`
+
+const SmallLoadingBubble = styled(LoadingBubble)`
+  height: 20px;
+  width: 20px;
+  margin-right: 8px;
+`
+
 const LoadingCollectionItem = ({ style }: { style?: CSSProperties }) => {
   return (
     <Flex row display="flex" justifyContent="space-between" style={style} pl="$spacing12" pr="$spacing16">
-      <Flex row display="flex" gap="$spacing12" flexBasis={1}>
-        <Shine>
-          <Flex width={20} height={20} borderRadius="$rounded8" backgroundColor="$surface3" />
-        </Shine>
-        <Shine>
-          <Flex width="75%" height={20} borderRadius="$rounded8" backgroundColor="$surface3" />
-        </Shine>
+      <Flex row display="flex" flexBasis={1}>
+        <SmallLoadingBubble />
+        <LongLoadingBubble />
       </Flex>
       <Flex borderColor="$surface3" aria-hidden={true} />
     </Flex>
@@ -194,7 +203,7 @@ const CollectionSelect = ({
         Collections
       </Text>
       <Flex pb="$spacing12" borderRadius="$rounded8">
-        <Flex pl="0" gap="$spacing8" maxHeight="80vh">
+        <Flex pl="0" gap="$spacing10" maxHeight="80vh">
           {!hideSearch && (
             <CollectionFilterSearch
               collectionSearchText={collectionSearchText}

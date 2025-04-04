@@ -12,8 +12,6 @@ type TestnetModeModalProps = {
   onClose: () => void
 }
 
-export type TestnetModeModalState = Omit<TestnetModeModalProps, 'onClose' | 'isOpen'>
-
 export function TestnetModeModal({
   isOpen,
   descriptionCopy,

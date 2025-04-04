@@ -72,7 +72,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             <Loader.Wallets repeat={5} />
           </Flex>
         ) : (
-          <ScrollView testID={TestID.SelectWalletScreenLoaded}>
+          <ScrollView>
             <Flex height="$spacing12" />
             <Flex gap="$spacing12">
               {importableAccounts?.map((account, i) => {
@@ -106,7 +106,6 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
               isDisabled={isLoading || !!showError || selectedAddresses.length === 0}
               variant="branded"
               size="large"
-              testID={TestID.Continue}
               onPress={onSubmit}
             >
               {t('common.button.continue')}

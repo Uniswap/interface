@@ -7,8 +7,8 @@ exports[`renders selection circle 1`] = `
       "alignItems": "center",
       "borderBottomColor": {
         "dynamic": {
-          "dark": "#FF37C7",
-          "light": "#FF37C7",
+          "dark": "#FC72FF",
+          "light": "#FC72FF",
         },
       },
       "borderBottomLeftRadius": 999999,
@@ -16,23 +16,23 @@ exports[`renders selection circle 1`] = `
       "borderBottomWidth": 1,
       "borderLeftColor": {
         "dynamic": {
-          "dark": "#FF37C7",
-          "light": "#FF37C7",
+          "dark": "#FC72FF",
+          "light": "#FC72FF",
         },
       },
       "borderLeftWidth": 1,
       "borderRightColor": {
         "dynamic": {
-          "dark": "#FF37C7",
-          "light": "#FF37C7",
+          "dark": "#FC72FF",
+          "light": "#FC72FF",
         },
       },
       "borderRightWidth": 1,
       "borderStyle": "solid",
       "borderTopColor": {
         "dynamic": {
-          "dark": "#FF37C7",
-          "light": "#FF37C7",
+          "dark": "#FC72FF",
+          "light": "#FC72FF",
         },
       },
       "borderTopLeftRadius": 999999,
@@ -50,8 +50,8 @@ exports[`renders selection circle 1`] = `
       {
         "backgroundColor": {
           "dynamic": {
-            "dark": "#FF37C7",
-            "light": "#FF37C7",
+            "dark": "#FC72FF",
+            "light": "#FC72FF",
           },
         },
         "borderBottomLeftRadius": 999999,

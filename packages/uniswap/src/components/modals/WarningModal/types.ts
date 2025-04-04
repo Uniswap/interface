@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { ColorTokens, GeneratedIcon } from 'ui/src'
+import { ThemeNames } from 'ui/src/theme'
 
 export enum WarningSeverity {
   None = 0,
@@ -13,6 +14,7 @@ export type WarningColor = {
   text: ColorTokens
   headerText: ColorTokens
   background: ColorTokens
+  buttonTheme: ThemeNames
 }
 
 export enum WarningAction {

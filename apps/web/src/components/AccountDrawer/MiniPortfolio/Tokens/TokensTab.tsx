@@ -25,7 +25,6 @@ import { useSortedPortfolioBalances } from 'uniswap/src/features/dataApi/balance
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
-import { getChainUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export default function Tokens() {
@@ -100,7 +99,6 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
       getTokenDetailsURL({
         address: tokenAddress,
         chain: chainId,
-        chainUrlParam: getChainUrlParam(chainId),
       }),
     )
     accountDrawer.close()

@@ -5,7 +5,6 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { useEffect } from 'react'
-import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { Address, Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
@@ -185,8 +184,6 @@ export function getBaseTradeAnalyticsProperties({
   currencyInAmountUSD,
   currencyOutAmountUSD,
   portfolioBalanceUsd,
-  presetPercentage,
-  preselectAsset,
   trace,
 }: {
   formatter: LocalizationContextState
@@ -194,8 +191,6 @@ export function getBaseTradeAnalyticsProperties({
   currencyInAmountUSD?: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD?: Maybe<CurrencyAmount<Currency>>
   portfolioBalanceUsd?: number
-  presetPercentage?: PresetPercentage
-  preselectAsset?: boolean
   trace: ITraceContext
 }): SwapTradeBaseProperties {
   const portionAmount = getClassicQuoteFromResponse(trade?.quote)?.portionAmount
@@ -234,8 +229,6 @@ export function getBaseTradeAnalyticsProperties({
     }),
     token_in_amount_usd: currencyInAmountUSD ? parseFloat(currencyInAmountUSD.toFixed(2)) : undefined,
     token_out_amount_usd: currencyOutAmountUSD ? parseFloat(currencyOutAmountUSD.toFixed(2)) : undefined,
-    preset_percentage: presetPercentage,
-    preselect_asset: preselectAsset,
     allowed_slippage:
       trade.slippageTolerance !== undefined ? parseFloat(trade.slippageTolerance.toFixed(2)) : undefined,
     allowed_slippage_basis_points: trade.slippageTolerance ? trade.slippageTolerance * 100 : undefined,

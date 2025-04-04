@@ -1,8 +1,10 @@
 /* eslint-env node */
+const { VanillaExtractPlugin } = require('@vanilla-extract/webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const { execSync } = require('child_process')
 const { readFileSync } = require('fs')
 const path = require('path')
+const ModuleScopePlugin = require(path.resolve(__dirname, '..', '..','node_modules/react-dev-utils/ModuleScopePlugin'))
 const { IgnorePlugin, ProvidePlugin, DefinePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
@@ -67,6 +69,9 @@ module.exports = {
             if (value.match(/babel/)) {return transform}
             return { ...transform, [key]: value }
           }, {}),
+          // Transform vanilla-extract using its own transformer.
+          // See https://sandroroth.com/blog/vanilla-extract-cra#jest-transform.
+          '\\.css\\.ts$': '@vanilla-extract/jest-transform',
           '\\.(t|j)sx?$': ['@swc/jest', swcrc],
         },
         // Use d3-arrays's build directly, as jest does not support its exports.
@@ -92,6 +97,7 @@ module.exports = {
         // - react-markdown requires process.cwd
         process: 'process/browser.js',
       }),
+      new VanillaExtractPlugin(),
       new RetryChunkLoadPlugin({
         cacheBust: `function() {
           return 'cache-bust=' + Date.now();
@@ -175,7 +181,16 @@ module.exports = {
           'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
           'react-native$': 'react-native-web',
         },
-        plugins: webpackConfig.resolve.plugins,
+        plugins: webpackConfig.resolve.plugins.map((plugin) => {
+          // Allow vanilla-extract in production builds.
+          // This is necessary because create-react-app guards against external imports.
+          // See https://sandroroth.com/blog/vanilla-extract-cra#production-build.
+          if (plugin instanceof ModuleScopePlugin) {
+            plugin.allowedPaths.push(path.join(__dirname, '..', '..', 'node_modules/@vanilla-extract/webpack-plugin'))
+          }
+
+          return plugin
+        }),
         // Webpack 5 does not resolve node modules, so we do so for those necessary:
         fallback: {
           // - react-markdown requires path

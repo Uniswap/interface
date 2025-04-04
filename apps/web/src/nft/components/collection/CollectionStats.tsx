@@ -9,12 +9,14 @@ import {
   TwitterIcon,
   VerifiedIcon,
   XMarkIcon,
-} from 'nft/components/iconExports'
+} from 'nft/components/icons'
+import { body, bodySmall, headlineMedium, headlineSmall } from 'nft/css/common.css'
+import { loadingAsset } from 'nft/css/loading.css'
 import { useBag } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { GenieCollection, TokenType } from 'nft/types'
 import { roundWholePercentage } from 'nft/utils/numbers'
-import { ReactNode, useEffect, useReducer, useState } from 'react'
+import { ReactNode, useEffect, useReducer, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { Anchor, Flex, FlexProps, Image, Shine, Text, styled as tamaguiStyled, useMedia, useSporeColors } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
@@ -27,7 +29,16 @@ const PercentChange = styled.div<{ isNegative: boolean }>`
   justify-content: center;
 `
 
+const CollectionNameText = styled.h1<{ isVerified: boolean }>`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  margin-right: ${({ isVerified }) => (isVerified ? '6px' : '0px')};
+`
+
 const CollectionNameTextLoading = styled.div`
+  ${loadingAsset}
   height: 32px;
   width: 236px;
 `
@@ -163,23 +174,11 @@ const CollectionName = ({
     <Flex row alignItems="center" justifyContent="space-between">
       <Flex minWidth={0} row alignItems="center">
         {isCollectionStatsLoading ? (
-          <Shine>
-            <CollectionNameTextLoading />
-          </Shine>
+          <CollectionNameTextLoading />
         ) : (
-          <Text
-            tag="h1"
-            variant={isMobile ? 'heading2' : 'heading1'}
-            $platform-web={{
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-            }}
-            overflow="hidden"
-            m={0}
-            mr={isVerified ? 6 : 0}
-          >
+          <CollectionNameText isVerified={isVerified} className={isMobile ? headlineSmall : headlineMedium}>
             {name}
-          </Text>
+          </CollectionNameText>
         )}
         {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
         <Flex
@@ -230,6 +229,47 @@ const CollectionName = ({
   )
 }
 
+const CollectionDescriptionText = styled.p<{ readMore: boolean }>`
+  vertical-align: top;
+  text-overflow: ellipsis;
+  margin: 0;
+
+  ${({ readMore }) =>
+    readMore
+      ? css`
+          white-space: normal;
+          overflow: visible;
+          display: inline;
+          max-width: 100%;
+        `
+      : css`
+          white-space: nowrap;
+          overflow: hidden;
+          display: inline-block;
+          max-width: min(calc(100% - 112px), 600px);
+        `}
+
+  a[href] {
+    color: ${({ theme }) => theme.neutral2};
+    text-decoration: none;
+
+    :hover {
+      opacity: ${({ theme }) => theme.opacity.hover};
+    }
+
+    :focus {
+      opacity: ${({ theme }) => theme.opacity.click};
+    }
+  }
+`
+
+const ReadMore = styled.span`
+  vertical-align: top;
+  color: ${({ theme }) => theme.neutral2};
+  cursor: pointer;
+  margin-left: 4px;
+`
+
 const CollectionDescriptionLoading = () => (
   <Shine>
     <Flex
@@ -245,85 +285,41 @@ const CollectionDescriptionLoading = () => (
 const CollectionDescription = ({ description }: { description: string }) => {
   const [showReadMore, setShowReadMore] = useState(false)
   const [readMore, toggleReadMore] = useReducer((state) => !state, false)
+  const baseRef = useRef<HTMLDivElement>(null)
+  const descriptionRef = useRef<HTMLDivElement>(null)
   const isCollectionStatsLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
   const isMobile = useIsMobile()
-  const colors = useSporeColors()
 
   useEffect(() => {
-    if (description.length > 75) {
+    if (
+      baseRef &&
+      descriptionRef &&
+      baseRef.current &&
+      descriptionRef.current &&
+      (descriptionRef.current.getBoundingClientRect().width >= baseRef.current?.getBoundingClientRect().width - 112 ||
+        descriptionRef.current.getBoundingClientRect().width >= 590)
+    ) {
       setShowReadMore(true)
     } else {
       setShowReadMore(false)
     }
-  }, [description])
+  }, [descriptionRef, baseRef, isCollectionStatsLoading, description])
 
   return isCollectionStatsLoading ? (
     <CollectionDescriptionLoading />
   ) : (
-    <Flex mt="$spacing12" $lg={{ mt: '$spacing16' }} maxWidth={680}>
-      <style>
-        {`
-          .descriptionMarkdown {
-            ${
-              readMore
-                ? css`
-                    white-space: normal;
-                    overflow: visible;
-                    display: inline;
-                    max-width: 100%;
-                  `
-                : css`
-                    white-space: nowrap;
-                    overflow: hidden;
-                    display: inline-block;
-                    max-width: min(calc(100% - 112px), 600px);
-                  `
-            }
-          
-            a[href] {
-              color: ${colors.neutral2.val};
-              text-decoration: none;
-          
-              :hover {
-                opacity: 0.5;
-              }
-          
-              :focus {
-                opacity: 0.5;
-              }
-            }
-          }
-        `}
-      </style>
-      <Text
-        tag="p"
-        variant={isMobile ? 'body3' : 'body2'}
-        className="descriptionMarkdown"
-        m={0}
-        $platform-web={{
-          verticalAlign: 'top',
-          textOverflow: 'ellipsis',
-        }}
-      >
+    <Flex ref={baseRef} mt="$spacing12" $lg={{ mt: '$spacing16' }} maxWidth={680}>
+      <CollectionDescriptionText readMore={readMore} ref={descriptionRef} className={isMobile ? bodySmall : body}>
         <ReactMarkdown
-          source={showReadMore && !readMore ? description.slice(0, 75).concat('...') : description}
+          source={description}
           allowedTypes={['link', 'paragraph', 'strong', 'code', 'emphasis', 'text']}
           renderers={{ paragraph: 'span' }}
         />
-      </Text>
+      </CollectionDescriptionText>
       {showReadMore && (
-        <Text
-          variant={isMobile ? 'body3' : 'body2'}
-          onPress={toggleReadMore}
-          ml={4}
-          cursor="pointer"
-          color="$neutral2"
-          $platform-web={{
-            verticalAlign: 'top',
-          }}
-        >
+        <ReadMore className={isMobile ? bodySmall : body} onClick={toggleReadMore}>
           show {readMore ? 'less' : 'more'}
-        </Text>
+        </ReadMore>
       )}
     </Flex>
   )

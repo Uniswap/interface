@@ -9,7 +9,6 @@ import {
   useExperimentWithExposureLoggingDisabled,
   useGate,
   useGateWithExposureLoggingDisabled,
-  useLayer,
 } from 'uniswap/src/features/gating/sdk/statsig'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -127,26 +126,4 @@ export function getDynamicConfigValue<
 >(config: Conf, key: Key, defaultValue: ValType, customTypeGuard?: (x: unknown) => boolean): ValType {
   const dynamicConfig = Statsig.getConfig(config)
   return getValueFromConfig(dynamicConfig, key, defaultValue, customTypeGuard)
-}
-
-export function getExperimentValueFromLayer<Layer extends string, Exp extends keyof ExperimentProperties, ValType>(
-  layerName: Layer,
-  param: ExperimentProperties[Exp],
-  defaultValue: ValType,
-  customTypeGuard?: (x: unknown) => x is ValType,
-): ValType {
-  const layer = Statsig.getLayer(layerName)
-  // we directly get param from layer; these are spread from experiments
-  return layer.get(param, defaultValue, customTypeGuard)
-}
-
-export function useExperimentValueFromLayer<Layer extends string, Exp extends keyof ExperimentProperties, ValType>(
-  layerName: Layer,
-  param: ExperimentProperties[Exp],
-  defaultValue: ValType,
-  customTypeGuard?: (x: unknown) => x is ValType,
-): ValType {
-  const { layer } = useLayer(layerName)
-  // we directly get param from layer; these are spread from experiments
-  return layer.get(param, defaultValue, customTypeGuard)
 }

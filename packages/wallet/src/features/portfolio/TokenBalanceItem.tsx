@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Shine, Text, TouchableArea, isWeb, useIsDarkMode } from 'ui/src'
+import { Flex, Shine, Text, TouchableArea, isWeb } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -40,9 +40,6 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
 
-  // Ensure items rerender when theme is switched
-  useIsDarkMode()
-
   const onPress = useCallback((): void => {
     onPressToken?.(currencyInfo.currencyId)
   }, [currencyInfo.currencyId, onPressToken])
@@ -79,9 +76,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         </Flex>
       </Flex>
 
-      {currencyInfo.isSpam === true ? undefined : (
-        <TokenBalanceRightSideColumn portfolioBalanceId={portfolioBalanceId} isLoading={isLoading} />
-      )}
+      <TokenBalanceRightSideColumn portfolioBalanceId={portfolioBalanceId} isLoading={isLoading} />
     </TouchableArea>
   )
 })

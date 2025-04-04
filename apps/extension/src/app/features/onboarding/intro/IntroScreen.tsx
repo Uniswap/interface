@@ -4,7 +4,6 @@ import { Complete } from 'src/app/features/onboarding/Complete'
 import { SyncFromPhoneButton } from 'src/app/features/onboarding/SyncFromPhoneButton'
 import { Terms } from 'src/app/features/onboarding/Terms'
 import { MainIntroWrapper } from 'src/app/features/onboarding/intro/MainIntroWrapper'
-import { useIsExtensionPasskeyImportEnabled } from 'src/app/hooks/useIsExtensionPasskeyImportEnabled'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
@@ -16,7 +15,6 @@ import { useTimeout } from 'utilities/src/time/timing'
 
 export function IntroScreen(): JSX.Element {
   const { t } = useTranslation()
-  const isPasskeyImportEnabled = useIsExtensionPasskeyImportEnabled()
 
   const isOnboarded = useSelector(isOnboardedSelector)
   // Detections for some unsupported browsers may not work until stylesheet is loaded
@@ -46,40 +44,26 @@ export function IntroScreen(): JSX.Element {
                 variant="branded"
                 onPress={(): void => navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Claim}`)}
               >
-                {isPasskeyImportEnabled
-                  ? t('onboarding.landing.button.createAccount')
-                  : t('onboarding.landing.button.create')}
+                {t('onboarding.landing.button.create')}
               </Button>
             </Flex>
             <Flex row>
               <Button
                 emphasis="secondary"
-                onPress={(): void =>
-                  navigate(
-                    `/${TopLevelRoutes.Onboarding}/${isPasskeyImportEnabled ? OnboardingRoutes.SelectImportMethod : OnboardingRoutes.Import}`,
-                  )
-                }
+                onPress={(): void => navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}`)}
               >
-                {isPasskeyImportEnabled
-                  ? t('onboarding.intro.button.signInOrImport')
-                  : t('onboarding.intro.button.alreadyHave')}
+                {t('onboarding.intro.button.alreadyHave')}
               </Button>
             </Flex>
           </Flex>
-
-          {isPasskeyImportEnabled ? null : (
-            <>
-              <Flex row alignItems="center" gap="$spacing16" py="$spacing4">
-                <Flex fill backgroundColor="$surface3" height={1} />
-                <Text color="$neutral3" variant="body3">
-                  {t('onboarding.intro.mobileScan.title')}
-                </Text>
-                <Flex fill backgroundColor="$surface3" height={1} />
-              </Flex>
-
-              <SyncFromPhoneButton fill />
-            </>
-          )}
+          <Flex row alignItems="center" gap="$spacing16" py="$spacing4">
+            <Flex fill backgroundColor="$surface3" height={1} />
+            <Text color="$neutral3" variant="body3">
+              {t('onboarding.intro.mobileScan.title')}
+            </Text>
+            <Flex fill backgroundColor="$surface3" height={1} />
+          </Flex>
+          <SyncFromPhoneButton fill />
         </MainIntroWrapper>
       </Flex>
     </Trace>

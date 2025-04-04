@@ -1,5 +1,4 @@
-/* eslint-disable jest/expect-expect */
-import { BigNumber } from '@ethersproject/bignumber'
+import { BigNumber } from 'ethers'
 import { toIncludeSameMembers } from 'jest-extended'
 import { EXTENSION_STATE_VERSION, migrations } from 'src/store/migrations'
 import {

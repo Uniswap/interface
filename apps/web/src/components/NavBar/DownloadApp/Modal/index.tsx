@@ -1,6 +1,5 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ChooseUnitagModal } from 'components/NavBar/DownloadApp/Modal/ChooseUnitag'
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
 import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
 import { PasskeyGenerationModal } from 'components/NavBar/DownloadApp/Modal/PasskeyGeneration'
@@ -20,8 +19,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 export enum Page {
   GetStarted = 0,
   GetApp = 1,
-  ChooseUnitag = 2,
-  PasskeyGeneration = 3,
+  PasskeyGeneration = 2,
 }
 
 export function GetTheAppModal() {
@@ -82,7 +80,6 @@ export function GetTheAppModal() {
               }}
             />
             <GetTheApp />
-            <ChooseUnitagModal setPage={setPage} />
             <PasskeyGenerationModal setPage={setPage} />
           </AnimateTransition>
         </Flex>

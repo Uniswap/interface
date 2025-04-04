@@ -129,10 +129,10 @@ export function ExploreScreen(): JSX.Element {
                 debouncedSearchFilter={debouncedSearchQuery}
                 parsedChainFilter={selectedChain}
                 searchFilter={searchQuery ?? ''}
-                onSelect={() => {}}
+                onSelectCurrency={() => {}}
               />
             ) : (
-              <SearchModalNoQueryList chainFilter={selectedChain} onSelect={() => {}} />
+              <SearchModalNoQueryList chainFilter={selectedChain} onSelectCurrency={() => {}} />
             )
           ) : debouncedSearchQuery.length === 0 ? (
             // Mimic ScrollView behavior with FlatList

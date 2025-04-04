@@ -1,16 +1,12 @@
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ArrowDownCircle, Bank, SendAction } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -18,7 +14,7 @@ import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/te
  * CTA buttons that appear at top of the screen showing actions such as
  * "Send", "Receive", "Buy" etc.
  */
-export function HomeScreenQuickActions(): JSX.Element {
+export function HomeScreenQuickActions({ onPressBuy }: { onPressBuy: () => void }): JSX.Element {
   const colors = useSporeColors()
   const iconSize = iconSizes.icon24
   const contentColor = colors.accent1.val
@@ -27,8 +23,6 @@ export function HomeScreenQuickActions(): JSX.Element {
   const dispatch = useDispatch()
   const { hapticFeedback } = useHapticFeedback()
   const openReceiveModal = useOpenReceiveModal()
-  const { isTestnetModeEnabled } = useEnabledChains()
-  const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
   const triggerHaptics = useCallback(async () => await hapticFeedback.light(), [hapticFeedback])
   const onPressSend = useCallback(async () => {
@@ -40,24 +34,6 @@ export function HomeScreenQuickActions(): JSX.Element {
     openReceiveModal()
     await triggerHaptics()
   }, [openReceiveModal, triggerHaptics])
-
-  const onPressBuy = useCallback(async (): Promise<void> => {
-    await triggerHaptics()
-    if (isTestnetModeEnabled) {
-      navigate(ModalName.TestnetMode, {
-        unsupported: true,
-        descriptionCopy: t('tdp.noTestnetSupportDescription'),
-      })
-      return
-    }
-    disableForKorea
-      ? navigate(ModalName.KoreaCexTransferInfoModal)
-      : dispatch(
-          openModal({
-            name: ModalName.FiatOnRampAggregator,
-          }),
-        )
-  }, [triggerHaptics, isTestnetModeEnabled, disableForKorea, dispatch, t])
 
   // PR #4621 Necessary to declare these as direct dependencies due to race
   // condition with initializing react-i18next and useMemo

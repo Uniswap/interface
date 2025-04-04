@@ -3,7 +3,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const NUM_DECIMALS_USD = 2

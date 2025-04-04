@@ -1,31 +1,25 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
 import { openSettings } from 'src/utils/linking'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { Flex, SpinningLoader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
-import { OSDynamicCloudIcon, PaperStack, Passkey, WalletFilled } from 'ui/src/components/icons'
+import { OSDynamicCloudIcon, PaperStack, WalletFilled } from 'ui/src/components/icons'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ElementNameType, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
-import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { exportSeedPhrase } from 'wallet/src/features/passkeys/passkeys'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 interface ImportMethodOption {
   title: (t: AppTFunction) => string
@@ -39,18 +33,9 @@ interface ImportMethodOption {
 
 const options: ImportMethodOption[] = [
   {
-    title: (t: AppTFunction) => t('onboarding.import.method.passkey.title'),
-    blurb: (t: AppTFunction) => t('onboarding.import.method.passkey.message'),
-    icon: <Passkey color="$accent1" size="$icon.18" />,
-    nav: OnboardingScreens.WelcomeSplash,
-    importType: ImportType.Passkey,
-    name: ElementName.OnboardingPasskey,
-    testID: TestID.OnboardingPasskey,
-  },
-  {
     title: (t: AppTFunction) => t('onboarding.import.method.import.title'),
     blurb: (t: AppTFunction) => t('onboarding.import.method.import.message'),
-    icon: <PaperStack color="$accent1" size="$icon.18" strokeWidth={1.5} />,
+    icon: <PaperStack color="$accent1" size={18} strokeWidth={1.5} />,
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
@@ -62,7 +47,7 @@ const options: ImportMethodOption[] = [
       isAndroid
         ? t(`onboarding.import.method.restore.message.android`)
         : t(`onboarding.import.method.restore.message.ios`),
-    icon: <OSDynamicCloudIcon color="$accent1" size="$icon.18" />,
+    icon: <OSDynamicCloudIcon color="$accent1" size="$icon.24" />,
     nav: OnboardingScreens.RestoreCloudBackup,
     importType: ImportType.Restore,
     name: ElementName.RestoreFromCloud,
@@ -77,9 +62,6 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const entryPoint = params?.entryPoint
-  const [isLoadingPasskey, setIsLoadingPasskey] = useState(false)
-
-  const { generateImportedAccounts } = useOnboardingContext()
 
   useNavigationHeader(navigation)
 
@@ -112,40 +94,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   }
 
   const handleOnPress = async (nav: OnboardingScreens, importType: ImportType): Promise<void> => {
-    if (isLoadingPasskey) {
-      return
-    }
-
     if (importType === ImportType.Restore) {
       await handleOnPressRestoreBackup()
-      return
-    }
-
-    if (importType === ImportType.Passkey) {
-      setIsLoadingPasskey(true)
-      const mnemonic = await exportSeedPhrase()
-      if (!mnemonic) {
-        navigate(ModalName.PasskeysHelp)
-        setIsLoadingPasskey(false)
-        return
-      }
-
-      const mnemonicId = await Keyring.importMnemonic(mnemonic)
-      const account = (await generateImportedAccounts({ mnemonicId }))[0]
-
-      if (!account) {
-        throw new Error('No account generated')
-      }
-
-      navigation.navigate({
-        name: OnboardingScreens.WelcomeSplash,
-        params: {
-          importType,
-          entryPoint,
-          address: account.address,
-        },
-        merge: true,
-      })
       return
     }
 
@@ -156,21 +106,13 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
     })
   }
 
-  let importOptions =
+  const importOptions =
     entryPoint === OnboardingEntryPoint.Sidebar
       ? options.filter((option) => option.name !== ElementName.RestoreFromCloud)
       : options
 
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  if (!isEmbeddedWalletEnabled) {
-    importOptions = importOptions.filter((option) => option.name !== ElementName.OnboardingPasskey)
-  }
-
   return (
-    <OnboardingScreen
-      Icon={WalletFilled}
-      title={isEmbeddedWalletEnabled ? t('onboarding.import.selectMethod.title') : t('onboarding.import.title')}
-    >
+    <OnboardingScreen Icon={WalletFilled} title={t('onboarding.import.title')}>
       <Flex
         grow
         gap="$spacing12"
@@ -183,13 +125,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             key={'connection-option-' + name + i}
             blurb={blurb(t)}
             elementName={name}
-            icon={
-              isLoadingPasskey && name === ElementName.OnboardingPasskey ? (
-                <SpinningLoader size={iconSizes.icon32} />
-              ) : (
-                icon
-              )
-            }
+            icon={icon}
             testID={testID}
             title={title(t)}
             onPress={(): Promise<void> => handleOnPress(nav, importType)}

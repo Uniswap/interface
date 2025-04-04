@@ -99,6 +99,7 @@ export function useUniversalRouterSwapCallback(
 
           const deadline = await getDeadline()
 
+          trace.setData('slippageTolerance', options.slippageTolerance.toFixed(2))
           const { calldata: data, value } = SwapRouter.swapCallParameters(trade, {
             slippageTolerance: options.slippageTolerance,
             deadlineOrPreviousBlockhash: deadline?.toString(),
@@ -118,6 +119,7 @@ export function useUniversalRouterSwapCallback(
           try {
             const gasEstimate = await provider.estimateGas(tx)
             gasLimit = calculateGasMargin(gasEstimate)
+            trace.setData('gasLimit', gasLimit.toNumber())
           } catch (gasError) {
             sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
               ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
@@ -131,21 +133,25 @@ export function useUniversalRouterSwapCallback(
             throw new GasEstimationError()
           }
 
-          const response = await trace.child({ name: 'Send transaction', op: 'wallet.send_transaction' }, async () => {
-            try {
-              const provider = providerRef.current
-              if (!provider) {
-                throw new Error('missing provider')
+          const response = await trace.child(
+            { name: 'Send transaction', op: 'wallet.send_transaction' },
+            async (walletTrace) => {
+              try {
+                const provider = providerRef.current
+                if (!provider) {
+                  throw new Error('missing provider')
+                }
+                return await provider.getSigner().sendTransaction({ ...tx, gasLimit })
+              } catch (error) {
+                if (didUserReject(error)) {
+                  walletTrace.setStatus('cancelled')
+                  throw new UserRejectedRequestError(swapErrorToUserReadableMessage(t, error))
+                } else {
+                  throw error
+                }
               }
-              return await provider.getSigner().sendTransaction({ ...tx, gasLimit })
-            } catch (error) {
-              if (didUserReject(error)) {
-                throw new UserRejectedRequestError(swapErrorToUserReadableMessage(t, error))
-              } else {
-                throw error
-              }
-            }
-          })
+            },
+          )
           sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
             ...formatSwapSignedAnalyticsEventProperties({
               trade,
@@ -177,10 +183,13 @@ export function useUniversalRouterSwapCallback(
           if (error instanceof GasEstimationError) {
             throw error
           } else if (error instanceof UserRejectedRequestError) {
+            trace.setStatus('cancelled')
             throw error
           } else if (error instanceof ModifiedSwapError) {
+            trace.setError(error, 'data_loss')
             throw error
           } else {
+            trace.setError(error)
             throw Error(swapErrorToUserReadableMessage(t, error))
           }
         }

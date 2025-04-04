@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useCommonTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptions'
 import { currencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { TokenOption } from 'uniswap/src/components/lists/types'
@@ -15,13 +14,10 @@ export function useCommonTokensOptionsWithFallback(
 
   const shouldFallback = data?.length === 0 && commonBases?.length
 
-  return useMemo(
-    () => ({
-      data: shouldFallback ? commonBases : data,
-      error: shouldFallback ? undefined : error,
-      refetch,
-      loading,
-    }),
-    [commonBases, data, error, loading, refetch, shouldFallback],
-  )
+  return {
+    data: shouldFallback ? commonBases : data,
+    error: shouldFallback ? undefined : error,
+    refetch,
+    loading,
+  }
 }

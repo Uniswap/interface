@@ -21,7 +21,7 @@ module.exports = {
     'no-unsanitized',
     '@typescript-eslint',
   ],
-  extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:react-hooks/recommended'],
+  extends: ['eslint:recommended'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
@@ -67,19 +67,6 @@ module.exports = {
 
     // Custom Rules
     'local-rules/no-unwrapped-t': ['error', { blockedElements: ['Flex', 'AnimatedFlex', 'TouchableArea', 'Trace'] }],
-
-    '@typescript-eslint/no-unused-vars': [
-      'error',
-      {
-        args: 'all',
-        argsIgnorePattern: '^_',
-        caughtErrors: 'all',
-        caughtErrorsIgnorePattern: 'e',
-        destructuredArrayIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        ignoreRestSiblings: true,
-      },
-    ],
   },
   overrides: [
     // All Typescript Files

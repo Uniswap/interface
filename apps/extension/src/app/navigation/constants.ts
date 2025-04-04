@@ -6,7 +6,6 @@ export enum TopLevelRoutes {
 }
 
 export enum OnboardingRoutes {
-  SelectImportMethod = 'select-import-method',
   Import = 'import',
   Create = 'create',
   Claim = 'claim',

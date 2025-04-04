@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import {
   CHAIN_TO_ADDRESSES_MAP,
   Currency,
@@ -15,6 +14,7 @@ import {
   OrderTextTable,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import ms from 'ms'
@@ -742,15 +742,6 @@ function parseRemoteActivity(
 ): Activity | undefined {
   try {
     if (!assetActivity) {
-      return undefined
-    }
-
-    // TODO: skip until offramp transactions are supported
-    if (
-      assetActivity.details.__typename === 'OffRampTransactionDetails' ||
-      (assetActivity.details.__typename === 'TransactionDetails' &&
-        assetActivity.details.type === TransactionType.OffRamp)
-    ) {
       return undefined
     }
 

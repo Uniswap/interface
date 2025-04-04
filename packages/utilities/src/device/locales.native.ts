@@ -12,7 +12,7 @@ export function getDeviceLocales(): DeviceLocale[] {
     const isKnownError = e instanceof Error && e.message.includes('Unsupported ISO 3166 country')
     if (!isKnownError) {
       logger.error(e, {
-        level: 'warn',
+        level: 'warning',
         tags: { file: 'utils.ts', function: 'getDeviceLocales' },
       })
     }

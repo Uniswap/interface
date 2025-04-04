@@ -40,8 +40,6 @@ export function useSwapCallback(): SwapCallback {
         onFailure,
         currencyInAmountUSD,
         currencyOutAmountUSD,
-        presetPercentage,
-        preselectAsset,
         isAutoSlippage,
         isFiatInputMode,
       } = args
@@ -57,8 +55,6 @@ export function useSwapCallback(): SwapCallback {
         trade,
         currencyInAmountUSD,
         currencyOutAmountUSD,
-        presetPercentage,
-        preselectAsset,
         portfolioBalanceUsd: portfolioData?.balanceUSD,
         trace,
       })

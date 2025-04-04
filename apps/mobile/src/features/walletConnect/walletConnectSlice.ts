@@ -40,12 +40,6 @@ export interface TransactionRequest extends BaseRequest {
   transaction: EthTransaction
 }
 
-export interface WalletCapabilitiesRequest extends Omit<BaseRequest, 'chainId'> {
-  type: EthMethod.GetCapabilities
-  account: Address // Wallet address
-  chainIds?: UniverseChainId[] // Optional array of chain IDs
-}
-
 export interface UwuLinkErc20Request extends BaseRequest {
   type: UwULinkMethod.Erc20Send
   recipient: {

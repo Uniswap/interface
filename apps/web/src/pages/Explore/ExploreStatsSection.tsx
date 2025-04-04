@@ -1,4 +1,4 @@
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { Fragment, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -123,13 +123,13 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
 
   return (
     <Flex group gap="$spacing4" animation="simple">
-      <Text variant="body4" color="$neutral2" $group-hover={{ color: isHoverable ? '$neutral2Hovered' : '$neutral2' }}>
+      <Text variant="body4" color="$neutral2" $group-hover={{ opacity: isHoverable ? 0.8 : 1 }}>
         {data.label}
       </Text>
       {isLoading ? (
         <LoadingBubble height="20px" width="52px" />
       ) : (
-        <Text variant="subheading1" color="$neutral1">
+        <Text variant="subheading1" color="$neutral1" $group-hover={{ opacity: isHoverable ? 0.8 : 1 }}>
           {data.value}
         </Text>
       )}
@@ -139,9 +139,7 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
         ) : (
           <Fragment>
             <DeltaArrow delta={data.change} size={12} />
-            <Text variant="body4" color="$neutral1">
-              {formatDelta(data.change)}
-            </Text>
+            <DeltaText delta={data.change}>{formatDelta(data.change)}</DeltaText>
           </Fragment>
         )}
       </Flex>

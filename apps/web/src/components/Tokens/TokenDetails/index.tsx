@@ -115,7 +115,11 @@ function TDPSwapComponent() {
         return
       }
 
-      const preloadedLogoSrc = getInitialLogoUrl(newDefaultToken.wrapped.address, newDefaultToken.chainId)
+      const preloadedLogoSrc = getInitialLogoUrl(
+        newDefaultToken.wrapped.address,
+        newDefaultToken.chainId,
+        newDefaultToken.isNative,
+      )
       const url = getTokenDetailsURL({
         // The function falls back to "NATIVE" if the address is null
         address: newDefaultToken.isNative ? null : newDefaultToken.address,

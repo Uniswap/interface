@@ -7,7 +7,7 @@ import { Erc20, Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { WRAP_FALLBACK_GAS_LIMIT_IN_GWEI } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTransactionRequestInfo'
+import { WRAP_FALLBACK_GAS_LIMIT_IN_GWEI } from 'uniswap/src/features/transactions/swap/hooks/useTransactionRequestInfo'
 import { getContract } from 'utilities/src/contracts/getContract'
 
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs

@@ -1,5 +1,5 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/iconExports'
+import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'
 import { useCollectionFilters, useIsCollectionLoading } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'

@@ -10,8 +10,8 @@ import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/
 import { useMigrateV3LpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useMigrateV3LpPositionCalldataQuery'
 import {
   CheckApprovalLPRequest,
-  LPprotocolItems,
   MigrateLPPositionRequest,
+  ProtocolItems,
   UniversalRouterVersion,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import {
@@ -64,7 +64,7 @@ export function MigrateV3PositionTxContextProvider({
       simulateTransaction: true,
       walletAddress: account.address,
       chainId: positionInfo.currency0Amount.currency.chainId,
-      protocol: LPprotocolItems.V3,
+      protocol: ProtocolItems.V3,
       positionToken: positionInfo.tokenId,
     }
   }, [positionInfo, account.address])
@@ -123,7 +123,7 @@ export function MigrateV3PositionTxContextProvider({
     }
     return {
       simulateTransaction: !approvalsNeeded,
-      inputProtocol: LPprotocolItems.V3,
+      inputProtocol: ProtocolItems.V3,
       tokenId: Number(positionInfo.tokenId),
       inputPosition: {
         pool: {
@@ -144,7 +144,7 @@ export function MigrateV3PositionTxContextProvider({
       inputSqrtRatioX96: positionInfo.pool.sqrtRatioX96?.toString(),
       inputPositionLiquidity: positionInfo.liquidity,
 
-      outputProtocol: LPprotocolItems.V4,
+      outputProtocol: ProtocolItems.V4,
       outputPosition: {
         pool: {
           token0: getCurrencyAddressForTradingApi(destinationPool.currency0),

@@ -169,13 +169,13 @@ exports[`SplitLogo renders without error 1`] = `
       style={
         {
           "borderColor": "#131313",
-          "borderRadius": 2.1,
+          "borderRadius": 2.25,
           "borderStyle": "solid",
           "borderWidth": 1.5,
           "flexDirection": "column",
-          "height": 7,
+          "height": 7.5,
           "overflow": "hidden",
-          "width": 7,
+          "width": 7.5,
           "zIndex": 10,
         }
       }
@@ -186,8 +186,8 @@ exports[`SplitLogo renders without error 1`] = `
         source="mock-asset-ARBITRUM_LOGO.png"
         style={
           {
-            "height": 4,
-            "width": 4,
+            "height": 4.5,
+            "width": 4.5,
           }
         }
       />

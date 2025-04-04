@@ -34,13 +34,13 @@ import AnimatedNumber, {
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { disconnectWallet } from 'uniswap/src/data/rest/embeddedWallet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
@@ -215,7 +215,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               {shouldShowBuyFiatButton && (
                 <ActionTile
                   dataTestId="wallet-buy-crypto"
-                  Icon={<Bank size={24} color="$accent1" />}
+                  Icon={<Bank size={24} />}
                   name={t('common.buy.label')}
                   onClick={handleBuyCryptoClick}
                   errorMessage={t('common.restricted.region')}
@@ -224,7 +224,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               )}
               <ActionTile
                 dataTestId="wallet-recieve-crypto"
-                Icon={<ArrowDownCircleFilled size={24} color="$accent1" />}
+                Icon={<ArrowDownCircleFilled size={24} />}
                 name={t('common.receive')}
                 onClick={openReceiveModal}
               />

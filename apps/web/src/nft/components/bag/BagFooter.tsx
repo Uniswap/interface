@@ -36,7 +36,7 @@ import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupp
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const InputCurrencyValue = ({

@@ -69,10 +69,10 @@ export function ServiceProviderSelector({
 }): JSX.Element {
   const onSelectServiceProvider = useCallback(
     (serviceProvider: FORServiceProvider) => {
-      onClose()
       navigate(ModalName.ExchangeTransferModal, {
         initialState: { serviceProvider },
       })
+      onClose()
     },
     [onClose],
   )

@@ -17,4 +17,18 @@ export const OnboardingPaneAnimatedContents = styled(Flex, {
   x: 0,
   opacity: 1,
   mx: 'auto',
+
+  variants: {
+    // note you can use _towards for implementing animations based on the direction!
+    going: (_towards: 'forward' | 'backward') => ({
+      enterStyle: {
+        opacity: 0,
+        zIndex: 1,
+      },
+      exitStyle: {
+        zIndex: 0,
+        opacity: 0,
+      },
+    }),
+  } as const,
 })

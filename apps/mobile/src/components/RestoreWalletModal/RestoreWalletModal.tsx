@@ -2,7 +2,6 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { Button, Flex, useSporeColors } from 'ui/src'
 import { ArrowDownCircle, WalletFilled } from 'ui/src/components/icons'
@@ -43,11 +42,8 @@ export function RestoreWalletModal(): JSX.Element | null {
   const colors = useSporeColors()
   const dispatch = useDispatch()
 
-  const { onClose } = useReactNavigationModal()
-
   const onRestore = (): void => {
-    onClose()
-    dispatch(closeAllModals()) // still need this until all modals are migrated to react-navigation
+    dispatch(closeAllModals())
     navigate(MobileScreens.OnboardingStack, {
       screen: OnboardingScreens.RestoreCloudBackupLoading,
       params: {

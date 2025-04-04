@@ -13,7 +13,6 @@ import {
 } from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
@@ -25,6 +24,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -178,8 +178,9 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: Swa
             position="absolute"
             right={0}
             top={0}
-            backgroundColor="$accent1"
-          />
+          >
+            <LinearGradient colors={['#F160F9', '#E14EE9']} end={[0, 1]} height="100%" start={[0, 0]} width="100%" />
+          </Flex>
           <Text allowFontScaling={false} color="$white" numberOfLines={1} variant="buttonLabel1">
             {t('common.button.swap')}
           </Text>
@@ -205,10 +206,15 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
   const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
+
+  const handleTestnetWarningModalClose = useCallback(() => {
+    setIsTestnetWarningModalOpen(false)
+  }, [])
 
   const onPress = (): void => {
     if (isTestnetModeEnabled) {
-      navigate(ModalName.TestnetMode, { unsupported: true })
+      setIsTestnetWarningModalOpen(true)
       return
     }
     dispatch(openModal({ name: ModalName.Explore }))
@@ -251,6 +257,7 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
 
   return (
     <TouchableArea activeOpacity={1} style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}>
+      <TestnetModeModal unsupported isOpen={isTestnetWarningModalOpen} onClose={handleTestnetWarningModalClose} />
       <TapGestureHandler testID={TestID.SearchTokensAndWallets} onGestureEvent={onGestureEvent}>
         <AnimatedFlex
           borderRadius="$roundedFull"

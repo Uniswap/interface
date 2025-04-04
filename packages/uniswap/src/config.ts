@@ -17,6 +17,7 @@ import {
   QUICKNODE_ENDPOINT_NAME,
   QUICKNODE_ENDPOINT_TOKEN,
   SCANTASTIC_API_URL_OVERRIDE,
+  SENTRY_DSN,
   SIMPLEHASH_API_KEY,
   SIMPLEHASH_API_URL,
   STATSIG_API_KEY,
@@ -59,6 +60,7 @@ export interface Config {
   quicknodeEndpointName: string
   quicknodeEndpointToken: string
   scantasticApiUrlOverride: string
+  sentryDsn: string
   simpleHashApiKey: string
   simpleHashApiUrl: string
   statsigProxyUrlOverride: string
@@ -103,6 +105,7 @@ const _config: Config = {
   quicknodeEndpointToken:
     process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN || process.env.QUICKNODE_ENDPOINT_TOKEN || QUICKNODE_ENDPOINT_TOKEN,
   scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE || SCANTASTIC_API_URL_OVERRIDE,
+  sentryDsn: process.env.REACT_APP_SENTRY_DSN || process.env.SENTRY_DSN || SENTRY_DSN,
   simpleHashApiKey: process.env.SIMPLEHASH_API_KEY || SIMPLEHASH_API_KEY,
   simpleHashApiUrl: process.env.SIMPLEHASH_API_URL || SIMPLEHASH_API_URL,
   statsigApiKey: process.env.REACT_APP_STATSIG_API_KEY || process.env.STATSIG_API_KEY || STATSIG_API_KEY,

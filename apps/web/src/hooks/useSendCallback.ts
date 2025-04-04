@@ -54,35 +54,39 @@ export function useSendCallback({
         }
 
         try {
-          const response = await trace.child({ name: 'Send transaction', op: 'wallet.send_transaction' }, async () => {
-            try {
-              const account = accountRef.current
-              let provider = providerRef.current
-              if (account.status !== 'connected') {
-                throw new Error('wallet must be connected to send')
+          const response = await trace.child(
+            { name: 'Send transaction', op: 'wallet.send_transaction' },
+            async (walletTrace) => {
+              try {
+                const account = accountRef.current
+                let provider = providerRef.current
+                if (account.status !== 'connected') {
+                  throw new Error('wallet must be connected to send')
+                }
+                if (account.chainId !== supportedTransactionChainId) {
+                  await switchChain(supportedTransactionChainId)
+                  // We need to reassign the provider after switching chains
+                  // otherwise sendTransaction will use the provider that is
+                  // not connected to the correct chain
+                  provider = providerRef.current
+                }
+                if (!provider) {
+                  throw new Error('missing provider')
+                }
+                return await provider.getSigner().sendTransaction({
+                  ...transactionRequest,
+                  ...gasFee?.params,
+                })
+              } catch (error) {
+                if (didUserReject(error)) {
+                  walletTrace.setStatus('cancelled')
+                  throw new UserRejectedRequestError(`Transfer failed: User rejected signature`)
+                } else {
+                  throw error
+                }
               }
-              if (account.chainId !== supportedTransactionChainId) {
-                await switchChain(supportedTransactionChainId)
-                // We need to reassign the provider after switching chains
-                // otherwise sendTransaction will use the provider that is
-                // not connected to the correct chain
-                provider = providerRef.current
-              }
-              if (!provider) {
-                throw new Error('missing provider')
-              }
-              return await provider.getSigner().sendTransaction({
-                ...transactionRequest,
-                ...gasFee?.params,
-              })
-            } catch (error) {
-              if (didUserReject(error)) {
-                throw new UserRejectedRequestError(`Transfer failed: User rejected signature`)
-              } else {
-                throw error
-              }
-            }
-          })
+            },
+          )
           const sendInfo: SendTransactionInfo = {
             type: TransactionType.SEND,
             currencyId: currencyId(currencyAmount.currency),
@@ -97,6 +101,7 @@ export function useSendCallback({
           })
         } catch (error) {
           if (error instanceof UserRejectedRequestError) {
+            trace.setStatus('cancelled')
             throw error
           } else {
             throw toReadableError(`Transfer failed:`, error)

@@ -3,7 +3,7 @@ rulesDirPlugin.RULES_DIR = '../../packages/uniswap/eslint_rules'
 
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/extension'],
+  extends: ['@uniswap/eslint-config/native-app'],
   plugins: ['rulesdir'],
   ignorePatterns: [
     'node_modules',

@@ -93,11 +93,11 @@ exports[`renders a relative change 1`] = `
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "color": "rgba(255, 255, 255, 0.65)",
+          "color": "#9B9B9B",
           "fontFamily": "Basel Grotesk",
           "fontSize": 17,
           "fontWeight": "400",
-          "lineHeight": 20,
+          "lineHeight": 24,
         }
       }
       suppressHighlighting={true}
@@ -202,11 +202,11 @@ exports[`renders placeholders with absolute change 1`] = `
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "color": "rgba(255, 255, 255, 0.65)",
+          "color": "#9B9B9B",
           "fontFamily": "Basel Grotesk",
           "fontSize": 17,
           "fontWeight": "400",
-          "lineHeight": 20,
+          "lineHeight": 24,
         }
       }
       suppressHighlighting={true}
@@ -242,11 +242,11 @@ exports[`renders placeholders without a change 1`] = `
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "color": "rgba(255, 255, 255, 0.65)",
+          "color": "#9B9B9B",
           "fontFamily": "Basel Grotesk",
           "fontSize": 17,
           "fontWeight": "400",
-          "lineHeight": 20,
+          "lineHeight": 24,
         }
       }
       suppressHighlighting={true}

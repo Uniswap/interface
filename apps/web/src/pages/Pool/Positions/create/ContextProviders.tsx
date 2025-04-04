@@ -35,7 +35,6 @@ import { PositionField } from 'types/position'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -283,7 +282,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     !!actualGasFee || needsApprovals /* skip */,
   )
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
-    toSupportedChainId(createCalldata?.create?.chainId) ?? undefined,
+    createCalldata?.create?.chainId,
     actualGasFee || calculatedGasFee,
   )
 

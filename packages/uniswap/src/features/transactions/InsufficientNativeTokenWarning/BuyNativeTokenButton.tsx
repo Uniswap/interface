@@ -33,8 +33,8 @@ export function BuyNativeTokenButton({
   )
 
   const onPressBuyFiatOnRamp = (): void => {
-    onPress?.()
     navigateToFiatOnRamp({ prefilledCurrency: fiatOnRampCurrency })
+    onPress?.()
   }
 
   return (

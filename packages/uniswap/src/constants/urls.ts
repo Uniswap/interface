@@ -57,7 +57,6 @@ export const uniswapUrls = {
     revokeExplainer: `${helpUrl}/articles/15724901841037-How-to-revoke-a-token-approval`,
     supportedNetworks: `${helpUrl}/articles/14569415293325`,
     swapFeeInfo: `${helpUrl}/articles/20131678274957`,
-    passkeysInfo: helpUrl, // TODO(WALL-6336): add Help link
     swapProtection: `${helpUrl}/articles/18814993155853`,
     swapSlippage: `${helpUrl}/articles/8643879653261-What-is-Price-Slippage-`,
     tokenWarning: `${helpUrl}/articles/8723118437133-What-are-token-warnings-`,

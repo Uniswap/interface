@@ -33,7 +33,7 @@ exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
   font-weight: inherit;
   font-size: inherit;
   line-height: inherit;
-  color: #131313;
+  color: #222222;
   white-space: nowrap;
   margin: 0;
 }
@@ -42,21 +42,29 @@ exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
     class=""
     style="display: contents;"
   >
-    <div
-      aria-current="page"
-      class="c0 c1 c2"
-      data-testid="current-breadcrumb"
+    <span
+      class=" _dsp_contents"
     >
-      <h1
-        class="c3"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        ETH
-      </h1>
-       
-    </div>
-    <div
-      style="display: contents;"
-    />
+        <div
+          aria-current="page"
+          class="c0 c1 c2"
+          data-testid="current-breadcrumb"
+        >
+          <h1
+            class="c3"
+          >
+            ETH
+          </h1>
+           
+        </div>
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </span>
 </DocumentFragment>
 `;
@@ -94,7 +102,7 @@ exports[`BreadcrumbNav renders hover components correctly 1`] = `
   font-weight: inherit;
   font-size: inherit;
   line-height: inherit;
-  color: #131313;
+  color: #222222;
   white-space: nowrap;
   margin: 0;
 }
@@ -109,27 +117,35 @@ exports[`BreadcrumbNav renders hover components correctly 1`] = `
     class=""
     style="display: contents;"
   >
-    <div
-      aria-current="page"
-      class="c0 c1 c2"
-      data-testid="current-breadcrumb"
+    <span
+      class=" _dsp_contents"
     >
-      <h1
-        class="c3"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        WBTC
-      </h1>
-       
-      <div
-        class="c0 c1 c4"
-        data-testid="breadcrumb-token-address"
-      >
-        0x2260...C599
-      </div>
-    </div>
-    <div
-      style="display: contents;"
-    />
+        <div
+          aria-current="page"
+          class="c0 c1 c2"
+          data-testid="current-breadcrumb"
+        >
+          <h1
+            class="c3"
+          >
+            WBTC
+          </h1>
+           
+          <div
+            class="c0 c1 c4"
+            data-testid="breadcrumb-token-address"
+          >
+            0x2260...C599
+          </div>
+        </div>
+        <div
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </span>
 </DocumentFragment>
 `;

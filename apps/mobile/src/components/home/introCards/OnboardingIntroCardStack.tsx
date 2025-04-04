@@ -3,6 +3,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { openModal } from 'src/features/modals/modalSlice'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
@@ -64,11 +65,13 @@ export function OnboardingIntroCardStack({
   }, [address])
 
   const navigateToUnitagIntro = useCallback(() => {
-    navigate(ModalName.UnitagsIntro, {
-      address,
-      entryPoint: MobileScreens.Home,
-    })
-  }, [address])
+    dispatch(
+      openModal({
+        name: ModalName.UnitagsIntro,
+        initialState: { address, entryPoint: MobileScreens.Home },
+      }),
+    )
+  }, [dispatch, address])
 
   const { cards: sharedCards } = useSharedIntroCards({
     navigateToUnitagClaim,

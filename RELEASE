@@ -1,78 +1,9 @@
-IPFS hash of the deployment:
-- CIDv0: `QmSSLdtykr4KjVJGyMjMx4hmMFVhcGkATFLJtfyeMTYMWC`
-- CIDv1: `bafybeib44pgd47ej4v7i33ggxbaeadodcp562yv7ct2lgbmjv6fkj367uu`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Settings Refresh: Enjoy a more streamlined settings page, with a clearer view of your active wallets. Also note that Manage Connections has now moved out of settings and can be accessed by clicking your profile image. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Token Actions: On specific token pages, find a new action button on the bottom right corner which allow you to do things like buy, sell, send, and receive. 
 
-IPFS gateways:
-- https://bafybeib44pgd47ej4v7i33ggxbaeadodcp562yv7ct2lgbmjv6fkj367uu.ipfs.dweb.link/
-- [ipfs://QmSSLdtykr4KjVJGyMjMx4hmMFVhcGkATFLJtfyeMTYMWC/](ipfs://QmSSLdtykr4KjVJGyMjMx4hmMFVhcGkATFLJtfyeMTYMWC/)
+Other changes: 
 
-## 5.78.0 (2025-04-02)
-
-
-### Features
-
-* **web:** [EW] list all passkeys for a wallet (#14815) 3d90cdd
-* **web:** add custom cache-control headers to the CF Pages app (#17936) 9310ef1
-* **web:** add onPress to search modal items (#17039) aafb4de
-* **web:** lazy load nft icons (#17963) e457d19
-* **web:** redo search text input for search modal (#17040) 6ed4d95
-* **web:** reduce amount of Mini Portfolio code in initial bundle (#17962) 73d4c24
-* **web:** refactor transactions tables (#17266) 68a27df
-* **web:** remove sentry (#17528) 8460708
-* **web:** set cache-control headers for vercel deploys (#17945) 6116753
-* **web:** table refactor (#17265) ba668ea
-* **web:** table scroll button (#17355) 7e1bdc8
-* **web:** use ErrorBoundary for LiquidityPositionRangeChart (#17965) 7c78cb3
-* **web:** use new REST endpoint for sitemap, add new chains (#17657) 5666bf0
-
-
-### Bug Fixes
-
-* **web:** add animations onpress and hover (#17725) 18f86cc
-* **web:** add presets to the lp screen (#17930) 7e70c82
-* **web:** console errors in LP flow - dedupe TamaguiClickableStyle (#17984) 04910e2
-* **web:** emphasis on dropdown button in LP step (#17972) 63bd289
-* **web:** fix crash in position range chart when currency decimals is zero (#17882) 6649588
-* **web:** fix range inputs with decimals (#17902) 561cab1
-* **web:** fix wrong useEnabledChain usage in WebUniswapContext (#17698) 9855fc5
-* **web:** handle scientific notation in LP range input auto-range (#18005) 1b00490
-* **web:** hover state on positions page (#17747) da3f3ff
-* **web:** migrate CopyHelper to tamagui (#17560) b6cec36
-* **web:** move vercel config back to root (#18039) 43ea5ef
-* **web:** patch stacked zindex sheets (#17740) a8bd517
-* **web:** patch z-index stacking (#17904) e3ce986
-* **web:** pull out landing page e2e tests around experimental CTAs (#17651) 2274a62
-* **web:** remove animation to prevent transparent flicker (#17745) 85e416d
-* **web:** remove styled components from positioncard/v2 (#17681) b0ec455
-* **web:** remove styled components from sushi card (#17682) 512ef16
-* **web:** remove styled components positions/index (#17680) f52bcc5
-* **web:** remove text 0 appearing on chart (#17861) ce86a70
-* **web:** update animations according to fred feedback (#17588) c5636ca
-* **web:** update line chart colors (#17832) c1091e7
-* **web:** update missed PR comments (#18029) 23d4d3b
-
-
-### Continuous Integration
-
-* **web:** update sitemaps dfb1790
-
-
-### Tests
-
-* **web:** add e2e fees tests (#17600) ab472ec
-
-
-### Code Refactoring
-
-* **web:** extract SlippageWarningCaption (#17639) d0677bb
-* **web:** migrate from styled component to tamagui and ui cleanup (#17649) 4ebbfa7
-* **web:** move SwapFormSettings inside swap/form/header (#17536) 624d58f
-
-
+- Various bug fixes and performance improvements

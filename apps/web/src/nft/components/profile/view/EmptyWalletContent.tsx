@@ -1,4 +1,5 @@
 import { EmptyActivityIcon, EmptyNftsIcon, EmptyPoolsIcon, EmptyTokensIcon } from 'nft/components/profile/view/icons'
+import { headlineMedium } from 'nft/css/common.css'
 import { useCallback } from 'react'
 import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -71,7 +72,7 @@ export const EmptyWalletModule = ({ type = 'nft', onNavigateClick }: EmptyWallet
       $sm={{ pt: '$spacing8' }}
     >
       {content.icon}
-      <Text variant="subheading2" textAlign="center" mt="$spacing12">
+      <Text variant="subheading2" textAlign="center" mt="$spacing12" className={headlineMedium}>
         {content.title}
       </Text>
       <Text variant="body3" textAlign="center" mt="$spacing8" color="$neutral2">

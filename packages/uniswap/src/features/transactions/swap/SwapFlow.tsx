@@ -22,10 +22,10 @@ import {
   useSwapFormContext,
 } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapTxContextProviderTradingApi } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
-import { SwapFormButton } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/SwapFormButton'
-import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
+import { SwapFormButton } from 'uniswap/src/features/transactions/swap/form/SwapFormButton'
+import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen'
+import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { isInterface } from 'utilities/src/platform'

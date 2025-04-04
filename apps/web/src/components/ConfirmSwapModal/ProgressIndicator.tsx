@@ -1,5 +1,5 @@
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
-import { ICON_SIZE, Step, StepDetails } from 'components/ConfirmSwapModal/Step'
+import { Step, StepDetails } from 'components/ConfirmSwapModal/Step'
 import { Sign } from 'components/Icons/Sign'
 import { Swap } from 'components/Icons/Swap'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -17,7 +17,7 @@ import { isLimitTrade, isUniswapXSwapTrade, isUniswapXTradeType } from 'state/ro
 import { useOrder } from 'state/signatures/hooks'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import { colors } from 'theme/colors'
-import { Divider } from 'theme/components/Dividers'
+import { Divider } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Flex } from 'ui/src'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
@@ -30,7 +30,12 @@ const DividerContainer = styled(Column)`
   padding: 0px 16px;
   justify-content: center;
 `
-
+const Edge = styled.div`
+  width: 2px;
+  height: 10px;
+  background-color: ${({ theme }) => theme.neutral3};
+  margin: 0px 27px;
+`
 type ProgressIndicatorStep = Extract<
   ConfirmModalState,
   | ConfirmModalState.APPROVING_TOKEN
@@ -113,7 +118,7 @@ export default function ProgressIndicator({
   const stepDetails: Record<ProgressIndicatorStep, StepDetails> = useMemo(
     () => ({
       [ConfirmModalState.WRAPPING]: {
-        icon: <CurrencyLogo currency={trade?.inputAmount.currency} size={ICON_SIZE} />,
+        icon: <CurrencyLogo currency={trade?.inputAmount.currency} size={24} />,
         rippleColor: inputTokenColor,
         previewTitle: t('common.wrap', { symbol: nativeCurrency.symbol }),
         actionRequiredTitle: t('common.wrapIn', { symbol: nativeCurrency.symbol }),
@@ -122,14 +127,14 @@ export default function ProgressIndicator({
         learnMoreLinkHref: uniswapUrls.helpArticleUrls.wethExplainer,
       },
       [ConfirmModalState.RESETTING_TOKEN_ALLOWANCE]: {
-        icon: <CurrencyLogo currency={trade?.inputAmount.currency} size={ICON_SIZE} />,
+        icon: <CurrencyLogo currency={trade?.inputAmount.currency} size={24} />,
         rippleColor: inputTokenColor,
         previewTitle: t('common.resetLimit', { symbol: trade?.inputAmount.currency.symbol }),
         actionRequiredTitle: t('common.resetLimitWallet', { symbol: trade?.inputAmount.currency.symbol }),
         inProgressTitle: t('common.resettingLimit', { symbol: trade?.inputAmount.currency.symbol }),
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
-        icon: <CurrencyLogo currency={trade?.inputAmount.currency} size={ICON_SIZE} />,
+        icon: <CurrencyLogo currency={trade?.inputAmount.currency} size={24} />,
         rippleColor: inputTokenColor,
         previewTitle: t('common.approveSpend', { symbol: trade?.inputAmount.currency.symbol }),
         actionRequiredTitle: t('common.wallet.approve'),
@@ -169,7 +174,7 @@ export default function ProgressIndicator({
   }
 
   return (
-    <Flex>
+    <Column>
       <DividerContainer>
         <Divider />
       </DividerContainer>
@@ -177,10 +182,10 @@ export default function ProgressIndicator({
         return (
           <Flex key={`progress-indicator-step-${i}`}>
             <Step stepStatus={getStatus(step)} stepDetails={stepDetails[step]} />
-            {i !== steps.length - 1 && <Flex width={2} height={10} backgroundColor="$neutral3" ml={18} />}
+            {i !== steps.length - 1 && <Edge />}
           </Flex>
         )
       })}
-    </Flex>
+    </Column>
   )
 }

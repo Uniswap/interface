@@ -1,4 +1,4 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
+import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
@@ -87,7 +87,7 @@ export const CurrencySelect = styled(ButtonGray)<CurrencySelectProps>`
 
   &:hover,
   &:active {
-    background-color: ${({ theme, selected }) => (selected ? theme.surface1Hovered : theme.accent1Hovered)};
+    background-color: ${({ theme, selected }) => (selected ? theme.surface2 : theme.accent1)};
   }
 
   &:before {
@@ -403,7 +403,11 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                       ) : null}
                     </ThemedText.DeprecatedBody>
                     {showMaxButton && selectedCurrencyBalance ? (
-                      <Trace logPress element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}>
+                      <Trace
+                        logPress
+                        eventOnTrigger={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
+                        element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}
+                      >
                         <Button
                           variant="branded"
                           emphasis="secondary"

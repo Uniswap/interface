@@ -6,6 +6,7 @@ import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { ColumnHeaders } from 'nft/components/explore/CollectionTable'
+import * as styles from 'nft/components/explore/Explore.css'
 import { CollectionTableColumn } from 'nft/types'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -147,42 +148,18 @@ export function Table<D extends Record<string, unknown>>({
   }
 
   return (
-    <table
-      {...getTableProps()}
-      style={{
-        borderCollapse: 'collapse',
-        boxShadow: '0 0 0 1px rgba(153, 161, 189, 0.24)',
-        borderSpacing: '0px 40px',
-        background: colors.surface1.val,
-        width: '100%',
-        borderRadius: '12px',
-        borderStyle: 'none',
-      }}
-    >
-      <thead
-        style={{
-          marginRight: '12px',
-          borderColor: colors.surface3.val,
-          borderWidth: '1px',
-          borderBottomStyle: 'solid',
-        }}
-      >
+    <table {...getTableProps()} className={styles.table}>
+      <thead className={styles.thead}>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column, index) => {
               return (
                 <StyledHeader
+                  className={styles.th}
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   style={{
-                    fontWeight: '400',
-                    fontSize: '14px',
-                    lineHeight: '24px',
                     textAlign: index === 0 ? 'left' : 'right',
                     paddingLeft: index === 0 ? (isMobile ? '16px' : '52px') : 0,
-                    paddingTop: '12px',
-                    paddingBottom: '12px',
-                    color: colors.neutral2.val,
-                    paddingRight: index === headerGroup.headers.length - 1 ? '20px' : 0,
                   }}
                   disabled={column.disableSortBy}
                   key={index}
@@ -226,17 +203,10 @@ export function Table<D extends Record<string, unknown>>({
                 {row.cells.map((cell, cellIndex) => {
                   return (
                     <td
+                      className={styles.td}
                       {...cell.getCellProps()}
                       key={cellIndex}
                       style={{
-                        fontWeight: '400',
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        paddingTop: '4px',
-                        paddingBottom: '4px',
-                        textAlign: 'right',
-                        position: 'relative',
-                        paddingRight: cellIndex === row.cells.length - 1 ? '20px' : 0,
                         maxWidth: cellIndex === 0 ? (isMobile ? MOBILE_CELL_WIDTH : DESKTOP_CELL_WIDTH) : CELL_WIDTH,
                       }}
                     >
@@ -271,39 +241,19 @@ interface LoadingTableProps {
 
 function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTableProps) {
   const colors = useSporeColors()
-  const isMobile = useIsMobile()
   return (
-    <table
-      {...props}
-      style={{
-        borderCollapse: 'collapse',
-        boxShadow: '0 0 0 1px rgba(153, 161, 189, 0.24)',
-        borderSpacing: '0px 40px',
-        background: colors.surface1.val,
-        width: '100%',
-        borderRadius: '12px',
-        borderStyle: 'none',
-      }}
-    >
-      <thead
-        style={{ marginRight: '12px', borderColor: 'var(--surface3)', borderWidth: '1px', borderBottomStyle: 'solid' }}
-      >
+    <table {...props} className={styles.table}>
+      <thead className={styles.thead}>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
             {headerGroup.headers.map((column, index) => {
               return (
                 <StyledHeader
+                  className={styles.th}
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   style={{
-                    fontWeight: '400',
-                    fontSize: '14px',
-                    lineHeight: '24px',
                     textAlign: index === 0 ? 'left' : 'right',
-                    paddingLeft: index === 0 ? (isMobile ? '16px' : '52px') : 0,
-                    paddingTop: '12px',
-                    paddingBottom: '12px',
-                    color: colors.neutral2.val,
-                    paddingRight: index === headerGroup.headers.length - 1 ? '20px' : 0,
+                    paddingLeft: index === 0 ? '52px' : 0,
                   }}
                   disabled={index === 0}
                   key={index}
@@ -333,20 +283,7 @@ function LoadingTable({ headerGroups, visibleColumns, ...props }: LoadingTablePr
           <StyledLoadingRow key={index}>
             {[...Array(visibleColumns.length)].map((_, cellIndex) => {
               return (
-                <td
-                  style={{
-                    fontWeight: '400',
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    maxWidth: '160px',
-                    paddingTop: '8px',
-                    paddingBottom: '8px',
-                    textAlign: 'right',
-                    position: 'relative',
-                    paddingRight: cellIndex === visibleColumns.length - 1 ? '20px' : 0,
-                  }}
-                  key={cellIndex}
-                >
+                <td className={styles.loadingTd} key={cellIndex}>
                   {cellIndex === 0 ? (
                     <StyledCollectionNameHolder>
                       <StyledRankHolder />

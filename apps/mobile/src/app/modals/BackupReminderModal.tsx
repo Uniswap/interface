@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { LockPreviewImage } from 'src/features/onboarding/LockPreviewImage'
 import { Button, Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -16,33 +16,36 @@ export function BackupReminderModal(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const closedByButtonRef = useRef<boolean>(false)
-  const { onClose } = useReactNavigationModal()
+
+  const onClose = (): void => {
+    dispatch(closeModal({ name: ModalName.BackupReminder }))
+  }
 
   const checkForSwipeToDismiss = (): void => {
-    onClose()
     if (!closedByButtonRef.current) {
       // Modal was swiped to dismiss, should open the BackupReminderWarning modal
-      navigate(ModalName.BackupReminderWarning)
+      dispatch(openModal({ name: ModalName.BackupReminderWarning }))
     }
 
     // Reset the ref and close the modal
     closedByButtonRef.current = false
+    onClose()
   }
 
   const onPressMaybeLater = (): void => {
     closedByButtonRef.current = true
+    dispatch(openModal({ name: ModalName.BackupReminderWarning }))
     onClose()
-    navigate(ModalName.BackupReminderWarning)
   }
 
   const onPressBackup = (): void => {
     closedByButtonRef.current = true
     dispatch(setBackupReminderLastSeenTs(Date.now()))
-    onClose()
     navigate(MobileScreens.OnboardingStack, {
       screen: OnboardingScreens.Backup,
       params: { importType: ImportType.BackupOnly, entryPoint: OnboardingEntryPoint.BackupCard },
     })
+    onClose()
   }
 
   return (

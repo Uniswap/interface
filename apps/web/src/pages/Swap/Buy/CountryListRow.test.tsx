@@ -1,6 +1,6 @@
 import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
 import { US } from 'test-utils/constants'
-import { act, render, screen } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
 
 describe('CountryListRow', () => {
   it('should render', () => {
@@ -14,14 +14,12 @@ describe('CountryListRow', () => {
     expect(container.firstChild).toMatchSnapshot()
   })
 
-  it('should render selected country', async () => {
+  it('should render selected country', () => {
     const clickHandler = jest.fn()
-    const result = await act(async () => {
-      return render(<CountryListRow country={US} selectedCountry={US} onClick={clickHandler} style={{}} />)
-    })
+    const { container } = render(<CountryListRow country={US} selectedCountry={US} onClick={clickHandler} style={{}} />)
     screen.getByText('United States').click()
     expect(clickHandler).toHaveBeenCalledTimes(1)
 
-    expect(result.container.firstChild).toMatchSnapshot()
+    expect(container.firstChild).toMatchSnapshot()
   })
 })

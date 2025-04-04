@@ -3,6 +3,7 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { Blocked } from 'ui/src/components/icons/Blocked'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { OctagonExclamation } from 'ui/src/components/icons/OctagonExclamation'
+import { ThemeNames } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
@@ -50,7 +51,7 @@ export function getWarningIconColors(severity?: WarningSeverity): {
       return {
         color: '$statusCritical',
         colorSecondary: '$statusCritical',
-        backgroundColor: '$statusCritical2',
+        backgroundColor: '$DEP_accentCriticalSoft',
         textColor: '$statusCritical',
       }
     case WarningSeverity.Medium:
@@ -77,6 +78,25 @@ export function getWarningIconColors(severity?: WarningSeverity): {
         inModalColor: '$neutral1',
         backgroundColor: '$surface3',
         textColor: '$neutral1',
+      }
+  }
+}
+
+export function getWarningButtonProps(severity?: WarningSeverity): { theme: ThemeNames; buttonTextColor: ColorTokens } {
+  switch (severity) {
+    case WarningSeverity.High:
+      return {
+        buttonTextColor: '$statusCritical',
+        theme: 'detrimental',
+      }
+    case WarningSeverity.Medium:
+    case WarningSeverity.Blocked:
+    case WarningSeverity.Low:
+    case WarningSeverity.None:
+    default:
+      return {
+        buttonTextColor: '$neutral1',
+        theme: 'secondary',
       }
   }
 }

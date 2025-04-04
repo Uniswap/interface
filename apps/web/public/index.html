@@ -33,7 +33,7 @@
       <% } %>
       <meta
         http-equiv="Content-Security-Policy" 
-        content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.concat(['nonce-'+cspStyleNonce]).join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>; media-src <%= cspConfig.mediaSrc.join(' ') %>;"
+        content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.concat(['nonce-'+cspStyleNonce]).join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
       >
     <% } %>
 

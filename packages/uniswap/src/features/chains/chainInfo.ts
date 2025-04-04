@@ -849,7 +849,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     label: 'Soneium',
     logo: SONEIUM_LOGO,
     nativeCurrency: {
-      name: 'Soneium ETH',
+      name: 'Ether',
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
@@ -986,7 +986,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsInterfaceClientSideRouting: true,
     supportsGasEstimates: false,
     supportsV4: true,
-    urlParam: 'unichain_sepolia',
+    urlParam: 'astrochain_sepolia',
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
       symbol: 'WETH',

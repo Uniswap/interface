@@ -1,6 +1,8 @@
 import React, { useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Image, Text, TouchableArea, TouchableAreaProps, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -31,6 +33,7 @@ export function UnitagBanner({
   const { fullWidth } = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
   const isShortDevice = useIsShortMobileDevice()
+  const dispatch = useDispatch()
 
   const imageWidth = compact
     ? COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
@@ -49,11 +52,13 @@ export function UnitagBanner({
   }, [address])
 
   const navigateToIntro = useCallback(() => {
-    navigate(ModalName.UnitagsIntro, {
-      address,
-      entryPoint: MobileScreens.Home,
-    })
-  }, [address])
+    dispatch(
+      openModal({
+        name: ModalName.UnitagsIntro,
+        initialState: { address, entryPoint: MobileScreens.Home },
+      }),
+    )
+  }, [dispatch, address])
 
   const { handleClaim, handleDismiss } = useUnitagClaimHandler({
     analyticsEntryPoint,

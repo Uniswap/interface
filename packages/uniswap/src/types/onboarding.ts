@@ -3,7 +3,6 @@ export enum ImportType {
   CreateAdditional = 'CreateAdditional',
   NotYetSelected = 'NotYetSelected',
   SeedPhrase = 'SeedPhrase',
-  Passkey = 'Passkey',
   Watch = 'Watch',
   Restore = 'Restore',
   RestoreMnemonic = 'RestoreMnemonic',

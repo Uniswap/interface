@@ -1,9 +1,9 @@
 import { ParsedQs } from 'qs'
 import { useParams } from 'react-router-dom'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { getChainInfo, UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 // i.e. ?chain=mainnet -> ethereum
@@ -24,14 +24,6 @@ export function getChainIdFromChainUrlParam(chainUrlParam?: string): UniverseCha
   return chainUrlParam !== undefined
     ? Object.values(UNIVERSE_CHAIN_INFO).find((chain) => chainUrlParam === chain.urlParam)?.id
     : undefined
-}
-
-export function getChainIdFromBackendChain(backendChain: GqlChainId): UniverseChainId | undefined {
-  return Object.values(UNIVERSE_CHAIN_INFO).find((chain) => backendChain === chain.backendChain.chain)?.id
-}
-
-export function getChainUrlParam(chainId: UniverseChainId) {
-  return getChainInfo(chainId).urlParam
 }
 
 export function useChainIdFromUrlParam(): UniverseChainId | undefined {

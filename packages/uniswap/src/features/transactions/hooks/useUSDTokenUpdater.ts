@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2

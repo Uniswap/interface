@@ -44,7 +44,7 @@ type SendContextState = {
   gasFee: GasFeeResult
   warnings: ParsedWarnings
   txRequest: TransactionRequest | undefined
-  onSelectCurrency: ({ currency }: { currency: Currency }) => void
+  onSelectCurrency: (currency: Currency, _currencyField: CurrencyField, _isBridgePair: boolean) => void
   updateSendForm: (newState: Partial<TransactionState>) => void
 } & TransactionState
 
@@ -117,7 +117,7 @@ export function SendContextProvider({
 
   // helper function for currency selection
   const onSelectCurrency = useCallback(
-    ({ currency }: { currency: Currency }) => {
+    (currency: Currency, _currencyField: CurrencyField, _isBridgePair: boolean) => {
       updateSendForm({
         [CurrencyField.INPUT]: {
           address: currencyAddress(currency),
@@ -125,7 +125,6 @@ export function SendContextProvider({
           type: AssetType.Currency,
         },
         exactAmountToken: '',
-        exactAmountFiat: '',
         selectingCurrencyField: undefined,
       })
     },

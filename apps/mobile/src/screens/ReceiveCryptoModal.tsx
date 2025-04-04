@@ -1,10 +1,9 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { AppStackScreenProp } from 'src/app/navigation/types'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { useDispatch, useSelector } from 'react-redux'
 import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransferServiceProviderSelector'
-import { openModal } from 'src/features/modals/modalSlice'
+import { closeModal, openModal } from 'src/features/modals/modalSlice'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -95,11 +94,15 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   )
 }
 
-export function ReceiveCryptoModal({ route }: AppStackScreenProp<typeof ModalName.ReceiveCryptoModal>): JSX.Element {
+export function ReceiveCryptoModal(): JSX.Element {
   const colors = useSporeColors()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const { serviceProviders } = route.params
-  const { onClose } = useReactNavigationModal()
+  const { initialState } = useSelector(selectModalState(ModalName.ReceiveCryptoModal))
+
+  const onClose = (): void => {
+    dispatch(closeModal({ name: ModalName.ReceiveCryptoModal }))
+  }
 
   return (
     <Modal
@@ -127,7 +130,7 @@ export function ReceiveCryptoModal({ route }: AppStackScreenProp<typeof ModalNam
           </Text>
           <Separator />
         </Flex>
-        <ServiceProviderSelector serviceProviders={serviceProviders || []} onClose={onClose} />
+        <ServiceProviderSelector serviceProviders={initialState || []} onClose={onClose} />
       </Flex>
     </Modal>
   )

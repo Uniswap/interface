@@ -3,9 +3,8 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
-import { openModal } from 'src/features/modals/modalSlice'
+import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -18,7 +17,6 @@ import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -31,7 +29,6 @@ type AccountCardItemProps = {
   address: Address
   isViewOnly: boolean
   onPress: (address: Address) => void
-  onClose: () => void
 } & PortfolioValueProps
 
 type PortfolioValueProps = {
@@ -78,7 +75,6 @@ export function AccountCardItem({
   isPortfolioValueLoading,
   portfolioValue,
   onPress,
-  onClose,
 }: AccountCardItemProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -106,38 +102,28 @@ export function AccountCardItem({
   }, [address, dispatch])
 
   const onPressEditWalletSettings = useCallback(() => {
-    onClose()
+    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
 
     if (selectedAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet) {
-      dispatch(
-        openModal({
-          name: ModalName.EditProfileSettingsModal,
-          initialState: { address, accessPoint: UnitagScreens.UnitagConfirmation },
-        }),
-      )
+      dispatch(openModal({ name: ModalName.EditProfileSettingsModal, initialState: { address } }))
     } else {
-      dispatch(
-        openModal({
-          name: ModalName.EditLabelSettingsModal,
-          initialState: { address, accessPoint: UnitagScreens.UnitagConfirmation },
-        }),
-      )
+      dispatch(openModal({ name: ModalName.EditLabelSettingsModal, initialState: { address } }))
     }
-  }, [selectedAccount?.type, onlyLabeledWallet, address, dispatch, onClose])
+  }, [selectedAccount?.type, onlyLabeledWallet, address, dispatch])
 
   const onPressConnectionSettings = useCallback(() => {
-    onClose()
+    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
 
     //Wait 300ms to open the the connection Modal and avoid overlapping animation
     setTimeout(() => {
       dispatch(openModal({ name: ModalName.ConnectionsDappListModal, initialState: { address } }))
     }, MODAL_CLOSE_WAIT_TIME)
-  }, [address, dispatch, onClose])
+  }, [address, dispatch])
 
   const onPressRemoveWallet = useCallback(() => {
-    onClose()
-    navigate(ModalName.RemoveWallet, { address })
-  }, [address, onClose])
+    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
+    dispatch(openModal({ name: ModalName.RemoveWallet, initialState: { address } }))
+  }, [address, dispatch])
 
   const menuActions = useMemo(
     () => [

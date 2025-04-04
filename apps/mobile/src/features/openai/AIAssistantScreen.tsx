@@ -69,7 +69,7 @@ export function AIAssistantScreen(): JSX.Element {
                     </Flex>
                     <Flex row flexWrap="wrap" gap="$spacing4">
                       {message.buttons.map((button, buttonIndex) => (
-                        <Button key={buttonIndex} onPress={(): void => {}}>
+                        <Button key={buttonIndex} theme="tertiary" onPress={(): void => {}}>
                           <Text variant="body3">{button.text}</Text>
                         </Button>
                       ))}

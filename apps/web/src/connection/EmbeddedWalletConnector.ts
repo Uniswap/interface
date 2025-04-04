@@ -13,7 +13,8 @@ interface EmbeddedWalletParameters {
   onConnect?(): void
 }
 
-export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function embeddedWallet(parameters: EmbeddedWalletParameters = {}) {
   type Provider = EmbeddedWalletProvider
   type Properties = {
     onConnect(connectInfo: ProviderConnectInfo): void

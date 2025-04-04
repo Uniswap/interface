@@ -75,7 +75,7 @@ function PopupContent(): JSX.Element {
         <Flex fill />
 
         <Trace logPress element={ElementName.ExtensionPopupOpenButton}>
-          <Flex row>
+          <Flex>
             <Button
               variant="branded"
               emphasis="primary"

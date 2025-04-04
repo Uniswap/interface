@@ -1,5 +1,6 @@
 import { expect, test } from 'playwright/fixtures'
 import { gotoAndWait } from 'playwright/utils'
+
 const MOBILE_VIEWPORT = { width: 375, height: 667 }
 const UNCONNECTED_USER_PARAM = '?eagerlyConnect=false' // Query param to prevent automatic wallet connection
 const FORCE_INTRO_PARAM = '?intro=true' // Query param to force the intro screen to be displayed
@@ -14,6 +15,26 @@ test.describe('Landing Page', () => {
   test('shows landing page when intro is forced', async ({ page }) => {
     await gotoAndWait(page, `/${FORCE_INTRO_PARAM}`)
     await expect(page.getByTestId('landing-page')).toBeVisible()
+  })
+
+  test('shows "Sign up" CTA on the landing page in an unconnected state', async ({ page }) => {
+    await gotoAndWait(page, `/${UNCONNECTED_USER_PARAM}`)
+    await expect(page.getByText('Sign up')).toBeVisible()
+
+    await gotoAndWait(page, `/swap?${UNCONNECTED_USER_PARAM}`)
+    await expect(page.getByText('Sign up')).not.toBeVisible()
+  })
+
+  test('hides "Sign up" CTA on small screens', async ({ page }) => {
+    await page.setViewportSize(MOBILE_VIEWPORT)
+    await gotoAndWait(page, `/${UNCONNECTED_USER_PARAM}`)
+    await expect(page.getByTestId('nav-sign-up')).not.toBeVisible()
+  })
+
+  test('opens modal when the "Sign up" button is clicked', async ({ page }) => {
+    await gotoAndWait(page, `/${UNCONNECTED_USER_PARAM}`)
+    await page.act({ action: 'Click "Sign up" in nav' })
+    await expect(page.getByText('Sign up with Uniswap')).toBeVisible()
   })
 
   test('allows navigation to pool', async ({ page }) => {

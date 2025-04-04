@@ -17,7 +17,6 @@ import ThemeToggle from 'theme/components/ThemeToggle'
 import { ClickableStyle } from 'theme/components/styles'
 import { Flex } from 'ui/src'
 import { LockedDocument } from 'ui/src/components/icons/LockedDocument'
-import { Passkey } from 'ui/src/components/icons/Passkey'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
@@ -74,12 +73,10 @@ export default function SettingsMenu({
   onClose,
   openLanguageSettings,
   openLocalCurrencySettings,
-  openPasskeySettings,
 }: {
   onClose: () => void
   openLanguageSettings: () => void
   openLocalCurrencySettings: () => void
-  openPasskeySettings: () => void
 }) {
   const activeLanguage = useCurrentLanguage()
   const activeLocalCurrency = useAppFiatCurrency()
@@ -115,16 +112,10 @@ export default function SettingsMenu({
             />
             {connectedWithEmbeddedWallet && (
               <SettingsButton
-                title="Passkeys"
-                currentState={<Passkey color="$neutral1" size="$icon.24" />}
-                onClick={openPasskeySettings}
-              />
-            )}
-            {connectedWithEmbeddedWallet && (
-              <SettingsButton
                 title="View Recovery Phrase"
                 currentState={<LockedDocument size="$icon.24" />}
                 onClick={openRecoveryPhraseModal}
+                showArrow={false}
               />
             )}
           </Column>

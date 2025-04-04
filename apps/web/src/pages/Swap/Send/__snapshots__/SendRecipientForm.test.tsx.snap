@@ -66,13 +66,13 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
 }
 
 .c4 {
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
 }
 
 .c6 {
   background: none;
   width: 100%;
-  color: #131313;
+  color: #222222;
   outline: none;
   border: none;
   font-size: 16px;
@@ -81,57 +81,65 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
 }
 
 .c6::-webkit-input-placeholder {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
 }
 
 .c6::-moz-placeholder {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
 }
 
 .c6:-ms-input-placeholder {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
 }
 
 .c6::placeholder {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
 }
 
 <span
   class=""
   style="display: contents;"
 >
-  <div
-    class="c0 c1"
+  <span
+    class=" _dsp_contents"
   >
     <span
-      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
-      data-disable-theme="true"
-    >
-      To
-    </span>
-    <div
-      class="c2 c3 c4"
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c2 c5"
+        class="c0 c1"
       >
-        <input
-          autocapitalize="off"
-          autocomplete="off"
-          autocorrect="off"
-          class="c6"
-          pattern="^(0x[a-fA-F0-9]{40})$"
-          placeholder="Wallet address or ENS name"
-          spellcheck="false"
-          type="text"
-          value="hayden.eth"
-        />
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
+          data-disable-theme="true"
+        >
+          To
+        </span>
+        <div
+          class="c2 c3 c4"
+        >
+          <div
+            class="c2 c5"
+          >
+            <input
+              autocapitalize="off"
+              autocomplete="off"
+              autocorrect="off"
+              class="c6"
+              pattern="^(0x[a-fA-F0-9]{40})$"
+              placeholder="Wallet address or ENS name"
+              spellcheck="false"
+              type="text"
+              value="hayden.eth"
+            />
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div
-    style="display: contents;"
-  />
+      <div
+        style="display: contents;"
+      />
+    </span>
+  </span>
 </span>
 `;
 
@@ -142,9 +150,9 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
 }
 
 .c7 path {
-  stroke: rgba(19,19,19,0.35);
-  background: rgba(19,19,19,0.63);
-  fill: rgba(19,19,19,0.35);
+  stroke: #CECECE;
+  background: #7D7D7D;
+  fill: #CECECE;
 }
 
 .c8 {
@@ -226,7 +234,7 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
 }
 
 .c10 {
-  color: #131313;
+  color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -234,7 +242,7 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
 }
 
 .c11 {
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -266,7 +274,7 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
 }
 
 .c12 {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -296,92 +304,100 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
   class=""
   style="display: contents;"
 >
-  <div
-    class="c0 c1"
+  <span
+    class=" _dsp_contents"
   >
-    <div
-      class="c2 c3 c4"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c2 c5 c6"
+        class="c0 c1"
       >
-        <svg
-          class="c7 c8"
-          data-testid="IdenticonLoader"
-          fill="rgba(19, 19, 19, 0.35)"
-          stroke="rgba(19, 19, 19, 0.35)"
-          viewBox="0 0 54 54"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
-            fill="rgba(19, 19, 19, 0.35)"
-            opacity="0.1"
-          />
-          <path
-            d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
-            fill="rgba(19, 19, 19, 0.35)"
-          />
-        </svg>
         <div
-          class="c0"
+          class="c2 c3 c4"
         >
           <div
-            class="c2 c9"
+            class="c2 c5 c6"
           >
-            <div
-              class="c10 css-n8z49y"
+            <svg
+              class="c7 c8"
+              data-testid="IdenticonLoader"
+              fill="#CECECE"
+              stroke="#CECECE"
+              viewBox="0 0 54 54"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              hayden
-            </div>
-            <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-            >
-              <img
-                height="18"
-                src="unitag-light-small.png"
-                style="object-fit: contain; vertical-align: sub;"
-                width="18"
+              <path
+                d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
+                fill="#CECECE"
+                opacity="0.1"
               />
+              <path
+                d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
+                fill="#CECECE"
+              />
+            </svg>
+            <div
+              class="c0"
+            >
+              <div
+                class="c2 c9"
+              >
+                <div
+                  class="c10 css-n8z49y"
+                >
+                  hayden
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                >
+                  <img
+                    height="18"
+                    src="unitag-light-small.png"
+                    style="object-fit: contain; vertical-align: sub;"
+                    width="18"
+                  />
+                </div>
+              </div>
+              <div
+                class="c11 css-obwv3p"
+              >
+                0x9984...9103
+              </div>
             </div>
           </div>
-          <div
-            class="c11 css-obwv3p"
+          <svg
+            class="c12"
+            fill="none"
+            height="20"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            0x9984...9103
-          </div>
+            <line
+              x1="18"
+              x2="6"
+              y1="6"
+              y2="18"
+            />
+            <line
+              x1="6"
+              x2="18"
+              y1="6"
+              y2="18"
+            />
+          </svg>
         </div>
       </div>
-      <svg
-        class="c12"
-        fill="none"
-        height="20"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <line
-          x1="18"
-          x2="6"
-          y1="6"
-          y2="18"
-        />
-        <line
-          x1="6"
-          x2="18"
-          y1="6"
-          y2="18"
-        />
-      </svg>
-    </div>
-  </div>
-  <div
-    style="display: contents;"
-  />
+      <div
+        style="display: contents;"
+      />
+    </span>
+  </span>
 </span>
 `;
 
@@ -392,9 +408,9 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
 }
 
 .c7 path {
-  stroke: rgba(19,19,19,0.35);
-  background: rgba(19,19,19,0.63);
-  fill: rgba(19,19,19,0.35);
+  stroke: #CECECE;
+  background: #7D7D7D;
+  fill: #CECECE;
 }
 
 .c8 {
@@ -476,7 +492,7 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
 }
 
 .c10 {
-  color: #131313;
+  color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -484,7 +500,7 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
 }
 
 .c11 {
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -516,7 +532,7 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
 }
 
 .c12 {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -546,82 +562,90 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
   class=""
   style="display: contents;"
 >
-  <div
-    class="c0 c1"
+  <span
+    class=" _dsp_contents"
   >
-    <div
-      class="c2 c3 c4"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c2 c5 c6"
+        class="c0 c1"
       >
-        <svg
-          class="c7 c8"
-          data-testid="IdenticonLoader"
-          fill="rgba(19, 19, 19, 0.35)"
-          stroke="rgba(19, 19, 19, 0.35)"
-          viewBox="0 0 54 54"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
-            fill="rgba(19, 19, 19, 0.35)"
-            opacity="0.1"
-          />
-          <path
-            d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
-            fill="rgba(19, 19, 19, 0.35)"
-          />
-        </svg>
         <div
-          class="c0"
+          class="c2 c3 c4"
         >
           <div
-            class="c2 c9"
+            class="c2 c5 c6"
           >
-            <div
-              class="c10 css-n8z49y"
+            <svg
+              class="c7 c8"
+              data-testid="IdenticonLoader"
+              fill="#CECECE"
+              stroke="#CECECE"
+              viewBox="0 0 54 54"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              hayden.eth
+              <path
+                d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
+                fill="#CECECE"
+                opacity="0.1"
+              />
+              <path
+                d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
+                fill="#CECECE"
+              />
+            </svg>
+            <div
+              class="c0"
+            >
+              <div
+                class="c2 c9"
+              >
+                <div
+                  class="c10 css-n8z49y"
+                >
+                  hayden.eth
+                </div>
+              </div>
+              <div
+                class="c11 css-obwv3p"
+              >
+                0x9984...9103
+              </div>
             </div>
           </div>
-          <div
-            class="c11 css-obwv3p"
+          <svg
+            class="c12"
+            fill="none"
+            height="20"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="20"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            0x9984...9103
-          </div>
+            <line
+              x1="18"
+              x2="6"
+              y1="6"
+              y2="18"
+            />
+            <line
+              x1="6"
+              x2="18"
+              y1="6"
+              y2="18"
+            />
+          </svg>
         </div>
       </div>
-      <svg
-        class="c12"
-        fill="none"
-        height="20"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        width="20"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <line
-          x1="18"
-          x2="6"
-          y1="6"
-          y2="18"
-        />
-        <line
-          x1="6"
-          x2="18"
-          y1="6"
-          y2="18"
-        />
-      </svg>
-    </div>
-  </div>
-  <div
-    style="display: contents;"
-  />
+      <div
+        style="display: contents;"
+      />
+    </span>
+  </span>
 </span>
 `;
 
@@ -691,13 +715,13 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
 }
 
 .c4 {
-  color: rgba(19,19,19,0.63);
+  color: #7D7D7D;
 }
 
 .c6 {
   background: none;
   width: 100%;
-  color: #131313;
+  color: #222222;
   outline: none;
   border: none;
   font-size: 16px;
@@ -706,56 +730,64 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
 }
 
 .c6::-webkit-input-placeholder {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
 }
 
 .c6::-moz-placeholder {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
 }
 
 .c6:-ms-input-placeholder {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
 }
 
 .c6::placeholder {
-  color: rgba(19,19,19,0.35);
+  color: #CECECE;
 }
 
 <span
   class=""
   style="display: contents;"
 >
-  <div
-    class="c0 c1"
+  <span
+    class=" _dsp_contents"
   >
     <span
-      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
-      data-disable-theme="true"
-    >
-      To
-    </span>
-    <div
-      class="c2 c3 c4"
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c2 c5"
+        class="c0 c1"
       >
-        <input
-          autocapitalize="off"
-          autocomplete="off"
-          autocorrect="off"
-          class="c6"
-          pattern="^(0x[a-fA-F0-9]{40})$"
-          placeholder="Wallet address or ENS name"
-          spellcheck="false"
-          type="text"
-          value=""
-        />
+        <span
+          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _userSelect-none"
+          data-disable-theme="true"
+        >
+          To
+        </span>
+        <div
+          class="c2 c3 c4"
+        >
+          <div
+            class="c2 c5"
+          >
+            <input
+              autocapitalize="off"
+              autocomplete="off"
+              autocorrect="off"
+              class="c6"
+              pattern="^(0x[a-fA-F0-9]{40})$"
+              placeholder="Wallet address or ENS name"
+              spellcheck="false"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div
-    style="display: contents;"
-  />
+      <div
+        style="display: contents;"
+      />
+    </span>
+  </span>
 </span>
 `;

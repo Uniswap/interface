@@ -1,30 +1,29 @@
 import { useConnect } from 'hooks/useConnect'
+import styled from 'lib/styled-components'
 import { useCallback } from 'react'
+import { AlertTriangle } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Button, Flex, styled } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { flexColumnNoWrap } from 'theme/styles'
+import { Button, Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-const Wrapper = styled(Flex, {
-  row: false,
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  p: '$spacing24',
-  '$platform-web': {
-    flexFlow: 'column nowrap',
-  },
-})
+const Wrapper = styled.div`
+  ${flexColumnNoWrap};
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 24px;
+`
 
-const AlertTriangleIcon = styled(AlertTriangle, {
-  width: 48,
-  height: 48,
-  strokeWidth: 1.5,
-  m: '$spacing36',
-  color: '$statusCritical',
-})
+const AlertTriangleIcon = styled(AlertTriangle)`
+  width: 48px;
+  height: 48px;
+  stroke-width: 1.5;
+  margin: 36px;
+  color: ${({ theme }) => theme.critical};
+`
 
 export default function ConnectionErrorView() {
   const connection = useConnect()
@@ -55,7 +54,7 @@ export default function ConnectionErrorView() {
         <ThemedText.BodyPrimary fontSize={16} marginBottom={24} lineHeight="24px" textAlign="center">
           <Trans i18nKey="wallet.connectionFailed.message" />
         </ThemedText.BodyPrimary>
-        <Button emphasis="primary" variant="branded" size="large" onPress={retry}>
+        <Button theme="primary" variant="branded" size="large" onPress={retry}>
           <Trans i18nKey="common.tryAgain.error" />
         </Button>
         <Flex row>

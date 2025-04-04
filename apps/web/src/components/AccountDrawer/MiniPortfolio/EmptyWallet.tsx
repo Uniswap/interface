@@ -8,17 +8,6 @@ import { Buy as BuyIcon } from 'ui/src/components/icons/Buy'
 import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
-// Custom wrapper for ActionCard with hover styles
-const ActionCardWrapper = styled.div`
-  & > div {
-    transition: background-color 150ms ease;
-  }
-
-  &:hover > div > div {
-    background-color: ${({ theme }) => theme.accent2Hovered};
-  }
-`
-
 export const EmptyWallet = ({
   handleBuyCryptoClick,
   handleReceiveCryptoClick,
@@ -73,9 +62,7 @@ export const EmptyWallet = ({
       </Flex>
       <Flex gap="$spacing12">
         {options.map((option) => (
-          <ActionCardWrapper key={option.title}>
-            <ActionCard {...option} />
-          </ActionCardWrapper>
+          <ActionCard key={option.title} {...option} />
         ))}
       </Flex>
     </Flex>

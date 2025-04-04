@@ -1,23 +1,23 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
 import {
   FilterHeaderRow,
-  HeaderCell,
+  HeaderArrow,
+  HeaderSortText,
   StyledExternalLink,
-  TableText,
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
+import { OrderDirection } from 'graphql/data/util'
 import { useFilteredTransactions } from 'pages/Explore/tables/useFilterTransaction'
 import { memo, useMemo, useReducer, useRef, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
-import { Flex, Text, styled, useMedia } from 'ui/src'
+import { Trans } from 'react-i18next'
+import { Flex, Text, styled } from 'ui/src'
 import {
   PoolTransaction,
   PoolTransactionType,
@@ -28,7 +28,7 @@ import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useFormatter } from 'utils/formatNumbers'
 
 const TableRow = styled(Flex, {
   row: true,
@@ -47,7 +47,6 @@ const RecentTransactions = memo(function RecentTransactions() {
     TransactionType.ADD,
   ])
   const chainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
-  const { t } = useTranslation()
 
   const { transactions, loading, loadMore, errorV2, errorV3 } = useAllTransactions(chainInfo.backendChain.chain, filter)
   const filteredTransactions = useFilteredTransactions(transactions)
@@ -60,38 +59,34 @@ const RecentTransactions = memo(function RecentTransactions() {
   const showLoadingSkeleton = allDataStillLoading || !!combinedError
   useUpdateManualOutage({ chainId: chainInfo.id, errorV3, errorV2 })
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
-  const media = useMedia()
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTransaction>()
-    const filteredColumns = [
-      !media.lg
-        ? columnHelper.accessor((transaction) => transaction, {
-            id: 'timestamp',
-            size: media.lg ? 60 : 80,
-            header: () => (
-              <HeaderCell justifyContent="flex-start">
-                <TableRow>
-                  <Text variant="body3" color="$neutral2">
-                    <Trans i18nKey="common.time" />
-                  </Text>
-                </TableRow>
-              </HeaderCell>
-            ),
-            cell: (transaction) => (
-              <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
-                <TimestampCell
-                  timestamp={Number(transaction.getValue?.().timestamp)}
-                  link={getExplorerLink(chainInfo.id, transaction.getValue?.().hash, ExplorerDataType.TRANSACTION)}
-                />
-              </Cell>
-            ),
-          })
-        : null,
+    return [
+      columnHelper.accessor((transaction) => transaction, {
+        id: 'timestamp',
+        header: () => (
+          <Cell minWidth={120} justifyContent="flex-start" grow>
+            <TableRow>
+              <HeaderArrow direction={OrderDirection.Desc} />
+              <HeaderSortText active>
+                <Trans i18nKey="common.time" />
+              </HeaderSortText>
+            </TableRow>
+          </Cell>
+        ),
+        cell: (transaction) => (
+          <Cell loading={showLoadingSkeleton} minWidth={120} justifyContent="flex-start" grow>
+            <TimestampCell
+              timestamp={Number(transaction.getValue?.().timestamp)}
+              link={getExplorerLink(chainInfo.id, transaction.getValue?.().hash, ExplorerDataType.TRANSACTION)}
+            />
+          </Cell>
+        ),
+      }),
       columnHelper.accessor((transaction) => transaction, {
         id: 'swap-type',
-        size: media.lg ? 180 : 320,
         header: () => (
-          <HeaderCell justifyContent="flex-start">
+          <Cell minWidth={276} justifyContent="flex-start" grow>
             <FilterHeaderRow clickable={filterModalIsOpen} onPress={() => toggleFilterModal()} ref={filterAnchorRef}>
               <Filter
                 allFilters={Object.values(TransactionType)}
@@ -101,74 +96,82 @@ const RecentTransactions = memo(function RecentTransactions() {
                 toggleFilterModal={toggleFilterModal}
                 anchorRef={filterAnchorRef}
               />
-              <Text variant="body3" color="$neutral2">
+              <Text variant="body2" color="$neutral2">
                 <Trans i18nKey="common.type.label" />
               </Text>
             </FilterHeaderRow>
-          </HeaderCell>
-        ),
-        cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton} justifyContent="flex-start">
-            <Text variant="body2" display="flex" flexDirection="row" gap="$spacing8" alignItems="center">
-              {media.lg && (
-                <PortfolioLogo
-                  chainId={chainInfo.id}
-                  images={[
-                    transaction.getValue?.().token0.project?.logo?.url,
-                    transaction.getValue?.().token1.project?.logo?.url,
-                  ]}
-                  size={20}
-                />
-              )}
-              <TableText color="$neutral2" $lg={{ display: 'none' }}>
-                {BETypeToTransactionType[transaction.getValue?.().type]}
-              </TableText>
-              <TokenLinkCell token={transaction.getValue?.().token0} hideLogo={media.lg} />
-              <Text color="$neutral2">
-                {transaction.getValue?.().type === PoolTransactionType.Swap
-                  ? t('common.for').toLowerCase()
-                  : t('common.and').toLowerCase()}
-              </Text>
-              <TokenLinkCell token={transaction.getValue?.().token1} hideLogo={media.lg} />
-            </Text>
           </Cell>
         ),
+        cell: (transaction) => {
+          const amountWithSymbolA = (
+            <>
+              <Text variant="body2" color="$neutral2">
+                {BETypeToTransactionType[transaction.getValue?.().type]}
+              </Text>
+              <TokenLinkCell token={transaction.getValue?.().token0} />
+            </>
+          )
+          const amountWithSymbolB = <TokenLinkCell token={transaction.getValue?.().token1} />
+
+          return (
+            <Cell loading={showLoadingSkeleton} minWidth={276} justifyContent="flex-start" grow>
+              <Text variant="body2" display="flex" flexDirection="row" gap="$spacing8">
+                {transaction.getValue?.().type === PoolTransactionType.Swap ? (
+                  <Trans
+                    i18nKey="activity.transaction.swap.descriptor.formatted"
+                    components={{
+                      amountWithSymbolA,
+                      amountWithSymbolB,
+                    }}
+                  />
+                ) : (
+                  <Trans
+                    i18nKey="activity.transaction.tokens.descriptor.formatted"
+                    components={{
+                      amountWithSymbolA,
+                      amountWithSymbolB,
+                    }}
+                  />
+                )}
+              </Text>
+            </Cell>
+          )
+        },
       }),
       columnHelper.accessor((transaction) => transaction.usdValue.value, {
         id: 'fiat-value',
-        maxSize: 125,
         header: () => (
-          <HeaderCell>
-            <Text variant="body3" color="$neutral2">
+          <Cell minWidth={125}>
+            <Text variant="body2" color="$neutral2">
               {activeLocalCurrency}
             </Text>
-          </HeaderCell>
+          </Cell>
         ),
         cell: (fiat) => (
-          <Cell loading={showLoadingSkeleton}>
-            <TableText>{formatFiatPrice({ price: fiat.getValue?.() })}</TableText>
+          <Cell loading={showLoadingSkeleton} minWidth={125}>
+            <Text variant="body2" color="$neutral1">
+              {formatFiatPrice({ price: fiat.getValue?.() })}
+            </Text>
           </Cell>
         ),
       }),
       columnHelper.accessor((transaction) => transaction, {
         id: 'token-amount-0',
-        size: 200,
         header: () => (
-          <HeaderCell>
-            <Text variant="body3" color="$neutral2">
+          <Cell minWidth={200}>
+            <Text variant="body2" color="$neutral2">
               <Trans i18nKey="common.tokenAmount" />
             </Text>
-          </HeaderCell>
+          </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton}>
+          <Cell loading={showLoadingSkeleton} minWidth={200}>
             <TableRow justifyContent="flex-end">
-              <TableText variant="body2" color="$neutral1">
+              <Text variant="body2" color="$neutral1">
                 {formatNumber({
                   input: Math.abs(parseFloat(transaction.getValue?.().token0Quantity)) || 0,
-                  type: NumberType.TokenQuantityStats,
                 })}
-              </TableText>
+              </Text>
               <TokenLinkCell token={transaction.getValue?.().token0} />
             </TableRow>
           </Cell>
@@ -176,23 +179,21 @@ const RecentTransactions = memo(function RecentTransactions() {
       }),
       columnHelper.accessor((transaction) => transaction, {
         id: 'token-amount-1',
-        size: 200,
         header: () => (
-          <HeaderCell>
-            <Text variant="body3" color="$neutral2">
+          <Cell minWidth={200}>
+            <Text variant="body2" color="$neutral2">
               <Trans i18nKey="common.tokenAmount" />
             </Text>
-          </HeaderCell>
+          </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton}>
+          <Cell loading={showLoadingSkeleton} minWidth={200}>
             <TableRow justifyContent="flex-end">
-              <TableText variant="body2" color="$neutral1">
+              <Text variant="body2" color="$neutral1">
                 {formatNumber({
                   input: Math.abs(parseFloat(transaction.getValue?.().token1Quantity)) || 0,
-                  type: NumberType.TokenQuantityStats,
                 })}
-              </TableText>
+              </Text>
               <TokenLinkCell token={transaction.getValue?.().token1} />
             </TableRow>
           </Cell>
@@ -200,37 +201,25 @@ const RecentTransactions = memo(function RecentTransactions() {
       }),
       columnHelper.accessor((transaction) => transaction.account, {
         id: 'maker-address',
-        maxSize: 150,
         header: () => (
-          <HeaderCell>
-            <Text variant="body3" color="$neutral2">
+          <Cell minWidth={150}>
+            <Text variant="body2" color="$neutral2">
               <Trans i18nKey="common.wallet.label" />
             </Text>
-          </HeaderCell>
+          </Cell>
         ),
         cell: (makerAddress) => (
-          <Cell loading={showLoadingSkeleton}>
+          <Cell loading={showLoadingSkeleton} minWidth={150}>
             <StyledExternalLink
               href={getExplorerLink(chainInfo.id, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}
             >
-              <TableText>{shortenAddress(makerAddress.getValue?.())}</TableText>
+              {shortenAddress(makerAddress.getValue?.())}
             </StyledExternalLink>
           </Cell>
         ),
       }),
     ]
-    return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
-  }, [
-    activeLocalCurrency,
-    chainInfo.id,
-    media.lg,
-    filter,
-    filterModalIsOpen,
-    formatFiatPrice,
-    formatNumber,
-    showLoadingSkeleton,
-    t,
-  ])
+  }, [activeLocalCurrency, chainInfo.id, filter, filterModalIsOpen, formatFiatPrice, formatNumber, showLoadingSkeleton])
 
   return (
     <Table
@@ -240,7 +229,6 @@ const RecentTransactions = memo(function RecentTransactions() {
       error={combinedError}
       loadMore={loadMore}
       maxWidth={1200}
-      defaultPinnedColumns={['timestamp', 'swap-type']}
     />
   )
 })

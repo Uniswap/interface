@@ -12,7 +12,7 @@ import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCur
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/constants'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
