@@ -34,7 +34,6 @@ import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
-import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -262,7 +261,7 @@ function UniversalSwapFlow({
       {currentTab === SwapTab.Swap && (
         <Flex gap="$spacing16">
           <SwapFlow
-            settings={[Slippage, Deadline, ProtocolPreference]}
+            settings={[Slippage, Deadline]}
             hideHeader={hideHeader}
             hideFooter={hideFooter}
             onClose={noop}
