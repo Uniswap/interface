@@ -109,7 +109,7 @@ cy.hardhat().then((hardhat) => {
   // Note the closure to keep signTypedDataStub in scope. Using closures instead of variables (eg let) helps prevent misuse of chaining.
   const signTypedDataStub = cy.stub(hardhat.provider, 'send').log(false)
   signTypedDataStub.withArgs('eth_signTypedData_v4).rejects(USER_REJECTION)
-  signTypedDataStub.callThrough() // allws other methods to call through to hardhat
+  signTypedDataStub.callThrough() // allows other methods to call through to hardhat
 
   cy.contains('Confirm swap').click()
 
