@@ -11,24 +11,22 @@ export function useDynamicFontSizing(
   onSetFontSize: (amount: string) => void
 } {
   const [fontSize, setFontSize] = useState(maxFontSize)
-  const textInputElementWidthRef = useRef(0)
+  const textInputElementWidthRef = useRef<number | null>(null)
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
-    if (textInputElementWidthRef.current) {
-      return
-    }
-
     const width = event.nativeEvent.layout.width
-    textInputElementWidthRef.current = width
+    if (textInputElementWidthRef.current !== width) {
+      textInputElementWidthRef.current = width
+    }
   }, [])
 
   const onSetFontSize = useCallback(
     (amount: string) => {
+      if (!textInputElementWidthRef.current) return
+      
       const stringWidth = getStringWidth(amount, maxCharWidthAtMaxFontSize, fontSize, maxFontSize)
       const scaledSize = fontSize * (textInputElementWidthRef.current / stringWidth)
-      // If scaledSize = 0 then onLayout hasn't triggered yet and we should default to the largest size
-      const scaledSizeWithMin = scaledSize ? Math.max(scaledSize, minFontSize) : maxFontSize
-      const newFontSize = Math.round(Math.min(maxFontSize, scaledSizeWithMin))
+      const newFontSize = Math.max(minFontSize, Math.min(maxFontSize, Math.round(scaledSize)))
       setFontSize(newFontSize)
     },
     [fontSize, maxFontSize, minFontSize, maxCharWidthAtMaxFontSize],
@@ -43,6 +41,5 @@ const getStringWidth = (
   currentFontSize: number,
   maxFontSize: number,
 ): number => {
-  const widthAtMaxFontSize = value.length * maxCharWidthAtMaxFontSize
-  return widthAtMaxFontSize * (currentFontSize / maxFontSize)
+  return (value.length * maxCharWidthAtMaxFontSize * currentFontSize) / maxFontSize
 }
