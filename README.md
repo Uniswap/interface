@@ -40,3 +40,51 @@ Products include:
   - V2: Onchain perps with degen mode up to 500x + Forex
 - Swapbox
   - Any Protocol can now integrate Kromatika DEX aggregator on their website with 1 line of code as a widget.
+
+## Setting up Kromatika Interface on local machine
+
+### 1. clone from github to machine
+
+```bash
+git clone https://github.com/Kromatika-Finance/interface.git
+```
+
+### 2. [install nvm (node version manager)](https://github.com/nvm-sh/nvm) to manage node versions on your machine (if not already installed)
+
+### 3. install yarn package manager globally(if not already installed)
+
+```bash
+npm install -g yarn
+```
+
+### 4. install node version 16 (if not already installed)
+
+```bash
+nvm install 16
+```
+
+### 5. switch node version to 16
+
+```bash
+nvm use 16
+```
+
+### 6. open terminal for kromatika interface directory
+
+### 7. install all dependencies
+
+```bash
+yarn install
+```
+
+### 8. run project post install command to installs ABIs of the smart contracts
+
+```bash
+  yarn postinstall
+```
+
+### 9. run project locally on machine
+
+```bash
+  yarn start
+```
