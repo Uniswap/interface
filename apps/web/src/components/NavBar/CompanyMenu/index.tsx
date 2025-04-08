@@ -59,9 +59,9 @@ export function CompanyMenu() {
       <Popover.Trigger data-testid="nav-company-menu">
         <Trigger>
           <UniIcon onClick={handleLogoClick} data-testid="nav-uniswap-logo">
-            <NavIcon />
+            <NavIcon color="#d0462d" />
             {isLargeScreen && (
-              <Text variant="subheading1" color="$accent1" userSelect="none">
+              <Text variant="subheading1" color="#d0462d" userSelect="none">
                 TANGOswap
               </Text>
             )}

@@ -45,7 +45,7 @@ export const NavIcon = ({ clickable, onClick }: NavIconProps) => {
 
   return (
     <Container clickable={clickable}>
-      <Logo color={colors.accent1.val} onClick={onClick} />
+      <Logo color="#d0462d" onClick={onClick} />
     </Container>
   )
 }
