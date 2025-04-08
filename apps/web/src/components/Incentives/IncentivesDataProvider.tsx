@@ -8,13 +8,11 @@ import React, {
   useRef,
 } from "react";
 import { useAccount } from "../../hooks/useAccount";
-import { useChainId } from "wagmi";
 import { useV3StakerContract } from "../../hooks/useV3StakerContract";
 import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
 import { ZERO_ADDRESS } from "constants/misc";
 import { useV3Positions } from "../../hooks/useV3Positions";
 import { formatUnits } from "viem/utils";
-import { useLocation } from "react-router-dom";
 import {
   TokenInfoDetails,
   Incentive,
@@ -29,6 +27,7 @@ import {
 } from "./types";
 import { TARAXA_MAINNET_LIST } from "constants/lists";
 import { buildIncentiveIdFromIncentive } from "hooks/usePosition";
+import { useTokenPrices } from "hooks/useTokenPrices";
 
 interface IncentivesDataContextType {
   activeIncentives: Incentive[];
@@ -107,6 +106,19 @@ export const IncentivesDataProvider: React.FC<React.PropsWithChildren<{}>> = ({
 
   const { getPositionsWithDepositsOfUser, isLoading: isLoadingDepositData } =
     useTotalPositions();
+
+  const [tokenPrices, setTokenPrices] = useState<{ [key: string]: number | null }>({});
+  
+  const tokenAddresses = useMemo(() => {
+    const uniqueAddresses = [...new Set(rawIncentivesData.map(incentive => incentive.rewardToken.id))];
+    return uniqueAddresses.slice(0, 5);
+  }, [rawIncentivesData]);
+
+  const prices = useTokenPrices(tokenAddresses);
+
+  useEffect(() => {
+    setTokenPrices(prices);
+  }, [prices]);
 
   const activeIncentives = useMemo((): Incentive[] => {
     const filteredIncentives = rawIncentivesData.filter((incentive) => {
@@ -332,7 +344,6 @@ export const IncentivesDataProvider: React.FC<React.PropsWithChildren<{}>> = ({
                       incentive.rewardToken.decimals
                     );
                   } catch (err) {
-                    console.warn(err);
                     pendingRewards = "0";
                   }
                 }
@@ -393,9 +404,9 @@ export const IncentivesDataProvider: React.FC<React.PropsWithChildren<{}>> = ({
                   : "";
                 const multipleRelevantPositions = relevantPositions.length > 1;
 
-                const apr24hrs = await calculateApy24hrs(
-                  incentive,
-                  totalRewardsToken
+                const apr24hrs = calculateApy24hrs(
+                  totalRewardsToken,
+                  tokenPrices[incentive.rewardToken.id] || null
                 );
 
                 const isEligible =
@@ -496,6 +507,7 @@ export const IncentivesDataProvider: React.FC<React.PropsWithChildren<{}>> = ({
       tokenList,
       fetchTokensForPool,
       userPositionsGql,
+      tokenPrices,
     ]
   );
 
