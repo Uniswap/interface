@@ -23,7 +23,7 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { TamaguiClickableStyle } from 'theme/components'
 import { PositionField } from 'types/position'
-
+import { DeprecatedButton } from 'ui'
 import { Button, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -60,10 +60,24 @@ export const CurrencySelector = ({
 
   // TODO: [Button] blocked by (WALL-5674)
   return (
-    <button
-
-      onClick={onPress}
-
+    <DeprecatedButton
+      flex={1}
+      width="100%"
+      onPress={onPress}
+      py="$spacing12"
+      pr="$spacing12"
+      pl="$spacing16"
+      theme="primary"
+      backgroundColor={currency ? '$surface3' : '$accent3'}
+      justifyContent="space-between"
+      gap="$spacing8"
+      hoverStyle={{
+        backgroundColor: undefined,
+        opacity: 0.8,
+      }}
+      pressStyle={{
+        backgroundColor: undefined,
+      }}
     >
       <Flex row gap="$spacing8" alignItems="center">
         {currency && (
@@ -80,7 +94,7 @@ export const CurrencySelector = ({
         </Text>
       </Flex>
       <RotatableChevron direction="down" color="$neutral2" width={iconSizes.icon24} height={iconSizes.icon24} />
-    </button>
+    </DeprecatedButton>
   )
 }
 
