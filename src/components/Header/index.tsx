@@ -239,18 +239,6 @@ export default function Header() {
         </Title>
         <NavigationLinks />
         <HeaderControls>
-          {/* <HeaderElement>
-            {chainId && (
-              <ExternalLink href={pools[chainId]} style={{ textDecoration: 'none' }}>
-                {kromPrice ? (
-                  <TokenPrice>
-                    <StyledLogoIcon src={tokenLogo} />
-                    <TYPE.body fontSize={16}>${kromPrice?.toSignificant(2)}</TYPE.body>
-                  </TokenPrice>
-                ) : null}
-              </ExternalLink>
-            )}
-          </HeaderElement> */}
           <HeaderElement>
             <NetworkSelector />
           </HeaderElement>

@@ -296,7 +296,7 @@ export const CHAIN_INFO: ChainInfo = {
     logoUrl: polygonMaticLogo,
     addNetworkInfo: {
       rpcUrl: 'https://polygon-rpc.com/',
-      nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
+      nativeCurrency: { name: 'Polygon POLY', symbol: 'POLY', decimals: 18 },
     },
   },
   [SupportedChainId.POLYGON_MUMBAI]: {
@@ -309,7 +309,7 @@ export const CHAIN_INFO: ChainInfo = {
     label: 'Polygon Mumbai',
     logoUrl: polygonMaticLogo,
     addNetworkInfo: {
-      nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
+      nativeCurrency: { name: 'Polygon Mumbai Poly', symbol: 'mPOLY', decimals: 18 },
       rpcUrl: 'https://rpc-endpoints.superfluid.dev/mumbai',
     },
   },

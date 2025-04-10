@@ -360,15 +360,15 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     SupportedChainId.POLYGON,
     '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
     18,
-    'WMATIC',
-    'Wrapped MATIC'
+    'WPOLY',
+    'Wrapped POLY'
   ),
   [SupportedChainId.POLYGON_MUMBAI]: new Token(
     SupportedChainId.POLYGON_MUMBAI,
     '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
     18,
-    'WMATIC',
-    'Wrapped MATIC'
+    'WPOLY',
+    'Wrapped POLY'
   ),
   [SupportedChainId.BASE]: new Token(
     SupportedChainId.BASE,
@@ -394,18 +394,18 @@ export const OP_OPTIMISM = new Token(
   'Optimism'
 )
 
-function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
+function isPoly(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
   return chainId === SupportedChainId.POLYGON_MUMBAI || chainId === SupportedChainId.POLYGON
 }
 
 class MaticNativeCurrency extends NativeCurrency {
   public constructor(chainId: number) {
-    if (!isMatic(chainId)) throw new Error('Not matic')
-    super(chainId, 18, 'POLY', 'Polygon Matic')
+    if (!isPoly(chainId)) throw new Error('Not poly')
+    super(chainId, 18, 'POLY', 'Polygon Poly')
   }
 
   get wrapped(): Token {
-    if (!isMatic(this.chainId)) throw new Error('Not matic')
+    if (!isPoly(this.chainId)) throw new Error('Not poly')
     return WRAPPED_NATIVE_CURRENCY[this.chainId]
   }
 
@@ -432,7 +432,7 @@ const cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
 export function nativeOnChain(chainId: number): NativeCurrency {
   return (
     cachedNativeCurrency[chainId] ??
-    (cachedNativeCurrency[chainId] = isMatic(chainId)
+    (cachedNativeCurrency[chainId] = isPoly(chainId)
       ? new MaticNativeCurrency(chainId)
       : ExtendedEther.onChain(chainId))
   )

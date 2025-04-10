@@ -90,10 +90,10 @@ export default function useWrapCallback(
           : hasInputAmount
           ? chainId !== 137
             ? 'Insufficient WETH balance'
-            : 'Insufficient WMATIC balance'
+            : 'Insufficient WPOLY balance'
           : chainId !== 137
           ? 'Enter WETH amount'
-          : 'Enter WMATIC amount',
+          : 'Enter WPOLY amount',
       }
     } else {
       return NOT_APPLICABLE
