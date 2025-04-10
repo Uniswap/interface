@@ -59,7 +59,7 @@ export const uniswapUrls = {
     swapFeeInfo: `${helpUrl}/articles/20131678274957`,
     swapProtection: `${helpUrl}/articles/18814993155853`,
     swapSlippage: `${helpUrl}/articles/8643879653261-What-is-Price-Slippage-`,
-    tokenWarning: `${helpUrl}/articles/8723118437133-What-are-token-warnings-`,
+    tokenWarning: `${helpUrl}/articles/18783818770701-Unsupported-Token-List`,
     transactionFailure: `${helpUrl}/articles/8643975058829-Why-did-my-transaction-fail-`,
     uniswapXInfo: `${helpUrl}/articles/17544708791821`,
     uniswapXFailure: `${helpUrl}/articles/17515489874189-Why-can-my-swap-not-be-filled-`,
