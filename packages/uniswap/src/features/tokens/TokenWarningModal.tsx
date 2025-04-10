@@ -168,11 +168,6 @@ function TokenWarningModalContent({
           captionComponent={
             <Text color="$neutral2" textAlign="center" variant="body3">
               {`${subtitleText} `}
-              {severity === WarningSeverity.Blocked && (
-                <>
-                  This warning is not from Blockaid.{' '}
-                </>
-              )}
               <LearnMoreLink
                 display="inline"
                 textColor="$neutral1"
