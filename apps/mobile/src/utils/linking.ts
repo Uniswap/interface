@@ -20,3 +20,11 @@ export async function openNotificationSettings(): Promise<void> {
     ])
   }
 }
+
+export async function openSecuritySettings(): Promise<void> {
+  if (isIOS) {
+    await openSettings()
+  } else {
+    await Linking.sendIntent('android.settings.SECURITY_SETTINGS')
+  }
+}

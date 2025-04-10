@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Text, TouchableArea, isWeb } from 'ui/src'
+import { Text, TouchableArea } from 'ui/src'
 import { MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
@@ -13,8 +13,7 @@ import {
   TokenSectionsHookProps,
 } from 'uniswap/src/components/TokenSelector/types'
 import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
-import { PoolOption, SearchModalItemTypes } from 'uniswap/src/components/lists/types'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SearchModalItemTypes } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SearchModalList } from 'uniswap/src/features/search/SearchModal/SearchModalList'
@@ -60,46 +59,9 @@ function useSectionsForNoQuerySearch({
     tokenOptions: popularTokenOptions?.slice(0, MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT),
   })
 
-  const MOCK_POOLS_SECTION: TokenSection<PoolOption>[] = useMemo(
-    () => [
-      {
-        sectionKey: TokenOptionSection.PopularTokens, // temp
-        data: [
-          {
-            poolId: '0x1234567890123456789012345678901234567890',
-            chainId: UniverseChainId.Unichain,
-            token0CurrencyInfo: {
-              currency: {
-                chainId: UniverseChainId.Unichain,
-                address: '0x1234567890123456789012345678901234567890',
-                decimals: 18,
-                name: 'Unichain',
-                symbol: 'UNI',
-              },
-            },
-            token1CurrencyInfo: {
-              currency: {
-                chainId: UniverseChainId.Unichain,
-                address: '0x1234567890123456789012345678901234567890',
-                decimals: 18,
-                name: 'Unichain',
-                symbol: 'UNI',
-              },
-            },
-            hookAddress: '0x1234567890123456789012345678901234567890',
-            protocolVersion: ProtocolVersion.V3,
-            feeTier: 3000,
-          } as PoolOption,
-        ],
-      },
-    ],
-    [],
-  )
+  // add NFTs section on mobile only
 
-  const sections = useMemo(
-    () => [...(recentSection ?? []), ...(popularSection ?? []), ...(isWeb ? MOCK_POOLS_SECTION : [])],
-    [popularSection, recentSection, MOCK_POOLS_SECTION],
-  )
+  const sections = useMemo(() => [...(recentSection ?? []), ...(popularSection ?? [])], [popularSection, recentSection])
 
   return useMemo(
     () => ({
@@ -125,11 +87,13 @@ export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
 
   return (
     <SearchModalList
+      showTokenAddress
       errorText={t('token.selector.search.error')}
       hasError={Boolean(error)}
       loading={loading}
       refetch={refetch}
       sections={sections}
+      showTokenWarnings={true}
       onSelectCurrency={onSelectCurrency}
     />
   )

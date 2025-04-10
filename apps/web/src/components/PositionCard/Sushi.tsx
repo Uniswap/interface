@@ -1,4 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
+import Badge, { BadgeVariant } from 'components/Badge/Badge'
 import { LightCard } from 'components/Card/cards'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { FixedHeightRow } from 'components/PositionCard'
@@ -13,7 +14,6 @@ import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { Button } from 'ui/src'
-import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`

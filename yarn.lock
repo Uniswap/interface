@@ -27493,15 +27493,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-modules-core@npm:2.0.4":
-  version: 2.0.4
-  resolution: "expo-modules-core@npm:2.0.4"
-  dependencies:
-    invariant: ^2.2.4
-  checksum: a347753e6d8f611908f0cfb240f4b46c202cb3df99ccc45c40a7e32b8681e544fc185523b7b2a398c9626bc02610bcb6c2996bf789fb8cee5eaf2e837ffcdcf5
-  languageName: node
-  linkType: hard
-
 "expo-modules-core@npm:2.1.4":
   version: 2.1.4
   resolution: "expo-modules-core@npm:2.1.4"
@@ -27558,7 +27549,6 @@ __metadata:
     expo-font: ~13.0.1
     expo-keep-awake: ~14.0.1
     expo-modules-autolinking: 2.0.2
-    expo-modules-core: 2.0.4
     fbemitter: ^3.0.0
     web-streams-polyfill: ^3.3.2
     whatwg-url-without-unicode: 8.0.0-3

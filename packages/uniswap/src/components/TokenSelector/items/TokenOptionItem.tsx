@@ -3,8 +3,7 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { OptionItem, OptionItemProps } from 'uniswap/src/components/lists/items/OptionItem'
-import { TokenOptionItemContextMenu } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
+import { TokenOptionItemWrapper } from 'uniswap/src/components/TokenSelector/items/TokenOptionItemWrapper'
 import { TokenOption } from 'uniswap/src/components/lists/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
@@ -33,7 +32,7 @@ interface OptionProps {
   isSelected?: boolean
 }
 
-function _LegacyTokenOptionItem({
+function _TokenOptionItem({
   option,
   showWarnings,
   onPress,
@@ -84,7 +83,7 @@ function _LegacyTokenOptionItem({
   }, [onPress])
 
   return (
-    <TokenOptionItemContextMenu
+    <TokenOptionItemWrapper
       tokenInfo={{
         address: currency.isNative ? NATIVE_TOKEN_PLACEHOLDER : currency.address,
         chain: currency.chainId,
@@ -168,102 +167,8 @@ function _LegacyTokenOptionItem({
         closeModalOnly={(): void => setShowWarningModal(false)}
         onAcknowledge={onAcceptTokenWarning}
       />
-    </TokenOptionItemContextMenu>
+    </TokenOptionItemWrapper>
   )
-}
-
-// @deprecated
-interface LegacyTokenOptionItemProps {
-  option: TokenOption
-  showWarnings: boolean
-  onPress: () => void
-  showTokenAddress?: boolean
-  tokenWarningDismissed: boolean
-  quantity: number | null
-  // TODO(WEB-4731): Remove isKeyboardOpen dependency
-  isKeyboardOpen?: boolean
-  // TODO(WEB-3643): Share localization context with WEB
-  // (balance, quantityFormatted)
-  balance: string
-  quantityFormatted?: string
-  isSelected?: boolean
-}
-
-export interface TokenOptionItemProps {
-  option: TokenOption
-  onPress: () => void
-  showTokenAddress?: boolean
-  rightElement?: JSX.Element
-  showDisabled?: boolean
-  modalInfo?: OptionItemProps['modalInfo']
-}
-
-function isLegacyTokenOptionItemProps(
-  props: TokenOptionItemProps | LegacyTokenOptionItemProps,
-): props is LegacyTokenOptionItemProps {
-  return 'balance' in props
-}
-
-function _TokenOptionItem(props: TokenOptionItemProps | LegacyTokenOptionItemProps): JSX.Element {
-  if (!isLegacyTokenOptionItemProps(props)) {
-    const { option, onPress, showTokenAddress, rightElement, showDisabled, modalInfo } = props
-    const { currencyInfo } = option
-    const { currency } = currencyInfo
-
-    // in lists like token selector & search, we only show the warning icon if token is >=Medium severity
-    const severity = getTokenWarningSeverity(currencyInfo)
-    const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
-
-    return (
-      <TokenOptionItemContextMenu
-        tokenInfo={{
-          address: currency.isNative ? NATIVE_TOKEN_PLACEHOLDER : currency.address,
-          chain: currency.chainId,
-          isNative: currency.isNative,
-        }}
-      >
-        <OptionItem
-          image={
-            <TokenLogo
-              chainId={currency.chainId}
-              name={currency.name}
-              symbol={currency.symbol}
-              url={currencyInfo.logoUrl ?? undefined}
-            />
-          }
-          title={currency.name ?? currency.symbol ?? ''}
-          subtitle={
-            <Flex row alignItems="center" gap="$spacing8">
-              <Text color="$neutral2" numberOfLines={1} variant="body3">
-                {getSymbolDisplayText(currency.symbol)}
-              </Text>
-              {!currency.isNative && showTokenAddress && (
-                <Flex shrink>
-                  <Text color="$neutral3" numberOfLines={1} variant="body3">
-                    {shortenAddress(currency.address)}
-                  </Text>
-                </Flex>
-              )}
-            </Flex>
-          }
-          badge={
-            warningIconColor ? (
-              <Flex>
-                <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />
-              </Flex>
-            ) : undefined
-          }
-          rightElement={rightElement}
-          disabled={showDisabled}
-          testID={`token-option-${currency.chainId}-${currency.symbol}`}
-          modalInfo={modalInfo}
-          onPress={onPress}
-        />
-      </TokenOptionItemContextMenu>
-    )
-  }
-
-  return <_LegacyTokenOptionItem {...props} />
 }
 
 export const TokenOptionItem = React.memo(_TokenOptionItem)

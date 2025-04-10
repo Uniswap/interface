@@ -1,62 +1,101 @@
 import { memo, useCallback } from 'react'
+import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
 import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { ItemRowInfo } from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
-import { PoolOptionItem } from 'uniswap/src/components/lists/items/pools/PoolOptionItem'
-import { TokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
-import { SearchModalItemTypes, isPoolOption } from 'uniswap/src/components/lists/types'
+import { SearchModalItemTypes, TokenOption } from 'uniswap/src/components/lists/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
+import { CurrencyId } from 'uniswap/src/types/currency'
+
+const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
+  tokenOption,
+  onSelectCurrency,
+  section,
+  index,
+  showWarnings,
+  showTokenAddress,
+  isKeyboardOpen,
+}: {
+  tokenOption: TokenOption
+  section: TokenSection<TokenOption>
+  index: number
+  showWarnings: boolean
+  showTokenAddress?: boolean
+  isKeyboardOpen?: boolean
+  onSelectCurrency: OnSelectCurrency
+}): JSX.Element {
+  const onPress = useCallback(
+    () => onSelectCurrency(tokenOption.currencyInfo, section, index),
+    [index, onSelectCurrency, section, tokenOption.currencyInfo],
+  )
+
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(tokenOption.currencyInfo.currency)
+
+  return (
+    <TokenOptionItem
+      isKeyboardOpen={isKeyboardOpen}
+      option={tokenOption}
+      showTokenAddress={showTokenAddress}
+      showWarnings={showWarnings}
+      tokenWarningDismissed={tokenWarningDismissed}
+      quantity={null}
+      balance="" // change tokenoptionitem to allow undefined balance/quantity
+      onPress={onPress}
+    />
+  )
+})
 
 interface SearchModalListProps {
   onSelectCurrency: OnSelectCurrency
   sections?: TokenSection<SearchModalItemTypes>[]
   chainFilter?: UniverseChainId | null
+  showTokenWarnings: boolean
   refetch?: () => void
   loading?: boolean
   hasError?: boolean
   emptyElement?: JSX.Element
   errorText?: string
+  showTokenAddress?: boolean
+  isKeyboardOpen?: boolean
 }
 
 function _SearchModalList({
+  onSelectCurrency,
   sections,
   chainFilter,
+  showTokenWarnings,
+  isKeyboardOpen,
   refetch,
   loading,
   hasError,
   emptyElement,
   errorText,
+  showTokenAddress,
 }: SearchModalListProps): JSX.Element {
-  const renderItem = useCallback(({ item, section, index }: ItemRowInfo<SearchModalItemTypes>) => {
-    if (isPoolOption(item)) {
+  const renderItem = useCallback(
+    ({ item, section, index }: ItemRowInfo<SearchModalItemTypes>) => {
+      // if (isTokenItem(item)) {
+      //   // return token option item wrapper
+      // } else if (isNFTItem(item)) {
+      //   // return nft item wrapper
+      // } else if (isWalletItem(item)) {
+      //   // return wallet item wrapper
+      // }
       return (
-        <PoolOptionItem
-          token0CurrencyInfo={item.token0CurrencyInfo}
-          token1CurrencyInfo={item.token1CurrencyInfo}
-          poolId={item.poolId}
-          chainId={item.chainId}
-          protocolVersion={item.protocolVersion}
-          hookAddress={item.hookAddress}
-          feeTier={item.feeTier}
-          onPress={() => {
-            // eslint-disable-next-line no-console
-            console.log('pool option item', item, section, index)
-          }}
+        <TokenOptionItemWrapper
+          index={index}
+          isKeyboardOpen={isKeyboardOpen}
+          section={section}
+          showTokenAddress={showTokenAddress}
+          showWarnings={showTokenWarnings}
+          tokenOption={item}
+          onSelectCurrency={onSelectCurrency}
         />
       )
-    }
-
-    return (
-      <TokenOptionItem
-        showTokenAddress
-        option={item}
-        onPress={() =>
-          // eslint-disable-next-line no-console
-          console.log('token option item', item, section, index)
-        }
-      />
-    )
-  }, [])
+    },
+    [isKeyboardOpen, onSelectCurrency, showTokenAddress, showTokenWarnings],
+  )
 
   return (
     <SelectorBaseList<SearchModalItemTypes>
@@ -73,11 +112,8 @@ function _SearchModalList({
   )
 }
 
-function key(item: SearchModalItemTypes): string {
-  if (isPoolOption(item)) {
-    return `pool-${item.chainId}-${item.poolId}-${item.protocolVersion}-${item.hookAddress}-${item.feeTier}`
-  }
-  return `token-${item.currencyInfo.currency.chainId}-${item.currencyInfo.currencyId}`
+function key(item: SearchModalItemTypes): CurrencyId {
+  return item.currencyInfo.currencyId
 }
 
 export const SearchModalList = memo(_SearchModalList)

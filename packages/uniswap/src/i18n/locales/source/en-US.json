@@ -1337,7 +1337,6 @@
   "pool.createdPosition": "Created position",
   "pool.createdPosition.cancelled": "Create position cancelled",
   "pool.createdPosition.failed": "Create position failed",
-  "pool.details": "Pool details",
   "pool.explorers": "Explorers",
   "pool.import": "Import pool",
   "pool.import.link.description": "Some v2 positions aren’t displayed automatically.",

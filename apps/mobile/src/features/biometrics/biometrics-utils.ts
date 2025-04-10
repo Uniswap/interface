@@ -4,13 +4,11 @@ import {
   isEnrolledAsync,
   LocalAuthenticationResult,
 } from 'expo-local-authentication'
-import { NativeModulesProxy } from 'expo-modules-core'
 import DeviceInfo from 'react-native-device-info'
+import { openSecuritySettings } from 'src/utils/linking'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
-
-const ELA = NativeModulesProxy.ExpoLocalAuthentication
 
 /**
  * Biometric authentication statuses
@@ -29,7 +27,7 @@ export enum BiometricAuthenticationStatus {
 }
 
 export async function enroll(): Promise<void> {
-  ELA?.enrollForAuthentication()
+  await openSecuritySettings()
 }
 
 // TODO: [MOB-220] Move into a saga

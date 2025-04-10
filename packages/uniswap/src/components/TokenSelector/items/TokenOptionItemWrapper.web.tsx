@@ -1,60 +1,53 @@
-import React, { ReactNode, useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
+import { TokenItemWrapperProps } from 'uniswap/src/components/TokenSelector/types'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openURL } from 'uniswap/src/utils/link'
-import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
+import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { isExtension } from 'utilities/src/platform'
 
-interface PoolOptionItemContextMenuProps {
-  children: ReactNode
-  poolInfo: {
-    poolId: string
-    chain: number
-  }
-}
-
-function _PoolOptionItemContextMenu({ children, poolInfo }: PoolOptionItemContextMenuProps): JSX.Element {
-  const { poolId, chain } = poolInfo
+function _TokenOptionItemWrapper({ children, tokenInfo }: TokenItemWrapperProps): JSX.Element {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const [copied, setCopied] = useState(false)
 
-  const onNavigateToPoolDetails = useCallback(async () => {
+  const onNavigateToTokenDetails = useCallback(async () => {
     if (isTestnetModeEnabled) {
       return
     }
 
-    const url = getPoolDetailsURL(poolId, chain)
+    const url = getTokenDetailsURL(tokenInfo)
 
     if (isExtension) {
       await openURL(`${UNISWAP_WEB_URL}${url}`)
     } else {
       navigate(url)
     }
-  }, [navigate, poolId, chain, isTestnetModeEnabled])
+  }, [navigate, tokenInfo, isTestnetModeEnabled])
 
   const onCopyAddress = useCallback(async (): Promise<void> => {
-    await setClipboard(poolId)
+    await setClipboard(tokenInfo.address)
     setCopied(true)
     setTimeout(() => {
       setCopied(false)
     }, 400)
-  }, [poolId])
+  }, [tokenInfo.address])
 
   const dropdownOptions = useMemo(
     () => [
       {
         key: 'token-selector-copy-address',
         onPress: onCopyAddress,
+        disabled: tokenInfo.isNative,
         label: copied ? t('notification.copied.address') : t('common.copy.address'),
         Icon: copied ? CheckCircleFilled : CopyAlt,
         closeDelay: 400,
@@ -64,12 +57,12 @@ function _PoolOptionItemContextMenu({ children, poolInfo }: PoolOptionItemContex
       },
       {
         key: 'token-selector-token-info',
-        onPress: onNavigateToPoolDetails,
-        label: t('pool.details'),
+        onPress: onNavigateToTokenDetails,
+        label: t('token.details'),
         Icon: InfoCircleFilled,
       },
     ],
-    [onNavigateToPoolDetails, t, onCopyAddress, copied],
+    [onNavigateToTokenDetails, t, onCopyAddress, copied, tokenInfo.isNative],
   )
 
   return (
@@ -79,4 +72,4 @@ function _PoolOptionItemContextMenu({ children, poolInfo }: PoolOptionItemContex
   )
 }
 
-export const PoolOptionItemContextMenu = React.memo(_PoolOptionItemContextMenu)
+export const TokenOptionItemWrapper = React.memo(_TokenOptionItemWrapper)

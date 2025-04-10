@@ -13,6 +13,7 @@ ignores: [
     '@datadog/datadog-ci',
     'expo-localization',
     'expo-linking',
+    'expo-modules-core',
     'madge',
     'postinstall-postinstall',
     ## React Native Usage

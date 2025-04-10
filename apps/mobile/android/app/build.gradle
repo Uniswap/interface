@@ -176,7 +176,7 @@ android {
     buildFeatures {
         compose true
     }
-    
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
@@ -238,7 +238,6 @@ dependencies {
     implementation("androidx.core:core-performance:$corePerf")
     implementation("androidx.core:core-performance-play-services:$corePerf")
 
-    implementation 'com.onesignal:OneSignal:4.8.9'
     implementation 'com.github.statsig-io:android-sdk:4.36.0'
 
     // For animated GIF support

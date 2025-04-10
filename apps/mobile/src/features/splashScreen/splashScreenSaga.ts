@@ -4,7 +4,7 @@ import {
   hideSplashScreen as hideSplashScreenAction,
   selectSplashScreenIsHidden,
 } from 'src/features/splashScreen/splashScreenSlice'
-import { call, select, take } from 'typed-redux-saga'
+import { call, select, takeLatest } from 'typed-redux-saga'
 
 //------------------------------
 // SplashScreen saga
@@ -14,9 +14,7 @@ export function* splashScreenSaga(): SagaIterator {
   if (yield* select(selectSplashScreenIsHidden)) {
     return
   }
-  // Take the first hide request only (deduplicates multiple requests)
-  yield* take(hideSplashScreenAction.type)
-  yield* call(hideSplashScreen)
+  yield* takeLatest(hideSplashScreenAction.type, hideSplashScreen)
 }
 
 function* hideSplashScreen(): SagaIterator {
