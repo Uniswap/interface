@@ -398,7 +398,7 @@ function isPoly(chainId: number): chainId is SupportedChainId.POLYGON | Supporte
   return chainId === SupportedChainId.POLYGON_MUMBAI || chainId === SupportedChainId.POLYGON
 }
 
-class MaticNativeCurrency extends NativeCurrency {
+class PolyNativeCurrency extends NativeCurrency {
   public constructor(chainId: number) {
     if (!isPoly(chainId)) throw new Error('Not poly')
     super(chainId, 18, 'POLY', 'Polygon Poly')
@@ -433,7 +433,7 @@ export function nativeOnChain(chainId: number): NativeCurrency {
   return (
     cachedNativeCurrency[chainId] ??
     (cachedNativeCurrency[chainId] = isPoly(chainId)
-      ? new MaticNativeCurrency(chainId)
+      ? new PolyNativeCurrency(chainId)
       : ExtendedEther.onChain(chainId))
   )
 }
