@@ -8,7 +8,6 @@ import {
 } from '@datadog/mobile-react-native'
 import { ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/rum/eventMappers/errorEventMapper'
 import { PropsWithChildren, default as React, useEffect } from 'react'
-import { getDatadogEnvironment } from 'src/utils/version'
 import { config } from 'uniswap/src/config'
 import {
   DatadogIgnoredErrorsConfigKey,
@@ -17,7 +16,7 @@ import {
 } from 'uniswap/src/features/gating/configs'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { datadogEnabled, isE2EMode, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { logger } from 'utilities/src/logger/logger'
+import { getDatadogEnvironment, logger } from 'utilities/src/logger/logger'
 
 // In case Statsig is not available
 export const MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent

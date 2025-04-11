@@ -41,7 +41,7 @@ apps/extension/dev
 
 packages/uniswap/codegen.ts
 
-# eslint partials
+# eslint
 
 packages/eslint-config/restrictedImports.js
 

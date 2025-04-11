@@ -16,6 +16,7 @@ import { navigationRef } from 'src/app/navigation/navigationRef'
 import { store as appStore, persistedReducer } from 'src/app/store'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
@@ -46,7 +47,7 @@ export function renderWithProviders(
     store = configureStore({
       reducer: persistedReducer,
       preloadedState,
-      middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+      middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(fiatOnRampAggregatorApi.middleware),
     }),
     ...renderOptions
   }: ExtendedRenderOptions = {},
@@ -116,7 +117,7 @@ export function renderHookWithProviders<P, R>(
     store = configureStore({
       reducer: persistedReducer,
       preloadedState,
-      middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+      middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(fiatOnRampAggregatorApi.middleware),
     }),
     ...renderOptions
   } = (hookOptions ?? {}) as ExtendedRenderHookOptions<P>

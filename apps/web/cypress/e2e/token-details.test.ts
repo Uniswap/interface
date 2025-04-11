@@ -55,41 +55,6 @@ describe('Token details', () => {
     cy.contains(shortenAddress(UNI_ADDRESS)).should('exist')
   })
 
-  it('token with warning and low trading volume should have all information populated', () => {
-    cy.interceptGraphqlOperation('SimpleToken', 'simple_token_warning.json')
-
-    // Null token created for this test, 0 trading volume and has warning modal
-    cy.visit('/explore/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681', {
-      featureFlags: [{ flag: FeatureFlags.GqlTokenLists, value: true }],
-    })
-
-    // Should have missing price view when price unavailable (expected for this token)
-    cy.get('[data-cy="chart-error-view"]').should('exist')
-
-    // Stats should not exist
-    cy.get('[data-cy="token-details-no-stats-data"]').should('exist')
-
-    // Info section should have description of token
-    cy.get(getTestSelector('token-details-info-section')).should('exist')
-    cy.contains('No token information available').should('exist')
-
-    // Links section should link out to Etherscan
-    cy.get(getTestSelector('token-details-info-links')).within(() => {
-      cy.contains('Etherscan')
-        .should('have.attr', 'href')
-        .and('include', 'etherscan.io/token/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
-    })
-
-    // Contract address should be displayed
-    cy.contains(shortenAddress('0x1eFBB78C8b917f67986BcE54cE575069c0143681')).should('exist')
-
-    // Warning label should show if relevant ([spec](https://www.notion.so/3f7fce6f93694be08a94a6984d50298e))
-    cy.get('[data-cy="token-safety-message"]').contains(/Warning/)
-    cy.get('[data-cy="token-safety-description"]').contains(
-      /This token isn’t traded on leading U.S. centralized exchanges or frequently swapped on Uniswap./,
-    )
-  })
-
   describe('swapping', () => {
     beforeEach(() => {
       // On mobile widths, we just link back to /swap instead of rendering the swap component.

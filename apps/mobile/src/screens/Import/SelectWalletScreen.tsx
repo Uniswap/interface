@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { DeprecatedButton, Flex, Loader, useLayoutAnimationOnChange } from 'ui/src'
+import { Button, Flex, Loader, useLayoutAnimationOnChange } from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -77,6 +77,11 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             <Flex gap="$spacing12">
               {importableAccounts?.map((account, i) => {
                 const { address, balance } = account
+                // prevents flickering and incorrect width calculation for long wallet names on Android
+                // it's not possible to deselect last wallet
+                if (selectedAddresses.length === 0) {
+                  return null
+                }
                 return (
                   <Flex key={address} px="$spacing16">
                     <WalletPreviewCard
@@ -96,14 +101,16 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
           </ScrollView>
         )}
         <Flex opacity={showError ? 0 : 1} px="$spacing16">
-          <DeprecatedButton
-            isDisabled={isLoading || !!showError || selectedAddresses.length === 0}
-            testID={TestID.Next}
-            size="large"
-            onPress={onSubmit}
-          >
-            {t('common.button.continue')}
-          </DeprecatedButton>
+          <Flex row>
+            <Button
+              isDisabled={isLoading || !!showError || selectedAddresses.length === 0}
+              variant="branded"
+              size="large"
+              onPress={onSubmit}
+            >
+              {t('common.button.continue')}
+            </Button>
+          </Flex>
         </Flex>
       </OnboardingScreen>
     </>

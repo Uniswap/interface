@@ -1,5 +1,15 @@
-exports.shared = {
+// Rules that should apply to all cases
+const sharedRules = {
   paths: [
+    {
+      name: '@tamagui/core',
+      message: "Please import from 'tamagui' directly to prevent mismatches.",
+    },
+    {
+      name: '@uniswap/sdk-core',
+      importNames: ['ChainId'],
+      message: "Don't use ChainId from @uniswap/sdk-core. Use the UniverseChainId from universe/uniswap.",
+    },
     {
       name: 'utilities/src/telemetry/trace/Trace',
       message: "Please use the Trace in 'uniswap/src/features/telemetry/Trace' for app level usage!",
@@ -11,7 +21,8 @@ exports.shared = {
     },
     {
       name: '@uniswap/analytics',
-      message: 'This is for internal use only. Please use `packages/uniswap/src/features/telemetry`',
+      importNames: ['sendAnalyticsEvent'],
+      message: "Please use the typed `sendAnalyticsEvent` in  'uniswap/src/features/telemetry/send'?",
     },
     {
       name: 'expo-localization',
@@ -62,18 +73,86 @@ exports.shared = {
       importNames: ['UNIVERSE_CHAIN_INFO'],
       message: 'Use useChainInfo or helpers in packages/uniswap/src/features/chains/utils.ts when possible!',
     },
-  ],
-  patterns: [
     {
-      group: ['**/dist'],
-      message: 'Do not import from dist/ - this is an implementation detail, and breaks tree-shaking.',
+      name: 'uniswap/src/features/settings/selectors',
+      importNames: ['selectIsTestnetModeEnabled'],
+      message: 'Use `useEnabledChains` instead.',
+    },
+    {
+      name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+      importNames: ['useAccountListQuery'],
+      message: 'Use `useAccountListData` instead.',
+    },
+    {
+      name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+      importNames: ['usePortfolioBalancesQuery'],
+      message: 'Use `usePortfolioBalances` instead.',
+    },
+    {
+      name: 'wallet/src/data/apollo/usePersistedApolloClient',
+      importNames: ['usePersistedApolloClient'],
+      message:
+        "This hook should only be used once at the top level where the React app is initialized . You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider elsewhere in React. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient''`.",
+    },
+    {
+      name: 'statsig-react',
+      message: 'Import from internal module uniswap/src/features/gating instead',
     },
   ],
+  patterns: [],
 }
 
-exports.crossPlatform = {
+
+// Rules that should apply to native code only
+const nativeRules = {
   paths: [
-    ...exports.shared.paths,
+    // Shared rules
+    ...sharedRules.paths,
+    // Should attempt sharing in the future
+    {
+      name: '@ethersproject',
+      message: "Please import from 'ethers' directly to support tree-shaking.",
+    },
+    // Native specific packages/restrictions
+    {
+      name: 'statsig-react-native',
+      message: 'Import from internal module uniswap/src/features/gating instead',
+    },
+    {
+      name: 'react-native-safe-area-context',
+      importNames: ['useSafeAreaInsets'],
+      message: 'Use our internal `useAppInsets` hook instead.',
+    },
+    {
+      name: 'react-native',
+      importNames: ['Switch'],
+      message: 'Use our custom Switch component instead.',
+    },
+    {
+      name: 'react-native',
+      importNames: ['Keyboard'],
+      message:
+        'Please use dismissNativeKeyboard() instead for dismissals. addListener is okay to ignore this import for!',
+    },
+    {
+      name: '@gorhom/bottom-sheet',
+      importNames: ['BottomSheetTextInput'],
+      message: 'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
+    },
+    {
+      name: 'expo-haptics',
+      message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'mobile/src'`",
+    },
+  ],
+  patterns: sharedRules.patterns,
+}
+
+// Rules that should apply to any code that's run on the web (interface) platform
+const webPlatformRules = {
+  // paths: [],
+  // patterns: [],
+  paths: [
+    ...sharedRules.paths,
     {
       name: 'ethers',
       message: "Please import from '@ethersproject/module' directly to support tree-shaking.",
@@ -92,7 +171,7 @@ exports.crossPlatform = {
     }
   ],
   patterns: [
-    ...exports.shared.patterns,
+    ...sharedRules.patterns,
     {
       group: [
         '*react-native*',
@@ -103,8 +182,87 @@ exports.crossPlatform = {
         '!@react-native-community/netinfo',
         '!react-native-localize',
       ],
+      allowTypeImports: true,
       message:
-        "React Native modules should not be imported outside of .native.ts files. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the whitelist in crossPlatform.js.",
+        "React Native modules should not be imported outside of .native.ts files unless they are only types. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the excluded files in webPlatform.js.",
     },
   ],
 }
+
+// Rules that should apply to the web interface only
+const interfaceRules = {
+  paths: [
+    ...webPlatformRules.paths,
+    {
+      name: '@playwright/test',
+      message: 'Import test and expect from playwright/fixtures instead.',
+      importNames: ['test', 'expect'],
+    },
+    {
+      name: 'i18next',
+      importNames: ['i18n'],
+      message: 'Import from `uniswap/src/i18n` instead.',
+    },
+    {
+      name: 'styled-components',
+      message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.',
+    },
+    {
+      name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+      importNames: ['useActivityWebQuery'],
+      message: 'Import cached/subscription-based activity hooks from `AssetActivityProvider` instead.',
+    },
+    {
+      name: '@uniswap/smart-order-router',
+      message: 'Only import types, unless you are in the client-side SOR, to preserve lazy-loading.',
+      allowTypeImports: true,
+    },
+    {
+      name: 'moment',
+      // tree-shaking for moment is not configured because it degrades performance - see craco.config.cjs.
+      message: 'moment is not configured for tree-shaking. If you use it, update the Webpack configuration.',
+    },
+    {
+      name: 'react-helmet-async',
+      // default package's esm export is broken, but the explicit cjs export works.
+      message: `Import from 'react-helment-async/lib/index' instead.`,
+    },
+    {
+      name: 'zustand',
+      importNames: ['default'],
+      message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
+    },
+    {
+      name: 'utilities/src/platform',
+      importNames: ['isIOS', 'isAndroid'],
+      message:
+        'Importing isIOS and isAndroid from platform is not allowed. Use isWebIOS and isWebAndroid instead.',
+    },
+    {
+      name: 'wagmi',
+      importNames: ['useChainId', 'useAccount'],
+      message: 'Import properly typed account data from `hooks/useAccount` instead.',
+    },
+    {
+      name: 'wagmi',
+      importNames: ['useConnect'],
+      message: 'Import wrapped useConnect util from `hooks/useConnect` instead.',
+    },
+    {
+      name: 'wagmi',
+      importNames: ['useDisconnect'],
+      message: 'Import wrapped useDisconnect util from `hooks/useDisconnect` instead.',
+    },
+    {
+      name: 'wagmi',
+      importNames: ['useBlockNumber', 'useWatchBlockNumber'],
+      message: 'Import wrapped useBlockNumber util from `hooks/useBlockNumber` instead.',
+    },
+  ],
+  patterns: webPlatformRules.patterns
+}
+
+exports.shared = sharedRules
+exports.native = nativeRules
+exports.webPlatform = webPlatformRules
+exports.interface = interfaceRules

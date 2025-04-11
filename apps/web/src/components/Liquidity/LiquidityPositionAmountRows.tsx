@@ -4,7 +4,7 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import { useSrcColor } from 'hooks/useColor'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -67,7 +67,7 @@ export function LiquidityPositionAmountRows({
   ).tokenColor
 
   return (
-    <Flex gap="$gap8" p="$padding8">
+    <Flex gap="$gap8">
       <Flex row alignItems="center" justifyContent="space-between">
         <TouchableArea onPress={() => navigate(currency0Link)} {...ClickableTamaguiStyle}>
           <Flex row alignItems="center" gap="$gap12" maxWidth={160}>

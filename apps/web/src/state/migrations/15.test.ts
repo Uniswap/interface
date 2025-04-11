@@ -65,7 +65,6 @@ describe('migration to v15', () => {
           isToken: false,
           isNative: false,
           logoUrl: 'https://coin-images.coingecko.com/coins/images/4713/large/polygon.png?1698233745',
-          safetyLevel: 'VERIFIED',
         },
         {
           type: 1,
@@ -77,7 +76,6 @@ describe('migration to v15', () => {
           isToken: true,
           isNative: false,
           logoUrl: 'https://coin-images.coingecko.com/coins/images/4713/large/polygon.png?1698233745',
-          safetyLevel: 'VERIFIED',
         },
         {
           type: 1,
@@ -89,7 +87,6 @@ describe('migration to v15', () => {
           isToken: true,
           isNative: false,
           logoUrl: 'https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694',
-          safetyLevel: 'VERIFIED',
         },
         {
           type: 1,
@@ -101,7 +98,6 @@ describe('migration to v15', () => {
           isToken: false,
           isNative: true,
           logoUrl: 'https://token-icons.s3.amazonaws.com/eth.png',
-          safetyLevel: 'VERIFIED',
         },
       ]),
     )
@@ -114,7 +110,6 @@ describe('migration to v15', () => {
         chainId: 137,
         logoUrl: 'https://coin-images.coingecko.com/coins/images/4713/large/polygon.png?1698233745',
         name: 'Polygon',
-        safetyLevel: 'VERIFIED',
         symbol: 'MATIC',
         type: 1,
       },
@@ -123,7 +118,6 @@ describe('migration to v15', () => {
         chainId: 1,
         logoUrl: 'https://coin-images.coingecko.com/coins/images/4713/large/polygon.png?1698233745',
         name: 'Matic Token',
-        safetyLevel: 'VERIFIED',
         symbol: 'MATIC',
         type: 1,
       },
@@ -132,7 +126,6 @@ describe('migration to v15', () => {
         chainId: 1,
         logoUrl: 'https://coin-images.coingecko.com/coins/images/6319/large/usdc.png?1696506694',
         name: 'USD Coin',
-        safetyLevel: 'VERIFIED',
         symbol: 'USDC',
         type: 1,
       },
@@ -141,7 +134,6 @@ describe('migration to v15', () => {
         chainId: 1,
         logoUrl: 'https://token-icons.s3.amazonaws.com/eth.png',
         name: 'Ethereum',
-        safetyLevel: 'VERIFIED',
         symbol: 'ETH',
         type: 1,
       },

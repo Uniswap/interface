@@ -1,25 +1,22 @@
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common/styles'
 import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Box } from 'components/deprecated/Box'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import styled from 'lib/styled-components'
-import { Center } from 'nft/components/Flex'
 import { reduceFilters } from 'nft/components/collection/Activity'
-import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import AssetActivity, { LoadingAssetActivity } from 'nft/components/details/AssetActivity'
 import * as styles from 'nft/components/details/AssetDetails.css'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import DetailsContainer from 'nft/components/details/DetailsContainer'
 import InfoContainer from 'nft/components/details/InfoContainer'
 import TraitsContainer from 'nft/components/details/TraitsContainer'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { isAudio } from 'nft/utils/isAudio'
 import { isVideo } from 'nft/utils/isVideo'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
+import { Flex, Shine, SpinningLoader, useSporeColors } from 'ui/src'
 import { NftActivityType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -105,6 +102,7 @@ const ActivitySelectContainer = styled.div`
   @media (max-width: 720px) {
     padding-bottom: 8px;
   }
+  height: 32px;
 `
 
 const ContentNotAvailable = styled.div`
@@ -121,6 +119,7 @@ const ContentNotAvailable = styled.div`
 `
 
 const FilterBox = styled.div<{ backgroundColor: string }>`
+  display: flex;
   box-sizing: border-box;
   background-color: ${({ backgroundColor }) => backgroundColor};
   font-size: 14px;
@@ -165,8 +164,8 @@ const AudioPlayer = ({
   dominantColor,
 }: GenieAsset & { dominantColor: [number, number, number] }) => {
   return (
-    <Box position="relative" display="inline-block" alignSelf="center">
-      <Box as="audio" className={styles.audioControls} width="292" controls src={animationUrl} />
+    <Flex $platform-web={{ display: 'inline-block' }} alignSelf="center">
+      <audio className={styles.audioControls} controls src={animationUrl} style={{ width: '292px' }} />
       <img
         className={styles.image}
         src={imageUrl}
@@ -177,7 +176,7 @@ const AudioPlayer = ({
           minHeight: '300px',
         }}
       />
-    </Box>
+    </Flex>
   )
 }
 
@@ -192,7 +191,6 @@ enum MediaType {
   Audio = 'audio',
   Video = 'video',
   Image = 'image',
-  Embed = 'embed',
 }
 
 const AssetView = ({
@@ -216,23 +214,6 @@ const AssetView = ({
       )
     case MediaType.Audio:
       return <AudioPlayer {...asset} dominantColor={dominantColor} />
-    case MediaType.Embed:
-      return (
-        <div className={styles.embedContainer}>
-          <iframe
-            title={asset.name ?? `${asset.collectionName} #${asset.tokenId}`}
-            src={asset.animationUrl}
-            className={styles.embed}
-            style={style}
-            frameBorder={0}
-            height="100%"
-            width="100%"
-            sandbox="allow-scripts"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-      )
   }
 }
 
@@ -262,8 +243,6 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       return MediaType.Audio
     } else if (isVideo(asset.animationUrl ?? '')) {
       return MediaType.Video
-    } else if (asset.animationUrl) {
-      return MediaType.Embed
     }
     return MediaType.Image
   }, [asset])
@@ -285,6 +264,8 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
     ? formatNumberOrString({ input: parseFloat(weiPrice), type: NumberType.NFTToken })
     : undefined
 
+  const colors = useSporeColors()
+
   const [activeFilters, filtersDispatch] = useReducer(reduceFilters, initialFilterState)
   const Filter = useCallback(
     function ActivityFilter({ eventType }: { eventType: ActivityEventType }) {
@@ -292,7 +273,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
 
       return (
         <FilterBox
-          backgroundColor={isActive ? vars.color.surface1 : themeVars.colors.surface3}
+          backgroundColor={isActive ? colors.surface1.val : colors.surface3.val}
           onClick={() => filtersDispatch({ eventType })}
         >
           {eventType === ActivityEventType.CancelListing
@@ -301,7 +282,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         </FilterBox>
       )
     },
-    [activeFilters],
+    [activeFilters, colors],
   )
 
   const {
@@ -392,9 +373,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
               hasMore={!!hasNextActivity}
               loader={
                 activitiesAreLoading && (
-                  <Center>
-                    <LoadingSparkle />
-                  </Center>
+                  <Flex justifyContent="center" alignItems="center">
+                    <Shine>
+                      <SpinningLoader size={40} />
+                    </Shine>
+                  </Flex>
                 )
               }
               dataLength={nftActivity?.length ?? 0}
@@ -406,7 +389,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
             <>
               {!errorLoadingActivities && nftActivity && (
                 <EmptyActivitiesContainer>
-                  <div>No activities yet</div>
+                  <Flex>No activities yet</Flex>
                   <Link to={`/nfts/collection/${asset.address}`}>View collection items</Link>{' '}
                 </EmptyActivitiesContainer>
               )}

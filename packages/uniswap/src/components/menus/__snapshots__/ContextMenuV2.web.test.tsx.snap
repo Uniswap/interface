@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContextMenu renders without error 1`] = `
+<View
+  aria-expanded={false}
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  minPressDuration={0}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+>
+  <div
+    onContextMenu={[Function]}
+  >
+    <View
+      style={
+        {
+          "flexDirection": "column",
+        }
+      }
+    >
+      Trigger
+    </View>
+  </div>
+</View>
+`;

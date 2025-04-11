@@ -2,11 +2,9 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useWETHContract } from 'hooks/useContract'
-import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef, useState } from 'react'
-import { Trans } from 'react-i18next'
 import { useCurrencyBalance } from 'state/connection/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -20,31 +18,11 @@ import { logger } from 'utilities/src/logger/logger'
 const NOT_APPLICABLE = { wrapType: WrapType.NotApplicable }
 
 enum WrapInputError {
-  NO_ERROR, // must be equal to 0 so all other errors are truthy
-  ENTER_NATIVE_AMOUNT,
-  ENTER_WRAPPED_AMOUNT,
-  INSUFFICIENT_NATIVE_BALANCE,
-  INSUFFICIENT_WRAPPED_BALANCE,
-}
-
-export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const { chainId } = useMultichainContext()
-  const native = useNativeCurrency(chainId)
-  const wrapped = native?.wrapped
-
-  switch (wrapInputError) {
-    case WrapInputError.NO_ERROR:
-      return null
-    case WrapInputError.ENTER_NATIVE_AMOUNT:
-      return <Trans i18nKey="swap.enterAmount" values={{ sym: native?.symbol }} />
-    case WrapInputError.ENTER_WRAPPED_AMOUNT:
-      return <Trans i18nKey="swap.enterAmount" values={{ sym: wrapped?.symbol }} />
-
-    case WrapInputError.INSUFFICIENT_NATIVE_BALANCE:
-      return <Trans i18nKey="common.insufficientTokenBalance.error" values={{ tokenSymbol: native?.symbol }} />
-    case WrapInputError.INSUFFICIENT_WRAPPED_BALANCE:
-      return <Trans i18nKey="common.insufficientTokenBalance.error" values={{ tokenSymbol: wrapped?.symbol }} />
-  }
+  NO_ERROR = 0, // must be equal to 0 so all other errors are truthy
+  ENTER_NATIVE_AMOUNT = 1,
+  ENTER_WRAPPED_AMOUNT = 2,
+  INSUFFICIENT_NATIVE_BALANCE = 3,
+  INSUFFICIENT_WRAPPED_BALANCE = 4,
 }
 
 /**
@@ -140,6 +118,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                   })
                   sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                     ...eventProperties,
+                    transaction_hash: txReceipt.hash,
                     type: WrapType.Wrap,
                   })
                   return txReceipt.hash
@@ -174,6 +153,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     })
                     sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                       ...eventProperties,
+                      transaction_hash: txReceipt.hash,
                       type: WrapType.Unwrap,
                     })
                     return txReceipt.hash

@@ -1,9 +1,9 @@
 import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, StyleSheet } from 'react-native'
+import { Image } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { Dispatch } from 'redux'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { DEAD_LUNI } from 'ui/src/assets'
 import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
@@ -48,7 +48,7 @@ class InternalErrorBoundary extends React.Component<
     // Based on https://github.com/getsentry/sentry-javascript/blob/develop/packages/react/src/errorboundary.tsx
     const errorBoundaryError = new Error(error.message)
     errorBoundaryError.name = `React ErrorBoundary ${errorBoundaryError.name}`
-    errorBoundaryError.stack = errorInfo.componentStack?.toString()
+    errorBoundaryError.stack = errorInfo.componentStack ?? undefined
     error.cause = errorBoundaryError
 
     logger.error(error, {
@@ -82,18 +82,18 @@ class InternalErrorBoundary extends React.Component<
     const { fallback } = this.props
 
     if (error !== null) {
-      return fallback === null ? null : <ErrorScreen error={error} />
+      return fallback === null ? null : fallback || <ErrorScreen error={error} />
     }
 
     return this.props.children
   }
 }
 
-export const ErrorBoundary = ({
+export function ErrorBoundary({
   notificationText,
   showNotification = false,
   ...props
-}: PropsWithChildren<ErrorBoundariesOwnProps> & { showNotification?: boolean }): JSX.Element => {
+}: PropsWithChildren<ErrorBoundariesOwnProps> & { showNotification?: boolean }): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
@@ -128,23 +128,18 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
   return (
     <Flex centered fill backgroundColor="$surface1" gap="$spacing16" px="$spacing16" py="$spacing48">
       <Flex centered grow gap="$spacing36">
-        <Image resizeMode="contain" source={DEAD_LUNI} style={styles.errorImage} />
+        <Image resizeMode="contain" source={DEAD_LUNI} height={LUNI_SIZE} width={LUNI_SIZE} />
         <Flex centered gap="$spacing8">
           <Text variant="subheading1">{t('errors.crash.title')}</Text>
           <Text variant="body2">{t('errors.crash.message')}</Text>
         </Flex>
         {error.message && __DEV__ && <Text variant="body2">{error.message}</Text>}
       </Flex>
-      <Flex alignSelf="stretch">
-        <DeprecatedButton onPress={restartApp}>{t('errors.crash.restart')}</DeprecatedButton>
+      <Flex row alignSelf="stretch">
+        <Button emphasis="primary" variant="branded" onPress={restartApp}>
+          {t('errors.crash.restart')}
+        </Button>
       </Flex>
     </Flex>
   )
 }
-
-const styles = StyleSheet.create({
-  errorImage: {
-    height: LUNI_SIZE,
-    width: LUNI_SIZE,
-  },
-})

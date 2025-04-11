@@ -4,8 +4,9 @@ import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ExternalLink, ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { flexColumnNoWrap } from 'theme/styles'
+import { Text } from 'ui/src'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
@@ -108,9 +109,9 @@ export default function AddressInputPanel({
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
-              <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
+              <Text variant="body1" color={theme.neutral2}>
                 {label ?? <Trans i18nKey="addressInput.recipient" />}
-              </ThemedText.DeprecatedBlack>
+              </Text>
               {address && chainId && (
                 <ExternalLink
                   href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}

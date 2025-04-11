@@ -102,9 +102,10 @@ export function getServiceProviderLogo(logos: FORLogo, isDarkMode: boolean): str
   return isDarkMode ? logos.darkLogo : logos.lightLogo
 }
 
-export function createOnRampTransactionId(serviceProvider?: string): string {
+export function createOnRampTransactionId(serviceProvider?: string, idSuffix?: string): string {
+  const id = idSuffix ? `${uuid().split('-')[0]}-${idSuffix}` : uuid()
   // The backend expects MoonPay transactions to have the MOONPAY prefix.
-  return `${serviceProvider?.toUpperCase() === 'MOONPAY' ? 'MOONPAY' : ''}${uuid()}`
+  return `${serviceProvider?.toUpperCase() === 'MOONPAY' ? 'MOONPAY' : ''}${id}`
 }
 
 export function selectInitialQuote(quotes: FORQuote[] | undefined): {

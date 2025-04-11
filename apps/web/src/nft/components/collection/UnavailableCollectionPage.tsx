@@ -2,7 +2,8 @@ import Column from 'components/deprecated/Column'
 import styled, { useTheme } from 'lib/styled-components'
 import { AlertTriangle } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ExternalLink, StyledInternalLink } from 'theme/components/Links'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const Container = styled(Column)`

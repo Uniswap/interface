@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   IncreaseLiquidityDerivedInfo,
@@ -6,7 +5,7 @@ import {
 } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useAccount } from 'hooks/useAccount'
 import { UseDepositInfoProps, useDepositInfo } from 'pages/Pool/Positions/create/hooks'
-import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
+import { getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
 
 export function useDerivedIncreaseLiquidityInfo(
@@ -20,17 +19,14 @@ export function useDerivedIncreaseLiquidityInfo(
     throw new Error('no position available')
   }
 
-  const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
+  const currency0 = getCurrencyWithOptionalUnwrap({
     currency: positionInfo.currency0Amount.currency,
     shouldUnwrap: unwrapNativeCurrency && positionInfo.version !== ProtocolVersion.V4,
   })
-  const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
+  const currency1 = getCurrencyWithOptionalUnwrap({
     currency: positionInfo.currency1Amount.currency,
     shouldUnwrap: unwrapNativeCurrency && positionInfo.version !== ProtocolVersion.V4,
   })
-
-  const currency0 = currency0Info?.currency
-  const currency1 = currency1Info?.currency
 
   const depositInfoProps = useMemo((): UseDepositInfoProps => {
     if (positionInfo.version === ProtocolVersion.V2) {

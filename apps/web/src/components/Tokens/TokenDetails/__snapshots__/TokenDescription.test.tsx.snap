@@ -3,6 +3,12 @@
 exports[`TokenDescription no description or social buttons shown when not available 1`] = `
 <DocumentFragment>
   .c1 {
+  color: #CECECE;
+  font-weight: 485;
+  font-size: 16px;
+}
+
+.c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -13,23 +19,12 @@ exports[`TokenDescription no description or social buttons shown when not availa
   font-weight: 500;
 }
 
-.c1:hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c1:active {
+.c0:active {
   opacity: 0.4;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c2 {
-  color: #CECECE;
-  font-weight: 485;
-  font-size: 16px;
 }
 
 <span
@@ -56,43 +51,37 @@ exports[`TokenDescription no description or social buttons shown when not availa
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _width-10037 _flexWrap-wrap"
             data-testid="token-details-info-links"
           >
-            <div
-              class="c0"
+            <span
+              class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
+              data-disable-theme="true"
             >
-              <div>
-                <span
-                  class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-                  data-disable-theme="true"
-                >
-                  <svg
-                    fill="none"
-                    height="18px"
-                    stroke="#222222"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="18px"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      height="13"
-                      rx="2"
-                      ry="2"
-                      width="13"
-                      x="9"
-                      y="9"
-                    />
-                    <path
-                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                    />
-                  </svg>
-                  0xA0b8...eB48
-                </span>
-              </div>
-            </div>
+              <svg
+                fill="none"
+                height="18px"
+                stroke="#222222"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="13"
+                  rx="2"
+                  ry="2"
+                  width="13"
+                  x="9"
+                  y="9"
+                />
+                <path
+                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                />
+              </svg>
+              0xA0b8...eB48
+            </span>
             <a
-              class="c1"
+              class="c0"
               href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
               rel="noopener noreferrer"
               target="_blank"
@@ -127,7 +116,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
             data-disable-theme="true"
           >
             <p
-              class="c2"
+              class="c1"
             >
               No token information available
             </p>
@@ -144,7 +133,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
 
 exports[`TokenDescription renders token information correctly with defaults 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -155,17 +144,12 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   font-weight: 500;
 }
 
-.c1:hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c1:active {
+.c0:active {
   opacity: 0.4;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
 }
 
 <span
@@ -192,43 +176,37 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _width-10037 _flexWrap-wrap"
             data-testid="token-details-info-links"
           >
-            <div
-              class="c0"
+            <span
+              class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
+              data-disable-theme="true"
             >
-              <div>
-                <span
-                  class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-                  data-disable-theme="true"
-                >
-                  <svg
-                    fill="none"
-                    height="18px"
-                    stroke="#222222"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="18px"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      height="13"
-                      rx="2"
-                      ry="2"
-                      width="13"
-                      x="9"
-                      y="9"
-                    />
-                    <path
-                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                    />
-                  </svg>
-                  0xA0b8...eB48
-                </span>
-              </div>
-            </div>
+              <svg
+                fill="none"
+                height="18px"
+                stroke="#222222"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="13"
+                  rx="2"
+                  ry="2"
+                  width="13"
+                  x="9"
+                  y="9"
+                />
+                <path
+                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                />
+              </svg>
+              0xA0b8...eB48
+            </span>
             <a
-              class="c1"
+              class="c0"
               href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
               rel="noopener noreferrer"
               target="_blank"
@@ -258,7 +236,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
               </span>
             </a>
             <a
-              class="c1"
+              class="c0"
               href="https://www.circle.com/en/usdc"
               rel="noopener noreferrer"
               target="_blank"
@@ -284,7 +262,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
               </span>
             </a>
             <a
-              class="c1"
+              class="c0"
               href="https://x.com/circle"
               rel="noopener noreferrer"
               target="_blank"
@@ -346,7 +324,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
 
 exports[`TokenDescription truncates description and shows more 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -357,17 +335,12 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   font-weight: 500;
 }
 
-.c1:hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c1:active {
+.c0:active {
   opacity: 0.4;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
 }
 
 <span
@@ -394,43 +367,37 @@ exports[`TokenDescription truncates description and shows more 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _width-10037 _flexWrap-wrap"
             data-testid="token-details-info-links"
           >
-            <div
-              class="c0"
+            <span
+              class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
+              data-disable-theme="true"
             >
-              <div>
-                <span
-                  class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-                  data-disable-theme="true"
-                >
-                  <svg
-                    fill="none"
-                    height="18px"
-                    stroke="#222222"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="18px"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      height="13"
-                      rx="2"
-                      ry="2"
-                      width="13"
-                      x="9"
-                      y="9"
-                    />
-                    <path
-                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                    />
-                  </svg>
-                  0xA0b8...eB48
-                </span>
-              </div>
-            </div>
+              <svg
+                fill="none"
+                height="18px"
+                stroke="#222222"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="13"
+                  rx="2"
+                  ry="2"
+                  width="13"
+                  x="9"
+                  y="9"
+                />
+                <path
+                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                />
+              </svg>
+              0xA0b8...eB48
+            </span>
             <a
-              class="c1"
+              class="c0"
               href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
               rel="noopener noreferrer"
               target="_blank"
@@ -460,7 +427,7 @@ exports[`TokenDescription truncates description and shows more 1`] = `
               </span>
             </a>
             <a
-              class="c1"
+              class="c0"
               href="https://www.circle.com/en/usdc"
               rel="noopener noreferrer"
               target="_blank"
@@ -486,7 +453,7 @@ exports[`TokenDescription truncates description and shows more 1`] = `
               </span>
             </a>
             <a
-              class="c1"
+              class="c0"
               href="https://x.com/circle"
               rel="noopener noreferrer"
               target="_blank"

@@ -14,8 +14,8 @@ import { CollectionNftsAndMenuLoading } from 'nft/components/collection/Collecti
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { UnavailableCollectionPage } from 'nft/components/collection/UnavailableCollectionPage'
 import { BagCloseIcon } from 'nft/components/icons'
+import { breakpointPaddingsCss } from 'nft/css/breakpoints'
 import { useBag, useCollectionFilters, useFiltersExpanded } from 'nft/hooks'
-import * as styles from 'nft/pages/collection/index.css'
 import { useDynamicBlocklistedNftCollections } from 'nft/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { Suspense, useEffect, useMemo } from 'react'
@@ -75,7 +75,9 @@ const Banner = styled.div<{ src: string }>`
 `
 
 const CollectionDescriptionSection = styled(Column)`
-  ${styles.ScreenBreakpointsPaddings}
+  padding-left: 16px;
+  padding-right: 16px;
+  ${breakpointPaddingsCss}
 `
 
 const FiltersContainer = styled.div<{ isMobile: boolean; isFiltersExpanded: boolean }>`
@@ -99,7 +101,7 @@ const MobileFilterHeader = styled(Row)`
 `
 
 // Sticky navbar on light mode looks incorrect because the box shadows from assets overlap the edges of the navbar.
-// As a result it needs 16px padding on either side. These paddings are offset by 16px to account for this. Please see CollectionNFTs.css.ts for the additional sizing context.
+// As a result it needs 16px padding on either side. These paddings are offset by 16px to account for this. Please see CollectionNFTs.css.tsx for the additional sizing context.
 // See breakpoint values in ScreenBreakpointsPaddings above - they must match
 const CollectionDisplaySection = styled(Row)`
   align-items: flex-start;
@@ -211,6 +213,7 @@ const Collection = () => {
               </BannerWrapper>
               <CollectionDescriptionSection>
                 {collectionStats && <CollectionStats stats={collectionStats} isMobile={isMobile} />}
+                {/* eslint-disable-next-line react/forbid-elements */}
                 <div id="nft-anchor" />
                 <ActivitySwitcher
                   showActivity={isActivityToggled}

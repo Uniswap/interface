@@ -17,13 +17,11 @@ export interface TransactionSettingsState {
   customSlippageTolerance?: number
   customDeadline?: number
   selectedProtocols: FrontendSupportedProtocol[]
-  isOnlyV2Allowed: boolean
   slippageWarningModalSeen: boolean
 }
 
 export const initialTransactionSettingsState: TransactionSettingsState = {
   selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
-  isOnlyV2Allowed: false,
   slippageWarningModalSeen: false,
 }
 

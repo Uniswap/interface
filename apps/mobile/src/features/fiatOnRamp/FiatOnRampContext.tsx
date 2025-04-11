@@ -12,6 +12,7 @@ import { FORQuote, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/feat
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { v4 as uuidv4 } from 'uuid'
 
 interface FiatOnRampContextType {
   quotesSections?: SectionListData<FORQuote>[] | undefined
@@ -35,6 +36,7 @@ interface FiatOnRampContextType {
   setIsOffRamp: (isOffRamp: boolean) => void
   isTokenInputMode: boolean
   setIsTokenInputMode: React.Dispatch<React.SetStateAction<boolean>>
+  externalTransactionIdSuffix: string
 }
 
 const initialState: FiatOnRampContextType = {
@@ -56,6 +58,7 @@ const initialState: FiatOnRampContextType = {
   setIsOffRamp: () => undefined,
   isTokenInputMode: false,
   setIsTokenInputMode: () => undefined,
+  externalTransactionIdSuffix: '',
 }
 
 const FiatOnRampContext = createContext<FiatOnRampContextType>(initialState)
@@ -73,6 +76,10 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [isTokenInputMode, setIsTokenInputMode] = useState<boolean>(false)
   const [fiatAmount, setFiatAmount] = useState<number | undefined>()
   const [tokenAmount, setTokenAmount] = useState<number | undefined>()
+  const [externalTransactionIdSuffix] = useState<string>(() => {
+    // Generate a UUID and extract the last 4 groups as the suffix
+    return uuidv4().split('-').slice(1).join('-')
+  })
 
   const { initialState: initialModalState } = useSelector(selectModalState(ModalName.FiatOnRampAggregator))
   const prefilledCurrency = initialModalState?.prefilledCurrency
@@ -92,14 +99,14 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [isOffRamp, setIsOffRamp] = useState<boolean>(initialModalState?.isOfframp ?? false)
 
   useEffect(() => {
-    if (prefilledCurrency) {
+    if (prefilledCurrency || quoteCurrency.currencyInfo) {
       return
     }
     // Addresses a race condition where the quoteCurrency could be set before ethCurrencyInfo is loaded
     if (ethCurrencyInfo) {
       setQuoteCurrency(defaultCurrency)
     }
-  }, [ethCurrencyInfo, defaultCurrency, prefilledCurrency])
+  }, [ethCurrencyInfo, defaultCurrency, prefilledCurrency, quoteCurrency])
 
   return (
     <FiatOnRampContext.Provider
@@ -125,6 +132,7 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         setIsOffRamp,
         isTokenInputMode,
         setIsTokenInputMode,
+        externalTransactionIdSuffix,
       }}
     >
       {children}

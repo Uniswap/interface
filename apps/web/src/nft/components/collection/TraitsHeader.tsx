@@ -1,16 +1,11 @@
 import clsx from 'clsx'
-import { Box } from 'components/deprecated/Box'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import styled from 'lib/styled-components'
-import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { ReactNode, useEffect, useState } from 'react'
-
-const ChildreMobileWrapper = styled.div<{ isMobile: boolean }>`
-  padding: ${({ isMobile }) => (isMobile ? '0px 16px 0px 12px' : '0px')};
-`
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { Flex, Text, useSporeColors } from 'ui/src'
 
 interface TraitsHeaderProps {
   title: string
@@ -25,6 +20,7 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
   const traitsOpen = useTraitsOpen((state) => state.traitsOpen)
   const setTraitsOpen = useTraitsOpen((state) => state.setTraitsOpen)
   const isMobile = useIsMobile()
+  const colors = useSporeColors()
 
   const prevTraitIsOpen = index !== undefined ? traitsOpen[index - 1] : false
   const showBorderTop = index !== TraitPosition.TRAIT_START_INDEX
@@ -38,40 +34,63 @@ export const TraitsHeader = (props: TraitsHeaderProps) => {
   return (
     <>
       {showBorderTop && (
-        <Box
-          className={clsx(subheadSmall, !isOpen && styles.rowHover, styles.detailsOpen)}
-          opacity={!prevTraitIsOpen && isOpen && index !== 0 ? '1' : '0'}
-          marginTop={prevTraitIsOpen ? '0' : '8'}
+        <Flex
+          className={clsx(subheadSmall)}
+          borderTopColor="$surface3"
+          borderTopWidth={1}
+          overflow="hidden"
+          my="$spacing8"
+          hoverStyle={
+            isOpen
+              ? {}
+              : {
+                  backgroundColor: '$surface3',
+                  borderRadius: '$rounded12',
+                }
+          }
+          opacity={!prevTraitIsOpen && isOpen && index !== 0 ? 1 : 0}
+          mt={prevTraitIsOpen ? 0 : 8}
         />
       )}
 
-      <Box as="details" className={clsx(subheadSmall, !isOpen && styles.rowHover)} open={isOpen}>
-        <Box
-          as="summary"
-          className={`${styles.row} ${styles.rowHover}`}
-          onClick={(e) => {
-            e.preventDefault()
-            setOpen(!isOpen)
-          }}
+      <Flex width="100%">
+        <Flex
+          row
+          width="100%"
+          alignItems="center"
+          justifyContent="space-between"
+          px="$padding12"
+          py="$padding8"
+          borderRadius="$rounded12"
+          onPress={() => setOpen(!isOpen)}
+          {...ClickableTamaguiStyle}
+          hoverStyle={{ backgroundColor: '$surface3' }}
         >
-          {title}
+          <Text variant="body2">{title}</Text>
 
-          <Box display="flex" alignItems="center">
-            <Box color="neutral2" display="inline-block" marginRight="12">
+          <Flex alignItems="center" row gap="$gap8">
+            <Text color="$neutral2" mr="12" variant="body2">
               {props.numTraits}
-            </Box>
-            <Box
-              className={styles.chevronContainer}
-              style={{
-                transform: `rotate(${isOpen ? 0 : 180}deg)`,
-              }}
+            </Text>
+            <Flex
+              $platform-web={{ display: 'inline-block' }}
+              height="$spacing28"
+              width="$spacing28"
+              animation="fast"
+              mr={-1}
+              rotate={isOpen ? '0deg' : '180deg'}
             >
-              <ChevronUpIcon className={styles.chevronIcon} />
-            </Box>
-          </Box>
-        </Box>
-        <ChildreMobileWrapper isMobile={isMobile}>{children}</ChildreMobileWrapper>
-      </Box>
+              <ChevronUpIcon fill={colors.neutral2.val} style={{ marginLeft: '-1px' }} />
+            </Flex>
+          </Flex>
+        </Flex>
+
+        {isOpen && (
+          <Flex pr={isMobile ? 16 : 0} pl={isMobile ? 12 : 0}>
+            {children}
+          </Flex>
+        )}
+      </Flex>
     </>
   )
 }

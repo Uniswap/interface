@@ -4,7 +4,7 @@ import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import {
   BridgeTrade,
   ClassicTrade,
@@ -155,6 +155,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   token_out_amount_usd: fiatValues.amountOut,
   // measures the amount of time the user took to sign the permit message or swap tx in their wallet
   time_to_sign_since_request_ms: timeToSignSinceRequestMs,
+  ...['routing' in trade ? getRouteAnalyticsData(trade) : undefined],
   ...formatCommonPropertiesForTrade(trade, allowedSlippage, fiatValues.feeUsd),
 })
 
@@ -164,21 +165,4 @@ function getQuoteMethod(trade: InterfaceTrade) {
   }
 
   return trade.quoteMethod
-}
-
-export const formatSwapQuoteReceivedEventProperties = (
-  trade: InterfaceTrade,
-  allowedSlippage: Percent,
-  swapQuoteLatencyMs: number | undefined,
-  outputFeeFiatValue: number | undefined,
-) => {
-  return {
-    ...formatCommonPropertiesForTrade(trade, allowedSlippage, outputFeeFiatValue),
-    swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber ?? undefined : undefined,
-    allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
-    token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
-    token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
-    quote_latency_milliseconds: swapQuoteLatencyMs,
-    transactionOriginType: TransactionOriginType.Internal,
-  }
 }

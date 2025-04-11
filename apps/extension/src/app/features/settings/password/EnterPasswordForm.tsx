@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PasswordInput } from 'src/app/components/PasswordInput'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 function useEnterPasswordForm(): {
@@ -72,9 +72,11 @@ export function EnterPasswordForm({ onNext }: { onNext: () => void }): JSX.Eleme
           </Text>
         )}
       </Flex>
-      <DeprecatedButton isDisabled={!submitEnabled} theme="tertiary" onPress={onContinue}>
-        {t('common.button.continue')}
-      </DeprecatedButton>
+      <Flex row>
+        <Button isDisabled={!submitEnabled} emphasis="secondary" onPress={onContinue}>
+          {t('common.button.continue')}
+        </Button>
+      </Flex>
     </Flex>
   )
 }

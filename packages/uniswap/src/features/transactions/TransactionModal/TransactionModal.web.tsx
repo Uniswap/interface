@@ -1,7 +1,5 @@
 import { useState } from 'react'
-import { FadeIn } from 'react-native-reanimated'
 import { Flex } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import {
   TransactionModalContextProvider,
   TransactionScreen,
@@ -52,8 +50,8 @@ export function TransactionModalInnerContainer({
 
 export function TransactionModalFooterContainer({ children }: TransactionModalFooterContainerProps): JSX.Element {
   return (
-    <AnimatedFlex entering={FadeIn} position="relative" pt="$spacing24">
+    <Flex animation="fast" animateEnter="fadeInDown" position="relative" pt="$spacing24">
       {children}
-    </AnimatedFlex>
+    </Flex>
   )
 }

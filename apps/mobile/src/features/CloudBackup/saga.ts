@@ -38,7 +38,7 @@ export function* cloudBackupsManagerSaga() {
   yield* fork(watchCloudStorageBackupEvents)
 }
 
-export function* watchCloudStorageBackupEvents() {
+function* watchCloudStorageBackupEvents() {
   const CloudManagerEvents = new NativeEventEmitter(
     NativeModules.RNCloudStorageBackupsManager as unknown as NativeModule,
   )

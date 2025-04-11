@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { AppStateStatus } from 'react-native'
 import { SagaIterator } from 'redux-saga'
-import { transitionAppState } from 'src/features/appState/appStateSlice'
+import { selectIsFromBackground, transitionAppState } from 'src/features/appState/appStateSlice'
 import { BiometricAuthenticationStatus } from 'src/features/biometrics/biometrics-utils'
 import {
   selectAuthenticationStatusIsAuthenticated,
@@ -15,7 +15,9 @@ import {
   selectLockScreenOnBlur,
   selectPreventLock,
   setLockScreenVisibility,
+  setManualRetryRequired,
 } from 'src/features/lockScreen/lockScreenSlice'
+import { hideSplashScreen } from 'src/features/splashScreen/splashScreenSlice'
 import { call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 
 //------------------------------
@@ -23,19 +25,51 @@ import { call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 //------------------------------
 
 export function* lockScreenSaga(): SagaIterator {
-  yield* takeLatest(transitionAppState.type, handleLockScreenTransition)
+  // setup initial lock screen state on app load if required
+  yield* call(setupInitialLockScreenState)
+  // handle when splash screen is hidden
+  yield* takeLatest(hideSplashScreen.type, onSplashScreenHide)
+  // handle when app state changes
+  yield* takeLatest(transitionAppState.type, onAppStateTransition)
   // handle authentication status change in dedicated saga
-  yield* takeEvery(setAuthenticationStatus.type, handleAuthenticationStatusChange)
+  yield* takeEvery(setAuthenticationStatus.type, onAuthenticationStatusChange)
 }
 
-function* handleAuthenticationStatusChange(action: PayloadAction<BiometricAuthenticationStatus>): SagaIterator {
-  const isVisible = yield* select(selectIsLockScreenVisible)
-  if (action.payload === BiometricAuthenticationStatus.Authenticated && isVisible) {
-    yield* put(setLockScreenVisibility(LockScreenVisibility.Hidden))
+function* setupInitialLockScreenState(): SagaIterator {
+  if (yield* call(shouldPresentLockScreen)) {
+    yield* put(setLockScreenVisibility(LockScreenVisibility.Visible))
   }
 }
 
-function* handleLockScreenTransition(action: PayloadAction<AppStateStatus>): SagaIterator {
+function* onSplashScreenHide(): SagaIterator {
+  const isRequiredForAppAccess = yield* select(selectRequiredForAppAccess)
+  // if biometrics are required for app access, trigger authentication
+  if (isRequiredForAppAccess) {
+    yield* call(handleTriggerAuthentication)
+  }
+}
+
+function* onAuthenticationStatusChange(action: PayloadAction<BiometricAuthenticationStatus>): SagaIterator {
+  const isVisible = yield* select(selectIsLockScreenVisible)
+  if (isVisible) {
+    // on success, dismiss the lock screen
+    if (action.payload === BiometricAuthenticationStatus.Authenticated) {
+      yield* put(setLockScreenVisibility(LockScreenVisibility.Hidden))
+      yield* put(setManualRetryRequired(false))
+    }
+    // on failure, show the manual retry button
+    // authenticated and authenticating are not failures,
+    // everything else is a failure
+    if (
+      action.payload !== BiometricAuthenticationStatus.Authenticated &&
+      action.payload !== BiometricAuthenticationStatus.Authenticating
+    ) {
+      yield* put(setManualRetryRequired(true))
+    }
+  }
+}
+
+function* onAppStateTransition(action: PayloadAction<AppStateStatus>): SagaIterator {
   switch (action.payload) {
     case 'inactive':
       yield* call(toInactiveTransition)
@@ -62,17 +96,7 @@ function* toBackgroundTransition(): SagaIterator {
     yield* put(setLockScreenVisibility(LockScreenVisibility.Visible))
     // invalidate authentication on backgrounding if
     // biometrics are required for app access
-    yield* call(invalidateAuthentication)
-  }
-}
-
-function* invalidateAuthentication(): SagaIterator {
-  const preventLock = yield* select(selectPreventLock)
-  if (preventLock) {
-    return
-  }
-  if (yield* select(selectRequiredForAppAccess)) {
-    yield* put(setAuthenticationStatus(BiometricAuthenticationStatus.Invalid))
+    yield* call(handleInvalidateAuthentication)
   }
 }
 
@@ -81,9 +105,27 @@ function* toActiveTransition(): SagaIterator {
   if (yield* call(shouldDismissLockScreen)) {
     yield* put(setLockScreenVisibility(LockScreenVisibility.Hidden))
   } else {
-    yield* put(triggerAuthentication({ showAlert: true }))
+    // only trigger authentication if the app was in the background
+    if (yield* select(selectIsFromBackground)) {
+      yield* call(handleTriggerAuthentication)
+    }
     // the lock screen will be dismissed when the authentication status changes to authenticated
   }
+}
+
+function* handleInvalidateAuthentication(): SagaIterator {
+  const preventLock = yield* select(selectPreventLock)
+  if (preventLock) {
+    return
+  }
+  if (yield* select(selectRequiredForAppAccess)) {
+    yield* put(setAuthenticationStatus(BiometricAuthenticationStatus.Invalid))
+  }
+  yield* put(setManualRetryRequired(false))
+}
+
+function* handleTriggerAuthentication(): SagaIterator {
+  yield* put(triggerAuthentication({}))
 }
 
 function* shouldDismissLockScreen(): SagaIterator<boolean> {

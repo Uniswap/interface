@@ -1,21 +1,50 @@
-import { sprinkles } from 'nft/css/sprinkles.css'
+import { style } from '@vanilla-extract/css'
 
-export const center = sprinkles({
+export const center = style({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 })
 
 // TYPOGRAPHY
-export const headlineMedium = sprinkles({ fontWeight: 'medium', fontSize: '28', lineHeight: '36' })
-export const headlineSmall = sprinkles({ fontWeight: 'medium', fontSize: '20', lineHeight: '28' })
+export const headlineMedium = style({
+  fontWeight: '500',
+  fontSize: '28px',
+  lineHeight: '36px',
+})
 
-export const subhead = sprinkles({ fontWeight: 'book', fontSize: '16', lineHeight: '24' })
-export const subheadSmall = sprinkles({ fontWeight: 'book', fontSize: '14', lineHeight: '14' })
+export const headlineSmall = style({
+  fontWeight: '500',
+  fontSize: '20px',
+  lineHeight: '28px',
+})
 
-export const body = sprinkles({ fontWeight: 'book', fontSize: '16', lineHeight: '24' })
-export const bodySmall = sprinkles({ fontWeight: 'book', fontSize: '14', lineHeight: '20' })
-export const caption = sprinkles({ fontWeight: 'book', fontSize: '12', lineHeight: '16' })
+export const subhead = style({
+  fontWeight: '400',
+  fontSize: '16px',
+  lineHeight: '24px',
+})
 
-export const buttonTextMedium = sprinkles({ fontWeight: 'medium', fontSize: '16', lineHeight: '20' })
-export const buttonTextSmall = sprinkles({ fontWeight: 'medium', fontSize: '14', lineHeight: '16' })
+export const subheadSmall = style({
+  fontWeight: '400',
+  fontSize: '14px',
+  lineHeight: '14px',
+})
+
+export const body = style({
+  fontWeight: '400',
+  fontSize: '16px',
+  lineHeight: '24px',
+})
+
+export const bodySmall = style({
+  fontWeight: '400',
+  fontSize: '14px',
+  lineHeight: '20px',
+})
+
+export const buttonTextMedium = style({
+  fontWeight: '500',
+  fontSize: '16px',
+  lineHeight: '20px',
+})

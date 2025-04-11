@@ -1,5 +1,7 @@
+import { Currency } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isBridge, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionStatus,
@@ -77,6 +79,32 @@ export function receiptFromEthersReceipt(
     gasUsed: ethersReceipt.gasUsed?.toNumber(),
     effectiveGasPrice: ethersReceipt.effectiveGasPrice?.toNumber(),
   }
+}
+
+export const isAmountGreaterThanZero = (
+  exactAmountToken: string | undefined,
+  exactAmountFiat: string | undefined,
+  currency: Currency | undefined,
+): boolean => {
+  if (exactAmountToken) {
+    return (
+      getCurrencyAmount({
+        value: exactAmountToken,
+        valueType: ValueType.Exact,
+        currency,
+      })?.greaterThan(0) || false
+    )
+  }
+  if (exactAmountFiat) {
+    return (
+      getCurrencyAmount({
+        value: exactAmountFiat,
+        valueType: ValueType.Exact,
+        currency,
+      })?.greaterThan(0) || false
+    )
+  }
+  return false
 }
 
 export function isOnRampTransaction(tx: TransactionDetails): boolean {

@@ -1,6 +1,7 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
 import { ProviderRpcError } from '@web3-react/types'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
+import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { getAccount } from 'wagmi/actions'
 
@@ -26,6 +27,10 @@ export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEv
     // ProviderRpcErrors occur frequently through 3P providers, so it's good to disambiguate them.
     // This allows us to see which errors are actually frequent, vs which ones are extension-specific.
     if (isProviderRpcError(hint.originalException)) {
+      if (shouldRejectProviderRpcError(event, hint.originalException)) {
+        return null
+      }
+
       event.exception?.values?.push({
         type: 'ProviderRpcError',
         value: `${hint.originalException.code}: ${hint.originalException.message}`,
@@ -171,4 +176,20 @@ function isProviderRpcError(error: unknown): error is ProviderRpcError {
     'message' in error &&
     typeof (error as Partial<ProviderRpcError>)?.message === 'string'
   )
+}
+
+function shouldRejectProviderRpcError(event: ErrorEvent, originalException: ProviderRpcError): boolean {
+  // Get chainId from the Redux state
+  const state = (event.contexts?.state?.state as any)?.value
+  const chainId = state?.application?.chainId
+
+  if (chainId && isTestnetChain(chainId)) {
+    return true // Filter out the error if it's from a testnet
+  }
+
+  if (originalException.message.includes("Must call 'eth_requestAccounts' before other methods")) {
+    return true
+  }
+
+  return false
 }

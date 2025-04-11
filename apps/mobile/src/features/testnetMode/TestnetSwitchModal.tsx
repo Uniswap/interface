@@ -46,7 +46,6 @@ export function TestnetSwitchModal(): JSX.Element {
       rejectText={t('common.button.cancel')}
       acknowledgeText={t('common.button.confirm')}
       icon={<Wrench color="$neutral1" size="$icon.24" />}
-      acknowledgeButtonTheme="primary"
       // only show if swap form state is provided
       modalName={ModalName.TestnetSwitchModal}
       severity={WarningSeverity.None}

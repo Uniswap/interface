@@ -191,7 +191,7 @@ export function AdaptiveWebModal({
 
         <Flex
           grow
-          maxHeight="calc(100vh - 32px)"
+          maxHeight={filteredRest.maxHeight ?? 'calc(100vh - 32px)'}
           borderRadius="$rounded16"
           justifyContent="center"
           overflow="hidden"

@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-elements */
 import { useIsPrimaryAppInstance } from 'src/store/storeSynchronization'
 
 // This is a dev-only component that renders a small green/red dot in the bottom right corner of the screen

@@ -1,4 +1,5 @@
 import configureMockStore from 'redux-mock-store'
+import { thunk } from 'redux-thunk'
 import FavoriteTokenCard, { FavoriteTokenCardProps } from 'src/components/explore/FavoriteTokenCard'
 import { act, cleanup, fireEvent, render, waitFor } from 'src/test/test-utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -28,7 +29,7 @@ jest.mock('@react-navigation/native', () => {
   }
 })
 
-const mockStore = configureMockStore()
+const mockStore = configureMockStore([thunk])
 
 const favoriteToken = ethToken({
   project: {
@@ -168,9 +169,10 @@ describe('FavoriteTokenCard', () => {
       })
 
       const actions = store.getActions()
-      expect(actions).toEqual([
-        { type: 'favorites/removeFavoriteToken', payload: { currencyId: SAMPLE_CURRENCY_ID_1 } },
-      ])
+      expect(actions).toContainEqual({
+        type: 'favorites/removeFavoriteToken',
+        payload: { currencyId: SAMPLE_CURRENCY_ID_1 },
+      })
     })
   })
 })

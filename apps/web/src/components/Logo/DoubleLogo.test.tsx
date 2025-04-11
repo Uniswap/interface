@@ -3,9 +3,11 @@ import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
+import { Flex } from 'ui/src'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 
 jest.mock('hooks/Tokens', () => ({
   useCurrencyInfo: jest.fn(),
@@ -42,7 +44,7 @@ describe('DoubleLogo', () => {
           logoUrl:
             'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png',
           currencyId: UNI[UniverseChainId.Mainnet].address,
-          safetyLevel: SafetyLevel.Verified,
+          safetyInfo: getCurrencySafetyInfo(SafetyLevel.Verified, undefined),
         }
       }
 
@@ -52,7 +54,7 @@ describe('DoubleLogo', () => {
           logoUrl:
             'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260fac5e5542a773aa44fbcfeDf7c193bc2c599/logo.png',
           currencyId: WBTC.address,
-          safetyLevel: SafetyLevel.Verified,
+          safetyInfo: getCurrencySafetyInfo(SafetyLevel.Verified, undefined),
         }
       }
 
@@ -85,7 +87,7 @@ describe('DoubleLogo', () => {
       <DoubleCurrencyLogo
         currencies={[mockCurrency1, mockCurrency2]}
         size={32}
-        customIcon={<div data-testid="custom-icon">Custom Icon</div>}
+        customIcon={<Flex data-testid="custom-icon">Custom Icon</Flex>}
       />,
     )
     expect(asFragment()).toMatchSnapshot()

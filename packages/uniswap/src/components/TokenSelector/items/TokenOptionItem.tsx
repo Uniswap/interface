@@ -1,27 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useCallback, useState } from 'react'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
-import { UnichainAnimatedText } from 'ui/src/components/text/UnichainAnimatedText'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOptionItemWrapper } from 'uniswap/src/components/TokenSelector/items/TokenOptionItemWrapper'
-import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { setHasSeenBridgingAnimation, setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
-import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isInterface } from 'utilities/src/platform'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 interface OptionProps {
   option: TokenOption
@@ -52,20 +45,15 @@ function _TokenOptionItem({
   isSelected,
 }: OptionProps): JSX.Element {
   const { currencyInfo, isUnsupported } = option
-  const { currency, safetyLevel } = currencyInfo
+  const { currency } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
   const colors = useSporeColors()
-  const dispatch = useDispatch()
 
   const severity = getTokenWarningSeverity(currencyInfo)
-  const isBlocked = severity === WarningSeverity.Blocked || safetyLevel === SafetyLevel.Blocked
+  const isBlocked = severity === WarningSeverity.Blocked
   // in token selector, we only show the warning icon if token is >=Medium severity
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
   const shouldShowWarningModalOnPress = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
-
-  const { shouldShowUnichainBridgingAnimation } = useUnichainTooltipVisibility()
-  const isUnichainEth = currency.isNative && currency.chainId === UniverseChainId.Unichain
-  const showUnichainPromoAnimation = shouldShowUnichainBridgingAnimation && isUnichainEth
 
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
@@ -73,7 +61,6 @@ function _TokenOptionItem({
   }, [setShowWarningModal])
 
   const onPressTokenOption = useCallback(() => {
-    dispatch(setHasSeenBridgingTooltip(true))
     if (showWarnings && shouldShowWarningModalOnPress) {
       // On mobile web we need to wait for the keyboard to hide
       // before showing the modal to avoid height issues
@@ -88,23 +75,12 @@ function _TokenOptionItem({
     }
 
     onPress()
-  }, [dispatch, showWarnings, shouldShowWarningModalOnPress, onPress, isKeyboardOpen, handleShowWarningModal])
+  }, [showWarnings, shouldShowWarningModalOnPress, onPress, isKeyboardOpen, handleShowWarningModal])
 
   const onAcceptTokenWarning = useCallback(() => {
     setShowWarningModal(false)
     onPress()
   }, [onPress])
-
-  useEffect(() => {
-    if (showUnichainPromoAnimation) {
-      // delay to prevent ux jank
-      const delay = setTimeout(() => {
-        dispatch(setHasSeenBridgingAnimation(true))
-      }, ONE_SECOND_MS * 2)
-      return () => clearTimeout(delay)
-    }
-    return undefined
-  }, [dispatch, showUnichainPromoAnimation])
 
   return (
     <TokenOptionItemWrapper
@@ -142,15 +118,9 @@ function _TokenOptionItem({
             />
             <Flex shrink>
               <Flex row alignItems="center" gap="$spacing8">
-                <UnichainAnimatedText
-                  color="$neutral1"
-                  delayMs={800}
-                  enabled={showUnichainPromoAnimation}
-                  numberOfLines={1}
-                  variant="body1"
-                >
+                <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {currency.name}
-                </UnichainAnimatedText>
+                </Text>
                 {warningIconColor && (
                   <Flex>
                     <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />

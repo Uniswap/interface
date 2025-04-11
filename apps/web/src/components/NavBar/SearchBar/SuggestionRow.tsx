@@ -14,7 +14,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { EllipsisStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { EllipsisStyle } from 'theme/components/styles'
 import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons/Verified'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
@@ -89,7 +90,7 @@ interface SuggestionRowProps {
   eventProperties: InterfaceSearchResultSelectionProperties
 }
 
-function suggestionIsToken(suggestion: GenieCollection | GqlSearchToken): suggestion is GqlSearchToken {
+export function suggestionIsToken(suggestion: GenieCollection | GqlSearchToken): suggestion is GqlSearchToken {
   return (suggestion as GqlSearchToken).decimals !== undefined
 }
 
@@ -249,17 +250,17 @@ const SkeletonContent = styled(Column)`
 export function SkeletonRow() {
   return (
     <SkeletonSuggestionRow $isFocused={false}>
-      <Flex row width="100%" gap="$gap4">
+      <Flex row width="100%" gap="$gap4" alignItems="center">
         <BrokenCollectionImage />
         <SkeletonContent gap="sm">
           <Flex row justifyContent="space-between">
-            <LoadingBubble height="20px" width="180px" />
-            <LoadingBubble height="20px" width="48px" />
+            <LoadingBubble height="20px" width="180px" containerWidth="180px" />
+            <LoadingBubble height="20px" width="48px" containerWidth="48px" />
           </Flex>
 
           <Flex row justifyContent="space-between">
-            <LoadingBubble height="16px" width="120px" />
-            <LoadingBubble height="16px" width="48px" />
+            <LoadingBubble height="16px" width="120px" containerWidth="120px" />
+            <LoadingBubble height="16px" width="48px" containerWidth="48px" />
           </Flex>
         </SkeletonContent>
       </Flex>

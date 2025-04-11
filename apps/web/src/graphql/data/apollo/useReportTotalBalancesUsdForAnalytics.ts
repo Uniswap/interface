@@ -29,6 +29,7 @@ export function useReportTotalBalancesUsdForAnalytics() {
     sendAnalyticsEvent(UniswapEventName.BalancesReportPerChain, {
       total_balances_usd_per_chain: totalBalancesUsdPerChain,
       wallet: account.address,
+      view_only: false,
     })
 
     if (account.connector?.name === UNISWAP_EXTENSION_CONNECTOR_NAME) {

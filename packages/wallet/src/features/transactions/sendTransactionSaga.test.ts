@@ -68,6 +68,15 @@ const sendParams = {
   transactionOriginType: TransactionOriginType.Internal,
 }
 
+const mockProvider = {
+  ...provider,
+  _getInternalBlockNumber: jest.fn(),
+  getNetwork: jest.fn(),
+  getBlockNumber: jest.fn(),
+  getGasPrice: jest.fn(),
+  getFeeData: jest.fn(),
+} as unknown as providers.Provider
+
 describe(sendTransaction, () => {
   let dateNowSpy: jest.SpyInstance
 
@@ -97,12 +106,12 @@ describe(sendTransaction, () => {
     return expectSaga(sendTransaction, sendParams)
       .withState({ transactions: {}, wallet: {} })
       .provide([
-        [call(getProvider, sendParams.chainId), provider],
+        [call(getProvider, sendParams.chainId), mockProvider],
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
-          call(signAndSendTransaction, txRequest, account, provider as providers.Provider, signerManager),
-          { transactionResponse: txResponse, populatedRequest: txRequest },
+          call(signAndSendTransaction, txRequest, account, mockProvider, signerManager),
+          { transactionResponse: txResponse, populatedRequest: txRequest, timestampBeforeSend: Date.now() },
         ],
       ])
       .put(
@@ -145,9 +154,12 @@ describe(sendTransaction, () => {
               maxPriorityFeePerGas: undefined,
               maxFeePerGas: undefined,
             },
-            submittedTimestampMs: Date.now(),
+            rpcSubmissionTimestampMs: Date.now(),
+            rpcSubmissionDelayMs: 0,
+            currentBlockFetchDelayMs: 0,
             timeoutTimestampMs: undefined,
             privateRpcProvider: undefined,
+            blockSubmitted: undefined,
           },
         }),
       )
@@ -219,16 +231,10 @@ describe(sendTransaction, () => {
     return expectSaga(sendTransaction, sendParamsWithoutNonce)
       .provide([
         [call(tryGetNonce, account, sendParams.chainId), { nonce: mockNonce }],
-        [call(getProvider, sendParams.chainId), provider],
+        [call(getProvider, sendParams.chainId), mockProvider],
         [call(getSignerManager), signerManager],
         [
-          call(
-            signAndSendTransaction,
-            { ...request, nonce: mockNonce },
-            account,
-            provider as providers.Provider,
-            signerManager,
-          ),
+          call(signAndSendTransaction, { ...request, nonce: mockNonce }, account, mockProvider, signerManager),
           { transactionResponse: txResponse, populatedRequest: { ...request, nonce: mockNonce } },
         ],
       ])
@@ -240,7 +246,7 @@ describe(sendTransaction, () => {
           nonce: mockNonce,
         },
         account,
-        provider as providers.Provider,
+        mockProvider,
         signerManager,
       )
       .silentRun()

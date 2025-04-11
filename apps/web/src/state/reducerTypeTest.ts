@@ -1,10 +1,8 @@
 import { TokenList } from '@uniswap/token-lists'
+import { PopupType } from 'components/Popups/types'
 import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
-import { ApplicationState, OpenModalParams, PopupList, PopupType } from 'state/application/reducer'
-import { Field as BurnField } from 'state/burn/actions'
-import { BurnState } from 'state/burn/reducer'
-import { BurnV3State } from 'state/burn/v3/reducer'
+import { ApplicationState, OpenModalParams } from 'state/application/reducer'
 import { FiatOnRampTransactionsState } from 'state/fiatOnRampTransactions/reducer'
 import { ListsState } from 'state/lists/types'
 import { LogsState } from 'state/logs/slice'
@@ -69,8 +67,6 @@ type ExpectedAppState = CombinedState<{
   readonly wallets: ConnectedWalletsState
   readonly mint: MintState
   readonly mintV3: MintV3State
-  readonly burn: BurnState
-  readonly burnV3: BurnV3State
   readonly multicall: ReturnType<typeof multicall.reducer>
   readonly logs: LogsState
   readonly [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
@@ -137,7 +133,6 @@ assert<Equals<ListsState, ExpectedListsState>>()
 interface ExpectedApplicationState {
   readonly chainId: number | null
   readonly openModal: OpenModalParams | null
-  readonly popupList: PopupList
   readonly suppressedPopups: PopupType[]
 }
 
@@ -170,19 +165,6 @@ interface ExpectedMintV3State {
 }
 
 assert<Equals<MintV3State, ExpectedMintV3State>>()
-
-interface ExpectedBurnState {
-  readonly independentField: BurnField
-  readonly typedValue: string
-}
-
-assert<Equals<BurnState, ExpectedBurnState>>()
-
-interface ExpectedBurnV3State {
-  readonly percent: number
-}
-
-assert<Equals<BurnV3State, ExpectedBurnV3State>>()
 
 interface ExpectedLogsState {
   [chainId: number]: {

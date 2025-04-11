@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import { PropsWithChildren, memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'
@@ -13,7 +14,7 @@ import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/te
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
 import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
-import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
+import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
 import { PortfolioEmptyState } from 'wallet/src/features/portfolio/PortfolioEmptyState'
 import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
@@ -41,7 +42,7 @@ export const TokenBalanceList = memo(function _TokenBalanceList({ owner }: Token
   )
 })
 
-export function TokenBalanceListInner(): JSX.Element {
+function TokenBalanceListInner(): JSX.Element {
   const { t } = useTranslation()
 
   const { rows, balancesById, networkStatus, refetch, hiddenTokensExpanded } = useTokenBalanceListContext()
@@ -65,33 +66,52 @@ export function TokenBalanceListInner(): JSX.Element {
     navigate(AppRoutes.Receive)
   }
 
-  return (
-    <Flex>
-      {!balancesById ? (
-        isNonPollingRequestInFlight(networkStatus) ? (
-          <Flex>
-            <Loader.Token withPrice repeat={6} />
-          </Flex>
-        ) : (
-          <Flex fill grow justifyContent="center" pt="$spacing48" px="$spacing36">
-            <BaseCard.ErrorState
-              retryButtonLabel={t('common.button.retry')}
-              title={t('home.tokens.error.load')}
-              onRetry={(): void | undefined => refetch?.()}
-            />
-          </Flex>
-        )
-      ) : rows.length === 0 ? (
+  const hasData = !!balancesById
+  const hasTokens = balancesById && Object.keys(balancesById).length > 0
+  const hasErrorWithCachedValues = hasData && networkStatus === NetworkStatus.error
+  const hasErrorWithoutCachedValues = isError(networkStatus, hasData)
+  const isLoadingWithoutCachedValues = !hasData && isNonPollingRequestInFlight(networkStatus)
+
+  if (isLoadingWithoutCachedValues) {
+    return (
+      <Flex>
+        <Loader.Token withPrice repeat={6} />
+      </Flex>
+    )
+  }
+
+  if (hasErrorWithoutCachedValues) {
+    return (
+      <Flex fill grow justifyContent="center" pt="$spacing48" px="$spacing36">
+        <BaseCard.ErrorState
+          retryButtonLabel={t('common.button.retry')}
+          title={t('home.tokens.error.load')}
+          onRetry={(): void | undefined => refetch?.()}
+        />
+      </Flex>
+    )
+  }
+
+  if (!hasTokens) {
+    return (
+      <Flex>
         <PortfolioEmptyState disableCexTransfers onPressBuy={onPressBuy} onPressReceive={onPressReceive} />
-      ) : (
-        <>
-          <TokenBalanceItems rows={visible} />
-          <AnimatePresence initial={false}>
-            {hiddenTokensExpanded && <TokenBalanceItems animated rows={hidden} />}
-          </AnimatePresence>
-        </>
+      </Flex>
+    )
+  }
+
+  return (
+    <>
+      {hasErrorWithCachedValues && (
+        <Flex>
+          <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
+        </Flex>
       )}
-    </Flex>
+      <TokenBalanceItems rows={visible} />
+      <AnimatePresence initial={false}>
+        {hiddenTokensExpanded && <TokenBalanceItems animated rows={hidden} />}
+      </AnimatePresence>
+    </>
   )
 }
 
@@ -157,7 +177,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
         <InfoLinkModal
           showCloseButton
           buttonText={t('common.button.close')}
-          buttonTheme="tertiary"
           description={t('hidden.tokens.info.text.info')}
           icon={
             <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">

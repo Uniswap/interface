@@ -1,14 +1,15 @@
-import { ButtonPrimary } from 'components/Button/buttons'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import type { GestureReponderEvent } from '@tamagui/core'
 import Column from 'components/deprecated/Column'
 import styled, { useTheme } from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { Listing, WalletAsset } from 'nft/types'
-import React from 'react'
 import { AlertTriangle, X } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { Button } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -52,13 +53,6 @@ const HazardIconWrap = styled.div`
   padding: 32px 120px;
 `
 
-const ContinueButton = styled(ButtonPrimary)`
-  font-weight: 535;
-  font-size: 20px;
-  line-height: 24px;
-  margin-top: 12px;
-`
-
 const EditListings = styled.span`
   font-weight: 535;
   font-size: 16px;
@@ -85,7 +79,7 @@ export const BelowFloorWarningModal = ({
   const { t } = useTranslation()
   const theme = useTheme()
   const { formatDelta } = useFormatter()
-  const clickContinue = (e: React.MouseEvent) => {
+  const clickContinue = (e: GestureReponderEvent) => {
     e.preventDefault()
     e.stopPropagation()
     startListing()
@@ -114,9 +108,9 @@ export const BelowFloorWarningModal = ({
             percentage: delta,
           })}
         </ThemedText.BodyPrimary>
-        <ContinueButton onClick={clickContinue}>
+        <Button variant="branded" mt="$spacing12" onPress={clickContinue}>
           <Trans i18nKey="common.button.continue" />
-        </ContinueButton>
+        </Button>
         <EditListings onClick={closeModal}>
           <Trans i18nKey="nft.editListings" />
         </EditListings>

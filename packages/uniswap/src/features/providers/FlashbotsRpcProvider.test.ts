@@ -21,7 +21,7 @@ describe('FlashbotsRpcProvider', () => {
       getAddress: jest.fn().mockResolvedValue(testAddress),
       signMessage: jest.fn().mockResolvedValue('0xsignature'),
     } as unknown as jest.Mocked<Signer>
-    provider = new FlashbotsRpcProvider(FLASHBOTS_DEFAULT_BLOCK_RANGE, mockSigner)
+    provider = new FlashbotsRpcProvider(FLASHBOTS_DEFAULT_BLOCK_RANGE, { signer: mockSigner, address: testAddress })
   })
 
   afterEach(() => {

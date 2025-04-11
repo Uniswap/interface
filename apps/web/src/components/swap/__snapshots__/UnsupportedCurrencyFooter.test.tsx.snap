@@ -2,125 +2,7 @@
 
 exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
 <DocumentFragment>
-  .c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-block;
-  text-align: center;
-  line-height: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  font-size: inherit;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  color: white;
-  background-color: primary;
-  border: 0;
-  border-radius: 4px;
-  padding: 0;
-}
-
-.c2 {
-  padding: 0;
-  width: 100%;
-  line-height: 24px;
-  font-weight: 535;
-  text-align: center;
-  border-radius: 16px;
-  outline: none;
-  border: 1px solid transparent;
-  color: #222222;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-flex-wrap: nowrap;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-  z-index: 1;
-  will-change: transform;
-  -webkit-transition: -webkit-transform 450ms ease;
-  -webkit-transition: transform 450ms ease;
-  transition: transform 450ms ease;
-  -webkit-transform: perspective(1px) translateZ(0);
-  -ms-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-}
-
-.c2:disabled {
-  opacity: 50%;
-  cursor: auto;
-  pointer-events: none;
-}
-
-.c2 > * {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c2 > a {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c3 {
-  background-color: transparent;
-  color: #FC72FF;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
-.c3:focus {
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-}
-
-.c3:hover {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c3:active {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c3:disabled {
-  opacity: 50%;
-  cursor: auto;
-}
-
-.c0 {
+  .c0 {
   padding-top: calc(16px + 2rem);
   padding-bottom: 20px;
   margin-left: auto;
@@ -140,11 +22,6 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
   -webkit-transition: transform 300ms ease-in-out;
   transition: transform 300ms ease-in-out;
   text-align: center;
-}
-
-.c4 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
 }
 
 <span
@@ -170,17 +47,22 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
               role="heading"
             />
           </span>
-          <button
-            class="c1 c2 c3 c4"
-            data-testid="read-more-button"
+          <div
+            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center"
           >
-            <span
-              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-              data-disable-theme="true"
+            <button
+              class=" is_Button  t_group_item"
+              data-testid="read-more-button"
+              dd-action-name="Read more about unsupported assets"
+              style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(34, 34, 34, 0.05); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
             >
-              Read more about unsupported assets
-            </span>
-          </button>
+              <span
+                class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+              >
+                Read more about unsupported assets
+              </span>
+            </button>
+          </div>
         </div>
         <div
           style="display: contents;"

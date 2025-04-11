@@ -106,6 +106,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
       {
         "alignItems": "center",
         "flexDirection": "row",
+        "flexShrink": 1,
         "gap": 12,
         "justifyContent": "center",
       }
@@ -191,6 +192,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
       style={
         {
           "flexDirection": "column",
+          "flexShrink": 1,
         }
       }
     >
@@ -255,6 +257,8 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
     style={
       {
         "flexDirection": "column",
+        "flexGrow": 0,
+        "marginLeft": 12,
         "opacity": 1,
         "transform": [
           {

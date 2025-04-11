@@ -2,6 +2,7 @@ import { Flex, FlexProps, Text, TextProps } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { IconSizeTokens } from 'ui/src/theme'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
+import { isAndroid } from 'utilities/src/platform'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type DisplayNameProps = {
@@ -12,6 +13,8 @@ type DisplayNameProps = {
   forcedWidth?: number
   disableForcedWidth?: boolean
 } & FlexProps
+
+const platformAdjustedUnitagYPosition = isAndroid ? 3 : 1
 
 export function DisplayNameText({
   displayName,
@@ -26,15 +29,13 @@ export function DisplayNameText({
   const name = isUnitag ? displayName?.name.replaceAll(UNITAG_SUFFIX, '') : displayName?.name
 
   return (
-    <Flex centered row {...rest}>
+    <Flex row alignItems="center" {...rest} width={disableForcedWidth ? undefined : forcedWidth}>
       <Text
-        ellipsizeMode="tail"
         {...textProps}
         color={textProps?.color ?? '$neutral1'}
         flexShrink={1}
         numberOfLines={1}
-        overflow="hidden"
-        width={isUnitag || disableForcedWidth ? undefined : forcedWidth}
+        whiteSpace="initial"
       >
         {name}
         {isUnitag && includeUnitagSuffix && (
@@ -42,12 +43,12 @@ export function DisplayNameText({
             {UNITAG_SUFFIX}
           </Text>
         )}
+        {isUnitag ? (
+          <Flex display="inline" pl="$spacing4" bottom="$spacing2" y={platformAdjustedUnitagYPosition}>
+            <Unitag size={unitagIconSize} />
+          </Flex>
+        ) : null}
       </Text>
-      {isUnitag ? (
-        <Flex>
-          <Unitag size={unitagIconSize} />
-        </Flex>
-      ) : null}
     </Flex>
   )
 }

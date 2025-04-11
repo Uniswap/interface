@@ -5,10 +5,11 @@ import {
   InterfaceRemoteSearchHistoryItem,
   useRecentlySearchedAssets,
 } from 'components/NavBar/SearchBar/RecentlySearchedAssets'
-import { SkeletonRow, SuggestionRow } from 'components/NavBar/SearchBar/SuggestionRow'
+import { SkeletonRow, SuggestionRow, suggestionIsToken } from 'components/NavBar/SearchBar/SuggestionRow'
 import QuestionHelper from 'components/QuestionHelper'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import useSearchTrendingTokensGql from 'graphql/data/SearchTrendingTokens'
 import { useAccount } from 'hooks/useAccount'
@@ -65,7 +66,7 @@ function SearchBarDropdownSection({
             <SkeletonRow key={index} />
           ) : (
             <SuggestionRow
-              key={suggestion.address}
+              key={suggestionIsToken(suggestion) ? `${suggestion.chain}-${suggestion.address ?? NATIVE_CHAIN_ID}` : ''}
               suggestion={suggestion}
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
@@ -193,7 +194,6 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
     query_text: queryText,
     ...trace,
   }
-
   return hasInput ? (
     <Flex gap="$spacing20">
       {tokens.length > 0 ? (

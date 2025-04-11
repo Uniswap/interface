@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import {
   addFiatSymbolToNumber,
   formatCurrencyAmount,

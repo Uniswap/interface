@@ -1,7 +1,7 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, TICK_SPACINGS, TickMath, tickToPrice } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool as PoolV3, TICK_SPACINGS, TickMath as TickMathV3, tickToPrice } from '@uniswap/v3-sdk'
+import { Pool as PoolV4 } from '@uniswap/v4-sdk'
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { LiquidityBarSeries } from 'components/Charts/LiquidityChart/liquidity-bar-series'
 import {
@@ -9,6 +9,7 @@ import {
   LiquidityBarProps,
   LiquidityBarSeriesOptions,
 } from 'components/Charts/LiquidityChart/renderer'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { BigNumber } from 'ethers/lib/ethers'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
@@ -155,7 +156,7 @@ async function calculateActiveRangeTokensLocked(
       },
     ]
     // Initialize pool containing only the active range
-    const pool1 = new Pool(
+    const pool1 = new PoolV3(
       token0,
       token1,
       feeTier,
@@ -165,12 +166,12 @@ async function calculateActiveRangeTokensLocked(
       mockTicks,
     )
     // Calculate amount of token0 that would need to be swapped to reach the bottom of the range
-    const bottomOfRangePrice = TickMath.getSqrtRatioAtTick(mockTicks[0].index)
+    const bottomOfRangePrice = TickMathV3.getSqrtRatioAtTick(mockTicks[0].index)
     const token1Amount = (await pool1.getOutputAmount(maxAmount(token0), bottomOfRangePrice))[0]
     const amount0Locked = parseFloat(tick.sdkPrice.invert().quote(token1Amount).toExact())
 
     // Calculate amount of token1 that would need to be swapped to reach the top of the range
-    const topOfRangePrice = TickMath.getSqrtRatioAtTick(mockTicks[1].index)
+    const topOfRangePrice = TickMathV3.getSqrtRatioAtTick(mockTicks[1].index)
     const token0Amount = (await pool1.getOutputAmount(maxAmount(token1), topOfRangePrice))[0]
     const amount1Locked = parseFloat(tick.sdkPrice.quote(token0Amount).toExact())
 
@@ -181,7 +182,7 @@ async function calculateActiveRangeTokensLocked(
 }
 
 /** Returns amounts of tokens locked in the given tick. Reference: https://docs.uniswap.org/sdk/v3/guides/advanced/active-liquidity */
-export async function calculateTokensLocked(
+export async function calculateTokensLockedV3(
   token0: Token,
   token1: Token,
   feeTier: FeeAmount,
@@ -193,7 +194,7 @@ export async function calculateTokensLocked(
       ? tick.liquidityNet
       : JSBI.multiply(tick.liquidityNet, JSBI.BigInt('-1'))
 
-    const sqrtPriceX96 = TickMath.getSqrtRatioAtTick(tick.tick)
+    const sqrtPriceX96 = TickMathV3.getSqrtRatioAtTick(tick.tick)
     const mockTicks = [
       {
         index: tick.tick,
@@ -208,10 +209,63 @@ export async function calculateTokensLocked(
     ]
 
     // Initialize pool containing only the current range
-    const pool = new Pool(token0, token1, Number(feeTier), sqrtPriceX96, tick.liquidityActive, tick.tick, mockTicks)
+    const pool = new PoolV3(token0, token1, Number(feeTier), sqrtPriceX96, tick.liquidityActive, tick.tick, mockTicks)
 
     // Calculate token amounts that would need to be swapped to reach the next range
-    const nextSqrtX96 = TickMath.getSqrtRatioAtTick(tick.tick - tickSpacing)
+    const nextSqrtX96 = TickMathV3.getSqrtRatioAtTick(tick.tick - tickSpacing)
+    const maxAmountToken0 = CurrencyAmount.fromRawAmount(token0, MAX_UINT128.toString())
+    const token1Amount = (await pool.getOutputAmount(maxAmountToken0, nextSqrtX96))[0]
+    const amount0Locked = parseFloat(tick.sdkPrice.invert().quote(token1Amount).toExact())
+    const amount1Locked = parseFloat(token1Amount.toExact())
+
+    return { amount0Locked, amount1Locked }
+  } catch {
+    return { amount0Locked: 0, amount1Locked: 0 }
+  }
+}
+
+export async function calculateTokensLockedV4(
+  token0: Token,
+  token1: Token,
+  feeTier: FeeAmount,
+  tickSpacing: number,
+  hooks: string,
+  tick: TickProcessed,
+): Promise<{ amount0Locked: number; amount1Locked: number }> {
+  try {
+    const liqGross = JSBI.greaterThan(tick.liquidityNet, JSBI.BigInt(0))
+      ? tick.liquidityNet
+      : JSBI.multiply(tick.liquidityNet, JSBI.BigInt('-1'))
+
+    const sqrtPriceX96 = TickMathV3.getSqrtRatioAtTick(tick.tick)
+    const mockTicks = [
+      {
+        index: tick.tick,
+        liquidityGross: liqGross,
+        liquidityNet: JSBI.multiply(tick.liquidityNet, JSBI.BigInt('-1')),
+      },
+      {
+        index: tick.tick + TICK_SPACINGS[feeTier],
+        liquidityGross: liqGross,
+        liquidityNet: tick.liquidityNet,
+      },
+    ]
+
+    // Initialize pool containing only the current range
+    const pool = new PoolV4(
+      token0,
+      token1,
+      Number(feeTier),
+      tickSpacing,
+      hooks,
+      sqrtPriceX96,
+      tick.liquidityActive,
+      tick.tick,
+      mockTicks,
+    )
+
+    // Calculate token amounts that would need to be swapped to reach the next range
+    const nextSqrtX96 = TickMathV3.getSqrtRatioAtTick(tick.tick - tickSpacing)
     const maxAmountToken0 = CurrencyAmount.fromRawAmount(token0, MAX_UINT128.toString())
     const token1Amount = (await pool.getOutputAmount(maxAmountToken0, nextSqrtX96))[0]
     const amount0Locked = parseFloat(tick.sdkPrice.invert().quote(token1Amount).toExact())
@@ -291,7 +345,16 @@ export function useLiquidityBarData({
           price1 = price0.invert()
         }
 
-        const { amount0Locked, amount1Locked } = await calculateTokensLocked(tokenA, tokenB, feeTier, t)
+        const { amount0Locked, amount1Locked } = await (version === ProtocolVersion.V3
+          ? calculateTokensLockedV3(tokenA, tokenB, feeTier, t)
+          : calculateTokensLockedV4(
+              tokenA,
+              tokenB,
+              feeTier,
+              tickSpacing ?? TICK_SPACINGS[feeTier],
+              hooks ?? ZERO_ADDRESS,
+              t,
+            ))
 
         barData.push({
           tick: t.tick,
@@ -335,7 +398,7 @@ export function useLiquidityBarData({
     }
 
     formatData()
-  }, [activePoolData, tokenA, tokenB, formatNumber, formatPrice, isReversed, feeTier])
+  }, [activePoolData, tokenA, tokenB, formatNumber, formatPrice, isReversed, feeTier, version, tickSpacing, hooks])
 
   return { tickData, activeTick: activePoolData.activeTick, loading: activePoolData.isLoading || !tickData }
 }

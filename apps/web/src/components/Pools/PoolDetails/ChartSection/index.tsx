@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
@@ -28,7 +27,8 @@ import { useAtomValue } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { EllipsisStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { EllipsisStyle } from 'theme/components/styles'
 import { textFadeIn } from 'theme/styles'
 import { Flex, SegmentedControl, useMedia } from 'ui/src'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -233,7 +233,7 @@ export default function ChartSection(props: ChartSectionProps) {
   const disabledChartOption = props.poolData?.protocolVersion === ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
 
   return (
-    <div data-testid="pdp-chart-container">
+    <Flex data-testid="pdp-chart-container">
       {ChartBody}
       <ChartActionsContainer>
         <PDPChartTypeSelector
@@ -259,7 +259,7 @@ export default function ChartSection(props: ChartSectionProps) {
           </Flex>
         )}
       </ChartActionsContainer>
-    </div>
+    </Flex>
   )
 }
 
@@ -456,7 +456,7 @@ function LiquidityChart({
       {(crosshair) => {
         const displayPoint = crosshair ?? tickData?.activeRangeData
         const display = (
-          <div>
+          <>
             <FadeInHeading>{`1 ${tokenADescriptor} = ${displayPoint?.price0} ${tokenBDescriptor}`}</FadeInHeading>
             <FadeInHeading>{`1 ${tokenBDescriptor} = ${displayPoint?.price1} ${tokenADescriptor}`}</FadeInHeading>
             {displayPoint && displayPoint.tick === activeTick && (
@@ -464,7 +464,7 @@ function LiquidityChart({
                 <Trans i18nKey="pool.activeRange" />
               </FadeInSubheader>
             )}
-          </div>
+          </>
         )
         return <ChartHeader value={display} />
       }}

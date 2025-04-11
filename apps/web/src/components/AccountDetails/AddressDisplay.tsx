@@ -1,5 +1,6 @@
 import styled from 'lib/styled-components'
-import { CopyHelper, EllipsisStyle } from 'theme/components'
+import { CopyHelper } from 'theme/components/CopyHelper'
+import { EllipsisStyle } from 'theme/components/styles'
 import { Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { useENSName } from 'uniswap/src/features/ens/api'

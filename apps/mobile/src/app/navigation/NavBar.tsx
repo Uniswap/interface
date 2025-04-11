@@ -33,9 +33,6 @@ import { isAndroid, isIOS } from 'utilities/src/platform'
 import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
-export const NAV_BAR_HEIGHT_XS = 52
-export const NAV_BAR_HEIGHT_SM = 72
-
 const NAV_BAR_MARGIN_SIDES = 24
 const NAV_BAR_GAP = 12
 
@@ -256,6 +253,8 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
     onLayout(e)
   }
 
+  const Wrapper = isIOS ? BlurView : Flex
+
   return (
     <TouchableArea activeOpacity={1} style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}>
       <TestnetModeModal unsupported isOpen={isTestnetWarningModalOpen} onClose={handleTestnetWarningModalClose} />
@@ -267,7 +266,7 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
           width={isNarrow ? height : undefined}
           onLayout={internalOnLayout}
         >
-          <BlurView intensity={isIOS ? 100 : 0}>
+          <Wrapper {...(isIOS ? { intensity: 100 } : {})}>
             <Flex
               {...contentProps}
               fill
@@ -297,7 +296,7 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
                 </Text>
               )}
             </Flex>
-          </BlurView>
+          </Wrapper>
         </AnimatedFlex>
       </TapGestureHandler>
     </TouchableArea>

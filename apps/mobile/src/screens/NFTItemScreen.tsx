@@ -16,7 +16,16 @@ import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackg
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import { Flex, Text, Theme, TouchableArea, getTokenValue, passesContrast, useSporeColors } from 'ui/src'
+import {
+  Flex,
+  MIN_COLOR_CONTRAST_THRESHOLD,
+  Text,
+  Theme,
+  TouchableArea,
+  getTokenValue,
+  passesContrast,
+  useSporeColors,
+} from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
@@ -38,7 +47,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { setClipboardImage } from 'uniswap/src/utils/clipboard'
-import { MIN_COLOR_CONTRAST_THRESHOLD, useNearestThemeColorFromImageUri } from 'uniswap/src/utils/colors'
+import { useNearestThemeColorFromImageUri } from 'uniswap/src/utils/colors'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'

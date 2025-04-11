@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import {
   PairPosition,
   PoolPosition,
@@ -388,8 +387,9 @@ export function calculateInvertedValues({
   }
 }
 
+// tick spacing must be a whole number >= 1
 export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
-  return Math.max((2 * feeAmount) / 100, 1)
+  return Math.max(Math.round((2 * feeAmount) / 100), 1)
 }
 
 export enum HookFlag {

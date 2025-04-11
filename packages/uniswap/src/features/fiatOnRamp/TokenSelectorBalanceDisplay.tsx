@@ -2,7 +2,7 @@ import { ComponentProps } from 'react'
 import { Flex, SpinningLoader, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
+import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
@@ -88,12 +88,12 @@ export function TokenSelectorBalanceDisplay({
           </Text>
         </Flex>
         {isOffRamp && (
-          <MaxAmountButton
+          <PresetAmountButton
             currencyAmount={currencyAmount}
             currencyBalance={currencyBalance}
             currencyField={CurrencyField.INPUT}
             transactionType={TransactionType.Send}
-            onSetMax={onMaxPress}
+            onSetPresetValue={onMaxPress}
           />
         )}
         <RotatableChevron color="$neutral3" direction={chevronDirection} height={iconSizes.icon24} />

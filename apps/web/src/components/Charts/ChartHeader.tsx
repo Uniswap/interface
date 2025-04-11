@@ -4,12 +4,12 @@ import { getProtocolColor, getProtocolName } from 'graphql/data/util'
 import { useTheme } from 'lib/styled-components'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
-import { EllipsisTamaguiStyle } from 'theme/components'
+import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled } from 'ui/src'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-export type ChartHeaderProtocolInfo = { protocol: PriceSource; value?: number }
+type ChartHeaderProtocolInfo = { protocol: PriceSource; value?: number }
 
 const ProtocolLegendWrapper = styled(Flex, {
   position: 'absolute',

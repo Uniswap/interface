@@ -5,7 +5,7 @@ import {
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { useAddressNotificationToggle } from 'src/features/notifications/hooks/useNotificationsToggle'
-import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
+import { showNotificationSettingsAlert } from 'src/features/notifications/showNotificationSettingsAlert'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
 
@@ -30,7 +30,7 @@ jest.mock('wallet/src/features/wallet/accounts/editAccountSaga', () => ({
   },
 }))
 
-jest.mock('src/screens/Onboarding/NotificationsSetupScreen', () => ({
+jest.mock('src/features/notifications/showNotificationSettingsAlert', () => ({
   showNotificationSettingsAlert: jest.fn(),
 }))
 

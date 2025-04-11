@@ -36,8 +36,10 @@ export const migration12 = (state: PersistAppStateV12 | undefined) => {
     return state
   }
 
+  // eslint-disable-next-line guard-for-in
   for (const chainId in state.transactions) {
     const transactionsForChain = state.transactions[chainId]
+    // eslint-disable-next-line guard-for-in
     for (const txHash in transactionsForChain) {
       const { receipt, ...tx } = transactionsForChain[txHash]
 

@@ -1,6 +1,10 @@
+const rulesDirPlugin = require('eslint-plugin-rulesdir')
+rulesDirPlugin.RULES_DIR = '../../packages/uniswap/eslint_rules'
+
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/native'],
+  extends: ['@uniswap/eslint-config/native-app'],
+  plugins: ['rulesdir'],
   ignorePatterns: ['.storybook/storybook.requires.ts'],
   parserOptions: {
     project: 'tsconfig.eslint.json',
@@ -31,4 +35,7 @@ module.exports = {
       },
     },
   ],
+  rules: {
+    'rulesdir/i18n': 'error',
+  },
 }

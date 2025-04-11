@@ -16,7 +16,8 @@ import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
-import { EllipsisStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { EllipsisStyle } from 'theme/components/styles'
 import { Flex, useSporeColors } from 'ui/src'
 import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -25,6 +26,8 @@ import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupp
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { useFormatter } from 'utils/formatNumbers'
+
+export const POPUP_MAX_WIDTH = 348
 
 const StyledClose = styled(X)<{ $padding: number }>`
   position: absolute;
@@ -35,26 +38,6 @@ const StyledClose = styled(X)<{ $padding: number }>`
   :hover {
     cursor: pointer;
   }
-`
-const PopupContainer = styled.div<{ padded?: boolean }>`
-  display: inline-block;
-  width: 100%;
-  background-color: ${({ theme }) => theme.surface1};
-  position: relative;
-  border: 1px solid ${({ theme }) => theme.surface3};
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
-  transition: ${({ theme }) => `visibility ${theme.transition.duration.fast} ease-in-out`};
-
-  padding: ${({ padded }) => (padded ? '20px 35px 20px 20px' : '2px 0px')};
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-  min-width: 290px;
-  &:not(:last-of-type) {
-    margin-right: 20px;
-  }
-`}
 `
 
 const RowNoFlex = styled(AutoRow)`
@@ -70,6 +53,24 @@ const PopupAlertTriangle = styled(AlertTriangleFilled)`
   width: 32px;
   height: 32px;
 `
+
+const PopupContainer = ({ children, padded }: { children: React.ReactNode; padded?: boolean }) => {
+  return (
+    <Flex
+      row
+      width={POPUP_MAX_WIDTH}
+      backgroundColor="$surface1"
+      position="relative"
+      borderWidth={1}
+      borderRadius="$rounded16"
+      borderColor="$surface3"
+      p={padded ? '20px 35px 20px 20px' : '2px 0px'}
+      animation="300ms"
+    >
+      {children}
+    </Flex>
+  )
+}
 
 export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: UniverseChainId; onClose: () => void }) {
   const isSupportedChain = useIsSupportedChainId(chainId)

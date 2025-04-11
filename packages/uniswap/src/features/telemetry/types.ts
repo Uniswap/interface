@@ -2,8 +2,6 @@
 import { ApolloError } from '@apollo/client'
 import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
 import { SerializedError } from '@reduxjs/toolkit'
-import { Currency, TradeType } from '@uniswap/sdk-core'
-// eslint-disable-next-line no-restricted-imports
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import {
   AppDownloadPlatform,
@@ -22,6 +20,7 @@ import {
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
@@ -60,6 +59,10 @@ export type GasEstimateAccuracyProperties = {
   final_status?: string
   time_to_confirmed_ms?: number
   blocks_to_confirmed?: number
+  user_experienced_delay_ms?: number
+  send_to_confirmation_delay_ms?: number
+  rpc_submission_delay_ms?: number
+  current_block_fetch_delay_ms?: number
   gas_use_diff?: number
   gas_use_diff_percentage?: number
   gas_used?: number
@@ -73,6 +76,21 @@ export type GasEstimateAccuracyProperties = {
   out_of_gas: boolean
   timed_out: boolean
   display_limit_inflation_factor?: number
+}
+
+type KeyringMissingMnemonicProperties = {
+  mnemonicId: string
+  timeImportedMsFirst?: number
+  timeImportedMsLast?: number
+  keyringMnemonicIds: string[]
+  // We're only logging the public addresses of the user accounts,
+  // nothing actually private.
+  keyringPrivateKeyAddresses: string[]
+  signerMnemonicAccounts: {
+    mnemonicId: string
+    address: string
+    timeImportedMs: number
+  }[]
 }
 
 export type PendingTransactionTimeoutProperties = {
@@ -252,17 +270,16 @@ export type InterfaceSearchResultSelectionProperties = {
 } & ITraceContext
 
 type WrapProperties = {
-  type?: WrapType
-  token_symbol?: string
-  token_address?: string
-  token_in_address?: string
-  token_out_address?: string
+  type: WrapType
+  token_in_address: string
+  token_out_address: string
   token_in_symbol?: string
   token_out_symbol?: string
-  chain_id?: number
+  chain_id: number
   amount?: number
   contract_address?: string
   contract_chain_id?: number
+  transaction_hash?: string
 }
 
 type NFTBagProperties = {
@@ -280,15 +297,12 @@ export enum DappRequestAction {
   Reject = 'Reject',
 }
 
-export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName
+export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName | ConnectionCardLoggingName
 
 export enum OnboardingCardLoggingName {
   FundWallet = 'fund_wallet',
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
-  BridgingBanner = 'bridging_banner',
-  UnichainBannerCold = 'unichain_banner_cold',
-  UnichainBannerWarm = 'unichain_banner_warm',
   EnablePushNotifications = 'enable_push_notifications',
 }
 
@@ -296,8 +310,15 @@ export enum DappRequestCardLoggingName {
   BridgingBanner = 'dapp_request_bridging_banner',
 }
 
+export enum ConnectionCardLoggingName {
+  ConnectionBanner = 'connections_removed_banner',
+}
+
 export type FORAmountEnteredProperties = ITraceContext & {
   source: 'chip' | 'textInput' | 'changeAsset' | 'maxButton'
+  // In order to track funnel metrics, we need to be able to associate this event to the FOR transaction.
+  // However, `externalTransactionId` must be unique for each transaction, so we pre-generate the suffix only.
+  externalTransactionIdSuffix?: string
   amountUSD?: number
   amount?: number
   chainId?: number
@@ -306,7 +327,14 @@ export type FORAmountEnteredProperties = ITraceContext & {
   isTokenInputMode?: boolean
 }
 
-export type FORTokenSelectedProperties = ITraceContext & { token: string; isUnsupported?: boolean; chainId?: number }
+export type FORTokenSelectedProperties = ITraceContext & {
+  token: string
+  // In order to track funnel metrics, we need to be able to associate this event to the FOR transaction.
+  // However, `externalTransactionId` must be unique for each transaction, so we pre-generate the suffix only.
+  externalTransactionIdSuffix?: string
+  isUnsupported?: boolean
+  chainId?: number
+}
 
 export type FORUnsupportedTokenSelectedProperties = ITraceContext & { token?: string }
 
@@ -610,6 +638,7 @@ export type UniverseEventProperties = {
     url: string
   }
   [MobileEventName.TokenDetailsOtherChainButtonPressed]: ITraceContext
+  [MobileEventName.TokenDetailsContextMenuAction]: ITraceContext & { action: string }
   [MobileEventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType
     eth_method?: EthMethod | UwULinkMethod
@@ -784,6 +813,7 @@ export type UniverseEventProperties = {
   [UniswapEventName.BalancesReportPerChain]: {
     total_balances_usd_per_chain: Record<string, number>
     wallet: string
+    view_only: boolean
   }
   [UniswapEventName.ConversionEventSubmitted]: {
     id: string
@@ -848,6 +878,7 @@ export type UniverseEventProperties = {
     url: string
   }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
+  [WalletEventName.KeyringMissingMnemonic]: KeyringMissingMnemonicProperties
   [WalletEventName.LowNetworkTokenInfoModalOpened]: {
     location: 'send' | 'swap'
   }

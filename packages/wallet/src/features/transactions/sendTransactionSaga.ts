@@ -1,3 +1,4 @@
+import { BaseProvider } from '@ethersproject/providers'
 import { providers } from 'ethers'
 import { call, put, select } from 'typed-redux-saga'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
@@ -57,7 +58,7 @@ export interface SendTransactionParams {
 // All outgoing transactions should go through here
 
 export function* sendTransaction(params: SendTransactionParams) {
-  const { chainId, account, options } = params
+  const { chainId, account, options, typeInfo } = params
   let request = options.request
 
   logger.debug('sendTransaction', '', `Sending tx on ${getChainLabel(chainId)} to ${request.to}`)
@@ -67,7 +68,7 @@ export function* sendTransaction(params: SendTransactionParams) {
   }
 
   // Register the tx in the store before it's submitted
-  let unsubmittedTransaction = yield* call(addUnsubmittedTransaction, params)
+  const unsubmittedTransaction = yield* call(addUnsubmittedTransaction, params)
   let calculatedNonce: CalculatedNonce | undefined
 
   try {
@@ -85,7 +86,7 @@ export function* sendTransaction(params: SendTransactionParams) {
       ? yield* call(getPrivateProvider, chainId, account)
       : yield* call(getProvider, chainId)
     const signerManager = yield* call(getSignerManager)
-    const { transactionResponse, populatedRequest } = yield* call(
+    const { transactionResponse, populatedRequest, timestampBeforeSend } = yield* call(
       signAndSendTransaction,
       request,
       account,
@@ -94,37 +95,14 @@ export function* sendTransaction(params: SendTransactionParams) {
     )
     logger.debug('sendTransaction', '', 'Tx submitted:', transactionResponse.hash)
 
-    const { gasEstimates } = unsubmittedTransaction.typeInfo
-    if (gasEstimates) {
-      const blockNumber = yield* call([provider, provider.getBlockNumber])
-      unsubmittedTransaction = {
-        ...unsubmittedTransaction,
-        typeInfo: {
-          ...unsubmittedTransaction.typeInfo,
-          gasEstimates: { ...gasEstimates, blockSubmitted: blockNumber },
-        },
-      }
-    }
-
-    unsubmittedTransaction = {
-      ...unsubmittedTransaction,
-      options: {
-        ...unsubmittedTransaction.options,
-        privateRpcProvider:
-          provider.constructor.name === 'FlashbotsRpcProvider'
-            ? 'flashbots'
-            : options.submitViaPrivateRpc
-              ? 'mevblocker'
-              : undefined,
-      },
-    }
-
     // Update the transaction with the hash and populated request
     yield* call(
       updateSubmittedTransaction,
       unsubmittedTransaction,
       transactionResponse.hash,
+      timestampBeforeSend,
       populatedRequest,
+      provider,
       params.analytics,
     )
     return { transactionResponse }
@@ -147,13 +125,21 @@ export function* sendTransaction(params: SendTransactionParams) {
         errorCategory = 'rate_limited'
       }
 
+      const logExtra = {
+        category: errorCategory,
+        chainId,
+        transactionType: typeInfo.type,
+        calculatedNonce,
+        ...options,
+      }
+
+      // Log warning for alerting
+      logger.warn('sendTransactionSaga', 'sendTransaction', 'RPC Failure', { errorMessage: error.message, ...logExtra })
+
+      // Log error for full error details
       logger.error(error, {
         tags: { file: 'sendTransactionSaga', function: 'sendTransaction' },
-        extra: {
-          category: errorCategory,
-          calculatedNonce,
-          ...options,
-        },
+        extra: logExtra,
       })
 
       throw new Error(`Failed to send transaction: ${errorCategory}`, {
@@ -173,14 +159,16 @@ export async function signAndSendTransaction(
 ): Promise<{
   transactionResponse: providers.TransactionResponse
   populatedRequest: providers.TransactionRequest
+  timestampBeforeSend: number
 }> {
   const signer = await signerManager.getSignerForAccount(account)
   const connectedSigner = signer.connect(provider)
   const hexRequest = hexlifyTransaction(request)
   const populatedRequest = await connectedSigner.populateTransaction(hexRequest)
   const signedTx = await connectedSigner.signTransaction(populatedRequest)
+  const timestampBeforeSend = Date.now()
   const transactionResponse = await provider.sendTransaction(signedTx)
-  return { transactionResponse, populatedRequest }
+  return { transactionResponse, populatedRequest, timestampBeforeSend }
 }
 
 function* addUnsubmittedTransaction({
@@ -211,18 +199,31 @@ function* addUnsubmittedTransaction({
   return transaction
 }
 
-function* updateSubmittedTransaction(
+export function* updateSubmittedTransaction(
   transaction: OnChainTransactionDetails,
   hash: string,
+  timestampBeforeSend: number,
   populatedRequest: providers.TransactionRequest,
+  provider: providers.Provider,
   analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>,
 ) {
+  const timestampAfterSend = Date.now()
+  // Get the internal (cached) block number if not older than 1000ms.
+  // The block number is fetched when submitting the transaction, so it should be recent.
+  const baseProvider = provider as BaseProvider
+  const blockNumber = yield* call([baseProvider, baseProvider._getInternalBlockNumber], 1000)
+  const currentBlockFetchDelayMs = Date.now() - timestampAfterSend
   const request = getSerializableTransactionRequest(populatedRequest, transaction.chainId)
-  const submittedTimestampMs = Date.now()
   const timeoutTimestampMs =
     transaction.typeInfo.gasEstimates || transaction.options.submitViaPrivateRpc
-      ? submittedTimestampMs + getTransactionTimeoutMs(transaction.chainId)
+      ? timestampAfterSend + getTransactionTimeoutMs(transaction.chainId)
       : undefined
+  const privateRpcProvider =
+    provider.constructor.name === 'FlashbotsRpcProvider'
+      ? 'flashbots'
+      : transaction.options.submitViaPrivateRpc
+        ? 'mevblocker'
+        : undefined
 
   const updatedTransaction: OnChainTransactionDetails = {
     ...transaction,
@@ -231,8 +232,12 @@ function* updateSubmittedTransaction(
     options: {
       ...transaction.options,
       request,
-      submittedTimestampMs,
+      rpcSubmissionTimestampMs: timestampAfterSend,
+      rpcSubmissionDelayMs: timestampAfterSend - timestampBeforeSend,
+      currentBlockFetchDelayMs,
       timeoutTimestampMs,
+      privateRpcProvider,
+      blockSubmitted: blockNumber,
     },
   }
 
@@ -241,7 +246,7 @@ function* updateSubmittedTransaction(
       // Don't expect swaps from WC or Dapps to always provide analytics object
       if (transaction.transactionOriginType === TransactionOriginType.Internal) {
         logger.error(new Error('Missing `analytics` for swap when calling `addTransaction`'), {
-          tags: { file: 'sendTransaction', function: 'addTransaction' },
+          tags: { file: 'sendTransactionSaga', function: 'addTransaction' },
           extra: { transaction },
         })
       }
@@ -311,7 +316,7 @@ export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: Univer
     }
   } catch (error) {
     logger.error(error, {
-      tags: { file: 'sendTransaction', function: 'tryGetNonce' },
+      tags: { file: 'sendTransactionSaga', function: 'tryGetNonce' },
     })
     return undefined
   }

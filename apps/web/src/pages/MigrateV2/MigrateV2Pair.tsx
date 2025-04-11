@@ -1,11 +1,9 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES, type Currency } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge/Badge'
-import { ButtonConfirmed } from 'components/Button/buttons'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card/cards'
 import FeeSelector from 'components/FeeSelector'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -14,7 +12,6 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
-import SettingsTab from 'components/Settings'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
@@ -33,6 +30,7 @@ import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import JSBI from 'jsbi'
 import { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
+import MigrateV2SettingsTab from 'pages/MigrateV2/Settings'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -44,8 +42,9 @@ import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } f
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
@@ -761,8 +760,8 @@ function V2PairMigration({
           <AutoColumn gap="md">
             {!isSuccessfullyMigrated && !isMigrationPending ? (
               <AutoColumn gap="md" style={{ flex: '1' }}>
-                <ButtonConfirmed
-                  disabled={
+                <Button
+                  isDisabled={
                     approval !== ApprovalState.NOT_APPROVED ||
                     signatureData !== null ||
                     !v3Amount0Min ||
@@ -770,7 +769,7 @@ function V2PairMigration({
                     invalidRange ||
                     confirmingMigration
                   }
-                  onClick={approve}
+                  onPress={approve}
                 >
                   {approval === ApprovalState.PENDING ? (
                     <Dots>
@@ -781,13 +780,12 @@ function V2PairMigration({
                   ) : (
                     <Trans i18nKey="migrate.allowLpMigration" />
                   )}
-                </ButtonConfirmed>
+                </Button>
               </AutoColumn>
             ) : null}
             <AutoColumn gap="md" style={{ flex: '1' }}>
-              <ButtonConfirmed
-                confirmed={isSuccessfullyMigrated}
-                disabled={
+              <Button
+                isDisabled={
                   !v3Amount0Min ||
                   !v3Amount1Min ||
                   invalidRange ||
@@ -796,7 +794,7 @@ function V2PairMigration({
                   isMigrationPending ||
                   isSuccessfullyMigrated
                 }
-                onClick={migrate}
+                onPress={migrate}
               >
                 {isSuccessfullyMigrated ? (
                   'Success!'
@@ -807,7 +805,7 @@ function V2PairMigration({
                 ) : (
                   <Trans i18nKey="common.migrate" />
                 )}
-              </ButtonConfirmed>
+              </Button>
             </AutoColumn>
           </AutoColumn>
         </Flex>
@@ -917,11 +915,7 @@ export default function MigrateV2Pair() {
             <MigrateHeader>
               <Trans i18nKey="migrate.v2Title" />
             </MigrateHeader>
-            <SettingsTab
-              autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE}
-              chainId={account.chainId}
-              hideRoutingSettings
-            />
+            <MigrateV2SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={account.chainId} />
           </Flex>
 
           {!account.isConnected || !isOwner ? (

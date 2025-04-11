@@ -2,102 +2,114 @@
 
 exports[`CopyTextButton renders without error 1`] = `
 <View
-  onBlur={[Function]}
-  onClick={[Function]}
-  onFocus={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
   style={
     {
-      "alignItems": "center",
-      "backgroundColor": {
-        "dynamic": {
-          "dark": "rgba(255,255,255,0.12)",
-          "light": "rgba(34,34,34,0.05)",
-        },
-      },
-      "borderBottomColor": {
-        "dynamic": {
-          "dark": "transparent",
-          "light": "transparent",
-        },
-      },
-      "borderBottomLeftRadius": 16,
-      "borderBottomRightRadius": 16,
-      "borderBottomWidth": 1,
-      "borderLeftColor": {
-        "dynamic": {
-          "dark": "transparent",
-          "light": "transparent",
-        },
-      },
-      "borderLeftWidth": 1,
-      "borderRightColor": {
-        "dynamic": {
-          "dark": "transparent",
-          "light": "transparent",
-        },
-      },
-      "borderRightWidth": 1,
-      "borderStyle": "solid",
-      "borderTopColor": {
-        "dynamic": {
-          "dark": "transparent",
-          "light": "transparent",
-        },
-      },
-      "borderTopLeftRadius": 16,
-      "borderTopRightRadius": 16,
-      "borderTopWidth": 1,
       "flexDirection": "row",
-      "gap": 8,
-      "height": "auto",
-      "justifyContent": "center",
-      "opacity": 1,
-      "paddingBottom": 12,
-      "paddingLeft": 12,
-      "paddingRight": 12,
-      "paddingTop": 12,
     }
   }
 >
-  <svg
-    color={
+  <View
+    collapsable={false}
+    dd-action-name="Copy"
+    focusVisibleStyle={
       {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#222222",
+        "backgroundColor": "rgba(34,34,34,0.09)",
+      }
+    }
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
         },
       }
     }
-    data-file-name="SvgCopySheets"
-    height={20}
-    size={20}
-    width={20}
-  />
-  <Text
-    maxFontSizeMultiplier={1.2}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onLayout={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     style={
       {
-        "color": {
+        "alignItems": "center",
+        "alignSelf": "stretch",
+        "backgroundColor": "rgba(34,34,34,0.05)",
+        "borderBottomColor": "transparent",
+        "borderBottomLeftRadius": 20,
+        "borderBottomRightRadius": 20,
+        "borderBottomWidth": 1,
+        "borderLeftColor": "transparent",
+        "borderLeftWidth": 1,
+        "borderRightColor": "transparent",
+        "borderRightWidth": 1,
+        "borderStyle": "solid",
+        "borderTopColor": "transparent",
+        "borderTopLeftRadius": 20,
+        "borderTopRightRadius": 20,
+        "borderTopWidth": 1,
+        "flex": 1,
+        "flexBasis": 0,
+        "flexDirection": "row",
+        "gap": 12,
+        "height": "auto",
+        "justifyContent": "center",
+        "paddingBottom": 16,
+        "paddingLeft": 20,
+        "paddingRight": 20,
+        "paddingTop": 16,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <svg
+      color={
+        {
           "dynamic": {
             "dark": "#FFFFFF",
             "light": "#222222",
           },
-        },
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "500",
-        "lineHeight": 21.849999999999998,
+        }
       }
-    }
-    suppressHighlighting={true}
-  >
-    Copy
-  </Text>
+      data-file-name="SvgCopySheets"
+      height={21.849999999999998}
+      width={21.849999999999998}
+    />
+    <Text
+      maxFontSizeMultiplier={1.2}
+      numberOfLines={1}
+      onBlur={[Function]}
+      onFocus={[Function]}
+      style={
+        {
+          "color": {
+            "dynamic": {
+              "dark": "#FFFFFF",
+              "light": "#222222",
+            },
+          },
+          "fontFamily": "Basel Grotesk",
+          "fontSize": 19,
+          "fontWeight": "500",
+          "lineHeight": 21.849999999999998,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      Copy
+    </Text>
+  </View>
 </View>
 `;

@@ -1,9 +1,9 @@
 export enum WalletConnectEvent {
-  Connected,
-  Disconnected,
-  NetworkChanged,
-  TransactionConfirmed,
-  TransactionFailed,
+  Connected = 0,
+  Disconnected = 1,
+  NetworkChanged = 2,
+  TransactionConfirmed = 3,
+  TransactionFailed = 4,
 }
 
 // derived from this list https://docs.walletconnect.com/json-rpc-api-methods/ethereum#eth_signtypeddata

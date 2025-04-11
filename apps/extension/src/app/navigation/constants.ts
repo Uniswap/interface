@@ -39,9 +39,7 @@ export enum SettingsRoutes {
   DevMenu = 'dev-menu',
   ViewRecoveryPhrase = 'view-recovery-phrase',
   RemoveRecoveryPhrase = 'remove-recovery-phrase',
-  Privacy = 'privacy',
   ManageConnections = 'manage-connections',
-  Permissions = 'permissions',
 }
 
 export enum RemoveRecoveryPhraseRoutes {

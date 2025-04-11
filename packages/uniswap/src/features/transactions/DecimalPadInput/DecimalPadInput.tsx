@@ -9,11 +9,10 @@ import {
   useRef,
   useState,
 } from 'react'
+import type { LayoutChangeEvent } from 'react-native'
 import { Flex, useIsShortMobileDevice } from 'ui/src'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { DecimalPad } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPad'
-// eslint-disable-next-line no-restricted-imports -- type import is safe
-import type { LayoutChangeEvent } from 'react-native'
 import { KeyAction, KeyLabel } from 'uniswap/src/features/transactions/DecimalPadInput/types'
 import { maxDecimalsReached } from 'utilities/src/format/truncateToMaxDecimals'
 
@@ -40,9 +39,9 @@ export type DecimalPadInputRef = {
 }
 
 export enum DecimalPadCalculatedSpaceId {
-  Swap,
-  Send,
-  FiatOnRamp,
+  Swap = 0,
+  Send = 1,
+  FiatOnRamp = 2,
 }
 
 const precalculatedSpace: Partial<Record<DecimalPadCalculatedSpaceId, number | undefined>> = {}

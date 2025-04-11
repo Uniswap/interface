@@ -41,6 +41,7 @@ export function FiatOnRampTokenSelectorModal({
     <Modal
       extendOnKeyboardVisible
       fullScreen
+      overrideInnerContainer
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       renderBehindBottomInset

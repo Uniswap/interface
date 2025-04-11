@@ -24,7 +24,7 @@ export function BaseQuoteFiatAmount({
   }
 
   return (
-    <Text>
+    <>
       <Text variant={variant ?? 'body3'} color="$neutral1">
         {formatPrice({ price, type: NumberType.TokenTx })} {quote?.symbol} = 1 {base?.symbol}
       </Text>{' '}
@@ -36,6 +36,6 @@ export function BaseQuoteFiatAmount({
         })}
         )
       </Text>
-    </Text>
+    </>
   )
 }

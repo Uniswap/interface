@@ -33,12 +33,6 @@ export const RowBetween = styled(Row)`
 `
 
 /** @deprecated Please use `Flex` from `ui/src` going forward */
-export const RowFlat = styled.div`
-  display: flex;
-  align-items: flex-end;
-`
-
-/** @deprecated Please use `Flex` from `ui/src` going forward */
 export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
   flex-wrap: wrap;
   margin: ${({ gap }) => gap && `-${gap}`};

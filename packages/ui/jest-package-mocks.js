@@ -31,3 +31,5 @@ jest.mock('react-native-webview', () => {
     WebView: View,
   }
 })
+
+jest.mock('ui/src/hooks/useDeviceInsets', () => jest.requireActual('ui/src/hooks/useDeviceInsets.web.ts'))

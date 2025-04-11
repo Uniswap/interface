@@ -58,8 +58,6 @@ describe(AccountList, () => {
       const signerAccounts = createArray(3, signerMnemonicAccount)
       render(<AccountList accounts={signerAccounts} onPress={jest.fn()} />, { resolvers })
 
-      expect(screen.queryByText('Your other wallets')).toBeTruthy()
-
       signerAccounts.forEach((account) => {
         const address = sanitizeAddressText(shortenAddress(account.address))
         if (address) {

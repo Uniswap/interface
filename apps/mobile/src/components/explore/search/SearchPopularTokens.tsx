@@ -7,7 +7,7 @@ import { SearchTokenItem } from 'src/components/explore/search/items/SearchToken
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
 import { MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
-import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
 import { RankingType } from 'uniswap/src/data/types'
@@ -36,7 +36,6 @@ function tokenStatsToTokenSearchResult(token: Maybe<TokenRankingsStat>): TokenSe
     symbol,
     logoUrl: logo ?? null,
     // BE has confirmed that all of these TokenRankingsStat tokens are Verified SafetyLevel, and design confirmed that we can hide the warning icon here
-    safetyLevel: SafetyLevel.Verified,
     safetyInfo: {
       tokenList: TokenList.Default,
       attackType: undefined,

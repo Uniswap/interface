@@ -7,7 +7,7 @@ import { InfoModal, ModalProps } from 'src/app/components/modal/InfoModal'
 import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
-import { DeprecatedButton, Flex, InputProps, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, InputProps, Text } from 'ui/src'
 import { AlertTriangleFilled, Lock } from 'ui/src/components/icons'
 import { spacing, zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -20,7 +20,7 @@ import { EditAccountAction, editAccountActions } from 'wallet/src/features/walle
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { SagaStatus } from 'wallet/src/utils/saga'
 
-export function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
+function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
   const [value, setValue] = useState(defaultValue)
 
   const onChangeText: InputProps['onChangeText'] = (newValue): void => {
@@ -35,8 +35,8 @@ export function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeT
 }
 
 enum ForgotPasswordModalStep {
-  Initial,
-  Speedbump,
+  Initial = 0,
+  Speedbump = 1,
 }
 
 const CONTAINER_PADDING_TOP_MIN = 50
@@ -211,28 +211,29 @@ export function Locked(): JSX.Element {
         </Flex>
 
         <Flex gap="$spacing12" justifyContent="flex-end" zIndex={zIndexes.sticky}>
-          <DeprecatedButton size="large" theme="primary" onPress={onPress}>
-            {t('extension.lock.button.submit')}
-          </DeprecatedButton>
+          <Flex row>
+            <Button size="large" variant="branded" onPress={onPress}>
+              {t('extension.lock.button.submit')}
+            </Button>
+          </Flex>
 
-          <TouchableArea>
-            <Text
-              color="$neutral3"
-              hoverStyle={{ color: '$neutral2' }}
-              textAlign="center"
-              variant="body2"
+          <Flex row>
+            <Button
+              size="large"
+              variant="default"
+              emphasis="text-only"
               onPress={(): void => setForgotPasswordModalOpen(true)}
             >
               {t('extension.lock.button.forgot')}
-            </Text>
-          </TouchableArea>
+            </Button>
+          </Flex>
         </Flex>
       </Flex>
 
       <InfoModal
         showCloseButton
         buttonText={modalProps[modalStep].buttonText}
-        buttonTheme="tertiary"
+        buttonEmphasis="secondary"
         description={modalProps[modalStep].description}
         icon={modalProps[modalStep].icon}
         isOpen={forgotPasswordModalOpen}

@@ -1,28 +1,21 @@
-import styled, { css } from 'lib/styled-components'
-import { ReactNode, useCallback } from 'react'
-import { ChevronLeft } from 'react-feather'
-import { Text } from 'ui/src'
+import { ReactNode } from 'react'
+import { Flex, Text, styled } from 'ui/src'
+import { ChevronLeft } from 'ui/src/components/icons/ChevronLeft'
+import { iconSizes } from 'ui/src/theme'
 
-const StyledChevron = styled(ChevronLeft)`
-  opacity: 0.8;
-`
-const ClickableHeader = css`
-  cursor: pointer;
-  &:hover {
-    ${StyledChevron} {
-      opacity: 0.6;
-    }
-  }
-`
-const Header = styled.div<{ $clickable: boolean }>`
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 8px 0;
-  ${({ $clickable }) => $clickable && ClickableHeader}
-`
+const Header = styled(Flex, {
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  alignItems: 'center',
+  gap: '$gap8',
+  width: '100%',
+  py: '$padding8',
+  variants: {
+    clickable: {
+      true: { cursor: 'pointer' },
+    },
+  },
+})
 
 interface TPreferencesHeaderProps {
   children: ReactNode
@@ -30,15 +23,9 @@ interface TPreferencesHeaderProps {
 }
 
 export function PreferencesHeader({ children, onExitMenu }: TPreferencesHeaderProps) {
-  const exitMenu = useCallback(() => {
-    if (onExitMenu) {
-      onExitMenu()
-    }
-  }, [onExitMenu])
-
   return (
-    <Header $clickable={!!onExitMenu} onClick={exitMenu}>
-      {onExitMenu && <StyledChevron />}
+    <Header clickable={!!onExitMenu} onPress={() => onExitMenu?.()} group>
+      {onExitMenu && <ChevronLeft size={iconSizes.icon24} color="$neutral1" $group-hover={{ opacity: 0.6 }} />}
       <Text variant="subheading1" color="$neutral1" textAlign="left" width="100%">
         {children}
       </Text>

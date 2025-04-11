@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
+import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
@@ -80,12 +80,12 @@ export function TokenSelectorPanel({
           </Flex>
           <Flex row gap="$spacing12">
             {showMaxButton && onSetMax && (
-              <MaxAmountButton
+              <PresetAmountButton
                 currencyAmount={currencyAmount}
                 currencyBalance={currencyBalance}
                 currencyField={CurrencyField.INPUT}
                 transactionType={TransactionType.Send}
-                onSetMax={onSetMax}
+                onSetPresetValue={onSetMax}
               />
             )}
             <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />

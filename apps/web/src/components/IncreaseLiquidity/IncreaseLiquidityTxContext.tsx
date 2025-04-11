@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
@@ -165,12 +164,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     }
   }, [account, positionInfo, currencyAmounts, approvalsNeeded, customSlippageTolerance, exactField])
 
-  const currency0Info = useCurrencyInfo(
-    positionInfo?.currency0Amount.currency ? currencyId(positionInfo.currency0Amount.currency) : undefined,
-  )
-  const currency1Info = useCurrencyInfo(
-    positionInfo?.currency1Amount.currency ? currencyId(positionInfo.currency1Amount.currency) : undefined,
-  )
+  const currency0Info = useCurrencyInfo(currencyId(positionInfo?.currency0Amount.currency))
+  const currency1Info = useCurrencyInfo(currencyId(positionInfo?.currency1Amount.currency))
   const token0FoTError = hasLPFoTTransferError(currency0Info, positionInfo?.version)
   const token1FoTError = hasLPFoTTransferError(currency1Info, positionInfo?.version)
   const fotErrorToken = token0FoTError || token1FoTError

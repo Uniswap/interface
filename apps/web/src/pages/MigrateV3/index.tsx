@@ -1,6 +1,6 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
+import { ErrorCallout } from 'components/ErrorCallout'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
@@ -11,6 +11,7 @@ import { LoadingRows } from 'components/Loader/styled'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import useSelectChain from 'hooks/useSelectChain'
 import { MigrateV3PositionTxContextProvider, useMigrateV3TxContext } from 'pages/MigrateV3/MigrateV3LiquidityTxContext'
+import useInitialPosition from 'pages/MigrateV3/hooks/useInitialPosition'
 import {
   CreatePositionContextProvider,
   DepositContextProvider,
@@ -26,7 +27,6 @@ import {
 import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
-import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
@@ -35,21 +35,22 @@ import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { PositionField } from 'types/position'
 import { Flex, Main, Text, styled, useMedia } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
+import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme/heights'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
@@ -85,9 +86,6 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const { protocolVersion } = positionState
   const { setPriceRangeState } = usePriceRangeContext()
   const { setDepositState } = useDepositContext()
-  const { value: lpRedesignEnabled, isLoading: isLPRedesignGateLoading } = useFeatureFlagWithLoading(
-    FeatureFlags.LPRedesign,
-  )
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
@@ -108,16 +106,8 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const currency0FiatAmount = useUSDCValue(currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(currency1Amount) ?? undefined
 
-  if (!isLPRedesignGateLoading && !lpRedesignEnabled) {
-    return <Navigate to="/pools" replace />
-  }
-
   if (!isMigrateToV4Enabled || !isSameAddress(account?.address, owner)) {
     navigate('/positions')
-  }
-
-  if (isLPRedesignGateLoading) {
-    return null
   }
 
   return (
@@ -167,7 +157,11 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
         </Flex>
         <Flex row gap={32} width="100%">
           {!media.xl && (
-            <Flex width={360}>
+            <Flex
+              width={360}
+              alignSelf="flex-start"
+              $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT + 25 }}
+            >
               <PoolProgressIndicator
                 steps={[
                   { label: t('migrate.selectFeeTier'), active: step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER },
@@ -199,6 +193,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
               <>
                 <Container width="100%" maxWidth="unset">
                   <SelectPriceRangeStep
+                    positionInfo={positionInfo}
                     onDisableContinue={!txInfo || Boolean(error)}
                     onContinue={() => {
                       const isValidTx = isValidLiquidityTxContext(txInfo)
@@ -236,7 +231,9 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                     }}
                   />
                 </Container>
-                <TradingAPIError errorMessage={error} refetch={refetch} />
+                <Flex mb="$spacing20">
+                  <ErrorCallout errorMessage={error} onPress={refetch} />
+                </Flex>
               </>
             )}
           </Flex>
@@ -285,6 +282,9 @@ export default function MigrateV3() {
 
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
 
+  // Need the initial position when migrating out of range positions.
+  const initialPosition = useInitialPosition(positionInfo)
+
   // TODO (WEB-4920): show error state for non-v3 position here.
   if (positionLoading || !position || !positionInfo || positionInfo.version !== ProtocolVersion.V3) {
     return (
@@ -307,6 +307,7 @@ export default function MigrateV3() {
   }
 
   const { currency0Amount, currency1Amount, feeTier } = positionInfo
+
   return (
     <Trace
       logImpression
@@ -324,6 +325,7 @@ export default function MigrateV3() {
         <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
           <CreatePositionContextProvider
             initialState={{
+              initialPosition,
               currencyInputs: {
                 [PositionField.TOKEN0]: getCurrencyForProtocol(currency0Amount.currency, ProtocolVersion.V4),
                 [PositionField.TOKEN1]: getCurrencyForProtocol(currency1Amount.currency, ProtocolVersion.V4),

@@ -1,10 +1,11 @@
 import type { GetProps } from 'tamagui'
-import { CustomButtonFrame } from 'ui/src/components/buttons/Button/components/CustomButtonFrame'
+import { CustomButtonFrame } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/CustomButtonFrame'
+import type { FlexProps } from 'ui/src/components/layout'
 
-type ButtonVariant = 'default' | 'branded' | 'critical'
-type ButtonEmphasis = 'primary' | 'secondary' | 'tertiary'
+export type ButtonVariant = 'default' | 'branded' | 'critical' | 'warning'
+export type ButtonEmphasis = 'primary' | 'secondary' | 'tertiary' | 'text-only'
+
 type ButtonSize = 'xxsmall' | 'xsmall' | 'small' | 'medium' | 'large'
-
 type CustomButtonFrameProps = GetProps<typeof CustomButtonFrame>
 
 export type ButtonVariantProps = {
@@ -13,14 +14,15 @@ export type ButtonVariantProps = {
   emphasis?: ButtonEmphasis
   // TODO(WEB-6347): change variant name back to `disabled`
   isDisabled?: boolean
-  singleLine?: boolean
+  // Used for automatically setting the text color to the color that most contrasts with the custom background color provided
+  'custom-background-color'?: FlexProps['backgroundColor']
 }
 
 // TODO(WEB-6347): don't allow people to set disabled prop until Tamagui issue resolved
 export type ButtonProps = Omit<CustomButtonFrameProps, 'variant' | 'disabled'> &
   ButtonVariantProps & {
     /**
-     * add icon before or after, passes color and size automatically if Component
+     * add icon before or after, passes color and size automatically if it's a Component
      */
     icon?: JSX.Element
     /**
@@ -30,8 +32,11 @@ export type ButtonProps = Omit<CustomButtonFrameProps, 'variant' | 'disabled'> &
      */
     loading?: boolean
     /**
-     * Mobile only
      * Whether to apply a LayoutAnimation when the loading state changes
      */
     shouldAnimateBetweenLoadingStates?: boolean
+    /**
+     * The Datadog action name for the button
+     */
+    'dd-action-name'?: string
   }

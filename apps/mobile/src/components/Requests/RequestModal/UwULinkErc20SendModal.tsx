@@ -132,7 +132,7 @@ function UwULinkErc20SendModalContent({
         {!hasSufficientTokenFunds && (
           <Text color="red">
             {t('uwulink.error.insufficientTokens', {
-              tokenSymbol: symbol,
+              tokenSymbol: symbol ?? '',
               chain: getChainLabel(chainId),
             })}
           </Text>

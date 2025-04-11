@@ -17,18 +17,18 @@ import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import NotFound from 'pages/NotFound'
 import { LegacyPositionPage } from 'pages/Pool/Positions/LegacyPositionPage'
 import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
-import { BodyWrapper, HeaderButton, LoadingRow } from 'pages/Pool/Positions/shared'
+import { BodyWrapper, LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { ClickableTamaguiStyle } from 'theme/components'
-import { DeprecatedButton, Flex, SegmentedControl, SegmentedControlOption, Text, TouchableArea } from 'ui/src'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { Button, Flex, SegmentedControl, SegmentedControlOption, Text, TouchableArea, useMedia } from 'ui/src'
 import { ExchangeHorizontal } from 'ui/src/components/icons/ExchangeHorizontal'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -39,7 +39,7 @@ import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -102,13 +102,13 @@ function PositionPage() {
 
   const dispatch = useAppDispatch()
 
-  const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const media = useMedia()
 
   const { currency0Amount, currency1Amount, status } = positionInfo ?? {}
   const {
@@ -189,10 +189,6 @@ function PositionPage() {
     return 620
   }, [screenWidth])
 
-  if (!isLoading && !lpRedesignEnabled) {
-    return <Navigate to="/pools" replace />
-  }
-
   if (positionLoading) {
     return (
       <BodyWrapper>
@@ -225,7 +221,11 @@ function PositionPage() {
           </Flex>
         }
         actionButton={
-          <DeprecatedButton onPress={() => navigate('/positions')}>{t('common.backToPositions')}</DeprecatedButton>
+          <Flex row centered>
+            <Button width="fit-content" variant="branded" onPress={() => navigate('/positions')}>
+              {t('common.backToPositions')}
+            </Button>
+          </Flex>
         }
       />
     )
@@ -270,7 +270,7 @@ function PositionPage() {
             justifyContent="space-between"
             alignItems="center"
           >
-            <LiquidityPositionInfo positionInfo={positionInfo} />
+            <LiquidityPositionInfo positionInfo={positionInfo} linkToPool />
             {isOwner && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
                 {positionInfo.version === ProtocolVersion.V3 &&
@@ -280,71 +280,70 @@ function PositionPage() {
                     <MouseoverTooltip
                       text={t('pool.migrateLiquidityDisabledTooltip')}
                       disabled={!showV4UnsupportedTooltip}
+                      style={media.sm ? { width: '100%', display: 'block' } : {}}
                     >
-                      <HeaderButton
+                      <Button
+                        size="small"
                         emphasis="secondary"
-                        disabled={showV4UnsupportedTooltip}
+                        $sm={{ width: '100%' }}
+                        isDisabled={showV4UnsupportedTooltip}
                         opacity={showV4UnsupportedTooltip ? 0.5 : 1}
                         onPress={() => {
                           navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
                         }}
                       >
-                        <Text variant="buttonLabel3" color="$neutral1">
-                          <Trans i18nKey="pool.migrateToV4" />
-                        </Text>
-                      </HeaderButton>
+                        {t('pool.migrateToV4')}
+                      </Button>
                     </MouseoverTooltip>
                   )}
-                <HeaderButton
+                <Button
+                  size="small"
                   emphasis="secondary"
+                  $sm={{ width: '100%' }}
                   onPress={() => {
                     dispatch(
                       setOpenModal({
                         name: ModalName.AddLiquidity,
-                        initialState: { ...positionInfo, collectAsWeth: false },
+                        initialState: positionInfo,
                       }),
                     )
                   }}
                 >
-                  <Text variant="buttonLabel3" color="$neutral1">
-                    <Trans i18nKey="common.addLiquidity" />
-                  </Text>
-                </HeaderButton>
+                  {t('common.addLiquidity')}
+                </Button>
                 {status !== PositionStatus.CLOSED && (
-                  <HeaderButton
-                    emphasis="secondary"
+                  <Button
+                    size="small"
+                    $sm={{ width: '100%' }}
                     onPress={() => {
                       dispatch(
                         setOpenModal({
                           name: ModalName.RemoveLiquidity,
-                          initialState: { ...positionInfo, collectAsWeth: false },
+                          initialState: positionInfo,
                         }),
                       )
                     }}
                   >
-                    <Text variant="buttonLabel3" color="$neutral1">
-                      <Trans i18nKey="pool.removeLiquidity" />
-                    </Text>
-                  </HeaderButton>
+                    {t('pool.removeLiquidity')}
+                  </Button>
                 )}
                 {hasFees && isOwner && (
-                  <HeaderButton
-                    emphasis="primary"
+                  <Button
+                    size="small"
+                    maxWidth="fit-content"
                     onPress={() => {
                       if (hasFees) {
                         dispatch(
                           setOpenModal({
                             name: ModalName.ClaimFee,
-                            initialState: { ...positionInfo, collectAsWeth: false },
+                            initialState: positionInfo,
                           }),
                         )
                       }
                     }}
                   >
-                    <Text variant="buttonLabel3" color="$surface1">
-                      <Trans i18nKey="pool.collectFees" />
-                    </Text>
-                  </HeaderButton>
+                    {t('pool.collectFees')}
+                  </Button>
                 )}
               </Flex>
             )}
@@ -367,7 +366,18 @@ function PositionPage() {
                 <ExchangeHorizontal size="$icon.16" />
               </TouchableArea>
             </Flex>
-            <Flex animation="fast" height="auto" width="100%" $lg={{ width: '100%' }}>
+            <Flex
+              animation="fast"
+              height="auto"
+              width="100%"
+              $lg={{ width: '100%' }}
+              borderWidth={0}
+              borderColor="$surface3"
+              borderBottomRightRadius="$rounded20"
+              borderBottomWidth={mainView === 'chart' ? 1 : 0}
+              borderRightWidth={mainView === 'chart' ? 1 : 0}
+              pb="$padding12"
+            >
               {mainView === 'chart' ? (
                 <LiquidityPositionRangeChart
                   version={positionInfo.version}
@@ -397,7 +407,15 @@ function PositionPage() {
                   crosshairEnabled={false}
                 />
               ) : (
-                <Flex width="100%" height="100%" justifyContent="center" alignItems="center" py="$spacing20">
+                <Flex
+                  width="100%"
+                  height="100%"
+                  justifyContent="center"
+                  alignItems="center"
+                  py="$spacing20"
+                  backgroundColor="$surface2"
+                  borderRadius="$rounded20"
+                >
                   {'result' in metadata ? (
                     <PositionNFT image={metadata.result.image} height={400} />
                   ) : (

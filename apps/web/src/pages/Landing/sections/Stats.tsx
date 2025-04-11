@@ -4,7 +4,7 @@ import { useInView } from 'pages/Landing/sections/useInView'
 import { useMemo } from 'react'
 import { ArrowRightCircle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import { ExternalLink } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text, styled, useSporeColors } from 'ui/src'
 import {
   ProtocolVersion,

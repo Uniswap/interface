@@ -1,0 +1,54 @@
+diff --git a/dist/cjs/createComponent.native.js b/dist/cjs/createComponent.native.js
+index ddcbfbc5112e148ff6a33fffd986d763b9f32248..fd8b81f75d0a9fc414fbda5eea02d9405d57a89f 100644
+--- a/dist/cjs/createComponent.native.js
++++ b/dist/cjs/createComponent.native.js
+@@ -98,7 +98,7 @@ function createComponent(staticConfig) {
+     defaultProps,
+     defaultPropsKeyOrder: defaultProps ? Object.keys(defaultProps) : []
+   });
+-  var component = /* @__PURE__ */ import_react.default.forwardRef(function(propsIn, forwardedRef) {
++  var OldComponent = /* @__PURE__ */ import_react.default.forwardRef(function(propsIn, forwardedRef) {
+     var _themeState_state, _hooks_usePropsTransform, _hooks_useEvents, _config_animations, internalID = process.env.NODE_ENV === "development" ? import_react.default.useId() : "";
+     if (process.env.NODE_ENV === "development" && startVisualizer && (startVisualizer(), startVisualizer = void 0), !hasSetupBaseViews) {
+       var _hooks_getBaseViews;
+@@ -548,6 +548,13 @@ If you meant to do this, you can disable this warning - either change untilMeasu
+       delete globalThis.willPrint, time.print(), time = null;
+     }, 50))), content;
+   });
++  // UNISWAP PATCH: Using key to avoid conditionally calling useAnimation hook
++  var component = /* @__PURE__ */ import_react.default.forwardRef(function(propsIn, forwardedRef) {
++    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(OldComponent, {
++      ref: forwardedRef,
++      ...propsIn,
++    }, "animation" in propsIn ? 1 : 0);
++  });
+   staticConfig.componentName && (component.displayName = staticConfig.componentName);
+   var res = component;
+   (process.env.TAMAGUI_FORCE_MEMO || staticConfig.memo) && (res = /* @__PURE__ */ import_react.default.memo(res)), res.staticConfig = staticConfig;
+diff --git a/dist/esm/createComponent.native.js b/dist/esm/createComponent.native.js
+index 40466f28af50e22730462702a96e2c8b41969276..92f8f589a72098efc72e58f7cf64fb80e00787d9 100644
+--- a/dist/esm/createComponent.native.js
++++ b/dist/esm/createComponent.native.js
+@@ -90,7 +90,7 @@ function createComponent(staticConfig) {
+     defaultProps,
+     defaultPropsKeyOrder: defaultProps ? Object.keys(defaultProps) : []
+   });
+-  var component = /* @__PURE__ */ React.forwardRef(function(propsIn, forwardedRef) {
++  var OldComponent = /* @__PURE__ */ React.forwardRef(function(propsIn, forwardedRef) {
+     var _themeState_state, _hooks_usePropsTransform, _hooks_useEvents, _config_animations, internalID = process.env.NODE_ENV === "development" ? React.useId() : "";
+     if (process.env.NODE_ENV === "development" && startVisualizer && (startVisualizer(), startVisualizer = void 0), !hasSetupBaseViews) {
+       var _hooks_getBaseViews;
+@@ -540,6 +540,13 @@ If you meant to do this, you can disable this warning - either change untilMeasu
+       delete globalThis.willPrint, time.print(), time = null;
+     }, 50))), content;
+   });
++  // UNISWAP PATCH: Using key to avoid conditionally calling useAnimation hook
++  var component = /* @__PURE__ */ import_react.default.forwardRef(function(propsIn, forwardedRef) {
++    return /* @__PURE__ */ _jsx(OldComponent, {
++      ref: forwardedRef,
++      ...propsIn,
++    }, "animation" in propsIn ? 1 : 0);
++  });
+   staticConfig.componentName && (component.displayName = staticConfig.componentName);
+   var res = component;
+   (process.env.TAMAGUI_FORCE_MEMO || staticConfig.memo) && (res = /* @__PURE__ */ React.memo(res)), res.staticConfig = staticConfig;

@@ -31,7 +31,6 @@ function currencyInfoToTokenSearchResult(currencyInfo: CurrencyInfo): TokenSearc
     name: currencyInfo.currency.name ?? null,
     symbol: currencyInfo.currency.symbol ?? '',
     logoUrl: currencyInfo.logoUrl ?? null,
-    safetyLevel: currencyInfo.safetyLevel ?? null,
     safetyInfo: currencyInfo.safetyInfo,
     feeData: currencyInfo.currency.isToken
       ? {

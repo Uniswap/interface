@@ -10,7 +10,8 @@ import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-import { ExternalLink, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -139,14 +140,12 @@ export function CancelOrdersDialog(
           left: {
             title: <Trans i18nKey="common.neverMind" />,
             onClick: onCancel,
-            textColor: 'neutral1',
           },
           right: {
             title: <Trans i18nKey="common.proceed" />,
             onClick: onConfirm,
             type: DialogButtonType.Error,
             disabled: cancelState !== CancellationState.REVIEWING_CANCELLATION,
-            textColor: 'white',
           },
         }}
       />

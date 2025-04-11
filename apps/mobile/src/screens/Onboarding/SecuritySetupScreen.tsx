@@ -1,18 +1,19 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Alert, Image, Platform, StyleSheet } from 'react-native'
+import { ActivityIndicator, Image, Platform, StyleSheet } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
-import { enroll, tryLocalAuthenticate } from 'src/features/biometrics/biometrics-utils'
+import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics/biometrics-utils'
 import { biometricAuthenticationSuccessful } from 'src/features/biometrics/biometricsSaga'
+import { useBiometricsAlert } from 'src/features/biometrics/useBiometricsAlert'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import { checkOsBiometricAuthEnabled, useBiometricName } from 'src/features/biometricsSettings/hooks'
 import { setRequiredForTransactions } from 'src/features/biometricsSettings/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { DeprecatedButton, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Button, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import { Lock } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -20,7 +21,6 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
-import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 
@@ -28,6 +28,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
+  const { showBiometricsAlert } = useBiometricsAlert({ t })
 
   const [isLoadingAccount, setIsLoadingAccount] = useState(false)
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -54,34 +55,18 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
 
   const onPressEnableSecurity = useCallback(async () => {
     const isOSBiometricAuthEnabled = await checkOsBiometricAuthEnabled()
+    const authStatus = await tryLocalAuthenticate()
 
-    if (!isOSBiometricAuthEnabled) {
-      isIOS
-        ? Alert.alert(
-            t('onboarding.security.alert.biometrics.title.ios', { biometricsMethod }),
-            t('onboarding.security.alert.biometrics.message.ios', {
-              biometricsMethod,
-            }),
-            [
-              { text: t('common.navigation.systemSettings'), onPress: openSettings },
-              { text: t('common.button.notNow') },
-            ],
-          )
-        : Alert.alert(
-            t('onboarding.security.alert.biometrics.title.android'),
-            t('onboarding.security.alert.biometrics.message.android'),
-            [{ text: t('onboarding.security.button.setup'), onPress: enroll }, { text: t('common.button.notNow') }],
-          )
+    if (!isOSBiometricAuthEnabled || authStatus === BiometricAuthenticationStatus.Rejected) {
+      showBiometricsAlert(biometricsMethod)
       return
     }
-
-    const authStatus = await tryLocalAuthenticate()
 
     if (biometricAuthenticationSuccessful(authStatus)) {
       dispatch(setRequiredForTransactions(true))
       await onPressNext()
     }
-  }, [t, biometricsMethod, dispatch, onPressNext])
+  }, [biometricsMethod, dispatch, onPressNext, showBiometricsAlert])
 
   const onCloseModal = useCallback(() => setShowWarningModal(false), [])
 
@@ -117,11 +102,13 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           </Flex>
         </Flex>
         <Trace logPress element={ElementName.Enable}>
-          <DeprecatedButton size="large" theme="primary" onPress={onPressEnableSecurity}>
-            {isIOS
-              ? t('onboarding.security.button.confirm.ios', { biometricsMethod })
-              : t('onboarding.security.button.confirm.android')}
-          </DeprecatedButton>
+          <Flex centered row>
+            <Button size="large" variant="branded" onPress={onPressEnableSecurity}>
+              {isIOS
+                ? t('onboarding.security.button.confirm.ios', { biometricsMethod })
+                : t('onboarding.security.button.confirm.android')}
+            </Button>
+          </Flex>
         </Trace>
       </OnboardingScreen>
     </>

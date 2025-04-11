@@ -59,7 +59,12 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
                   mb="$spacing4"
                   pr="$spacing20"
                 >
-                  <SectionHeaderText icon={<RecentIcon />} title={t('explore.search.section.recent')} />
+                  <SectionHeaderText
+                    icon={
+                      <ClockIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
+                    }
+                    title={t('explore.search.section.recent')}
+                  />
                   <TouchableArea onPress={onPressClearSearchHistory}>
                     <Text color="$accent1" variant="buttonLabel2">
                       {t('explore.search.action.clear')}
@@ -103,9 +108,4 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
       />
     </>
   )
-}
-
-export const RecentIcon = (): JSX.Element => {
-  const colors = useSporeColors()
-  return <ClockIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
 }

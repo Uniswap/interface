@@ -79,37 +79,37 @@ exports[`AccountHeader renders correctly 1`] = `
                 },
                 "borderBottomColor": {
                   "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
+                    "dark": "rgba(255,255,255,0.12)",
+                    "light": "rgba(34,34,34,0.05)",
                   },
                 },
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
-                "borderBottomWidth": 0,
+                "borderBottomWidth": 1,
                 "borderLeftColor": {
                   "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
+                    "dark": "rgba(255,255,255,0.12)",
+                    "light": "rgba(34,34,34,0.05)",
                   },
                 },
-                "borderLeftWidth": 0,
+                "borderLeftWidth": 1,
                 "borderRightColor": {
                   "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
+                    "dark": "rgba(255,255,255,0.12)",
+                    "light": "rgba(34,34,34,0.05)",
                   },
                 },
-                "borderRightWidth": 0,
+                "borderRightWidth": 1,
                 "borderStyle": "solid",
                 "borderTopColor": {
                   "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
+                    "dark": "rgba(255,255,255,0.12)",
+                    "light": "rgba(34,34,34,0.05)",
                   },
                 },
                 "borderTopLeftRadius": 999999,
                 "borderTopRightRadius": 999999,
-                "borderTopWidth": 0,
+                "borderTopWidth": 1,
                 "flexDirection": "column",
                 "position": "relative",
               }

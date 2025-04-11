@@ -1,11 +1,11 @@
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { Column } from 'nft/components/Flex'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { useBag, useNativeUsdPrice } from 'nft/hooks'
 import { BagItemStatus, BagStatus } from 'nft/types'
 import { formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { useEffect, useMemo } from 'react'
+import { Flex } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
@@ -69,7 +69,7 @@ export const BagContent = () => {
 
   return (
     <>
-      <Column display={priceChangedAssets.length > 0 || unavailableAssets.length > 0 ? 'flex' : 'none'}>
+      <Flex display={priceChangedAssets.length > 0 || unavailableAssets.length > 0 ? 'flex' : 'none'}>
         {unavailableAssets.length > 0 && (
           <Trace
             logImpression
@@ -100,8 +100,8 @@ export const BagContent = () => {
             isMobile={isMobile}
           />
         ))}
-      </Column>
-      <Column>
+      </Flex>
+      <Flex>
         {unchangedAssets
           .slice(0)
           .reverse()
@@ -115,7 +115,7 @@ export const BagContent = () => {
               isMobile={isMobile}
             />
           ))}
-      </Column>
+      </Flex>
     </>
   )
 }

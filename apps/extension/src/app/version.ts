@@ -13,19 +13,3 @@ export function getStatsigEnvironmentTier(): StatsigEnvironmentTier {
   }
   return StatsigEnvironmentTier.PROD
 }
-
-export function getDatadogEnvironment(): DatadogEnvironment {
-  if (isDevEnv()) {
-    return DatadogEnvironment.DEV
-  }
-  if (isBetaEnv()) {
-    return DatadogEnvironment.BETA
-  }
-  return DatadogEnvironment.PROD
-}
-
-enum DatadogEnvironment {
-  DEV = 'dev',
-  BETA = 'beta',
-  PROD = 'prod',
-}

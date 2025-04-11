@@ -1,23 +1,9 @@
-IPFS hash of the deployment:
-- CIDv0: `QmQ2hU8vjNncmKCmEU6cU1DNpokWPfMtBRLj9fQpJRzCu2`
-- CIDv1: `bafybeiazdyfabltg5ykqliad3cflnjagpxmrkdv2bwagwtbjasovu2uftu`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Settings Refresh: Enjoy a more streamlined settings page, with a clearer view of your active wallets. Also note that Manage Connections has now moved out of settings and can be accessed by clicking your profile image. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Token Actions: On specific token pages, find a new action button on the bottom right corner which allow you to do things like buy, sell, send, and receive. 
 
-IPFS gateways:
-- https://bafybeiazdyfabltg5ykqliad3cflnjagpxmrkdv2bwagwtbjasovu2uftu.ipfs.dweb.link/
-- [ipfs://QmQ2hU8vjNncmKCmEU6cU1DNpokWPfMtBRLj9fQpJRzCu2/](ipfs://QmQ2hU8vjNncmKCmEU6cU1DNpokWPfMtBRLj9fQpJRzCu2/)
+Other changes: 
 
-### 5.74.1 (2025-02-27)
-
-
-### Bug Fixes
-
-* **web:** wait for statsig init to check ff (#16802) af389dd
-
-
+- Various bug fixes and performance improvements

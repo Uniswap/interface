@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
@@ -9,7 +8,7 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, Image, Text } from 'ui/src'
+import { Button, Flex, Image } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { ArrowRightToLine } from 'ui/src/components/icons/ArrowRightToLine'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -31,23 +30,17 @@ const UnreadIndicator = () => {
 
 const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: string; onPress: () => void }) => {
   return (
-    <DeprecatedButton
-      display="flex"
-      alignItems="center"
-      gap="$spacing12"
-      theme="outline"
-      px="$spacing16"
-      py="$spacing12"
-      fontSize="$large"
-      onPress={onPress}
-      hoverStyle={{ opacity: 0.9 }}
-    >
-      {Icon}
-      <Text display="flex" flex={1} variant="buttonLabel2">
-        {Label}
-      </Text>
-      <RotatableChevron width={iconSizes.icon20} height={iconSizes.icon20} color="$neutral3" direction="right" />
-    </DeprecatedButton>
+    <Button justifyContent="flex-start" fill={false} emphasis="tertiary" onPress={onPress}>
+      <Flex row alignItems="flex-start" gap="$spacing12">
+        <Flex row>{Icon}</Flex>
+        <Button.Text>{Label}</Button.Text>
+      </Flex>
+      <Flex row flexGrow={1} justifyContent="flex-end">
+        <Button.Icon typeOfButton="button" emphasis="tertiary">
+          <RotatableChevron direction="right" />
+        </Button.Icon>
+      </Flex>
+    </Button>
   )
 }
 

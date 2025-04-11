@@ -74,6 +74,7 @@ export const TestID = {
   SwapSettings: 'swap-settings',
   SwitchCurrenciesButton: 'switch-currencies-button',
   TokenDetailsAboutHeader: 'token-details-about-header',
+  TokenDetailsActionButton: 'token-details-action-button',
   TokenDetailsBuyButton: 'token-details-buy-button',
   TokenDetailsMoreButton: 'token-details-more-button',
   TokenDetailsSellButton: 'token-details-sell-button',

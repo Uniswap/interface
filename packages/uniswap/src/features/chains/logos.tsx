@@ -32,6 +32,7 @@ const BLOCK_EXPLORER_LOGOS_LIGHT: Record<UniverseChainId, GeneratedIcon> = {
   [UniverseChainId.Optimism]: OpEtherscanLogoLight,
   [UniverseChainId.Polygon]: PolygonscanLogoLight,
   [UniverseChainId.Sepolia]: EtherscanLogoLight,
+  [UniverseChainId.Soneium]: BlockExplorer,
   [UniverseChainId.Unichain]: BlockExplorer,
   [UniverseChainId.UnichainSepolia]: BlockExplorer,
   [UniverseChainId.WorldChain]: BlockExplorer,

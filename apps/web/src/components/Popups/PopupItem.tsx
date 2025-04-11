@@ -4,12 +4,10 @@ import {
   UniswapXOrderPopupContent,
 } from 'components/Popups/PopupContent'
 import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
+import { PopupContent, PopupType } from 'components/Popups/types'
 import { useAccount } from 'hooks/useAccount'
 import { TFunction } from 'i18next'
-import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useRemovePopup } from 'state/application/hooks'
-import { PopupContent, PopupType } from 'state/application/reducer'
 import { Flex, Text } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -18,32 +16,8 @@ import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSuppor
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
-export default function PopupItem({
-  removeAfterMs,
-  content,
-  popKey,
-}: {
-  removeAfterMs: number | null
-  content: PopupContent
-  popKey: string
-}) {
+export function PopupItem({ content, onClose }: { content: PopupContent; popKey: string; onClose: () => void }) {
   const { t } = useTranslation()
-  const removePopup = useRemovePopup()
-  const onClose = () => removePopup(popKey)
-
-  useEffect(() => {
-    if (removeAfterMs === null) {
-      return undefined
-    }
-
-    const timeout = setTimeout(() => {
-      removePopup(popKey)
-    }, removeAfterMs)
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [popKey, removeAfterMs, removePopup])
 
   const { chainId } = useAccount()
   const supportedChainId = useSupportedChainId(chainId)

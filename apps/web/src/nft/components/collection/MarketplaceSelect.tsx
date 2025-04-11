@@ -1,32 +1,13 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
-import clsx from 'clsx'
-import { Box } from 'components/deprecated/Box'
-import styled from 'lib/styled-components'
-import { Column, Row } from 'nft/components/Flex'
-import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
-import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { getMarketplaceIcon } from 'nft/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { ThemedText } from 'theme/components'
-import { LabeledCheckbox } from 'ui/src'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { Checkbox, Flex, Text, useSporeColors } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-
-const FilterItemWrapper = styled(Row)`
-  justify-content: space-between;
-  padding: 10px 16px 10px 12px;
-  cursor: pointer;
-  border-radius: 12px;
-  &:hover {
-    background: ${({ theme }) => theme.surface2};
-  }
-`
-
-const MarketNameWrapper = styled(Row)`
-  gap: 10px;
-`
 
 export const MARKETPLACE_ITEMS = {
   x2y2: 'X2Y2',
@@ -46,13 +27,25 @@ export const FilterItem = ({
 }: {
   title: string | JSX.Element
   element: JSX.Element
-  onClick: React.MouseEventHandler<HTMLElement>
+  onClick: (e: any) => void
 }) => {
   return (
-    <FilterItemWrapper onClick={onClick}>
+    <Flex
+      row
+      onPress={onClick}
+      justifyContent="space-between"
+      px={10}
+      pt="$padding16"
+      pb="$padding12"
+      cursor="pointer"
+      borderRadius="$rounded12"
+      hoverStyle={{
+        backgroundColor: '$surface2',
+      }}
+    >
       <ThemedText.BodyPrimary>{title}</ThemedText.BodyPrimary>
       <ThemedText.SubHeaderSmall>{element}</ThemedText.SubHeaderSmall>
-    </FilterItemWrapper>
+    </Flex>
   )
 }
 
@@ -87,25 +80,23 @@ const MarketplaceItem = ({
   }
 
   const checkbox = (
-    <LabeledCheckbox
-      variant="branded"
-      checked={isCheckboxSelected}
-      onCheckPressed={handleCheckbox}
-      text={String(count)}
-    />
+    <Flex row alignItems="center" gap="$gap8">
+      <Checkbox variant="branded" checked={isCheckboxSelected} onCheckedChange={handleCheckbox} />
+      <Text variant="body2">{String(count)}</Text>
+    </Flex>
   )
 
   const titleWithLogo = (
-    <MarketNameWrapper>
+    <Flex row gap="$gap8">
       {getMarketplaceIcon(title, '16')}
       {title}
-    </MarketNameWrapper>
+    </Flex>
   )
 
   return (
-    <div key={value}>
+    <Flex key={value}>
       <FilterItem title={titleWithLogo} element={checkbox} onClick={handleCheckbox} />
-    </div>
+    </Flex>
   )
 }
 
@@ -117,49 +108,53 @@ export const FilterDropdown = ({
 }: {
   title: string
   items: JSX.Element[]
-  onClick: React.MouseEventHandler<HTMLElement>
+  onClick: (e: any) => void
   isOpen: boolean
 }) => {
+  const colors = useSporeColors()
   return (
     <>
-      <Box className={styles.detailsOpen} opacity={isOpen ? '1' : '0'} />
-      <Box
-        as="details"
-        className={clsx(subheadSmall, !isOpen && styles.rowHover)}
-        open={isOpen}
-        borderRadius={isOpen ? '0' : '12'}
-      >
-        <Box
-          as="summary"
-          className={`${styles.row} ${styles.rowHover}`}
-          display="flex"
-          justifyContent="space-between"
+      <Flex
+        my="$padding8"
+        width="100%"
+        borderColor="surface3"
+        borderTopWidth={isOpen ? 1 : 0}
+        opacity={isOpen ? 1 : 0}
+      />
+      <Flex {...ClickableTamaguiStyle} borderRadius={isOpen ? 0 : '$rounded12'}>
+        <Flex
+          row
           alignItems="center"
-          fontSize="16"
-          paddingTop="12"
-          paddingLeft="12"
-          paddingBottom="12"
-          lineHeight="20"
-          borderRadius="12"
-          maxHeight="48"
-          onClick={onClick}
+          justifyContent="space-between"
+          p="$padding12"
+          borderRadius="$rounded12"
+          maxHeight={48}
+          onPress={onClick}
+          hoverStyle={{
+            backgroundColor: '$surface3',
+          }}
         >
-          {title}
-          <Box display="flex" alignItems="center">
-            <Box
-              className={styles.chevronContainer}
-              style={{
-                transform: `rotate(${isOpen ? 0 : 180}deg)`,
-              }}
-            >
-              <ChevronUpIcon className={styles.chevronIcon} />
-            </Box>
-          </Box>
-        </Box>
-        <Column className={styles.filterDropDowns} paddingBottom="8" paddingLeft="0">
-          {items}
-        </Column>
-      </Box>
+          <Text variant="body2">{title}</Text>
+          <Flex
+            centered
+            $platform-web={{
+              display: 'inline-block',
+            }}
+            height="$spacing28"
+            width="$spacing28"
+            animation="fast"
+            rotate={isOpen ? '0deg' : '180deg'}
+            mr={-1}
+          >
+            <ChevronUpIcon fill={colors.neutral2.val} style={{ marginLeft: '-1px' }} />
+          </Flex>
+        </Flex>
+        {isOpen && (
+          <Flex pb="$padding8" pl={0}>
+            {items}
+          </Flex>
+        )}
+      </Flex>
     </>
   )
 }
@@ -194,7 +189,7 @@ export const MarketplaceSelect = () => {
     [addMarket, marketCount, removeMarket, selectedMarkets],
   )
 
-  const onClick: React.MouseEventHandler<HTMLElement> = (e) => {
+  const onClick = (e: any) => {
     e.preventDefault()
     setOpen(!isOpen)
     setTraitsOpen(TraitPosition.MARKPLACE_INDEX, !isOpen)

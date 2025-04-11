@@ -46,6 +46,7 @@ jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
 
 const account = signerMnemonicAccount()
 
+const MOCK_TIMESTAMP = 1487076708000
 const CHAIN_ID = UniverseChainId.Mainnet
 const universalRouterAddress = UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V1_2, CHAIN_ID)
 
@@ -160,7 +161,11 @@ const nonce = 1
 const expectedSendApprovalParams: SendTransactionParams = {
   chainId: mockApproveTxRequest.chainId,
   account,
-  options: { request: mockApproveTxRequest, submitViaPrivateRpc: false },
+  options: {
+    request: mockApproveTxRequest,
+    submitViaPrivateRpc: false,
+    userSubmissionTimestampMs: MOCK_TIMESTAMP,
+  },
   typeInfo: {
     type: TransactionType.Approve,
     tokenAddress: mockApproveTxRequest.to,
@@ -175,11 +180,22 @@ const expectedSendApprovalParams: SendTransactionParams = {
 }
 
 describe(approveAndSwap, () => {
+  let dateNowSpy: jest.SpyInstance
   const sharedProviders: (EffectProviders | StaticProvider)[] = [
     [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.Off],
     [call(getProvider, mockSwapTxRequest.chainId), mockProvider],
     [call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId), { nonce }],
   ]
+
+  beforeAll(() => {
+    // Lock Time
+    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => MOCK_TIMESTAMP)
+  })
+
+  afterAll(() => {
+    // Unlock Time
+    dateNowSpy?.mockRestore()
+  })
 
   it('sends a swap tx', async () => {
     const classicSwapParamsWithoutApprove = {
@@ -194,7 +210,11 @@ describe(approveAndSwap, () => {
     const expectedSendSwapParams: SendTransactionParams = {
       chainId: classicSwapParamsWithoutApprove.swapTxContext.txRequest.chainId,
       account: classicSwapParamsWithoutApprove.account,
-      options: { request: { ...mockSwapTxRequest, nonce }, submitViaPrivateRpc: false },
+      options: {
+        request: { ...mockSwapTxRequest, nonce },
+        submitViaPrivateRpc: false,
+        userSubmissionTimestampMs: Date.now(),
+      },
       typeInfo: mockTransactionTypeInfo,
       analytics: classicSwapParamsWithoutApprove.analytics,
       txId: classicSwapParamsWithoutApprove.txId,
@@ -235,7 +255,11 @@ describe(approveAndSwap, () => {
     const expectedSendSwapParams: SendTransactionParams = {
       chainId: classicSwapParams.swapTxContext.txRequest.chainId,
       account: classicSwapParams.account,
-      options: { request: { ...mockSwapTxRequest, nonce: nonce + 1 }, submitViaPrivateRpc: false },
+      options: {
+        request: { ...mockSwapTxRequest, nonce: nonce + 1 },
+        submitViaPrivateRpc: false,
+        userSubmissionTimestampMs: Date.now(),
+      },
       typeInfo: mockTransactionTypeInfo,
       analytics: classicSwapParams.analytics,
       txId: classicSwapParams.txId,

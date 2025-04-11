@@ -38,7 +38,7 @@ import {
   updateTransaction,
   upsertFiatOnRampTransaction,
 } from 'uniswap/src/features/transactions/slice'
-import { tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
@@ -339,7 +339,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
-  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options?.submittedTimestampMs) {
+  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options?.rpcSubmissionTimestampMs) {
     // Transaction was not submitted yet, ignore it for now
     // Once it's submitted, it'll be updated and the watcher will pick it up
     return undefined
@@ -613,6 +613,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       transactedUSDValue,
       ...swapProperties,
       ...bridgeProperties,
+      ...getRouteAnalyticsData(payload),
     }
 
     if (isUniswapX(payload)) {
@@ -716,7 +717,13 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
     return
   }
 
+  const currentTimeMs = Date.now()
   const transactionGasLimit = 'options' in transaction ? transaction.options.request.gasLimit : undefined
+  const userSubmissionTimestampMs = 'options' in transaction ? transaction.options.userSubmissionTimestampMs : undefined
+  const rpcSubmissionTimestampMs = 'options' in transaction ? transaction.options.rpcSubmissionTimestampMs : undefined
+  const rpcSubmissionDelayMs = 'options' in transaction ? transaction.options.rpcSubmissionDelayMs : undefined
+  const completionDelayMs = 'options' in transaction ? transaction.options.currentBlockFetchDelayMs : undefined
+  const blockSubmitted = 'options' in transaction ? transaction.options.blockSubmitted : undefined
   const out_of_gas =
     !!transaction.receipt &&
     !!transactionGasLimit &&
@@ -726,7 +733,7 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
     !transaction.receipt &&
     'options' in transaction &&
     !!transaction.options.timeoutTimestampMs &&
-    Date.now() > transaction.options.timeoutTimestampMs
+    currentTimeMs > transaction.options.timeoutTimestampMs
 
   for (const estimate of [gasEstimates.activeEstimate, ...(gasEstimates.shadowEstimates || [])]) {
     const gasUseDiff = getDiff(estimate.gasLimit, transaction.receipt?.gasUsed)
@@ -741,8 +748,12 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
       transaction_type: transaction.typeInfo.type,
       chain_id: transaction.chainId,
       final_status: transaction.status,
-      time_to_confirmed_ms: getDiff(Date.now(), transaction.addedTime),
-      blocks_to_confirmed: getDiff(transaction.receipt?.blockNumber, gasEstimates.blockSubmitted),
+      time_to_confirmed_ms: getDiff(currentTimeMs, rpcSubmissionTimestampMs),
+      blocks_to_confirmed: getDiff(transaction.receipt?.blockNumber, blockSubmitted),
+      user_experienced_delay_ms: getDiff(currentTimeMs, userSubmissionTimestampMs),
+      send_to_confirmation_delay_ms: getDiff(transaction.receipt?.confirmedTime, rpcSubmissionTimestampMs),
+      rpc_submission_delay_ms: rpcSubmissionDelayMs,
+      current_block_fetch_delay_ms: completionDelayMs,
       gas_use_diff: gasUseDiff,
       gas_use_diff_percentage: getPercentageError(gasUseDiff, estimate.gasLimit),
       gas_used: transaction.receipt?.gasUsed,
