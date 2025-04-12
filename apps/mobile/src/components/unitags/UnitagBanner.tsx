@@ -22,10 +22,12 @@ export function UnitagBanner({
   address,
   compact,
   entryPoint,
+  onPressClaim,
 }: {
   address: Address
   compact?: boolean
   entryPoint: MobileScreens.Home | MobileScreens.Settings
+  onPressClaim?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
@@ -67,6 +69,9 @@ export function UnitagBanner({
   const onPressClaimNow = (): void => {
     dismissNativeKeyboard()
     handleClaim()
+    if (onPressClaim) {
+      onPressClaim()
+    }
   }
 
   const baseButtonStyle: TouchableAreaProps = {

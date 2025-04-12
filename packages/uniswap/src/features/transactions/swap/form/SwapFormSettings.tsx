@@ -126,7 +126,7 @@ export function SwapFormSettings({
               }
             }}
           >
-            <>
+            <Flex>
               <SwapFormSettingsButton
                 showCustomSlippage={!!showCustomSlippage}
                 customSlippageTolerance={customSlippageTolerance}
@@ -141,7 +141,7 @@ export function SwapFormSettings({
                 isOpen={showTransactionSettingsModal}
                 onClose={onCloseSettingsModal}
               />
-            </>
+            </Flex>
           </Popover>
         )}
       </Flex>

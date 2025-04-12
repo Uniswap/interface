@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, DeprecatedButton, Flex, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { AnimatePresence, Button, Flex, useIsShortMobileDevice } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { iconSizes } from 'ui/src/theme'
 import { Warning, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import { SWAP_BUTTON_TEXT_VARIANT } from 'uniswap/src/features/transactions/swap/form/SwapFormButton'
 import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
@@ -44,103 +42,60 @@ export function SubmitSwapButton({
   const actionText = getActionName(t, wrapType, swapTxContext)
 
   const isShortMobileDevice = useIsShortMobileDevice()
-  const size = isShortMobileDevice ? 'small' : 'large'
+  const size = isShortMobileDevice ? 'medium' : 'large'
 
   switch (true) {
     case indicative: {
       return (
-        <DeprecatedButton
-          fill
-          isDisabled
-          backgroundColor="$surface2"
-          pressStyle={{ scale: 0.98 }}
-          icon={<SpinningLoader color="$neutral2" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />}
-          opacity={1} // For indicative loading UI, opacity should be full despite disabled state
-          size={size}
-        >
-          <Text color="$neutral2" flex={1} textAlign="center" variant={SWAP_BUTTON_TEXT_VARIANT}>
-            {t('swap.finalizingQuote')}
-          </Text>
-        </DeprecatedButton>
+        <Button loading variant="default" emphasis="secondary" size={size}>
+          {t('swap.finalizingQuote')}
+        </Button>
       )
     }
     case showUniswapXSubmittingUI: {
       return (
-        <DeprecatedButton
-          fill
-          isDisabled
-          backgroundColor="$accent2"
-          color="$accent1"
-          pressStyle={{ scale: 0.98 }}
-          hoverStyle={{ opacity: 1 }}
-          icon={<SpinningLoader color="$accent1" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />}
-          opacity={1} // For UniswapX submitting UI, opacity should be full despite disabled state
-          size={size}
-        >
+        <Button loading variant="branded" emphasis="primary" size={size}>
           <UniswapXSubmittingText />
-        </DeprecatedButton>
+        </Button>
       )
     }
     case isInterface && isSubmitting: {
       return (
-        <DeprecatedButton
-          fill
-          isDisabled
-          backgroundColor="$surface2"
-          color="$neutral2"
-          pressStyle={{ scale: 0.98 }}
-          hoverStyle={{ opacity: 1 }}
-          icon={<SpinningLoader color="$neutral2" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />}
-          opacity={1} // For UniswapX submitting UI, opacity should be full despite disabled state
-          size={size}
-        >
+        <Button loading shouldAnimateBetweenLoadingStates={false} size={size}>
           <ConfirmInWalletText />
-        </DeprecatedButton>
+        </Button>
       )
     }
     case warning?.severity === WarningSeverity.High: {
       return (
-        <DeprecatedButton
-          fill
-          backgroundColor="$statusCritical"
-          color="$accent1"
+        <Button
+          variant="critical"
+          emphasis="primary"
           isDisabled={disabled}
-          pressStyle={{ scale: 0.98 }}
-          hoverStyle={{ opacity: 1, backgroundColor: '$statusCritical' }}
-          opacity={disabled ? 0.5 : 0.9}
-          icon={renderBiometricsIcon?.({ color: 'white' })}
+          icon={renderBiometricsIcon?.({})}
           size={size}
           testID={TestID.Swap}
           onPress={onSubmit}
         >
-          <Text color="$white" variant={SWAP_BUTTON_TEXT_VARIANT}>
-            {actionText}
-          </Text>
-        </DeprecatedButton>
+          {actionText}
+        </Button>
       )
     }
     default: {
-      const backgroundColor = disabled ? '$surface2' : '$accent1'
-      const textColor = disabled ? '$neutral2' : '$white'
-      const biometricIcon = renderBiometricsIcon?.({ color: disabled ? '$neutral2' : '$white' })
+      const biometricIcon = renderBiometricsIcon?.({})
 
       return (
-        <DeprecatedButton
-          fill
-          backgroundColor={backgroundColor}
+        <Button
+          variant={disabled ? 'default' : 'branded'}
+          emphasis={disabled ? 'secondary' : 'primary'}
           isDisabled={disabled}
-          pressStyle={{ scale: 0.98 }}
-          hoverStyle={{ opacity: 1 }}
-          opacity={0.9}
           icon={biometricIcon}
           size={size}
           testID={TestID.Swap}
           onPress={onSubmit}
         >
-          <Text color={textColor} variant={SWAP_BUTTON_TEXT_VARIANT}>
-            {actionText}
-          </Text>
-        </DeprecatedButton>
+          {actionText}
+        </Button>
       )
     }
   }
@@ -183,9 +138,9 @@ function UniswapXSubmittingText(): JSX.Element {
   return (
     <AnimatePresence key={key}>
       <Flex animateEnterExit="fadeInDownOutDown" animation="quicker">
-        <Text color="$accent1" flex={1} textAlign="center" variant={SWAP_BUTTON_TEXT_VARIANT}>
+        <Button.Text>
           {showKeepOpenMessage ? t('swap.button.submitting.keep.open') : t('swap.button.submitting')}
-        </Text>
+        </Button.Text>
       </Flex>
     </AnimatePresence>
   )
@@ -197,9 +152,7 @@ function ConfirmInWalletText(): JSX.Element {
   return (
     <AnimatePresence>
       <Flex animateEnterExit="fadeInDownOutDown" animation="quicker">
-        <Text color="$neutral2" flex={1} textAlign="center" variant={SWAP_BUTTON_TEXT_VARIANT}>
-          {t('common.confirmWallet')}
-        </Text>
+        <Button.Text>{t('common.confirmWallet')}</Button.Text>
       </Flex>
     </AnimatePresence>
   )

@@ -8,13 +8,13 @@ import { GasFeeResult } from 'uniswap/src/features/gas/types'
  * Always use our own gas estimates and override and values from the provider txn request.
  *
  */
-export function formatExternalTxnWithGasEstimates({
+export function formatExternalTxnWithGasEstimates<T extends providers.TransactionRequest>({
   transaction,
   gasFeeResult,
 }: {
-  transaction: providers.TransactionRequest
+  transaction: T
   gasFeeResult: GasFeeResult
-}): providers.TransactionRequest {
+}): T {
   const { params } = gasFeeResult
 
   // Clone to ensure object is configurable, otherwise deleting properties may cause type errors
@@ -26,7 +26,7 @@ export function formatExternalTxnWithGasEstimates({
   delete transactionClone.maxFeePerGas
   delete transactionClone.maxPriorityFeePerGas
 
-  const formattedTxnWithGasEstimates: providers.TransactionRequest = {
+  const formattedTxnWithGasEstimates: T = {
     ...transactionClone,
     ...params,
   }

@@ -142,6 +142,10 @@ export const networkColors = {
     light: '#836EF9',
     dark: '#836EF9',
   },
+  soneium: {
+    light: '#000000',
+    dark: '#FFFFFF',
+  },
   worldchain: {
     light: '#222222',
     dark: '#FFFFFF',
@@ -294,7 +298,9 @@ export const colorsLight = {
   statusCritical2: sporeLight.statusCritical2,
   statusCritical2Hovered: sporeLight.statusCritical2Hovered,
   statusWarning: sporeLight.statusWarning,
+  statusWarningHovered: sporeLight.statusWarningHovered,
   statusWarning2: sporeLight.statusWarning2,
+  statusWarning2Hovered: sporeLight.statusWarning2Hovered,
 
   DEP_backgroundBranded: '#FCF7FF',
   DEP_backgroundOverlay: opacifyRaw(60, colors.white),
@@ -327,6 +333,7 @@ export const colorsLight = {
   chain_43114: networkColors.avalanche.light,
   chain_324: networkColors.zksync.light,
   chain_480: networkColors.worldchain.light,
+  chain_1868: networkColors.soneium.light,
 
   // Testnets
   chain_11155111: networkColors.ethereum.light,
@@ -380,7 +387,9 @@ export const colorsDark = {
   statusCritical2: sporeDark.statusCritical2,
   statusCritical2Hovered: sporeDark.statusCritical2Hovered,
   statusWarning: sporeDark.statusWarning,
+  statusWarningHovered: sporeDark.statusWarningHovered,
   statusWarning2: sporeDark.statusWarning2,
+  statusWarning2Hovered: sporeDark.statusWarning2Hovered,
 
   DEP_backgroundBranded: '#100D1C',
   DEP_backgroundOverlay: opacifyRaw(10, colors.white),
@@ -414,6 +423,7 @@ export const colorsDark = {
   chain_43114: networkColors.avalanche.dark,
   chain_324: networkColors.zksync.dark,
   chain_480: networkColors.worldchain.dark,
+  chain_1868: networkColors.soneium.dark,
 
   // Testnets
   chain_11155111: networkColors.ethereum.dark,

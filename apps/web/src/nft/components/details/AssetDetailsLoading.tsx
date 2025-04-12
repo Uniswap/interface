@@ -2,7 +2,7 @@ import Column from 'components/deprecated/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import { LoadingBubble } from 'components/Tokens/loading'
 import styled, { useTheme } from 'lib/styled-components'
-import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
+import { breakpointPaddingsCss } from 'nft/css/breakpoints'
 
 const BREAKPOINT = '960px'
 
@@ -80,7 +80,7 @@ const LoadingContainer = styled.div`
   margin-right: auto;
   max-width: 1296px;
 
-  ${ScreenBreakpointsPaddings}
+  ${breakpointPaddingsCss}
 
   @media (max-width: ${BREAKPOINT}) {
     max-width: 100%;

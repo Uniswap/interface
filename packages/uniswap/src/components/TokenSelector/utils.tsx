@@ -1,10 +1,6 @@
 import { useMemo } from 'react'
-import {
-  TokenOption,
-  TokenOptionSection,
-  TokenSection,
-  TokenSelectorFlow,
-} from 'uniswap/src/components/TokenSelector/types'
+import { TokenOptionSection, TokenSection, TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOption, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { SafetyLevel as GqlSafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GetSwappableTokensResponse, SafetyLevel } from 'uniswap/src/data/tradingApi/__generated__'
@@ -105,10 +101,10 @@ export function formatSearchResults(
  * Also updates the search results section name accordingly
  */
 export function mergeSearchResultsWithBridgingTokens(
-  searchResults: TokenSection[] | undefined,
+  searchResults: TokenSection<TokenOption>[] | undefined,
   bridgingTokens: TokenOption[] | undefined,
   sectionHeaderString: string | undefined,
-): TokenSection[] | undefined {
+): TokenSection<TokenOption>[] | undefined {
   if (!searchResults || !bridgingTokens || bridgingTokens.length === 0) {
     return searchResults
   }
@@ -116,15 +112,8 @@ export function mergeSearchResultsWithBridgingTokens(
   const extractedBridgingTokens: TokenOption[] = []
 
   const extractedSearchResults = searchResults.map((section) => {
-    const sectionResults2D: TokenOption[][] = []
     const sectionResults: TokenOption[] = []
     section.data.forEach((token) => {
-      if (isTokenOptionArray(token)) {
-        // 2D array is for horizontal token list sections, which is not applicable for search results
-        sectionResults2D.push(token)
-        return
-      }
-
       const isBridgingToken = bridgingTokens.some((bridgingToken) =>
         areCurrencyIdsEqual(token.currencyInfo.currencyId, bridgingToken.currencyInfo.currencyId),
       )
@@ -138,11 +127,11 @@ export function mergeSearchResultsWithBridgingTokens(
 
     return {
       ...section,
-      data: sectionResults2D.length > 0 ? sectionResults2D : sectionResults,
+      data: sectionResults,
     }
   })
 
-  const bridgingSection: TokenSection = {
+  const bridgingSection: TokenSection<TokenOption> = {
     sectionKey: TokenOptionSection.BridgingTokens,
     data: extractedBridgingTokens,
   }
@@ -159,7 +148,7 @@ export function mergeSearchResultsWithBridgingTokens(
   return [bridgingSection, ...extractedSearchResults].filter((section) => section.data.length > 0)
 }
 
-export function isTokenOptionArray(option: TokenOption | TokenOption[]): option is TokenOption[] {
+export function isTokenOptionArray(option: TokenSelectorItemTypes): option is TokenOption[] {
   return Array.isArray(option)
 }
 
@@ -170,7 +159,7 @@ function isExactTokenOptionMatch(searchResult: TokenOption, query: string): bool
   )
 }
 
-export function useTokenOptionsSection({
+export function useTokenOptionsSection<T extends TokenSelectorItemTypes>({
   sectionKey,
   tokenOptions,
   rightElement,
@@ -178,11 +167,11 @@ export function useTokenOptionsSection({
   name,
 }: {
   sectionKey: TokenOptionSection
-  tokenOptions?: TokenOption[] | TokenOption[][]
+  tokenOptions?: T[]
   rightElement?: JSX.Element
   endElement?: JSX.Element
   name?: string
-}): TokenSection[] | undefined {
+}): TokenSection<T>[] | undefined {
   return useMemo(() => {
     if (!tokenOptions) {
       return undefined
@@ -216,8 +205,8 @@ export function isSwapListLoading({
   isTestnetModeEnabled,
 }: {
   loading: boolean
-  portfolioSection: TokenSection[] | undefined
-  popularSection: TokenSection[] | undefined
+  portfolioSection: TokenSection<TokenOption>[] | undefined
+  popularSection: TokenSection<TokenOption>[] | undefined
   isTestnetModeEnabled: boolean
 }): boolean {
   // the popular section is not shown on testnet

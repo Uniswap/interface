@@ -1,6 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonPrimary } from 'components/Button/buttons'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useAccount } from 'hooks/useAccount'
 import { TFunction } from 'i18next'
@@ -15,6 +14,7 @@ import { useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
+import { Button } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -53,14 +53,6 @@ const Center = styled.div`
   align-items: center;
   position: fixed;
   white-space: nowrap;
-`
-
-const ConnectWalletButton = styled(ButtonPrimary)`
-  width: min-content;
-  white-space: nowrap;
-  border-radius: 12px;
-  padding: 14px 18px;
-  border: none;
 `
 
 function getProfilePageTitle(t: TFunction, account: string | undefined, ENSName: string | null | undefined): string {
@@ -118,11 +110,9 @@ export default function Profile() {
               <ThemedText.HeadlineMedium lineHeight="36px" color="neutral2" fontWeight="535" marginBottom="24px">
                 <Trans i18nKey="nft.noItems" />
               </ThemedText.HeadlineMedium>
-              <ConnectWalletButton onClick={accountDrawer.open}>
-                <ThemedText.SubHeader color="white" lineHeight="20px">
-                  <ConnectWalletButtonText />
-                </ThemedText.SubHeader>
-              </ConnectWalletButton>
+              <Button onPress={accountDrawer.open} variant="branded" fill={false} style={{ whiteSpace: 'nowrap' }}>
+                <ConnectWalletButtonText />
+              </Button>
             </Center>
           )}
         </ProfilePageWrapper>

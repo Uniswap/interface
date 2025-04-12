@@ -1,13 +1,10 @@
-import { SmallButtonPrimary } from 'components/Button/buttons'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
-import styled from 'lib/styled-components'
+import styledDep from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ModalCloseIcon } from 'ui/src'
-import { breakpoints } from 'ui/src/theme'
+import { Button, Flex, ModalCloseIcon, Text, styled } from 'ui/src'
+import { ExperimentRow } from 'uniswap/src/components/gating/GatingOverrides'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import {
@@ -16,84 +13,25 @@ import {
   NetworkRequestsConfigKey,
   QuickRouteChainsConfigKey,
 } from 'uniswap/src/features/gating/configs'
+import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-const Wrapper = styled(Column)`
-  padding: 20px 16px;
-  width: 100%;
-  gap: 8px;
-`
+const CenteredRow = styled(Flex, {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  py: '$gap8',
+  maxWidth: '100%',
+  gap: '$gap4',
+})
 
-const FlagsColumn = styled(Column)`
-  max-height: 600px;
-  padding-bottom: 8px;
-  overflow-y: auto;
-
-  @media screen and (max-width: ${breakpoints.md}px) {
-    max-height: unset;
-  }
-`
-
-const CenteredRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0px;
-  max-width: 100%;
-  gap: 4px;
-`
-
-const Header = styled(CenteredRow)`
-  font-weight: 535;
-  font-size: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.surface3};
-  justify-content: space-between;
-`
-const FlagName = styled.span`
-  font-size: 16px;
-  line-height: 20px;
-  color: ${({ theme }) => theme.neutral1};
-`
-const FlagGroupName = styled.span`
-  font-size: 20px;
-  line-height: 24px;
-  color: ${({ theme }) => theme.neutral1};
-  font-weight: 535;
-`
-const FlagDescription = styled.span`
-  font-size: 12px;
-  line-height: 16px;
-  color: ${({ theme }) => theme.neutral2};
-  display: flex;
-  align-items: center;
-`
-
-const FlagInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-left: 8px;
-  flex-shrink: 1;
-  overflow: hidden;
-`
-
-const SaveButton = styled.button`
-  border-radius: 12px;
-  padding: 8px;
-  margin: 0px 20px;
-  background: ${({ theme }) => theme.surface3};
-  font-weight: 535;
-  font-size: 16px;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
-
-  :hover {
-    background: ${({ theme }) => theme.surface3};
-  }
-`
+const FlagInfo = styled(Flex, {
+  pl: '$padding8',
+  flexShrink: 1,
+})
 
 interface FeatureFlagProps {
   label: string
@@ -104,14 +42,14 @@ function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }
   return (
     <>
       <CenteredRow key={name}>
-        <FlagGroupName>{name}</FlagGroupName>
+        <Text variant="body1">{name}</Text>
       </CenteredRow>
       {children}
     </>
   )
 }
 
-const FlagVariantSelection = styled.select`
+const FlagVariantSelection = styledDep.select`
   border-radius: 12px;
   padding: 8px;
   background: ${({ theme }) => theme.surface3};
@@ -135,8 +73,10 @@ function FeatureFlagOption({ flag, label }: FeatureFlagProps) {
   return (
     <CenteredRow key={flag}>
       <FlagInfo>
-        <FlagName>{name}</FlagName>
-        <FlagDescription>{label}</FlagDescription>
+        <Text variant="body2">{name}</Text>
+        <Text variant="body4" color="$neutral2">
+          {label}
+        </Text>
       </FlagInfo>
       <FlagVariantSelection
         id={name}
@@ -178,8 +118,10 @@ function DynamicConfigDropdown<
   return (
     <CenteredRow key={config}>
       <FlagInfo>
-        <FlagName>{config}</FlagName>
-        <FlagDescription>{label}</FlagDescription>
+        <Text variant="body2">{config}</Text>
+        <Text variant="body4" color="$neutral2">
+          {label}
+        </Text>
       </FlagInfo>
       <select multiple onChange={handleSelectChange}>
         {options.map((opt) => (
@@ -198,25 +140,27 @@ export default function FeatureFlagModal() {
 
   return (
     <Modal name={ModalName.FeatureFlags} isModalOpen={open} onClose={closeModal} padding={0}>
-      <Wrapper>
-        <Header>
-          <Row width="100%" justify="space-between">
-            <span>Feature Flag Settings</span>
-            <SmallButtonPrimary
-              onClick={() => {
+      <Flex py="$gap20" px="$gap16" gap="$gap8">
+        <CenteredRow borderBottomColor="$surface3" borderBottomWidth={1}>
+          <Flex row grow alignItems="center" justifyContent="space-between">
+            <Text variant="subheading2">Feature Flag Settings</Text>
+            <Button
+              onPress={() => {
                 Statsig.removeGateOverride()
                 Statsig.removeConfigOverride()
               }}
+              variant="branded"
+              size="small"
+              fill={false}
             >
               Clear Overrides
-            </SmallButtonPrimary>
-          </Row>
+            </Button>
+          </Flex>
           <ModalCloseIcon onClose={closeModal} />
-        </Header>
-        <FlagsColumn>
+        </CenteredRow>
+        <Flex maxHeight="600px" pb="$gap8" overflow="scroll" $md={{ maxHeight: 'unset' }}>
           <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
           <FeatureFlagOption flag={FeatureFlags.V4Swap} label="Enable v4 in the shared swap flow" />
-          <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
           <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
           <FeatureFlagOption
             flag={FeatureFlags.IndicativeSwapQuotes}
@@ -240,23 +184,19 @@ export default function FeatureFlagModal() {
             label="Enable EIP-6963: Multi Injected Provider Discovery"
           />
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-          <FeatureFlagOption flag={FeatureFlags.LPRedesign} label="Enable LP flow redesign" />
           <FeatureFlagOption flag={FeatureFlags.V4Data} label="Enable v4 data" />
           <FeatureFlagOption flag={FeatureFlags.MigrateV3ToV4} label="Enable migrate flow from v3 -> v4" />
-          <FeatureFlagOption flag={FeatureFlags.PriceRangeInputV2} label="Enable Price Range Input V2" />
           <FeatureFlagOption flag={FeatureFlags.PositionPageV2} label="Enable Position Page V2" />
-          <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
           <FeatureFlagOption
             flag={FeatureFlags.TokenSelectorTrendingTokens}
             label="Enable 24h volume trending tokens in Token Selector"
           />
+          <FeatureFlagOption flag={FeatureFlags.SearchRevamp} label="Enable search revamp" />
           <FeatureFlagGroup name="New Chains">
-            <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
-            <FeatureFlagOption flag={FeatureFlags.Unichain} label="Enable Unichain" />
-            <FeatureFlagOption flag={FeatureFlags.UnichainPromo} label="Unichain In App Promotion" />
             <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
+            <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />
             <FeatureFlagOption flag={FeatureFlags.MonadTestnetDown} label="Enable Monad Testnet Down Banner" />
           </FeatureFlagGroup>
           <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
@@ -289,9 +229,22 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />
             <FeatureFlagOption flag={FeatureFlags.AATestWeb} label="A/A Test for Web" />
           </FeatureFlagGroup>
-        </FlagsColumn>
-        <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
-      </Wrapper>
+          <FeatureFlagGroup name="Experiments">
+            <Flex ml="$padding8">
+              <ExperimentRow experiment={Experiments.SwapPresets} />
+            </Flex>
+          </FeatureFlagGroup>
+        </Flex>
+        <Button
+          onPress={() => window.location.reload()}
+          variant="default"
+          emphasis="secondary"
+          size="small"
+          fill={false}
+        >
+          Reload
+        </Button>
+      </Flex>
     </Modal>
   )
 }

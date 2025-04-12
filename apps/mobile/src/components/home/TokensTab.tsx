@@ -3,6 +3,7 @@ import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { useDispatch } from 'react-redux'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TabProps } from 'src/components/layout/TabHelpers'
@@ -61,9 +62,13 @@ export const TokensTab = memo(
     }, [dispatch])
 
     const onPressBuy = useCallback(() => {
-      dispatch(
-        openModal({ name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator }),
-      )
+      disableForKorea
+        ? navigate(ModalName.KoreaCexTransferInfoModal)
+        : dispatch(
+            openModal({
+              name: ModalName.FiatOnRampAggregator,
+            }),
+          )
     }, [disableForKorea, dispatch])
 
     const onPressReceive = useCallback(() => {

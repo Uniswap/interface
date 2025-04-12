@@ -37,7 +37,7 @@ export function useInsufficientNativeTokenWarning({
   warning: Warning
   flow: ComponentProps<typeof InsufficientNativeTokenWarning>['flow']
 } | null {
-  const { defaultChainId } = useEnabledChains()
+  const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const insufficientGasFundsWarning = warnings.find((w) => w.type === WarningLabel.InsufficientGasFunds)
@@ -99,37 +99,64 @@ export function useInsufficientNativeTokenWarning({
 
   const networkName = getChainLabel(supportedChainId)
 
-  const modalOrTooltipMainMessage =
-    warning.type === WarningLabel.InsufficientGasFunds ? (
+  const getModalOrTooltipMainMessage = (): JSX.Element => {
+    if (warning.type === WarningLabel.InsufficientGasFunds) {
       // When the user doesn't have enough funds to cover the transaction's network cost.
-      <Trans
-        components={{
-          // TODO(WALL-3901): move this to `value` once the bug in i18next is fixed.
-          // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
-          // which causes the value `<$0.01` to be incorrectly escaped.
-          fiatTokenAmount: (
-            <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
-              {gasAmountFiatFormatted}
-            </Text>
-          ),
-        }}
-        i18nKey="transaction.warning.insufficientGas.modal.message"
-        values={{
-          networkName,
-          tokenSymbol: nativeCurrency.symbol,
-          tokenAmount: gasAmount?.toSignificant(2),
-        }}
-      />
-    ) : (
+      const warningComponents = {
+        // TODO(WALL-3901): move this to `value` once the bug in i18next is fixed.
+        // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
+        // which causes the value `<$0.01` to be incorrectly escaped.
+        fiatTokenAmount: (
+          <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
+            {gasAmountFiatFormatted}
+          </Text>
+        ),
+      }
+
+      const warningValues = {
+        networkName,
+        tokenSymbol: nativeCurrency.symbol,
+        tokenAmount: gasAmount?.toSignificant(2),
+      }
+
+      if (isTestnetModeEnabled) {
+        return (
+          <Trans
+            components={warningComponents}
+            i18nKey="transaction.warning.insufficientGas.modal.message.noAction"
+            values={warningValues}
+          />
+        )
+      } else {
+        return (
+          <Trans
+            components={warningComponents}
+            i18nKey="transaction.warning.insufficientGas.modal.message"
+            values={warningValues}
+          />
+        )
+      }
+    } else {
       // When the user is trying to swap a native token and they don't have enough of that token.
-      <Trans
-        i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount"
-        values={{
-          networkName,
-          tokenSymbol: nativeCurrency.symbol,
-        }}
-      />
-    )
+      const values = {
+        networkName,
+        tokenSymbol: nativeCurrency.symbol,
+      }
+
+      if (isTestnetModeEnabled) {
+        return (
+          <Trans
+            i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount.noAction"
+            values={values}
+          />
+        )
+      } else {
+        return (
+          <Trans i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount" values={values} />
+        )
+      }
+    }
+  }
 
   return {
     flow,
@@ -139,7 +166,7 @@ export function useInsufficientNativeTokenWarning({
     nativeCurrencyInfo,
     networkColors,
     networkName,
-    modalOrTooltipMainMessage,
+    modalOrTooltipMainMessage: getModalOrTooltipMainMessage(),
     warning,
   }
 }

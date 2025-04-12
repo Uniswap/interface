@@ -140,17 +140,20 @@ export function AccountHeader(): JSX.Element {
                 testID={TestID.AccountHeaderAvatar}
                 onLongPress={async (): Promise<void> => {
                   if (isDevEnv()) {
-                    dispatch(openModal({ name: ModalName.Experiments }))
+                    navigate(ModalName.Experiments)
                   }
                 }}
                 onPress={onPressAccountHeader}
               >
                 <AccountIcon
+                  showBorder
                   address={activeAddress}
                   avatarUri={avatar}
                   showBackground={true}
                   showViewOnlyBadge={account?.type === AccountType.Readonly}
                   size={iconSize}
+                  borderColor="$surface3"
+                  borderWidth="$spacing1"
                 />
               </TouchableArea>
               {walletHasName ? (

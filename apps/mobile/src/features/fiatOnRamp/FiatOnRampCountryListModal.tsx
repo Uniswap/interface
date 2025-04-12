@@ -12,7 +12,6 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORCountry, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
@@ -103,7 +102,6 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
               bounces={true}
               contentContainerStyle={{ paddingBottom: insets.bottom + spacing.spacing12 }}
               data={filteredData}
-              focusHook={useBottomSheetFocusHook}
               keyExtractor={key}
               keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="always"
@@ -151,6 +149,7 @@ export function FiatOnRampCountryListModal({
       fullScreen
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
+      overrideInnerContainer
       renderBehindBottomInset
       backgroundColor={colors.surface1.val}
       name={ModalName.FiatOnRampCountryList}

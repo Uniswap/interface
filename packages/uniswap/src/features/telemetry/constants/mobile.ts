@@ -19,6 +19,7 @@ export enum MobileEventName {
   PerformanceReport = 'Performance Report',
   ShareLinkOpened = 'Share Link Opened',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
+  TokenDetailsContextMenuAction = 'Token Details Context Menu Action Selected',
   WalletConnectSheetCompleted = 'Wallet Connect Sheet Completed',
   WidgetClicked = 'Widget Clicked',
   WidgetConfigurationUpdated = 'Widget Configuration Updated',

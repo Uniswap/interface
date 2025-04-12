@@ -1,7 +1,4 @@
-import { Box } from 'components/deprecated/Box'
-import { Column, Row } from 'nft/components/Flex'
 import { getSortDropdownOptions } from 'nft/components/collection/CollectionNfts'
-import * as styles from 'nft/components/collection/Filters.css'
 import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
 import { PriceRange } from 'nft/components/collection/PriceRange'
 import { TraitSelect } from 'nft/components/collection/TraitSelect'
@@ -11,7 +8,7 @@ import { Trait } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { DropDownOption } from 'nft/types'
 import { useMemo } from 'react'
-import { Checkbox, Flex, Text } from 'ui/src'
+import { Checkbox, Flex, Text, useScrollbarStyles } from 'ui/src'
 import { isMobileWeb } from 'utilities/src/platform'
 
 export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait[]> }) => {
@@ -21,9 +18,10 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
   }))
   const setSortBy = useCollectionFilters((state) => state.setSortBy)
   const hasRarity = useCollectionFilters((state) => state.hasRarity)
+  const scrollbarStyles = useScrollbarStyles()
 
-  const handleBuyNowToggle = () => {
-    setBuyNow(!buyNow)
+  const handleBuyNowToggle = (value: boolean) => {
+    setBuyNow(value)
   }
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
@@ -32,15 +30,32 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
   )
 
   return (
-    <Box className={styles.container}>
-      <Row width="full" justifyContent="space-between"></Row>
-      <Column marginTop="8">
+    <Flex
+      $platform-web={{
+        overflow: 'auto',
+      }}
+      style={scrollbarStyles}
+      height="100vh"
+      pt="$padding16"
+      width={308}
+      pr="$padding8"
+      pb={96}
+      ml={48}
+      $md={{
+        width: 'auto',
+        height: 'auto',
+        pb: 0,
+        ml: 8,
+      }}
+    >
+      <Flex row width="100%" justifyContent="space-between"></Flex>
+      <Flex mt={8}>
         <Flex row width="100%" justifyContent="space-between" px="$spacing12">
-          <Text>Buy now</Text>
+          <Text variant="body2">Buy now</Text>
           <Checkbox
             testID="nft-collection-filter-buy-now"
             checked={buyNow}
-            onPress={handleBuyNowToggle}
+            onCheckedChange={handleBuyNowToggle}
             variant="branded"
           />
         </Flex>
@@ -48,23 +63,23 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
         <MarketplaceSelect />
         <PriceRange />
         {Object.entries(traitsByGroup).length > 0 && (
-          <Box
-            as="span"
-            color="neutral2"
-            paddingLeft="8"
-            marginTop="12"
-            marginBottom="12"
-            className={styles.borderTop}
-          ></Box>
+          <Flex
+            backgroundColor="$neutral2"
+            opacity={0.2}
+            pl="$spacing8"
+            my="$spacing12"
+            borderTopColor="$surface3"
+            borderTopWidth={1}
+          />
         )}
 
-        <Column>
+        <Flex>
           {Object.entries(traitsByGroup).map(([type, traits], index) => (
             // the index is offset by two because price range and marketplace appear prior to it
             <TraitSelect key={type} {...{ type, traits }} index={index + TraitPosition.TRAIT_START_INDEX} />
           ))}
-        </Column>
-      </Column>
-    </Box>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }

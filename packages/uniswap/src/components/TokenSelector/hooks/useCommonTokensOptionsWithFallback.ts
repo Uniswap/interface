@@ -1,6 +1,6 @@
 import { useCommonTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptions'
 import { currencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
-import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

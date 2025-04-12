@@ -17,7 +17,7 @@ import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useToke
 import { OrderDirection, unwrapToken } from 'graphql/data/util'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { EllipsisTamaguiStyle } from 'theme/components'
+import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled } from 'ui/src'
 import { Token as GQLToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

@@ -1,9 +1,10 @@
 import { CommandParser, UniversalRouterCall } from '@uniswap/universal-router-sdk'
 import { V4BaseActionsParser, V4RouterCall } from '@uniswap/v4-sdk'
 import { EthSendTransactionRPCActions } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { EthersTransactionRequest } from 'src/app/features/dappRequests/types/EthersTypes'
 import { parseCalldata as parseNfPMCalldata } from 'src/app/features/dappRequests/types/NonfungiblePositionManager'
 import { NonfungiblePositionManagerCall } from 'src/app/features/dappRequests/types/NonfungiblePositionManagerTypes'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 import methodHashToFunctionSignature from 'utilities/src/calldata/methodHashToFunctionSignature'
 import noop from 'utilities/src/react/noop'
 
@@ -15,15 +16,17 @@ interface GetCalldataInfoFromTransactionReturnValue {
 }
 
 function getCalldataInfoFromTransaction(
-  transaction: EthersTransactionRequest,
+  data: string,
+  to: string | undefined,
+  chainId: UniverseChainId | undefined,
 ): GetCalldataInfoFromTransactionReturnValue {
-  const calldataMethodHash = transaction.data.substring(2, 10)
+  const calldataMethodHash = data.substring(2, 10)
   const functionSignature = methodHashToFunctionSignature(calldataMethodHash)
   const contractInteractions = EthSendTransactionRPCActions.ContractInteraction
   const result: GetCalldataInfoFromTransactionReturnValue = {
     functionSignature,
     contractInteractions,
-    to: transaction.to,
+    to,
   }
 
   if (functionSignature) {
@@ -32,7 +35,7 @@ function getCalldataInfoFromTransaction(
       return result
     }
     try {
-      const v4Calldata = V4BaseActionsParser.parseCalldata(transaction.data)
+      const v4Calldata = V4BaseActionsParser.parseCalldata(data)
 
       if (v4Calldata) {
         result.contractInteractions = EthSendTransactionRPCActions.Swap
@@ -43,7 +46,7 @@ function getCalldataInfoFromTransaction(
       noop()
     }
     try {
-      const URCalldata = CommandParser.parseCalldata(transaction.data)
+      const URCalldata = CommandParser.parseCalldata(data)
 
       if (URCalldata) {
         result.contractInteractions = EthSendTransactionRPCActions.Swap
@@ -54,7 +57,7 @@ function getCalldataInfoFromTransaction(
       noop()
     }
     try {
-      const NfPMCalldata = parseNfPMCalldata(transaction.data)
+      const NfPMCalldata = parseNfPMCalldata(data)
 
       if (NfPMCalldata) {
         result.contractInteractions = EthSendTransactionRPCActions.LP
@@ -64,7 +67,11 @@ function getCalldataInfoFromTransaction(
     } catch (_e) {
       noop()
     }
-    if (functionSignature.includes('wrap')) {
+
+    const isWrapUnwrapSignature = functionSignature === 'deposit()' || functionSignature === 'withdraw(uint256)'
+    const isNativeWrappedCurrencyTo =
+      chainId && to?.toLowerCase() === wrappedNativeCurrency(chainId).address.toLowerCase()
+    if (functionSignature.includes('wrap') || (isWrapUnwrapSignature && isNativeWrappedCurrencyTo)) {
       result.contractInteractions = EthSendTransactionRPCActions.Wrap
       return result
     }

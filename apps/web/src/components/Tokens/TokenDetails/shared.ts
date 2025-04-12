@@ -1,5 +1,5 @@
 import deprecatedStyled from 'lib/styled-components'
-import { TamaguiClickableStyle } from 'theme/components'
+import { TamaguiClickableStyle } from 'theme/components/styles'
 import { TextProps } from 'ui/src'
 
 export const ActionButtonStyle = {

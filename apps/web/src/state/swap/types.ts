@@ -4,7 +4,7 @@ import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/type
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
-export type SwapInfo = {
+type SwapInfo = {
   currencies: { [field in CurrencyField]?: Currency }
   currencyBalances: { [field in CurrencyField]?: CurrencyAmount<Currency> }
   inputTax: Percent
@@ -29,7 +29,7 @@ type SwapContextType = {
   setSwapState: Dispatch<SetStateAction<SwapState>>
 }
 
-export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
+const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
   currencies: {},
   currencyBalances: {},
   inputTax: new Percent(0),
@@ -41,7 +41,7 @@ export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
   },
 })
 
-export const initialSwapState: SwapState = {
+const initialSwapState: SwapState = {
   typedValue: '',
   independentField: CurrencyField.INPUT,
 }
@@ -54,10 +54,6 @@ export const SwapContext = createContext<SwapContextType>({
 
 type SwapAndLimitContextType = {
   currencyState: CurrencyState
-  prefilledState: {
-    inputCurrency?: Currency
-    outputCurrency?: Currency
-  }
   setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
   currentTab: SwapTab
   setCurrentTab: Dispatch<SetStateAction<SwapTab>>
@@ -69,10 +65,6 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
     outputCurrency: undefined,
   },
   setCurrencyState: () => undefined,
-  prefilledState: {
-    inputCurrency: undefined,
-    outputCurrency: undefined,
-  },
   currentTab: SwapTab.Swap,
   setCurrentTab: () => undefined,
 })

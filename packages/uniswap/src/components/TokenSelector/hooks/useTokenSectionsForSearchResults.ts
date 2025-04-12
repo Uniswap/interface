@@ -8,6 +8,7 @@ import {
   mergeSearchResultsWithBridgingTokens,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
@@ -21,7 +22,7 @@ export function useTokenSectionsForSearchResults(
   searchFilter: string | null,
   isBalancesOnlySearch: boolean,
   input: TradeableAsset | undefined,
-): GqlResult<TokenSection[]> {
+): GqlResult<TokenSection<TokenOption>[]> {
   const { t } = useTranslation()
 
   const {

@@ -12,12 +12,12 @@ export function PlusCircle(): JSX.Element {
       borderColor="$surface3"
       borderRadius="$roundedFull"
       borderWidth="$spacing1"
-      height={iconSizes.icon40}
+      height={iconSizes.icon32}
       p="$spacing8"
       shadowColor={isDarkMode ? '$shadowColor' : '$surface3'}
       shadowOffset={{ width: 0, height: 0 }}
       shadowRadius={10}
-      width={iconSizes.icon40}
+      width={iconSizes.icon32}
     >
       <Plus color="$neutral2" size="$icon.16" strokeWidth={2} />
     </Flex>

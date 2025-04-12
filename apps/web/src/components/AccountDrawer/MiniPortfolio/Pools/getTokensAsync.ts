@@ -1,4 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
+import { INTERNAL_JSON_RPC_ERROR_CODE } from 'constants/misc'
 import { Interface } from 'ethers/lib/utils'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
@@ -25,7 +26,7 @@ async function fetchChunk(multicall: UniswapInterfaceMulticall, chunk: Call[]): 
   try {
     return (await multicall.callStatic.multicall(chunk)).returnData
   } catch (error) {
-    if (error.code === -32603 || error.message?.indexOf('execution ran out of gas') !== -1) {
+    if (error.code === INTERNAL_JSON_RPC_ERROR_CODE || error.message?.indexOf('execution ran out of gas') !== -1) {
       if (chunk.length > 1) {
         const half = Math.floor(chunk.length / 2)
         return Promise.all([

@@ -1,85 +1,48 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { TradeType } from '@uniswap/sdk-core'
-import { VoteOption } from 'state/governance/types'
-import {
-  AssetActivityPartsFragment,
-  TransactionDetailsPartsFragment,
-  TransactionStatus,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-export type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
-
-/**
- * Always add to the bottom of this enum because these values is persisted in state and if you change the value it will cause errors
- */
 export enum TransactionType {
   APPROVAL = 0,
-  SWAP,
-  DEPOSIT_LIQUIDITY_STAKING,
-  WITHDRAW_LIQUIDITY_STAKING,
-  CLAIM,
-  VOTE,
-  DELEGATE,
-  WRAP,
-  CREATE_V3_POOL,
-  ADD_LIQUIDITY_V3_POOL,
-  ADD_LIQUIDITY_V2_POOL,
-  MIGRATE_LIQUIDITY_V2_TO_V3,
-  COLLECT_FEES,
-  REMOVE_LIQUIDITY_V3,
-  SUBMIT_PROPOSAL,
-  QUEUE,
-  EXECUTE,
-  BUY,
-  SEND,
-  RECEIVE,
-  MINT,
-  BURN,
-  BORROW,
-  REPAY,
-  DEPLOY,
-  CANCEL,
-  LIMIT,
-  SELL,
-  SET_SPREAD,
-  SET_LOCKUP,
-  SET_VALUE,
-  INCREASE_LIQUIDITY,
-  DECREASE_LIQUIDITY,
-  BRIDGE,
-  CREATE_POSITION,
-  MIGRATE_LIQUIDITY_V3_TO_V4,
-  // Always add to the bottom of this enum
+  SWAP = 1,
+  DEPOSIT_LIQUIDITY_STAKING = 2,
+  WITHDRAW_LIQUIDITY_STAKING = 3,
+  CLAIM = 4,
+  VOTE = 5,
+  DELEGATE = 6,
+  WRAP = 7,
+  CREATE_V3_POOL = 8,
+  ADD_LIQUIDITY_V3_POOL = 9,
+  ADD_LIQUIDITY_V2_POOL = 10,
+  MIGRATE_LIQUIDITY_V2_TO_V3 = 11,
+  COLLECT_FEES = 12,
+  REMOVE_LIQUIDITY_V3 = 13,
+  SUBMIT_PROPOSAL = 14,
+  QUEUE = 15,
+  EXECUTE = 16,
+  BUY = 17,
+  SEND = 18,
+  RECEIVE = 19,
+  MINT = 20,
+  BURN = 21,
+  BORROW = 22,
+  REPAY = 23,
+  DEPLOY = 24,
+  CANCEL = 25,
+  LIMIT = 26,
+  SELL = 27,
+  SET_SPREAD = 28,
+  SET_LOCKUP = 29,
+  SET_VALUE = 30,
+  INCREASE_LIQUIDITY = 31,
+  DECREASE_LIQUIDITY = 32,
+  BRIDGE = 33,
+  CREATE_POSITION = 34,
+  MIGRATE_LIQUIDITY_V3_TO_V4 = 35,
 }
-
 interface BaseTransactionInfo {
   type: TransactionType
-}
-
-export interface VoteTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.VOTE
-  governorAddress: string
-  proposalId: number
-  decision: VoteOption
-  reason: string
-}
-
-export interface QueueTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.QUEUE
-  governorAddress: string
-  proposalId: number
-}
-
-export interface ExecuteTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.EXECUTE
-  governorAddress: string
-  proposalId: number
-}
-
-export interface DelegateTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.DELEGATE
-  delegatee: string
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
@@ -142,7 +105,7 @@ export interface WrapTransactionInfo {
   chainId?: number
 }
 
-export interface ClaimTransactionInfo {
+interface ClaimTransactionInfo {
   type: TransactionType.CLAIM
   recipient: string
   uniAmountRaw?: string
@@ -263,10 +226,6 @@ export type TransactionInfo =
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ClaimTransactionInfo
-  | VoteTransactionInfo
-  | QueueTransactionInfo
-  | ExecuteTransactionInfo
-  | DelegateTransactionInfo
   | DepositLiquidityStakingTransactionInfo
   | WithdrawLiquidityStakingTransactionInfo
   | WrapTransactionInfo

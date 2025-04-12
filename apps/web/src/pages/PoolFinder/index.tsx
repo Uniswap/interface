@@ -18,7 +18,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useTokenBalance } from 'state/connection/hooks'
 import { usePairAdder } from 'state/user/hooks'
 import { PositionField } from 'types/position'
-import { DeprecatedButton, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -68,8 +68,8 @@ export default function PoolFinder() {
   const token0UsdValue = useUSDCValue(token0Deposited)
   const token1UsdValue = useUSDCValue(token1Deposited)
 
-  const currency0CurrencyInfo = useCurrencyInfo(currency0 ? currencyId(currency0) : undefined)
-  const currency1CurrencyInfo = useCurrencyInfo(currency1 ? currencyId(currency1) : undefined)
+  const currency0CurrencyInfo = useCurrencyInfo(currencyId(currency0))
+  const currency1CurrencyInfo = useCurrencyInfo(currencyId(currency1))
 
   const networkSupportsV2 = useNetworkSupportsV2()
   if (!networkSupportsV2) {
@@ -154,28 +154,31 @@ export default function PoolFinder() {
               </Flex>
             </Flex>
           )}
-          {!account.isConnected ? (
-            <DeprecatedButton theme="secondary" mt="$gap32" onPress={accountDrawer.open}>
-              {t('common.connectWallet.button')}
-            </DeprecatedButton>
-          ) : (
-            <DeprecatedButton
-              theme="secondary"
-              mt="$gap32"
-              isDisabled={!hasPosition || success}
-              onPress={() => {
-                if (hasPosition && pair) {
-                  addPair(pair)
-                  setSuccess(true)
-                  setTimeout(() => {
-                    setSuccess(false)
-                  }, ms('3s'))
-                }
-              }}
-            >
-              {hasPosition ? (success ? t('pool.import.success') : t('pool.import')) : t('common.button.continue')}
-            </DeprecatedButton>
-          )}
+          <Flex row>
+            {!account.isConnected ? (
+              <Button size="large" emphasis="secondary" mt="$gap32" onPress={accountDrawer.open}>
+                {t('common.connectWallet.button')}
+              </Button>
+            ) : (
+              <Button
+                size="large"
+                emphasis="secondary"
+                mt="$gap32"
+                isDisabled={!hasPosition || success}
+                onPress={() => {
+                  if (hasPosition && pair) {
+                    addPair(pair)
+                    setSuccess(true)
+                    setTimeout(() => {
+                      setSuccess(false)
+                    }, ms('3s'))
+                  }
+                }}
+              >
+                {hasPosition ? (success ? t('pool.import.success') : t('pool.import')) : t('common.button.continue')}
+              </Button>
+            )}
+          </Flex>
         </Flex>
 
         <CurrencySearchModal

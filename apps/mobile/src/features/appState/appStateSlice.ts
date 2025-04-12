@@ -15,7 +15,7 @@ const initialState: AppStateState = {
   previous: null,
 }
 
-export const appStateSlice = createSlice({
+const appStateSlice = createSlice({
   name: 'appState',
   initialState,
   reducers: {
@@ -33,7 +33,7 @@ export const appStateReducer = appStateSlice.reducer
 // AppState selectors
 //------------------------------
 
-export const selectAppState = (state: { appState: AppStateState }): AppStateState => state.appState
+const selectAppState = (state: { appState: AppStateState }): AppStateState => state.appState
 
 export const selectCurrentAppState = (state: { appState: AppStateState }): AppStateState['current'] =>
   selectAppState(state).current
@@ -41,5 +41,5 @@ export const selectCurrentAppState = (state: { appState: AppStateState }): AppSt
 export const selectPreviousAppState = (state: { appState: AppStateState }): AppStateState['previous'] =>
   selectAppState(state).previous
 
-export const selectAppStateIsVisible = (state: { appState: AppStateState }): boolean =>
-  selectCurrentAppState(state) === 'active'
+export const selectIsFromBackground = (state: { appState: AppStateState }): boolean =>
+  selectPreviousAppState(state) === 'background'

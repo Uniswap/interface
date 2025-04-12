@@ -1,26 +1,26 @@
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
-import { DefaultTheme } from 'lib/styled-components'
 import { PriceImpact } from 'nft/hooks/usePriceImpact'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
+import { useSporeColors } from 'ui/src'
 
 export enum BuyButtonStates {
-  WALLET_NOT_CONNECTED,
-  NOT_SUPPORTED_CHAIN,
-  INSUFFICIENT_BALANCE,
-  ERROR,
-  IN_WALLET_CONFIRMATION,
-  PROCESSING_TRANSACTION,
-  FETCHING_TOKEN_ROUTE,
-  INVALID_TOKEN_ROUTE,
-  NO_TOKEN_ROUTE_FOUND,
-  LOADING_ALLOWANCE,
-  IN_WALLET_ALLOWANCE_APPROVAL,
-  PROCESSING_APPROVAL,
-  REQUIRE_APPROVAL,
-  CONFIRM_UPDATED_PRICE,
-  PRICE_IMPACT_HIGH,
-  PAY,
+  WALLET_NOT_CONNECTED = 0,
+  NOT_SUPPORTED_CHAIN = 1,
+  INSUFFICIENT_BALANCE = 2,
+  ERROR = 3,
+  IN_WALLET_CONFIRMATION = 4,
+  PROCESSING_TRANSACTION = 5,
+  FETCHING_TOKEN_ROUTE = 6,
+  INVALID_TOKEN_ROUTE = 7,
+  NO_TOKEN_ROUTE_FOUND = 8,
+  LOADING_ALLOWANCE = 9,
+  IN_WALLET_ALLOWANCE_APPROVAL = 10,
+  PROCESSING_APPROVAL = 11,
+  REQUIRE_APPROVAL = 12,
+  CONFIRM_UPDATED_PRICE = 13,
+  PRICE_IMPACT_HIGH = 14,
+  PAY = 15,
 }
 
 export interface BuyButtonStateData {
@@ -37,7 +37,7 @@ export interface BuyButtonStateData {
 
 export function getBuyButtonStateData(
   buyButtonState: BuyButtonStates,
-  theme: DefaultTheme,
+  themeColors: ReturnType<typeof useSporeColors>,
   handleClickOverride?: (() => void) | (() => Promise<void>),
   usingPayWithAnyToken?: boolean,
   priceImpact?: PriceImpact,
@@ -47,11 +47,11 @@ export function getBuyButtonStateData(
     buttonText: <Trans i18nKey="common.card.error.description" />,
     disabled: true,
     warningText: undefined,
-    warningTextColor: theme.deprecated_accentWarning,
+    warningTextColor: themeColors.statusWarning.val,
     helperText: undefined,
-    helperTextColor: theme.neutral2,
-    buttonColor: theme.accent1,
-    buttonTextColor: theme.deprecated_accentTextLightPrimary,
+    helperTextColor: themeColors.neutral2.val,
+    buttonColor: themeColors.accent1.val,
+    buttonTextColor: themeColors.white.val,
   }
 
   const buyButtonStateData: Record<BuyButtonStates, BuyButtonStateData> = {
@@ -96,8 +96,8 @@ export function getBuyButtonStateData(
     [BuyButtonStates.NO_TOKEN_ROUTE_FOUND]: {
       ...defaultBuyButtonState,
       buttonText: <Trans i18nKey="common.insufficientLiquidity" />,
-      buttonColor: theme.surface3,
-      buttonTextColor: theme.neutral1,
+      buttonColor: themeColors.surface3.val,
+      buttonTextColor: themeColors.neutral1.val,
       helperText: <Trans i18nKey="transaction.insufficientLiquidity" />,
     },
     [BuyButtonStates.LOADING_ALLOWANCE]: {
@@ -123,7 +123,7 @@ export function getBuyButtonStateData(
       ...defaultBuyButtonState,
       handleClick: handleClickOverride ?? (() => undefined),
       disabled: false,
-      warningTextColor: theme.accent1,
+      warningTextColor: themeColors.accent1.val,
       warningText: <Trans i18nKey="common.priceUpdated" />,
       buttonText: <Trans i18nKey="common.pay.button" />,
     },

@@ -7,6 +7,7 @@ import { usePopularTokensOptions } from 'uniswap/src/components/TokenSelector/ho
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
 import { TokenOptionSection, TokenSection, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
 import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 
@@ -24,7 +25,7 @@ function ClearAll({ onPress }: { onPress: () => void }): JSX.Element {
 export function useTokenSectionsForEmptySearch({
   activeAccountAddress,
   chainFilter,
-}: Omit<TokenSectionsHookProps, 'input' | 'isKeyboardOpen'>): GqlResult<TokenSection[]> {
+}: Omit<TokenSectionsHookProps, 'input' | 'isKeyboardOpen'>): GqlResult<TokenSection<TokenOption>[]> {
   const dispatch = useDispatch()
 
   const { data: popularTokenOptions, loading } = usePopularTokensOptions(activeAccountAddress, chainFilter)

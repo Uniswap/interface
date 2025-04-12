@@ -4,10 +4,11 @@ import { ChainLogo } from 'components/Logo/ChainLogo'
 import {
   InterfaceRemoteSearchHistoryItem,
 } from 'components/NavBar/SearchBar/RecentlySearchedAssets'
-import { SkeletonRow, SuggestionRow } from 'components/NavBar/SearchBar/SuggestionRow'
+import { SkeletonRow, SuggestionRow, suggestionIsToken } from 'components/NavBar/SearchBar/SuggestionRow'
 import QuestionHelper from 'components/QuestionHelper'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import useSearchTrendingTokensGql from 'graphql/data/SearchTrendingTokens'
 import { useAccount } from 'hooks/useAccount'
@@ -64,7 +65,7 @@ function SearchBarDropdownSection({
             <SkeletonRow key={index} />
           ) : (
             <SuggestionRow
-              key={suggestion.address}
+              key={suggestionIsToken(suggestion) ? `${suggestion.chain}-${suggestion.address ?? NATIVE_CHAIN_ID}` : ''}
               suggestion={suggestion}
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
@@ -224,29 +225,6 @@ function SearchBarDropdownContents({
       </Text>
     </Flex>
     )
-
-  const tokenSearchResults = displayTokens ? (
-    tokens.length > 0 ? (
-      <SearchBarDropdownSection
-        hoveredIndex={hoveredIndex}
-        startingIndex={0}
-        setHoveredIndex={setHoveredIndex}
-        toggleOpen={toggleOpen}
-        suggestions={tokens}
-        eventProperties={{
-          suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
-          ...eventProperties,
-        }}
-        header={<Trans i18nKey="common.tokens" />}
-      />
-    ) : (
-      <Flex py="$spacing4" px="$spacing16">
-        <Text variant="body3">
-          <Trans i18nKey="tokens.noneFound" />
-        </Text>
-      </Flex>
-    )
-  ) : null
 
   return hasInput ? (
     <Flex gap="$spacing20">

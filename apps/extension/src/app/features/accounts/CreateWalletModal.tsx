@@ -1,8 +1,7 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { OpaqueColorValue } from 'react-native'
-import { DeprecatedButton, Flex, Text, getUniconColors, useIsDarkMode } from 'ui/src'
-import { iconSizes, opacify } from 'ui/src/theme'
+import { Button, Flex, Text } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -25,7 +24,6 @@ export function CreateWalletModal({
   onConfirm,
 }: CreateWalletModalProps): JSX.Element | null {
   const { t } = useTranslation()
-  const isDark = useIsDarkMode()
 
   const [inputText, setInputText] = useState<string>('')
 
@@ -39,17 +37,6 @@ export function CreateWalletModal({
   const placeholderText = nextDerivationIndex
     ? t('account.wallet.create.placeholder', { index: nextDerivationIndex + 1 })
     : ''
-
-  const { color: uniconColor } = onboardingAccountAddress
-    ? getUniconColors(onboardingAccountAddress, isDark)
-    : { color: '' }
-
-  // Cast because DeprecatedButton component doesnt acccept sytling outside of theme color values for hover and press states
-  const hoverAndPressButtonStyle = useMemo(() => {
-    return {
-      backgroundColor: opacify(15, uniconColor) as unknown as OpaqueColorValue,
-    }
-  }, [uniconColor])
 
   return (
     <Modal isModalOpen={isOpen} name={ModalName.AccountEditLabel} onClose={onCancel}>
@@ -75,21 +62,13 @@ export function CreateWalletModal({
           )}
         </Flex>
 
-        <Flex centered fill row gap="$spacing12" justifyContent="space-between" width="100%">
-          <DeprecatedButton color="$neutral1" flex={1} flexBasis={1} size="small" theme="secondary" onPress={onCancel}>
+        <Flex row alignSelf="stretch" gap="$spacing12">
+          <Button size="small" emphasis="secondary" onPress={onCancel}>
             {t('common.button.cancel')}
-          </DeprecatedButton>
-          <DeprecatedButton
-            flex={1}
-            flexBasis={1}
-            hoverStyle={hoverAndPressButtonStyle}
-            pressStyle={hoverAndPressButtonStyle}
-            size="small"
-            style={{ color: uniconColor, backgroundColor: opacify(10, uniconColor) }}
-            onPress={onPressConfirm}
-          >
+          </Button>
+          <Button variant="branded" emphasis="secondary" size="small" onPress={onPressConfirm}>
             {t('common.button.create')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
     </Modal>

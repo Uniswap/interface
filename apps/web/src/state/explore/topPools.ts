@@ -1,6 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import {

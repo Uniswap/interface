@@ -6,6 +6,7 @@ import {
   isValidContentScriptToProxyEmission,
   isValidWindowEthereumConfigResponse,
 } from 'src/contentScript/types'
+import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { v4 as uuid } from 'uuid'
 
@@ -30,7 +31,8 @@ const UNISWAP_RDNS = 'org.uniswap.app'
 declare global {
   interface Window {
     isStretchInstalled?: boolean
-    ethereum?: unknown
+    // We declare this as readonly to force the use of `assignWindowEthereum` to override it.
+    readonly ethereum?: unknown
   }
 }
 
@@ -46,10 +48,25 @@ interface EIP6963ProviderInfo {
   rdns: string
 }
 
+function assignWindowEthereum(provider: unknown): void {
+  try {
+    // We need to try/catch this because some sneaky wallet extensions set `window.ethereum` to a getter,
+    // which throws an error when trying to override it.
+    // In these cases, our wallet will only work with dapps that suppport EIP-6963.
+    // @ts-expect-error: we're intentionally trying to override this.
+    window.ethereum = provider
+  } catch (error) {
+    if (isDevEnv()) {
+      // Only log in dev env for debugging purposes to avoid spamming DD with these errors.
+      logger.error(error, { tags: { file: 'ethereum.ts', function: 'assignWindowEthereum' } })
+    }
+  }
+}
+
 const oldProvider = window.ethereum
 
 const uniswapProvider = new WindowEthereumProxy()
-window.ethereum = uniswapProvider
+assignWindowEthereum(uniswapProvider)
 
 addWindowMessageListener(isValidContentScriptToProxyEmission, (message) => {
   logger.debug('ethereum.ts', `Emitting ${message.emitKey} via WindowEthereumProxy`, message.emitValue)
@@ -105,8 +122,7 @@ addWindowMessageListener<WindowEthereumConfigResponse>(
     if (isDefaultProvider === false) {
       uniswapProvider.isMetaMask = false
       if (oldProvider) {
-        // typing isn't exact here but the idea is that we are injecting some 1193 provider
-        window.ethereum = oldProvider
+        assignWindowEthereum(oldProvider)
         create6963Listener()
       }
     }

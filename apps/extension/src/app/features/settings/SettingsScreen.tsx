@@ -1,30 +1,30 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SCREEN_ITEM_HORIZONTAL_PAD } from 'src/app/constants'
-import { useAllDappConnectionsForActiveAccount } from 'src/app/features/dapp/hooks'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
+import { getIsDefaultProviderFromStorage, setIsDefaultProviderToStorage } from 'src/app/utils/provider'
 import {
+  Button,
   ColorTokens,
-  DeprecatedButton,
   Flex,
   GeneratedIcon,
   ScrollView,
-  Separator,
   Switch,
   Text,
   TouchableArea,
   useSporeColors,
 } from 'ui/src'
 import {
+  ArrowUpRight,
   Chart,
   Coins,
   FileListLock,
-  Globe,
+  Global,
   HelpCenter,
   Key,
   Language,
@@ -32,7 +32,6 @@ import {
   Lock,
   RotatableChevron,
   Settings,
-  ShieldQuestion,
   Wrench,
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -42,22 +41,22 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import {
-  setCurrentFiatCurrency,
-  setHideSmallBalances,
-  setHideSpamTokens,
-  setIsTestnetModeEnabled,
-} from 'uniswap/src/features/settings/slice'
+import { setCurrentFiatCurrency, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ConnectionCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { isDevEnv } from 'utilities/src/environment/env'
+import { logger } from 'utilities/src/logger/logger'
 import noop from 'utilities/src/react/noop'
+import { CardType, IntroCard, IntroCardGraphicType } from 'wallet/src/components/introCards/IntroCard'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
+import { PermissionsModal } from 'wallet/src/components/settings/permissions/PermissionsModal'
+import { PortfolioBalanceModal } from 'wallet/src/components/settings/portfolioBalance/PortfolioBalanceModal'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
-import { resetWalletBehaviorHistory } from 'wallet/src/features/behaviorHistory/slice'
+import { selectHasViewedConnectionMigration } from 'wallet/src/features/behaviorHistory/selectors'
+import { resetWalletBehaviorHistory, setHasViewedConnectionMigration } from 'wallet/src/features/behaviorHistory/slice'
 
 const manifestVersion = chrome.runtime.getManifest().version
 
@@ -67,10 +66,13 @@ export function SettingsScreen(): JSX.Element {
   const { navigateTo, navigateBack } = useExtensionNavigation()
   const currentLanguageInfo = useCurrentLanguageInfo()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
-  const dappUrls = useAllDappConnectionsForActiveAccount()
+  const hasViewedConnectionMigration = useSelector(selectHasViewedConnectionMigration)
 
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
+  const [isPortfolioBalanceModalOpen, setIsPortfolioBalanceModalOpen] = useState(false)
   const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
+  const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
+  const [isDefaultProvider, setIsDefaultProvider] = useState(true)
 
   const onPressLockWallet = async (): Promise<void> => {
     navigateBack()
@@ -78,17 +80,6 @@ export function SettingsScreen(): JSX.Element {
   }
 
   // TODO(WALL-4908): consider wrapping handlers in useCallback
-
-  const hideSpamTokens = useHideSpamTokensSetting()
-  const handleSpamTokensToggle = async (): Promise<void> => {
-    await dispatch(setHideSpamTokens(!hideSpamTokens))
-  }
-
-  const hideSmallBalances = useHideSmallBalancesSetting()
-  const handleSmallBalancesToggle = async (): Promise<void> => {
-    await dispatch(setHideSmallBalances(!hideSmallBalances))
-  }
-
   const { isTestnetModeEnabled } = useEnabledChains()
   const handleTestnetModeToggle = async (isChecked: boolean): Promise<void> => {
     const fireAnalytic = (): void => {
@@ -115,9 +106,38 @@ export function SettingsScreen(): JSX.Element {
   }
   const handleTestnetModalClose = useCallback(() => setIsTestnetModalOpen(false), [])
 
+  useEffect(() => {
+    getIsDefaultProviderFromStorage()
+      .then((newIsDefaultProvider) => setIsDefaultProvider(newIsDefaultProvider))
+      .catch((e) =>
+        logger.error(e, {
+          tags: { file: 'PermissionsModal', function: 'fetchIsDefaultProvider' },
+        }),
+      )
+  }, [])
+
+  const handleDefaultBrowserToggle = async (isChecked: boolean): Promise<void> => {
+    setIsDefaultProvider(!!isChecked)
+    await setIsDefaultProviderToStorage(!!isChecked)
+  }
+
+  const setConnectionMigrationAsViewed = (): void => {
+    dispatch(setHasViewedConnectionMigration(true))
+  }
+
   return (
     <>
       {isLanguageModalOpen ? <SettingsLanguageModal onClose={() => setIsLanguageModalOpen(false)} /> : undefined}
+      {isPortfolioBalanceModalOpen ? (
+        <PortfolioBalanceModal onClose={() => setIsPortfolioBalanceModalOpen(false)} />
+      ) : undefined}
+      {isPermissionsModalOpen ? (
+        <PermissionsModal
+          handleDefaultBrowserToggle={handleDefaultBrowserToggle}
+          isDefaultBrowserProvider={isDefaultProvider}
+          onClose={() => setIsPermissionsModalOpen(false)}
+        />
+      ) : undefined}
       <TestnetModeModal isOpen={isTestnetModalOpen} onClose={handleTestnetModalClose} />
       <Flex fill backgroundColor="$surface1" gap="$spacing8">
         <ScreenHeader title={t('settings.title')} />
@@ -146,6 +166,21 @@ export function SettingsScreen(): JSX.Element {
               )}
             </>
             <SettingsItemWithDropdown
+              Icon={Coins}
+              items={ORDERED_CURRENCIES.map((currency) => {
+                return {
+                  label: getFiatCurrencyName(t, currency).shortName,
+                  value: currency,
+                }
+              })}
+              selected={appFiatCurrencyInfo.code}
+              title={t('settings.setting.currency.title')}
+              onSelect={(value) => {
+                const currency = value as FiatCurrency
+                dispatch(setCurrentFiatCurrency(currency))
+              }}
+            />
+            <SettingsItemWithDropdown
               Icon={Language}
               disableDropdown={true}
               items={[]}
@@ -156,40 +191,12 @@ export function SettingsScreen(): JSX.Element {
               }}
               onSelect={noop}
             />
-            <SettingsItemWithDropdown
-              Icon={Coins}
-              items={ORDERED_CURRENCIES.map((currency) => {
-                return {
-                  label: getFiatCurrencyName(t, currency).shortName,
-                  value: currency,
-                }
-              })}
-              selected={appFiatCurrencyInfo.shortName}
-              title={t('settings.setting.currency.title')}
-              onSelect={(value) => {
-                const currency = value as FiatCurrency
-                dispatch(setCurrentFiatCurrency(currency))
-              }}
-            />
-            <SettingsToggleRow
-              Icon={Chart}
-              checked={hideSmallBalances && !isTestnetModeEnabled}
-              title={t('settings.setting.smallBalances.title')}
-              disabled={isTestnetModeEnabled}
-              onCheckedChange={handleSmallBalancesToggle}
-            />
-            <SettingsToggleRow
-              Icon={ShieldQuestion}
-              checked={hideSpamTokens}
-              title={t('settings.setting.unknownTokens.title')}
-              onCheckedChange={handleSpamTokensToggle}
-            />
             <SettingsItem
-              Icon={Globe}
-              title={t('settings.setting.wallet.connections.title')}
-              count={dappUrls.length}
-              onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)}
+              Icon={Chart}
+              title={t('settings.setting.smallBalances.title')}
+              onPress={(): void => setIsPortfolioBalanceModalOpen(true)}
             />
+
             <SettingsToggleRow
               Icon={Wrench}
               checked={isTestnetModeEnabled}
@@ -197,37 +204,70 @@ export function SettingsScreen(): JSX.Element {
               onCheckedChange={handleTestnetModeToggle}
             />
           </SettingsSection>
-          <SettingsSectionSeparator />
-          <SettingsSection title={t('settings.section.privacyAndSecurity')}>
-            <SettingsItem
-              Icon={Key}
-              title={t('settings.setting.password.title')}
-              onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
-            />
-            <SettingsItem
-              Icon={FileListLock}
-              title={t('settings.setting.recoveryPhrase.title')}
-              onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
-            />
-            <SettingsItem
-              Icon={LineChartDots}
-              title={t('settings.setting.permissions.title')}
-              onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
-            />
-          </SettingsSection>
-          <SettingsSectionSeparator />
-          <SettingsSection title={t('settings.section.support')}>
-            <SettingsItem
-              Icon={HelpCenter}
-              title={t('settings.setting.helpCenter.title')}
-              url={uniswapUrls.helpArticleUrls.extensionHelp}
-            />
-            <Text color="$neutral3" px="$spacing12" py="$spacing4" variant="body4">{`Version ${manifestVersion}`}</Text>
-          </SettingsSection>
+          {!hasViewedConnectionMigration && (
+            <Flex pt="$padding8">
+              <IntroCard
+                loggingName={ConnectionCardLoggingName.ConnectionBanner}
+                graphic={{ type: IntroCardGraphicType.Icon, Icon: Global }}
+                title={t('settings.setting.wallet.connection.banner.title')}
+                description={t('settings.setting.wallet.connection.banner.description')}
+                cardType={CardType.Dismissible}
+                iconColor="$neutral2"
+                containerProps={{
+                  borderWidth: 0,
+                  backgroundColor: '$surface2',
+                  shadowColor: '$transparent',
+                }}
+                onPress={() => {
+                  setConnectionMigrationAsViewed()
+                }}
+                onClose={(): void => {
+                  setConnectionMigrationAsViewed()
+                }}
+              />
+            </Flex>
+          )}
+          <Flex pt="$padding16">
+            <SettingsSection title={t('settings.section.privacyAndSecurity')}>
+              <SettingsItem
+                Icon={Key}
+                title={t('settings.setting.password.title')}
+                onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
+              />
+              <SettingsItem
+                Icon={FileListLock}
+                title={t('settings.setting.recoveryPhrase.title')}
+                onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
+              />
+              <SettingsItem
+                Icon={LineChartDots}
+                title={t('settings.setting.permissions.title')}
+                onPress={(): void => setIsPermissionsModalOpen(true)}
+              />
+            </SettingsSection>
+          </Flex>
+          <Flex pt="$padding16">
+            <SettingsSection title={t('settings.section.support')}>
+              <SettingsItem
+                Icon={HelpCenter}
+                title={t('settings.setting.helpCenter.title')}
+                url={uniswapUrls.helpArticleUrls.extensionHelp}
+                RightIcon={ArrowUpRight}
+              />
+              <Text
+                color="$neutral3"
+                px="$spacing12"
+                py="$spacing4"
+                variant="body4"
+              >{`Version ${manifestVersion}`}</Text>
+            </SettingsSection>
+          </Flex>
         </ScrollView>
-        <DeprecatedButton icon={<Lock />} theme="secondary" onPress={onPressLockWallet}>
-          {t('settings.action.lock')}
-        </DeprecatedButton>
+        <Flex row>
+          <Button icon={<Lock />} emphasis="secondary" onPress={onPressLockWallet}>
+            {t('settings.action.lock')}
+          </Button>
+        </Flex>
       </Flex>
     </>
   )
@@ -242,10 +282,12 @@ function SettingsItem({
   url,
   count,
   hideChevron = false,
+  RightIcon,
 }: {
   Icon: GeneratedIcon
   title: string
   hideChevron?: boolean
+  RightIcon?: GeneratedIcon
   onPress?: () => void
   iconProps?: { strokeWidth?: number }
   // TODO: do this with a wrapping Theme, "detrimental" wasn't working
@@ -288,8 +330,13 @@ function SettingsItem({
           </Text>
         )}
       </Flex>
-      {!hideChevron && (
-        <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />
+
+      {RightIcon ? (
+        <RightIcon color="$neutral3" size={iconSizes.icon24} strokeWidth={iconProps?.strokeWidth ?? undefined} />
+      ) : (
+        !hideChevron && (
+          <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />
+        )
       )}
     </TouchableArea>
   )
@@ -343,14 +390,6 @@ function SettingsSection({ title, children }: { title: string; children: JSX.Ele
         {title}
       </Text>
       {children}
-    </Flex>
-  )
-}
-
-function SettingsSectionSeparator(): JSX.Element {
-  return (
-    <Flex mx="$spacing8">
-      <Separator my="$spacing16" width="100%" />
     </Flex>
   )
 }

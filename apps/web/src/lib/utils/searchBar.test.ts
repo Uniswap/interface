@@ -23,7 +23,6 @@ describe('searchBar', () => {
           logoUrl: 'eth-logo.png',
           symbol: 'ETH',
           name: 'Ethereum',
-          safetyLevel: SafetyLevel.Verified,
           safetyInfo: getCurrencySafetyInfo(SafetyLevel.Verified, { attackTypes: [], result: ProtectionResult.Benign }),
           feeData: null,
         }
@@ -79,7 +78,6 @@ describe('searchBar', () => {
           logoUrl: 'matic-logo.png',
           symbol: 'MATIC',
           name: 'Polygon',
-          safetyLevel: SafetyLevel.Verified,
           feeData: null,
           safetyInfo: {
             tokenList: TokenList.Default,
@@ -98,7 +96,6 @@ describe('searchBar', () => {
           logoUrl: 'token-logo.png',
           symbol: 'ABC',
           name: 'ABC Token',
-          safetyLevel: SafetyLevel.Verified,
           feeData: null,
           safetyInfo: {
             tokenList: TokenList.Default,

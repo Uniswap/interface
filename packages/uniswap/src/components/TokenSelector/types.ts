@@ -1,17 +1,15 @@
 import { ReactNode } from 'react'
+import { ItemType, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FiatNumberType } from 'utilities/src/format/types'
 
-export type TokenOption = {
-  currencyInfo: CurrencyInfo
-  quantity: number | null // float representation of balance, returned by data-api
-  balanceUSD: Maybe<number>
-  isUnsupported?: boolean
-}
-
-export type OnSelectCurrency = (currency: CurrencyInfo, section: TokenSection, index: number) => void
+export type OnSelectCurrency = (
+  currency: CurrencyInfo,
+  section: TokenSection<TokenSelectorItemTypes>,
+  index: number,
+) => void
 
 export enum TokenOptionSection {
   YourTokens = 'yourTokens',
@@ -23,8 +21,8 @@ export enum TokenOptionSection {
   BridgingTokens = 'bridgingTokens',
 }
 
-export type TokenSection = {
-  data: TokenOption[] | TokenOption[][]
+export type TokenSection<T extends ItemType> = {
+  data: T[]
   sectionKey: TokenOptionSection
   name?: string
   rightElement?: JSX.Element
@@ -45,8 +43,8 @@ export type ConvertFiatAmountFormattedCallback = (
 ) => string
 
 export enum TokenSelectorFlow {
-  Swap,
-  Send,
+  Swap = 0,
+  Send = 1,
 }
 
 export interface TokenItemWrapperProps {

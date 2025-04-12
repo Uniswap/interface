@@ -35,7 +35,7 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
   )
 }
 
-export function _RecipientSelect({
+function _RecipientSelect({
   onSelectRecipient,
   onHideRecipientSelector,
   recipient,

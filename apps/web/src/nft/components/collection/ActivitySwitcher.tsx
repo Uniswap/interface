@@ -1,20 +1,11 @@
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Box } from 'components/deprecated/Box'
-import styled from 'lib/styled-components'
-import { Row } from 'nft/components/Flex'
-import * as styles from 'nft/components/collection/ActivitySwitcher.css'
 import { useIsCollectionLoading } from 'nft/hooks'
+import { Flex, Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-
-const BaseActivityContainer = styled(Row)`
-  border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.surface3};
-  margin-right: 12px;
-`
 
 export const ActivitySwitcherLoading = new Array(2)
   .fill(null)
-  .map((_, index) => <div className={styles.styledLoading} key={`ActivitySwitcherLoading-key-${index}`} />)
+  .map((_, index) => <Flex width={58} height={20} key={`ActivitySwitcherLoading-key-${index}`} />)
 
 export const ActivitySwitcher = ({
   showActivity,
@@ -26,34 +17,38 @@ export const ActivitySwitcher = ({
   const isLoading = useIsCollectionLoading((state) => state.isCollectionStatsLoading)
 
   return (
-    <BaseActivityContainer gap="24" marginBottom="16">
+    <Flex row gap="$gap24" pb="$spacing8" borderBottomWidth={1} borderColor="$surface3" mr="$spacing12">
       {isLoading ? (
         ActivitySwitcherLoading
       ) : (
         <>
-          <Box
-            as="button"
-            className={showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
-            onClick={() => showActivity && toggleActivity()}
+          <Text
+            variant="buttonLabel1"
+            cursor="pointer"
+            mb="$spacing8"
+            color={showActivity ? '$neutral2' : '$neutral1'}
+            onPress={() => showActivity && toggleActivity()}
           >
             Items
-          </Box>
+          </Text>
           <Trace
             logPress
             element={InterfaceElementName.NFT_ACTIVITY_TAB}
             eventOnTrigger={NFTEventName.NFT_ACTIVITY_SELECTED}
           >
-            <Box
-              as="button"
-              className={!showActivity ? styles.activitySwitcherToggle : styles.selectedActivitySwitcherToggle}
-              onClick={() => !showActivity && toggleActivity()}
+            <Text
+              variant="buttonLabel1"
+              cursor="pointer"
+              mb="$spacing8"
+              color={!showActivity ? '$neutral2' : '$neutral1'}
+              onPress={() => !showActivity && toggleActivity()}
               data-testid="nft-activity"
             >
               Activity
-            </Box>
+            </Text>
           </Trace>
         </>
       )}
-    </BaseActivityContainer>
+    </Flex>
   )
 }

@@ -1,10 +1,8 @@
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
 import { PendingModalError } from 'components/ConfirmSwapModal/Error'
 import { RESET_APPROVAL_TOKENS } from 'components/swap/constants'
 import { useAccount } from 'hooks/useAccount'
-import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import useSelectChain from 'hooks/useSelectChain'
@@ -18,10 +16,8 @@ import { isUniswapXTrade } from 'state/routing/utils'
 import { useIsWhitelistedToken } from 'state/swap/hooks'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
@@ -106,9 +102,6 @@ export function useConfirmModalState({
     return steps
   }, [allowance, trade])
 
-  const trace = useTrace()
-  const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
-
   const nativeCurrency = useNativeCurrency(chainId)
 
   const [wrapTxHash, setWrapTxHash] = useState<string>()
@@ -146,13 +139,6 @@ export function useConfirmModalState({
               // After the wrap has succeeded, reset the input currency to be WETH
               // because the trade will be on WETH -> token
               onCurrencySelection(CurrencyField.INPUT, trade.inputAmount.currency, /*isResettingWETHAfterWrap=*/ true)
-              sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
-                chain_id: chainId,
-                token_symbol: maximumAmountIn?.currency.symbol,
-                token_address: maximumAmountIn?.currency.address,
-                ...trade,
-                ...trace,
-              })
             })
             .catch((e) => catchUserReject(e, PendingModalError.WRAP_ERROR))
           break
@@ -184,18 +170,7 @@ export function useConfirmModalState({
           break
       }
     },
-    [
-      onWrap,
-      allowance,
-      onCurrencySelection,
-      trade,
-      chainId,
-      maximumAmountIn?.currency.symbol,
-      maximumAmountIn?.currency.address,
-      trace,
-      catchUserReject,
-      onSwap,
-    ],
+    [onWrap, allowance, onCurrencySelection, trade, catchUserReject, onSwap],
   )
 
   const startSwapFlow = useCallback(async () => {

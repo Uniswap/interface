@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
 import { removeAllDappConnectionsForAccount } from 'src/app/features/dapp/actions'
+import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
+import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { CopySheets, Edit, Ellipsis, TrashFilled } from 'ui/src/components/icons'
+import { CopySheets, Edit, Ellipsis, Globe, TrashFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -32,6 +34,7 @@ type AccountItemProps = {
 export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountItemProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const { navigateTo } = useExtensionNavigation()
 
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
@@ -40,13 +43,15 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
   const [showEditLabelModal, setShowEditLabelModal] = useState(false)
 
   const displayName = useDisplayName(address)
-  const hasDisplayName = displayName?.type === DisplayNameType.Unitag || displayName?.type === DisplayNameType.ENS
 
   const accounts = useSignerAccounts()
   const activeAccount = useActiveAccountWithThrow()
   const activeAccountDisplayName = useDisplayName(activeAccount.address)
+  const accountAddress = useDisplayName(address)
+  const activeAccountHasUnitag = accountAddress?.type === DisplayNameType.Unitag
 
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
+
   const onRemoveWallet = useCallback(async () => {
     const accountForDeletion = accounts.find((account) => account.address === address)
     if (!accountForDeletion) {
@@ -87,28 +92,36 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
 
   const menuOptions = useMemo((): MenuContentItem[] => {
     return [
-      // hide edit label if account has unitag or ENS
-      ...(!hasDisplayName
-        ? [
-            {
-              label: t('account.wallet.menu.edit.title'),
-              onPress: (e: BaseSyntheticEvent): void => {
-                // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
-                // means that without it the TouchableArea handler will get called
-                e.preventDefault()
-                e.stopPropagation()
-
-                setShowEditLabelModal(true)
-              },
-              Icon: Edit,
-            },
-          ]
-        : []),
-
       {
         label: t('account.wallet.menu.copy.title'),
         onPress: onPressCopyAddress,
         Icon: CopySheets,
+      },
+      {
+        label: !activeAccountHasUnitag
+          ? t('account.wallet.menu.edit.title')
+          : t('settings.setting.wallet.action.editProfile'),
+        onPress: (e: BaseSyntheticEvent): void => {
+          // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
+          // means that without it the TouchableArea handler will get called
+          e.preventDefault()
+          e.stopPropagation()
+
+          setShowEditLabelModal(true)
+        },
+        Icon: Edit,
+      },
+      {
+        label: t('account.wallet.menu.manageConnections'),
+        onPress: (e: BaseSyntheticEvent): void => {
+          // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
+          // means that without it the TouchableArea handler will get called
+          e.preventDefault()
+          e.stopPropagation()
+
+          navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)
+        },
+        Icon: Globe,
       },
       {
         label: t('account.wallet.menu.remove.title'),
@@ -125,7 +138,7 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         iconProps: { color: '$statusCritical' },
       },
     ]
-  }, [hasDisplayName, onPressCopyAddress, t])
+  }, [activeAccountHasUnitag, onPressCopyAddress, navigateTo, t])
 
   return (
     <>
@@ -149,7 +162,9 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         backgroundColor="$surface1"
         borderRadius="$rounded16"
         cursor="pointer"
-        p="$spacing12"
+        pt="$padding20"
+        pb="$spacing12"
+        px="$spacing12"
         onPress={onAccountSelect}
       >
         <Flex centered fill group row gap="$spacing8" justifyContent="space-between">
@@ -160,31 +175,25 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
             size={iconSizes.icon40}
             variant="subheading2"
           />
-          <Flex>
-            <Text
-              $group-hover={{ opacity: 0 }}
-              color="$neutral2"
-              opacity={1}
-              position="absolute"
-              right={0}
-              top="50%"
-              transform="translateY(-50%)"
-              variant="body3"
-            >
-              {formattedBalance}
-            </Text>
-            <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
+          <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
+            <Flex centered>
+              <Text $group-hover={{ opacity: 0 }} color="$neutral2" opacity={1} variant="body3">
+                {formattedBalance}
+              </Text>
               <Flex
                 $group-hover={{ opacity: 1 }}
                 borderRadius="$roundedFull"
                 hoverStyle={{ backgroundColor: '$surface2Hovered' }}
                 opacity={0}
+                position="absolute"
                 p="$spacing4"
+                right={0}
+                top={0}
               >
                 <Ellipsis color="$neutral2" size="$icon.16" />
               </Flex>
-            </ContextMenu>
-          </Flex>
+            </Flex>
+          </ContextMenu>
         </Flex>
       </TouchableArea>
     </>

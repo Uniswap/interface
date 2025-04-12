@@ -4,14 +4,14 @@ import { DdRum, DdSdkReactNative, RumActionType } from '@datadog/mobile-react-na
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
-import { default as React, StrictMode, useCallback, useEffect, useRef } from 'react'
+import { default as React, StrictMode, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
 import DeviceInfo from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
-import OneSignal from 'react-native-onesignal'
+import { OneSignal } from 'react-native-onesignal'
 import { configureReanimatedLogger } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
@@ -27,6 +27,7 @@ import { persistor, store } from 'src/app/store'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
+import { useLogMissingMnemonic } from 'src/features/analytics/useLogMissingMnemonic'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
@@ -39,6 +40,7 @@ import {
   setFavoritesUserDefaults,
   setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
+import { loadLocaleData } from 'src/polyfills/intl-delayed'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getStatsigEnvironmentTier } from 'src/utils/version'
 import { flexStyles, useIsDarkMode } from 'ui/src'
@@ -80,7 +82,7 @@ import { isIOS } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
@@ -212,10 +214,11 @@ function AppOuter(): JSX.Element | null {
   })
   const jsBundleLoadedRef = useRef(false)
 
-  useEffect(() => {
+  const { locale } = useCurrentLanguageInfo()
+  useLayoutEffect(() => {
     // Dynamically load polyfills so that we save on bundle size and improve app startup time
-    import('src/polyfills/intl-delayed')
-  }, [])
+    loadLocaleData(locale)
+  }, [locale])
 
   /**
    * Function called by the @shopify/react-native-performance PerformanceProfiler that returns a
@@ -234,7 +237,6 @@ function AppOuter(): JSX.Element | null {
         await DdRum.addTiming(DDRumTiming.ScreenInteractive)
       }
     }
-
     sendAnalyticsEvent(MobileEventName.PerformanceReport, report)
   }, [])
 
@@ -262,7 +264,7 @@ function AppOuter(): JSX.Element | null {
       const notificationsPriceAlertsEnabled = getFeatureFlag(FeatureFlags.NotificationPriceAlertsIOS)
       const notificationsUnfundedWalletEnabled = getFeatureFlag(FeatureFlags.NotificationUnfundedWalletsIOS)
 
-      OneSignal.sendTags({
+      OneSignal.User.addTags({
         [OneSignalUserTagField.GatingPriceAlertsEnabled]: notificationsPriceAlertsEnabled ? 'true' : 'false',
         [OneSignalUserTagField.GatingUnfundedWalletsEnabled]: notificationsUnfundedWalletEnabled ? 'true' : 'false',
       })
@@ -343,6 +345,8 @@ function AppInner(): JSX.Element {
     // after updating RN to 0.72.0 or higher)
     NativeModules.ThemeModule.setColorScheme(themeSetting)
   }, [themeSetting])
+
+  useLogMissingMnemonic()
 
   return (
     <>

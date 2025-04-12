@@ -1,8 +1,7 @@
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { LinkButton, LinkButtonType } from 'src/components/TokenDetails/LinkButton'
+import { LinkButton, LinkButtonType, type LinkButtonProps } from 'src/components/TokenDetails/LinkButton'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, Text } from 'ui/src'
@@ -16,6 +15,12 @@ import { isDefaultNativeAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { getTwitterLink } from 'wallet/src/utils/linking'
 
+const ItemSeparatorComponent = (): JSX.Element => <Flex width="$spacing8" />
+
+const renderItem = ({ item }: { item: LinkButtonProps }): JSX.Element => <LinkButton {...item} />
+
+const keyExtractor = (item: LinkButtonProps): string => item.testID ?? item.value
+
 export function TokenDetailsLinks(): JSX.Element {
   const { t } = useTranslation()
 
@@ -26,7 +31,7 @@ export function TokenDetailsLinks(): JSX.Element {
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
   const explorerName = getChainInfo(chainId).explorer.name
 
-  const links = useMemo(() => {
+  const links = useMemo((): LinkButtonProps[] => {
     return [
       {
         Icon: getBlockExplorerIcon(chainId),
@@ -69,21 +74,20 @@ export function TokenDetailsLinks(): JSX.Element {
   }, [chainId, address, homepageUrl, twitterName, explorerName, explorerLink, t])
 
   return (
-    <View style={{ marginHorizontal: -14 }}>
-      <Flex gap="$spacing8">
-        <Text color="$neutral2" mx="$spacing16" variant="subheading2">
-          {t('token.links.title')}
-        </Text>
-        <Flex row gap="$spacing8" px="$spacing16">
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={links}
-            renderItem={({ item }) => <LinkButton {...item} />}
-            keyExtractor={(item) => item.testID}
-          />
-        </Flex>
-      </Flex>
-    </View>
+    <Flex gap="$spacing8">
+      <Text color="$neutral2" mx="$spacing16" variant="subheading2">
+        {t('token.links.title')}
+      </Text>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={links}
+        ListHeaderComponent={ItemSeparatorComponent}
+        ListFooterComponent={ItemSeparatorComponent}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+      />
+    </Flex>
   )
 }

@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { useMemo } from 'react'
-import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { GqlResult } from 'uniswap/src/data/types'

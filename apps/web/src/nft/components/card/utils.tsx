@@ -13,9 +13,9 @@ import { isAudio, isVideo } from 'nft/utils'
 import { ReactNode, useCallback } from 'react'
 
 enum AssetMediaType {
-  Image,
-  Video,
-  Audio,
+  Image = 0,
+  Video = 1,
+  Audio = 2,
 }
 
 function getAssetImageUrl(asset: GenieAsset | WalletAsset) {

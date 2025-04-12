@@ -1,8 +1,8 @@
-/* eslint-disable-next-line no-restricted-imports */
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { DropdownSelector } from 'components/DropdownSelector'
+import { ErrorCallout } from 'components/ErrorCallout'
 import { getProtocolVersionLabel, parseProtocolVersion } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import {
@@ -24,25 +24,22 @@ import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep, SelectPriceRangeStepV2 } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import ResetCreatePositionFormModal from 'pages/Pool/Positions/create/ResetCreatePositionsFormModal'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
-import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { useInitialPoolInputs } from 'pages/Pool/Positions/create/hooks'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
-import { DeprecatedButton, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
+import { Button, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
-import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -54,39 +51,6 @@ import { usePrevious } from 'utilities/src/react/hooks'
 const WIDTH = {
   positionCard: 600,
   sidebar: 360,
-}
-
-function CreatingPoolInfo() {
-  const { t } = useTranslation()
-  const { derivedPositionInfo } = useCreatePositionContext()
-
-  const previouslyCreatingPoolOrPair = usePrevious(derivedPositionInfo.creatingPoolOrPair)
-
-  const shouldShowDisabled = previouslyCreatingPoolOrPair && derivedPositionInfo.poolOrPairLoading
-
-  if (!shouldShowDisabled && !derivedPositionInfo.creatingPoolOrPair) {
-    return null
-  }
-
-  return (
-    <Flex
-      row
-      gap="$spacing12"
-      p="$spacing12"
-      borderWidth="$spacing1"
-      borderColor="$surface3"
-      borderRadius="$rounded16"
-      opacity={shouldShowDisabled ? 0.4 : 1}
-    >
-      <InfoCircleFilled flexShrink={0} size={iconSizes.icon20} color="$neutral2" />
-      <Flex flexWrap="wrap" flexShrink={1} gap="$gap4">
-        <Text variant="body3">{t('pool.create')}</Text>
-        <Text variant="body3" color="$neutral2">
-          {t('pool.create.info')}
-        </Text>
-      </Flex>
-    </Flex>
-  )
 }
 
 function CreatePositionInner() {
@@ -115,7 +79,6 @@ function CreatePositionInner() {
     return (
       <Trace logImpression section={SectionName.CreatePositionSelectTokensStep}>
         <SelectTokensStep onContinue={handleContinue} />
-        <CreatingPoolInfo />
       </Trace>
     )
   }
@@ -126,9 +89,8 @@ function CreatePositionInner() {
         <EditSelectTokensStep />
         <Container>
           {v2Selected ? <SelectPriceRangeStepV2 /> : <SelectPriceRangeStep />}
-          <CreatingPoolInfo />
-          <DepositStep autofocus={false} />
-          <TradingAPIError errorMessage={error} refetch={refetch} />
+          <DepositStep />
+          <ErrorCallout errorMessage={error} onPress={refetch} />
         </Container>
       </Trace>
     )
@@ -140,7 +102,7 @@ function CreatePositionInner() {
       <Container>
         <DepositStep />
       </Container>
-      <TradingAPIError errorMessage={error} refetch={refetch} />
+      <ErrorCallout errorMessage={error} onPress={refetch} />
     </Trace>
   )
 }
@@ -200,24 +162,9 @@ interface ResetProps {
 const ResetButton = ({ onClickReset, isDisabled }: ResetProps) => {
   const { t } = useTranslation()
   return (
-    <DeprecatedButton
-      theme="tertiary"
-      py="10px"
-      px="$spacing12"
-      backgroundColor="$surface1"
-      borderRadius="$rounded12"
-      borderColor="$surface3"
-      borderWidth="$spacing1"
-      gap="$gap4"
-      onPress={onClickReset}
-      isDisabled={isDisabled}
-      flex={1}
-    >
-      <RotateLeft size={iconSizes.icon16} color="$neutral1" />
-      <Text variant="buttonLabel3" lineHeight="16px">
-        {t('common.button.reset')}
-      </Text>
-    </DeprecatedButton>
+    <Button size="small" emphasis="tertiary" onPress={onClickReset} isDisabled={isDisabled} icon={<RotateLeft />}>
+      {t('common.button.reset')}
+    </Button>
   )
 }
 
@@ -326,7 +273,7 @@ const Toolbar = ({
   )
 
   return (
-    <div>
+    <Flex>
       <ResetCreatePositionFormModal
         isOpen={showResetModal}
         onClose={() => setShowResetModal(false)}
@@ -369,12 +316,11 @@ const Toolbar = ({
           />
         </Flex>
       </ToolbarContainer>
-    </div>
+    </Flex>
   )
 }
 
 export default function CreatePosition() {
-  const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const media = useMedia()
   const { t } = useTranslation()
@@ -394,14 +340,6 @@ export default function CreatePosition() {
 
     return paramsProtocolVersion
   }, [isV4DataEnabled, paramsProtocolVersion])
-
-  if (!isLoading && !lpRedesignEnabled) {
-    return <Navigate to="/pools" replace />
-  }
-
-  if (isLoading) {
-    return null
-  }
 
   return (
     <Trace logImpression page={InterfacePageNameLocal.CreatePosition}>
@@ -452,7 +390,7 @@ export default function CreatePosition() {
                     </Flex>
                     <Flex row gap="$spacing20" justifyContent="space-between" width="100%">
                       {!media.xl && <Sidebar />}
-                      <Flex gap={80} flex={1} maxWidth={WIDTH.positionCard} mb="$spacing28">
+                      <Flex gap="$spacing24" flex={1} maxWidth={WIDTH.positionCard} mb="$spacing28">
                         <CreatePositionInner />
                       </Flex>
                     </Flex>

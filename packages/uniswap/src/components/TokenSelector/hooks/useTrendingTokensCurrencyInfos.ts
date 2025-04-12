@@ -9,7 +9,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export function useTrendingTokensCurrencyInfos(chainFilter: Maybe<UniverseChainId>): {
   data: CurrencyInfo[]
-  error: Error
+  error: Error | undefined
   refetch: () => void
   loading: boolean
 } {
@@ -28,5 +28,5 @@ export function useTrendingTokensCurrencyInfos(chainFilter: Maybe<UniverseChainI
     [trendingTokens],
   )
 
-  return { data: formattedTokens, loading: isLoading || isFetching, error: new Error(error?.message), refetch }
+  return { data: formattedTokens, loading: isLoading || isFetching, error: error ?? undefined, refetch }
 }

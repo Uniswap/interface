@@ -19,3 +19,6 @@ export const selectHasViewedNotificationsCard = (state: WalletState): boolean =>
 
 export const selectHasViewedDappRequestBridgingBanner = (state: WalletState, dappUrl: string): boolean =>
   state.behaviorHistory.hasViewedDappRequestBridgingBanner?.[dappUrl] ?? false
+
+export const selectHasViewedConnectionMigration = (state: WalletState): boolean =>
+  state.behaviorHistory.hasViewedConnectionMigration ?? false

@@ -4,7 +4,9 @@ import Column from 'components/deprecated/Column'
 import Row, { RowBetween } from 'components/deprecated/Row'
 import styled, { Keyframes, keyframes } from 'lib/styled-components'
 import { ReactElement, useEffect, useState } from 'react'
-import { ExternalLink, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
+import { Flex } from 'ui/src'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 
 export interface StepDetails {
@@ -57,9 +59,9 @@ function RippleAnimation({ rippleColor }: { rippleColor?: string }) {
     return null
   }
   return (
-    <div data-testid="icon-ripple-animation">
+    <Flex data-testid="icon-ripple-animation">
       <Ring $borderColor={rippleColor} $animation={ringAnimation} />
-    </div>
+    </Flex>
   )
 }
 
@@ -68,12 +70,12 @@ function Icon({ stepStatus, icon, rippleColor }: { stepStatus: StepStatus; icon:
     return <LoaderV3 size="24px" stroke={rippleColor} fill={rippleColor} data-testid="loader-icon" />
   }
   return (
-    <div>
+    <>
       {stepStatus === StepStatus.Active && <RippleAnimation rippleColor={rippleColor} />}
       <IconWrapper isActive={stepStatus === StepStatus.Active} data-testid="step-icon">
         {icon}
       </IconWrapper>
-    </div>
+    </>
   )
 }
 

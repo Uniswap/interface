@@ -2,8 +2,8 @@ import { FlagWarning, getFlagWarning, getFlagsFromContractAddress } from 'compon
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CopyHelper } from 'theme/components'
-import { Checkbox, DeprecatedButton, Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
+import { CopyHelper } from 'theme/components/CopyHelper'
+import { Button, Checkbox, Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
@@ -193,20 +193,14 @@ export function HookModal({
 
           <Flex row gap="$gap8">
             <Trace logPress element={ElementName.Cancel}>
-              <DeprecatedButton size="small" theme="secondary" width="49%" onPress={handleClearHook}>
+              <Button size="small" emphasis="secondary" onPress={handleClearHook}>
                 {t('position.removeHook')}
-              </DeprecatedButton>
+              </Button>
             </Trace>
             <Trace logPress element={ElementName.Continue}>
-              <DeprecatedButton
-                isDisabled={!canContinue}
-                size="small"
-                theme="primary"
-                width="49%"
-                onPress={handleContinue}
-              >
+              <Button isDisabled={!canContinue} size="small" variant="branded" onPress={handleContinue}>
                 {t('common.button.continue')}
-              </DeprecatedButton>
+              </Button>
             </Trace>
           </Flex>
         </Flex>

@@ -1,4 +1,3 @@
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ColumnCenter } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
@@ -6,6 +5,7 @@ import styled, { DefaultTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Gap } from 'theme'
 import { ThemedText } from 'theme/components'
+import { Button, ButtonEmphasis, ButtonVariant } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -41,14 +41,6 @@ const DescriptionText = styled(ThemedText.BodySecondary)`
   text-align: center;
 `
 
-const StyledButton = styled(ThemeButton)<{ $color?: keyof DefaultTheme }>`
-  display: flex;
-  flex-grow: 1;
-  height: 40px;
-  ${({ $color, theme }) => $color && `color: ${theme[$color]};`}
-  border-radius: 12px;
-`
-
 const DialogHeader = styled(GetHelpHeader)`
   padding: 4px 0px;
 `
@@ -59,17 +51,26 @@ export enum DialogButtonType {
   Accent = 'accent',
 }
 
-function getButtonEmphasis(type?: DialogButtonType) {
+function getButtonEmphasis(type?: DialogButtonType): ButtonEmphasis {
   switch (type) {
-    case DialogButtonType.Error:
-      return ButtonEmphasis.destructive
     case DialogButtonType.Accent:
-      return ButtonEmphasis.high
+    case DialogButtonType.Error:
+      return 'primary'
     default:
-      return ButtonEmphasis.medium
+      return 'secondary' // default/undefined DialogButtonType should show as Button default variant, secondary emphasis
   }
 }
 
+function getButtonVariant(type?: DialogButtonType): ButtonVariant {
+  switch (type) {
+    case DialogButtonType.Error:
+      return 'critical'
+    case DialogButtonType.Accent:
+      return 'branded'
+    default:
+      return 'default'
+  }
+}
 type ButtonConfig = {
   type?: DialogButtonType
   title: ReactNode
@@ -113,30 +114,32 @@ export function DialogContent({ icon, title, description, body, buttonsConfig }:
       <Row align="center" justify="center" gap={gap ?? 'md'}>
         {left ? (
           'title' in left ? (
-            <StyledButton
-              size={ButtonSize.small}
-              onClick={left.onClick}
-              disabled={left.disabled}
+            <Button
+              size="small"
+              onPress={left.onClick}
+              isDisabled={left.disabled}
+              height={40}
               emphasis={getButtonEmphasis(left.type)}
-              $color={left.textColor}
+              variant={getButtonVariant(left.type)}
             >
               {left.title}
-            </StyledButton>
+            </Button>
           ) : (
             left
           )
         ) : null}
         {right ? (
           'title' in right ? (
-            <StyledButton
-              size={ButtonSize.small}
-              onClick={right.onClick}
-              disabled={right.disabled}
+            <Button
+              size="small"
+              onPress={right.onClick}
+              isDisabled={right.disabled}
+              height={40}
               emphasis={getButtonEmphasis(right.type)}
-              $color={right.textColor}
+              variant={getButtonVariant(right.type)}
             >
               {right.title}
-            </StyledButton>
+            </Button>
           ) : (
             right
           )

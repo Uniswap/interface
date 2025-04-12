@@ -1,7 +1,6 @@
-// eslint-disable-next-line no-restricted-imports
 import { Currency, Price } from '@uniswap/sdk-core'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
-import { PriceOrdering } from 'components/PositionListItem'
+import { PriceOrdering } from 'components/Liquidity/types'
 import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, SegmentedControl, SegmentedControlOption, Text, styled } from 'ui/src'
@@ -134,7 +133,7 @@ export function LiquidityPositionPriceRangeTile({
       </Flex>
       <InnerTile>
         <Text variant="subheading2" color="$neutral2">
-          <Trans i18nKey="common.currentPrice" />
+          <Trans i18nKey="common.marketPrice" />
         </Text>
         <Text variant="heading2" color="$neutral1">
           {formatPrice({ price: currentPrice, type: NumberType.TokenTx })}

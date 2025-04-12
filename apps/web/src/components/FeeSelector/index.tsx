@@ -1,20 +1,19 @@
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { ButtonGray } from 'components/Button/buttons'
 import Card from 'components/Card/cards'
 import { FeeOption } from 'components/FeeSelector/FeeOption'
 import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
+import { AutoColumn } from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
 import styled, { keyframes } from 'lib/styled-components'
-import { DynamicSection } from 'pages/AddLiquidityV3/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { Flex, RadioButtonGroup, Text } from 'ui/src'
+import { Button, Flex, RadioButtonGroup, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -45,6 +44,11 @@ const Select = styled.div`
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 8px;
   width: 100%;
+`
+
+const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
+  opacity: ${({ disabled }) => (disabled ? '0.2' : '1')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
 `
 
 export default function FeeSelector({
@@ -191,9 +195,15 @@ export default function FeeSelector({
               )}
             </Flex>
 
-            <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" $borderRadius="6px">
+            <Button
+              onPress={() => setShowOptions(!showOptions)}
+              variant="default"
+              emphasis="secondary"
+              size="small"
+              fill={false}
+            >
               {showOptions ? <Trans i18nKey="common.hide.button" /> : <Trans i18nKey="common.edit.button" />}
-            </ButtonGray>
+            </Button>
           </Flex>
         </FocusedOutlineCard>
 

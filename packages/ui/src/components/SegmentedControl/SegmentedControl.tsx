@@ -38,12 +38,22 @@ const OptionsSelector = styled(Tabs.List, {
         gap: '$spacing6',
         borderRadius: '$rounded16',
       },
+      smallThumbnail: {
+        height: 34,
+        gap: '$spacing6',
+        borderRadius: '$rounded16',
+      },
       default: {
         height: 34,
         gap: '$gap8',
         borderRadius: '$rounded20',
       },
       large: {
+        height: 42,
+        gap: '$gap12',
+        borderRadius: '$rounded24',
+      },
+      largeThumbnail: {
         height: 42,
         gap: '$gap12',
         borderRadius: '$rounded24',
@@ -106,6 +116,11 @@ const OptionButton = styled(Tabs.Tab, {
         py: '$spacing2',
         px: '$padding6',
       },
+      smallThumbnail: {
+        height: '$spacing24',
+        py: '$spacing2',
+        px: '$gap4',
+      },
       default: {
         height: '$spacing24',
         py: '$spacing2',
@@ -115,6 +130,11 @@ const OptionButton = styled(Tabs.Tab, {
         height: '$spacing32',
         py: '$padding8',
         px: '$padding12',
+      },
+      largeThumbnail: {
+        height: '$spacing32',
+        py: '$padding8',
+        px: '$padding8',
       },
     },
     disabled: {
@@ -137,7 +157,7 @@ export interface SegmentedControlOption<T extends string = string> {
   wrapper?: JSX.Element
 }
 
-type SegmentedControlSize = 'small' | 'default' | 'large'
+type SegmentedControlSize = 'small' | 'smallThumbnail' | 'default' | 'large' | 'largeThumbnail'
 
 interface SegmentedControlProps<T extends string = string> {
   options: readonly SegmentedControlOption<T>[]
@@ -161,7 +181,9 @@ interface SegmentedControlProps<T extends string = string> {
  * For reference, the heights of the container are as follows (each with top and bottom padding of 4px):
  * - small: 30px
  * - default: 34px
+ * - defaultThumbnail: 34px
  * - large: 42px
+ * - largeThumbnail: 42px
  *
  * @param selectedOption - The value of the currently selected option.
  * @param onSelectOption - Callback function to be called when an option is selected.

@@ -7,7 +7,7 @@ import { useCallback, useState } from 'react'
 import { Copy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ClickableStyle } from 'theme/components'
+import { ClickableStyle } from 'theme/components/styles'
 import { useMedia } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
 

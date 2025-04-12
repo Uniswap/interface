@@ -1,5 +1,7 @@
 import { ErrorEvent } from '@sentry/types'
+import { INTERNAL_JSON_RPC_ERROR_CODE } from 'constants/misc'
 import { beforeSend } from 'tracing/errors'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 Object.defineProperty(window.performance, 'getEntriesByType', {
   writable: true,
@@ -191,12 +193,75 @@ describe('beforeSend', () => {
     it('augments the event with an exception from the ProviderRpcError', () => {
       const exception = { mechanism: { handled: false, synthetic: true } }
       const event = { exception: { values: [exception] } } as ErrorEvent
-      const originalException = { code: -32603, message: 'Internal JSON-RPC error', data: '[Object]' }
+      const originalException = {
+        code: INTERNAL_JSON_RPC_ERROR_CODE,
+        message: 'Internal JSON-RPC error',
+        data: '[Object]',
+      }
       beforeSend(event, { originalException })
       expect(event.exception?.values).toEqual([
         exception,
         { type: 'ProviderRpcError', value: `${originalException.code}: ${originalException.message}` },
       ])
+    })
+
+    it('filters errors from testnet chains', () => {
+      const exception = { mechanism: { handled: false, synthetic: true } }
+      const event = {
+        exception: { values: [exception] },
+        contexts: {
+          state: {
+            state: {
+              value: {
+                application: {
+                  chainId: UniverseChainId.Sepolia,
+                },
+              },
+            },
+          },
+        },
+      } as unknown as ErrorEvent
+      const originalException = {
+        code: INTERNAL_JSON_RPC_ERROR_CODE,
+        message: 'Some error on testnet',
+        data: '[Object]',
+      }
+      expect(beforeSend(event, { originalException })).toBeNull()
+    })
+
+    it('does not filter errors from mainnet', () => {
+      const exception = { mechanism: { handled: false, synthetic: true } }
+      const event = {
+        exception: { values: [exception] },
+        contexts: {
+          state: {
+            state: {
+              value: {
+                application: {
+                  chainId: 1, // Mainnet
+                },
+              },
+            },
+          },
+        },
+      } as unknown as ErrorEvent
+      const originalException = {
+        code: INTERNAL_JSON_RPC_ERROR_CODE,
+        message: 'Some error on mainnet',
+        data: '[Object]',
+      }
+      expect(beforeSend(event, { originalException })).not.toBeNull()
+    })
+
+    it('filters eth_requestAccounts prerequisite errors', () => {
+      const exception = { mechanism: { handled: false, synthetic: true } }
+      const event = { exception: { values: [exception] } } as ErrorEvent
+      const originalException = {
+        code: -32002,
+        message: "Must call 'eth_requestAccounts' before other methods",
+        data: '[Object]',
+      }
+      expect(beforeSend(event, { originalException })).toBeNull()
     })
   })
 })

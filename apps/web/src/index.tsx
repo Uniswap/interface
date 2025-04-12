@@ -3,6 +3,7 @@ import 'sideEffects'
 
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
+import { datadogRum } from '@datadog/browser-rum'
 import { PortalProvider } from '@tamagui/portal'
 import { QueryClientProvider } from '@tanstack/react-query'
 import Web3Provider, { Web3ProviderUpdater } from 'components/Web3Provider'
@@ -15,10 +16,11 @@ import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import App from 'pages/App'
-import { PropsWithChildren, StrictMode, useMemo } from 'react'
+import { PropsWithChildren, StrictMode, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { I18nextProvider } from 'react-i18next'
+import { configureReanimatedLogger } from 'react-native-reanimated'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import store from 'state'
@@ -28,22 +30,33 @@ import FiatOnRampTransactionsUpdater from 'state/fiatOnRampTransactions/updater'
 import PoolListUpdater from 'state/lists/poolsList/updater'
 import ListsUpdater from 'state/lists/updater'
 import LogsUpdater from 'state/logs/updater'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
 import { ThemeProvider, ThemedGlobalStyle } from 'theme'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { getEnvName } from 'tracing/env'
+import { config } from 'uniswap/src/config'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n'
+import { initializeDatadog } from 'uniswap/src/utils/datadog'
+import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
+}
+
+if (__DEV__ && !isTestEnv()) {
+  configureReanimatedLogger({
+    strict: false,
+  })
 }
 
 function Updaters() {
@@ -87,20 +100,35 @@ function StatsigProvider({ children }: PropsWithChildren) {
     [account.address],
   )
 
-  if (!process.env.REACT_APP_STATSIG_API_KEY) {
+  useEffect(() => {
+    datadogRum.setUserProperty('connection', {
+      type: account.connector?.type,
+      name: account.connector?.name,
+      rdns: account.connector?.id,
+      address: account.address,
+      status: account.status,
+    })
+  }, [account])
+
+  if (!config.statsigApiKey) {
     throw new Error('REACT_APP_STATSIG_API_KEY is not set')
   }
 
   return (
     <BaseStatsigProvider
       user={statsigUser}
-      sdkKey={process.env.REACT_APP_STATSIG_API_KEY}
+      sdkKey={config.statsigApiKey}
       waitForInitialization={false}
       options={{
         environment: { tier: getEnvName() },
-        api: process.env.REACT_APP_STATSIG_PROXY_URL,
+        api: uniswapUrls.statsigProxyUrl,
         disableAutoMetricsLogging: true,
         disableErrorLogging: true,
+        initCompletionCallback: () => {
+          if (!isDevEnv()) {
+            initializeDatadog('web').catch(() => undefined)
+          }
+        },
       }}
     >
       {children}

@@ -4,7 +4,6 @@ import { Flex } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
-import { SectionHeader } from 'uniswap/src/components/TokenSelector/items/TokenSectionHeader'
 import {
   OnSelectCurrency,
   TokenOptionSection,
@@ -12,12 +11,14 @@ import {
   TokenSectionsHookProps,
 } from 'uniswap/src/components/TokenSelector/types'
 import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import { SectionHeader } from 'uniswap/src/components/lists/TokenSectionHeader'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
 
 function useTokenSectionsForSend({
   activeAccountAddress,
   chainFilter,
-}: TokenSectionsHookProps): GqlResult<TokenSection[]> {
+}: TokenSectionsHookProps): GqlResult<TokenSection<TokenOption>[]> {
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,

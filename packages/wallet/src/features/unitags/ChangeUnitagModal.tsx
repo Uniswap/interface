@@ -1,9 +1,8 @@
 /* eslint-disable complexity */
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled, Person } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -24,7 +23,8 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { changeUnitag } from 'wallet/src/features/unitags/api'
-import { useCanAddressClaimUnitag, useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
+import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
+import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks/useCanClaimUnitagName'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
@@ -43,7 +43,6 @@ export function ChangeUnitagModal({
   onSuccess?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const dispatch = useDispatch()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const account = useAccount(address)
@@ -97,7 +96,7 @@ export function ChangeUnitagModal({
       logger.error(new Error('DeviceId is undefined'), {
         tags: { file: 'ChangeUnitagModal', function: 'onChangeSubmit' },
       })
-      return // Should never hit this condition. DeprecatedButton is disabled if deviceId is undefined
+      return // Should never hit this condition. Button is disabled if deviceId is undefined
     }
 
     onFinishEditing()
@@ -255,22 +254,17 @@ export function ChangeUnitagModal({
               </Text>
             )}
           </Flex>
-          <Flex centered row pt="$spacing4" width="100%">
-            <DeprecatedButton
-              fill
+          <Flex row width="100%" pt="$spacing4">
+            <Button
               isDisabled={isSubmitButtonDisabled}
+              loading={isCheckingUnitag || isChangeResponseLoading}
               testID={TestID.Confirm}
-              theme="primary"
+              variant="branded"
+              emphasis="primary"
               onPress={onPressSaveChanges}
             >
-              {isCheckingUnitag || isChangeResponseLoading ? (
-                <Flex height={fonts.buttonLabel1.lineHeight}>
-                  <ActivityIndicator color={colors.white.val} />
-                </Flex>
-              ) : (
-                t('common.button.save')
-              )}
-            </DeprecatedButton>
+              {t('common.button.save')}
+            </Button>
           </Flex>
         </Flex>
       </Modal>
@@ -311,15 +305,15 @@ function ChangeUnitagConfirmModal({
         <Flex py="$spacing32">
           <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
         </Flex>
-        <Flex centered row gap="$spacing12" width="100%">
+        <Flex row gap="$spacing12" width="100%">
           {isMobileApp && (
-            <DeprecatedButton fill testID={TestID.Remove} theme="secondary" onPress={onClose}>
+            <Button testID={TestID.Remove} size="large" variant="default" emphasis="secondary" onPress={onClose}>
               {t('common.button.back')}
-            </DeprecatedButton>
+            </Button>
           )}
-          <DeprecatedButton fill testID={TestID.Remove} theme="detrimental" onPress={onChangeSubmit}>
+          <Button testID={TestID.Remove} size="large" variant="critical" emphasis="secondary" onPress={onChangeSubmit}>
             {t('common.button.confirm')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
     </Modal>

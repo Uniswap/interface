@@ -13,7 +13,7 @@ export function getOSCollectionsInfiniteQueryOptions(address: string) {
         limit: `${WALLET_COLLECTIONS_PAGINATION_LIMIT}`,
       }
 
-      const res = await OSCollectionsFetcher(params)
+      const res = await OSCollectionsFetcher({ params })
 
       return {
         data: res,

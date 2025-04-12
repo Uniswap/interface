@@ -35,6 +35,14 @@ export const USDC_UNICHAIN_SEPOLIA = new Token(
   'USD//C',
 )
 
+export const USDC_SONEIUM = new Token(
+  UniverseChainId.Soneium,
+  '0xbA9986D2381edf1DA03B0B9c1f8b00dc4AacC369',
+  6,
+  'USDCE',
+  'Soneium Bridged USDC Soneium',
+)
+
 export const DAI = new Token(
   UniverseChainId.Mainnet,
   '0x6B175474E89094C44Da98b954EedeAC495271d0F',
@@ -502,6 +510,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
   [UniverseChainId.Sepolia]: new Token(
     UniverseChainId.Sepolia,
     '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+    18,
+    'WETH',
+    'Wrapped Ether',
+  ),
+  [UniverseChainId.Soneium]: new Token(
+    UniverseChainId.Soneium,
+    '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
     'Wrapped Ether',

@@ -1,18 +1,18 @@
 import React, { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { DeprecatedButton } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
+import { isAmountGreaterThanZero } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -39,23 +39,8 @@ export function SendFormButton({
     exactAmountFiat,
   } = useSendContext()
   const { walletNeedsRestore } = useTransactionModalContext()
-
   const hasValueGreaterThanZero = useMemo(() => {
-    if (exactAmountToken) {
-      return getCurrencyAmount({
-        value: exactAmountToken,
-        valueType: ValueType.Exact,
-        currency: currencyInInfo?.currency,
-      })?.greaterThan(0)
-    }
-    if (exactAmountFiat) {
-      return getCurrencyAmount({
-        value: exactAmountFiat,
-        valueType: ValueType.Exact,
-        currency: currencyInInfo?.currency,
-      })?.greaterThan(0)
-    }
-    return false
+    return isAmountGreaterThanZero(exactAmountToken, exactAmountFiat, currencyInInfo?.currency)
   }, [exactAmountToken, exactAmountFiat, currencyInInfo?.currency])
 
   const isViewOnlyWallet = account.type === AccountType.Readonly
@@ -102,15 +87,18 @@ export function SendFormButton({
     : t('send.button.review')
 
   return (
-    <DeprecatedButton
-      isDisabled={actionButtonDisabled && !isViewOnlyWallet}
-      // Override opacity only for view-only wallets
-      opacity={isViewOnlyWallet ? 0.4 : undefined}
-      size="large"
-      testID={TestID.ReviewTransfer}
-      onPress={onPressReview}
-    >
-      {buttonText}
-    </DeprecatedButton>
+    <Flex centered row>
+      <Button
+        isDisabled={actionButtonDisabled && !isViewOnlyWallet}
+        variant="branded"
+        // Override opacity only for view-only wallets
+        opacity={isViewOnlyWallet ? 0.4 : undefined}
+        size="large"
+        testID={TestID.ReviewTransfer}
+        onPress={onPressReview}
+      >
+        {buttonText}
+      </Button>
+    </Flex>
   )
 }

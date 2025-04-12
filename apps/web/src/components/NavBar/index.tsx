@@ -13,52 +13,56 @@ import Web3Status from 'components/Web3Status'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import styled, { css } from 'lib/styled-components'
+import deprecatedStyled, { css } from 'lib/styled-components'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { useOperatedPools } from 'state/pool/hooks'
 import { Z_INDEX } from 'theme/zIndex'
-import { useMedia } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT, breakpoints } from 'ui/src/theme'
+import { Flex, Nav as TamaguiNav, styled, useMedia } from 'ui/src'
+import { INTERFACE_NAV_HEIGHT, breakpoints, zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-const Nav = styled.nav`
-  padding: 0px 12px;
-  width: 100%;
-  height: ${INTERFACE_NAV_HEIGHT}px;
-  z-index: ${Z_INDEX.sticky};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
+// Flex is position relative by default, we must unset the position on every Flex
+// between the body and search component
+const UnpositionedFlex = styled(Flex, {
+  position: 'unset',
+})
+const Nav = styled(TamaguiNav, {
+  position: 'unset',
+  px: '$padding12',
+  width: '100%',
+  height: INTERFACE_NAV_HEIGHT,
+  zIndex: zIndexes.sticky,
+  justifyContent: 'center',
+})
 const NavItems = css`
   gap: 12px;
   @media screen and (max-width: ${breakpoints.md}px) {
     gap: 4px;
   }
 `
-const Left = styled(Row)`
+const Left = deprecatedStyled(Row)`
   display: flex;
   align-items: center;
   wrap: nowrap;
   ${NavItems}
 `
-const Right = styled(Row)`
+const Right = deprecatedStyled(Row)`
   justify-content: flex-end;
   ${NavItems}
 `
-const SearchContainer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-shrink: 1;
-  justify-content: center;
-  align-self: center;
-  align-items: flex-start;
-  height: 42px;
-`
+const SearchContainer = styled(UnpositionedFlex, {
+  width: 'max-content',
+  flex: 1,
+  flexShrink: 1,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  alignItems: 'flex-start',
+  height: 42,
+})
 
 // TODO: customize
 const SelectedPoolContainer = styled.div`
@@ -134,7 +138,7 @@ export default function Navbar() {
 
   return (
     <Nav>
-      <NavContents>
+      <UnpositionedFlex row centered width="100%">
         <Left>
           <CompanyMenu />
           {areTabsVisible && <Tabs userIsOperator={userIsOperator} />}
@@ -161,7 +165,7 @@ export default function Navbar() {
             <NewUserCTAButton />
           )}
         </Right>
-      </NavContents>
+      </UnpositionedFlex>
     </Nav>
   )
 }

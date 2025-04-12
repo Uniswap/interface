@@ -3,14 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeAllModals } from 'src/features/modals/modalSlice'
-import { DeprecatedButton, Flex, useSporeColors } from 'ui/src'
+import { Button, Flex, useSporeColors } from 'ui/src'
 import { ArrowDownCircle, WalletFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { spacing } from 'ui/src/theme/spacing'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
@@ -97,9 +96,9 @@ export function RestoreWalletModal(): JSX.Element | null {
           subtitleVariant="body3"
         />
         <Flex row>
-          <DeprecatedButton fill testID={TestID.RestoreWallet} theme="primary" size="medium" onPress={onRestore}>
+          <Button variant="branded" emphasis="primary" size="large" onPress={onRestore}>
             {t('common.button.continue')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
     </Modal>

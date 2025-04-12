@@ -4,7 +4,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const { execSync } = require('child_process')
 const { readFileSync } = require('fs')
 const path = require('path')
-const ModuleScopePlugin = require(path.resolve(__dirname, '..', '..','node_modules/react-scripts/node_modules/react-dev-utils/ModuleScopePlugin'))
+const ModuleScopePlugin = require(path.resolve(__dirname, '..', '..','node_modules/react-dev-utils/ModuleScopePlugin'))
 const { IgnorePlugin, ProvidePlugin, DefinePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
@@ -90,6 +90,7 @@ module.exports = {
     plugins: [
       new DefinePlugin({
         __DEV__: isDev,
+        'process.env.EXPO_OS': '"web"',
       }),
       // Webpack 5 does not polyfill node globals, so we do so for those necessary:
       new ProvidePlugin({
@@ -334,6 +335,12 @@ module.exports = {
 
       // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true })
+
+      // Add rules to ignore `*.stories.*` and `*.mdx` files during the build process
+      webpackConfig.module.rules.push({
+        test: /\.stories\.[tj]sx?$|\.mdx$/,
+        use: 'ignore-loader',
+      })
 
       return webpackConfig
     },

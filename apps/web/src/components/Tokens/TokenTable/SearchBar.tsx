@@ -6,11 +6,13 @@ import { exploreSearchStringAtom } from 'components/Tokens/state'
 import useDebounce from 'hooks/useDebounce'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled from 'lib/styled-components'
+import { ExploreTab } from 'pages/Explore'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, useSporeColors } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+
 const ICON_SIZE = '20px'
 
 const SearchInput = styled.input<{ isOpen?: boolean }>`
@@ -92,16 +94,22 @@ export default function SearchBar({ tab }: { tab?: string }) {
     }
   }
 
+  const placeholdersText: Record<string, string> = {
+    [ExploreTab.Tokens]: t('tokens.table.search.placeholder.tokens'),
+    [ExploreTab.Pools]: t('tokens.table.search.placeholder.pools'),
+    [ExploreTab.Transactions]: t('tokens.table.search.placeholder.transactions'),
+  }
+
   return (
     <Trace
       logFocus
       eventOnTrigger={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
       element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
     >
-      <Flex position="relative" height="100%" flex={1}>
+      <Flex centered flex={1}>
         <SearchIcon
           fill={colors.neutral1.val}
-          style={{ position: 'absolute', left: '12px', top: '10px' }}
+          style={{ position: 'absolute', left: '12px' }}
           width={ICON_SIZE}
           height={ICON_SIZE}
           pointerEvents="none"
@@ -109,9 +117,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
         <SearchInput
           data-testid="explore-tokens-search-input"
           type="search"
-          placeholder={
-            tab === 'tokens' ? t('tokens.table.search.placeholder.tokens') : t('tokens.table.search.placeholder.pools')
-          }
+          placeholder={placeholdersText[tab ?? ExploreTab.Tokens]}
           id="searchBar"
           autoComplete="off"
           value={localFilterString}

@@ -20,13 +20,24 @@ jest.mock('src/lib/RNEthersRs')
 // Mock OneSignal package
 jest.mock('react-native-onesignal', () => {
   return {
-    setLogLevel: jest.fn(),
-    setAppId: jest.fn(),
-    promptForPushNotificationsWithUserResponse: jest.fn(),
-    setNotificationWillShowInForegroundHandler: jest.fn(),
-    setNotificationOpenedHandler: jest.fn(),
-    sendTag: jest.fn(),
-    getDeviceState: () => ({ userId: 'dummyUserId', pushToken: 'dummyPushToken' }),
+    OneSignal: {
+      Debug: {
+        setLogLevel: jest.fn(),
+      },
+      initialize: jest.fn(),
+      Notifications: {
+        addEventListener: jest.fn(),
+        requestPermission: jest.fn(),
+      },
+      User: {
+        addTag: jest.fn(),
+        addTags: jest.fn(),
+        getOnesignalId: jest.fn(() => 'dummyUserId'),
+        pushSubscription: {
+          getTokenAsync: jest.fn(() => 'dummyPushToken'),
+        }
+      },
+    }
   }
 })
 

@@ -10,7 +10,7 @@ import { Currency, NftItemScreenQuery } from 'uniswap/src/data/graphql/uniswap-d
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
-export type Collection = NonNullable<
+type Collection = NonNullable<
   NonNullable<NonNullable<NftItemScreenQuery['nftAssets']>>['edges'][0]
 >['node']['collection']
 

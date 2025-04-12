@@ -1,24 +1,29 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
+
+const MODAL_CLOSE_WAIT_TIME = 300
 
 type AccountCardItemProps = {
   address: Address
@@ -73,8 +78,16 @@ export function AccountCardItem({
 }: AccountCardItemProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const { defaultChainId } = useEnabledChains()
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId })?.name
+  const { unitag } = useUnitagByAddress(address)
 
-  const onPressCopyAddress = async (): Promise<void> => {
+  const addressToAccount = useAccounts()
+  const selectedAccount = addressToAccount[address]
+
+  const onlyLabeledWallet = ensName === null && unitag?.username === undefined
+
+  const onPressCopyAddress = useCallback(async (): Promise<void> => {
     await setClipboard(address)
     dispatch(
       pushNotification({
@@ -86,46 +99,99 @@ export function AccountCardItem({
       element: ElementName.CopyAddress,
       modal: ModalName.AccountSwitcher,
     })
-  }
+  }, [address, dispatch])
 
-  const onPressWalletSettings = (): void => {
+  const onPressEditWalletSettings = useCallback(() => {
     dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-    navigate(MobileScreens.SettingsStack, {
-      screen: MobileScreens.SettingsWallet,
-      params: { address },
-    })
-  }
 
-  const onPressRemoveWallet = (): void => {
+    if (selectedAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet) {
+      dispatch(openModal({ name: ModalName.EditProfileSettingsModal, initialState: { address } }))
+    } else {
+      dispatch(openModal({ name: ModalName.EditLabelSettingsModal, initialState: { address } }))
+    }
+  }, [selectedAccount?.type, onlyLabeledWallet, address, dispatch])
+
+  const onPressConnectionSettings = useCallback(() => {
+    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
+
+    //Wait 300ms to open the the connection Modal and avoid overlapping animation
+    setTimeout(() => {
+      dispatch(openModal({ name: ModalName.ConnectionsDappListModal, initialState: { address } }))
+    }, MODAL_CLOSE_WAIT_TIME)
+  }, [address, dispatch])
+
+  const onPressRemoveWallet = useCallback(() => {
     dispatch(closeModal({ name: ModalName.AccountSwitcher }))
     dispatch(openModal({ name: ModalName.RemoveWallet, initialState: { address } }))
-  }
+  }, [address, dispatch])
 
-  const menuActions = useMemo(() => {
-    return [
-      { title: t('account.wallet.action.copy'), systemIcon: 'doc.on.doc' },
-      { title: t('account.wallet.action.settings'), systemIcon: 'gearshape' },
-      { title: t('account.wallet.button.remove'), systemIcon: 'trash', destructive: true },
-    ]
-  }, [t])
+  const menuActions = useMemo(
+    () => [
+      {
+        title: t('account.wallet.action.copy'),
+        systemIcon: 'doc.on.doc',
+        onPress: onPressCopyAddress,
+      },
+      ...(selectedAccount?.type === AccountType.Readonly
+        ? [
+            {
+              title: t('settings.setting.wallet.action.editLabel'),
+              systemIcon: 'square.and.pencil',
+              onPress: onPressEditWalletSettings,
+            },
+          ]
+        : []),
+
+      ...(selectedAccount?.type === AccountType.Readonly
+        ? [
+            {
+              title: t('account.wallet.button.remove'),
+              systemIcon: 'trash',
+              destructive: true,
+              onPress: onPressRemoveWallet,
+            },
+          ]
+        : []),
+
+      ...(selectedAccount?.type === AccountType.SignerMnemonic
+        ? [
+            {
+              title: onlyLabeledWallet
+                ? t('settings.setting.wallet.action.editLabel')
+                : t('settings.setting.wallet.action.editProfile'),
+              systemIcon: 'square.and.pencil',
+              onPress: onPressEditWalletSettings,
+            },
+            {
+              title: t('account.wallet.action.manageConnections'),
+              systemIcon: 'globe',
+              onPress: onPressConnectionSettings,
+            },
+            {
+              title: t('account.wallet.button.remove'),
+              systemIcon: 'trash',
+              destructive: true,
+              onPress: onPressRemoveWallet,
+            },
+          ]
+        : []),
+    ],
+    [
+      t,
+      selectedAccount,
+      onlyLabeledWallet,
+      onPressCopyAddress,
+      onPressEditWalletSettings,
+      onPressConnectionSettings,
+      onPressRemoveWallet,
+    ],
+  )
 
   return (
     <ContextMenu
       actions={menuActions}
       onPress={async (e): Promise<void> => {
-        // Emitted index based on order of menu action array
-        // Copy address
-        if (e.nativeEvent.index === 0) {
-          await onPressCopyAddress()
-        }
-        // Navigate to settings
-        if (e.nativeEvent.index === 1) {
-          onPressWalletSettings()
-        }
-        // Remove wallet
-        if (e.nativeEvent.index === 2) {
-          onPressRemoveWallet()
-        }
+        await menuActions[e.nativeEvent.index]?.onPress?.()
       }}
     >
       <TouchableArea
@@ -143,7 +209,7 @@ export function AccountCardItem({
               gapBetweenLines="$spacing2"
               notificationsBadgeContainer={NotificationsBadgeContainer}
               showViewOnlyBadge={isViewOnly}
-              size={iconSizes.icon36}
+              size={iconSizes.icon32}
             />
           </Flex>
           <PortfolioValue

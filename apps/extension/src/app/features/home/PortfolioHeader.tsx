@@ -3,8 +3,6 @@ import { memo, useEffect, useState } from 'react'
 import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
-import { useDappConnectedAccounts } from 'src/app/features/dapp/hooks'
-import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { ConnectPopupContent } from 'src/app/features/popups/ConnectPopup'
 import { selectPopupState } from 'src/app/features/popups/selectors'
 import { PopupName, closePopup, openPopup } from 'src/app/features/popups/slice'
@@ -118,7 +116,6 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
   }
 
   const { isConnected, lastChainId, dappUrl, dappIconUrl } = useDappContext()
-  const connectedAccounts = useDappConnectedAccounts(dappUrl)
   const showConnectionStatus = isConnected || dappUrl.startsWith('http://') || dappUrl.startsWith('https://')
 
   const toggleConnectPopup = (): void => {
@@ -201,15 +198,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
                 shadowRadius={POPUP_SHADOW_RADIUS}
               >
                 <Popover.Arrow backgroundColor="transparent" />
-                {isConnected ? (
-                  <SwitchNetworksModal />
-                ) : (
-                  <ConnectPopupContent
-                    asPopover
-                    showConnectButton={connectedAccounts.length > 0 && !isConnected}
-                    onClose={(): void => onClosePopup()}
-                  />
-                )}
+                <ConnectPopupContent asPopover onClose={onClosePopup} />
               </Popover.Content>
             </Popover>
           )}

@@ -2,22 +2,17 @@ import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-eve
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonSecondary } from 'components/Button/buttons'
-import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
+import StatusIcon from 'components/Identicon/StatusIcon'
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
-import { RowBetween } from 'components/deprecated/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
-import { darken } from 'polished'
-import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { RefObject, forwardRef, useCallback, useEffect, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAppSelector } from 'state/hooks'
-import { flexRowNoWrap } from 'theme/styles'
-import { Text } from 'ui/src'
+import { Button, ButtonProps, Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { breakpoints } from 'ui/src/theme'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
@@ -27,78 +22,36 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isIFramed } from 'utils/isIFramed'
 
-// https://stackoverflow.com/a/31617326
-const FULL_BORDER_RADIUS = 9999
-
-const Web3StatusGeneric = styled(ButtonSecondary)`
-  ${flexRowNoWrap};
-  width: 100%;
-  align-items: center;
-  padding: 0.5rem 0.25rem;
-  border-radius: ${FULL_BORDER_RADIUS}px;
-  cursor: pointer;
-  user-select: none;
-  height: 36px;
-  margin-right: 2px;
-  margin-left: 2px;
-  :focus {
-    outline: none;
-  }
+const TextStyled = styled.span<{ marginRight?: number }>`
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1rem;
+  width: fit-content;
+  font-weight: 485;
+  margin-right: ${({ marginRight = 0 }) => marginRight}px;
+  color: ${({ theme }) => theme.neutral1};
 `
 
-const Web3StatusConnectWrapper = styled.div`
-  ${flexRowNoWrap};
-  align-items: center;
-  background-color: ${({ theme }) => theme.accent2};
-  border-radius: ${FULL_BORDER_RADIUS}px;
-  border: none;
-  padding: 0;
-  height: 40px;
-
-  color: ${({ theme }) => theme.accent1};
-  :hover {
-    color: ${({ theme }) => theme.accent1};
-    stroke: ${({ theme }) => theme.accent2};
-    background-color: ${({ theme }) => darken(0.015, theme.accent2)};
-  }
-
-  transition: ${({
-    theme: {
-      transition: { duration, timing },
-    },
-  }) => `${duration.fast} color ${timing.in}`};
-`
-
-const Web3StatusConnected = styled(Web3StatusGeneric)<{
-  pending?: boolean
-}>`
-  background-color: ${({ pending, theme }) => (pending ? theme.accent1 : theme.surface1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.accent1 : theme.surface1)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.neutral1)};
-  :hover,
-  :focus {
-    border: 1px solid ${({ theme }) => theme.surface2};
-    background-color: ${({ pending, theme }) => (pending ? theme.accent2 : theme.surface2)};
-
-    :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.accent1) : darken(0.1, theme.surface3))};
-    }
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xl}px`}) {
-    width: ${({ pending }) => !pending && '36px'};
-
-    ${IconWrapper} {
-      margin-right: 0;
-    }
-  }
-`
-
-const Web3StatusConnecting = styled(Web3StatusConnected)`
-  &:disabled {
-    opacity: 1;
-  }
-`
+const Web3StatusGeneric = forwardRef<HTMLDivElement, ButtonProps>(function Web3StatusGeneric(
+  { children, ...props },
+  ref,
+) {
+  return (
+    <Flex row ref={ref}>
+      <Button
+        size="xsmall"
+        emphasis="text-only"
+        userSelect="none"
+        hoverStyle={{ backgroundColor: '$surface1Hovered' }}
+        {...props}
+      >
+        {children}
+      </Button>
+    </Flex>
+  )
+})
 
 const AddressAndChevronContainer = styled.div<{ $loading?: boolean }>`
   display: flex;
@@ -110,30 +63,10 @@ const AddressAndChevronContainer = styled.div<{ $loading?: boolean }>`
   }
 `
 
-const StyledText = styled.span`
-  flex: 1 1 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0 2px;
-  font-size: 1rem;
-  width: fit-content;
-  font-weight: 485;
-`
-
-const StyledConnectButton = styled.button`
-  background-color: transparent;
-  border: none;
-  border-top-left-radius: ${FULL_BORDER_RADIUS}px;
-  border-bottom-left-radius: ${FULL_BORDER_RADIUS}px;
-  cursor: pointer;
-  font-weight: 535;
-  font-size: 16px;
-  padding: 10px 12px;
-  color: inherit;
-`
-
-function ExistingUserCTAButton() {
+const ExistingUserCTAButton = forwardRef<HTMLDivElement, { onPress: () => void }>(function ExistingUserCTAButton(
+  { onPress },
+  ref,
+) {
   const { t } = useTranslation()
 
   const { value: accountsCTAExperimentGroup } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)
@@ -143,13 +76,20 @@ function ExistingUserCTAButton() {
     accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount && !isEmbeddedWalletEnabled
 
   return (
-    <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
-      <Text variant="buttonLabel3" color="theme.accent1" whiteSpace="nowrap">
-        {isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connect.button')}
-      </Text>
-    </StyledConnectButton>
+    <Button
+      fill={false}
+      size="small"
+      variant="branded"
+      emphasis="secondary"
+      tabIndex={0}
+      data-testid="navbar-connect-wallet"
+      ref={ref}
+      onPress={onPress}
+    >
+      {isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connect.button')}
+    </Button>
   )
-}
+})
 
 export const Web3StatusRef = atom<RefObject<HTMLElement> | undefined>(undefined)
 
@@ -178,63 +118,53 @@ function Web3StatusInner() {
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   if (((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) || isExperimentGroupNameLoading) {
     return (
-      <Web3StatusConnecting disabled={true} onClick={handleWalletDropdownClick} ref={ref}>
-        <IconWrapper size={24}>
-          <LoaderV3 size="24px" />
-        </IconWrapper>
+      <Web3StatusGeneric loading isDisabled onPress={handleWalletDropdownClick} ref={ref}>
         <AddressAndChevronContainer $loading={true}>
-          <StyledText>{accountIdentifier}</StyledText>
-          {hasUnitag && <Unitag size={18} />}
+          <TextStyled marginRight={hasUnitag ? 8 : undefined}>{accountIdentifier}</TextStyled>
+          {hasUnitag ? <Unitag size={18} /> : undefined}
         </AddressAndChevronContainer>
-      </Web3StatusConnecting>
+      </Web3StatusGeneric>
     )
   }
 
   if (account.address) {
     return (
       <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'open' }}>
-        <Web3StatusConnected
-          disabled={Boolean(switchingChain)}
+        <Web3StatusGeneric
+          isDisabled={Boolean(switchingChain)}
           data-testid="web3-status-connected"
-          onClick={handleWalletDropdownClick}
-          pending={hasPendingActivity}
+          onPress={handleWalletDropdownClick}
+          loading={hasPendingActivity}
           ref={ref}
+          icon={!hasPendingActivity ? <StatusIcon size={24} showMiniIcons={false} /> : undefined}
         >
-          {!hasPendingActivity && <StatusIcon size={24} showMiniIcons={false} />}
           {hasPendingActivity ? (
-            <RowBetween>
-              <StyledText>
-                <Trans i18nKey="activity.pending" values={{ pendingActivityCount }} />
-              </StyledText>{' '}
-              <Loader stroke="white" />
-            </RowBetween>
+            <TextStyled>
+              <Trans i18nKey="activity.pending" values={{ pendingActivityCount }} />
+            </TextStyled>
           ) : (
             <AddressAndChevronContainer>
-              <StyledText>{accountIdentifier}</StyledText>
+              <TextStyled marginRight={hasUnitag ? 8 : undefined}>{accountIdentifier}</TextStyled>
               {hasUnitag && <Unitag size={18} />}
             </AddressAndChevronContainer>
           )}
-        </Web3StatusConnected>
-      </Trace>
-    )
-  } else {
-    return (
-      <Trace
-        logPress
-        eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-        element={InterfaceElementName.CONNECT_WALLET_BUTTON}
-      >
-        <Web3StatusConnectWrapper
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
-          onClick={handleWalletDropdownClick}
-          ref={ref}
-        >
-          <ExistingUserCTAButton />
-        </Web3StatusConnectWrapper>
+        </Web3StatusGeneric>
       </Trace>
     )
   }
+
+  return (
+    <Trace
+      logPress
+      eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+      element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+    >
+      {/* eslint-disable-next-line react/forbid-elements */}
+      <div onKeyDown={(e) => e.key === 'Enter' && handleWalletDropdownClick()}>
+        <ExistingUserCTAButton ref={ref} onPress={handleWalletDropdownClick} />
+      </div>
+    </Trace>
+  )
 }
 
 export default function Web3Status() {

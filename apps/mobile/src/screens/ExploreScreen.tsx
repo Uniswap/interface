@@ -18,6 +18,10 @@ import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
+import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
 import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -49,6 +53,7 @@ export function ExploreScreen(): JSX.Element {
   const listRef = useAnimatedRef<FlatList>()
   useScrollToTop(listRef)
 
+  const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedSearchQuery = useDebounce(searchQuery).trim()
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
@@ -115,7 +120,21 @@ export function ExploreScreen(): JSX.Element {
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flexStyles.fill}>
           <Flex p="$spacing4" />
-          {debouncedSearchQuery.length === 0 ? (
+          {searchRevampEnabled ? (
+            // TODO(WEB-6768): integrate SearchModalList into mobile ExploreScreen
+            searchQuery && searchQuery.length > 0 ? (
+              <SearchModalResultsList
+                chainFilter={selectedChain}
+                debouncedParsedSearchFilter={debouncedSearchQuery}
+                debouncedSearchFilter={debouncedSearchQuery}
+                parsedChainFilter={selectedChain}
+                searchFilter={searchQuery ?? ''}
+                onSelectCurrency={() => {}}
+              />
+            ) : (
+              <SearchModalNoQueryList chainFilter={selectedChain} onSelectCurrency={() => {}} />
+            )
+          ) : debouncedSearchQuery.length === 0 ? (
             // Mimic ScrollView behavior with FlatList
             // Needs to be from gesture handler to work on android within BottomSheelModal
             <FlatList

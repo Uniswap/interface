@@ -1,4 +1,4 @@
-let { crossPlatform: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
+let { interface: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
 
 module.exports = {
   extends: [require.resolve('./base.js'), 'plugin:react/recommended', 'plugin:react-hooks/recommended'],
@@ -14,10 +14,8 @@ module.exports = {
     },
   },
   rules: {
-    curly: 'error',
+    'import/no-unused-modules': ['error', { unusedExports: true }],
     'react/react-in-jsx-scope': 'off',
-    'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
-    'local-rules/no-unwrapped-t': ['error', { blockedElements: ['Flex', 'AnimatedFlex', 'TouchableArea', 'Trace'] }],
   },
   settings: {
     react: {

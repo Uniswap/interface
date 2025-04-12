@@ -84,23 +84,6 @@ jest.mock('@popperjs/core', () => {
   }
 })
 
-jest.mock('@datadog/browser-rum', () => ({
-  init: jest.fn(),
-  setUser: jest.fn(),
-  clearUser: jest.fn(),
-  addAction: jest.fn(),
-  addError: jest.fn(),
-}))
-
-jest.mock('@datadog/browser-logs', () => ({
-  init: jest.fn(),
-  setUser: jest.fn(),
-  setUserProperty: jest.fn(),
-  clearUser: jest.fn(),
-  addAction: jest.fn(),
-  addError: jest.fn(),
-}))
-
 jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
 jest.mock('@web3-react/core', () => {

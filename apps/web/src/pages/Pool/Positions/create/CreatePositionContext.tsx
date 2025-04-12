@@ -1,4 +1,3 @@
-/* eslint-disable-next-line no-restricted-imports */
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { DepositContextType, DepositState } from 'components/Liquidity/types'
@@ -26,6 +25,8 @@ export const CreatePositionContext = React.createContext<CreatePositionContextTy
     currencies: [undefined, undefined],
     isPoolOutOfSync: false,
     refetchPoolData: () => undefined,
+    defaultInitialPrice: undefined,
+    isDefaultInitialPriceLoading: false,
   },
   dynamicFeeTierSpeedbumpData: {
     open: false,

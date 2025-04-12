@@ -9,7 +9,7 @@ import { Dispatch, SetStateAction, memo, useCallback, useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { EllipsisTamaguiStyle } from 'theme/components'
+import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { ElementAfterText, Flex, FlexProps, ScrollView, styled, useMedia } from 'ui/src'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
@@ -75,7 +75,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
   )
 
   return (
-    <div>
+    <Flex>
       <Trace modal={ModalName.NetworkSelector}>
         <DropdownSelector
           isOpen={isMenuOpen}
@@ -96,6 +96,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           buttonStyle={{ height: 40 }}
           dropdownStyle={StyledDropdown}
           adaptToSheet
+          allowFlip
           alignRight={!media.lg}
         >
           <ScrollView px="$spacing8">
@@ -116,7 +117,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           </ScrollView>
         </DropdownSelector>
       </Trace>
-    </div>
+    </Flex>
   )
 }
 

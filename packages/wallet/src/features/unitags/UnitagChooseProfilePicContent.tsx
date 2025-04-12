@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
-import { DeprecatedButton, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
-import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -14,7 +13,7 @@ import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSel
 import { ChoosePhotoOptionsModal, ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
-import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useClaimUnitag } from 'wallet/src/features/unitags/hooks/useClaimUnitag'
 
 function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): UnitagClaimSource {
   switch (entryPoint) {
@@ -49,7 +48,6 @@ export function UnitagChooseProfilePicContent({
   onContinue: (imageUri: string | undefined) => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const { data: ensName } = useENSName(address)
   const claimUnitag = useClaimUnitag()
   const isDarkMode = useIsDarkMode()
@@ -133,21 +131,19 @@ export function UnitagChooseProfilePicContent({
         )}
       </Flex>
       {isMobileApp && <Flex fill />}
-      <DeprecatedButton
-        isDisabled={!!claimError || isClaiming}
-        size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
-        testID={TestID.Continue}
-        theme="primary"
-        onPress={onPressContinue}
-      >
-        {isClaiming ? (
-          <Flex height={fonts.buttonLabel1.lineHeight}>
-            <ActivityIndicator color={colors.white.val} />
-          </Flex>
-        ) : (
-          t('common.button.continue')
-        )}
-      </DeprecatedButton>
+      <Flex row>
+        <Button
+          loading={isClaiming}
+          testID={TestID.Continue}
+          isDisabled={!!claimError || isClaiming}
+          size="medium"
+          variant="branded"
+          onPress={onPressContinue}
+        >
+          {t('common.button.continue')}
+        </Button>
+      </Flex>
+
       {showModal && (
         <ChoosePhotoOptionsModal
           address={address}

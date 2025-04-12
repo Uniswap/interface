@@ -7,7 +7,7 @@ import {
   setAuthenticationStatus as setAuthenticationStatusAction,
 } from 'src/features/biometrics/biometricsSlice'
 
-export interface UseBiometricsStateResult {
+interface UseBiometricsStateResult {
   authenticationStatus: BiometricAuthenticationStatus
   setAuthenticationStatus: (value: BiometricAuthenticationStatus) => void
   deviceSupportsBiometrics: boolean | undefined

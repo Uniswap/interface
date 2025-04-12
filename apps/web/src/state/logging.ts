@@ -30,7 +30,6 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
       application: {
         chainId: application.chainId,
         openModal: application.openModal,
-        popupList: application.popupList,
       },
       user: {
         lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,

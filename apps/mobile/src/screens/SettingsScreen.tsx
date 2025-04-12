@@ -38,13 +38,13 @@ import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import {
   Bell,
   Chart,
+  Cloud,
   Coins,
-  Feedback,
-  Key,
+  FileListLock,
   Language,
+  LikeSquare,
   LineChartDots,
-  OSDynamicCloudIcon,
-  ShieldQuestion,
+  TouchId,
   WavePulse,
   Wrench,
 } from 'ui/src/components/icons'
@@ -53,8 +53,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import { setHideSmallBalances, setHideSpamTokens, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
+import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
@@ -85,20 +84,6 @@ export function SettingsScreen(): JSX.Element {
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { originName: currentLanguage } = useCurrentLanguageInfo()
-
-  const hideSmallBalances = useHideSmallBalancesSetting()
-  const onToggleHideSmallBalances = useCallback(() => {
-    setTimeout(() => {
-      dispatch(setHideSmallBalances(!hideSmallBalances))
-    }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, hideSmallBalances])
-
-  const hideSpamTokens = useHideSpamTokensSetting()
-  const onToggleHideSpamTokens = useCallback(() => {
-    setTimeout(() => {
-      dispatch(setHideSpamTokens(!hideSpamTokens))
-    }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, hideSpamTokens])
 
   const { hapticsEnabled, setHapticsEnabled } = useHapticFeedback()
 
@@ -181,7 +166,7 @@ export function SettingsScreen(): JSX.Element {
         subTitle: t('settings.section.preferences'),
         data: [
           {
-            screen: MobileScreens.SettingsAppearance,
+            modal: ModalName.SettingsAppearance,
             text: t('settings.setting.appearance.title'),
             currentSetting:
               currentAppearanceSetting === 'system'
@@ -216,17 +201,9 @@ export function SettingsScreen(): JSX.Element {
             },
           },
           {
+            modal: ModalName.PortfolioBalanceModal,
             text: t('settings.setting.smallBalances.title'),
             icon: <Chart {...iconProps} />,
-            isToggleEnabled: hideSmallBalances && !isTestnetModeEnabled,
-            disabled: isTestnetModeEnabled,
-            onToggle: onToggleHideSmallBalances,
-          },
-          {
-            text: t('settings.setting.unknownTokens.title'),
-            icon: <ShieldQuestion {...iconProps} />,
-            isToggleEnabled: hideSpamTokens,
-            onToggle: onToggleHideSpamTokens,
           },
           {
             text: t('settings.setting.hapticTouch.title'),
@@ -234,7 +211,6 @@ export function SettingsScreen(): JSX.Element {
             isToggleEnabled: hapticsEnabled,
             onToggle: onToggleEnableHaptics,
           },
-
           {
             text: t('settings.setting.wallet.testnetMode.title'),
             icon: <Wrench {...iconProps} />,
@@ -250,17 +226,23 @@ export function SettingsScreen(): JSX.Element {
           ...(deviceSupportsBiometrics
             ? [
                 {
-                  screen: MobileScreens.SettingsBiometricAuth as MobileScreens.SettingsBiometricAuth,
+                  modal: ModalName.BiometricsModal,
                   isHidden: !isTouchIdSupported && !isFaceIdSupported,
                   text: isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod,
-                  icon: isTouchIdSupported ? <FingerprintIcon {...svgProps} /> : <FaceIdIcon {...svgProps} />,
+                  icon: isAndroid ? (
+                    <TouchId size="$icon.20" />
+                  ) : isTouchIdSupported ? (
+                    <FingerprintIcon {...svgProps} />
+                  ) : (
+                    <FaceIdIcon {...svgProps} />
+                  ),
                 },
               ]
             : []),
           {
             screen: MobileScreens.SettingsViewSeedPhrase,
             text: t('settings.setting.recoveryPhrase.title'),
-            icon: <Key {...iconProps} />,
+            icon: <FileListLock {...iconProps} />,
             screenProps: { address: signerAccount?.address ?? '', walletNeedsRestore },
             isHidden: noSignerAccountImported,
           },
@@ -282,11 +264,11 @@ export function SettingsScreen(): JSX.Element {
             text: t('settings.setting.backup.selected', {
               cloudProviderName: getCloudProviderName(),
             }),
-            icon: <OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
+            icon: <Cloud color="$neutral2" size="$icon.24" />,
             isHidden: noSignerAccountImported,
           },
           {
-            screen: MobileScreens.SettingsPrivacy,
+            modal: ModalName.PermissionsModal,
             text: t('settings.setting.permissions.title'),
             icon: <LineChartDots {...iconProps} />,
           },
@@ -302,7 +284,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('settings.action.feedback'),
             },
             text: t('settings.action.feedback'),
-            icon: <Feedback color="$neutral2" size="$icon.24" />,
+            icon: <LikeSquare color="$neutral2" size="$icon.24" />,
           },
           {
             screen: MobileScreens.WebView,
@@ -358,10 +340,6 @@ export function SettingsScreen(): JSX.Element {
     currentAppearanceSetting,
     currentFiatCurrencyInfo.code,
     currentLanguage,
-    hideSmallBalances,
-    onToggleHideSmallBalances,
-    hideSpamTokens,
-    onToggleHideSpamTokens,
     hapticsEnabled,
     onToggleEnableHaptics,
     noSignerAccountImported,
@@ -403,12 +381,12 @@ function keyExtractor(_item: SectionData, index: number): string {
 }
 
 function renderSectionFooter(): JSX.Element {
-  return <Flex pt="$spacing24" />
+  return <Flex pt="$spacing8" />
 }
 
 function renderSectionHeader({ section }: { section: SettingsSection }): JSX.Element {
   return section.subTitle ? (
-    <Flex backgroundColor="$surface1" py="$spacing12">
+    <Flex backgroundColor="$surface1" py="$spacing8">
       <Text color="$neutral2" variant="body1">
         {section.subTitle}
       </Text>

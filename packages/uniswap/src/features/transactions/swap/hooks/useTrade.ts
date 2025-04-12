@@ -1,5 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
 import { TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
@@ -10,6 +10,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks/useIndicativeTrade'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import {
   SWAP_GAS_URGENCY_OVERRIDE,
   getTokenAddressForApi,
@@ -60,6 +61,8 @@ export function useTrade({
     currencyIn && currencyOut && areCurrencyIdsEqual(currencyId(currencyIn), currencyId(currencyOut))
 
   const tokenInChainId = toTradingApiSupportedChainId(currencyIn?.chainId)
+  const v4SwapEnabled = useV4SwapEnabled(tokenInChainId)
+
   const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
   const tokenInAddress = getTokenAddressForApi(currencyIn)
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
@@ -94,8 +97,6 @@ export function useTrade({
     isZeroAmount ||
     currencyInEqualsCurrencyOut
 
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
-
   const quoteRequestArgs = useMemo((): Parameters<typeof useTradingApiQuoteQuery>[0]['params'] | undefined => {
     if (skipQuery) {
       return undefined
@@ -111,7 +112,7 @@ export function useTrade({
       tokenOutChainId,
       type: requestTradeType,
       urgency: SWAP_GAS_URGENCY_OVERRIDE,
-      v4Enabled,
+      v4Enabled: v4SwapEnabled,
       ...routingParams,
       ...slippageParams,
     }
@@ -129,7 +130,7 @@ export function useTrade({
     tokenInChainId,
     tokenOutAddress,
     tokenOutChainId,
-    v4Enabled,
+    v4SwapEnabled,
   ])
 
   /***** Fetch quote from trading API  ******/
@@ -140,7 +141,6 @@ export function useTrade({
   const response = useTradingApiQuoteQuery({
     params: quoteRequestArgs,
     refetchInterval: internalPollInterval,
-    staleTime: internalPollInterval,
     // We set the `gcTime` to 15 seconds longer than the refetch interval so that there's more than enough time for a refetch to complete before we clear the stale data.
     // If the user loses internet connection (or leaves the app and comes back) for longer than this,
     // then we clear stale data and show a big loading spinner in the swap review screen.
@@ -150,7 +150,27 @@ export function useTrade({
     retry: 1,
   })
 
-  const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt } = response
+  const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt, fetchStatus } = response
+
+  // Measure and report quote latency
+  const [lastReqStart, setLastReqStart] = useState<number | undefined>()
+  useEffect(() => {
+    // Don't log USD quotes
+    if (isUSDQuote) {
+      return
+    }
+
+    // record start of fetching
+    if (fetchStatus === 'fetching' && lastReqStart === undefined) {
+      setLastReqStart(Date.now())
+    }
+
+    // log end of fetching
+    if (fetchStatus === 'idle' && lastReqStart) {
+      logger.info('useTrade', 'useTrade', 'Quote Latency', { quoteLatency: Date.now() - lastReqStart })
+      setLastReqStart(undefined)
+    }
+  }, [fetchStatus, lastReqStart, isUSDQuote])
 
   const errorRef = useRef<Error | null>(error)
 

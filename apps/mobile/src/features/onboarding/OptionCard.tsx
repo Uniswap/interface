@@ -66,8 +66,8 @@ export function OptionCard({
                     centered
                     backgroundColor="$DEP_magentaDark"
                     borderRadius="$rounded8"
-                    p="$spacing8"
-                    alignSelf="flex-start"
+                    p="$spacing6"
+                    px="$spacing8"
                     maxWidth="30%"
                   >
                     <Text textAlign="center" color="$accent1" variant="buttonLabel3">

@@ -3,34 +3,20 @@ import { UniIcon as NavIcon } from 'components/Logo/UniIcon'
 import { MenuDropdown } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { MobileMenuDrawer } from 'components/NavBar/CompanyMenu/MobileMenuDrawer'
 import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
-import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Popover, Text, useIsTouchDevice, useMedia } from 'ui/src'
+import { Flex, Popover, Text, styled, useIsTouchDevice, useMedia } from 'ui/src'
 import { Hamburger } from 'ui/src/components/icons/Hamburger'
 
-const ArrowDown = styled(ArrowChangeDown)<{ $isActive: boolean }>`
-  height: 100%;
-  color: ${({ $isActive, theme }) => ($isActive ? theme.neutral1 : theme.neutral2)};
-`
-const Trigger = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 8px;
-  cursor: pointer;
-  &:hover {
-    ${ArrowDown} {
-      color: ${({ theme }) => theme.neutral1} !important;
-    }
-  }
-`
-const UniIcon = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`
+const ArrowDownWrapper = styled(Text, {
+  color: '$neutral2',
+  '$group-hover': { color: '$neutral1' },
+  variants: {
+    open: {
+      true: { color: '$neutral1' },
+    },
+  },
+})
 
 export function CompanyMenu() {
   const theme = useTheme()
@@ -58,18 +44,30 @@ export function CompanyMenu() {
   return (
     <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
       <Popover.Trigger data-testid="nav-company-menu">
-        <Trigger>
-          <UniIcon onClick={handleLogoClick} data-testid="nav-uniswap-logo">
+        <Flex
+          row
+          alignItems="center"
+          gap="$gap4"
+          p="$spacing8"
+          cursor="pointer"
+          group
+          $platform-web={{ containerType: 'normal' }}
+        >
+          <Flex row alignItems="center" gap="$gap4" onPress={handleLogoClick} data-testid="nav-uniswap-logo">
             <NavIcon />
             {isLargeScreen && (
               <Text variant="subheading1" color={theme.accent1} userSelect="none">
                 Rigoblock
               </Text>
             )}
-          </UniIcon>
+          </Flex>
           {(media.md || isTouchDevice) && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
-          {!media.md && !isTouchDevice && <ArrowDown $isActive={isOpen} width="12px" height="12px" />}
-        </Trigger>
+          {!media.md && !isTouchDevice && (
+            <ArrowDownWrapper open={isOpen}>
+              <ArrowChangeDown width="12px" height="12px" />
+            </ArrowDownWrapper>
+          )}
+        </Flex>
       </Popover.Trigger>
       {isMobileDrawer ? <MobileMenuDrawer isOpen={isOpen} closeMenu={closeMenu} /> : <MenuDropdown close={closeMenu} />}
     </Popover>

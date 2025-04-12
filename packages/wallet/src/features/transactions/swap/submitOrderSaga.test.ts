@@ -114,6 +114,10 @@ describe(submitUniswapXOrder, () => {
         routing: 'uniswap_x_v2',
         order_hash: baseExpectedInitialOrderDetails.orderHash,
         transactionOriginType: TransactionOriginType.Internal,
+        v2Used: false,
+        v3Used: false,
+        v4Used: false,
+        uniswapXUsed: true,
       })
       .next()
       .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
@@ -190,6 +194,10 @@ describe(submitUniswapXOrder, () => {
           routing: 'uniswap_x_v2',
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
+          v2Used: false,
+          v3Used: false,
+          v4Used: false,
+          uniswapXUsed: true,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
@@ -228,6 +236,10 @@ describe(submitUniswapXOrder, () => {
           routing: 'uniswap_x_v2',
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
+          v2Used: false,
+          v3Used: false,
+          v4Used: false,
+          uniswapXUsed: true,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
@@ -266,6 +278,10 @@ describe(submitUniswapXOrder, () => {
           routing: 'uniswap_x_v2',
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
+          v2Used: false,
+          v3Used: false,
+          v4Used: false,
+          uniswapXUsed: true,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))

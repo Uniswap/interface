@@ -1,24 +1,22 @@
 import SizingImage from 'assets/images/sizingImage.png'
-import { Box } from 'components/deprecated/Box'
 import { ASSET_PAGE_SIZE } from 'graphql/data/nft/Asset'
-import { Row } from 'nft/components/Flex'
-import * as styles from 'nft/components/collection/CollectionAssetLoading.css'
 import { loadingAsset } from 'nft/css/loading.css'
+import { Flex, Image } from 'ui/src'
 
 const CollectionAssetLoading = ({ height }: { height?: number }) => {
   return (
-    <Box as="div" className={styles.collectionAssetLoading}>
-      <Box as="div" position="relative" width="full" style={{ height }}>
-        <Box as="div" className={styles.collectionAssetsImageLoading} />
-        <Box as="img" width="full" opacity="0" src={SizingImage} draggable={false} />
-      </Box>
-      <Row justifyContent="space-between" marginTop="12" paddingLeft="12" paddingRight="12">
-        <Box as="div" className={loadingAsset} height="12" width="120"></Box>
-      </Row>
-      <Row justifyContent="space-between" marginTop="12" paddingLeft="12" paddingRight="12">
-        <Box as="div" className={loadingAsset} height="16" width="80"></Box>
-      </Row>
-    </Box>
+    <Flex borderRadius="$rounded12" pb="$padding12" backgroundColor="$surface2">
+      <Flex width="100%" height={height ?? 200}>
+        <Flex height="100%" width="100%" />
+        <Image width="100%" opacity={0} src={SizingImage} />
+      </Flex>
+      <Flex row alignItems="center" justifyContent="space-between" mt="$spacing12" pl="$spacing12" pr="$spacing12">
+        <Flex className={loadingAsset} height={12} width={120}></Flex>
+      </Flex>
+      <Flex row alignItems="center" justifyContent="space-between" mt="$spacing12" pl="$spacing12" pr="$spacing12">
+        <Flex className={loadingAsset} height={16} width={80} />
+      </Flex>
+    </Flex>
   )
 }
 

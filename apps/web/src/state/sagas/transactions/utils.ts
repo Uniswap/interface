@@ -1,3 +1,4 @@
+import { datadogRum } from '@datadog/browser-rum'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
@@ -406,6 +407,13 @@ export function addTransactionBreadcrumb({
   }
   status?: 'initiated' | 'complete' | 'in progress' | 'interrupted'
 }) {
+  datadogRum.addAction('Transaction Action', {
+    message: `${step.type} ${status}`,
+    step: step.type,
+    level: 'info',
+    data,
+  })
+
   Sentry.addBreadCrumb({
     level: 'info',
     category: 'transaction',

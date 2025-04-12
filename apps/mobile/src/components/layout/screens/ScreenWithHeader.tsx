@@ -49,7 +49,7 @@ type ScreenHeaderProps = {
  * Fixed header component that can be used in any screen context.
  * Supports customization of center and right elements, and can expand to device edges.
  */
-export function ScreenHeader({
+function ScreenHeader({
   centerElement,
   rightElement = <Flex width={iconSizes.icon24} />,
   fullScreen = false,

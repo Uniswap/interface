@@ -24,7 +24,6 @@ const mockSwapAndLimitContextValue = {
     inputCurrency: DAI,
     outputCurrency: undefined,
   },
-  prefilledState: {},
   setCurrencyState: jest.fn(),
   currentTab: SwapTab.Limit,
   setCurrentTab: jest.fn(),

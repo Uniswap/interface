@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { DeprecatedButton, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, IconButton, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { AlertTriangleFilled, BackArrow, X } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -288,13 +288,7 @@ export function SendReviewDetails({
                 </Text>
               </Flex>
             ) : (
-              <AddressDisplay
-                address={recipient}
-                captionVariant="body3"
-                showAccountIcon={false}
-                textAlign="flex-start"
-                variant="heading3"
-              />
+              <AddressDisplay address={recipient} captionVariant="body3" showAccountIcon={false} variant="heading3" />
             )}
             <AccountIcon
               address={recipient}
@@ -345,17 +339,17 @@ export function SendReviewDetails({
 
       <TransactionModalFooterContainer>
         <Flex row gap="$spacing8">
-          {!isWeb && <DeprecatedButton icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />}
-          <DeprecatedButton
-            fill
+          {!isWeb && <IconButton icon={<BackArrow />} emphasis="secondary" size="large" onPress={onPrev} />}
+          <Button
             isDisabled={actionButtonProps.disabled}
-            icon={ButtonAuthIcon}
+            icon={ButtonAuthIcon ?? undefined}
             size="medium"
             testID={actionButtonProps.name}
+            variant="branded"
             onPress={actionButtonProps.onPress}
           >
             {actionButtonProps.label}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </TransactionModalFooterContainer>
     </Trace>

@@ -2,7 +2,8 @@ import { memo } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 function _TokenCard({
@@ -14,7 +15,7 @@ function _TokenCard({
   onSelectCurrency: OnSelectCurrency
   token: TokenOption
   index: number
-  section: TokenSection
+  section: TokenSection<TokenOption[]>
 }): JSX.Element {
   const { currency, logoUrl } = token.currencyInfo
 

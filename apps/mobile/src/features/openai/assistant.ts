@@ -9,6 +9,7 @@ export const openai = new OpenAI({
   apiKey: config.openaiApiKey,
 })
 
+// eslint-disable-next-line import/no-unused-modules
 export function setupAssistant(): void {
   openai.beta.assistants
     .update(ASSISTANT_ID, {

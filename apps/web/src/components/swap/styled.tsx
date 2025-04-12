@@ -3,9 +3,7 @@ import styled, { css } from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { ButtonText } from 'theme/components'
 import { Flex, styled as TamaguiStyled } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 
 export const PageWrapper = TamaguiStyled(Flex, {
   pt: '$spacing60',
@@ -19,26 +17,6 @@ export const PageWrapper = TamaguiStyled(Flex, {
   $md: {
     pt: '$spacing20',
   },
-})
-
-const SwapWrapperOuter = TamaguiStyled(Flex, {
-  position: 'relative',
-  zIndex: zIndexes.default,
-  animation: 'fast',
-  borderRadius: 'rounded24',
-})
-
-export const SwapWrapper = (props: React.ComponentProps<typeof SwapWrapperOuter>) => {
-  return (
-    <SwapWrapperOuter {...props}>
-      <SwapWrapperInner>{props.children}</SwapWrapperInner>
-    </SwapWrapperOuter>
-  )
-}
-
-const SwapWrapperInner = TamaguiStyled(Flex, {
-  borderRadius: '$rounded24',
-  zIndex: zIndexes.negative,
 })
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
@@ -166,29 +144,10 @@ export const SwapSection = styled.div`
   }
 `
 
-export const OutputSwapSection = styled(SwapSection)`
-  border-bottom: ${({ theme }) => `1px solid ${theme.surface1}`};
-`
-
 export const ArrowContainer = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
-`
-
-export const SwapHeaderTabButton = styled(ButtonText)<{ $isActive: boolean }>`
-  color: ${({ theme, $isActive }) => ($isActive ? theme.neutral1 : theme.neutral2)};
-  background-color: ${({ theme, $isActive }) => $isActive && theme.surface3};
-  padding: 8px 16px;
-  border-radius: 20px;
-  gap: 4px;
-  font-weight: 485;
-  &:focus {
-    text-decoration: none;
-  }
-  &:active {
-    text-decoration: none;
-  }
 `

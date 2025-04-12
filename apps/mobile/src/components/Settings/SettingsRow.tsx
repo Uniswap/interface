@@ -32,7 +32,15 @@ export interface SettingsSectionItemComponent {
   isHidden?: boolean
 }
 
-type SettingsModal = typeof ModalName.FiatCurrencySelector | typeof ModalName.LanguageSelector
+type SettingsModal =
+  | typeof ModalName.FiatCurrencySelector
+  | typeof ModalName.LanguageSelector
+  | typeof ModalName.SettingsAppearance
+  | typeof ModalName.BiometricsModal
+  | typeof ModalName.PortfolioBalanceModal
+  | typeof ModalName.PermissionsModal
+  | typeof ModalName.EditProfileSettingsModal
+  | typeof ModalName.EditLabelSettingsModal
 
 export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList | typeof MobileScreens.OnboardingStack

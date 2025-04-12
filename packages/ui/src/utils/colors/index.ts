@@ -336,6 +336,14 @@ function pickContrastPassingTokenColor(extractedColors: ExtractedColors, backgro
   return colorsLight.accent1
 }
 
-export function getHoverCssFilter(isDarkMode?: boolean): string {
-  return isDarkMode ? 'brightness(1.05)' : 'brightness(0.95)'
+export function getHoverCssFilter({
+  isDarkMode = false,
+  differenceFrom1 = 0.05,
+}: {
+  isDarkMode?: boolean
+  differenceFrom1?: number
+}): string {
+  return isDarkMode ? `brightness(${1 + differenceFrom1})` : `brightness(${1 - differenceFrom1})`
 }
+
+export * from './getContrastPassingTextColor'

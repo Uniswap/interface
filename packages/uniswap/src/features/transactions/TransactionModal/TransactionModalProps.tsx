@@ -1,5 +1,4 @@
 import { PropsWithChildren } from 'react'
-/* eslint-disable no-restricted-imports */
 import type { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet'
 import type { ViewStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'

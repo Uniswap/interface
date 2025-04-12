@@ -7,11 +7,11 @@ import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/tra
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 
 export function InsufficientNativeTokenBaseComponent({
-  parsedInsufficentNativeTokenWarning,
+  parsedInsufficientNativeTokenWarning,
 }: {
-  parsedInsufficentNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
+  parsedInsufficientNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
 }): JSX.Element | null {
-  const { nativeCurrency, networkColors, networkName, flow } = parsedInsufficentNativeTokenWarning
+  const { nativeCurrency, networkColors, networkName, flow } = parsedInsufficientNativeTokenWarning
 
   const currencySymbol = nativeCurrency.symbol
 

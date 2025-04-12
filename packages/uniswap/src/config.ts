@@ -1,5 +1,6 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import {
+  ALCHEMY_API_KEY,
   AMPLITUDE_PROXY_URL_OVERRIDE,
   API_BASE_URL_OVERRIDE,
   API_BASE_URL_V2_OVERRIDE,
@@ -15,7 +16,6 @@ import {
   OPENAI_API_KEY,
   QUICKNODE_ENDPOINT_NAME,
   QUICKNODE_ENDPOINT_TOKEN,
-  QUICKNODE_MONAD_TESTNET_RPC_URL,
   SCANTASTIC_API_URL_OVERRIDE,
   SENTRY_DSN,
   SIMPLEHASH_API_KEY,
@@ -43,6 +43,7 @@ import { isNonJestDev } from 'utilities/src/environment/constants'
  */
 
 export interface Config {
+  alchemyApiKey: string
   amplitudeProxyUrlOverride: string
   apiBaseUrlOverride: string
   apiBaseUrlV2Override: string
@@ -58,7 +59,6 @@ export interface Config {
   openaiApiKey: string
   quicknodeEndpointName: string
   quicknodeEndpointToken: string
-  quicknodeMonadTestnetRpcUrl: string
   scantasticApiUrlOverride: string
   sentryDsn: string
   simpleHashApiKey: string
@@ -85,13 +85,15 @@ export interface Config {
  */
 
 const _config: Config = {
+  alchemyApiKey: process.env.REACT_APP_ALCHEMY_API_KEY || process.env.ALCHEMY_API_KEY || ALCHEMY_API_KEY,
   amplitudeProxyUrlOverride: process.env.AMPLITUDE_PROXY_URL_OVERRIDE || AMPLITUDE_PROXY_URL_OVERRIDE,
   apiBaseUrlOverride: process.env.API_BASE_URL_OVERRIDE || API_BASE_URL_OVERRIDE,
   apiBaseUrlV2Override: process.env.API_BASE_URL_V2_OVERRIDE || API_BASE_URL_V2_OVERRIDE,
   appsflyerApiKey: process.env.APPSFLYER_API_KEY || APPSFLYER_API_KEY,
   appsflyerAppId: process.env.APPSFLYER_APP_ID || APPSFLYER_APP_ID,
-  datadogClientToken: process.env.DATADOG_CLIENT_TOKEN || DATADOG_CLIENT_TOKEN,
-  datadogProjectId: process.env.DATADOG_PROJECT_ID || DATADOG_PROJECT_ID,
+  datadogClientToken:
+    process.env.REACT_APP_DATADOG_CLIENT_TOKEN || process.env.DATADOG_CLIENT_TOKEN || DATADOG_CLIENT_TOKEN,
+  datadogProjectId: process.env.REACT_APP_DATADOG_PROJECT_ID || process.env.DATADOG_PROJECT_ID || DATADOG_PROJECT_ID,
   forApiUrlOverride: process.env.FOR_API_URL_OVERRIDE || FOR_API_URL_OVERRIDE,
   graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE || GRAPHQL_URL_OVERRIDE,
   infuraKey: process.env.REACT_APP_INFURA_KEY || INFURA_KEY,
@@ -102,10 +104,6 @@ const _config: Config = {
     process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME || process.env.QUICKNODE_ENDPOINT_NAME || QUICKNODE_ENDPOINT_NAME,
   quicknodeEndpointToken:
     process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN || process.env.QUICKNODE_ENDPOINT_TOKEN || QUICKNODE_ENDPOINT_TOKEN,
-  quicknodeMonadTestnetRpcUrl:
-    process.env.REACT_APP_QUICKNODE_MONAD_TESTNET_RPC_URL ||
-    process.env.QUICKNODE_MONAD_TESTNET_RPC_URL ||
-    QUICKNODE_MONAD_TESTNET_RPC_URL,
   scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE || SCANTASTIC_API_URL_OVERRIDE,
   sentryDsn: process.env.REACT_APP_SENTRY_DSN || process.env.SENTRY_DSN || SENTRY_DSN,
   simpleHashApiKey: process.env.SIMPLEHASH_API_KEY || SIMPLEHASH_API_KEY,

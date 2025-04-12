@@ -228,7 +228,6 @@ import fs from 'fs'
 import { format } from 'prettier'
 
 const configPath = path.resolve(__dirname, '../../../../.prettierrc')
-// eslint-disable-next-line security/detect-non-literal-fs-filename
 const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
 
 // it was removing needed imports for some reason

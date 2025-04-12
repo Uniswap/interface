@@ -84,7 +84,8 @@ export function TestMnemonic({ numberOfTests = 3 }: { numberOfTests?: number }):
           completedStepsCount: isComplete ? numberOfTests : completedTests,
           totalStepsCount: numberOfTests,
         })}
-        nextButtonTheme="secondary"
+        nextButtonVariant="default"
+        nextButtonEmphasis="secondary"
         subtitle={t('onboarding.backup.manual.subtitle', { count: nextWordNumber, ordinal: true })}
         title={t('onboarding.backup.manual.title')}
         onBack={goToPreviousStep}
@@ -167,7 +168,7 @@ type InputStackProps = InputStackBaseProps & {
   prefixText: string
 }
 
-export function InputStack({ onChangeText, total, value, current, prefixText }: InputStackProps): JSX.Element {
+function InputStack({ onChangeText, total, value, current, prefixText }: InputStackProps): JSX.Element {
   const { t } = useTranslation()
   const refs = useRef<TextInput[]>([])
   const prefixTexts = useRef<string[]>([])

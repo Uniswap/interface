@@ -1,53 +1,54 @@
-import { Box, BoxProps } from 'components/deprecated/Box'
-import { FormEvent, forwardRef } from 'react'
+import { forwardRef } from 'react'
+import { InputProps, Input as TamaguiInput } from 'ui/src'
 
 const isNumber = (s: string): boolean => {
   const reg = /^-?\d+\.?\d*$/
   return reg.test(s) && !isNaN(parseFloat(s)) && isFinite(parseFloat(s))
 }
 
-export const Input = forwardRef<HTMLInputElement, BoxProps>((props, ref) => (
-  <Box
-    ref={ref}
-    as="input"
-    borderColor={{ default: 'surface3', focus: 'neutral3' }}
-    borderWidth="1px"
+export const Input = (props: InputProps) => (
+  <TamaguiInput
+    borderColor="$surface3"
+    borderWidth={1}
     borderStyle="solid"
-    borderRadius="12"
-    padding="12"
+    backgroundColor="$transparent"
+    borderRadius="$rounded16"
+    px="$padding12"
+    py="$padding20"
     fontSize="14"
     fontWeight="book"
-    color={{ placeholder: 'neutral2', default: 'neutral1' }}
-    backgroundColor="transparent"
+    focusStyle={{ borderColor: '$neutral3' }}
+    hoverStyle={{ borderColor: '$neutral3' }}
     {...props}
   />
-))
+)
 
 Input.displayName = 'Input'
 
-export const NumericInput = forwardRef<HTMLInputElement, BoxProps>((props, ref) => {
+export const NumericInput = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return (
-    <Box
-      ref={ref}
-      as="input"
+    <TamaguiInput
+      ref={ref as any}
       inputMode="decimal"
       autoComplete="off"
-      type="text"
-      borderColor={{ default: 'surface3', focus: 'neutral2' }}
-      color={{ placeholder: 'neutral2', default: 'neutral1' }}
-      onInput={(v: FormEvent<HTMLInputElement>) => {
-        if (v.currentTarget.value === '.') {
-          v.currentTarget.value = '0.'
+      borderColor="$surface3"
+      focusStyle={{ borderColor: '$neutral2' }}
+      color="$neutral1"
+      borderWidth={0}
+      height="100%"
+      onChangeText={(value) => {
+        if (value === '.') {
+          value = '0.'
         }
 
-        v.currentTarget.value =
-          !!v.currentTarget.value && isNumber(v.currentTarget.value) && parseFloat(v.currentTarget.value) >= 0
-            ? v.currentTarget.value
-            : ''
+        const isValid = value === '' || (isNumber(value) && parseFloat(value) >= 0)
+        const finalValue = isValid ? value : ''
+
+        props.onChangeText?.(finalValue)
       }}
       {...props}
     />
   )
 })
 
-NumericInput.displayName = 'Input'
+NumericInput.displayName = 'NumericInput'

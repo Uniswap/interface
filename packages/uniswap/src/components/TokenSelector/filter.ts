@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const searchOptions: Fuse.IFuseOptions<TokenOption> = {
