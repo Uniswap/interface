@@ -15,7 +15,7 @@ import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import AppBody from 'pages/App/AppBody'
+import { BodyWrapper } from 'pages/App/AppBody'
 import { ProposalActionDetail } from 'pages/CreateProposal/ProposalActionDetail'
 import {
   ProposalAction,
@@ -24,7 +24,6 @@ import {
 } from 'pages/CreateProposal/ProposalActionSelector'
 import { ProposalEditor } from 'pages/CreateProposal/ProposalEditor'
 import { ProposalSubmissionModal } from 'pages/CreateProposal/ProposalSubmissionModal'
-import { Wrapper } from 'pages/LegacyPool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -34,7 +33,8 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ExternalLink, StyledInternalLink } from 'theme/components/Links'
 import AUTHORITY_ABI from 'uniswap/src/abis/authority.json'
 import TOKEN_ABI from 'uniswap/src/abis/erc20.json'
 import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
@@ -122,6 +122,11 @@ const CreateProposalButton = ({
     </ButtonError>
   )
 }
+
+const Wrapper = styled.div`
+  position: relative;
+  padding: 20px;
+`
 
 const CreateProposalWrapper = styled(Wrapper)`
   display: flex;
@@ -339,7 +344,7 @@ ${bodyValue}
   return (
     <Trace logImpression page={InterfacePageName.VOTE_PAGE}>
       <PageWrapper>
-        <AppBody $maxWidth="800px">
+        <BodyWrapper $maxWidth="800px">
           <Nav to="/vote">
             <BackArrow />
             <HeaderText>
@@ -401,7 +406,7 @@ ${bodyValue}
             onProposalActionSelect={(proposalAction: ProposalAction) => handleActionChange(proposalAction)}
           />
           <ProposalSubmissionModal isOpen={attempting} hash={hash} onDismiss={handleDismissSubmissionModal} />
-        </AppBody>
+        </BodyWrapper>
       </PageWrapper>
     </Trace>
   )

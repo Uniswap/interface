@@ -3,6 +3,8 @@ import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import ms from 'ms'
 import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
 import {
   ActivityWebQueryResult,
@@ -20,6 +22,12 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
   const { isTestnetModeEnabled, gqlChains } = useEnabledChains()
   const previousIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled)
   const activeSmartPool = useActiveSmartPool()
+
+  const { pathname: page } = useLocation()
+  const isSendPage = page === '/send'
+  const shouldQueryPoolBalances = activeSmartPool.address && !isSendPage
+
+  const contextAddress = shouldQueryPoolBalances ? activeSmartPool.address : account.address
 
   const fiatOnRampTransactions = useFiatOnRampTransactions()
 

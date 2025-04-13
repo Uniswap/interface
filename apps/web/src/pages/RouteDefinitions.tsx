@@ -38,6 +38,7 @@ const LegacyPositionPageRedirects = lazy(() =>
 const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
+const PoolPositionPage = lazy(() => import('pages/CreatePool/PoolPositionPage'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const Vote = lazy(() => import('pages/Vote'))
 

@@ -1,4 +1,5 @@
 import { isAddress } from '@ethersproject/address'
+import { createAction } from '@reduxjs/toolkit'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button/buttons'
@@ -7,13 +8,14 @@ import { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow, RowBetween } from 'components/deprecated/Row'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import Slider from 'components/Slider'
 import { GRG_TRANSFER_PROXY_ADDRESSES } from 'constants/addresses'
 import { useAccount } from 'hooks/useAccount'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import JSBI from 'jsbi'
 import styled, { useTheme } from 'lib/styled-components'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
 import {
@@ -22,21 +24,19 @@ import {
   usePoolExtendedContract,
   usePoolIdByAddress,
 } from 'state/governance/hooks'
+import { useAppDispatch } from 'state/hooks'
 import { ThemedText } from 'theme/components'
+import { Button, ButtonProps, Text } from 'ui/src'
 import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
-import { Text } from 'ui/src'
 import { Trans } from 'react-i18next'
 import { logger } from 'utilities/src/logger/logger'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
-import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
-// TODO: check if should write into state stake hooks
-import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -57,12 +57,35 @@ export const TextButton = styled.div`
   }
 `
 
+const MaxButton = ({ onPress, children }: { onPress: ButtonProps['onPress'], children?: ReactNode }) => {
+  return (
+    <Button variant="branded" emphasis="secondary" size="xxsmall" onPress={onPress}>
+      {children || <Trans i18nKey="common.max" />}
+    </Button>
+  )
+}
+
+export const SmallMaxButton = styled(MaxButton)`
+  font-size: 12px;
+`
+
+export const ResponsiveHeaderText = styled(Text)`
+  font-size: 40px;
+  font-weight: 535;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
+     font-size: 24px
+  `};
+`
+
 interface VoteModalProps {
   isOpen: boolean
   poolInfo?: PoolInfo
   onDismiss: () => void
   title: ReactNode
 }
+
+// TODO: fix action, use stake/unstake action
+export const selectPercent = createAction<{ percent: number }>('burnV3/selectBurnPercent')
 
 export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: VoteModalProps) {
   const account = useAccount()
@@ -77,8 +100,14 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     setTyped(val)
   }
 
-  const { percent } = useBurnV3State()
-  const { onPercentSelect } = useBurnV3ActionHandlers()
+  const { percent } = useRemoveLiquidityModalContext()
+  const dispatch = useAppDispatch()
+  const onPercentSelect = useCallback(
+    (percent: number) => {
+      dispatch(selectPercent({ percent }))
+    },
+    [dispatch],
+  )
 
   // monitor for self delegation or input for third part delegate
   // default is self delegation
@@ -95,7 +124,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   const grgBalance = usingDelegate ? grgPoolBalance : grgUserBalance
 
   // boilerplate for the slider
-  const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
+  const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(Number(percent), onPercentSelect)
   //CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed))
   const parsedAmount = CurrencyAmount.fromRawAmount(
     currencyValue,
@@ -235,16 +264,16 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
                 <Trans>{{percentForSlider}}%</Trans>
               </ResponsiveHeaderText>
               <AutoRow gap="4px" justify="flex-end">
-                <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
+                <SmallMaxButton onPress={() => onPercentSelect(25)}>
                   <Trans>25%</Trans>
                 </SmallMaxButton>
-                <SmallMaxButton onClick={() => onPercentSelect(50)} width="20%">
+                <SmallMaxButton onPress={() => onPercentSelect(50)}>
                   <Trans>50%</Trans>
                 </SmallMaxButton>
-                <SmallMaxButton onClick={() => onPercentSelect(75)} width="20%">
+                <SmallMaxButton onPress={() => onPercentSelect(75)}>
                   <Trans>75%</Trans>
                 </SmallMaxButton>
-                <SmallMaxButton onClick={() => onPercentSelect(100)} width="20%">
+                <SmallMaxButton onPress={() => onPercentSelect(100)}>
                   <Trans>Max</Trans>
                 </SmallMaxButton>
               </AutoRow>

@@ -1,5 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { TradeType } from '@uniswap/sdk-core'
+import { VoteOption } from 'state/governance/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -43,6 +44,31 @@ export enum TransactionType {
 }
 interface BaseTransactionInfo {
   type: TransactionType
+}
+
+export interface VoteTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.VOTE
+  governorAddress: string
+  proposalId: number
+  decision: VoteOption
+  reason: string
+}
+
+export interface QueueTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.QUEUE
+  governorAddress: string
+  proposalId: number
+}
+
+export interface ExecuteTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.EXECUTE
+  governorAddress: string
+  proposalId: number
+}
+
+export interface DelegateTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.DELEGATE
+  delegatee: string
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
@@ -105,7 +131,7 @@ export interface WrapTransactionInfo {
   chainId?: number
 }
 
-interface ClaimTransactionInfo {
+export interface ClaimTransactionInfo {
   type: TransactionType.CLAIM
   recipient: string
   uniAmountRaw?: string
@@ -226,6 +252,10 @@ export type TransactionInfo =
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ClaimTransactionInfo
+  | VoteTransactionInfo
+  | QueueTransactionInfo
+  | ExecuteTransactionInfo
+  | DelegateTransactionInfo
   | DepositLiquidityStakingTransactionInfo
   | WithdrawLiquidityStakingTransactionInfo
   | WrapTransactionInfo

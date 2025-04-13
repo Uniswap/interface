@@ -8,8 +8,10 @@ import styled, { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import { useQueueCallback } from 'state/governance/hooks'
-import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { CustomLightSpinner, ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { Trans } from 'react-i18next'
+import { Flex } from 'ui/src'
 import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
@@ -104,7 +106,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
       {attempting && !hash && (
         <ConfirmOrLoadingWrapper>
           <RowBetween>
-            <div />
+            <Flex />
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
@@ -125,7 +127,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
       {hash && (
         <ConfirmOrLoadingWrapper>
           <RowBetween>
-            <div />
+            <Flex />
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>

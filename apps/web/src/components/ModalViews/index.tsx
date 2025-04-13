@@ -4,9 +4,10 @@ import { RowBetween } from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { ArrowUpCircle, CheckCircle } from 'react-feather'
-import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { CustomLightSpinner, ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { Trans } from 'react-i18next'
-import { ModalCloseIcon}  from 'ui/src'
+import { Flex, ModalCloseIcon}  from 'ui/src'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const ConfirmOrLoadingWrapper = styled.div`
@@ -22,7 +23,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
   return (
     <ConfirmOrLoadingWrapper>
       <RowBetween>
-        <div />
+        <Flex />
         <ModalCloseIcon onClose={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
@@ -55,7 +56,7 @@ export function SubmittedView({
   return (
     <ConfirmOrLoadingWrapper>
       <RowBetween>
-        <div />
+        <Flex />
         <ModalCloseIcon onClose={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>

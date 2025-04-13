@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button/buttons'
-import { GrayCard } from 'components/Card/cards'
+import { DarkGrayCard } from 'components/Card/cards'
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -45,8 +45,9 @@ import {
   useUserVotes,
 } from 'state/governance/hooks'
 import { VoteOption } from 'state/governance/types'
-import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-import { Flex } from 'ui/src'
+import { ThemedText } from 'theme/components'
+import { ExternalLink, StyledInternalLink } from 'theme/components/Links'
+import { Flex, Text } from 'ui/src'
 import { GRG } from 'uniswap/src/constants/tokens'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -343,7 +344,7 @@ export default function VotePage() {
                 </ThemedText.DeprecatedMain>
               </RowBetween>
               {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
-                <GrayCard>
+                <DarkGrayCard>
                   <ThemedText.DeprecatedBlack>
                     <Trans
                       i18nKey="vote.votePage.onlyGrgVotesBeforeDateEligible"
@@ -362,7 +363,7 @@ export default function VotePage() {
                       </span>
                     )}
                   </ThemedText.DeprecatedBlack>
-                </GrayCard>
+                </DarkGrayCard>
               )}
             </AutoColumn>
             {showVotingButtons && (
@@ -448,18 +449,18 @@ export default function VotePage() {
                 <CardSection>
                   <AutoColumn gap="md">
                     <WrapSmall>
-                      <ThemedText.DeprecatedBlack fontWeight={535}>
+                      <Text fontWeight={500}>
                         <Trans i18nKey="common.for" />
-                      </ThemedText.DeprecatedBlack>
+                      </Text>
                       {proposalData && (
-                        <ThemedText.DeprecatedBlack fontWeight={535}>
+                        <Text fontWeight={500}>
                           {proposalData.forCount.toFixed(0, { groupSeparator: ',' })}
                           {quorumAmount && (
                             <span style={{ fontWeight: 485 }}>{` / ${quorumAmount.toExact({
                               groupSeparator: ',',
                             })}`}</span>
                           )}
-                        </ThemedText.DeprecatedBlack>
+                        </Text>
                       )}
                     </WrapSmall>
                   </AutoColumn>
@@ -477,13 +478,13 @@ export default function VotePage() {
                 <CardSection>
                   <AutoColumn gap="md">
                     <WrapSmall>
-                      <ThemedText.DeprecatedBlack fontWeight={535}>
+                      <Text fontWeight={500}>
                         <Trans i18nKey="vote.votePage.against" />
-                      </ThemedText.DeprecatedBlack>
+                      </Text>
                       {proposalData && (
-                        <ThemedText.DeprecatedBlack fontWeight={535}>
+                        <Text fontWeight={500}>
                           {proposalData.againstCount.toFixed(0, { groupSeparator: ',' })}
-                        </ThemedText.DeprecatedBlack>
+                        </Text>
                       )}
                     </WrapSmall>
                   </AutoColumn>
@@ -499,9 +500,9 @@ export default function VotePage() {
               </StyledDataCard>
             </CardWrapper>
             <AutoColumn gap="md">
-              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
+              <Text fontWeight={500}>
                 <Trans i18nKey="vote.votePage.details" />
-              </ThemedText.DeprecatedMediumHeader>
+              </Text>
               {proposalData?.details?.map((d, i) => {
                 return (
                   <DetailText key={i}>
@@ -520,9 +521,9 @@ export default function VotePage() {
               })}
             </AutoColumn>
             <AutoColumn gap="md">
-              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
+              <Text fontWeight={500}>
                 <Trans i18nKey="vote.votePage.description" />
-              </ThemedText.DeprecatedMediumHeader>
+              </Text>
               <MarkDownWrapper>
                 <ReactMarkdown
                   source={proposalData?.description}
@@ -533,9 +534,9 @@ export default function VotePage() {
               </MarkDownWrapper>
             </AutoColumn>
             <AutoColumn gap="md">
-              <ThemedText.DeprecatedMediumHeader fontWeight={535}>
+              <Text fontWeight={500}>
                 <Trans i18nKey="vote.votePage.proposer" />
-              </ThemedText.DeprecatedMediumHeader>
+              </Text>
               <ProposerAddressLink
                 href={
                   proposalData?.proposer && account.chainId

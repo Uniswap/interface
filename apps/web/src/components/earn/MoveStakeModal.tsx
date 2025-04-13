@@ -3,10 +3,11 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { Trans } from 'react-i18next'
 import JSBI from 'jsbi'
-import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
 import styled from 'lib/styled-components'
+import { useAppDispatch } from 'state/hooks'
 import { ThemedText } from 'theme/components/text'
 import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -14,12 +15,11 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
+import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
+import { selectPercent, ResponsiveHeaderText, SmallMaxButton } from 'components/vote/DelegateModal'
 import { TextButton } from 'components/vote/DelegateModal'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
-// TODO: check if should write into state stake hooks
-import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
 import {
   StakeData,
   useDeactivateStakeCallback,
@@ -73,8 +73,14 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     setTyped(val)
   }
 
-  const { percent } = useBurnV3State()
-  const { onPercentSelect } = useBurnV3ActionHandlers()
+  const { percent } = useRemoveLiquidityModalContext()
+    const dispatch = useAppDispatch()
+    const onPercentSelect = useCallback(
+      (percent: number) => {
+        dispatch(selectPercent({ percent }))
+      },
+      [dispatch],
+    )
 
   const fromPoolAddress = typed ?? ZERO_ADDRESS
   const { address: parsedAddress } = useENS({ nameOrAddress: fromPoolAddress })
@@ -90,7 +96,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   const poolContract = usePoolExtendedContract(poolInfo?.pool?.address)
 
   // boilerplate for the slider
-  const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
+  const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(Number(percent), onPercentSelect)
   //CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed))
   const parsedAmount = CurrencyAmount.fromRawAmount(
     currencyValue,
@@ -201,16 +207,16 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
                 <Trans>{{percentForSlider}}%</Trans>
               </ResponsiveHeaderText>
               <AutoRow gap="4px" justify="flex-end">
-                <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
+                <SmallMaxButton onPress={() => onPercentSelect(25)}>
                   <Trans>25%</Trans>
                 </SmallMaxButton>
-                <SmallMaxButton onClick={() => onPercentSelect(50)} width="20%">
+                <SmallMaxButton onPress={() => onPercentSelect(50)}>
                   <Trans>50%</Trans>
                 </SmallMaxButton>
-                <SmallMaxButton onClick={() => onPercentSelect(75)} width="20%">
+                <SmallMaxButton onPress={() => onPercentSelect(75)}>
                   <Trans>75%</Trans>
                 </SmallMaxButton>
-                <SmallMaxButton onClick={() => onPercentSelect(100)} width="20%">
+                <SmallMaxButton onPress={() => onPercentSelect(100)}>
                   <Trans>Max</Trans>
                 </SmallMaxButton>
               </AutoRow>

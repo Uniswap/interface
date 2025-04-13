@@ -17,7 +17,6 @@ import deprecatedStyled, { css } from 'lib/styled-components'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { useOperatedPools } from 'state/pool/hooks'
-import { Z_INDEX } from 'theme/zIndex'
 import { Flex, Nav as TamaguiNav, styled, useMedia } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, breakpoints, zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -64,26 +63,17 @@ const SearchContainer = styled(UnpositionedFlex, {
   height: 42,
 })
 
-// TODO: customize
-const SelectedPoolContainer = styled.div`
-  display: flex;
-  flex: 1;
-  flex-shrink: 1;
-  justify-content: center;
-  align-self: center;
-  align-items: flex-start;
-  height: 42px;
-  margin-right: 64px;
-`
-
-const NavContents = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex: 1 auto 1;
-`
+const SelectedPoolContainer = styled(UnpositionedFlex, {
+  width: 'max-content',
+  flex: 1,
+  flexShrink: 1,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  alignItems: 'flex-start',
+  height: 42,
+  mr: 64,
+})
 
 function useShouldHideChainSelector() {
   const isNFTPage = useIsPage(PageType.NFTS)
