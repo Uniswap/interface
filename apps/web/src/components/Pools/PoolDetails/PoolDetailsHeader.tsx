@@ -20,14 +20,9 @@ import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import {
-  ClickableStyle,
-  ClickableTamaguiStyle,
-  EllipsisStyle,
-  ExternalLink,
-  TamaguiClickableStyle,
-  ThemedText,
-} from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
+import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle, TamaguiClickableStyle } from 'theme/components/styles'
 import { textFadeIn } from 'theme/styles'
 import { Flex, TouchableArea, useIsTouchDevice, useMedia } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
@@ -133,7 +128,7 @@ const PoolDetailsTitle = ({
   const feePercent = feeTier && formatPercent(new Percent(feeTier, BIPS_BASE * 100))
   return (
     <StyledPoolDetailsTitle>
-      <div>
+      <Flex>
         <PoolName>
           <StyledLink
             to={getTokenDetailsURL({
@@ -153,7 +148,7 @@ const PoolDetailsTitle = ({
             {token1?.symbol}
           </StyledLink>
         </PoolName>
-      </div>
+      </Flex>
       <Flex row gap="$gap4" alignItems="center">
         <PoolDetailsBadge variant="body3" $position="left">
           {protocolVersion?.toLowerCase()}

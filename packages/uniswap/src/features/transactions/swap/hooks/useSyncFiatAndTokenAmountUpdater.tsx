@@ -44,7 +44,7 @@ export function useSyncFiatAndTokenAmountUpdater({ skip = false }: { skip?: bool
       updateSwapForm({ exactAmountToken: tokenAmount?.toExact() })
     }
 
-    // Special case when we have token amount, but not fiat, which can occur when we hit "max"
+    // When we have new token amount after user hit "max" or changes exact currency field
     if (!isFiatMode || (isFiatMode && !exactAmountFiat && exactAmountToken)) {
       const tokenAmount = getCurrencyAmount({
         value: exactAmountToken,

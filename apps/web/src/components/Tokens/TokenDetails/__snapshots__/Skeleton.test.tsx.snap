@@ -25,14 +25,6 @@ exports[`TDP Skeleton should render correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c17 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -70,6 +62,14 @@ exports[`TDP Skeleton should render correctly 1`] = `
 
 .c1:hover {
   color: #CECECE;
+}
+
+.c17 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c16 {

@@ -11,7 +11,8 @@ import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { SignatureType } from 'state/signatures/types'
-import { EllipsisStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { EllipsisStyle } from 'theme/components/styles'
 import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import {
   TransactionStatus,

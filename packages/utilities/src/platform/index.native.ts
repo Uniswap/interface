@@ -12,6 +12,7 @@ export const isWebAndroid: boolean = false
 
 // Capability
 export const isTouchable: boolean = true
+export const isHoverable: boolean = false
 
 // Browser
 export const isChrome: boolean = false

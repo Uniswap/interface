@@ -9,7 +9,12 @@ import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 
 export function currencyId(tradeableAsset: TradeableAsset): CurrencyId
 export function currencyId(currency: Currency): CurrencyId
-export function currencyId(currencyOrTradeableAsset: Currency | TradeableAsset): CurrencyId {
+export function currencyId(currency: Currency | undefined): CurrencyId | undefined
+export function currencyId(currencyOrTradeableAsset: Currency | TradeableAsset | undefined): CurrencyId | undefined {
+  if (!currencyOrTradeableAsset) {
+    return undefined
+  }
+
   return buildCurrencyId(
     currencyOrTradeableAsset.chainId,
     'isNative' in currencyOrTradeableAsset

@@ -137,8 +137,6 @@ export const createUniverseTransaction = (info: TransactionInfo, chainId: Univer
     case TransactionType.DEPOSIT_LIQUIDITY_STAKING:
     case TransactionType.WITHDRAW_LIQUIDITY_STAKING:
     case TransactionType.CLAIM:
-    case TransactionType.VOTE:
-    case TransactionType.DELEGATE:
     case TransactionType.CREATE_V3_POOL:
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
     case TransactionType.REMOVE_LIQUIDITY_V3:

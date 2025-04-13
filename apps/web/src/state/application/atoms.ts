@@ -8,7 +8,13 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 // some dapp browsers need to be able to disable the NFT portion of the app in order to pass Apple's app store review
 // this atom persists the inclusion of the `disableNFTs=boolean` query parameter via the webview's session storage
 const storage = createJSONStorage(() => sessionStorage)
+const persistStorage = createJSONStorage(() => localStorage)
 
 export const shouldDisableNFTRoutesAtom = atomWithStorage('shouldDisableNFTRoutes', true, storage)
 export const hideMobileAppPromoBannerAtom = atomWithStorage('hideMobileAppPromoBanner', true, storage)
 export const shouldDisableExploreRoutesAtom = atomWithStorage('shouldDisableExploreRoutes', true, storage)
+export const persistHideMobileAppPromoBannerAtom = atomWithStorage(
+  'persistHideMobileAppPromoBanner',
+  true,
+  persistStorage,
+)

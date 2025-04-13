@@ -39,7 +39,7 @@ import { getContractManager, getProviderManager } from 'wallet/src/features/wall
 import { selectAccounts, selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
-export interface DeepLink {
+interface DeepLink {
   url: string
   coldStart: boolean
 }
@@ -313,11 +313,15 @@ function* _sendAnalyticsEvent(deepLinkAction: DeepLinkActionResult, coldStart: b
 
 export function* handleGoToFiatOnRampDeepLink() {
   const disableForKorea = Statsig.checkGate(getFeatureFlagName(FeatureFlags.DisableFiatOnRampKorea))
-  yield* put(
-    openModal({
-      name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
-    }),
-  )
+  if (disableForKorea) {
+    navigate(ModalName.KoreaCexTransferInfoModal)
+  } else {
+    yield* put(
+      openModal({
+        name: ModalName.FiatOnRampAggregator,
+      }),
+    )
+  }
 }
 
 export function* handleGoToTokenDetailsDeepLink(currencyId: string) {
@@ -373,7 +377,7 @@ export function* parseAndValidateUserAddress(userAddress: string | null) {
   return matchingAccount.address
 }
 
-export function* handleScantasticDeepLink(scantasticQueryParams: string): Generator {
+function* handleScantasticDeepLink(scantasticQueryParams: string): Generator {
   const params = parseScantasticParams(scantasticQueryParams)
   const scantasticEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.Scantastic))
 

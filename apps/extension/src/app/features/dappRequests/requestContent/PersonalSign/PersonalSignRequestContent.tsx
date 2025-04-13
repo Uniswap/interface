@@ -3,13 +3,13 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { SignMessageRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { DeprecatedButton, Flex, Text, Tooltip } from 'ui/src'
+import { Flex, IconButton, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled, Code, StickyNoteTextSquare } from 'ui/src/components/icons'
 import { containsNonPrintableChars } from 'utilities/src/primitives/string'
 
 enum ViewEncoding {
-  UTF8,
-  HEX,
+  UTF8 = 0,
+  HEX = 1,
 }
 interface PersonalSignRequestProps {
   dappRequest: SignMessageRequest
@@ -51,7 +51,7 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
     window.addEventListener('resize', checkScroll)
 
     return () => window.removeEventListener('resize', checkScroll)
-  }, [setIsScrollable, viewEncoding])
+  }, [setIsScrollable, viewEncoding, utf8Message])
 
   return (
     <DappRequestContent
@@ -86,19 +86,11 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
           right={isScrollable ? '$spacing24' : '$spacing12'}
         >
           <Tooltip.Trigger>
-            <DeprecatedButton
-              borderColor="$surface3"
-              borderRadius="$rounded4"
-              icon={
-                viewEncoding === ViewEncoding.UTF8 ? (
-                  <Code color="$neutral2" size="$icon.12" />
-                ) : (
-                  <StickyNoteTextSquare color="$neutral2" size="$icon.12" />
-                )
-              }
-              p="$spacing4"
-              position="relative"
-              theme="secondary"
+            <IconButton
+              icon={viewEncoding === ViewEncoding.UTF8 ? <Code /> : <StickyNoteTextSquare />}
+              size="xxsmall"
+              variant="default"
+              emphasis="secondary"
               onPress={toggleViewEncoding}
             />
           </Tooltip.Trigger>

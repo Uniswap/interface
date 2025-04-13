@@ -3,6 +3,7 @@ import { Token } from '@uniswap/sdk-core'
 import { ScrollBarStyles } from 'components/Common/styles'
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
+import { SearchModal } from 'components/NavBar/SearchBar/SearchModal'
 import Row from 'components/deprecated/Row'
 import { GqlSearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
@@ -19,6 +20,10 @@ import { Z_INDEX } from 'theme/zIndex'
 import { Input, useMedia } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { breakpoints } from 'ui/src/theme'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -172,15 +177,17 @@ export const SearchBar = ({
   const theme = useTheme()
   const { t } = useTranslation() // subscribe to locale changes
 
+  const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
+
   const toggleOpen = useCallback(() => {
     setOpen(!isOpen)
-    if (fullScreen) {
+    if (!searchRevampEnabled && fullScreen) {
       // disable body scroll on fullScreen search (was triggering the animation to hide the nav and affecting the search modal. Alternative option would be to create a separate search modal that is not a child of the nav component)
       document.body.style.overflow = !isOpen ? 'hidden' : 'scroll'
     }
-  }, [setOpen, isOpen, fullScreen])
+  }, [isOpen, searchRevampEnabled, fullScreen])
 
-  useOnClickOutside(searchRef, () => isOpen && toggleOpen())
+  useOnClickOutside(searchRef, () => !searchRevampEnabled && isOpen && toggleOpen())
 
   useKeyDown({
     callback: toggleOpen,
@@ -193,6 +200,7 @@ export const SearchBar = ({
     keys: ['Escape'],
     keyAction: KeyAction.UP,
     disabled: !isOpen,
+    shouldTriggerInInput: true,
   })
 
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue)
@@ -270,6 +278,60 @@ export const SearchBar = ({
   }
 
   const placeholderText = t('smartPools.selector.search.placeholder')
+
+  const onSelectCurrency = useCallback(() => {}, [])
+
+  if (searchRevampEnabled) {
+    return (
+      <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
+        {isOpen && (
+          <SearchModal
+            isModalOpen={isOpen}
+            flow={TokenSelectorFlow.Swap}
+            chainId={UniverseChainId.Mainnet}
+            chainIds={[UniverseChainId.Mainnet]}
+            onClose={() => {
+              toggleOpen()
+              sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
+            }}
+            onSelectCurrency={onSelectCurrency}
+            onSelectChain={() => {}}
+          />
+        )}
+        {isNavSearchInputVisible ? (
+          <SearchInput $isOpen={isOpen} $fullScreen={fullScreen} data-testid="nav-search-input">
+            <SearchIcon data-cy="nav-search-icon">
+              <Search width="20px" height="20px" color={theme.neutral2} />
+            </SearchIcon>
+            <Trace
+              logFocus
+              eventOnTrigger={InterfaceEventName.NAVBAR_SEARCH_SELECTED}
+              element={InterfaceElementName.NAVBAR_SEARCH_INPUT}
+              properties={{ ...trace }}
+            >
+              <Input
+                ref={inputRef}
+                width="100%"
+                height="100%"
+                fontWeight="$book"
+                backgroundColor="$transparent"
+                placeholder={placeholderText}
+                placeholderTextColor={theme.neutral2}
+                onFocus={() => !isOpen && toggleOpen()}
+              />
+            </Trace>
+            <KeyShortcut>/</KeyShortcut>
+          </SearchInput>
+        ) : (
+          <NavIcon onClick={toggleOpen} label={placeholderText}>
+            <SearchIcon data-cy="nav-search-icon">
+              <Search width="20px" height="20px" color={theme.neutral2} />
+            </SearchIcon>
+          </NavIcon>
+        )}
+      </Trace>
+    )
+  }
 
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>

@@ -1,6 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
 import Badge, { BadgeVariant } from 'components/Badge/Badge'
-import { ButtonEmpty } from 'components/Button/buttons'
 import { LightCard } from 'components/Card/cards'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { FixedHeightRow } from 'components/PositionCard'
@@ -14,6 +13,7 @@ import { transparentize } from 'polished'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
+import { Button } from 'ui/src'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
@@ -57,15 +57,11 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
             <Badge variant={BadgeVariant.WARNING}>Sushi</Badge>
           </AutoRow>
           <RowFixed gap="8px">
-            <ButtonEmpty
-              padding="0px 35px 0px 0px"
-              $borderRadius="12px"
-              width="fit-content"
-              as={Link}
-              to={`/migrate/v2/${liquidityToken.address}`}
-            >
-              <Trans i18nKey="common.migrate" />
-            </ButtonEmpty>
+            <Link to={`/migrate/v2/${liquidityToken.address}`} style={{ textDecoration: 'none' }}>
+              <Button variant="branded" emphasis="tertiary" fill={false}>
+                <Trans i18nKey="common.migrate" />
+              </Button>
+            </Link>
           </RowFixed>
         </FixedHeightRow>
       </AutoColumn>

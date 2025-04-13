@@ -4,6 +4,7 @@ import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
 import { useCallback, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
@@ -15,7 +16,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePrevious } from 'utilities/src/react/hooks'
 
 interface CurrencySearchProps {
@@ -24,7 +25,6 @@ interface CurrencySearchProps {
   onDismiss: () => void
   chainIds?: UniverseChainId[]
 }
-
 export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, chainIds }: CurrencySearchProps) {
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
@@ -32,6 +32,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, cha
   const { currentTab } = useSwapAndLimitContext()
   const prevChainId = usePrevious(chainId)
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
+  const { pathname } = useLocation()
 
   const selectChain = useSelectChain()
   const { chains } = useEnabledChains()
@@ -72,7 +73,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, cha
       <Flex width="100%" flexGrow={1} flexShrink={1} flexBasis="auto">
         <TokenSelectorContent
           activeAccountAddress={
-            currentTab === SwapTab.Swap && location.pathname !== '/mint'
+            currentTab === SwapTab.Swap && pathname !== '/mint'
               ? smartPoolAddress ?? undefined
               : account.address!
           }

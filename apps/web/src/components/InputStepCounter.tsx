@@ -1,5 +1,4 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { ButtonGray } from 'components/Button/buttons'
 import { OutlineCard } from 'components/Card/cards'
 import { Input as NumericalInput } from 'components/NumericalInput'
 import { AutoColumn } from 'components/deprecated/Column'
@@ -7,8 +6,7 @@ import styled, { keyframes } from 'lib/styled-components'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { Text, styled as tamaguiStyled } from 'ui/src'
+import { Button, Flex, Text, styled as tamaguiStyled } from 'ui/src'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -26,11 +24,6 @@ const pulse = (color: string) => keyframes`
 
 const InputRow = styled.div`
   display: flex;
-`
-
-const SmallButton = styled(ButtonGray)`
-  border-radius: 8px;
-  padding: 4px;
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
@@ -59,11 +52,6 @@ const InputTitle = tamaguiStyled(Text, {
   fontWeight: '$medium',
   color: '$neutral2',
 })
-
-const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`
-  color: ${({ theme, disabled }) => (disabled ? theme.neutral2 : theme.neutral1)} !important;
-  display: flex;
-`
 
 interface StepCounterProps {
   value: string
@@ -161,18 +149,30 @@ const StepCounter = ({
 
         <AutoColumn gap="8px">
           {!locked && (
-            <SmallButton data-testid="increment-price-range" onClick={handleIncrement} disabled={incrementDisabled}>
-              <ButtonLabel disabled={incrementDisabled} fontSize="12px">
-                <Plus size={18} />
-              </ButtonLabel>
-            </SmallButton>
+            <Button
+              size="xxsmall"
+              emphasis="tertiary"
+              data-testid="increment-price-range"
+              onPress={handleIncrement}
+              isDisabled={incrementDisabled}
+            >
+              <Flex centered>
+                <Plus size={16} />
+              </Flex>
+            </Button>
           )}
           {!locked && (
-            <SmallButton data-testid="decrement-price-range" onClick={handleDecrement} disabled={decrementDisabled}>
-              <ButtonLabel disabled={decrementDisabled} fontSize="12px">
-                <Minus size={18} />
-              </ButtonLabel>
-            </SmallButton>
+            <Button
+              size="xxsmall"
+              emphasis="tertiary"
+              data-testid="decrement-price-range"
+              onPress={handleDecrement}
+              isDisabled={decrementDisabled}
+            >
+              <Flex centered>
+                <Minus size={16} />
+              </Flex>
+            </Button>
           )}
         </AutoColumn>
       </InputRow>

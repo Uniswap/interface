@@ -4,6 +4,7 @@ import { darken } from 'polished'
 import { forwardRef } from 'react'
 import { ChevronDown } from 'react-feather'
 import { ButtonProps as ButtonPropsOriginal, Button as RebassButton } from 'rebass/styled-components'
+import { Flex } from 'ui/src'
 
 export { default as LoadingButtonSpinner } from './LoadingButtonSpinner'
 
@@ -310,7 +311,7 @@ export function ButtonDropdownLight({ disabled = false, children, ...rest }: { d
   return (
     <ButtonOutlined {...rest} disabled={disabled}>
       <RowBetween>
-        <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
+        <Flex style={{ display: 'flex', alignItems: 'center' }}>{children}</Flex>
         <ChevronDown size={24} />
       </RowBetween>
     </ButtonOutlined>
@@ -318,19 +319,19 @@ export function ButtonDropdownLight({ disabled = false, children, ...rest }: { d
 }
 
 export enum ButtonSize {
-  small,
-  medium,
-  large,
+  small = 0,
+  medium = 1,
+  large = 2,
 }
 export enum ButtonEmphasis {
-  high,
-  promotional,
-  highSoft,
-  medium,
-  low,
-  warning,
-  destructive,
-  failure,
+  high = 0,
+  promotional = 1,
+  highSoft = 2,
+  medium = 3,
+  low = 4,
+  warning = 5,
+  destructive = 6,
+  failure = 7,
 }
 interface BaseThemeButtonProps {
   size: ButtonSize

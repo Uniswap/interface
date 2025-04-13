@@ -3,9 +3,9 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import { dismissInAppBrowser } from 'src/utils/linking'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissInAppBrowser } from 'wallet/src/utils/linking'
 
 describe(handleOnRampReturnLink, () => {
   it('Navigates to the home screen activity tab when coming back from on-ramp widget', () => {

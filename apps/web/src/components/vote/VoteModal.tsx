@@ -9,8 +9,10 @@ import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import { useUserVotes, useVoteCallback } from 'state/governance/hooks'
 import { VoteOption } from 'state/governance/types'
-import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { CustomLightSpinner, ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { Trans } from 'react-i18next'
+import { Flex } from 'ui/src'
 import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -118,7 +120,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
       {attempting && !hash && (
         <ConfirmOrLoadingWrapper>
           <RowBetween>
-            <div />
+            <Flex />
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
@@ -131,7 +133,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             <ThemedText.DeprecatedSubHeader>
-              <Trans i18nKey="common.confirmTransaction.button" />
+              <Trans i18nKey="common.confirm" />
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
@@ -139,7 +141,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
       {hash && (
         <ConfirmOrLoadingWrapper>
           <RowBetween>
-            <div />
+            <Flex />
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>

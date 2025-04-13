@@ -1,13 +1,12 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CHART_WIDTH } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
-import { PriceOrdering } from 'components/PositionListItem'
+import { PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled, useMedia } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -101,6 +100,8 @@ export function LiquidityPositionFeeStats({
       gap="$gap20"
       py="$spacing16"
       px="$spacing24"
+      borderBottomLeftRadius="$rounded20"
+      borderBottomRightRadius="$rounded20"
       backgroundColor={cardHovered ? '$surface2Hovered' : '$surface2'}
     >
       <Flex row gap="$gap20" grow $sm={{ row: false }}>

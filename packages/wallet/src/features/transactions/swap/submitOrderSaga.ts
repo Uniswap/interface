@@ -9,7 +9,10 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
 import { finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import {
+  getBaseTradeAnalyticsProperties,
+  getRouteAnalyticsData,
+} from 'uniswap/src/features/transactions/swap/analytics'
 import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   QueuedOrderStatus,
@@ -130,7 +133,11 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
     return
   }
 
-  const properties = { order_hash: orderHash, ...analytics }
+  const properties = {
+    order_hash: orderHash,
+    ...analytics,
+    ...getRouteAnalyticsData({ routing }),
+  }
   yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, properties)
 
   yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))

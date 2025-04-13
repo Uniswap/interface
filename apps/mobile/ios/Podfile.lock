@@ -1430,16 +1430,52 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
-  - OneSignalXCFramework (3.12.6):
-    - OneSignalXCFramework/OneSignalCore (= 3.12.6)
-    - OneSignalXCFramework/OneSignalExtension (= 3.12.6)
-    - OneSignalXCFramework/OneSignalOutcomes (= 3.12.6)
-  - OneSignalXCFramework/OneSignalCore (3.12.6)
-  - OneSignalXCFramework/OneSignalExtension (3.12.6):
+  - OneSignalXCFramework (5.2.10):
+    - OneSignalXCFramework/OneSignalComplete (= 5.2.10)
+  - OneSignalXCFramework/OneSignal (5.2.10):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalExtension
+    - OneSignalXCFramework/OneSignalLiveActivities
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalComplete (5.2.10):
+    - OneSignalXCFramework/OneSignal
+    - OneSignalXCFramework/OneSignalInAppMessages
+    - OneSignalXCFramework/OneSignalLocation
+  - OneSignalXCFramework/OneSignalCore (5.2.10)
+  - OneSignalXCFramework/OneSignalExtension (5.2.10):
     - OneSignalXCFramework/OneSignalCore
     - OneSignalXCFramework/OneSignalOutcomes
-  - OneSignalXCFramework/OneSignalOutcomes (3.12.6):
+  - OneSignalXCFramework/OneSignalInAppMessages (5.2.10):
     - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalLiveActivities (5.2.10):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalLocation (5.2.10):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalNotifications (5.2.10):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalExtension
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalOSCore (5.2.10):
+    - OneSignalXCFramework/OneSignalCore
+  - OneSignalXCFramework/OneSignalOutcomes (5.2.10):
+    - OneSignalXCFramework/OneSignalCore
+  - OneSignalXCFramework/OneSignalUser (5.2.10):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
   - OpenTelemetrySwiftApi (1.6.0)
   - PLCrashReporter (1.11.2)
   - RCT-Folly (2024.01.01.00):
@@ -2731,8 +2767,8 @@ PODS:
     - React-Core
   - react-native-netinfo (11.4.1):
     - React-Core
-  - react-native-onesignal (4.5.2):
-    - OneSignalXCFramework (= 3.12.6)
+  - react-native-onesignal (5.2.9):
+    - OneSignalXCFramework (= 5.2.10)
     - React (< 1.0.0, >= 0.13.0)
   - react-native-pager-view (6.5.1):
     - DoubleConversion
@@ -2759,7 +2795,7 @@ PODS:
     - React-Core
   - react-native-safe-area-context (4.12.0):
     - React-Core
-  - react-native-skia (1.6.0):
+  - react-native-skia (1.7.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -3311,7 +3347,6 @@ PODS:
   - SocketRocket (0.7.1)
   - sparkfabrik-react-native-idfa-aaid (1.2.0):
     - React
-  - Statsig (1.49.0)
   - UIImageColors (2.1.0)
   - Yoga (0.0.0)
   - ZXingObjC (3.6.9):
@@ -3352,7 +3387,7 @@ DEPENDENCIES:
   - fmt (from `../../../node_modules/react-native/third-party-podspecs/fmt.podspec`)
   - glog (from `../../../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../../../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
-  - OneSignalXCFramework (= 3.12.6)
+  - OneSignalXCFramework (< 6.0, >= 5.0.0)
   - RCT-Folly (from `../../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../../../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../../../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -3446,7 +3481,6 @@ DEPENDENCIES:
   - RNScreens (from `../../../node_modules/react-native-screens`)
   - RNSVG (from `../../../node_modules/react-native-svg`)
   - "sparkfabrik-react-native-idfa-aaid (from `../../../node_modules/@sparkfabrik/react-native-idfa-aaid`)"
-  - Statsig (= 1.49.0)
   - UIImageColors (= 2.1.0)
   - Yoga (from `../../../node_modules/react-native/ReactCommon/yoga`)
 
@@ -3490,7 +3524,6 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - SocketRocket
-    - Statsig
     - UIImageColors
     - ZXingObjC
 
@@ -3791,7 +3824,7 @@ SPEC CHECKSUMS:
   MMKV: 3eacda84cd1c4fc95cf848d3ecb69d85ed56006c
   MMKVCore: 508b4d3a8ce031f1b5c8bd235f0517fb3f4c73a9
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  OneSignalXCFramework: ff1c970b7aeb4ac0fe48fb35393eb5d8bf378135
+  OneSignalXCFramework: 1a3b28dfbff23aabce585796d23c1bef37772774
   OpenTelemetrySwiftApi: 657da8071c2908caecce11548e006f779924ff9c
   PLCrashReporter: 499c53b0104f95c302d94fd723ebb03c56d9bac8
   RCT-Folly: bf5c0376ffe4dd2cf438dcf86db385df9fdce648
@@ -3830,11 +3863,11 @@ SPEC CHECKSUMS:
   react-native-image-picker: 00f0e4aae2710ad1ffbc72f65dfe0e396f6b6508
   react-native-mmkv: dea675cf9697ad35940f1687e98e133e1358ef9f
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
-  react-native-onesignal: ab800900cffeca4d9db70a05244013fc8a36ceb8
+  react-native-onesignal: 33ade92bd91578374c31c5a5a91f45f49c2d6614
   react-native-pager-view: 16ba891ddbceb61ee19e6de8ab884793452e7089
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
   react-native-safe-area-context: 142fade490cbebbe428640b8cbdb09daf17e8191
-  react-native-skia: 97ee91100acc4f2498d9092ef6f13947d502b617
+  react-native-skia: 20722d5387a02e4904090fd1a24aa7f6975ca527
   react-native-slider: 552edab18aa6e2a52e220a066cc6bf28b6181ac9
   react-native-webview: 90edc35a70c053b9b44a07cdd0e22414d433f48c
   react-native-widgetkit: efb6680df237463bbe1be3a4d1a1578a1b0bb08f
@@ -3889,11 +3922,10 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   sparkfabrik-react-native-idfa-aaid: 1b72a6264a2175473e309ffa6434db87c58af264
-  Statsig: 970abcd107e8e64bb68f6b8504a94c39d7f9e318
   UIImageColors: d2ef3b0877d203cbb06489eeb78ea8b7788caabe
   Yoga: fd4ca32b81c4069b4175ad9460b042e17db94b66
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: 9f95e7afd1cac471c11319c56b11cea6044f2ecc
+PODFILE CHECKSUM: eda9e221a3f51c82395761c3808502347630fff1
 
 COCOAPODS: 1.14.3

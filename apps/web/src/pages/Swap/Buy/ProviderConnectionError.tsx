@@ -1,6 +1,6 @@
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans } from 'react-i18next'
-import { DeprecatedButton, Flex, Image, Text, useIsDarkMode } from 'ui/src'
+import { Button, Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { RIGOBLOCK_LOGO_LARGE } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
@@ -41,18 +41,11 @@ export function ProviderConnectionError({ onBack, closeModal, selectedServicePro
             />
           </Text>
         </Flex>
-        <DeprecatedButton
-          size="medium"
-          backgroundColor="$accent3"
-          color="$primary"
-          hoverStyle={{
-            backgroundColor: '$accent3Hovered',
-          }}
-          width="100%"
-          onPress={onBack}
-        >
-          <Trans i18nKey="common.tryAgain.error" />
-        </DeprecatedButton>
+        <Flex row width="100%">
+          <Button size="small" emphasis="primary" fill onPress={onBack}>
+            <Trans i18nKey="common.tryAgain.error" />
+          </Button>
+        </Flex>
       </Flex>
     </ConnectingViewWrapper>
   )

@@ -11,10 +11,10 @@ export enum PasswordErrors {
 }
 
 export enum PasswordStrength {
-  NONE, // if there is no input or we don't want it to be displayed yet
-  WEAK,
-  MEDIUM,
-  STRONG,
+  NONE = 0, // if there is no input or we don't want it to be displayed yet
+  WEAK = 1,
+  MEDIUM = 2,
+  STRONG = 3,
 }
 
 export const PASSWORD_VALIDATION_DEBOUNCE_MS = 500

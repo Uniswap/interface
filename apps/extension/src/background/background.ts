@@ -11,8 +11,6 @@ import { setSidePanelBehavior, setSidePanelOptions } from 'src/background/utils/
 import { readIsOnboardedFromStorage } from 'src/background/utils/persistedStateUtils'
 import { logger } from 'utilities/src/logger/logger'
 
-export const EXTENSION_ID = chrome.runtime.id
-
 initMessageBridge()
 
 async function initApp(): Promise<void> {

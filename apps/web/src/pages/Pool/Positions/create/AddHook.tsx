@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { HookModal } from 'components/Liquidity/HookModal'
 import { isDynamicFeeTier } from 'components/Liquidity/utils'
@@ -8,7 +7,7 @@ import { AdvancedButton } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE } from 'pages/Pool/Positions/create/types'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Text, TouchableArea, styled } from 'ui/src'
+import { IconButton, Text, TouchableArea, styled } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { X } from 'ui/src/components/icons/X'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -195,19 +194,15 @@ export function AddHook() {
               onChangeText={setHookValue}
               onFocus={() => handleFocus(true)}
             />
-            <DeprecatedButton
-              theme="secondary"
-              py="$spacing8"
-              px="$spacing12"
-              borderWidth="$none"
-              borderRadius="$rounded12"
+            <IconButton
+              size="xsmall"
+              emphasis="secondary"
               onPress={() => {
                 setHookInputEnabled(false)
                 setHookValue('')
               }}
-            >
-              <X size="$icon.20" color="$neutral1" />
-            </DeprecatedButton>
+              icon={<X />}
+            />
             {showFlyout && (
               <AutocompleteFlyout address={hookValue} handleSelectAddress={() => setHookModalOpen(true)} />
             )}

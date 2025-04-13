@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
-import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { DAI, DAI_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -14,7 +14,7 @@ const TEST_TOKEN_INPUT: TokenOption[] = [
       currency: DAI,
       currencyId: currencyId(DAI),
       logoUrl: null,
-      safetyLevel: null,
+      safetyInfo: null,
     },
     balanceUSD: null,
     quantity: null,
@@ -24,7 +24,7 @@ const TEST_TOKEN_INPUT: TokenOption[] = [
       currency: ETH,
       currencyId: currencyId(ETH),
       logoUrl: null,
-      safetyLevel: null,
+      safetyInfo: null,
     },
     balanceUSD: null,
     quantity: null,
@@ -34,7 +34,7 @@ const TEST_TOKEN_INPUT: TokenOption[] = [
       currency: DAI_ARBITRUM_ONE,
       currencyId: currencyId(DAI_ARBITRUM_ONE),
       logoUrl: null,
-      safetyLevel: null,
+      safetyInfo: null,
     },
     balanceUSD: null,
     quantity: null,

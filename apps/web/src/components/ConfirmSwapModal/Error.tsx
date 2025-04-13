@@ -7,17 +7,17 @@ import { SwapResult } from 'hooks/useSwapCallback'
 import { Trans } from 'react-i18next'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
-import { ExternalLink } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 export enum PendingModalError {
-  TOKEN_APPROVAL_ERROR,
-  PERMIT_ERROR,
-  XV2_HARD_QUOTE_ERROR,
-  CONFIRMATION_ERROR,
-  WRAP_ERROR,
-  TOKEN_WHITELIST_ERROR,
+  TOKEN_APPROVAL_ERROR = 0,
+  PERMIT_ERROR = 1,
+  XV2_HARD_QUOTE_ERROR = 2,
+  CONFIRMATION_ERROR = 3,
+  WRAP_ERROR = 4,
+  TOKEN_PRICE_FEED_ERROR = 5,
 }
 
 interface ErrorModalContentProps {

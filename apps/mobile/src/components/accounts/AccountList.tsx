@@ -36,28 +36,15 @@ const ViewOnlyHeaderContent = (): JSX.Element => {
 }
 
 enum AccountListItemType {
-  SignerHeader,
-  SignerAccount,
-  ViewOnlyHeader,
-  ViewOnlyAccount,
+  SignerAccount = 0,
+  ViewOnlyHeader = 1,
+  ViewOnlyAccount = 2,
 }
 
 type AccountListItem =
-  | { type: AccountListItemType.SignerHeader }
   | { type: AccountListItemType.SignerAccount; account: AccountWithPortfolioValue }
   | { type: AccountListItemType.ViewOnlyHeader }
   | { type: AccountListItemType.ViewOnlyAccount; account: AccountWithPortfolioValue }
-
-const SignerHeader = (): JSX.Element => {
-  const { t } = useTranslation()
-  return (
-    <Flex fill px="$spacing24" py="$spacing8">
-      <Text color="$neutral2" variant="subheading2">
-        {t('account.wallet.header.other')}
-      </Text>
-    </Flex>
-  )
-}
 
 export function AccountList({ accounts, onPress, isVisible }: AccountListProps): JSX.Element {
   const colors = useSporeColors()
@@ -122,7 +109,6 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
     const items: AccountListItem[] = []
 
     if (hasSignerAccounts) {
-      items.push({ type: AccountListItemType.SignerHeader })
       items.push(...signerAccounts.map((account) => ({ type: AccountListItemType.SignerAccount, account })))
     }
 
@@ -138,8 +124,6 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
     // eslint-disable-next-line consistent-return
     ({ item }: { item: AccountListItem }) => {
       switch (item.type) {
-        case AccountListItemType.SignerHeader:
-          return <SignerHeader />
         case AccountListItemType.ViewOnlyHeader:
           return <ViewOnlyHeaderContent />
         case AccountListItemType.SignerAccount:

@@ -1,10 +1,11 @@
 import { LiquidityEventName } from '@uniswap/analytics-events'
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
-import { PopupType, addPopup } from 'state/application/reducer'
+import { popupRegistry } from 'components/Popups/registry'
+import { PopupType } from 'components/Popups/types'
 import {
-  HandleOnChainStepParams,
   handleApprovalTransactionStep,
   handleOnChainStep,
+  HandleOnChainStepParams,
   //handleSignatureStep,
 } from 'state/sagas/transactions/utils'
 import {
@@ -16,7 +17,7 @@ import {
   TransactionType,
 } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
-import { call, put } from 'typed-redux-saga'
+import { call } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
@@ -139,7 +140,7 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
       | UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED])
   }
 
-  yield* put(addPopup({ content: { type: PopupType.Transaction, hash }, key: hash }))
+  popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
 }
 
 function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }) {

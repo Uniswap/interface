@@ -3,10 +3,10 @@ import { Dialog, DialogButtonType } from 'components/Dialog/Dialog'
 import { fireEvent, render, screen } from 'test-utils/render'
 import { Gap } from 'theme'
 
-const mockIcon = <div>Mock Icon</div>
-const mockTitle = <div>Mock Title</div>
-const mockDescription = <div>Mock Description</div>
-const mockBody = <div>Mock Body</div>
+const mockIcon = <>Mock Icon</>
+const mockTitle = <>Mock Title</>
+const mockDescription = <>Mock Description</>
+const mockBody = <>Mock Body</>
 
 const mockOnCancel = jest.fn()
 const mockLeftClick = jest.fn()
@@ -14,11 +14,11 @@ const mockRightClick = jest.fn()
 
 const mockButtonsConfig = {
   left: {
-    title: <div>Left Button</div>,
+    title: <>Left Button</>,
     onClick: mockLeftClick,
   },
   right: {
-    title: <div>Right Button</div>,
+    title: <>Right Button</>,
     onClick: mockRightClick,
   },
   gap: 'md' as Gap,

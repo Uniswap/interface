@@ -2,7 +2,7 @@ import styled from 'lib/styled-components'
 import { Gap } from 'theme'
 
 /** @deprecated Please use `Flex` from `ui/src` going forward */
-export const Column = styled.div<{
+const Column = styled.div<{
   gap?: Gap | string
   flex?: string
 }>`

@@ -1,11 +1,12 @@
 import { SwapEventName } from '@uniswap/analytics-events'
+import { popupRegistry } from 'components/Popups/registry'
+import { PopupType } from 'components/Popups/types'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
-import { PopupType, addPopup } from 'state/application/reducer'
 import {
-  HandleSignatureStepParams,
   addTransactionBreadcrumb,
   getSwapTransactionInfo,
   handleSignatureStep,
+  HandleSignatureStepParams,
 } from 'state/sagas/transactions/utils'
 import { addSignature } from 'state/signatures/reducer'
 import { SignatureType, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
@@ -89,7 +90,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
 
   yield* put(addSignature(signatureDetails))
 
-  yield* put(addPopup({ content: { type: PopupType.Order, orderHash }, key: orderHash }))
+  popupRegistry.addPopup({ type: PopupType.Order, orderHash }, orderHash)
 }
 
 const ROUTING_TO_SIGNATURE_TYPE_MAP: {

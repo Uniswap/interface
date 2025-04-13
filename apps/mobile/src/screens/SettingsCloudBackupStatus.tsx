@@ -11,7 +11,7 @@ import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNClo
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
-import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -134,15 +134,19 @@ export function SettingsCloudBackupStatus({
             </Flex>
           </Flex>
         </Flex>
-        <DeprecatedButton
-          testID={TestID.Remove}
-          theme="detrimental"
-          onPress={(): void => {
-            setShowBackupDeleteWarning(true)
-          }}
-        >
-          {t('settings.setting.backup.status.action.delete')}
-        </DeprecatedButton>
+        <Flex row centered>
+          <Button
+            testID={TestID.Remove}
+            size="large"
+            emphasis="secondary"
+            variant="critical"
+            onPress={(): void => {
+              setShowBackupDeleteWarning(true)
+            }}
+          >
+            {t('settings.setting.backup.status.action.delete')}
+          </Button>
+        </Flex>
       </Flex>
 
       <WarningModal

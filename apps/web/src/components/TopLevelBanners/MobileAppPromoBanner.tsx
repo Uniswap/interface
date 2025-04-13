@@ -2,10 +2,9 @@ import { ReactComponent as UniswapLogo } from 'assets/svg/uniswap_app_logo.svg'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { useState } from 'react'
 import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { hideMobileAppPromoBannerAtom } from 'state/application/atoms'
+import { hideMobileAppPromoBannerAtom, persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
 import { Anchor, Flex, Text, styled, useSporeColors } from 'ui/src'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { getWalletMeta } from 'utils/walletMeta'
@@ -41,10 +40,12 @@ const StyledButton = styled(Anchor, {
  * - The user is on a mobile device our app supports
  * - The user is not using Safari (since we don't want to conflict with the Safari-native Smart App Banner)
  * - The user has not dismissed the banner during this session
+ * - The user has not clicked the Uniswap wallet or Get Uniswap Wallet buttons in wallet options
  */
-export function useMobileAppPromoBannerEligible() {
+export function useMobileAppPromoBannerEligible(): boolean {
   const hideMobileAppPromoBanner = useAtomValue(hideMobileAppPromoBannerAtom)
-  return (isWebIOS || isWebAndroid) && !hideMobileAppPromoBanner
+  const persistHideMobileAppPromoBanner = useAtomValue(persistHideMobileAppPromoBannerAtom)
+  return (isWebIOS || isWebAndroid) && !hideMobileAppPromoBanner && !persistHideMobileAppPromoBanner
 }
 
 const UNIVERSAL_DOWNLOAD_LINK = 'https://uniswapwallet.onelink.me/8q3y/39b0eeui'
@@ -79,18 +80,12 @@ function getDownloadLink(userAgent: string, peerWalletAgent?: string): string {
 
 export function MobileAppPromoBanner() {
   const { t } = useTranslation()
-  const [isVisible, setIsVisible] = useState(true)
-  const mobileAppPromoBannerEligible = useMobileAppPromoBannerEligible()
   const [, setHideMobileAppPromoBanner] = useAtom(hideMobileAppPromoBannerAtom)
   const colors = useSporeColors()
 
   const provider = useEthersWeb3Provider()
 
   const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
-
-  if (!mobileAppPromoBannerEligible || !isVisible) {
-    return null
-  }
 
   return (
     <Wrapper>
@@ -100,7 +95,6 @@ export function MobileAppPromoBanner() {
           size={20}
           color={colors.neutral2.val}
           onClick={() => {
-            setIsVisible(false)
             setHideMobileAppPromoBanner(true)
           }}
         />

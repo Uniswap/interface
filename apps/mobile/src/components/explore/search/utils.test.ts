@@ -79,7 +79,6 @@ describe(formatTokenSearchResults, () => {
     expect(result?.[0]?.name).toEqual(searchToken.name)
     expect(result?.[0]?.symbol).toEqual(searchToken.symbol)
     expect(result?.[0]?.logoUrl).toEqual(searchToken.project?.logoUrl)
-    expect(result?.[0]?.safetyLevel).toEqual(searchToken.project?.safetyLevel)
     expect(result?.[0]?.feeData).toEqual(searchToken.feeData)
     expect(result?.[0]?.safetyInfo).toEqual(
       getCurrencySafetyInfo(searchToken.project?.safetyLevel, searchToken.protectionInfo),

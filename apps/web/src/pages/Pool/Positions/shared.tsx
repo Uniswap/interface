@@ -1,4 +1,4 @@
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Flex, Main, Text, styled } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { TextVariantTokens, fonts, iconSizes } from 'ui/src/theme'
@@ -62,38 +62,4 @@ export const BodyWrapper = styled(Main, {
   $lg: {
     px: '$padding20',
   },
-})
-
-// TODO: replace with Spore button once available
-export const HeaderButton = styled(Flex, {
-  row: true,
-  backgroundColor: '$surface2',
-  borderRadius: '$rounded12',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '$gap4',
-  py: '$padding8',
-  px: '$padding12',
-  ...ClickableTamaguiStyle,
-  variants: {
-    emphasis: {
-      primary: {
-        backgroundColor: '$accent3',
-      },
-      secondary: {
-        backgroundColor: '$surface2',
-      },
-    },
-    disabled: {
-      true: {
-        cursor: 'default',
-        hoverStyle: {
-          opacity: 0.5,
-        },
-        pressStyle: {
-          opacity: 0.5,
-        },
-      },
-    },
-  } as const,
 })

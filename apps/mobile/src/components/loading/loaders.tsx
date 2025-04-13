@@ -41,7 +41,11 @@ function Image(): JSX.Element {
   )
 }
 
-function Favorite({ height, contrast }: { height?: number; contrast?: boolean }): JSX.Element {
+function Favorite({
+  height,
+  contrast,
+  ...props
+}: { height?: number; contrast?: boolean } & FlexLoaderProps): JSX.Element {
   return (
     <Skeleton contrast={contrast}>
       {/* surface3 because these only show up on explore modal which has a blurred bg that makes neutral3 look weird */}
@@ -50,6 +54,7 @@ function Favorite({ height, contrast }: { height?: number; contrast?: boolean })
         borderRadius="$rounded16"
         height={height ?? 50}
         testID="loader/favorite"
+        {...props}
       />
     </Skeleton>
   )

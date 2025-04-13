@@ -40,6 +40,7 @@ import {
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
   TransactionDetailsPartsFragment,
+  TransactionDirection,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -350,6 +351,30 @@ function parseBridge(changes: TransactionChanges, formatNumberOrString: FormatNu
   return { title: i18n.t('common.unknownBridge') }
 }
 
+function parseV2PositionCreation(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
+  const lpTokenIndex = changes.TokenTransfer.findIndex(
+    (transfer) => transfer.asset.symbol === 'UNI-V2' && transfer.direction === TransactionDirection.In,
+  )
+  const transfers = changes.TokenTransfer.filter(
+    (transfer, i) => i !== lpTokenIndex && transfer.direction === TransactionDirection.Out,
+  )
+
+  if (lpTokenIndex > -1 && transfers.length === 2) {
+    return {
+      title: i18n.t('pool.createdPosition'),
+      ...parseLPTransfers(
+        {
+          ...changes,
+          TokenTransfer: transfers,
+        },
+        formatNumberOrString,
+      ),
+    }
+  }
+
+  return undefined
+}
+
 /**
  * Wrap/unwrap transactions are labelled as lend transactions on the backend.
  * This function parses the transaction changes to determine if the transaction is a wrap/unwrap transaction.
@@ -360,6 +385,12 @@ function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumb
   if (native && erc20 && gqlToCurrency(native)?.wrapped.address === gqlToCurrency(erc20)?.wrapped.address) {
     return parseSwap(changes, formatNumberOrString)
   }
+  // Edge case: v2 position creation
+  const v2PositionCreation = parseV2PositionCreation(changes, formatNumberOrString)
+  if (v2PositionCreation) {
+    return v2PositionCreation
+  }
+
   return { title: i18n.t('common.unknownLend') }
 }
 

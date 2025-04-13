@@ -16,6 +16,7 @@ import {
   tokenOptionDifference,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
+import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -29,7 +30,7 @@ function useTokenSectionsForSwapOutput({
   activeAccountAddress,
   chainFilter,
   input,
-}: TokenSectionsHookProps): GqlResult<TokenSection[]> {
+}: TokenSectionsHookProps): GqlResult<TokenSection<TokenSelectorItemTypes>[]> {
   const isTokenSelectorTrendingTokensEnabled = useFeatureFlag(FeatureFlags.TokenSelectorTrendingTokens)
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
 
@@ -131,7 +132,7 @@ function useTokenSectionsForSwapOutput({
     tokenOptions: isTokenSelectorTrendingTokensEnabled ? popularTokenOptions : popularMinusPortfolioTokens,
   })
 
-  const bridgingSectionTokenOptions = useMemo(
+  const bridgingSectionTokenOptions: TokenSelectorItemTypes[] = useMemo(
     () => (shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : bridgingTokenOptions ?? []),
     [bridgingTokenOptions, shouldNestBridgingTokens],
   )

@@ -1,36 +1,35 @@
 import { logger } from 'utilities/src/logger/logger'
 import { isInterface } from 'utilities/src/platform'
+
+// only disable for this enum
+/* eslint-disable @typescript-eslint/prefer-enum-initializers */
 /**
  * Feature flag names
  */
 export enum FeatureFlags {
   // Shared
+  BlockaidFotLogging,
   Datadog,
   EmbeddedWallet,
-  ForAggregator,
   IndicativeSwapQuotes,
   InstantTokenBalanceUpdate,
   MonadTestnet,
   MonadTestnetDown,
   PortionFields,
+  SearchRevamp,
   SharedSwapArbitrumUniswapXExperiment,
+  Soneium,
   TokenSelectorTrendingTokens,
   TwoSecondSwapQuotePollingInterval,
-  Unichain,
-  UnichainPromo,
   UniswapX,
   V4Swap,
   UniswapXPriorityOrdersBase,
   UniswapXPriorityOrdersOptimism,
   UniswapXPriorityOrdersUnichain,
-  BlockaidFotLogging,
 
   // Wallet
   DisableFiatOnRampKorea,
-  ExtensionAppRating,
   ExtensionAutoConnect,
-  ExtensionClaimUnitag,
-  FiatOffRamp,
   NotificationPriceAlertsAndroid,
   NotificationPriceAlertsIOS,
   NotificationOnboardingCard,
@@ -41,10 +40,8 @@ export enum FeatureFlags {
   PrivateRpc,
   Scantastic,
   SelfReportSpamNFTs,
-  TransactionDetailsSheet,
   UwULink,
   BlurredLockScreen,
-  TokenSelectorFlashList,
 
   // Web
   AATestWeb,
@@ -54,22 +51,20 @@ export enum FeatureFlags {
   GqlTokenLists,
   L2NFTs,
   LimitsFees,
-  LPRedesign,
   MigrateV3ToV4,
   MultipleRoutingOptions,
   NavigationHotkeys,
   PositionPageV2,
   PriceRangeInputV2,
   QuickRouteMainnet,
-  Realtime,
   TraceJsonRpc,
   TwitterConversionTracking,
   UniswapXSyntheticQuote,
   UniswapXv2,
   UniversalSwap,
   V4Data,
-  Zora,
 }
+/* eslint-enable @typescript-eslint/prefer-enum-initializers */
 
 // These names must match the gate name on statsig
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
@@ -80,11 +75,11 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.InstantTokenBalanceUpdate, 'instant-token-balance-update'],
   [FeatureFlags.MonadTestnet, 'monad_testnet'],
   [FeatureFlags.PortionFields, 'portion-fields'],
+  [FeatureFlags.SearchRevamp, 'search_revamp'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
+  [FeatureFlags.Soneium, 'soneium'],
   [FeatureFlags.TokenSelectorTrendingTokens, 'token_selector_trending_tokens'],
   [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
-  [FeatureFlags.Unichain, 'unichain'],
-  [FeatureFlags.UnichainPromo, 'unichain_promo'],
   [FeatureFlags.UniswapX, 'uniswapx'],
   [FeatureFlags.UniswapXPriorityOrdersBase, 'uniswapx_priority_orders_base'],
   [FeatureFlags.UniswapXPriorityOrdersOptimism, 'uniswapx_priority_orders_optimism'],
@@ -98,11 +93,9 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.AATestWeb, 'aatest_web'],
   [FeatureFlags.ConversionTracking, 'conversion-tracking'],
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
-  [FeatureFlags.ForAggregator, 'for_aggregator_web'],
   [FeatureFlags.GoogleConversionTracking, 'google_conversion_tracking'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.L2NFTs, 'l2_nfts'],
-  [FeatureFlags.LPRedesign, 'lp_redesign'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.MigrateV3ToV4, 'migrate-v3-to-v4'],
   [FeatureFlags.MonadTestnetDown, 'monad_down'],
@@ -111,14 +104,12 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PositionPageV2, 'position_page_v2'],
   [FeatureFlags.PriceRangeInputV2, 'price_range_input_v2'],
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
-  [FeatureFlags.Realtime, 'realtime'],
   [FeatureFlags.TraceJsonRpc, 'traceJsonRpc'],
   [FeatureFlags.TwitterConversionTracking, 'twitter_conversion_tracking'],
   [FeatureFlags.UniswapXSyntheticQuote, 'uniswapx_synthetic_quote'],
   [FeatureFlags.UniswapXv2, 'uniswapx_v2'],
   [FeatureFlags.UniversalSwap, 'universal_swap'],
   [FeatureFlags.V4Data, 'v4_data'],
-  [FeatureFlags.Zora, 'zora'],
 ])
 
 // These names must match the gate name on statsig
@@ -126,11 +117,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   ...SHARED_FEATURE_FLAG_NAMES,
   [FeatureFlags.BlurredLockScreen, 'blurred_lock_screen'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
-  [FeatureFlags.ExtensionAppRating, 'extension_app_rating'],
   [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
-  [FeatureFlags.ExtensionClaimUnitag, 'extension-claim-unitag'],
-  [FeatureFlags.FiatOffRamp, 'fiat-offramp'],
-  [FeatureFlags.ForAggregator, 'for-aggregator'],
   [FeatureFlags.NotificationOnboardingCard, 'notification_onboarding_card'],
   [FeatureFlags.NotificationPriceAlertsAndroid, 'notification_price_alerts_android'],
   [FeatureFlags.NotificationPriceAlertsIOS, 'notification_price_alerts_ios'],
@@ -141,14 +128,12 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PrivateRpc, 'mev-blocker'],
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
-  [FeatureFlags.TokenSelectorFlashList, 'token_selector_flashlist'],
-  [FeatureFlags.TransactionDetailsSheet, 'transaction-details-sheet'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])
 
 export enum FeatureFlagClient {
-  Web,
-  Wallet,
+  Web = 0,
+  Wallet = 1,
 }
 
 const FEATURE_FLAG_NAMES = {

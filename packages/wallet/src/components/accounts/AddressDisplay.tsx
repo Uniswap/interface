@@ -1,6 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { FlexAlignType, LayoutChangeEvent, Platform } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
@@ -29,8 +28,10 @@ type AddressDisplayProps = {
   size?: number
   variant?: keyof typeof fonts
   textColor?: ColorTokens
+  alignItems?: 'flex-start' | 'center'
   captionTextColor?: ColorTokens
   captionVariant?: keyof typeof fonts
+  centered?: boolean
   direction?: 'row' | 'column'
   showCopy?: boolean
   showCopyWrapperButton?: boolean
@@ -39,11 +40,9 @@ type AddressDisplayProps = {
   showIconBackground?: boolean
   showIconBorder?: boolean
   includeUnitagSuffix?: boolean
-  textAlign?: FlexAlignType
   horizontalGap?: SpaceTokens
   notificationsBadgeContainer?: ({ children, address }: { children: JSX.Element; address: string }) => JSX.Element
   gapBetweenLines?: SpaceTokens
-  showViewOnlyLabel?: boolean
   showViewOnlyBadge?: boolean
 
   // TODO WALL-4545 Added flag to disable forced width causing trouble in other screens
@@ -79,27 +78,25 @@ export function AddressDisplay({
   size = 24,
   variant = 'body1',
   textColor = '$neutral1',
+  alignItems = 'center',
   captionTextColor = '$neutral2',
   captionVariant = 'subheading2',
+  centered,
   hideAddressInSubtitle,
   direction = 'row',
   showCopy = false,
   showCopyWrapperButton = false,
   showAccountIcon = true,
-  textAlign,
-  contentAlign = 'center', // vertical alignment of all items
   showIconBackground,
   showIconBorder,
   horizontalGap = '$spacing12',
   showViewOnlyBadge = false,
-  showViewOnlyLabel = false,
   notificationsBadgeContainer,
   includeUnitagSuffix = false,
   gapBetweenLines = '$none',
   disableForcedWidth = false,
   displayNameTextAlign,
 }: AddressDisplayProps): JSX.Element {
-  const { t } = useTranslation()
   const dispatch = useDispatch()
   const displayName = useDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
   const { avatar } = useAvatar(address)
@@ -127,7 +124,6 @@ export function AddressDisplay({
   // Extract sizes so copy icon can match font variants
   const mainSize = fonts[variant].fontSize
   const captionSize = fonts[captionVariant].fontSize
-  const itemAlignment = textAlign || (!showAccountIcon || direction === 'column' ? 'center' : 'flex-start')
 
   const icon = useMemo(() => {
     return (
@@ -145,8 +141,8 @@ export function AddressDisplay({
   return (
     <Flex
       shrink
-      alignItems={contentAlign}
       flexDirection={direction}
+      alignItems={alignItems}
       gap={horizontalGap}
       onLayout={(e: LayoutChangeEvent) => {
         Platform.OS === 'web' && setWrapperWidth(e.nativeEvent.layout.width)
@@ -154,9 +150,9 @@ export function AddressDisplay({
     >
       {showAccountIcon &&
         (notificationsBadgeContainer ? notificationsBadgeContainer({ children: icon, address }) : icon)}
-      <Flex shrink alignItems={itemAlignment} gap={gapBetweenLines}>
+      <Flex flexShrink={1} gap={gapBetweenLines}>
         <CopyButtonWrapper onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
-          <Flex centered row gap="$spacing12">
+          <Flex row centered={centered} gap="$spacing12">
             <DisplayNameText
               disableForcedWidth={disableForcedWidth}
               displayName={displayName}
@@ -176,6 +172,8 @@ export function AddressDisplay({
                 textAlign: displayNameTextAlign,
               }}
               unitagIconSize={mainSize}
+              flexShrink={1}
+              centered={centered}
             />
             {showCopy && !showAddressAsSubtitle && <CopySheets color="$neutral1" size={mainSize} />}
           </Flex>
@@ -186,22 +184,13 @@ export function AddressDisplay({
             captionSize={captionSize}
             captionTextColor={captionTextColor}
             captionVariant={captionVariant}
+            centered={centered}
             showCopy={showCopy}
             showCopyWrapperButton={showCopyWrapperButton}
             onPressCopyAddress={onPressCopyAddress}
           />
         )}
       </Flex>
-
-      {showViewOnlyLabel && (
-        <Flex grow alignItems="flex-end" flexBasis="30%" mr="$spacing8">
-          <Flex backgroundColor="$surface2" borderRadius="$rounded12" px="$spacing8" py="$spacing4">
-            <Text color="$neutral2" variant="body4">
-              {t('settings.section.wallet.label.viewOnly')}
-            </Text>
-          </Flex>
-        </Flex>
-      )}
     </Flex>
   )
 }
@@ -211,17 +200,19 @@ const AddressSubtitle = ({
   captionTextColor,
   captionVariant,
   captionSize,
+  centered,
   showCopy,
   showCopyWrapperButton,
   onPressCopyAddress,
 }: { captionSize: number; onPressCopyAddress: () => Promise<void> } & Pick<
   AddressDisplayProps,
-  'address' | 'captionTextColor' | 'captionVariant' | 'showCopy' | 'showCopyWrapperButton'
+  'address' | 'captionTextColor' | 'captionVariant' | 'centered' | 'showCopy' | 'showCopyWrapperButton'
 >): JSX.Element => (
   <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
     <Flex
-      centered
       row
+      centered={centered}
+      alignItems="center"
       backgroundColor={showCopyWrapperButton ? '$surface2' : '$transparent'}
       borderRadius="$roundedFull"
       gap="$spacing4"

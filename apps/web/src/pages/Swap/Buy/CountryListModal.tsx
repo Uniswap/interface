@@ -102,7 +102,7 @@ export function CountryListModal({
         <Flex grow>
           <AutoSizer disableWidth>
             {({ height }: { height: number }) => (
-              <div data-testid="country-list-wrapper">
+              <Flex data-testid="country-list-wrapper">
                 <FixedSizeList
                   height={height}
                   ref={fixedList as any}
@@ -125,7 +125,7 @@ export function CountryListModal({
                     />
                   )}
                 </FixedSizeList>
-              </div>
+              </Flex>
             )}
           </AutoSizer>
         </Flex>

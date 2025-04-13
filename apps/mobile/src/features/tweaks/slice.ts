@@ -7,7 +7,7 @@ export interface TweaksState {
 
 export const initialTweaksState: TweaksState = {}
 
-export const slice = createSlice({
+const slice = createSlice({
   name: 'tweaks',
   initialState: initialTweaksState,
   reducers: {

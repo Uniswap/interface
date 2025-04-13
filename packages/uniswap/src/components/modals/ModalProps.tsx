@@ -22,6 +22,7 @@ export type ModalProps = PropsWithChildren<{
   dismissOnBackPress?: boolean
   isDismissible?: boolean
   overrideInnerContainer?: boolean
+  position?: ComponentProps<typeof View>['position']
   renderBehindTopInset?: boolean
   renderBehindBottomInset?: boolean
   hideKeyboardOnDismiss?: boolean

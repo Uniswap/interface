@@ -16,10 +16,10 @@ export enum PageType {
 
 // eslint-disable-next-line import/no-unused-modules -- currently used in a test file
 export enum MatchType {
-  EXACT,
-  STARTS_WITH,
-  ENDS_WITH,
-  INCLUDES,
+  EXACT = 0,
+  STARTS_WITH = 1,
+  ENDS_WITH = 2,
+  INCLUDES = 3,
 }
 
 // Default mapping of PageType to MatchType

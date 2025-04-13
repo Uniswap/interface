@@ -6,8 +6,8 @@ import { ProposalAction } from 'pages/CreateProposal/ProposalActionSelector'
 import { Trans } from 'react-i18next'
 
 enum ProposalActionDetailField {
-  ADDRESS,
-  CURRENCY,
+  ADDRESS = 0,
+  CURRENCY = 1,
 }
 
 const ProposalActionDetailContainer = styled.div`

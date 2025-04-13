@@ -12,6 +12,7 @@ import {
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
+  USDC_SONEIUM,
   USDC_UNICHAIN,
   USDC_UNICHAIN_SEPOLIA,
   USDC_WORLD_CHAIN,
@@ -26,6 +27,7 @@ import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 
 const USDC_DEFAULT_MIN = 1_000e6
 const USDC_18_DEFAULT_MIN = 1_000e18
+const USDC_SONEIUM_DEFAULT_MIN = 3_0000e4
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -41,6 +43,7 @@ export const STABLECOIN_AMOUNT_OUT: Record<UniverseChainId, CurrencyAmount<Token
   [UniverseChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, USDC_DEFAULT_MIN),
   [UniverseChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, USDC_DEFAULT_MIN),
   [UniverseChainId.Sepolia]: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, USDC_DEFAULT_MIN),
+  [UniverseChainId.Soneium]: CurrencyAmount.fromRawAmount(USDC_SONEIUM, USDC_SONEIUM_DEFAULT_MIN),
   [UniverseChainId.Unichain]: CurrencyAmount.fromRawAmount(USDC_UNICHAIN, USDC_DEFAULT_MIN),
   [UniverseChainId.UnichainSepolia]: CurrencyAmount.fromRawAmount(USDC_UNICHAIN_SEPOLIA, USDC_DEFAULT_MIN),
   [UniverseChainId.WorldChain]: CurrencyAmount.fromRawAmount(USDC_WORLD_CHAIN, USDC_DEFAULT_MIN),

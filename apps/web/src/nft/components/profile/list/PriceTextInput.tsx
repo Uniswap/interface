@@ -5,7 +5,6 @@ import { BrokenLinkIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
 import { WarningType } from 'nft/components/profile/list/shared'
 import { useUpdateInputAndWarnings } from 'nft/components/profile/list/utils'
-import { body } from 'nft/css/common.css'
 import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { Dispatch, useRef, useState } from 'react'
@@ -110,11 +109,11 @@ export const PriceTextInput = ({
           ? theme.accent1
           : theme.neutral2
 
-  const setPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!listPrice && event.target.value.includes('.') && parseFloat(event.target.value) === 0) {
+  const setPrice = (text: string) => {
+    if (!listPrice && text.includes('.') && parseFloat(text) === 0) {
       return
     }
-    const val = parseFloat(event.target.value)
+    const val = parseFloat(text)
     setListPrice(isNaN(val) ? undefined : val)
   }
 
@@ -141,16 +140,12 @@ export const PriceTextInput = ({
     <PriceTextInputWrapper>
       <InputWrapper borderColor={warningColor}>
         <NumericInput
-          as="input"
-          pattern="[0-9]"
-          borderStyle="none"
-          className={body}
-          color={{ placeholder: 'neutral2', default: 'neutral1' }}
+          color="$neutral1"
           placeholder="0"
           backgroundColor="none"
-          width={{ sm: '54', md: '68' }}
+          width={68}
           ref={inputRef}
-          onChange={setPrice}
+          onChangeText={setPrice}
         />
         <CurrencyWrapper listPrice={listPrice}>&nbsp;ETH</CurrencyWrapper>
         {(isGlobalPrice || globalOverride) && (

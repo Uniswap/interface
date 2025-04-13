@@ -6,7 +6,6 @@ export const BUTTON_PADDING = 20
 
 export const CURSOR_INNER_SIZE = 12
 export const CURSOR_SIZE = CURSOR_INNER_SIZE + 6
-export const LINE_WIDTH = 1
 
 export const TIME_RANGES = [
   [HistoryDuration.Hour, i18n.t('token.priceExplorer.timeRangeLabel.hour'), ElementName.TimeFrame1H],

@@ -1,36 +1,24 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
-import { useIsExtraLargeScreen } from 'ui/src/hooks/useDeviceDimensions'
-import { fonts } from 'ui/src/theme'
-import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
-import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
-import { SectionFooter, TokenSectionFooterProps } from 'uniswap/src/components/TokenSelector/items/TokenSectionFooter'
-import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/items/TokenSectionHeader'
+import { memo, useCallback, useState } from 'react'
+import { TokenOptionItem as BaseTokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
 import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
-import {
-  TokenSectionBaseList,
-  TokenSectionBaseListRef,
-} from 'uniswap/src/components/TokenSelector/lists/TokenSectionBaseList/TokenSectionBaseList'
-import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
-import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
+import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
+import { ItemRowInfo } from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
+import { TokenOption, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
-import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
-import { isInterface } from 'utilities/src/platform'
 
-function isHorizontalListTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
+function isHorizontalListTokenItem(data: TokenSelectorItemTypes): data is TokenOption[] {
   return Array.isArray(data)
 }
 
-const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
+const TokenOptionItem = memo(function _TokenOptionItem({
   tokenOption,
   onSelectCurrency,
   section,
@@ -40,7 +28,7 @@ const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
   isKeyboardOpen,
 }: {
   tokenOption: TokenOption
-  section: TokenSection
+  section: TokenSection<TokenOption>
   index: number
   showWarnings: boolean
   showTokenAddress?: boolean
@@ -68,7 +56,7 @@ const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
   const subtitle = isTestnetModeEnabled ? undefined : tokenBalance
 
   return (
-    <TokenOptionItem
+    <BaseTokenOptionItem
       balance={title}
       isKeyboardOpen={isKeyboardOpen}
       option={tokenOption}
@@ -82,20 +70,9 @@ const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
   )
 })
 
-function EmptyResults(): JSX.Element {
-  const { t } = useTranslation()
-  return (
-    <Flex>
-      <Text color="$neutral3" mt="$spacing16" textAlign="center" variant="subheading2">
-        {t('common.noResults')}
-      </Text>
-    </Flex>
-  )
-}
-
 interface TokenSelectorListProps {
   onSelectCurrency: OnSelectCurrency
-  sections?: TokenSection[]
+  sections?: TokenSection<TokenSelectorItemTypes>[]
   chainFilter?: UniverseChainId | null
   showTokenWarnings: boolean
   refetch?: () => void
@@ -120,29 +97,12 @@ function _TokenSelectorList({
   errorText,
   showTokenAddress,
 }: TokenSelectorListProps): JSX.Element {
-  const { t } = useTranslation()
-  const sectionListRef = useRef<TokenSectionBaseListRef>()
   const [expandedItems, setExpandedItems] = useState<string[]>([])
-  const { shouldShowUnichainBridgingTooltip } = useUnichainTooltipVisibility()
-  const isExtraLargeScreen = useIsExtraLargeScreen()
-  const isXLInterface = isInterface && isExtraLargeScreen
-  const shouldRenderUnichainInlineBridgingTooltip =
-    shouldShowUnichainBridgingTooltip && !isXLInterface && chainFilter === UniverseChainId.Unichain
 
   usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])
 
-  useEffect(() => {
-    if (sections?.length) {
-      sectionListRef.current?.scrollToLocation({
-        itemIndex: 0,
-        sectionIndex: 0,
-        animated: true,
-      })
-    }
-  }, [chainFilter, sections?.length])
-
   const handleExpand = useCallback(
-    (item: TokenOption | TokenOption[]) => {
+    (item: TokenSelectorItemTypes) => {
       setExpandedItems((prev) => [...prev, key(item)])
     },
     [setExpandedItems],
@@ -155,15 +115,14 @@ function _TokenSelectorList({
     [expandedItems],
   )
 
-  // Note: the typing for this comes from the web TokenSectionBaseList.tsx's renderItem
   const renderItem = useCallback(
-    ({ item, section, index }: { item: TokenOption | TokenOption[]; section: TokenSection; index: number }) => {
+    ({ item, section, index }: ItemRowInfo<TokenSelectorItemTypes>) => {
       // TODO: should not render smart pools here
       if (isHorizontalListTokenItem(item)) {
         return (
           <HorizontalTokenList
             tokens={item}
-            section={section}
+            section={section as TokenSection<TokenOption[]>}
             index={index}
             expanded={isExpandedItem(item)}
             onSelectCurrency={onSelectCurrency}
@@ -172,10 +131,10 @@ function _TokenSelectorList({
         )
       }
       return (
-        <TokenOptionItemWrapper
+        <TokenOptionItem
           index={index}
           isKeyboardOpen={isKeyboardOpen}
-          section={section}
+          section={section as TokenSection<TokenOption>}
           showTokenAddress={showTokenAddress}
           showWarnings={showTokenWarnings}
           tokenOption={item}
@@ -186,76 +145,23 @@ function _TokenSelectorList({
     [onSelectCurrency, showTokenAddress, showTokenWarnings, isKeyboardOpen, handleExpand, isExpandedItem],
   )
 
-  const renderSectionHeader = useCallback(
-    ({ section }: { section: TokenSectionHeaderProps }): JSX.Element => (
-      <SectionHeader
-        rightElement={section.rightElement}
-        endElement={section.endElement}
-        sectionKey={section.sectionKey}
-        name={section.name}
-        chainId={chainFilter}
-      />
-    ),
-    [chainFilter],
-  )
-
-  const renderSectionFooter = useCallback(
-    ({ section }: { section: TokenSectionFooterProps }): JSX.Element => (
-      <SectionFooter
-        rightElement={section.rightElement}
-        sectionKey={section.sectionKey}
-        name={section.name}
-        chainId={chainFilter}
-      />
-    ),
-    [chainFilter],
-  )
-
-  if (hasError) {
-    return (
-      <>
-        <Flex grow justifyContent="center">
-          <BaseCard.ErrorState
-            retryButtonLabel={t('common.button.retry')}
-            title={errorText ?? t('tokens.selector.error.load')}
-            onRetry={refetch}
-          />
-        </Flex>
-        {/*
-          This is needed to position error message roughly in the center of
-          the sheet initially when modal is opened to 65% only
-        */}
-        <Flex grow />
-      </>
-    )
-  }
-
   return (
-    <AnimateTransition animationType="fade" currentIndex={(!sections || !sections.length) && loading ? 0 : 1}>
-      <Flex grow px="$spacing16">
-        <Flex height={ITEM_SECTION_HEADER_ROW_HEIGHT} justifyContent="center" py="$spacing16" width={80}>
-          <Skeleton>
-            <Loader.Box height={fonts.subheading2.lineHeight} />
-          </Skeleton>
-        </Flex>
-        <Loader.Token gap="$none" repeat={15} />
-      </Flex>
-      <TokenSectionBaseList
-        ListEmptyComponent={emptyElement || <EmptyResults />}
-        focusHook={useBottomSheetFocusHook}
-        keyExtractor={key}
-        renderItem={renderItem}
-        renderSectionHeader={renderSectionHeader}
-        renderSectionFooter={shouldRenderUnichainInlineBridgingTooltip ? renderSectionFooter : undefined}
-        sectionListRef={sectionListRef}
-        sections={sections ?? []}
-        expandedItems={expandedItems}
-      />
-    </AnimateTransition>
+    <SelectorBaseList
+      renderItem={renderItem}
+      sections={sections}
+      chainFilter={chainFilter}
+      refetch={refetch}
+      loading={loading}
+      hasError={hasError}
+      emptyElement={emptyElement}
+      errorText={errorText}
+      keyExtractor={key}
+      expandedItems={expandedItems}
+    />
   )
 }
 
-function key(item: TokenOption | TokenOption[]): CurrencyId {
+function key(item: TokenSelectorItemTypes): CurrencyId {
   if (isHorizontalListTokenItem(item)) {
     return item.map((token) => token.currencyInfo.currencyId).join('-')
   }

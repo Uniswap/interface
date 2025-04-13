@@ -67,6 +67,8 @@ export enum ForceUpgradeConfigKey {
   Status = 'status',
 }
 
+export type ForceUpgradeStatus = 'recommended' | 'required' | 'not-required'
+
 export enum HomeScreenExploreTokensConfigKey {
   EthChainId = 'ethChainId',
   Tokens = 'tokens',
@@ -118,6 +120,7 @@ export type GasStrategies = {
 export enum MainnetPrivateRpcConfigKey {
   UseFlashbots = 'use_flashbots',
   FlashbotsBlockRange = 'flashbots_block_range',
+  FlashbotsRefundPercent = 'flashbots_refund_percent',
   SendFlashbotsAuthenticationHeader = 'send_authentication_header',
 }
 

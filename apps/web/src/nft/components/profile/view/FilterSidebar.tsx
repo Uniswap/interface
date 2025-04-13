@@ -1,31 +1,18 @@
-import { ScrollBarStyles } from 'components/Common/styles'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { Box } from 'components/deprecated/Box'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
-import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
 import { Input } from 'nft/components/layout/Input'
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from 'nft/components/profile/view/ProfilePage'
-import * as styles from 'nft/components/profile/view/ProfilePage.css'
-import { subhead } from 'nft/css/common.css'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
-import { CSSProperties, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import { CSSProperties, Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
-import { ThemedText } from 'theme/components'
-import { LabeledCheckbox } from 'ui/src'
+import { Flex, Image, LabeledCheckbox, Text, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import noop from 'utilities/src/react/noop'
 
 const COLLECTION_ROW_HEIGHT = 44
-
-const ItemsContainer = styled(Column)`
-  ${ScrollBarStyles}
-  height: 100vh;
-`
 
 const LongLoadingBubble = styled(LoadingBubble)`
   min-height: 15px;
@@ -38,20 +25,15 @@ const SmallLoadingBubble = styled(LoadingBubble)`
   margin-right: 8px;
 `
 
-const MobileMenuHeader = styled(Row)`
-  justify-content: space-between;
-  padding-bottom: 8px;
-`
-
 const LoadingCollectionItem = ({ style }: { style?: CSSProperties }) => {
   return (
-    <Row display="flex" justifyContent="space-between" style={style} paddingLeft="12" paddingRight="16">
-      <Row display="flex" flex="1">
+    <Flex row display="flex" justifyContent="space-between" style={style} pl="$spacing12" pr="$spacing16">
+      <Flex row display="flex" flexBasis={1}>
         <SmallLoadingBubble />
         <LongLoadingBubble />
-      </Row>
-      <Box as="span" borderColor="surface3" aria-hidden="true" />
-    </Row>
+      </Flex>
+      <Flex borderColor="$surface3" aria-hidden={true} />
+    </Flex>
   )
 }
 
@@ -77,40 +59,56 @@ export const FilterSidebar = ({
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
 
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
-  const isMobile = useIsMobile()
+  const media = useMedia()
+  const showMobileHeader = media.lg
+  const colors = useSporeColors()
 
   const hideSearch = useMemo(
     () => (walletCollections && walletCollections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT) || isFetchingNextPage,
     [walletCollections, isFetchingNextPage],
   )
 
-  return (
-    <Box
-      position={{ sm: 'fixed', md: 'sticky' }}
-      top={{ sm: '0', md: '72' }}
-      left={{ sm: '0', md: 'unset' }}
-      width={{ sm: 'full', md: '332', lg: '332' }}
-      height={{ sm: 'full', md: 'auto' }}
-      zIndex={{ sm: 'modal', md: 'auto' }}
-      display={isFiltersExpanded ? 'flex' : 'none'}
-      style={{ transform: isMobile ? undefined : `translateX(${isFiltersExpanded ? 0 : -360}px)` }}
+  return isFiltersExpanded ? (
+    <Flex
+      $platform-web={{ position: 'sticky' }}
+      top={72}
+      left="unset"
+      width="332"
+      height="100%"
+      zIndex="auto"
+      backgroundColor="$surface1"
+      $lg={{
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: '$modal',
+        p: '$spacing24',
+        '$platform-web': {
+          position: 'fixed',
+        },
+      }}
     >
-      <Box
-        paddingTop={{ sm: '24', md: '0' }}
-        paddingLeft={{ sm: '16', md: '0' }}
-        paddingRight="16"
-        width={{ sm: 'full', md: '332', lg: '332' }}
+      <Flex
+        width="332"
+        pr="$spacing16"
+        $lg={{
+          pt: '$spacing24',
+          px: '$spacing16',
+          width: '100%',
+        }}
       >
-        {isMobile && (
-          <MobileMenuHeader>
-            <ThemedText.HeadlineSmall>Filter</ThemedText.HeadlineSmall>
+        {showMobileHeader && (
+          <Flex row justifyContent="space-between" pb="$spacing8">
+            <Text variant="heading2">Filter</Text>
             <XMarkIcon
               height={28}
               width={28}
-              fill={themeVars.colors.neutral1}
+              fill={colors.neutral1.val}
               onClick={() => setFiltersExpanded(false)}
+              cursor="pointer"
             />
-          </MobileMenuHeader>
+          </Flex>
         )}
         <CollectionSelect
           collections={walletCollections}
@@ -121,9 +119,9 @@ export const FilterSidebar = ({
           isFetchingNextPage={isFetchingNextPage}
           hideSearch={hideSearch}
         />
-      </Box>
-    </Box>
-  )
+      </Flex>
+    </Flex>
+  ) : null
 }
 
 const CollectionSelect = ({
@@ -197,20 +195,22 @@ const CollectionSelect = ({
     [displayCollections, isFetchingNextPage, itemKey, collectionFilters, setCollectionFilters],
   )
 
+  const scrollbarStyles = useScrollbarStyles()
+
   return (
     <>
-      <Box className={subhead} marginTop="12" marginBottom="16" width="276">
+      <Text variant="subheading1" mt="$spacing12" mb="$spacing16" width={276}>
         Collections
-      </Box>
-      <Box paddingBottom="12" borderRadius="8">
-        <Column as="ul" paddingLeft="0" gap="10" style={{ maxHeight: '80vh' }}>
+      </Text>
+      <Flex pb="$spacing12" borderRadius="$rounded8">
+        <Flex pl="0" gap="$spacing10" maxHeight="80vh">
           {!hideSearch && (
             <CollectionFilterSearch
               collectionSearchText={collectionSearchText}
               setCollectionSearchText={setCollectionSearchText}
             />
           )}
-          <ItemsContainer>
+          <Flex style={scrollbarStyles} height="100vh">
             <AutoSizer disableWidth>
               {({ height }: { height: number }) => (
                 <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={itemCount} loadMoreItems={loadMoreItems}>
@@ -236,9 +236,9 @@ const CollectionSelect = ({
                 </InfiniteLoader>
               )}
             </AutoSizer>
-          </ItemsContainer>
-        </Column>
-      </Box>
+          </Flex>
+        </Flex>
+      </Flex>
     </>
   )
 }
@@ -253,13 +253,13 @@ const CollectionFilterSearch = ({
   return (
     <Input
       placeholder="Search"
-      marginTop="8"
-      marginBottom="8"
+      mt="$spacing8"
+      mb="$spacing8"
       autoComplete="off"
       position="static"
       width="full"
       value={collectionSearchText}
-      onChange={(e: FormEvent<HTMLInputElement>) => setCollectionSearchText(e.currentTarget.value)}
+      onChangeText={(value: string) => setCollectionSearchText(value)}
     />
   )
 }
@@ -287,46 +287,42 @@ const CollectionItem = ({
     setCollectionFilters(collection.address)
   }
   return (
-    <Row
-      maxWidth="full"
-      overflowX="hidden"
-      overflowY="hidden"
-      fontWeight="book"
-      className={styles.subRowHover}
+    <Flex
+      maxWidth="100%"
+      overflow="hidden"
       justifyContent="space-between"
       cursor="pointer"
-      paddingLeft="12"
-      paddingRight="16"
-      borderRadius="12"
+      pl="$spacing12"
+      pr="$spacing16"
+      py={22}
+      borderRadius="$rounded12"
       style={{
-        paddingBottom: '22px',
-        paddingTop: '22px',
         ...style,
       }}
-      maxHeight={`${COLLECTION_ROW_HEIGHT}`}
-      as="li"
-      onClick={handleCheckbox}
+      maxHeight={COLLECTION_ROW_HEIGHT}
+      onPress={handleCheckbox}
     >
-      <Row>
-        <Box as="img" borderRadius="round" width="20" height="20" src={collection.image} />
-        <Box
-          as="span"
+      <Flex row alignItems="center">
+        <Image borderRadius="$roundedFull" width={20} height={20} src={collection.image} />
+        <Text
+          variant="body3"
           whiteSpace="nowrap"
           textOverflow="ellipsis"
           overflow="hidden"
-          paddingLeft="12"
-          paddingRight="14"
-          style={{ minHeight: 15, maxWidth: '180px' }}
+          pl="$spacing12"
+          pr="$spacing16"
+          maxWidth={180}
+          minHeight={15}
         >
           {collection.name}{' '}
-        </Box>
-      </Row>
+        </Text>
+      </Flex>
 
       <LabeledCheckbox
         checked={isChecked(collection.address)}
         onCheckPressed={handleCheckbox}
         text={String(collection.count)}
       />
-    </Row>
+    </Flex>
   )
 }

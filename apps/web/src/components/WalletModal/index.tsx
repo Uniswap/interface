@@ -12,7 +12,8 @@ import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import styled, { css } from 'lib/styled-components'
 import { useReducer } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Flex, Text } from 'ui/src'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
@@ -73,7 +74,7 @@ export default function WalletModal() {
   const connectors = useOrderedConnections()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, isEmbeddedWalletEnabled)
+  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, true)
 
   const isSignIn =
     useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp ||

@@ -19,14 +19,6 @@ const defaultState = {
   application: {
     chainId: null,
     openModal: null,
-    popupList: [],
-  },
-  burn: {
-    independentField: 'LIQUIDITY_PERCENT',
-    typedValue: '0',
-  },
-  burnV3: {
-    percent: 0,
   },
   logs: {},
   mint: {

@@ -2,7 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
 import { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
-import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTransferModalState'
+import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
+import { EditWalletSettingsModalState } from 'src/components/Settings/EditWalletModal/EditWalletSettingsModalState'
+import { ManageWalletsModalState } from 'src/components/Settings/ManageWalletsModalState'
 import { ModalsState } from 'src/features/modals/ModalsState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchModalState'
@@ -20,17 +22,20 @@ type AccountSwitcherModalParams = {
   initialState?: undefined
 }
 
-type KoreaCexTransferInfoModalParams = {
-  name: typeof ModalName.KoreaCexTransferInfoModal
+type BiometricsModalParams = {
+  name: typeof ModalName.BiometricsModal
   initialState?: undefined
 }
 
-type ExchangeTransferModalParams = {
-  name: typeof ModalName.ExchangeTransferModal
-  initialState?: ExchangeTransferModalState
+type EditProfileSettingsModalParams = {
+  name: typeof ModalName.EditProfileSettingsModal
+  initialState?: EditWalletSettingsModalState
 }
 
-type ExperimentsModalParams = { name: typeof ModalName.Experiments; initialState?: undefined }
+type EditLabelSettingsModalParams = {
+  name: typeof ModalName.EditLabelSettingsModal
+  initialState?: EditWalletSettingsModalState
+}
 
 type ExploreModalParams = {
   name: typeof ModalName.Explore
@@ -57,6 +62,21 @@ type LanguageSelectorModalParams = {
   initialState?: undefined
 }
 
+type SettingsAppearanceModalParams = {
+  name: typeof ModalName.SettingsAppearance
+  initialState?: undefined
+}
+
+type PortfolioBalanceModalParams = {
+  name: typeof ModalName.PortfolioBalanceModal
+  initialState?: undefined
+}
+
+type ManageWalletsModalParams = {
+  name: typeof ModalName.ManageWalletsModal
+  initialState?: ManageWalletsModalState
+}
+
 type ScantasticModalParams = {
   name: typeof ModalName.Scantastic
   initialState: ScantasticModalState
@@ -79,6 +99,11 @@ type WalletConnectModalParams = {
   initialState: ScannerModalState
 }
 
+type ConnectionsDappListModalParams = {
+  name: typeof ModalName.ConnectionsDappListModal
+  initialState: ConnectionsDappsListModalState
+}
+
 type SwapModalParams = { name: typeof ModalName.Swap; initialState?: TransactionState }
 
 type SendModalParams = {
@@ -91,6 +116,11 @@ type SendModalParams = {
 type UnitagsIntroParams = {
   name: typeof ModalName.UnitagsIntro
   initialState?: { address: Address; entryPoint: MobileScreens.Home | MobileScreens.Settings }
+}
+
+type PermissionsModalParams = {
+  name: typeof ModalName.PermissionsModal
+  initialState?: undefined
 }
 
 type ViewOnlyExplainerParams = {
@@ -117,18 +147,23 @@ export type OpenModalParams =
   | AccountSwitcherModalParams
   | BackupReminderParams
   | BackupWarningParams
-  | KoreaCexTransferInfoModalParams
-  | ExchangeTransferModalParams
-  | ExperimentsModalParams
+  | BiometricsModalParams
+  | ConnectionsDappListModalParams
+  | EditLabelSettingsModalParams
+  | EditProfileSettingsModalParams
   | ExploreModalParams
   | FiatCurrencySelectorParams
   | FiatOnRampAggregatorModalParams
+  | PortfolioBalanceModalParams
+  | PermissionsModalParams
   | ReceiveCryptoModalParams
   | LanguageSelectorModalParams
+  | ManageWalletsModalParams
   | ScantasticModalParams
   | TestnetSwitchModalParams
   | RemoveWalletModalParams
   | SendModalParams
+  | SettingsAppearanceModalParams
   | SwapModalParams
   | WalletConnectModalParams
   | RestoreWalletModalParams

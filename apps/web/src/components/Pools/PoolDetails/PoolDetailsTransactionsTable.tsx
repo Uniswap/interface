@@ -14,7 +14,8 @@ import { OrderDirection, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import styled from 'lib/styled-components'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { ExternalLink, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -34,12 +35,12 @@ const TableWrapper = styled.div`
 `
 
 enum PoolTransactionColumn {
-  Timestamp,
-  Type,
-  MakerAddress,
-  FiatValue,
-  InputAmount,
-  OutputAmount,
+  Timestamp = 0,
+  Type = 1,
+  MakerAddress = 2,
+  FiatValue = 3,
+  InputAmount = 4,
+  OutputAmount = 5,
 }
 
 const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {

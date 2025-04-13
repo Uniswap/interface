@@ -1,10 +1,9 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { LoaderButton } from 'components/Button/LoaderButton'
 import {
   LiquidityPositionRangeChart,
   getLiquidityRangeChartProps,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { ErrorCallout } from 'components/ErrorCallout'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
@@ -22,15 +21,14 @@ import {
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
-import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { formatPrices } from 'pages/Pool/Positions/create/shared'
 import { getInvertedTuple, getPoolIdOrAddressFromCreatePositionInfo } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { DeprecatedButton, Flex, Separator, Text } from 'ui/src'
+import { Button, Flex, Separator, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -62,6 +60,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
     derivedDepositInfo,
     depositState: { exactField },
   } = useDepositContext()
+  const { t } = useTranslation()
   const { currencies, protocolVersion, creatingPoolOrPair } = derivedPositionInfo
   const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue } = derivedDepositInfo
 
@@ -290,7 +289,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               />
             </Flex>
           </Flex>
-          <TradingAPIError errorMessage={error} refetch={refetch} />
+          <ErrorCallout errorMessage={error} onPress={refetch} />
           <PoolOutOfSyncError />
         </Flex>
         {currentTransactionStep && steps.length > 1 ? (
@@ -322,23 +321,17 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               />
             </Flex>
             {currentTransactionStep ? (
-              <LoaderButton isDisabled={true} loading={true} buttonKey="create-position-confirm">
-                <Text variant="buttonLabel1" color="$white">
-                  <Trans i18nKey="common.confirmWallet" />
-                </Text>
-              </LoaderButton>
+              <Flex>
+                <Button size="large" variant="branded" loading={true} key="create-position-confirm">
+                  {t('common.confirmWallet')}
+                </Button>
+              </Flex>
             ) : (
-              <DeprecatedButton
-                flex={1}
-                py="$spacing16"
-                px="$spacing20"
-                onPress={handleCreate}
-                isDisabled={!txInfo?.action}
-              >
-                <Text variant="buttonLabel1" color="$neutralContrast">
-                  <Trans i18nKey="common.button.create" />
-                </Text>
-              </DeprecatedButton>
+              <Flex row>
+                <Button size="large" variant="branded" onPress={handleCreate} isDisabled={!txInfo?.action}>
+                  {t('common.button.create')}
+                </Button>
+              </Flex>
             )}
           </>
         )}

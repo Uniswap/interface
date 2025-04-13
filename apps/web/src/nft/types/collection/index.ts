@@ -16,8 +16,8 @@ export interface CollectionInfoForAsset {
 }
 
 export enum UniformAspectRatios {
-  unset,
-  square,
+  unset = 0,
+  square = 1,
 }
 
 export type UniformAspectRatio = UniformAspectRatios | number

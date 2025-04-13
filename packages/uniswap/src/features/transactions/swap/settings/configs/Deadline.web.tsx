@@ -3,6 +3,12 @@ import { Flex, Input, Text } from 'ui/src'
 import { SwapSettingConfig, SwapSettingId } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import { useDeadlineSettings } from 'uniswap/src/features/transactions/swap/settings/useDeadlineSettings'
 
+/**
+ * Note: This setting has its title overridden in the Web Swap flow
+ * See {@link file:apps/web/src/pages/Swap/settings/DeadlineOverride.tsx}
+ * If further overrides are needed, consider moving to a factory function
+ */
+
 const INPUT_MIN_WIDTH = 44
 
 export const Deadline: SwapSettingConfig = {

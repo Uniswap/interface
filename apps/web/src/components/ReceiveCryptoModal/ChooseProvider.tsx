@@ -2,40 +2,21 @@ import { Status } from 'components/AccountDrawer/Status'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
 import { useAccount } from 'hooks/useAccount'
-import { useTheme } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { CopyToClipboard } from 'theme/components'
-import { DeprecatedButton, Flex, GeneratedIcon, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
+import { CopyToClipboard } from 'theme/components/CopyHelper'
+import { Flex, GeneratedIcon, HeightAnimator, IconButton, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
-import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
-const ICON_SIZE = 32
-const ICON_BORDER_RADIUS = 100
-
 function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
-  const theme = useTheme()
-  const activeStyle = { backgroundColor: theme.surface3 }
-  return (
-    <DeprecatedButton
-      backgroundColor="$surface3"
-      hoverStyle={activeStyle}
-      pressStyle={activeStyle}
-      borderRadius={ICON_BORDER_RADIUS}
-      height={ICON_SIZE}
-      width={ICON_SIZE}
-      p={0}
-    >
-      <Icon color="$neutral2" size={iconSizes.icon16} />
-    </DeprecatedButton>
-  )
+  return <IconButton emphasis="secondary" size="xxsmall" icon={<Icon />} />
 }
 
 function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {

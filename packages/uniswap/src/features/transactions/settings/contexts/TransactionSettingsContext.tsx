@@ -1,6 +1,5 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { selectTransactionSettings } from 'uniswap/src/features/transactions/settings/selectors'
@@ -49,10 +48,7 @@ export function TransactionSettingsContextProvider({
     (): TransactionSettingsContextState => ({
       ...transactionSettings,
       updateTransactionSettings,
-      selectedProtocols: transactionSettings.isOnlyV2Allowed
-        ? [ProtocolItems.V2]
-        : transactionSettings.selectedProtocols,
-      isOnlyV2Allowed: transactionSettings.isOnlyV2Allowed,
+      selectedProtocols: transactionSettings.selectedProtocols,
     }),
     [transactionSettings, updateTransactionSettings],
   )

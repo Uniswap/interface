@@ -27,7 +27,7 @@ export function RemoveRecoveryPhraseWallets(): JSX.Element {
         icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
         nextButtonEnabled={true}
         nextButtonText={t('common.button.continue')}
-        nextButtonTheme="secondary_Button"
+        nextButtonEmphasis="secondary"
         subtitle={t('setting.recoveryPhrase.remove.initial.subtitle')}
         title={t('setting.recoveryPhrase.remove.initial.title')}
         onNextPressed={(): void => {
@@ -109,9 +109,11 @@ function AssociatedAccountRow({
           variant="body2"
         />
       </Flex>
-      <Text color="$neutral2" loading={loading} numberOfLines={1} variant="body3">
-        {balanceFormatted}
-      </Text>
+      <Flex flexGrow={0} pl="$padding8">
+        <Text color="$neutral2" loading={loading} numberOfLines={1} variant="body3">
+          {balanceFormatted}
+        </Text>
+      </Flex>
     </Flex>
   )
 }

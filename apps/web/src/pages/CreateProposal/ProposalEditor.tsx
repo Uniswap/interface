@@ -1,9 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
-import { ResizingTextArea, TextInput } from 'components/TextInput'
+import { ResizingTextArea } from 'components/ResizingTextArea'
 import styled from 'lib/styled-components'
 import { memo } from 'react'
 import { Text } from 'rebass'
 import { Trans } from 'react-i18next'
+import { TextInput } from 'uniswap/src/components/input/TextInput'
 import i18n from 'uniswap/src/i18n'
 
 const ProposalEditorHeader = styled(Text)`

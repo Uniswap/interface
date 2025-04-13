@@ -1,31 +1,27 @@
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
-import { removeDappConnection, saveDappChain } from 'src/app/features/dapp/actions'
+import { saveDappChain } from 'src/app/features/dapp/actions'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
-import { PopupName, closePopup } from 'src/app/features/popups/slice'
-import { Anchor, DeprecatedButton, Flex, Popover, Separator, Text, getTokenValue } from 'ui/src'
-import { Check, Power } from 'ui/src/components/icons'
+import { Flex, Popover, Text, TouchableArea } from 'ui/src'
+import { CheckCircleFilled, RotatableChevron } from 'ui/src/components/icons'
 import { usePreventOverflowBelowFold } from 'ui/src/hooks/usePreventOverflowBelowFold'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { extractUrlHost } from 'utilities/src/format/urls'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const BUTTON_OFFSET = 20
 
-export function SwitchNetworksModal(): JSX.Element {
+interface SwitchNetworksModalProps {
+  onPress: () => void
+}
+
+export function SwitchNetworksModal({ onPress }: SwitchNetworksModalProps): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
-  const { dappUrl, dappIconUrl } = useDappContext()
-  const activeWalletAccount = useActiveAccountWithThrow()
+  const { dappUrl } = useDappContext()
   const activeChain = useDappLastChainId(dappUrl)
   const { chains: enabledChains } = useEnabledChains()
 
@@ -37,11 +33,8 @@ export function SwitchNetworksModal(): JSX.Element {
     })
   }
 
-  const onDisconnect = async (): Promise<void> => {
-    await removeDappConnection(dappUrl, activeWalletAccount)
-    dispatch(pushNotification({ type: AppNotificationType.DappDisconnected, dappIconUrl }))
-    dispatch(closePopup(PopupName.Connect))
-    sendAnalyticsEvent(ExtensionEventName.SidebarDisconnect)
+  const handlePress = (): void => {
+    onPress()
   }
 
   const { ref, maxHeight } = usePreventOverflowBelowFold()
@@ -58,34 +51,38 @@ export function SwitchNetworksModal(): JSX.Element {
       maxHeight={maxHeight - BUTTON_OFFSET}
     >
       <Flex px="$spacing8">
-        <Text variant="subheading2">{t('extension.connection.titleConnected')}</Text>
-        {dappUrl ? (
-          <Anchor color="$accent1" href={dappUrl} textDecorationLine="none">
-            <Flex>
-              <Text color="$accent1" numberOfLines={1} variant="buttonLabel2">
-                {extractUrlHost(dappUrl)}
-              </Text>
-            </Flex>
-          </Anchor>
-        ) : null}
+        <Flex row alignItems="center" py="$spacing4" width="100%">
+          <TouchableArea onPress={handlePress}>
+            <RotatableChevron
+              color="$neutral3"
+              direction="left"
+              flexShrink={1}
+              height={iconSizes.icon16}
+              width={iconSizes.icon16}
+            />
+          </TouchableArea>
+          <Flex centered fill py="$spacing8">
+            <Text color="$neutral1" variant="body3">
+              {t('extension.connection.network')}
+            </Text>
+          </Flex>
+        </Flex>
       </Flex>
-
-      <Separator mb="$spacing4" mt="$spacing8" />
 
       <Flex shrink $platform-web={{ overflow: 'auto' }}>
         {enabledChains.map((chain: UniverseChainId) => {
           return (
             <Popover.Close asChild>
-              <DeprecatedButton
+              {/* TODO(WALL-5883): Use new component */}
+              <TouchableArea
                 key={chain}
                 borderRadius="$rounded12"
+                hoverStyle={{ backgroundColor: '$surface2' }}
                 justifyContent="space-between"
-                px="$spacing8"
-                py="$spacing8"
-                theme={null}
+                p="$spacing8"
                 onPress={async (): Promise<void> => onNetworkClicked(chain)}
               >
-                <Flex grow row alignItems="center" justifyContent="flex-start">
+                <Flex grow row alignItems="center" justifyContent="space-between">
                   <Flex grow row alignItems="center" gap="$spacing8">
                     <NetworkLogo chainId={chain} size={iconSizes.icon20} />
                     <Text color="$neutral1" variant="subheading2">
@@ -94,27 +91,15 @@ export function SwitchNetworksModal(): JSX.Element {
                   </Flex>
                   {activeChain === chain ? (
                     <Flex row>
-                      <Check color="$neutral2" size={iconSizes.icon20} />
+                      <CheckCircleFilled color="$accent3" size="$icon.20" />
                     </Flex>
                   ) : null}
                 </Flex>
-              </DeprecatedButton>
+              </TouchableArea>
             </Popover.Close>
           )
         })}
       </Flex>
-
-      <Popover.Close asChild>
-        <DeprecatedButton mt="$spacing8" size="small" theme="tertiary" onPress={onDisconnect}>
-          <Flex centered row gap="$spacing8">
-            <Power color="$neutral1" size={getTokenValue('$icon.16')} />
-            {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}{' '}
-            <Text color="$neutral1" variant="buttonLabel2">
-              {t('common.button.disconnect')}
-            </Text>
-          </Flex>
-        </DeprecatedButton>
-      </Popover.Close>
     </Flex>
   )
 }

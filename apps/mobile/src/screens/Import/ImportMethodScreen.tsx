@@ -6,6 +6,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
+import { openSettings } from 'src/utils/linking'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
@@ -19,7 +20,6 @@ import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
-import { openSettings } from 'wallet/src/utils/linking'
 
 interface ImportMethodOption {
   title: (t: AppTFunction) => string

@@ -93,6 +93,18 @@ export function SendContextProvider({ children }: PropsWithChildren) {
     ...(isTestnetModeEnabled ? DEFAULT_TESTNET_SEND_STATE : DEFAULT_SEND_STATE),
     inputCurrency: initialCurrency,
   })
+
+  useEffect(() => {
+    if (isTestnetModeEnabled) {
+      setSendState((prev) => ({
+        ...prev,
+        exactAmountToken: prev.inputInFiat ? '' : prev.exactAmountToken,
+        exactAmountFiat: undefined,
+        inputInFiat: false,
+      }))
+    }
+  }, [isTestnetModeEnabled])
+
   const derivedSendInfo = useDerivedSendInfo(sendState)
 
   useEffect(() => {
@@ -112,7 +124,7 @@ export function SendContextProvider({ children }: PropsWithChildren) {
         return { ...prev, inputCurrency: sendState.inputCurrency }
       }
     })
-  }, [outputCurrency, sendState, setCurrencyState])
+  }, [outputCurrency, sendState.inputCurrency, setCurrencyState])
 
   const value = useMemo(
     () => ({

@@ -77,7 +77,7 @@ export function ApproveRequestContent({
 
   const tokenInfo = useDappRequestTokenRecipientInfo(dappRequest, dappUrl)
   const tokenSymbol = tokenInfo?.currency.symbol
-  const spender = parseSpenderAddress(dappRequest.transaction.data)
+  const spender = parseSpenderAddress(dappRequest.transaction.data ?? '')
   const transactionTypeInfo: TransactionTypeInfo | undefined = dappRequest.transaction.to
     ? {
         type: TransactionType.Approve,

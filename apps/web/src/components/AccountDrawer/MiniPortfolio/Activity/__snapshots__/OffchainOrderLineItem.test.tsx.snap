@@ -162,6 +162,16 @@ exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
   letter-spacing: -0.01em;
 }
 
+.c1 {
+  cursor: auto;
+  color: #7D7D7D;
+}
+
+.c2 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
 .c3 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -179,16 +189,6 @@ exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
 
 .c3:active {
   opacity: 0.4;
-}
-
-.c1 {
-  cursor: auto;
-  color: #7D7D7D;
-}
-
-.c2 {
-  text-align: right;
-  overflow-wrap: break-word;
 }
 
 <span

@@ -13,13 +13,13 @@ import PoolPositionList from 'components/PoolPositionList'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'react-i18next'
 import JSBI from 'jsbi'
-import { Center } from 'nft/components/Flex'
 import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { PoolRegisteredLog, useAllPoolsData, useStakingPools } from 'state/pool/hooks'
 import { useFreeStakeBalance, useUnclaimedRewards, useUserStakeBalances } from 'state/stake/hooks'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
+import { Flex } from 'ui/src'
 import { GRG } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
@@ -277,9 +277,9 @@ export default function Stake() {
                 hasMore={!!hasMore}
                 loader={
                   orderedPools?.length !== items?.length ? (
-                    <Center paddingY="20">
+                    <Flex width="fit-content" alignItems="center" justifyContent="center">
                       <Loader style={{ margin: 'auto' }} />
-                    </Center>
+                    </Flex>
                   ) : null
                 }
                 dataLength={orderedPools.length}

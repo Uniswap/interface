@@ -43,6 +43,7 @@ export const initialSchema = {
     currentCurrency: 'USD',
   },
   behaviorHistory: {
+    hasViewedConnectionMigration: false,
     hasViewedReviewScreen: false,
     hasSubmittedHoldToSwap: false,
     hasSkippedUnitagPrompt: false,

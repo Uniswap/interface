@@ -104,8 +104,8 @@ export interface CreateProposalData {
 }
 
 export enum StakeStatus {
-  UNDELEGATED,
-  DELEGATED,
+  UNDELEGATED = 0,
+  DELEGATED = 1,
 }
 
 interface StakeInfo {
@@ -125,15 +125,15 @@ export interface StakeData {
 
 export enum ProposalState {
   UNDETERMINED = -1,
-  PENDING,
-  ACTIVE,
-  CANCELED,
-  QUALIFIED,
-  DEFEATED,
-  SUCCEEDED,
-  QUEUED,
-  EXPIRED,
-  EXECUTED,
+  PENDING = 0,
+  ACTIVE = 1,
+  CANCELED = 2,
+  QUALIFIED = 3,
+  DEFEATED = 4,
+  SUCCEEDED = 5,
+  QUEUED = 6,
+  EXPIRED = 7,
+  EXECUTED = 8,
 }
 
 const GovernanceInterface = new Interface(GOVERNANCE_RB_ABI)

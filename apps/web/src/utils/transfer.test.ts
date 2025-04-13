@@ -15,7 +15,7 @@ describe('useCreateTransfer', () => {
     const web3Provider = signer.provider as Mutable<Web3Provider>
     web3Provider.provider = {
       isWalletConnect: true,
-      session: { peer: { metadata: { name } } },
+      session: { peer: { metadata: { name: 'Test Name' } } },
     } as ExternalProvider
   })
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { AdaptiveWebModal, WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
@@ -26,6 +26,7 @@ export function Modal({
   paddingY,
   analyticsProperties,
   skipLogImpression,
+  position,
   flex,
   zIndex,
   isDismissible = true,
@@ -57,6 +58,7 @@ export function Modal({
     <Trace logImpression={skipLogImpression ? false : isModalOpen} modal={name} properties={analyticsProperties}>
       {(isModalOpen || !fullyClosed) && (
         <ModalComponent
+          position={position}
           bottomAttachment={bottomAttachment}
           shadowOpacity={isExtension ? 0 : undefined}
           borderWidth={isExtension ? 0 : undefined}

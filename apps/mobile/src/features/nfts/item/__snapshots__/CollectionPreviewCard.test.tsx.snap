@@ -183,6 +183,23 @@ exports[`renders collection preview card 1`] = `
       </View>
     </View>
     <View
+      collapsable={false}
+      forwardedRef={[Function]}
+      jestAnimatedStyle={
+        {
+          "value": {
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "transform": [
+              {
+                "rotate": "180deg",
+              },
+            ],
+          },
+        }
+      }
       style={
         {
           "alignItems": "center",

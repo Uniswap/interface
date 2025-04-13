@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, useSporeColors } from 'ui/src'
 import { Camera, PhotoStacked, Share, Trash } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isExtension } from 'utilities/src/platform'
@@ -54,25 +53,27 @@ export const ChoosePhotoOptionsModal = ({
 
   const options = [
     {
-      key: `${ElementName.OpenCameraRoll}`,
-      onPress: onPressCameraRoll,
-      item: <ChoosePhotoOption type={PhotoAction.BrowseCameraRoll} />,
+      item: (
+        <ChoosePhotoOption
+          key={ElementName.OpenCameraRoll}
+          type={PhotoAction.BrowseCameraRoll}
+          onPress={onPressCameraRoll}
+        />
+      ),
     },
   ]
 
   if (hasNFTs) {
     options.push({
-      key: `${ElementName.OpenNftsList}`,
-      onPress: onPressNftsList,
-      item: <ChoosePhotoOption type={PhotoAction.BrowseNftsList} />,
+      item: (
+        <ChoosePhotoOption key={ElementName.OpenNftsList} type={PhotoAction.BrowseNftsList} onPress={onPressNftsList} />
+      ),
     })
   }
 
   if (showRemoveOption) {
     options.push({
-      key: `${ElementName.Remove}`,
-      onPress: onRemovePhoto,
-      item: <ChoosePhotoOption type={PhotoAction.RemovePhoto} />,
+      item: <ChoosePhotoOption key={ElementName.Remove} type={PhotoAction.RemovePhoto} onPress={onRemovePhoto} />,
     })
   }
 
@@ -87,11 +88,7 @@ export const ChoosePhotoOptionsModal = ({
       >
         <Flex centered gap="$spacing24" pt="$spacing8" px="$spacing24">
           <Flex gap="$spacing12" width="100%">
-            {options.map((option) => (
-              <TouchableArea key={option.key} onPress={option.onPress}>
-                {option.item}
-              </TouchableArea>
-            ))}
+            {options.map((option) => option.item)}
           </Flex>
         </Flex>
       </Modal>
@@ -108,38 +105,52 @@ enum PhotoAction {
   RemovePhoto = 'remove-photo',
 }
 
-const ChoosePhotoOption = ({ type }: { type: PhotoAction }): JSX.Element => {
+const ChoosePhotoOption = ({
+  type,
+  onPress,
+}: {
+  type: PhotoAction.BrowseCameraRoll | PhotoAction.BrowseNftsList | PhotoAction.RemovePhoto
+  onPress: () => void
+}): JSX.Element | null => {
   const { t } = useTranslation()
+
+  const { buttonText, icon } = ((): {
+    buttonText: string
+    icon: JSX.Element
+  } => {
+    if (type === PhotoAction.BrowseCameraRoll) {
+      return {
+        buttonText: isExtension ? t('unitags.choosePhoto.option.computer') : t('unitags.choosePhoto.option.cameraRoll'),
+        icon: isExtension ? <Share /> : <Camera />,
+      }
+    }
+
+    if (type === PhotoAction.BrowseNftsList) {
+      return {
+        buttonText: t('unitags.choosePhoto.option.nft'),
+        icon: <PhotoStacked />,
+      }
+    }
+
+    // type === PhotoAction.RemovePhoto
+    return {
+      buttonText: t('unitags.choosePhoto.option.remove'),
+      icon: <Trash />,
+    }
+  })()
+
   return (
-    <Flex
-      row
-      alignItems="center"
-      backgroundColor="$surface3"
-      borderRadius="$rounded20"
-      gap="$spacing16"
-      justifyContent="flex-start"
-      p="$spacing24"
-    >
-      {type === PhotoAction.BrowseCameraRoll &&
-        (isExtension ? (
-          <Share color="$neutral1" size={iconSizes.icon24} />
-        ) : (
-          <Camera color="$neutral1" size={iconSizes.icon24} />
-        ))}
-      {type === PhotoAction.BrowseNftsList && <PhotoStacked color="$neutral1" size={iconSizes.icon24} />}
-      {type === PhotoAction.RemovePhoto && <Trash color="$statusCritical" size={iconSizes.icon24} />}
-      <Flex shrink alignItems="flex-start">
-        <Text
-          color={type === PhotoAction.RemovePhoto ? '$statusCritical' : '$neutral1'}
-          numberOfLines={1}
-          variant="buttonLabel1"
-        >
-          {type === PhotoAction.BrowseCameraRoll &&
-            (isExtension ? t('unitags.choosePhoto.option.computer') : t('unitags.choosePhoto.option.cameraRoll'))}
-          {type === PhotoAction.BrowseNftsList && t('unitags.choosePhoto.option.nft')}
-          {type === PhotoAction.RemovePhoto && t('unitags.choosePhoto.option.remove')}
-        </Text>
-      </Flex>
+    <Flex row>
+      <Button
+        icon={icon}
+        size="large"
+        variant={type === PhotoAction.RemovePhoto ? 'critical' : 'default'}
+        emphasis="secondary"
+        justifyContent="flex-start"
+        onPress={onPress}
+      >
+        {buttonText}
+      </Button>
     </Flex>
   )
 }

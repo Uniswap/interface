@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -15,6 +14,7 @@ import { PoolState, usePool } from 'hooks/usePools'
 import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { useDefaultInitialPrice } from 'pages/Pool/Positions/create/hooks/useDefaultInitialPrice'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,
@@ -159,6 +159,11 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     return poolData?.pools && poolData.pools.length === 0
   }, [protocolVersion, poolData?.pools, pairResult, v3PoolResult])
 
+  const { price: defaultInitialPrice, isLoading: isDefaultInitialPriceLoading } = useDefaultInitialPrice({
+    currencies: state.currencyInputs,
+    skip: !creatingPoolOrPair,
+  })
+
   return useMemo(() => {
     const currencies: [OptionalCurrency, OptionalCurrency] = [TOKEN0, TOKEN1]
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
@@ -166,6 +171,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         currencies,
         protocolVersion: ProtocolVersion.V4,
         isPoolOutOfSync: false,
+        defaultInitialPrice,
+        isDefaultInitialPriceLoading,
         refetchPoolData: () => undefined,
       }
     }
@@ -178,6 +185,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         creatingPoolOrPair,
         poolOrPairLoading: pairIsLoading,
         isPoolOutOfSync,
+        defaultInitialPrice,
+        isDefaultInitialPriceLoading,
         refetchPoolData,
       } satisfies CreateV2PositionInfo
     }
@@ -191,6 +200,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         poolOrPairLoading: poolIsLoading,
         isPoolOutOfSync,
         poolId: pool?.poolId,
+        defaultInitialPrice,
+        isDefaultInitialPriceLoading,
         refetchPoolData,
       } satisfies CreateV3PositionInfo
     }
@@ -203,6 +214,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       poolOrPairLoading: poolIsLoading,
       isPoolOutOfSync,
       poolId: pool?.poolId,
+      defaultInitialPrice,
+      isDefaultInitialPriceLoading,
       refetchPoolData,
     } satisfies CreateV4PositionInfo
   }, [
@@ -216,6 +229,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     pool?.poolId,
     pair,
     pairIsLoading,
+    defaultInitialPrice,
+    isDefaultInitialPriceLoading,
     v3Pool,
     refetchPoolData,
   ])

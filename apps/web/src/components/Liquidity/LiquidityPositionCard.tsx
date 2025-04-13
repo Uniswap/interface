@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   CHART_HEIGHT,
@@ -6,6 +5,7 @@ import {
   LiquidityPositionRangeChart,
   LiquidityPositionRangeChartLoader,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { AdaptiveDropdown } from 'components/DropdownSelector/AdaptiveDropdown'
 import {
   LiquidityPositionFeeStats,
   LiquidityPositionFeeStatsLoader,
@@ -13,20 +13,17 @@ import {
 } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
 import { useGetRangeDisplay, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { PositionInfo } from 'components/Liquidity/types'
-import { PriceOrdering } from 'components/PositionListItem'
+import { PositionInfo, PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { getPoolDetailsURL } from 'graphql/data/util'
 import useHoverProps from 'hooks/useHoverProps'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { ClickableTamaguiStyle } from 'theme/components'
-import { Flex, Popover, Shine, Text, TouchableArea, useIsTouchDevice, useMedia } from 'ui/src'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { Flex, FlexProps, Shine, Text, TouchableArea, styled, useIsTouchDevice, useMedia } from 'ui/src'
 import { ArrowsLeftRight } from 'ui/src/components/icons/ArrowsLeftRight'
 import { Dollar } from 'ui/src/components/icons/Dollar'
 import { Eye } from 'ui/src/components/icons/Eye'
@@ -41,13 +38,13 @@ import { zIndexes } from 'ui/src/theme/zIndexes'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { togglePositionVisibility } from 'uniswap/src/features/visibility/slice'
+import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 import { useAccount } from 'wagmi'
@@ -86,8 +83,8 @@ function useDropdownOptions(
   isVisible?: boolean,
 ): MenuOptionItem[] {
   const { t } = useTranslation()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
+  const isV4DataEnabled = true //useFeatureFlag(FeatureFlags.V4Data)
+  const isMigrateToV4Enabled = false //useFeatureFlag(FeatureFlags.MigrateV3ToV4)
   const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
 
   const dispatch = useAppDispatch()
@@ -122,7 +119,7 @@ function useDropdownOptions(
           return
         }
 
-        navigate(getPoolDetailsURL(liquidityPosition.poolId, toGraphQLChain(liquidityPosition.chainId)))
+        navigate(getPoolDetailsURL(liquidityPosition.poolId, liquidityPosition.chainId))
       },
       label: t('pool.info'),
       Icon: InfoCircleFilled,
@@ -174,7 +171,7 @@ function useDropdownOptions(
             dispatch(
               setOpenModal({
                 name: ModalName.ClaimFee,
-                initialState: { ...liquidityPosition, collectAsWeth: false },
+                initialState: liquidityPosition,
               }),
             )
           },
@@ -227,12 +224,14 @@ export function LiquidityPositionCard({
   liquidityPosition,
   isMiniVersion,
   showVisibilityOption,
+  showMigrateButton = false,
   isVisible = true,
   disabled = false,
 }: {
   liquidityPosition: PositionInfo
   isMiniVersion?: boolean
   showVisibilityOption?: boolean
+  showMigrateButton?: boolean
   isVisible?: boolean
   disabled?: boolean
 }) {
@@ -317,7 +316,6 @@ export function LiquidityPositionCard({
           borderRadius="$rounded20"
           borderColor="$surface3"
           width="100%"
-          overflow="hidden"
           hoverStyle={!disabled ? { borderColor: '$surface3Hovered', backgroundColor: '$surface1Hovered' } : {}}
         >
           <Flex
@@ -328,7 +326,11 @@ export function LiquidityPositionCard({
             justifyContent="space-between"
             $md={{ row: false, alignItems: 'flex-start', gap: '$gap20' }}
           >
-            <LiquidityPositionInfo positionInfo={liquidityPosition} isMiniVersion={isSmallScreen} />
+            <LiquidityPositionInfo
+              positionInfo={liquidityPosition}
+              isMiniVersion={isSmallScreen}
+              showMigrateButton={showMigrateButton}
+            />
             <LiquidityPositionRangeChart
               version={liquidityPosition.version}
               chainId={liquidityPosition.chainId}
@@ -353,7 +355,6 @@ export function LiquidityPositionCard({
               />
             </Flex>
           </Flex>
-
           <LiquidityPositionFeeStats
             formattedUsdValue={v3OrV4FormattedUsdValue ?? v2FormattedUsdValue}
             formattedUsdFees={v3OrV4FormattedFeesValue}
@@ -367,7 +368,7 @@ export function LiquidityPositionCard({
             pricesInverted={pricesInverted}
             setPricesInverted={setPricesInverted}
           />
-          {!isTouchDevice && !disabled && <PositionPopoverMoreMenu menuOptions={dropdownOptions} />}
+          {!isTouchDevice && !disabled && <PositionDropdownMoreMenu menuOptions={dropdownOptions} />}
         </Flex>
       )}
     </ContextMenu>
@@ -461,47 +462,61 @@ function MiniPositionCard({
       ) : (
         <Text variant="body4">{t('common.fullRange')}</Text>
       )}
-      <PositionPopoverMoreMenu menuOptions={menuOptions} />
+      <PositionDropdownMoreMenu menuOptions={menuOptions} />
     </Flex>
   )
 }
 
-const PositionPopoverMoreMenu = ({ menuOptions }: { menuOptions: MenuOptionItem[] }) => {
-  const popoverMenuRef = useRef<HTMLDivElement>(null)
+const activeStyle: FlexProps = { opacity: 1, pointerEvents: 'auto', backgroundColor: '$scrim' }
+const PositionDetailsMenuButton = styled(Flex, {
+  animation: 'fast',
+  opacity: 0,
+  borderRadius: '$rounded12',
+  p: '$spacing8',
+  variants: {
+    open: {
+      true: activeStyle,
+    },
+  },
+})
 
+function PositionDropdownMoreMenu({ menuOptions }: { menuOptions: MenuOptionItem[] }) {
   const [isOpen, setIsOpen] = useState(false)
 
-  useOnClickOutside(popoverMenuRef, () => isOpen && setIsOpen(false))
+  const dropdownTrigger = (
+    <TouchableArea
+      zIndex={zIndexes.mask}
+      onPress={(event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        setIsOpen(!isOpen)
+      }}
+    >
+      <PositionDetailsMenuButton $group-hover={activeStyle} open={isOpen} onPress={() => {}}>
+        <MoreHorizontal size={iconSizes.icon16} color="white" />
+      </PositionDetailsMenuButton>
+    </TouchableArea>
+  )
 
   return (
-    <Popover open={isOpen} placement="bottom-end" allowFlip offset={{ crossAxis: 6 }}>
-      <TouchableArea
-        position="absolute"
-        top="$spacing16"
-        right="$spacing16"
-        animation="fast"
-        opacity={0}
-        borderRadius="$rounded12"
-        zIndex={zIndexes.dropdown}
-        $group-hover={{ opacity: 1, pointerEvents: 'auto', backgroundColor: '$scrim' }}
-        onPress={(event) => {
-          event.preventDefault()
-          event.stopPropagation()
-          setIsOpen(true)
+    <Flex position="absolute" top="$spacing16" right="$spacing16">
+      <AdaptiveDropdown
+        alignRight
+        allowFlip
+        positionFixed
+        isOpen={isOpen}
+        toggleOpen={setIsOpen}
+        trigger={dropdownTrigger}
+        dropdownStyle={{
+          p: 0,
+          backgroundColor: 'transparent',
+          borderRadius: '$rounded20',
+          minWidth: 'max-content',
+          borderWidth: 0,
         }}
       >
-        <Popover.Trigger p="$spacing8">
-          <MoreHorizontal size={iconSizes.icon16} color="white" />
-        </Popover.Trigger>
-      </TouchableArea>
-      <Popover.Content
-        ref={popoverMenuRef}
-        animation="125ms"
-        enterStyle={{ y: -4, opacity: 0 }}
-        backgroundColor="transparent"
-      >
         <MenuContent items={menuOptions} onItemClick={() => setIsOpen(false)} />
-      </Popover.Content>
-    </Popover>
+      </AdaptiveDropdown>
+    </Flex>
   )
 }

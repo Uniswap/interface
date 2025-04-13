@@ -16,8 +16,9 @@ import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useTransaction } from 'state/transactions/hooks'
 import { isConfirmedTx } from 'state/transactions/utils'
-import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { ModalCloseIcon } from 'ui/src'
+import { CustomLightSpinner, ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
+import { Flex, ModalCloseIcon } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -63,7 +64,7 @@ function ConfirmationPendingContent({
       <AutoColumn gap="md">
         {!inline && (
           <RowBetween>
-            <div />
+            <Flex />
             <ModalCloseIcon onClose={onDismiss} />
           </RowBetween>
         )}
@@ -78,7 +79,7 @@ function ConfirmationPendingContent({
             {pendingText}
           </ThemedText.SubHeader>
           <ThemedText.SubHeaderSmall color="neutral2" textAlign="center" marginBottom="12px">
-            {t('common.confirmTransaction.button')}
+            {t('common.confirm')}
           </ThemedText.SubHeaderSmall>
         </AutoColumn>
       </AutoColumn>
@@ -131,7 +132,7 @@ function TransactionSubmittedContent({
       <AutoColumn>
         {!inline && (
           <RowBetween>
-            <div />
+            <Flex />
             <ModalCloseIcon onClose={onDismiss} />
           </RowBetween>
         )}
@@ -280,21 +281,23 @@ function L2Content({
               <ThemedText.SubHeaderSmall color={theme.accent1}>{t('common.viewOnExplorer')}</ThemedText.SubHeaderSmall>
             </ExternalLink>
           ) : (
-            <div style={{ height: '17px' }} />
+            <Flex style={{ height: '17px' }} />
           )}
           <ThemedText.SubHeaderSmall color={theme.neutral3} marginTop="20px">
             {!secondsToConfirm ? (
-              <div style={{ height: '24px' }} />
+              <Flex style={{ height: '24px' }} />
             ) : (
-              <div>
-                <Trans
-                  i18nKey="transaction.confirmation.completionTime"
-                  components={{
-                    highlight: <span style={{ fontWeight: 535, marginLeft: '4px', color: theme.neutral1 }} />,
-                  }}
-                  count={secondsToConfirm}
-                />
-              </div>
+              <Flex>
+                <ThemedText.SubHeaderSmall>
+                  <Trans
+                    i18nKey="transaction.confirmation.completionTime"
+                    components={{
+                      highlight: <span style={{ fontWeight: 535, marginLeft: '4px', color: theme.neutral1 }} />,
+                    }}
+                    count={secondsToConfirm}
+                  />
+                </ThemedText.SubHeaderSmall>
+              </Flex>
             )}
           </ThemedText.SubHeaderSmall>
           <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>

@@ -9,15 +9,15 @@ import { Log, filterToKey, isHistoricalLog } from 'state/logs/utils'
 // TODO: try deprecate logs if we still have issues retrieving them on altchains
 enum LogsState {
   // The filter is invalid
-  INVALID,
+  INVALID = 0,
   // The logs are being loaded
-  LOADING,
+  LOADING = 1,
   // Logs are from a previous block number
-  SYNCING,
+  SYNCING = 2,
   // Tried to fetch logs but received an error
-  ERROR,
+  ERROR = 3,
   // Logs have been fetched as of the latest block number
-  SYNCED,
+  SYNCED = 4,
 }
 
 interface UseLogsResult {

@@ -1,55 +1,57 @@
-import { Box } from 'components/deprecated/Box'
-import { Column, Row } from 'nft/components/Flex'
-import { eventRow } from 'nft/components/collection/Activity.css'
 import { HeaderRow } from 'nft/components/collection/ActivityHeaderRow'
-import * as styles from 'nft/components/collection/ActivityLoader.css'
+import { Flex, Shine } from 'ui/src'
 
 const LoadingSquare = () => {
-  return <Box className={styles.loadingSquare} />
+  return (
+    <Shine>
+      <Flex width={60} height={60} borderRadius="$rounded8" />
+    </Shine>
+  )
 }
 
 const LoadingSliver = () => {
-  return <Box className={styles.loadingSliver} />
+  return (
+    <Shine>
+      <Flex height={16} width={108} borderRadius="$rounded8" />
+    </Shine>
+  )
 }
 
 const ActivityLoadingRow = () => {
   return (
-    <Box as="a" className={eventRow}>
-      <Row gap="16">
+    <Flex gap="$gap4" row width="100%" justifyContent="space-between" alignItems="center">
+      <Flex row gap="$gap16" alignItems="center">
         <LoadingSquare />
         <LoadingSliver />
-      </Row>
-      <Row>
+      </Flex>
+      <Flex row alignItems="center">
         <LoadingSliver />
-      </Row>
-      <Row display={{ sm: 'none', md: 'flex' }}>
+      </Flex>
+      <Flex row alignItems="center" $md={{ display: 'none' }}>
         <LoadingSliver />
-      </Row>
-      <Row display={{ sm: 'none', lg: 'flex' }}>
+      </Flex>
+      <Flex row $md={{ display: 'none' }}>
         <LoadingSliver />
-      </Row>
-      <Row display={{ sm: 'none', xl: 'flex' }}>
-        <LoadingSliver />
-      </Row>
-    </Box>
+      </Flex>
+    </Flex>
   )
 }
 
 export const ActivityPageLoader = ({ rowCount }: { rowCount: number }) => {
   return (
-    <>
+    <Flex gap="$gap12">
       {[...Array(rowCount)].map((_, index) => (
         <ActivityLoadingRow key={index} />
       ))}
-    </>
+    </Flex>
   )
 }
 
 export const ActivityLoader = () => {
   return (
-    <Column marginTop="36">
+    <Flex mt="$spacing36">
       <HeaderRow />
       <ActivityPageLoader rowCount={10} />
-    </Column>
+    </Flex>
   )
 }

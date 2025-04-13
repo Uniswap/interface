@@ -3,13 +3,13 @@ import React, { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { useLockScreenOnBlur } from 'src/features/lockScreen/useLockScreenState'
+import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreenOnBlur'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 
 import { SeedPhraseInput } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/SeedPhraseInput'
 import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { DeprecatedButton, Flex, Text, TouchableArea, useIsShortMobileDevice } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useIsShortMobileDevice } from 'ui/src'
 import { PapersText, QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -106,16 +106,19 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
       Icon={PapersText}
       footer={
         <Trace logPress element={ElementName.Next}>
-          <DeprecatedButton
-            isDisabled={!isSubmitEnabled}
-            mx="$spacing16"
-            my="$spacing12"
-            size="large"
-            testID={TestID.Continue}
-            onPress={() => seedPhraseInputRef.current?.handleSubmit()}
-          >
-            {t('common.button.continue')}
-          </DeprecatedButton>
+          <Flex row>
+            <Button
+              isDisabled={!isSubmitEnabled}
+              mx="$spacing16"
+              my="$spacing12"
+              size="large"
+              variant="branded"
+              testID={TestID.Continue}
+              onPress={() => seedPhraseInputRef.current?.handleSubmit()}
+            >
+              {t('common.button.continue')}
+            </Button>
+          </Flex>
         </Trace>
       }
       minHeightWhenKeyboardExpanded={false}

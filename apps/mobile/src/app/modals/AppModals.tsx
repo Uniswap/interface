@@ -3,9 +3,7 @@ import { useDispatch } from 'react-redux'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
 import { BackupWarningModal } from 'src/app/modals/BackupWarningModal'
-import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
-import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoModal'
 import { LazyModalRenderer } from 'src/app/modals/LazyModalRenderer'
 import { SendTokenModal } from 'src/app/modals/SendTokenModal'
 import { SwapModal } from 'src/app/modals/SwapModal'
@@ -14,9 +12,14 @@ import { ViewOnlyExplainerModal } from 'src/app/modals/ViewOnlyExplainerModal'
 import { RemoveWalletModal } from 'src/components/RemoveWallet/RemoveWalletModal'
 import { WalletConnectModals } from 'src/components/Requests/WalletConnectModals'
 import { RestoreWalletModal } from 'src/components/RestoreWalletModal/RestoreWalletModal'
+import { ConnectionsDappListModal } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappListModal'
+import { EditLabelSettingsModal } from 'src/components/Settings/EditWalletModal/EditLabelSettingsModal'
+import { EditProfileSettingsModal } from 'src/components/Settings/EditWalletModal/EditProfileSettingsModal'
+import { ManageWalletsModal } from 'src/components/Settings/ManageWalletsModal'
+import { SettingsAppearanceModal } from 'src/components/Settings/SettingsAppearanceModal'
+import { SettingsBiometricModal } from 'src/components/Settings/SettingsBiometricModal'
 import { ForceUpgradeModal } from 'src/components/forceUpgrade/ForceUpgradeModal'
 import { UnitagsIntroModal } from 'src/components/unitags/UnitagsIntroModal'
-import { ExchangeTransferModal } from 'src/features/fiatOnRamp/ExchangeTransferModal'
 import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
 import { LockScreenModal } from 'src/features/lockScreen/LockScreenModal'
 import { closeModal } from 'src/features/modals/modalSlice'
@@ -26,6 +29,8 @@ import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
+import { PermissionsModal } from 'wallet/src/components/settings/permissions/PermissionsModal'
+import { PortfolioBalanceModal } from 'wallet/src/components/settings/portfolioBalance/PortfolioBalanceModal'
 import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
 
 export function AppModals(): JSX.Element {
@@ -35,20 +40,16 @@ export function AppModals(): JSX.Element {
     dispatch(closeModal({ name: ModalName.LanguageSelector }))
   }, [dispatch])
 
+  const onClosePortfolioBalanceModal = useCallback(() => {
+    dispatch(closeModal({ name: ModalName.PortfolioBalanceModal }))
+  }, [dispatch])
+
+  const onClosePermissionsModal = useCallback(() => {
+    dispatch(closeModal({ name: ModalName.PermissionsModal }))
+  }, [dispatch])
+
   return (
     <>
-      <LazyModalRenderer name={ModalName.KoreaCexTransferInfoModal}>
-        <KoreaCexTransferInfoModal />
-      </LazyModalRenderer>
-
-      <LazyModalRenderer name={ModalName.ExchangeTransferModal}>
-        <ExchangeTransferModal />
-      </LazyModalRenderer>
-
-      <LazyModalRenderer name={ModalName.Experiments}>
-        <ExperimentsModal />
-      </LazyModalRenderer>
-
       <LazyModalRenderer name={ModalName.FiatOnRampAggregator}>
         <FiatOnRampAggregatorModal />
       </LazyModalRenderer>
@@ -83,10 +84,26 @@ export function AppModals(): JSX.Element {
         <AccountSwitcherModal />
       </LazyModalRenderer>
 
+      <LazyModalRenderer name={ModalName.ManageWalletsModal}>
+        <ManageWalletsModal />
+      </LazyModalRenderer>
+
       <QueuedOrderModal />
 
       <LazyModalRenderer name={ModalName.RemoveWallet}>
         <RemoveWalletModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.ConnectionsDappListModal}>
+        <ConnectionsDappListModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.EditLabelSettingsModal}>
+        <EditLabelSettingsModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.EditProfileSettingsModal}>
+        <EditProfileSettingsModal />
       </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.RestoreWallet}>
@@ -95,6 +112,22 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.LanguageSelector}>
         <SettingsLanguageModal onClose={onCloseLanguageModal} />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.PortfolioBalanceModal}>
+        <PortfolioBalanceModal onClose={onClosePortfolioBalanceModal} />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.PermissionsModal}>
+        <PermissionsModal onClose={onClosePermissionsModal} />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.SettingsAppearance}>
+        <SettingsAppearanceModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.BiometricsModal}>
+        <SettingsBiometricModal />
       </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.FiatCurrencySelector}>

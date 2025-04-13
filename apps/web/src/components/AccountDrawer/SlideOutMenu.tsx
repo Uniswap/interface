@@ -2,7 +2,8 @@ import { ScrollBarStyles } from 'components/Common/styles'
 import Column from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { ArrowLeft } from 'react-feather'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { ClickableStyle } from 'theme/components/styles'
 
 const Menu = styled(Column)`
   width: 100%;

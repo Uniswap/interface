@@ -32,6 +32,7 @@ export const uniswapUrls = {
     acrossRoutingInfo: `${helpUrl}/articles/30677918339341`,
     approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
     cexTransferKorea: `${helpUrl}/articles/29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea`,
+    contractAddressExplainer: `${helpUrl}/articles/26757826138637-What-is-a-token-contract-address`,
     extensionHelp: `${helpUrl}/articles/24458735271181`,
     extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,

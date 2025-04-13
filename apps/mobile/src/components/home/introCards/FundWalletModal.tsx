@@ -2,6 +2,8 @@ import React, { PropsWithChildren, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ImageBackground } from 'react-native'
 import { useDispatch } from 'react-redux'
+import { navigate } from 'src/app/navigation/rootNavigation'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, useIsDarkMode, useShadowPropsShort } from 'ui/src'
 import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from 'ui/src/assets'
@@ -16,12 +18,14 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 
-export function FundWalletModal({ onClose }: { onClose: () => void }): JSX.Element {
+export function FundWalletModal(): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const shadowProps = useShadowPropsShort()
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const cexTransferProviders = useCexTransferProviders()
+
+  const { onClose } = useReactNavigationModal()
 
   const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
@@ -41,11 +45,13 @@ export function FundWalletModal({ onClose }: { onClose: () => void }): JSX.Eleme
 
   const onPressBuy = useCallback(() => {
     onClose()
-    dispatch(
-      openModal({
-        name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
-      }),
-    )
+    disableForKorea
+      ? navigate(ModalName.KoreaCexTransferInfoModal)
+      : dispatch(
+          openModal({
+            name: ModalName.FiatOnRampAggregator,
+          }),
+        )
   }, [disableForKorea, onClose, dispatch])
 
   const onPressReceive = useCallback(() => {

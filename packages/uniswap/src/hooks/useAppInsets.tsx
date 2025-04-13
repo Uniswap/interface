@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
 import { useTestnetModeBannerHeight } from 'uniswap/src/features/settings/hooks'
 

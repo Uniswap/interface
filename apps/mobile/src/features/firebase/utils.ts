@@ -38,7 +38,7 @@ export const getFirestoreMetadataRef = (
     .collection(pushId)
     .doc('data')
 
-export function getAddressDataCollectionFromBundleId(): string {
+function getAddressDataCollectionFromBundleId(): string {
   if (isDevEnv()) {
     return DEV_ADDRESS_DATA_COLLECTION
   }

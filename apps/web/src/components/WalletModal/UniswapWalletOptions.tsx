@@ -9,9 +9,11 @@ import { uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useConnect } from 'hooks/useConnect'
+import { useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { useCallback, useMemo } from 'react'
 import { Trans } from 'react-i18next'
+import { persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
 import { Z_INDEX } from 'theme/zIndex'
 import { Flex, Image, Text } from 'ui/src'
 import { RIGOBLOCK_LOGO, UNISWAP_LOGO } from 'ui/src/assets'
@@ -58,6 +60,7 @@ export function UniswapWalletOptions() {
   const embeddedWalletConnector = useConnectorWithId(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID, {
     shouldThrow: true,
   })
+  const [, setPersistHideMobileAppPromoBanner] = useAtom(persistHideMobileAppPromoBannerAtom)
 
   const { connect } = useConnect()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
@@ -117,6 +120,7 @@ export function UniswapWalletOptions() {
         <OptionContainer
           gap="md"
           onClick={() => {
+            setPersistHideMobileAppPromoBanner(true)
             connect({
               // Initialize Uniswap Wallet on click instead of in wagmi config
               // to avoid multiple wallet connect sockets being opened
@@ -153,7 +157,10 @@ export function UniswapWalletOptions() {
         {isMobileWeb && (
           // If on a mobile web browser show the relevant app store download link
           <OptionContainer
-            onClick={() => openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })}
+            onClick={() => {
+              setPersistHideMobileAppPromoBanner(true)
+              openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })
+            }}
           >
             <PhoneDownload size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} />
             <Row gap="xs">

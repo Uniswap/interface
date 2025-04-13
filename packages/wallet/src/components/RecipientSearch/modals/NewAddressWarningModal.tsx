@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, GetProps, ScrollView, Text } from 'ui/src'
+import { Button, Flex, GetProps, ScrollView, Text } from 'ui/src'
 import { UserSquare } from 'ui/src/components/icons'
 import { fonts, imageSizes } from 'ui/src/theme'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
@@ -74,6 +74,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
           borderRadius="$rounded16"
           borderWidth="$spacing1"
           flexDirection="column"
+          py="$padding12"
         >
           {displayName?.type === DisplayNameType.Unitag && (
             <LeftRightText
@@ -87,6 +88,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
                   lineHeight={fonts.body3.lineHeight}
                   size={16}
                   variant="body3"
+                  disableForcedWidth={true}
                 />
               }
             />
@@ -95,9 +97,17 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
             <LeftRightText
               leftText={t('send.warning.newAddress.details.ENS')}
               rightChild={
-                <Flex row alignItems="center" gap="$spacing4">
+                <Flex shrink row alignItems="center" gap="$spacing4">
                   <AccountIcon address={address} avatarUri={ensAvatar} size={imageSizes.image16} />
-                  <Text numberOfLines={0} loading={ensDisplayName.isLoading} variant="body3">
+                  <Text
+                    adjustsFontSizeToFit
+                    allowFontScaling
+                    flexShrink={1}
+                    numberOfLines={1}
+                    loading={ensDisplayName.isLoading}
+                    variant="body3"
+                    whiteSpace="initial"
+                  >
                     {ensDisplayName.data}
                   </Text>
                 </Flex>
@@ -107,7 +117,14 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
           <LeftRightText
             leftText={t('send.warning.newAddress.details.walletAddress')}
             rightChild={
-              <Text numberOfLines={0} variant="body3">
+              <Text
+                adjustsFontSizeToFit
+                allowFontScaling
+                flexShrink={1}
+                numberOfLines={1}
+                variant="body3"
+                whiteSpace="initial"
+              >
                 {shortenAddress(address, 6)}
               </Text>
             }
@@ -115,12 +132,12 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
         </ScrollView>
 
         <Flex row gap="$spacing12" pt="$spacing24">
-          <DeprecatedButton flex={1} flexBasis={1} theme="secondary" onPress={onClose}>
+          <Button emphasis="secondary" onPress={onClose}>
             {t('common.button.back')}
-          </DeprecatedButton>
-          <DeprecatedButton flex={1} flexBasis={1} theme="primary" onPress={onAcknowledge}>
+          </Button>
+          <Button emphasis="primary" variant="branded" onPress={onAcknowledge}>
             {t('common.button.confirm')}
-          </DeprecatedButton>
+          </Button>
         </Flex>
       </Flex>
     </Modal>
@@ -130,7 +147,6 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
 const styles = {
   scrollViewContent: {
     flexDirection: 'column',
-    flexWrap: 'wrap',
     py: '$spacing16',
     flexGrow: 1,
   } satisfies GetProps<typeof ScrollView>['contentContainerStyle'],

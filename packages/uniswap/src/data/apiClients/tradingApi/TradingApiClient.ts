@@ -38,8 +38,7 @@ import {
   TransactionHash,
   UniversalRouterVersion,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isTestEnv } from 'utilities/src/environment/env'
+import { logger } from 'utilities/src/logger/logger'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
 // See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
@@ -95,6 +94,14 @@ export async function fetchQuote({
     headers: {
       'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
     },
+    on404: () => {
+      logger.warn('TradingApiClient', 'fetchQuote', 'Quote 404', {
+        chainIdIn: params.tokenInChainId,
+        chainIdOut: params.tokenOutChainId,
+        tradeType: params.type,
+        isBridging: params.tokenInChainId !== params.tokenOutChainId,
+      })
+    },
   })
 }
 
@@ -108,7 +115,7 @@ export async function fetchSwap({ v4Enabled, ...params }: WithV4Flag<CreateSwapR
   return await TradingApiClient.post<CreateSwapResponse>(uniswapUrls.tradingApiPaths.swap, {
     body: JSON.stringify(params),
     headers: {
-      'x-universal-router-version': v4Enabled ? '2.0' : '1.2',
+      'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
     },
   })
 }
@@ -134,19 +141,11 @@ export async function fetchOrders({ orderIds }: { orderIds: string[] }): Promise
 }
 
 export async function fetchSwappableTokens(params: SwappableTokensParams): Promise<GetSwappableTokensResponse> {
-  const chainBlocklist = params.unichainEnabled ? [] : [UniverseChainId.Unichain.toString()]
-
   return await TradingApiClient.get<GetSwappableTokensResponse>(uniswapUrls.tradingApiPaths.swappableTokens, {
     params: {
       tokenIn: params.tokenIn,
       tokenInChainId: params.tokenInChainId,
     },
-    headers:
-      params.unichainEnabled || isTestEnv()
-        ? {}
-        : {
-            'x-chain-blocklist': chainBlocklist.join(','),
-          },
   })
 }
 

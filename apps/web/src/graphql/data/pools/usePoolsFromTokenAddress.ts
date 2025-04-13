@@ -15,8 +15,8 @@ import {
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const DEFAULT_QUERY_SIZE = 20
 
@@ -27,7 +27,7 @@ export function usePoolsFromTokenAddress(
 ) {
   const { defaultChainId } = useEnabledChains()
   const chain = toGraphQLChain(chainId ?? defaultChainId)
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //useFeatureFlag(FeatureFlags.V4Data)
   const {
     loading: loadingV4,
     error: errorV4,

@@ -12,8 +12,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       },
       "flex": 1,
       "flexDirection": "column",
-      "paddingLeft": undefined,
-      "paddingRight": undefined,
+      "paddingLeft": 0,
+      "paddingRight": 0,
       "paddingTop": 200,
     }
   }
@@ -28,7 +28,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             "justifyContent": "flex-end",
           },
           {
-            "marginBottom": undefined,
+            "marginBottom": 0,
           },
         ],
         {
@@ -483,7 +483,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           style={
                             {
                               "alignItems": "center",
-                              "alignSelf": "flex-start",
                               "backgroundColor": {
                                 "dynamic": {
                                   "dark": "#FC72FF1f",
@@ -497,10 +496,10 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                               "flexDirection": "column",
                               "justifyContent": "center",
                               "maxWidth": "30%",
-                              "paddingBottom": 8,
+                              "paddingBottom": 6,
                               "paddingLeft": 8,
                               "paddingRight": 8,
-                              "paddingTop": 8,
+                              "paddingTop": 6,
                             }
                           }
                         >
@@ -946,8 +945,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       },
       "flex": 1,
       "flexDirection": "column",
-      "paddingLeft": undefined,
-      "paddingRight": undefined,
+      "paddingLeft": 0,
+      "paddingRight": 0,
       "paddingTop": 200,
     }
   }
@@ -962,7 +961,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             "justifyContent": "flex-end",
           },
           {
-            "marginBottom": undefined,
+            "marginBottom": 0,
           },
         ],
         {
@@ -1417,7 +1416,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           style={
                             {
                               "alignItems": "center",
-                              "alignSelf": "flex-start",
                               "backgroundColor": {
                                 "dynamic": {
                                   "dark": "#FC72FF1f",
@@ -1431,10 +1429,10 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                               "flexDirection": "column",
                               "justifyContent": "center",
                               "maxWidth": "30%",
-                              "paddingBottom": 8,
+                              "paddingBottom": 6,
                               "paddingLeft": 8,
                               "paddingRight": 8,
-                              "paddingTop": 8,
+                              "paddingTop": 6,
                             }
                           }
                         >

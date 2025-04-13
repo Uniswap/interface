@@ -1,5 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
-// eslint-disable-next-line no-restricted-imports
 import type { ImageSourcePropType } from 'react-native'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
@@ -21,6 +21,7 @@ export enum UniverseChainId {
   Optimism = UniswapSDKChainId.OPTIMISM,
   Polygon = UniswapSDKChainId.POLYGON,
   Sepolia = UniswapSDKChainId.SEPOLIA,
+  Soneium = UniswapSDKChainId.SONEIUM,
   Unichain = UniswapSDKChainId.UNICHAIN,
   UnichainSepolia = UniswapSDKChainId.UNICHAIN_SEPOLIA,
   WorldChain = UniswapSDKChainId.WORLDCHAIN,
@@ -40,6 +41,7 @@ export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Avalanche,
   UniverseChainId.Celo,
   UniverseChainId.WorldChain,
+  UniverseChainId.Soneium,
   UniverseChainId.Zora,
   UniverseChainId.Zksync,
 ]
@@ -70,8 +72,8 @@ export enum RPCType {
 }
 
 export enum NetworkLayer {
-  L1,
-  L2,
+  L1 = 0,
+  L2 = 1,
 }
 
 export interface RetryOptions {
@@ -143,6 +145,7 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly statusPage?: string
   readonly supportsInterfaceClientSideRouting: boolean
   readonly supportsGasEstimates: boolean
+  readonly supportsV4: boolean
   readonly urlParam: string
   readonly wrappedNativeCurrency: {
     name: string // 'Wrapped Ether',

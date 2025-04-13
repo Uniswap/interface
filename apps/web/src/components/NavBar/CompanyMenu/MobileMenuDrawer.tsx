@@ -1,6 +1,7 @@
 import { useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
+import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
 import { getSettingsViewIndex } from 'components/NavBar/PreferencesMenu'
 import { CurrencySettings } from 'components/NavBar/PreferencesMenu/Currency'
@@ -15,6 +16,8 @@ import { ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { Accordion, AnimateTransition, Flex, Square, Text } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 function MenuSection({
   title,
@@ -55,6 +58,7 @@ function MenuSection({
 export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; closeMenu: () => void }) {
   const [openSections, setOpenSections] = useState<string[]>()
   const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)
+  const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const changeView = useCallback(
     (view: PreferencesView) => {
@@ -129,6 +133,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
 
               {shouldDisplayAppTab && <DownloadApp onClick={closeMenu} />}
               <Socials iconSize="25px" />
+              {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={closeMenu} />}
             </Flex>
           </Accordion>
 

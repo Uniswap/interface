@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, LabeledCheckbox, SpinningLoader, Text } from 'ui/src'
+import { Button, Flex, LabeledCheckbox, SpinningLoader, Text } from 'ui/src'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function RemoveLastMnemonicWalletFooter({
@@ -31,16 +31,18 @@ export function RemoveLastMnemonicWalletFooter({
         />
       </Flex>
       <Flex centered row mt="$spacing8">
-        <DeprecatedButton
+        <Button
           fill
+          size="large"
           isDisabled={!checkBoxAccepted}
           icon={inProgress ? <SpinningLoader color="$statusCritical" /> : undefined}
           testID={TestID.Confirm}
-          theme="detrimental"
+          variant="critical"
+          emphasis="secondary"
           onPress={onPress}
         >
           {!inProgress ? t('account.wallet.button.remove') : undefined}
-        </DeprecatedButton>
+        </Button>
       </Flex>
     </>
   )

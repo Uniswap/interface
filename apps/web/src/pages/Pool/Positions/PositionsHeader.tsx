@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { lpStatusConfig } from 'components/Liquidity/constants'
@@ -6,7 +5,7 @@ import { getProtocolStatusLabel, getProtocolVersionLabel } from 'components/Liqu
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, LabeledCheckbox, Text, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -14,8 +13,8 @@ import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCi
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const StyledDropdownButton = {
   borderRadius: '$rounded16',
@@ -51,7 +50,7 @@ export function PositionsHeader({
   const { t } = useTranslation()
   const { chains } = useEnabledChains()
   const navigate = useNavigate()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //useFeatureFlag(FeatureFlags.V4Data)
   const media = useMedia()
 
   const protocolVersions = useMemo(

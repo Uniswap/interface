@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
 import { render } from 'test-utils/render'

@@ -1,5 +1,5 @@
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { ChartEntry } from 'components/LiquidityChartRangeInput/types'
+import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Flex, Text } from 'ui/src'

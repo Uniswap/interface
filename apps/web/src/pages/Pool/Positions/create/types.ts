@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -6,8 +5,8 @@ import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
-
 export type FeeData = {
   feeAmount: number
   tickSpacing: number
@@ -25,9 +24,9 @@ export const DYNAMIC_FEE_DATA = {
 } as const satisfies DynamicFeeData
 
 export enum PositionFlowStep {
-  SELECT_TOKENS_AND_FEE_TIER,
-  PRICE_RANGE,
-  DEPOSIT,
+  SELECT_TOKENS_AND_FEE_TIER = 0,
+  PRICE_RANGE = 1,
+  DEPOSIT = 2,
 }
 
 export interface PositionState {
@@ -36,6 +35,12 @@ export interface PositionState {
   fee: FeeData
   hook?: string
   userApprovedHook?: string // address of approved hook. If different from `hook`, user needs to reapprove the new hook
+  // Initial position is provided for migration purposes.
+  initialPosition?: {
+    tickLower: number
+    tickUpper: number
+    isOutOfRange: boolean
+  }
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
@@ -54,6 +59,9 @@ type BaseCreatePositionInfo = {
   poolId?: string
   poolOrPairLoading?: boolean
   isPoolOutOfSync: boolean
+  // The default initial price we use when we don't have a pool. Based on the current price of the token pair.
+  defaultInitialPrice?: Price<Currency, Currency>
+  isDefaultInitialPriceLoading?: boolean
   refetchPoolData: () => void
 }
 
@@ -94,6 +102,12 @@ export type CreatePositionContextType = {
   setCurrentTransactionStep: Dispatch<SetStateAction<{ step: TransactionStep; accepted: boolean } | undefined>>
 }
 
+export type PriceDifference = {
+  value: number
+  absoluteValue: number
+  warning?: WarningSeverity
+}
+
 export interface PriceRangeState {
   priceInverted: boolean
   fullRange: boolean
@@ -101,6 +115,7 @@ export interface PriceRangeState {
   minPrice?: string
   maxPrice?: string
   initialPrice: string
+  isInitialPriceDirty?: boolean
 }
 
 type BasePriceRangeInfo = {
@@ -108,6 +123,7 @@ type BasePriceRangeInfo = {
   deposit0Disabled: boolean
   deposit1Disabled: boolean
   price?: Price<Currency, Currency>
+  priceDifference?: PriceDifference
   invertPrice: boolean
 }
 

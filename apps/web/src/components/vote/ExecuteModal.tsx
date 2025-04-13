@@ -8,8 +8,10 @@ import styled, { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import { useExecuteCallback } from 'state/governance/hooks'
-import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { CustomLightSpinner, ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components/Links'
 import { Trans } from 'react-i18next'
+import { Flex } from 'ui/src'
 import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
@@ -104,7 +106,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
       {attempting && !hash && (
         <ConfirmOrLoadingWrapper>
           <RowBetween>
-            <div />
+            <Flex />
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
@@ -117,7 +119,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             <ThemedText.DeprecatedSubHeader>
-              <Trans i18nKey="common.confirmTransaction.button" />
+              <Trans i18nKey="common.confirm" />
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
@@ -125,7 +127,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
       {hash && (
         <ConfirmOrLoadingWrapper>
           <RowBetween>
-            <div />
+            <Flex />
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>

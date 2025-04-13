@@ -12,6 +12,10 @@ export interface GasStrategy {
   displayLimitInflationFactor: number
   priceInflationFactor: number
   percentileThresholdFor1559Fee: number
+  thresholdToInflateLastBlockBaseFee?: number | null
+  baseFeeMultiplier?: number | null
+  baseFeeHistoryWindow?: number | null
+  minPriorityFeeRatioOfBaseFee?: number | null
   minPriorityFeeGwei?: number | null
   maxPriorityFeeGwei?: number | null
 }

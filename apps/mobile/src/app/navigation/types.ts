@@ -5,7 +5,9 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
+import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import {
@@ -25,11 +27,11 @@ type NFTItemScreenParams = {
   fallbackData?: NFTItem
 }
 
-export type BackupFormParams = {
+type BackupFormParams = {
   address: Address
 }
 
-export type CloudBackupFormParams = {
+type CloudBackupFormParams = {
   address: Address
   password: string
 }
@@ -55,8 +57,6 @@ export type FiatOnRampStackParamList = {
 export type SettingsStackParamList = {
   [MobileScreens.Dev]: undefined
   [MobileScreens.Settings]: undefined
-  [MobileScreens.SettingsAppearance]: undefined
-  [MobileScreens.SettingsBiometricAuth]: undefined
   [MobileScreens.SettingsCloudBackupPasswordConfirm]: CloudBackupFormParams
   [MobileScreens.SettingsCloudBackupPasswordCreate]: { address: Address }
   [MobileScreens.SettingsCloudBackupProcessing]: CloudBackupFormParams
@@ -70,7 +70,12 @@ export type SettingsStackParamList = {
   [MobileScreens.SettingsWalletEdit]: { address: Address }
   [MobileScreens.SettingsWalletManageConnection]: { address: Address }
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
+  [ModalName.BiometricsModal]: undefined
   [ModalName.NotificationsOSSettings]: undefined
+  [ModalName.SettingsAppearance]: undefined
+  [ModalName.ConnectionsDappListModal]: ConnectionsDappsListModalState
+  [ModalName.EditProfileSettingsModal]: undefined
+  [ModalName.EditLabelSettingsModal]: undefined
 }
 
 export type OnboardingStackBaseParams = {
@@ -125,16 +130,20 @@ export type AppStackParamList = {
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
   [MobileScreens.Storybook]: undefined
   [ModalName.NotificationsOSSettings]: undefined
+  [ModalName.FundWallet]: undefined
+  [ModalName.KoreaCexTransferInfoModal]: undefined
+  [ModalName.ExchangeTransferModal]: { initialState: { serviceProvider: FORServiceProvider } }
+  [ModalName.Experiments]: undefined
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>
-export type AppStackScreenProps = NativeStackScreenProps<AppStackParamList>
+type AppStackScreenProps = NativeStackScreenProps<AppStackParamList>
 export type AppStackScreenProp<Screen extends keyof AppStackParamList> = NativeStackScreenProps<
   AppStackParamList,
   Screen
 >
 
-export type ExploreStackNavigationProp = CompositeNavigationProp<
+type ExploreStackNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ExploreStackParamList>,
   AppStackNavigationProp
 >
@@ -167,7 +176,7 @@ export type RootParamList = AppStackParamList &
   FiatOnRampStackParamList
 
 export enum EducationContentType {
-  SeedPhrase,
+  SeedPhrase = 0,
 }
 
 export const useAppStackNavigation = (): AppStackNavigationProp => useNavigation<AppStackNavigationProp>()

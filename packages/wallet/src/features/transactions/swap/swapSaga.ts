@@ -12,13 +12,19 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   ApproveTransactionInfo,
+  TransactionOptions,
   TransactionOriginType,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import { CalculatedNonce, sendTransaction, tryGetNonce } from 'wallet/src/features/transactions/sendTransactionSaga'
+import {
+  CalculatedNonce,
+  SendTransactionParams,
+  sendTransaction,
+  tryGetNonce,
+} from 'wallet/src/features/transactions/sendTransactionSaga'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import { wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
@@ -35,6 +41,7 @@ export type SwapParams = {
 }
 
 export function* approveAndSwap(params: SwapParams) {
+  const userSubmissionTimestampMs = Date.now()
   let calculatedNonce: CalculatedNonce | undefined
   try {
     const { swapTxContext, account, txId, analytics, onSuccess, onFailure } = params
@@ -69,10 +76,12 @@ export function* approveAndSwap(params: SwapParams) {
         swapTxId: txId,
         gasEstimates: gasFeeEstimation?.approvalEstimates,
       }
-
-      const options = { request: { ...approveTxRequest, nonce }, submitViaPrivateRpc }
-
-      const sendTransactionParams = {
+      const options: TransactionOptions = {
+        request: { ...approveTxRequest, nonce },
+        submitViaPrivateRpc,
+        userSubmissionTimestampMs,
+      }
+      const sendTransactionParams: SendTransactionParams = {
         chainId,
         account,
         options,
@@ -126,8 +135,12 @@ export function* approveAndSwap(params: SwapParams) {
       }
       yield* call(submitUniswapXOrder, submitOrderParams)
     } else if (swapTxContext.routing === Routing.BRIDGE) {
-      const options = { request: { ...swapTxContext.txRequest, nonce }, submitViaPrivateRpc }
-      const sendTransactionParams = {
+      const options: TransactionOptions = {
+        request: { ...swapTxContext.txRequest, nonce },
+        submitViaPrivateRpc,
+        userSubmissionTimestampMs,
+      }
+      const sendTransactionParams: SendTransactionParams = {
         txId,
         chainId,
         account,
@@ -139,8 +152,12 @@ export function* approveAndSwap(params: SwapParams) {
       yield* call(sendTransaction, sendTransactionParams)
       yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
     } else if (swapTxContext.routing === Routing.CLASSIC) {
-      const options = { request: { ...swapTxContext.txRequest, nonce }, submitViaPrivateRpc }
-      const sendTransactionParams = {
+      const options: TransactionOptions = {
+        request: { ...swapTxContext.txRequest, nonce },
+        submitViaPrivateRpc,
+        userSubmissionTimestampMs,
+      }
+      const sendTransactionParams: SendTransactionParams = {
         txId,
         chainId,
         account,

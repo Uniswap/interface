@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-/* eslint-disable-next-line no-restricted-imports */
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPositionAmountsTile'
@@ -13,28 +12,25 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import NotFound from 'pages/NotFound'
-import { useCanUnwrapCurrency } from 'pages/Pool/Positions/create/utils'
-import { HeaderButton, LoadingRow } from 'pages/Pool/Positions/shared'
-import { useMemo, useState } from 'react'
+import { LoadingRow } from 'pages/Pool/Positions/shared'
+import { useMemo } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { DeprecatedButton, Flex, Main, Switch, Text, styled } from 'ui/src'
+import { Button, DeprecatedButton, Flex, Main, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
@@ -98,10 +94,8 @@ export function LegacyPositionPage() {
   usePendingLPTransactionsChangeListener(refetch)
 
   const dispatch = useAppDispatch()
-  const [collectAsWeth, setCollectAsWeth] = useState(false)
 
-  const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //useFeatureFlag(FeatureFlags.V4Data)
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const { formatCurrencyAmount } = useFormatter()
@@ -120,15 +114,6 @@ export function LegacyPositionPage() {
     fiatValue1,
     priceOrdering,
   } = useV3OrV4PositionDerivedInfo(positionInfo)
-
-  const canUnwrap0 = useCanUnwrapCurrency(currency0Amount?.currency)
-  const canUnwrap1 = useCanUnwrapCurrency(currency1Amount?.currency)
-  const canUnwrap = positionInfo && chainId && positionInfo.version !== ProtocolVersion.V4 && (canUnwrap0 || canUnwrap1)
-  const nativeCurrencyInfo = useNativeCurrencyInfo(chainId ?? UniverseChainId.Mainnet)
-
-  if (!isLoading && !lpRedesignEnabled) {
-    return <Navigate to="/pools" replace />
-  }
 
   if (positionLoading) {
     return (
@@ -207,7 +192,7 @@ export function LegacyPositionPage() {
             justifyContent="space-between"
             alignItems="center"
           >
-            <LiquidityPositionInfo positionInfo={positionInfo} />
+            <LiquidityPositionInfo positionInfo={positionInfo} linkToPool />
             {isOwner && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
                 {positionInfo.version === ProtocolVersion.V3 &&
@@ -218,51 +203,54 @@ export function LegacyPositionPage() {
                       text={t('pool.migrateLiquidityDisabledTooltip')}
                       disabled={!showV4UnsupportedTooltip}
                     >
-                      <HeaderButton
-                        emphasis="secondary"
-                        disabled={showV4UnsupportedTooltip}
-                        opacity={showV4UnsupportedTooltip ? 0.5 : 1}
-                        onPress={() => {
-                          navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
-                        }}
-                      >
-                        <Text variant="buttonLabel2" color="$neutral1">
+                      <Flex row>
+                        <Button
+                          size="small"
+                          emphasis="secondary"
+                          isDisabled={showV4UnsupportedTooltip}
+                          opacity={showV4UnsupportedTooltip ? 0.5 : 1}
+                          onPress={() => {
+                            navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                          }}
+                        >
                           <Trans i18nKey="pool.migrateToV4" />
-                        </Text>
-                      </HeaderButton>
+                        </Button>
+                      </Flex>
                     </MouseoverTooltip>
                   )}
-                <HeaderButton
-                  emphasis="secondary"
-                  onPress={() => {
-                    dispatch(
-                      setOpenModal({
-                        name: ModalName.AddLiquidity,
-                        initialState: { ...positionInfo, collectAsWeth },
-                      }),
-                    )
-                  }}
-                >
-                  <Text variant="buttonLabel2" color="$neutral1">
-                    <Trans i18nKey="common.addLiquidity" />
-                  </Text>
-                </HeaderButton>
-                {status !== PositionStatus.CLOSED && (
-                  <HeaderButton
-                    emphasis="primary"
+                <Flex row>
+                  <Button
+                    size="small"
+                    emphasis="secondary"
                     onPress={() => {
                       dispatch(
                         setOpenModal({
-                          name: ModalName.RemoveLiquidity,
-                          initialState: { ...positionInfo, collectAsWeth },
+                          name: ModalName.AddLiquidity,
+                          initialState: positionInfo,
                         }),
                       )
                     }}
                   >
-                    <Text variant="buttonLabel2" color="$surface1">
+                    <Trans i18nKey="common.addLiquidity" />
+                  </Button>
+                </Flex>
+                {status !== PositionStatus.CLOSED && (
+                  <Flex row>
+                    <Button
+                      size="small"
+                      emphasis="primary"
+                      onPress={() => {
+                        dispatch(
+                          setOpenModal({
+                            name: ModalName.RemoveLiquidity,
+                            initialState: positionInfo,
+                          }),
+                        )
+                      }}
+                    >
                       <Trans i18nKey="pool.removeLiquidity" />
-                    </Text>
-                  </HeaderButton>
+                    </Button>
+                  </Flex>
                 )}
               </Flex>
             )}
@@ -320,23 +308,24 @@ export function LegacyPositionPage() {
                   <Trans i18nKey="pool.uncollectedFees" />
                 </Text>
                 {hasFees && isOwner && (
-                  <HeaderButton
-                    emphasis="primary"
-                    onPress={() => {
-                      if (hasFees) {
-                        dispatch(
-                          setOpenModal({
-                            name: ModalName.ClaimFee,
-                            initialState: { ...positionInfo, collectAsWeth },
-                          }),
-                        )
-                      }
-                    }}
-                  >
-                    <Text variant="buttonLabel4" color="$surface1">
+                  <Flex row>
+                    <Button
+                      size="xsmall"
+                      emphasis="primary"
+                      onPress={() => {
+                        if (hasFees) {
+                          dispatch(
+                            setOpenModal({
+                              name: ModalName.ClaimFee,
+                              initialState: positionInfo,
+                            }),
+                          )
+                        }
+                      }}
+                    >
                       <Trans i18nKey="pool.collectFees" />
-                    </Text>
-                  </HeaderButton>
+                    </Button>
+                  </Flex>
                 )}
               </Flex>
               <Text variant="heading2" mt="$spacing8" mb="$spacing16">
@@ -363,23 +352,6 @@ export function LegacyPositionPage() {
                   fiatValue0={fiatFeeValue0}
                   fiatValue1={fiatFeeValue1}
                 />
-              )}
-              {canUnwrap && isOwner && (
-                <Flex row width="100%" justifyContent="space-between" mt="$spacing16" alignItems="center">
-                  <Text variant="body1">
-                    <Trans
-                      i18nKey="pool.collectAs"
-                      values={{ nativeWrappedSymbol: nativeCurrencyInfo?.currency.wrapped.symbol }}
-                    />
-                  </Text>
-                  <Switch
-                    variant="default"
-                    checked={collectAsWeth}
-                    onCheckedChange={() => {
-                      setCollectAsWeth((prev) => !prev)
-                    }}
-                  />
-                </Flex>
               )}
             </Flex>
           </Flex>

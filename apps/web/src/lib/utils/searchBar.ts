@@ -14,7 +14,6 @@ export const searchTokenToTokenSearchResult = (
     address: tokenAddressOrNativeAddress(searchToken.address, searchToken.chainId),
     name: searchToken.name ?? null,
     logoUrl: searchToken.project?.logoUrl ?? null,
-    safetyLevel: searchToken.project?.safetyLevel ?? null,
     safetyInfo: getCurrencySafetyInfo(searchToken.project?.safetyLevel, searchToken.protectionInfo),
     feeData: searchToken.feeData ?? null,
   }

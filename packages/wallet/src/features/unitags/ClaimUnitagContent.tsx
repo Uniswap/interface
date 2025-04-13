@@ -2,9 +2,9 @@ import { EventConsumer, EventMapBase } from '@react-navigation/core'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, LayoutChangeEvent } from 'react-native'
+import { LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { AnimatePresence, DeprecatedButton, Flex, FlexProps, Input, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatePresence, Button, Flex, FlexProps, Input, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
@@ -27,7 +27,7 @@ import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { UnitagInfoModal } from 'wallet/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
-import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
+import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks/useCanClaimUnitagName'
 import { getYourNameString } from 'wallet/src/features/unitags/utils'
 
 const MAX_UNITAG_CHAR_LENGTH = 20
@@ -92,18 +92,31 @@ export function ClaimUnitagContent({
     MIN_INPUT_FONT_SIZE,
   )
 
-  const focusUniTagTextInput = (): void | null => textInputRef.current && textInputRef.current.focus()
+  /*
+   * Resets the unitag to check
+   * Called onFocus, as well as `onChangeText`
+   */
+  const resetUnitagToCheck = useCallback(() => {
+    if (unitagToCheck) {
+      setUnitagToCheck(undefined)
+    }
+  }, [unitagToCheck])
+
+  const focusUnitagTextInput = useCallback((): void | null => {
+    textInputRef.current?.focus()
+  }, [textInputRef])
+
+  const handleHideInfoModal = useCallback(() => {
+    setShowInfoModal(false)
+  }, [])
 
   useEffect(() => {
-    return navigationEventConsumer?.addListener('transitionEnd', () => {
-      focusUniTagTextInput()
-    })
-  }, [navigationEventConsumer])
+    return navigationEventConsumer?.addListener('transitionEnd', focusUnitagTextInput)
+  }, [navigationEventConsumer, focusUnitagTextInput])
 
   useEffect(() => {
     const unsubscribe = navigationEventConsumer?.addListener('focus', () => {
-      // Reset the Unitag to check
-      setUnitagToCheck(undefined)
+      resetUnitagToCheck()
 
       // When returning back to this screen, handle animating the Unitag logo out and text input in
       if (showTextInputView) {
@@ -119,7 +132,7 @@ export function ClaimUnitagContent({
       setTimeout(() => {
         setShowTextInputView(true)
         addressViewOpacity.value = withTiming(1, { duration: ONE_SECOND_MS / 2 })
-        focusUniTagTextInput()
+        focusUnitagTextInput()
       }, ONE_SECOND_MS)
     })
 
@@ -130,12 +143,17 @@ export function ClaimUnitagContent({
     setShowTextInputView,
     addressViewOpacity,
     unitagInputContainerTranslateY,
+    resetUnitagToCheck,
+    focusUnitagTextInput,
   ])
 
   const onChangeTextInput = useCallback(
     (text: string): void => {
       setShouldBlockContinue(false)
       setUnitagToCheck(undefined)
+
+      // This handles the case where the user has already checked a unitag, received an error, and proceeds to change their inputted text
+      resetUnitagToCheck()
 
       if (text.length > MAX_UNITAG_CHAR_LENGTH) {
         return
@@ -149,13 +167,13 @@ export function ClaimUnitagContent({
 
       setUnitagInputValue(text?.trim())
     },
-    [inputPlaceholder, onSetFontSize],
+    [inputPlaceholder, onSetFontSize, resetUnitagToCheck],
   )
 
-  const onPressAddressTooltip = (): void => {
+  const onPressAddressTooltip = useCallback((): void => {
     dismissNativeKeyboard()
     setShowInfoModal(true)
-  }
+  }, [])
 
   const navigateWithAnimation = useCallback(
     (unitag: string) => {
@@ -232,7 +250,7 @@ export function ClaimUnitagContent({
   ])
 
   const onPressContinue = (): void => {
-    if (unitagInputValue !== unitagToCheck) {
+    if (unitagInputValue && unitagInputValue !== unitagToCheck) {
       setIsCheckingUnitag(true)
       setUnitagToCheck(unitagInputValue)
     }
@@ -258,7 +276,7 @@ export function ClaimUnitagContent({
     }
 
     // Fix from WALL-4822 for Android
-    // Sets input minWidth to initial input width + 1 point. Initial width is not sufficent after clearing the input.
+    // Sets input minWidth to initial input width + 1 point. Initial width is not sufficient after clearing the input.
     setUnitagNameInputMinWidth(event.nativeEvent.layout.width + 1)
   }
 
@@ -349,12 +367,7 @@ export function ClaimUnitagContent({
             <Text color="$neutral2" variant="subheading2">
               {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
             </Text>
-            <TouchableArea
-              onPress={(): void => {
-                dismissNativeKeyboard()
-                setShowInfoModal(true)
-              }}
-            >
+            <TouchableArea onPress={onPressAddressTooltip}>
               <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
             </TouchableArea>
           </AnimatedFlex>
@@ -366,33 +379,24 @@ export function ClaimUnitagContent({
           </Text>
         </Flex>
       </Flex>
-      <Flex gap="$spacing24" justifyContent="flex-end">
-        <DeprecatedButton
+      <Flex row justifyContent="flex-end">
+        <Button
+          size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
+          variant="branded"
           isDisabled={
             (entryPoint === OnboardingScreens.Landing && !unitagAddress) ||
             !unitagInputValue ||
             isCheckingUnitag ||
             shouldBlockContinue
           }
-          size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
           testID={TestID.Continue}
-          theme="primary"
+          loading={isCheckingUnitag}
           onPress={onPressContinue}
         >
-          {isCheckingUnitag ? (
-            <Flex height={fonts.buttonLabel1.lineHeight}>
-              <ActivityIndicator color={colors.white.val} />
-            </Flex>
-          ) : (
-            t('common.button.continue')
-          )}
-        </DeprecatedButton>
+          {t('common.button.continue')}
+        </Button>
       </Flex>
-      <UnitagInfoModal
-        isOpen={showInfoModal}
-        unitagAddress={unitagAddress}
-        onClose={(): void => setShowInfoModal(false)}
-      />
+      <UnitagInfoModal isOpen={showInfoModal} unitagAddress={unitagAddress} onClose={handleHideInfoModal} />
     </>
   )
 }

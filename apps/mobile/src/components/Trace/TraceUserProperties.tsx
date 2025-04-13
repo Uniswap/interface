@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { NativeModules } from 'react-native'
-import OneSignal from 'react-native-onesignal'
+import { OneSignal } from 'react-native-onesignal'
 import { useSelector } from 'react-redux'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
@@ -14,7 +14,7 @@ import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { isAndroid } from 'utilities/src/platform'
-// eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAccountBalances } from 'wallet/src/features/accounts/useAccountListData'
 import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userPropertyHooks'
@@ -125,7 +125,7 @@ export function TraceUserProperties(): null {
   }, [allowAnalytics, isTestnetModeEnabled])
 
   useEffect(() => {
-    OneSignal.sendTag(OneSignalUserTagField.AccountIsUnfunded, signerAccountsTotalBalance === 0 ? 'true' : 'false')
+    OneSignal.User.addTag(OneSignalUserTagField.AccountIsUnfunded, signerAccountsTotalBalance === 0 ? 'true' : 'false')
   }, [signerAccountsTotalBalance])
 
   return null
