@@ -38,8 +38,8 @@ import { zIndexes } from 'ui/src/theme/zIndexes'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -83,8 +83,8 @@ function useDropdownOptions(
   isVisible?: boolean,
 ): MenuOptionItem[] {
   const { t } = useTranslation()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
+  const isV4DataEnabled = true //useFeatureFlag(FeatureFlags.V4Data)
+  const isMigrateToV4Enabled = false //useFeatureFlag(FeatureFlags.MigrateV3ToV4)
   const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
 
   const dispatch = useAppDispatch()

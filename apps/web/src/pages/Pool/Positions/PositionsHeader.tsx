@@ -13,8 +13,8 @@ import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCi
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const StyledDropdownButton = {
   borderRadius: '$rounded16',
@@ -50,7 +50,7 @@ export function PositionsHeader({
   const { t } = useTranslation()
   const { chains } = useEnabledChains()
   const navigate = useNavigate()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //useFeatureFlag(FeatureFlags.V4Data)
   const media = useMedia()
 
   const protocolVersions = useMemo(

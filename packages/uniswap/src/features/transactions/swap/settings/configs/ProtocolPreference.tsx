@@ -55,11 +55,12 @@ export const ProtocolPreference: SwapSettingConfig = {
     const { selectedProtocols, updateTransactionSettings } = useTransactionSettingsContext()
     const [isDefault, setIsDefault] = useState(isDefaultOptions(selectedProtocols))
     const uniswapXEnabledFlag = useFeatureFlag(FeatureFlags.UniswapX)
-    const v4EnabledFlag = useFeatureFlag(FeatureFlags.V4Swap)
+    //const v4EnabledFlag = useFeatureFlag(FeatureFlags.V4Swap)
 
     const { chainId } = useSwapFormContext().derivedSwapInfo
     const uniswapXEnabled = uniswapXEnabledFlag && chainId !== UniverseChainId.MonadTestnet
     const v4SwapEnabled = useV4SwapEnabled(chainId)
+    console.log('v4SwapEnabled', v4SwapEnabled)
     const chainName = getChainInfo(chainId).name
     const restrictionDescription = t('swap.settings.protection.subtitle.unavailable', { chainName })
 
@@ -116,7 +117,7 @@ export const ProtocolPreference: SwapSettingConfig = {
                 onSelect={() => toggleProtocol(ProtocolItems.UNISWAPX_V2)}
               />
             )}
-            {v4EnabledFlag && (
+            {v4SwapEnabled && (
               <OptionRow
                 active={v4SwapEnabled && selectedProtocols.includes(ProtocolItems.V4)}
                 elementName={ElementName.SwapRoutingPreferenceV4}

@@ -11,6 +11,7 @@ import { useStakingPoolsRewards } from 'state/pool/hooks'
 import styled from 'lib/styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
+import { Flex, Text } from 'ui/src'
 import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 
 // TODO: check if we want to keep margin right 12px by keeping list item margin right at 12px
@@ -130,10 +131,12 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   return (
     <>
       <DesktopHeader>
-        <div>
-          {filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}
-          {positions && ' (' + poolsWithStats.length + ')'}
-        </div>
+        <Flex>
+          <Text>
+            {filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}
+            {positions && ` (${poolsWithStats.length})`}
+          </Text>
+        </Flex>
         {filterByOperator && (
           <RowFixed gap="32px">
             <RowFixed gap="2px">
@@ -192,21 +195,31 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         )}
       </DesktopHeader>
       <MobileHeader>
-        <div>{filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}</div>
+        <Flex>
+          <Text>
+            {filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}
+          </Text>
+        </Flex>
         {!filterByOperator ? (
           <RowFixed style={{ gap: '40px', marginRight: '8px' }}>
-            <div>
-              <Trans>IRR</Trans>
-            </div>
-            <div>
-              <Trans>APR</Trans>
-            </div>
+            <Flex>
+              <Text>
+                <Trans>IRR</Trans>
+              </Text>
+            </Flex>
+            <Flex>
+              <Text>
+                <Trans>APR</Trans>
+              </Text>
+            </Flex>
           </RowFixed>
         ) : (
           <RowFixed style={{ gap: '40px', marginRight: '8px' }}>
-            <div>
-              <Trans>Points</Trans>
-            </div>
+            <Flex>
+              <Text>
+                <Trans>Points</Trans>
+              </Text>
+            </Flex>
           </RowFixed>
         )}
       </MobileHeader>
@@ -223,9 +236,11 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       ) : !filterByOperator && !account.isConnected ? (
         <>
           <DesktopHeader>
-            <div>
-              <Trans>Could not retrieve pools. Try again by connecting your wallet.</Trans>
-            </div>
+            <Flex>
+              <Text>
+                <Trans>Could not retrieve pools. Try again by connecting your wallet.</Trans>
+              </Text>
+            </Flex>
           </DesktopHeader>
           <MobileHeader>
             <Trans>Could not retrieve pools. Try again by connecting your wallet.</Trans>
@@ -234,9 +249,11 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       ) : filterByOperator && account.isConnected ? (
         <>
           <DesktopHeader>
-            <div>
-              <Trans>You don&apos;t have a smart pool. Create yours or buy an existing one.</Trans>
-            </div>
+            <Flex>
+              <Text>
+                <Trans>You don&apos;t have a smart pool. Create yours or buy an existing one.</Trans>
+              </Text>
+            </Flex>
           </DesktopHeader>
           <MobileHeader>
             <Trans>You don&apos;t have a smart pool. Create yours or buy an existing one.</Trans>
@@ -245,9 +262,11 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       ) : (
         <>
           <DesktopHeader>
-            <div>
-              <Trans>Could not retrieve pools. RPC endpoint is down.</Trans>
-            </div>
+            <Flex>
+              <Text>
+                <Trans>Could not retrieve pools. RPC endpoint is down.</Trans>
+              </Text>
+            </Flex>
           </DesktopHeader>
           <MobileHeader>
             <Trans>Could not retrieve pools. RPC endpoint is down.</Trans>

@@ -157,9 +157,6 @@ function SearchBarDropdownContents({
     [searchHistory],
   )
   const account = useAccount()
-  // TODO: set true when looking to display tokens
-  const displayTokens = false
-
   const { data: trendingTokenData } = useSearchTrendingTokensGql(account.chainId)
 
   const trendingTokens = useMemo(
@@ -230,7 +227,6 @@ function SearchBarDropdownContents({
     <Flex gap="$spacing20">
       <>
         {poolSearchResults}
-        {tokenSearchResults}
       </>
     </Flex>
   ) : (

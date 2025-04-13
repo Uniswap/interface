@@ -133,7 +133,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             <ThemedText.DeprecatedSubHeader>
-              <Trans i18nKey="common.confirmTransaction.button" />
+              <Trans i18nKey="common.confirm" />
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>

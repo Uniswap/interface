@@ -32,7 +32,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
       <AutoColumn gap="100px" justify="center">
         {children}
         <ThemedText.DeprecatedSubHeader>
-          <Trans i18nKey="common.confirmTransaction.button" />
+          <Trans i18nKey="common.confirm" />
         </ThemedText.DeprecatedSubHeader>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>

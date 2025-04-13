@@ -170,7 +170,6 @@ interface Resources {
     "common.amountDeposited.label": "{{amount}} Deposited",
     "common.amountInput.placeholder": "Input amount",
     "common.amountPerBase": "{{amount}} {{symbolA}} per {{symbolB}}",
-    "common.analytics": "Analytics",
     "common.and": "and",
     "common.app": "App",
     "common.approval.cancelled": "Approval cancelled",

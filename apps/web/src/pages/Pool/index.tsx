@@ -32,8 +32,8 @@ import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
@@ -165,7 +165,7 @@ const statusFilterAtom = atom<PositionStatus[]>([PositionStatus.IN_RANGE, Positi
 
 export default function Pool() {
   const { t } = useTranslation()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //useFeatureFlag(FeatureFlags.V4Data)
 
   const media = useMedia()
 

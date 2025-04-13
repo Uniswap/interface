@@ -31,7 +31,7 @@ import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/s
 import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/hooks/useWrapTransactionRequest'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { SwapGasFeeEstimation } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
+import { /*ApprovalAction,*/ TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {

@@ -79,7 +79,7 @@ function ConfirmationPendingContent({
             {pendingText}
           </ThemedText.SubHeader>
           <ThemedText.SubHeaderSmall color="neutral2" textAlign="center" marginBottom="12px">
-            {t('common.confirmTransaction.button')}
+            {t('common.confirm')}
           </ThemedText.SubHeaderSmall>
         </AutoColumn>
       </AutoColumn>

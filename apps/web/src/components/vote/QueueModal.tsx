@@ -119,7 +119,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             <ThemedText.DeprecatedSubHeader>
-              <Trans i18nKey="common.confirmTransaction.button" />
+              <Trans i18nKey="common.confirm" />
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>

@@ -4,6 +4,7 @@ import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
 import { useCallback, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
@@ -24,7 +25,6 @@ interface CurrencySearchProps {
   onDismiss: () => void
   chainIds?: UniverseChainId[]
 }
-
 export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, chainIds }: CurrencySearchProps) {
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
@@ -32,6 +32,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, cha
   const { currentTab } = useSwapAndLimitContext()
   const prevChainId = usePrevious(chainId)
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
+  const { pathname } = useLocation()
 
   const selectChain = useSelectChain()
   const { chains } = useEnabledChains()
@@ -72,7 +73,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, cha
       <Flex width="100%" flexGrow={1} flexShrink={1} flexBasis="auto">
         <TokenSelectorContent
           activeAccountAddress={
-            currentTab === SwapTab.Swap && location.pathname !== '/mint'
+            currentTab === SwapTab.Swap && pathname !== '/mint'
               ? smartPoolAddress ?? undefined
               : account.address!
           }

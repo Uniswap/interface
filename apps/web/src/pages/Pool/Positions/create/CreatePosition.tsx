@@ -38,8 +38,8 @@ import { Button, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -321,7 +321,7 @@ const Toolbar = ({
 }
 
 export default function CreatePosition() {
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //useFeatureFlag(FeatureFlags.V4Data)
   const media = useMedia()
   const { t } = useTranslation()
 

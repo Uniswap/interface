@@ -22,7 +22,7 @@ const ExploreStatsSection = () => {
   const media = useMedia()
   const { t } = useTranslation()
   const { formatFiatPrice } = useFormatter()
-  const isV4DataEnabled = useFeatureFlagWithLoading(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //useFeatureFlagWithLoading(FeatureFlags.V4Data)
 
   const {
     protocolVolumes,

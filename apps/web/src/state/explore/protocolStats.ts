@@ -1,8 +1,8 @@
 import { TimestampedAmount } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { useContext, useMemo } from 'react'
 import { ExploreContext } from 'state/explore'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 
 function mapDataByTimestamp(
   v2Data?: TimestampedAmount[],
@@ -44,8 +44,8 @@ export function use24hProtocolVolume() {
     protocolStats: { data, isLoading },
   } = useContext(ExploreContext)
 
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
+  //const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //isV4DataEnabledLoaded || isV4DataLoading
 
   const v2Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v2
   const v3Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v3
@@ -112,8 +112,8 @@ export function useDailyTVLWithChange() {
     protocolStats: { data, isLoading },
   } = useContext(ExploreContext)
 
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
+  //const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //isV4DataEnabledLoaded || isV4DataLoading
 
   const v2Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v2
   const v3Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v3

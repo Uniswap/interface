@@ -102,7 +102,7 @@ function PositionPage() {
 
   const dispatch = useAppDispatch()
 
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isV4DataEnabled = true //useFeatureFlag(FeatureFlags.V4Data)
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const { formatCurrencyAmount } = useFormatter()

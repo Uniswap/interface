@@ -74,7 +74,7 @@ export default function WalletModal() {
   const connectors = useOrderedConnections()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, isEmbeddedWalletEnabled)
+  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, true)
 
   const isSignIn =
     useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp ||
