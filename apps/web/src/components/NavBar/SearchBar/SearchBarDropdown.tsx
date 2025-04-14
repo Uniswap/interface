@@ -201,6 +201,8 @@ function SearchBarDropdownContents({
     ...trace,
   }
 
+  const shouldDisplayTrendingTokens = false
+
   const poolSearchResults =
     pools.length > 0 ? (
       <SearchBarDropdownSection
@@ -248,21 +250,23 @@ function SearchBarDropdownContents({
           isLoading={!searchHistory}
         />
       )}
-      <SearchBarDropdownSection
-        hoveredIndex={hoveredIndex}
-        startingIndex={shortenedHistory.length}
-        setHoveredIndex={setHoveredIndex}
-        toggleOpen={toggleOpen}
-        suggestions={trendingTokens}
-        eventProperties={{
-          suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
-          ...eventProperties,
-        }}
-        header={<Trans i18nKey="explore.search.section.popularTokens" />}
-        headerIcon={<TrendingUp width={20} height={20} />}
-        headerInfoText={<Trans i18nKey="explore.search.section.popularTokenInfo" />}
-        isLoading={!trendingTokenData}
-      />
+      {shouldDisplayTrendingTokens && (
+        <SearchBarDropdownSection
+          hoveredIndex={hoveredIndex}
+          startingIndex={shortenedHistory.length}
+          setHoveredIndex={setHoveredIndex}
+          toggleOpen={toggleOpen}
+          suggestions={trendingTokens}
+          eventProperties={{
+            suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
+            ...eventProperties,
+          }}
+          header={<Trans i18nKey="explore.search.section.popularTokens" />}
+          headerIcon={<TrendingUp width={20} height={20} />}
+          headerInfoText={<Trans i18nKey="explore.search.section.popularTokenInfo" />}
+          isLoading={!trendingTokenData}
+        />
+      )}
     </Flex>
   )
 }

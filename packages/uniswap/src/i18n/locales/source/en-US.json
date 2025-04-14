@@ -616,6 +616,7 @@
   "common.transactionDetails": "Transaction details",
   "common.transactionId": "Transaction ID",
   "common.transactionPending": "Transaction pending",
+  "common.transactionSubmitted": "Transaction submitted",
   "common.transactions": "Transactions",
   "common.transactionSettings": "Transaction Settings",
   "common.transfer_one": "transfer",

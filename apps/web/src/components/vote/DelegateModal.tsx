@@ -1,11 +1,11 @@
 import { isAddress } from '@ethersproject/address'
-import { createAction } from '@reduxjs/toolkit'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Trans, useTranslation } from 'react-i18next'
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button/buttons'
 import { LightCard } from 'components/Card/cards'
 import { AutoColumn } from 'components/deprecated/Column'
-import { AutoRow, RowBetween } from 'components/deprecated/Row'
+import { RowBetween } from 'components/deprecated/Row'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
@@ -15,6 +15,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import JSBI from 'jsbi'
 import styled, { useTheme } from 'lib/styled-components'
+import { ClickablePill } from 'pages/Swap/Buy/PredefinedAmount'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
@@ -24,16 +25,14 @@ import {
   usePoolExtendedContract,
   usePoolIdByAddress,
 } from 'state/governance/hooks'
-import { useAppDispatch } from 'state/hooks'
 import { ThemedText } from 'theme/components'
-import { Button, ButtonProps, Text } from 'ui/src'
+import { Button, ButtonProps, Flex, Text, useSporeColors } from 'ui/src'
 import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
-import { Trans } from 'react-i18next'
 import { logger } from 'utilities/src/logger/logger'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
@@ -84,12 +83,11 @@ interface VoteModalProps {
   title: ReactNode
 }
 
-// TODO: fix action, use stake/unstake action
-export const selectPercent = createAction<{ percent: number }>('burnV3/selectBurnPercent')
-
 export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: VoteModalProps) {
   const account = useAccount()
   const theme = useTheme()
+  const { t } = useTranslation()
+  const colors = useSporeColors()
 
   // state for delegate input
   const [currencyValue] = useState<Currency>(GRG[account.chainId ?? UniverseChainId.Mainnet])
@@ -100,13 +98,12 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     setTyped(val)
   }
 
-  const { percent } = useRemoveLiquidityModalContext()
-  const dispatch = useAppDispatch()
+  const { percent, setPercent } = useRemoveLiquidityModalContext()
   const onPercentSelect = useCallback(
     (percent: number) => {
-      dispatch(selectPercent({ percent }))
+      setPercent(percent.toString())
     },
-    [dispatch],
+    [setPercent],
   )
 
   // monitor for self delegation or input for third part delegate
@@ -263,20 +260,27 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
               <ResponsiveHeaderText>
                 <Trans>{{percentForSlider}}%</Trans>
               </ResponsiveHeaderText>
-              <AutoRow gap="4px" justify="flex-end">
-                <SmallMaxButton onPress={() => onPercentSelect(25)}>
-                  <Trans>25%</Trans>
-                </SmallMaxButton>
-                <SmallMaxButton onPress={() => onPercentSelect(50)}>
-                  <Trans>50%</Trans>
-                </SmallMaxButton>
-                <SmallMaxButton onPress={() => onPercentSelect(75)}>
-                  <Trans>75%</Trans>
-                </SmallMaxButton>
-                <SmallMaxButton onPress={() => onPercentSelect(100)}>
-                  <Trans>Max</Trans>
-                </SmallMaxButton>
-              </AutoRow>
+              <Flex row gap="$gap8" width="100%" justifyContent="center">
+                {[25, 50, 75, 100].map((option) => {
+                  const active = percent === option.toString()
+                  const disabled = false
+                  return (
+                    <ClickablePill
+                      key={option}
+                      onPress={() => {
+                        onPercentSelectForSlider(option)
+                      }}
+                      $disabled={disabled}
+                      $active={active}
+                      customBorderColor={colors.surface3.val}
+                      foregroundColor={colors[disabled ? 'neutral3' : active ? 'neutral1' : 'neutral2'].val}
+                      label={option < 100 ? option + '%' : t('swap.button.max')}
+                      px="$spacing16"
+                      textVariant="buttonLabel2"
+                    />
+                  )
+                })}
+              </Flex>
             </RowBetween>
             <Slider value={percentForSlider} onChange={onPercentSelectForSlider} />
             <LightCard>

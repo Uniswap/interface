@@ -53,7 +53,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
           <ExternalLink
             style={{ flexGrow: 1, flexBasis: 0 }}
             id="get-support-on-discord"
-            href={uniswapUrls.helpRequestUrl}
+            href={uniswapUrls.rigoblockDiscordUrl}
             target="_blank"
           >
             <Flex row>

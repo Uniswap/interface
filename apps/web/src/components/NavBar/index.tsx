@@ -65,6 +65,9 @@ const SearchContainer = styled(UnpositionedFlex, {
 
 const SelectedPoolContainer = styled(UnpositionedFlex, {
   width: 'max-content',
+  maxWidth: '100%',
+  minWidth: 300,
+  maxHeight: 42,
   flex: 1,
   flexShrink: 1,
   flexDirection: 'row',

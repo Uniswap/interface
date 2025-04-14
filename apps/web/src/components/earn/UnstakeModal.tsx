@@ -1,17 +1,18 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'lib/styled-components'
-import { useAppDispatch } from 'state/hooks'
+import { ClickablePill } from 'pages/Swap/Buy/PredefinedAmount'
 import { ThemedText } from 'theme/components/text'
+import { Flex, useSporeColors } from 'ui/src'
 import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ModalName} from 'uniswap/src/features/telemetry/constants'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { selectPercent, ResponsiveHeaderText, SmallMaxButton } from 'components/vote/DelegateModal'
+import { ResponsiveHeaderText } from 'components/vote/DelegateModal'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { useUnstakeCallback } from 'state/stake/hooks'
@@ -20,7 +21,7 @@ import { /*ButtonConfirmed,*/ ButtonPrimary } from 'components/Button/buttons'
 //import { ButtonError } from '../Button'
 import { LightCard } from 'components/Card/cards'
 import { AutoColumn } from 'components/deprecated/Column'
-import { AutoRow, RowBetween } from 'components/deprecated/Row'
+import { RowBetween } from 'components/deprecated/Row'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import Slider from 'components/Slider'
@@ -50,6 +51,8 @@ interface UnstakeModalProps {
 // TODO: add balance input to display amount when withdrawing
 export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismiss, title }: UnstakeModalProps) {
   const account = useAccount()
+  const { t } = useTranslation()
+  const colors = useSporeColors()
 
   // state for unstake input
   const [currencyValue] = useState<Token | undefined>(GRG[account.chainId ?? UniverseChainId.Mainnet])
@@ -57,13 +60,12 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
     throw new Error ('No GRG token found to unstake')
   }
 
-  const { percent } = useRemoveLiquidityModalContext()
-  const dispatch = useAppDispatch()
+  const { percent, setPercent } = useRemoveLiquidityModalContext()
   const onPercentSelect = useCallback(
     (percent: number) => {
-      dispatch(selectPercent({ percent }))
+      setPercent(percent.toString())
     },
-    [dispatch],
+    [setPercent],
   )
 
   // boilerplate for the slider
@@ -134,20 +136,27 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
               <ResponsiveHeaderText>
                 <Trans>{{percentForSlider}}%</Trans>
               </ResponsiveHeaderText>
-              <AutoRow gap="4px" justify="flex-end">
-                <SmallMaxButton onPress={() => onPercentSelect(25)}>
-                  <Trans>25%</Trans>
-                </SmallMaxButton>
-                <SmallMaxButton onPress={() => onPercentSelect(50)}>
-                  <Trans>50%</Trans>
-                </SmallMaxButton>
-                <SmallMaxButton onPress={() => onPercentSelect(75)}>
-                  <Trans>75%</Trans>
-                </SmallMaxButton>
-                <SmallMaxButton onPress={() => onPercentSelect(100)}>
-                  <Trans>Max</Trans>
-                </SmallMaxButton>
-              </AutoRow>
+              <Flex row gap="$gap8" width="100%" justifyContent="center">
+                {[25, 50, 75, 100].map((option) => {
+                  const active = percent === option.toString()
+                  const disabled = false
+                  return (
+                    <ClickablePill
+                      key={option}
+                      onPress={() => {
+                        onPercentSelectForSlider(option)
+                      }}
+                      $disabled={disabled}
+                      $active={active}
+                      customBorderColor={colors.surface3.val}
+                      foregroundColor={colors[disabled ? 'neutral3' : active ? 'neutral1' : 'neutral2'].val}
+                      label={option < 100 ? option + '%' : t('swap.button.max')}
+                      px="$spacing16"
+                      textVariant="buttonLabel2"
+                    />
+                  )
+                })}
+              </Flex>
             </RowBetween>
             <Slider value={percentForSlider} onChange={onPercentSelectForSlider} />
             <LightCard>

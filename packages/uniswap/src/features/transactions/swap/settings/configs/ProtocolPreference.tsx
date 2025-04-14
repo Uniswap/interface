@@ -60,7 +60,6 @@ export const ProtocolPreference: SwapSettingConfig = {
     const { chainId } = useSwapFormContext().derivedSwapInfo
     const uniswapXEnabled = uniswapXEnabledFlag && chainId !== UniverseChainId.MonadTestnet
     const v4SwapEnabled = useV4SwapEnabled(chainId)
-    console.log('v4SwapEnabled', v4SwapEnabled)
     const chainName = getChainInfo(chainId).name
     const restrictionDescription = t('swap.settings.protection.subtitle.unavailable', { chainName })
 

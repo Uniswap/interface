@@ -37,13 +37,13 @@ export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Optimism,
   UniverseChainId.Base,
   UniverseChainId.Bnb,
-  UniverseChainId.Blast,
-  UniverseChainId.Avalanche,
-  UniverseChainId.Celo,
-  UniverseChainId.WorldChain,
-  UniverseChainId.Soneium,
-  UniverseChainId.Zora,
-  UniverseChainId.Zksync,
+  //UniverseChainId.Blast,
+  //UniverseChainId.Avalanche,
+  //UniverseChainId.Celo,
+  //UniverseChainId.WorldChain,
+  //UniverseChainId.Soneium,
+  //UniverseChainId.Zora,
+  //UniverseChainId.Zksync,
 ]
 
 export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [
