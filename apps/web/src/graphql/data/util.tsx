@@ -139,9 +139,10 @@ export function getPoolDetailsURL(address: string, chain: Chain) {
   return `/explore/pools/${chainName}/${address}`
 }
 
+// TODO: define smart pool url by chain
 export function getSmartPoolDetailsURL(address: string, chain: Chain) {
   const chainName = chain.toLowerCase()
-  return `/smart-pool/${chainName}/${address}`
+  return chainName ? `/smart-pool/${address}` : `/smart-pool/${address}`
 }
 
 export function unwrapToken<
