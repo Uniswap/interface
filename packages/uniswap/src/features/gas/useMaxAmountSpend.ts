@@ -20,10 +20,12 @@ export function useMaxAmountSpend({
   currencyAmount,
   txType,
   isExtraTx = false,
+  isSmartPool = true,
 }: {
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   txType?: TransactionType
   isExtraTx?: boolean
+  isSmartPool?: boolean
 }): Maybe<CurrencyAmount<Currency>> {
   const minAmountPerTx = useGetMinAmount(currencyAmount?.currency.chainId, txType)
   const multiplierAsPercent = useLowBalanceWarningGasPercentage()
@@ -32,12 +34,15 @@ export function useMaxAmountSpend({
     return undefined
   }
 
+  // TODO: verify if we are using this hook from user wallet transactions
   // if isExtraTx: minAmountPerTx * multiplierAsPercent / 100%
   // else: minAmountPerTx
-  const minAmount = JSBI.divide(
-    JSBI.multiply(minAmountPerTx, JSBI.BigInt(isExtraTx ? multiplierAsPercent : 100)),
-    JSBI.BigInt(100),
-  )
+  const minAmount = !isSmartPool
+    ? JSBI.divide(
+        JSBI.multiply(minAmountPerTx, JSBI.BigInt(isExtraTx ? multiplierAsPercent : 100)),
+        JSBI.BigInt(100),
+      )
+    : JSBI.BigInt(0)
 
   if (!currencyAmount.currency.isNative) {
     return currencyAmount
