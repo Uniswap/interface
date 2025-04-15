@@ -38,8 +38,8 @@ export default function CrossChainSwapPage() {
         <CenteredContainer>
           <iframe
             ref={iframeRef}
-            height="600px"
-            width="500px"
+            height="880px"
+            width="600px"
             src={widgetUrl.toString()}
           />
         </CenteredContainer>
