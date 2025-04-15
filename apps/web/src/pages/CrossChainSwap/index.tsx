@@ -4,6 +4,7 @@ import Trace from "uniswap/src/features/telemetry/Trace";
 import styled from "styled-components";
 import { useRef } from "react";
 import { PageWrapper } from "components/swap/styled";
+import { config } from 'uniswap/src/config'
 
 const CenteredContainer = styled.div`
   display: flex;
@@ -23,9 +24,10 @@ export default function CrossChainSwapPage() {
   const widgetUrl = new URL("https://widget.rocketx.exchange/swap/TARAXA.taraxa/ETHEREUM.ethereum");
   widgetUrl.searchParams.set("rx_t", "dark"); //theme
   widgetUrl.searchParams.set("rx_p_c", "15aa5a"); //primary color
-  widgetUrl.searchParams.set("rx_k", process.env.REACT_APP_ROCKETX_API_KEY || ""); //api key
+  widgetUrl.searchParams.set("rx_k", config.rocketxApiKey); //api key
+  console.log('config', config)
 
-  if (!process.env.REACT_APP_ROCKETX_API_KEY) {
+  if (!config.rocketxApiKey) {
     return <div>Cross Chain Swap is not available</div>;
   }
 
