@@ -145,9 +145,6 @@ export function useTokenUsdPrice(
 }
 
 export const useTokenEthPrice = async (tokenAddress: string) => {
-  if (tokenAddress.toLowerCase() === TSWAP_TARAXA.address.toLowerCase()) {
-    return { ethPrice: Number(process.env.REACT_APP_TSWAP_PRICE || 0.008) };
-  }
   if (!indexerTaraswap) {
     return { ethPrice: null };
   }

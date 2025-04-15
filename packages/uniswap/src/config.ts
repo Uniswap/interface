@@ -20,7 +20,6 @@ import {
   TRADING_API_KEY,
   UNISWAP_API_KEY,
   WALLETCONNECT_PROJECT_ID,
-  ROCKETX_API_KEY,
 } from "react-native-dotenv";
 import { isNonJestDev } from "utilities/src/environment";
 
@@ -46,7 +45,6 @@ export interface Config {
   quicknodeMainnetRpcUrl: string;
   tradingApiKey: string;
   firebaseAppCheckDebugToken: string;
-  rocketxApiKey: string;
 }
 
 const _config: Config = {
@@ -96,7 +94,6 @@ const _config: Config = {
   firebaseAppCheckDebugToken:
     process.env.FIREBASE_APP_CHECK_DEBUG_TOKEN ||
     FIREBASE_APP_CHECK_DEBUG_TOKEN,
-    rocketxApiKey: process.env.ROCKETX_API_KEY || ROCKETX_API_KEY,
 };
 
 export const config = Object.freeze(_config);
