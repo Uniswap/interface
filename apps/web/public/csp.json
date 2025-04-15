@@ -24,7 +24,8 @@
     "https://buy.moonpay.com/",
     "https://verify.walletconnect.com/",
     "https://verify.walletconnect.org/",
-    "https://iz72myarki.execute-api.eu-central-1.amazonaws.com/prod"
+    "https://iz72myarki.execute-api.eu-central-1.amazonaws.com/prod",
+    "https://widget.rocketx.exchange/"
   ],
   "connectSrc": [
     "'self'",

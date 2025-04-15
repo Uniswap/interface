@@ -21,4 +21,5 @@ declare module 'react-native-dotenv' {
   export const QUICKNODE_MAINNET_RPC_URL: string
   export const TRADING_API_KEY: string
   export const FIREBASE_APP_CHECK_DEBUG_TOKEN: string
+  export const ROCKETX_API_KEY: string
 }
