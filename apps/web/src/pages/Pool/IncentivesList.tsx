@@ -1,26 +1,21 @@
 import { Token } from "@taraswap/sdk-core";
-import { useAccount } from "hooks/useAccount";
-import { useV3StakerContract } from "hooks/useV3StakerContract";
-import { useV3NFTPositionManagerContract } from "hooks/useContract";
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Trans } from "i18n";
 import { LoadingRows, IncentiveCard, IncentiveHeader, IncentiveContent, AutoColumnWrapper, IncentiveStatus } from "./styled";
 import { ThemedText } from "theme/components";
 import { RowBetween, RowFixed } from "components/Row";
 import CurrencyLogo from "components/Logo/CurrencyLogo";
 import { ButtonPrimary } from "components/Button";
-import { IncentiveKey } from "hooks/usePosition";
 import Row from "components/Row";
 import { getAddress } from "ethers/lib/utils";
 import { useIncentivesData, type ProcessedIncentive } from "hooks/useIncentivesData";
 import { ScrollBarStyles } from "components/Common";
 import styled from "styled-components";
 import { useBulkPosition } from "hooks/useBulkPosition";
-import { ethers } from "ethers";
 
 const Container = styled(AutoColumnWrapper)`
   position: relative;
-  height: 100%;
+  height: 400px;
 `
 
 const ButtonsContainer = styled(Row)`
@@ -42,11 +37,10 @@ const ScrollableContent = styled(AutoColumnWrapper)`
 
 function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress: string }) {
   const [expandedIncentive, setExpandedIncentive] = useState<string | null>(null);
-  const { address, chainId } = useAccount();
-  const v3StakerContract = useV3StakerContract();
   const [isTokenOwner, setIsTokenOwner] = useState(false);
 
   const { activeIncentives, endedIncentives, isLoading, error } = useIncentivesData(poolAddress);
+  console.log('activeIncentives', activeIncentives)
   const allIncentives = [...activeIncentives, ...endedIncentives];
 
   const {
@@ -141,7 +135,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
       <ScrollableContent gap="md">
         {allIncentives.map((incentive) => {
           const isExpanded = expandedIncentive === incentive.id;
-          const isActive = !incentive.ended;
+          const isActive = incentive.status === 'active';
           const hasStaked = incentive.hasUserPositionInIncentive;
           const rewardToken = new Token(
             1,
@@ -170,7 +164,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                 </RowFixed>
                 <RowFixed gap="8px">
                   <IncentiveStatus isActive={isActive}>
-                    {isActive ? <Trans i18nKey="common.active" /> : <Trans i18nKey="common.ended" />}
+                    {isActive ? <Trans i18nKey="common.active" /> : incentive.status === 'inactive' ? <Trans i18nKey="common.inactive" /> : <Trans i18nKey="common.ended" />}
                   </IncentiveStatus>
                 </RowFixed>
               </IncentiveHeader>

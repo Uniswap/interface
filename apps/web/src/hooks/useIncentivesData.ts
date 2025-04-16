@@ -91,7 +91,7 @@ export interface ProcessedIncentive {
   tokenRewardsPercentage: number;
   hasUserPositionInPool: boolean;
   hasUserPositionInIncentive: boolean;
-  ended: boolean;
+  status: 'active' | 'ended' | 'inactive';
   reward: string;
   rewardToken: {
     id: string;
@@ -217,8 +217,15 @@ export function useIncentivesData(poolAddress?: string) {
       );
 
       const processedIncentives = await Promise.all(incentives);
-      setActiveIncentives(processedIncentives.filter((inc: ProcessedIncentive) => !inc.ended));
-      setEndedIncentives(processedIncentives.filter((inc: ProcessedIncentive) => inc.ended));
+      const sortedIncentives = processedIncentives.sort((a, b) => {
+        if (a.status === 'active' && b.status !== 'active') return -1;
+        if (a.status !== 'active' && b.status === 'active') return 1;
+        if (a.status === 'inactive' && b.status === 'ended') return -1;
+        if (a.status === 'ended' && b.status === 'inactive') return 1;
+        return 0;
+      });
+      setActiveIncentives(sortedIncentives.filter((inc: ProcessedIncentive) => inc.status === 'active'));
+      setEndedIncentives(sortedIncentives.filter((inc: ProcessedIncentive) => inc.status === 'inactive' || inc.status === 'ended'));
       setUserPositions(incentivesData.data.userPositions);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -258,8 +265,15 @@ export function useIncentivesData(poolAddress?: string) {
         );
 
         const processedIncentives = await Promise.all(incentives);
-        setActiveIncentives(processedIncentives.filter((inc) => !inc.ended));
-        setEndedIncentives(processedIncentives.filter((inc) => inc.ended));
+        const sortedIncentives = processedIncentives.sort((a, b) => {
+          if (a.status === 'active' && b.status !== 'active') return -1;
+          if (a.status !== 'active' && b.status === 'active') return 1;
+          if (a.status === 'inactive' && b.status === 'ended') return -1;
+          if (a.status === 'ended' && b.status === 'inactive') return 1;
+          return 0;
+        });
+        setActiveIncentives(sortedIncentives.filter((inc) => inc.status === 'active'));
+        setEndedIncentives(sortedIncentives.filter((inc) => inc.status === 'inactive' || inc.status === 'ended'));
       };
 
       processIncentives();
@@ -397,7 +411,11 @@ export function useIncentivesData(poolAddress?: string) {
         token0LogoURI: token0Info?.logoURI || "",
         token1LogoURI: token1Info?.logoURI || "",
         feesUSD: incentive.pool.feesUSD,
-        ended: Number(incentive.endTime) < Math.floor(Date.now() / 1000),
+        status: Number(incentive.endTime) < Math.floor(Date.now() / 1000) 
+          ? 'ended' 
+          : Number(incentive.startTime) > Math.floor(Date.now() / 1000)
+            ? 'inactive'
+            : 'active',
         userHasTokensToDeposit,
         daily24hAPR,
         weeklyRewards,

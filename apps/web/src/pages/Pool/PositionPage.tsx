@@ -152,16 +152,19 @@ const LeftPane = styled.div`
 `;
 
 const RightPane = styled.div`
-  flex: 0 0 35%;
+  flex: 0 0 40%;
   min-width: 350px;
-  max-width: 35%;
+  max-width: 40%;
   overflow: hidden;
   width: 100%;
+  height: fit-content;
+  padding-top: 85px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     max-width: 100%;
     width: 100%;
     min-width: 0;
+    padding-top: 0;
   }
 `;
 
@@ -1836,9 +1839,11 @@ function PositionPageContent() {
             </AutoColumn>
           </LeftPane>
           <RightPane>
-            <DarkCardWithOverflow style={{ marginTop: '75px' }}>
-              <IncentivesList tokenId={Number(tokenId?.toString() ?? 0)} poolAddress={poolAddress ?? ""} />
-            </DarkCardWithOverflow>
+            {account?.address && (
+              <DarkCardWithOverflow>
+                <IncentivesList tokenId={Number(tokenId?.toString() ?? 0)} poolAddress={poolAddress ?? ""} />
+              </DarkCardWithOverflow>
+            )}
           </RightPane>
         </PageWrapper>
         <SwitchLocaleLink />

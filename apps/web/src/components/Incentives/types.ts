@@ -16,20 +16,32 @@ export type RewardToken = {
   symbol: string;
 };
 
-export type Incentive = {
-  contract: string;
-  endTime: string;
-  ended: boolean;
+export interface Incentive {
   id: string;
+  reward: string;
+  rewardToken: {
+    id: string;
+    symbol: string;
+    decimals: number;
+  };
   pool: {
     id: string;
+    feeTier: number;
+    token0: {
+      id: string;
+      symbol: string;
+    };
+    token1: {
+      id: string;
+      symbol: string;
+    };
   };
-  reward: string;
-  rewardToken: RewardToken;
   startTime: string;
+  endTime: string;
   vestingPeriod: string;
   refundee: string;
-};
+  status: 'active' | 'ended' | 'inactive';
+}
 
 export type TokenInfoDetails = {
   chainId: number;

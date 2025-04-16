@@ -162,7 +162,7 @@ export const IncentiveTable = ({
 
   const allIncentivesEnded = useMemo(
     () =>
-      incentives.length > 0 && incentives.every((incentive) => incentive.ended),
+      incentives.length > 0 && incentives.every((incentive) => incentive.status !== 'active'),
     [incentives]
   );
 
@@ -256,6 +256,10 @@ export const IncentiveTable = ({
         cell: (pool) => {
           const data = pool?.row?.original;
           if (!data) return null;
+
+          if (data.status !== 'active') {
+            return null;
+          }
 
           if (allIncentivesEnded) {
             return (
@@ -363,7 +367,7 @@ export const IncentiveTable = ({
             const data = pool?.row?.original;
             if (!data) return null;
 
-            if (data.ended) {
+            if (data.status !== 'active') {
               return <Cell minWidth={150} />;
             }
             return (
