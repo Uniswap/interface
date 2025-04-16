@@ -32,7 +32,8 @@ import extractTransactionDetails from 'wallet/src/features/transactions/history/
 import { extractUniswapXOrderDetails } from 'wallet/src/features/transactions/history/conversion/extractUniswapXOrderDetails'
 
 export interface AllFormattedTransactions {
-  last24hTransactionList: TransactionDetails[]
+  todayTransactionList: TransactionDetails[]
+  yesterdayTransactionList: TransactionDetails[]
   // Maps year <-> TransactionSummaryInfo[] for all months before current month
   priorByMonthTransactionList: Record<string, TransactionDetails[]>
   pending: TransactionDetails[]
@@ -43,13 +44,14 @@ export function formatTransactionsByDate(
   localizedDayjs: LocalizedDayjs,
 ): AllFormattedTransactions {
   // timestamp in ms for start of time periods
-  const msTimestampCutoff24h = dayjs().subtract(24, 'hour').valueOf()
+  const msTimestampCutoffToday = dayjs().startOf('day').valueOf()
+  const msTimestampCutoffYesterday = dayjs().subtract(1, 'day').startOf('day').valueOf()
   const msTimestampCutoffYear = dayjs().startOf('year').valueOf()
 
   // Segment by time periods.
-  const [pending, last24hTransactionList, olderThan24HTransactionList] = (transactions ?? []).reduce<
-    [TransactionDetails[], TransactionDetails[], TransactionDetails[]]
-  >(
+  const [pending, todayTransactionList, yesterdayTransactionList, olderThan24HTransactionList] = (
+    transactions ?? []
+  ).reduce<[TransactionDetails[], TransactionDetails[], TransactionDetails[], TransactionDetails[]]>(
     (accum, item) => {
       if (
         // Want all incomplete transactions
@@ -58,14 +60,19 @@ export function formatTransactionsByDate(
         item.status === TransactionStatus.Replacing
       ) {
         accum[0].push(item)
-      } else if (item.addedTime > msTimestampCutoff24h) {
+      } else if (item.addedTime >= msTimestampCutoffToday) {
+        // Today's transactions
         accum[1].push(item)
-      } else {
+      } else if (item.addedTime >= msTimestampCutoffYesterday) {
+        // Yesterday's transactions
         accum[2].push(item)
+      } else {
+        // Older than yesterday
+        accum[3].push(item)
       }
       return accum
     },
-    [[], [], []],
+    [[], [], [], []],
   )
 
   const pendingSorted = pending.sort((a, b) => {
@@ -80,7 +87,7 @@ export function formatTransactionsByDate(
     return nonceA && nonceB ? (nonceA < nonceB ? 1 : -1) : 1
   })
 
-  // For all transactions before last 24 hours, group by month
+  // For all transactions before yesterday, group by month
   const priorByMonthTransactionList = olderThan24HTransactionList.reduce(
     (accum: Record<string, TransactionDetails[]>, item) => {
       const isPreviousYear = item.addedTime < msTimestampCutoffYear
@@ -99,7 +106,8 @@ export function formatTransactionsByDate(
 
   return {
     pending: pendingSorted,
-    last24hTransactionList,
+    todayTransactionList,
+    yesterdayTransactionList,
     priorByMonthTransactionList,
   }
 }

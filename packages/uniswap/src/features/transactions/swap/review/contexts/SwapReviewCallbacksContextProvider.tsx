@@ -7,7 +7,7 @@ import { SwapReviewCallbacksContext } from 'uniswap/src/features/transactions/sw
 import { useSwapReviewState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewStateContext'
 import { useSwapWarningState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewWarningStateContext'
 import { useCreateSwapReviewCallbacks } from 'uniswap/src/features/transactions/swap/review/hooks/useCreateSwapReviewCallbacks'
-import { GetSwapService } from 'uniswap/src/features/transactions/swap/review/services/swapService'
+import { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
 
 interface SwapReviewCallbacksContextProviderProps {
   children: ReactNode
@@ -16,7 +16,7 @@ interface SwapReviewCallbacksContextProviderProps {
   onSubmitSwap?: () => Promise<void>
   onClose: () => void
   onAcceptTrade: () => void
-  getSwapService: GetSwapService
+  getExecuteSwapService: GetExecuteSwapService
 }
 
 export const SwapReviewCallbacksContextProvider = ({
@@ -26,7 +26,7 @@ export const SwapReviewCallbacksContextProvider = ({
   onSubmitSwap,
   onClose,
   onAcceptTrade,
-  getSwapService,
+  getExecuteSwapService,
 }: SwapReviewCallbacksContextProviderProps): JSX.Element => {
   const {
     showWarningModal,
@@ -55,7 +55,7 @@ export const SwapReviewCallbacksContextProvider = ({
       authTrigger,
       onSubmitSwap,
       onClose,
-      getSwapService,
+      getExecuteSwapService,
       updateSwapForm,
       reviewScreenWarning,
       setCurrentStep,

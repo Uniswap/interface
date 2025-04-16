@@ -49,6 +49,7 @@ type CurrencyInputPanelProps = {
   isIndicativeLoading?: boolean
   focus?: boolean
   isFiatMode?: boolean
+  /** Only show a single max button rather than all percentage preset options. */
   showMaxButtonOnly?: boolean
   onPressIn?: () => void
   onSelectionChange?: (start: number, end: number) => void
@@ -287,14 +288,15 @@ export const CurrencyInputPanel = memo(
           <Flex {...rest} overflow="hidden" px="$spacing16" py={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
             {headerLabel || showDefaultTokenOptions ? (
               <Flex row justifyContent="space-between">
-                <Text color="$neutral2" variant="subheading2" fontSize="$micro">
+                {/* IMPORTANT: $micro crashes on mobile */}
+                <Text color="$neutral2" variant="subheading2" fontSize={isWeb ? '$micro' : '$small'}>
                   {headerLabel}
                 </Text>
                 {isInputPresetsEnabled &&
                   isInterfaceDesktop &&
                   currencyField === CurrencyField.INPUT &&
                   currencyBalance && (
-                    <Flex position="absolute" right={0} top={-2}>
+                    <Flex position="absolute" right={0} top={-spacing.spacing2}>
                       <AmountInputPresets
                         currencyAmount={currencyAmount}
                         currencyBalance={currencyBalance}
@@ -304,7 +306,7 @@ export const CurrencyInputPanel = memo(
                     </Flex>
                   )}
                 {showDefaultTokenOptions && isInterfaceDesktop && (
-                  <Flex position="absolute" right={0} top={-4}>
+                  <Flex position="absolute" right={0} top={-spacing.spacing4}>
                     <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
                   </Flex>
                 )}

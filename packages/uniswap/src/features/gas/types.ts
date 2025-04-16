@@ -1,4 +1,3 @@
-import { SerializedError } from '@reduxjs/toolkit'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -55,7 +54,7 @@ export type GasFeeResult = {
   value?: string
   displayValue?: string
   isLoading: boolean
-  error: SerializedError | FetchError | Error | null
+  error: FetchError | Error | null
   params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams
   gasEstimates?: GasFeeEstimates
 }

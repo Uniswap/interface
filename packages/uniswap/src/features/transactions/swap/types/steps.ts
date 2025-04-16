@@ -20,6 +20,7 @@ export enum TransactionStepType {
   MigratePositionTransactionStep = 'MigratePositionTransaction',
   MigratePositionTransactionStepAsync = 'MigratePositionTransactionAsync',
   CollectFeesTransactionStep = 'CollectFeesTransaction',
+  CollectLpIncentiveRewardsTransactionStep = 'CollectLpIncentiveRewardsTransactionStep',
 }
 
 export type UniswapXSwapSteps =
@@ -48,8 +49,10 @@ export type MigratePositionSteps = Permit2SignatureStep | MigratePositionTransac
 
 export type CollectFeesSteps = CollectFeesTransactionStep
 
+export type CollectLpIncentiveRewardsSteps = CollectLpIncentiveRewardsTransactionStep
+
 // TODO: add v4 lp flow
-export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps | IncreasePositionSteps | DecreasePositionSteps | MigratePositionSteps | CollectFeesSteps
+export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps | IncreasePositionSteps | DecreasePositionSteps | MigratePositionSteps | CollectFeesSteps | CollectLpIncentiveRewardsSteps
 export type OnChainTransactionStep = TransactionStep & OnChainTransactionFields
 export type SignatureTransactionStep = TransactionStep & SignTypedDataStepFields
 
@@ -128,6 +131,10 @@ export interface CollectFeesTransactionStep extends OnChainTransactionFields {
   type: TransactionStepType.CollectFeesTransactionStep
 }
 
+export interface CollectLpIncentiveRewardsTransactionStep extends OnChainTransactionFields {
+  type: TransactionStepType.CollectLpIncentiveRewardsTransactionStep
+}
+
 export type ClassicSwapFlow =
   | {
       revocation?: TokenRevocationTransactionStep
@@ -164,8 +171,8 @@ export type IncreasePositionFlow =
       increasePosition: IncreasePositionTransactionStepAsync
     }
 
-export type MigratePositionFlow = 
-  | { permit: undefined, migrate: MigratePositionTransactionStep} 
+export type MigratePositionFlow =
+  | { permit: undefined, migrate: MigratePositionTransactionStep}
   | { permit: Permit2SignatureStep, migrate: MigratePositionTransactionStepAsync }
 
 export type DecreasePositionFlow = {

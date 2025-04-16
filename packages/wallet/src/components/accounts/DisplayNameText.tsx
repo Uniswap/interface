@@ -43,12 +43,12 @@ export function DisplayNameText({
             {UNITAG_SUFFIX}
           </Text>
         )}
-        {isUnitag ? (
-          <Flex display="inline" pl="$spacing4" bottom="$spacing2" y={platformAdjustedUnitagYPosition}>
-            <Unitag size={unitagIconSize} />
-          </Flex>
-        ) : null}
       </Text>
+      {isUnitag ? (
+        <Flex display="inline" bottom="$spacing2" y={platformAdjustedUnitagYPosition}>
+          <Unitag size={unitagIconSize} />
+        </Flex>
+      ) : null}
     </Flex>
   )
 }

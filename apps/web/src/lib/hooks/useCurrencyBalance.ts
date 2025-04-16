@@ -1,20 +1,14 @@
-import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import JSBI from 'jsbi'
-import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-import ERC20ABI from 'uniswap/src/abis/erc20.json'
-import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isAddress } from 'utilities/src/addresses'
 import { currencyKey } from 'utils/currencyKey'
 import { assume0xAddress } from 'utils/wagmi'
-import { useBalance } from 'wagmi'
-
-const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
-const tokenBalancesGasRequirement = { gasRequired: 185_000 }
+import { erc20Abi } from 'viem'
+import { useBalance, useReadContracts } from 'wagmi'
 
 /**
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
@@ -32,23 +26,34 @@ export function useRpcTokenBalancesWithLoadingIndicator(
         : tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false && t?.chainId === chainId) ?? [],
     [chainId, tokens, skip],
   )
-  const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
 
-  const balances = useMultipleContractSingleData(
-    validatedTokenAddresses,
-    ERC20Interface,
-    'balanceOf',
-    useMemo(() => [address], [address]),
-    tokenBalancesGasRequirement,
-  )
-
-  const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
+  const { data, isLoading: balancesLoading } = useReadContracts({
+    contracts: useMemo(
+      () =>
+        validatedTokens.map(
+          (token) =>
+            ({
+              address: assume0xAddress(token.address),
+              chainId,
+              abi: erc20Abi,
+              functionName: 'balanceOf',
+              args: [address],
+            }) as const,
+        ),
+      [address, chainId, validatedTokens],
+    ),
+    query: { enabled: !!address },
+  })
 
   return useMemo(
     () => [
       address && validatedTokens.length > 0
         ? validatedTokens.reduce<{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }>((memo, token, i) => {
-            const value = balances?.[i]?.result?.[0]
+            const value = data?.[i].result
+            if (!value) {
+              return memo
+            }
+
             const amount = value ? JSBI.BigInt(value.toString()) : undefined
             if (amount) {
               memo[token.address] = CurrencyAmount.fromRawAmount(token, amount)
@@ -56,9 +61,9 @@ export function useRpcTokenBalancesWithLoadingIndicator(
             return memo
           }, {})
         : {},
-      anyLoading,
+      balancesLoading,
     ],
-    [address, validatedTokens, anyLoading, balances],
+    [address, validatedTokens, balancesLoading, data],
   )
 }
 

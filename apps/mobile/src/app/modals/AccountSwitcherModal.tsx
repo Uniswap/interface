@@ -7,6 +7,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
+import { openModal } from 'src/features/modals/modalSlice'
 import { openSettings } from 'src/utils/linking'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -88,10 +89,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     onClose()
-    navigate(MobileScreens.SettingsStack, {
-      screen: MobileScreens.SettingsWallet,
-      params: { address: activeAccountAddress },
-    })
+    dispatch(openModal({ name: ModalName.ManageWalletsModal, initialState: { address: activeAccountAddress } }))
   }
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {

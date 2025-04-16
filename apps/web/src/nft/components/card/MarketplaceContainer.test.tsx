@@ -1,6 +1,6 @@
 import { MarketplaceContainer } from 'nft/components/card/icons'
 import { Markets } from 'nft/types'
-import { render } from 'test-utils/render'
+import { act, render } from 'test-utils/render'
 
 describe('MarketplaceContainer', () => {
   it('should render with list price', () => {
@@ -16,8 +16,10 @@ describe('MarketplaceContainer', () => {
     expect(result.container).toMatchSnapshot()
   })
 
-  it('should render with marketplace', () => {
-    const result = render(<MarketplaceContainer isSelected={false} marketplace={Markets.Opensea} />)
+  it('should render with marketplace', async () => {
+    const result = await act(() => {
+      return render(<MarketplaceContainer isSelected={false} marketplace={Markets.Opensea} />)
+    })
     expect(result.container).toMatchSnapshot()
   })
 })

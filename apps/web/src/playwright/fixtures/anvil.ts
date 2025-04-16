@@ -48,37 +48,10 @@ const anvil = anvilClient
     },
   }))
 
-let snapshotId: `0x${string}` | undefined
-
-export const test = base.extend<{ anvil: typeof anvil; snapshot?: `0x${string}` }>({
+export const test = base.extend<{ anvil: typeof anvil }>({
   // eslint-disable-next-line no-empty-pattern
   async anvil({}, use) {
     await use(anvil)
+    await anvil.reset()
   },
-  snapshot: [
-    // eslint-disable-next-line no-empty-pattern
-    async ({}, use) => {
-      if (process.env.SMOKETEST_RUN) {
-        await use(undefined)
-        return
-      }
-      // Setup code before the test is run
-      snapshotId = await anvil.snapshot()
-
-      await use(snapshotId)
-
-      // Teardown code after the test is run
-      if (snapshotId) {
-        try {
-          await anvil.revert({ id: snapshotId })
-        } catch (error) {
-          // Warn but don't fail the test, next test will take a new snapshot
-          // eslint-disable-next-line no-console
-          console.warn('anvil', 'snapshot', 'Failed to revert snapshot', error)
-        }
-        snapshotId = undefined
-      }
-    },
-    { auto: true },
-  ],
 })

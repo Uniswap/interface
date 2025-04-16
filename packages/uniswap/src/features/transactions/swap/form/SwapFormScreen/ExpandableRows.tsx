@@ -7,11 +7,11 @@ import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/context
 import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
-import { RoutingInfo } from 'uniswap/src/features/transactions/swap/modals/RoutingInfo'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow/MaxSlippageRow'
 import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/PriceImpactRow'
 
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
+import { RoutingInfo } from 'uniswap/src/features/transactions/swap/review/modals/RoutingInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'

@@ -5,19 +5,20 @@ import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { deleteUnitag } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
 import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
-import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
-import { deleteUnitag } from 'wallet/src/features/unitags/api'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 export function DeleteUnitagModal({
   unitag,
@@ -51,10 +52,10 @@ export function DeleteUnitagModal({
   const onDelete = async (): Promise<void> => {
     try {
       setIsDeleting(true)
-      const { data: deleteResponse } = await deleteUnitag({
-        username: unitag,
-        account,
-        signerManager,
+      const deleteResponse = await deleteUnitag({
+        data: { username: unitag },
+        address: account.address,
+        signMessage: generateSignerFunc(account, signerManager),
       })
       setIsDeleting(false)
 

@@ -232,6 +232,13 @@ export function ActiveLiquidityChart({
               />
             </mask>
           )}
+
+          <style>
+            {`
+              .axis-right line { display: none; }
+              .axis-right text { fill: ${colors.neutral2.val}; }
+            `}
+          </style>
         </defs>
 
         <g>

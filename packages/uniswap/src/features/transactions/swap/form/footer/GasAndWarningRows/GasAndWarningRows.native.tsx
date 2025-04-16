@@ -10,8 +10,8 @@ import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transact
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/footer/hooks/useDebouncedGasInfo'
 import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/footer/tradeInfo/TradeInfoRow'
+import { SwapWarningModal } from 'uniswap/src/features/transactions/swap/form/modals/SwapWarningModal'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
-import { SwapWarningModal } from 'uniswap/src/features/transactions/swap/modals/SwapWarningModal'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 

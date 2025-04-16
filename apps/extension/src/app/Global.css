@@ -31,3 +31,15 @@ html {
     -webkit-mask-position: -50%;
   }
 }
+
+@keyframes cloud-float-animation {
+  0% {
+    transform: translateY(-8px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+  100% {
+    transform: translateY(-8px);
+  }
+}

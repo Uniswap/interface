@@ -26,7 +26,8 @@ const SHORT_BREAKPOINT_STYLE: FlexProps['$short'] = { gap: '$none' }
 const AMOUNT_INPUT_PRESET_BUTTON_PROPS: ButtonProps = {
   emphasis: 'tertiary',
   size: 'xsmall',
-  borderRadius: '$roundedFull',
+  // set to height of the button for full rounding
+  borderRadius: 16,
   fill: true,
 }
 

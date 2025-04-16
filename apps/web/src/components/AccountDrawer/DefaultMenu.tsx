@@ -1,13 +1,14 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import AuthenticatedHeader from 'components/AccountDrawer/AuthenticatedHeader'
 import LanguageMenu from 'components/AccountDrawer/LanguageMenu'
 import LocalCurrencyMenu from 'components/AccountDrawer/LocalCurrencyMenu'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
 import { UniExtensionPoolsMenu } from 'components/AccountDrawer/MiniPortfolio/Pools/UniExtensionPoolsMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import PasskeyMenu from 'components/AccountDrawer/PasskeyMenu'
+import PasskeyMenu from 'components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import WalletModal from 'components/WalletModal'
+import { OtherWalletsModal } from 'components/WalletModal/OtherWalletsModal'
 import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
@@ -42,6 +43,7 @@ function DefaultMenu() {
       [MenuState.DEFAULT]: 0,
       [MenuState.SETTINGS]: 1,
       [MenuState.POOLS]: 1,
+      [MenuState.OTHER_WALLETS]: 1,
       [MenuState.LANGUAGE_SETTINGS]: 2,
       [MenuState.LOCAL_CURRENCY_SETTINGS]: 2,
       [MenuState.LIMITS]: 2,
@@ -85,6 +87,8 @@ function DefaultMenu() {
         ) : (
           <WalletModal />
         )
+      case MenuState.OTHER_WALLETS:
+        return <OtherWalletsModal />
       case MenuState.SETTINGS:
         return (
           <SettingsMenu

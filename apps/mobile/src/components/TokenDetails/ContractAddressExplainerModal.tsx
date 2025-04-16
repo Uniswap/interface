@@ -6,7 +6,11 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-export function ContractAddressExplainerModal({ onAcknowledge }: { onAcknowledge: () => void }): JSX.Element | null {
+export function ContractAddressExplainerModal({
+  onAcknowledge,
+}: {
+  onAcknowledge: (markViewed: boolean) => void
+}): JSX.Element | null {
   const { t } = useTranslation()
 
   return (
@@ -29,8 +33,8 @@ export function ContractAddressExplainerModal({ onAcknowledge }: { onAcknowledge
       }
       severity={WarningSeverity.Low}
       acknowledgeText={t('common.button.understand')}
-      onAcknowledge={onAcknowledge}
-      onClose={onAcknowledge}
+      onAcknowledge={() => onAcknowledge(true)}
+      onClose={() => onAcknowledge(false)}
     />
   )
 }

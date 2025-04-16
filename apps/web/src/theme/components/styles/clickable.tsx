@@ -1,5 +1,5 @@
 import { css } from 'lib/styled-components'
-import { FlexProps, TextProps } from 'ui/src'
+import { FlexProps } from 'ui/src'
 
 /** @deprecated use tamagui and ClickableTamaguiStyle instead */
 export const ClickableStyle = css`
@@ -19,6 +19,7 @@ export const ClickableTamaguiStyle = {
   '$platform-web': {
     textDecoration: 'none',
     transitionDuration: '0.2s',
+    textDecorationLine: 'none',
   },
   hoverStyle: {
     opacity: 0.8,
@@ -26,14 +27,6 @@ export const ClickableTamaguiStyle = {
   pressStyle: {
     opacity: 0.6,
   },
-} satisfies FlexProps
-
-export const TamaguiClickableStyle = {
-  textDecorationLine: 'none',
-  cursor: 'pointer',
   // Tamagui bug. Animation property breaks theme value transition, must use style instead
   style: { transition: '100ms' },
-  hoverStyle: {
-    opacity: 0.6,
-  },
-} satisfies TextProps
+} satisfies FlexProps

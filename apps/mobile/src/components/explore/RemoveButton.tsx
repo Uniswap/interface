@@ -1,4 +1,3 @@
-import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { AnimatedTouchableArea, Flex, TouchableAreaProps } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
 
@@ -7,10 +6,6 @@ type RemoveButtonProps = TouchableAreaProps & {
 }
 
 export default function RemoveButton({ visible = true, ...rest }: RemoveButtonProps): JSX.Element {
-  const animatedVisibilityStyle = useAnimatedStyle(() => ({
-    opacity: visible ? withTiming(1) : withTiming(0),
-  }))
-
   return (
     <AnimatedTouchableArea
       alignItems="center"
@@ -19,7 +14,9 @@ export default function RemoveButton({ visible = true, ...rest }: RemoveButtonPr
       disabled={!visible}
       height={imageSizes.image24}
       justifyContent="center"
-      style={animatedVisibilityStyle}
+      style={{
+        opacity: visible ? 1 : 0,
+      }}
       testID="explore/remove-button"
       width={imageSizes.image24}
       zIndex="$tooltip"

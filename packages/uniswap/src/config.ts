@@ -13,7 +13,6 @@ import {
   INCLUDE_PROTOTYPE_FEATURES,
   INFURA_KEY,
   ONESIGNAL_APP_ID,
-  OPENAI_API_KEY,
   QUICKNODE_ENDPOINT_NAME,
   QUICKNODE_ENDPOINT_TOKEN,
   SCANTASTIC_API_URL_OVERRIDE,
@@ -55,7 +54,6 @@ export interface Config {
   includePrototypeFeatures: string
   infuraKey: string
   onesignalAppId: string
-  openaiApiKey: string
   quicknodeEndpointName: string
   quicknodeEndpointToken: string
   scantasticApiUrlOverride: string
@@ -65,6 +63,7 @@ export interface Config {
   statsigApiKey: string
   tradingApiKey: string
   tradingApiUrlOverride: string
+  tradingApiWebTestEnv: string
   uniswapApiKey: string
   unitagsApiUrlOverride: string
   walletConnectProjectId: string
@@ -97,7 +96,6 @@ const _config: Config = {
   infuraKey: process.env.REACT_APP_INFURA_KEY || INFURA_KEY,
   includePrototypeFeatures: process.env.INCLUDE_PROTOTYPE_FEATURES || INCLUDE_PROTOTYPE_FEATURES,
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
-  openaiApiKey: process.env.OPENAI_API_KEY || OPENAI_API_KEY,
   quicknodeEndpointName:
     process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME || process.env.QUICKNODE_ENDPOINT_NAME || QUICKNODE_ENDPOINT_NAME,
   quicknodeEndpointToken:
@@ -108,7 +106,9 @@ const _config: Config = {
   statsigApiKey: process.env.REACT_APP_STATSIG_API_KEY || process.env.STATSIG_API_KEY || STATSIG_API_KEY,
   statsigProxyUrlOverride: process.env.STATSIG_PROXY_URL_OVERRIDE || STATSIG_PROXY_URL_OVERRIDE,
   tradingApiKey: process.env.REACT_APP_TRADING_API_KEY || process.env.TRADING_API_KEY || TRADING_API_KEY,
-  tradingApiUrlOverride: process.env.TRADING_API_URL_OVERRIDE || TRADING_API_URL_OVERRIDE,
+  tradingApiUrlOverride:
+    process.env.REACT_APP_TRADING_API_URL_OVERRIDE || process.env.TRADING_API_URL_OVERRIDE || TRADING_API_URL_OVERRIDE,
+  tradingApiWebTestEnv: process.env.REACT_APP_TRADING_API_TEST_ENV || '',
   uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
   unitagsApiUrlOverride: process.env.UNITAGS_API_URL_OVERRIDE || UNITAGS_API_URL_OVERRIDE,
   walletConnectProjectId:

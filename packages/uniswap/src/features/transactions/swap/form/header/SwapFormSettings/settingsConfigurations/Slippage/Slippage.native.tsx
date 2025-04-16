@@ -215,7 +215,7 @@ function SlippageMessage({
       {showSlippageWarning ? (
         <Flex centered row gap="$spacing8">
           <AlertTriangleFilled color={color} size="$icon.16" />
-          <Text color="$DEP_accentWarning" variant="body2">
+          <Text color="$statusWarning" variant="body2">
             {t('swap.settings.slippage.warning.message')}
           </Text>
         </Flex>

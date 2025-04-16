@@ -25,11 +25,11 @@ const getPaddingForSize = (size: TooltipSize) => {
   }
 }
 
-const TooltipContainer = styled.div<{ size: TooltipSize }>`
+const TooltipContainer = styled.div<{ size: TooltipSize; padding?: number }>`
   max-width: ${({ size }) => size};
   width: ${({ size }) => (size === TooltipSize.Max ? 'auto' : `calc(100vw - 16px)`)};
   cursor: default;
-  padding: ${({ size }) => getPaddingForSize(size)};
+  padding: ${({ size, padding }) => (padding !== undefined ? `${padding}px` : getPaddingForSize(size))};
   pointer-events: auto;
 
   color: ${({ theme }) => theme.neutral1};
@@ -53,10 +53,11 @@ type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &
     placement?: PopoverProps['placement']
     onOpen?: () => void
     forceShow?: boolean
+    padding?: number
   }>
 
 export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverTooltipProps) {
-  const { text, disabled, children, onOpen, forceShow, timeout, ...rest } = props
+  const { text, disabled, children, onOpen, forceShow, timeout, padding, ...rest } = props
   const [show, setShow] = useState(false)
   const open = () => {
     setShow(true)
@@ -86,6 +87,7 @@ export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverT
       content={
         text && (
           <TooltipContainer
+            padding={padding}
             size={props.size ?? TooltipSize.Small}
             onMouseEnter={disabled ? noop : open}
             onMouseLeave={disabled ? noop : close}

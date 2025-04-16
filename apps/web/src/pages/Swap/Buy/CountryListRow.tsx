@@ -1,4 +1,4 @@
-import { ApprovedCheckmarkIcon } from 'nft/components/icons'
+import { ApprovedCheckmarkIcon } from 'nft/components/iconExports'
 import { CSSProperties } from 'react'
 import { Avatar, Flex, styled } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'

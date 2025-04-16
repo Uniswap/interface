@@ -21,7 +21,6 @@ import {
 import { useSwapFormScreenCallbacks } from 'uniswap/src/features/transactions/swap/form/context/hooks/useSwapFormScreenCallbacks'
 import { useSwapNetworkNotification } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapNetworkNotification'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/form/hooks/useSyncFiatAndTokenAmountUpdater'
-import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { getExactOutputWillFail } from 'uniswap/src/features/transactions/swap/utils/getExactOutputWillFail'
 import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -37,11 +36,9 @@ const useExactValueRef = (): MutableRefObject<string> => {
 }
 
 export function SwapFormScreenContextProvider({
-  wrapCallback,
   tokenColor,
   children,
 }: {
-  wrapCallback?: WrapCallback
   tokenColor?: string
   children: ReactNode
 }): JSX.Element {
@@ -213,7 +210,6 @@ export function SwapFormScreenContextProvider({
     onShowTokenSelectorOutput: callbacks.onShowTokenSelectorOutput,
     showTemporaryFoTWarning,
     onDecimalPadTriggerInputShake: callbacks.onDecimalPadTriggerInputShake,
-    wrapCallback,
 
     // Styles
     hoverStyles,

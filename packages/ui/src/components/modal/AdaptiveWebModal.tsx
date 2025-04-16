@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import { RemoveScroll } from '@tamagui/remove-scroll'
 import { PropsWithChildren, ReactNode, useCallback, useEffect, useState } from 'react'
 import { DimensionValue } from 'react-native'
@@ -19,7 +18,7 @@ export function ModalCloseIcon(props: CloseIconProps): JSX.Element {
   return hideCloseIcon ? <></> : <CloseIconWithHover {...props} />
 }
 
-export function WebBottomSheet({ isOpen, onClose, children, gap, zIndex, ...rest }: ModalProps): JSX.Element | null {
+export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element | null {
   const isTouchDevice = useIsTouchDevice()
   const [isHandlePressed, setHandlePressed] = useState(false)
 
@@ -67,7 +66,7 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, zIndex, ...rest
         disableDrag={isTouchDevice && !isHandlePressed}
         open={isOpen}
         snapPointsMode="fit"
-        zIndex={zIndex ?? zIndexes.modal}
+        zIndex={zIndexes.modal}
         onOpenChange={handleClose}
       >
         <Sheet.Frame
@@ -77,7 +76,7 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, zIndex, ...rest
           borderTopRightRadius="$rounded16"
           borderWidth="$spacing1"
           px="$spacing8"
-          zIndex={zIndex ?? zIndexes.modal}
+          zIndex={zIndexes.modal}
           {...sheetOverrideStyles}
           {...sheetHeightStyles}
         >
@@ -123,7 +122,6 @@ type ModalProps = GetProps<typeof View> &
     onClose?: () => void
     adaptToSheet?: boolean
     alignment?: 'center' | 'top'
-    zIndex?: number
   }>
 
 /**
@@ -148,7 +146,6 @@ export function AdaptiveWebModal({
   const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) // Filter out undefined properties from rest
   const scrollbarStyles = useScrollbarStyles()
   const isTopAligned = alignment === 'top'
-  const isSmallScreen = useMedia().sm
 
   const topAlignedStyles: FlexProps = isTopAligned
     ? {
@@ -181,7 +178,6 @@ export function AdaptiveWebModal({
               px={px ?? p ?? '$spacing24'}
               py={py ?? p ?? '$spacing16'}
               style={style}
-              zIndex={zIndex}
               onClose={onClose}
               {...filteredRest}
             >
@@ -193,7 +189,7 @@ export function AdaptiveWebModal({
       {/* TODO(WEB-7196): on latest Tamagui upgrade to 1.125.17, stacking sheets/dialogs on mweb is broken because Adapt isn't playing nice with Dialog.Portal zIndexes.
        * Dialog.Portal also does not like zIndex={undefined}, so temp giving it a dummy value of zIndexes.background
        */}
-      <Dialog.Portal zIndex={adaptToSheet && isSmallScreen ? zIndexes.background : zIndex ?? zIndexes.modal}>
+      <Dialog.Portal zIndex={zIndex ?? zIndexes.modal}>
         <Overlay key="overlay" zIndex={zIndexes.modalBackdrop} />
         <Flex
           grow
@@ -222,7 +218,7 @@ export function AdaptiveWebModal({
             py={py ?? p ?? '$spacing16'}
             style={Object.assign({}, scrollbarStyles, style)}
             width="calc(100vw - 32px)"
-            zIndex={zIndex ?? zIndexes.modal}
+            zIndex={zIndexes.modal}
             {...filteredRest}
           >
             {children}

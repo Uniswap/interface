@@ -16,8 +16,8 @@ import { ElementName, ElementNameType, ModalName } from 'uniswap/src/features/te
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
-import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/modals/UniswapXInfo'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
+import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/form/modals/UniswapXInfo'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import {
   DEFAULT_PROTOCOL_OPTIONS,
   FrontendSupportedProtocol,
@@ -63,7 +63,6 @@ export const ProtocolPreference: SwapSettingConfig = {
     const { selectedProtocols, updateTransactionSettings } = useTransactionSettingsContext()
     const [isDefault, setIsDefault] = useState(isDefaultOptions(selectedProtocols))
     const uniswapXEnabledFlag = useFeatureFlag(FeatureFlags.UniswapX)
-    const v4EnabledFlag = useFeatureFlag(FeatureFlags.V4Swap)
 
     const { chainId } = useSwapFormContext().derivedSwapInfo
     const uniswapXEnabled = uniswapXEnabledFlag && chainId !== UniverseChainId.MonadTestnet
@@ -125,17 +124,15 @@ export const ProtocolPreference: SwapSettingConfig = {
                 onSelect={() => toggleProtocol(ProtocolItems.UNISWAPX_V2)}
               />
             )}
-            {v4EnabledFlag && (
-              <OptionRow
-                active={v4SwapEnabled && selectedProtocols.includes(ProtocolItems.V4)}
-                elementName={ElementName.SwapRoutingPreferenceV4}
-                title={getProtocolTitle(ProtocolItems.V4, t)}
-                cantDisable={onlyOneClassicProtocolSelected}
-                disabled={!v4SwapEnabled}
-                description={!v4SwapEnabled ? restrictionDescription : undefined}
-                onSelect={() => toggleProtocol(ProtocolItems.V4)}
-              />
-            )}
+            <OptionRow
+              active={v4SwapEnabled && selectedProtocols.includes(ProtocolItems.V4)}
+              elementName={ElementName.SwapRoutingPreferenceV4}
+              title={getProtocolTitle(ProtocolItems.V4, t)}
+              cantDisable={onlyOneClassicProtocolSelected}
+              disabled={!v4SwapEnabled}
+              description={!v4SwapEnabled ? restrictionDescription : undefined}
+              onSelect={() => toggleProtocol(ProtocolItems.V4)}
+            />
             <OptionRow
               active={selectedProtocols.includes(ProtocolItems.V3)}
               elementName={ElementName.SwapRoutingPreferenceV3}

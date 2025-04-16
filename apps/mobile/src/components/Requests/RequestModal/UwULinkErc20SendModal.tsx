@@ -151,7 +151,7 @@ function UwULinkErc20SendModalContent({
         <NetworkFee chainId={chainId} gasFee={gasFee} />
       </Flex>
       {!hasSufficientGasFunds && (
-        <Text color="$DEP_accentWarning" pt="$spacing8" textAlign="center" variant="body3">
+        <Text color="$statusWarning" pt="$spacing8" textAlign="center" variant="body3">
           {t('walletConnect.request.error.insufficientFunds', {
             currencySymbol: nativeCurrency?.symbol,
           })}

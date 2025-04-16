@@ -11,7 +11,7 @@ import {
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { WALLET_FEATURE_FLAG_NAMES, WEB_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
@@ -121,7 +121,7 @@ export async function initializeDatadog(appName: string): Promise<void> {
       // Datadog has a limited set of accepted symbols in feature flags
       // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
       flagKey.replaceAll('-', '_'),
-      Statsig.checkGateWithExposureLoggingDisabled(flagKey),
+      getStatsigClient().checkGate(flagKey),
     )
   }
 
@@ -130,7 +130,7 @@ export async function initializeDatadog(appName: string): Promise<void> {
       // Datadog has a limited set of accepted symbols in feature flags
       // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
       `experiment_${experiment.replaceAll('-', '_')}`,
-      Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
+      getStatsigClient().getExperiment(experiment).groupName,
     )
   }
 }

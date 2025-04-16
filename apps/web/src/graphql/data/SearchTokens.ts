@@ -17,9 +17,10 @@ function isExploreSupportedToken(token: GqlSearchToken | undefined): token is To
 export function useSearchTokens(searchQuery: string = '') {
   const { gqlChains: chains } = useEnabledChains()
   const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
+  const tokenSearchV2Enabled = useFeatureFlag(FeatureFlags.TokenSearchV2)
 
   const { data, loading, error } = useSearchTokensWebQuery({
-    variables: { searchQuery, chains },
+    variables: { searchQuery, chains, tokenSearchV2Enabled },
     skip: searchQuery === '' || searchRevampEnabled, // if search revamp is enabled, we call useSearchTokens in `SearchModalResultsList` instead
   })
 

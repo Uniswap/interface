@@ -1,3 +1,4 @@
+import { getEmbeddedWalletState, setChainId } from 'state/embeddedWallet/store'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
@@ -33,9 +34,8 @@ export class EmbeddedWalletProvider {
 
   private constructor() {
     this.listeners = new Map()
-    // TODO[EW]: move from localstorage to context layer
-    const chainId = localStorage.getItem('embeddedUniswapWallet.chainId')
-    this.chainId = chainId ? parseInt(chainId) : 1
+    const { chainId } = getEmbeddedWalletState()
+    this.chainId = chainId ?? 1
     this.publicClient = undefined
   }
 
@@ -129,8 +129,7 @@ export class EmbeddedWalletProvider {
 
   connect(chainId?: number) {
     this.chainId = chainId ?? 1 // TODO[EW]: handle base case and dynamic switching
-    // TODO[EW]: move from localstorage to context layer
-    localStorage.setItem('embeddedUniswapWallet.chainId', `${chainId}`)
+    setChainId(chainId ?? null)
     this.emit('connect', { chainId: this.chainId })
   }
 
@@ -139,9 +138,8 @@ export class EmbeddedWalletProvider {
   }
 
   getAccount() {
-    const address: `0x${string}` | undefined =
-      // TODO[EW]: move from localstorage to context layer
-      (localStorage.getItem('embeddedUniswapWallet.address') as `0x${string}`) ?? undefined
+    const { walletAddress } = getEmbeddedWalletState()
+    const address = walletAddress as `0x${string}` | undefined
 
     if (!address) {
       logger.debug('EmbeddedWalletProvider.ts', 'getAccount', 'No embedded wallet connected')

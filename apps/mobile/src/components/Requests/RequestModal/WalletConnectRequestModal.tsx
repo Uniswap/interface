@@ -167,6 +167,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           request,
         }),
       )
+    } else if (request.type === EthMethod.SendCalls) {
+      // TODO: Implement
     } else {
       dispatch(
         signWcRequestActions.trigger({
@@ -243,6 +245,11 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     return (
       <KidSuperCheckinModal request={request} onClose={handleClose} onConfirm={onConfirmPress} onReject={onReject} />
     )
+  }
+
+  if (request.type === EthMethod.SendCalls) {
+    // TODO: Implement
+    return null
   }
 
   return (

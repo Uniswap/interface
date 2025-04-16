@@ -10,8 +10,10 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { useParentSize } from '@visx/responsive'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ErrorModal } from 'components/Table/ErrorBox'
+import { TableSizeProvider } from 'components/Table/TableSizeProvider'
 import {
   CellContainer,
   DataRow,
@@ -29,7 +31,7 @@ import {
 } from 'components/Table/styled'
 import { getCommonPinningStyles } from 'components/Table/utils'
 import useDebounce from 'hooks/useDebounce'
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { LinkProps } from 'react-router-dom'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
@@ -96,17 +98,13 @@ const TableRow = ({ row }: { row: Row<RowData> }) => {
   )
 }
 
-function TableBody<Data extends RowData>({
-  table,
-  loading,
-  error,
-  innerRef,
-}: {
-  table: TanstackTable<Data>
+type TableBodyProps<T extends RowData = unknown> = {
+  table: TanstackTable<T>
   loading?: boolean
   error?: ApolloError | boolean
-  innerRef: React.RefObject<HTMLDivElement>
-}) {
+}
+
+const TableBody = forwardRef<HTMLDivElement, TableBodyProps<RowData>>(({ table, loading, error }, ref) => {
   const rows = table.getRowModel().rows
 
   if (loading || error) {
@@ -116,7 +114,7 @@ function TableBody<Data extends RowData>({
           <DataRow key={`skeleton-row-${rowIndex}`}>
             {table.getAllColumns().map((column, columnIndex) => (
               <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
-                {flexRender(column.columnDef.cell, {} as CellContext<Data, any>)}
+                {flexRender(column.columnDef.cell, {} as CellContext<RowData, any>)}
               </CellContainer>
             ))}
           </DataRow>
@@ -142,13 +140,15 @@ function TableBody<Data extends RowData>({
   }
 
   return (
-    <Flex ref={innerRef} position="relative">
+    <Flex ref={ref} position="relative">
       {rows.map((row) => (
         <TableRow key={row.id} row={row} />
       ))}
     </Flex>
   )
-}
+})
+
+TableBody.displayName = 'TableBody'
 
 const ScrollButton = ({ onPress, opacity }: { onPress: () => void; opacity?: number }) => (
   <TouchableArea onPress={onPress}>
@@ -171,7 +171,7 @@ const ScrollButton = ({ onPress, opacity }: { onPress: () => void; opacity?: num
   </TouchableArea>
 )
 
-export function Table<Data extends RowData>({
+export function Table<T extends RowData>({
   columns,
   data,
   loading,
@@ -182,8 +182,8 @@ export function Table<Data extends RowData>({
   defaultPinnedColumns = [],
   forcePinning = false,
 }: {
-  columns: ColumnDef<Data, any>[]
-  data: Data[]
+  columns: ColumnDef<T, any>[]
+  data: T[]
   loading?: boolean
   error?: ApolloError | boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
@@ -210,6 +210,8 @@ export function Table<Data extends RowData>({
   const canLoadMore = useRef(true)
   const isSticky = useMemo(() => !maxHeight, [maxHeight])
 
+  const { parentRef, width, height, top, left } = useParentSize()
+
   useEffect(() => {
     const scrollableElement = maxHeight ? tableBodyRef.current : window
     if (scrollableElement === null) {
@@ -231,7 +233,7 @@ export function Table<Data extends RowData>({
     }
     scrollableElement.addEventListener('scroll', updateScrollPosition)
     return () => scrollableElement.removeEventListener('scroll', updateScrollPosition)
-  }, [loadMore, maxHeight, loadingMore])
+  }, [loadMore, maxHeight, loadingMore, tableBodyRef])
 
   useEffect(() => {
     if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore && canLoadMore.current && !error) {
@@ -299,7 +301,7 @@ export function Table<Data extends RowData>({
     return () => {
       container.removeEventListener('scroll', horizontalScrollHandler)
     }
-  }, [loading, showScrollButton])
+  }, [loading, showScrollButton, tableBodyRef])
 
   const headerHeight = useMemo(() => {
     const header = document.getElementById('AppHeader')
@@ -308,13 +310,13 @@ export function Table<Data extends RowData>({
 
   const scrollButtonTop = useMemo(() => {
     if (maxHeight) {
-      return maxHeight / 2
+      return height / 2
     } else if (isSticky) {
       return (window.innerHeight - (headerHeight + 12)) / 2
     }
 
     return 0
-  }, [headerHeight, isSticky, maxHeight])
+  }, [headerHeight, height, isSticky, maxHeight])
 
   const onScrollButtonPress = useCallback(() => {
     const container = tableBodyRef.current?.parentElement
@@ -323,51 +325,61 @@ export function Table<Data extends RowData>({
     }
 
     container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' })
-  }, [])
+  }, [tableBodyRef])
 
   const hasPinnedColumns = useMemo(() => pinnedColumns.length > 0, [pinnedColumns])
 
+  const tableSize = useMemo(() => ({ width, height, top, left }), [width, height, top, left])
+
   return (
-    <ScrollSync horizontal>
-      <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative">
-        <TableHead $isSticky={isSticky} $top={headerHeight}>
-          {hasPinnedColumns && (
-            <>
-              <Flex position="absolute" top={scrollButtonTop} right={0} pr="$spacing12" zIndex={zIndexes.default}>
-                <ScrollButton onPress={onScrollButtonPress} opacity={showScrollButton ? 1 : 0} />
-              </Flex>
-              <TableScrollMask
-                top={isSticky ? '$spacing12' : 0}
-                zIndex={zIndexes.dropdown - 1}
-                borderTopRightRadius="$rounded20"
-              />
-            </>
-          )}
+    <TableSizeProvider value={tableSize}>
+      <ScrollSync horizontal>
+        <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
+          <TableHead $isSticky={isSticky} $top={headerHeight}>
+            {hasPinnedColumns && (
+              <>
+                <Flex position="absolute" top={scrollButtonTop} right={0} pr="$spacing12" zIndex={zIndexes.default}>
+                  <ScrollButton onPress={onScrollButtonPress} opacity={showScrollButton ? 1 : 0} />
+                </Flex>
+                <TableScrollMask
+                  top={isSticky ? '$spacing12' : 0}
+                  zIndex={zIndexes.dropdown - 1}
+                  borderTopRightRadius="$rounded20"
+                />
+              </>
+            )}
+            <ScrollSyncPane group="table-sync">
+              <HeaderRow dimmed={!!error}>
+                {table.getFlatHeaders().map((header) => (
+                  <CellContainer key={header.id} style={getCommonPinningStyles(header.column, colors)}>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </CellContainer>
+                ))}
+              </HeaderRow>
+            </ScrollSyncPane>
+          </TableHead>
+          {hasPinnedColumns && <TableScrollMask zIndex={zIndexes.default} borderBottomRightRadius="$rounded20" />}
           <ScrollSyncPane group="table-sync">
-            <HeaderRow dimmed={!!error}>
-              {table.getFlatHeaders().map((header) => (
-                <CellContainer key={header.id} style={getCommonPinningStyles(header.column, colors)}>
-                  {flexRender(header.column.columnDef.header, header.getContext())}
-                </CellContainer>
-              ))}
-            </HeaderRow>
+            <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
+              <TableBody
+                loading={loading}
+                error={error}
+                // @ts-ignore
+                table={table}
+                ref={tableBodyRef}
+              />
+            </TableBodyContainer>
           </ScrollSyncPane>
-        </TableHead>
-        {hasPinnedColumns && <TableScrollMask zIndex={zIndexes.default} borderBottomRightRadius="$rounded20" />}
-        <ScrollSyncPane group="table-sync">
-          <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
-            <TableBody loading={loading} error={error} table={table} innerRef={tableBodyRef} />
-          </TableBodyContainer>
-        </ScrollSyncPane>
-        {loadingMore && (
-          <LoadingIndicatorContainer>
-            <LoadingIndicator>
-              <Loader />
-              <Trans i18nKey="common.loading" />
-            </LoadingIndicator>
-          </LoadingIndicatorContainer>
-        )}
-      </TableContainer>
-    </ScrollSync>
+          {loadingMore && (
+            <LoadingIndicatorContainer>
+              <LoadingIndicator>
+                <Loader />
+                <Trans i18nKey="common.loading" />
+              </LoadingIndicator>
+            </LoadingIndicatorContainer>
+          )}
+        </TableContainer>
+      </ScrollSync>
+    </TableSizeProvider>
   )
 }

@@ -4,18 +4,10 @@ import { opacify } from 'theme/utils'
 function getDeprecatedTheme(darkMode: boolean) {
   return {
     // other
-    deprecated_yellow1: colors.yellow400,
-    deprecated_yellow2: colors.yellow500,
     deprecated_yellow3: colors.yellow600,
-
-    // dont wanna forget these blue yet
-    deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-
-    deprecated_backgroundScrolledSurface: darkMode ? opacify(72, colors.white) : opacify(72, '#131313'),
 
     deprecated_accentWarning: colors.gold200,
 
-    deprecated_accentWarningSoft: opacify(24, colors.gold200),
     deprecated_accentFailureSoft: opacify(12, darkMode ? colors.critical_dark : colors.critical_light),
 
     deprecated_accentTextLightPrimary: colors.gray50,
@@ -26,13 +18,8 @@ function getDeprecatedTheme(darkMode: boolean) {
       ? '0px 0px 10px 0px rgba(34, 34, 34, 0.04);'
       : '0px 0px 10px 0px rgba(34, 34, 34, 0.04);',
 
-    deprecated_networkDefaultShadow: darkMode
-      ? `0px 40px 120px ${opacify(16, colors.accent1_dark)}`
-      : `0px 40px 120px ${opacify(12, colors.accent1_light)}`,
-
     deprecated_stateOverlayHover: opacify(8, colors.gray300),
     deprecated_stateOverlayPressed: opacify(24, colors.gray200),
-    deprecated_hoverState: opacify(24, colors.gray300),
     deprecated_hoverDefault: opacify(8, colors.gray300),
   }
 }

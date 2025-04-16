@@ -850,6 +850,14 @@ export type UniverseEventProperties = {
     attackType?: string
     protectionResult?: string
   }
+  [UniswapEventName.LowNetworkTokenInfoModalOpened]: {
+    location: 'send' | 'swap'
+  }
+  [UniswapEventName.LpIncentiveCollectRewardsButtonClicked]: undefined
+  [UniswapEventName.LpIncentiveCollectRewardsErrorThrown]: { error: string }
+  [UniswapEventName.LpIncentiveCollectRewardsRetry]: undefined
+  [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
+  [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
   [UnitagEventName.UnitagBannerActionTaken]: {
     action: 'claim' | 'dismiss'
     entryPoint: 'home' | 'settings'
@@ -889,9 +897,6 @@ export type UniverseEventProperties = {
   }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
   [WalletEventName.KeyringMissingMnemonic]: KeyringMissingMnemonicProperties
-  [WalletEventName.LowNetworkTokenInfoModalOpened]: {
-    location: 'send' | 'swap'
-  }
   [WalletEventName.PendingTransactionTimeout]: PendingTransactionTimeoutProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties

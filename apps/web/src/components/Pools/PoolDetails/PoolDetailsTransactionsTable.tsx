@@ -13,7 +13,6 @@ import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import styled from 'lib/styled-components'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text, useMedia } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
@@ -46,7 +45,7 @@ enum PoolTransactionColumn {
 const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {
   [PoolTransactionColumn.Timestamp]: 80,
   [PoolTransactionColumn.Type]: 90,
-  [PoolTransactionColumn.MakerAddress]: 80,
+  [PoolTransactionColumn.MakerAddress]: 125,
   [PoolTransactionColumn.FiatValue]: 125,
   [PoolTransactionColumn.InputAmount]: 125,
   [PoolTransactionColumn.OutputAmount]: 125,
@@ -185,7 +184,7 @@ export function PoolDetailsTransactionsTable({
         ),
         cell: (fiat) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <ThemedText.BodyPrimary>{formatFiatPrice({ price: fiat.getValue?.() })}</ThemedText.BodyPrimary>
+            <TableText>{formatFiatPrice({ price: fiat.getValue?.() })}</TableText>
           </Cell>
         ),
       }),
@@ -201,9 +200,9 @@ export function PoolDetailsTransactionsTable({
         ),
         cell: (inputTokenAmount) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <ThemedText.BodyPrimary>
+            <TableText>
               {formatNumber({ input: Math.abs(inputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
-            </ThemedText.BodyPrimary>
+            </TableText>
           </Cell>
         ),
       }),
@@ -219,9 +218,9 @@ export function PoolDetailsTransactionsTable({
         ),
         cell: (outputTokenAmount) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
-            <ThemedText.BodyPrimary>
+            <TableText>
               {formatNumber({ input: Math.abs(outputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
-            </ThemedText.BodyPrimary>
+            </TableText>
           </Cell>
         ),
       }),
@@ -238,7 +237,7 @@ export function PoolDetailsTransactionsTable({
         cell: (makerAddress) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" grow>
             <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
-              <ThemedText.BodyPrimary>{shortenAddress(makerAddress.getValue?.(), 0)}</ThemedText.BodyPrimary>
+              <TableText>{shortenAddress(makerAddress.getValue?.(), 0)}</TableText>
             </StyledExternalLink>
           </Cell>
         ),

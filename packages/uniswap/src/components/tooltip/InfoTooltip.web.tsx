@@ -37,7 +37,7 @@ export function InfoTooltip({
       >
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
         {text && (
-          <Tooltip.Content maxWidth={maxWidth ?? (isWeb ? 280 : '100%')} mx="$spacing24">
+          <Tooltip.Content pointerEvents="auto" maxWidth={maxWidth ?? (isWeb ? 280 : '100%')} mx="$spacing24">
             <Flex row alignItems="center" gap="$spacing8">
               <Flex grow>{icon}</Flex>
               <Flex shrink gap="$spacing4">

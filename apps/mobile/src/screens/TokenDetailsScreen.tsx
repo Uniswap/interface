@@ -222,9 +222,11 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
 
       {isContractAddressExplainerModalOpen && (
         <ContractAddressExplainerModal
-          onAcknowledge={async () => {
-            closeContractAddressExplainerModal()
-            await copyAddressToClipboard(address)
+          onAcknowledge={async (markViewed: boolean) => {
+            closeContractAddressExplainerModal(markViewed)
+            if (markViewed) {
+              await copyAddressToClipboard(address)
+            }
           }}
         />
       )}

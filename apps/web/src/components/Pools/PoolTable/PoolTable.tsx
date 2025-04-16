@@ -97,7 +97,7 @@ function PoolDescription({
             href={getExplorerLink(chainId, hookAddress, ExplorerDataType.ADDRESS)}
             onClick={(e) => e.stopPropagation()}
           >
-            <PoolDetailsBadge variant="body4" {...TamaguiClickableStyle}>
+            <PoolDetailsBadge variant="body4" {...ClickableTamaguiStyle}>
               {shortenAddress(hookAddress, 0, 4)}
             </PoolDetailsBadge>
           </ExternalLink>
@@ -205,10 +205,12 @@ export const TopPoolTable = memo(function TopPoolTable({
   topPoolData,
   pageSize = TABLE_PAGE_SIZE,
   staticSize = false,
+  forcePinning = false,
 }: {
   topPoolData: TopPoolTableProps
   pageSize?: number
   staticSize?: boolean
+  forcePinning?: boolean
 }) {
   const { topPools, isLoading, isError } = topPoolData
   const { page, loadMore } = useSimplePagination()
@@ -221,6 +223,8 @@ export const TopPoolTable = memo(function TopPoolTable({
         error={isError}
         loadMore={staticSize ? undefined : loadMore}
         maxWidth={1200}
+        forcePinning={forcePinning}
+        maxHeight={staticSize ? 1000 : undefined}
       />
     </TableWrapper>
   )

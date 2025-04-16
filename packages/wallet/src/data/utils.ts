@@ -1,11 +1,10 @@
 import { ApolloClient, NetworkStatus, NormalizedCacheObject, useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
 import { OnRampTransactionsAuth } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { objectToQueryString } from 'uniswap/src/data/utils'
-import { AuthData } from 'wallet/src/data/types'
+import { createSignedRequestParams, objectToQueryString } from 'uniswap/src/data/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-import { signMessage } from 'wallet/src/features/wallet/signing/signing'
+import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 export const ON_RAMP_AUTH_MAX_LIMIT = 100
 export const ON_RAMP_AUTH_MIN_LIMIT = 1
@@ -43,45 +42,15 @@ export function useRefetchQueries(): (
   )
 }
 
-export async function createSignedRequestBody<T>(
-  data: T,
-  account: Account,
-  signerManager: SignerManager,
-): Promise<{ requestBody: T & AuthData; signature: string }> {
-  const requestBody: T & AuthData = {
-    ...data,
-    'x-uni-address': account.address,
-    'x-uni-timestamp': Date.now(),
-  }
-  const message = JSON.stringify(requestBody)
-  const signature = await signMessage(message, account, signerManager)
-  return { requestBody, signature }
-}
-
-export async function createSignedRequestParams<T>(
-  params: T,
-  account: Account,
-  signerManager: SignerManager,
-): Promise<{ requestParams: T & AuthData; signature: string }> {
-  const requestParams: T & AuthData = {
-    ...params,
-    'x-uni-address': account.address,
-    'x-uni-timestamp': Date.now(),
-  }
-  const message = objectToQueryString(requestParams)
-  const signature = await signMessage(message, account, signerManager)
-  return { requestParams, signature }
-}
-
 export async function createOnRampTransactionsAuth(
   limit: number,
   account: Account,
   signerManager: SignerManager,
 ): Promise<OnRampTransactionsAuth> {
-  const { requestParams, signature } = await createSignedRequestParams(
-    { limit }, // Parameter needed by graphql server when fetching onramp transactions
-    account,
-    signerManager,
-  )
+  const { requestParams, signature } = await createSignedRequestParams({
+    data: { limit }, // Parameter needed by graphql server when fetching onramp transactions
+    address: account.address,
+    signMessage: generateSignerFunc(account, signerManager),
+  })
   return { queryParams: objectToQueryString(requestParams), signature }
 }

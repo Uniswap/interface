@@ -2,8 +2,8 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pool
 import {
   CHART_HEIGHT,
   CHART_WIDTH,
-  LiquidityPositionRangeChart,
   LiquidityPositionRangeChartLoader,
+  WrappedLiquidityPositionRangeChart,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { AdaptiveDropdown } from 'components/DropdownSelector/AdaptiveDropdown'
 import {
@@ -16,6 +16,7 @@ import { useGetRangeDisplay, useV3OrV4PositionDerivedInfo } from 'components/Liq
 import { PositionInfo, PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip } from 'components/Tooltip'
 import useHoverProps from 'hooks/useHoverProps'
+import { useLpIncentivesFormattedEarnings } from 'hooks/useLpIncentivesFormattedEarnings'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -83,7 +84,6 @@ function useDropdownOptions(
   isVisible?: boolean,
 ): MenuOptionItem[] {
   const { t } = useTranslation()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
   const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
 
@@ -182,7 +182,6 @@ function useDropdownOptions(
 
     const showMigrateV3Option =
       isOpenLiquidityPosition &&
-      isV4DataEnabled &&
       isMigrateToV4Enabled &&
       !isV4UnsupportedChain(liquidityPosition.chainId) &&
       liquidityPosition.version !== ProtocolVersion.V4
@@ -210,7 +209,6 @@ function useDropdownOptions(
     dispatch,
     isMigrateToV4Enabled,
     isOpenLiquidityPosition,
-    isV4DataEnabled,
     isVisible,
     liquidityPosition,
     navigate,
@@ -238,6 +236,7 @@ export function LiquidityPositionCard({
   const { formatCurrencyAmount } = useLocalizationContext()
   const isTouchDevice = useIsTouchDevice()
   const [pricesInverted, setPricesInverted] = useState(false)
+  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const [hover, hoverProps] = useHoverProps()
   const media = useMedia()
@@ -268,6 +267,12 @@ export function LiquidityPositionCard({
           type: NumberType.FiatStandard,
         })
       : undefined
+
+  const { lpIncentivesFormattedEarnings } = useLpIncentivesFormattedEarnings({
+    liquidityPosition,
+    fiatFeeValue0,
+    fiatFeeValue1,
+  })
 
   const dropdownOptions = useDropdownOptions(liquidityPosition, showVisibilityOption, isVisible)
 
@@ -331,7 +336,7 @@ export function LiquidityPositionCard({
               isMiniVersion={isSmallScreen}
               showMigrateButton={showMigrateButton}
             />
-            <LiquidityPositionRangeChart
+            <WrappedLiquidityPositionRangeChart
               version={liquidityPosition.version}
               chainId={liquidityPosition.chainId}
               currency0={
@@ -358,15 +363,28 @@ export function LiquidityPositionCard({
           <LiquidityPositionFeeStats
             formattedUsdValue={v3OrV4FormattedUsdValue ?? v2FormattedUsdValue}
             formattedUsdFees={v3OrV4FormattedFeesValue}
+            formattedLpIncentiveEarnings={lpIncentivesFormattedEarnings}
             priceOrdering={priceOrdering}
             tickSpacing={liquidityPosition.tickSpacing}
             tickLower={liquidityPosition.tickLower}
             tickUpper={liquidityPosition.tickUpper}
             version={liquidityPosition.version}
+            currency0Amount={liquidityPosition.currency0Amount}
+            currency1Amount={liquidityPosition.currency1Amount}
             apr={apr}
             cardHovered={hover && !disabled}
             pricesInverted={pricesInverted}
             setPricesInverted={setPricesInverted}
+            lpIncentiveRewardApr={
+              isLPIncentivesEnabled && liquidityPosition.version === ProtocolVersion.V4
+                ? liquidityPosition.boostedApr
+                : undefined
+            }
+            totalApr={
+              isLPIncentivesEnabled && liquidityPosition.version === ProtocolVersion.V4
+                ? liquidityPosition.totalApr
+                : undefined
+            }
           />
           {!isTouchDevice && !disabled && <PositionDropdownMoreMenu menuOptions={dropdownOptions} />}
         </Flex>

@@ -1,4 +1,4 @@
-import { XMarkIcon } from 'nft/components/icons'
+import { XMarkIcon } from 'nft/components/iconExports'
 import { Input } from 'nft/components/layout/Input'
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from 'nft/components/profile/view/ProfilePage'
 import { useFiltersExpanded, useWalletCollections } from 'nft/hooks'

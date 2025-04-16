@@ -24,7 +24,7 @@ export function FundWalletModal(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const cexTransferProviders = useCexTransferProviders()
-  const onPressReceive = useOpenReceiveModal()
+  const openReceiveModal = useOpenReceiveModal()
 
   const { onClose } = useReactNavigationModal()
 
@@ -54,6 +54,11 @@ export function FundWalletModal(): JSX.Element {
           }),
         )
   }, [disableForKorea, onClose, dispatch])
+
+  const onPressReceive = useCallback(() => {
+    onClose()
+    openReceiveModal()
+  }, [onClose, openReceiveModal])
 
   const cards = useMemo(
     () =>

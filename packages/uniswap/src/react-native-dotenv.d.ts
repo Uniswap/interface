@@ -12,7 +12,6 @@ declare module 'react-native-dotenv' {
   export const SIMPLEHASH_API_URL: string
   export const STATSIG_PROXY_URL: string
   export const ONESIGNAL_APP_ID: string
-  export const OPENAI_API_KEY: string
   export const WALLETCONNECT_PROJECT_ID: string
   export const WALLETCONNECT_PROJECT_ID_BETA: string
   export const WALLETCONNECT_PROJECT_ID_DEV: string

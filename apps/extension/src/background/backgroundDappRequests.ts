@@ -162,16 +162,6 @@ export function initMessageBridge(): void {
       }),
     )
   })
-  contentScriptUtilityMessageChannel.addMessageListener(ContentScriptUtilityMessageType.FocusOnboardingTab, () => {
-    focusOrCreateOnboardingTab().catch((error) =>
-      logger.error(error, {
-        tags: {
-          file: 'backgroundDappRequests.ts',
-          function: 'contentScriptUtilityMessageListener',
-        },
-      }),
-    )
-  })
 
   initialized = true
 }

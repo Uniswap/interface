@@ -35,6 +35,7 @@ import { PositionField } from 'types/position'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -68,6 +69,16 @@ export function CreatePositionContextProvider({
     })
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   }, [initialState])
+
+  // initialState.currencyInputs can change because it relies on async data to populate token0 and token1
+  useEffect(() => {
+    if (initialState.currencyInputs) {
+      setPositionState((prevState) => ({
+        ...prevState,
+        currencyInputs: { ...prevState.currencyInputs, ...initialState.currencyInputs },
+      }))
+    }
+  }, [initialState.currencyInputs])
 
   return (
     <CreatePositionContext.Provider
@@ -282,7 +293,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     !!actualGasFee || needsApprovals /* skip */,
   )
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
-    createCalldata?.create?.chainId,
+    toSupportedChainId(createCalldata?.create?.chainId) ?? undefined,
     actualGasFee || calculatedGasFee,
   )
 

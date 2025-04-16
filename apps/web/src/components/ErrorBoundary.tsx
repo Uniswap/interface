@@ -117,9 +117,17 @@ function ErrorDetailsSection({ errorDetails, eventId }: { errorDetails: string; 
   )
 }
 
-export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
+export default function ErrorBoundary({
+  children,
+  fallback,
+}: PropsWithChildren & {
+  fallback?: React.ComponentType<{
+    error: Error
+    resetError: () => void
+  }>
+}): JSX.Element {
   return (
-    <DatadogErrorBoundary fallback={({ error }) => <Fallback error={error} eventId={null} />}>
+    <DatadogErrorBoundary fallback={fallback ?? (({ error }) => <Fallback error={error} eventId={null} />)}>
       {children}
     </DatadogErrorBoundary>
   )

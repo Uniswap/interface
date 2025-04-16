@@ -134,4 +134,7 @@ export function loadLocaleData(langCode) {
     default:
       break
   }
+
+  // Needed to processing the swap inputs which uses en locale for number formatting
+  require('@formatjs/intl-numberformat/locale-data/en').default
 }

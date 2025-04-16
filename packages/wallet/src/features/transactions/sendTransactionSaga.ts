@@ -8,7 +8,7 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
@@ -267,7 +267,7 @@ export interface CalculatedNonce {
  */
 export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: UniverseChainId) {
   try {
-    const isPrivateRpcEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
+    const isPrivateRpcEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
 
     const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
       DynamicConfigs.MainnetPrivateRpc,

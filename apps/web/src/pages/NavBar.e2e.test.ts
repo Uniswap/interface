@@ -1,4 +1,5 @@
 import { expect, test } from 'playwright/fixtures'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const companyMenu = [
   {
@@ -59,7 +60,7 @@ const socialMediaLinks = ['https://github.com/Uniswap', 'https://x.com/Uniswap',
 test.describe('Navigation', () => {
   test('clicking nav icon redirects to home page', async ({ page }) => {
     await page.goto('/swap')
-    await page.getByTestId('nav-uniswap-logo').click()
+    await page.getByTestId(TestID.NavUniswapLogo).click()
     await expect(page).toHaveURL(/\/\?intro=true/)
   })
 
@@ -68,32 +69,31 @@ test.describe('Navigation', () => {
       await page.goto('/')
     })
     test('contains appropriate sections and links', async ({ page }) => {
-      await page.getByTestId('nav-company-menu').hover()
-      await expect(page.getByTestId('nav-company-dropdown').first()).toBeVisible()
+      await page.getByTestId(TestID.NavCompanyMenu).hover()
+      await expect(page.getByTestId(TestID.NavCompanyDropdown).first()).toBeVisible()
 
       for (const section of companyMenu) {
-        await expect(page.getByTestId('nav-company-dropdown').getByText(section.label)).toBeVisible()
+        await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText(section.label)).toBeVisible()
         for (const item of section.items) {
-          await expect(page.getByTestId('nav-company-dropdown').locator(`a:has-text("${item.label}")`)).toHaveAttribute(
-            'href',
-            item.href,
-          )
+          await expect(
+            page.getByTestId(TestID.NavCompanyDropdown).locator(`a:has-text("${item.label}")`),
+          ).toHaveAttribute('href', item.href)
         }
       }
     })
 
     test('Download Uniswap opens the app modal', async ({ page }) => {
-      await page.getByTestId('nav-company-menu').hover()
-      const downloadBtn = page.getByTestId('nav-dropdown-download-app')
+      await page.getByTestId(TestID.NavCompanyMenu).hover()
+      const downloadBtn = page.getByTestId(TestID.DownloadUniswapApp)
       await expect(downloadBtn).toBeVisible()
       await downloadBtn.click()
-      await expect(page.getByTestId('download-uniswap-modal')).toBeVisible()
+      await expect(page.getByTestId(TestID.DownloadUniswapModal)).toBeVisible()
     })
 
     test('includes social media links', async ({ page }) => {
-      await page.getByTestId('nav-company-menu').hover()
+      await page.getByTestId(TestID.NavCompanyMenu).hover()
       for (const link of socialMediaLinks) {
-        await expect(page.getByTestId('nav-company-dropdown').locator(`a[href='${link}']`)).toBeVisible()
+        await expect(page.getByTestId(TestID.NavCompanyDropdown).locator(`a[href='${link}']`)).toBeVisible()
       }
     })
   })
@@ -128,13 +128,13 @@ test.describe('Mobile navigation', () => {
     await page.setViewportSize({ width: 449, height: 900 })
     await page.goto('/')
     await page.waitForTimeout(500)
-    await page.getByTestId('nav-company-menu').click()
+    await page.getByTestId(TestID.NavCompanyMenu).click()
   })
 
   for (const tab of tabs) {
     test.describe(`Mobile ${tab.label} tab`, () => {
       test(`displays "${tab.label}" tab and navigates`, async ({ page }) => {
-        const drawer = page.getByTestId('company-menu-mobile-drawer')
+        const drawer = page.getByTestId(TestID.CompanyMenuMobileDrawer)
         await drawer.getByRole('link', { name: tab.label }).click()
         await expect(page).toHaveURL(tab.path)
       })
@@ -142,7 +142,7 @@ test.describe('Mobile navigation', () => {
   }
 
   test('display settings are visible in mobile menu', async ({ page }) => {
-    const drawer = page.getByTestId('company-menu-mobile-drawer')
+    const drawer = page.getByTestId(TestID.CompanyMenuMobileDrawer)
     await expect(drawer).toBeVisible()
     await page.getByRole('button', { name: 'Display settings' }).click()
 
@@ -153,7 +153,7 @@ test.describe('Mobile navigation', () => {
   })
 
   test('contains appropriate sections and links', async ({ page }) => {
-    const drawer = page.getByTestId('company-menu-mobile-drawer')
+    const drawer = page.getByTestId(TestID.CompanyMenuMobileDrawer)
     await expect(drawer).toBeVisible()
 
     for (const section of companyMenu) {
@@ -166,12 +166,12 @@ test.describe('Mobile navigation', () => {
   })
 
   test('Download Uniswap is visible', async ({ page }) => {
-    await expect(page.getByTestId('nav-dropdown-download-app')).toBeVisible()
+    await expect(page.getByTestId(TestID.DownloadUniswapApp)).toBeVisible()
   })
 
   test('includes social media links', async ({ page }) => {
     for (const link of socialMediaLinks) {
-      await expect(page.getByTestId('company-menu-mobile-drawer').locator(`a[href='${link}']`)).toBeVisible()
+      await expect(page.getByTestId(TestID.CompanyMenuMobileDrawer).locator(`a[href='${link}']`)).toBeVisible()
     }
   })
 })
@@ -179,7 +179,7 @@ test.describe('Mobile navigation', () => {
 test('shows bottom bar on token details page on mobile', async ({ page }) => {
   await page.goto('/explore/tokens/ethereum/NATIVE')
   await page.setViewportSize({ width: 449, height: 900 })
-  const bottomBar = page.getByTestId('tdp-mobile-bottom-bar')
+  const bottomBar = page.getByTestId(TestID.TokenDetailsMobileBottomBar)
   await expect(bottomBar).toBeVisible()
   await expect(bottomBar.getByText('Buy')).toBeVisible()
   await expect(bottomBar.getByText('Sell')).toBeVisible()

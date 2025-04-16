@@ -10,6 +10,7 @@ import { Star } from 'ui/src/components/icons/Star'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { isAndroid } from 'utilities/src/platform'
 
 export type TokenSectionHeaderProps = {
   sectionKey: TokenOptionSection
@@ -32,19 +33,27 @@ export const SectionHeader = memo(function _SectionHeader({
   }
 
   return (
-    <Flex row backgroundColor="$surface1" justifyContent="space-between" pb="$spacing4" pt="$spacing12" px="$spacing16">
-      <Text color="$neutral2" variant="subheading2">
-        <Flex row alignItems="center" gap="$spacing8" width="100%">
-          {icon}
+    <Flex
+      row
+      backgroundColor="$surface1"
+      justifyContent="space-between"
+      pb="$spacing4"
+      pt="$spacing12"
+      px="$spacing16"
+      alignItems={isAndroid ? 'flex-end' : 'flex-start'}
+    >
+      <Flex row alignItems="center" gap="$spacing8" flex={1}>
+        {icon}
+        <Text color="$neutral2" variant="subheading2">
           <ElementAfterText
             text={name ?? title}
             textProps={{ color: '$neutral2' }}
             wrapperProps={{ flex: 1 }}
             element={rightElement}
           />
-          {endElement && <Flex ml="auto">{endElement}</Flex>}
-        </Flex>
-      </Text>
+        </Text>
+      </Flex>
+      {endElement}
     </Flex>
   )
 })

@@ -1,4 +1,6 @@
 import { EmbeddedWalletProvider, Listener, embeddedWalletProvider } from 'connection/EmbeddedWalletProvider'
+import { t } from 'i18next'
+import { getEmbeddedWalletState } from 'state/embeddedWallet/store'
 import {
   ProviderConnectInfo,
   ResourceUnavailableRpcError,
@@ -22,7 +24,7 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
 
   return createConnector<Provider, Properties, StorageItem>((config) => ({
     id: 'embeddedUniswapWalletConnector',
-    name: 'Embedded Wallet',
+    name: t('account.passkey.sign.in.title'),
     type: 'embeddedUniswapWallet',
     async setup() {
       const provider = await this.getProvider()
@@ -34,9 +36,17 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
       return embeddedWalletProvider
     },
     async connect({ chainId } = {}) {
-      // TODO[EW]: move from localstorage to context layer
-      if (!localStorage.getItem('embeddedUniswapWallet.address')) {
+      const { walletAddress, isConnected } = getEmbeddedWalletState()
+      if (!walletAddress) {
         throw new ResourceUnavailableRpcError(new Error('No accounts available'))
+      }
+
+      if (!isConnected) {
+        throw new ResourceUnavailableRpcError(
+          new Error(
+            'Embedded wallet isConnected state must be updated to true before attempting connection. See useSignInWithPasskey hook.',
+          ),
+        )
       }
 
       const provider = await this.getProvider()
@@ -89,8 +99,6 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
       provider.removeListener('disconnect', this.onDisconnect.bind(this))
       provider.on('connect', this.onConnect.bind(this) as Listener)
 
-      // TODO[EW]: move from localstorage to context layer
-      localStorage.removeItem('embeddedUniswapWallet.address')
       config.storage?.setItem('embeddedUniswapWallet.disconnected', true)
     },
     async getAccounts() {

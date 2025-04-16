@@ -2,6 +2,8 @@ import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { TradeType } from '@uniswap/sdk-core'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 export enum TransactionType {
   APPROVAL = 0,
@@ -36,6 +38,7 @@ export enum TransactionType {
   BRIDGE = 29,
   CREATE_POSITION = 30,
   MIGRATE_LIQUIDITY_V3_TO_V4 = 31,
+  LP_INCENTIVES_CLAIM_REWARDS = 32,
 }
 interface BaseTransactionInfo {
   type: TransactionType
@@ -218,6 +221,7 @@ export type TransactionInfo =
   | BridgeTransactionInfo
   | CreatePositionTransactionInfo
   | MigrateV3LiquidityToV4TransactionInfo
+  | LpIncentivesClaimTransactionInfo
 
 interface BaseTransactionDetails {
   status: TransactionStatus
@@ -243,3 +247,13 @@ export interface ConfirmedTransactionDetails extends BaseTransactionDetails {
 export type TransactionDetails = PendingTransactionDetails | ConfirmedTransactionDetails
 
 export type VitalTxFields = Pick<TransactionResponse, 'hash' | 'nonce' | 'data'>
+
+export interface LpIncentivesClaimTransactionInfo {
+  type: TransactionType.LP_INCENTIVES_CLAIM_REWARDS
+  tokenAddress: string
+}
+
+export type LpIncentivesClaimTransactionStep = TransactionStep & {
+  type: TransactionStepType.CollectLpIncentiveRewardsTransactionStep
+  txRequest: ValidatedTransactionRequest
+}

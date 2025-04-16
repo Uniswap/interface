@@ -164,22 +164,21 @@ exports[`AccountDetails renders unitag without error 1`] = `
       suppressHighlighting={true}
     >
       luni
-      <View
-        style={
-          {
-            "bottom": 2,
-            "display": "inline",
-            "flexDirection": "column",
-            "paddingLeft": 4,
-            "transform": [
-              {
-                "translateY": 1,
-              },
-            ],
-          }
-        }
-      />
     </Text>
+    <View
+      style={
+        {
+          "bottom": 2,
+          "display": "inline",
+          "flexDirection": "column",
+          "transform": [
+            {
+              "translateY": 1,
+            },
+          ],
+        }
+      }
+    />
   </View>,
   <div
     style={

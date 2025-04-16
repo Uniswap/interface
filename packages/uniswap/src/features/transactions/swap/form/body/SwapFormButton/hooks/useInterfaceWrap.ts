@@ -1,18 +1,20 @@
 import { useMemo } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { useSwapDependencies } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isInterface } from 'utilities/src/platform'
 
 // TODO(WEB-5012): Align interface wrap UX into SwapReviewScreen
-export function useInterfaceWrap(wrapCallback?: WrapCallback): {
+export function useInterfaceWrap(): {
   isInterfaceWrap: boolean
   onInterfaceWrap?: () => void
 } {
+  // TODO(WALL-6391): remove direct usage and replace with SwapService
+  const { wrapCallback } = useSwapDependencies()
   const account = useAccountMeta()
   const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
   const swapTxContext = useSwapTxContext()

@@ -28,11 +28,19 @@ const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backg
   position: relative;
 `
 
-function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: number }) {
+function LogolessPlaceholder({
+  currency,
+  size,
+  includeNetwork = true,
+}: {
+  currency?: Currency
+  size: number
+  includeNetwork?: boolean
+}) {
   const { foreground, background } = useColorSchemeFromSeed(currency?.name ?? currency?.symbol ?? '')
 
   const chainId = currency?.chainId
-  const showNetworkLogo = chainId && chainId !== UniverseChainId.Mainnet
+  const showNetworkLogo = includeNetwork && chainId && chainId !== UniverseChainId.Mainnet
   const networkLogoSize = Math.round(size * STATUS_RATIO)
   const networkLogoBorderWidth = isMobileApp ? 2 : 1.5
 
@@ -52,27 +60,30 @@ export const DoubleCurrencyLogo = memo(function DoubleCurrencyLogo({
   currencies,
   size = 32,
   customIcon,
+  includeNetwork = true,
 }: {
   currencies: Array<Currency | undefined>
   size?: number
   customIcon?: React.ReactNode
+  includeNetwork?: boolean
 }) {
   const currencyInfos = [useCurrencyInfo(currencies?.[0]), useCurrencyInfo(currencies?.[1])]
   const invalidCurrencyLogo0 = !currencyInfos[0]?.logoUrl
   const invalidCurrencyLogo1 = !currencyInfos[1]?.logoUrl
+  const chainId = includeNetwork ? currencyInfos[0]?.currency.chainId ?? null : null
 
   if (invalidCurrencyLogo0 && invalidCurrencyLogo1) {
-    return <LogolessPlaceholder currency={currencies?.[0]} size={size} />
+    return <LogolessPlaceholder currency={currencies?.[0]} size={size} includeNetwork={Boolean(chainId)} />
   }
   if (invalidCurrencyLogo0 && currencyInfos[1]?.logoUrl) {
-    return <TokenLogo url={currencyInfos[1].logoUrl} size={size} chainId={currencyInfos[1]?.currency.chainId} />
+    return <TokenLogo url={currencyInfos[1].logoUrl} size={size} chainId={chainId} />
   }
   if (invalidCurrencyLogo1 && currencyInfos[0]?.logoUrl) {
-    return <TokenLogo url={currencyInfos[0]?.logoUrl} size={size} chainId={currencyInfos[0]?.currency.chainId} />
+    return <TokenLogo url={currencyInfos[0]?.logoUrl} size={size} chainId={chainId} />
   }
   return (
     <SplitLogo
-      chainId={currencyInfos[0]?.currency.chainId ?? null}
+      chainId={chainId}
       inputCurrencyInfo={currencyInfos[0]}
       outputCurrencyInfo={currencyInfos[1]}
       customIcon={customIcon}

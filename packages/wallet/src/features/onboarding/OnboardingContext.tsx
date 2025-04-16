@@ -8,6 +8,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
 import { UnitagClaim } from 'uniswap/src/features/unitags/types'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
@@ -18,12 +19,13 @@ import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { setBackupReminderLastSeenTs, setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { createImportedAccounts } from 'wallet/src/features/onboarding/createImportedAccounts'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
-import { useClaimUnitag } from 'wallet/src/features/unitags/hooks/useClaimUnitag'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
+import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 export const NUMBER_OF_WALLETS_TO_GENERATE = 10
 
@@ -127,6 +129,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   const { t } = useTranslation()
   const claimUnitag = useClaimUnitag()
   const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
+  const signerManager = useWalletSigners()
 
   const [onboardingAccount, setOnboardingAccount] = useState<SignerMnemonicAccount | undefined>()
   const [unitagClaim, setUnitagClaim] = useState<UnitagClaim | undefined>()
@@ -428,14 +431,15 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     const isValidUnitagClaimState = areAddressesEqual(onboardingAccount?.address, unitagClaim?.address)
 
     // Claim unitag if there's a claim to process
-    if (unitagClaim && isValidUnitagClaimState && !isWatchFlow) {
+    if (unitagClaim && isValidUnitagClaimState && onboardingAccount && !isWatchFlow) {
       const { claimError } = await claimUnitag(
         unitagClaim,
         {
           source: 'onboarding',
           hasENSAddress: false,
         },
-        onboardingAccount,
+        onboardingAccount?.address,
+        generateSignerFunc(onboardingAccount, signerManager),
       )
 
       if (claimError && !extensionOnboardingFlow) {

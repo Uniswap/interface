@@ -5,6 +5,7 @@ import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/hooks/useInterfaceWrap'
 import { useIsAmountSelectionInvalid } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/hooks/useIsAmountSelectionInvalid'
 import { useIsTokenSelectionInvalid } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/hooks/useIsTokenSelectionInvalid'
 import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/hooks/useIsTradeIndicative'
@@ -12,7 +13,8 @@ import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/ho
 import { getActionName } from 'uniswap/src/features/transactions/swap/review/SubmitSwapButton'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-export const useSwapFormButtonText = (isInterfaceWrap: boolean): string => {
+export const useSwapFormButtonText = (): string => {
+  const { isInterfaceWrap } = useInterfaceWrap()
   const { t } = useTranslation()
   const { swapRedirectCallback } = useTransactionModalContext()
   const {

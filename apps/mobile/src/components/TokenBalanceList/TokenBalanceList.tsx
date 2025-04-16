@@ -23,9 +23,9 @@ import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
 import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
+import { ExpandoRow } from 'wallet/src/components/ExpandoRow/ExpandoRow'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
 import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
 import {
   HIDDEN_TOKEN_BALANCES_ROW,
@@ -305,9 +305,10 @@ const HiddenTokensRowWrapper = memo(function HiddenTokensRowWrapper(): JSX.Eleme
 
   return (
     <Flex grow>
-      <HiddenTokensRow
+      <ExpandoRow
         isExpanded={hiddenTokensExpanded}
-        numHidden={hiddenTokensCount}
+        label={t('hidden.tokens.info.text.button', { numHidden: hiddenTokensCount })}
+        mx="$spacing16"
         onPress={(): void => {
           setHiddenTokensExpanded(!hiddenTokensExpanded)
         }}

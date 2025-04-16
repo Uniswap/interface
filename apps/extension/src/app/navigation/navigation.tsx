@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
 import { DappRequestQueue } from 'src/app/features/dappRequests/DappRequestQueue'
+import { ForceUpgradeModal } from 'src/app/features/forceUpgrade/ForceUpgradeModal'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import { Locked } from 'src/app/features/lockScreen/Locked'
 import { NotificationToastWrapper } from 'src/app/features/notifications/NotificationToastWrapper'
@@ -132,6 +133,7 @@ export function WebNavigation(): JSX.Element {
         <NotificationToastWrapper />
         {shouldRestoreScroll && <ScrollRestoration />}
         {childrenMemo}
+        <ForceUpgradeModal />
       </WalletUniswapProvider>
     </SideBarNavigationProvider>
   )

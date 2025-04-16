@@ -15,7 +15,7 @@ export default function PrimaryAppInstanceDebugger(): JSX.Element | null {
         borderRadius: '5px',
         width: '5px',
         height: '5px',
-        zIndex: 999999999999999,
+        zIndex: Number.MAX_SAFE_INTEGER,
         background: isPrimaryAppInstance ? 'green' : 'red',
         color: 'white',
       }}

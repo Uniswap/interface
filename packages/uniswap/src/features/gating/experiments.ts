@@ -4,7 +4,6 @@
  * These must match parameter names on Statsig within an experiment
  */
 export enum Experiments {
-  ArbitrumXV2Sampling = 'arbitrum_uniswapx_sampling',
   AccountCTAs = 'signin_login_connect_ctas',
   SwapPresets = 'swap_presets',
 }
@@ -13,20 +12,18 @@ export enum Layers {
   SwapPage = 'swap-page',
 }
 
-export enum ArbitrumXV2SamplingGroup {
-  Classic = 'Classic',
-  DutchV2 = 'DutchV2',
-  DutchV3 = 'DutchV3',
-}
-
-export enum ArbitrumXV2SamplingProperties {
-  RoutingType = 'routingType',
-}
+// experiment groups
 
 export enum AccountCTAsExperimentGroup {
   Control = 'Control', // Get the app / Connect
   SignInSignUp = 'SignIn-SignUp',
   LogInCreateAccount = 'LogIn-CreateAccount',
+}
+
+// experiment properties
+
+export enum ArbitrumXV2SamplingProperties {
+  RoutingType = 'routingType',
 }
 
 export enum SwapPresetsProperties {
@@ -35,6 +32,10 @@ export enum SwapPresetsProperties {
 }
 
 export type ExperimentProperties = {
-  [Experiments.ArbitrumXV2Sampling]: ArbitrumXV2SamplingProperties
   [Experiments.SwapPresets]: SwapPresetsProperties
+}
+
+// will be a spread of all experiment properties in that layer
+export const LayerProperties: Record<Layers, string[]> = {
+  [Layers.SwapPage]: Object.values(SwapPresetsProperties),
 }

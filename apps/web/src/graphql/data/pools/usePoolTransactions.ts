@@ -15,8 +15,6 @@ import {
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export enum PoolTableTransactionType {
   BUY = 'Buy',
@@ -63,7 +61,6 @@ export function usePoolTransactions(
 ) {
   const { defaultChainId } = useEnabledChains()
   const variables = { first, chain: toGraphQLChain(chainId ?? defaultChainId) }
-  const v4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const {
     loading: loadingV4,
     error: errorV4,
@@ -74,7 +71,7 @@ export function usePoolTransactions(
       ...variables,
       poolId: address,
     },
-    skip: !v4DataEnabled || protocolVersion !== ProtocolVersion.V4,
+    skip: protocolVersion !== ProtocolVersion.V4,
   })
   const {
     loading: loadingV3,

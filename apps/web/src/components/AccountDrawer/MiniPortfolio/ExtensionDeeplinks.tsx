@@ -1,5 +1,5 @@
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool } from 'components/Icons/Pool'

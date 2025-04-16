@@ -1,5 +1,6 @@
 /* eslint-disable import/no-unused-modules */
 import { EthereumRpcErrorSchema } from 'src/app/features/dappRequests/types/ErrorTypes'
+import { GetCallsStatusResultSchema, SendCallsParamsSchema, SendCallsResultSchema } from 'wallet/src/features/dappRequests/types'
 import {
   EthersTransactionRequestSchema,
   EthersTransactionResponseSchema,
@@ -7,7 +8,7 @@ import {
 import { NonfungiblePositionManagerCallSchema } from 'src/app/features/dappRequests/types/NonfungiblePositionManagerTypes'
 import { UniversalRouterCallSchema } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
 import { HomeTabs } from 'src/app/navigation/constants'
-import { MessageSchema } from 'src/background/messagePassing/messageTypes'
+import { MessageSchema } from 'uniswap/src/extension/messagePassing/messageTypes'
 import { PermissionRequestSchema, PermissionSchema } from 'src/contentScript/WindowEthereumRequestTypes'
 import { z } from 'zod'
 
@@ -26,6 +27,8 @@ export enum DappRequestType {
   SignTransaction = 'SignTransaction',
   SignTypedData = 'SignTypedData',
   UniswapOpenSidebar = 'UniswapOpenSidebar',
+  SendCalls = 'SendCalls',
+  GetCallsStatus = 'GetCallsStatus',
 }
 
 export enum DappResponseType {
@@ -41,6 +44,8 @@ export enum DappResponseType {
   SignTypedDataResponse = 'SignTypedDataResponse',
   SignMessageResponse = 'SignMessageResponse',
   UniswapOpenSidebarResponse = 'UniswapOpenSidebarResponse',
+  SendCallsResponse = 'SendCallsResponse',
+  GetCallsStatusResponse = 'GetCallsStatusResponse',
 }
 
 // SCHEMAS + TYPES
@@ -255,6 +260,30 @@ export const ErrorResponseSchema = BaseDappResponseSchema.extend({
 })
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>
 
+export const SendCallsRequestSchema = BaseDappRequestSchema.extend({
+  type: z.literal(DappRequestType.SendCalls),
+  sendCallsParams: SendCallsParamsSchema
+})
+export type SendCallsRequest = z.infer<typeof SendCallsRequestSchema>
+
+export const GetCallsStatusRequestSchema = BaseDappRequestSchema.extend({
+  type: z.literal(DappRequestType.GetCallsStatus),
+  batchId: z.string(),
+})
+export type GetCallsStatusRequest = z.infer<typeof GetCallsStatusRequestSchema>
+
+export const SendCallsResponseSchema = BaseDappResponseSchema.extend({
+  type: z.literal(DappResponseType.SendCallsResponse),
+  response: SendCallsResultSchema
+})
+export type SendCallsResponse = z.infer<typeof SendCallsResponseSchema>
+
+export const GetCallsStatusResponseSchema = BaseDappResponseSchema.extend({
+  type: z.literal(DappResponseType.GetCallsStatusResponse),
+  response: GetCallsStatusResultSchema
+})
+export type GetCallsStatusResponse = z.infer<typeof GetCallsStatusResponseSchema>
+
 export const DappRequestSchema = z.union([
   ChangeChainRequestSchema,
   GetAccountRequestSchema,
@@ -268,6 +297,8 @@ export const DappRequestSchema = z.union([
   SignTypedDataRequestSchema,
   SignTransactionRequestSchema,
   UniswapOpenSidebarRequestSchema,
+  SendCallsRequestSchema,
+  GetCallsStatusRequestSchema,
 ])
 
 const DappResponseSchema = z.union([
@@ -282,6 +313,8 @@ const DappResponseSchema = z.union([
   SignTransactionResponseSchema,
   SendTransactionResponseSchema,
   UniswapOpenSidebarResponseSchema,
+  SendCallsResponseSchema,
+  GetCallsStatusResponseSchema,
 ])
 
 export type DappRequest = z.infer<typeof DappRequestSchema>
@@ -389,3 +422,18 @@ export function isWrapRequest(request: SendTransactionRequest): request is WrapS
   return WrapSendTransactionRequestSchema.safeParse(request).success
 }
 
+export function isSendCallsRequest(request: DappRequest): request is SendCallsRequest {
+  return SendCallsRequestSchema.safeParse(request).success
+}
+
+export function isGetCallsStatusRequest(request: DappRequest): request is GetCallsStatusRequest {
+  return GetCallsStatusRequestSchema.safeParse(request).success
+}
+
+export function isValidSendCallsResponse(response: unknown): response is SendCallsResponse {
+  return SendCallsResponseSchema.safeParse(response).success
+}
+
+export function isValidGetCallsStatusResponse(response: unknown): response is GetCallsStatusResponse {
+  return GetCallsStatusResponseSchema.safeParse(response).success
+}

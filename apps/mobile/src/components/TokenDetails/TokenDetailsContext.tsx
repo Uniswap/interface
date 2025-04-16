@@ -31,7 +31,7 @@ type TokenDetailsContextState = {
   closeTokenWarningModal: () => void
   isContractAddressExplainerModalOpen: boolean
   openContractAddressExplainerModal: () => void
-  closeContractAddressExplainerModal: () => void
+  closeContractAddressExplainerModal: (markViewed: boolean) => void
   copyAddressToClipboard: (address: string) => Promise<void>
   error: unknown | undefined
   setError: (error: unknown | undefined) => void
@@ -54,10 +54,15 @@ export function TokenDetailsContextProvider({
 
   const [isContractAddressExplainerModalOpen, setIsContractAddressExplainerModalOpen] = useState(false)
   const openContractAddressExplainerModal = useCallback(() => setIsContractAddressExplainerModalOpen(true), [])
-  const closeContractAddressExplainerModal = useCallback(() => {
-    dispatch(setHasViewedContractAddressExplainer(true))
-    setIsContractAddressExplainerModalOpen(false)
-  }, [dispatch])
+  const closeContractAddressExplainerModal = useCallback(
+    (markViewed: boolean) => {
+      if (markViewed) {
+        dispatch(setHasViewedContractAddressExplainer(true))
+      }
+      setIsContractAddressExplainerModalOpen(false)
+    },
+    [dispatch],
+  )
 
   const copyAddressToClipboard = useCallback(
     async (address: string): Promise<void> => {

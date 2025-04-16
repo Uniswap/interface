@@ -15,3 +15,14 @@ import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/moc
 jest.mock('react-native-localize', () => mockRNLocalize)
 jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
+
+jest.mock('uniswap/src/features/gating/sdk/statsig', () => {
+  const actualStatsig = jest.requireActual('uniswap/src/features/gating/sdk/statsig')
+  return {
+    ...actualStatsig,
+    useClientAsyncInit: jest.fn(() => ({
+      client: null,
+      isLoading: true,
+    })),
+  }
+})
