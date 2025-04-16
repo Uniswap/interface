@@ -10,7 +10,7 @@ import { Flex, Loader, Text, styled } from 'ui/src'
 import { EyeSlash } from 'ui/src/components/icons/EyeSlash'
 import { LockedDocument } from 'ui/src/components/icons/LockedDocument'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { exportSeedPhraseWithPasskey } from 'uniswap/src/data/rest/embeddedWallet'
+import { exportSeedPhrase } from 'uniswap/src/features/passkey/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
 
@@ -61,8 +61,8 @@ export function RecoveryPhraseModal() {
   useOnClickOutside(seedPhraseContentRef, () => setIsRevealed(false))
 
   const fetchSeedPhrase = async () => {
-    const retrievedSeedPhrase = await exportSeedPhraseWithPasskey()
-    setSeedPhrase(retrievedSeedPhrase)
+    const retrievedSeedPhrase = await exportSeedPhrase()
+    setSeedPhrase(retrievedSeedPhrase?.split(' '))
   }
 
   // After revealing passphrase, hide it after 1 minute

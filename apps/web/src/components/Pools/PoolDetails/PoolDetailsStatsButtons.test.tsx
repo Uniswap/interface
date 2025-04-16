@@ -41,6 +41,7 @@ describe('PoolDetailsStatsButton', () => {
   const useUniswapContextReturnValue = {
     navigateToFiatOnRamp: () => {},
     navigateToSwapFlow: () => {},
+    navigateToTokenDetails: () => {},
     onSwapChainsChanged: () => {},
     isSwapTokenSelectorOpen: false,
     setSwapOutputChainId: () => {},

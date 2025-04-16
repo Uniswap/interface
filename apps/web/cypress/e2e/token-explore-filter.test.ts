@@ -25,12 +25,12 @@ describe('Token explore filter', () => {
 
     cy.get('@filteredTokens').then((filteredTokens) => {
       const filteredTokenTexts = Cypress.$(filteredTokens)
-        .map((i, token) => token.innerText)
+        .map((_i, token) => token.innerText)
         .get()
 
       cy.get(getTestSelector('token-name')).then((tokens) => {
         const tokenTexts = Cypress.$(tokens)
-          .map((i, token) => token.innerText)
+          .map((_i, token) => token.innerText)
           .get()
 
           const firstToken = [tokenTexts[0]]

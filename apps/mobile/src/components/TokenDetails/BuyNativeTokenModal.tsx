@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import { ReceiveButton } from 'src/components/TokenDetails/ReceiveButton'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -17,18 +19,14 @@ import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function BuyNativeTokenModal({
-  chainId,
-  currencyId,
-  onClose,
-}: {
-  chainId: UniverseChainId
-  currencyId: string
-  onClose: () => void
-}): JSX.Element | null {
+  route,
+}: AppStackScreenProp<typeof ModalName.BuyNativeToken>): JSX.Element | null {
+  const { chainId, currencyId } = route.params
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddress()
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
   const currencyInfo = useCurrencyInfo(currencyId)
+  const { onClose } = useReactNavigationModal()
 
   const { data: bridgingTokenWithHighestBalance } = useBridgingTokenWithHighestBalance({
     address: activeAddress ?? '',

@@ -1,8 +1,9 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { AppStackScreenProp } from 'src/app/navigation/types'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
 import { Wrench } from 'ui/src/components/icons'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -10,16 +11,15 @@ import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
-export function TestnetSwitchModal(): JSX.Element {
+export function TestnetSwitchModal({ route }: AppStackScreenProp<typeof ModalName.TestnetSwitchModal>): JSX.Element {
+  const { onClose } = useReactNavigationModal()
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const modalState = useSelector(selectModalState(ModalName.TestnetSwitchModal))
-
-  const { switchToMode } = modalState.initialState ?? {}
+  const switchToMode = route.params.initialState?.switchToMode
 
   const onToggleTestnetMode = (): void => {
-    dispatch(closeModal({ name: ModalName.TestnetSwitchModal }))
+    onClose()
     dispatch(setIsTestnetModeEnabled(switchToMode === 'testnet'))
 
     sendAnalyticsEvent(WalletEventName.TestnetModeToggled, {
@@ -30,7 +30,7 @@ export function TestnetSwitchModal(): JSX.Element {
 
   const onReject = (): void => {
     dispatch(closeModal({ name: ModalName.Swap }))
-    dispatch(closeModal({ name: ModalName.TestnetSwitchModal }))
+    onClose()
   }
 
   const toTestnetModeDescription = t('testnet.modal.swapDeepLink.description.toTestnetMode')

@@ -20,9 +20,9 @@ import { breakpoints } from 'ui/src/theme'
 import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
+import { getChainUrlParam } from 'utils/chainParams'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
   display: none;
@@ -110,12 +110,12 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
 
   const navigate = useNavigate()
   const { defaultChainId } = useEnabledChains()
-  const chainName = toGraphQLChain(chainId ?? defaultChainId)
+  const chainUrlParam = getChainUrlParam(chainId ?? defaultChainId)
   const handleTokenTextClick = useCallback(() => {
     if (!isPool) {
-      navigate(getTokenDetailsURL({ address: tokens[0]?.address, chain: chainName }))
+      navigate(getTokenDetailsURL({ address: tokens[0]?.address, chainUrlParam }))
     }
-  }, [navigate, tokens, isPool, chainName])
+  }, [navigate, tokens, isPool, chainUrlParam])
 
   const [truncateAddress, setTruncateAddress] = useState<false | 'start' | 'both'>(false)
   const onTextRender = useCallback(

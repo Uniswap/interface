@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { AppStackScreenProp } from 'src/app/navigation/types'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { closeAllModals } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
 import { getEncryptedMnemonic } from 'src/features/scantastic/ScantasticEncryption'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled, Faceid, Laptop, LinkBrokenHorizontal, Wifi } from 'ui/src/components/icons'
@@ -32,10 +33,11 @@ interface OtpStateApiResponse {
   expiresAtInSeconds?: number
 }
 
-export function ScantasticModal(): JSX.Element | null {
+export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.Scantastic>): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
+  const { onClose } = useReactNavigationModal()
 
   // Use the first mnemonic account because zero-balance mnemonic accounts will fail to retrieve the mnemonic from rnEthers
   const account = useSignerAccounts().sort(
@@ -46,8 +48,7 @@ export function ScantasticModal(): JSX.Element | null {
     throw new Error('This should not be accessed with no mnemonic accounts')
   }
 
-  const { initialState } = useSelector(selectModalState(ModalName.Scantastic))
-  const params = initialState?.params
+  const params = route.params?.params
 
   const [OTP, setOTP] = useState('')
   // Once a user has scanned a QR they have 6 minutes to correctly input the OTP
@@ -71,15 +72,18 @@ export function ScantasticModal(): JSX.Element | null {
   }, [expirationTimestamp])
   useInterval(setExpirationText, ONE_SECOND_MS)
 
-  if (redeemed) {
-    dispatch(
-      pushNotification({
-        type: AppNotificationType.ScantasticComplete,
-        hideDelay: 6 * ONE_SECOND_MS,
-      }),
-    )
-    dispatch(closeAllModals())
-  }
+  useEffect(() => {
+    if (redeemed) {
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.ScantasticComplete,
+          hideDelay: 6 * ONE_SECOND_MS,
+        }),
+      )
+      onClose()
+      dispatch(closeAllModals())
+    }
+  }, [redeemed, onClose, dispatch])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -89,10 +93,6 @@ export function ScantasticModal(): JSX.Element | null {
 
     return () => clearInterval(interval)
   }, [expirationTimestamp, t])
-
-  const onClose = useCallback((): void => {
-    dispatch(closeAllModals())
-  }, [dispatch])
 
   const onEncryptSeedphrase = async (): Promise<void> => {
     if (!pubKey) {

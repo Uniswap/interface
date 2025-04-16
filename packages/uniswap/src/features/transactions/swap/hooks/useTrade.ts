@@ -7,8 +7,8 @@ import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/featur
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks/useIndicativeTrade'
-import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import {
@@ -167,10 +167,15 @@ export function useTrade({
 
     // log end of fetching
     if (fetchStatus === 'idle' && lastReqStart) {
-      logger.info('useTrade', 'useTrade', 'Quote Latency', { quoteLatency: Date.now() - lastReqStart })
+      logger.info('useTrade', 'useTrade', 'Quote Latency', {
+        quoteLatency: Date.now() - lastReqStart,
+        chainIdIn: tokenInChainId,
+        chainIdOut: tokenOutChainId,
+        isBridging: currencyInEqualsCurrencyOut,
+      })
       setLastReqStart(undefined)
     }
-  }, [fetchStatus, lastReqStart, isUSDQuote])
+  }, [fetchStatus, lastReqStart, isUSDQuote, tokenInChainId, tokenOutChainId, currencyInEqualsCurrencyOut])
 
   const errorRef = useRef<Error | null>(error)
 

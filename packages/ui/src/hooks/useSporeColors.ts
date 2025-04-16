@@ -8,7 +8,7 @@ type OpaqueColorValue = symbol & { __TYPE__: 'Color' }
 
 export type DynamicColor = ColorTokens | string | OpaqueColorValue
 
-type UseSporeColorsReturn = {
+export type UseSporeColorsReturn = {
   [key in ThemeKeys]: {
     val: ColorTokens
     get: () => DynamicColor

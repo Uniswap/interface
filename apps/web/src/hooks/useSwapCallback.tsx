@@ -1,7 +1,7 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import { BigNumber } from 'ethers/lib/ethers'
 import { useAccount } from 'hooks/useAccount'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import useSelectChain from 'hooks/useSelectChain'

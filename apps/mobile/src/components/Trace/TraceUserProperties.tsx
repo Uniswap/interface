@@ -1,9 +1,10 @@
 import { useEffect, useMemo } from 'react'
-import { NativeModules } from 'react-native'
+import { NativeModules, useWindowDimensions } from 'react-native'
 import { OneSignal } from 'react-native-onesignal'
 import { useSelector } from 'react-redux'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
+import { setDatadogUserWithUniqueId } from 'src/features/datadog/user'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
 import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
@@ -13,6 +14,7 @@ import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
+import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
@@ -31,6 +33,7 @@ import {
 /** Component that tracks UserProperties during the lifetime of the app */
 export function TraceUserProperties(): null {
   const isDarkMode = useIsDarkMode()
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
   const viewOnlyAccounts = useViewOnlyAccounts()
   const activeAccount = useActiveAccount()
   const signerAccounts = useSignerAccounts()
@@ -71,6 +74,20 @@ export function TraceUserProperties(): null {
     }
   }, [allowAnalytics])
 
+  // Set user properties for datadog
+
+  useEffect(() => {
+    setDatadogUserWithUniqueId(activeAccount?.address).catch(() =>
+      logger.warn(
+        'TraceUserProperties',
+        'TraceUserProperties',
+        'Failed to set datadog current active address attribute',
+      ),
+    )
+  }, [activeAccount?.address])
+
+  // Set user properties for amplitude
+
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.WalletSwapProtectionSetting, swapProtectionSetting)
   }, [allowAnalytics, swapProtectionSetting])
@@ -78,6 +95,11 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.DarkMode, isDarkMode)
   }, [allowAnalytics, isDarkMode])
+
+  useEffect(() => {
+    setUserProperty(MobileUserPropertyName.WindowHeight, windowHeight)
+    setUserProperty(MobileUserPropertyName.WindowWidth, windowWidth)
+  }, [windowWidth, windowHeight])
 
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.WalletSignerCount, signerAccountAddresses.length)

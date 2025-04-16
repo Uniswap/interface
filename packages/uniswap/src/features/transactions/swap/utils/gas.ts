@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers/lib/ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 
 export function sumGasFees(gasFees: (string | undefined)[]): string | undefined {
   if (gasFees.length === 0) {

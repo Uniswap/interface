@@ -41,7 +41,7 @@ const nftTopCollectionsQuery = `
   }
 `
 
-fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
+fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (_err, data) => {
   const tokenURLs = {}
   try {
     const sitemap = await parseStringPromise(data)
@@ -100,7 +100,7 @@ fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
   }
 })
 
-fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
+fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (_err, data) => {
   const collectionURLs = {}
   try {
     const sitemap = await parseStringPromise(data)
@@ -156,7 +156,7 @@ fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
   }
 })
 
-fs.readFile('./public/pools-sitemap.xml', 'utf8', async (err, data) => {
+fs.readFile('./public/pools-sitemap.xml', 'utf8', async (_err, data) => {
   const poolURLs = {}
   try {
     const sitemap = await parseStringPromise(data)

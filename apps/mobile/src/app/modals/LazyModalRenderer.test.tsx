@@ -8,7 +8,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 describe(LazyModalRenderer, () => {
   it('renders null when modal is not open', () => {
     const tree = renderWithProviders(
-      <LazyModalRenderer name={ModalName.BackupReminderWarning}>
+      <LazyModalRenderer name={ModalName.FiatOnRampAggregator}>
         <Text>Rendered</Text>
       </LazyModalRenderer>,
       { preloadedState: preloadedMobileState() },
@@ -19,13 +19,13 @@ describe(LazyModalRenderer, () => {
 
   it('renders modal when modal is open', () => {
     const tree = renderWithProviders(
-      <LazyModalRenderer name={ModalName.BackupReminderWarning}>
+      <LazyModalRenderer name={ModalName.FiatOnRampAggregator}>
         <Text>Rendered</Text>
       </LazyModalRenderer>,
       {
         preloadedState: preloadedMobileState({
           modals: preloadedModalsState({
-            [ModalName.BackupReminderWarning]: { isOpen: true },
+            [ModalName.FiatOnRampAggregator]: { isOpen: true },
           }),
         }),
       },

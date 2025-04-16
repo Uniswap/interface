@@ -8,7 +8,6 @@ declare module 'react-native-dotenv' {
   export const DATADOG_PROJECT_ID: string
   export const UNISWAP_API_KEY: string
   export const INFURA_KEY: string
-  export const SENTRY_DSN: string
   export const SIMPLEHASH_API_KEY: string
   export const SIMPLEHASH_API_URL: string
   export const STATSIG_PROXY_URL: string

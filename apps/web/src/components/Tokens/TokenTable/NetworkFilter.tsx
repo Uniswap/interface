@@ -1,8 +1,7 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import Badge from 'components/Badge/Badge'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import deprecatedStyled, { useTheme } from 'lib/styled-components'
+import { useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { Dispatch, SetStateAction, memo, useCallback, useState } from 'react'
@@ -12,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { ElementAfterText, Flex, FlexProps, ScrollView, styled, useMedia } from 'ui/src'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import Badge from 'uniswap/src/components/badge/Badge'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -22,7 +22,7 @@ import { ALL_CHAIN_IDS, UniverseChainId, UniverseChainInfo } from 'uniswap/src/f
 import { isBackendSupportedChainId, isTestnetChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useChainIdFromUrlParam } from 'utils/chainParams'
+import { getChainUrlParam, useChainIdFromUrlParam } from 'utils/chainParams'
 
 const NetworkLabel = styled(Flex, {
   flexDirection: 'row',
@@ -30,13 +30,6 @@ const NetworkLabel = styled(Flex, {
   gap: '$gap8',
 })
 
-const Tag = deprecatedStyled(Badge)`
-  background-color: ${({ theme }) => theme.surface2};
-  color: ${({ theme }) => theme.neutral2};
-  font-size: 10px;
-  opacity: 1;
-  padding: 4px 6px;
-`
 const StyledDropdown = {
   maxHeight: 350,
   minWidth: 256,
@@ -145,6 +138,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
   const isNew = chainId && newChains.includes(chainId)
 
   const chainName = chainId ? toGraphQLChain(chainId) : 'All networks'
+  const chainUrlParam = chainId ? getChainUrlParam(chainId) : ''
 
   const isCurrentChain = isAllNetworks ? !currentChainInfo : currentChainInfo?.id === chainId && exploreParams.chainName
 
@@ -162,8 +156,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
         data-testid={`tokens-network-filter-option-${chainName.toLowerCase()}`}
         disabled={unsupported}
         onPress={() => {
-          !unsupported &&
-            navigate(`/explore/${tab ?? ExploreTab.Tokens}${!isAllNetworks ? `/${chainName.toLowerCase()}` : ''}`)
+          !unsupported && navigate(`/explore/${tab ?? ExploreTab.Tokens}${!isAllNetworks ? `/${chainUrlParam}` : ''}`)
           toggleMenu(false)
         }}
       >
@@ -181,7 +174,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
         </NetworkLabel>
         {/* separate from ElementAfterText as this is placed at the far right of the row, not next to the text */}
         {unsupported ? (
-          <Tag>{t('settings.setting.beta.tooltip')}</Tag>
+          <Badge fontSize={10}>{t('settings.setting.beta.tooltip')}</Badge>
         ) : isCurrentChain ? (
           <Check size={16} color={theme.accent1} />
         ) : null}

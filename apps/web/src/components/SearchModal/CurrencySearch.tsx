@@ -36,7 +36,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, cha
   const { chains } = useEnabledChains()
 
   const handleCurrencySelectTokenSelectorCallback = useCallback(
-    async (currency: Currency) => {
+    async ({ currency }: { currency: Currency }) => {
       if (!isMultichainContext) {
         const correctChain = await selectChain(currency.chainId)
         if (!correctChain) {

@@ -17,9 +17,17 @@ export function useFeatureFlagUrlOverrides() {
     const featureFlagOverridesOff =
       typeof parsedQs.featureFlagOverrideOff === 'string' ? parsedQs.featureFlagOverrideOff.split(',') : []
 
+    // Experiment overrides
+    const experimentOverrides =
+      typeof parsedQs.experimentOverride === 'string' ? parsedQs.experimentOverride.split(',') : []
+
     if (statsigContext.initialized && !isProduction) {
       featureFlagOverrides.forEach((gate) => Statsig.overrideGate(gate, true))
       featureFlagOverridesOff.forEach((gate) => Statsig.overrideGate(gate, false))
+      experimentOverrides.forEach((experiment) => {
+        const [experimentName, groupName] = experiment.split(':')
+        Statsig.overrideConfig(experimentName, { group: groupName })
+      })
     }
-  }, [statsigContext.initialized, parsedQs.featureFlagOverride, parsedQs.featureFlagOverrideOff, isProduction])
+  }, [statsigContext.initialized, parsedQs, isProduction])
 }

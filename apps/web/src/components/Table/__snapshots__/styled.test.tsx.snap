@@ -24,7 +24,7 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #222222;
+  color: #131313;
 }
 
 .c0:hover {
@@ -39,84 +39,76 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
     class=""
     style="display: contents;"
   >
-    <span
-      class=" _dsp_contents"
+    <a
+      class="c0"
+      href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     >
-      <span
-        class=" t_light _dsp_contents is_Theme"
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _maxWidth-100px"
       >
-        <a
-          class="c0"
-          href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+        <span
+          class="font_body _fontFamily-_lg_f-family _fontSize-_lg_f-size-smal108 _lineHeight-_lg_f-lineHeigh1269072494 _fontWeight-_lg_f-weight-bo3548 _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+          data-disable-theme="true"
+        >
+          USDC
+        </span>
+        <div
+          class="c1"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _maxWidth-68px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
           >
             <div
-              class="c1"
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
+              data-testid="token-logo"
             >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+              />
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                data-testid="img-token-image"
+              >
+                <img
+                  height="20"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  style="object-fit: contain; border-radius: 10px; z-index: 1;"
+                  width="20"
+                />
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _bottom--2px _position-absolute _right--3px _zIndex-10"
               >
                 <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
-                  data-testid="token-logo"
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
+                  data-testid="network-logo"
+                  style="width: 11px; height: 11px; border-radius: 3.3px; border-width: 1.5px; border-color: #ffffff; border-style: solid;"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
-                  />
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                    data-testid="img-token-image"
-                  >
-                    <img
-                      height="16"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      style="object-fit: contain; border-radius: 8px; z-index: 1;"
-                      width="16"
-                    />
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _bottom--2px _position-absolute _right--3px _zIndex-10"
+                    class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                    style="width: 8px; height: 8px;"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _overflowX-hidden _overflowY-hidden _zIndex-10"
-                      data-testid="network-logo"
-                      style="width: 10px; height: 10px; border-radius: 3px; border-width: 1.5px; border-color: #ffffff; border-style: solid;"
-                    >
-                      <div
-                        class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
-                        style="width: 7px; height: 7px;"
-                      >
-                        <div
-                          class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
-                          style="background-image: url(polygon-logo.png);"
-                        />
-                        <img
-                          alt=""
-                          class="css-accessibilityImage-9pa8cd"
-                          draggable="false"
-                          src="polygon-logo.png"
-                        />
-                      </div>
-                    </div>
+                      class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                      style="background-image: url(polygon-logo.png);"
+                    />
+                    <img
+                      alt=""
+                      class="css-accessibilityImage-9pa8cd"
+                      draggable="false"
+                      src="polygon-logo.png"
+                    />
                   </div>
                 </div>
               </div>
             </div>
-            <span
-              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
-              data-disable-theme="true"
-            >
-              USDC
-            </span>
           </div>
-        </a>
-        <div
-          style="display: contents;"
-        />
-      </span>
-    </span>
+        </div>
+      </div>
+    </a>
+    <div
+      style="display: contents;"
+    />
   </span>
 </DocumentFragment>
 `;
@@ -145,7 +137,7 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #222222;
+  color: #131313;
 }
 
 .c0:hover {
@@ -160,59 +152,51 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
     class=""
     style="display: contents;"
   >
-    <span
-      class=" _dsp_contents"
+    <a
+      class="c0"
+      href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     >
-      <span
-        class=" t_light _dsp_contents is_Theme"
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _maxWidth-100px"
       >
-        <a
-          class="c0"
-          href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+        <span
+          class="font_body _fontFamily-_lg_f-family _fontSize-_lg_f-size-smal108 _lineHeight-_lg_f-lineHeigh1269072494 _fontWeight-_lg_f-weight-bo3548 _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+          data-disable-theme="true"
+        >
+          USDC
+        </span>
+        <div
+          class="c1"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _maxWidth-68px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
           >
             <div
-              class="c1"
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
+              data-testid="token-logo"
             >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+              />
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                data-testid="img-token-image"
               >
-                <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
-                  data-testid="token-logo"
-                >
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
-                  />
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                    data-testid="img-token-image"
-                  >
-                    <img
-                      height="16"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      style="object-fit: contain; border-radius: 8px; z-index: 1;"
-                      width="16"
-                    />
-                  </div>
-                </div>
+                <img
+                  height="20"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  style="object-fit: contain; border-radius: 10px; z-index: 1;"
+                  width="20"
+                />
               </div>
             </div>
-            <span
-              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
-              data-disable-theme="true"
-            >
-              USDC
-            </span>
           </div>
-        </a>
-        <div
-          style="display: contents;"
-        />
-      </span>
-    </span>
+        </div>
+      </div>
+    </a>
+    <div
+      style="display: contents;"
+    />
   </span>
 </DocumentFragment>
 `;
@@ -241,7 +225,7 @@ exports[`TokenLinkCell renders unknown token 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #222222;
+  color: #131313;
 }
 
 .c0:hover {
@@ -256,59 +240,51 @@ exports[`TokenLinkCell renders unknown token 1`] = `
     class=""
     style="display: contents;"
   >
-    <span
-      class=" _dsp_contents"
+    <a
+      class="c0"
+      href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     >
-      <span
-        class=" t_light _dsp_contents is_Theme"
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _maxWidth-100px"
       >
-        <a
-          class="c0"
-          href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+        <span
+          class="font_body _fontFamily-_lg_f-family _fontSize-_lg_f-size-smal108 _lineHeight-_lg_f-lineHeigh1269072494 _fontWeight-_lg_f-weight-bo3548 _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+          data-disable-theme="true"
+        >
+          UNKNOWN
+        </span>
+        <div
+          class="c1"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _maxWidth-68px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
           >
             <div
-              class="c1"
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
+              data-testid="token-logo"
             >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+              />
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                data-testid="img-token-image"
               >
-                <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
-                  data-testid="token-logo"
-                >
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px"
-                  />
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                    data-testid="img-token-image"
-                  >
-                    <img
-                      height="16"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      style="object-fit: contain; border-radius: 8px; z-index: 1;"
-                      width="16"
-                    />
-                  </div>
-                </div>
+                <img
+                  height="20"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  style="object-fit: contain; border-radius: 10px; z-index: 1;"
+                  width="20"
+                />
               </div>
             </div>
-            <span
-              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
-              data-disable-theme="true"
-            >
-              UNKNOWN
-            </span>
           </div>
-        </a>
-        <div
-          style="display: contents;"
-        />
-      </span>
-    </span>
+        </div>
+      </div>
+    </a>
+    <div
+      style="display: contents;"
+    />
   </span>
 </DocumentFragment>
 `;

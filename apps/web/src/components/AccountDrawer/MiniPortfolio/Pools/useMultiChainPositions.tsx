@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Pool, Position, computePoolAddress } from '@uniswap/v3-sdk'
@@ -13,7 +14,6 @@ import {
   usePoolPriceMap,
   useV3ManagerContracts,
 } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
-import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'

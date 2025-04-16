@@ -4,7 +4,6 @@ import localForage from 'localforage'
 import { PersistConfig, persistReducer, persistStore } from 'redux-persist'
 import createSagaMiddleware from 'redux-saga'
 import { updateVersion } from 'state/global/actions'
-import { sentryEnhancer } from 'state/logging'
 import { INDEXED_DB_REDUX_TABLE_NAME, PERSIST_VERSION, customCreateMigrate, migrations } from 'state/migrations'
 import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
@@ -48,7 +47,7 @@ const dataDogReduxEnhancer = createDatadogReduxEnhancer({
 export function createDefaultStore() {
   const store = configureStore({
     reducer: persistedReducer,
-    enhancers: (defaultEnhancers) => defaultEnhancers.concat(sentryEnhancer, dataDogReduxEnhancer),
+    enhancers: (defaultEnhancers) => defaultEnhancers.concat(dataDogReduxEnhancer),
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: true,

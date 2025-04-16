@@ -123,13 +123,13 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
 
   return (
     <Flex group gap="$spacing4" animation="simple">
-      <Text variant="body4" color="$neutral2" $group-hover={{ opacity: isHoverable ? 0.8 : 1 }}>
+      <Text variant="body4" color="$neutral2" $group-hover={{ color: isHoverable ? '$neutral2Hovered' : '$neutral2' }}>
         {data.label}
       </Text>
       {isLoading ? (
         <LoadingBubble height="20px" width="52px" />
       ) : (
-        <Text variant="subheading1" color="$neutral1" $group-hover={{ opacity: isHoverable ? 0.8 : 1 }}>
+        <Text variant="subheading1" color="$neutral1">
           {data.value}
         </Text>
       )}

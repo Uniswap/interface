@@ -4,6 +4,7 @@ import { FlatList, ImageBackground } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, useIsDarkMode, useShadowPropsShort } from 'ui/src'
 import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from 'ui/src/assets'
@@ -15,7 +16,6 @@ import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexT
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 
 export function FundWalletModal(): JSX.Element {
@@ -24,6 +24,7 @@ export function FundWalletModal(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const cexTransferProviders = useCexTransferProviders()
+  const onPressReceive = useOpenReceiveModal()
 
   const { onClose } = useReactNavigationModal()
 
@@ -54,23 +55,6 @@ export function FundWalletModal(): JSX.Element {
         )
   }, [disableForKorea, onClose, dispatch])
 
-  const onPressReceive = useCallback(() => {
-    onClose()
-    dispatch(
-      openModal(
-        cexTransferProviders.length > 0
-          ? {
-              name: ModalName.ReceiveCryptoModal,
-              initialState: cexTransferProviders,
-            }
-          : {
-              name: ModalName.WalletConnectScan,
-              initialState: ScannerModalState.WalletQr,
-            },
-      ),
-    )
-  }, [cexTransferProviders, dispatch, onClose])
-
   const cards = useMemo(
     () =>
       [
@@ -94,6 +78,7 @@ export function FundWalletModal(): JSX.Element {
           icon:
             cexTransferProviders.length > 0 ? (
               <OverlappingLogos
+                // eslint-disable-next-line react/jsx-key
                 logos={[<ReceiveCryptoIcon />, ...cexTransferProviders.map((provider) => provider.logos.lightLogo)]}
               />
             ) : (

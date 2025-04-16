@@ -80,29 +80,6 @@ export const ButtonGray = styled(BaseButton)`
 `
 
 /** @deprecated Please use `Button` from `ui/src` and replace this usage if possible */
-export const ButtonEmpty = styled(BaseButton)`
-  background-color: transparent;
-  color: ${({ theme }) => theme.accent1};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &:focus {
-    text-decoration: underline;
-  }
-  &:hover {
-    text-decoration: none;
-  }
-  &:active {
-    text-decoration: none;
-  }
-  &:disabled {
-    opacity: 50%;
-    cursor: auto;
-  }
-`
-
-/** @deprecated Please use `Button` from `ui/src` and replace this usage if possible */
 export enum ButtonEmphasis {
   highSoft = 'highSoft',
   medium = 'medium',

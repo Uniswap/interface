@@ -6,19 +6,16 @@ import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'rea
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE, TabProps } from 'src/components/layout/TabHelpers'
 import { Flex, Loader, useSporeColors } from 'ui/src'
-import { ShieldCheck } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { zIndexes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -302,20 +299,8 @@ const HiddenTokensRowWrapper = memo(function HiddenTokensRowWrapper(): JSX.Eleme
 
   const { hiddenTokensCount, hiddenTokensExpanded, setHiddenTokensExpanded } = useTokenBalanceListContext()
 
-  const [isModalVisible, setModalVisible] = useState(false)
-
   const handlePressToken = useCallback((): void => {
-    setModalVisible(true)
-  }, [])
-
-  const closeModal = useCallback((): void => {
-    setModalVisible(false)
-  }, [])
-
-  const handleAnalytics = useCallback((): void => {
-    sendAnalyticsEvent(WalletEventName.ExternalLinkOpened, {
-      url: uniswapUrls.helpArticleUrls.hiddenTokenInfo,
-    })
+    navigate(ModalName.HiddenTokenInfoModal)
   }, [])
 
   return (
@@ -332,25 +317,6 @@ const HiddenTokensRowWrapper = memo(function HiddenTokensRowWrapper(): JSX.Eleme
           <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={handlePressToken} />
         </Flex>
       )}
-
-      <InfoLinkModal
-        showCloseButton
-        buttonText={t('common.button.close')}
-        description={t('hidden.tokens.info.text.info')}
-        icon={
-          <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
-            <ShieldCheck color="$neutral1" size="$icon.24" />
-          </Flex>
-        }
-        isOpen={isModalVisible}
-        linkText={t('common.button.learn')}
-        linkUrl={uniswapUrls.helpArticleUrls.hiddenTokenInfo}
-        name={ModalName.HiddenTokenInfoModal}
-        title={t('hidden.tokens.info.text.title')}
-        onAnalyticsEvent={handleAnalytics}
-        onButtonPress={closeModal}
-        onDismiss={closeModal}
-      />
     </Flex>
   )
 })

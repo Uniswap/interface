@@ -16,6 +16,7 @@ import { Account } from 'wallet/src/features/wallet/accounts/types'
 type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress'> & {
   accounts: Account[]
   isVisible?: boolean
+  onClose: () => void
 }
 
 type AccountWithPortfolioValue = {
@@ -46,7 +47,7 @@ type AccountListItem =
   | { type: AccountListItemType.ViewOnlyHeader }
   | { type: AccountListItemType.ViewOnlyAccount; account: AccountWithPortfolioValue }
 
-export function AccountList({ accounts, onPress, isVisible }: AccountListProps): JSX.Element {
+export function AccountList({ accounts, onPress, isVisible, onClose }: AccountListProps): JSX.Element {
   const colors = useSporeColors()
   const addresses = useMemo(() => accounts.map((a) => a.address), [accounts])
 
@@ -100,9 +101,10 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
         isViewOnly={item.account.type === AccountType.Readonly}
         portfolioValue={item.portfolioValue}
         onPress={onPress}
+        onClose={onClose}
       />
     ),
-    [onPress],
+    [onPress, onClose],
   )
 
   const accountsToRender = useMemo(() => {

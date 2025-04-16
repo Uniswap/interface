@@ -29,7 +29,7 @@ export default function TestnetModeTooltip() {
           <Wrench color="$statusSuccess" size="$icon.16" />
         </Flex>
       </Tooltip.Trigger>
-      <Tooltip.Content>
+      <Tooltip.Content animationDirection="right">
         <Text variant="body4">{t('home.banner.testnetMode.nav')}</Text>
         <Tooltip.Arrow />
       </Tooltip.Content>

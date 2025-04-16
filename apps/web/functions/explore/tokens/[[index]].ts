@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import getToken from '../../utils/getToken'
 import { transformResponse } from '../../utils/transformResponse'
 

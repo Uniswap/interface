@@ -10,6 +10,8 @@
 		<string>applinks:app.uniswap.org</string>
 		<string>applinks:app.corn-staging.com</string>
 		<string>webcredentials:app.uniswap.org</string>
+		<string>webcredentials:uniswap.org</string>
+		<string>webcredentials:unihq.org</string>
 	</array>
 	<key>com.apple.developer.devicecheck.appattest-environment</key>
 	<string>production</string>

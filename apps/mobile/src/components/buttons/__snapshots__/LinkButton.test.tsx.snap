@@ -48,7 +48,7 @@ exports[`LinkButton renders without error 1`] = `
           "color": {
             "dynamic": {
               "dark": "#FFFFFF",
-              "light": "#222222",
+              "light": "#131313",
             },
           },
           "flexShrink": 1,
@@ -63,8 +63,8 @@ exports[`LinkButton renders without error 1`] = `
       color={
         {
           "dynamic": {
-            "dark": "#FC72FF",
-            "light": "#FC72FF",
+            "dark": "#FF37C7",
+            "light": "#FF37C7",
           },
         }
       }

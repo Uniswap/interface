@@ -1,13 +1,12 @@
+import { useIsFocused } from '@react-navigation/core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { Action } from 'redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
 import { openSettings } from 'src/utils/linking'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -33,21 +32,13 @@ import { selectAllAccountsSorted, selectSortedSignerMnemonicAccounts } from 'wal
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
 export function AccountSwitcherModal(): JSX.Element {
-  const dispatch = useDispatch()
   const colors = useSporeColors()
+  const { onClose } = useReactNavigationModal()
 
   return (
-    <Modal
-      backgroundColor={colors.surface1.val}
-      name={ModalName.AccountSwitcher}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}
-    >
+    <Modal backgroundColor={colors.surface1.val} name={ModalName.AccountSwitcher} onClose={onClose}>
       <Flex backgroundColor="$surface1">
-        <AccountSwitcher
-          onClose={(): void => {
-            dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-          }}
-        />
+        <AccountSwitcher onClose={onClose} />
       </Flex>
     </Modal>
   )
@@ -64,7 +55,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const activeAccountAddress = useActiveAccountAddress()
   const dispatch = useDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
-  const modalState = useSelector(selectModalState(ModalName.AccountSwitcher))
+  const isModalOpen = useIsFocused()
+
   const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
@@ -95,8 +87,11 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       return
     }
 
-    dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-    dispatch(openModal({ name: ModalName.ManageWalletsModal, initialState: { address: activeAccountAddress } }))
+    onClose()
+    navigate(MobileScreens.SettingsStack, {
+      screen: MobileScreens.SettingsWallet,
+      params: { address: activeAccountAddress },
+    })
   }
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
@@ -138,6 +133,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     const onPressAddViewOnlyWallet = (): void => {
+      onClose()
       navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.WatchWallet,
         params: {
@@ -146,21 +142,19 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         },
       })
       setShowAddWalletModal(false)
-      onClose()
     }
 
     const onPressImportWallet = (): void => {
+      onClose()
       if (hasImportedSeedPhrase && activeAccountAddress) {
-        dispatch(openModal({ name: ModalName.RemoveWallet }))
+        navigate(ModalName.RemoveWallet)
       } else {
         navigate(MobileScreens.OnboardingStack, {
           screen: OnboardingScreens.SeedPhraseInput,
           params: { importType: ImportType.SeedPhrase, entryPoint: OnboardingEntryPoint.Sidebar },
         })
       }
-
       setShowAddWalletModal(false)
-      onClose()
     }
 
     const onPressRestore = async (): Promise<void> => {
@@ -186,12 +180,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         return
       }
 
+      onClose()
       navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.RestoreCloudBackupLoading,
         params: { importType: ImportType.Restore, entryPoint: OnboardingEntryPoint.Sidebar },
       })
       setShowAddWalletModal(false)
-      onClose()
     }
 
     const options: MenuItemProp[] = [
@@ -272,7 +266,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         </Flex>
       </Flex>
       <Flex maxHeight={fullScreenContentHeight / 2}>
-        <AccountList accounts={accountsWithoutActive} isVisible={modalState.isOpen} onPress={onPressAccount} />
+        <AccountList
+          accounts={accountsWithoutActive}
+          isVisible={isModalOpen}
+          onPress={onPressAccount}
+          onClose={onClose}
+        />
       </Flex>
       <TouchableArea mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing8" ml="$spacing24">

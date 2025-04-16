@@ -15,5 +15,6 @@ export {
   useExperimentWithExposureLoggingDisabled,
   useGate,
   useGateWithExposureLoggingDisabled,
+  useLayer,
 } from 'statsig-react-native'
 export { statsig as Statsig, statsigContext as StatsigContext }

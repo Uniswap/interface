@@ -7,10 +7,10 @@ import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { getChainUrlParam } from 'utils/chainParams'
 
 export function LiquidityPositionAmountRows({
   currency0Amount,
@@ -30,7 +30,7 @@ export function LiquidityPositionAmountRows({
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
   const totalFiatValue = fiatValue0?.add(fiatValue1 ?? CurrencyAmount.fromRawAmount(fiatValue0.currency, 0))
 
-  const chainUrlParam = getChainInfo(currencyInfo0?.currency.chainId || UniverseChainId.Mainnet).urlParam
+  const chainUrlParam = getChainUrlParam(currencyInfo0?.currency.chainId || UniverseChainId.Mainnet)
   const currency0Link = getTokenDetailsURL({
     address: currencyInfo0?.currency.isToken ? currencyInfo0?.currency.address : undefined, // util handles native addresses
     chainUrlParam,

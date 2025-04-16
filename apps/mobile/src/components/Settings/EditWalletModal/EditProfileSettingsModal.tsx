@@ -6,6 +6,7 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackHeader } from 'src/components/layout/BackHeader'
+import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { Flex, Text } from 'ui/src'
@@ -15,7 +16,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isIOS } from 'utilities/src/platform'
 import { ChangeUnitagModal } from 'wallet/src/features/unitags/ChangeUnitagModal'
@@ -25,17 +26,22 @@ import { EditUnitagProfileContent } from 'wallet/src/features/unitags/EditUnitag
 export function EditProfileSettingsModal(): JSX.Element {
   const { initialState } = useSelector(selectModalState(ModalName.EditProfileSettingsModal))
   const address = initialState?.address ?? ''
+  const entryPoint = initialState?.accessPoint ?? MobileScreens.SettingsWallet
 
   const { unitag: retrievedUnitag } = useUnitagByAddress(address)
   const unitag = retrievedUnitag?.username
 
-  const entryPoint = UnitagScreens.UnitagConfirmation
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { keyboardHeight } = useBottomSheetSafeKeyboard()
 
   const [showDeleteUnitagModal, setShowDeleteUnitagModal] = useState(false)
   const [showChangeUnitagModal, setShowChangeUnitagModal] = useState(false)
+  const [isUpdatingWalletProfile, setIsUpdatingWalletProfile] = useState(false)
+
+  const onButtonClick = (): void => {
+    setIsUpdatingWalletProfile(true)
+  }
 
   const onNavigate = (): void => {
     navigate(MobileScreens.Home)
@@ -59,9 +65,12 @@ export function EditProfileSettingsModal(): JSX.Element {
       { title: t('unitags.profile.action.delete'), systemIcon: 'trash', destructive: true },
     ]
   }, [t])
-
   const onPressBack = (): void => {
     dispatch(closeModal({ name: ModalName.EditProfileSettingsModal }))
+
+    if (!isUpdatingWalletProfile) {
+      navigateBackFromEditingWallet(dispatch, entryPoint, address)
+    }
   }
 
   return (
@@ -107,7 +116,13 @@ export function EditProfileSettingsModal(): JSX.Element {
           <Text variant="body1">{t('settings.setting.wallet.action.editProfile')}</Text>
         </BackHeader>
         {unitag && (
-          <EditUnitagProfileContent address={address} unitag={unitag} entryPoint={entryPoint} onNavigate={onNavigate} />
+          <EditUnitagProfileContent
+            address={address}
+            unitag={unitag}
+            entryPoint={entryPoint}
+            onNavigate={onNavigate}
+            onButtonClick={onButtonClick}
+          />
         )}
       </KeyboardAvoidingView>
       {showDeleteUnitagModal && unitag && (

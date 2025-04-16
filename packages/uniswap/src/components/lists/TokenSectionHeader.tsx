@@ -58,6 +58,8 @@ function useTokenOptionsSectionTitle(section: TokenOptionSection): string {
       return t('tokens.selector.section.bridging')
     case TokenOptionSection.YourTokens:
       return t('tokens.selector.section.yours')
+    case TokenOptionSection.OtherChainsTokens:
+      return t('tokens.selector.section.otherNetworksSearchResults')
     case TokenOptionSection.PopularTokens: // TODO(WEB-5917): Rename section to TrendingTokens once feature flag is fully on
       return isTokenSelectorTrendingTokensEnabled ? t('tokens.selector.section.trending') : t('common.tokens')
     case TokenOptionSection.RecentTokens:
@@ -78,6 +80,7 @@ function getTokenOptionsSectionIcon(section: TokenOptionSection): JSX.Element | 
     case TokenOptionSection.BridgingTokens:
       return <Shuffle color="$neutral2" size="$icon.16" />
     case TokenOptionSection.YourTokens:
+    case TokenOptionSection.OtherChainsTokens:
       return <Coins color="$neutral2" size="$icon.16" />
     case TokenOptionSection.PopularTokens:
       return <Star color="$neutral2" size="$icon.16" />

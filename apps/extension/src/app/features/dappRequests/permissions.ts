@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { rpcErrors, serializeError } from '@metamask/rpc-errors'
-import { logger } from 'ethers'
 import { removeDappConnection } from 'src/app/features/dapp/actions'
 import { DappInfo } from 'src/app/features/dapp/store'
 import { saveAccount } from 'src/app/features/dappRequests/accounts'
@@ -23,6 +22,7 @@ import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { extractBaseUrl } from 'utilities/src/format/urls'
+import { logger } from 'utilities/src/logger/logger'
 
 export function getPermissions(dappUrl: string | undefined, connectedAddresses: Address[] | undefined): Permission[] {
   const permissions: Permission[] = []

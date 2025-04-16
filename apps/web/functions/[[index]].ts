@@ -2,7 +2,6 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../index.d.ts" />
 
-/* eslint-disable import/no-unused-modules */
 import { paths } from '../src/pages/paths'
 import { transformResponse } from './utils/transformResponse'
 

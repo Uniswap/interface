@@ -26,7 +26,7 @@ export function SettingsRecoveryPhrase({
   return (
     <Flex grow justifyContent="space-between" p="$spacing4" pt="$spacing24">
       <Flex alignItems="flex-start" gap="$spacing16">
-        <Square backgroundColor="$DEP_accentCriticalSoft" borderRadius="$rounded8" p="$spacing8">
+        <Square backgroundColor="$statusCritical2" borderRadius="$rounded8" p="$spacing8">
           {icon}
         </Square>
         <Flex gap="$spacing4" mb="$spacing24">

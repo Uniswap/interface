@@ -4,6 +4,7 @@ import { Flex, Text } from 'ui/src'
 import AcrossLogoFull from 'ui/src/assets/logos/svg/across-logo-full.svg'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { AcrossLogo } from 'ui/src/components/logos/AcrossLogo'
+import { zIndexes } from 'ui/src/theme'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
@@ -22,6 +23,7 @@ export function AcrossRoutingInfo(): JSX.Element {
       severity: WarningSeverity.None,
       title: t('swap.details.orderRouting'),
       icon: <OrderRouting color="$neutral2" size="$icon.24" />,
+      zIndex: zIndexes.popover,
     }),
     [t],
   )
@@ -59,16 +61,15 @@ export function AcrossRoutingInfo(): JSX.Element {
   return (
     <Flex row alignItems="center" justifyContent="space-between" width="100%">
       <WarningInfo
-        children={
-          <Text color="$neutral2" variant="body3">
-            {t('swap.details.orderRouting')}
-          </Text>
-        }
         infoButton={commonInfoButton}
         modalProps={commonModalProps}
         tooltipProps={commonTooltipProps}
         triggerPlacement="end"
-      />
+      >
+        <Text color="$neutral2" variant="body3">
+          {t('swap.details.orderRouting')}
+        </Text>
+      </WarningInfo>
 
       <WarningInfo
         infoButton={commonInfoButton}

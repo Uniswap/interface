@@ -89,7 +89,7 @@ export function DeleteUnitagModal({
       <Flex centered gap="$spacing12" pb="$spacing12" pt={isExtension ? '$spacing24' : '$spacing12'} px="$spacing24">
         <Flex
           centered
-          backgroundColor="$DEP_accentCriticalSoft"
+          backgroundColor="$statusCritical2"
           borderRadius="$rounded12"
           height="$spacing48"
           mb="$spacing8"

@@ -17,8 +17,6 @@ import { Z_INDEX } from 'theme/zIndex'
 import { Input, useMedia } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { breakpoints } from 'ui/src/theme'
-import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -222,23 +220,16 @@ export const SearchBar = ({
 
   const placeholderText = t('tokens.selector.search.placeholder')
 
-  const onSelectCurrency = useCallback(() => {}, [])
-
   if (searchRevampEnabled) {
     return (
       <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
         {isOpen && (
           <SearchModal
             isModalOpen={isOpen}
-            flow={TokenSelectorFlow.Swap}
-            chainId={UniverseChainId.Mainnet}
-            chainIds={[UniverseChainId.Mainnet]}
             onClose={() => {
               toggleOpen()
               sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
             }}
-            onSelectCurrency={onSelectCurrency}
-            onSelectChain={() => {}}
           />
         )}
         {isNavSearchInputVisible ? (

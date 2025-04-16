@@ -3,7 +3,6 @@ import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartMode
 import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
 import { StackedAreaSeries } from 'components/Charts/StackedLineChart/stacked-area-series/stacked-area-series'
 import { getProtocolColor } from 'graphql/data/util'
-import { useTheme } from 'lib/styled-components'
 import {
   CustomStyleOptions,
   DeepPartial,
@@ -14,6 +13,7 @@ import {
   WhitespaceData,
 } from 'lightweight-charts'
 import { useMemo } from 'react'
+import { ColorTokens, useSporeColors } from 'ui/src'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
@@ -21,7 +21,7 @@ export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
 }
 
 interface TVLChartParams extends ChartModelParams<StackedLineData> {
-  colors: string[]
+  colors: ColorTokens[]
   gradients?: { start: string; end: string }[]
 }
 
@@ -102,12 +102,12 @@ interface LineChartProps {
 }
 
 export function LineChart({ height, data, sources, stale }: LineChartProps) {
-  const theme = useTheme()
+  const sporeColors = useSporeColors()
 
   const params = useMemo(() => {
-    const colors = sources?.map((source) => getProtocolColor(source, theme)) ?? [theme.accent1]
+    const colors = sources?.map((source) => getProtocolColor(source)) ?? [sporeColors.accent1.val]
     return { data, colors, stale }
-  }, [data, theme, sources, stale])
+  }, [data, sporeColors, sources, stale])
 
   const lastEntry = data[data.length - 1]
   return (

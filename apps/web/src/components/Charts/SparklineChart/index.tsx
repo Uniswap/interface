@@ -5,10 +5,9 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { curveCardinal, scaleLinear } from 'd3'
 import { SparklineMap } from 'graphql/data/types'
 import { PricePoint } from 'graphql/data/util'
-import { useTheme } from 'lib/styled-components'
 import { memo } from 'react'
 import { TokenStat } from 'state/explore/types'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
@@ -22,7 +21,7 @@ interface SparklineChartProps {
 }
 
 function _SparklineChart({ width, height, tokenData, pricePercentChange, sparklineMap }: SparklineChartProps) {
-  const theme = useTheme()
+  const colors = useSporeColors()
   // for sparkline
   const chainId = getChainIdFromChainUrlParam(tokenData?.chain.toLowerCase())
   const chainInfo = chainId && getChainInfo(chainId)
@@ -53,7 +52,7 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
     )
 
   const { min, max } = getPriceBounds(pricePoints)
-  const rdScale = scaleLinear().domain([min, max]).range([30, 0])
+  const rdScale = scaleLinear().domain([min, max]).range([height, 0])
   const curveTension = 0.9
 
   return (
@@ -62,8 +61,7 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
       getX={(p: PricePoint) => widthScale(p.timestamp)}
       getY={(p: PricePoint) => rdScale(p.value)}
       curve={curveCardinal.tension(curveTension)}
-      marginTop={5}
-      color={pricePercentChange && pricePercentChange < 0 ? theme.critical : theme.success}
+      color={pricePercentChange && pricePercentChange < 0 ? colors.statusCritical.val : colors.statusSuccess.val}
       strokeWidth={1.5}
       width={width}
       height={height}

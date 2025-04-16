@@ -32,6 +32,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { getChainUrlParam } from 'utils/chainParams'
 import { useFormatter } from 'utils/formatNumbers'
 
 const StyledExternalLink = styled(ExternalLink)`
@@ -66,9 +67,9 @@ interface PoolDetailsBreadcrumbProps {
 
 export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, loading }: PoolDetailsBreadcrumbProps) {
   const { defaultChainId } = useEnabledChains()
-  const chainName = toGraphQLChain(chainId ?? defaultChainId)
-  const exploreOrigin = `/explore/${chainName.toLowerCase()}`
-  const poolsOrigin = `/explore/pools/${chainName.toLowerCase()}`
+  const chainUrlParam = getChainUrlParam(chainId ?? defaultChainId)
+  const exploreOrigin = `/explore/${chainUrlParam}`
+  const poolsOrigin = `/explore/pools/${chainUrlParam}`
 
   return (
     <BreadcrumbNavContainer aria-label="breadcrumb-nav">
@@ -156,7 +157,7 @@ const PoolDetailsTitle = ({
         {hookAddress && (
           <ExternalLink href={getExplorerLink(chainId ?? defaultChainId, hookAddress, ExplorerDataType.ADDRESS)}>
             <PoolDetailsBadge variant="body3" {...TamaguiClickableStyle}>
-              {shortenAddress(hookAddress, 0)}
+              {shortenAddress(hookAddress, 0, 4)}
             </PoolDetailsBadge>
           </ExternalLink>
         )}

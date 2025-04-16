@@ -2,7 +2,6 @@ import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import useDebounce from 'hooks/useDebounce'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { Input } from 'nft/components/layout/Input'
-import { subheadSmall } from 'nft/css/common.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
 import { scrollToTop } from 'nft/utils/scrollToTop'
@@ -69,7 +68,6 @@ const TraitItem = ({
       key={trait.trait_value}
       maxWidth="100%"
       overflow="hidden"
-      className={`${subheadSmall}`}
       hoverStyle={{
         backgroundColor: '$surface3',
       }}
@@ -89,7 +87,7 @@ const TraitItem = ({
       onPress={handleCheckbox}
     >
       <Text
-        variant="body2"
+        variant="subheading2"
         whiteSpace="nowrap"
         textOverflow="ellipsis"
         overflow="hidden"

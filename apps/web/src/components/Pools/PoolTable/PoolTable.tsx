@@ -1,13 +1,19 @@
 import { ApolloError } from '@apollo/client'
-import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import { createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
-import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
-import { EllipsisText } from 'components/Tokens/TokenTable'
+import {
+  ClickableHeaderRow,
+  EllipsisText,
+  HeaderArrow,
+  HeaderCell,
+  HeaderSortText,
+  TableText,
+} from 'components/Table/styled'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
@@ -22,16 +28,12 @@ import { useTranslation } from 'react-i18next'
 import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useExploreContextTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
-import { ExternalLink } from 'theme/components/Links'
-import { TamaguiClickableStyle } from 'theme/components/styles'
-import { Flex, Text, styled } from 'ui/src'
+import { Flex, Text, styled, useMedia } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { Chain, ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { shortenAddress } from 'utilities/src/addresses'
+import { getChainUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TableWrapper = styled(Flex, {
@@ -67,53 +69,40 @@ interface PoolTableValues {
   volume30d: number
   volOverTvl?: number
   link: string
+  protocolVersion?: string
+  feeTier?: number
 }
 
 function PoolDescription({
   token0,
   token1,
-  feeTier,
   chainId,
-  protocolVersion,
-  hookAddress,
 }: {
   token0?: Token | TokenStats
   token1?: Token | TokenStats
-  feeTier?: number
   chainId: UniverseChainId
-  protocolVersion?: ProtocolVersion | string
-  hookAddress?: string
 }) {
   const currencies = [token0 ? gqlToCurrency(token0) : undefined, token1 ? gqlToCurrency(token1) : undefined]
 
   return (
-    <Flex row gap="$gap8" alignItems="center">
-      <PortfolioLogo currencies={currencies} chainId={chainId} size={28} />
+    <Flex row gap="$gap8" alignItems="center" maxWidth="100%">
+      <PortfolioLogo currencies={currencies} chainId={chainId} size={24} />
       <EllipsisText>
         {token0?.symbol}/{token1?.symbol}
       </EllipsisText>
-      <Flex row gap="$gap4" alignItems="center">
-        {protocolVersion && (
-          <PoolDetailsBadge variant="body4" $position="left">
-            {protocolVersion.toLowerCase()}
-          </PoolDetailsBadge>
-        )}
-        {hookAddress && (
+      {/* TODO: Figure out if still needed for the table */}
+      {/* <Flex row gap="$gap4" alignItems="center">
+         {hookAddress && (
           <ExternalLink
             href={getExplorerLink(chainId, hookAddress, ExplorerDataType.ADDRESS)}
             onClick={(e) => e.stopPropagation()}
           >
             <PoolDetailsBadge variant="body4" {...TamaguiClickableStyle}>
-              {shortenAddress(hookAddress, 0)}
+              {shortenAddress(hookAddress, 0, 4)}
             </PoolDetailsBadge>
           </ExternalLink>
         )}
-        {feeTier && (
-          <PoolDetailsBadge variant="body4" $position="right">
-            {feeTier / BIPS_BASE}%
-          </PoolDetailsBadge>
-        )}
-      </Flex>
+      </Flex> */}
     </Flex>
   )
 }
@@ -165,17 +154,21 @@ function PoolTableHeader({
   }
 
   return (
-    <MouseoverTooltip
-      disabled={!HEADER_DESCRIPTIONS[category]}
-      size={TooltipSize.Max}
-      text={HEADER_DESCRIPTIONS[category]}
-      placement="top"
-    >
-      <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory}>
-        {isCurrentSortMethod && <HeaderArrow direction={direction} />}
-        <HeaderSortText active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
-      </ClickableHeaderRow>
-    </MouseoverTooltip>
+    <Flex width="100%">
+      <MouseoverTooltip
+        disabled={!HEADER_DESCRIPTIONS[category]}
+        size={TooltipSize.Max}
+        text={HEADER_DESCRIPTIONS[category]}
+        placement="top"
+      >
+        <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory} group>
+          <HeaderArrow orderDirection={direction} size={14} opacity={isCurrentSortMethod ? 1 : 0} />
+          <HeaderSortText active={isCurrentSortMethod} variant="body3">
+            {HEADER_TEXT[category]}
+          </HeaderSortText>
+        </ClickableHeaderRow>
+      </MouseoverTooltip>
+    </Flex>
   )
 }
 
@@ -241,6 +234,7 @@ export function PoolsTable({
   maxWidth,
   maxHeight,
   hiddenColumns,
+  forcePinning,
 }: {
   pools?: TablePool[] | PoolStat[]
   loading: boolean
@@ -249,6 +243,7 @@ export function PoolsTable({
   maxWidth?: number
   maxHeight?: number
   hiddenColumns?: PoolSortFields[]
+  forcePinning?: boolean
 }) {
   const { formatNumber, formatPercent } = useFormatter()
   const sortAscending = useAtomValue(sortAscendingAtom)
@@ -270,18 +265,17 @@ export function PoolsTable({
             <PoolDescription
               token0={unwrapToken(chainId, pool.token0)}
               token1={unwrapToken(chainId, pool.token1)}
-              feeTier={pool.feeTier}
               chainId={chainId}
-              protocolVersion={pool.protocolVersion}
-              hookAddress={pool.hookAddress}
             />
           ),
+          protocolVersion: pool.protocolVersion?.toLowerCase(),
+          feeTier: pool.feeTier,
           tvl: isGqlPool ? pool.tvl : giveExploreStatDefaultValue(pool.totalLiquidity?.value),
           volume24h: isGqlPool ? pool.volume24h : giveExploreStatDefaultValue(pool.volume1Day?.value),
           volume30d: isGqlPool ? pool.volume30d : giveExploreStatDefaultValue(pool.volume30Day?.value),
           volOverTvl: pool.volOverTvl,
           apr: pool.apr,
-          link: `/explore/pools/${toGraphQLChain(chainId ?? defaultChainId).toLowerCase()}/${isGqlPool ? pool.hash : pool.id}`,
+          link: `/explore/pools/${getChainUrlParam(chainId ?? defaultChainId)}/${isGqlPool ? pool.hash : pool.id}`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {
@@ -303,58 +297,92 @@ export function PoolsTable({
   )
 
   const showLoadingSkeleton = loading || !!error
+  const media = useMedia()
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTableValues>()
-    return [
-      columnHelper.accessor((row) => row.index, {
-        id: 'index',
+    const filteredColumns = [
+      !media.lg
+        ? columnHelper.accessor((row) => row.index, {
+            id: 'index',
+            size: 60,
+            header: () => (
+              <HeaderCell justifyContent="flex-start">
+                <Text variant="body3" color="$neutral2">
+                  #
+                </Text>
+              </HeaderCell>
+            ),
+            cell: (index) => (
+              <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+                <TableText>{index.getValue?.()}</TableText>
+              </Cell>
+            ),
+          })
+        : null,
+      columnHelper.accessor((row) => row.poolDescription, {
+        id: 'poolDescription',
+        size: media.lg ? 170 : 240,
         header: () => (
-          <Cell justifyContent="center" maxWidth={44} width={44}>
-            <Text variant="body2" color="$neutral2">
-              #
+          <HeaderCell justifyContent="flex-start">
+            <Text variant="body3" color="$neutral2">
+              {t('common.pool')}
             </Text>
-          </Cell>
+          </HeaderCell>
         ),
-        cell: (index) => (
-          <Cell justifyContent="center" loading={showLoadingSkeleton} maxWidth={44} width={44}>
-            <Text variant="body2" color="$neutral2">
-              {index.getValue?.()}
-            </Text>
+        cell: (poolDescription) => (
+          <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+            {poolDescription.getValue?.()}
           </Cell>
         ),
       }),
-      columnHelper.accessor((row) => row.poolDescription, {
-        id: 'poolDescription',
+      columnHelper.accessor((row) => row.protocolVersion, {
+        id: 'protocolVersion',
+        size: 120,
         header: () => (
-          <Cell justifyContent="flex-start" width={320} grow>
-            <Text variant="body2" color="$neutral2">
-              {t('common.pool')}
+          <HeaderCell justifyContent="flex-start">
+            <Text variant="body3" color="$neutral2">
+              {t('common.protocol')}
             </Text>
+          </HeaderCell>
+        ),
+        cell: (protocolVersion) => (
+          <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+            <TableText>{protocolVersion.getValue?.() ?? '-'}</TableText>
           </Cell>
         ),
-        cell: (poolDescription) => (
-          <Cell justifyContent="flex-start" alignItems="center" loading={showLoadingSkeleton} width={320} grow>
-            {poolDescription.getValue?.()}
+      }),
+      columnHelper.accessor((row) => row.feeTier, {
+        id: 'feeTier',
+        size: 120,
+        header: () => (
+          <HeaderCell>
+            <Text variant="body3" color="$neutral2">
+              {t('common.fee')}
+            </Text>
+          </HeaderCell>
+        ),
+        cell: (feeTier) => (
+          <Cell loading={showLoadingSkeleton}>
+            <TableText>{feeTier.getValue?.() ? `${(feeTier.getValue()! / BIPS_BASE).toFixed(2)}%` : '-'}</TableText>
           </Cell>
         ),
       }),
       !hiddenColumns?.includes(PoolSortFields.TVL)
         ? columnHelper.accessor((row) => row.tvl, {
             id: 'tvl',
+            size: 100,
             header: () => (
-              <Cell minWidth={100} grow>
+              <HeaderCell>
                 <PoolTableHeader
                   category={PoolSortFields.TVL}
                   isCurrentSortMethod={sortMethod === PoolSortFields.TVL}
                   direction={orderDirection}
                 />
-              </Cell>
+              </HeaderCell>
             ),
             cell: (tvl) => (
-              <Cell loading={showLoadingSkeleton} minWidth={100} grow>
-                <Text variant="body2" color="$neutral1">
-                  {formatNumber({ input: tvl.getValue?.(), type: NumberType.FiatTokenStats })}
-                </Text>
+              <Cell loading={showLoadingSkeleton}>
+                <TableText>{formatNumber({ input: tvl.getValue?.(), type: NumberType.FiatTokenStats })}</TableText>
               </Cell>
             ),
           })
@@ -362,20 +390,19 @@ export function PoolsTable({
       !hiddenColumns?.includes(PoolSortFields.Apr)
         ? columnHelper.accessor((row) => row.apr, {
             id: 'apr',
+            size: 100,
             header: () => (
-              <Cell minWidth={100} grow>
+              <HeaderCell>
                 <PoolTableHeader
                   category={PoolSortFields.Apr}
                   isCurrentSortMethod={sortMethod === PoolSortFields.Apr}
                   direction={orderDirection}
                 />
-              </Cell>
+              </HeaderCell>
             ),
             cell: (oneDayApr) => (
-              <Cell minWidth={100} loading={showLoadingSkeleton} grow>
-                <Text variant="body2" color="$neutral1">
-                  {formatPercent(oneDayApr.getValue?.())}
-                </Text>
+              <Cell loading={showLoadingSkeleton}>
+                <TableText>{formatPercent(oneDayApr.getValue?.())}</TableText>
               </Cell>
             ),
           })
@@ -383,20 +410,21 @@ export function PoolsTable({
       !hiddenColumns?.includes(PoolSortFields.Volume24h)
         ? columnHelper.accessor((row) => row.volume24h, {
             id: 'volume24h',
+            size: 120,
             header: () => (
-              <Cell minWidth={120} grow>
+              <HeaderCell>
                 <PoolTableHeader
                   category={PoolSortFields.Volume24h}
                   isCurrentSortMethod={sortMethod === PoolSortFields.Volume24h}
                   direction={orderDirection}
                 />
-              </Cell>
+              </HeaderCell>
             ),
             cell: (volume24h) => (
-              <Cell minWidth={120} loading={showLoadingSkeleton} grow>
-                <Text variant="body2" color="$neutral1">
+              <Cell loading={showLoadingSkeleton}>
+                <TableText>
                   {formatNumber({ input: volume24h.getValue?.(), type: NumberType.FiatTokenStats })}
-                </Text>
+                </TableText>
               </Cell>
             ),
           })
@@ -404,20 +432,21 @@ export function PoolsTable({
       !hiddenColumns?.includes(PoolSortFields.Volume30D)
         ? columnHelper.accessor((row) => row.volume30d, {
             id: 'volume30Day',
+            size: 120,
             header: () => (
-              <Cell minWidth={120} grow>
+              <HeaderCell>
                 <PoolTableHeader
                   category={PoolSortFields.Volume30D}
                   isCurrentSortMethod={sortMethod === PoolSortFields.Volume30D}
                   direction={orderDirection}
                 />
-              </Cell>
+              </HeaderCell>
             ),
             cell: (volumeWeek) => (
-              <Cell minWidth={120} loading={showLoadingSkeleton} grow>
-                <Text variant="body2" color="$neutral1">
+              <Cell loading={showLoadingSkeleton}>
+                <TableText>
                   {formatNumber({ input: volumeWeek.getValue?.(), type: NumberType.FiatTokenStats })}
-                </Text>
+                </TableText>
               </Cell>
             ),
           })
@@ -425,30 +454,32 @@ export function PoolsTable({
       !hiddenColumns?.includes(PoolSortFields.VolOverTvl)
         ? columnHelper.accessor((row) => row.volOverTvl, {
             id: 'volOverTvl',
+            size: 120,
             header: () => (
-              <Cell minWidth={120} grow>
+              <HeaderCell>
                 <PoolTableHeader
                   category={PoolSortFields.VolOverTvl}
                   isCurrentSortMethod={sortMethod === PoolSortFields.VolOverTvl}
                   direction={orderDirection}
                 />
-              </Cell>
+              </HeaderCell>
             ),
             cell: (volOverTvl) => (
-              <Cell minWidth={120} loading={showLoadingSkeleton} grow>
-                <Text variant="body2" color="$neutral1">
+              <Cell loading={showLoadingSkeleton}>
+                <TableText>
                   {formatNumber({
                     input: volOverTvl.getValue?.(),
                     type: NumberType.TokenQuantityStats,
                     placeholder: '-',
                   })}
-                </Text>
+                </TableText>
               </Cell>
             ),
           })
         : null,
-    ].filter((column): column is ColumnDef<PoolTableValues, any> => Boolean(column))
-  }, [formatNumber, formatPercent, hiddenColumns, orderDirection, showLoadingSkeleton, sortMethod, t])
+    ]
+    return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
+  }, [formatNumber, formatPercent, hiddenColumns, orderDirection, showLoadingSkeleton, sortMethod, t, media.lg])
 
   return (
     <Table
@@ -459,6 +490,8 @@ export function PoolsTable({
       loadMore={loadMore}
       maxWidth={maxWidth}
       maxHeight={maxHeight}
+      defaultPinnedColumns={['index', 'poolDescription']}
+      forcePinning={forcePinning}
     />
   )
 }

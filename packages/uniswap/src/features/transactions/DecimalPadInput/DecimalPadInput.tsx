@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   RefObject,
   forwardRef,
@@ -15,6 +16,7 @@ import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { DecimalPad } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPad'
 import { KeyAction, KeyLabel } from 'uniswap/src/features/transactions/DecimalPadInput/types'
 import { maxDecimalsReached } from 'utilities/src/format/truncateToMaxDecimals'
+import { useEvent } from 'utilities/src/react/hooks'
 
 const LONG_PRESS_DELETE_INTERVAL_MS = 20
 const LONG_PRESS_DELETE_INTERVAL_DELIMITER_MS = 750
@@ -55,20 +57,33 @@ is automatically resizing to find the right size for the screen.
 export function DecimalPadCalculateSpace({
   id,
   decimalPadRef,
+  additionalElementsHeight,
 }: {
   id: DecimalPadCalculatedSpaceId
   decimalPadRef: RefObject<DecimalPadInputRef>
+  additionalElementsHeight: null | number
 }): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
+  const [bottomScreenHeight, setBottomScreenHeight] = useState<number | null>(null)
 
-  const onBottomScreenLayout = useCallback(
-    (event: LayoutChangeEvent): void => {
-      const height = event.nativeEvent.layout.height
-      decimalPadRef.current?.setMaxHeight(height)
-      precalculatedSpace[id] = height
-    },
-    [decimalPadRef, id],
-  )
+  const onBottomScreenLayout = useEvent((event: LayoutChangeEvent): void => {
+    const height = event.nativeEvent.layout.height
+    setBottomScreenHeight(height)
+    // We call `setMaxHeight` even if `additionalElementsHeight` is not set yet,
+    // because sometimes it won't be set at all if there are no additional elements.
+    decimalPadRef.current?.setMaxHeight(height - (additionalElementsHeight ?? 0))
+    precalculatedSpace[id] = height
+  })
+
+  useEffect(() => {
+    if (!bottomScreenHeight || additionalElementsHeight === null) {
+      // There can be a race condition where either `bottomScreenHeight` or `additionalElementsHeight`
+      // could be ready first. If `bottomScreenHeight` is not ready yet, we skip this and
+      // then `setMaxHeight` will be called from within `onBottomScreenLayout`.
+      return
+    }
+    decimalPadRef.current?.setMaxHeight(bottomScreenHeight - additionalElementsHeight)
+  }, [additionalElementsHeight])
 
   useEffect(() => {
     const precalculatedHeight = precalculatedSpace[id]
@@ -109,7 +124,6 @@ export const DecimalPadInput = memo(
 
     useEffect(() => {
       updateDisabledKeys(valueRef.current)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [valueRef, selectionRef, maxDecimals])
 
     useImperativeHandle(ref, () => ({

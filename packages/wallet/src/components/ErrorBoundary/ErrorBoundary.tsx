@@ -52,7 +52,7 @@ class InternalErrorBoundary extends React.Component<
     error.cause = errorBoundaryError
 
     logger.error(error, {
-      level: 'fatal',
+      level: 'error',
       tags: {
         file: 'ErrorBoundary',
         function: 'componentDidCatch',

@@ -67,20 +67,26 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
   const highlightComponent = <CustomHeadingText color="$accent1" />
 
   const pageContentList = [
+    // eslint-disable-next-line react/jsx-key
     <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part1" />,
+    // eslint-disable-next-line react/jsx-key
     <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part2" />,
+    // eslint-disable-next-line react/jsx-key
     <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part3" />,
+    // eslint-disable-next-line react/jsx-key
     <Trans
       components={{ highlight: highlightComponent }}
       i18nKey="account.recoveryPhrase.education.part4"
       values={{ cloudProviderName }}
     />,
+    // eslint-disable-next-line react/jsx-key
     <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part5" />,
+    // eslint-disable-next-line react/jsx-key
     <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part6" />,
   ]
 
-  return pageContentList.map((content) => (
-    <Page params={params} text={<CustomHeadingText>{content}</CustomHeadingText>} />
+  return pageContentList.map((content, i) => (
+    <Page key={i} params={params} text={<CustomHeadingText>{content}</CustomHeadingText>} />
   ))
 }
 

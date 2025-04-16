@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import { MetaTagInjector } from '../components/metaTagInjector'
 import { Data } from './cache'
 import { getRequest } from './getRequest'

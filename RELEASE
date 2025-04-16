@@ -1,9 +1,9 @@
 We are back with some new updates! Here’s the latest:
 
-Settings Refresh: Enjoy a more streamlined settings page, with a clearer view of your active wallets. Also note that Manage Connections has now moved out of settings and can be accessed by clicking your profile image. 
+Honeypot Detection: Using Blockaid’s data, we now identify potentially malicious honeypot tokens and show users a token warning when interacting with them. 
 
-Token Actions: On specific token pages, find a new action button on the bottom right corner which allow you to do things like buy, sell, send, and receive. 
+New pink!: Our accent pink color has been updated across the app for better accessibility and better vibes. 
 
 Other changes: 
-
+- Removed balances from spam tokens, to clean up the portfolio view
 - Various bug fixes and performance improvements

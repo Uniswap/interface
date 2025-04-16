@@ -23,9 +23,9 @@ import { PhoneDownload } from 'ui/src/components/icons/PhoneDownload'
 import { ScanQr } from 'ui/src/components/icons/ScanQr'
 import { iconSizes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { signInWithPasskey } from 'uniswap/src/data/rest/embeddedWallet'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { signInWithPasskey } from 'uniswap/src/features/passkey/embeddedWallet'
 import { isMobileWeb, isWebIOS } from 'utilities/src/platform'
 import { openDownloadApp } from 'utils/openDownloadApp'
 import { Connector } from 'wagmi'
@@ -106,7 +106,7 @@ export function UniswapWalletOptions() {
             onClick={handleSignInWithPasskey}
             data-testid="connect-passkey-embedded-wallet"
           >
-            <Passkey size={iconSizes.icon32} />
+            <Passkey color="$neutral1" size={iconSizes.icon32} />
             <Row justify="space-between">
               <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
                 <Trans i18nKey="common.passkey" />

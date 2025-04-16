@@ -52,7 +52,7 @@ function WrapChildrenForMediaSize({ children }: { children: React.ReactNode }) {
 
 function FeeStat({ children }: { children: React.ReactNode }) {
   return (
-    <Flex gap="$gap4" flex={1} flexBasis={0} $sm={{ flexBasis: 'auto' }}>
+    <Flex flex={1} flexBasis={0} $sm={{ flexBasis: 'auto' }}>
       {children}
     </Flex>
   )

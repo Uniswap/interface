@@ -2791,6 +2791,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-passkey (3.1.0):
+    - React-Core
   - react-native-restart (0.0.27):
     - React-Core
   - react-native-safe-area-context (4.12.0):
@@ -3428,6 +3430,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../../../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../../../node_modules/react-native-onesignal`)
   - react-native-pager-view (from `../../../node_modules/react-native-pager-view`)
+  - react-native-passkey (from `../../../node_modules/react-native-passkey`)
   - react-native-restart (from `../../../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
   - "react-native-skia (from `../../../node_modules/@shopify/react-native-skia`)"
@@ -3657,6 +3660,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-onesignal"
   react-native-pager-view:
     :path: "../../../node_modules/react-native-pager-view"
+  react-native-passkey:
+    :path: "../../../node_modules/react-native-passkey"
   react-native-restart:
     :path: "../../../node_modules/react-native-restart"
   react-native-safe-area-context:
@@ -3865,6 +3870,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac
   react-native-onesignal: 33ade92bd91578374c31c5a5a91f45f49c2d6614
   react-native-pager-view: 16ba891ddbceb61ee19e6de8ab884793452e7089
+  react-native-passkey: 69bede03f6bb35fad8117cad73155231cc31066c
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
   react-native-safe-area-context: 142fade490cbebbe428640b8cbdb09daf17e8191
   react-native-skia: 20722d5387a02e4904090fd1a24aa7f6975ca527

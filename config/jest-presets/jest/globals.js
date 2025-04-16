@@ -20,7 +20,6 @@ module.exports = {
     QUICKNODE_ENDPOINT_NAME: 'name',
     QUICKNODE_ENDPOINT_TOKEN: 'token',
     SCANTASTIC_API_URL_OVERRIDE: '',
-    SENTRY_DSN: 'http://sentry.com',
     SHAKE_CLIENT_ID: 123,
     SHAKE_CLIENT_SECRET: 123,
     SIMPLEHASH_API_KEY: 'key',

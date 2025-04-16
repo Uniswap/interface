@@ -44,7 +44,6 @@ describe('utils', () => {
       expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 2)).toBe('0x2E...CC')
       expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 6)).toBe('0x2E...c254CC')
       expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 0, 4)).toBe('0x...54CC')
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 0)).toBe('0x...')
       expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 44)).toBe(
         '0x2E1b342132A67Ea578e4E3B814bae2107dc254CC',
       )
@@ -54,6 +53,10 @@ describe('utils', () => {
       expect(shortenAddress('2E1b342132A67Ea578e4E3B814bae2107dc254CC', 1, 55)).toBe(
         '0x2E1b342132A67Ea578e4E3B814bae2107dc254CC',
       )
+    })
+
+    it('shortens to 4 chars on start & end if chars is not a positive integer', () => {
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 0)).toBe('0x2E1b...54CC')
     })
   })
 })

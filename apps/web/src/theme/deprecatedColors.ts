@@ -16,7 +16,7 @@ function getDeprecatedTheme(darkMode: boolean) {
     deprecated_accentWarning: colors.gold200,
 
     deprecated_accentWarningSoft: opacify(24, colors.gold200),
-    deprecated_accentFailureSoft: opacify(12, colors.critical),
+    deprecated_accentFailureSoft: opacify(12, darkMode ? colors.critical_dark : colors.critical_light),
 
     deprecated_accentTextLightPrimary: colors.gray50,
     deprecated_deepShadow: darkMode

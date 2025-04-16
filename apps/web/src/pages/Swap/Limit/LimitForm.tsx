@@ -13,7 +13,6 @@ import {
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
@@ -61,19 +60,6 @@ const CustomHeightSwapSection = styled(SwapSection)`
 const ShortArrowWrapper = styled(ArrowWrapper)`
   margin-top: -22px;
   margin-bottom: -22px;
-`
-
-const StyledAlertIcon = styled(AlertTriangleFilled)`
-  align-self: flex-start;
-  flex-shrink: 0;
-  margin-right: 12px;
-`
-
-const LimitDisclaimerContainer = styled(Row)`
-  background-color: ${({ theme }) => theme.surface2};
-  border-radius: 12px;
-  padding: 12px;
-  margin-top: 12px;
 `
 
 const LearnMore = tamaguiStyled(Text, {
@@ -400,8 +386,13 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           priceInverted={limitState.limitPriceInverted}
         />
       )}
-      <LimitDisclaimerContainer>
-        <StyledAlertIcon size={20} color={!isLimitSupportedChain ? theme.critical : theme.neutral2} />
+      <Flex row backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12" mt="$padding12">
+        <AlertTriangleFilled
+          size="$icon.20"
+          mr="$spacing12"
+          alignSelf="flex-start"
+          color={!isLimitSupportedChain ? '$critical' : '$neutral2'}
+        />
         <Text variant="body3">
           {!isLimitSupportedChain ? (
             <Trans
@@ -435,7 +426,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             />
           )}
         </Text>
-      </LimitDisclaimerContainer>
+      </Flex>
       {account.address && (
         <OpenLimitOrdersButton
           account={account.address}

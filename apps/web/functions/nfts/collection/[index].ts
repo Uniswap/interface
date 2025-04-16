@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unused-modules */
 import getCollection from '../../utils/getCollection'
 import { transformResponse } from '../../utils/transformResponse'
 

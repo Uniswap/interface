@@ -21,6 +21,7 @@ ignores: [
     '@react-native-masked-view/masked-view',
     '@shopify/react-native-skia',
     'react-native-image-colors',
+    'react-native-passkey',
     'react-native-restart',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces

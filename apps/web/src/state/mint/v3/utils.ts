@@ -14,7 +14,7 @@ export function tryParsePrice<T extends Currency>(baseToken?: T, quoteToken?: T,
     return undefined
   }
 
-  if (!value.match(/^\d*\.?\d+$/)) {
+  if (!value.match(/^\d*\.?\d*$/)) {
     return undefined
   }
 

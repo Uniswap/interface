@@ -1,6 +1,6 @@
 // TODO(MOB-203): reduce component complexity
 /* eslint-disable complexity */
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 import {
   TokenStandard,
   TransactionDirection,

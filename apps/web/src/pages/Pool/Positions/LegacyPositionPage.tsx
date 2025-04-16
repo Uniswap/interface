@@ -21,7 +21,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { Button, DeprecatedButton, Flex, Main, Text, styled } from 'ui/src'
+import { Button, Flex, Main, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -144,9 +144,7 @@ export function LegacyPositionPage() {
             </Text>
           </Flex>
         }
-        actionButton={
-          <DeprecatedButton onPress={() => navigate('/positions')}>{t('common.backToPositions')}</DeprecatedButton>
-        }
+        actionButton={<Button onPress={() => navigate('/positions')}>{t('common.backToPositions')}</Button>}
       />
     )
   }

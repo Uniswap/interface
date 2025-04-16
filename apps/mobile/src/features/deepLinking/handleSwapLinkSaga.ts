@@ -1,4 +1,5 @@
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { put } from 'typed-redux-saga'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
@@ -56,14 +57,11 @@ export function* handleSwapLink(url: URL) {
 
     // if testnet mode isn't aligned with assets, prompt testnet switch modal (closes prefilled swap modal if rejected)
     if (isTestnetModeEnabled !== isTestnetChains) {
-      yield* put(
-        openModal({
-          name: ModalName.TestnetSwitchModal,
-          initialState: {
-            switchToMode: isTestnetChains ? 'testnet' : 'production',
-          },
-        }),
-      )
+      navigate(ModalName.TestnetSwitchModal, {
+        initialState: {
+          switchToMode: isTestnetChains ? 'testnet' : 'production',
+        },
+      })
       return
     }
   } catch (error) {

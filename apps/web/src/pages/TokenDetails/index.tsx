@@ -8,7 +8,6 @@ import { gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSrcColor } from 'hooks/useColor'
-import { useTheme } from 'lib/styled-components'
 import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from 'pages/TokenDetails/TDPContext'
 import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
@@ -17,6 +16,7 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
+import { useSporeColors } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -117,14 +117,14 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   )
 
   // Extract color for page usage
-  const theme = useTheme()
+  const colors = useSporeColors()
   const { preloadedLogoSrc } = (useLocation().state as { preloadedLogoSrc?: string }) ?? {}
   const extractedColorSrc = tokenQuery.data?.token?.project?.logoUrl ?? preloadedLogoSrc
   const tokenColor =
     useSrcColor(
       extractedColorSrc,
       tokenQuery.data?.token?.name ?? tokenQuery.data?.token?.project?.name,
-      theme.surface2,
+      colors.surface2.val,
     ).tokenColor ?? undefined
 
   return useMemo(() => {

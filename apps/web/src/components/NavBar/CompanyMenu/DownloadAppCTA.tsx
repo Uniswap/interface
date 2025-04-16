@@ -1,39 +1,46 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { MobileAppLogo } from 'components/Icons/MobileAppLogo'
 import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
-import Row from 'components/deprecated/Row'
-import styled, { css } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ThemedText } from 'theme/components'
-import { Flex, useIsTouchDevice } from 'ui/src'
-import { breakpoints } from 'ui/src/theme'
+import { Anchor, Flex, TextProps, styled, useIsTouchDevice } from 'ui/src'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
-import { APP_DOWNLOAD_LINKS, openDownloadApp } from 'utils/openDownloadApp'
+import { openDownloadApp } from 'utils/openDownloadApp'
 
 const DOWNLOAD_PADDING_X = 8
-const HoverStyles = css`
-  background: ${({ theme }) => theme.accent2};
-  color: ${({ theme }) => theme.accent1} !important;
-`
-const DownloadCTA = styled(Row)<{ isMobile: boolean }>`
-  cursor: pointer;
-  padding: 12px ${DOWNLOAD_PADDING_X}px;
-  border-radius: 16px;
-  transition: all 0.2s;
-  box-sizing: content-box;
-  transform: translateX(-${DOWNLOAD_PADDING_X}px);
-  ${({ isMobile }) => isMobile && HoverStyles}
-  &:hover {
-    ${HoverStyles}
-  }
-  @media screen and (max-width: ${breakpoints.sm}px) {
-    transform: none;
-    box-sizing: border-box;
-  }
-`
+
+const PinkFilled: TextProps = {
+  backgroundColor: '$accent2',
+  color: '$accent1',
+}
+
+const DownloadCTA = styled(Anchor, {
+  display: 'flex',
+  flexDirection: 'row',
+  cursor: 'pointer',
+  py: '$padding12',
+  px: DOWNLOAD_PADDING_X,
+  borderRadius: '$rounded16',
+  animation: '200ms',
+  '$platform-web': { boxSizing: 'content-box' },
+  transform: `translateX(-${DOWNLOAD_PADDING_X}px)`,
+  gap: '$spacing12',
+  textDecorationLine: 'none',
+  fontWeight: '$book',
+  hoverStyle: PinkFilled,
+  variants: {
+    isMobile: {
+      true: PinkFilled,
+    },
+  },
+  $sm: {
+    transform: 'none',
+    '$platform-web': { boxSizing: 'border-box' },
+  },
+})
+
 export function DownloadApp({ onClick }: { onClick?: () => void }) {
   const { t } = useTranslation()
   const openGetTheAppModal = useOpenModal({ name: ApplicationModal.GET_THE_APP })
@@ -42,10 +49,8 @@ export function DownloadApp({ onClick }: { onClick?: () => void }) {
 
   return (
     <DownloadCTA
-      href={APP_DOWNLOAD_LINKS[InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON]}
       isMobile={isTouchDevice || isMobileDrawer}
-      gap="md"
-      onClick={() => {
+      onPress={() => {
         if (onClick) {
           onClick()
         }
@@ -60,9 +65,9 @@ export function DownloadApp({ onClick }: { onClick?: () => void }) {
       <MobileAppLogo width={41} height={41} />
       <Flex>
         <Text lineHeight="20px">{t('common.downloadUniswap')}</Text>
-        <ThemedText.LabelMicro lineHeight="18px" color="theme.accent1">
+        <Text variant="body4" fontSize={12} lineHeight="18px" color="theme.accent1">
           {t('common.availableOnIOSAndroid')}
-        </ThemedText.LabelMicro>
+        </Text>
       </Flex>
     </DownloadCTA>
   )

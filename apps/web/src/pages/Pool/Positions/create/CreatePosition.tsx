@@ -44,8 +44,8 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
-import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/SwapFormSettings'
-import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
+import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/SwapFormSettings'
+import { Deadline } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Deadline/Deadline'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 const WIDTH = {

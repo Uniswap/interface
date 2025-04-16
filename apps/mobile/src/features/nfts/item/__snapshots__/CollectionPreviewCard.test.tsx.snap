@@ -83,7 +83,7 @@ exports[`renders collection preview card 1`] = `
               "aspectRatio": 1,
               "backgroundColor": {
                 "dynamic": {
-                  "dark": "#1B1B1B",
+                  "dark": "#1F1F1F",
                   "light": "#F9F9F9",
                 },
               },
@@ -105,14 +105,14 @@ exports[`renders collection preview card 1`] = `
               {
                 "color": {
                   "dynamic": {
-                    "dark": "#9B9B9B",
-                    "light": "#7D7D7D",
+                    "dark": "rgba(255, 255, 255, 0.65)",
+                    "light": "rgba(19, 19, 19, 0.63)",
                   },
                 },
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 17,
                 "fontWeight": "400",
-                "lineHeight": 24,
+                "lineHeight": 20,
                 "textAlign": "center",
               }
             }
@@ -154,11 +154,11 @@ exports[`renders collection preview card 1`] = `
               numberOfLines={1}
               style={
                 {
-                  "color": "#222222",
+                  "color": "#131313",
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 17,
                   "fontWeight": "400",
-                  "lineHeight": 24,
+                  "lineHeight": 20,
                 }
               }
               suppressHighlighting={true}
@@ -170,8 +170,8 @@ exports[`renders collection preview card 1`] = `
             color={
               {
                 "dynamic": {
-                  "dark": "#FC72FF",
-                  "light": "#FC72FF",
+                  "dark": "#FF37C7",
+                  "light": "#FF37C7",
                 },
               }
             }
@@ -234,7 +234,7 @@ exports[`renders collection preview card 1`] = `
               "borderWidth": 0,
             },
             {
-              "color": "#222222",
+              "color": "#131313",
               "height": 24,
               "width": 24,
             },
@@ -249,7 +249,7 @@ exports[`renders collection preview card 1`] = `
         vbWidth={24}
       >
         <RNSVGGroup
-          color="#222222"
+          color="#131313"
           fill={null}
           propList={
             [

@@ -12,16 +12,16 @@ import { tokens } from 'ui/src/theme/tokens'
  */
 
 export const configWithoutAnimations = {
-  shouldAddPrefersColorThemes: true,
-  themeClassNameOnRoot: true,
-  disableSSR: true,
-  onlyAllowShorthands: true,
   shorthands,
   fonts: allFonts,
   themes,
   tokens,
   media,
   settings: {
+    shouldAddPrefersColorThemes: true,
+    themeClassNameOnRoot: true,
+    disableSSR: true,
+    onlyAllowShorthands: true,
     allowedStyleValues: 'somewhat-strict-web',
     autocompleteSpecificTokens: 'except-special',
     fastSchemeChange: true,

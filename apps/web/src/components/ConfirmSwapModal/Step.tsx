@@ -1,13 +1,13 @@
 import { CheckMark } from 'components/Icons/CheckMark'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import Column from 'components/deprecated/Column'
-import Row, { RowBetween } from 'components/deprecated/Row'
 import styled, { Keyframes, keyframes } from 'lib/styled-components'
 import { ReactElement, useEffect, useState } from 'react'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex } from 'ui/src'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
+
+export const ICON_SIZE = 24
 
 export interface StepDetails {
   // Left-justified icon representing the step and grayed out when step is not active
@@ -42,18 +42,13 @@ const ringAnimation = keyframes`
 `
 const Ring = styled.div<{ $borderColor: string; $animation: Keyframes }>`
   position: absolute;
-  width: 24px;
-  height: 24px;
+  width: ${ICON_SIZE}px;
+  height: ${ICON_SIZE}px;
   border: 1px solid ${({ $borderColor }) => $borderColor};
   border-radius: 50%;
   animation: ${({ $animation }) => $animation} 1.5s linear infinite;
 `
-const IconWrapper = styled.div<{ isActive: boolean }>`
-  width: 24px;
-  height: 24px;
-  filter: ${({ isActive }) => `grayscale(${isActive ? 0 : 1})`};
-  opacity: ${({ isActive }) => (isActive ? '1' : '0.5')};
-`
+
 function RippleAnimation({ rippleColor }: { rippleColor?: string }) {
   if (!rippleColor) {
     return null
@@ -66,16 +61,22 @@ function RippleAnimation({ rippleColor }: { rippleColor?: string }) {
 }
 
 function Icon({ stepStatus, icon, rippleColor }: { stepStatus: StepStatus; icon: ReactElement; rippleColor?: string }) {
+  const isActive = stepStatus === StepStatus.Active
   if (stepStatus === StepStatus.InProgress) {
-    return <LoaderV3 size="24px" stroke={rippleColor} fill={rippleColor} data-testid="loader-icon" />
+    return <LoaderV3 size={`${ICON_SIZE}px`} stroke={rippleColor} fill={rippleColor} data-testid="loader-icon" />
   }
   return (
-    <>
-      {stepStatus === StepStatus.Active && <RippleAnimation rippleColor={rippleColor} />}
-      <IconWrapper isActive={stepStatus === StepStatus.Active} data-testid="step-icon">
+    <Flex>
+      {isActive && <RippleAnimation rippleColor={rippleColor} />}
+      <Flex
+        height={ICON_SIZE}
+        width={ICON_SIZE}
+        filter={isActive ? 'grayscale(0)' : 'grayscale(1)'}
+        data-testid="step-icon"
+      >
         {icon}
-      </IconWrapper>
-    </>
+      </Flex>
+    </Flex>
   )
 }
 
@@ -119,9 +120,6 @@ function Timer({ secondsRemaining }: { secondsRemaining: number }) {
   return <MonospacedTimer data-testid="step-timer">{timerText}</MonospacedTimer>
 }
 
-const Container = styled(RowBetween)`
-  padding-right: 16px;
-`
 const StyledExternalLink = styled(ExternalLink)`
   font-size: 12px;
   font-weight: 485px;
@@ -154,10 +152,10 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
   }, [stepStatus, stepDetails.timeToStart])
 
   return (
-    <Container>
-      <Row align="center" gap="12px" height={40} padding="8px 16px">
+    <Flex row pr="$spacing16" justifyContent="space-between">
+      <Flex row centered gap="$gap12" height={40} px="$spacing8" py="$spacing16">
         <Icon stepStatus={stepStatus} icon={stepDetails.icon} rippleColor={stepDetails.rippleColor} />
-        <Column>
+        <Flex>
           <Title
             stepStatus={stepStatus}
             stepDetails={stepDetails}
@@ -168,10 +166,10 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
               {stepDetails.learnMoreLinkText}
             </StyledExternalLink>
           )}
-        </Column>
-      </Row>
+        </Flex>
+      </Flex>
       {secondsRemaining !== null && <Timer secondsRemaining={secondsRemaining} />}
       {stepStatus === StepStatus.Complete && <CheckMark />}
-    </Container>
+    </Flex>
   )
 }

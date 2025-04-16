@@ -1,13 +1,19 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
-import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
-import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
+import {
+  ClickableHeaderRow,
+  EllipsisText,
+  HeaderArrow,
+  HeaderCell,
+  HeaderSortText,
+  TableText,
+} from 'components/Table/styled'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import {
   TokenSortMethod,
@@ -17,7 +23,7 @@ import {
   sortMethodAtom,
   useSetSortMethod,
 } from 'components/Tokens/state'
-import { MouseoverTooltip } from 'components/Tooltip'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SparklineMap } from 'graphql/data/types'
 import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import useSimplePagination from 'hooks/useSimplePagination'
@@ -27,7 +33,7 @@ import { Trans } from 'react-i18next'
 import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
-import { Flex, Text, styled } from 'ui/src'
+import { Flex, Text, View, styled, useMedia } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -38,25 +44,6 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 const TableWrapper = styled(Flex, {
   m: '0 auto',
   maxWidth: MAX_WIDTH_MEDIA_BREAKPOINT,
-})
-
-export const EllipsisText = styled(Text, {
-  variant: 'body2',
-  color: '$neutral1',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-})
-
-const SparklineContainer = styled(Flex, {
-  width: '124px',
-  height: '$spacing40',
-})
-
-const TokenTableText = styled(Text, {
-  variant: 'body2',
-  color: '$neutral2',
-  maxWidth: '100%',
 })
 
 interface TokenTableValue {
@@ -75,16 +62,14 @@ interface TokenTableValue {
 
 function TokenDescription({ token }: { token: TokenStat }) {
   return (
-    <Flex row gap="$gap8">
-      <QueryTokenLogo token={token} size={28} />
+    <Flex row gap="$gap8" alignItems="center" justifyContent="flex-start">
+      <View pr="$spacing4">
+        <QueryTokenLogo token={token} size={24} />
+      </View>
       <EllipsisText data-testid="token-name">{token.name ?? token.project?.name}</EllipsisText>
-      <TokenTableText
-        $platform-web={{
-          minWidth: 'fit-content',
-        }}
-      >
+      <TableText $platform-web={{ minWidth: 'fit-content' }} $lg={{ display: 'none' }} color="$neutral2">
         {token.symbol}
-      </TokenTableText>
+      </TableText>
     </Flex>
   )
 }
@@ -112,8 +97,8 @@ const HEADER_TEXT: Record<TokenSortMethod, ReactNode> = {
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: <Trans i18nKey="stats.fdv" />,
   [TokenSortMethod.PRICE]: <Trans i18nKey="common.price" />,
   [TokenSortMethod.VOLUME]: <Trans i18nKey="common.volume" />,
-  [TokenSortMethod.HOUR_CHANGE]: <Trans i18nKey="common.oneHour" />,
-  [TokenSortMethod.DAY_CHANGE]: <Trans i18nKey="common.oneDay" />,
+  [TokenSortMethod.HOUR_CHANGE]: <Trans i18nKey="common.oneHour.short" />,
+  [TokenSortMethod.DAY_CHANGE]: <Trans i18nKey="common.oneDay.short" />,
 }
 
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
@@ -136,12 +121,21 @@ function TokenTableHeader({
   const handleSortCategory = useSetSortMethod(category)
 
   return (
-    <MouseoverTooltip disabled={!HEADER_DESCRIPTIONS[category]} text={HEADER_DESCRIPTIONS[category]} placement="top">
-      <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory}>
-        {isCurrentSortMethod && <HeaderArrow direction={direction} />}
-        <HeaderSortText active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
-      </ClickableHeaderRow>
-    </MouseoverTooltip>
+    <Flex width="100%">
+      <MouseoverTooltip
+        disabled={!HEADER_DESCRIPTIONS[category]}
+        size={TooltipSize.Max}
+        text={HEADER_DESCRIPTIONS[category]}
+        placement="top"
+      >
+        <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory} group>
+          <HeaderArrow orderDirection={direction} size={14} opacity={isCurrentSortMethod ? 1 : 0} />
+          <HeaderSortText active={isCurrentSortMethod} variant="body3">
+            {HEADER_TEXT[category]}
+          </HeaderSortText>
+        </ClickableHeaderRow>
+      </MouseoverTooltip>
+    </Flex>
   )
 }
 
@@ -184,35 +178,27 @@ function TokenTable({
           price: giveExploreStatDefaultValue(token.price?.value),
           testId: `token-table-row-${unwrappedToken.address}`,
           percentChange1hr: (
-            <>
+            <Flex row gap="$gap4" alignItems="center">
               <DeltaArrow delta={delta1hr} />
-              <DeltaText delta={delta1hr}>{formatDelta(delta1hr)}</DeltaText>
-            </>
+              <TableText>{formatDelta(delta1hr)}</TableText>
+            </Flex>
           ),
           percentChange1d: (
-            <>
+            <Flex row gap="$gap4" alignItems="center">
               <DeltaArrow delta={delta1d} />
-              <DeltaText delta={delta1d}>{formatDelta(delta1d)}</DeltaText>
-            </>
+              <TableText>{formatDelta(delta1d)}</TableText>
+            </Flex>
           ),
           fdv: giveExploreStatDefaultValue(token.fullyDilutedValuation?.value),
           volume: giveExploreStatDefaultValue(token.volume?.value),
           sparkline: (
-            <SparklineContainer>
-              <ParentSize>
-                {({ width, height }) =>
-                  sparklines && (
-                    <SparklineChart
-                      width={width}
-                      height={height}
-                      tokenData={token}
-                      pricePercentChange={token.pricePercentChange1Day?.value}
-                      sparklineMap={sparklines}
-                    />
-                  )
-                }
-              </ParentSize>
-            </SparklineContainer>
+            <SparklineChart
+              width={80}
+              height={20}
+              tokenData={token}
+              pricePercentChange={token.pricePercentChange1Day?.value}
+              sparklineMap={sparklines}
+            />
           ),
           link: getTokenDetailsURL({
             address: unwrappedToken.address,
@@ -238,138 +224,156 @@ function TokenTable({
   )
 
   const showLoadingSkeleton = loading || !!error
+
+  const media = useMedia()
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<TokenTableValue>()
-    return [
-      columnHelper.accessor((row) => row.index, {
-        id: 'index',
-        header: () => (
-          <Cell justifyContent="center" minWidth={44}>
-            <TokenTableText>#</TokenTableText>
-          </Cell>
-        ),
-        cell: (index) => (
-          <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
-            <TokenTableText>{index.getValue?.()}</TokenTableText>
-          </Cell>
-        ),
-      }),
+    const filteredColumns = [
+      !media.lg
+        ? columnHelper.accessor((row) => row.index, {
+            id: 'index',
+            size: 60,
+            header: () => (
+              <HeaderCell justifyContent="flex-start">
+                <Text variant="body3" color="$neutral2">
+                  #
+                </Text>
+              </HeaderCell>
+            ),
+            cell: (index) => (
+              <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+                <TableText>{index.getValue?.()}</TableText>
+              </Cell>
+            ),
+          })
+        : null,
       columnHelper.accessor((row) => row.tokenDescription, {
         id: 'tokenDescription',
+        size: media.lg ? 150 : 300,
         header: () => (
-          <Cell justifyContent="flex-start" width={240} grow>
-            <TokenTableText>
+          <HeaderCell justifyContent="flex-start">
+            <Text variant="body3" color="$neutral2" fontWeight="500">
               <Trans i18nKey="common.tokenName" />
-            </TokenTableText>
-          </Cell>
+            </Text>
+          </HeaderCell>
         ),
         cell: (tokenDescription) => (
-          <Cell justifyContent="flex-start" width={240} loading={showLoadingSkeleton} grow testId="name-cell">
-            <TokenTableText>{tokenDescription.getValue?.()}</TokenTableText>
+          <Cell justifyContent="flex-start" loading={showLoadingSkeleton} testId="name-cell">
+            <TableText>{tokenDescription.getValue?.()}</TableText>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => row.price, {
         id: 'price',
+        maxSize: 140,
         header: () => (
-          <Cell minWidth={133} grow>
+          <HeaderCell justifyContent="flex-end">
             <TokenTableHeader
               category={TokenSortMethod.PRICE}
               isCurrentSortMethod={sortMethod === TokenSortMethod.PRICE}
               direction={orderDirection}
             />
-          </Cell>
+          </HeaderCell>
         ),
         cell: (price) => (
-          <Cell loading={showLoadingSkeleton} minWidth={133} grow testId="price-cell">
-            <Text variant="body2" color="$neutral1">
+          <Cell loading={showLoadingSkeleton} testId="price-cell" justifyContent="flex-end">
+            <TableText>
               {/* A simple 0 price indicates the price is not currently available from the api */}
               {price.getValue?.() === 0
                 ? '-'
                 : formatFiatPrice({ price: price.getValue?.(), type: NumberType.FiatTokenPrice })}
-            </Text>
+            </TableText>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => row.percentChange1hr, {
         id: 'percentChange1hr',
+        maxSize: 100,
         header: () => (
-          <Cell minWidth={133} grow>
+          <HeaderCell>
             <TokenTableHeader
               category={TokenSortMethod.HOUR_CHANGE}
               isCurrentSortMethod={sortMethod === TokenSortMethod.HOUR_CHANGE}
               direction={orderDirection}
             />
-          </Cell>
+          </HeaderCell>
         ),
         cell: (percentChange1hr) => (
-          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
-            {percentChange1hr.getValue?.()}
+          <Cell loading={showLoadingSkeleton}>
+            <TableText>{percentChange1hr.getValue?.()}</TableText>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => row.percentChange1d, {
         id: 'percentChange1d',
+        maxSize: 120,
         header: () => (
-          <Cell minWidth={133} grow>
+          <HeaderCell justifyContent="flex-end">
             <TokenTableHeader
               category={TokenSortMethod.DAY_CHANGE}
               isCurrentSortMethod={sortMethod === TokenSortMethod.DAY_CHANGE}
               direction={orderDirection}
             />
-          </Cell>
+          </HeaderCell>
         ),
         cell: (percentChange1d) => (
-          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
-            {percentChange1d.getValue?.()}
+          <Cell loading={showLoadingSkeleton} justifyContent="flex-end">
+            <TableText>{percentChange1d.getValue?.()}</TableText>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => row.fdv, {
         id: 'fdv',
+        maxSize: 120,
         header: () => (
-          <Cell width={133} grow>
+          <HeaderCell justifyContent="flex-end">
             <TokenTableHeader
               category={TokenSortMethod.FULLY_DILUTED_VALUATION}
               isCurrentSortMethod={sortMethod === TokenSortMethod.FULLY_DILUTED_VALUATION}
               direction={orderDirection}
             />
-          </Cell>
+          </HeaderCell>
         ),
         cell: (fdv) => (
-          <Cell loading={showLoadingSkeleton} width={133} grow testId="fdv-cell">
+          <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId="fdv-cell">
             <EllipsisText>{formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}</EllipsisText>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => row.volume, {
         id: 'volume',
+        maxSize: 150,
         header: () => (
-          <Cell width={133} grow>
+          <HeaderCell>
             <TokenTableHeader
               category={TokenSortMethod.VOLUME}
               isCurrentSortMethod={sortMethod === TokenSortMethod.VOLUME}
               direction={orderDirection}
             />
-          </Cell>
+          </HeaderCell>
         ),
         cell: (volume) => (
-          <Cell width={133} loading={showLoadingSkeleton} grow testId="volume-cell">
+          <Cell loading={showLoadingSkeleton} grow testId="volume-cell">
             <EllipsisText>{formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}</EllipsisText>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => row.sparkline, {
         id: 'sparkline',
-        header: () => <Cell minWidth={172} />,
-        cell: (sparkline) => (
-          <Cell minWidth={172} loading={showLoadingSkeleton}>
-            {sparkline.getValue?.()}
-          </Cell>
+        maxSize: 120,
+        header: () => (
+          <HeaderCell>
+            <Text variant="body3" color="$neutral2" fontWeight="500">
+              1D chart
+            </Text>
+          </HeaderCell>
         ),
+        cell: (sparkline) => <Cell loading={showLoadingSkeleton}>{sparkline.getValue?.()}</Cell>,
       }),
     ]
-  }, [formatFiatPrice, formatNumber, orderDirection, showLoadingSkeleton, sortMethod])
+
+    return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
+  }, [formatFiatPrice, formatNumber, orderDirection, showLoadingSkeleton, sortMethod, media])
 
   return (
     <Table
@@ -379,6 +383,7 @@ function TokenTable({
       error={error}
       loadMore={loadMore}
       maxWidth={1200}
+      defaultPinnedColumns={['index', 'tokenDescription']}
     />
   )
 }

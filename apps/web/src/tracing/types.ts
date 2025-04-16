@@ -6,7 +6,7 @@ import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
  *
  * [1]: https://github.com/open-telemetry/opentelemetry-specification/blob/24de67b3827a4e3ab2515cd8ab62d5bcf837c586/specification/trace/semantic_conventions/README.md
  */
-export type OpCode =
+type OpCode =
   // Please keep this alphabetized for ease-of-use.
   | 'http.client'
   | 'http.graphql.query'

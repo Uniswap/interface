@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, UniswapXText, isWeb, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Gas } from 'ui/src/components/icons/Gas'
-import { NATIVE_LINE_HEIGHT_SCALE, fonts } from 'ui/src/theme'
+import { NATIVE_LINE_HEIGHT_SCALE, fonts, zIndexes } from 'ui/src/theme'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -61,6 +61,7 @@ export function NetworkFeeWarning({
         modalName: ModalName.NetworkFeeInfo,
         severity: WarningSeverity.None,
         title: showHighGasFeeUI ? t('transaction.networkCost.veryHigh.label') : t('transaction.networkCost.label'),
+        zIndex: zIndexes.popover,
       }}
       tooltipProps={{
         text: (

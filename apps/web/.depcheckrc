@@ -6,7 +6,6 @@ ignores: [
     '@swc/jest',
     '@swc/plugin-styled-components',
     '@typechain/ethers-v5',
-    '@vanilla-extract/jest-transform',
     'buffer',
     'swc-loader',
     'postinstall-postinstall',
@@ -21,7 +20,6 @@ ignores: [
     '@graphql-codegen/*',
     ## React Scripts and subpackages used from within it
     'case-sensitive-paths-webpack-plugin',
-    'react-dev-utils',
     'workbox-expiration',
     'workbox-strategies',
     ## Packages used in github actions

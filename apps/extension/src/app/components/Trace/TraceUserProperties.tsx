@@ -1,3 +1,4 @@
+import { datadogRum } from '@datadog/browser-rum'
 import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -23,6 +24,14 @@ export function TraceUserProperties(): null {
   const { isTestnetModeEnabled } = useEnabledChains()
 
   useGatingUserPropertyUsernames()
+
+  // Set user properties for datadog
+
+  useEffect(() => {
+    datadogRum.setUserProperty(ExtensionUserPropertyName.ActiveWalletAddress, activeAccount?.address)
+  }, [activeAccount?.address])
+
+  // Set user properties for amplitude
 
   useEffect(() => {
     setUserProperty(ExtensionUserPropertyName.AppVersion, chrome.runtime.getManifest().version)

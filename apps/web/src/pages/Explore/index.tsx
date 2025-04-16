@@ -21,9 +21,9 @@ import { TamaguiClickableStyle } from 'theme/components/styles'
 import { Button, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { isBackendSupportedChain } from 'uniswap/src/features/chains/utils'
+import { isBackendSupportedChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useChainIdFromUrlParam } from 'utils/chainParams'
+import { getChainUrlParam, useChainIdFromUrlParam } from 'utils/chainParams'
 
 export enum ExploreTab {
   Tokens = 'tokens',
@@ -143,9 +143,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const navigate = useNavigate()
   useOnGlobalChainSwitch(
     useCallback(
-      (_chainId, chain) => {
-        if (chain && isBackendSupportedChain(chain)) {
-          navigate(getTokenExploreURL({ tab, chain }))
+      (chain) => {
+        const chainName = chain && toGraphQLChain(chain)
+        if (chainName && isBackendSupportedChain(chainName)) {
+          navigate(getTokenExploreURL({ tab, chainUrlParam: getChainUrlParam(chain) }))
         }
       },
       [navigate, tab],
@@ -159,25 +160,24 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       properties={{ chainName: chainInfo?.backendChain.chain }}
     >
       <ExploreContextProvider chainId={chainInfo?.id}>
-        <Flex width="100%" minWidth={320} py="$spacing48" px="$spacing40" $md={{ p: '$spacing16' }}>
+        <Flex width="100%" minWidth={320} pt="$spacing24" pb="$spacing48" px="$spacing40" $md={{ p: '$spacing16' }}>
           <ExploreStatsSection />
           <Flex
             ref={tabNavRef}
             row
             maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
-            mt={60}
+            mt={80}
             mx="auto"
             mb="$spacing4"
             alignItems="center"
             justifyContent="space-between"
             width="100%"
-            $lg={{
-              row: false,
-              flexDirection: 'column',
-              mx: 'unset',
-              alignItems: 'flex-start',
-              gap: '$spacing16',
-            }}
+            $lg={{ row: false, flexDirection: 'column', mx: 'unset', alignItems: 'flex-start', gap: '$spacing16' }}
+            // Pools page needs to break to multiple rows at larger breakpoint due to the extra filter options
+            {...(currentKey === ExploreTab.Pools && {
+              $lg: {},
+              $xl: { row: false, flexDirection: 'column', mx: 'unset', alignItems: 'flex-start', gap: '$spacing16' },
+            })}
           >
             <Flex
               row
@@ -188,7 +188,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               data-testid="explore-navbar"
             >
               {Pages.map(({ title, loggingElementName, key }, index) => {
-                const url = getTokenExploreURL({ tab: key, chain: chainInfo?.backendChain.chain })
+                const url = getTokenExploreURL({
+                  tab: key,
+                  chainUrlParam: chainInfo ? getChainUrlParam(chainInfo.id) : '',
+                })
                 return (
                   <Trace
                     logPress
@@ -203,7 +206,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                 )
               })}
             </Flex>
-            <Flex row gap="$spacing8" justifyContent="flex-start">
+            <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
               {currentKey === ExploreTab.Pools && (
                 <Flex row>
                   <Button size="small" icon={<Plus />} onPress={() => navigate('/positions/create')}>

@@ -9,16 +9,18 @@ module.exports = function (api) {
 
   plugins = [
     ...plugins,
-    // disable for now as its causing ci to hang
-    // process.env.NODE_ENV === 'test'
-    //   ? null
-    //   : [
-    //       '@tamagui/babel-plugin',
-    //       {
-    //         components: ['ui'],
-    //         config: '../../packages/ui/src/tamagui.config.ts',
-    //       },
-    //     ],
+
+    process.env.NODE_ENV === 'test'
+      ? null
+      : [
+          '@tamagui/babel-plugin',
+          {
+            components: ['ui'],
+            // experimentalFlattenThemesOnNative: true,
+            config: '../../packages/ui/src/tamagui.config.ts',
+          },
+        ],
+
     [
       'module-resolver',
       {

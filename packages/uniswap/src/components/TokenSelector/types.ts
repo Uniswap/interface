@@ -1,4 +1,3 @@
-import { ReactNode } from 'react'
 import { ItemType, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -19,6 +18,7 @@ export enum TokenOptionSection {
   SearchResults = 'searchResults',
   SuggestedTokens = 'suggestedTokens',
   BridgingTokens = 'bridgingTokens',
+  OtherChainsTokens = 'otherNetworksTokens',
 }
 
 export type TokenSection<T extends ItemType> = {
@@ -45,13 +45,4 @@ export type ConvertFiatAmountFormattedCallback = (
 export enum TokenSelectorFlow {
   Swap = 0,
   Send = 1,
-}
-
-export interface TokenItemWrapperProps {
-  children: ReactNode
-  tokenInfo: {
-    address: string
-    chain: number
-    isNative: boolean
-  }
 }

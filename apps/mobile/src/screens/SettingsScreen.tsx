@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/core'
-import { default as React, useCallback, useMemo, useState } from 'react'
+import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -56,7 +56,6 @@ import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
@@ -93,7 +92,6 @@ export function SettingsScreen(): JSX.Element {
     }, AVOID_RENDER_DURING_ANIMATION_MS)
   }, [setHapticsEnabled, hapticsEnabled])
 
-  const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
   const { notificationPermissionsEnabled: notificationOSPermission } = useNotificationOSPermissionsEnabled()
 
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -110,9 +108,9 @@ export function SettingsScreen(): JSX.Element {
       // trigger before toggling on (ie disabling analytics)
       if (newIsTestnetMode) {
         fireAnalytic()
+        navigation.navigate(ModalName.TestnetMode, {})
       }
 
-      setIsTestnetModalOpen(newIsTestnetMode)
       dispatch(setIsTestnetModeEnabled(newIsTestnetMode))
 
       // trigger after toggling off (ie enabling analytics)
@@ -120,7 +118,7 @@ export function SettingsScreen(): JSX.Element {
         fireAnalytic()
       }
     }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, isTestnetModeEnabled])
+  }, [dispatch, isTestnetModeEnabled, navigation])
 
   // Signer account info
   const signerAccount = useSignerAccounts()[0]
@@ -356,11 +354,8 @@ export function SettingsScreen(): JSX.Element {
     navigation,
   ])
 
-  const handleModalClose = useCallback(() => setIsTestnetModalOpen(false), [])
-
   return (
     <ScreenWithHeader centerElement={<Text variant="body1">{t('settings.title')}</Text>}>
-      <TestnetModeModal isOpen={isTestnetModalOpen} onClose={handleModalClose} />
       <SettingsList
         keyExtractor={keyExtractor}
         sections={sections}

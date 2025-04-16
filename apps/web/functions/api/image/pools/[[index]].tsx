@@ -1,5 +1,4 @@
 /* eslint-disable react/forbid-elements */
-/* eslint-disable import/no-unused-modules */
 import { ImageResponse } from '@vercel/og'
 
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

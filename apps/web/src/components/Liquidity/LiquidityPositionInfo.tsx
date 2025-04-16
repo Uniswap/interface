@@ -8,10 +8,11 @@ import { PositionInfo } from 'components/Liquidity/types'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { TextLoader } from 'pages/Pool/Positions/shared'
-import { Trans } from 'react-i18next'
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Button, Circle, Flex, Text } from 'ui/src'
+import { Anchor, Button, Circle, Flex, Text, useMedia } from 'ui/src'
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
@@ -51,6 +52,39 @@ export function LiquidityPositionInfo({
   const versionLabel = getProtocolVersionLabel(version)
   const navigate = useNavigate()
   const chainInfo = getChainInfo(positionInfo.chainId)
+  const media = useMedia()
+  const { t } = useTranslation()
+
+  const isMigrateToV4ButtonVisible = useMemo(() => {
+    if (!(positionInfo.version === ProtocolVersion.V3 && showMigrateButton)) {
+      return false
+    }
+    // if we're in the md-lg or xl-xxl ranges, hide the button due to overlapping issues
+    const isInMdToLgRange = media.lg && !media.md
+    const isInXlToXxlRange = media.xxl && !media.xl
+    const shouldHideInRange = isInMdToLgRange || isInXlToXxlRange
+
+    return !shouldHideInRange
+  }, [positionInfo.version, showMigrateButton, media.lg, media.md, media.xxl, media.xl])
+
+  const migrateToV4Button = (): JSX.Element => {
+    return (
+      <Button
+        icon={<RightArrow />}
+        iconPosition="after"
+        py="$spacing2"
+        borderRadius="$rounded4"
+        emphasis="secondary"
+        size="xxsmall"
+        onPress={(e) => {
+          e.preventDefault()
+          navigate(`/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`)
+        }}
+      >
+        {t('pool.migrateToV4')}
+      </Button>
+    )
+  }
 
   return (
     <Flex row gap="$gap16" $md={{ width: '100%' }} alignItems={isMiniVersion ? 'center' : 'flex-start'}>
@@ -61,7 +95,7 @@ export function LiquidityPositionInfo({
         $md={{ row: false, gap: isMiniVersion ? '$gap0' : '$gap4' }}
         alignItems="flex-start"
       >
-        <Flex $md={{ row: true, gap: '$gap12' }}>
+        <Flex gap="$gap4" $md={{ row: true, gap: '$gap12' }}>
           {linkToPool ? (
             <Anchor href={getPoolDetailsURL(positionInfo.poolId, positionInfo.chainId)} textDecorationLine="none">
               <Text variant="subheading1" {...ClickableTamaguiStyle}>
@@ -73,29 +107,16 @@ export function LiquidityPositionInfo({
               {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
             </Text>
           )}
-          {!hideStatusIndicator && <LiquidityPositionStatusIndicator status={status} />}
+          <Flex row gap="$gap8" alignItems="center">
+            {!hideStatusIndicator && <LiquidityPositionStatusIndicator status={status} />}
+          </Flex>
         </Flex>
 
-        <Flex row gap="$gap8" alignItems="center">
+        <Flex row gap="$gap8" alignItems="center" mt={3} $md={{ mt: 0 }}>
           <Flex row gap={2} alignItems="center">
             <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={v4hook} feeTier={feeTier} />
           </Flex>
-          {positionInfo.version === ProtocolVersion.V3 && showMigrateButton && (
-            <Button
-              icon={<RightArrow />}
-              iconPosition="after"
-              py="$spacing2"
-              borderRadius="$rounded4"
-              emphasis="secondary"
-              size="xxsmall"
-              onPress={(e) => {
-                e.preventDefault()
-                navigate(`/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`)
-              }}
-            >
-              <Trans i18nKey="pool.migrateToV4" />
-            </Button>
-          )}
+          {isMigrateToV4ButtonVisible && migrateToV4Button()}
         </Flex>
       </Flex>
     </Flex>

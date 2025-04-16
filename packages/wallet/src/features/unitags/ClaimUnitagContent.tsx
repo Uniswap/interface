@@ -381,7 +381,7 @@ export function ClaimUnitagContent({
       </Flex>
       <Flex row justifyContent="flex-end">
         <Button
-          size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
+          size="large"
           variant="branded"
           isDisabled={
             (entryPoint === OnboardingScreens.Landing && !unitagAddress) ||

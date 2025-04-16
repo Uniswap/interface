@@ -4,7 +4,7 @@ import {
   ProcessedRowType,
   processTokenSections,
 } from 'uniswap/src/components/lists/TokenSectionBaseList/processTokenSections'
-import type { TokenOption } from 'uniswap/src/components/lists/types'
+import { isPoolOption, type TokenOption } from 'uniswap/src/components/lists/types'
 import type { TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -142,7 +142,7 @@ describe('processTokenSections', () => {
     expect(header.data.section.sectionKey).toBe(TokenOptionSection.YourTokens)
   })
 
-  it('correctly sets item indices within sections', () => {
+  it('correctly sets token item indices within sections', () => {
     const tokens = Array.from({ length: 3 }, (_, i) => ({
       ...mockTokenOption,
       currencyInfo: {
@@ -157,7 +157,7 @@ describe('processTokenSections', () => {
 
     items.forEach((item, index) => {
       expect(item.data.index).toBe(index)
-      if (!Array.isArray(item.data.item)) {
+      if (!isPoolOption(item.data.item) && !Array.isArray(item.data.item)) {
         expect(item.data.item.currencyInfo.currencyId).toBe(String(index + 1))
       }
     })

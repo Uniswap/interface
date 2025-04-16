@@ -11,12 +11,11 @@ import {
   SquareArrowUpIcon,
   VerifiedIcon,
 } from 'nft/components/icons'
-import { loadingBlock } from 'nft/css/loading.css'
 import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { getAssetHref } from 'nft/utils'
 import { useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, Flex, Image, Text, TouchableAreaEvent, View } from 'ui/src'
+import { Button, Flex, Image, Shine, Text, TouchableAreaEvent, View } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -134,7 +133,9 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
             />
           )}
           {!loadedImage && (
-            <View position="absolute" className={`${loadingBlock}`} width="56" height="56" borderRadius="$rounded8" />
+            <Shine>
+              <View position="absolute" width="56" height="56" borderRadius="$rounded8" />
+            </Shine>
           )}
           {noImageAvailable && <NoContentContainer />}
         </Flex>

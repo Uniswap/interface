@@ -15,6 +15,7 @@ import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/to
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
+import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 export function useTokenSectionsForSearchResults(
   address: string | undefined,
@@ -55,9 +56,25 @@ export function useTokenSectionsForSearchResults(
     loading: searchTokensLoading,
   } = useSearchTokens(searchFilter, chainFilter, /*skip*/ isBalancesOnlySearch)
 
+  const [selectedNetworkResults, otherNetworksSearchResults] = useMemo((): [CurrencyInfo[], CurrencyInfo[]] => {
+    if (!searchResultCurrencies) {
+      return [[], []]
+    }
+
+    const selected = searchResultCurrencies.filter((currency) => !currency.isFromOtherNetwork)
+    const other = searchResultCurrencies.filter((currency) => currency.isFromOtherNetwork)
+
+    return [selected, other]
+  }, [searchResultCurrencies])
+
   const searchResults = useMemo(() => {
-    return formatSearchResults(searchResultCurrencies, portfolioBalancesById, searchFilter)
-  }, [searchResultCurrencies, portfolioBalancesById, searchFilter])
+    return formatSearchResults(selectedNetworkResults, portfolioBalancesById, searchFilter)
+  }, [selectedNetworkResults, portfolioBalancesById, searchFilter])
+
+  // Format other networks search results if they exist
+  const otherNetworksResults = useMemo(() => {
+    return formatSearchResults(otherNetworksSearchResults, portfolioBalancesById, searchFilter)
+  }, [otherNetworksSearchResults, portfolioBalancesById, searchFilter])
 
   const loading =
     portfolioTokenOptionsLoading ||
@@ -71,17 +88,32 @@ export function useTokenSectionsForSearchResults(
     tokenOptions: isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
   })
 
+  // Create section for other chains search results if they exist
+  const otherNetworksSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.OtherChainsTokens,
+    tokenOptions: otherNetworksResults,
+  })
+
   // If there are bridging options, we need to extract them from the search results and then prepend them as a new section above.
   // The remaining non-bridging search results will be shown in a section with a different name
   const networkName = chainFilter ? getChainLabel(chainFilter) : undefined
   const searchResultsSectionHeader = networkName
     ? t('tokens.selector.section.otherSearchResults', { network: networkName })
     : undefined
-  const sections = mergeSearchResultsWithBridgingTokens(
-    searchResultsSections,
-    bridgingTokenOptions,
-    searchResultsSectionHeader,
-  )
+
+  const allSections = useMemo(() => {
+    // Start with existing sections (bridging tokens + search results)
+    let sections =
+      mergeSearchResultsWithBridgingTokens(searchResultsSections, bridgingTokenOptions, searchResultsSectionHeader) ??
+      []
+
+    // Add other networks section if it exists
+    if (otherNetworksSection?.length) {
+      sections = [...sections, ...otherNetworksSection]
+    }
+
+    return sections
+  }, [searchResultsSections, bridgingTokenOptions, searchResultsSectionHeader, otherNetworksSection])
 
   const error =
     (!bridgingTokenOptions && bridgingTokenOptionsError) ||
@@ -98,11 +130,11 @@ export function useTokenSectionsForSearchResults(
 
   return useMemo(
     () => ({
-      data: sections,
+      data: allSections,
       loading,
       error: error || undefined,
       refetch: refetchAll,
     }),
-    [error, loading, refetchAll, sections],
+    [error, loading, refetchAll, allSections],
   )
 }

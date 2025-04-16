@@ -45,6 +45,7 @@ export enum MenuState {
   LOCAL_CURRENCY_SETTINGS = 'local_currency_settings',
   LIMITS = 'limits',
   POOLS = 'pools',
+  PASSKEYS = 'passkeys',
 }
 
 export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)

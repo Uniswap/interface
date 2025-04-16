@@ -42,7 +42,7 @@ function getCalldataInfoFromTransaction(
         result.parsedCalldata = v4Calldata
         return result
       }
-    } catch (_e) {
+    } catch (e) {
       noop()
     }
     try {
@@ -53,7 +53,7 @@ function getCalldataInfoFromTransaction(
         result.parsedCalldata = URCalldata
         return result
       }
-    } catch (_e) {
+    } catch (e) {
       noop()
     }
     try {
@@ -64,7 +64,7 @@ function getCalldataInfoFromTransaction(
         result.parsedCalldata = NfPMCalldata
         return result
       }
-    } catch (_e) {
+    } catch (e) {
       noop()
     }
 

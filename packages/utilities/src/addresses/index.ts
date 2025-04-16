@@ -1,4 +1,5 @@
 import { getAddress } from '@ethersproject/address'
+import { logger } from 'utilities/src/logger/logger'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value?: string | null | undefined): `0x${string}` | false {
@@ -32,6 +33,12 @@ export function shortenAddress(address = '', chars = 4, charsEnd?: number): stri
   }
   if (charsEnd === undefined) {
     charsEnd = chars
+  }
+
+  if (chars <= 0 && charsEnd <= 0) {
+    logger.warn('utilities/src/addresses/index.ts', 'shortenAddress', 'chars and charsEnd must be positive integers')
+    chars = 4
+    charsEnd = 4
   }
 
   return ellipseAddressAdd0x(parsed, chars, charsEnd)
