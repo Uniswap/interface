@@ -36,6 +36,7 @@ import { ProtocolVersion } from "uniswap/src/data/graphql/uniswap-data-api/__gen
 import Trace from "uniswap/src/features/telemetry/Trace";
 import CTACards from "./CTACards";
 import { LoadingRows } from "./styled";
+import { useIncentivesData } from 'hooks/useIncentivesData'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -217,6 +218,9 @@ export default function Pool() {
     account.address
   );
 
+  const { userPositions: stakingPositions, isLoading: isStakingPositionsLoading } = useIncentivesData();
+  console.log('stakingPositions', stakingPositions)
+
   const [openPositions, closedPositions] = positions?.reduce<
     [PositionDetails[], PositionDetails[]]
   >(
@@ -320,6 +324,7 @@ export default function Pool() {
               </ButtonRow>
             </TitleRow>
 
+            {/* Pool Positions Section */}
             <MainContentWrapper>
               {positionsLoading ? (
                 <PositionsLoadingPlaceholder />
@@ -376,6 +381,38 @@ export default function Pool() {
                 </ErrorContainer>
               )}
             </MainContentWrapper>
+
+            {/* Staking Positions Section */}
+            <TitleRow padding="0" style={{ marginTop: '20px' }}>
+              <Row gap="md" width="min-content">
+                <ThemedText.LargeHeader>
+                  <Trans i18nKey="pool.incentives" />
+                </ThemedText.LargeHeader>
+              </Row>
+            </TitleRow>
+            <MainContentWrapper>
+              {isStakingPositionsLoading ? (
+                <PositionsLoadingPlaceholder />
+              ) : stakingPositions && stakingPositions.length > 0 ? (
+                <PositionList
+                  positions={stakingPositions}
+                  isStakingList={true}
+                />
+              ) : (
+                <ErrorContainer>
+                  <ThemedText.BodyPrimary
+                    color={theme.neutral3}
+                    textAlign="center"
+                  >
+                    <InboxIcon strokeWidth={1} style={{ marginTop: "2em" }} />
+                    <div>
+                      <Trans i18nKey="pool.stakingPositions.empty" />
+                    </div>
+                  </ThemedText.BodyPrimary>
+                </ErrorContainer>
+              )}
+            </MainContentWrapper>
+
             <HideSmall>
               <CTACards />
             </HideSmall>

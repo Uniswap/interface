@@ -74,7 +74,8 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       };
 
       const stakeTx = await v3StakerContract.stakeToken(incentiveKey, tokenId);
-      await stakeTx.wait();
+      const stakeReceipt = await stakeTx.wait();
+      console.log('stakeReceipt', stakeReceipt)
     } catch (error) {
       console.error('Error staking:', error);
     } finally {
@@ -155,9 +156,36 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         throw new Error('No incentives available to stake');
       }
 
+      // Check if NFT is already deposited in the staking contract
+      const deposit = await v3StakerContract.deposits(tokenId);
+      console.log('deposit', deposit)
+      const isDeposited = deposit.owner === address;
+      console.log('isDeposited', isDeposited)
+
+      if (isDeposited) {
+        // If already deposited, use multicall to stake in all incentives
+        const stakeCalls = incentivesToStake.map((incentive) => {
+          const incentiveKey = {
+            rewardToken: incentive.rewardToken.id,
+            pool: incentive.poolAddress,
+            startTime: incentive.startTime,
+            endTime: incentive.endTime,
+            vestingPeriod: parseInt(incentive.vestingPeriod),
+            refundee: incentive.refundee,
+          };
+          return v3StakerContract.interface.encodeFunctionData('stakeToken', [incentiveKey, tokenId]);
+        });
+
+        const stakeTx = await v3StakerContract.multicall(stakeCalls, {
+          gasLimit: 500000
+        });
+        const receipt = await stakeTx.wait();
+        console.log('receipt', receipt)
+        return
+      }
+      // If not deposited, use the original logic with safeTransferFrom
       const incentiveKeys = await Promise.all(
         incentivesToStake.map(async (incentive) => {
-            console.log('incentive.rewardToken.id,', incentive.rewardToken.id,)
           const key = [
             incentive.rewardToken.id,
             incentive.poolAddress,
@@ -167,7 +195,7 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
             incentive.refundee
           ];
           return key;
-        }))
+        }));
 
       const data = ethers.utils.defaultAbiCoder.encode(
         ['tuple(address,address,uint256,uint256,uint256,address)[]'],
@@ -179,7 +207,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       ](address, v3StakerContract.address, tokenId, data, {
         gasLimit: 500000
       });
-
       const receipt = await transferTx.wait();
       console.log('receipt', receipt)
 
@@ -190,7 +217,7 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       setIsBulkStaking(false);
     }
   }, [v3StakerContract, tokenId, address, allIncentives, nftManagerPositionsContract]);
-  
+
 
   const handleBulkUnstake = useCallback(async () => {
     if (!v3StakerContract || !address || !nftManagerPositionsContract) return;
@@ -240,7 +267,7 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       setIsBulkUnstaking(false);
     }
   }, [v3StakerContract, tokenId, address, allIncentives, nftManagerPositionsContract]);
-  
+
 
   const handleBulkWithdraw = useCallback(async () => {
     if (!v3StakerContract || !address || !nftManagerPositionsContract) return;

@@ -17,6 +17,8 @@ import { MEDIA_WIDTHS } from 'theme'
 import { HideSmall, SmallOnly, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
+import { UserPosition } from 'hooks/useIncentivesData'
+import { PositionDetails } from 'types/position'
 
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -101,7 +103,11 @@ const PrimaryPositionIdData = styled.div`
   }
 `
 
-interface PositionListItemProps {
+interface BasePositionListItemProps {
+  isStakingPosition?: boolean
+}
+
+interface PoolPositionListItemProps extends BasePositionListItemProps {
   token0: string
   token1: string
   tokenId: BigNumber
@@ -109,6 +115,32 @@ interface PositionListItemProps {
   liquidity: BigNumber
   tickLower: number
   tickUpper: number
+}
+
+interface StakingPositionListItemProps extends BasePositionListItemProps {
+  id: string
+  minter: { id: string }
+  owner: { id: string }
+  pool: {
+    id: string
+    feeTier: number
+    incentives: { id: string }[]
+  }
+  liquidity: string
+  depositedToken0: string
+  depositedToken1: string
+  withdrawnToken0: string
+  withdrawnToken1: string
+  token0: { symbol: string }
+  token1: { symbol: string }
+  tickLower: { tickIdx: string }
+  tickUpper: { tickIdx: string }
+}
+
+type PositionListItemProps = PoolPositionListItemProps | StakingPositionListItemProps
+
+function isStakingPosition(props: PositionListItemProps): props is StakingPositionListItemProps {
+  return 'isStakingPosition' in props && props.isStakingPosition === true
 }
 
 export function getPriceOrderingFromPositionForUI(position?: Position): {
@@ -165,16 +197,84 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 }
 
-export default function PositionListItem({
-  token0: token0Address,
-  token1: token1Address,
-  tokenId,
-  fee: feeAmount,
-  liquidity,
-  tickLower,
-  tickUpper,
-}: PositionListItemProps) {
+export default function PositionListItem(props: PositionListItemProps) {
   const { formatDelta, formatTickPrice } = useFormatter()
+
+  if (isStakingPosition(props)) {
+    const {
+      id,
+      pool,
+      token0,
+      token1,
+      tickLower,
+      tickUpper,
+      liquidity,
+      isStakingPosition
+    } = props
+
+    const positionSummaryLink = `/staking/${id}`
+
+    return (
+      <LinkRow to={positionSummaryLink}>
+        <RowBetween>
+          <PrimaryPositionIdData>
+            <ThemedText.SubHeader>
+              {token0.symbol} / {token1.symbol}
+            </ThemedText.SubHeader>
+            <FeeTierText>{formatDelta(parseFloat(new Percent(pool.feeTier, 1_000_000).toSignificant()))}</FeeTierText>
+          </PrimaryPositionIdData>
+          <RangeBadge removed={false} inRange={true} />
+        </RowBetween>
+
+        <RangeLineItem>
+          <RangeText>
+            <ExtentsText>
+              <Trans i18nKey="pool.min.label" />
+              &nbsp;
+            </ExtentsText>
+            <span>{tickLower.tickIdx}</span>
+            <Trans
+              i18nKey="common.xPerY"
+              components={{
+                x: <HoverInlineText text={token0.symbol} />,
+                y: <HoverInlineText text={token1.symbol} />,
+              }}
+            />
+          </RangeText>
+          <HideSmall>
+            <DoubleArrow>↔</DoubleArrow>
+          </HideSmall>
+          <SmallOnly>
+            <DoubleArrow>↔</DoubleArrow>
+          </SmallOnly>
+          <RangeText>
+            <ExtentsText>
+              <Trans i18nKey="pool.max.label" />
+              &nbsp;
+            </ExtentsText>
+            <span>{tickUpper.tickIdx}</span>
+            <Trans
+              i18nKey="common.xPerY"
+              components={{
+                x: <HoverInlineText text={token0.symbol} />,
+                y: <HoverInlineText text={token1.symbol} />,
+              }}
+            />
+          </RangeText>
+        </RangeLineItem>
+      </LinkRow>
+    )
+  }
+
+  const {
+    token0: token0Address,
+    token1: token1Address,
+    tokenId,
+    fee: feeAmount,
+    liquidity,
+    tickLower,
+    tickUpper,
+  } = props
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
@@ -252,6 +352,7 @@ export default function PositionListItem({
           <RangeText>
             <ExtentsText>
               <Trans i18nKey="pool.max.label" />
+              &nbsp;
             </ExtentsText>
             <span>
               {formatTickPrice({
@@ -264,7 +365,7 @@ export default function PositionListItem({
               i18nKey="common.xPerY"
               components={{
                 x: <HoverInlineText text={currencyQuote?.symbol} />,
-                y: <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />,
+                y: <HoverInlineText text={currencyBase?.symbol ?? ''} />,
               }}
             />
           </RangeText>
