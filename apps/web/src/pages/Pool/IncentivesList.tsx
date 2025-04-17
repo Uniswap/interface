@@ -47,7 +47,6 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
     isStaking,
     isUnstaking,
     isClaiming,
-    hasRewards,
     handleStake,
     handleUnstake,
     handleClaim,
@@ -57,11 +56,13 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
   } = useBulkPosition(tokenId, poolAddress, allIncentives);
 
   const hasAvailableIncentives = useMemo(() => {
-    return activeIncentives.some(incentive => incentive.hasUserPositionInPool && !incentive.hasUserPositionInIncentive && !incentive.positionOnIncentiveIds?.includes(tokenId));
+    return activeIncentives.some(incentive => 
+      incentive.positionOnPoolIds?.includes(tokenId) && !incentive.positionOnIncentiveIds?.includes(tokenId)
+    );
   }, [activeIncentives]);
 
   const hasStakedIncentives = useMemo(() => {
-    return allIncentives.some(incentive => incentive.hasUserPositionInPool && incentive.hasUserPositionInIncentive && incentive.positionOnIncentiveIds?.includes(tokenId));
+    return allIncentives.some(incentive => incentive.hasUserPositionInIncentive && incentive.positionOnIncentiveIds?.includes(tokenId));
   }, [allIncentives]);
 
   const canWithdraw = useMemo(() => {
@@ -132,8 +133,9 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
         {allIncentives.map((incentive) => {
           const isExpanded = expandedIncentive === incentive.id;
           const isActive = incentive.status === 'active';
-          const hasStaked = incentive.hasUserPositionInIncentive && incentive.positionOnIncentiveIds?.includes(tokenId);
-          const canStake = incentive.hasUserPositionInPool && incentive.positionOnIncentiveIds?.includes(tokenId);
+          const hasStaked = incentive.positionOnIncentiveIds?.includes(tokenId);
+          console.log('incentive.positionOnIncentiveIds', incentive.positionOnIncentiveIds)
+          const canStake = incentive.positionOnPoolIds?.includes(tokenId) && !hasStaked;
           const rewardToken = new Token(
             1,
             incentive.rewardToken.id,
@@ -188,7 +190,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                         e.stopPropagation();
                         handleStake(incentive);
                       }}
-                      disabled={!isActive || !canStake || isStaking}
+                      disabled={!isActive || !canStake || isStaking || isBulkStaking}
                       style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px' }}
                     >
                       {isStaking  ? (
@@ -202,7 +204,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                         e.stopPropagation();
                           handleUnstake(incentive);
                       }}
-                      disabled={!hasStaked || isUnstaking }
+                      disabled={!hasStaked || isUnstaking  || isBulkUnstaking}
                       style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px' }}
                     >
                       {isUnstaking  ? (
@@ -211,13 +213,12 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                         <Trans i18nKey="common.unstake" />
                       )}
                     </ButtonPrimary>
-                    {Number(incentive.currentReward?.reward) > 0 && (
                       <ButtonPrimary
                         onClick={(e) => {
                           e.stopPropagation();
                           handleClaim(incentive);
                         }}
-                        disabled={!hasRewards || (isClaiming)  }
+                        disabled={Number(incentive.currentReward?.reward) <= 0|| (isClaiming)}
                         style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px' }}
                       >
                         {isClaiming ? (
@@ -226,7 +227,6 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                           <Trans i18nKey="common.claim" />
                         )}
                       </ButtonPrimary>
-                    )}
                   </Row>
                 </IncentiveContent>
               )}

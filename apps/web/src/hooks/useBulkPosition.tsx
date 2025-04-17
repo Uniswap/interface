@@ -17,33 +17,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
   const [isUnstaking, setIsUnstaking] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
   const [currentIncentiveId, setCurrentIncentiveId] = useState<string | null>(null);
-  const [hasRewards, setHasRewards] = useState(false);
-
-  useEffect(() => {
-    const checkRewards = async () => {
-      if (!v3StakerContract || !address) {
-        setHasRewards(false);
-        return;
-      }
-
-      try {
-        let totalRewards = 0;
-        for (const incentive of allIncentives) {
-          if (incentive.hasUserPositionInIncentive) {
-            const reward = await v3StakerContract.rewards(incentive.rewardToken.id, address);
-            const rewardAmount = ethers.utils.formatUnits(reward, 18);
-            totalRewards += Number(rewardAmount);
-          }
-        }
-        setHasRewards(totalRewards > 0);
-      } catch (error) {
-        console.error('Error checking rewards:', error);
-        setHasRewards(false);
-      }
-    };
-
-    checkRewards();
-  }, [v3StakerContract, address, allIncentives]);
 
   const getIncentiveData = useCallback(async (incentiveId: string) => {
     const incentive = allIncentives.find(inc => inc.id === incentiveId);
@@ -129,12 +102,20 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         incentive.rewardToken.id,
         address
       );
+      console.log('Reward amount before claim:', reward.toString());
+      
+      if (reward.lte(0)) {
+        console.log('No rewards available to claim');
+        return;
+      }
+
       const claimTx = await v3StakerContract.claimReward(
         incentive.rewardToken.id,
         address,
         reward
       );
       const claimReceipt = await claimTx.wait();
+      console.log('Claim transaction receipt:', claimReceipt);
     } catch (error) {
       console.error('Error claiming:', error);
     } finally {
@@ -149,21 +130,19 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
 
     try {
       const incentivesToStake = allIncentives.filter(
-        (incentive) => !incentive.hasUserPositionInIncentive && incentive.status === 'active'
+        (incentive) => incentive.status === 'active'
       );
 
       if (incentivesToStake.length === 0) {
         throw new Error('No incentives available to stake');
       }
 
-      // Check if NFT is already deposited in the staking contract
       const deposit = await v3StakerContract.deposits(tokenId);
       console.log('deposit', deposit)
       const isDeposited = deposit.owner === address;
       console.log('isDeposited', isDeposited)
 
       if (isDeposited) {
-        // If already deposited, use multicall to stake in all incentives
         const stakeCalls = incentivesToStake.map((incentive) => {
           const incentiveKey = {
             rewardToken: incentive.rewardToken.id,
@@ -183,7 +162,7 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         console.log('receipt', receipt)
         return
       }
-      // If not deposited, use the original logic with safeTransferFrom
+      
       const incentiveKeys = await Promise.all(
         incentivesToStake.map(async (incentive) => {
           const key = [
@@ -316,7 +295,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
     isUnstaking,
     isClaiming,
     currentIncentiveId,
-    hasRewards,
     getIncentiveData,
     handleStake,
     handleUnstake,
