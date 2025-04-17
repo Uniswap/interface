@@ -13,7 +13,7 @@ import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex, Switch } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 
 const LabelWrapper = styled(Column)`
   height: 100%;

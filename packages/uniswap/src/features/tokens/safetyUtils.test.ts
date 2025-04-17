@@ -75,6 +75,22 @@ describe('getTokenWarningSeverity', () => {
     expect(getTokenWarningSeverity(airdropCurrencyInfo)).toBe(WarningSeverity.Medium)
   })
 
+  it('should return Medium for potential honeypot', () => {
+    const potentialHoneypotCurrencyInfo = {
+      ...mockCurrencyInfo,
+      safetyInfo: {
+        ...mockSafetyInfo,
+        attackType: AttackType.Honeypot,
+      },
+      currency: {
+        ...mockCurrency,
+        sellFeeBps: { toNumber: () => 300 },
+        buyFeeBps: { toNumber: () => 300 },
+      } as Currency,
+    }
+    expect(getTokenWarningSeverity(potentialHoneypotCurrencyInfo)).toBe(WarningSeverity.Medium)
+  })
+
   it('should return Medium for low fee on transfer', () => {
     const lowFeeCurrencyInfo = {
       ...mockCurrencyInfo,
@@ -316,6 +332,22 @@ describe('getTokenProtectionWarning', () => {
       TokenProtectionWarning.MaliciousGeneral,
       'other malicious attack -> MaliciousGeneral',
     ],
+    [
+      {
+        ...mockCurrencyInfo,
+        safetyInfo: {
+          ...mockSafetyInfo,
+          attackType: AttackType.Honeypot,
+        },
+        currency: {
+          ...mockCurrency,
+          sellFeeBps: { toNumber: () => 300 },
+          buyFeeBps: { toNumber: () => 300 },
+        } as Currency,
+      },
+      TokenProtectionWarning.PotentialHoneypot,
+      'honeypot attack without 100% fee -> PotentialHoneypot',
+    ],
 
     // Edge cases
     [
@@ -432,6 +464,14 @@ describe('useModalHeaderText', () => {
       }),
     ).toBe('token.safety.blocked.title.tokenNotAvailable')
   })
+
+  it('returns correct text for potential honeypot', () => {
+    expect(
+      useModalHeaderText({
+        tokenProtectionWarning: TokenProtectionWarning.PotentialHoneypot,
+      }),
+    ).toBe('token.safety.warning.potentialHoneypot.title')
+  })
 })
 
 describe('useModalSubtitleText', () => {
@@ -445,6 +485,15 @@ describe('useModalSubtitleText', () => {
         tokenProtectionWarning: TokenProtectionWarning.MaliciousHoneypot,
       }),
     ).toBe('token.safety.warning.honeypot.message')
+  })
+
+  it('returns correct text for potential honeypot warning', () => {
+    expect(
+      useModalSubtitleText({
+        tokenProtectionWarning: TokenProtectionWarning.PotentialHoneypot,
+        tokenSymbol: 'ABC',
+      }),
+    ).toBe('token.safety.warning.potentialHoneypot.modal.message')
   })
 
   it('returns correct text for non-default warning', () => {
@@ -510,6 +559,14 @@ describe('useCardHeaderText', () => {
       }),
     ).toBe('token.safety.warning.fotHigh.title')
   })
+
+  it('returns correct text for potential honeypot warning', () => {
+    expect(
+      useCardHeaderText({
+        tokenProtectionWarning: TokenProtectionWarning.PotentialHoneypot,
+      }),
+    ).toBe('token.safety.warning.potentialHoneypot.title')
+  })
 })
 
 describe('useCardSubtitleText', () => {
@@ -523,5 +580,14 @@ describe('useCardSubtitleText', () => {
         tokenProtectionWarning: TokenProtectionWarning.MaliciousImpersonator,
       }),
     ).toBe('token.safety.warning.malicious.impersonator.message.short')
+  })
+
+  it('returns correct text for potential honeypot warning', () => {
+    expect(
+      useCardSubtitleText({
+        tokenProtectionWarning: TokenProtectionWarning.PotentialHoneypot,
+        tokenSymbol: 'ABC',
+      }),
+    ).toBe('token.safety.warning.potentialHoneypot.card.message')
   })
 })

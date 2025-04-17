@@ -1,9 +1,6 @@
-import { Extras } from '@sentry/types'
-import { datadogEnabled, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
-import { Sentry } from 'utilities/src/logger/Sentry'
+import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
-import { LogLevel, LoggerErrorContext, OverridesSentryFingerprint } from 'utilities/src/logger/types'
+import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
 import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
@@ -18,12 +15,12 @@ declare global {
   const __DEV__: boolean
 }
 
-const SENTRY_CHAR_LIMIT = 8192
+const MAX_CHAR_LIMIT = 8192
 
-let walletDatadogEnabled = false
+let datadogEnabled = false
 
 /**
- * Logs a message to console. Additionally sends log to Sentry and Datadog if using 'error', 'warn', or 'info'.
+ * Logs a message to console. Additionally sends log to Datadog if using 'error', 'warn', or 'info'.
  * Use `logger.debug` for development only logs.
  *
  * ex. `logger.warn('myFile', 'myFunc', 'Some warning', myArray)`
@@ -41,8 +38,8 @@ export const logger = {
   warn: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
     logMessage('warn', fileName, functionName, message, ...args),
   error: (error: unknown, captureContext: LoggerErrorContext): void => logException(error, captureContext),
-  setWalletDatadogEnabled: (enabled: boolean): void => {
-    walletDatadogEnabled = enabled || localDevDatadogEnabled
+  setDatadogEnabled: (enabled: boolean): void => {
+    datadogEnabled = enabled || localDevDatadogEnabled
   },
 }
 
@@ -68,37 +65,19 @@ function logMessage(
     }
   }
 
-  if (!datadogEnabled) {
+  // don't log if datadog isn't enabled on the build or by the switch
+  if (!datadogEnabledBuild || !datadogEnabled) {
     return
   }
 
   if (level === 'warn') {
-    if (isInterface) {
-      Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
-    }
-    if (walletDatadogEnabled) {
-      logWarningToDatadog(message, {
-        level,
-        args,
-        functionName,
-        fileName,
-      })
-    }
+    logWarningToDatadog(message, {
+      level,
+      args,
+      functionName,
+      fileName,
+    })
   } else if (level === 'info') {
-    if (isInterface) {
-      Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
-    }
-    if (walletDatadogEnabled) {
-      logToDatadog(message, {
-        level,
-        args,
-        functionName,
-        fileName,
-      })
-    }
-  }
-
-  if (isInterface) {
     logToDatadog(message, {
       level,
       args,
@@ -117,25 +96,21 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
     console.error(error, captureContext)
   }
 
-  if (!datadogEnabled) {
+  // don't log if datadog isn't enabled on the build or by the switch
+  if (!datadogEnabledBuild || !datadogEnabled) {
     return
   }
 
-  // Limit character length for string tags to the max Sentry allows
+  // Limit character length for string tags
   for (const contextProp of Object.keys(updatedContext.tags)) {
     const prop = contextProp as 'file' | 'function'
     const contextValue = updatedContext.tags[prop]
     if (typeof contextValue === 'string') {
-      updatedContext.tags[prop] = contextValue.slice(0, SENTRY_CHAR_LIMIT)
+      updatedContext.tags[prop] = contextValue.slice(0, MAX_CHAR_LIMIT)
     }
   }
 
-  if (isInterface) {
-    Sentry.captureException(error, updatedContext)
-  }
-  if (isInterface || walletDatadogEnabled) {
-    logErrorToDatadog(error instanceof Error ? error : new Error(`${error}`), updatedContext)
-  }
+  logErrorToDatadog(error instanceof Error ? error : new Error(`${error}`), updatedContext)
 }
 
 interface RNError {
@@ -148,7 +123,7 @@ export function addErrorExtras(error: unknown, captureContext: LoggerErrorContex
   if (error instanceof Error) {
     const updatedContext = { ...captureContext }
 
-    const extras: Extras = {}
+    const extras: Record<string, unknown> = {}
     const { nativeStackAndroid, userInfo } = error as RNError
 
     if (Array.isArray(nativeStackAndroid) && nativeStackAndroid.length > 0) {
@@ -161,21 +136,9 @@ export function addErrorExtras(error: unknown, captureContext: LoggerErrorContex
 
     updatedContext.extra = { ...updatedContext.extra, ...extras }
 
-    if (doesOverrideFingerprint(error)) {
-      updatedContext.fingerprint = ['{{ default }}', ...error.getFingerprint()]
-    }
-
     return updatedContext
   }
   return captureContext
-}
-
-function doesOverrideFingerprint(error: unknown): error is OverridesSentryFingerprint {
-  return (
-    typeof error === 'object' &&
-    error !== null &&
-    typeof (error as OverridesSentryFingerprint).getFingerprint === 'function'
-  )
 }
 
 function pad(n: number, amount: number = 2): string {
@@ -207,20 +170,4 @@ function formatMessage(
     // Specific printing style for mobile logging
     return [`${timeString}::${fileName}#${functionName}`, message]
   }
-}
-
-export enum DatadogEnvironment {
-  DEV = 'dev',
-  BETA = 'beta',
-  PROD = 'prod',
-}
-
-export function getDatadogEnvironment(): DatadogEnvironment {
-  if (isDevEnv()) {
-    return DatadogEnvironment.DEV
-  }
-  if (isBetaEnv()) {
-    return DatadogEnvironment.BETA
-  }
-  return DatadogEnvironment.PROD
 }

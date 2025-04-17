@@ -5,10 +5,18 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
+import { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
+import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
+import { BuyNativeTokenModalState } from 'src/components/TokenDetails/BuyNativeTokenModalState'
+import { UnitagsIntroModalState } from 'src/components/unitags/UnitagsIntroModalState'
+import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
+import { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchModalState'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestnetModeModalState } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import {
   FiatOnRampScreens,
@@ -34,6 +42,10 @@ type BackupFormParams = {
 type CloudBackupFormParams = {
   address: Address
   password: string
+}
+
+type WelcomeSplashParams = {
+  address: Address
 }
 
 export type ExploreStackParamList = {
@@ -76,6 +88,8 @@ export type SettingsStackParamList = {
   [ModalName.ConnectionsDappListModal]: ConnectionsDappsListModalState
   [ModalName.EditProfileSettingsModal]: undefined
   [ModalName.EditLabelSettingsModal]: undefined
+  [ModalName.UnitagsIntro]: UnitagsIntroModalState
+  [ModalName.RestoreWallet]: undefined
 }
 
 export type OnboardingStackBaseParams = {
@@ -93,6 +107,7 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.Landing]: OnboardingStackBaseParams
   [OnboardingScreens.Notifications]: OnboardingStackBaseParams
   [OnboardingScreens.WelcomeWallet]: OnboardingStackBaseParams
+  [OnboardingScreens.WelcomeSplash]: WelcomeSplashParams & OnboardingStackBaseParams
   [OnboardingScreens.Security]: OnboardingStackBaseParams
 
   // import
@@ -134,6 +149,22 @@ export type AppStackParamList = {
   [ModalName.KoreaCexTransferInfoModal]: undefined
   [ModalName.ExchangeTransferModal]: { initialState: { serviceProvider: FORServiceProvider } }
   [ModalName.Experiments]: undefined
+  [ModalName.TestnetSwitchModal]: { initialState: TestnetSwitchModalState }
+  [ModalName.TokenWarning]: { initialState?: TokenWarningModalState }
+  [ModalName.ViewOnlyExplainer]: undefined
+  [ModalName.UnitagsIntro]: UnitagsIntroModalState
+  [ModalName.RestoreWallet]: undefined
+  [ModalName.AccountSwitcher]: undefined
+  [ModalName.Scantastic]: ScantasticModalState
+  [ModalName.BackupReminder]: undefined
+  [ModalName.BackupReminderWarning]: undefined
+  [ModalName.RemoveWallet]: RemoveWalletModalState | undefined
+  [ModalName.ReceiveCryptoModal]: ReceiveCryptoModalState
+  [ModalName.TestnetMode]: TestnetModeModalState
+  [ModalName.BuyNativeToken]: BuyNativeTokenModalState
+  [ModalName.HiddenTokenInfoModal]: undefined
+  [ModalName.ScreenshotWarning]: { acknowledgeText?: string } | undefined
+  [ModalName.PasskeysHelp]: undefined
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

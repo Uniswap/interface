@@ -126,7 +126,7 @@ class GoogleDriveApiHelper {
 
               } else {
                 continuation.resumeWith(Result.failure(Exception("Oauth process has been interrupted")))
-                Log.d("Activity intent", "Indent null")
+                Log.d("Activity intent", "Intent null")
               }
             }
 

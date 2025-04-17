@@ -19,7 +19,7 @@ export const HeaderSkipButton = ({ onPress }: { onPress: () => void }): JSX.Elem
   return (
     <Trace logPress element={ElementName.Skip}>
       <TouchableArea testID={TestID.Skip} onPress={() => onPress()}>
-        <Text color="$neutral2" variant="buttonLabel2">
+        <Text color="$neutral2" variant="buttonLabel2" testID={TestID.Skip}>
           {t('common.button.skip')}
         </Text>
       </TouchableArea>

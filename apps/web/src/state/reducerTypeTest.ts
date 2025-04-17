@@ -1,6 +1,5 @@
 import { TokenList } from '@uniswap/token-lists'
 import { PopupType } from 'components/Popups/types'
-import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
 import { ApplicationState, OpenModalParams } from 'state/application/reducer'
 import { FiatOnRampTransactionsState } from 'state/fiatOnRampTransactions/reducer'
@@ -19,6 +18,7 @@ import { LocalWebTransactionState } from 'state/transactions/reducer'
 import { TransactionDetails } from 'state/transactions/types'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
+import { WalletCapabilitiesState } from 'state/walletCapabilities/reducer'
 import { ConnectedWalletsState } from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
@@ -67,7 +67,6 @@ type ExpectedAppState = CombinedState<{
   readonly wallets: ConnectedWalletsState
   readonly mint: MintState
   readonly mintV3: MintV3State
-  readonly multicall: ReturnType<typeof multicall.reducer>
   readonly logs: LogsState
   readonly [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
   readonly [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>
@@ -85,6 +84,7 @@ type ExpectedAppState = CombinedState<{
   readonly userSettings: UserSettingsState
   readonly portfolio: PortfolioState
   readonly visibility: VisibilityState
+  readonly walletCapabilities: WalletCapabilitiesState
 }>
 
 assert<Equals<InterfaceState, ExpectedAppState>>()

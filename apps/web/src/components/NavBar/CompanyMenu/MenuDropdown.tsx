@@ -8,12 +8,14 @@ import { Socials } from 'pages/Landing/sections/Footer'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { Separator, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
+import { Separator } from 'theme/components/Dividers'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text, styled } from 'ui/src'
 import { TextVariantTokens } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const Container = styled(Flex, {
   width: '295px',
@@ -93,7 +95,7 @@ export function MenuDropdown({ close }: { close?: () => void }) {
   }, [tabs])
 
   return (
-    <NavDropdown isOpen={false} dataTestId="nav-company-dropdown">
+    <NavDropdown isOpen={false} dataTestId={TestID.NavCompanyDropdown}>
       <Container>
         <Flex gap="$spacing20">
           {!areTabsVisible && <Section title={t('common.app')} items={tabsMenuItems} closeMenu={close} />}

@@ -147,10 +147,10 @@ export function ActiveLiquidityChart({
 
   return (
     <>
-      {hoverY && hoveredTick && (
+      {hoverY && hoveredTick ? (
         <TickTooltip
           hoverY={hoverY}
-          hoveredTick={hoveredTick ?? undefined}
+          hoveredTick={hoveredTick}
           currentTick={currentTick}
           currentPrice={current}
           contentWidth={contentWidth}
@@ -158,7 +158,7 @@ export function ActiveLiquidityChart({
           currency0={currency0}
           currency1={currency1}
         />
-      )}
+      ) : null}
       {showDiffIndicators && (
         <>
           {southHandleInView && (
@@ -232,6 +232,13 @@ export function ActiveLiquidityChart({
               />
             </mask>
           )}
+
+          <style>
+            {`
+              .axis-right line { display: none; }
+              .axis-right text { fill: ${colors.neutral2.val}; }
+            `}
+          </style>
         </defs>
 
         <g>
@@ -243,9 +250,9 @@ export function ActiveLiquidityChart({
               xValue={xAccessor}
               yValue={yAccessor}
               brushDomain={brushDomain}
+              containerHeight={height}
               fill={opacify(10, brushDomain ? colors.neutral1.val : barColor ?? colors.accent1.val)}
               selectedFill={opacify(10, barColor ?? colors.accent1.val)}
-              containerHeight={height}
               containerWidth={width - axisLabelPaneWidth}
             />
 

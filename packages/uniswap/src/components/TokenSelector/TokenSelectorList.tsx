@@ -1,13 +1,19 @@
 import { memo, useCallback, useState } from 'react'
-import { TokenOptionItem as BaseTokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
+import { useDispatch } from 'react-redux'
+import { Text } from 'ui/src'
 import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
 import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
 import { ItemRowInfo } from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
+import { TokenOptionItem as BaseTokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
 import { TokenOption, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -35,37 +41,81 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   isKeyboardOpen?: boolean
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
-  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+  const { currencyInfo } = tokenOption
+
   const onPress = useCallback(
-    () => onSelectCurrency(tokenOption.currencyInfo, section, index),
-    [index, onSelectCurrency, section, tokenOption.currencyInfo],
+    () => onSelectCurrency(currencyInfo, section, index),
+    [index, onSelectCurrency, section, currencyInfo],
   )
 
-  const { isTestnetModeEnabled } = useEnabledChains()
+  const dispatch = useDispatch()
+  const onPressTokenOption = useCallback(() => {
+    dispatch(setHasSeenBridgingTooltip(true))
+    onPress()
+  }, [dispatch, onPress])
 
-  const { tokenWarningDismissed } = useDismissedTokenWarnings(tokenOption.currencyInfo.currency)
+  // Balance & quantity formatting
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const tokenBalance = formatNumberOrString({
     value: tokenOption.quantity,
     type: NumberType.TokenTx,
   })
-
   const fiatBalance = convertFiatAmountFormatted(tokenOption.balanceUSD, NumberType.FiatTokenPrice)
 
-  const title = isTestnetModeEnabled ? tokenBalance : fiatBalance
-  const subtitle = isTestnetModeEnabled ? undefined : tokenBalance
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const balanceText = isTestnetModeEnabled ? tokenBalance : fiatBalance
+  const quantityText = isTestnetModeEnabled ? undefined : tokenBalance
+
+  // Token protection modal
+  const severity = getTokenWarningSeverity(currencyInfo)
+  const [showWarningModal, setShowWarningModal] = useState(false)
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo.currency)
+  const isBlocked = severity === WarningSeverity.Blocked
+  const shouldShowWarningModalOnPress = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
+
+  const onAcceptTokenWarning = useCallback(() => {
+    setShowWarningModal(false)
+    onPress()
+  }, [onPress])
 
   return (
     <BaseTokenOptionItem
-      balance={title}
-      isKeyboardOpen={isKeyboardOpen}
       option={tokenOption}
-      quantity={tokenOption.quantity}
-      quantityFormatted={subtitle}
       showTokenAddress={showTokenAddress}
+      rightElement={
+        tokenOption.quantity && tokenOption.quantity !== 0 ? (
+          <>
+            <Text variant="body1">{balanceText}</Text>
+            {quantityText && (
+              <Text color="$neutral2" variant="body3">
+                {quantityText}
+              </Text>
+            )}
+          </>
+        ) : undefined
+      }
+      showDisabled={Boolean((showWarnings && isBlocked) || tokenOption.isUnsupported)}
+      balance={balanceText}
+      modalInfo={{
+        modal: (
+          <TokenWarningModal
+            currencyInfo0={currencyInfo}
+            isVisible={showWarningModal}
+            closeModalOnly={(): void => setShowWarningModal(false)}
+            onAcknowledge={onAcceptTokenWarning}
+          />
+        ),
+        modalShouldShow: showWarnings && shouldShowWarningModalOnPress,
+        modalSetIsOpen: setShowWarningModal,
+      }}
+      // TODO: clean up legacy token selector variables:
+      isKeyboardOpen={isKeyboardOpen}
+      quantity={tokenOption.quantity}
+      quantityFormatted={quantityText}
       showWarnings={showWarnings}
       tokenWarningDismissed={tokenWarningDismissed}
-      onPress={onPress}
+      onPress={onPressTokenOption}
     />
   )
 })

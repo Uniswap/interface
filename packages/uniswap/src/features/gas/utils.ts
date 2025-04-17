@@ -7,7 +7,7 @@ import {
   GasStrategyType,
   GasStrategyWithConditions,
 } from 'uniswap/src/features/gating/configs'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 
 function getNativeCurrencyTotalSpend(
@@ -43,7 +43,7 @@ export function findLocalGasStrategy(
   gasEstimate: GasEstimate,
   type: GasStrategyType,
 ): GasStrategyWithConditions | undefined {
-  const gasStrategies = Statsig.getConfig(DynamicConfigs.GasStrategies).value as GasStrategies
+  const gasStrategies = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies).value as GasStrategies
   return gasStrategies.strategies.find(
     (s) => s.conditions.types === type && areEqualGasStrategies(s.strategy, gasEstimate.strategy),
   )

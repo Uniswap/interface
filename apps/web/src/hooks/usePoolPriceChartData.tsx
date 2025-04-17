@@ -26,7 +26,6 @@ export type PDPChartQueryVars = {
 export function usePoolPriceChartData(
   variables: PDPChartQueryVars | undefined,
   currencyA: OptionalCurrency,
-  currencyB: OptionalCurrency,
   protocolVersion: ProtocolVersion,
   sortedCurrencyAAddress: string,
 ): ChartQueryResult<PriceChartData, ChartType.PRICE> {

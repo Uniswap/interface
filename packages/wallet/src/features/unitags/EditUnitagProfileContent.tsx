@@ -16,11 +16,13 @@ import {
 import { Pen } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
+import { updateUnitagMetadata } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { tryUploadAvatar } from 'uniswap/src/features/unitags/avatars'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
@@ -38,11 +40,10 @@ import { extensionNftModalProps } from 'wallet/src/features/unitags/ChooseNftMod
 import { ChoosePhotoOptionsModal } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
 import { HeaderRadial, solidHeaderProps } from 'wallet/src/features/unitags/HeaderRadial'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
-import { updateUnitagMetadata } from 'wallet/src/features/unitags/api'
-import { tryUploadAvatar } from 'wallet/src/features/unitags/avatars'
 import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hooks/useAvatarUploadCredsWithRefresh'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 const PADDING_WIDTH = isExtension ? '$none' : '$spacing16'
@@ -76,11 +77,13 @@ export function EditUnitagProfileContent({
   unitag,
   entryPoint,
   onNavigate,
+  onButtonClick,
 }: {
   address: string
   unitag: string
   entryPoint: UnitagScreens.UnitagConfirmation | MobileScreens.SettingsWallet | UnitagScreens.EditProfile
   onNavigate?: () => void
+  onButtonClick?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const account = useAccount(address)
@@ -223,12 +226,14 @@ export function EditUnitagProfileContent({
       : updatedMetadata
 
     setUpdateResponseLoading(true)
-    const { data: updateResponse } = await updateUnitagMetadata({
+    const updateResponse = await updateUnitagMetadata({
       username: unitag,
-      metadata,
-      clearAvatar: metadata.avatar === undefined,
-      account,
-      signerManager,
+      data: {
+        metadata,
+        clearAvatar: metadata.avatar === undefined,
+      },
+      address: account.address,
+      signMessage: generateSignerFunc(account, signerManager),
     })
 
     setUpdateResponseLoading(false)
@@ -260,6 +265,9 @@ export function EditUnitagProfileContent({
     if (entryPoint === UnitagScreens.UnitagConfirmation) {
       onNavigate?.()
     }
+
+    // Tracks back button to re open the manage wallets modal
+    onButtonClick?.()
   }
 
   const handleUpdateError = (): void => {

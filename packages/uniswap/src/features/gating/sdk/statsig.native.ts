@@ -1,19 +1,37 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { Statsig, StatsigContext } from 'statsig-react-native'
-const statsig = Statsig
-const statsigContext = StatsigContext
+import { StatsigClient } from '@statsig/react-bindings'
+import { StatsigClientRN } from '@statsig/react-native-bindings'
+import { config } from 'uniswap/src/config'
+import { LocalOverrideAdapterWrapper } from 'uniswap/src/features/gating/LocalOverrideAdapterWrapper'
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 export {
-  DynamicConfig,
+  StatsigClient,
   StatsigOptions,
-  StatsigOverrides,
-  StatsigProvider,
   StatsigUser,
-  useConfig,
+  StorageProvider,
+  TypedReturn,
+} from '@statsig/react-native-bindings'
+
+export {
+  StatsigContext,
+  StatsigProviderRN as StatsigProvider,
+  Storage,
+  useClientAsyncInitRN as useClientAsyncInit,
+  useDynamicConfig,
   useExperiment,
-  useExperimentWithExposureLoggingDisabled,
-  useGate,
-  useGateWithExposureLoggingDisabled,
-} from 'statsig-react-native'
-export { statsig as Statsig, statsigContext as StatsigContext }
+  useFeatureGate,
+  useGateValue,
+  useLayer,
+  useStatsigClient,
+  useStatsigUser,
+} from '@statsig/react-native-bindings'
+
+let localOverrideAdapter: LocalOverrideAdapterWrapper
+
+export const getOverrideAdapter = (): LocalOverrideAdapterWrapper => {
+  if (!localOverrideAdapter) {
+    localOverrideAdapter = new LocalOverrideAdapterWrapper(config.statsigApiKey)
+  }
+  return localOverrideAdapter
+}
+
+export const getStatsigClient = (): StatsigClient => StatsigClientRN.instance(config.statsigApiKey)

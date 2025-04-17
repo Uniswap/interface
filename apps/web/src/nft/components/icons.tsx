@@ -3,19 +3,20 @@ import React from 'react'
 import { useSporeColors } from 'ui/src'
 
 // ESLint reports `fill` is missing, whereas it exists on an SVGProps type
-type SVGProps = React.SVGProps<SVGSVGElement> & {
+export type SVGProps = React.SVGProps<SVGSVGElement> & {
   fill?: string
   height?: string | number
   width?: string | number
   gradientId?: string
 }
 
-export const ChevronUpIcon = ({
-  secondaryColor,
-  secondaryWidth,
-  secondaryHeight,
-  ...props
-}: SVGProps & { secondaryWidth?: string; secondaryHeight?: string; secondaryColor?: string }) => {
+export type ChevronUpIconProps = SVGProps & {
+  secondaryWidth?: string
+  secondaryHeight?: string
+  secondaryColor?: string
+}
+
+export const ChevronUpIcon = ({ secondaryColor, secondaryWidth, secondaryHeight, ...props }: ChevronUpIconProps) => {
   const colors = useSporeColors()
   return (
     <svg

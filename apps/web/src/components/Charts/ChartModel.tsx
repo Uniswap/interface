@@ -19,7 +19,7 @@ import {
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Flex, TamaguiElement, assertWebElement, styled, useMedia } from 'ui/src'
+import { ColorTokens, Flex, TamaguiElement, assertWebElement, styled, useMedia } from 'ui/src'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useFormatter } from 'utils/formatNumbers'
 import { v4 as uuidv4 } from 'uuid'
@@ -38,7 +38,7 @@ interface ChartUtilParams<TDataType extends SeriesDataItemType> {
 }
 
 interface ChartDataParams<TDataType extends SeriesDataItemType> {
-  color?: string
+  color?: ColorTokens
   data: TDataType[]
   /** Repesents whether `data` is stale. If true, stale UI will appear */
   stale?: boolean

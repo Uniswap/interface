@@ -3,7 +3,7 @@ rulesDirPlugin.RULES_DIR = '../../packages/uniswap/eslint_rules'
 
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/native-app'],
+  extends: ['@uniswap/eslint-config/mobile'],
   plugins: ['rulesdir'],
   ignorePatterns: ['.storybook/storybook.requires.ts'],
   parserOptions: {
@@ -37,5 +37,6 @@ module.exports = {
   ],
   rules: {
     'rulesdir/i18n': 'error',
+    'rulesdir/no-redux-modals': 'error',
   },
 }

@@ -39,7 +39,8 @@ function useWalletSigner(): ethers.Signer | undefined {
 export function WalletUniswapProvider({ children }: PropsWithChildren): JSX.Element {
   const account = useActiveAccount() ?? undefined
   const signer = useWalletSigner()
-  const { navigateToBuyOrReceiveWithEmptyWallet, navigateToFiatOnRamp, navigateToSwapFlow } = useWalletNavigation()
+  const { navigateToTokenDetails, navigateToBuyOrReceiveWithEmptyWallet, navigateToFiatOnRamp, navigateToSwapFlow } =
+    useWalletNavigation()
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
 
   const navigateToSwapFromCurrencyIds = useCallback(
@@ -60,6 +61,7 @@ export function WalletUniswapProvider({ children }: PropsWithChildren): JSX.Elem
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToSwapFlow={navigateToSwapFromCurrencyIds}
+      navigateToTokenDetails={navigateToTokenDetails}
       signer={signer}
       useProviderHook={useWalletProvider}
       onSwapChainsChanged={showSwapNetworkNotification}

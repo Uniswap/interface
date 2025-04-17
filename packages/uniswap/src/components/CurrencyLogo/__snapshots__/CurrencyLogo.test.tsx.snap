@@ -73,13 +73,13 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
       style={
         {
           "borderColor": "#131313",
-          "borderRadius": 6.6,
+          "borderRadius": 6,
           "borderStyle": "solid",
           "borderWidth": 2,
           "flexDirection": "column",
-          "height": 22,
+          "height": 20,
           "overflow": "hidden",
-          "width": 22,
+          "width": 20,
           "zIndex": 10,
         }
       }
@@ -90,8 +90,8 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
         source="mock-asset-ARBITRUM_LOGO.png"
         style={
           {
-            "height": 18,
-            "width": 18,
+            "height": 16,
+            "width": 16,
           }
         }
       />

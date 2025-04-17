@@ -1,8 +1,9 @@
+/* eslint-disable max-lines */
 import { AnyAction } from '@reduxjs/toolkit'
 import { IWalletKit, WalletKit, WalletKitTypes } from '@reown/walletkit'
 import { Core } from '@walletconnect/core'
 import '@walletconnect/react-native-compat'
-import { PendingRequestTypes, ProposalTypes } from '@walletconnect/types'
+import { PendingRequestTypes, ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils'
 import { Alert } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
@@ -13,6 +14,9 @@ import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
+  parseGetCallsStatusRequest,
+  parseGetCapabilitiesRequest,
+  parseSendCallsRequest,
   parseSignRequest,
   parseTransactionRequest,
 } from 'src/features/walletConnect/utils'
@@ -27,6 +31,8 @@ import { call, fork, put, select, take } from 'typed-redux-saga'
 import { config } from 'uniswap/src/config'
 import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import i18n from 'uniswap/src/i18n'
@@ -211,6 +217,9 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
             EthMethod.PersonalSign,
             EthMethod.SignTypedData,
             EthMethod.SignTypedDataV4,
+            EthMethod.GetCapabilities,
+            EthMethod.SendCalls,
+            EthMethod.GetCallsStatus,
           ],
           events: [EthEvent.AccountsChanged, EthEvent.ChainChanged],
           accounts,
@@ -256,6 +265,16 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
   }
 }
 
+function getAccountAddressFromWCSession(requestSession: SessionTypes.Struct) {
+  const namespaces = Object.values(requestSession.namespaces)
+  const eip155Account = namespaces[0]?.accounts[0]
+  return eip155Account ? getAccountAddressFromEIP155String(eip155Account) : undefined
+}
+
+const eip5792Methods = [EthMethod.GetCallsStatus, EthMethod.SendCalls, EthMethod.GetCapabilities].map((m) =>
+  m.valueOf(),
+)
+
 function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
   const { topic, params, id } = sessionRequest
   const { request: wcRequest, chainId: wcChainId } = params
@@ -263,10 +282,30 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
 
   const chainId = getChainIdFromEIP155String(wcChainId)
   const requestSession = wcWeb3Wallet.engine.signClient.session.get(topic)
+  const accountAddress = getAccountAddressFromWCSession(requestSession)
   const dapp = requestSession.peer.metadata
 
   if (!chainId) {
     throw new Error('WalletConnect 2.0 session request has invalid chainId')
+  }
+
+  if (!accountAddress) {
+    throw new Error('WalletConnect 2.0 session has no eip155 account')
+  }
+
+  if (eip5792Methods.includes(method)) {
+    const eip5792MethodsEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.Eip5792Methods)) ?? false
+    if (!eip5792MethodsEnabled) {
+      yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
+        topic,
+        response: {
+          id,
+          jsonrpc: '2.0',
+          error: getSdkError('WC_METHOD_UNSUPPORTED'),
+        },
+      })
+      return
+    }
   }
 
   switch (method) {
@@ -274,25 +313,99 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
     case EthMethod.PersonalSign:
     case EthMethod.SignTypedData:
     case EthMethod.SignTypedDataV4: {
-      const { account, request } = parseSignRequest(method, topic, id, chainId, dapp, requestParams)
-      yield* put(
-        addRequest({
-          account,
-          request,
-        }),
-      )
-
+      const request = parseSignRequest(method, topic, id, chainId, dapp, requestParams)
+      yield* put(addRequest(request))
       break
     }
     case EthMethod.EthSendTransaction: {
-      const { account, request } = parseTransactionRequest(method, topic, id, chainId, dapp, requestParams)
-      yield* put(
-        addRequest({
-          account,
-          request,
-        }),
-      )
+      const request = parseTransactionRequest(method, topic, id, chainId, dapp, requestParams)
+      yield* put(addRequest(request))
+      break
+    }
+    case EthMethod.SendCalls: {
+      // capabilities as part of sendCallsRequest is subject to change
+      const { capabilities } = parseSendCallsRequest(topic, id, chainId, dapp, requestParams, accountAddress)
 
+      // Mock response data
+      const response = {
+        id,
+        capabilities,
+      }
+
+      yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
+        topic,
+        response: {
+          id,
+          jsonrpc: '2.0',
+          result: response,
+        },
+      })
+
+      break
+    }
+    case EthMethod.GetCallsStatus: {
+      const { id: batchId } = parseGetCallsStatusRequest(topic, id, chainId, dapp, requestParams, accountAddress)
+
+      // Mock response data
+      const response = {
+        version: '1.0',
+        id: batchId,
+        chainId,
+        status: 100,
+        receipts: [
+          {
+            logs: [
+              {
+                address: '0x1234567890123456789012345678901234567890',
+                data: '0x0000000000000000000000000000000000000000000000000000000000000001',
+                topics: ['0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'],
+              },
+            ],
+            status: '0x1', // Success
+            blockHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+            blockNumber: '0x1',
+            gasUsed: '0x5208', // 21000
+            transactionHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+          },
+        ],
+        capabilities: {},
+      }
+
+      yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
+        topic,
+        response: {
+          id,
+          jsonrpc: '2.0',
+          result: response,
+        },
+      })
+
+      break
+    }
+    case EthMethod.GetCapabilities: {
+      const { account } = parseGetCapabilitiesRequest(method, topic, id, dapp, requestParams)
+      if (account !== accountAddress) {
+        // Reject unauthorized wallet_getCapabilities request
+        logger.warn('WalletConnectSaga', 'sessionRequestHandler', `Session request method is unauthorized: ${method}`)
+        yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
+          topic,
+          response: {
+            id,
+            jsonrpc: '2.0',
+            error: getSdkError('UNAUTHORIZED_METHOD'),
+          },
+        })
+      }
+
+      yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
+        topic,
+        response: {
+          id,
+          jsonrpc: '2.0',
+          // TODO: This would be where we add any changes in capabilities object (when decided)
+          result: {},
+        },
+      })
       break
     }
     default:

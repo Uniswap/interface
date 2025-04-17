@@ -1,6 +1,5 @@
 import DeviceInfo from 'react-native-device-info'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
-import { StatsigEnvironmentTier } from 'wallet/src/version'
 
 /**
  * Returns a string with the app version and build number in the format:
@@ -32,14 +31,4 @@ export function getBuildVariant(): BuildVariant {
   } else {
     return BuildVariant.Production
   }
-}
-
-export function getStatsigEnvironmentTier(): StatsigEnvironmentTier {
-  if (isDevEnv()) {
-    return StatsigEnvironmentTier.DEV
-  }
-  if (isBetaEnv()) {
-    return StatsigEnvironmentTier.BETA
-  }
-  return StatsigEnvironmentTier.PROD
 }

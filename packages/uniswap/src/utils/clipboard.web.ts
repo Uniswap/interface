@@ -9,8 +9,7 @@ const Clipboard: IClipboard = {
     const value = await navigator.clipboard.readText()
     return value
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setClipboardImage: async (imageUrl: string | undefined) => {
+  setClipboardImage: async (_imageUrl: string | undefined) => {
     throw new Error('setClipboardImage not implemented on web')
   },
 } as IClipboard

@@ -12,7 +12,9 @@ const DEFAULT_TIMEOUT = ms('30s')
 export default defineConfig({
   testDir: './src/pages',
   testMatch: '**/*.e2e.test.ts',
-  fullyParallel: false,
+  // TODO: WEB-7311 - Increase number of workers
+  workers: 1,
+  fullyParallel: true,
   timeout: ms('10m'),
   reporter: process.env.CI && process.env.REPORT_TO_SLACK ? [['blob', 'list']] : 'list',
   expect: {

@@ -1,7 +1,6 @@
 import * as ExpoClipboard from 'expo-clipboard'
 import { State } from 'react-native-gesture-handler'
 import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils'
-import { MobileState } from 'src/app/mobileReducer'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { fireEvent, render, screen, waitFor, within } from 'src/test/test-utils'
@@ -16,11 +15,7 @@ import { ACCOUNT, preloadedWalletPackageState, signerMnemonicAccount } from 'wal
 const preloadedState = preloadedWalletPackageState({ account: ACCOUNT })
 const address = ACCOUNT.address
 const shortenedAddress = sanitizeAddressText(shortenAddress(address))!
-
-const isModalOpen = (state: MobileState): boolean => {
-  const modalState = state.modals[ModalName.AccountSwitcher]
-  return modalState.isOpen
-}
+const navigate = jest.fn()
 
 describe(AccountHeader, () => {
   it('renders correctly', () => {
@@ -71,33 +66,40 @@ describe(AccountHeader, () => {
       expect(addressText).toBeTruthy()
     })
 
-    it('opens account switcher modal when account name is pressed', () => {
-      const { store } = render(<AccountHeader />, { preloadedState })
+    it('opens account switcher modal when account name is pressed', async () => {
+      jest.spyOn(navigationRef, 'isReady').mockImplementation(() => true)
+      jest.spyOn(navigationRef, 'navigate').mockImplementation(navigate)
+
+      render(<AccountHeader />, { preloadedState })
 
       const displayNameText = within(screen.getByTestId('account-header/display-name')).getByText(ACCOUNT.name)
 
-      expect(isModalOpen(store.getState())).toBe(false)
-
       fireEvent.press(displayNameText, ON_PRESS_EVENT_PAYLOAD)
 
-      expect(isModalOpen(store.getState())).toBe(true)
+      await waitFor(() => {
+        expect(navigate).toHaveBeenCalledTimes(1)
+        expect(navigate).toHaveBeenCalledWith(ModalName.AccountSwitcher, undefined)
+      })
     })
   })
 
-  it('opens account switcher modal when account avatar is pressed', () => {
-    const { store } = render(<AccountHeader />, { preloadedState })
+  it('opens account switcher modal when account avatar is pressed', async () => {
+    jest.spyOn(navigationRef, 'isReady').mockImplementation(() => true)
+    jest.spyOn(navigationRef, 'navigate').mockImplementation(navigate)
+
+    render(<AccountHeader />, { preloadedState })
 
     const avatar = screen.getByTestId('account-icon')
 
-    expect(isModalOpen(store.getState())).toBe(false)
-
     fireEvent.press(avatar, ON_PRESS_EVENT_PAYLOAD)
 
-    expect(isModalOpen(store.getState())).toBe(true)
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledTimes(1)
+      expect(navigate).toHaveBeenCalledWith(ModalName.AccountSwitcher, undefined)
+    })
   })
 
   it('opens settings screen when settings button is pressed', async () => {
-    const navigate = jest.fn()
     jest.spyOn(navigationRef, 'isReady').mockImplementation(() => true)
     jest.spyOn(navigationRef, 'navigate').mockImplementation(navigate)
     render(<AccountHeader />, { preloadedState })

@@ -5,7 +5,6 @@ User-agent: *
 Disallow: https://statsigapi.net
 Disallow: https://api.uniswap.org/v1/statsig-proxy
 Disallow: https://api.uniswap.org/v1/amplitude-proxy
-Disallow: https://sentry.io
 
 # Token Lists
 Disallow: https://cloudflare-ipfs.com

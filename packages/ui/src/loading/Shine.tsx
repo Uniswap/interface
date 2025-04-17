@@ -24,7 +24,10 @@ export function Shine({ children, disabled, ...rest }: ShineProps & FlexProps): 
             : {
                 WebkitMaskImage: `linear-gradient(-75deg, rgba(0,0,0,0.5) 30%, #000 50%, rgba(0,0,0,0.5) 70%)`,
                 WebkitMaskSize: '200%',
-                animation: 'shine 1s linear infinite',
+                animationName: 'shine',
+                animationDuration: '1s',
+                animationTimingFunction: 'linear',
+                animationIterationCount: 'infinite',
                 animationDelay: rest['$platform-web']?.animationDelay,
               }
         }

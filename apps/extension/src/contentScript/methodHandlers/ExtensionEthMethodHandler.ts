@@ -24,6 +24,8 @@ import {
   EthSignTypedDataV4RequestSchema,
   PersonalSignRequest,
   PersonalSignRequestSchema,
+  WalletGetCallsStatusRequest,
+  WalletGetCallsStatusRequestSchema,
   WalletGetCapabilitiesRequest,
   WalletGetCapabilitiesRequestSchema,
   WalletGetCapabilitiesResponse,
@@ -33,6 +35,8 @@ import {
   WalletRequestPermissionsRequestSchema,
   WalletRevokePermissionsRequest,
   WalletRevokePermissionsRequestSchema,
+  WalletSendCallsRequest,
+  WalletSendCallsRequestSchema,
   WalletSwitchEthereumChainRequest,
   WalletSwitchEthereumChainRequestSchema,
 } from 'src/contentScript/WindowEthereumRequestTypes'
@@ -211,6 +215,32 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
 
       source?.postMessage(message)
     })
+
+    dappResponseMessageChannel.addMessageListener(DappResponseType.SendCallsResponse, (message) => {
+      const source = getPendingResponseInfo(
+        this.requestIdToSourceMap,
+        message.requestId,
+        DappResponseType.SendCallsResponse,
+      )?.source
+
+      source?.postMessage({
+        requestId: message.requestId,
+        result: message.response,
+      })
+    })
+
+    dappResponseMessageChannel.addMessageListener(DappResponseType.GetCallsStatusResponse, (message) => {
+      const source = getPendingResponseInfo(
+        this.requestIdToSourceMap,
+        message.requestId,
+        DappResponseType.GetCallsStatusResponse,
+      )?.source
+
+      source?.postMessage({
+        requestId: message.requestId,
+        result: message.response,
+      })
+    })
   }
 
   private isAuthorized(): boolean {
@@ -229,6 +259,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     this.setProvider(new JsonRpcProvider(providerUrl))
   }
 
+  // eslint-disable-next-line complexity
   async handleRequest(request: WindowEthereumRequest, source: MessageEventSource | null): Promise<void> {
     switch (request.method) {
       case ExtensionEthMethods.eth_chainId: {
@@ -321,6 +352,24 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
         }
 
         await this.handleEthSignTypedData(parsedRequest, source)
+        break
+      }
+      case ExtensionEthMethods.wallet_sendCalls: {
+        if (!this.isAuthorized()) {
+          postUnauthorizedError(source, request.requestId)
+          return
+        }
+        const parsedRequest = WalletSendCallsRequestSchema.parse(request)
+        await this.handleWalletSendCalls(parsedRequest, source)
+        break
+      }
+      case ExtensionEthMethods.wallet_getCallsStatus: {
+        if (!this.isAuthorized()) {
+          postUnauthorizedError(source, request.requestId)
+          return
+        }
+        const parsedRequest = WalletGetCallsStatusRequestSchema.parse(request)
+        await this.handleWalletGetCallsStatus(parsedRequest, source)
         break
       }
     }
@@ -504,6 +553,43 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
     source?.postMessage({
       requestId: request.requestId,
       result: capabilities,
+    })
+  }
+
+  /**
+   * Handle wallet_sendCalls request
+   * This method allows dapps to send a batch of calls to the wallet
+   */
+  async handleWalletSendCalls(request: WalletSendCallsRequest, source: MessageEventSource | null): Promise<void> {
+    this.requestIdToSourceMap.set(request.requestId, {
+      type: DappResponseType.SendCallsResponse,
+      source,
+    })
+
+    await contentScriptToBackgroundMessageChannel.sendMessage({
+      type: DappRequestType.SendCalls,
+      requestId: request.requestId,
+      sendCallsParams: request.sendCallsParams,
+    })
+  }
+
+  /**
+   * Handle wallet_getCallsStatus request
+   * This method returns the status of a call batch that was sent via wallet_sendCalls
+   */
+  async handleWalletGetCallsStatus(
+    request: WalletGetCallsStatusRequest,
+    source: MessageEventSource | null,
+  ): Promise<void> {
+    this.requestIdToSourceMap.set(request.requestId, {
+      type: DappResponseType.GetCallsStatusResponse,
+      source,
+    })
+
+    await contentScriptToBackgroundMessageChannel.sendMessage({
+      type: DappRequestType.GetCallsStatus,
+      requestId: request.requestId,
+      batchId: request.batchId,
     })
   }
 }

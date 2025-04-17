@@ -9,7 +9,9 @@ export const EllipsisStyle = css`
 `
 
 export const EllipsisTamaguiStyle = {
-  whiteSpace: 'nowrap',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
+  '$platform-web': {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
 } satisfies TextStyle

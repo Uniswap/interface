@@ -17,13 +17,13 @@ exports[`renders text with few matches 1`] = `
         "color": {
           "dynamic": {
             "dark": "#FFFFFF",
-            "light": "#222222",
+            "light": "#131313",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -38,13 +38,13 @@ exports[`renders text with few matches 1`] = `
         "color": {
           "dynamic": {
             "dark": "#FFFFFF",
-            "light": "#222222",
+            "light": "#131313",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -58,14 +58,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -79,14 +79,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -101,13 +101,13 @@ exports[`renders text with few matches 1`] = `
         "color": {
           "dynamic": {
             "dark": "#FFFFFF",
-            "light": "#222222",
+            "light": "#131313",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -122,13 +122,13 @@ exports[`renders text with few matches 1`] = `
         "color": {
           "dynamic": {
             "dark": "#FFFFFF",
-            "light": "#222222",
+            "light": "#131313",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -143,13 +143,13 @@ exports[`renders text with few matches 1`] = `
         "color": {
           "dynamic": {
             "dark": "#FFFFFF",
-            "light": "#222222",
+            "light": "#131313",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -164,13 +164,13 @@ exports[`renders text with few matches 1`] = `
         "color": {
           "dynamic": {
             "dark": "#FFFFFF",
-            "light": "#222222",
+            "light": "#131313",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -185,13 +185,13 @@ exports[`renders text with few matches 1`] = `
         "color": {
           "dynamic": {
             "dark": "#FFFFFF",
-            "light": "#222222",
+            "light": "#131313",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -205,14 +205,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -226,14 +226,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -247,14 +247,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -268,14 +268,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -289,14 +289,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -310,14 +310,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -331,14 +331,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -352,14 +352,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -373,14 +373,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -394,14 +394,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -415,14 +415,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -436,14 +436,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -457,14 +457,14 @@ exports[`renders text with few matches 1`] = `
       {
         "color": {
           "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
+            "dark": "rgba(255, 255, 255, 0.38)",
+            "light": "rgba(19, 19, 19, 0.35)",
           },
         },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 24.7,
       }
     }
     suppressHighlighting={true}
@@ -484,13 +484,13 @@ exports[`renders text without matches 1`] = `
       "color": {
         "dynamic": {
           "dark": "#FFFFFF",
-          "light": "#222222",
+          "light": "#131313",
         },
       },
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",
-      "lineHeight": 24,
+      "lineHeight": 24.7,
     }
   }
   suppressHighlighting={true}

@@ -6,18 +6,18 @@ const preloadedState = preloadedWalletPackageState({
   account: ACCOUNT,
 })
 
-describe(ReceiveScreen, () => {
-  it('renders without error', async () => {
+describe('ReceiveScreen', () => {
+  it('renders without error', () => {
     const tree = render(<ReceiveScreen />, { preloadedState })
 
     expect(tree).toMatchSnapshot()
     cleanup()
   })
 
-  it('renders a QR code', async () => {
+  it('renders a QR code', () => {
     render(<ReceiveScreen />, { preloadedState })
 
-    const qrCode = await screen.getByTestId('wallet-qr-code')
+    const qrCode = screen.getByTestId('wallet-qr-code')
     expect(qrCode).toBeDefined()
     cleanup()
   })

@@ -113,9 +113,7 @@ export const SettingsRow = memo(
               {icon}
             </Flex>
             <Flex fill grow alignItems="stretch">
-              <Text numberOfLines={1} variant="body1">
-                {text}
-              </Text>
+              <Text variant="body1">{text}</Text>
               {subText && (
                 <Text color="$neutral2" numberOfLines={1} variant="buttonLabel2">
                   {subText}

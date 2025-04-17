@@ -294,14 +294,6 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/nfts",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
     "path": "/nfts/asset/:contractAddress/:tokenId",
   },
   {
@@ -318,15 +310,7 @@ exports[`Routes router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/nfts/collection/:contractAddress",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/nfts/collection/:contractAddress/activity",
+    "path": "/auth/passkey/extension",
   },
   {
     "enabled": [Function],

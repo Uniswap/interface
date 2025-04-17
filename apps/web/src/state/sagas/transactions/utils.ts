@@ -46,7 +46,6 @@ import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
 import { percentFromFloat } from 'utilities/src/format/percent'
-import { Sentry } from 'utilities/src/logger/Sentry'
 import noop from 'utilities/src/react/noop'
 import { currencyId } from 'utils/currencyId'
 import { signTypedData } from 'utils/signing'
@@ -411,13 +410,6 @@ export function addTransactionBreadcrumb({
     message: `${step.type} ${status}`,
     step: step.type,
     level: 'info',
-    data,
-  })
-
-  Sentry.addBreadCrumb({
-    level: 'info',
-    category: 'transaction',
-    message: `${step.type} ${status}`,
     data,
   })
 }

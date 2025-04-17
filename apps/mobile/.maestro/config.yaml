@@ -1,3 +1,6 @@
+flows:
+  - 'flows/onboarding/*'
+  - 'flows/swap/*'
 baselineBranch: main
 executionOrder:
   continueOnFailure: true

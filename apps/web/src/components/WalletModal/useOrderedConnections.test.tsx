@@ -5,6 +5,7 @@ import { renderHook } from 'test-utils/render'
 import {
   COINBASE_INJECTED_CONNECTOR,
   COINBASE_SDK_CONNECTOR,
+  EMBEDDED_WALLET_CONNECTOR,
   INJECTED_CONNECTOR,
   METAMASK_INJECTED_CONNECTOR,
   UNISWAP_EXTENSION_CONNECTOR,
@@ -12,6 +13,7 @@ import {
   WALLET_CONNECT_CONNECTOR,
 } from 'test-utils/wagmi/fixtures'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useConnect } from 'wagmi'
 
@@ -30,11 +32,16 @@ jest.mock('components/Web3Provider/constants', () => ({
   useRecentConnectorId: jest.fn(),
 }))
 
+jest.mock('uniswap/src/features/gating/hooks', () => ({
+  useFeatureFlag: jest.fn(),
+}))
+
 const DEFAULT_CONNECTORS = [
   INJECTED_CONNECTOR,
   WALLET_CONNECT_CONNECTOR,
   COINBASE_SDK_CONNECTOR,
   METAMASK_INJECTED_CONNECTOR,
+  EMBEDDED_WALLET_CONNECTOR,
 ]
 
 describe('useOrderedConnections', () => {
@@ -43,6 +50,7 @@ describe('useOrderedConnections', () => {
     mocked(useConnect).mockReturnValue({
       connectors: DEFAULT_CONNECTORS,
     } as unknown as ReturnType<typeof useConnect>)
+    mocked(useFeatureFlag).mockReturnValue(false)
   })
 
   it('should return ordered connectors', () => {
@@ -95,7 +103,13 @@ describe('useOrderedConnections', () => {
   it('should return only the Coinbase injected connector in the Coinbase Wallet', async () => {
     UserAgentMock.isMobileWeb = true
     mocked(useConnect).mockReturnValue({
-      connectors: [INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR, COINBASE_INJECTED_CONNECTOR],
+      connectors: [
+        INJECTED_CONNECTOR,
+        WALLET_CONNECT_CONNECTOR,
+        COINBASE_SDK_CONNECTOR,
+        COINBASE_INJECTED_CONNECTOR,
+        EMBEDDED_WALLET_CONNECTOR,
+      ],
     } as unknown as ReturnType<typeof useConnect>)
     const { result } = renderHook(() => useOrderedConnections())
     expect(result.current.length).toEqual(1)
@@ -123,7 +137,13 @@ describe('useOrderedConnections', () => {
   it('should include the fallback injected provider when no eip6963 injectors are present', async () => {
     window.ethereum = true as any
     mocked(useConnect).mockReturnValue({
-      connectors: [UNISWAP_MOBILE_CONNECTOR, INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR],
+      connectors: [
+        UNISWAP_MOBILE_CONNECTOR,
+        INJECTED_CONNECTOR,
+        WALLET_CONNECT_CONNECTOR,
+        COINBASE_SDK_CONNECTOR,
+        EMBEDDED_WALLET_CONNECTOR,
+      ],
     } as unknown as ReturnType<typeof useConnect>)
     const { result } = renderHook(() => useOrderedConnections())
     const expectedConnectors = [
@@ -141,7 +161,7 @@ describe('useOrderedConnections', () => {
     UserAgentMock.isMobileWeb = true
     window.ethereum = true as any
     mocked(useConnect).mockReturnValue({
-      connectors: [INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR],
+      connectors: [INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR, EMBEDDED_WALLET_CONNECTOR],
     } as unknown as ReturnType<typeof useConnect>)
     const { result } = renderHook(() => useOrderedConnections())
     const expectedConnectors = [{ id: CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID }]
@@ -149,5 +169,73 @@ describe('useOrderedConnections', () => {
       expect(connector.id).toEqual(expectedConnectors[index].id)
     })
     expect(result.current.length).toEqual(expectedConnectors.length)
+  })
+
+  describe('with embedded wallet enabled', () => {
+    beforeEach(() => {
+      mocked(useFeatureFlag).mockReturnValue(true)
+    })
+
+    it('should show embedded wallet connector in primary view', () => {
+      const { result } = renderHook(() => useOrderedConnections())
+
+      const expectedConnectors = [
+        { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS },
+        { id: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID },
+      ]
+
+      result.current.forEach((connector, index) => {
+        expect(connector.id).toEqual(expectedConnectors[index].id)
+      })
+      expect(result.current.length).toEqual(expectedConnectors.length)
+    })
+
+    it('should include recent mobile connectors in primary view', () => {
+      mocked(useRecentConnectorId).mockReturnValue(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
+      const { result } = renderHook(() => useOrderedConnections())
+
+      const expectedConnectors = [
+        { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
+        { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS },
+        { id: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID },
+      ]
+
+      result.current.forEach((connector, index) => {
+        expect(connector.id).toEqual(expectedConnectors[index].id)
+      })
+      expect(result.current.length).toEqual(expectedConnectors.length)
+    })
+  })
+
+  describe('with showSecondaryConnectors', () => {
+    beforeEach(() => {
+      mocked(useFeatureFlag).mockReturnValue(true)
+    })
+
+    it('should show mobile connectors and filter out recent connector', () => {
+      mocked(useRecentConnectorId).mockReturnValue(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
+      const { result } = renderHook(() => useOrderedConnections({ showSecondaryConnectors: true }))
+
+      const expectedConnectors = [{ id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID }]
+
+      result.current.forEach((connector, index) => {
+        expect(connector.id).toEqual(expectedConnectors[index].id)
+      })
+      expect(result.current.length).toEqual(expectedConnectors.length)
+    })
+
+    it('should show all mobile connectors when no recent connector', () => {
+      const { result } = renderHook(() => useOrderedConnections({ showSecondaryConnectors: true }))
+
+      const expectedConnectors = [
+        { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
+        { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
+      ]
+
+      result.current.forEach((connector, index) => {
+        expect(connector.id).toEqual(expectedConnectors[index].id)
+      })
+      expect(result.current.length).toEqual(expectedConnectors.length)
+    })
   })
 })

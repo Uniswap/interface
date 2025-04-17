@@ -75,7 +75,7 @@ export function ViewMnemonic(): JSX.Element {
         Icon={
           <Square
             alignContent="center"
-            backgroundColor={viewStep === ViewStep.View ? '$surface2' : '$DEP_accentCriticalSoft'}
+            backgroundColor={viewStep === ViewStep.View ? '$surface2' : '$statusCritical2'}
             borderRadius="$rounded12"
             size={iconSizes.icon48}
           >
@@ -148,7 +148,7 @@ export function ViewMnemonic(): JSX.Element {
 
 function WarningIcon({ Icon }: { Icon: FunctionComponent<IconProps> }): JSX.Element {
   return (
-    <Circle backgroundColor="$DEP_accentCriticalSoft" size={iconSizes.icon36}>
+    <Circle backgroundColor="$statusCritical2" size={iconSizes.icon36}>
       <Icon color="$statusCritical" size={iconSizes.icon24} />
     </Circle>
   )

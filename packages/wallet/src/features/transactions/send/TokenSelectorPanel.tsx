@@ -20,7 +20,15 @@ interface TokenSelectorPanelProps {
   currencyBalance: Maybe<CurrencyAmount<Currency>>
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   showTokenSelector: boolean
-  onSelectCurrency: (currency: Currency, field: CurrencyField, isBridgePair: boolean) => void
+  onSelectCurrency: ({
+    currency,
+    field,
+    forceIsBridgePair,
+  }: {
+    currency: Currency
+    field: CurrencyField
+    forceIsBridgePair: boolean
+  }) => void
   onHideTokenSelector: () => void
   onShowTokenSelector: () => void
   onSetMax: (amount: string) => void

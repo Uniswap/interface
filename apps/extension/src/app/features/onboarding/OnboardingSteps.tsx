@@ -122,7 +122,9 @@ export function OnboardingStepsProvider({
   }, [])
 
   const onboardingScreenKey = (props?: MaybeOnboardingProps): string => {
-    return `${props?.title}${props?.subtitle}${Object.keys(props || {}).join('')}`
+    const keysString = Object.keys(props || {}).join('')
+    const { title, subtitle } = props ?? {}
+    return `${title}${subtitle}${keysString}`
   }
 
   const goToNextStep = useCallback(() => {

@@ -8,9 +8,8 @@ export type DropdownButtonVariantProps = ButtonVariantProps & {
 
 export type DropdownButtonProps = Omit<
   ButtonProps,
-  'size' | 'emphasis' | 'iconPosition' | 'buttonType' | 'variant' | 'justifyContent' | 'loading'
+  'size' | 'iconPosition' | 'buttonType' | 'variant' | 'justifyContent' | 'loading'
 > & {
-  emphasis?: Extract<ButtonProps['emphasis'], 'secondary' | 'tertiary' | 'text-only'>
   size?: Extract<ButtonProps['size'], 'small' | 'medium' | 'large'>
   isExpanded: DropdownButtonVariantProps['isExpanded']
 } & Pick<GetProps<typeof DropdownButtonFrame>, 'elementPositioning'>

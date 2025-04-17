@@ -102,6 +102,7 @@ export const DepositStep = () => {
         </Flex>
       </Flex>
       <DepositInputForm
+        autofocus={false}
         token0={token0}
         token1={token1}
         formattedAmounts={updatedFormattedAmounts}

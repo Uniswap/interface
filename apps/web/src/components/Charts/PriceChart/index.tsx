@@ -160,8 +160,8 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
       color: theme.surface3,
       lineWidth: 2,
       lineStyle: LineStyle.Dashed,
-      axisLabelColor: theme.neutral3,
-      axisLabelTextColor: theme.neutral2,
+      axisLabelColor: theme.surface3Solid,
+      axisLabelTextColor: theme.neutral1,
     }
     this.minPriceLine?.applyOptions({ price: this.min, ...this.priceLineOptions })
     this.maxPriceLine?.applyOptions({ price: this.max, ...this.priceLineOptions })

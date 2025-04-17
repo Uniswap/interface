@@ -2,7 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { BaseSyntheticEvent, memo, useCallback, useMemo, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { AnimatePresence, Flex, Text, TouchableArea, getTokenValue } from 'ui/src'
+import { AnimatePresence, Flex, Text, TouchableArea, getTokenValue, useIsDarkMode } from 'ui/src'
 import { CopyAlt, Unitag } from 'ui/src/components/icons'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
@@ -37,6 +37,9 @@ function _AnimatedUnitagDisplayName({
   const { width: viewWidth, onLayout: onViewWidthLayout } = useLayoutWidth()
 
   const onPressUnitag = (): void => setShowUnitagSuffix(!showUnitagSuffix)
+
+  // Ensure component changes over on theme switch
+  useIsDarkMode()
 
   const onPressCopyAddress = useCallback(
     async (e: BaseSyntheticEvent): Promise<void> => {

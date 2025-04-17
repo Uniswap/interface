@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Flex, useMedia } from 'ui/src'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export enum TimePeriodDisplay {
   HOUR = '1H',
@@ -64,7 +65,7 @@ export default function VolumeTimeFrameSelector() {
         isOpen={isMenuOpen}
         toggleOpen={toggleMenu}
         menuLabel={`${DISPLAYS[activeTime]} ${isLargeScreen ? t('common.volume').toLowerCase() : ''}`}
-        dataTestId="time-selector"
+        dataTestId={TestID.TimeSelector}
         buttonStyle={{ height: 40 }}
         dropdownStyle={{ maxHeight: 300 }}
         adaptToSheet

@@ -23,9 +23,10 @@ import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { getChainUrlParam } from 'utils/chainParams'
+import { formatUnits } from 'viem'
 
 export function hasLPFoTTransferError(
   currencyInfo: Maybe<CurrencyInfo>,
@@ -97,13 +98,13 @@ export function parseProtocolVersion(version: string | undefined): ProtocolVersi
 }
 
 export function getPositionUrl(position: PositionInfo): string {
-  const chainInfo = getChainInfo(position.chainId)
+  const chainUrlParam = getChainUrlParam(position.chainId)
   if (position.version === ProtocolVersion.V2) {
-    return `/positions/v2/${chainInfo.urlParam}/${position.liquidityToken.address}`
+    return `/positions/v2/${chainUrlParam}/${position.liquidityToken.address}`
   } else if (position.version === ProtocolVersion.V3) {
-    return `/positions/v3/${chainInfo.urlParam}/${position.tokenId}`
+    return `/positions/v3/${chainUrlParam}/${position.tokenId}`
   }
-  return `/positions/v4/${chainInfo.urlParam}/${position.tokenId}`
+  return `/positions/v4/${chainUrlParam}/${position.tokenId}`
 }
 
 function parseV3FeeTier(feeTier: string | undefined): FeeAmount | undefined {
@@ -355,6 +356,9 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       apr: v4Position.apr,
       owner: v4Position.owner,
       isHidden: position.isHidden,
+      totalApr: position.position.value.poolPosition?.totalApr,
+      unclaimedRewardsAmountUni: position.position.value.poolPosition?.unclaimedRewardsAmountUni,
+      boostedApr: position.position.value.poolPosition?.boostedApr,
     }
   } else {
     return undefined
@@ -637,4 +641,19 @@ export function isDynamicFeeTierAmount(
   }
 
   return feeAmountNumber === DYNAMIC_FEE_DATA.feeAmount
+}
+
+// TODO | LP_INCENTIVES: assuming there is another method in codebase that already does this
+export function formatTokenAmount(amount: string, decimals: number): string {
+  try {
+    const formatted = formatUnits(BigInt(amount), decimals)
+    // Split by decimal point and truncate to 8 decimal places
+    const [whole, decimal] = formatted.split('.')
+    if (!decimal) {
+      return whole
+    }
+    return `${whole}.${decimal.slice(0, 8)}`
+  } catch (e) {
+    return '0'
+  }
 }

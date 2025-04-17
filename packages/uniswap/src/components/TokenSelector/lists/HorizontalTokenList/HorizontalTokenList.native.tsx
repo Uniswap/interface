@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { TokenPill } from 'uniswap/src/components/TokenSelector/items/SuggestedToken'
+import { TokenPill } from 'uniswap/src/components/TokenSelector/items/tokens/SuggestedToken'
 import { HorizontalTokenListProps } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
 
 export const HorizontalTokenList = memo(function _HorizontalTokenList({

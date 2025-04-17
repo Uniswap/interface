@@ -125,6 +125,10 @@ export interface IKeyring {
   signHashForAddress(address: string, hash: string, chainId: number): Promise<string>
 
   retrieveMnemonicUnlocked(address: string): Promise<string | undefined>
+
+  generateKeyPairForPasskeyWallet(): Promise<string>
+
+  decryptMnemonicForPasskey(encryptedMnemonic: string, publicKeyBase64: string): Promise<string>
 }
 
 /** Dummy Keyring implementation.  */
@@ -223,6 +227,14 @@ class NullKeyring implements IKeyring {
 
   signHashForAddress(_address: string, _hash: string, _chainId: number): Promise<string> {
     throw new PlatformSplitStubError('signHashForAddress')
+  }
+
+  generateKeyPairForPasskeyWallet(): Promise<string> {
+    throw new PlatformSplitStubError('generateKeyPairForPasskeyWallet')
+  }
+
+  decryptMnemonicForPasskey(_encryptedMnemonic: string, _publicKeyBase64: string): Promise<string> {
+    throw new PlatformSplitStubError('decryptMnemonicForPasskey')
   }
 }
 

@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import '@testing-library/jest-dom' // jest custom assertions
-import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills' // add polyfills
 import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
@@ -15,9 +14,13 @@ import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import * as gatingHooks from 'uniswap/src/features/gating/hooks'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { TextDecoder, TextEncoder } from 'util'
+
+// Mock EXPO_OS environment variable
+process.env.EXPO_OS = 'web'
 
 setupi18n()
 
@@ -156,13 +159,37 @@ failOnConsole({
   },
 })
 
-jest.mock('uniswap/src/features/gating/hooks')
+jest.mock('uniswap/src/features/gating/hooks', () => {
+  return {
+    ...jest.genMockFromModule<typeof gatingHooks>('uniswap/src/features/gating/hooks'),
+    useStatsigClientStatus: () => ({
+      isStatsigLoading: false,
+      isStatsigReady: true,
+      isStatsigUninitialized: false,
+    }), // Specific custom mock for useStatsigClientStatus
+  }
+})
 
 jest.mock('uniswap/src/features/chains/hooks/useOrderedChainIds', () => {
   return {
     useOrderedChainIds: (chainIds: UniverseChainId[]) => chainIds,
   }
 })
+
+function muteStatsigWarnings() {
+  jest.spyOn(console, 'warn').mockImplementation((message, ...args) => {
+    const isStatsigWarning = args.some((arg) => {
+      return typeof arg === 'string' && arg.includes('Statsig')
+    })
+
+    if (isStatsigWarning) {
+      return
+    } else {
+      // Forward all other warnings to console.warn to avoid losing them
+      console.warn(message, ...args)
+    }
+  })
+}
 
 const originalConsoleDebug = console.debug
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
@@ -187,6 +214,8 @@ beforeEach(() => {
     }
     originalConsoleDebug(...args)
   })
+  // TODO: can be removed after wrapping the test app in StatsigProvider and mocking flags and configs
+  muteStatsigWarnings()
 })
 
 afterEach(() => {

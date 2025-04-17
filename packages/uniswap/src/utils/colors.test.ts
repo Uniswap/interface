@@ -37,7 +37,7 @@ describe('adjustColorVariant', () => {
 
 describe('findNearestThemeColor', () => {
   it('Finds correct theme color for color in theme', () => {
-    expect(findNearestThemeColor(colorsLight.accent1)).toEqual('pinkBase')
+    expect(findNearestThemeColor(colorsLight.statusSuccess)).toEqual('greenBase')
   })
 })
 

@@ -38,3 +38,8 @@ export const WALLET_CONNECT_CONNECTOR = {
     return Promise.resolve({ modal: { setTheme: jest.fn() } })
   },
 } as unknown as Connector
+export const EMBEDDED_WALLET_CONNECTOR = {
+  id: 'embeddedUniswapWalletConnector',
+  name: 'Uniswap Wallet',
+  type: 'embeddedUniswapWallet',
+} as unknown as Connector

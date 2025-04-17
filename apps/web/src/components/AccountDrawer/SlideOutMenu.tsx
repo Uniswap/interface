@@ -41,11 +41,13 @@ export const SlideOutMenu = ({
   children,
   onClose,
   title,
+  rightIcon,
 }: {
   onClose: () => void
   title: React.ReactNode
   children: React.ReactNode
   onClear?: () => void
+  rightIcon?: React.ReactNode
 }) => (
   <Menu>
     <Header>
@@ -53,6 +55,7 @@ export const SlideOutMenu = ({
       <Title>
         <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
       </Title>
+      {rightIcon && <>{rightIcon}</>}
     </Header>
 
     {children}

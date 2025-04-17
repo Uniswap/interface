@@ -35,7 +35,7 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
 }
 
 .c2 {
-  color: #222222;
+  color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -65,7 +65,7 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
   -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 8px;
-  border: 1px solid #22222212;
+  border: 1px solid rgba(34,34,34,0.05);
   border-radius: 16px;
   background-color: #FFFFFF;
 }
@@ -92,7 +92,7 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
 }
 
 .c6 {
-  background-color: #22222212;
+  background-color: rgba(34,34,34,0.05);
   height: 36px;
 }
 
@@ -141,101 +141,93 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
     class=""
     style="display: contents;"
   >
-    <span
-      class=" _dsp_contents"
+    <div
+      class="c0"
     >
-      <span
-        class=" t_light _dsp_contents is_Theme"
+      <div
+        class="c1"
       >
         <div
-          class="c0"
+          class="c2 css-n8z49y"
+        >
+          Swap
+        </div>
+      </div>
+      <div
+        class="c3"
+      >
+        <div
+          class="c4"
         >
           <div
-            class="c1"
-          >
-            <div
-              class="c2 css-n8z49y"
-            >
-              Swap
-            </div>
-          </div>
+            class="c5 c6"
+            width="60"
+          />
           <div
-            class="c3"
-          >
-            <div
-              class="c4"
-            >
-              <div
-                class="c5 c6"
-                width="60"
-              />
-              <div
-                class="c7 c6"
-                radius="16"
-                width="100"
-              />
-            </div>
-          </div>
-          <div
-            class="c8"
-          >
-            <div
-              class="c9 c10"
-            >
-              <div
-                class="c11"
-              >
-                <svg
-                  fill="none"
-                  height="16"
-                  stroke="#CECECE"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="5"
-                    y2="19"
-                  />
-                  <polyline
-                    points="19 12 12 19 5 12"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div
-              class="c3"
-            >
-              <div
-                class="c4"
-              >
-                <div
-                  class="c5 c6"
-                  width="60"
-                />
-                <div
-                  class="c7 c6"
-                  radius="16"
-                  width="100"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c12"
+            class="c7 c6"
             radius="16"
+            width="100"
           />
         </div>
+      </div>
+      <div
+        class="c8"
+      >
         <div
-          style="display: contents;"
-        />
-      </span>
-    </span>
+          class="c9 c10"
+        >
+          <div
+            class="c11"
+          >
+            <svg
+              fill="none"
+              height="16"
+              stroke="rgba(19, 19, 19, 0.35)"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line
+                x1="12"
+                x2="12"
+                y1="5"
+                y2="19"
+              />
+              <polyline
+                points="19 12 12 19 5 12"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="c3"
+        >
+          <div
+            class="c4"
+          >
+            <div
+              class="c5 c6"
+              width="60"
+            />
+            <div
+              class="c7 c6"
+              radius="16"
+              width="100"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="c12"
+        radius="16"
+      />
+    </div>
+    <div
+      style="display: contents;"
+    />
   </span>
 </DocumentFragment>
 `;

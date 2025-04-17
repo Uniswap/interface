@@ -1,16 +1,42 @@
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, HeightAnimator, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { useTimeout } from 'utilities/src/time/timing'
 
-// TODO(WEB-1982): Replace this component to use `components/Expand` under the hood
-type ExpandoRowProps = PropsWithChildren<{ title?: string; numItems: number; isExpanded: boolean; toggle: () => void }>
-export function ExpandoRow({ title, numItems, isExpanded, toggle, children }: ExpandoRowProps) {
+type ExpandoRowProps = PropsWithChildren<{
+  title?: string
+  numItems: number
+  isExpanded: boolean
+  toggle: () => void
+  enableOverflow?: boolean
+}>
+export function ExpandoRow({ title, numItems, isExpanded, toggle, children, enableOverflow = false }: ExpandoRowProps) {
   const { t } = useTranslation()
   const titleWithFallback = title ?? t('common.hidden')
+
+  const [allowOverflow, setAllowOverflow] = useState(false)
+
+  // Delay overflow change to prevent UI glitches when expanding/collapsing
+  useTimeout(
+    () => {
+      if (enableOverflow && isExpanded) {
+        setAllowOverflow(true)
+      }
+    },
+    enableOverflow && isExpanded ? 300 : undefined,
+  )
+
+  useEffect(() => {
+    if (!isExpanded) {
+      setAllowOverflow(false)
+    }
+  }, [isExpanded])
+
   if (numItems === 0) {
     return null
   }
+
   return (
     <>
       <Flex row justifyContent="space-between" alignItems="center" p="$spacing16">
@@ -26,7 +52,9 @@ export function ExpandoRow({ title, numItems, isExpanded, toggle, children }: Ex
           <Button.Text color="$neutral2">{isExpanded ? t('common.hide.button') : t('common.show.button')}</Button.Text>
         </Button>
       </Flex>
-      <HeightAnimator open={isExpanded}>{children}</HeightAnimator>
+      <HeightAnimator open={isExpanded} overflow={allowOverflow ? 'visible' : 'hidden'}>
+        {children}
+      </HeightAnimator>
     </>
   )
 }

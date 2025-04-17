@@ -1,5 +1,6 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ChooseUnitagModal } from 'components/NavBar/DownloadApp/Modal/ChooseUnitag'
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
 import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
 import { PasskeyGenerationModal } from 'components/NavBar/DownloadApp/Modal/PasskeyGeneration'
@@ -17,9 +18,10 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export enum Page {
-  GetStarted = 0,
-  GetApp = 1,
-  PasskeyGeneration = 2,
+  GetApp = 0,
+  GetStarted = 1,
+  ChooseUnitag = 2,
+  PasskeyGeneration = 3,
 }
 
 export function GetTheAppModal() {
@@ -36,6 +38,8 @@ export function GetTheAppModal() {
   const { isControl: isAccountCTAExperimentControl } = useIsAccountCTAExperimentControl()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const isControl = isAccountCTAExperimentControl || isEmbeddedWalletEnabled
+
+  const [unitag, setUnitag] = useState('')
 
   return (
     <Trace modal={InterfaceModalName.GETTING_STARTED_MODAL}>
@@ -57,7 +61,11 @@ export function GetTheAppModal() {
           pr="$spacing24"
         >
           {showBackButton && (
-            <TouchableArea onPress={() => setPage(Page.GetStarted)}>
+            <TouchableArea
+              onPress={() => {
+                setPage(page === Page.GetApp ? Page.GetStarted : page - 1)
+              }}
+            >
               <BackArrow size={iconSizes.icon24} color="$neutral2" hoverColor="$neutral2Hovered" />
             </TouchableArea>
           )}
@@ -72,6 +80,7 @@ export function GetTheAppModal() {
         >
           {/* The Page enum value corresponds to the modal page's index */}
           <AnimateTransition currentIndex={page} animationType={page === Page.GetStarted ? 'forward' : 'backward'}>
+            <GetTheApp />
             <GetStarted
               setPage={setPage}
               toConnectWalletDrawer={() => {
@@ -79,8 +88,8 @@ export function GetTheAppModal() {
                 accountDrawer.open()
               }}
             />
-            <GetTheApp />
-            <PasskeyGenerationModal setPage={setPage} />
+            <ChooseUnitagModal setUnitag={setUnitag} setPage={setPage} />
+            <PasskeyGenerationModal unitag={unitag} setPage={setPage} />
           </AnimateTransition>
         </Flex>
       </Modal>

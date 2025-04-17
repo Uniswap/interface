@@ -3,11 +3,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { DefaultTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { ExploreTab } from 'pages/Explore'
 import { TokenStat } from 'state/explore/types'
-import { ThemeColors } from 'theme/colors'
+import { ColorTokens } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Chain,
@@ -25,8 +24,8 @@ import {
   toSupportedChainId,
 } from 'uniswap/src/features/chains/utils'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
-import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
-import { getChainIdFromChainUrlParam } from 'utils/chainParams'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 export enum PollingInterval {
@@ -72,7 +71,8 @@ export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currenc
   if (!token.chain) {
     return undefined
   }
-  const chainId = getChainIdFromChainUrlParam(token.chain.toLowerCase())
+  const chainId =
+    getChainIdFromChainUrlParam(token.chain.toLowerCase()) ?? getChainIdFromBackendChain(token.chain as GqlChainId)
   if (!chainId) {
     return undefined
   }
@@ -112,9 +112,8 @@ export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | un
   return isBackendSupportedChain(chain) ? fromGraphQLChain(chain) ?? undefined : undefined
 }
 
-export function getTokenExploreURL({ tab, chain }: { tab: ExploreTab; chain?: Chain }) {
-  const chainName = chain?.toLowerCase()
-  return `/explore/${tab}${chain ? `/${chainName}` : ''}`
+export function getTokenExploreURL({ tab, chainUrlParam }: { tab: ExploreTab; chainUrlParam?: string }) {
+  return `/explore/${tab}${chainUrlParam ? `/${chainUrlParam}` : ''}`
 }
 
 export function getTokenDetailsURL({
@@ -166,28 +165,28 @@ export function unwrapToken<
   }
 }
 
-type ProtocolMeta = { name: string; color: keyof ThemeColors; gradient: { start: string; end: string } }
+type ProtocolMeta = { name: string; color: ColorTokens; gradient: { start: string; end: string } }
 const PROTOCOL_META: { [source in PriceSource]: ProtocolMeta } = {
   [PriceSource.SubgraphV2]: {
     name: 'v2',
-    color: 'accent3',
+    color: '$DEP_blue400',
     gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
   },
   [PriceSource.SubgraphV3]: {
     name: 'v3',
-    color: 'accent1',
+    color: '$accent1',
     gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
   },
   [PriceSource.SubgraphV4]: {
     name: 'v4',
-    color: 'chain_137',
+    color: '$chain_137',
     gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
   },
   /* [PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
 }
 
-export function getProtocolColor(priceSource: PriceSource, theme: DefaultTheme): string {
-  return theme[PROTOCOL_META[priceSource].color]
+export function getProtocolColor(priceSource: PriceSource): ColorTokens {
+  return PROTOCOL_META[priceSource].color
 }
 
 export function getProtocolName(priceSource: PriceSource): string {

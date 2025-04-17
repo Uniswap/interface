@@ -7,7 +7,6 @@ import {
 import { Data } from 'utils/cache'
 import client from '../client'
 
-// eslint-disable-next-line import/no-unused-modules
 export default async function getPool(networkName: string, poolAddress: string, url: string) {
   const origin = new URL(url).origin
   const image = origin + '/api/image/pools/' + networkName + '/' + poolAddress

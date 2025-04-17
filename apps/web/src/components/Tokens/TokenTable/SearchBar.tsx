@@ -1,70 +1,16 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { ReactComponent as SearchIcon } from 'assets/svg/search.svg'
-import xIcon from 'assets/svg/x.svg'
-import { MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import useDebounce from 'hooks/useDebounce'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import styled from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, useSporeColors } from 'ui/src'
-import { breakpoints } from 'ui/src/theme'
+import { transitions } from 'theme/styles'
+import { Flex, IconButton, Input, useSporeColors } from 'ui/src'
+import { X } from 'ui/src/components/icons/X'
+import { zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-
-const ICON_SIZE = '20px'
-
-const SearchInput = styled.input<{ isOpen?: boolean }>`
-  background-color: ${({ theme }) => theme.surface1};
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.surface3};
-  height: 100%;
-  width: ${({ isOpen }) => (isOpen ? '200px' : '0')};
-  font-size: 16px;
-  font-weight: 485;
-  padding-left: 40px;
-  color: ${({ theme }) => theme.neutral2};
-  transition-duration: ${({ theme }) => theme.transition.duration.fast};
-  text-overflow: ellipsis;
-
-  :hover {
-    background-color: ${({ theme }) => theme.surface1};
-  }
-
-  :focus {
-    outline: none;
-    background-color: ${({ theme }) => theme.surface1};
-    border-color: ${({ theme }) => theme.accent1};
-    color: ${({ theme }) => theme.neutral1};
-  }
-
-  ::placeholder {
-    color: ${({ theme }) => theme.neutral3};
-  }
-
-  @supports (-webkit-touch-callout: none) {
-    @media screen and (max-width: ${breakpoints.md}px) {
-      min-width: 44px;
-      padding-left: ${({ isOpen }) => (isOpen ? '40px' : '36px')};
-    }
-  }
-
-  ::-webkit-search-cancel-button {
-    -webkit-appearance: none;
-    appearance: none;
-    height: ${ICON_SIZE};
-    width: ${ICON_SIZE};
-    background-image: url(${xIcon});
-    margin-right: 10px;
-    background-size: ${ICON_SIZE} ${ICON_SIZE};
-    cursor: pointer;
-  }
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    width: ${({ isOpen }) => (isOpen ? 'min(100%, 200px)' : '0')};
-  }
-`
 
 export default function SearchBar({ tab }: { tab?: string }) {
   const { t } = useTranslation()
@@ -94,6 +40,10 @@ export default function SearchBar({ tab }: { tab?: string }) {
     }
   }
 
+  const handleClose = () => {
+    setIsOpen(false)
+  }
+
   const placeholdersText: Record<string, string> = {
     [ExploreTab.Tokens]: t('tokens.table.search.placeholder.tokens'),
     [ExploreTab.Pools]: t('tokens.table.search.placeholder.pools'),
@@ -106,26 +56,66 @@ export default function SearchBar({ tab }: { tab?: string }) {
       eventOnTrigger={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
       element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
     >
-      <Flex centered flex={1}>
+      <Flex
+        $md={{
+          position: isOpen ? 'absolute' : 'relative',
+          width: isOpen ? '100%' : 'auto',
+          left: 0,
+          right: 0,
+          zIndex: zIndexes.mask,
+          height: 40,
+        }}
+        centered
+      >
         <SearchIcon
           fill={colors.neutral1.val}
           style={{ position: 'absolute', left: '12px' }}
-          width={ICON_SIZE}
-          height={ICON_SIZE}
+          width={20}
+          height={20}
           pointerEvents="none"
         />
-        <SearchInput
+        <Input
           data-testid="explore-tokens-search-input"
-          type="search"
           placeholder={placeholdersText[tab ?? ExploreTab.Tokens]}
+          placeholderTextColor="$neutral3"
           id="searchBar"
           autoComplete="off"
           value={localFilterString}
-          onChange={({ target: { value } }) => setLocalFilterString(value)}
-          isOpen={isOpen}
+          onChangeText={(value) => setLocalFilterString(value)}
+          backgroundColor="$surface1"
+          borderRadius={12}
+          borderWidth={1}
+          borderColor={isOpen ? '$accent1' : '$surface3'}
+          height="100%"
+          width={isOpen ? 230 : 0}
+          pl={34}
+          color="$neutral2"
+          textOverflow="ellipsis"
           onFocus={handleFocus}
           onBlur={handleBlur}
+          $platform-web={{
+            transitionDuration: transitions.duration.fast,
+          }}
+          focusStyle={{
+            backgroundColor: '$surface1',
+            borderColor: '$accent1',
+            color: '$neutral1',
+          }}
+          hoverStyle={{
+            backgroundColor: '$surface1',
+          }}
+          $md={{
+            '$platform-web': {
+              transitionDuration: 'initial',
+            },
+            width: isOpen ? '100%' : 0,
+          }}
         />
+        {isOpen && (
+          <Flex row centered position="absolute" right={6} zIndex={zIndexes.mask}>
+            <IconButton size="xxsmall" emphasis="secondary" onPress={handleClose} icon={<X />} p={3} scale={0.8} />
+          </Flex>
+        )}
       </Flex>
     </Trace>
   )

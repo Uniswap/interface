@@ -37,7 +37,7 @@ exports[`renders a Pill with border 1`] = `
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 22.1,
       }
     }
     suppressHighlighting={true}
@@ -53,7 +53,7 @@ exports[`renders a Pill with border 1`] = `
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 22.1,
         "paddingTop": 1,
       }
     }
@@ -69,7 +69,7 @@ exports[`renders a Pill without image 1`] = `
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#1B1B1B",
+      "backgroundColor": "#1F1F1F",
       "borderBottomColor": "transparent",
       "borderBottomLeftRadius": 999999,
       "borderBottomRightRadius": 999999,
@@ -102,7 +102,7 @@ exports[`renders a Pill without image 1`] = `
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 22.1,
         "paddingTop": 1,
       }
     }

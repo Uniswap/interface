@@ -1,11 +1,8 @@
 import { Percent } from '@uniswap/sdk-core'
 import { Scrim } from 'components/AccountDrawer/Scrim'
-import Column, { AutoColumn } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import MaxSlippageSettings from 'pages/MigrateV2/Settings/MaxSlippageSettings'
 import MenuButton from 'pages/MigrateV2/Settings/MenuButton'
@@ -16,85 +13,28 @@ import { Trans } from 'react-i18next'
 import { useCloseModal, useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ThemedText } from 'theme/components'
+import { transitions } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { HeightAnimator } from 'ui/src'
+import { Flex, HeightAnimator, TouchableArea, styled } from 'ui/src'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 
-const CloseButton = styled.button`
-  background: transparent;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
-  height: 24px;
-  padding: 0;
-  width: 24px;
-`
-
-const Menu = styled.div`
-  position: relative;
-`
-
-const MenuFlyout = styled(AutoColumn)`
-  min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.surface1};
-  border: 1px solid ${({ theme }) => theme.surface3};
-  box-shadow:
-    0px 0px 1px rgba(0, 0, 0, 0.01),
-    0px 4px 8px rgba(0, 0, 0, 0.04),
-    0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
-  position: absolute;
-  top: 100%;
-  margin-top: 10px;
-  right: 0;
-  z-index: 100;
-  color: ${({ theme }) => theme.neutral1};
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
-    min-width: 18.125rem;
-  `};
-  user-select: none;
-  padding: 16px;
-`
-
-const ExpandColumn = styled(AutoColumn)<{ $padTop: boolean }>`
-  gap: 8px;
-  padding-top: ${({ $padTop }) => ($padTop ? '16px' : '0')};
-`
-
-const MobileMenuContainer = styled(Row)`
-  overflow: visible;
-  position: fixed;
-  height: 100%;
-  top: 100vh;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: ${Z_INDEX.fixed};
-`
-
-const MobileMenuWrapper = styled(Column)<{ $open: boolean }>`
-  height: min-content;
-  width: 100%;
-  padding: 8px 16px 24px;
-  background-color: ${({ theme }) => theme.surface1};
-  overflow: hidden;
-  position: absolute;
-  bottom: ${({ $open }) => ($open ? `100vh` : 0)};
-  transition: bottom ${({ theme }) => theme.transition.duration.medium};
-  border: ${({ theme }) => `1px solid ${theme.surface3}`};
-  border-radius: 12px;
-  border-bottom-right-radius: 0px;
-  border-bottom-left-radius: 0px;
-  font-size: 16px;
-  box-shadow: unset;
-  z-index: ${Z_INDEX.modal};
-`
-
-const MobileMenuHeader = styled(Row)`
-  margin-bottom: 16px;
-`
+const MenuFlyout = styled(Flex, {
+  minWidth: '20.125rem',
+  backgroundColor: '$surface1',
+  borderWidth: 1,
+  borderColor: '$surface3',
+  boxShadow:
+    '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.01)',
+  borderRadius: 12,
+  position: 'absolute',
+  top: '100%',
+  mt: 10,
+  right: 0,
+  zIndex: 100,
+  userSelect: 'none',
+  p: 16,
+})
 
 // @deprecated
 // Should use <SwapFormSettings settings={[Slippage, Deadline]} ... /> from packages/uniswap/src/features/transactions/swap/form/SwapFormSettings
@@ -127,39 +67,71 @@ export default function MigrateV2SettingsTab({
   const Settings = useMemo(
     () => (
       <HeightAnimator open>
-        <ExpandColumn $padTop={false}>
+        <Flex gap="$spacing8">
           <MaxSlippageSettings autoSlippage={autoSlippage} />
           {showDeadlineSettings && <TransactionDeadlineSettings />}
-        </ExpandColumn>
+        </Flex>
       </HeightAnimator>
     ),
     [autoSlippage, showDeadlineSettings],
   )
 
   return (
-    <Menu ref={toggleButtonNode}>
+    <Flex position="relative" ref={toggleButtonNode}>
       <MenuButton disabled={!isChainSupported} isActive={isOpen} compact={compact} onClick={toggleMenu} />
       {isOpenDesktop && <MenuFlyout ref={menuNode}>{Settings}</MenuFlyout>}
       {isOpenMobile && (
         <Portal>
-          <MobileMenuContainer data-testid="mobile-settings-menu" ref={menuNode}>
+          <Flex
+            row
+            data-testid="mobile-settings-menu"
+            ref={menuNode}
+            $platform-web={{
+              position: 'fixed',
+            }}
+            height="100%"
+            top="100vh"
+            left="0"
+            right="0"
+            width="100%"
+            zIndex={Z_INDEX.fixed}
+            overflow="visible"
+          >
             <Scrim onClick={closeMenu} $open />
-            <MobileMenuWrapper $open>
-              <MobileMenuHeader padding="8px 0px 4px">
-                <CloseButton data-testid="mobile-settings-close" onClick={closeMenu}>
+            <Flex
+              height="min-content"
+              width="100%"
+              pt={8}
+              px={16}
+              pb={24}
+              backgroundColor="$surface1"
+              overflow="hidden"
+              position="absolute"
+              bottom="100vh"
+              transition={`bottom ${transitions.duration.medium}`}
+              borderWidth={1}
+              borderColor="$surface3"
+              borderRadius={12}
+              borderBottomRightRadius={0}
+              borderBottomLeftRadius={0}
+              boxShadow="unset"
+              zIndex={Z_INDEX.modal}
+            >
+              <Flex row pt={8} pb={4} mb={16}>
+                <TouchableArea data-testid="mobile-settings-close" onPress={closeMenu}>
                   <X size={24} />
-                </CloseButton>
-                <Row padding="0px 24px 0px 0px" justify="center">
+                </TouchableArea>
+                <Flex row width="100%" pr={24} justifyContent="center">
                   <ThemedText.SubHeader>
                     <Trans i18nKey="common.settings" />
                   </ThemedText.SubHeader>
-                </Row>
-              </MobileMenuHeader>
+                </Flex>
+              </Flex>
               {Settings}
-            </MobileMenuWrapper>
-          </MobileMenuContainer>
+            </Flex>
+          </Flex>
         </Portal>
       )}
-    </Menu>
+    </Flex>
   )
 }

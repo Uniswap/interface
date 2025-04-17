@@ -5,7 +5,6 @@ import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import styled from 'lib/styled-components'
 import { reduceFilters } from 'nft/components/collection/Activity'
 import AssetActivity, { LoadingAssetActivity } from 'nft/components/details/AssetActivity'
-import * as styles from 'nft/components/details/AssetDetails.css'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import DetailsContainer from 'nft/components/details/DetailsContainer'
 import InfoContainer from 'nft/components/details/InfoContainer'
@@ -16,7 +15,8 @@ import { isVideo } from 'nft/utils/isVideo'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
-import { Flex, Shine, SpinningLoader, useSporeColors } from 'ui/src'
+import { Flex, Image, Shine, SpinningLoader, styled as tamaguiStyled, useSporeColors } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 import { NftActivityType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -139,10 +139,6 @@ const ByText = styled.span`
   line-height: 20px;
 `
 
-const Img = styled.img`
-  background-color: white;
-`
-
 const HoverImageContainer = styled.div`
   display: flex;
   margin-right: 4px;
@@ -156,6 +152,20 @@ const ContainerText = styled.span`
   font-size: 14px;
 `
 
+const AssetDetailsImageContainer = tamaguiStyled(Flex, {
+  borderRadius: '$rounded20',
+  overflow: 'hidden',
+})
+
+const AssetDetailsImage = tamaguiStyled(Image, {
+  borderRadius: '$rounded20',
+  alignSelf: 'center',
+  boxShadow: `0px 20px 50px $shadow, 0px 10px 50px rgba(70, 115, 250, 0.2)`,
+})
+
+const ALLOWED_AUDIO_MIME_TYPES = ['audio/mp3', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/x-wav', 'audio/webm']
+const ALLOWED_VIDEO_MIME_TYPES = ['video/mp4', 'video/webm', 'video/ogg', 'video/x-m4v']
+
 const AudioPlayer = ({
   imageUrl,
   animationUrl,
@@ -163,19 +173,58 @@ const AudioPlayer = ({
   collectionName,
   dominantColor,
 }: GenieAsset & { dominantColor: [number, number, number] }) => {
+  const isValidAudioType = ALLOWED_AUDIO_MIME_TYPES.some((type) =>
+    animationUrl?.toLowerCase().endsWith(type.split('/')[1]),
+  )
+
+  if (!isValidAudioType) {
+    return null
+  }
+
   return (
     <Flex $platform-web={{ display: 'inline-block' }} alignSelf="center">
-      <audio className={styles.audioControls} controls src={animationUrl} style={{ width: '292px' }} />
-      <img
-        className={styles.image}
-        src={imageUrl}
-        alt={name || collectionName}
+      <audio
         style={{
-          ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)`,
-          minWidth: '300px',
-          minHeight: '300px',
+          position: 'absolute',
+          left: '0',
+          right: '0',
+          textAlign: 'center',
+          marginRight: 'auto',
+          marginLeft: 'auto',
+          bottom: 'calc(10%)',
+          width: '292px',
+          zIndex: zIndexes.overlay,
         }}
-      />
+        controls
+        src={animationUrl}
+        preload="auto"
+        crossOrigin="anonymous"
+      >
+        <source src={animationUrl} />
+        Your browser does not support the audio element.
+      </audio>
+      <AssetDetailsImageContainer>
+        <AssetDetailsImage
+          src={imageUrl}
+          alt={name || collectionName}
+          height={520}
+          width={520}
+          $lg={{
+            height: 400,
+            width: 400,
+          }}
+          $md={{
+            height: 300,
+            width: 300,
+          }}
+          $sm={{
+            height: 200,
+            width: 200,
+          }}
+          alignSelf="center"
+          shadowColor={`rgba(${dominantColor.join(', ')}, 0.5)`}
+        />
+      </AssetDetailsImageContainer>
     </Flex>
   )
 }
@@ -203,14 +252,71 @@ const AssetView = ({
   dominantColor: [number, number, number]
   // eslint-disable-next-line consistent-return
 }) => {
-  const style = { ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }
+  const shadowStyle = { ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }
 
   switch (mediaType) {
-    case MediaType.Video:
-      return <video src={asset.animationUrl} className={styles.image} autoPlay controls muted loop style={style} />
+    case MediaType.Video: {
+      const isValidVideoType = ALLOWED_VIDEO_MIME_TYPES.some((type) =>
+        asset.animationUrl?.toLowerCase().endsWith(type.split('/')[1]),
+      )
+
+      if (!isValidVideoType) {
+        return null
+      }
+
+      return (
+        <video
+          src={asset.animationUrl}
+          style={{
+            ...shadowStyle,
+            borderRadius: '20px',
+            height: '100%',
+            alignSelf: 'center',
+            maxHeight: 'calc(90vh - 165px)',
+            minHeight: 400,
+            maxWidth: 780,
+            boxShadow: `0px 20px 50px var(--shadow), 0px 10px 50px rgba(70, 115, 250, 0.2)`,
+            ['@media' as string]: {
+              '(max-width: 1024px)': {
+                maxHeight: '64vh',
+              },
+              '(max-width: 640px)': {
+                minHeight: '280px',
+                maxHeight: '56vh',
+                maxWidth: '100%',
+              },
+            },
+          }}
+          autoPlay
+          controls
+          muted
+          loop
+        />
+      )
+    }
     case MediaType.Image:
       return (
-        <img className={styles.image} src={asset.imageUrl} alt={asset.name || asset.collectionName} style={style} />
+        <AssetDetailsImageContainer>
+          <AssetDetailsImage
+            src={asset.imageUrl}
+            alt={asset.name || asset.collectionName}
+            height={520}
+            width={520}
+            $lg={{
+              height: 400,
+              width: 400,
+            }}
+            $md={{
+              height: 300,
+              width: 300,
+            }}
+            $sm={{
+              height: 200,
+              width: 200,
+            }}
+            shadowColor={`rgba(${dominantColor.join(', ')}, 0.5)`}
+          />
+        </AssetDetailsImageContainer>
       )
     case MediaType.Audio:
       return <AudioPlayer {...asset} dominantColor={dominantColor} />
@@ -311,12 +417,28 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         {asset.imageUrl === undefined || showHolder ? (
           <ContentNotAvailable>Content not available yet</ContentNotAvailable>
         ) : assetMediaType === MediaType.Image ? (
-          <Img
-            className={styles.image}
-            src={asset.imageUrl}
-            alt={asset.name || collection.collectionName}
-            onError={() => setShowHolder(true)}
-          />
+          <AssetDetailsImageContainer>
+            <AssetDetailsImage
+              backgroundColor="white"
+              src={asset.imageUrl}
+              alt={asset.name || collection.collectionName}
+              onError={() => setShowHolder(true)}
+              height={520}
+              width={520}
+              $lg={{
+                height: 400,
+                width: 400,
+              }}
+              $md={{
+                height: 300,
+                width: 300,
+              }}
+              $sm={{
+                height: 200,
+                width: 200,
+              }}
+            />
+          </AssetDetailsImageContainer>
         ) : (
           <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
         )}

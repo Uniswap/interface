@@ -1,6 +1,6 @@
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 
 export function isInstantTokenBalanceUpdateEnabled(): boolean {
-  return Statsig.checkGate(getFeatureFlagName(FeatureFlags.InstantTokenBalanceUpdate))
+  return getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.InstantTokenBalanceUpdate))
 }

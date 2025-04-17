@@ -15,8 +15,6 @@ jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsS
 
 jest.mock('@walletconnect/react-native-compat', () => ({}))
 
-jest.mock('src/lib/RNEthersRs')
-
 // Mock OneSignal package
 jest.mock('react-native-onesignal', () => {
   return {
@@ -91,10 +89,6 @@ jest.mock('react-native/Libraries/Linking/Linking', () => ({
   canOpenURL: jest.fn(),
   getInitialURL: jest.fn(),
 }))
-
-
-jest.mock('openai')
-
 
 jest.mock("react-native-bootsplash", () => {
   return {

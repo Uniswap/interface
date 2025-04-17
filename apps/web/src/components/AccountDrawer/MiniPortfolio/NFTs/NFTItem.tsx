@@ -1,22 +1,18 @@
 import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MouseFollowTooltip, TooltipSize } from 'components/Tooltip'
 import { NftCard } from 'nft/components/card'
-import { detailsHref } from 'nft/components/card/utils'
-import { VerifiedIcon } from 'nft/components/icons'
+import { VerifiedIcon } from 'nft/components/iconExports'
 import { WalletAsset } from 'nft/types'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
-import { ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
 import { Flex, Text } from 'ui/src'
+import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { GqlChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export function NFT({
   asset,
@@ -29,18 +25,19 @@ export function NFT({
 }) {
   const { t } = useTranslation()
   const { isTestnetModeEnabled, gqlChains } = useEnabledChains()
-  const accountDrawer = useAccountDrawer()
-  const navigate = useNavigate()
   const trace = useTrace()
   const [isHovered, setIsHovered] = useState(false)
 
   const enabled =
     asset.chain && isTestnetModeEnabled ? gqlChains.includes(asset.chain as GqlChainId) : asset.chain === Chain.Ethereum
 
-  const navigateToNFTDetails = () => {
-    if (enabled) {
-      accountDrawer.close()
-      navigate(detailsHref(asset))
+  const onPress = () => {
+    if (asset.asset_contract?.address && asset.tokenId) {
+      window.open(
+        `https://opensea.io/assets/${asset.asset_contract.address}/${asset.tokenId}`,
+        '_blank',
+        'noopener,noreferrer',
+      )
     }
   }
 
@@ -69,7 +66,7 @@ export function NFT({
           display={{ disabledInfo: true }}
           isSelected={false}
           isDisabled={!enabled}
-          onCardClick={navigateToNFTDetails}
+          onCardClick={onPress}
           sendAnalyticsEvent={() =>
             sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
               element: InterfaceElementName.MINI_PORTFOLIO_NFT_ITEM,
@@ -90,7 +87,7 @@ export function NFT({
 }
 
 function NFTDetails({ asset, isHovered }: { asset: WalletAsset; isHovered: boolean }) {
-  const { formatNumberOrString } = useFormatter()
+  const { t } = useTranslation()
 
   return (
     <Flex overflow="hidden" width="100%" flexWrap="nowrap">
@@ -108,16 +105,15 @@ function NFTDetails({ asset, isHovered }: { asset: WalletAsset; isHovered: boole
       <Flex
         opacity={isHovered ? 1 : 0}
         row
-        $platform-web={{ whiteSpace: 'pre' }}
         alignItems="center"
         justifyContent="flex-start"
         width="100%"
+        gap="$spacing4"
       >
-        <ThemedText.BodySmall color="neutral2">
-          {asset.floorPrice
-            ? `${formatNumberOrString({ input: asset.floorPrice, type: NumberType.NFTTokenFloorPrice })} ETH`
-            : ' '}
-        </ThemedText.BodySmall>
+        <Text color="$neutral2" variant="body4">
+          {t('common.opensea.link')}
+        </Text>
+        <ExternalLink color="$neutral2" size="$icon.12" />
       </Flex>
     </Flex>
   )

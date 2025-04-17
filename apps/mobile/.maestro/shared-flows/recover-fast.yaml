@@ -1,0 +1,35 @@
+# this flow is used for flows that test the app with a pre-existing wallet
+# check flows/onboarding for all onboarding specific flows
+appId: com.uniswap.mobile.dev
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+---
+- tapOn:
+    id: ${output.testIds.ImportAccount}
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.OnboardingImportSeedPhrase}
+- waitForAnimationToEnd
+- inputText: ${E2E_RECOVERY_PHRASE}
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.Continue}
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.SelectWalletScreenLoaded}
+    timeout: 60000 # 1 minute (sometimes it takes longer to load in e2e)
+- tapOn:
+    id: ${output.testIds.Continue}
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.Skip}
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.Skip}
+- waitForAnimationToEnd
+- tapOn:
+    id: ${output.testIds.Skip}
+- waitForAnimationToEnd
+- runFlow: biometrics-confirm.yaml
+- waitForAnimationToEnd

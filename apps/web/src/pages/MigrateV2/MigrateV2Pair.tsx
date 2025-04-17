@@ -3,7 +3,6 @@ import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES, type Currency } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
-import Badge from 'components/Badge/Badge'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card/cards'
 import FeeSelector from 'components/FeeSelector'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -47,12 +46,13 @@ import { ExternalLink } from 'theme/components/Links'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
+import Badge from 'uniswap/src/components/badge/Badge'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -574,7 +574,12 @@ function V2PairMigration({
               }}
             />
           </TokenPairHeader>
-          <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
+          <FeeSelector
+            feeAmount={feeAmount}
+            handleFeePoolSelect={setFeeAmount}
+            currencyA={currency0}
+            currencyB={currency1}
+          />
           {noLiquidity && (
             <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <AlertCircle color={theme.neutral1} style={{ marginBottom: '12px', opacity: 0.8 }} />

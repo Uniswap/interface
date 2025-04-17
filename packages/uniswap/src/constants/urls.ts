@@ -22,6 +22,9 @@ export const UNISWAP_MOBILE_REDIRECT_URL = 'https://uniswap.org/mobile-redirect'
 
 const helpUrl = 'https://support.uniswap.org/hc/en-us'
 
+// The trading api uses custom builds for testing which may not use the v1 prefix
+const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
+
 export const uniswapUrls = {
   // Help and web articles/items
   helpUrl,
@@ -41,6 +44,7 @@ export const uniswapUrls = {
     limitsFailure: `${helpUrl}/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute`,
     limitsInfo: `${helpUrl}/articles/24470337797005`,
     limitsNetworkSupport: `${helpUrl}/articles/24470251716237-What-networks-do-limits-support`,
+    lpIncentiveInfo: `${helpUrl}/articles/35506888223501`,
     fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
     fiatOffRampHelp: `${helpUrl}/articles/34006552258957`,
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
@@ -57,6 +61,7 @@ export const uniswapUrls = {
     revokeExplainer: `${helpUrl}/articles/15724901841037-How-to-revoke-a-token-approval`,
     supportedNetworks: `${helpUrl}/articles/14569415293325`,
     swapFeeInfo: `${helpUrl}/articles/20131678274957`,
+    passkeysInfo: helpUrl, // TODO(WALL-6336): add Help link
     swapProtection: `${helpUrl}/articles/18814993155853`,
     swapSlippage: `${helpUrl}/articles/8643879653261-What-is-Price-Slippage-`,
     tokenWarning: `${helpUrl}/articles/8723118437133-What-are-token-warnings-`,
@@ -102,20 +107,26 @@ export const uniswapUrls = {
   trmPath: '/v1/screen',
   gasServicePath: '/v1/gas-fee',
   tradingApiPaths: {
-    quote: '/v1/quote',
-    indicativeQuote: '/v1/indicative_quote',
-    approval: '/v1/check_approval',
-    swap: '/v1/swap',
-    order: '/v1/order',
-    orders: '/v1/orders',
-    swaps: '/v1/swaps',
-    swappableTokens: '/v1/swappable_tokens',
-    createLp: '/v1/lp/create',
-    increaseLp: '/v1/lp/increase',
-    decreaseLp: '/v1/lp/decrease',
-    claimLpFees: '/v1/lp/claim',
-    lpApproval: '/v1/lp/approve',
-    migrate: '/v1/lp/migrate',
+    quote: `${tradingApiVersionPrefix}/quote`,
+    indicativeQuote: `${tradingApiVersionPrefix}/indicative_quote`,
+    approval: `${tradingApiVersionPrefix}/check_approval`,
+    swap: `${tradingApiVersionPrefix}/swap`,
+    order: `${tradingApiVersionPrefix}/order`,
+    orders: `${tradingApiVersionPrefix}/orders`,
+    swaps: `${tradingApiVersionPrefix}/swaps`,
+    swappableTokens: `${tradingApiVersionPrefix}/swappable_tokens`,
+    createLp: `${tradingApiVersionPrefix}/lp/create`,
+    increaseLp: `${tradingApiVersionPrefix}/lp/increase`,
+    decreaseLp: `${tradingApiVersionPrefix}/lp/decrease`,
+    claimLpFees: `${tradingApiVersionPrefix}/lp/claim`,
+    lpApproval: `${tradingApiVersionPrefix}/lp/approve`,
+    migrate: `${tradingApiVersionPrefix}/lp/migrate`,
+    claimRewards: `${tradingApiVersionPrefix}/lp/claim_rewards`,
+    wallet: {
+      checkDelegation: `${tradingApiVersionPrefix}/wallet/check_delegation`,
+      encode7702: `${tradingApiVersionPrefix}/wallet/encode_7702`,
+    },
+    swap7702: `${tradingApiVersionPrefix}/swap_7702`,
   },
 
   // App and Redirect URL's

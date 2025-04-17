@@ -11,6 +11,7 @@ export enum TokenList {
 }
 
 export enum AttackType {
+  Honeypot = 'honeypot',
   Airdrop = 'airdrop',
   Impersonator = 'impersonator',
   HighFees = 'high-fees',
@@ -31,6 +32,8 @@ export type CurrencyInfo = {
   spamCode?: Maybe<SpamCode>
   logoUrl: Maybe<string>
   isSpam?: Maybe<boolean>
+  // Indicates if this currency is from another chain than user searched
+  isFromOtherNetwork?: boolean
 }
 
 // Portfolio balance as exposed to the app

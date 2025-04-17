@@ -101,7 +101,12 @@ export function ManageWalletsModal(): JSX.Element {
       screenProps: { address },
       isHidden: !!ensName || !!unitag?.username,
       checkIfCanProceed: (): boolean => {
-        dispatch(openModal({ name: ModalName.EditLabelSettingsModal, initialState: { address } }))
+        dispatch(
+          openModal({
+            name: ModalName.EditLabelSettingsModal,
+            initialState: { address, accessPoint: MobileScreens.SettingsWallet },
+          }),
+        )
         return false
       },
     }
@@ -119,7 +124,12 @@ export function ManageWalletsModal(): JSX.Element {
       screenProps: { address },
       isHidden: currentAccount?.type === AccountType.Readonly,
       checkIfCanProceed: (): boolean => {
-        dispatch(openModal({ name: ModalName.EditProfileSettingsModal, initialState: { address } }))
+        dispatch(
+          openModal({
+            name: ModalName.EditProfileSettingsModal,
+            initialState: { address, accessPoint: MobileScreens.SettingsWallet },
+          }),
+        )
         return false
       },
     }

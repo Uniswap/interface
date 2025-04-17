@@ -54,7 +54,6 @@ describe('Swap', () => {
     revocationTxRequest: undefined,
     gasFee: { error: null, isLoading: false, value: '1000000000000000000' },
     gasFeeEstimation: { swapEstimates: undefined, approvalEstimates: undefined },
-    indicativeTrade: undefined,
     permit: undefined,
     routing: Routing.CLASSIC,
     swapRequestArgs: {

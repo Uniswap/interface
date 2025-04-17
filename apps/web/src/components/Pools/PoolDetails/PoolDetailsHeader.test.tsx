@@ -9,6 +9,10 @@ import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-
 import { render, screen } from 'test-utils/render'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
+jest.mock('nft/components/iconExports', () => ({
+  ReversedArrowsIcon: () => <div data-testid="reversed-arrows-icon" />,
+}))
+
 describe('PoolDetailsHeader', () => {
   beforeEach(() => {
     store.dispatch(
@@ -73,8 +77,9 @@ describe('PoolDetailsHeader', () => {
   })
 
   it('renders header text correctly', () => {
-    const { asFragment } = render(<PoolDetailsHeader {...mockHeaderProps} />)
-    expect(asFragment()).toMatchSnapshot()
+    const result = render(<PoolDetailsHeader {...mockHeaderProps} />)
+
+    expect(result.asFragment()).toMatchSnapshot()
 
     const usdcLink = document.querySelector(
       'a[href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"]',

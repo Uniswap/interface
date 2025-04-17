@@ -165,7 +165,9 @@ function getHighestPriorityAttackType(attackTypes?: (ProtectionAttackType | unde
     return undefined
   }
   const attackTypeSet = new Set(attackTypes)
-  if (attackTypeSet.has(ProtectionAttackType.Impersonator)) {
+  if (attackTypeSet.has(ProtectionAttackType.Honeypot)) {
+    return AttackType.Honeypot
+  } else if (attackTypeSet.has(ProtectionAttackType.Impersonator)) {
     return AttackType.Impersonator
   } else if (attackTypeSet.has(ProtectionAttackType.AirdropPattern)) {
     return AttackType.Airdrop

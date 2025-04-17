@@ -1,8 +1,8 @@
-import { AnimatePresence, Variants, motion } from 'framer-motion'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
 import { DappRequestQueue } from 'src/app/features/dappRequests/DappRequestQueue'
+import { ForceUpgradeModal } from 'src/app/features/forceUpgrade/ForceUpgradeModal'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import { Locked } from 'src/app/features/lockScreen/Locked'
 import { NotificationToastWrapper } from 'src/app/features/notifications/NotificationToastWrapper'
@@ -11,10 +11,10 @@ import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { HideContentsWhenSidebarBecomesInactive } from 'src/app/navigation/HideContentsWhenSidebarBecomesInactive'
 import { SideBarNavigationProvider } from 'src/app/navigation/SideBarNavigationProvider'
 import { AppRoutes } from 'src/app/navigation/constants'
-import { RouterState, subscribeToRouterState, useRouterState } from 'src/app/navigation/state'
+import { useRouterState } from 'src/app/navigation/state'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
-import { Flex, SpinningLoader, styled } from 'ui/src'
+import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
 import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
@@ -72,29 +72,7 @@ const getAppRouteFromPathName = (pathname: string): AppRoutes | null => {
   return null
 }
 
-const animationVariant: Variants = {
-  initial: (dir: Direction) => ({
-    x: isVertical(dir) ? 0 : dir === 'right' ? -30 : 30,
-    y: !isVertical(dir) ? 0 : dir === 'down' ? -15 : 15,
-    opacity: 0,
-    zIndex: 1,
-  }),
-  animate: {
-    x: 0,
-    y: 0,
-    opacity: 1,
-    zIndex: 1,
-  },
-  exit: (dir: Direction) => ({
-    x: isVertical(dir) ? 0 : dir === 'left' ? -30 : 30,
-    y: !isVertical(dir) ? 0 : dir === 'up' ? -15 : 15,
-    opacity: 0,
-    zIndex: 0,
-  }),
-}
-
 export function WebNavigation(): JSX.Element {
-  const [isTransitioning, setIsTransitioning] = useState(false)
   const isLoggedIn = useIsWalletUnlocked()
   const { pathname } = useLocation()
   const history = useRef<string[]>([]).current
@@ -118,50 +96,36 @@ export function WebNavigation(): JSX.Element {
   // Only restore scroll if path on latest re-render is different from the previous path.
   const prevPathname = usePrevious(pathname)
   const shouldRestoreScroll = pathname !== prevPathname
-
-  useEffect(() => {
-    // We're using subscribeToRouterState subscriber to detect, whether we will
-    // navigate to another page, which will lead to the start of the animation.
-    subscribeToRouterState(({ historyAction, location }: RouterState) => {
-      const trimmedPathname = location.pathname.replace('/', '') as AppRoutes
-      if (historyAction !== NavigationType.Replace && Object.values(AppRoutes).includes(trimmedPathname)) {
-        setIsTransitioning(true)
-      }
-    })
-  }, [])
-
   const childrenMemo = useMemo(() => {
     return (
-      <OverflowControlledFlex isTransitioning={isTransitioning}>
-        <AnimatePresence initial={false}>
-          <MotionFlex
-            key={pathname}
-            variants={animationVariant}
-            custom={towards}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            onAnimationComplete={() => {
-              setIsTransitioning(false)
-            }}
-          >
-            <Flex fill grow overflow="visible">
-              <TestnetModeBanner />
-              {isLoggedIn === null ? (
-                <Loading />
-              ) : isLoggedIn === true ? (
-                <HideContentsWhenSidebarBecomesInactive>
-                  <LoggedIn />
-                </HideContentsWhenSidebarBecomesInactive>
-              ) : (
-                <LoggedOut />
-              )}
-            </Flex>
-          </MotionFlex>
-        </AnimatePresence>
-      </OverflowControlledFlex>
+      <AnimatePresence custom={{ towards }} initial={false}>
+        <AnimatedPane
+          key={pathname}
+          animation={[
+            isVertical(towards) ? 'quicker' : '100ms',
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
+        >
+          <Flex fill grow overflow="visible">
+            <TestnetModeBanner />
+            {isLoggedIn === null ? (
+              <Loading />
+            ) : isLoggedIn === true ? (
+              <HideContentsWhenSidebarBecomesInactive>
+                <LoggedIn />
+              </HideContentsWhenSidebarBecomesInactive>
+            ) : (
+              <LoggedOut />
+            )}
+          </Flex>
+        </AnimatedPane>
+      </AnimatePresence>
     )
-  }, [isLoggedIn, pathname, towards, isTransitioning])
+  }, [isLoggedIn, pathname, towards])
 
   return (
     <SideBarNavigationProvider>
@@ -169,12 +133,21 @@ export function WebNavigation(): JSX.Element {
         <NotificationToastWrapper />
         {shouldRestoreScroll && <ScrollRestoration />}
         {childrenMemo}
+        <ForceUpgradeModal />
       </WalletUniswapProvider>
     </SideBarNavigationProvider>
   )
 }
 
-const MotionFlex = styled(motion(Flex), {
+function Loading(): JSX.Element {
+  return (
+    <Flex centered grow>
+      <SpinningLoader />
+    </Flex>
+  )
+}
+
+const AnimatedPane = styled(Flex, {
   zIndex: 1,
   fill: true,
   position: 'absolute',
@@ -185,30 +158,22 @@ const MotionFlex = styled(motion(Flex), {
   minHeight: '100vh',
   mx: 'auto',
   width: '100%',
+
+  variants: {
+    towards: (dir: Direction) => ({
+      enterStyle: {
+        opacity: 0,
+        zIndex: 1,
+      },
+      exitStyle: {
+        zIndex: 0,
+        x: isVertical(dir) ? 0 : dir === 'left' ? 30 : -30,
+        y: !isVertical(dir) ? 0 : dir === 'up' ? 15 : -15,
+        opacity: 0,
+      },
+    }),
+  } as const,
 })
-
-function OverflowControlledFlex({
-  children,
-  isTransitioning,
-}: React.PropsWithChildren & { isTransitioning: boolean }): JSX.Element {
-  if (!isTransitioning) {
-    return <Flex fill>{children}</Flex>
-  }
-  return (
-    <Flex fill overflow="hidden">
-      {children}
-    </Flex>
-  )
-}
-
-// TODO(EXT-994): improve this loading screen.
-function Loading(): JSX.Element {
-  return (
-    <Flex centered grow>
-      <SpinningLoader />
-    </Flex>
-  )
-}
 
 const isVertical = (dir: Direction): boolean => dir === 'up' || dir === 'down'
 

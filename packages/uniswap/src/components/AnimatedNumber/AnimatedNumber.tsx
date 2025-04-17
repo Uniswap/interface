@@ -28,7 +28,7 @@ export const BALANCE_CHANGE_INDICATION_DURATION = isWeb ? ONE_SECOND_MS / 2 : ON
 export const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 export const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
 const SPACE_SIZE = isWeb ? 0 : 2
-export const DIGIT_HEIGHT = 44
+export const DIGIT_HEIGHT = 40 // matches heading2 lineHeight
 export const DIGIT_MAX_WIDTH = 29
 export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
 

@@ -139,3 +139,28 @@ export function getPercentageError(
   }
   return diff !== undefined && estimated !== undefined && estimated !== 0 ? (diff / estimated) * 100 : undefined
 }
+
+export function getRPCErrorCategory(error: Error): string {
+  const message = error.message
+  switch (true) {
+    case message.includes('nonce'):
+    case message.includes('future transaction tries to replace pending'):
+      return 'nonce_error'
+    case message.includes('Failed in pending block with: Reverted'):
+      return 'reverted'
+    case message.includes('intrinsic gas too low'):
+    case message.includes('max fee per gas less than block base fee'):
+    case message.includes('transaction underpriced'):
+      return 'gas_too_low'
+    case message.includes('insufficient funds for intrinsic transaction cost'):
+      return 'insufficient_gas'
+    case message.includes('Too Many Requests'):
+      return 'rate_limited'
+    case message.includes('already known'):
+      return 'already_known'
+    case message.includes('code=TIMEOUT'):
+      return 'timeout'
+    default:
+      return 'unknown'
+  }
+}

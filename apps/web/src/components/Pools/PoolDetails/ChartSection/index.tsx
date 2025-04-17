@@ -35,7 +35,7 @@ import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-ap
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PDP_CHART_HEIGHT_PX = 356
@@ -114,13 +114,7 @@ function usePDPChartState(
     isV2,
   }
 
-  const priceQuery = usePDPPriceChartData(
-    variables,
-    poolData,
-    isReversed ? tokenB : tokenA,
-    isReversed ? tokenA : tokenB,
-    protocolVersion,
-  )
+  const priceQuery = usePDPPriceChartData(variables, poolData, isReversed ? tokenB : tokenA, protocolVersion)
   const volumeQuery = usePDPVolumeChartData(variables)
 
   return useMemo(() => {

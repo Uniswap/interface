@@ -1,12 +1,14 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import AuthenticatedHeader from 'components/AccountDrawer/AuthenticatedHeader'
 import LanguageMenu from 'components/AccountDrawer/LanguageMenu'
 import LocalCurrencyMenu from 'components/AccountDrawer/LocalCurrencyMenu'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
 import { UniExtensionPoolsMenu } from 'components/AccountDrawer/MiniPortfolio/Pools/UniExtensionPoolsMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import PasskeyMenu from 'components/AccountDrawer/PasskeyMenu/PasskeyMenu'
 import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import WalletModal from 'components/WalletModal'
+import { OtherWalletsModal } from 'components/WalletModal/OtherWalletsModal'
 import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
@@ -32,6 +34,7 @@ function DefaultMenu() {
   const openLocalCurrencySettings = useCallback(() => setMenu(MenuState.LOCAL_CURRENCY_SETTINGS), [setMenu])
   const closeLimitsMenu = useCallback(() => setMenu(MenuState.DEFAULT), [setMenu])
   const { isOpen: drawerOpen } = useAccountDrawer()
+  const openPasskeySettings = useCallback(() => setMenu(MenuState.PASSKEYS), [setMenu])
 
   const prevMenu = usePrevious(menu)
 
@@ -40,9 +43,11 @@ function DefaultMenu() {
       [MenuState.DEFAULT]: 0,
       [MenuState.SETTINGS]: 1,
       [MenuState.POOLS]: 1,
+      [MenuState.OTHER_WALLETS]: 1,
       [MenuState.LANGUAGE_SETTINGS]: 2,
       [MenuState.LOCAL_CURRENCY_SETTINGS]: 2,
       [MenuState.LIMITS]: 2,
+      [MenuState.PASSKEYS]: 2,
     } as const
 
     if (!prevMenu || prevMenu === menu) {
@@ -82,12 +87,15 @@ function DefaultMenu() {
         ) : (
           <WalletModal />
         )
+      case MenuState.OTHER_WALLETS:
+        return <OtherWalletsModal />
       case MenuState.SETTINGS:
         return (
           <SettingsMenu
             onClose={closeSettings}
             openLanguageSettings={openLanguageSettings}
             openLocalCurrencySettings={openLocalCurrencySettings}
+            openPasskeySettings={openPasskeySettings}
           />
         )
       case MenuState.LANGUAGE_SETTINGS:
@@ -98,6 +106,8 @@ function DefaultMenu() {
         return account.address ? <LimitsMenu onClose={closeLimitsMenu} account={account.address} /> : null
       case MenuState.POOLS:
         return account.address ? <UniExtensionPoolsMenu account={account.address} onClose={closeLimitsMenu} /> : null
+      case MenuState.PASSKEYS:
+        return <PasskeyMenu onClose={openSettings} />
     }
   }, [
     account.address,
@@ -106,6 +116,7 @@ function DefaultMenu() {
     menu,
     openLanguageSettings,
     openLocalCurrencySettings,
+    openPasskeySettings,
     openSettings,
   ])
 

@@ -120,7 +120,7 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
                 "borderWidth": 0,
               },
               {
-                "color": "#9B9B9B",
+                "color": "rgba(255, 255, 255, 0.65)",
                 "height": 20,
                 "width": 20,
               },
@@ -135,7 +135,7 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
           vbWidth={24}
         >
           <RNSVGGroup
-            color="#9B9B9B"
+            color="rgba(255, 255, 255, 0.65)"
             fill={null}
             propList={
               [

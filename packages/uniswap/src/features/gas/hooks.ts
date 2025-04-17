@@ -20,14 +20,15 @@ import {
 } from 'uniswap/src/features/gas/types'
 import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { DynamicConfigs, GasStrategies, GasStrategyType } from 'uniswap/src/features/gating/configs'
-import { Statsig, useConfig } from 'uniswap/src/features/gating/sdk/statsig'
+import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
-import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
-import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -67,38 +68,38 @@ function isValidGasStrategies(value: unknown): value is GasStrategies {
 
 // Hook to use active GasStrategy for a specific chain.
 export function useActiveGasStrategy(chainId: number | undefined, type: GasStrategyType): GasStrategy {
-  const { isLoading } = useConfig(DynamicConfigs.GasStrategies)
+  const { isStatsigReady } = useStatsigClientStatus()
 
   return useMemo(() => {
-    if (isLoading) {
+    if (!isStatsigReady) {
       return DEFAULT_GAS_STRATEGY
     }
 
-    const config = Statsig.getConfig(DynamicConfigs.GasStrategies)
+    const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)
     const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
     const activeStrategy = gasStrategies?.strategies.find(
       (s) => s.conditions.chainId === chainId && s.conditions.types === type && s.conditions.isActive,
     )
     return activeStrategy ? activeStrategy.strategy : DEFAULT_GAS_STRATEGY
-  }, [isLoading, chainId, type])
+  }, [isStatsigReady, chainId, type])
 }
 
 // Hook to use shadow GasStrategies for a specific chain.
 export function useShadowGasStrategies(chainId: number | undefined, type: GasStrategyType): GasStrategy[] {
-  const { isLoading } = useConfig(DynamicConfigs.GasStrategies)
+  const { isStatsigReady } = useStatsigClientStatus()
 
   return useMemo(() => {
-    if (isLoading) {
+    if (!isStatsigReady) {
       return []
     }
 
-    const config = Statsig.getConfig(DynamicConfigs.GasStrategies)
+    const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)
     const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
     const shadowStrategies = gasStrategies?.strategies
       .filter((s) => s.conditions.chainId === chainId && s.conditions.types === type && !s.conditions.isActive)
       .map((s) => s.strategy)
     return shadowStrategies ?? []
-  }, [isLoading, chainId, type])
+  }, [chainId, isStatsigReady, type])
 }
 
 /**

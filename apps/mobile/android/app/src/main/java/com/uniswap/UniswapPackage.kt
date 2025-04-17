@@ -24,7 +24,7 @@ class UniswapPackage : ReactPackage {
   ): List<NativeModule> = listOf(
     AndroidDeviceModule(reactContext),
     RNEthersRSModule(reactContext),
-
+    EmbeddedWalletModule(reactContext),
     ThemeModule(reactContext),
   )
 }

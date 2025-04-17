@@ -55,6 +55,7 @@ export function TokenDetailsPoolsTable({
         maxHeight={600}
         hiddenColumns={HIDDEN_COLUMNS}
         loadMore={loadMore}
+        forcePinning
       />
     </Flex>
   )

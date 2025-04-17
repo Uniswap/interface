@@ -1,4 +1,4 @@
-import { wordlists } from 'ethers'
+import { wordlists } from '@ethersproject/wordlists'
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -324,7 +324,7 @@ const RecoveryPhraseWord = forwardRef<
         onKeyPress={handleKeyPress(index)}
         onSubmitEditing={onSubmitEditing}
         {...(showError && {
-          backgroundColor: '$DEP_accentCriticalSoft',
+          backgroundColor: '$statusCritical2',
           color: '$statusCritical',
         })}
       />

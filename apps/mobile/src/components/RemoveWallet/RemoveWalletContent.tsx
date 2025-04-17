@@ -52,13 +52,14 @@ export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentPro
     isRemovingRecoveryPhrase ? RemoveWalletStep.Warning : RemoveWalletStep.Final,
   )
 
-  const onPressClose = useCallback((): void => {
+  const handleOnClose = useCallback((): void => {
     if (onClose) {
       onClose()
     }
   }, [onClose])
 
   const onRemoveWallet = useCallback((): void => {
+    handleOnClose()
     if (!hasAccountsLeft) {
       // user has no accounts left, so we bring onboarding back
       dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
@@ -107,9 +108,8 @@ export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentPro
       wallets_removed: accountsToRemove.map((a) => a.address),
     })
 
-    onPressClose()
     setInProgress(false)
-  }, [account, associatedAccounts, dispatch, isReplacing, hasAccountsLeft, onPressClose])
+  }, [account, associatedAccounts, dispatch, isReplacing, hasAccountsLeft, handleOnClose])
 
   const { trigger } = useBiometricPrompt(
     () => {
@@ -192,7 +192,7 @@ export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentPro
           </>
         ) : (
           <Flex row gap={inProgress ? '$none' : '$spacing12'} pt="$spacing12">
-            <Button size="large" emphasis="tertiary" isDisabled={inProgress} onPress={onPressClose}>
+            <Button size="large" emphasis="tertiary" isDisabled={inProgress} onPress={handleOnClose}>
               {t('common.button.cancel')}
             </Button>
 

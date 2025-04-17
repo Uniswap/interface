@@ -1,12 +1,15 @@
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import styled from 'lib/styled-components'
+import { colorsDark, colorsLight } from 'ui/src/theme'
 
 const StyledUpArrow = styled(ArrowChangeUp)<{ $noColor?: boolean }>`
-  color: ${({ theme, $noColor }) => ($noColor ? theme.neutral2 : theme.success)};
+  color: ${({ theme, $noColor }) =>
+    $noColor ? theme.neutral2 : theme.darkMode ? colorsDark.statusSuccess : colorsLight.statusSuccess};
 `
 const StyledDownArrow = styled(ArrowChangeDown)<{ $noColor?: boolean }>`
-  color: ${({ theme, $noColor }) => ($noColor ? theme.neutral2 : theme.critical)};
+  color: ${({ theme, $noColor }) =>
+    $noColor ? theme.neutral2 : theme.darkMode ? colorsDark.statusCritical : colorsLight.statusCritical};
 `
 
 export function calculateDelta(start: number, current: number) {
@@ -38,5 +41,13 @@ export function DeltaArrow({ delta, noColor = false, size = 16 }: DeltaArrowProp
 
 export const DeltaText = styled.span<{ delta?: number }>`
   color: ${({ theme, delta }) =>
-    delta !== undefined ? (Math.sign(delta) < 0 ? theme.critical : theme.success) : theme.neutral1};
+    delta !== undefined
+      ? Math.sign(delta) < 0
+        ? theme.darkMode
+          ? colorsDark.statusCritical
+          : colorsLight.statusCritical
+        : theme.darkMode
+          ? colorsDark.statusSuccess
+          : colorsLight.statusSuccess
+      : theme.neutral1};
 `

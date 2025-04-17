@@ -1,42 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TransferTransactionDetails Component renders TransferTransactionDetails without error 1`] = `
-<View
-  cancelable={true}
-  disabled={false}
-  focusable={true}
-  hitSlop={[Function]}
-  minPressDuration={0}
-  onBlur={[Function]}
-  onFocus={[Function]}
-  onMouseEnter={[Function]}
-  onMouseLeave={[Function]}
-  onPress={[Function]}
-  onPressIn={[Function]}
-  onPressOut={[Function]}
-  style={
-    {
-      "flexDirection": "column",
-      "opacity": 1,
-      "transform": [
-        {
-          "scale": 1,
-        },
-      ],
-    }
-  }
->
+[
   <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
     style={
       {
-        "alignItems": "center",
         "flexDirection": "column",
-        "gap": 8,
-        "justifyContent": "center",
-        "paddingBottom": 32,
-        "paddingLeft": 32,
-        "paddingRight": 32,
-        "paddingTop": 32,
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
       }
     }
   >
@@ -44,12 +31,34 @@ exports[`TransferTransactionDetails Component renders TransferTransactionDetails
       style={
         {
           "alignItems": "center",
-          "flexDirection": "row",
+          "flexDirection": "column",
           "gap": 8,
           "justifyContent": "center",
+          "paddingBottom": 32,
+          "paddingLeft": 32,
+          "paddingRight": 32,
+          "paddingTop": 32,
         }
       }
-    />
-  </View>
-</View>
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "gap": 8,
+            "justifyContent": "center",
+          }
+        }
+      />
+    </View>
+  </View>,
+  <div
+    style={
+      {
+        "display": "contents",
+      }
+    }
+  />,
+]
 `;

@@ -39,9 +39,9 @@ import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks } from 'wallet/src/test/mocks'
 
 jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
-  Statsig: {
+  getStatsigClient: jest.fn(() => ({
     checkGate: jest.fn().mockReturnValue(true),
-  },
+  })),
 }))
 
 const account = signerMnemonicAccount()
@@ -123,7 +123,6 @@ const classicSwapParams = {
     revocationTxRequest: mockRevocationTxRequest,
     txRequest: mockSwapTxRequest,
     trade: mockTrade,
-    indicativeTrade: undefined,
     gasFee: { value: '5', isLoading: false, error: null },
     gasFeeEstimation: {},
     permit: undefined,
@@ -145,7 +144,6 @@ const uniswapXSwapParams = {
     approveTxRequest: mockApproveTxRequest,
     revocationTxRequest: mockRevocationTxRequest,
     trade: mockUniswapXTrade,
-    indicativeTrade: undefined,
     permit: mockPermit,
     wrapTxRequest: undefined,
     gasFee: { value: '5', isLoading: false, error: null },

@@ -34,10 +34,11 @@ import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionMod
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
+import { SwapDependenciesContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContextProvider'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
-import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
-import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
+import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/ProtocolPreference'
+import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Slippage/Slippage'
+import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
@@ -263,18 +264,18 @@ function UniversalSwapFlow({
       )}
       {currentTab === SwapTab.Swap && (
         <Flex gap="$spacing16">
-          <SwapFlow
-            settings={[Slippage, DeadlineOverride, ProtocolPreference]}
-            hideHeader={hideHeader}
-            hideFooter={hideFooter}
-            onClose={noop}
-            swapRedirectCallback={swapRedirectCallback}
-            onCurrencyChange={onCurrencyChange}
-            swapCallback={swapCallback}
-            wrapCallback={wrapCallback}
-            prefilledState={prefilledState}
-            tokenColor={tokenColor}
-          />
+          <SwapDependenciesContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
+            <SwapFlow
+              settings={[Slippage, DeadlineOverride, ProtocolPreference]}
+              hideHeader={hideHeader}
+              hideFooter={hideFooter}
+              onClose={noop}
+              swapRedirectCallback={swapRedirectCallback}
+              onCurrencyChange={onCurrencyChange}
+              prefilledState={prefilledState}
+              tokenColor={tokenColor}
+            />
+          </SwapDependenciesContextProvider>
           <SwapBottomCard />
         </Flex>
       )}
@@ -300,7 +301,7 @@ const DisabledSwapOverlay = () => {
   return (
     <DisabledOverlay cursor="not-allowed">
       <Tooltip placement="left-start">
-        <Tooltip.Content>
+        <Tooltip.Content animationDirection="left">
           <Tooltip.Arrow />
           <Text variant="body4">{t('testnet.unsupported')}</Text>
         </Tooltip.Content>

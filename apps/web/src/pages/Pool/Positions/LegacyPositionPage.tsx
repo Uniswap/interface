@@ -21,7 +21,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { Button, DeprecatedButton, Flex, Main, Text, styled } from 'ui/src'
+import { Button, Flex, Main, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -93,7 +93,6 @@ export function LegacyPositionPage() {
 
   const dispatch = useAppDispatch()
 
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const { formatCurrencyAmount } = useFormatter()
@@ -144,9 +143,7 @@ export function LegacyPositionPage() {
             </Text>
           </Flex>
         }
-        actionButton={
-          <DeprecatedButton onPress={() => navigate('/positions')}>{t('common.backToPositions')}</DeprecatedButton>
-        }
+        actionButton={<Button onPress={() => navigate('/positions')}>{t('common.backToPositions')}</Button>}
       />
     )
   }
@@ -195,7 +192,6 @@ export function LegacyPositionPage() {
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
                 {positionInfo.version === ProtocolVersion.V3 &&
                   status !== PositionStatus.CLOSED &&
-                  isV4DataEnabled &&
                   isMigrateToV4Enabled && (
                     <MouseoverTooltip
                       text={t('pool.migrateLiquidityDisabledTooltip')}

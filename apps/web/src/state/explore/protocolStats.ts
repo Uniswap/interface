@@ -1,8 +1,6 @@
 import { TimestampedAmount } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { useContext, useMemo } from 'react'
 import { ExploreContext } from 'state/explore'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 
 function mapDataByTimestamp(
   v2Data?: TimestampedAmount[],
@@ -44,14 +42,11 @@ export function use24hProtocolVolume() {
     protocolStats: { data, isLoading },
   } = useContext(ExploreContext)
 
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
-
   const v2Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v2
   const v3Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v3
   const v4Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v4
 
-  const dataByTime = mapDataByTimestamp(v2Data, v3Data, isV4DataEnabled ? v4Data : undefined)
+  const dataByTime = mapDataByTimestamp(v2Data, v3Data, v4Data)
 
   const sortedTimestamps = Object.keys(dataByTime)
     .map(Number)
@@ -71,9 +66,8 @@ export function use24hProtocolVolume() {
     [dataByTime, previousTimestamp],
   )
 
-  const totalLatest = (latestVolumes.v2 || 0) + (latestVolumes.v3 || 0) + (isV4DataEnabled ? latestVolumes.v4 || 0 : 0)
-  const totalPrevious =
-    (previousVolumes.v2 || 0) + (previousVolumes.v3 || 0) + (isV4DataEnabled ? previousVolumes.v4 || 0 : 0)
+  const totalLatest = (latestVolumes.v2 || 0) + (latestVolumes.v3 || 0) + (latestVolumes.v4 || 0)
+  const totalPrevious = (previousVolumes.v2 || 0) + (previousVolumes.v3 || 0) + (previousVolumes.v4 || 0)
 
   const computeChangePercent = (latest: number, previous: number): number => {
     // If previous is 0, we treat the change as 0 to avoid division by zero.
@@ -112,15 +106,12 @@ export function useDailyTVLWithChange() {
     protocolStats: { data, isLoading },
   } = useContext(ExploreContext)
 
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
-
   const v2Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v2
   const v3Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v3
   const v4Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v4
 
   return useMemo(() => {
-    const dataByTime = mapDataByTimestamp(v2Data, v3Data, isV4DataEnabled ? v4Data : undefined)
+    const dataByTime = mapDataByTimestamp(v2Data, v3Data, v4Data)
     const sortedTimestamps = Object.keys(dataByTime)
       .map(Number)
       .sort((a, b) => b - a)
@@ -150,8 +141,8 @@ export function useDailyTVLWithChange() {
       v4: latest.v4,
     }
 
-    const totalTVL = latest.v2 + latest.v3 + (isV4DataEnabled ? latest.v4 : 0)
-    const previousTotal = previous.v2 + previous.v3 + (isV4DataEnabled ? previous.v4 : 0)
+    const totalTVL = latest.v2 + latest.v3 + latest.v4
+    const previousTotal = previous.v2 + previous.v3 + previous.v4
 
     const computeChangePercent = (latestVal: number, previousVal: number) =>
       previousVal === 0 ? 0 : ((latestVal - previousVal) / previousVal) * 100
@@ -162,7 +153,7 @@ export function useDailyTVLWithChange() {
     // Individual protocol changes
     const v2Change = computeChangePercent(latest.v2, previous.v2)
     const v3Change = computeChangePercent(latest.v3, previous.v3)
-    const v4Change = isV4DataEnabled ? computeChangePercent(latest.v4, previous.v4) : 0
+    const v4Change = computeChangePercent(latest.v4, previous.v4)
 
     return {
       isLoading,
@@ -175,5 +166,5 @@ export function useDailyTVLWithChange() {
         v4: v4Change,
       },
     }
-  }, [isLoading, isV4DataEnabled, v2Data, v3Data, v4Data])
+  }, [isLoading, v2Data, v3Data, v4Data])
 }

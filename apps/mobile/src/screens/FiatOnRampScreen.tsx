@@ -541,7 +541,12 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               }}
             />
 
-            <DecimalPadCalculateSpace id={DecimalPadCalculatedSpaceId.FiatOnRamp} decimalPadRef={decimalPadRef} />
+            <DecimalPadCalculateSpace
+              id={DecimalPadCalculatedSpaceId.FiatOnRamp}
+              decimalPadRef={decimalPadRef}
+              // TODO(WALL-6347): pass in the correct height of the additional elements in the AnimatedFlex below.
+              additionalElementsHeight={0}
+            />
 
             <AnimatedFlex
               bottom={0}

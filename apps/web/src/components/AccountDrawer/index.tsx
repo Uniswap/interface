@@ -1,14 +1,12 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { SignInModal } from 'components/AccountDrawer/SignInModal'
 import { Web3StatusRef } from 'components/Web3Status'
-import { useAccount } from 'hooks/useAccount'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
-import { atom, useAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { transitions } from 'theme/styles'
@@ -25,8 +23,6 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, iconSizes, zIndexes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const DRAWER_SPECS = {
@@ -37,17 +33,6 @@ const DRAWER_SPECS = {
 }
 
 export const MODAL_WIDTH = '368px'
-
-export enum MenuState {
-  DEFAULT = 'default',
-  SETTINGS = 'settings',
-  LANGUAGE_SETTINGS = 'language_settings',
-  LOCAL_CURRENCY_SETTINGS = 'local_currency_settings',
-  LIMITS = 'limits',
-  POOLS = 'pools',
-}
-
-export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)
 
 const AccountDrawerScrollWrapper = styled(Flex, {
   '$platform-web': {
@@ -252,8 +237,6 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
 
 function AccountDrawer() {
   const accountDrawer = useAccountDrawer()
-  const account = useAccount()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   // close on escape keypress
   useEffect(() => {
@@ -273,12 +256,10 @@ function AccountDrawer() {
 
   useDisableScrolling(accountDrawer.isOpen)
 
-  return account?.address || !isEmbeddedWalletEnabled ? (
+  return (
     <Drawer>
       <DefaultMenu />
     </Drawer>
-  ) : (
-    <SignInModal isOpen={accountDrawer.isOpen} close={accountDrawer.close} />
   )
 }
 

@@ -32,5 +32,6 @@ module.exports = {
   moduleNameMapper: {
     ...preset.moduleNameMapper,
     '@tamagui/core': '@tamagui/core/native-test',
+    '@tamagui/web': '@tamagui/core/native-test',
   },
 }

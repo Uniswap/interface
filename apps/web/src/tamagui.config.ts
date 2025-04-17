@@ -3,9 +3,8 @@ import { animations } from 'ui/src/theme/animations'
 import { TamaguiGroupNames, configWithoutAnimations } from 'ui/src/theme/config'
 
 const {
-  // lets have our own settings
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  settings,
+  // web has specific settings (see below)
+  settings: _settings,
   ...defaultConfig
 } = configWithoutAnimations
 

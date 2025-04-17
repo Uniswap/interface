@@ -15,8 +15,3 @@ export class NetworkError extends Error {
     this.name = 'NetworkError'
   }
 }
-
-export type AuthData = {
-  'x-uni-address': Address
-  'x-uni-timestamp': number
-}

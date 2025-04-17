@@ -15,14 +15,14 @@ import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import styled, { useTheme } from 'lib/styled-components'
-import { ReversedArrowsIcon } from 'nft/components/icons'
+import { ReversedArrowsIcon } from 'nft/components/iconExports'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
-import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle, TamaguiClickableStyle } from 'theme/components/styles'
+import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle } from 'theme/components/styles'
 import { textFadeIn } from 'theme/styles'
 import { Flex, TouchableArea, useIsTouchDevice, useMedia } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
@@ -32,6 +32,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { getChainUrlParam } from 'utils/chainParams'
 import { useFormatter } from 'utils/formatNumbers'
 
 const StyledExternalLink = styled(ExternalLink)`
@@ -66,9 +67,9 @@ interface PoolDetailsBreadcrumbProps {
 
 export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, loading }: PoolDetailsBreadcrumbProps) {
   const { defaultChainId } = useEnabledChains()
-  const chainName = toGraphQLChain(chainId ?? defaultChainId)
-  const exploreOrigin = `/explore/${chainName.toLowerCase()}`
-  const poolsOrigin = `/explore/pools/${chainName.toLowerCase()}`
+  const chainUrlParam = getChainUrlParam(chainId ?? defaultChainId)
+  const exploreOrigin = `/explore/${chainUrlParam}`
+  const poolsOrigin = `/explore/pools/${chainUrlParam}`
 
   return (
     <BreadcrumbNavContainer aria-label="breadcrumb-nav">
@@ -155,8 +156,8 @@ const PoolDetailsTitle = ({
         </PoolDetailsBadge>
         {hookAddress && (
           <ExternalLink href={getExplorerLink(chainId ?? defaultChainId, hookAddress, ExplorerDataType.ADDRESS)}>
-            <PoolDetailsBadge variant="body3" {...TamaguiClickableStyle}>
-              {shortenAddress(hookAddress, 0)}
+            <PoolDetailsBadge variant="body3" {...ClickableTamaguiStyle}>
+              {shortenAddress(hookAddress, 0, 4)}
             </PoolDetailsBadge>
           </ExternalLink>
         )}

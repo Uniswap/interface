@@ -26,6 +26,7 @@ describe(AccountCardItem, () => {
     portfolioValue: 100,
     isViewOnly: false,
     onPress: jest.fn(),
+    onClose: jest.fn(),
   }
 
   it('renders correctly', () => {

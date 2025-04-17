@@ -28,7 +28,7 @@ type AnimatedFlashListProps = FlatListProps<any> &
 // difficult to properly type
 export const AnimatedFlashList = forwardRef<typeof ReanimatedFlashList, AnimatedFlashListProps>(
   function _AnimatedFlashList(props, ref) {
-    return <ReanimatedFlashList ref={ref} sentry-label="ReanimatedFlashList" {...props} />
+    return <ReanimatedFlashList ref={ref} label="ReanimatedFlashList" {...props} />
   },
 )
 
@@ -39,7 +39,7 @@ export const AnimatedBottomSheetFlashList = forwardRef<typeof ReanimatedFlashLis
         ref={ref}
         {...props}
         renderScrollComponent={BottomSheetScrollView}
-        sentry-label="AnimatedBottomSheetFlashList"
+        label="AnimatedBottomSheetFlashList"
       />
     )
   },

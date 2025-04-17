@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { BigNumber } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
 import { toIncludeSameMembers } from 'jest-extended'
 import mockdate from 'mockdate'
 import { migrations, OLD_DEMO_ACCOUNT_ADDRESS } from 'src/app/migrations'

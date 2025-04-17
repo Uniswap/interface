@@ -17,10 +17,8 @@
     "@ethersproject/providers": "5.7.2",
     "@react-native-community/netinfo": "11.4.1",
     "@react-navigation/core": "6.2.2",
-    "@sentry/core": "7.80.0",
-    "@sentry/react": "7.80.0",
     "@uniswap/analytics": "1.7.0",
-    "@uniswap/analytics-events": "2.41.0",
+    "@uniswap/analytics-events": "2.42.0",
     "@uniswap/sdk-core": "7.7.2",
     "dayjs": "1.11.7",
     "expo-localization": "16.0.0",
@@ -36,10 +34,9 @@
     "uuid": "9.0.0"
   },
   "devDependencies": {
-    "@sentry/types": "7.80.0",
     "@storybook/react": "8.5.2",
     "@testing-library/react-hooks": "8.0.1",
-    "@types/chrome": "0.0.254",
+    "@types/chrome": "0.0.304",
     "@types/react": "18.3.18",
     "@types/uuid": "9.0.1",
     "@uniswap/eslint-config": "workspace:^",

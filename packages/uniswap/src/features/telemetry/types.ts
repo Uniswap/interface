@@ -21,6 +21,7 @@ import {
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
@@ -162,6 +163,8 @@ export type SwapTradeBaseProperties = {
   token_in_detected_tax?: number
   token_out_detected_tax?: number
   minimum_output_after_slippage?: string
+  preset_percentage?: PresetPercentage
+  preselect_asset?: boolean
   fee_amount?: string
   // `requestId` is the same as `ura_request_id`. We should eventually standardize on one or the other.
   requestId?: string
@@ -749,7 +752,13 @@ export type UniverseEventProperties = {
     address: string
   }
   [SharedEventName.NAVBAR_CLICKED]: undefined
-  [SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED]: undefined
+  [SwapEventName.SWAP_PRESET_TOKEN_AMOUNT_SELECTED]: {
+    percentage: number
+  }
+  [SwapEventName.SWAP_PRESELECT_ASSET_SELECTED]: {
+    chain_id: UniverseChainId
+    token_symbol: string | undefined
+  }
   [SwapEventName.SWAP_PRICE_IMPACT_ACKNOWLEDGED]: SwapPriceImpactActionProperties
   [SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED]: SwapPriceUpdateActionProperties
   [SwapEventName.SWAP_TRANSACTION_COMPLETED]:
@@ -826,7 +835,8 @@ export type UniverseEventProperties = {
         AssetDetailsBaseProperties &
         SearchResultContextProperties & {
           field: CurrencyField
-          tokenSection: TokenOptionSection
+          tokenSection?: TokenOptionSection
+          preselect_asset: boolean
         })
     | InterfaceTokenSelectedProperties
   [UniswapEventName.BlockaidFeesMismatch]: {
@@ -840,6 +850,14 @@ export type UniverseEventProperties = {
     attackType?: string
     protectionResult?: string
   }
+  [UniswapEventName.LowNetworkTokenInfoModalOpened]: {
+    location: 'send' | 'swap'
+  }
+  [UniswapEventName.LpIncentiveCollectRewardsButtonClicked]: undefined
+  [UniswapEventName.LpIncentiveCollectRewardsErrorThrown]: { error: string }
+  [UniswapEventName.LpIncentiveCollectRewardsRetry]: undefined
+  [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
+  [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
   [UnitagEventName.UnitagBannerActionTaken]: {
     action: 'claim' | 'dismiss'
     entryPoint: 'home' | 'settings'
@@ -865,7 +883,7 @@ export type UniverseEventProperties = {
   }
 
   [WalletEventName.BackupMethodAdded]: {
-    backupMethodType: 'manual' | 'cloud'
+    backupMethodType: 'manual' | 'cloud' | 'passkey'
     newBackupCount: number
   }
   [WalletEventName.BackupMethodRemoved]: {
@@ -879,9 +897,6 @@ export type UniverseEventProperties = {
   }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
   [WalletEventName.KeyringMissingMnemonic]: KeyringMissingMnemonicProperties
-  [WalletEventName.LowNetworkTokenInfoModalOpened]: {
-    location: 'send' | 'swap'
-  }
   [WalletEventName.PendingTransactionTimeout]: PendingTransactionTimeoutProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties

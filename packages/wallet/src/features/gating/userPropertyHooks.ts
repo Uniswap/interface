@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -14,18 +14,27 @@ export function useGatingUserPropertyUsernames(): void {
   const { unitag } = useUnitagByAddress(validatedAddress ?? undefined)
 
   useEffect(() => {
+    const statsigClient = getStatsigClient()
+    const { user } = statsigClient.getContext()
+    const newEns = ens?.split('.')[0]
     if (activeAccount?.type === AccountType.SignerMnemonic) {
-      const user = Statsig.getCurrentUser()
-      Statsig.updateUser({
-        ...user,
-        privateAttributes: {
-          ...user?.privateAttributes,
-          unitag: unitag?.username,
-          ens: ens?.split('.')[0],
-        },
-      }).catch((error) => {
-        logger.warn('userPropertyHooks', 'useGatingUserPropertyUsernames', 'Failed to set usernames for gating', error)
-      })
+      statsigClient
+        .updateUserAsync({
+          ...user,
+          privateAttributes: {
+            ...user?.privateAttributes,
+            unitag: unitag?.username,
+            ens: newEns,
+          },
+        })
+        .catch((error) => {
+          logger.warn(
+            'userPropertyHooks',
+            'useGatingUserPropertyUsernames',
+            'Failed to set usernames for gating',
+            error,
+          )
+        })
     }
-  }, [activeAccount, ens, unitag?.username])
+  }, [activeAccount?.type, ens, unitag?.username])
 }

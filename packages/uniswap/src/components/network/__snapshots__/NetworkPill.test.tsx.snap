@@ -35,7 +35,7 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 22.1,
         "paddingTop": 1,
       }
     }
@@ -81,7 +81,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
-        "lineHeight": 24,
+        "lineHeight": 22.1,
         "paddingTop": 1,
       }
     }

@@ -1,7 +1,8 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
+import { navigate } from 'src/app/navigation/rootNavigation'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -12,10 +13,7 @@ export function BackupWarningModal(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const closedByButtonRef = useRef<boolean>(false)
-
-  const onClose = (): void => {
-    dispatch(closeModal({ name: ModalName.BackupReminderWarning }))
-  }
+  const { onClose } = useReactNavigationModal()
 
   const checkForSwipeToDismiss = (): void => {
     const markReminderAsSeen = !closedByButtonRef.current
@@ -37,8 +35,8 @@ export function BackupWarningModal(): JSX.Element {
 
   const openBackupReminderModal = (): void => {
     closedByButtonRef.current = true
-    dispatch(openModal({ name: ModalName.BackupReminder }))
     onClose()
+    navigate(ModalName.BackupReminder)
   }
 
   const onConfirm = (): void => {

@@ -6,6 +6,7 @@ export enum AccountType {
 export interface SignerMnemonicAccountMeta {
   type: AccountType.SignerMnemonic
   address: Address
+  chainId?: number
 }
 
 export interface ReadOnlyAccountMeta {

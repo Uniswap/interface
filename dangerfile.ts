@@ -74,10 +74,7 @@ function checkGeneralizedHookFiles() {
 }
 
 // Put any files here that we explicitly want to ignore!
-const IGNORED_SPLIT_RULE_FILES: string[] = [
-  'packages/uniswap/src/features/gating/sdk/statsig.native.ts',
-  'packages/uniswap/src/features/gating/sdk/statsig.ts',
-]
+const IGNORED_SPLIT_RULE_FILES: string[] = ['packages/uniswap/src/features/gating/sdk/statsig.native.ts']
 
 function checkSplitFiles() {
   const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)
@@ -213,6 +210,12 @@ async function processAddChanges() {
         idx,
         Math.min(change.content.length, idx + longestImportLength + 6 + 1),
       )
+
+      // Skip warning on specific icon imports, needed for web to avoid pulling in all icons
+      if (change.content.includes('ui/src/components/icons/')) {
+        return
+      }
+
       if (!validLongerImports.some((validImport) => potentialSubstring.includes(validImport))) {
         const endOfImport = change.content.indexOf(`'`, idx + 6) // skipping the "from '"
         warn(
@@ -227,10 +230,10 @@ async function processAddChanges() {
 
     // In this section we concatenate all the added lines by file in order to account for multiline changes.
 
-    // Check for non-recommended sentry usage
+    // Check for non-recommended logger usage
     if (/logger\.error\(\s*new Error\(/.test(concatenatedAddedLines)) {
       warn(
-        `It appears you may be manually logging a Sentry error. Please log the error directly if possible. If you need to use a custom error message, ensure the error object is added to the 'cause' property.`,
+        `It appears you may be manually logging an error. Please log the error directly if possible. If you need to use a custom error message, ensure the error object is added to the 'cause' property.`,
       )
     }
     if (/logger\.error\(\s*['`"]/.test(concatenatedAddedLines)) {

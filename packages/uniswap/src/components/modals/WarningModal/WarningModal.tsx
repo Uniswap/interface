@@ -37,6 +37,7 @@ type WarningModalContentProps = {
 export type WarningModalProps = {
   isOpen: boolean
   isDismissible?: boolean
+  zIndex?: number
 } & WarningModalContentProps
 
 export function WarningModalContent({
@@ -60,8 +61,7 @@ export function WarningModalContent({
   analyticsProperties,
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
   const colors = useSporeColors()
-  const alertColor = getAlertColor(severity)
-  const alertColorValue = alertColor.headerText as keyof typeof colors
+  const { headerText: alertHeaderTextColor } = getAlertColor(severity)
 
   return (
     <Flex
@@ -82,11 +82,12 @@ export function WarningModalContent({
             backgroundIconColor === false
               ? undefined
               : {
-                  backgroundColor: backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
+                  backgroundColor:
+                    backgroundIconColor ?? opacify(12, colors[alertHeaderTextColor as keyof typeof colors].val),
                 }
           }
         >
-          {icon ?? <AlertTriangleFilled color={alertColor.headerText} size="$icon.24" />}
+          {icon ?? <AlertTriangleFilled color={alertHeaderTextColor} size="$icon.24" />}
         </Flex>
       )}
       {title && (
@@ -125,7 +126,7 @@ export function WarningModalContent({
 }
 
 export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.Element {
-  const { hideHandlebar, isDismissible = true, isOpen, maxWidth, modalName, onClose } = props
+  const { hideHandlebar, isDismissible = true, isOpen, maxWidth, modalName, onClose, zIndex } = props
   const colors = useSporeColors()
 
   const swapFormContext = useContext(SwapFormContext)
@@ -138,6 +139,7 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
       isModalOpen={isOpen}
       maxWidth={maxWidth}
       name={modalName}
+      zIndex={zIndex}
       onClose={onClose}
     >
       {swapFormContext ? (

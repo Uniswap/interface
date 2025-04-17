@@ -7,13 +7,17 @@ import { AlertTriangleFilled, Person } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { changeUnitag } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
+import { useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCanClaimUnitagName'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
+import { parseUnitagErrorCode } from 'uniswap/src/features/unitags/utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
@@ -21,13 +25,10 @@ import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
-import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
-import { changeUnitag } from 'wallet/src/features/unitags/api'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
-import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks/useCanClaimUnitagName'
-import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 export function ChangeUnitagModal({
   unitag,
@@ -104,11 +105,13 @@ export function ChangeUnitagModal({
     setIsChangeResponseLoading(true)
     try {
       // Change unitag backend call
-      const { data: changeResponse } = await changeUnitag({
-        username: unitagToCheck,
-        deviceId,
-        account,
-        signerManager,
+      const changeResponse = await changeUnitag({
+        data: {
+          username: unitagToCheck,
+          deviceId,
+        },
+        address: account.address,
+        signMessage: generateSignerFunc(account, signerManager),
       })
       setIsChangeResponseLoading(false)
 
@@ -227,7 +230,7 @@ export function ChangeUnitagModal({
           </Flex>
           {hasReachedAddressLimit ? (
             <Flex
-              backgroundColor="$DEP_accentCriticalSoft"
+              backgroundColor="$statusCritical2"
               borderRadius="$rounded16"
               px="$spacing16"
               py="$spacing12"
@@ -288,7 +291,7 @@ function ChangeUnitagConfirmModal({
       <Flex centered gap="$spacing12" pb="$spacing12" pt={isExtension ? '$spacing24' : '$spacing12'} px="$spacing24">
         <Flex
           centered
-          backgroundColor="$DEP_accentCriticalSoft"
+          backgroundColor="$statusCritical2"
           borderRadius="$rounded12"
           height="$spacing48"
           mb="$spacing8"

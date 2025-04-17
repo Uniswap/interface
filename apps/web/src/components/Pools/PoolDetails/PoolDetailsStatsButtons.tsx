@@ -21,13 +21,13 @@ import { Button, Flex, useIsTouchDevice, useMedia } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { breakpoints } from 'ui/src/theme'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { getChainUrlParam } from 'utils/chainParams'
 
 const PoolDetailsStatsButtonsRow = styled(Row)`
   gap: 12px;
@@ -155,14 +155,14 @@ export function PoolDetailsStatsButtons({
     if (currency0 && currency1) {
       const currency0Address = currency0.isNative ? NATIVE_CHAIN_ID : currency0.address
       const currency1Address = currency1.isNative ? NATIVE_CHAIN_ID : currency1.address
-      const chainName = getChainInfo(chainId ?? currency0.chainId)?.urlParam
+      const chainUrlParam = getChainUrlParam(chainId ?? currency0.chainId)
 
       if (tokenId) {
-        navigate(`/positions/${protocolVersion?.toLowerCase()}/${chainName}/${tokenId}`, {
+        navigate(`/positions/${protocolVersion?.toLowerCase()}/${chainUrlParam}/${tokenId}`, {
           state: { from: location.pathname },
         })
       } else {
-        const url = `/positions/create/${protocolVersion?.toLowerCase()}?currencyA=${currency0Address}&currencyB=${currency1Address}&chain=${chainName}`
+        const url = `/positions/create/${protocolVersion?.toLowerCase()}?currencyA=${currency0Address}&currencyB=${currency1Address}&chain=${chainUrlParam}`
         navigate(url, {
           state: { from: location.pathname },
         })

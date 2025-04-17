@@ -56,7 +56,6 @@ export function Skeleton({ children, contrast, disabled }: SkeletonProps): JSX.E
   return (
     <MaskedView
       maskElement={children}
-      sentry-label="Shimmer"
       style={{
         width: layout.width,
         height: layout.height,
