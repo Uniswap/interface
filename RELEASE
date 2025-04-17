@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQToF1qiuAjejy6i8taYNKVGVw2eehvVKb8mimGtzmdnt`
-- CIDv1: `bafybeia7rqlhhzrec6fjpzeo2eh3ayuiiqrkqehr2puihgnpw5xabvisqu`
+- CIDv0: `Qmare3scA791vEczmDbddpWRgmipd2LyBeHGoV53RzqJWd`
+- CIDv1: `bafybeifz7lwau4w4z7awqjzujhgnff4lpwxrj533xk3n6skzpjmvzpyhvi`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,51 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeia7rqlhhzrec6fjpzeo2eh3ayuiiqrkqehr2puihgnpw5xabvisqu.ipfs.dweb.link/
-- [ipfs://QmQToF1qiuAjejy6i8taYNKVGVw2eehvVKb8mimGtzmdnt/](ipfs://QmQToF1qiuAjejy6i8taYNKVGVw2eehvVKb8mimGtzmdnt/)
+- https://bafybeifz7lwau4w4z7awqjzujhgnff4lpwxrj533xk3n6skzpjmvzpyhvi.ipfs.dweb.link/
+- [ipfs://Qmare3scA791vEczmDbddpWRgmipd2LyBeHGoV53RzqJWd/](ipfs://Qmare3scA791vEczmDbddpWRgmipd2LyBeHGoV53RzqJWd/)
 
-## 5.79.0 (2025-04-16)
-
-
-### Features
-
-* **web:** [EW] add EW redux state and Recently Signed In Modal (#18035) f78e203
-* **web:** [EW] add ExternallyConnectableExtension dynamic config to select which extension the web app will communicate with (#18226) 211a6f8
-* **web:** [EW] Add new passkeys to wallet (#14816) a06b597
-* **web:** [EW] Be able to delete passkeys (#14817) 53cf094
-* **web:** [EW] Modify Sign In Connector (#17668) eb6e89f
-* **web:** add apr section to position page (#18078) 328c45a
-* **web:** add low network native balance warning for send (#18248) 1eb12a9
-* **web:** add username to EW registration (#18084) 5ac58a5
-* **web:** allow Low network token balance warning to show for interface (#18102) d756982
-* **web:** lp incentive position card updates (#18044) d50e225
-* **web:** update positions page with lp incentive boost treatments (#18026) 4211bdc
+### 5.79.1 (2025-04-17)
 
 
 ### Bug Fixes
 
-* **web:** fixing arb v3 (#18421) (#18503) 6d6599f
-* **web:** handle async token0 or token1 in create context (#18395) ad71e5e
-* **web:** hotfix staging fix safari dropdown (#18468) b19c84c
-* **web:** move to 1 worker and fix wallet connection (#18348) c38af7e
-* **web:** only use mainnet in legacy searchbardropdown (#17966) de03a5d
-* **web:** tooltip on hover tamagui bug (#18349) 4c9c8aa
-* **web:** web staging builds (#18402) 8aff715
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 7d9688f
-
-
-### Code Refactoring
-
-* **web:** kill multicall (#15064) ef6c894
-* **web:** move x-specifics to getUniswapXSwapTxAndGasInfo (#18180) 35560f7
-* **web:** rm unused indicativeTrade field from swapTxAndGasInfo (#18177) 3161013
-* **web:** rm useMultipleContractSingleData in legacy v2 hook (#15062) ab7b73e
-* **web:** rm useMultipleContractSingleData in usePools (#15063) 2dba888
-* **web:** rm useMultipleContractSingleData in useV2Pairs (#15061) 7549b71
-* **web:** rm useMultipleContractSingleData usage in useCurrencyBalance (#15059) 11995d0
+* **web:** v4 0 slippage at max (#18588) 07180fd
 
 
