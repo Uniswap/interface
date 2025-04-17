@@ -14,7 +14,6 @@ import styled from "styled-components";
 import { useBulkPosition } from "hooks/useBulkPosition";
 
 const Container = styled(AutoColumnWrapper)`
-  position: relative;
   height: 400px;
 `
 
@@ -31,7 +30,6 @@ const ButtonsContainer = styled(Row)`
 const ScrollableContent = styled(AutoColumnWrapper)`
   max-height: calc(100vh - 340px);
   overflow-y: auto;
-  gap: 0px;
   ${ScrollBarStyles}
 `
 
@@ -40,7 +38,6 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
   const [isTokenOwner, setIsTokenOwner] = useState(false);
 
   const { activeIncentives, endedIncentives, isLoading, error } = useIncentivesData(poolAddress);
-  console.log('activeIncentives', activeIncentives)
   const allIncentives = [...activeIncentives, ...endedIncentives];
 
   const {
@@ -50,22 +47,21 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
     isStaking,
     isUnstaking,
     isClaiming,
-    currentIncentiveId,
     hasRewards,
     handleStake,
     handleUnstake,
     handleClaim,
     handleBulkStake,
     handleBulkUnstake,
-    handleBulkWithdraw
+    handleBulkWithdraw,
   } = useBulkPosition(tokenId, poolAddress, allIncentives);
 
   const hasAvailableIncentives = useMemo(() => {
-    return activeIncentives.some(incentive => incentive.hasUserPositionInPool && !incentive.hasUserPositionInIncentive);
+    return activeIncentives.some(incentive => incentive.hasUserPositionInPool && !incentive.hasUserPositionInIncentive && !incentive.positionOnIncentiveIds?.includes(tokenId));
   }, [activeIncentives]);
 
   const hasStakedIncentives = useMemo(() => {
-    return allIncentives.some(incentive => incentive.hasUserPositionInPool && incentive.hasUserPositionInIncentive);
+    return allIncentives.some(incentive => incentive.hasUserPositionInPool && incentive.hasUserPositionInIncentive && incentive.positionOnIncentiveIds?.includes(tokenId));
   }, [allIncentives]);
 
   const canWithdraw = useMemo(() => {
@@ -74,7 +70,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
 
   if (isLoading) {
     return (
-      <Container gap="md">
+      <Container>
         <LoadingRows>
           <div />
           <div />
@@ -86,14 +82,14 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
 
   if (error) {
     return (
-      <Container gap="md">
+      <Container>
         <ThemedText.DeprecatedMain>Error loading incentives: {error.message}</ThemedText.DeprecatedMain>
       </Container>
     );
   }
 
   return (
-    <Container gap="md">
+    <Container>
       <Trans i18nKey="common.incentives" />
 
       <ButtonsContainer gap="8px">
@@ -136,7 +132,8 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
         {allIncentives.map((incentive) => {
           const isExpanded = expandedIncentive === incentive.id;
           const isActive = incentive.status === 'active';
-          const hasStaked = incentive.hasUserPositionInIncentive;
+          const hasStaked = incentive.hasUserPositionInIncentive && incentive.positionOnIncentiveIds?.includes(tokenId);
+          const canStake = incentive.hasUserPositionInPool && incentive.positionOnIncentiveIds?.includes(tokenId);
           const rewardToken = new Token(
             1,
             incentive.rewardToken.id,
@@ -191,24 +188,24 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                         e.stopPropagation();
                         handleStake(incentive);
                       }}
-                      disabled={!isActive || hasStaked || (isStaking && currentIncentiveId === incentive.id)}
+                      disabled={!isActive || !canStake || isStaking}
                       style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px' }}
                     >
-                      {isStaking && currentIncentiveId === incentive.id ? (
+                      {isStaking  ? (
                         <Trans i18nKey="common.staking" />
                       ) : (
                         <Trans i18nKey="common.stake" />
                       )}
                     </ButtonPrimary>
                     <ButtonPrimary
-                      onClick={(e) => {
+                      onClick={async (e) => {
                         e.stopPropagation();
-                        handleUnstake(incentive);
+                          handleUnstake(incentive);
                       }}
-                      disabled={!hasStaked || (isUnstaking && currentIncentiveId === incentive.id)}
+                      disabled={!hasStaked || isUnstaking }
                       style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px' }}
                     >
-                      {isUnstaking && currentIncentiveId === incentive.id ? (
+                      {isUnstaking  ? (
                         <Trans i18nKey="common.unstaking" />
                       ) : (
                         <Trans i18nKey="common.unstake" />
@@ -220,10 +217,10 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                           e.stopPropagation();
                           handleClaim(incentive);
                         }}
-                        disabled={!hasRewards || (isClaiming && currentIncentiveId === incentive.id)}
+                        disabled={!hasRewards || (isClaiming)  }
                         style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px' }}
                       >
-                        {isClaiming && currentIncentiveId === incentive.id ? (
+                        {isClaiming ? (
                           <Trans i18nKey="common.claiming" />
                         ) : (
                           <Trans i18nKey="common.claim" />

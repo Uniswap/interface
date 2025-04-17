@@ -149,7 +149,7 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
 
     try {
       const incentivesToStake = allIncentives.filter(
-        (incentive) => !incentive.hasUserPositionInIncentive
+        (incentive) => !incentive.hasUserPositionInIncentive && incentive.status === 'active'
       );
 
       if (incentivesToStake.length === 0) {
@@ -225,8 +225,9 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
 
     try {
       const stakedIncentives = allIncentives.filter(
-        (incentive) => incentive.hasUserPositionInIncentive
+        (incentive) => incentive.hasUserPositionInIncentive && incentive.hasUserPositionInPool
       );
+      console.log('stakedIncentives', stakedIncentives)
 
       if (stakedIncentives.length === 0) {
         throw new Error('No staked incentives to unstake from');
@@ -246,7 +247,10 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         })
       );
 
+      console.log('incentiveKeys', incentiveKeys)
+      console.log('tokenId', tokenId)
       const unstakeCalls = incentiveKeys.map((key) => {
+        console.log('key', key)
         const callData = v3StakerContract.interface.encodeFunctionData('unstakeToken', [
           key,
           tokenId
@@ -259,6 +263,7 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       });
 
       const receipt = await unstakeTx.wait();
+      console.log('receipt', receipt)
 
     } catch (error) {
       console.error('Error in bulk unstaking:', error);
@@ -287,6 +292,22 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
     }
   }, [v3StakerContract, tokenId, address, nftManagerPositionsContract]);
 
+  const checkStakeStatus = useCallback(async (positionId: number, incentiveId: string) => {
+    if (!v3StakerContract) return null;
+    try {
+      const stake = await v3StakerContract.stakes(positionId, incentiveId);
+      console.log('Stake status:', {
+        positionId,
+        incentiveId,
+        liquidity: stake.toString()
+      });
+      return stake;
+    } catch (error) {
+      console.error('Error checking stake status:', error);
+      return null;
+    }
+  }, [v3StakerContract]);
+
   return {
     isBulkStaking,
     isBulkUnstaking,
@@ -302,6 +323,7 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
     handleClaim,
     handleBulkStake,
     handleBulkUnstake,
-    handleBulkWithdraw
+    handleBulkWithdraw,
+    checkStakeStatus
   };
 }; 

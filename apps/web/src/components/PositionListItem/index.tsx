@@ -17,8 +17,6 @@ import { MEDIA_WIDTHS } from 'theme'
 import { HideSmall, SmallOnly, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
-import { UserPosition } from 'hooks/useIncentivesData'
-import { PositionDetails } from 'types/position'
 
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -107,7 +105,23 @@ interface BasePositionListItemProps {
   isStakingPosition?: boolean
 }
 
-interface PoolPositionListItemProps extends BasePositionListItemProps {
+interface StakingPositionListItemProps extends BasePositionListItemProps {
+  isStakingPosition: true
+  id: string
+  minter: { id: string }
+  owner: { id: string }
+  pool: {
+    id: string
+    feeTier: number
+    token0: { symbol: string }
+    token1: { symbol: string }
+  }
+  tickLower: { tickIdx: string }
+  tickUpper: { tickIdx: string }
+}
+
+interface RegularPositionListItemProps extends BasePositionListItemProps {
+  isStakingPosition?: false
   token0: string
   token1: string
   tokenId: BigNumber
@@ -117,31 +131,7 @@ interface PoolPositionListItemProps extends BasePositionListItemProps {
   tickUpper: number
 }
 
-interface StakingPositionListItemProps extends BasePositionListItemProps {
-  id: string
-  minter: { id: string }
-  owner: { id: string }
-  pool: {
-    id: string
-    feeTier: number
-    incentives: { id: string }[]
-  }
-  liquidity: string
-  depositedToken0: string
-  depositedToken1: string
-  withdrawnToken0: string
-  withdrawnToken1: string
-  token0: { symbol: string }
-  token1: { symbol: string }
-  tickLower: { tickIdx: string }
-  tickUpper: { tickIdx: string }
-}
-
-type PositionListItemProps = PoolPositionListItemProps | StakingPositionListItemProps
-
-function isStakingPosition(props: PositionListItemProps): props is StakingPositionListItemProps {
-  return 'isStakingPosition' in props && props.isStakingPosition === true
-}
+type PositionListItemProps = StakingPositionListItemProps | RegularPositionListItemProps
 
 export function getPriceOrderingFromPositionForUI(position?: Position): {
   priceLower?: Price<Token, Token>
@@ -158,7 +148,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
 
   // if token0 is a dollar-stable asset, set it as the quote token
   const stables = [DAI, USDC_MAINNET, USDT]
-  if (stables.some((stable) => stable.equals(token0))) {
+  if (stables.some((stable) => stable?.equals(token0))) {
     return {
       priceLower: position.token0PriceUpper.invert(),
       priceUpper: position.token0PriceLower.invert(),
@@ -200,26 +190,24 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
 export default function PositionListItem(props: PositionListItemProps) {
   const { formatDelta, formatTickPrice } = useFormatter()
 
-  if (isStakingPosition(props)) {
+  if (props.isStakingPosition) {
     const {
       id,
       pool,
-      token0,
-      token1,
       tickLower,
-      tickUpper,
-      liquidity,
-      isStakingPosition
+      tickUpper
     } = props
 
-    const positionSummaryLink = `/staking/${id}`
+    if (!pool) return null
+
+    const positionSummaryLink = `/pool/${id}`
 
     return (
       <LinkRow to={positionSummaryLink}>
         <RowBetween>
           <PrimaryPositionIdData>
             <ThemedText.SubHeader>
-              {token0.symbol} / {token1.symbol}
+              {pool.token0.symbol} / {pool.token1.symbol}
             </ThemedText.SubHeader>
             <FeeTierText>{formatDelta(parseFloat(new Percent(pool.feeTier, 1_000_000).toSignificant()))}</FeeTierText>
           </PrimaryPositionIdData>
@@ -236,8 +224,8 @@ export default function PositionListItem(props: PositionListItemProps) {
             <Trans
               i18nKey="common.xPerY"
               components={{
-                x: <HoverInlineText text={token0.symbol} />,
-                y: <HoverInlineText text={token1.symbol} />,
+                x: <HoverInlineText text={pool.token0.symbol} />,
+                y: <HoverInlineText text={pool.token1.symbol} />,
               }}
             />
           </RangeText>
@@ -256,8 +244,8 @@ export default function PositionListItem(props: PositionListItemProps) {
             <Trans
               i18nKey="common.xPerY"
               components={{
-                x: <HoverInlineText text={token0.symbol} />,
-                y: <HoverInlineText text={token1.symbol} />,
+                x: <HoverInlineText text={pool.token0.symbol} />,
+                y: <HoverInlineText text={pool.token1.symbol} />,
               }}
             />
           </RangeText>
@@ -286,7 +274,7 @@ export default function PositionListItem(props: PositionListItemProps) {
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
 
   const position = useMemo(() => {
-    if (pool) {
+    if (pool && liquidity && tickLower !== undefined && tickUpper !== undefined) {
       return new Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
     }
     return undefined
@@ -301,7 +289,9 @@ export default function PositionListItem(props: PositionListItemProps) {
   const currencyBase = base && unwrappedToken(base)
 
   // check if price is within range
-  const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
+  const outOfRange: boolean = pool && tickLower !== undefined && tickUpper !== undefined 
+    ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper 
+    : false
 
   const positionSummaryLink = '/pools/' + tokenId
 
@@ -316,7 +306,7 @@ export default function PositionListItem(props: PositionListItemProps) {
             &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
           </ThemedText.SubHeader>
 
-          <FeeTierText>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</FeeTierText>
+          <FeeTierText>{feeAmount ? formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant())) : null}</FeeTierText>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />
       </RowBetween>

@@ -5,6 +5,8 @@ import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
 import { UserPosition } from 'hooks/useIncentivesData'
+import { PositionsResponse } from 'hooks/useTotalPositions'
+import { BigNumber } from '@ethersproject/bignumber'
 
 const DesktopHeader = styled.div`
   display: none;
@@ -61,14 +63,36 @@ const ToggleLabel = styled.button`
 `
 
 type PositionListProps = React.PropsWithChildren<{
-  positions: PositionDetails[] | UserPosition[]
+  positions: PositionsResponse[] | UserPosition[] | PositionDetails[]
   setUserHideClosedPositions?: (value: boolean) => void
   userHideClosedPositions?: boolean
   isStakingList?: boolean
 }>
 
-function isStakingPosition(position: PositionDetails | UserPosition): position is UserPosition {
-  return 'isStakingPosition' in position
+function isStakingPosition(position: PositionsResponse | UserPosition | PositionDetails): position is UserPosition {
+  return 'minter' in position && 'owner' in position && 'pool' in position
+}
+
+function isPositionsResponse(position: PositionsResponse | UserPosition | PositionDetails): position is PositionsResponse {
+  return 'id' in position && typeof position.id === 'number'
+}
+
+function convertPositionsResponseToPositionDetails(p: PositionsResponse): PositionDetails {
+  return {
+    tokenId: BigNumber.from(p.id),
+    fee: p.pool.feeTier,
+    liquidity: BigNumber.from(p.liquidity || 0),
+    tickLower: p.tickLower.tickIdx,
+    tickUpper: p.tickUpper.tickIdx,
+    token0: p.token0.symbol,
+    token1: p.token1.symbol,
+    feeGrowthInside0LastX128: BigNumber.from(0),
+    feeGrowthInside1LastX128: BigNumber.from(0),
+    nonce: BigNumber.from(0),
+    operator: p.owner.id,
+    tokensOwed0: BigNumber.from(0),
+    tokensOwed1: BigNumber.from(0)
+  }
 }
 
 export default function PositionList({
@@ -110,13 +134,56 @@ export default function PositionList({
           </ToggleWrap>
         )}
       </MobileHeader>
-      {positions.map((p) => (
-        <PositionListItem 
-          key={isStakingPosition(p) ? p.id.toString() : p.tokenId.toString()} 
-          {...p} 
-          isStakingPosition={isStakingList} 
-        />
-      ))}
+      {positions.map((p) => {
+        if (isStakingPosition(p)) {
+          return (
+            <PositionListItem
+              key={p.id}
+              isStakingPosition={true}
+              id={p.id}
+              minter={p.minter}
+              owner={p.owner}
+              pool={{
+                ...p.pool,
+                token0: p.token0,
+                token1: p.token1
+              }}
+              tickLower={p.tickLower}
+              tickUpper={p.tickUpper}
+            />
+          );
+        } else if (isPositionsResponse(p)) {
+          const positionDetails = convertPositionsResponseToPositionDetails(p)
+          return (
+            <PositionListItem
+              key={positionDetails.tokenId.toString()}
+              isStakingPosition={false}
+              token0={positionDetails.token0}
+              token1={positionDetails.token1}
+              tokenId={positionDetails.tokenId}
+              fee={positionDetails.fee}
+              liquidity={positionDetails.liquidity}
+              tickLower={positionDetails.tickLower}
+              tickUpper={positionDetails.tickUpper}
+            />
+          );
+        } else {
+          // Handle PositionDetails type
+          return (
+            <PositionListItem
+              key={p.tokenId.toString()}
+              isStakingPosition={false}
+              token0={p.token0}
+              token1={p.token1}
+              tokenId={p.tokenId}
+              fee={p.fee}
+              liquidity={p.liquidity}
+              tickLower={p.tickLower}
+              tickUpper={p.tickUpper}
+            />
+          );
+        }
+      })}
     </>
   )
 }

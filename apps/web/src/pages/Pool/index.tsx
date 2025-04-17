@@ -218,7 +218,7 @@ export default function Pool() {
     account.address
   );
 
-  const { userPositions: stakingPositions, isLoading: isStakingPositionsLoading } = useIncentivesData();
+  const { userPositionsInIncentives: stakingPositions, isLoading: isStakingPositionsLoading } = useIncentivesData();
   console.log('stakingPositions', stakingPositions)
 
   const [openPositions, closedPositions] = positions?.reduce<
