@@ -101,27 +101,7 @@ const PrimaryPositionIdData = styled.div`
   }
 `
 
-interface BasePositionListItemProps {
-  isStakingPosition?: boolean
-}
-
-interface StakingPositionListItemProps extends BasePositionListItemProps {
-  isStakingPosition: true
-  id: string
-  minter: { id: string }
-  owner: { id: string }
-  pool: {
-    id: string
-    feeTier: number
-    token0: { symbol: string }
-    token1: { symbol: string }
-  }
-  tickLower: { tickIdx: string }
-  tickUpper: { tickIdx: string }
-}
-
-interface RegularPositionListItemProps extends BasePositionListItemProps {
-  isStakingPosition?: false
+interface PositionListItemProps {
   token0: string
   token1: string
   tokenId: BigNumber
@@ -130,8 +110,6 @@ interface RegularPositionListItemProps extends BasePositionListItemProps {
   tickLower: number
   tickUpper: number
 }
-
-type PositionListItemProps = StakingPositionListItemProps | RegularPositionListItemProps
 
 export function getPriceOrderingFromPositionForUI(position?: Position): {
   priceLower?: Price<Token, Token>
@@ -148,7 +126,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
 
   // if token0 is a dollar-stable asset, set it as the quote token
   const stables = [DAI, USDC_MAINNET, USDT]
-  if (stables.some((stable) => stable?.equals(token0))) {
+  if (stables.some((stable) => stable.equals(token0))) {
     return {
       priceLower: position.token0PriceUpper.invert(),
       priceUpper: position.token0PriceLower.invert(),
@@ -187,82 +165,16 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 }
 
-export default function PositionListItem(props: PositionListItemProps) {
+export default function PositionListItem({
+  token0: token0Address,
+  token1: token1Address,
+  tokenId,
+  fee: feeAmount,
+  liquidity,
+  tickLower,
+  tickUpper,
+}: PositionListItemProps) {
   const { formatDelta, formatTickPrice } = useFormatter()
-
-  if (props.isStakingPosition) {
-    const {
-      id,
-      pool,
-      tickLower,
-      tickUpper
-    } = props
-
-    if (!pool) return null
-
-    const positionSummaryLink = `/pool/${id}`
-
-    return (
-      <LinkRow to={positionSummaryLink}>
-        <RowBetween>
-          <PrimaryPositionIdData>
-            <ThemedText.SubHeader>
-              {pool.token0.symbol} / {pool.token1.symbol}
-            </ThemedText.SubHeader>
-            <FeeTierText>{formatDelta(parseFloat(new Percent(pool.feeTier, 1_000_000).toSignificant()))}</FeeTierText>
-          </PrimaryPositionIdData>
-          <RangeBadge removed={false} inRange={true} />
-        </RowBetween>
-
-        <RangeLineItem>
-          <RangeText>
-            <ExtentsText>
-              <Trans i18nKey="pool.min.label" />
-              &nbsp;
-            </ExtentsText>
-            <span>{tickLower.tickIdx}</span>
-            <Trans
-              i18nKey="common.xPerY"
-              components={{
-                x: <HoverInlineText text={pool.token0.symbol} />,
-                y: <HoverInlineText text={pool.token1.symbol} />,
-              }}
-            />
-          </RangeText>
-          <HideSmall>
-            <DoubleArrow>↔</DoubleArrow>
-          </HideSmall>
-          <SmallOnly>
-            <DoubleArrow>↔</DoubleArrow>
-          </SmallOnly>
-          <RangeText>
-            <ExtentsText>
-              <Trans i18nKey="pool.max.label" />
-              &nbsp;
-            </ExtentsText>
-            <span>{tickUpper.tickIdx}</span>
-            <Trans
-              i18nKey="common.xPerY"
-              components={{
-                x: <HoverInlineText text={pool.token0.symbol} />,
-                y: <HoverInlineText text={pool.token1.symbol} />,
-              }}
-            />
-          </RangeText>
-        </RangeLineItem>
-      </LinkRow>
-    )
-  }
-
-  const {
-    token0: token0Address,
-    token1: token1Address,
-    tokenId,
-    fee: feeAmount,
-    liquidity,
-    tickLower,
-    tickUpper,
-  } = props
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
@@ -274,7 +186,7 @@ export default function PositionListItem(props: PositionListItemProps) {
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
 
   const position = useMemo(() => {
-    if (pool && liquidity && tickLower !== undefined && tickUpper !== undefined) {
+    if (pool) {
       return new Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
     }
     return undefined
@@ -289,9 +201,7 @@ export default function PositionListItem(props: PositionListItemProps) {
   const currencyBase = base && unwrappedToken(base)
 
   // check if price is within range
-  const outOfRange: boolean = pool && tickLower !== undefined && tickUpper !== undefined 
-    ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper 
-    : false
+  const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
   const positionSummaryLink = '/pools/' + tokenId
 
@@ -306,7 +216,7 @@ export default function PositionListItem(props: PositionListItemProps) {
             &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
           </ThemedText.SubHeader>
 
-          <FeeTierText>{feeAmount ? formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant())) : null}</FeeTierText>
+          <FeeTierText>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</FeeTierText>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />
       </RowBetween>
@@ -342,7 +252,6 @@ export default function PositionListItem(props: PositionListItemProps) {
           <RangeText>
             <ExtentsText>
               <Trans i18nKey="pool.max.label" />
-              &nbsp;
             </ExtentsText>
             <span>
               {formatTickPrice({
@@ -355,7 +264,7 @@ export default function PositionListItem(props: PositionListItemProps) {
               i18nKey="common.xPerY"
               components={{
                 x: <HoverInlineText text={currencyQuote?.symbol} />,
-                y: <HoverInlineText text={currencyBase?.symbol ?? ''} />,
+                y: <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />,
               }}
             />
           </RangeText>

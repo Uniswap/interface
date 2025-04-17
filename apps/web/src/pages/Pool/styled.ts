@@ -149,10 +149,10 @@ export const Container = styled(AutoColumnWrapper)`
   height: 100%;
 `;
 
-export const ScrollableContent = styled(AutoColumn)`
+export const ScrollableContent = styled(AutoColumnWrapper)`
   max-height: calc(100vh - 340px);
   overflow-y: auto;
-  padding-right: 16px;
+  gap: 8px;
   ${ScrollBarStyles}
 `;
 
@@ -163,7 +163,7 @@ export const IncentiveCard = styled.div`
   box-sizing: border-box;
   background: ${({ theme }) => theme.surface2};
   border-radius: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   
   &:hover {
     transform: translateY(-2px);

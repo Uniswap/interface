@@ -36,7 +36,7 @@ import { ProtocolVersion } from "uniswap/src/data/graphql/uniswap-data-api/__gen
 import Trace from "uniswap/src/features/telemetry/Trace";
 import CTACards from "./CTACards";
 import { LoadingRows } from "./styled";
-import { useIncentivesData } from 'hooks/useIncentivesData'
+import { useIncentivesData, UserPosition } from 'hooks/useIncentivesData'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

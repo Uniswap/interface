@@ -58,14 +58,16 @@ export interface UserPosition {
     id: string;
     feeTier: number;
     incentives: { id: string }[];
+    token0: { symbol: string, id: string };
+    token1: { symbol: string, id: string };
   };
   liquidity: string;
   depositedToken0: string;
-  depositedToken1: string;
   withdrawnToken0: string;
+  depositedToken1: string;
   withdrawnToken1: string;
-  token0: { symbol: string };
-  token1: { symbol: string };
+  token0: { symbol: string};
+  token1: { symbol: string};
   tickLower: { tickIdx: string };
   tickUpper: { tickIdx: string };
 }
@@ -116,6 +118,9 @@ export interface ProcessedIncentive {
   hasUserPositionInPool: boolean;
 }
 
+export interface PositionWithReward extends PositionsResponse {
+  reward: string;
+}
 
 export function useIncentivesData(poolAddress?: string) {
   const account = useAccount();
@@ -127,7 +132,7 @@ export function useIncentivesData(poolAddress?: string) {
     []
   );
   const [userPositionsInPools, setUserPositionsInPools] = useState<UserPosition[]>([]);
-  const [userPositionsInIncentives, setUserPositionsInIncentives] = useState<PositionsResponse[]>([]);
+  const [userPositionsInIncentives, setUserPositionsInIncentives] = useState<PositionWithReward[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [storedBalances, setStoredBalances] = useState<
@@ -182,6 +187,16 @@ export function useIncentivesData(poolAddress?: string) {
             incentives {
               id
             }
+            token0 {
+              id
+              symbol
+              decimals
+            }
+            token1 {
+              id
+              symbol
+              decimals
+            }
           }
           liquidity
           depositedToken0
@@ -189,10 +204,14 @@ export function useIncentivesData(poolAddress?: string) {
           depositedToken1
           withdrawnToken1
           token0 {
+            id
             symbol
+            decimals
           }
           token1 {
+            id
             symbol
+            decimals
           }
           tickLower {
             tickIdx
@@ -262,6 +281,7 @@ export function useIncentivesData(poolAddress?: string) {
       setIncentivesData(incentivesData.data.incentives);
       const ethPriceUSD = parseFloat(incentivesData.data.bundle.ethPriceUSD);
       const positions = positionsData.data.positions;
+      console.log('positions', positions)
 
       const incentives = incentivesData.data.incentives.map(
         (inc: IncentiveData) => {
@@ -295,63 +315,6 @@ export function useIncentivesData(poolAddress?: string) {
     }
   };
 
-  useEffect(() => {
-    if (
-      !isBalancesLoading &&
-      Object.keys(storedBalances).length > 0 &&
-      incentivesData.length > 0 &&
-      account.address
-    ) {
-      const processIncentives = async () => {
-        const positions = await getPositionsWithDepositsOfUser(
-          account.address as string
-        );
-        const response = await fetch(
-          "https://indexer.lswap.app/subgraphs/name/taraxa/uniswap-v3/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              query: getIncentivesQuery(),
-              variables: { userAddress: account.address },
-            }),
-          }
-        );
-        const data = await response.json();
-        const ethPriceUSD = parseFloat(data.data.bundle.ethPriceUSD);
-
-        const incentives = incentivesData.map((inc) =>
-          processIncentive(inc, positions, storedBalances, ethPriceUSD)
-        );
-
-        const processedIncentives = await Promise.all(incentives);
-        const sortedIncentives = processedIncentives.sort((a, b) => {
-          if (a.status === 'active' && b.status !== 'active') return -1;
-          if (a.status !== 'active' && b.status === 'active') return 1;
-          if (a.status === 'inactive' && b.status === 'ended') return -1;
-          if (a.status === 'ended' && b.status === 'inactive') return 1;
-          return 0;
-        });
-
-        // Collect all positions from processed incentives
-        const allPositions = new Set<PositionsResponse>();
-        processedIncentives.forEach(inc => {
-          if (inc.positionOnIncentiveIds) {
-            inc.positionOnIncentiveIds.forEach(id => {
-              const position = positions.find(p => p.id === id);
-              if (position) allPositions.add(position);
-            });
-          }
-        });
-        
-        setUserPositionsInIncentives(Array.from(allPositions));
-        setActiveIncentives(sortedIncentives.filter((inc) => inc.status === 'active'));
-        setEndedIncentives(sortedIncentives.filter((inc) => inc.status === 'inactive' || inc.status === 'ended'));
-      };
-
-      processIncentives();
-    }
-  }, [storedBalances, isBalancesLoading, incentivesData, account.address]);
 
   const processIncentive = useCallback(
     async (
@@ -363,11 +326,12 @@ export function useIncentivesData(poolAddress?: string) {
       const positionOnIncentiveIds = [];
       const positionOnIncentive = [];
       const positionOnPoolIds = userPositionsInPools.map(position => Number(position.id));
+      console.log('positionOnPoolIds', positionOnPoolIds)
       let hasUserPositionInIncentive = false;
-      let currentReward = undefined;
+      let currentReward: { reward: string } | undefined = undefined;
 
-      const status = Number(incentive.endTime) < Math.floor(Date.now() / 1000) 
-        ? 'ended' 
+      const status = Number(incentive.endTime) < Math.floor(Date.now() / 1000)
+        ? 'ended'
         : Number(incentive.startTime) > Math.floor(Date.now() / 1000)
           ? 'inactive'
           : 'active';
@@ -385,9 +349,20 @@ export function useIncentivesData(poolAddress?: string) {
               currentReward = {
                 reward: formatUnits(reward || '0', incentive.rewardToken.decimals),
               };
-
-              positionOnIncentiveIds.push(position.id);
+              console.log('positioasdasdn', position)
+            
+              positionOnIncentiveIds.push(Number(position.id));
               positionOnIncentive.push(position);
+              setUserPositionsInIncentives(prevPositions => {
+                const positionExists = prevPositions.some(p => Number(p.id) === Number(position.id));
+                console.log('positionExists', positionExists)
+                if (!positionExists) {
+                  console.log('[...prevPositions, position]', [...prevPositions, { ...position, reward: currentReward?.reward ?? '0' }])
+                  
+                  return [...prevPositions, { ...position, reward: currentReward?.reward ?? '0' }];
+                }
+                return prevPositions;
+              });
               break;
             }
           }
@@ -477,7 +452,7 @@ export function useIncentivesData(poolAddress?: string) {
         rewardToken: {
           id: incentive.rewardToken.id,
           symbol: incentive.rewardToken.symbol,
-          decimals: incentive.rewardToken.decimals, 
+          decimals: incentive.rewardToken.decimals,
         },
         hasUserPositionInIncentive,
         poolAddress: incentive.pool.id,
