@@ -1,4 +1,3 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DepositState } from 'components/Liquidity/types'
@@ -38,8 +37,6 @@ import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
@@ -173,7 +170,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const { derivedDepositInfo, depositState } = useDepositContext()
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
   const swapSettings = useTransactionSettingsContext()
-  const v4ZeroSlippageEnabled = useFeatureFlag(FeatureFlags.V40Slippage)
 
   const hasError = Boolean(derivedDepositInfo.error)
   const [hasCreateErrorResponse, setHasCreateErrorResponse] = useState(false)
@@ -219,10 +215,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     approvalCalldata?.gasFeeToken1Approval,
   )
 
-  // stopgap measure to prevent overslippage on V4 pools
-  // TODO: remove this when we can set an upper limit on maxAmounts on protocol level
-  const forceV4ZeroSlippage = v4ZeroSlippageEnabled && derivedPositionInfo.protocolVersion === ProtocolVersion.V4
-
   const createCalldataQueryParams = useMemo(() => {
     return generateCreateCalldataQueryParams({
       account,
@@ -233,7 +225,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       derivedPriceRangeInfo,
       derivedDepositInfo,
       independentField: depositState.exactField,
-      slippageTolerance: forceV4ZeroSlippage ? 0 : undefined,
     })
   }, [
     account,
@@ -244,7 +235,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     positionState,
     priceRangeState,
     depositState.exactField,
-    forceV4ZeroSlippage,
   ])
 
   const isUserCommittedToCreate =

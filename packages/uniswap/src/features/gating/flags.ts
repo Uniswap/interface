@@ -64,7 +64,6 @@ export enum FeatureFlags {
   UniswapXSyntheticQuote,
   UniswapXv2,
   UniversalSwap,
-  V40Slippage,
 }
 /* eslint-enable @typescript-eslint/prefer-enum-initializers */
 
@@ -112,7 +111,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UniswapXSyntheticQuote, 'uniswapx_synthetic_quote'],
   [FeatureFlags.UniswapXv2, 'uniswapx_v2'],
   [FeatureFlags.UniversalSwap, 'universal_swap'],
-  [FeatureFlags.V40Slippage, 'v4_0_slippage'],
 ])
 
 // These names must match the gate name on statsig

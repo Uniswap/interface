@@ -18,8 +18,6 @@ import {
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   IncreasePositionTxAndGasInfo,
@@ -50,7 +48,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep } = useIncreaseLiquidityContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
   const [hasIncreaseErrorResponse, setHasIncreaseErrorResponse] = useState(false)
-  const v4ZeroSlippageEnabled = useFeatureFlag(FeatureFlags.V40Slippage)
 
   const { currencyAmounts, error } = derivedIncreaseLiquidityInfo
   const { exactField } = increaseLiquidityState
@@ -144,10 +141,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       exactField === PositionField.TOKEN0 ? [amount0, amount1] : [amount1, amount0]
     const independentToken = exactField === PositionField.TOKEN0 ? IndependentToken.TOKEN_0 : IndependentToken.TOKEN_1
 
-    // stopgap measure to prevent overslippage on V4 pools
-    // TODO: remove this when we can set an upper limit on maxAmounts on protocol level
-    const forceV4ZeroSlippage = v4ZeroSlippageEnabled && positionInfo.version === ProtocolVersion.V4
-
     return {
       simulateTransaction: !approvalsNeeded,
       protocol: apiProtocolItems,
@@ -168,17 +161,9 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
           hooks: positionInfo.v4hook,
         },
       },
-      slippageTolerance: forceV4ZeroSlippage ? 0 : customSlippageTolerance,
+      slippageTolerance: customSlippageTolerance,
     }
-  }, [
-    account,
-    positionInfo,
-    currencyAmounts,
-    approvalsNeeded,
-    customSlippageTolerance,
-    exactField,
-    v4ZeroSlippageEnabled,
-  ])
+  }, [account, positionInfo, currencyAmounts, approvalsNeeded, customSlippageTolerance, exactField])
 
   const currency0Info = useCurrencyInfo(currencyId(positionInfo?.currency0Amount.currency))
   const currency1Info = useCurrencyInfo(currencyId(positionInfo?.currency1Amount.currency))
