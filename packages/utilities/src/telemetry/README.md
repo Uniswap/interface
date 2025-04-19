@@ -4,7 +4,7 @@
 
 We use Amplitude as our logging library and it's implemented using the Trace component. We also have the ability to log single events where Trace is not possible to use.
 
-A key component for analytics are the user properties, these need to be set at app start and updated every time they change during a an app session. These properties will be tied to all events logged in the app without having to manually do so. The component `<TraceUserProperties/>` keeps track of these custom properties and updates them as they change.
+A key component for analytics are the user properties, these need to be set at app start and updated every time they change during an app session. These properties will be tied to all events logged in the app without having to manually do so. The component `<TraceUserProperties/>` keeps track of these custom properties and updates them as they change.
 
 All screens that are part of the navigation stack will automatically log impressions as a `<Trace>` element has already been setup for every [onStateChange](https://github.com/Uniswap/mobile/blob/3903efcf27f0bcb08d9e1b15e3b39a71d7d56c17/src/app/navigation/NavigationContainer.tsx#L52).
 
