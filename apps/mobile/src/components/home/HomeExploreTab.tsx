@@ -14,6 +14,7 @@ import { SwirlyArrowDown } from 'ui/src/components/icons'
 import { spacing, zIndexes } from 'ui/src/theme'
 import {
   Chain,
+  ContractInput,
   HomeScreenTokensQuery,
   useHomeScreenTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -21,7 +22,6 @@ import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { DynamicConfigs, HomeScreenExploreTokensConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { isContractInputArrayType } from 'uniswap/src/features/gating/typeGuards'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -48,14 +48,14 @@ export const HomeExploreTab = memo(
       Chain.Ethereum,
       (x): x is Chain => Object.values(Chain).includes(x as Chain),
     )
-
     const recommendedTokens = useDynamicConfigValue(
       DynamicConfigs.HomeScreenExploreTokens,
       HomeScreenExploreTokensConfigKey.Tokens,
-      [],
-      isContractInputArrayType,
+      [] as ContractInput[],
+      (x): x is ContractInput[] =>
+        Array.isArray(x) &&
+        x.every((val) => typeof val.chain === 'string' && (!val.address || typeof val.address === 'string')),
     )
-
     const { onContentSizeChange } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
     const { data } = useHomeScreenTokensQuery({ variables: { contracts: recommendedTokens, chain: ethChainId } })

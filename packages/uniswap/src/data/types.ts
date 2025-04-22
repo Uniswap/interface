@@ -30,8 +30,3 @@ export enum CustomRankingType {
   PricePercentChange1DayDesc = 'PRICE_PERCENT_CHANGE_1_DAY_DESC',
   Trending = 'TRENDING',
 }
-
-export type AuthData = {
-  'x-uni-address': Address
-  'x-uni-timestamp': number
-}

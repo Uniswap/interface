@@ -10,10 +10,6 @@ import { getLanguageInfo, useCurrentLanguageInfo } from 'uniswap/src/features/la
 import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import i18n from 'uniswap/src/i18n'
 
-/**
- * When modifying this component, take into consideration that this is used
- * both as a full screen page in the Sidebar, and as a modal in the Onboarding page.
- */
 export function DevMenuScreen(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()

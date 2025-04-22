@@ -49,7 +49,6 @@ type CurrencyInputPanelProps = {
   isIndicativeLoading?: boolean
   focus?: boolean
   isFiatMode?: boolean
-  /** Only show a single max button rather than all percentage preset options. */
   showMaxButtonOnly?: boolean
   onPressIn?: () => void
   onSelectionChange?: (start: number, end: number) => void
@@ -296,7 +295,7 @@ export const CurrencyInputPanel = memo(
                   isInterfaceDesktop &&
                   currencyField === CurrencyField.INPUT &&
                   currencyBalance && (
-                    <Flex position="absolute" right={0} top={-spacing.spacing2}>
+                    <Flex position="absolute" right={0} top={-2}>
                       <AmountInputPresets
                         currencyAmount={currencyAmount}
                         currencyBalance={currencyBalance}
@@ -306,7 +305,7 @@ export const CurrencyInputPanel = memo(
                     </Flex>
                   )}
                 {showDefaultTokenOptions && isInterfaceDesktop && (
-                  <Flex position="absolute" right={0} top={-spacing.spacing4}>
+                  <Flex position="absolute" right={0} top={-4}>
                     <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
                   </Flex>
                 )}

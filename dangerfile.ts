@@ -74,7 +74,10 @@ function checkGeneralizedHookFiles() {
 }
 
 // Put any files here that we explicitly want to ignore!
-const IGNORED_SPLIT_RULE_FILES: string[] = ['packages/uniswap/src/features/gating/sdk/statsig.native.ts']
+const IGNORED_SPLIT_RULE_FILES: string[] = [
+  'packages/uniswap/src/features/gating/sdk/statsig.native.ts',
+  'packages/uniswap/src/features/gating/sdk/statsig.ts',
+]
 
 function checkSplitFiles() {
   const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)

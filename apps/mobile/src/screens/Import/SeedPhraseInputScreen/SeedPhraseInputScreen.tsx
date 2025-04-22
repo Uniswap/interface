@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -29,7 +29,6 @@ import {
 } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInput/types'
 import { useFunctionAfterNavigationTransitionEndWithDelay } from 'src/utils/hooks'
 import { MobileDeviceHeight } from 'ui/src'
-import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 type SeedPhraseInputScreenProps = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
@@ -66,7 +65,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
     setFalse: handleClosePastePermissionModal,
   } = useBooleanState(false)
 
-  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false)
+  const { value: isSubmitEnabled, setValue: setIsSubmitEnabled } = useBooleanState(false)
 
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
@@ -79,10 +78,6 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
     [setIsSubmitEnabled],
   )
 
-  const handleSubmitError: NativeSeedPhraseInputProps['onSubmitError'] = useCallback(() => {
-    setIsSubmitEnabled(true)
-  }, [setIsSubmitEnabled])
-
   const handleOnMnemonicStored: NativeSeedPhraseInputProps['onMnemonicStored'] = useCallback(
     async (event) => {
       await generateImportedAccounts({ mnemonicId: event.nativeEvent.mnemonicId, backupType: BackupType.Manual })
@@ -90,21 +85,13 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
       seedPhraseInputRef.current?.blur()
 
       onRestoreComplete({ isRestoringMnemonic, dispatch, params, navigation })
-      setIsSubmitEnabled(true)
     },
-    [dispatch, generateImportedAccounts, setIsSubmitEnabled, isRestoringMnemonic, navigation, params],
+    [dispatch, generateImportedAccounts, isRestoringMnemonic, navigation, params],
   )
 
   const onPressRecoveryHelpButton = useCallback(
     () => openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport),
     [],
-  )
-
-  const handleSubmit = useEvent(() =>
-    setIsSubmitEnabled((_prev) => {
-      seedPhraseInputRef.current?.handleSubmit()
-      return false
-    }),
   )
 
   const onPressTryAgainButton = useCallback(() => {
@@ -127,7 +114,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
               size="large"
               variant="branded"
               testID={TestID.Continue}
-              onPress={handleSubmit}
+              onPress={() => seedPhraseInputRef.current?.handleSubmit()}
             >
               {t('common.button.continue')}
             </Button>
@@ -167,7 +154,6 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
         onMnemonicStored={handleOnMnemonicStored}
         onPasteEnd={handleClosePastePermissionModal}
         onPasteStart={handleOpenPastePermissionModal}
-        onSubmitError={handleSubmitError}
       />
 
       <Flex row justifyContent="center" pt="$spacing24">

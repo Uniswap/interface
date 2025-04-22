@@ -1,6 +1,5 @@
 import { useApolloClient } from '@apollo/client'
 import { useCallback, useMemo, useState } from 'react'
-import { fetchUnitagsByAddresses } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import {
   SelectWalletScreenDocument,
   SelectWalletScreenQuery,
@@ -9,6 +8,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
+import { fetchUnitagByAddresses } from 'wallet/src/features/unitags/api'
 
 export interface AddressWithBalanceAndName {
   address: string
@@ -96,11 +96,11 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
       variables: { ownerAddresses: addressesArray, chains: gqlChains, valueModifiers },
     })
 
-    const fetchUnitags = fetchUnitagsByAddresses({ addresses: addressesArray })
+    const fetchUnitags = fetchUnitagByAddresses(addressesArray)
 
     const [balancesResponse, unitagsResponse] = await Promise.all([fetchBalances, fetchUnitags])
 
-    const unitagsByAddress = unitagsResponse.usernames ?? {}
+    const unitagsByAddress = unitagsResponse?.data ?? {}
 
     const balancesByAddress = (balancesResponse?.data?.portfolios ?? []).reduce(
       (balances: AddressTo<number | undefined>, portfolios): AddressTo<number | undefined> => {

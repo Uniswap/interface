@@ -1,5 +1,6 @@
 import { TokenList } from '@uniswap/token-lists'
 import { PopupType } from 'components/Popups/types'
+import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
 import { ApplicationState, OpenModalParams } from 'state/application/reducer'
 import { FiatOnRampTransactionsState } from 'state/fiatOnRampTransactions/reducer'
@@ -67,6 +68,7 @@ type ExpectedAppState = CombinedState<{
   readonly wallets: ConnectedWalletsState
   readonly mint: MintState
   readonly mintV3: MintV3State
+  readonly multicall: ReturnType<typeof multicall.reducer>
   readonly logs: LogsState
   readonly [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
   readonly [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>

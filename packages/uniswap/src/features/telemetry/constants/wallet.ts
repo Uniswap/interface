@@ -14,6 +14,7 @@ export enum WalletEventName {
   ExternalLinkOpened = 'External Link Opened',
   GasEstimateAccuracy = 'Gas Estimate Accuracy',
   KeyringMissingMnemonic = 'Keyring Missing Mnemonic',
+  LowNetworkTokenInfoModalOpened = 'Low Network Token Info Modal Opened',
   ModalClosed = 'Modal Closed',
   NFTVisibilityChanged = 'NFT Visibility Changed',
   NFTsLoaded = 'NFTs Loaded',

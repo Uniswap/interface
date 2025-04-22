@@ -72,12 +72,6 @@ class SeedPhraseInputView: UIView {
     set { vc.rootView.viewModel.onPasteEnd = newValue }
     get { return vc.rootView.viewModel.onPasteEnd }
   }
-  
-  @objc
-  var onSubmitError: RCTDirectEventBlock {
-    set { vc.rootView.viewModel.onSubmitError = newValue }
-    get { return vc.rootView.viewModel.onSubmitError }
-  }
 
   @objc
   func focus() {

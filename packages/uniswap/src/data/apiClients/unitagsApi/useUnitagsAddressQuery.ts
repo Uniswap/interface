@@ -3,7 +3,7 @@ import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import {
   UNITAGS_API_CACHE_KEY,
   fetchAddress,
-  fetchUnitagsByAddresses,
+  fetchAddresses,
 } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import {
   UnitagAddressRequest,
@@ -39,9 +39,7 @@ export function useUnitagsAddressesQuery({
 
   return useQuery<UnitagAddressesResponse>({
     queryKey,
-    queryFn: params
-      ? async (): ReturnType<typeof fetchUnitagsByAddresses> => await fetchUnitagsByAddresses(params)
-      : skipToken,
+    queryFn: params ? async (): ReturnType<typeof fetchAddresses> => await fetchAddresses(params) : skipToken,
     staleTime: ONE_MINUTE_MS,
     gcTime: MAX_REACT_QUERY_CACHE_TIME_MS,
     ...rest,

@@ -7,7 +7,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Flex, Popover, Text, styled, useIsTouchDevice, useMedia } from 'ui/src'
 import { Hamburger } from 'ui/src/components/icons/Hamburger'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const ArrowDownWrapper = styled(Text, {
   color: '$neutral2',
@@ -43,7 +42,7 @@ export function CompanyMenu() {
 
   return (
     <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
-      <Popover.Trigger data-testid={TestID.NavCompanyMenu}>
+      <Popover.Trigger data-testid="nav-company-menu">
         <Flex
           row
           alignItems="center"
@@ -53,7 +52,7 @@ export function CompanyMenu() {
           group
           $platform-web={{ containerType: 'normal' }}
         >
-          <Flex row alignItems="center" gap="$gap4" onPress={handleLogoClick} data-testid={TestID.NavUniswapLogo}>
+          <Flex row alignItems="center" gap="$gap4" onPress={handleLogoClick} data-testid="nav-uniswap-logo">
             <NavIcon />
             {isLargeScreen && (
               <Text variant="subheading1" color="$accent1" userSelect="none">

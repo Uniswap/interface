@@ -1,7 +1,6 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { MonadOutageBanner } from 'components/Banner/Outage/MonadOutageBanner'
 import { OutageBanner, getOutageBannerSessionStorageKey } from 'components/Banner/Outage/OutageBanner'
-import { LPIncentiveAnnouncementBanner } from 'components/Liquidity/LPIncentiveAnnouncementBanner'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
@@ -16,7 +15,6 @@ import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 export function Banners() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
-  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const manualOutage = useAtomValue(manualChainOutageAtom)
 
@@ -55,10 +53,6 @@ export function Banners() {
     return (
       <OutageBanner chainId={pageChainId} version={currentPageHasManualOutage ? manualOutage?.version : undefined} />
     )
-  }
-
-  if (isLPIncentivesEnabled) {
-    return <LPIncentiveAnnouncementBanner />
   }
 
   return null

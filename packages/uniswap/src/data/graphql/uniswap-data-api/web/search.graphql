@@ -21,8 +21,8 @@ query SearchTrendingTokensWeb($chain: Chain!) {
   }
 }
 
-query SearchTokensWeb($searchQuery: String!, $chains: [Chain!], $tokenSearchV2Enabled: Boolean) {
-  searchTokens(searchQuery: $searchQuery, chains: $chains, tokenSearchV2Enabled: $tokenSearchV2Enabled) {
+query SearchTokensWeb($searchQuery: String!, $chains: [Chain!]) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains) {
     ...SimpleTokenDetails
     id
     decimals

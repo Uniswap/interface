@@ -332,13 +332,6 @@ module.exports = (env) => {
                     description: EXTENSION_DESCRIPTION,
                     version: EXTENSION_VERSION,
                     name: EXTENSION_NAME_POSTFIX ? manifest.name + ' ' + EXTENSION_NAME_POSTFIX : manifest.name,
-                    externally_connectable: {
-                      ...manifest.externally_connectable,
-                      matches:
-                        BUILD_ENV === 'prod'
-                          ? ['https://app.uniswap.org/*']
-                          : ['https://app.uniswap.org/*', 'https://ew.unihq.org/*', 'https://*.ew.unihq.org/*'],
-                    },
                   },
                   null,
                   2,

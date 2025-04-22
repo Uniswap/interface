@@ -15,8 +15,6 @@ import {
   changeChainSaga,
   confirmRequest,
   confirmRequestNoDappInfo,
-  handleGetCallsStatus,
-  handleSendCalls,
   handleSendTransaction,
   handleSignMessage,
   handleSignTypedData,
@@ -35,8 +33,6 @@ import {
   ErrorResponse,
   GetAccountRequest,
   GetAccountRequestSchema,
-  GetCallsStatusRequest,
-  GetCallsStatusRequestSchema,
   GetChainIdRequest,
   GetChainIdRequestSchema,
   GetPermissionsRequest,
@@ -47,8 +43,6 @@ import {
   RequestPermissionsRequestSchema,
   RevokePermissionsRequest,
   RevokePermissionsRequestSchema,
-  SendCallsRequest,
-  SendCallsRequestSchema,
   SignMessageRequest,
   SignMessageRequestSchema,
   SignTypedDataRequest,
@@ -178,18 +172,6 @@ function* dappRequestApproval({
         case DappRequestType.SignTypedData: {
           const validatedRequest: SignTypedDataRequest = SignTypedDataRequestSchema.parse(confirmedRequest.dappRequest)
           yield* call(handleSignTypedData, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
-          break
-        }
-        case DappRequestType.SendCalls: {
-          const validatedRequest: SendCallsRequest = SendCallsRequestSchema.parse(confirmedRequest.dappRequest)
-          yield* call(handleSendCalls, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
-          break
-        }
-        case DappRequestType.GetCallsStatus: {
-          const validatedRequest: GetCallsStatusRequest = GetCallsStatusRequestSchema.parse(
-            confirmedRequest.dappRequest,
-          )
-          yield* call(handleGetCallsStatus, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
           break
         }
         // Add more request types here

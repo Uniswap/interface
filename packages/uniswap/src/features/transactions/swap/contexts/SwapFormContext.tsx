@@ -292,11 +292,6 @@ export function SwapFormContextProvider({
   return <SwapFormContext.Provider value={state}>{children}</SwapFormContext.Provider>
 }
 
-// TODO: WEB-7258 Remove this after Swap Form Settings component refactor
-export const useOptionalSwapFormContext = (): SwapFormContextState | undefined => {
-  return useContext(SwapFormContext)
-}
-
 export const useSwapFormContext = (): SwapFormContextState => {
   const swapContext = useContext(SwapFormContext)
 

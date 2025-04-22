@@ -17,7 +17,7 @@ import { Z_INDEX } from 'theme/zIndex'
 import { Button, Flex, useScrollbarStyles } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
-const BAG_WIDTH = 320
+export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
 
 const Bag = () => {

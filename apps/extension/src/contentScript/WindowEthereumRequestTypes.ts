@@ -1,7 +1,6 @@
 import { EthersTransactionRequestSchema } from 'src/app/features/dappRequests/types/EthersTypes'
 import { HexadecimalNumberSchema } from 'src/app/features/dappRequests/types/utilityTypes'
 import { HomeTabs } from 'src/app/navigation/constants'
-import { GetCallsStatusParamsSchema, SendCallsParamsSchema } from 'wallet/src/features/dappRequests/types'
 import { ZodIssueCode, z } from 'zod'
 
 /**
@@ -252,6 +251,7 @@ export const WalletGetPermissionsRequestSchema = EthereumRequestWithIdSchema.ext
 })
 export type WalletGetPermissionsRequest = z.infer<typeof WalletGetPermissionsRequestSchema>
 
+// WalletGetCapabilitiesRequestSchema
 export const WalletGetCapabilitiesRequestSchema = EthereumRequestWithIdSchema.extend({
   method: z.literal('wallet_getCapabilities'),
   params: z.array(z.unknown()),
@@ -302,65 +302,3 @@ export const UniswapOpenSidebarRequestSchema = EthereumRequestWithIdSchema.exten
 })
 
 export type UniswapOpenSidebarRequest = z.infer<typeof UniswapOpenSidebarRequestSchema>
-
-export const WalletSendCallsRequestSchema = EthereumRequestWithIdSchema.extend({
-  method: z.literal('wallet_sendCalls'),
-  params: z.array(z.unknown()),
-}).transform((data) => {
-  const { requestId, method, params } = data
-
-  if (params.length < 1) {
-    throw new z.ZodError([
-      {
-        message: 'Params array must contain at least one element',
-        path: ['params'],
-        code: ZodIssueCode.custom,
-      },
-    ])
-  }
-
-  const parseResult = SendCallsParamsSchema.safeParse(params[0])
-
-  if (!parseResult.success) {
-    throw new Error('First element of the array must match SendCallsParamsSchema')
-  }
-
-  const sendCallsParams = parseResult.data
-
-  return {
-    requestId,
-    method,
-    params,
-    sendCallsParams,
-  }
-})
-
-export type WalletSendCallsRequest = z.infer<typeof WalletSendCallsRequestSchema>
-
-export const WalletGetCallsStatusRequestSchema = EthereumRequestWithIdSchema.extend({
-  method: z.literal('wallet_getCallsStatus'),
-  params: z.array(z.unknown()),
-}).transform((data) => {
-  const { requestId, method, params } = data
-
-  if (params.length < 1) {
-    throw new z.ZodError([
-      {
-        message: 'Params array must contain at least one element',
-        path: ['params'],
-        code: ZodIssueCode.custom,
-      },
-    ])
-  }
-
-  const batchId = GetCallsStatusParamsSchema.parse(params[0])
-
-  return {
-    requestId,
-    method,
-    params,
-    batchId,
-  }
-})
-
-export type WalletGetCallsStatusRequest = z.infer<typeof WalletGetCallsStatusRequestSchema>

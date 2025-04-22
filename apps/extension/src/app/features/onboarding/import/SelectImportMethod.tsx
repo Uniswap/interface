@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { OptionCard } from 'src/app/components/buttons/OptionCard'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
-import { IMPORT_PASSKEY_STATE_KEY } from 'src/app/features/onboarding/import/InitiatePasskeyAuth'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Flex, Square } from 'ui/src'
@@ -39,12 +38,7 @@ export function SelectImportMethod(): JSX.Element {
               Icon={Passkey}
               title={t('onboarding.import.selectMethod.passkey.title')}
               subtitle={t('onboarding.import.selectMethod.passkey.subtitle')}
-              onPress={(): void =>
-                navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.ImportPasskey}`, {
-                  replace: true,
-                  state: { [IMPORT_PASSKEY_STATE_KEY]: true },
-                })
-              }
+              onPress={() => {}}
             />
 
             <OptionCard

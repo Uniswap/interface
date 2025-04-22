@@ -461,6 +461,16 @@ export function generateTransactionSteps(
         signOrder: createSignOrderUniswapXStep(txContext.permit, txContext.trade.quote.quote),
       })
     } else if (isBridge(txContext)) {
+      const { swapRequestArgs } = txContext
+
+      if (txContext.unsigned) {
+        return orderSwapSteps({
+          revocation,
+          approval,
+          permit: createPermit2SignatureStep(txContext.permit, trade.inputAmount.currency),
+          swap: createSwapTransactionAsyncStep(swapRequestArgs, v4Enabled),
+        })
+      }
       return orderSwapSteps({
         revocation,
         approval,

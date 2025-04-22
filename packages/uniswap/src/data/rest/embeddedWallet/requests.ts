@@ -6,11 +6,8 @@ import {
   AuthenticationTypes,
   ChallengeResponse,
   CreateWalletResponse,
-  DeleteAuthenticatorResponse,
   ExportSeedPhraseResponse,
   ListAuthenticatorsResponse,
-  RegisterNewAuthenticatorResponse,
-  RegistrationOptions,
   SecuredChallengeResponse,
   SignMessagesResponse,
   SignTransactionsResponse,
@@ -32,15 +29,13 @@ const EW_CACHE_KEY = 'EmbeddedWallet'
 export async function fetchChallengeRequest({
   type,
   action,
-  options,
 }: {
   type: AuthenticationTypes
   action: Action
-  options?: RegistrationOptions
 }): Promise<ChallengeResponse> {
   return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'challenge', type, action, options],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.challenge({ type, action, options }),
+    queryKey: [EW_CACHE_KEY, 'challenge', type, action],
+    queryFn: () => EMBEDDED_WALLET_CLIENT.challenge({ type, action }),
   })
 }
 
@@ -140,57 +135,5 @@ export async function fetchListAuthenticatorsRequest({
   return await SharedQueryClient.fetchQuery({
     queryKey: [EW_CACHE_KEY, 'listAuthenticatorsRequest', credential],
     queryFn: () => EMBEDDED_WALLET_CLIENT.listAuthenticators({ credential }),
-  })
-}
-
-export async function fetchRegisterNewAuthenticatorRequest({
-  newCredential,
-  newAuthenticationType,
-  existingCredential,
-  existingAuthenticationType,
-}: {
-  newCredential: string
-  newAuthenticationType: AuthenticationTypes
-  existingCredential: string
-  existingAuthenticationType: AuthenticationTypes
-}): Promise<RegisterNewAuthenticatorResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [
-      'addAuthenticator',
-      newCredential,
-      newAuthenticationType,
-      existingCredential,
-      existingAuthenticationType,
-    ],
-    queryFn: () =>
-      EMBEDDED_WALLET_CLIENT.registerNewAuthenticator({
-        newCredential,
-        newAuthenticationType,
-        existingCredential,
-        existingAuthenticationType,
-      }),
-  })
-}
-
-export async function fetchDeleteAuthenticatorRequest({
-  credential,
-  authenticationType,
-  authenticatorId,
-  authenticatorType,
-}: {
-  credential: string
-  authenticationType: AuthenticationTypes
-  authenticatorId: string
-  authenticatorType: string
-}): Promise<DeleteAuthenticatorResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: ['deleteAuthenticator', credential, authenticationType, authenticatorId, authenticatorType],
-    queryFn: () =>
-      EMBEDDED_WALLET_CLIENT.deleteAuthenticator({
-        credential,
-        type: authenticationType,
-        authenticatorId,
-        authenticatorType,
-      }),
   })
 }

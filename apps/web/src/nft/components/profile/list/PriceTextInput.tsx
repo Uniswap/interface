@@ -1,7 +1,7 @@
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import styled, { useTheme } from 'lib/styled-components'
-import { BrokenLinkIcon } from 'nft/components/iconExports'
+import { BrokenLinkIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
 import { WarningType } from 'nft/components/profile/list/shared'
 import { useUpdateInputAndWarnings } from 'nft/components/profile/list/utils'

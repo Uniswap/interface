@@ -1,9 +1,9 @@
 import { InterfaceElementName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
 import {

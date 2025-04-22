@@ -5,30 +5,13 @@ import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { initMessageBridge } from 'src/background/backgroundDappRequests'
 import { backgroundStore } from 'src/background/backgroundStore'
-import {
-  backgroundToSidePanelMessageChannel,
-  contentScriptUtilityMessageChannel,
-} from 'src/background/messagePassing/messageChannels'
-import {
-  BackgroundToSidePanelRequestType,
-  ContentScriptUtilityMessageType,
-} from 'src/background/messagePassing/types/requests'
+import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassing/messageChannels'
+import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { setSidePanelBehavior, setSidePanelOptions } from 'src/background/utils/chromeSidePanelUtils'
 import { readIsOnboardedFromStorage } from 'src/background/utils/persistedStateUtils'
 import { logger } from 'utilities/src/logger/logger'
 
-let isArcBrowser = false
-
 initMessageBridge()
-
-async function setSidebarState(isOnboarded: boolean): Promise<void> {
-  if (isOnboarded) {
-    await enableSidebar()
-  } else {
-    await disableSidebar()
-    await focusOrCreateOnboardingTab()
-  }
-}
 
 async function initApp(): Promise<void> {
   await initStatSigForBrowserScripts()
@@ -37,7 +20,12 @@ async function initApp(): Promise<void> {
   // Enables or disables sidebar based on onboarding status
   // Injected script will reject any requests if not onboarded
   backgroundStore.addOnboardingChangedListener(async (isOnboarded) => {
-    await setSidebarState(isOnboarded)
+    if (isOnboarded) {
+      await enableSidebar()
+    } else {
+      await disableSidebar()
+      await focusOrCreateOnboardingTab()
+    }
   })
 
   await backgroundStore.init()
@@ -54,33 +42,16 @@ chrome.runtime.onInstalled.addListener(async () => {
   await checkAndHandleOnboarding()
 })
 
-// on arc browser, show unsupported browser page (lives on onboarding flow)
-// this is because arc doesn't support the sidebar
-contentScriptUtilityMessageChannel.addMessageListener(
-  ContentScriptUtilityMessageType.ArcBrowserCheck,
-  async (message) => {
-    isArcBrowser = !!message.isArcBrowser
-
-    if (message.isArcBrowser) {
-      await disableSidebar()
-    } else {
-      // ensure that we reenable the sidebar if arc styles are not detected
-      // this ensures that funky edge cases (eg sites that define arc styles) don't cause the sidebar to be disabled on accident
-      await enableSidebar()
-    }
-  },
-)
-
 // Utility Functions
 async function checkAndHandleOnboarding(): Promise<void> {
-  if (isArcBrowser) {
-    await focusOrCreateOnboardingTab()
-    return
-  }
-
   const isOnboarded = await readIsOnboardedFromStorage()
 
-  await setSidebarState(isOnboarded)
+  if (!isOnboarded) {
+    await disableSidebar()
+    await focusOrCreateOnboardingTab()
+  } else {
+    await enableSidebar()
+  }
 }
 
 async function enableSidebar(): Promise<void> {

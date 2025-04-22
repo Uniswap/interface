@@ -15,7 +15,6 @@ import { getCrosshairProps, priceToNumber } from 'components/Charts/LiquidityPos
 import { useDensityChartData } from 'components/Charts/LiquidityRangeInput/hooks'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { PriceChartType, formatTickMarks } from 'components/Charts/utils'
-import ErrorBoundary from 'components/ErrorBoundary'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
@@ -406,7 +405,7 @@ export function LiquidityPositionRangeChartLoader({
   )
 }
 
-function LiquidityPositionRangeChart({
+export function LiquidityPositionRangeChart({
   version,
   currency0,
   currency1,
@@ -638,13 +637,5 @@ function LiquidityPositionRangeChart({
         </Shine>
       )}
     </Flex>
-  )
-}
-
-export function WrappedLiquidityPositionRangeChart(props: LiquidityPositionRangeChartProps): JSX.Element {
-  return (
-    <ErrorBoundary fallback={() => null}>
-      <LiquidityPositionRangeChart {...props} />
-    </ErrorBoundary>
   )
 }

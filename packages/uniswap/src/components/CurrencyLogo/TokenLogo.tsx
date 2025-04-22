@@ -11,7 +11,7 @@ interface TokenLogoProps {
   url?: string | null
   symbol?: string
   name?: string | null
-  chainId?: UniverseChainId | null
+  chainId?: UniverseChainId
   size?: number
   hideNetworkLogo?: boolean
   networkLogoBorderWidth?: number

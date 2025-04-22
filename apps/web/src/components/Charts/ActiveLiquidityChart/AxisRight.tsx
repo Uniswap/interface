@@ -1,6 +1,17 @@
 import { NumberValue, ScaleLinear, axisRight, Axis as d3Axis, select } from 'd3'
+import styled from 'lib/styled-components'
 import { useMemo } from 'react'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+const StyledGroup = styled.g`
+  line {
+    display: none;
+  }
+
+  text {
+    color: ${({ theme }) => theme.neutral2};
+  }
+`
 
 const TEXT_Y_OFFSET = 5
 
@@ -66,7 +77,7 @@ export const AxisRight = ({
   }, [current, max, min, yScale])
 
   return (
-    <g transform={`translate(${offset}, 0)`} className="axis-right">
+    <StyledGroup transform={`translate(${offset}, 0)`}>
       <Axis
         axisGenerator={axisRight(yScale)
           .tickValues(tickValues)
@@ -79,6 +90,6 @@ export const AxisRight = ({
         height={height}
         yScale={yScale}
       />
-    </g>
+    </StyledGroup>
   )
 }

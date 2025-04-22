@@ -3,7 +3,7 @@ import { call, put, select } from 'typed-redux-saga'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
@@ -187,7 +187,7 @@ export const {
 export function* shouldSubmitViaPrivateRpc(chainId: number) {
   const swapProtectionSetting = yield* select(selectWalletSwapProtectionSetting)
   const swapProtectionOn = swapProtectionSetting === SwapProtectionSetting.On
-  const privateRpcFeatureEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
+  const privateRpcFeatureEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
   const privateRpcSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
   return Boolean(swapProtectionOn && privateRpcSupportedOnChain && privateRpcFeatureEnabled)
 }

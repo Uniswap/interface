@@ -28,8 +28,6 @@ export function createApiClient({
   readonly fetch: (path: string, options: StandardFetchOptions) => Promise<Response>
   readonly get: <T>(path: string, options?: CustomOptions) => Promise<T>
   readonly post: <T>(path: string, options: CustomOptions) => Promise<T>
-  readonly put: <T>(path: string, options: CustomOptions) => Promise<T>
-  readonly delete: <T>(path: string, options: CustomOptions) => Promise<T>
 } {
   const headers = includeBaseUniswapHeaders ? { ...BASE_UNISWAP_HEADERS, ...additionalHeaders } : additionalHeaders
 
@@ -81,7 +79,7 @@ export function createApiClient({
     },
 
     get post() {
-      return async <T>(path: string, options: CustomOptions): Promise<T> => {
+      return async <T>(path: string, options?: CustomOptions): Promise<T> => {
         const _options = options ?? {}
 
         _options.headers = {
@@ -90,25 +88,6 @@ export function createApiClient({
         }
 
         return await this.get(path, { ..._options, method: 'POST' })
-      }
-    },
-
-    get put() {
-      return async <T>(path: string, options: CustomOptions): Promise<T> => {
-        const _options = options ?? {}
-
-        _options.headers = {
-          'Content-Type': 'application/json',
-          ...(options?.headers ?? {}),
-        }
-
-        return await this.get(path, { ..._options, method: 'PUT' })
-      }
-    },
-
-    get delete() {
-      return async <T>(path: string, options: CustomOptions = {}): Promise<T> => {
-        return await this.get(path, { ...options, method: 'DELETE' })
       }
     },
   }

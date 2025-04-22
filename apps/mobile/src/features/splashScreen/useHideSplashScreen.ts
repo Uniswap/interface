@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { dismissSplashScreen } from 'src/features/splashScreen/splashScreenSlice'
+import { hideSplashScreen } from 'src/features/splashScreen/splashScreenSlice'
 import { useEvent } from 'utilities/src/react/hooks'
 
 /**
@@ -10,6 +10,6 @@ export function useHideSplashScreen(): () => void {
   const dispatch = useDispatch()
 
   return useEvent(() => {
-    dispatch(dismissSplashScreen())
+    dispatch(hideSplashScreen())
   })
 }

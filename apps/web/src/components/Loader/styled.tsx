@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from 'lib/styled-components'
 
-const loadingAnimation = keyframes`
+export const loadingAnimation = keyframes`
   0% {
     background-position: 100% 50%;
   }

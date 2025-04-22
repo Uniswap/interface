@@ -1,8 +1,7 @@
 import { ApolloClient, ApolloLink, from, NormalizedCacheObject } from '@apollo/client'
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
-import { useMutation } from '@tanstack/react-query'
 import { PersistentStorage } from 'apollo3-cache-persist/lib/types'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import {
   CustomEndpoint,
   getCustomGraphqlHttpLink,
@@ -17,7 +16,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getDatadogApolloLink } from 'utilities/src/logger/datadog/datadogLink'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
-import { useEvent } from 'utilities/src/react/hooks'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { initAndPersistCache } from 'wallet/src/data/apollo/cache'
 import { getOnRampAuthLink } from 'wallet/src/data/onRampAuthLink'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
@@ -77,63 +76,10 @@ export const usePersistedApolloClient = ({
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
   const signerManager = useWalletSigners()
   const accounts = useAccounts()
-  const hasInitialized = useRef(false)
-  const init = useMemo(
-    () =>
-      makeApolloClientInit({
-        storageWrapper,
-        maxCacheSizeInBytes,
-        customEndpoint,
-        reduxStore,
-        accounts,
-        signerManager,
-      }),
-    [storageWrapper, maxCacheSizeInBytes, customEndpoint, reduxStore, accounts, signerManager],
-  )
 
-  const mutation = useMutation({
-    mutationFn: init,
-    onSuccess: (newClient) => {
-      setClient(newClient)
-    },
-    retry: false,
-    onError: (error) => {
-      logger.error(error, {
-        tags: {
-          file: 'usePersistedApolloClient.ts',
-          function: 'init',
-        },
-      })
-    },
-  })
-
-  const mutate = useEvent(() => {
-    // we only want to initialize the apollo client once per app load
-    if (!hasInitialized.current) {
-      hasInitialized.current = true
-      mutation.mutate()
-    }
-  })
-
-  useEffect(() => {
-    mutate()
-  }, [mutate])
-
-  return client
-}
-
-function makeApolloClientInit(ctx: {
-  storageWrapper: PersistentStorage<string>
-  maxCacheSizeInBytes: number
-  customEndpoint?: CustomEndpoint
-  reduxStore: ToolkitStore
-  accounts: ReturnType<typeof useAccounts>
-  signerManager: ReturnType<typeof useWalletSigners>
-}): () => Promise<ApolloClient<NormalizedCacheObject>> {
-  const { storageWrapper, maxCacheSizeInBytes, customEndpoint, reduxStore, accounts, signerManager } = ctx
   const apolloLink = customEndpoint ? getCustomGraphqlHttpLink(customEndpoint) : getGraphqlHttpLink()
 
-  const init = async (): Promise<ApolloClient<NormalizedCacheObject>> => {
+  const init = useCallback(async () => {
     const cache = await initAndPersistCache({ storage: storageWrapper, maxCacheSizeInBytes })
 
     if (customEndpoint) {
@@ -175,11 +121,15 @@ function makeApolloClientInit(ctx: {
         },
       },
     })
-    apolloClientRef.current = newClient
 
-    return newClient
+    apolloClientRef.current = newClient
+    setClient(newClient)
+
     // Ensure this callback only is computed once even if apolloLink changes,
     // otherwise this will cause a rendering loop re-initializing the client
-  }
-  return init
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useAsyncData(init)
+  return client
 }

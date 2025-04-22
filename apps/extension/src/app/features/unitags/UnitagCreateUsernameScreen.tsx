@@ -7,8 +7,8 @@ import { Flex, Square } from 'ui/src'
 import { Person } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ClaimUnitagContent, ClaimUnitagContentProps } from 'uniswap/src/features/unitags/ClaimUnitagContent'
 import { ExtensionScreens, ExtensionUnitagClaimScreens } from 'uniswap/src/types/screens/extension'
+import { ClaimUnitagContent, ClaimUnitagContentProps } from 'wallet/src/features/unitags/ClaimUnitagContent'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type onNavigateContinueType = Exclude<ClaimUnitagContentProps['onNavigateContinue'], undefined>

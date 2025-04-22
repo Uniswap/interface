@@ -1,23 +1,18 @@
 import { BigNumber } from '@ethersproject/bignumber'
 /* eslint-disable-next-line no-restricted-imports */
-import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { WrappedLiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import { LiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPositionAmountRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { LiquidityPositionStackedBars } from 'components/Liquidity/LiquidityPositionStackedBars'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import type { PositionInfo } from 'components/Liquidity/types'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { useCurrencyInfo } from 'hooks/Tokens'
-import { useSrcColor } from 'hooks/useColor'
-import { useLpIncentivesFormattedEarnings } from 'hooks/useLpIncentivesFormattedEarnings'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import NotFound from 'pages/NotFound'
 import { LegacyPositionPage } from 'pages/Pool/Positions/LegacyPositionPage'
@@ -33,36 +28,21 @@ import { useAppDispatch } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import {
-  Button,
-  Flex,
-  SegmentedControl,
-  SegmentedControlOption,
-  Text,
-  TouchableArea,
-  useMedia,
-  useSporeColors,
-} from 'ui/src'
+import { Button, Flex, SegmentedControl, SegmentedControlOption, Text, TouchableArea, useMedia } from 'ui/src'
 import { ExchangeHorizontal } from 'ui/src/components/icons/ExchangeHorizontal'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme/breakpoints'
-import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { UNI } from 'uniswap/src/constants/tokens'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isMobileWeb } from 'utilities/src/platform'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
@@ -122,9 +102,10 @@ function PositionPage() {
 
   const dispatch = useAppDispatch()
 
+  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
-  const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
+  const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
   const { t } = useTranslation()
   const media = useMedia()
@@ -276,7 +257,7 @@ function PositionPage() {
           })}
         </title>
       </Helmet>
-      <BodyWrapper mb={100}>
+      <BodyWrapper>
         <Flex gap="$gap20">
           <BreadcrumbNavContainer aria-label="breadcrumb-nav">
             <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
@@ -288,20 +269,13 @@ function PositionPage() {
             $lg={{ row: false, alignItems: 'flex-start', gap: '$gap16' }}
             justifyContent="space-between"
             alignItems="center"
-            borderBottomWidth={1}
-            borderColor="$surface3"
-            pb="$padding16"
           >
-            <LiquidityPositionInfo
-              positionInfo={positionInfo}
-              linkToPool
-              includeNetwork
-              includeLpIncentives={isLpIncentivesEnabled}
-            />
+            <LiquidityPositionInfo positionInfo={positionInfo} linkToPool />
             {isOwner && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
                 {positionInfo.version === ProtocolVersion.V3 &&
                   status !== PositionStatus.CLOSED &&
+                  isV4DataEnabled &&
                   isMigrateToV4Enabled && (
                     <MouseoverTooltip
                       text={t('pool.migrateLiquidityDisabledTooltip')}
@@ -380,7 +354,7 @@ function PositionPage() {
             )}
           </Flex>
         </Flex>
-        <Flex row justifyContent="space-between" pt="$padding20" $lg={{ row: false, gap: '$gap24' }}>
+        <Flex row justifyContent="space-between" $lg={{ row: false, gap: '$gap24' }}>
           <Flex gap="$gap12" width={chartWidth}>
             <Flex row gap="$gap8" alignItems="center">
               <BaseQuoteFiatAmount
@@ -407,7 +381,7 @@ function PositionPage() {
               pb="$padding12"
             >
               {mainView === 'chart' ? (
-                <WrappedLiquidityPositionRangeChart
+                <LiquidityPositionRangeChart
                   version={positionInfo.version}
                   currency0={priceInverted ? currency1Amount.currency : currency0Amount.currency}
                   currency1={priceInverted ? currency0Amount.currency : currency1Amount.currency}
@@ -575,454 +549,100 @@ function PositionPage() {
                 ))}
             </Flex>
           </Flex>
-          <Flex gap="$spacing20">
-            <PositionSection
-              position={position}
-              currency0Amount={currency0Amount}
-              currency1Amount={currency1Amount}
-              fiatValue0={fiatValue0}
-              fiatValue1={fiatValue1}
-            />
-            <EarningsSection
-              positionInfo={positionInfo}
-              currency0Amount={currency0Amount}
-              currency1Amount={currency1Amount}
-              fiatValue0={fiatValue0}
-              fiatValue1={fiatValue1}
-              fiatFeeValue0={fiatFeeValue0}
-              fiatFeeValue1={fiatFeeValue1}
-              feeValue0={feeValue0}
-              feeValue1={feeValue1}
-            />
-            {isLpIncentivesEnabled &&
-              positionInfo?.version === ProtocolVersion.V4 &&
-              Boolean(positionInfo.boostedApr) && (
-                <APRSection
-                  poolApr={positionInfo.apr}
-                  lpIncentiveRewardApr={positionInfo.boostedApr}
-                  totalApr={positionInfo.totalApr}
-                />
+          <Flex
+            p="$spacing20"
+            backgroundColor="$surface2"
+            width={380}
+            $lg={{ width: '100%' }}
+            borderRadius="$rounded16"
+            gap="$spacing24"
+            $platform-web={{
+              height: 'min-content',
+            }}
+          >
+            <Flex gap="$gap8">
+              <Text color="$neutral2" variant="body2">
+                <Trans i18nKey="pool.position" />
+              </Text>
+              {position.status === PositionStatus.CLOSED ? (
+                <Text variant="heading2" $lg={{ variant: 'heading3' }}>
+                  {formatCurrencyAmount({
+                    amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
+                    type: NumberType.FiatTokenPrice,
+                  })}
+                </Text>
+              ) : (
+                <>
+                  <Text variant="heading2" $lg={{ variant: 'heading3' }}>
+                    {fiatValue0 && fiatValue1 ? (
+                      formatCurrencyAmount({
+                        amount: fiatValue0.add(fiatValue1),
+                        type: NumberType.FiatTokenPrice,
+                      })
+                    ) : (
+                      <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
+                        <Flex alignItems="center" row gap="$gap8">
+                          <Text variant="body1" color="$neutral2">
+                            {t('pool.positions.usdValueUnavailable')}
+                          </Text>
+                          <InfoCircleFilled color="$neutral2" size="$icon.16" />
+                        </Flex>
+                      </MouseoverTooltip>
+                    )}
+                  </Text>
+                  <LiquidityPositionAmountRows
+                    currency0Amount={currency0Amount}
+                    currency1Amount={currency1Amount}
+                    fiatValue0={fiatValue0}
+                    fiatValue1={fiatValue1}
+                  />
+                </>
               )}
+            </Flex>
+            <Flex gap="$gap8">
+              <Text color="$neutral2" variant="body2">
+                <Trans i18nKey="common.fees" />
+              </Text>
+              {position.status === PositionStatus.CLOSED ? (
+                <Text variant="heading2" $lg={{ variant: 'heading3' }}>
+                  {formatCurrencyAmount({
+                    amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
+                    type: NumberType.FiatTokenPrice,
+                  })}
+                </Text>
+              ) : (
+                <>
+                  <Text variant="heading2" mt="$spacing8" mb="$spacing16" $lg={{ variant: 'heading3' }}>
+                    {fiatFeeValue0 && fiatFeeValue1 ? (
+                      formatCurrencyAmount({
+                        amount: fiatFeeValue0.add(fiatFeeValue1),
+                        type: NumberType.FiatTokenPrice,
+                      })
+                    ) : (
+                      <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
+                        <Flex alignItems="center" row gap="$gap8">
+                          <Text variant="body1" color="$neutral2">
+                            {t('pool.positions.usdValueUnavailable')}
+                          </Text>
+                          <InfoCircleFilled color="$neutral2" size="$icon.16" />
+                        </Flex>
+                      </MouseoverTooltip>
+                    )}
+                  </Text>
+                  {feeValue0 && feeValue1 && (
+                    <LiquidityPositionAmountRows
+                      currency0Amount={feeValue0}
+                      currency1Amount={feeValue1}
+                      fiatValue0={fiatFeeValue0}
+                      fiatValue1={fiatFeeValue1}
+                    />
+                  )}
+                </>
+              )}
+            </Flex>
           </Flex>
         </Flex>
       </BodyWrapper>
     </Trace>
-  )
-}
-
-const SectionContainer = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Flex
-      p="$spacing20"
-      backgroundColor="$surface2"
-      width={380}
-      $lg={{ width: '100%' }}
-      borderRadius="$rounded16"
-      gap="$spacing24"
-      $platform-web={{
-        height: 'min-content',
-      }}
-    >
-      {children}
-    </Flex>
-  )
-}
-
-const PositionSection = ({
-  position,
-  currency0Amount,
-  currency1Amount,
-  fiatValue0,
-  fiatValue1,
-}: {
-  position: Position
-  currency0Amount: CurrencyAmount<Currency>
-  currency1Amount: CurrencyAmount<Currency>
-  fiatValue0?: CurrencyAmount<Currency>
-  fiatValue1?: CurrencyAmount<Currency>
-}) => {
-  const { formatCurrencyAmount } = useFormatter()
-  const { t } = useTranslation()
-  const colors = useSporeColors()
-  const currencyInfo0 = useCurrencyInfo(currency0Amount.currency)
-  const currencyInfo1 = useCurrencyInfo(currency1Amount.currency)
-  const token0Color = useSrcColor(
-    currencyInfo0?.logoUrl ?? undefined,
-    currencyInfo0?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
-  const token1Color = useSrcColor(
-    currencyInfo1?.logoUrl ?? undefined,
-    currencyInfo1?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
-  const totalFiatValue = fiatValue0?.add(fiatValue1 ?? CurrencyAmount.fromRawAmount(fiatValue0.currency, 0))
-  const bars = useMemo(() => {
-    const percent0 =
-      totalFiatValue?.greaterThan(0) && fiatValue0
-        ? new Percent(fiatValue0.quotient, totalFiatValue.quotient)
-        : undefined
-
-    const percent1 =
-      totalFiatValue?.greaterThan(0) && fiatValue1
-        ? new Percent(fiatValue1.quotient, totalFiatValue.quotient)
-        : undefined
-
-    if (!percent0 || !percent1 || !token0Color || !token1Color || !currencyInfo0 || !currencyInfo1) {
-      return []
-    }
-
-    return [
-      { value: percent0, color: token0Color, currencyInfo: currencyInfo0 },
-      { value: percent1, color: token1Color, currencyInfo: currencyInfo1 },
-    ]
-  }, [currencyInfo0, currencyInfo1, fiatValue0, fiatValue1, token0Color, token1Color, totalFiatValue])
-
-  const rows = useMemo(() => {
-    if (!currencyInfo0 || !currencyInfo1) {
-      return []
-    }
-
-    return [
-      {
-        currencyInfo: currencyInfo0,
-        currencyAmount: currency0Amount,
-        fiatValue: fiatValue0,
-      },
-      {
-        currencyInfo: currencyInfo1,
-        currencyAmount: currency1Amount,
-        fiatValue: fiatValue1,
-      },
-    ]
-  }, [currencyInfo0, currencyInfo1, currency0Amount, currency1Amount, fiatValue0, fiatValue1])
-
-  return (
-    <SectionContainer>
-      <Flex gap="$gap8">
-        <Text color="$neutral2" variant="body2">
-          <Trans i18nKey="pool.position" />
-        </Text>
-        {position.status === PositionStatus.CLOSED ? (
-          <Text variant="heading2" $lg={{ variant: 'heading3' }}>
-            {formatCurrencyAmount({
-              amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
-              type: NumberType.FiatTokenPrice,
-            })}
-          </Text>
-        ) : (
-          <>
-            <Text variant="heading2" mb="$spacing12">
-              {fiatValue0 && fiatValue1 ? (
-                formatCurrencyAmount({
-                  amount: fiatValue0.add(fiatValue1),
-                  type: NumberType.FiatTokenPrice,
-                })
-              ) : (
-                <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
-                  <Flex alignItems="center" row gap="$gap8">
-                    <Text variant="body1" color="$neutral2">
-                      {t('pool.positions.usdValueUnavailable')}
-                    </Text>
-                    <InfoCircleFilled color="$neutral2" size="$icon.16" />
-                  </Flex>
-                </MouseoverTooltip>
-              )}
-            </Text>
-            {bars.length > 0 && (
-              <Flex mb="$spacing24">
-                <LiquidityPositionStackedBars bars={bars} />
-              </Flex>
-            )}
-            {rows.length > 0 && <LiquidityPositionAmountRows rows={rows} />}
-          </>
-        )}
-      </Flex>
-    </SectionContainer>
-  )
-}
-
-const APRSection = ({
-  poolApr,
-  lpIncentiveRewardApr,
-  totalApr,
-}: {
-  poolApr?: number
-  lpIncentiveRewardApr?: number
-  totalApr?: number
-}) => {
-  const { address, chainId, symbol } = UNI[UniverseChainId.Mainnet]
-  const currencyInfo = useCurrencyInfo(address, chainId)
-  const { t } = useTranslation()
-  const { formatPercent } = useLocalizationContext()
-
-  // Format APR values
-  const displayPoolApr = poolApr ? formatPercent(poolApr) : '-'
-  const displayRewardApr = lpIncentiveRewardApr ? formatPercent(lpIncentiveRewardApr) : '-'
-  const displayTotalApr = totalApr ? formatPercent(totalApr) : '-'
-
-  return (
-    <SectionContainer>
-      <Flex justifyContent="space-between" gap="$gap8">
-        <Text color="$neutral2" variant="body2">
-          {t('pool.totalAPR')}
-        </Text>
-        <Text color="$neutral1" variant="heading2" pb="$spacing4">
-          {displayTotalApr}
-        </Text>
-        <Flex row justifyContent="space-between">
-          <Text color="$neutral2" variant="body3">
-            {t('pool.aprText')}
-          </Text>
-          <Text color="$neutral1" variant="body3">
-            {displayPoolApr}
-          </Text>
-        </Flex>
-        <Flex row justifyContent="space-between">
-          <Text color="$neutral2" variant="body3">
-            {t('pool.rewardAPR')}
-          </Text>
-          <Flex row gap="$spacing6" alignItems="center">
-            <CurrencyLogo currencyInfo={currencyInfo} size={16} />
-            <Text color="$accent1" variant="body3">
-              {displayRewardApr} {symbol}
-            </Text>
-          </Flex>
-        </Flex>
-      </Flex>
-    </SectionContainer>
-  )
-}
-
-const EarningsSection = ({
-  positionInfo,
-  currency0Amount,
-  currency1Amount,
-  fiatFeeValue0,
-  fiatFeeValue1,
-  feeValue0,
-  feeValue1,
-}: {
-  positionInfo: PositionInfo
-  currency0Amount: CurrencyAmount<Currency>
-  currency1Amount: CurrencyAmount<Currency>
-  fiatValue0?: CurrencyAmount<Currency>
-  fiatValue1?: CurrencyAmount<Currency>
-  fiatFeeValue0?: CurrencyAmount<Currency>
-  fiatFeeValue1?: CurrencyAmount<Currency>
-  feeValue0?: CurrencyAmount<Currency>
-  feeValue1?: CurrencyAmount<Currency>
-}) => {
-  const { formatCurrencyAmount } = useFormatter()
-  const { t } = useTranslation()
-  const colors = useSporeColors()
-  const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
-
-  const { lpIncentivesFormattedEarnings, uniLpRewardsCurrencyAmount, uniLpRewardsFiatValue } =
-    useLpIncentivesFormattedEarnings({
-      liquidityPosition: positionInfo,
-      fiatFeeValue0,
-      fiatFeeValue1,
-    })
-
-  // TODO(WEB-4920): skip GraphQL call once backend provides image URLs
-  const [currencyInfo0, currencyInfo1, rewardCurrencyInfo] = useCurrencyInfos([
-    currencyId(currency0Amount.currency),
-    currencyId(currency1Amount.currency),
-    buildCurrencyId(UniverseChainId.Mainnet, UNI[UniverseChainId.Mainnet].address),
-  ])
-
-  const token0Color = useSrcColor(
-    currencyInfo0?.logoUrl ?? undefined,
-    currencyInfo0?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
-  const token1Color = useSrcColor(
-    currencyInfo1?.logoUrl ?? undefined,
-    currencyInfo1?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
-  const rewardTokenColor = useSrcColor(
-    rewardCurrencyInfo?.logoUrl ?? undefined,
-    rewardCurrencyInfo?.currency.name,
-    colors.surface2.val,
-  ).tokenColor
-
-  const totalFeesFiatValue = useMemo(() => {
-    const values = [fiatFeeValue0, fiatFeeValue1].filter((v): v is CurrencyAmount<Currency> => v !== undefined)
-    if (values.length === 0) {
-      return undefined
-    }
-    const [initial, ...rest] = values
-    return rest.reduce((acc, curr) => acc.add(curr), initial)
-  }, [fiatFeeValue0, fiatFeeValue1])
-
-  const bars = useMemo(() => {
-    const percent0 =
-      totalFeesFiatValue?.greaterThan(0) && fiatFeeValue0
-        ? new Percent(fiatFeeValue0.quotient, totalFeesFiatValue.quotient)
-        : undefined
-
-    const percent1 =
-      totalFeesFiatValue?.greaterThan(0) && fiatFeeValue1
-        ? new Percent(fiatFeeValue1.quotient, totalFeesFiatValue.quotient)
-        : undefined
-
-    if (!percent0 || !percent1 || !token0Color || !token1Color || !currencyInfo0 || !currencyInfo1) {
-      return []
-    }
-
-    const rewards =
-      isLpIncentivesEnabled &&
-      rewardTokenColor &&
-      uniLpRewardsCurrencyAmount?.greaterThan(0) &&
-      uniLpRewardsCurrencyAmount &&
-      lpIncentivesFormattedEarnings
-        ? [
-            {
-              // TODO | LP_INCENTIVES: determine if we can show correct numerator, this always shows 100% for now
-              value: new Percent(uniLpRewardsCurrencyAmount.quotient, uniLpRewardsCurrencyAmount.quotient),
-              color: rewardTokenColor,
-              currencyInfo: rewardCurrencyInfo as CurrencyInfo,
-            },
-          ]
-        : []
-
-    return [
-      { value: percent0, color: token0Color, currencyInfo: currencyInfo0 },
-      { value: percent1, color: token1Color, currencyInfo: currencyInfo1 },
-      ...rewards,
-    ]
-  }, [
-    currencyInfo0,
-    currencyInfo1,
-    fiatFeeValue0,
-    fiatFeeValue1,
-    isLpIncentivesEnabled,
-    rewardCurrencyInfo,
-    uniLpRewardsCurrencyAmount,
-    rewardTokenColor,
-    token0Color,
-    token1Color,
-    totalFeesFiatValue,
-    lpIncentivesFormattedEarnings,
-  ])
-
-  const feeRows = useMemo(() => {
-    if (!currencyInfo0 || !currencyInfo1 || !feeValue0 || !feeValue1) {
-      return []
-    }
-
-    return [
-      {
-        currencyInfo: currencyInfo0,
-        currencyAmount: feeValue0,
-        fiatValue: fiatFeeValue0,
-      },
-      {
-        currencyInfo: currencyInfo1,
-        currencyAmount: feeValue1,
-        fiatValue: fiatFeeValue1,
-      },
-    ]
-  }, [currencyInfo0, currencyInfo1, feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1])
-
-  const rewardRows = useMemo(() => {
-    if (!isLpIncentivesEnabled || !rewardCurrencyInfo || !lpIncentivesFormattedEarnings) {
-      return []
-    }
-
-    return [
-      {
-        currencyInfo: rewardCurrencyInfo,
-        currencyAmount: uniLpRewardsCurrencyAmount || CurrencyAmount.fromRawAmount(rewardCurrencyInfo.currency, 0),
-        fiatValue: uniLpRewardsFiatValue || CurrencyAmount.fromRawAmount(rewardCurrencyInfo.currency, 0),
-      },
-    ]
-  }, [
-    isLpIncentivesEnabled,
-    rewardCurrencyInfo,
-    uniLpRewardsCurrencyAmount,
-    uniLpRewardsFiatValue,
-    lpIncentivesFormattedEarnings,
-  ])
-
-  return (
-    <SectionContainer>
-      <Flex gap="$gap8">
-        <Text color="$neutral2" variant="body2">
-          {isLpIncentivesEnabled ? t('pool.earnings') : t('common.feesEarned')}
-        </Text>
-        {positionInfo.status === PositionStatus.CLOSED ? (
-          <Text variant="heading2">
-            {formatCurrencyAmount({
-              amount: CurrencyAmount.fromRawAmount(currency0Amount.currency, 0),
-              type: NumberType.FiatRewards,
-            })}
-          </Text>
-        ) : (
-          <>
-            <Text variant="heading2" mb="$spacing12">
-              {lpIncentivesFormattedEarnings ? (
-                lpIncentivesFormattedEarnings
-              ) : totalFeesFiatValue ? (
-                formatCurrencyAmount({
-                  amount: totalFeesFiatValue,
-                  type: NumberType.FiatRewards,
-                })
-              ) : (
-                <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
-                  <Flex alignItems="center" row gap="$gap8">
-                    <Text variant="body1" color="$neutral2">
-                      {t('pool.positions.usdValueUnavailable')}
-                    </Text>
-                    <InfoCircleFilled color="$neutral2" size="$icon.16" />
-                  </Flex>
-                </MouseoverTooltip>
-              )}
-            </Text>
-            {bars.length > 0 && (
-              <Flex mb="$spacing24">
-                <LiquidityPositionStackedBars bars={bars} />
-              </Flex>
-            )}
-
-            {isLpIncentivesEnabled ? (
-              <>
-                {lpIncentivesFormattedEarnings && rewardRows.length > 0 && (
-                  <>
-                    <Text color="$neutral2" variant="body2" mb="$spacing12">
-                      {t('pool.rewards')}
-                    </Text>
-                    <LiquidityPositionAmountRows rows={rewardRows} />
-                  </>
-                )}
-                {(fiatFeeValue0?.greaterThan(0) || fiatFeeValue1?.greaterThan(0)) && feeRows.length > 0 && (
-                  <>
-                    <Text
-                      color="$neutral2"
-                      variant="body2"
-                      mb="$spacing12"
-                      mt={lpIncentivesFormattedEarnings ? '$spacing24' : '$none'}
-                    >
-                      {t('common.fees')}
-                    </Text>
-                    <LiquidityPositionAmountRows rows={feeRows} />
-                  </>
-                )}
-              </>
-            ) : (
-              feeRows.length > 0 && <LiquidityPositionAmountRows rows={feeRows} />
-            )}
-
-            {!lpIncentivesFormattedEarnings && totalFeesFiatValue?.equalTo(0) && (
-              <Text variant="body3" color="$neutral3">
-                {t('pool.earnings.empty')}
-              </Text>
-            )}
-          </>
-        )}
-      </Flex>
-    </SectionContainer>
   )
 }

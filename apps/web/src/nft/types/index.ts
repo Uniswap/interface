@@ -4,10 +4,14 @@ export { ActivityEventType, ActivityEventTypeDisplay, UniformAspectRatios } from
 export type {
   ActivityEvent,
   CollectionInfoForAsset,
+  TokenMetadata,
+  TokenRarity,
   UniformAspectRatio,
 } from './collection'
 export { DetailsOrigin, Markets, TokenType, isPooledMarket } from './common'
-export type { DropDownOption, GenieAsset, GenieCollection, PriceInfo, Trait } from './common'
+export type { DropDownOption, GenieAsset, GenieCollection, PriceInfo, Rarity, Trait } from './common'
+export { Denomination, TimePeriod } from './discover'
+export type { CollectionTableColumn, TrendingCollection, VolumeType } from './discover'
 export { ListingStatus, ProfilePageStateType } from './sell'
 export type {
   AssetRow,

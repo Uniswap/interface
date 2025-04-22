@@ -6,13 +6,10 @@ import {
   SignRequest,
   TransactionRequest,
   WalletCapabilitiesRequest,
-  WalletGetCallsStatusRequest,
-  WalletSendCallsRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod, EthSignMethod } from 'uniswap/src/types/walletConnect'
-import { GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappRequests/types'
 
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.
@@ -77,49 +74,6 @@ export const getAccountAddressFromEIP155String = (account: string): Address | nu
 }
 
 /**
- * Creates a base WalletConnect request object with common properties
- *
- * @param method The request method type
- * @param topic WalletConnect session ID
- * @param internalId WalletConnect request ID
- * @param account Account address
- * @param chainId Chain ID for the request
- * @param dapp Dapp metadata
- * @returns Base request object with common properties
- */
-function createBaseRequest<T extends EthMethod>(
-  method: T,
-  topic: string,
-  internalId: number,
-  account: Address,
-  dapp: SignClientTypes.Metadata,
-): {
-  type: T
-  sessionId: string
-  internalId: string
-  account: Address
-  dapp: {
-    name: string
-    url: string
-    icon: string | null
-    source: 'walletconnect'
-  }
-} {
-  return {
-    type: method,
-    sessionId: topic,
-    internalId: String(internalId),
-    account,
-    dapp: {
-      name: dapp.name,
-      url: dapp.url,
-      icon: dapp.icons[0] ?? null,
-      source: 'walletconnect',
-    },
-  }
-}
-
-/**
  * Formats SignRequest object from WalletConnect 2.0 request parameters
  *
  * @param {EthSignMethod} method type of method to sign
@@ -137,13 +91,25 @@ export const parseSignRequest = (
   chainId: UniverseChainId,
   dapp: SignClientTypes.Metadata,
   requestParams: WalletKitTypes.SessionRequest['params']['request']['params'],
-): SignRequest => {
+): { account: Address; request: SignRequest } => {
   const { address, rawMessage, message } = getAddressAndMessageToSign(method, requestParams)
   return {
-    ...createBaseRequest(method, topic, internalId, address, dapp),
-    chainId,
-    rawMessage,
-    message,
+    account: address,
+    request: {
+      type: method,
+      sessionId: topic,
+      internalId: String(internalId),
+      rawMessage,
+      message,
+      account: address,
+      chainId,
+      dapp: {
+        name: dapp.name,
+        url: dapp.url,
+        icon: dapp.icons[0] ?? null,
+        source: 'walletconnect',
+      },
+    },
   }
 }
 
@@ -167,19 +133,31 @@ export const parseTransactionRequest = (
   chainId: UniverseChainId,
   dapp: SignClientTypes.Metadata,
   requestParams: WalletKitTypes.SessionRequest['params']['request']['params'],
-): TransactionRequest => {
+): { account: Address; request: TransactionRequest } => {
   // Omit gasPrice and nonce in tx sent from dapp since it is calculated later
   const { from, to, data, gasLimit, value } = requestParams[0]
 
   return {
-    ...createBaseRequest(method, topic, internalId, from, dapp),
-    chainId,
-    transaction: {
-      to,
-      from,
-      value,
-      data,
-      gasLimit,
+    account: from,
+    request: {
+      type: method,
+      sessionId: topic,
+      internalId: String(internalId),
+      transaction: {
+        to,
+        from,
+        value,
+        data,
+        gasLimit,
+      },
+      account: from,
+      chainId,
+      dapp: {
+        name: dapp.name,
+        url: dapp.url,
+        icon: dapp.icons[0] ?? null,
+        source: 'walletconnect',
+      },
     },
   }
 }
@@ -192,7 +170,7 @@ export const parseTransactionRequest = (
  * @param {number} internalId id for the WalletConnect request
  * @param {SignClientTypes.Metadata} dapp metadata for the dapp requesting capabilities
  * @param {[string, string[]?]} requestParams parameters of the request [Wallet Address, [Chain IDs]?]
- * @returns {WalletCapabilitiesRequest} formatted request object
+ * @returns {{account: Address, request: WalletCapabilitiesRequest}} formatted request object
  */
 export const parseGetCapabilitiesRequest = (
   method: EthMethod.GetCapabilities,
@@ -200,52 +178,27 @@ export const parseGetCapabilitiesRequest = (
   internalId: number,
   dapp: SignClientTypes.Metadata,
   requestParams: [string, string[]?],
-): WalletCapabilitiesRequest => {
+): { account: Address; request: WalletCapabilitiesRequest } => {
   const [address, chainIds] = requestParams
   const parsedChainIds = chainIds
     ?.map((chainId) => toSupportedChainId(chainId))
     .filter((c): c is UniverseChainId => Boolean(c))
 
   return {
-    ...createBaseRequest(method, topic, internalId, address, dapp), // 0 as chainId since it's not specific to a chain
-    chainIds: parsedChainIds,
-  }
-}
-
-export const parseSendCallsRequest = (
-  topic: string,
-  internalId: number,
-  chainId: number,
-  dapp: SignClientTypes.Metadata,
-  requestParams: [SendCallsParams],
-  account: Address,
-): WalletSendCallsRequest => {
-  const sendCallsParam = requestParams[0]
-  const requestId = sendCallsParam.id || 'mock-batch-id (will be txID or `id` from request)'
-  return {
-    ...createBaseRequest(EthMethod.SendCalls, topic, internalId, sendCallsParam.from ?? account, dapp),
-    chainId,
-    calls: sendCallsParam.calls,
-    capabilities: sendCallsParam.capabilities || {},
-    account: sendCallsParam.from ?? account,
-    id: requestId,
-    version: sendCallsParam.version,
-  }
-}
-
-export const parseGetCallsStatusRequest = (
-  topic: string,
-  internalId: number,
-  chainId: number,
-  dapp: SignClientTypes.Metadata,
-  requestParams: [GetCallsStatusParams],
-  account: Address,
-): WalletGetCallsStatusRequest => {
-  const requestId = requestParams[0]
-  return {
-    ...createBaseRequest(EthMethod.GetCallsStatus, topic, internalId, account, dapp),
-    chainId,
-    id: requestId,
+    account: address,
+    request: {
+      type: method,
+      sessionId: topic,
+      internalId: String(internalId),
+      account: address,
+      chainIds: parsedChainIds,
+      dapp: {
+        name: dapp.name,
+        url: dapp.url,
+        icon: dapp.icons[0] ?? null,
+        source: 'walletconnect',
+      },
+    },
   }
 }
 

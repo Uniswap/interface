@@ -1,9 +1,11 @@
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { Fragment, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
 import { Flex, Popover, Text, isTouchable, useMedia, useShadowPropsMedium } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface ExploreStatSectionData {
@@ -20,6 +22,7 @@ const ExploreStatsSection = () => {
   const media = useMedia()
   const { t } = useTranslation()
   const { formatFiatPrice } = useFormatter()
+  const isV4DataEnabled = useFeatureFlagWithLoading(FeatureFlags.V4Data)
 
   const {
     protocolVolumes,
@@ -54,7 +57,13 @@ const ExploreStatsSection = () => {
       { label: t('common.totalUniswapTVL'), value: formatPrice(totalTVL), change: totalTVL24hrChangePercent },
       { label: t('explore.v2TVL'), value: formatPrice(protocolTVL.v2), change: protocolChangePercent.v2 },
       { label: t('explore.v3TVL'), value: formatPrice(protocolTVL.v3), change: protocolChangePercent.v3 },
-      { label: t('explore.v4TVL'), value: formatPrice(protocolTVL.v4), change: protocolChangePercent.v4 },
+      isV4DataEnabled
+        ? {
+            label: t('explore.v4TVL'),
+            value: formatPrice(protocolTVL.v4),
+            change: protocolChangePercent.v4,
+          }
+        : null,
     ]
 
     return stats.filter((state): state is Exclude<typeof state, null> => state !== null)
@@ -74,6 +83,7 @@ const ExploreStatsSection = () => {
     protocolChangePercent.v2,
     protocolChangePercent.v3,
     protocolChangePercent.v4,
+    isV4DataEnabled,
   ])
 
   return (
@@ -129,9 +139,7 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
         ) : (
           <Fragment>
             <DeltaArrow delta={data.change} size={12} />
-            <Text variant="body4" color="$neutral1">
-              {formatDelta(data.change)}
-            </Text>
+            <DeltaText delta={data.change}>{formatDelta(data.change)}</DeltaText>
           </Fragment>
         )}
       </Flex>
@@ -144,6 +152,7 @@ StatDisplay.displayName = 'StatDisplay'
 const StatDisplayWithPopover = memo(({ data, isLoading }: StatDisplayProps) => {
   const shadowProps = useShadowPropsMedium()
   const { formatFiatPrice } = useFormatter()
+  const isV4DataEnabled = useFeatureFlagWithLoading(FeatureFlags.V4Data)
 
   return (
     <Popover hoverable placement="bottom-start" offset={{ mainAxis: 10 }}>
@@ -161,6 +170,10 @@ const StatDisplayWithPopover = memo(({ data, isLoading }: StatDisplayProps) => {
       >
         <Flex gap="$spacing8" px="$spacing4" py="$spacing6" width={180}>
           {data.protocolPopoverFormattedData?.map((item) => {
+            if (item.label === 'Uniswap v4' && !isV4DataEnabled) {
+              return null
+            }
+
             return (
               <Flex key={item.label} row justifyContent="space-between">
                 <Text variant="body4" color="neutral2">

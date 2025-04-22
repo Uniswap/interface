@@ -14,6 +14,12 @@
 import Foundation
 import CryptoKit
 
+// TODO: [MOB-200] move constants to another file
+let prefix = "com.uniswap.mobile"
+let mnemonicPrefix = ".mnemonic."
+let privateKeyPrefix = ".privateKey."
+let entireMnemonicPrefix = prefix + mnemonicPrefix
+let entirePrivateKeyPrefix = prefix + privateKeyPrefix
 
 enum RNEthersRSError: String, Error  {
   case storeMnemonicError = "storeMnemonicError"

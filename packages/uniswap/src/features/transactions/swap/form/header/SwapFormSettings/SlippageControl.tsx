@@ -17,6 +17,9 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
   const [inputWidth, setInputWidth] = useState(0)
   const [isLayoutReady, setIsLayoutReady] = useState(false)
 
+  // TODO (WEB-6896): determine how to use tradeAutoSlippage update here
+  // See:https://github.com/Uniswap/universe/pull/16428
+
   const {
     isEditingSlippage,
     autoSlippageEnabled,

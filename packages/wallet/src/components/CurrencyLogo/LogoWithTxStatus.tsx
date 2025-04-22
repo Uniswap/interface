@@ -161,7 +161,7 @@ export function DappLogoWithTxStatus({
 }: DappLogoWithTxStatusProps): JSX.Element | null {
   const colors = useSporeColors()
   const green = colors.statusSuccess.val
-  const yellow = colors.statusWarning.val
+  const yellow = colors.DEP_accentWarning.val
   const fill = colors.surface1.val
 
   const dappImageSize = size

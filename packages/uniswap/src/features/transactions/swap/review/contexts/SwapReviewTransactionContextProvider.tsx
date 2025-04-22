@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from 'react'
-import { getRelevantTokenWarningSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils/getRelevantTokenWarningSeverity'
+import { getRelevantTokenWarningSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils'
 import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import {

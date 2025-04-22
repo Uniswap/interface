@@ -3,13 +3,11 @@ import { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { TransactionScreen } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
+import { GetSwapService } from 'uniswap/src/features/transactions/swap/review/services/swapService'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { isInterface } from 'utilities/src/platform'
-import { useEvent } from 'utilities/src/react/hooks'
 
 interface SwapReviewCallbacks {
   onSwapButtonClick: () => Promise<void>
@@ -32,7 +30,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
   setShowWarningModal: (show: boolean) => void
   setWarningAcknowledged: (acknowledged: boolean) => void
   setShouldSubmitTx: (shouldSubmit: boolean) => void
-  getExecuteSwapService: GetExecuteSwapService
+  getSwapService: GetSwapService
   updateSwapForm: (newState: Partial<SwapFormState>) => void
   reviewScreenWarning: ParsedWarnings['reviewScreenWarning']
   setCurrentStep: SetCurrentStepFn
@@ -51,7 +49,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
     setShowWarningModal,
     setWarningAcknowledged,
     setShouldSubmitTx,
-    getExecuteSwapService,
+    getSwapService,
     updateSwapForm,
     reviewScreenWarning,
     setCurrentStep,
@@ -80,20 +78,15 @@ export function useCreateSwapReviewCallbacks(ctx: {
     onClose?.()
   }, [setScreen, updateSwapForm, onClose])
 
-  const swapTxContext = useSwapTxContext()
-
-  const getSwapTxContext = useEvent(() => swapTxContext)
-
-  const executeSwapService = useMemo(
+  const swapService = useMemo(
     () =>
-      getExecuteSwapService({
+      getSwapService({
         onSuccess,
         onFailure,
         setCurrentStep,
         setSteps,
-        getSwapTxContext,
       }),
-    [getExecuteSwapService, onSuccess, onFailure, setCurrentStep, setSteps, getSwapTxContext],
+    [getSwapService, onSuccess, onFailure, setCurrentStep, setSteps],
   )
 
   const submitTransaction = useCallback(() => {
@@ -103,15 +96,8 @@ export function useCreateSwapReviewCallbacks(ctx: {
       return
     }
 
-    executeSwapService.executeSwap()
-  }, [
-    reviewScreenWarning,
-    showWarningModal,
-    warningAcknowledged,
-    setShouldSubmitTx,
-    setShowWarningModal,
-    executeSwapService,
-  ])
+    swapService.executeTransaction()
+  }, [reviewScreenWarning, showWarningModal, warningAcknowledged, setShouldSubmitTx, setShowWarningModal, swapService])
 
   const onSwapButtonClick = useCallback(async () => {
     updateSwapForm({ isSubmitting: true })
@@ -132,9 +118,9 @@ export function useCreateSwapReviewCallbacks(ctx: {
     setShowWarningModal(false)
 
     if (shouldSubmitTx) {
-      executeSwapService.executeSwap()
+      swapService.executeTransaction()
     }
-  }, [shouldSubmitTx, executeSwapService, setShowWarningModal, setWarningAcknowledged])
+  }, [shouldSubmitTx, swapService, setShowWarningModal, setWarningAcknowledged])
 
   const onCancelWarning = useCallback(() => {
     if (shouldSubmitTx) {

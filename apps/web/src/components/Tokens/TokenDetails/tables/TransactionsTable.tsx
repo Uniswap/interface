@@ -192,7 +192,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
           const nonReferenceSwapLeg =
             row.input.address?.toLowerCase() === referenceToken.address.toLowerCase() ? row.output : row.input
           return (
-            <Flex row gap="$gap8" justifyContent="flex-end" alignItems="center">
+            <Flex row gap="$gap8" justifyContent="flex-end">
               <EllipsisText maxWidth={75}>
                 {formatNumber({
                   input: Math.abs(nonReferenceSwapLeg.amount) || 0,

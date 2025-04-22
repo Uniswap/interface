@@ -20,8 +20,7 @@ import {
 } from 'uniswap/src/features/gas/types'
 import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { DynamicConfigs, GasStrategies, GasStrategyType } from 'uniswap/src/features/gating/configs'
-import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
-import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
+import { Statsig, useConfig } from 'uniswap/src/features/gating/sdk/statsig'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -68,38 +67,38 @@ function isValidGasStrategies(value: unknown): value is GasStrategies {
 
 // Hook to use active GasStrategy for a specific chain.
 export function useActiveGasStrategy(chainId: number | undefined, type: GasStrategyType): GasStrategy {
-  const { isStatsigReady } = useStatsigClientStatus()
+  const { isLoading } = useConfig(DynamicConfigs.GasStrategies)
 
   return useMemo(() => {
-    if (!isStatsigReady) {
+    if (isLoading) {
       return DEFAULT_GAS_STRATEGY
     }
 
-    const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)
+    const config = Statsig.getConfig(DynamicConfigs.GasStrategies)
     const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
     const activeStrategy = gasStrategies?.strategies.find(
       (s) => s.conditions.chainId === chainId && s.conditions.types === type && s.conditions.isActive,
     )
     return activeStrategy ? activeStrategy.strategy : DEFAULT_GAS_STRATEGY
-  }, [isStatsigReady, chainId, type])
+  }, [isLoading, chainId, type])
 }
 
 // Hook to use shadow GasStrategies for a specific chain.
 export function useShadowGasStrategies(chainId: number | undefined, type: GasStrategyType): GasStrategy[] {
-  const { isStatsigReady } = useStatsigClientStatus()
+  const { isLoading } = useConfig(DynamicConfigs.GasStrategies)
 
   return useMemo(() => {
-    if (!isStatsigReady) {
+    if (isLoading) {
       return []
     }
 
-    const config = getStatsigClient().getDynamicConfig(DynamicConfigs.GasStrategies)
+    const config = Statsig.getConfig(DynamicConfigs.GasStrategies)
     const gasStrategies = isValidGasStrategies(config.value) ? config.value : undefined
     const shadowStrategies = gasStrategies?.strategies
       .filter((s) => s.conditions.chainId === chainId && s.conditions.types === type && !s.conditions.isActive)
       .map((s) => s.strategy)
     return shadowStrategies ?? []
-  }, [chainId, isStatsigReady, type])
+  }, [isLoading, chainId, type])
 }
 
 /**

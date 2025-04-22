@@ -142,7 +142,6 @@ export const createUniverseTransaction = (info: TransactionInfo, chainId: Univer
     case TransactionType.REMOVE_LIQUIDITY_V3:
     case TransactionType.ADD_LIQUIDITY_V2_POOL:
     case TransactionType.SUBMIT_PROPOSAL:
-    case TransactionType.LP_INCENTIVES_CLAIM_REWARDS:
       return { ...baseTransaction, ...info } as UniswapTransactionDetails
     default:
       assertUnreachable(info)

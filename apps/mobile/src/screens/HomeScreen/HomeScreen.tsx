@@ -32,6 +32,7 @@ import {
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
+import { DevAIAssistantOverlay } from 'src/features/openai/DevAIGate'
 import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { HomeScreenQuickActions } from 'src/screens/HomeScreen/HomeScreenQuickActions'
@@ -473,6 +474,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   return (
     <Screen edges={['left', 'right']} onLayout={hideSplashScreen}>
+      <DevAIAssistantOverlay />
       <View style={TAB_STYLES.container}>
         <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>
           {contentHeader}

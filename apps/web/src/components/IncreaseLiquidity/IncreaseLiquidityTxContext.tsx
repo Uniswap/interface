@@ -15,7 +15,6 @@ import {
   IncreaseLPPositionRequest,
   IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -221,7 +220,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
   const { value: calculatedGasFee } = useTransactionGasFee(increase, !!actualGasFee)
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
-    toSupportedChainId(increaseCalldata?.increase?.chainId) ?? undefined,
+    increaseCalldata?.increase?.chainId,
     actualGasFee || calculatedGasFee,
   )
 

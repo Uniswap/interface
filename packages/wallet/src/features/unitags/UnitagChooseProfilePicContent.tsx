@@ -4,8 +4,6 @@ import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
-import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
@@ -13,10 +11,9 @@ import { MobileScreens, OnboardingScreens, UnitagEntryPoint } from 'uniswap/src/
 import { isMobileApp } from 'utilities/src/platform'
 import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSelection'
 import { ChoosePhotoOptionsModal, ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
+import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
-import { useWalletSigners } from 'wallet/src/features/wallet/context'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
+import { useClaimUnitag } from 'wallet/src/features/unitags/hooks/useClaimUnitag'
 
 function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): UnitagClaimSource {
   switch (entryPoint) {
@@ -54,9 +51,6 @@ export function UnitagChooseProfilePicContent({
   const { data: ensName } = useENSName(address)
   const claimUnitag = useClaimUnitag()
   const isDarkMode = useIsDarkMode()
-  const accounts = useAccounts()
-  const signerManager = useWalletSigners()
-  const account = accounts[address]
 
   const [imageUri, setImageUri] = useState<string>()
   const [showModal, setShowModal] = useState(false)
@@ -99,8 +93,6 @@ export function UnitagChooseProfilePicContent({
         source,
         hasENSAddress: !!ensName,
       },
-      address,
-      generateSignerFunc(account, signerManager),
     )
     setIsClaiming(false)
     setClaimError(attemptClaimError)

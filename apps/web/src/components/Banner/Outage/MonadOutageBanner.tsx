@@ -2,12 +2,11 @@ import { OutageCloseButton } from 'components/Banner/Outage/OutageBanner'
 import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Globe } from 'react-feather'
-import { useTranslation } from 'react-i18next'
+import { Trans } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 
 export function MonadOutageBanner() {
-  const { t } = useTranslation()
   const [hidden, setHidden] = useState(false)
   const theme = useTheme()
 
@@ -42,21 +41,21 @@ export function MonadOutageBanner() {
       <Flex row p="$spacing8" borderRadius="$rounded20" height="100%">
         <Flex
           centered
-          m="$spacing12"
-          mr="spacing6"
+          m={12}
+          mr={6}
           height={45}
           width={45}
-          backgroundColor={theme.warning2}
+          backgroundColor={theme.deprecated_accentWarningSoft}
           borderRadius="$rounded12"
         >
           <Globe size={28} color={theme.warning2} />
         </Flex>
         <Flex gap="$spacing2" p={10} $xs={{ maxWidth: 270 }} flexShrink={1}>
           <Text variant="body2" color={theme.neutral1}>
-            {t('home.banner.testnetMode.outage.monad.title')}
+            <Trans i18nKey="home.banner.testnetMode.outage.monad.title" />
           </Text>
           <Text variant="body3" color={theme.neutral2}>
-            {t('home.banner.testnetMode.outage.monad.description')}
+            <Trans i18nKey="home.banner.testnetMode.outage.monad.description" />
           </Text>
         </Flex>
         <OutageCloseButton

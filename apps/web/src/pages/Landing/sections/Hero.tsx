@@ -78,7 +78,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       pt={INTERFACE_NAV_HEIGHT}
       pointerEvents="none"
     >
-      {!media.sm && <TokenCloud />}
+      {!media.sm && <TokenCloud transition={transition} />}
 
       <Flex
         alignSelf="center"

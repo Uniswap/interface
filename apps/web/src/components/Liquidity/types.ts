@@ -85,9 +85,6 @@ type V4PositionInfo = BasePositionInfo & {
   feeTier?: string
   v4hook?: string
   owner: string
-  totalApr?: number
-  unclaimedRewardsAmountUni?: string
-  boostedApr?: number
 }
 
 export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo

@@ -4,7 +4,7 @@ import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
-import { default as React, StrictMode, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { default as React, StrictMode, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
@@ -35,7 +35,7 @@ import { setDatadogUserWithUniqueId } from 'src/features/datadog/user'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { OneSignalUserTagField } from 'src/features/notifications/constants'
-import { statsigMMKVStorageProvider } from 'src/features/statsig/statsigMMKVStorageProvider'
+import { DevAIAssistantScreen, DevOpenAIProvider } from 'src/features/openai/DevAIGate'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import {
@@ -46,12 +46,14 @@ import {
 } from 'src/features/widgets/widgets'
 import { loadLocaleData } from 'src/polyfills/intl-delayed'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
+import { getStatsigEnvironmentTier } from 'src/utils/version'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
+import { config } from 'uniswap/src/config'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import {
   DatadogSessionSampleRateKey,
   DatadogSessionSampleRateValType,
@@ -61,7 +63,8 @@ import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { getDynamicConfigValue, getFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { StatsigUser, Storage, getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
+import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
+import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice'
@@ -133,34 +136,48 @@ function App(): JSX.Element | null {
 
   const [datadogSessionSampleRate, setDatadogSessionSampleRate] = React.useState<number | undefined>(undefined)
 
-  Storage._setProvider(statsigMMKVStorageProvider)
-
-  const statsigUser: StatsigUser = useMemo(
-    () => ({
+  const statSigOptions: {
+    user: StatsigUser
+    options: StatsigOptions
+    sdkKey: string
+    waitForInitialization: boolean
+  } = {
+    options: {
+      environment: {
+        tier: getStatsigEnvironmentTier(),
+      },
+      api: uniswapUrls.statsigProxyUrl,
+      disableAutoMetricsLogging: true,
+      disableErrorLogging: true,
+      initCompletionCallback: () => {
+        loadStatsigOverrides()
+        // we should move this logic inside DatadogProviderWrapper once we migrate to @statsig/js-client
+        // https://docs.statsig.com/client/javascript-sdk/migrating-from-statsig-js/#initcompletioncallback
+        setDatadogSessionSampleRate(
+          getDynamicConfigValue<
+            DynamicConfigs.DatadogSessionSampleRate,
+            DatadogSessionSampleRateKey,
+            DatadogSessionSampleRateValType
+          >(
+            DynamicConfigs.DatadogSessionSampleRate,
+            DatadogSessionSampleRateKey.Rate,
+            MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
+          ),
+        )
+      },
+    },
+    sdkKey: config.statsigApiKey,
+    user: {
       ...(deviceId ? { userID: deviceId } : {}),
       custom: {
         app: StatsigCustomAppValue.Mobile,
       },
-    }),
-    [deviceId],
-  )
-
-  const onStatsigInit = (): void => {
-    setDatadogSessionSampleRate(
-      getDynamicConfigValue<
-        DynamicConfigs.DatadogSessionSampleRate,
-        DatadogSessionSampleRateKey,
-        DatadogSessionSampleRateValType
-      >(
-        DynamicConfigs.DatadogSessionSampleRate,
-        DatadogSessionSampleRateKey.Rate,
-        MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
-      ),
-    )
+    },
+    waitForInitialization: true,
   }
 
   return (
-    <StatsigProviderWrapper user={statsigUser} storageProvider={statsigMMKVStorageProvider} onInit={onStatsigInit}>
+    <StatsigProvider {...statSigOptions}>
       <DatadogProviderWrapper sessionSampleRate={datadogSessionSampleRate}>
         <Trace>
           <StrictMode>
@@ -179,7 +196,7 @@ function App(): JSX.Element | null {
           </StrictMode>
         </Trace>
       </DatadogProviderWrapper>
-    </StatsigProviderWrapper>
+    </StatsigProvider>
   )
 }
 
@@ -228,7 +245,7 @@ function AppOuter(): JSX.Element | null {
         // Datadog has a limited set of accepted symbols in feature flags
         // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
         flagKey.replaceAll('-', '_'),
-        getStatsigClient().checkGate(flagKey),
+        Statsig.checkGateWithExposureLoggingDisabled(flagKey),
       ).catch(() => undefined)
     }
 
@@ -237,7 +254,7 @@ function AppOuter(): JSX.Element | null {
         // Datadog has a limited set of accepted symbols in feature flags
         // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
         `experiment_${experiment.replaceAll('-', '_')}`,
-        getStatsigClient().getExperiment(experiment).groupName,
+        Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
       ).catch(() => undefined)
     }
 
@@ -269,15 +286,17 @@ function AppOuter(): JSX.Element | null {
                     <DataUpdaters />
                     <NavigationContainer>
                       <MobileWalletNavigationProvider>
-                        <WalletUniswapProvider>
-                          <BottomSheetModalProvider>
-                            <AppModals />
-                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                              <AppInner />
-                            </PerformanceProfiler>
-                          </BottomSheetModalProvider>
-                        </WalletUniswapProvider>
-                        <NotificationToastWrapper />
+                        <DevOpenAIProvider>
+                          <WalletUniswapProvider>
+                            <BottomSheetModalProvider>
+                              <AppModals />
+                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                <AppInner />
+                              </PerformanceProfiler>
+                            </BottomSheetModalProvider>
+                          </WalletUniswapProvider>
+                          <NotificationToastWrapper />
+                        </DevOpenAIProvider>
                       </MobileWalletNavigationProvider>
                     </NavigationContainer>
                   </UnitagUpdaterContextProvider>
@@ -330,6 +349,7 @@ function AppInner(): JSX.Element {
 
   return (
     <>
+      <DevAIAssistantScreen />
       <OfflineBanner />
       <TestnetModeBanner />
       <AppStackNavigator />

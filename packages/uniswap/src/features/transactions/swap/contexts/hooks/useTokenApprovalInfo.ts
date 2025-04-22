@@ -9,7 +9,7 @@ import {
   useActiveGasStrategy,
   useShadowGasStrategies,
 } from 'uniswap/src/features/gas/hooks'
-import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
+import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -28,15 +28,20 @@ export interface TokenApprovalInfoParams {
   currencyOutAmount?: Maybe<CurrencyAmount<Currency>>
   routing: Routing | undefined
   account?: AccountMeta
+  skip?: boolean
 }
 
-export type ApprovalTxInfo = {
-  tokenApprovalInfo: TokenApprovalInfo
-  approvalGasFeeResult: GasFeeResult
-  revokeGasFeeResult: GasFeeResult
+interface TokenApprovalGasInfo {
+  gasFee?: string
+  displayGasFee?: string
+  cancelGasFee?: string
+  displayCancelGasFee?: string
+  gasEstimates?: GasFeeEstimates
+  isLoading: boolean
 }
-export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalTxInfo {
-  const { account, chainId, wrapType, currencyInAmount, currencyOutAmount, routing } = params
+
+export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenApprovalInfo & TokenApprovalGasInfo {
+  const { account, chainId, wrapType, currencyInAmount, currencyOutAmount, routing, skip } = params
 
   const isWrap = wrapType !== WrapType.NotApplicable
 
@@ -90,7 +95,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     shadowGasStrategies,
   ])
 
-  const shouldSkip = !approvalRequestArgs || isWrap || !address
+  const shouldSkip = skip || !approvalRequestArgs || isWrap || !address
 
   const { data, isLoading, error } = useCheckApprovalQuery({
     params: shouldSkip ? undefined : approvalRequestArgs,
@@ -98,7 +103,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     immediateGcTime: ONE_MINUTE_MS,
   })
 
-  const tokenApprovalInfo: TokenApprovalInfo = useMemo(() => {
+  return useMemo(() => {
     if (error) {
       logger.error(error, {
         tags: { file: 'useTokenApprovalInfo', function: 'useTokenApprovalInfo' },
@@ -108,12 +113,12 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
       })
     }
 
-    // Approval is N/A for wrap transactions or unconnected state.
-    if (isWrap || !address) {
+    if (isWrap) {
       return {
         action: ApprovalAction.None,
         txRequest: null,
         cancelTxRequest: null,
+        isLoading,
       }
     }
 
@@ -124,22 +129,43 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
           action: ApprovalAction.None,
           txRequest: null,
           cancelTxRequest: null,
+          isLoading,
         }
       }
 
       if (data.approval) {
+        const activeEstimate = data.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
+
+        let gasEstimates: GasFeeEstimates | undefined
+        if (activeEstimate) {
+          gasEstimates = {
+            activeEstimate,
+            shadowEstimates: data.gasEstimates?.filter((e) => e !== activeEstimate),
+          }
+        }
+
         if (data.cancel) {
           return {
             action: ApprovalAction.RevokeAndPermit2Approve,
             txRequest: data.approval,
+            gasFee: data.gasFee,
+            displayGasFee: convertGasFeeToDisplayValue(data.gasFee, activeGasStrategy),
             cancelTxRequest: data.cancel,
+            cancelGasFee: data.cancelGasFee,
+            displayCancelGasFee: convertGasFeeToDisplayValue(data.cancelGasFee, activeGasStrategy),
+            isLoading,
+            gasEstimates,
           }
         }
 
         return {
           action: ApprovalAction.Permit2Approve,
           txRequest: data.approval,
+          gasFee: data.gasFee,
+          displayGasFee: convertGasFeeToDisplayValue(data.gasFee, activeGasStrategy),
+          gasEstimates,
           cancelTxRequest: null,
+          isLoading,
         }
       }
     }
@@ -149,46 +175,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
       action: ApprovalAction.Unknown,
       txRequest: null,
       cancelTxRequest: null,
+      isLoading,
     }
-  }, [address, approvalRequestArgs, data, error, isWrap])
-
-  return useMemo(() => {
-    const activeEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
-
-    const noApprovalNeeded = tokenApprovalInfo.action === ApprovalAction.None
-    const noRevokeNeeded =
-      tokenApprovalInfo.action === ApprovalAction.Permit2Approve || tokenApprovalInfo.action === ApprovalAction.None
-    const approvalFee = noApprovalNeeded ? '0' : data?.gasFee
-    const revokeFee = noRevokeNeeded ? '0' : data?.cancelGasFee
-
-    const unknownApproval = tokenApprovalInfo.action === ApprovalAction.Unknown
-    const isGasLoading = unknownApproval && isLoading
-    const approvalGasError = unknownApproval && !isLoading ? new Error('Approval action unknown') : null
-
-    let gasEstimates: GasFeeEstimates | undefined
-    if (activeEstimate) {
-      gasEstimates = {
-        activeEstimate,
-        shadowEstimates: data?.gasEstimates?.filter((e) => e !== activeEstimate),
-      }
-    }
-
-    return {
-      tokenApprovalInfo,
-      approvalGasFeeResult: {
-        value: approvalFee,
-        displayValue: convertGasFeeToDisplayValue(approvalFee, activeGasStrategy),
-        isLoading: isGasLoading,
-        error: approvalGasError,
-        gasEstimates,
-        activeEstimate,
-      },
-      revokeGasFeeResult: {
-        value: revokeFee,
-        displayValue: convertGasFeeToDisplayValue(revokeFee, activeGasStrategy),
-        isLoading: isGasLoading,
-        error: approvalGasError,
-      },
-    }
-  }, [activeGasStrategy, data?.cancelGasFee, data?.gasEstimates, data?.gasFee, isLoading, tokenApprovalInfo])
+  }, [activeGasStrategy, approvalRequestArgs, data, error, isWrap, isLoading])
 }

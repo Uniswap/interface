@@ -93,6 +93,7 @@ export function LegacyPositionPage() {
 
   const dispatch = useAppDispatch()
 
+  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const { formatCurrencyAmount } = useFormatter()
@@ -192,6 +193,7 @@ export function LegacyPositionPage() {
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
                 {positionInfo.version === ProtocolVersion.V3 &&
                   status !== PositionStatus.CLOSED &&
+                  isV4DataEnabled &&
                   isMigrateToV4Enabled && (
                     <MouseoverTooltip
                       text={t('pool.migrateLiquidityDisabledTooltip')}

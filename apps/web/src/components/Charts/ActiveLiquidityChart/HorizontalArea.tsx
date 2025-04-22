@@ -1,6 +1,11 @@
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { ScaleLinear } from 'd3'
-import { useSporeColors } from 'ui/src'
+import styled from 'lib/styled-components'
+
+const Bar = styled.rect<{ fill?: string }>`
+  stroke: ${({ fill, theme }) => fill ?? theme.accent1};
+  fill: ${({ fill, theme }) => fill ?? theme.accent1};
+`
 
 export const HorizontalArea = ({
   series,
@@ -25,8 +30,6 @@ export const HorizontalArea = ({
   fill?: string
   selectedFill?: string
 }) => {
-  const colors = useSporeColors()
-
   return (
     <>
       {series
@@ -37,17 +40,14 @@ export const HorizontalArea = ({
         .map((d, i) => {
           const price = yValue(d)
           const isInDomain = brushDomain && price >= brushDomain[0] && price <= brushDomain[1]
-          const fillWithDefault = (isInDomain ? selectedFill : fill) ?? colors.accent1.val
-
           return (
-            <rect
+            <Bar
               key={i}
               x={xScale(xValue(d))}
               y={yScale(price)}
               width={xScale(containerWidth) - xScale(xValue(d))}
               height={0.2}
-              fill={fillWithDefault}
-              stroke={fillWithDefault}
+              fill={isInDomain ? selectedFill : fill}
               rx={1}
               ry={1}
             />

@@ -34,7 +34,7 @@ export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props)
       return <CheckmarkCircle size={size} />
     }
 
-    return <AlertCircle color={colors.statusWarning.val} height={size} width={size} />
+    return <AlertCircle color={colors.DEP_accentWarning.val} height={size} width={size} />
   }
 
   /*************** Pending in-app txn  **************/

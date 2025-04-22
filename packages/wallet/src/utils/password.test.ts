@@ -80,7 +80,7 @@ describe(getPasswordStrengthTextAndColor, () => {
     })
     expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.MEDIUM)).toEqual({
       text: 'Medium',
-      color: '$statusWarning',
+      color: '$DEP_accentWarning',
     })
     expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.STRONG)).toEqual({
       text: 'Strong',

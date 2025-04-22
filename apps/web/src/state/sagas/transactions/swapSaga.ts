@@ -35,7 +35,6 @@ import {
   UnexpectedTransactionStateError,
 } from 'uniswap/src/features/transactions/errors'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import {
   SwapTransactionStep,
   SwapTransactionStepAsync,
@@ -54,6 +53,7 @@ import {
   ValidatedUniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'

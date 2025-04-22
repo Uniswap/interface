@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappInfo, EthMethod, EthSignMethod, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
-import { Call, Capability } from 'wallet/src/features/dappRequests/types'
 
 export type WalletConnectPendingSession = {
   id: string
@@ -47,19 +46,6 @@ export interface WalletCapabilitiesRequest extends Omit<BaseRequest, 'chainId'> 
   chainIds?: UniverseChainId[] // Optional array of chain IDs
 }
 
-export interface WalletSendCallsRequest extends BaseRequest {
-  calls: Call[]
-  capabilities: Record<string, Capability>
-  id: string
-  type: EthMethod.SendCalls
-  version: string
-}
-
-export interface WalletGetCallsStatusRequest extends BaseRequest {
-  id: string
-  type: EthMethod.GetCallsStatus
-}
-
 export interface UwuLinkErc20Request extends BaseRequest {
   type: UwULinkMethod.Erc20Send
   recipient: {
@@ -76,7 +62,7 @@ export interface UwuLinkErc20Request extends BaseRequest {
   transaction: EthTransaction // the formatted transaction, prepared by the wallet
 }
 
-export type WalletConnectRequest = SignRequest | TransactionRequest | UwuLinkErc20Request | WalletSendCallsRequest
+export type WalletConnectRequest = SignRequest | TransactionRequest | UwuLinkErc20Request
 
 export const isTransactionRequest = (request: WalletConnectRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send
@@ -142,8 +128,9 @@ const slice = createSlice({
       state.pendingSession = null
     },
 
-    addRequest: (state, action: PayloadAction<WalletConnectRequest>) => {
-      state.pendingRequests.push(action.payload)
+    addRequest: (state, action: PayloadAction<{ request: WalletConnectRequest; account: string }>) => {
+      const { request } = action.payload
+      state.pendingRequests.push(request)
     },
 
     removeRequest: (state, action: PayloadAction<{ requestInternalId: string; account: string }>) => {

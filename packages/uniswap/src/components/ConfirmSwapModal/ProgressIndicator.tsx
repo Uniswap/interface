@@ -82,8 +82,5 @@ function Step({ step, status }: { step: TransactionStep; status: StepStatus }): 
     case TransactionStepType.MigratePositionTransactionStepAsync:
     case TransactionStepType.CollectFeesTransactionStep:
       return <LPTransactionStepRow step={step} status={status} />
-    default:
-      // Return a fallback UI if no matching case is found
-      return <></>
   }
 }

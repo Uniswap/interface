@@ -90,6 +90,10 @@ jest.mock('react-native/Libraries/Linking/Linking', () => ({
   getInitialURL: jest.fn(),
 }))
 
+
+jest.mock('openai')
+
+
 jest.mock("react-native-bootsplash", () => {
   return {
     hide: jest.fn().mockResolvedValue(),

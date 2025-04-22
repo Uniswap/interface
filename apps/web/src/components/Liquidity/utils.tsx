@@ -26,7 +26,6 @@ import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getChainUrlParam } from 'utils/chainParams'
-import { formatUnits } from 'viem'
 
 export function hasLPFoTTransferError(
   currencyInfo: Maybe<CurrencyInfo>,
@@ -356,9 +355,6 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       apr: v4Position.apr,
       owner: v4Position.owner,
       isHidden: position.isHidden,
-      totalApr: position.position.value.poolPosition?.totalApr,
-      unclaimedRewardsAmountUni: position.position.value.poolPosition?.unclaimedRewardsAmountUni,
-      boostedApr: position.position.value.poolPosition?.boostedApr,
     }
   } else {
     return undefined
@@ -641,19 +637,4 @@ export function isDynamicFeeTierAmount(
   }
 
   return feeAmountNumber === DYNAMIC_FEE_DATA.feeAmount
-}
-
-// TODO | LP_INCENTIVES: assuming there is another method in codebase that already does this
-export function formatTokenAmount(amount: string, decimals: number): string {
-  try {
-    const formatted = formatUnits(BigInt(amount), decimals)
-    // Split by decimal point and truncate to 8 decimal places
-    const [whole, decimal] = formatted.split('.')
-    if (!decimal) {
-      return whole
-    }
-    return `${whole}.${decimal.slice(0, 8)}`
-  } catch (e) {
-    return '0'
-  }
 }

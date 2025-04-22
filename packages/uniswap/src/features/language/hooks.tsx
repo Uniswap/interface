@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import { ForceUpgradeTranslations } from 'uniswap/src/features/gating/configs'
 import {
   DEFAULT_LOCALE,
   Language,
@@ -279,25 +278,6 @@ export function useLanguageInfo(language: Language): LanguageInfo {
 export function useCurrentLanguageInfo(): LanguageInfo {
   const currentLanguage = useCurrentLanguage()
   return useLanguageInfo(currentLanguage)
-}
-
-type SupportedLocale = keyof ForceUpgradeTranslations
-
-/**
- * Retrieves the Statsig key for a given locale from the i18n resources.
- * @returns The Statsig key if available, otherwise null.
- */
-export function useLocalizedStatsigLanguage(): SupportedLocale | null {
-  const { i18n } = useTranslation()
-  const currentLanguage = useCurrentLanguage()
-
-  const resources = i18n.services.backendConnector.options.resources as Record<string, { statsigKey?: SupportedLocale }>
-
-  if (typeof currentLanguage !== 'string' || !(currentLanguage in resources)) {
-    return null
-  }
-
-  return resources[currentLanguage]?.statsigKey ?? null
 }
 
 // Locale

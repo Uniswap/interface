@@ -227,7 +227,7 @@ function DappRequestFooter({
       <Flex gap="$spacing8" mt="$spacing8">
         {!hasSufficientGas && (
           <Flex pb="$spacing8">
-            <Text color="$statusWarning" variant="body3">
+            <Text color="$DEP_accentWarning" variant="body3">
               {t('swap.warning.insufficientGas.title', {
                 currencySymbol: nativeBalance?.currency?.symbol ?? '',
               })}

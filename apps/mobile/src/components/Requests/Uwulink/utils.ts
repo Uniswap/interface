@@ -1,14 +1,8 @@
 import { parseEther } from 'ethers/lib/utils'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { AssetType } from 'uniswap/src/entities/assets'
-import {
-  DynamicConfigs,
-  UwULinkAllowlist,
-  UwULinkAllowlistItem,
-  UwuLinkConfigKey,
-} from 'uniswap/src/features/gating/configs'
+import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { isUwULinkAllowlistType } from 'uniswap/src/features/gating/typeGuards'
 import {
   EthMethod,
   EthTransaction,
@@ -22,6 +16,23 @@ import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { getTokenSendRequest } from 'wallet/src/features/transactions/send/hooks/useSendTransactionRequest'
 import { SendCurrencyParams } from 'wallet/src/features/transactions/send/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+
+// This type must match the format in statsig dynamic config for uwulink
+// https://console.statsig.com/5HjUux4OvSGzgqWIfKFt8i/dynamic_configs/uwulink_config
+type UwULinkAllowlistItem = {
+  chainId: number
+  address: string
+  name: string
+  logo?: {
+    dark?: string
+    light?: string
+  }
+}
+
+type UwULinkAllowlist = {
+  contracts: UwULinkAllowlistItem[]
+  tokenRecipients: UwULinkAllowlistItem[]
+}
 
 const UWULINK_MAX_TXN_VALUE = '0.001'
 
@@ -54,7 +65,18 @@ export function useUwuLinkContractAllowlist(): UwULinkAllowlist {
       contracts: [],
       tokenRecipients: [],
     },
-    isUwULinkAllowlistType,
+    (x: unknown) => {
+      const hasFields =
+        x !== null && typeof x === 'object' && Object.hasOwn(x, 'contracts') && Object.hasOwn(x, 'tokenRecipients')
+
+      if (!hasFields) {
+        return false
+      }
+
+      const castedObj = x as { contracts: unknown; tokenRecipients: unknown }
+
+      return Array.isArray(castedObj.contracts) && Array.isArray(castedObj.tokenRecipients)
+    },
   )
 }
 

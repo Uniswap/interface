@@ -59,15 +59,7 @@ export default function ConnectionErrorView() {
           <Trans i18nKey="common.tryAgain.error" />
         </Button>
         <Flex row>
-          <Button
-            emphasis="text-only"
-            variant="branded"
-            width="fit-content"
-            p="$none"
-            mt="$spacing20"
-            // Reset connection to prevent being stuck in an error state
-            onPress={connection?.reset}
-          >
+          <Button emphasis="text-only" variant="branded" width="fit-content" p="$none" mt="$spacing20">
             <Trans i18nKey="common.close" />
           </Button>
         </Flex>

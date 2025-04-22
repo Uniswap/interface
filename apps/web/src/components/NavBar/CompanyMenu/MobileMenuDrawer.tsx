@@ -17,7 +17,6 @@ import { useTranslation } from 'react-i18next'
 import { Accordion, AnimateTransition, Flex, Square, Text } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 function MenuSection({
   title,
@@ -84,7 +83,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   }, [isOpen])
 
   return (
-    <NavDropdown dropdownRef={dropdownRef} isOpen={isOpen} dataTestId={TestID.CompanyMenuMobileDrawer}>
+    <NavDropdown dropdownRef={dropdownRef} isOpen={isOpen} dataTestId="company-menu-mobile-drawer">
       <Flex pt="$spacing12" pb="$spacing32" px="$spacing24">
         <AnimateTransition
           currentIndex={getSettingsViewIndex(settingsView)}

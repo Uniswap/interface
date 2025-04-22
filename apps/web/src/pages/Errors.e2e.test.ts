@@ -2,7 +2,6 @@ import { expect, test } from 'playwright/fixtures'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/anvil'
 import { stubTradingApiQuoteProtocols, stubTradingApiSwap } from 'playwright/fixtures/tradingApi'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 test('wallet rejection', async ({ page, anvil }) => {
   await stubTradingApiSwap(page)
@@ -12,17 +11,17 @@ test('wallet rejection', async ({ page, anvil }) => {
   await anvil.setTransactionRejection()
 
   // Enter amount to swap
-  await page.getByTestId(TestID.AmountInputOut).fill('1')
+  await page.getByTestId('amount-input-out').fill('1')
 
   // Wait for input value to be populated
-  await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue(/.+/)
+  await expect(page.getByTestId('amount-input-in')).toHaveValue(/.+/)
 
   // Submit transaction
-  await page.getByTestId(TestID.ReviewSwap).click()
-  await page.getByTestId(TestID.Swap).click()
+  await page.getByTestId('review-swap').click()
+  await page.getByTestId('swap').click()
 
   // Verify rejection state by checking the button text
-  await expect(page.getByTestId(TestID.Swap)).toContainText('Swap')
+  await expect(page.getByTestId('swap')).toContainText('Swap')
 })
 
 test.skip('transaction past deadline', async ({ page, anvil }) => {
@@ -32,14 +31,14 @@ test.skip('transaction past deadline', async ({ page, anvil }) => {
   await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
   // Enter amount to swap
-  await page.getByTestId(TestID.AmountInputOut).fill('1')
+  await page.getByTestId('amount-input-out').fill('1')
 
   // Wait for input value to be populated
-  await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue(/.+/)
+  await expect(page.getByTestId('amount-input-in')).toHaveValue(/.+/)
 
   // Submit transaction
-  await page.getByTestId(TestID.ReviewSwap).click()
-  await page.getByTestId(TestID.Swap).click()
+  await page.getByTestId('review-swap').click()
+  await page.getByTestId('swap').click()
 
   // Get the hash of the transaction in the mempool
   let hash: `0x${string}` | undefined
@@ -76,26 +75,26 @@ test('slippage failure', async ({ page, anvil }) => {
 
   await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
-  await page.getByTestId(TestID.SwapSettings).click()
+  await page.getByTestId('swap-settings').click()
   await page
     .locator('div')
     .filter({ hasText: /^5.50$/ })
     .getByRole('textbox')
     .fill('.01')
   await page.waitForTimeout(300)
-  await page.getByTestId(TestID.SwapSettings).click()
+  await page.getByTestId('swap-settings').click()
 
-  await page.getByTestId(TestID.AmountInputIn).fill('1')
-  await expect(page.getByTestId(TestID.AmountInputOut)).toHaveValue(/.+/)
-  await page.getByTestId(TestID.ReviewSwap).click()
-  await page.getByTestId(TestID.Swap).click()
+  await page.getByTestId('amount-input-in').fill('100')
+  await expect(page.getByTestId('amount-input-out')).toHaveValue(/.+/)
+  await page.getByTestId('review-swap').click()
+  await page.getByTestId('swap').click()
 
   await page.waitForTimeout(1000)
 
-  await page.getByTestId(TestID.AmountInputIn).fill('1')
-  await expect(page.getByTestId(TestID.AmountInputOut)).toHaveValue(/.+/)
-  await page.getByTestId(TestID.ReviewSwap).click()
-  await page.getByTestId(TestID.Swap).click()
+  await page.getByTestId('amount-input-in').fill('100')
+  await expect(page.getByTestId('amount-input-out')).toHaveValue(/.+/)
+  await page.getByTestId('review-swap').click()
+  await page.getByTestId('swap').click()
 
   // mine both transaction
   await anvil.mine({
@@ -123,6 +122,6 @@ test('insufficient liquidity', async ({ page }) => {
     })
   })
 
-  await page.getByTestId(TestID.AmountInputOut).fill('10000')
+  await page.getByTestId('amount-input-out').fill('10000')
   await expect(page.getByText('This trade cannot be completed right now')).toBeVisible()
 })

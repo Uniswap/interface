@@ -11,8 +11,6 @@ export enum ExtensionEthMethods {
   wallet_requestPermissions = 'wallet_requestPermissions',
   wallet_revokePermissions = 'wallet_revokePermissions',
   wallet_getCapabilities = 'wallet_getCapabilities',
-  wallet_sendCalls = 'wallet_sendCalls',
-  wallet_getCallsStatus = 'wallet_getCallsStatus',
   eth_signTypedData_v4 = 'eth_signTypedData_v4',
 }
 

@@ -13,9 +13,12 @@ import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'
 import { PoolStat } from 'state/explore/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 function useFilteredPools(pools?: PoolStat[]) {
   const filterString = useAtomValue(exploreSearchStringAtom)
+  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
@@ -30,15 +33,16 @@ function useFilteredPools(pools?: PoolStat[]) {
         const poolName = `${pool.token0?.symbol}/${pool.token1?.symbol}`.toLowerCase()
         const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
         return (
-          token0IncludesFilterString ||
-          token1IncludesFilterString ||
-          addressIncludesFilterString ||
-          token0HashIncludesFilterString ||
-          token1HashIncludesFilterString ||
-          poolNameIncludesFilterString
+          (token0IncludesFilterString ||
+            token1IncludesFilterString ||
+            addressIncludesFilterString ||
+            token0HashIncludesFilterString ||
+            token1HashIncludesFilterString ||
+            poolNameIncludesFilterString) &&
+          (pool.protocolVersion?.toLowerCase() !== 'v4' || isV4DataEnabled)
         )
       }),
-    [lowercaseFilterString, pools],
+    [isV4DataEnabled, lowercaseFilterString, pools],
   )
 }
 

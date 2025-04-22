@@ -9,8 +9,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isAddress } from 'utilities/src/addresses'
 
 type SearchToken = NonNullable<NonNullable<SearchTokensQuery['searchTokens']>[number]>
@@ -22,7 +20,6 @@ export function useSearchTokens(
 ): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = chainFilter ? toGraphQLChain(chainFilter) : null
   const { gqlChains } = useEnabledChains()
-  const tokenSearchV2Enabled = useFeatureFlag(FeatureFlags.TokenSearchV2)
 
   const isSearchQueryAnAddress = isAddress(searchQuery)
 
@@ -33,7 +30,6 @@ export function useSearchTokens(
     variables: {
       searchQuery: searchQuery ?? '',
       chains: shouldSearchAllNetworks ? gqlChains : [gqlChainFilter],
-      tokenSearchV2Enabled,
     },
     skip: skip || !searchQuery,
   })

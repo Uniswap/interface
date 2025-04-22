@@ -1,6 +1,10 @@
-import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isInterface } from 'utilities/src/platform'
+
+const EXTENSION_ID_LOCAL = 'ceofpnbcmdjbibjjdniemjemmgaibeih'
+const EXTENSION_ID_DEV = 'afhngfaoadjjlhbgopehflaabbgfbcmn'
+const EXTENSION_ID_BETA = 'foilfbjokdonehdajefeadkclfpmhdga'
+const EXTENSION_ID_PROD = 'nnpmfplkfogfpmcngplhnbdnnilmcdcg'
 
 export function isTestEnv(): boolean {
   return (
@@ -19,11 +23,7 @@ export function isDevEnv(): boolean {
   if (isInterface) {
     return process.env.NODE_ENV === 'development'
   } else if (isExtension) {
-    return (
-      __DEV__ ||
-      chrome.runtime.id === TRUSTED_CHROME_EXTENSION_IDS.dev ||
-      chrome.runtime.id === TRUSTED_CHROME_EXTENSION_IDS.local
-    )
+    return __DEV__ || chrome.runtime.id === EXTENSION_ID_DEV || chrome.runtime.id === EXTENSION_ID_LOCAL
   } else if (isTestEnv()) {
     return false
   } else {
@@ -36,7 +36,7 @@ export function isBetaEnv(): boolean {
     // This is set in vercel builds and deploys from web/staging.
     return Boolean(process.env.REACT_APP_STAGING)
   } else if (isExtension) {
-    return chrome.runtime.id === TRUSTED_CHROME_EXTENSION_IDS.beta
+    return chrome.runtime.id === EXTENSION_ID_BETA
   } else if (isTestEnv()) {
     return false
   } else {
@@ -48,7 +48,7 @@ export function isProdEnv(): boolean {
   if (isInterface) {
     return process.env.NODE_ENV === 'production' && !isBetaEnv()
   } else if (isExtension) {
-    return chrome.runtime.id === TRUSTED_CHROME_EXTENSION_IDS.prod
+    return chrome.runtime.id === EXTENSION_ID_PROD
   } else if (isTestEnv()) {
     return false
   } else {

@@ -68,11 +68,11 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
       <Flex row p="$spacing8" borderRadius="$rounded20" height="100%">
         <Flex
           centered
-          m="$spacing12"
-          mr="$spacing6"
+          m={12}
+          mr={6}
           height={45}
           width={45}
-          backgroundColor={theme.warning2}
+          backgroundColor={theme.deprecated_accentWarningSoft}
           borderRadius="$rounded12"
         >
           <Globe size={28} color={theme.warning2} />

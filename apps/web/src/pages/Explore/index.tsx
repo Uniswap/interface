@@ -17,7 +17,7 @@ import { NamedExoticComponent, useCallback, useEffect, useMemo, useRef, useState
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { TamaguiClickableStyle } from 'theme/components/styles'
 import { Button, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -63,7 +63,7 @@ function usePages(): Array<Page> {
 }
 
 const HeaderTab = tamaguiStyled(Text, {
-  ...ClickableTamaguiStyle,
+  ...TamaguiClickableStyle,
   variant: 'heading3',
   userSelect: 'none',
   color: '$neutral2',

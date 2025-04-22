@@ -21,7 +21,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { TamaguiClickableStyle } from 'theme/components/styles'
 import { PositionField } from 'types/position'
 import { Button, DropdownButton, DropdownButtonProps, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
@@ -95,7 +95,7 @@ const FeeTierContainer = styled(Flex, {
   borderWidth: 1,
   borderColor: '$surface3',
   position: 'relative',
-  ...ClickableTamaguiStyle,
+  ...TamaguiClickableStyle,
 })
 
 const FeeTier = ({
@@ -365,7 +365,6 @@ export function SelectTokensStep({
               ) : (
                 <Flex row gap="$gap16" $md={{ flexDirection: 'column' }}>
                   <CurrencySelector
-                    emphasis={token0CurrencyInfo ? undefined : 'primary'}
                     currencyInfo={token0CurrencyInfo}
                     onPress={() => setCurrencySearchInputState(PositionField.TOKEN0)}
                   />

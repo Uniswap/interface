@@ -16,6 +16,7 @@ module.exports = {
     GRAPHQL_URL_OVERRIDE: '',
     INFURA_KEY: 'key',
     ONESIGNAL_APP_ID: 123,
+    OPENAI_API_KEY: 'key',
     QUICKNODE_ENDPOINT_NAME: 'name',
     QUICKNODE_ENDPOINT_TOKEN: 'token',
     SCANTASTIC_API_URL_OVERRIDE: '',

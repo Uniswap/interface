@@ -47,7 +47,7 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
 ### Packages and Software
 
 1. Install `homebrew`. We’ll be using Homebrew to install many of the other required tools through the command line. Open a terminal and Copy and paste the command from [brew.sh](https://brew.sh/) into your terminal and run it
-2. Install `nvm` [Node Version Manager](https://github.com/nvm-sh/nvm) While not required, it makes it easy to install Node and switch between different versions. Use the version of `node` specified in `.nvmrc`.
+2. Install `nvm` [Node Version Manager](https://github.com/nvm-sh/nvm) While not required, it makes it easy to install Node and switch between different versions. A minimum Node version of 18 (verify version in `.nvmrc`) is required to use this repository.
 
    - Copy the curl command listed under _Install & Update Script_ on [this page](https://github.com/nvm-sh/nvm#install--update-script) and run it in your terminal.
    - To make sure nvm installed correctly, try running `nvm -v` (you may need to re-source your shell with `source {base config}`). It should return a version number. If it returns something like `zsh: command not found: nvm`, it hasn’t been installed correctly.

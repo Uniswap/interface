@@ -36,6 +36,9 @@ const defaultState = {
     startPriceTypedValue: '',
     typedValue: '',
   },
+  multicall: {
+    callResults: {},
+  },
   searchHistory: {
     results: [],
   },

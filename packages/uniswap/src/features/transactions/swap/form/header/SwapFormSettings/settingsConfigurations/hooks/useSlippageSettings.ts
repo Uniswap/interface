@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
@@ -10,11 +10,14 @@ import {
   SLIPPAGE_CRITICAL_TOLERANCE,
 } from 'uniswap/src/constants/transactions'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { useOptionalSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 
 const SLIPPAGE_INCREMENT = 0.1
 
-export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTrade?: boolean }): {
+export function useSlippageSettings(params?: {
+  saveOnBlur?: boolean
+  tradeAutoSlippage?: number
+  isBridgeTrade?: boolean
+}): {
   isEditingSlippage: boolean
   autoSlippageEnabled: boolean
   showSlippageWarning: boolean
@@ -29,21 +32,8 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
   onBlurSlippageInput: () => void
   onPressPlusMinusButton: (type: PlusMinusButtonType) => void
 } {
-  const { saveOnBlur } = params ?? {}
+  const { saveOnBlur, tradeAutoSlippage: tradeSlippage } = params ?? {}
   const { t } = useTranslation()
-
-  // TODO: WEB-7258
-  // swap context is possibly undefined, because SlippageControl can be used outside of SwapFormContext
-  const swapContext = useOptionalSwapFormContext()
-  const tradeAutoSlippage = useMemo(() => {
-    if (!swapContext) {
-      return undefined
-    } else {
-      const { derivedSwapInfo } = swapContext
-      const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
-      return acceptedTrade?.slippageTolerance
-    }
-  }, [swapContext])
 
   const {
     customSlippageTolerance,
@@ -60,7 +50,7 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
 
   // Fall back to default slippage if there is no trade specified.
   // Separate from inputSlippageTolerance since autoSlippage updates when the trade quote updates
-  const autoSlippageTolerance = tradeAutoSlippage ?? derivedAutoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
+  const autoSlippageTolerance = tradeSlippage ?? derivedAutoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
 
   // Determine numerical currentSlippage value to use based on inputSlippageTolerance string value
   // ex. if inputSlippageTolerance is '' or '.', currentSlippage is set to autoSlippageTolerance

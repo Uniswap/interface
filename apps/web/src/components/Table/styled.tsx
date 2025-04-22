@@ -1,6 +1,5 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { Cell } from 'components/Table/Cell'
-import { useTableSize } from 'components/Table/TableSizeProvider'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -13,8 +12,8 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ClickableStyle, ClickableTamaguiStyle } from 'theme/components/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { Anchor, Flex, Text, TextProps, View, styled } from 'ui/src'
-import { breakpoints, zIndexes } from 'ui/src/theme'
+import { Anchor, Flex, Text, View, styled } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -235,26 +234,32 @@ const StyledTimestampRow = styled(StyledExternalLink, {
   },
 })
 
-export const TableText = ({ children, ...props }: PropsWithChildren<TextProps>) => {
-  const { width } = useTableSize()
+export const EllipsisText = styled(Text, {
+  variant: 'body2',
+  color: '$neutral1',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  $lg: {
+    variant: 'body3',
+  },
+})
 
-  return (
-    <Text {...props} variant={width <= breakpoints.lg ? 'body3' : 'body2'} color="$neutral1">
-      {children}
-    </Text>
-  )
-}
-
-export const EllipsisText = ({ children, ...props }: PropsWithChildren<TextProps>) => {
-  return (
-    <TableText {...props} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-      {children}
-    </TableText>
-  )
-}
+export const TableText = styled(Text, {
+  variant: 'body2',
+  $lg: {
+    variant: 'body3',
+  },
+  color: '$neutral1',
+  maxWidth: '100%',
+  whiteSpace: 'nowrap',
+})
 
 export const HeaderCell = styled(Cell, {
   py: '$spacing12',
+  $lg: {
+    py: '$spacing4',
+  },
 })
 
 /**
@@ -310,7 +315,7 @@ export const TokenLinkCell = ({ token, hideLogo }: { token: Token; hideLogo?: bo
         chain: token.chain,
       })}
     >
-      <Flex row gap="$gap8" maxWidth="100px" alignItems="center">
+      <Flex row gap="$gap8" maxWidth="100px">
         <EllipsisText>{unwrappedToken?.symbol ?? t('common.unknown').toUpperCase()}</EllipsisText>
         {!hideLogo && (
           <PortfolioLogo

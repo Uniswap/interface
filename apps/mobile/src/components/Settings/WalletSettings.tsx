@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { HiddenWalletsDivider } from 'src/components/Settings/HiddenWalletsDivider'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
@@ -8,7 +8,6 @@ import { iconSizes } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { ExpandoRow } from 'wallet/src/components/ExpandoRow/ExpandoRow'
 import { useAccountsList, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const DEFAULT_ACCOUNTS_TO_DISPLAY = 3
@@ -18,7 +17,6 @@ interface Account {
 }
 
 export function WalletSettings(): JSX.Element {
-  const { t } = useTranslation()
   const dispatch = useDispatch()
   const allAccounts = useAccountsList()
   const [showAll, setShowAll] = useState(false)
@@ -71,10 +69,9 @@ export function WalletSettings(): JSX.Element {
         <>
           {renderAccountRow(activeAccount)}
 
-          <ExpandoRow
+          <HiddenWalletsDivider
             isExpanded={showAll}
-            label={t('settings.section.wallet.hidden.row.title', { numHidden: allAccounts.length - 1 })}
-            mx="$spacing16"
+            numHidden={allAccounts.length - 1}
             onPress={(): void => toggleViewAll()}
           />
 

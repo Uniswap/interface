@@ -19,13 +19,11 @@ export enum DynamicConfigs {
   MainnetPrivateRpc = 'mainnet_private_rpc',
   DatadogSessionSampleRate = 'datadog_session_sample_rate',
   DatadogIgnoredErrors = 'datadog_ignored_errors',
-  EmbeddedWallet = 'embedded_wallet',
 
   // Web
   QuickRouteChains = 'quick_route_chains',
   AstroChain = 'astro_chain',
   BlockedNftCollections = 'blocked_nft_collections',
-  ExternallyConnectableExtension = 'externally_connectable_extension',
 }
 
 // Config values go here for easy access
@@ -67,23 +65,9 @@ export enum ChainsConfigKey {
 // Wallet
 export enum ForceUpgradeConfigKey {
   Status = 'status',
-  Translations = 'translations',
 }
 
 export type ForceUpgradeStatus = 'recommended' | 'required' | 'not-required'
-
-type SupportedLocale = `${Extract<Locale[keyof Locale], string>}`
-
-type ContentMessage = {
-  title: string
-  description: string
-}
-
-export type ForceUpgradeTranslations = Record<SupportedLocale, ContentMessage>
-
-export enum EmbeddedWalletConfigKey {
-  BaseUrl = 'baseUrl',
-}
 
 export enum HomeScreenExploreTokensConfigKey {
   EthChainId = 'ethChainId',
@@ -109,10 +93,6 @@ export enum DatadogSessionSampleRateKey {
 
 export enum BlockedNftCollectionsConfigKey {
   BlocklistedCollections = 'blocklistedCollections',
-}
-
-export enum ExternallyConnectableExtensionConfigKey {
-  ExtensionId = 'extensionId',
 }
 
 export type DatadogIgnoredErrorsValType = Array<{ messageContains: string; sampleRate: number }>
@@ -167,28 +147,9 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.MainnetPrivateRpc]: MainnetPrivateRpcConfigKey
   [DynamicConfigs.DatadogIgnoredErrors]: DatadogIgnoredErrorsConfigKey
   [DynamicConfigs.DatadogSessionSampleRate]: DatadogSessionSampleRateKey
-  [DynamicConfigs.EmbeddedWallet]: EmbeddedWalletConfigKey
 
   // Web
   [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
   [DynamicConfigs.BlockedNftCollections]: BlockedNftCollectionsConfigKey
-  [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
-}
-
-// This type must match the format in statsig dynamic config for uwulink
-// https://console.statsig.com/5HjUux4OvSGzgqWIfKFt8i/dynamic_configs/uwulink_config
-export type UwULinkAllowlistItem = {
-  chainId: number
-  address: string
-  name: string
-  logo?: {
-    dark?: string
-    light?: string
-  }
-}
-
-export type UwULinkAllowlist = {
-  contracts: UwULinkAllowlistItem[]
-  tokenRecipients: UwULinkAllowlistItem[]
 }

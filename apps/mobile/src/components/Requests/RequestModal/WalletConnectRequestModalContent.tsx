@@ -117,7 +117,7 @@ export function WalletConnectRequestModalContent({
 
         {!hasSufficientFunds && (
           <SectionContainer>
-            <Text color="$statusWarning" variant="body2">
+            <Text color="$DEP_accentWarning" variant="body2">
               {t('walletConnect.request.error.insufficientFunds', {
                 currencySymbol: nativeCurrency?.symbol,
               })}
@@ -130,12 +130,12 @@ export function WalletConnectRequestModalContent({
             backgroundColor="$statusWarning2"
             icon={
               <AlertTriangleFilled
-                color={colors.statusWarning.val}
+                color={colors.DEP_accentWarning.val}
                 height={iconSizes.icon16}
                 width={iconSizes.icon16}
               />
             }
-            textColor="$statusWarning"
+            textColor="$DEP_accentWarning"
             title={t('walletConnect.request.error.network')}
           />
         ) : (
@@ -185,7 +185,7 @@ function WarningSection({
   if (!isTransactionRequest(request)) {
     return (
       <Flex centered row alignSelf="center" gap="$spacing8">
-        <AlertTriangleFilled color={colors.statusWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+        <AlertTriangleFilled color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
         <Text color="$neutral2" fontStyle="italic" variant="body3">
           {t('walletConnect.request.warning.general.message')}
         </Text>

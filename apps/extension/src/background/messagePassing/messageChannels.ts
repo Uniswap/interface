@@ -13,10 +13,6 @@ import {
   ErrorResponseSchema,
   GetAccountRequest,
   GetAccountRequestSchema,
-  GetCallsStatusRequest,
-  GetCallsStatusRequestSchema,
-  GetCallsStatusResponse,
-  GetCallsStatusResponseSchema,
   GetChainIdRequest,
   GetChainIdRequestSchema,
   GetPermissionsRequest,
@@ -33,10 +29,6 @@ import {
   RevokePermissionsRequestSchema,
   RevokePermissionsResponse,
   RevokePermissionsResponseSchema,
-  SendCallsRequest,
-  SendCallsRequestSchema,
-  SendCallsResponse,
-  SendCallsResponseSchema,
   SendTransactionRequest,
   SendTransactionRequestSchema,
   SendTransactionResponse,
@@ -58,7 +50,11 @@ import {
   UniswapOpenSidebarResponse,
   UniswapOpenSidebarResponseSchema,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { TypedPortMessageChannel, TypedRuntimeMessageChannel } from 'src/background/messagePassing/platform'
+import {
+  MessageParsers,
+  TypedPortMessageChannel,
+  TypedRuntimeMessageChannel,
+} from 'src/background/messagePassing/platform'
 import {
   HighlightOnboardingTabMessage,
   HighlightOnboardingTabMessageSchema,
@@ -69,8 +65,6 @@ import {
 import {
   AnalyticsLog,
   AnalyticsLogSchema,
-  ArcBrowserCheckMessage,
-  ArcBrowserCheckMessageSchema,
   BackgroundToSidePanelRequestType,
   ContentScriptUtilityMessageType,
   DappRequestMessage,
@@ -89,7 +83,6 @@ import {
   UpdateConnectionRequest,
   UpdateConnectionRequestSchema,
 } from 'src/background/messagePassing/types/requests'
-import { MessageParsers } from 'uniswap/src/extension/messagePassing/platform'
 
 enum MessageChannelName {
   DappContentScript = 'DappContentScript',
@@ -168,8 +161,6 @@ type ContentScriptToBackgroundMessageSchemas = {
   [DappRequestType.SignTransaction]: SignTransactionRequest
   [DappRequestType.SignTypedData]: SignTypedDataRequest
   [DappRequestType.UniswapOpenSidebar]: UniswapOpenSidebarRequest
-  [DappRequestType.SendCalls]: SendCallsRequest
-  [DappRequestType.GetCallsStatus]: GetCallsStatusRequest
 }
 const contentScriptToBackgroundMessageParsers: MessageParsers<
   DappRequestType,
@@ -190,8 +181,6 @@ const contentScriptToBackgroundMessageParsers: MessageParsers<
   [DappRequestType.SignTypedData]: (message): SignTypedDataRequest => SignTypedDataRequestSchema.parse(message),
   [DappRequestType.UniswapOpenSidebar]: (message): UniswapOpenSidebarRequest =>
     UniswapOpenSidebarRequestSchema.parse(message),
-  [DappRequestType.SendCalls]: (message): SendCallsRequest => SendCallsRequestSchema.parse(message),
-  [DappRequestType.GetCallsStatus]: (message): GetCallsStatusRequest => GetCallsStatusRequestSchema.parse(message),
 }
 
 function createContentScriptToBackgroundMessageChannel(): TypedRuntimeMessageChannel<
@@ -218,8 +207,6 @@ type DappResponseMessageSchemas = {
   [DappResponseType.SignTransactionResponse]: SignTransactionResponse
   [DappResponseType.SignTypedDataResponse]: SignTypedDataResponse
   [DappResponseType.UniswapOpenSidebarResponse]: UniswapOpenSidebarResponse
-  [DappResponseType.SendCallsResponse]: SendCallsResponse
-  [DappResponseType.GetCallsStatusResponse]: GetCallsStatusResponse
 }
 const dappResponseMessageParsers: MessageParsers<DappResponseType, DappResponseMessageSchemas> = {
   [DappResponseType.AccountResponse]: (message): AccountResponse => AccountResponseSchema.parse(message),
@@ -241,9 +228,6 @@ const dappResponseMessageParsers: MessageParsers<DappResponseType, DappResponseM
     SignTypedDataResponseSchema.parse(message),
   [DappResponseType.UniswapOpenSidebarResponse]: (message): UniswapOpenSidebarResponse =>
     UniswapOpenSidebarResponseSchema.parse(message),
-  [DappResponseType.SendCallsResponse]: (message): SendCallsResponse => SendCallsResponseSchema.parse(message),
-  [DappResponseType.GetCallsStatusResponse]: (message): GetCallsStatusResponse =>
-    GetCallsStatusResponseSchema.parse(message),
 }
 
 function createDappResponseMessageChannel(): TypedRuntimeMessageChannel<DappResponseType, DappResponseMessageSchemas> {
@@ -275,7 +259,6 @@ function createExternalDappMessageChannel(): TypedRuntimeMessageChannel<
 }
 
 type ContentScriptUtilityMessageSchemas = {
-  [ContentScriptUtilityMessageType.ArcBrowserCheck]: ArcBrowserCheckMessage
   [ContentScriptUtilityMessageType.FocusOnboardingTab]: FocusOnboardingMessage
   [ContentScriptUtilityMessageType.ErrorLog]: ErrorLog
   [ContentScriptUtilityMessageType.AnalyticsLog]: AnalyticsLog
@@ -284,8 +267,6 @@ const contentScriptUtilityMessageParsers: MessageParsers<
   ContentScriptUtilityMessageType,
   ContentScriptUtilityMessageSchemas
 > = {
-  [ContentScriptUtilityMessageType.ArcBrowserCheck]: (message): ArcBrowserCheckMessage =>
-    ArcBrowserCheckMessageSchema.parse(message),
   [ContentScriptUtilityMessageType.FocusOnboardingTab]: (message): FocusOnboardingMessage =>
     FocusOnboardingMessageSchema.parse(message),
   [ContentScriptUtilityMessageType.ErrorLog]: (message): ErrorLog => ErrorLogSchema.parse(message),

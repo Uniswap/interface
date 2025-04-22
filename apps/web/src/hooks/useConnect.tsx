@@ -4,8 +4,6 @@ import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletC
 import { useDisconnect } from 'hooks/useDisconnect'
 import { PropsWithChildren, createContext, useContext, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useModalIsOpen } from 'state/application/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
@@ -19,7 +17,6 @@ export function ConnectionProvider({ children }: PropsWithChildren) {
   const { pathname } = useLocation()
   const accountDrawer = useAccountDrawer()
   const { disconnect } = useDisconnect()
-  const isRecentlyConnectedModalOpen = useModalIsOpen(ModalName.RecentlyConnectedModal)
 
   const connection = useConnectWagmi({
     mutation: {
@@ -51,11 +48,11 @@ export function ConnectionProvider({ children }: PropsWithChildren) {
   })
 
   useEffect(() => {
-    if (!accountDrawer.isOpen && !isRecentlyConnectedModalOpen && connection.isPending) {
+    if (!accountDrawer.isOpen && connection.isPending) {
       connection.reset()
       disconnect()
     }
-  }, [connection, accountDrawer.isOpen, disconnect, isRecentlyConnectedModalOpen])
+  }, [connection, accountDrawer.isOpen, disconnect])
 
   return <ConnectionContext.Provider value={connection}>{children}</ConnectionContext.Provider>
 }

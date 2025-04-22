@@ -48,17 +48,6 @@ module.exports = {
             rootDir: 'src',
           },
         ],
-        'import/no-restricted-paths': [
-          'error',
-          {
-            zones: [
-              {
-                target: ['src/**/*[!.test].ts', 'src/**/*[!.test].tsx'],
-                from: 'src/test-utils',
-              },
-            ],
-          },
-        ],
       },
     },
     {
@@ -101,11 +90,6 @@ module.exports = {
             message:
               "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
           },
-          {
-            selector:
-              'ImportDeclaration[source.value="src/nft/components/icons"], ImportDeclaration[source.value="nft/components/icons"]',
-            message: 'Please import icons from nft/components/iconExports instead of directly from icons.tsx',
-          },
           // TODO(WEB-4251) - remove useWeb3React rules once web3 react is removed
           {
             selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='account']`,
@@ -126,19 +110,6 @@ module.exports = {
             selector: `TSTypeAssertion[typeAnnotation.typeName.name='Address'], TSAsExpression[typeAnnotation.typeName.name='Address'], TSAsExpression[typeAnnotation.type='TSUnionType'] TSTypeReference[typeName.name='Address'], TSTypeAssertion[typeAnnotation.type='TSUnionType'] TSTypeReference[typeName.name='Address']`,
             message:
               'Do not use type assertions with "<Address>". Use `assumeOxAddress` to treat a string as an address, or isAddress/getAddress from viem to validate a string as an Address.',
-          },
-        ],
-      },
-    },
-    {
-      files: ['**/*.e2e.test.ts'],
-      rules: {
-        'no-restricted-syntax': [
-          'error',
-          {
-            selector: 'CallExpression[callee.property.name="getByTestId"] > Literal',
-            message:
-              'Use TestID enum from uniswap/src/test/fixtures/testIDs instead of string literals with getByTestId (e.g. TestID.SwapSettings)',
           },
         ],
       },

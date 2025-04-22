@@ -126,13 +126,13 @@ export function* getAccountRequest(request: RequestAccountRequest, senderTabInfo
   const accountInfo = yield* call(saveAccount, senderTabInfo)
 
   if (!accountInfo) {
-    const errorResponse: ErrorResponse = {
+    const errorReponse: ErrorResponse = {
       type: DappResponseType.ErrorResponse,
       error: serializeError(providerErrors.unauthorized()),
       requestId: request.requestId,
     }
 
-    yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, errorResponse)
+    yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, errorReponse)
   } else {
     const { dappUrl, activeAccount, connectedAddresses, chainId, providerUrl } = accountInfo
 

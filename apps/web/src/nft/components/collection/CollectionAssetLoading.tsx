@@ -1,7 +1,6 @@
 import SizingImage from 'assets/images/sizingImage.png'
+import { ASSET_PAGE_SIZE } from 'graphql/data/nft/Asset'
 import { Flex, Image, Shine } from 'ui/src'
-
-const ASSET_PAGE_SIZE = 25
 
 const CollectionAssetLoading = ({ height }: { height?: number }) => {
   return (

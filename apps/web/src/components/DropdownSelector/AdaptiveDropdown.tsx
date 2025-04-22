@@ -58,7 +58,6 @@ const DropdownContent = styled(Text, {
 })
 
 const DropdownContainer = styled(Text, {
-  display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative',

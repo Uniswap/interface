@@ -35,9 +35,11 @@ import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
 let mockGates: Record<string, boolean> = {}
 let mockConfigs: Record<string, Record<string, unknown>> = {}
 jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
-  getStatsigClient: jest.fn(() => ({
-    checkGate: jest.fn((gate: string) => mockGates[gate] ?? false),
-  })),
+  Statsig: {
+    checkGate: jest.fn().mockImplementation((gate) => {
+      return mockGates[gate] ?? false
+    }),
+  },
 }))
 
 jest.mock('uniswap/src/features/gating/hooks', () => {

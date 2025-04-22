@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { getUnitagAvatarUploadUrl } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS } from 'uniswap/src/features/unitags/constants'
 import { UnitagGetAvatarUploadUrlResponse } from 'uniswap/src/features/unitags/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { getUnitagAvatarUploadUrl } from 'wallet/src/features/unitags/api'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 export const useAvatarUploadCredsWithRefresh = ({
   unitag,
@@ -28,10 +27,10 @@ export const useAvatarUploadCredsWithRefresh = ({
     const fetchAvatarUploadUrl = async (): Promise<void> => {
       try {
         setAvatarUploadUrlLoading(true)
-        const data = await getUnitagAvatarUploadUrl({
-          data: { username: unitag }, // Assuming unitag is the username you're working with
-          address: account.address,
-          signMessage: generateSignerFunc(account, signerManager),
+        const { data } = await getUnitagAvatarUploadUrl({
+          username: unitag, // Assuming unitag is the username you're working with
+          account,
+          signerManager,
         })
         setAvatarUploadUrlResponse(data)
       } catch (e) {

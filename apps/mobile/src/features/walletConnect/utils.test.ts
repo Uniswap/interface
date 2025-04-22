@@ -4,11 +4,7 @@ import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
-  parseGetCallsStatusRequest,
   parseGetCapabilitiesRequest,
-  parseSendCallsRequest,
-  parseSignRequest,
-  parseTransactionRequest,
 } from 'src/features/walletConnect/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/types/walletConnect'
@@ -113,16 +109,19 @@ describe(parseGetCapabilitiesRequest, () => {
     ])
 
     expect(result).toEqual({
-      type: EthMethod.GetCapabilities,
-      sessionId: mockTopic,
-      internalId: String(mockInternalId),
       account: TEST_ADDRESS,
-      chainIds: undefined,
-      dapp: {
-        name: mockDapp.name,
-        url: mockDapp.url,
-        icon: mockDapp.icons[0],
-        source: 'walletconnect',
+      request: {
+        type: EthMethod.GetCapabilities,
+        sessionId: mockTopic,
+        internalId: String(mockInternalId),
+        account: TEST_ADDRESS,
+        chainIds: undefined,
+        dapp: {
+          name: mockDapp.name,
+          url: mockDapp.url,
+          icon: mockDapp.icons[0],
+          source: 'walletconnect',
+        },
       },
     })
   })
@@ -135,273 +134,19 @@ describe(parseGetCapabilitiesRequest, () => {
     ])
 
     expect(result).toEqual({
-      type: EthMethod.GetCapabilities,
-      sessionId: mockTopic,
-      internalId: String(mockInternalId),
       account: TEST_ADDRESS,
-      chainIds,
-      dapp: {
-        name: mockDapp.name,
-        url: mockDapp.url,
-        icon: mockDapp.icons[0],
-        source: 'walletconnect',
-      },
-    })
-  })
-})
-
-describe(parseSignRequest, () => {
-  const mockTopic = 'test-topic'
-  const mockInternalId = 123
-  const mockChainId = UniverseChainId.Mainnet
-  const mockDapp = {
-    name: 'Test Dapp',
-    description: 'Test Dapp Description',
-    url: 'https://test.com',
-    icons: ['https://test.com/icon.png'],
-  }
-
-  it('parses personal_sign request correctly', () => {
-    const message = '0x48656c6c6f20576f726c64' // "Hello World" in hex
-    const params = [message, TEST_ADDRESS]
-
-    const result = parseSignRequest(EthMethod.PersonalSign, mockTopic, mockInternalId, mockChainId, mockDapp, params)
-
-    expect(result).toEqual({
-      type: EthMethod.PersonalSign,
-      sessionId: mockTopic,
-      internalId: String(mockInternalId),
-      account: TEST_ADDRESS,
-      chainId: mockChainId,
-      rawMessage: message,
-      message: 'Hello World',
-      dapp: {
-        name: mockDapp.name,
-        url: mockDapp.url,
-        icon: mockDapp.icons[0],
-        source: 'walletconnect',
-      },
-    })
-  })
-
-  it('parses eth_sign request correctly', () => {
-    const message = '0x48656c6c6f20576f726c64' // "Hello World" in hex
-    const params = [TEST_ADDRESS, message]
-
-    const result = parseSignRequest(EthMethod.EthSign, mockTopic, mockInternalId, mockChainId, mockDapp, params)
-
-    expect(result).toEqual({
-      type: EthMethod.EthSign,
-      sessionId: mockTopic,
-      internalId: String(mockInternalId),
-      account: TEST_ADDRESS,
-      chainId: mockChainId,
-      rawMessage: message,
-      message: 'Hello World',
-      dapp: {
-        name: mockDapp.name,
-        url: mockDapp.url,
-        icon: mockDapp.icons[0],
-        source: 'walletconnect',
-      },
-    })
-  })
-
-  it('parses eth_signTypedData request correctly', () => {
-    const typedData = '{"types":{"EIP712Domain":[]},"domain":{},"primaryType":"Mail","message":{}}'
-    const params = [TEST_ADDRESS, typedData]
-
-    const result = parseSignRequest(EthMethod.SignTypedData, mockTopic, mockInternalId, mockChainId, mockDapp, params)
-
-    expect(result).toEqual({
-      type: EthMethod.SignTypedData,
-      sessionId: mockTopic,
-      internalId: String(mockInternalId),
-      account: TEST_ADDRESS,
-      chainId: mockChainId,
-      rawMessage: typedData,
-      message: null,
-      dapp: {
-        name: mockDapp.name,
-        url: mockDapp.url,
-        icon: mockDapp.icons[0],
-        source: 'walletconnect',
-      },
-    })
-  })
-})
-
-describe(parseTransactionRequest, () => {
-  const mockTopic = 'test-topic'
-  const mockInternalId = 123
-  const mockChainId = UniverseChainId.Mainnet
-  const mockDapp = {
-    name: 'Test Dapp',
-    description: 'Test Dapp Description',
-    url: 'https://test.com',
-    icons: ['https://test.com/icon.png'],
-  }
-
-  it('parses eth_sendTransaction request correctly', () => {
-    const txParams = {
-      from: TEST_ADDRESS,
-      to: '0x1234567890123456789012345678901234567890',
-      data: '0x',
-      gasLimit: '0x5208', // 21000 in hex
-      value: '0x0',
-      gasPrice: '0x4a817c800', // This should be omitted in the result
-      nonce: '0x1', // This should be omitted in the result
-    }
-
-    const result = parseTransactionRequest(
-      EthMethod.EthSendTransaction,
-      mockTopic,
-      mockInternalId,
-      mockChainId,
-      mockDapp,
-      [txParams],
-    )
-
-    expect(result).toEqual({
-      type: EthMethod.EthSendTransaction,
-      sessionId: mockTopic,
-      internalId: String(mockInternalId),
-      account: TEST_ADDRESS,
-      chainId: mockChainId,
-      transaction: {
-        from: TEST_ADDRESS,
-        to: '0x1234567890123456789012345678901234567890',
-        data: '0x',
-        gasLimit: '0x5208',
-        value: '0x0',
-        // gasPrice and nonce should be omitted
-      },
-      dapp: {
-        name: mockDapp.name,
-        url: mockDapp.url,
-        icon: mockDapp.icons[0],
-        source: 'walletconnect',
-      },
-    })
-  })
-})
-
-describe(parseSendCallsRequest, () => {
-  const mockTopic = 'test-topic'
-  const mockInternalId = 123
-  const mockChainId = UniverseChainId.Mainnet
-  const mockDapp = {
-    name: 'Test Dapp',
-    description: 'Test Dapp Description',
-    url: 'https://test.com',
-    icons: ['https://test.com/icon.png'],
-  }
-
-  it('parses wallet_sendCalls request with from address', () => {
-    const sendCallsParams = {
-      from: TEST_ADDRESS,
-      calls: [
-        {
-          to: '0x1234567890123456789012345678901234567890',
-          data: '0xabcdef',
-          value: '0x0',
+      request: {
+        type: EthMethod.GetCapabilities,
+        sessionId: mockTopic,
+        internalId: String(mockInternalId),
+        account: TEST_ADDRESS,
+        chainIds,
+        dapp: {
+          name: mockDapp.name,
+          url: mockDapp.url,
+          icon: mockDapp.icons[0],
+          source: 'walletconnect',
         },
-      ],
-      chainId: '0x01',
-      id: 'test-batch-id',
-      version: '1.0',
-      capabilities: {
-        eip155: {
-          methods: ['eth_sendTransaction'],
-        },
-      },
-    }
-
-    const result = parseSendCallsRequest(
-      mockTopic,
-      mockInternalId,
-      mockChainId,
-      mockDapp,
-      [sendCallsParams],
-      'fallback-address',
-    )
-
-    expect(result).toEqual({
-      type: EthMethod.SendCalls,
-      sessionId: mockTopic,
-      internalId: String(mockInternalId),
-      account: TEST_ADDRESS,
-      chainId: mockChainId,
-      calls: sendCallsParams.calls,
-      capabilities: sendCallsParams.capabilities,
-      id: sendCallsParams.id,
-      version: sendCallsParams.version,
-      dapp: {
-        name: mockDapp.name,
-        url: mockDapp.url,
-        icon: mockDapp.icons[0],
-        source: 'walletconnect',
-      },
-    })
-  })
-
-  it('uses fallback address when from is not provided', () => {
-    const sendCallsParams = {
-      chainId: '0x01',
-      calls: [
-        {
-          to: '0x1234567890123456789012345678901234567890',
-          data: '0xabcdef',
-          value: '0x0',
-        },
-      ],
-      version: '1.0',
-    }
-
-    const fallbackAddress = '0xfallbackaddress'
-    const result = parseSendCallsRequest(
-      mockTopic,
-      mockInternalId,
-      mockChainId,
-      mockDapp,
-      [sendCallsParams],
-      fallbackAddress,
-    )
-
-    expect(result.account).toBe(fallbackAddress)
-    expect(result.id).toBeTruthy() // Should generate a mock ID
-  })
-})
-
-describe(parseGetCallsStatusRequest, () => {
-  const mockTopic = 'test-topic'
-  const mockInternalId = 123
-  const mockChainId = UniverseChainId.Mainnet
-  const mockDapp = {
-    name: 'Test Dapp',
-    description: 'Test Dapp Description',
-    url: 'https://test.com',
-    icons: ['https://test.com/icon.png'],
-  }
-
-  it('parses wallet_getCallsStatus request correctly', () => {
-    const requestId = 'test-batch-id'
-    const account = TEST_ADDRESS
-
-    const result = parseGetCallsStatusRequest(mockTopic, mockInternalId, mockChainId, mockDapp, [requestId], account)
-
-    expect(result).toEqual({
-      type: EthMethod.GetCallsStatus,
-      sessionId: mockTopic,
-      internalId: String(mockInternalId),
-      account,
-      chainId: mockChainId,
-      id: requestId,
-      dapp: {
-        name: mockDapp.name,
-        url: mockDapp.url,
-        icon: mockDapp.icons[0],
-        source: 'walletconnect',
       },
     })
   })

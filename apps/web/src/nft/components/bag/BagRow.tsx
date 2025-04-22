@@ -10,7 +10,7 @@ import {
   SquareArrowDownIcon,
   SquareArrowUpIcon,
   VerifiedIcon,
-} from 'nft/components/iconExports'
+} from 'nft/components/icons'
 import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { getAssetHref } from 'nft/utils'
 import { useCallback, useEffect, useReducer, useState } from 'react'

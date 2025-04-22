@@ -4,7 +4,7 @@ import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { GeneratedIcon, isWeb } from 'ui/src'
-import { Eye, EyeOff, Flag } from 'ui/src/components/icons'
+import { Eye, EyeOff, Trash } from 'ui/src/components/icons'
 import { reportNftSpamToSimpleHash } from 'uniswap/src/data/apiClients/simpleHashApi/SimpleHashApiClient'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
@@ -12,13 +12,11 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
 import { setNftVisibility } from 'uniswap/src/features/visibility/slice'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -47,6 +45,7 @@ export function useNFTContextMenu({
 }: NFTMenuParams): {
   menuActions: Array<MenuAction>
   onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
+  onlyShare: boolean
 } {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -133,26 +132,6 @@ export function useNFTContextMenu({
     }
   }, [contractAddress, tokenId, chainId, navigateToNftDetails])
 
-  const onPressCopyAddress = useCallback(async (): Promise<void> => {
-    if (!contractAddress) {
-      return
-    }
-    await setClipboard(contractAddress)
-    dispatch(
-      pushNotification({
-        type: AppNotificationType.Copied,
-        copyType: CopyNotificationType.Address,
-      }),
-    )
-  }, [contractAddress, dispatch])
-
-  const openExplorerLink = useCallback(async (): Promise<void> => {
-    if (!chainId || !contractAddress) {
-      return
-    }
-    await openUri(getExplorerLink(chainId, contractAddress, ExplorerDataType.ADDRESS))
-  }, [chainId, contractAddress])
-
   const ExplorerLogo = useBlockExplorerLogo(chainId)
 
   const menuActions = useMemo(
@@ -166,24 +145,6 @@ export function useNFTContextMenu({
                     onPress: onPressNavigateToExplorer,
                     Icon: ExplorerLogo,
                     destructive: false,
-                  },
-                ]
-              : []),
-            ...(!isWeb && chainId
-              ? [
-                  {
-                    title: t('tokens.nfts.action.viewOnExplorer', { blockExplorerName: getExplorerName(chainId) }),
-                    systemIcon: 'link',
-                    onPress: openExplorerLink,
-                  },
-                ]
-              : []),
-            ...(contractAddress
-              ? [
-                  {
-                    title: t('common.copy.address'),
-                    systemIcon: 'doc.on.doc',
-                    onPress: onPressCopyAddress,
                   },
                 ]
               : []),
@@ -202,32 +163,31 @@ export function useNFTContextMenu({
                     title: t('nft.reportSpam'),
                     ...(isWeb
                       ? {
-                          Icon: Flag,
+                          Icon: Trash,
                         }
                       : {
-                          systemIcon: 'flag',
+                          systemIcon: 'trash',
                         }),
                     destructive: true,
                     onPress: onPressReport,
                   },
                 ]
               : []),
-            ...(isLocalAccount
-              ? [
-                  {
-                    title: isVisible ? t('tokens.nfts.hidden.action.hide') : t('tokens.nfts.hidden.action.unhide'),
-                    ...(isWeb
-                      ? {
-                          Icon: isVisible ? EyeOff : Eye,
-                        }
-                      : {
-                          systemIcon: isVisible ? 'eye.slash' : 'eye',
-                        }),
-                    destructive: isVisible,
-                    onPress: onPressHiddenStatus,
-                  },
-                ]
-              : []),
+            ...((isLocalAccount && [
+              {
+                title: isVisible ? t('tokens.nfts.hidden.action.hide') : t('tokens.nfts.hidden.action.unhide'),
+                ...(isWeb
+                  ? {
+                      Icon: isVisible ? EyeOff : Eye,
+                    }
+                  : {
+                      systemIcon: isVisible ? 'eye.slash' : 'eye',
+                    }),
+                destructive: isVisible,
+                onPress: onPressHiddenStatus,
+              },
+            ]) ||
+              []),
           ]
         : [],
     [
@@ -236,9 +196,6 @@ export function useNFTContextMenu({
       t,
       onPressNavigateToExplorer,
       ExplorerLogo,
-      openExplorerLink,
-      contractAddress,
-      onPressCopyAddress,
       onPressShare,
       isSelfReportSpamNFTEnabled,
       isViewOnlyWallet,
@@ -256,5 +213,5 @@ export function useNFTContextMenu({
     [menuActions],
   )
 
-  return { menuActions, onContextMenuPress }
+  return { menuActions, onContextMenuPress, onlyShare: !!nftKey && !isLocalAccount }
 }

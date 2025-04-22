@@ -7,7 +7,7 @@ import {
   OpenSeaMarketplaceIcon,
   SudoSwapIcon,
   X2y2Icon,
-} from 'nft/components/iconExports'
+} from 'nft/components/icons'
 import { GenieAsset, Markets, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
 import { isAudio, isVideo } from 'nft/utils'
 import { ReactNode, useCallback } from 'react'

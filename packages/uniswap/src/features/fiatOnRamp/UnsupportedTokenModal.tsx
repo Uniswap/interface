@@ -36,7 +36,7 @@ export default function UnsupportedTokenModal({ isVisible, onBack, onClose, onAc
               backgroundColor: colors.statusWarning2.val,
             }}
           >
-            <WarningIcon color={colors.statusWarning.val} size="$icon.24" />
+            <WarningIcon color={colors.DEP_accentWarning.val} size="$icon.24" />
           </Flex>
           <Text variant="subheading1">{t('fiatOffRamp.unsupportedToken.title')}</Text>
         </Flex>

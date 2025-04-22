@@ -15,7 +15,6 @@ import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
-import { useSignOutWithPasskey } from 'hooks/useSignOutWithPasskey'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import styled from 'lib/styled-components'
 import { useCallback, useState } from 'react'
@@ -41,11 +40,11 @@ import { useENSName } from 'uniswap/src/features/ens/api'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import i18next from 'uniswap/src/i18n'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { isPathBlocked } from 'utils/blockedPaths'
 
@@ -114,7 +113,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { isTestnetModeEnabled } = useEnabledChains()
   const connectedWithEmbeddedWallet =
     useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
-  const { signOutWithPasskey } = useSignOutWithPasskey()
   const isRightToLeft = i18next.dir() === 'rtl'
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
@@ -124,14 +122,13 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const accountDrawer = useAccountDrawer()
   const dispatch = useDispatch()
 
-  const handleDisconnect = useCallback(async () => {
+  const handleDisconnect = useCallback(() => {
     if (connectedWithEmbeddedWallet) {
-      await signOutWithPasskey()
+      disconnectWallet()
     }
     dispatch(setIsTestnetModeEnabled(false))
     disconnect()
-    accountDrawer.close()
-  }, [connectedWithEmbeddedWallet, dispatch, disconnect, accountDrawer, signOutWithPasskey])
+  }, [connectedWithEmbeddedWallet, disconnect, dispatch])
 
   const handleBuyCryptoClick = useCallback(() => {
     accountDrawer.close()
@@ -217,7 +214,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <Row gap="8px">
               {shouldShowBuyFiatButton && (
                 <ActionTile
-                  dataTestId={TestID.WalletBuyCrypto}
+                  dataTestId="wallet-buy-crypto"
                   Icon={<Bank size={24} color="$accent1" />}
                   name={t('common.buy.label')}
                   onClick={handleBuyCryptoClick}
@@ -226,7 +223,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                 />
               )}
               <ActionTile
-                dataTestId={TestID.WalletReceiveCrypto}
+                dataTestId="wallet-recieve-crypto"
                 Icon={<ArrowDownCircleFilled size={24} color="$accent1" />}
                 name={t('common.receive')}
                 onClick={openReceiveModal}

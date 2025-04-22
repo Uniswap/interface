@@ -11,20 +11,15 @@ import {
   CheckApprovalLPResponse,
   ClaimLPFeesRequest,
   ClaimLPFeesResponse,
-  ClaimLPRewardsRequest,
-  ClaimLPRewardsResponse,
   ClassicQuote,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
-  CreateSwap7702Request,
-  CreateSwap7702Response,
   CreateSwapRequest,
   CreateSwapResponse,
   DecreaseLPPositionRequest,
   DecreaseLPPositionResponse,
   DutchQuoteV2,
   DutchQuoteV3,
-  Encode7702ResponseBody,
   GetOrdersResponse,
   GetSwappableTokensResponse,
   GetSwapsResponse,
@@ -42,9 +37,6 @@ import {
   Routing,
   TransactionHash,
   UniversalRouterVersion,
-  WalletCheckDelegationRequestBody,
-  WalletCheckDelegationResponseBody,
-  WalletEncode7702RequestBody,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -209,44 +201,6 @@ export async function fetchSwaps(params: { txHashes: TransactionHash[]; chainId:
 
 export async function migrateLpPosition(params: MigrateLPPositionRequest): Promise<MigrateLPPositionResponse> {
   return await TradingApiClient.post<MigrateLPPositionResponse>(uniswapUrls.tradingApiPaths.migrate, {
-    body: JSON.stringify({
-      ...params,
-    }),
-  })
-}
-
-export async function fetchClaimLpIncentiveRewards(params: ClaimLPRewardsRequest): Promise<ClaimLPRewardsResponse> {
-  return await TradingApiClient.post<ClaimLPRewardsResponse>(uniswapUrls.tradingApiPaths.claimRewards, {
-    body: JSON.stringify({
-      ...params,
-    }),
-  })
-}
-
-export async function fetchWalletEncoding7702(params: WalletEncode7702RequestBody): Promise<Encode7702ResponseBody> {
-  return await TradingApiClient.post<Encode7702ResponseBody>(uniswapUrls.tradingApiPaths.wallet.encode7702, {
-    body: JSON.stringify({
-      ...params,
-    }),
-  })
-}
-
-export async function checkWalletDelegation(
-  params: WalletCheckDelegationRequestBody,
-): Promise<WalletCheckDelegationResponseBody> {
-  return await TradingApiClient.get<WalletCheckDelegationResponseBody>(
-    uniswapUrls.tradingApiPaths.wallet.checkDelegation,
-    {
-      params: {
-        walletAddress: params.walletAddress,
-        chainIds: params.chainIds.join(','),
-      },
-    },
-  )
-}
-
-export async function fetchCreateSwap7702(params: CreateSwap7702Request): Promise<CreateSwap7702Response> {
-  return await TradingApiClient.post<CreateSwap7702Response>(uniswapUrls.tradingApiPaths.swap7702, {
     body: JSON.stringify({
       ...params,
     }),

@@ -146,12 +146,8 @@ export const colors = {
   accent2Solid_light: colorsLight.accent2Solid,
   accent3_light: colorsLight.accent3,
   success_light: colorsLight.statusSuccess,
-  success_dark: colorsDark.statusSuccess,
-  warning_light: colorsLight.statusWarning,
-  warning_dark: colorsDark.statusWarning,
-  warning2_light: colorsLight.statusWarning2,
-  warning2_dark: colorsDark.statusWarning2,
   critical_light: colorsLight.statusCritical,
+  success_dark: colorsDark.statusSuccess,
   critical_dark: colorsDark.statusCritical,
   critical2_dark: colorsDark.statusCritical2,
   critical2_light: colorsLight.statusCritical2,
@@ -226,11 +222,11 @@ export const darkTheme = {
   token1: colors.accent3_dark,
 
   success: colors.success_dark,
-  warning: colors.warning_dark,
-  warning2: colors.warning2_dark,
   critical: colors.critical_dark,
   critical2: colors.critical2_dark,
   scrim: colors.scrim,
+
+  warning2: colors.gold200,
 
   blue400: colors.blue400,
 }
@@ -269,11 +265,11 @@ export const lightTheme: ThemeColors = {
   token1: colors.accent3_light,
 
   success: colors.success_light,
-  warning: colors.warning_light,
-  warning2: colors.warning2_light,
   critical: colors.critical_light,
   critical2: colors.critical2_light,
   scrim: colors.scrim,
+
+  warning2: colors.gold200,
 
   blue400: colors.blue400,
 }

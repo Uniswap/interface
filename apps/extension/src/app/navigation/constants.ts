@@ -6,14 +6,13 @@ export enum TopLevelRoutes {
 }
 
 export enum OnboardingRoutes {
-  Claim = 'claim',
-  Create = 'create',
+  SelectImportMethod = 'select-import-method',
   Import = 'import',
-  ImportPasskey = 'import-passkey',
+  Create = 'create',
+  Claim = 'claim',
+  Scan = 'scan',
   Reset = 'reset',
   ResetScan = 'reset-scan',
-  Scan = 'scan',
-  SelectImportMethod = 'select-import-method',
   UnsupportedBrowser = 'unsupported-browser',
 }
 

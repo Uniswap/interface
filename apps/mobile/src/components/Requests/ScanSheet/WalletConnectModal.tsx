@@ -18,8 +18,8 @@ import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
-import { QrCode } from 'ui/src/components/icons'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -179,7 +179,7 @@ export function WalletConnectModal({
             contractManager,
           })
 
-          dispatch(addRequest(wcRequest.request))
+          dispatch(addRequest(wcRequest))
 
           onClose()
         } catch (_) {
@@ -292,7 +292,7 @@ export function WalletConnectModal({
           >
             <Flex row alignItems="center" gap="$spacing12">
               {isScanningQr ? (
-                <QrCode color="$neutral1" size="$icon.24" />
+                <Scan color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
               ) : (
                 <ScanQRIcon color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
               )}

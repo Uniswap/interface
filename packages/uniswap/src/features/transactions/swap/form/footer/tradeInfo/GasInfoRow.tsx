@@ -1,9 +1,8 @@
 import { Flex, Text } from 'ui/src'
 import { Gas } from 'ui/src/components/icons/Gas'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
-import { NetworkFeeWarning } from 'uniswap/src/features/transactions/modals/NetworkFeeWarning'
 import { GasInfo } from 'uniswap/src/features/transactions/swap/form/footer/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { isInterface } from 'utilities/src/platform'
 
 function NetworkFeeWarningContent({ gasInfo }: { gasInfo: GasInfo }): JSX.Element | null {
@@ -37,7 +36,7 @@ export function GasInfoRow({ gasInfo, hidden }: { gasInfo: GasInfo; hidden?: boo
         gasFeeHighRelativeToValue={gasInfo.isHighRelativeToValue}
         placement={isInterface ? 'right' : 'bottom'}
         tooltipTrigger={
-          <Flex centered row gap="$spacing4" testID={TestID.GasInfoRow}>
+          <Flex centered row gap="$spacing4">
             <NetworkFeeWarningContent gasInfo={gasInfo} />
           </Flex>
         }

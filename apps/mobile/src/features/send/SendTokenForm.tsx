@@ -2,7 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { AlertCircle } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -20,6 +21,7 @@ import {
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
@@ -42,8 +44,10 @@ const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
 export function SendTokenForm(): JSX.Element {
   const { t } = useTranslation()
+  const colors = useSporeColors()
   const { fullHeight } = useDeviceDimensions()
 
+  const { walletNeedsRestore, openWalletRestoreModal } = useTransactionModalContext()
   const { updateSendForm, derivedSendInfo, warnings, gasFee } = useSendContext()
 
   const [currencyFieldFocused, setCurrencyFieldFocused] = useState(true)
@@ -91,6 +95,14 @@ export function SendTokenForm(): JSX.Element {
   const { isBlocked: isActiveBlocked } = useIsBlockedActiveAddress()
   const { isBlocked: isRecipientBlocked } = useIsBlocked(recipient)
   const isBlocked = isActiveBlocked || isRecipientBlocked
+
+  const onRestorePress = (): void => {
+    if (!openWalletRestoreModal) {
+      throw new Error('Invalid call to `onRestorePress` with missing `openWalletRestoreModal`')
+    }
+    setCurrencyFieldFocused(false)
+    openWalletRestoreModal()
+  }
 
   const onTransferWarningClick = (): void => {
     dismissNativeKeyboard()
@@ -312,6 +324,32 @@ export function SendTokenForm(): JSX.Element {
             >
               {recipient && (
                 <RecipientInputPanel recipientAddress={recipient} onShowRecipientSelector={onShowRecipientSelector} />
+              )}
+              {walletNeedsRestore && (
+                <TouchableArea disabled={!openWalletRestoreModal} onPress={onRestorePress}>
+                  <Flex
+                    grow
+                    row
+                    alignItems="center"
+                    alignSelf="stretch"
+                    backgroundColor="$surface2"
+                    borderBottomColor="$surface1"
+                    borderBottomLeftRadius="$rounded20"
+                    borderBottomRightRadius="$rounded20"
+                    borderBottomWidth={1}
+                    gap="$spacing8"
+                    p="$spacing12"
+                  >
+                    <InfoCircleFilled
+                      color={colors.DEP_accentWarning.val}
+                      height={iconSizes.icon20}
+                      width={iconSizes.icon20}
+                    />
+                    <Text color="$DEP_accentWarning" variant="subheading2">
+                      {t('send.warning.restore')}
+                    </Text>
+                  </Flex>
+                </TouchableArea>
               )}
               {isBlocked ? (
                 <BlockedAddressWarning

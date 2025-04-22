@@ -9,10 +9,10 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { PortfolioBalance, TokenList } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/HiddenTokenInfoModal'
-import { ExpandoRow } from 'wallet/src/components/ExpandoRow/ExpandoRow'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
 import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
+import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
 import { PortfolioEmptyState } from 'wallet/src/features/portfolio/PortfolioEmptyState'
 import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
 import {
@@ -152,9 +152,9 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
   if (item === HIDDEN_TOKEN_BALANCES_ROW) {
     return (
       <>
-        <ExpandoRow
+        <HiddenTokensRow
           isExpanded={hiddenTokensExpanded}
-          label={t('hidden.tokens.info.text.button', { numHidden: hiddenTokensCount })}
+          numHidden={hiddenTokensCount}
           onPress={(): void => {
             setHiddenTokensExpanded(!hiddenTokensExpanded)
           }}

@@ -145,7 +145,7 @@ export function RecoveryPhraseModal() {
               hoverStyle={{ opacity: 0.6 }}
               cursor="pointer"
               userSelect="none"
-              transform="translate(-50%, -50%)" // ClickableTamaguiStyle (animate) breaks this transform
+              transform="translate(-50%, -50%)" // TamaguiClickableStyle (animate) breaks this transform
               onPress={handleReveal}
             >
               <EyeSlash minHeight={20} minWidth={20} color="$accent1" />
@@ -168,7 +168,7 @@ export function RecoveryPhraseModal() {
               position="absolute"
               left="50%"
               top="0"
-              transform="translate(-50%, -50%)" // ClickableTamaguiStyle (animate) breaks this transform
+              transform="translate(-50%, -50%)" // TamaguiClickableStyle (animate) breaks this transform
               zIndex={1}
               hoverStyle={{ opacity: 0.6 }}
               cursor="pointer"

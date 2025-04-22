@@ -1,34 +1,38 @@
 import { Page } from 'components/NavBar/DownloadApp/Modal'
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
-import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
-import { Dispatch, SetStateAction } from 'react'
+import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
+import { Dispatch, SetStateAction, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCloseModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { TamaguiClickableStyle } from 'theme/components/styles'
 import { Button, Flex, Text } from 'ui/src'
 import { MultiDevice } from 'ui/src/components/icons/MultiDevice'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { PasskeyFingerprint } from 'ui/src/components/icons/PasskeyFingerprint'
-import { useEvent } from 'utilities/src/react/hooks'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { createNewEmbeddedWallet } from 'uniswap/src/features/passkey/embeddedWallet'
+import { useConnect } from 'wagmi'
 
-export function PasskeyGenerationModal({
-  unitag,
-  setPage,
-}: {
-  unitag: string
-  setPage: Dispatch<SetStateAction<Page>>
-}) {
+export function PasskeyGenerationModal({ setPage }: { setPage: Dispatch<SetStateAction<Page>> }) {
   const { t } = useTranslation()
   const closeModal = useCloseModal(ApplicationModal.GET_THE_APP)
-
-  const onSuccess = useEvent(() => {
-    closeModal()
-    setPage(Page.GetStarted)
+  const { connect } = useConnect()
+  const connector = useConnectorWithId(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID, {
+    shouldThrow: true,
   })
-
-  const { signInWithPasskey } = useSignInWithPasskey({ createNewWallet: true, unitag, onSuccess })
-
+  const handleCreatePasskey = useCallback(async () => {
+    const newWalletAddress = await createNewEmbeddedWallet()
+    if (newWalletAddress) {
+      // TODO[EW]: move from localstorage to context layer
+      localStorage.setItem('embeddedUniswapWallet.address', newWalletAddress)
+      connect({ connector })
+      closeModal()
+      setPage(Page.GetStarted)
+    } else {
+      // TODO[EW]: surface wallet creation error to user
+    }
+  }, [closeModal, connect, connector, setPage])
   return (
     <ModalContent title={t('onboarding.passkey.create')} logo={<Passkey color="$neutral1" size={56} pt="$spacing12" />}>
       <Flex gap="$gap16" alignItems="center">
@@ -67,12 +71,12 @@ export function PasskeyGenerationModal({
           mt="$spacing24"
           variant="buttonLabel3"
           color="$neutral2"
-          {...ClickableTamaguiStyle}
+          {...TamaguiClickableStyle}
           onPress={() => setPage(Page.GetApp)}
         >
           {t('onboarding.passkey.use.recovery.phrase')}
         </Text>
-        <Button variant="branded" py="$spacing16" width="100%" onPress={() => signInWithPasskey()}>
+        <Button variant="branded" py="$spacing16" width="100%" onPress={handleCreatePasskey}>
           <Text color="white" variant="buttonLabel1">
             {t('common.create')}
           </Text>

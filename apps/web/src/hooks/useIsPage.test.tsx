@@ -9,6 +9,7 @@ describe('useIsPage', () => {
     [PageType.LANDING, '/'],
     [PageType.LIMIT, '/limit'],
     [PageType.MIGRATE_V3, '/migrate/v3/info'],
+    [PageType.NFTS, '/nfts/asset/123'],
     [PageType.SEND, '/path/to/send'],
   ])('matches default behavior for %s based on path %s', (pageType, path) => {
     window.history.pushState({}, '', path)
@@ -31,6 +32,7 @@ describe('useIsPage', () => {
   })
 
   it.each([
+    [PageType.NFTS, '/wrong/path/nfts'],
     [PageType.SWAP, '/different/swap/location'],
     [PageType.POSITIONS, '/incorrect/position'],
   ])('does not match default behavior for %s with path %s', (pageType, path) => {

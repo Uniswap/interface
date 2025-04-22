@@ -4,7 +4,6 @@ import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTi
 import { ReactNode, Suspense, lazy, useMemo } from 'react'
 import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
@@ -12,6 +11,8 @@ import { RemoveLiquidityV2WithTokenRedirects } from 'pages/LegacyPool/redirects'
 import Swap from 'pages/Swap'
 import i18n from 'uniswap/src/i18n'
 
+const NftExplore = lazy(() => import('nft/pages/explore'))
+const Collection = lazy(() => import('nft/pages/collection'))
 const CreatePosition = lazy(() => import('pages/Pool/Positions/create/CreatePosition'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
@@ -36,7 +37,6 @@ const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
-const ExtensionPasskeySignInPopUp = lazy(() => import('pages/ExtensionPasskeyAuthPopUp'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
@@ -331,6 +331,17 @@ export const routes: RouteDefinition[] = [
     getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
   }),
   createRouteDefinition({
+    path: '/nfts',
+    getElement: () => (
+      <Suspense fallback={null}>
+        <NftExplore />
+      </Suspense>
+    ),
+    enabled: (args) => !args.shouldDisableNFTRoutes,
+    getTitle: () => i18n.t('title.exploreNFTs'),
+    getDescription: () => i18n.t('title.betterPricesMoreListings'),
+  }),
+  createRouteDefinition({
     path: '/nfts/asset/:contractAddress/:tokenId',
     getElement: () => (
       <Suspense fallback={null}>
@@ -352,9 +363,24 @@ export const routes: RouteDefinition[] = [
     getDescription: () => i18n.t('title.manageNFT'),
   }),
   createRouteDefinition({
-    path: EXTENSION_PASSKEY_AUTH_PATH,
-    getElement: () => <ExtensionPasskeySignInPopUp />,
-    getTitle: () => i18n.t('title.extensionPasskeySignIn'),
+    path: '/nfts/collection/:contractAddress',
+    getElement: () => (
+      <Suspense fallback={null}>
+        <Collection />
+      </Suspense>
+    ),
+    enabled: (args) => !args.shouldDisableNFTRoutes,
+    getTitle: () => StaticTitlesAndDescriptions.NFTTitle,
+  }),
+  createRouteDefinition({
+    path: '/nfts/collection/:contractAddress/activity',
+    getElement: () => (
+      <Suspense fallback={null}>
+        <Collection />
+      </Suspense>
+    ),
+    enabled: (args) => !args.shouldDisableNFTRoutes,
+    getTitle: () => StaticTitlesAndDescriptions.NFTTitle,
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),

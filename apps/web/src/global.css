@@ -37,7 +37,7 @@ html {
   }
 }
 
-@keyframes cloud-float-animation {
+@keyframes token-float-animation {
   0% {
     transform: translateY(-8px);
   }

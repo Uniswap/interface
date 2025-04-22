@@ -36,13 +36,13 @@ export enum ActivityEventTypeDisplay {
   'CANCEL_LISTING' = 'Cancellation',
 }
 
- interface TokenRarity {
+export interface TokenRarity {
   rank: number
   score: number
   source: string
 }
 
-interface TokenMetadata {
+export interface TokenMetadata {
   name?: string
   imageUrl?: string
   smallImageUrl?: string

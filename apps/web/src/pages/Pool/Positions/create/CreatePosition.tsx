@@ -38,6 +38,8 @@ import { Button, Flex, Text, TouchableArea, styled, useMedia } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -179,7 +181,13 @@ const ToolbarContainer = styled(Flex, {
   },
 })
 
-const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => {
+const Toolbar = ({
+  defaultInitialToken,
+  isV4DataEnabled,
+}: {
+  defaultInitialToken: Currency
+  isV4DataEnabled: boolean
+}) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { positionState, setPositionState, setStep, reset: resetCreatePositionState } = useCreatePositionContext()
@@ -249,7 +257,10 @@ const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => 
 
   const versionOptions = useMemo(
     () =>
-      [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
+      (isV4DataEnabled
+        ? [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
+        : [ProtocolVersion.V3, ProtocolVersion.V2]
+      )
         .filter((version) => version != protocolVersion)
         .map((version) => (
           <TouchableArea key={`version-${version}`} onPress={() => handleVersionChange(version)}>
@@ -258,7 +269,7 @@ const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => 
             </Flex>
           </TouchableArea>
         )),
-    [handleVersionChange, protocolVersion, t],
+    [handleVersionChange, protocolVersion, isV4DataEnabled, t],
   )
 
   return (
@@ -310,6 +321,7 @@ const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => 
 }
 
 export default function CreatePosition() {
+  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const media = useMedia()
   const { t } = useTranslation()
 
@@ -318,7 +330,16 @@ export default function CreatePosition() {
   const paramsProtocolVersion = parseProtocolVersion(protocolVersion)
 
   const initialInputs = useInitialPoolInputs()
-  const initialProtocolVersion = paramsProtocolVersion ?? ProtocolVersion.V4
+  const initialProtocolVersion = useMemo((): ProtocolVersion => {
+    if (isV4DataEnabled) {
+      return paramsProtocolVersion ?? ProtocolVersion.V4
+    }
+    if (!paramsProtocolVersion || paramsProtocolVersion === ProtocolVersion.V4) {
+      return ProtocolVersion.V3
+    }
+
+    return paramsProtocolVersion
+  }, [isV4DataEnabled, paramsProtocolVersion])
 
   return (
     <Trace logImpression page={InterfacePageNameLocal.CreatePosition}>
@@ -362,7 +383,10 @@ export default function CreatePosition() {
                       $md={{ flexDirection: 'column', alignItems: 'stretch' }}
                     >
                       <Text variant="heading2">{t('position.new')}</Text>
-                      <Toolbar defaultInitialToken={initialInputs[PositionField.TOKEN0]} />
+                      <Toolbar
+                        defaultInitialToken={initialInputs[PositionField.TOKEN0]}
+                        isV4DataEnabled={isV4DataEnabled}
+                      />
                     </Flex>
                     <Flex row gap="$spacing20" justifyContent="space-between" width="100%">
                       {!media.xl && <Sidebar />}

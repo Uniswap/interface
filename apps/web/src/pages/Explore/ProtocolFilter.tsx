@@ -6,17 +6,23 @@ import { useCallback, useMemo, useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export const exploreProtocolVersionFilterAtom = atom(ProtocolVersion.UNSPECIFIED)
-const PROTOCOL_VERSIONS = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
 
 function ProtocolFilter() {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const [open, setOpen] = useState(false)
   const [selectedProtocol, setSelectedProtocol] = useAtom(exploreProtocolVersionFilterAtom)
+  const protocolVersions = useMemo(() => {
+    const options = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
+    return isV4DataEnabled ? options : options.filter((o) => o !== ProtocolVersion.V4)
+  }, [isV4DataEnabled])
   const media = useMedia()
 
   const onVersionChange = useCallback(
@@ -28,13 +34,13 @@ function ProtocolFilter() {
   )
 
   const versionFilterOptions = useMemo(() => {
-    return PROTOCOL_VERSIONS.map((option) => (
+    return protocolVersions.map((option) => (
       <InternalMenuItem key={`ExplorePools-version-${option}`} onPress={() => onVersionChange(option)}>
         {option === ProtocolVersion.UNSPECIFIED ? t('common.all') : getProtocolVersionLabel(option)}
         {selectedProtocol === option && <Check size={16} color={colors.accent1.val} />}
       </InternalMenuItem>
     ))
-  }, [selectedProtocol, onVersionChange, colors, t])
+  }, [protocolVersions, selectedProtocol, onVersionChange, colors, t])
 
   return (
     <Flex>

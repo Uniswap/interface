@@ -40,6 +40,7 @@ describe('useTokenApprovalInfo', () => {
     currencyOutAmount: mockCurrencyOutAmount,
     routing: Routing.CLASSIC,
     account: mockAccount,
+    skip: false,
   }
 
   beforeEach(() => {
@@ -71,72 +72,39 @@ describe('useTokenApprovalInfo', () => {
         gasFee: '200000',
         gasEstimates: [mockGasEstimates.activeEstimate],
       },
-      isLoading: false,
       error: null,
     })
 
     const { result } = renderHook(() => useTokenApprovalInfo(mockParams))
 
     expect(result.current).toEqual({
-      tokenApprovalInfo: {
-        action: ApprovalAction.Permit2Approve,
-        txRequest: {
-          to: '0x456',
-          chainId: UniverseChainId.Mainnet,
-          gasLimit: '100000',
-          maxFeePerGas: '300000',
-          maxPriorityFeePerGas: '400000',
-        },
-        cancelTxRequest: null,
+      action: ApprovalAction.Permit2Approve,
+      txRequest: {
+        to: '0x456',
+        chainId: UniverseChainId.Mainnet,
+        gasLimit: '100000',
+        maxFeePerGas: '300000',
+        maxPriorityFeePerGas: '400000',
       },
-      approvalGasFeeResult: {
-        value: '200000',
-        displayValue: '173913',
-        isLoading: false,
-        error: null,
-        gasEstimates: mockGasEstimates,
-        activeEstimate: mockGasEstimates.activeEstimate,
-      },
-      revokeGasFeeResult: {
-        value: '0',
-        displayValue: '0',
-        isLoading: false,
-        error: null,
-      },
+      gasFee: '200000',
+      displayGasFee: '173913',
+      gasEstimates: mockGasEstimates,
+      cancelTxRequest: null,
     })
   })
 
   it('should handle undefined approval data gracefully', () => {
     mockUseCheckApprovalQuery.mockReturnValue({
       data: undefined,
-      isLoading: false,
       error: null,
     })
 
     const { result } = renderHook(() => useTokenApprovalInfo(mockParams))
 
     expect(result.current).toEqual({
-      tokenApprovalInfo: {
-        action: ApprovalAction.Unknown,
-        txRequest: null,
-        cancelTxRequest: null,
-      },
-      approvalGasFeeResult: {
-        value: undefined,
-        displayValue: undefined,
-        isLoading: false,
-        error: new Error('Approval action unknown'),
-        gasEstimates: undefined,
-        activeEstimate: undefined,
-      },
-      revokeGasFeeResult: {
-        value: undefined,
-        displayValue: undefined,
-        isLoading: false,
-        error: new Error('Approval action unknown'),
-        gasEstimates: undefined,
-        activeEstimate: undefined,
-      },
+      action: ApprovalAction.Unknown,
+      txRequest: null,
+      cancelTxRequest: null,
     })
   })
 
@@ -144,7 +112,6 @@ describe('useTokenApprovalInfo', () => {
     const mockError = new Error('Approval check failed')
     mockUseCheckApprovalQuery.mockReturnValue({
       data: undefined,
-      isLoading: false,
       error: mockError,
     })
 
@@ -157,27 +124,9 @@ describe('useTokenApprovalInfo', () => {
       },
     })
     expect(result.current).toEqual({
-      tokenApprovalInfo: {
-        action: ApprovalAction.Unknown,
-        txRequest: null,
-        cancelTxRequest: null,
-      },
-      approvalGasFeeResult: {
-        value: undefined,
-        displayValue: undefined,
-        isLoading: false,
-        error: new Error('Approval action unknown'),
-        gasEstimates: undefined,
-        activeEstimate: undefined,
-      },
-      revokeGasFeeResult: {
-        value: undefined,
-        displayValue: undefined,
-        isLoading: false,
-        error: new Error('Approval action unknown'),
-        gasEstimates: undefined,
-        activeEstimate: undefined,
-      },
+      action: ApprovalAction.Unknown,
+      txRequest: null,
+      cancelTxRequest: null,
     })
   })
 })

@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AdaptiveWebPopoverContent, Button, Flex, Text, TouchableArea, isWeb, useMedia, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SLIPPAGE_CRITICAL_TOLERANCE, WARNING_DEADLINE_TOLERANCE } from 'uniswap/src/constants/transactions'
@@ -198,7 +198,7 @@ function TransactionSettingsModalInterface({
       shadowRadius={6}
       width={POPOVER_WIDTH}
       isOpen={isOpen}
-      webBottomSheetProps={{ px: '$padding16' }}
+      webBottomSheetProps={{ px: '$padding16', zIndex: zIndexes.overlay }} // TODO(WEB-7196): Latest tamagui upgrade to 1.125.17 broke stacking zindexes on mweb. Temp forcing zIndex.overlay to display over LP modals
     >
       <TransactionSettingsModalContent
         defaultTitle={defaultTitle}

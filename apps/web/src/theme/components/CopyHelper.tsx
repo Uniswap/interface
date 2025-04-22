@@ -133,8 +133,8 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
         {iconPosition === 'left' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
         <Flex
           ref={textRef}
-          maxWidth={`calc(100% - ${offset + 'px'})`}
           {...EllipsisTamaguiStyle}
+          maxWidth={`calc(100% - ${offset + 'px'})`}
           $platform-web={{
             fontSize: fontSize ? fontSize : 'inherit',
           }}

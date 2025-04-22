@@ -574,12 +574,7 @@ function V2PairMigration({
               }}
             />
           </TokenPairHeader>
-          <FeeSelector
-            feeAmount={feeAmount}
-            handleFeePoolSelect={setFeeAmount}
-            currencyA={currency0}
-            currencyB={currency1}
-          />
+          <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
           {noLiquidity && (
             <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <AlertCircle color={theme.neutral1} style={{ marginBottom: '12px', opacity: 0.8 }} />

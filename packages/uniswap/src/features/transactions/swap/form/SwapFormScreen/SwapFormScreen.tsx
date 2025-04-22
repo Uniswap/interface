@@ -1,16 +1,18 @@
 /* eslint-disable complexity */
 import { useTranslation } from 'react-i18next'
-import { Flex, isWeb } from 'ui/src'
+import { Accordion, Flex, isWeb } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { ExpandableRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/ExpandableRows'
 import { SwapFormDecimalPad } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormDecimalPad'
-import { SwapFormScreenDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails'
+import { SwapFormScreenFooter } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenFooter'
 import { SwitchCurrenciesButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwitchCurrenciesButton'
 import { WalletRestoreButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/WalletRestoreButton'
+import { SwapFormButton } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/SwapFormButton'
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/body/SwapTokenSelector/SwapTokenSelector'
 import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
 import { SwapFormScreenContextProvider } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContextProvider'
@@ -19,15 +21,18 @@ import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/he
 import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/ProtocolPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Slippage/Slippage'
 import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
+
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isExtension, isInterface } from 'utilities/src/platform'
-
 interface SwapFormScreenProps {
   hideContent: boolean
   hideFooter?: boolean
   settings: SwapSettingConfig[]
   tokenColor?: string
+  // TODO(WEB-5012): Remove wrap callback prop drilling by aligning interface wrap UX w/ wallet
+  wrapCallback?: WrapCallback
 }
 
 /**
@@ -38,6 +43,7 @@ export function SwapFormScreen({
   hideContent,
   settings = [Slippage, ProtocolPreference],
   tokenColor,
+  wrapCallback,
 }: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
   const { selectingCurrencyField, hideSettings, derivedSwapInfo } = useSwapFormContext()
@@ -51,7 +57,7 @@ export function SwapFormScreen({
       {!hideSettings && <SwapFormSettings settings={settings} isBridgeTrade={isBridgeTrade} />}
 
       {!hideContent && (
-        <SwapFormScreenContextProvider tokenColor={tokenColor}>
+        <SwapFormScreenContextProvider wrapCallback={wrapCallback} tokenColor={tokenColor}>
           <SwapFormContent />
         </SwapFormScreenContextProvider>
       )}
@@ -91,6 +97,7 @@ function SwapFormContent(): JSX.Element {
     tokenColor,
     walletNeedsRestore,
     isBridge,
+    showFooter,
 
     // Trade-related values
     trade,
@@ -109,6 +116,7 @@ function SwapFormContent(): JSX.Element {
     onShowTokenSelectorOutput,
     showTemporaryFoTWarning,
     onDecimalPadTriggerInputShake,
+    wrapCallback,
 
     // Styles
     hoverStyles,
@@ -196,7 +204,27 @@ function SwapFormContent(): JSX.Element {
           </Flex>
         </Trace>
 
-        <SwapFormScreenDetails />
+        <Accordion collapsible type="single" overflow="hidden">
+          <Accordion.Item value="a1" className="gas-container">
+            {/* <Accordion.HeightAnimator> attaches an absolutely positioned element that cannot be targeted without the below style */}
+            {isWeb && (
+              <style>{`
+              .gas-container > div > div {
+                width: 100%;
+              }
+            `}</style>
+            )}
+            <Flex>
+              {isWeb && (
+                <Flex pt="$spacing4">
+                  <SwapFormButton wrapCallback={wrapCallback} tokenColor={tokenColor} />
+                </Flex>
+              )}
+              <SwapFormScreenFooter />
+            </Flex>
+            {isWeb && showFooter ? <ExpandableRows isBridge={isBridge} /> : null}
+          </Accordion.Item>
+        </Accordion>
       </Flex>
 
       {!isWeb && (

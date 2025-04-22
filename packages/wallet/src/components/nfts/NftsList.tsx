@@ -14,7 +14,7 @@ import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ExpandoRow } from 'wallet/src/components/ExpandoRow/ExpandoRow'
+import { HiddenNftsRow } from 'wallet/src/components/nfts/NFTHiddenRow'
 import { ShowNFTModal } from 'wallet/src/components/nfts/ShowNFTModal'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { EMPTY_NFT_ITEM, ESTIMATED_NFT_LIST_ITEM_SIZE, HIDDEN_NFTS_ROW } from 'wallet/src/features/nfts/constants'
@@ -140,22 +140,19 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
           return null
         case HIDDEN_NFTS_ROW:
           return (
-            <Flex grow>
-              <ExpandoRow
-                isExpanded={hiddenNftsExpanded}
-                label={t('hidden.nfts.info.text.button', { numHidden })}
-                mx="$spacing4"
-                onPress={onHiddenRowPressed}
-              />
-              {hiddenNftsExpanded && <ShowNFTModal />}
-            </Flex>
+            <>
+              <Flex grow>
+                <HiddenNftsRow isExpanded={hiddenNftsExpanded} numHidden={numHidden} onPress={onHiddenRowPressed} />
+                {hiddenNftsExpanded && <ShowNFTModal />}
+              </Flex>
+            </>
           )
 
         default:
           return null
       }
     },
-    [hiddenNftsExpanded, numHidden, onHiddenRowPressed, renderNFTItem, t],
+    [hiddenNftsExpanded, numHidden, onHiddenRowPressed, renderNFTItem],
   )
 
   const onRetry = useCallback(() => refetch(), [refetch])

@@ -7,14 +7,8 @@ import { UNISWAP_LOGO } from 'ui/src/assets'
 import { imageSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
-import {
-  DynamicConfigs,
-  ForceUpgradeConfigKey,
-  ForceUpgradeStatus,
-  ForceUpgradeTranslations,
-} from 'uniswap/src/features/gating/configs'
+import { DynamicConfigs, ForceUpgradeConfigKey, ForceUpgradeStatus } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { useLocalizedStatsigLanguage } from 'uniswap/src/features/language/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 import { isMobileApp } from 'utilities/src/platform'
@@ -23,11 +17,6 @@ import { UpgradeStatus } from 'wallet/src/features/forceUpgrade/types'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
-type Translation = {
-  description?: string
-  title?: string
-}
-
 interface ForceUpgradeProps {
   SeedPhraseModalContent: React.ComponentType<{ mnemonicId: string; onDismiss: () => void }>
 }
@@ -35,30 +24,12 @@ interface ForceUpgradeProps {
 export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const statsigLanguage = useLocalizedStatsigLanguage()
 
   const forceUpgradeStatusString = useDynamicConfigValue<
     DynamicConfigs.ForceUpgrade,
     ForceUpgradeConfigKey,
     ForceUpgradeStatus
   >(DynamicConfigs.ForceUpgrade, ForceUpgradeConfigKey.Status, 'not-required')
-
-  const upgradeTextTranslations = useDynamicConfigValue<
-    DynamicConfigs.ForceUpgrade,
-    ForceUpgradeConfigKey,
-    ForceUpgradeTranslations
-  >(DynamicConfigs.ForceUpgrade, ForceUpgradeConfigKey.Translations, {})
-
-  const { description: translatedDescription, title: translatedTitle } = useMemo<Translation>(() => {
-    if (!statsigLanguage) {
-      return { description: undefined, title: undefined }
-    }
-
-    const translation = upgradeTextTranslations[statsigLanguage]
-    return translation
-      ? { description: translation.description, title: translation.title }
-      : { description: undefined, title: undefined }
-  }, [upgradeTextTranslations, statsigLanguage])
 
   const upgradeStatus = useMemo(() => {
     if (forceUpgradeStatusString === 'recommended') {
@@ -74,14 +45,6 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
   const [userDismissed, setUserDismissed] = useState(false)
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
   const isVisible = shouldShow && !userDismissed && !showSeedPhrase
-
-  const isRecommended = upgradeStatus === UpgradeStatus.Recommended
-  const titleText =
-    translatedTitle ?? (isRecommended ? t('forceUpgrade.title.recommendedStatus') : t('forceUpgrade.title'))
-
-  const descriptionText =
-    translatedDescription ??
-    (isMobileApp ? t('forceUpgrade.description.wallet') : t('forceUpgrade.description.extension'))
 
   // signerAccounts could be empty if no seed phrase imported or in onboarding
   const signerAccounts = useSignerAccounts()
@@ -167,10 +130,10 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
           </Flex>
           <Flex gap="$spacing8">
             <Text textAlign="center" variant="subheading1">
-              {titleText}
+              {t('forceUpgrade.title')}
             </Text>
             <Text color="$neutral2" textAlign="center" variant="body3">
-              {descriptionText}
+              {isMobileApp ? t('forceUpgrade.description.wallet') : t('forceUpgrade.description.extension')}
             </Text>
           </Flex>
           <Flex centered gap="$spacing8" pb={isWeb ? '$none' : '$spacing12'} width="100%">

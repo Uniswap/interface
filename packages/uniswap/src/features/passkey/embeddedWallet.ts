@@ -2,18 +2,13 @@ import {
   Action,
   AuthenticationTypes,
   Authenticator,
-  RegistrationOptions_AuthenticatorAttachment as AuthenticatorAttachment,
-  RegistrationOptions,
 } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 import {
   fetchChallengeRequest,
   fetchCreateWalletRequest,
-  fetchDeleteAuthenticatorRequest,
   fetchDisconnectRequest,
   fetchExportSeedPhraseRequest,
   fetchListAuthenticatorsRequest,
-  fetchRegisterNewAuthenticatorRequest,
-  fetchSecuredChallengeRequest,
   fetchSignMessagesRequest,
   fetchSignTransactionRequest,
   fetchSignTypedDataRequest,
@@ -23,28 +18,15 @@ import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passk
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 
-export {
-  Authenticator,
-  RegistrationOptions_AuthenticatorAttachment as AuthenticatorAttachment,
-  AuthenticatorNameType,
-} from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
+export type BE_AUTHENTICATOR_TYPE = Authenticator
 
 // Registration
-async function registerNewPasskey({
-  username,
-  authenticatorAttachment,
-  action,
-}: {
-  username?: string
-  authenticatorAttachment?: AuthenticatorAttachment
-  action?: Action
-} = {}): Promise<string | undefined> {
-  const options: RegistrationOptions = { authenticatorAttachment, username } as RegistrationOptions
+
+async function registerNewPasskey(): Promise<string | undefined> {
   try {
     const challenge = await fetchChallengeRequest({
       type: AuthenticationTypes.PASSKEY_REGISTRATION,
-      action: action ?? Action.CREATE_WALLET,
-      options,
+      action: Action.CREATE_WALLET,
     })
     return await registerPasskey(challenge.challengeOptions)
   } catch (registrationError: unknown) {
@@ -58,9 +40,9 @@ async function registerNewPasskey({
   return undefined
 }
 
-export async function createNewEmbeddedWallet(unitag: string): Promise<`0x${string}` | undefined> {
+export async function createNewEmbeddedWallet(): Promise<`0x${string}` | undefined> {
   try {
-    const passkeyCredential = await registerNewPasskey({ username: unitag })
+    const passkeyCredential = await registerNewPasskey()
     if (!passkeyCredential) {
       return undefined
     }
@@ -92,24 +74,6 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<`0x${stri
     })
   }
   return undefined
-}
-
-export async function getSecuredChallengeOptions({
-  type,
-  action,
-  b64EncryptionPublicKey,
-}: {
-  type: AuthenticationTypes
-  action: Action
-  b64EncryptionPublicKey: string
-}): Promise<string> {
-  const securedChallengeResponse = await fetchSecuredChallengeRequest({
-    type,
-    action,
-    b64EncryptionPublicKey,
-  })
-
-  return securedChallengeResponse.challengeOptions
 }
 
 // Authentication
@@ -252,60 +216,4 @@ export async function listAuthenticators(): Promise<Authenticator[]> {
   const credential = await authenticateWithPasskey(Action.LIST_AUTHENTICATORS)
   const listAuthenticatorsResp = await fetchListAuthenticatorsRequest({ credential: JSON.stringify(credential) })
   return listAuthenticatorsResp.authenticators
-}
-
-export async function registerNewAuthenticator({
-  authenticatorAttachment,
-}: {
-  authenticatorAttachment: AuthenticatorAttachment
-}): Promise<boolean | undefined> {
-  try {
-    const existingCredential = await authenticateWithPasskey(Action.REGISTER_NEW_AUTHENTICATION_TYPES)
-    const newPasskeyCredential = await registerNewPasskey({
-      authenticatorAttachment,
-      action: Action.REGISTER_NEW_AUTHENTICATION_TYPES,
-    })
-    if (newPasskeyCredential && existingCredential) {
-      await fetchRegisterNewAuthenticatorRequest({
-        newCredential: newPasskeyCredential,
-        newAuthenticationType: AuthenticationTypes.PASSKEY_REGISTRATION,
-        existingCredential,
-        existingAuthenticationType: AuthenticationTypes.PASSKEY_AUTHENTICATION,
-      })
-      return true
-    }
-  } catch (error) {
-    logger.error(error, {
-      tags: {
-        file: 'embeddedWallet.ts',
-        function: 'registerNewAuthenticator',
-      },
-    })
-    return false
-  }
-  return false
-}
-
-export async function deleteAuthenticator(authenticator: Authenticator): Promise<boolean | undefined> {
-  try {
-    const credential = await authenticateWithPasskey(Action.DELETE_RECORD)
-    if (credential) {
-      await fetchDeleteAuthenticatorRequest({
-        credential,
-        authenticationType: AuthenticationTypes.PASSKEY_AUTHENTICATION,
-        authenticatorId: authenticator.id,
-        authenticatorType: authenticator.type,
-      })
-      return true
-    }
-    return false
-  } catch (error) {
-    logger.error(error, {
-      tags: {
-        file: 'embeddedWallet.ts',
-        function: 'deleteAuthenticator',
-      },
-    })
-    return false
-  }
 }

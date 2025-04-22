@@ -1,5 +1,4 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import {
   LiquidityPositionStatusIndicator,
@@ -7,24 +6,15 @@ import {
 } from 'components/Liquidity/LiquidityPositionStatusIndicator'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Button, Circle, Flex, Text, useMedia } from 'ui/src'
-
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
-import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import { UNI } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 
 interface LiquidityPositionInfoProps {
@@ -34,10 +24,6 @@ interface LiquidityPositionInfoProps {
   showMigrateButton?: boolean
   isMiniVersion?: boolean
   linkToPool?: boolean
-  includeLpIncentives?: boolean
-  includeNetwork?: boolean
-  poolApr?: number
-  lpIncentiveRewardApr?: number
 }
 
 export function LiquidityPositionInfoLoader({ hideStatus }: { hideStatus?: boolean }) {
@@ -61,21 +47,13 @@ export function LiquidityPositionInfo({
   showMigrateButton = false,
   isMiniVersion = false,
   linkToPool = false,
-  includeLpIncentives = false,
-  includeNetwork = false,
-  poolApr,
 }: LiquidityPositionInfoProps) {
-  const { currency0Amount, currency1Amount, status, feeTier, v4hook, version, chainId } = positionInfo
+  const { currency0Amount, currency1Amount, status, feeTier, v4hook, version } = positionInfo
   const versionLabel = getProtocolVersionLabel(version)
   const navigate = useNavigate()
   const chainInfo = getChainInfo(positionInfo.chainId)
   const media = useMedia()
   const { t } = useTranslation()
-  const { formatPercent } = useLocalizationContext()
-  const lpIncentiveRewardApr =
-    positionInfo.version === ProtocolVersion.V4 && Boolean(positionInfo.boostedApr)
-      ? positionInfo.boostedApr
-      : undefined
 
   const isMigrateToV4ButtonVisible = useMemo(() => {
     if (!(positionInfo.version === ProtocolVersion.V3 && showMigrateButton)) {
@@ -88,17 +66,6 @@ export function LiquidityPositionInfo({
 
     return !shouldHideInRange
   }, [positionInfo.version, showMigrateButton, media.lg, media.md, media.xxl, media.xl])
-
-  const [currency0Info, currency1Info, rewardCurrencyInfo] = useCurrencyInfos([
-    currencyId(currency0Amount.currency),
-    currencyId(currency1Amount.currency),
-    buildCurrencyId(UniverseChainId.Mainnet, UNI[UniverseChainId.Mainnet].address),
-  ])
-
-  const includeNetworkInLogo = useMemo(
-    () => !includeNetwork || (includeNetwork && media.lg),
-    [includeNetwork, media.lg],
-  )
 
   const migrateToV4Button = (): JSX.Element => {
     return (
@@ -121,78 +88,36 @@ export function LiquidityPositionInfo({
 
   return (
     <Flex row gap="$gap16" $md={{ width: '100%' }} alignItems={isMiniVersion ? 'center' : 'flex-start'}>
-      <SplitLogo
-        inputCurrencyInfo={currency0Info}
-        outputCurrencyInfo={currency1Info}
-        size={currencyLogoSize}
-        chainId={includeNetworkInLogo ? chainId : null}
-      />
-      <Flex gap={isMiniVersion ? '$none' : '$spacing2'}>
-        <Flex
-          flexDirection={isMiniVersion ? 'column' : 'row'}
-          gap={isMiniVersion ? '$none' : '$gap12'}
-          $md={{ gap: isMiniVersion ? '$none' : '$gap12' }}
-          alignItems={isMiniVersion ? 'flex-start' : 'center'}
-        >
-          <Flex>
-            {linkToPool ? (
-              <Anchor href={getPoolDetailsURL(positionInfo.poolId, positionInfo.chainId)} textDecorationLine="none">
-                <Text variant="subheading1" {...ClickableTamaguiStyle}>
-                  {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
-                </Text>
-              </Anchor>
-            ) : (
-              <Text variant="subheading1">
+      <DoubleCurrencyLogo currencies={[currency0Amount?.currency, currency1Amount?.currency]} size={currencyLogoSize} />
+      <Flex
+        flexDirection={isMiniVersion ? 'column' : 'row'}
+        gap={isMiniVersion ? '$gap0' : '$gap16'}
+        $md={{ row: false, gap: isMiniVersion ? '$gap0' : '$gap4' }}
+        alignItems="flex-start"
+      >
+        <Flex gap="$gap4" $md={{ row: true, gap: '$gap12' }}>
+          {linkToPool ? (
+            <Anchor href={getPoolDetailsURL(positionInfo.poolId, positionInfo.chainId)} textDecorationLine="none">
+              <Text variant="subheading1" {...ClickableTamaguiStyle}>
                 {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
               </Text>
-            )}
+            </Anchor>
+          ) : (
+            <Text variant="subheading1">
+              {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
+            </Text>
+          )}
+          <Flex row gap="$gap8" alignItems="center">
+            {!hideStatusIndicator && <LiquidityPositionStatusIndicator status={status} />}
           </Flex>
+        </Flex>
+
+        <Flex row gap="$gap8" alignItems="center" mt={3} $md={{ mt: 0 }}>
           <Flex row gap={2} alignItems="center">
             <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={v4hook} feeTier={feeTier} />
           </Flex>
           {isMigrateToV4ButtonVisible && migrateToV4Button()}
         </Flex>
-
-        {!isMiniVersion && (
-          <Flex row gap="$gap12">
-            {includeNetwork && (
-              <Flex row gap="$spacing6" alignItems="center" $lg={{ display: 'none' }}>
-                <NetworkLogo chainId={chainInfo.id} size={16} shape="square" />
-                <Text variant="body3" color="$neutral2">
-                  {chainInfo.name}
-                </Text>
-              </Flex>
-            )}
-            {!hideStatusIndicator && (
-              <Flex row gap="$spacing6" alignItems="center">
-                <LiquidityPositionStatusIndicator status={status} />
-              </Flex>
-            )}
-            {includeLpIncentives && lpIncentiveRewardApr && (
-              <MouseoverTooltip
-                padding={0}
-                text={
-                  <LPIncentiveFeeStatTooltip
-                    currency0Amount={currency0Amount}
-                    currency1Amount={currency1Amount}
-                    poolApr={poolApr}
-                    lpIncentiveRewardApr={lpIncentiveRewardApr}
-                    totalApr={positionInfo.version === ProtocolVersion.V4 ? positionInfo.totalApr : undefined}
-                  />
-                }
-                size={TooltipSize.Small}
-                placement="top"
-              >
-                <Flex row gap="$spacing6" alignItems="center" cursor="pointer">
-                  <CurrencyLogo currencyInfo={rewardCurrencyInfo} size={16} />
-                  <Text variant="body3" color="$accent1">
-                    {t('pool.rewardAPR.percent', { pct: formatPercent(lpIncentiveRewardApr) })}
-                  </Text>
-                </Flex>
-              </MouseoverTooltip>
-            )}
-          </Flex>
-        )}
       </Flex>
     </Flex>
   )

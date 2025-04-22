@@ -25,7 +25,6 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   IncreaseLiquidityTransactionInfo,
-  LpIncentivesClaimTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   RemoveLiquidityV3TransactionInfo,
   SendTransactionInfo,
@@ -273,18 +272,6 @@ async function parseSend(
   }
 }
 
-async function parseLpIncentivesClaim(
-  info: LpIncentivesClaimTransactionInfo,
-  chainId: UniverseChainId,
-): Promise<Partial<Activity>> {
-  const token = await getCurrency(info.tokenAddress, chainId)
-  const symbol = token?.symbol ?? i18n.t('common.unknown')
-  return {
-    descriptor: i18n.t('activity.transaction.lpRewards.descriptor', { symbol }),
-    currencies: [token],
-  }
-}
-
 export async function transactionToActivity(
   details: TransactionDetails | undefined,
   chainId: UniverseChainId,
@@ -337,8 +324,6 @@ export async function transactionToActivity(
       additionalFields = await parseMigrateCreateV3(info, chainId)
     } else if (info.type === TransactionType.SEND) {
       additionalFields = await parseSend(info, chainId, formatNumber)
-    } else if (info.type === TransactionType.LP_INCENTIVES_CLAIM_REWARDS) {
-      additionalFields = await parseLpIncentivesClaim(info, chainId)
     }
 
     const activity = { ...defaultFields, ...additionalFields }

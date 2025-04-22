@@ -1,33 +1,25 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { CHART_WIDTH } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
-import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/Liquidity/types'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Dispatch, SetStateAction } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled, useMedia } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
-import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 interface LiquidityPositionFeeStatsProps extends LiquidityPositionMinMaxRangeProps {
-  version: ProtocolVersion
-  cardHovered: boolean
-  currency0Amount: CurrencyAmount<Currency>
-  currency1Amount: CurrencyAmount<Currency>
   formattedUsdValue?: string
   formattedUsdFees?: string
-  formattedLpIncentiveEarnings?: string
-  totalApr?: number
+  totalApr?: string
   feeApr?: string
+  version: ProtocolVersion
   apr?: number
-  lpIncentiveRewardApr?: number
+  cardHovered: boolean
 }
 
 const PrimaryText = styled(Text, {
@@ -88,25 +80,18 @@ export function LiquidityPositionFeeStatsLoader() {
 export function LiquidityPositionFeeStats({
   formattedUsdValue,
   formattedUsdFees,
-  formattedLpIncentiveEarnings,
   priceOrdering,
   tickLower,
   tickUpper,
   tickSpacing,
   version,
   apr,
-  currency0Amount,
-  currency1Amount,
   cardHovered,
   pricesInverted,
   setPricesInverted,
-  lpIncentiveRewardApr,
-  totalApr,
 }: LiquidityPositionFeeStatsProps) {
   const { t } = useTranslation()
-  const hasLPIncentiveRewards = !!lpIncentiveRewardApr
-  const hasLpIncentiveEarnings = !!formattedLpIncentiveEarnings
-  const earningsOrFees = hasLpIncentiveEarnings ? formattedLpIncentiveEarnings : formattedUsdFees ?? '-'
+  const { formatPercent } = useLocalizationContext()
 
   return (
     <Flex
@@ -144,24 +129,19 @@ export function LiquidityPositionFeeStats({
                 </MouseoverTooltip>
               </Flex>
             ) : (
-              <PrimaryText>{earningsOrFees}</PrimaryText>
+              <PrimaryText>{formattedUsdFees ?? '-'}</PrimaryText>
             )}
             <SecondaryText variant="body3" color="$neutral2">
-              {hasLpIncentiveEarnings || hasLPIncentiveRewards ? t('pool.earnings') : t('common.fees')}
+              {t('common.fees')}
             </SecondaryText>
           </FeeStat>
         </WrapChildrenForMediaSize>
-        {hasLPIncentiveRewards ? (
-          <LPIncentiveFeeStat
-            currency0Amount={currency0Amount}
-            currency1Amount={currency1Amount}
-            poolApr={apr}
-            lpIncentiveRewardApr={lpIncentiveRewardApr}
-            totalApr={totalApr}
-          />
-        ) : (
-          <APRFeeStat apr={apr} />
-        )}
+        <FeeStat>
+          <PrimaryText>{apr ? formatPercent(apr) : '-'}</PrimaryText>
+          <SecondaryText variant="body3" color="$neutral2">
+            {t('pool.apr')}
+          </SecondaryText>
+        </FeeStat>
       </Flex>
       <Flex $md={{ display: 'none' }}>
         <MinMaxRange
@@ -229,9 +209,7 @@ export function MinMaxRange({
             <SecondaryText color="$neutral1" display="flex" alignItems="center" gap="$gap4">
               <span
                 style={{
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
+                  ...EllipsisTamaguiStyle,
                 }}
               >
                 {maxPrice}
@@ -261,92 +239,6 @@ export function MinMaxRange({
           <SecondaryText>{t('common.fullRange')}</SecondaryText>
         </Flex>
       )}
-    </Flex>
-  )
-}
-
-function APRFeeStat({ apr }: { apr?: number }) {
-  const { formatPercent } = useLocalizationContext()
-  const { t } = useTranslation()
-
-  return (
-    <FeeStat>
-      <PrimaryText>{apr ? formatPercent(apr) : '-'}</PrimaryText>
-      <SecondaryText variant="body3" color="$neutral2">
-        {t('pool.apr')}
-      </SecondaryText>
-    </FeeStat>
-  )
-}
-
-function LPIncentiveFeeStat({
-  currency0Amount,
-  currency1Amount,
-  lpIncentiveRewardApr,
-  poolApr,
-  totalApr,
-}: {
-  currency0Amount: CurrencyAmount<Currency>
-  currency1Amount: CurrencyAmount<Currency>
-  lpIncentiveRewardApr: number
-  poolApr?: number
-  totalApr?: number
-}) {
-  const { formatPercent } = useLocalizationContext()
-  const { t } = useTranslation()
-
-  return (
-    <Flex flex={1.3} flexBasis={0} $sm={{ flexBasis: 'auto' }}>
-      <MouseoverTooltip
-        padding={0}
-        text={
-          <LPIncentiveFeeStatTooltip
-            currency0Amount={currency0Amount}
-            currency1Amount={currency1Amount}
-            poolApr={poolApr}
-            lpIncentiveRewardApr={lpIncentiveRewardApr}
-            totalApr={totalApr}
-          />
-        }
-        size={TooltipSize.Small}
-        placement="top"
-      >
-        <>
-          <Flex row gap="$spacing6" alignItems="center">
-            <Text variant="body2" color="$neutral1">
-              {poolApr ? formatPercent(poolApr) : '-'}
-            </Text>
-            <Badge
-              badgeVariant={BadgeVariant.SOFT}
-              borderRadius="$rounded6"
-              py="$spacing2"
-              paddingLeft="$spacing4"
-              paddingRight="$spacing4"
-              marginBottom="$spacing1"
-            >
-              <Flex row gap="$spacing4" alignItems="center">
-                <Text variant="buttonLabel4" color="$accent1">
-                  +{formatPercent(lpIncentiveRewardApr)}
-                </Text>
-                <Flex
-                  row
-                  gap="$spacing2"
-                  alignItems="center"
-                  justifyContent="center"
-                  backgroundColor="white"
-                  borderRadius="$roundedFull"
-                  padding="$spacing2"
-                >
-                  <UniswapLogo size="$icon.8" />
-                </Flex>
-              </Flex>
-            </Badge>
-          </Flex>
-          <SecondaryText variant="body3" color="$neutral2">
-            {t('pool.totalAPR')}
-          </SecondaryText>
-        </>
-      </MouseoverTooltip>
     </Flex>
   )
 }

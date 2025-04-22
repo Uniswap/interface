@@ -92,8 +92,8 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
   ) : status === TransactionStatus.Failed ? (
     <Flex grow alignItems="flex-end" justifyContent="space-between">
       <AlertTriangleFilled
-        color={colors.statusWarning.val}
-        fill={colors.statusWarning.val}
+        color={colors.DEP_accentWarning.val}
+        fill={colors.DEP_accentWarning.val}
         size={TXN_STATUS_ICON_SIZE}
       />
     </Flex>

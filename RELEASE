@@ -1,23 +1,10 @@
-IPFS hash of the deployment:
-- CIDv0: `QmeAziMcEHMw2m77u6dTq6DBg3f9NPNCsFSoWy5jLRLx8c`
-- CIDv1: `bafybeihlihgtua66efgaafuzz3mf3ndy5waaffkvh5tfkqifvtjc75suju`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Honeypot Detection: Using Blockaid’s data, we now identify potentially malicious honeypot tokens and show users a token warning when interacting with them. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+New pink!: Our accent pink color has been updated across the app for better accessibility and better vibes. 
 
-IPFS gateways:
-- https://bafybeihlihgtua66efgaafuzz3mf3ndy5waaffkvh5tfkqifvtjc75suju.ipfs.dweb.link/
-- [ipfs://QmeAziMcEHMw2m77u6dTq6DBg3f9NPNCsFSoWy5jLRLx8c/](ipfs://QmeAziMcEHMw2m77u6dTq6DBg3f9NPNCsFSoWy5jLRLx8c/)
+Other changes: 
 
-### 5.79.2 (2025-04-18)
-
-
-### Bug Fixes
-
-* **web:** remove v4 0 slippage (#18615) 3a282e3
-
-
+- Removed balances from spam tokens, to clean up the portfolio view
+- Various bug fixes and performance improvements

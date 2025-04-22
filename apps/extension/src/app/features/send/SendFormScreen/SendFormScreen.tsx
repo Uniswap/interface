@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RecipientPanel } from 'src/app/features/send/SendFormScreen/RecipientPanel'
 import { ReviewButton } from 'src/app/features/send/SendFormScreen/ReviewButton'
@@ -7,7 +7,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import {
@@ -17,11 +17,10 @@ import {
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
+import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/swap/modals/LowNativeBalanceModal'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
 import { SendAmountInput } from 'wallet/src/features/transactions/send/SendAmountInput'
@@ -35,11 +34,7 @@ export function SendFormScreen(): JSX.Element {
   const colors = useSporeColors()
 
   const hasDismissedLowNetworkTokenWarning = useSelector(selectHasDismissedLowNetworkTokenWarning)
-  const {
-    value: showMaxTransferModal,
-    setTrue: handleShowMaxTransferModal,
-    setFalse: handleHideMaxTransferModal,
-  } = useBooleanState(false)
+  const [showMaxTransferModal, setShowMaxTransferModal] = useState(false)
 
   const {
     derivedSendInfo,
@@ -110,12 +105,12 @@ export function SendFormScreen(): JSX.Element {
 
   const onPressReview = useCallback(() => {
     if (!hasDismissedLowNetworkTokenWarning && isMax && currencyInInfo?.currency.isNative) {
-      sendAnalyticsEvent(UniswapEventName.LowNetworkTokenInfoModalOpened, { location: 'send' })
-      handleShowMaxTransferModal()
+      sendAnalyticsEvent(WalletEventName.LowNetworkTokenInfoModalOpened, { location: 'send' })
+      setShowMaxTransferModal(true)
       return
     }
     goToReview()
-  }, [goToReview, isMax, hasDismissedLowNetworkTokenWarning, handleShowMaxTransferModal, currencyInInfo])
+  }, [goToReview, isMax, hasDismissedLowNetworkTokenWarning, setShowMaxTransferModal, currencyInInfo])
 
   const onSetExactAmount = useCallback(
     (amount: string) => {
@@ -131,11 +126,15 @@ export function SendFormScreen(): JSX.Element {
     [updateSendForm],
   )
 
+  const hideLowNativeBalanceWarning = useCallback(() => {
+    setShowMaxTransferModal(false)
+  }, [setShowMaxTransferModal])
+
   const onAcknowledgeLowNativeBalanceWarning = useCallback(() => {
-    handleHideMaxTransferModal()
+    hideLowNativeBalanceWarning()
 
     goToReview()
-  }, [handleHideMaxTransferModal, goToReview])
+  }, [hideLowNativeBalanceWarning, goToReview])
 
   const onHideTokenSelector = useCallback(() => {
     updateSendForm({ selectingCurrencyField: undefined })
@@ -163,7 +162,7 @@ export function SendFormScreen(): JSX.Element {
       </Modal>
       <LowNativeBalanceModal
         isOpen={showMaxTransferModal}
-        onClose={handleHideMaxTransferModal}
+        onClose={hideLowNativeBalanceWarning}
         onAcknowledge={onAcknowledgeLowNativeBalanceWarning}
       />
       <Flex fill gap="$spacing12">
