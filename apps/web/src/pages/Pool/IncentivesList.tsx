@@ -77,9 +77,9 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
     return allIncentives.some(incentive => incentive.positionOnIncentiveIds?.includes(tokenId));
   }, [allIncentives]);
 
-
   const handleStakeWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
     try {
+      console.log('incentive', incentive)
       await handleStake(incentive);
       await refetchIncentives();
     } catch (error) {
@@ -198,8 +198,15 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
           const isExpanded = expandedIncentive === incentive.id;
           const isActive = incentive.status === 'active';
           const hasStaked = incentive.positionOnIncentiveIds?.includes(Number(tokenId));
-          console.log('incentive.positionOnIncentiveIds', incentive.positionOnIncentiveIds)
-          const canStake = incentive.positionOnPoolIds?.includes(tokenId) && !hasStaked;
+          const canStake = incentive.positionOnPoolIds?.includes(Number(tokenId)) && !hasStaked;
+
+          if( incentive.status === 'active') {
+            console.log('incentive.positionOnPoolIds?', incentive.positionOnPoolIds)
+            console.log('incentive.positionOnIncentiveIds', incentive.positionOnIncentiveIds)
+            console.log('hasStaked', hasStaked)
+            console.log('canStake', canStake)
+
+          }
           const rewardToken = new Token(
             1,
             incentive.rewardToken.id,

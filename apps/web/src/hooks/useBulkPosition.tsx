@@ -64,7 +64,7 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         refundee: incentiveData.refundee,
       };
 
-      const stakeTx = await v3StakerContract.stakeToken(incentiveKey, tokenId);
+      const stakeTx = await v3StakerContract.stakeToken(incentiveKey, Number(tokenId));
       const stakeReceipt = await stakeTx.wait();
       console.log('stakeReceipt', stakeReceipt)
     } catch (error) {
