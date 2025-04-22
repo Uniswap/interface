@@ -56,6 +56,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
     isStaking,
     isUnstaking,
     isClaiming,
+    isDeposited,
     handleStake,
     handleUnstake,
     handleClaim,
@@ -63,22 +64,6 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
     handleBulkUnstake,
     handleBulkWithdraw,
   } = useBulkPosition(tokenId, poolAddress, allIncentives);
-  const nftManagerPositionsContract = useV3StakerContract();
-  const {address} = useAccount();
-
-  // useEffect(() => {
-  //   const checkTokenOwnership = async () => {
-  //     if (!nftManagerPositionsContract) return;
-  //     try {
-  //       const owner = await nftManagerPositionsContract.ownerOf(tokenId);
-  //       setIsTokenOwner(owner.toLowerCase() === address?.toLowerCase());
-  //     } catch (error) {
-  //       console.error('Error checking token ownership:', error);
-  //       setIsTokenOwner(false);
-  //     }
-  //   };
-  //   checkTokenOwnership();
-  // }, [tokenId, address, nftManagerPositionsContract]);
 
   const hasAvailableIncentives = useMemo(() => {
     return activeIncentives.some(incentive => {
@@ -94,33 +79,58 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
 
 
   const handleStakeWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
-    await handleStake(incentive);
-    await refetchIncentives();
+    try {
+      await handleStake(incentive);
+      await refetchIncentives();
+    } catch (error) {
+      console.error('Error in stake with refresh:', error);
+    }
   }, [handleStake, refetchIncentives]);
 
   const handleUnstakeWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
-    await handleUnstake(incentive);
-    await refetchIncentives();
+    try {
+      await handleUnstake(incentive);
+      await refetchIncentives();
+    } catch (error) {
+      console.error('Error in unstake with refresh:', error);
+    }
   }, [handleUnstake, refetchIncentives]);
 
   const handleClaimWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
-    await handleClaim(incentive);
-    await refetchIncentives();
+    try {
+      await handleClaim(incentive);
+      await refetchIncentives();
+    } catch (error) {
+      console.error('Error in claim with refresh:', error);
+    }
   }, [handleClaim, refetchIncentives]);
 
   const handleBulkStakeWithRefresh = useCallback(async () => {
-    await handleBulkStake();
-    await refetchIncentives();
+    try {
+      await handleBulkStake();
+      await refetchIncentives();
+    } catch (error) {
+      console.error('Error in bulk staking with refresh:', error);
+    }
   }, [handleBulkStake, refetchIncentives]);
 
   const handleBulkUnstakeWithRefresh = useCallback(async () => {
-    await handleBulkUnstake();
-    await refetchIncentives();
+    try {
+      await handleBulkUnstake();
+      await refetchIncentives();
+    } catch (error) {
+      console.error('Error in bulk unstaking with refresh:', error);
+    }
   }, [handleBulkUnstake, refetchIncentives]);
 
   const handleBulkWithdrawWithRefresh = useCallback(async () => {
-    await handleBulkWithdraw();
-    await refetchIncentives();
+    try {
+      await handleBulkWithdraw();
+      await refetchIncentives();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.error('Error in bulk withdrawal with refresh:', error);
+    }
   }, [handleBulkWithdraw, refetchIncentives]);
 
   if (isLoading) {
@@ -172,7 +182,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
         </ButtonPrimary>
         <ButtonPrimary
           onClick={handleBulkWithdrawWithRefresh}
-          disabled={isBulkWithdrawing || hasStakedIncentives}
+          disabled={isBulkWithdrawing || !isDeposited || hasStakedIncentives}
           style={{ padding: '8px', fontSize: '14px', height: '32px', whiteSpace: 'nowrap', width: '120px' }}
         >
           {isBulkWithdrawing ? (
@@ -235,7 +245,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                         logoURI={`https://raw.githubusercontent.com/taraswap/assets/master/logos/${getAddress(rewardToken.address)}/logo.png`}
                       />
                       <ThemedText.DeprecatedMain>
-                        {incentive.currentReward?.reward || '0'} {rewardToken.symbol}
+                        {Number(incentive.currentReward?.reward) || '0'} {rewardToken.symbol}
                       </ThemedText.DeprecatedMain>
                     </RowFixed>
                   </RowBetween>
@@ -273,7 +283,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                           e.stopPropagation();
                           handleClaimWithRefresh(incentive);
                         }}
-                        disabled={Number(incentive.currentReward?.reward) <= 0|| (isClaiming)}
+                        disabled={Number(incentive.currentReward?.reward) <= 0 || (isClaiming) || isNaN(Number(incentive.currentReward?.reward))}
                         style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px' }}
                       >
                         {isClaiming ? (
