@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZ1bV2GELY9nMg3DBadANd68MuUTJy9A9rU8LoySetMXm`
-- CIDv1: `bafybeie6r3p2nalk3ahef7qkknt6ddaisbvqikuyhfbpehzusabqgvmbwa`
+- CIDv0: `QmPJ67xPvHcYEk5YWu59uGkE5Mv6QBSSTWwzBTy72Eoeo4`
+- CIDv1: `bafybeiaogowvdnmwgmzi4yqbtzsn27ej4xhanmrcacyu2ejjwuyc4apwym`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,61 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeie6r3p2nalk3ahef7qkknt6ddaisbvqikuyhfbpehzusabqgvmbwa.ipfs.dweb.link/
-- [ipfs://QmZ1bV2GELY9nMg3DBadANd68MuUTJy9A9rU8LoySetMXm/](ipfs://QmZ1bV2GELY9nMg3DBadANd68MuUTJy9A9rU8LoySetMXm/)
+- https://bafybeiaogowvdnmwgmzi4yqbtzsn27ej4xhanmrcacyu2ejjwuyc4apwym.ipfs.dweb.link/
+- [ipfs://QmPJ67xPvHcYEk5YWu59uGkE5Mv6QBSSTWwzBTy72Eoeo4/](ipfs://QmPJ67xPvHcYEk5YWu59uGkE5Mv6QBSSTWwzBTy72Eoeo4/)
 
-## 5.80.0 (2025-04-23)
-
-
-### Features
-
-* **web:** [EW] Add Download Wallet Header to Connect Modal (#18295) 3dc6b22
-* **web:** [EW] setup deeplink to passkey mgmt modal (#18231) 5f0eadc
-* **web:** add loading state to passkey mgmt (#18554) c561013
-* **web:** add token carousel header (#18319) 2ff8d5c
-* **web:** clean up the sign up modals (#18271) f7cc410
-* **web:** default sell experience for TDP from MiniPort (#17805) dc6f91c
-* **web:** delete ApplicationModal enum, use ModalName enum (#18055) 2e73a78
-* **web:** explicitly define buffer import (#18451) 59ad348
-* **web:** lp incentives phase one update staging (#18766) 13cc540
-* **web:** Only show EW Sign In Modal if EW was Recent Connector (#18549) d0ee8cc
-* **web:** open sidebar when wallet is created (#18489) 42d7946
-* **web:** use new contextmenu in .web (#17810) 63760c5
-* **web:** use publicClient for getting tx receipt (#18574) 82da74f
-* **web:** use sporified DropdownMenuSheetItem in web&native ContextMenus (#17519) 7b8aa1c
+### 5.80.1 (2025-04-23)
 
 
 ### Bug Fixes
 
-* **web:** [lp] preserve currency input state in create step 1 (#18441) 31f0fd5
-* **web:** [usePools] handle invalid vs non-existent pools (#18608) 396a787
-* **web:** add web3modal to csp to fix wallet connect error (#18705) 8af61a6
-* **web:** app store images compress staging (#18647) d942ac7
-* **web:** dynamic config overrides - set value to a single value when allowMultiple=false (#18328) f733d10
-* **web:** fix bad merge - remove duplicate EW feature flag (#18394) eeedb85
-* **web:** fix create liquidity chart deux (#18337) 47cc380
-* **web:** fix safari dropdown (#18475) c1c0544
-* **web:** fixing arb v3 (#18421) a220a0d
-* **web:** pass chainId to useReadContracts (#18665) fec2585
-* **web:** remove v4 0 slippage (#18599) 2dc6dc7
-* **web:** update modals during onboarding flow (#18418) 99bfe9d
-* **web:** update the logic for is connected to extension (#18457) ff75de8
-* **web:** v4 0 slippage at max (#18583) 9131be0
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 17fee92
-
-
-### Code Refactoring
-
-* **web:** hook new dialog comp into dynamic fee tier speedbump modal (#18517) a6ca1fe
-
-
-### Tests
-
-* **web:** [lp] create lp (#18417) 49e63bb
-* **web:** use development for dev feature flags in test runs (#18437) d979904
+* **web:** uninitialized v2 pools (#18808) 551de59
 
 
