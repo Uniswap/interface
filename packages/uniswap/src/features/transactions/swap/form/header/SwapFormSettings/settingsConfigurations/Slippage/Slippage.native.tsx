@@ -34,12 +34,8 @@ export const Slippage: SwapSettingConfig = {
     const { t } = useTranslation()
     const { formatPercent } = useLocalizationContext()
     const { derivedSwapInfo } = useSwapFormContext()
-    const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
     const isBridgeTrade = derivedSwapInfo.trade.trade instanceof BridgeTrade
-    const { currentSlippageTolerance, autoSlippageEnabled } = useSlippageSettings({
-      tradeAutoSlippage: acceptedTrade?.slippageTolerance,
-      isBridgeTrade,
-    })
+    const { currentSlippageTolerance, autoSlippageEnabled } = useSlippageSettings({ isBridgeTrade })
 
     return (
       <Flex row gap="$spacing8">
@@ -61,7 +57,6 @@ export const Slippage: SwapSettingConfig = {
     const colors = useSporeColors()
     const { derivedSwapInfo } = useSwapFormContext()
     const { trade } = derivedSwapInfo.trade
-    const acceptedTrade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
 
     const {
       isEditingSlippage,
@@ -76,7 +71,7 @@ export const Slippage: SwapSettingConfig = {
       onFocusSlippageInput,
       onBlurSlippageInput,
       onPressPlusMinusButton,
-    } = useSlippageSettings({ tradeAutoSlippage: acceptedTrade?.slippageTolerance })
+    } = useSlippageSettings()
 
     const isBridgeTrade = trade instanceof BridgeTrade
 
@@ -220,7 +215,7 @@ function SlippageMessage({
       {showSlippageWarning ? (
         <Flex centered row gap="$spacing8">
           <AlertTriangleFilled color={color} size="$icon.16" />
-          <Text color="$DEP_accentWarning" variant="body2">
+          <Text color="$statusWarning" variant="body2">
             {t('swap.settings.slippage.warning.message')}
           </Text>
         </Flex>

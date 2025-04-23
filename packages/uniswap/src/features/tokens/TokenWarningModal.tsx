@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, LabeledCheckbox, Text, useSporeColors } from 'ui/src'
 import { BlockaidLogo } from 'ui/src/components/logos/BlockaidLogo'
-import { zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
@@ -304,7 +303,6 @@ export default function TokenWarningModal({
       backgroundColor={colors.surface1.val}
       isModalOpen={isVisible}
       name={ModalName.TokenWarningModal}
-      zIndex={zIndexes.overlay} //TODO(WEB-7196): Latest tamagui upgrade to 1.125.17 broke stacking sheets/dialogs on mweb. Temp forcing token warning modal zIndexes.overlay to display over token selector modal
       skipLogImpression={true} // impression trace logged in TokenWarningModalContent instead to handle multi-token warnings
       onClose={onReject ?? closeModalOnly}
     >

@@ -7,7 +7,6 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { DecimalPadInputRef } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
 import { useSwapFormHoverStyles } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useSwapFormHoverStyles'
 import { TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
-import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export interface SwapFormScreenContextState {
@@ -59,7 +58,6 @@ export interface SwapFormScreenContextState {
   onShowTokenSelectorOutput: () => void
   showTemporaryFoTWarning: () => void
   onDecimalPadTriggerInputShake: () => void
-  wrapCallback?: WrapCallback
 
   // Styles
   hoverStyles: ReturnType<typeof useSwapFormHoverStyles>

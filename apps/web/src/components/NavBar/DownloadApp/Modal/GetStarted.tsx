@@ -108,7 +108,7 @@ export function GetStarted({
         <Flex row>
           <Button
             variant="branded"
-            onPress={() => setPage(Page.PasskeyGeneration)}
+            onPress={() => setPage(Page.ChooseUnitag)}
             display={isEmbeddedWalletEnabled ? 'flex' : 'none'}
           >
             {t('nav.signUp.button')}

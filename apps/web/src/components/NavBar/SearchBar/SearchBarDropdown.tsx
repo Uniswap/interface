@@ -145,9 +145,8 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
     () => searchHistory?.filter((item) => (item as Token).chain) ?? [...Array<GqlSearchToken>(2)],
     [searchHistory],
   )
-  const account = useAccount()
 
-  const { data: trendingTokenData } = useSearchTrendingTokensGql(account.chainId)
+  const { data: trendingTokenData } = useSearchTrendingTokensGql()
 
   const trendingTokens = useMemo(
     () => trendingTokenData?.slice(0, 3) ?? [...Array<GqlSearchToken>(3)],

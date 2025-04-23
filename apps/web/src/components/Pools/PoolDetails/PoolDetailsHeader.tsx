@@ -15,14 +15,14 @@ import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import styled, { useTheme } from 'lib/styled-components'
-import { ReversedArrowsIcon } from 'nft/components/icons'
+import { ReversedArrowsIcon } from 'nft/components/iconExports'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
-import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle, TamaguiClickableStyle } from 'theme/components/styles'
+import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle } from 'theme/components/styles'
 import { textFadeIn } from 'theme/styles'
 import { Flex, TouchableArea, useIsTouchDevice, useMedia } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
@@ -156,7 +156,7 @@ const PoolDetailsTitle = ({
         </PoolDetailsBadge>
         {hookAddress && (
           <ExternalLink href={getExplorerLink(chainId ?? defaultChainId, hookAddress, ExplorerDataType.ADDRESS)}>
-            <PoolDetailsBadge variant="body3" {...TamaguiClickableStyle}>
+            <PoolDetailsBadge variant="body3" {...ClickableTamaguiStyle}>
               {shortenAddress(hookAddress, 0, 4)}
             </PoolDetailsBadge>
           </ExternalLink>

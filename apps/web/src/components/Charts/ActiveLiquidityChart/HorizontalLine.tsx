@@ -1,13 +1,5 @@
 import { ScaleLinear } from 'd3'
-import styled from 'lib/styled-components'
-
-const StyledLine = styled.line<{ strokeDasharray: string }>`
-  opacity: 0.5;
-  stroke-width: 1;
-  stroke: ${({ theme }) => theme.neutral2};
-  stroke-dasharray: ${({ strokeDasharray }) => strokeDasharray};
-  fill: none;
-`
+import { useSporeColors } from 'ui/src'
 
 export const HorizontalLine = ({
   value,
@@ -23,6 +15,7 @@ export const HorizontalLine = ({
   lineStyle?: 'solid' | 'dashed'
 }) => {
   const lineStart = containerWidth - width
+  const colors = useSporeColors()
 
   if (isNaN(lineStart)) {
     return null
@@ -31,8 +24,12 @@ export const HorizontalLine = ({
   const strokeDasharray = lineStyle === 'dashed' ? '1, 4' : 'none'
 
   return (
-    <StyledLine
+    <line
       strokeDasharray={strokeDasharray}
+      stroke={colors.neutral2.val}
+      opacity={0.5}
+      strokeWidth={1}
+      fill="none"
       y1={yScale(value)}
       x1={lineStart}
       y2={yScale(value)}

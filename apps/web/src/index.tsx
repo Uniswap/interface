@@ -14,7 +14,6 @@ import { apolloClient } from 'graphql/data/apollo/client'
 import { useAccount } from 'hooks/useAccount'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
-import { MulticallUpdater } from 'lib/state/multicall'
 import App from 'pages/App'
 import { PropsWithChildren, StrictMode, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -29,16 +28,15 @@ import ApplicationUpdater from 'state/application/updater'
 import FiatOnRampTransactionsUpdater from 'state/fiatOnRampTransactions/updater'
 import ListsUpdater from 'state/lists/updater'
 import LogsUpdater from 'state/logs/updater'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
 import { ThemeProvider, ThemedGlobalStyle } from 'theme'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
-import { getEnvName } from 'tracing/env'
-import { config } from 'uniswap/src/config'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
+import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n'
@@ -71,7 +69,6 @@ function Updaters() {
       <ThemeColorMetaUpdater />
       <ApplicationUpdater />
       <ActivityStateUpdater />
-      <MulticallUpdater />
       <LogsUpdater />
       <FiatOnRampTransactionsUpdater />
       <Web3ProviderUpdater />
@@ -108,29 +105,17 @@ function StatsigProvider({ children }: PropsWithChildren) {
     })
   }, [account])
 
-  if (!config.statsigApiKey) {
-    throw new Error('REACT_APP_STATSIG_API_KEY is not set')
+  const onStatsigInit = () => {
+    const isDatadogEnabled = getFeatureFlag(FeatureFlags.Datadog)
+    if (isDatadogEnabled && !isDevEnv()) {
+      initializeDatadog('web').catch(() => undefined)
+    }
   }
 
   return (
-    <BaseStatsigProvider
-      user={statsigUser}
-      sdkKey={config.statsigApiKey}
-      waitForInitialization={false}
-      options={{
-        environment: { tier: getEnvName() },
-        api: uniswapUrls.statsigProxyUrl,
-        disableAutoMetricsLogging: true,
-        disableErrorLogging: true,
-        initCompletionCallback: () => {
-          if (!isDevEnv()) {
-            initializeDatadog('web').catch(() => undefined)
-          }
-        },
-      }}
-    >
+    <StatsigProviderWrapper user={statsigUser} onInit={onStatsigInit}>
       {children}
-    </BaseStatsigProvider>
+    </StatsigProviderWrapper>
   )
 }
 

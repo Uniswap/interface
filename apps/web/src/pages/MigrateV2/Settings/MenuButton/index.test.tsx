@@ -32,6 +32,6 @@ describe('MenuButton', () => {
   it('should render an icon with a custom slippage and a warning when value is out of bounds', () => {
     mocked(useUserSlippageTolerance).mockReturnValue([new Percent(1, 10_000), noop])
     renderButton()
-    expect(screen.getByTestId('settings-icon-with-slippage')).toHaveStyle({ backgroundColor: 'accentWarningSoft' })
+    expect(screen.getByTestId('settings-icon-with-slippage')).toHaveStyle({ backgroundColor: 'warning2' })
   })
 })

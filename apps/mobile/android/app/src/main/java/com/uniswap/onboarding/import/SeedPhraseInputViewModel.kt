@@ -21,6 +21,7 @@ class SeedPhraseInputViewModel(
   private val ethersRs: RnEthersRs,
   private val onInputValidated: (canSubmit: Boolean) -> Unit,
   private val onMnemonicStored: (mnemonicId: String) -> Unit,
+  private val onSubmitError: () -> Unit,
 ) : ViewModel() {
 
   sealed interface Status {
@@ -143,6 +144,7 @@ class SeedPhraseInputViewModel(
 
     if (status is Status.Error) {
       onInputValidated(false)
+      onSubmitError()
     }
   }
 
@@ -151,6 +153,7 @@ class SeedPhraseInputViewModel(
       val generatedId = ethersRs.generateAddressForMnemonic(mnemonic, derivationIndex = 0)
       if (generatedId != mnemonicIdForRecovery) {
         status = Status.Error(MnemonicError.WrongRecoveryPhrase)
+        onSubmitError()
       } else {
         storeMnemonic(mnemonic)
       }
@@ -168,5 +171,5 @@ class SeedPhraseInputViewModel(
     private const val MIN_LENGTH = 12
     private const val MAX_LENGTH = 24
   }
-  
+
 }

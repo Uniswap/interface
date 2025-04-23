@@ -43,12 +43,14 @@ type CurrencyInputPanelProps = {
   autoFocus?: boolean
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   currencyBalance: Maybe<CurrencyAmount<Currency>>
+  nativeTokenPercentageBuffer?: number
   currencyField: CurrencyField
   currencyInfo: Maybe<CurrencyInfo>
   isLoading?: boolean
   isIndicativeLoading?: boolean
   focus?: boolean
   isFiatMode?: boolean
+  /** Only show a single max button rather than all percentage preset options. */
   showMaxButtonOnly?: boolean
   onPressIn?: () => void
   onSelectionChange?: (start: number, end: number) => void
@@ -88,6 +90,7 @@ export const CurrencyInputPanel = memo(
         autoFocus,
         currencyAmount,
         currencyBalance,
+        nativeTokenPercentageBuffer,
         currencyField,
         currencyInfo,
         focus,
@@ -295,7 +298,7 @@ export const CurrencyInputPanel = memo(
                   isInterfaceDesktop &&
                   currencyField === CurrencyField.INPUT &&
                   currencyBalance && (
-                    <Flex position="absolute" right={0} top={-2}>
+                    <Flex position="absolute" right={0} top={-spacing.spacing2}>
                       <AmountInputPresets
                         currencyAmount={currencyAmount}
                         currencyBalance={currencyBalance}
@@ -305,7 +308,7 @@ export const CurrencyInputPanel = memo(
                     </Flex>
                   )}
                 {showDefaultTokenOptions && isInterfaceDesktop && (
-                  <Flex position="absolute" right={0} top={-4}>
+                  <Flex position="absolute" right={0} top={-spacing.spacing4}>
                     <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
                   </Flex>
                 )}
@@ -418,6 +421,7 @@ export const CurrencyInputPanel = memo(
                     buttonProps={{ py: '$spacing4' }}
                     currencyAmount={currencyAmount}
                     currencyBalance={currencyBalance}
+                    nativeTokenPercentageBuffer={nativeTokenPercentageBuffer}
                     onSetPresetValue={handleSetPresetValue}
                   />
                 </Flex>
@@ -452,6 +456,7 @@ export const CurrencyInputPanel = memo(
                       currencyBalance={currencyBalance}
                       currencyField={currencyField}
                       transactionType={transactionType}
+                      nativeTokenPercentageBuffer={nativeTokenPercentageBuffer}
                       onSetPresetValue={handleSetPresetValue}
                     />
                   )}

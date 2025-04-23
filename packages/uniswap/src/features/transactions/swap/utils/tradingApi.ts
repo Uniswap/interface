@@ -283,6 +283,7 @@ function parseV3PoolApi({
   if (!tokenIn || !tokenOut || !fee || !sqrtRatioX96 || !liquidity || !tickCurrent) {
     throw new Error('Expected pool values to be present')
   }
+
   return new V3Pool(
     parseTokenApi(tokenIn),
     parseTokenApi(tokenOut),

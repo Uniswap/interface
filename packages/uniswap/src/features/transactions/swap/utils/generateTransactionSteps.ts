@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ADDRESS_ZERO } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import {
@@ -15,6 +16,8 @@ import {
   MigrateLPPositionRequest,
   PriorityQuote,
 } from 'uniswap/src/data/tradingApi/__generated__'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   LiquidityTransactionType,
   LiquidityTxAndGasInfo,
@@ -55,6 +58,7 @@ import {
   validateTransactionRequest,
 } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
+import { logger } from 'utilities/src/logger/logger'
 
 function orderSwapSteps(flow: ClassicSwapFlow): ClassicSwapSteps[] {
   const steps: ClassicSwapSteps[] = []
@@ -262,8 +266,21 @@ function createCreatePositionAsyncStep(
 
         return validateTransactionRequest(create)
       } catch (e) {
+        const message = parseErrorMessageTitle(e, { includeRequestId: true })
+        if (message) {
+          logger.error(message, {
+            tags: {
+              file: 'generateTransactionSteps',
+              function: 'createCreatePositionAsyncStep',
+            },
+          })
+
+          sendAnalyticsEvent(InterfaceEventNameLocal.CreatePositionFailed, {
+            message,
+          })
+        }
         throw new Error('create failed to get transaction request', {
-          cause: parseErrorMessageTitle(e, { includeRequestId: true }),
+          cause: message,
         })
       }
     },
@@ -290,8 +307,20 @@ function createIncreasePositionAsyncStep(
 
         return validateTransactionRequest(increase)
       } catch (e) {
+        const message = parseErrorMessageTitle(e, { includeRequestId: true })
+        if (message) {
+          logger.error(message, {
+            tags: {
+              file: 'generateTransactionSteps',
+              function: 'createIncreasePositionAsyncStep',
+            },
+          })
+          sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
+            message,
+          })
+        }
         throw new Error('increase failed to get transaction request', {
-          cause: parseErrorMessageTitle(e, { includeRequestId: true }),
+          cause: message,
         })
       }
     },
@@ -461,16 +490,6 @@ export function generateTransactionSteps(
         signOrder: createSignOrderUniswapXStep(txContext.permit, txContext.trade.quote.quote),
       })
     } else if (isBridge(txContext)) {
-      const { swapRequestArgs } = txContext
-
-      if (txContext.unsigned) {
-        return orderSwapSteps({
-          revocation,
-          approval,
-          permit: createPermit2SignatureStep(txContext.permit, trade.inputAmount.currency),
-          swap: createSwapTransactionAsyncStep(swapRequestArgs, v4Enabled),
-        })
-      }
       return orderSwapSteps({
         revocation,
         approval,

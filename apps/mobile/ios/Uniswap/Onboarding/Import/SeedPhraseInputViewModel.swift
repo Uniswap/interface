@@ -63,6 +63,7 @@ class SeedPhraseInputViewModel: ObservableObject {
   @Published var onMnemonicStored: RCTDirectEventBlock = { _ in }
   @Published var onPasteStart: RCTDirectEventBlock = { _ in }
   @Published var onPasteEnd: RCTDirectEventBlock = { _ in }
+  @Published var onSubmitError: RCTDirectEventBlock = { _ in }
   @Published var onHeightMeasured: RCTDirectEventBlock = { _ in }
 
   private var lastWordValidationTimer: Timer?
@@ -88,7 +89,8 @@ class SeedPhraseInputViewModel: ObservableObject {
     let mnemonic = trimInput(value: normalized)
     let words = mnemonic.components(separatedBy: " ")
     let valid = rnEthersRS.validateMnemonic(mnemonic: mnemonic)
-
+      
+    error = nil
     if (words.count < minCount) {
       status = .error
       error = .notEnoughWords
@@ -100,6 +102,10 @@ class SeedPhraseInputViewModel: ObservableObject {
       error = .invalidPhrase
     } else {
       submitMnemonic(mnemonic: mnemonic)
+    }
+    
+    if (error != nil) {
+      onSubmitError([:])
     }
   }
 
@@ -114,9 +120,10 @@ class SeedPhraseInputViewModel: ObservableObject {
           } else {
             status = .error
             error = .wrongRecoveryPhrase
+            onSubmitError([:])
           }
         }, reject: { code, message, error in
-          // TODO gary update ethers library to catch exception or send in reject
+          onSubmitError([:])
           print("SeedPhraseInputView model error while generating address: \(message ?? "")")
         })
     } else {
@@ -131,7 +138,7 @@ class SeedPhraseInputViewModel: ObservableObject {
         onMnemonicStored(["mnemonicId": String(describing: mnemonicId ?? "")])
       },
       reject: { code, message, error in
-        // TODO gary update ethers library to catch exception or send in reject
+        onSubmitError([:])
         print("SeedPhraseInputView model error while storing mnemonic: \(message ?? "")")
       }
     )

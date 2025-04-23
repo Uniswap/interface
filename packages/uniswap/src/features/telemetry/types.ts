@@ -532,6 +532,21 @@ export type UniverseEventProperties = {
   [InterfaceEventNameLocal.UniswapXSignatureRequested]: Record<string, unknown> // TODO specific type
   [InterfaceEventNameLocal.UniswapXOrderPostError]: Record<string, unknown> // TODO specific type
   [InterfaceEventNameLocal.UniswapXOrderSubmitted]: Record<string, unknown> // TODO specific type
+  [InterfaceEventNameLocal.CreatePositionFailed]: {
+    message: string
+  }
+  [InterfaceEventNameLocal.IncreaseLiquidityFailed]: {
+    message: string
+  }
+  [InterfaceEventNameLocal.DecreaseLiquidityFailed]: {
+    message: string
+  }
+  [InterfaceEventNameLocal.MigrateLiquidityFailed]: {
+    message: string
+  }
+  [InterfaceEventNameLocal.CollectLiquidityFailed]: {
+    message: string
+  }
   [InterfaceEventName.NAVBAR_SEARCH_EXITED]: {
     navbar_search_input_text: string
     hasInput: boolean
@@ -850,6 +865,14 @@ export type UniverseEventProperties = {
     attackType?: string
     protectionResult?: string
   }
+  [UniswapEventName.LowNetworkTokenInfoModalOpened]: {
+    location: 'send' | 'swap'
+  }
+  [UniswapEventName.LpIncentiveCollectRewardsButtonClicked]: undefined
+  [UniswapEventName.LpIncentiveCollectRewardsErrorThrown]: { error: string }
+  [UniswapEventName.LpIncentiveCollectRewardsRetry]: undefined
+  [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
+  [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
   [UnitagEventName.UnitagBannerActionTaken]: {
     action: 'claim' | 'dismiss'
     entryPoint: 'home' | 'settings'
@@ -889,9 +912,6 @@ export type UniverseEventProperties = {
   }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
   [WalletEventName.KeyringMissingMnemonic]: KeyringMissingMnemonicProperties
-  [WalletEventName.LowNetworkTokenInfoModalOpened]: {
-    location: 'send' | 'swap'
-  }
   [WalletEventName.PendingTransactionTimeout]: PendingTransactionTimeoutProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties

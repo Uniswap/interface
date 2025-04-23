@@ -1,15 +1,19 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
+import tokenLogo from 'assets/images/token-logo.png'
 import V4_HOOK from 'assets/images/v4Hooks.png'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool as PoolIcon } from 'components/Icons/Pool'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
+import { LpIncentiveClaimModal } from 'components/Liquidity/LpIncentiveClaimModal'
+import LpIncentiveRewardsCard from 'components/Liquidity/LpIncentiveRewardsCard'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getPositionUrl, parseRestPosition } from 'components/Liquidity/utils'
 import { TopPoolTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
 import { OrderDirection } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
+import { useLpIncentives } from 'hooks/useLpIncentives'
 import { atom, useAtom } from 'jotai'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
@@ -35,7 +39,8 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageNameLocal, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 
 const PAGE_SIZE = 25
@@ -122,6 +127,7 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
           topPoolData={{ topPools, isLoading: exploreStatsLoading, isError: !!exploreStatsError }}
           pageSize={10}
           staticSize
+          forcePinning
         />
         <ExternalArrowLink href="/explore/pools" openInNewTab={false}>
           {t('explore.more.pools')}
@@ -160,13 +166,12 @@ function LearnMoreTile({ img, text, link }: { img: string; text: string; link?: 
 }
 
 const chainFilterAtom = atom<UniverseChainId | null>(null)
-const versionFilterAtom = atom<ProtocolVersion[]>([ProtocolVersion.V3, ProtocolVersion.V2])
+const versionFilterAtom = atom<ProtocolVersion[]>([ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2])
 const statusFilterAtom = atom<PositionStatus[]>([PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE])
 
 export default function Pool() {
   const { t } = useTranslation()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
-
+  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const media = useMedia()
 
   const [chainFilter, setChainFilter] = useAtom(chainFilterAtom)
@@ -181,11 +186,16 @@ export default function Pool() {
   const isPositionVisible = usePositionVisibilityCheck()
   const [showHiddenPositions, setShowHiddenPositions] = useState(false)
 
-  useEffect(() => {
-    if (isV4DataEnabled) {
-      setVersionFilter([ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2])
-    }
-  }, [isV4DataEnabled, setVersionFilter])
+  const {
+    isPendingTransaction,
+    isModalOpen,
+    tokenRewards,
+    openModal,
+    closeModal,
+    setTokenRewards,
+    onTransactionSuccess,
+    hasCollectedRewards,
+  } = useLpIncentives()
 
   const { data, isPlaceholderData, refetch, isLoading, fetchNextPage, hasNextPage, isFetching } =
     useGetPositionsInfiniteQuery(
@@ -208,7 +218,6 @@ export default function Pool() {
   const savedPositions = useRequestPositionsForSavedPairs()
 
   const isLoadingPositions = !!account.address && (isLoading || !data)
-
   const combinedPositions = useMemo(() => {
     return [
       ...loadedPositions,
@@ -280,33 +289,46 @@ export default function Pool() {
         $lg={{ px: '$spacing20' }}
       >
         <Flex grow shrink gap="$spacing24" maxWidth={700} $xl={{ maxWidth: '100%' }}>
-          <PositionsHeader
-            showFilters={account.isConnected}
-            selectedChain={chainFilter}
-            selectedVersions={versionFilter}
-            selectedStatus={statusFilter}
-            onChainChange={(selectedChain) => {
-              setChainFilter(selectedChain ?? null)
-            }}
-            onVersionChange={(toggledVersion) => {
-              setVersionFilter((prevVersionFilter) => {
-                if (prevVersionFilter.includes(toggledVersion)) {
-                  return prevVersionFilter.filter((v) => v !== toggledVersion)
-                } else {
-                  return [...prevVersionFilter, toggledVersion]
-                }
-              })
-            }}
-            onStatusChange={(toggledStatus) => {
-              setStatusFilter((prevStatusFilter) => {
-                if (prevStatusFilter?.includes(toggledStatus)) {
-                  return prevStatusFilter.filter((s) => s !== toggledStatus)
-                } else {
-                  return [...prevStatusFilter, toggledStatus]
-                }
-              })
-            }}
-          />
+          {isLPIncentivesEnabled && (
+            <LpIncentiveRewardsCard
+              walletAddress={account.address}
+              onCollectRewards={() => {
+                sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsButtonClicked)
+                openModal()
+              }}
+              setTokenRewards={setTokenRewards}
+              hasCollectedRewards={hasCollectedRewards}
+            />
+          )}
+          <Flex row justifyContent="space-between" alignItems="center" mt={isLPIncentivesEnabled ? '$spacing28' : 0}>
+            <PositionsHeader
+              showFilters={account.isConnected}
+              selectedChain={chainFilter}
+              selectedVersions={versionFilter}
+              selectedStatus={statusFilter}
+              onChainChange={(selectedChain) => {
+                setChainFilter(selectedChain ?? null)
+              }}
+              onVersionChange={(toggledVersion) => {
+                setVersionFilter((prevVersionFilter) => {
+                  if (prevVersionFilter.includes(toggledVersion)) {
+                    return prevVersionFilter.filter((v) => v !== toggledVersion)
+                  } else {
+                    return [...prevVersionFilter, toggledVersion]
+                  }
+                })
+              }}
+              onStatusChange={(toggledStatus) => {
+                setStatusFilter((prevStatusFilter) => {
+                  if (prevStatusFilter?.includes(toggledStatus)) {
+                    return prevStatusFilter.filter((s) => s !== toggledStatus)
+                  } else {
+                    return [...prevStatusFilter, toggledStatus]
+                  }
+                })
+              }}
+            />
+          </Flex>
           {!isLoadingPositions ? (
             combinedPositions.length > 0 ? (
               <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
@@ -378,7 +400,7 @@ export default function Pool() {
             </Anchor>
           </Flex>
         </Flex>
-        <Flex gap="$gap32" pt={64} $xl={{ pt: '$spacing12' }}>
+        <Flex gap="$gap32">
           {!media.xl && !showingEmptyPositions && !isLoading && <TopPools chainId={chainFilter} />}
           <Flex gap="$gap20" mb="$spacing24">
             <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
@@ -388,13 +410,7 @@ export default function Pool() {
                 text={t('liquidity.provideOnProtocols')}
                 link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
               />
-              {isV4DataEnabled && (
-                <LearnMoreTile
-                  img={V4_HOOK}
-                  text={t('liquidity.hooks')}
-                  link={uniswapUrls.helpArticleUrls.v4HooksInfo}
-                />
-              )}
+              <LearnMoreTile img={V4_HOOK} text={t('liquidity.hooks')} link={uniswapUrls.helpArticleUrls.v4HooksInfo} />
             </Flex>
             <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>
               {t('common.button.learn')}
@@ -402,6 +418,21 @@ export default function Pool() {
           </Flex>
         </Flex>
       </Flex>
+      {isLPIncentivesEnabled && (
+        <LpIncentiveClaimModal
+          isOpen={isModalOpen}
+          onClose={() => closeModal()}
+          onSuccess={() => {
+            sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsSuccess, {
+              token_rewards: tokenRewards,
+            })
+            onTransactionSuccess()
+          }}
+          tokenRewards={tokenRewards}
+          isPendingTransaction={isPendingTransaction}
+          iconUrl={tokenLogo}
+        />
+      )}
     </Trace>
   )
 }

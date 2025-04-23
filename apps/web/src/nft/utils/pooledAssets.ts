@@ -176,7 +176,7 @@ const calcAmmBasedPoolprice = (asset: GenieAsset, position = 0): string => {
   return price.toString()
 }
 
-export const calcPoolPrice = (asset: GenieAsset, position = 0): string => {
+const calcPoolPrice = (asset: GenieAsset, position = 0): string => {
   if (!asset.sellorders) {
     return ''
   }

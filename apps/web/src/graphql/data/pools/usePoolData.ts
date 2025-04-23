@@ -11,8 +11,6 @@ import {
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export interface PoolData {
   // basic pool info
@@ -82,7 +80,6 @@ export function usePoolData(
 } {
   const { defaultChainId } = useEnabledChains()
   const chain = toGraphQLChain(chainId ?? defaultChainId)
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const {
     loading: loadingV4,
     error: errorV4,
@@ -90,7 +87,6 @@ export function usePoolData(
   } = useV4PoolQuery({
     variables: { chain, poolId: poolIdOrAddress },
     errorPolicy: 'all',
-    skip: !isV4DataEnabled,
   })
   const {
     loading: loadingV3,

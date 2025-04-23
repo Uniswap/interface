@@ -1,9 +1,9 @@
 /* eslint-disable complexity */
 import { ApolloQueryResult } from '@apollo/client'
 import { isAddress } from 'ethers/lib/utils'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native'
+import { GestureResponderEvent, StatusBar, StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
@@ -27,7 +27,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
-import ShareIcon from 'ui/src/assets/icons/share.svg'
+import { CopyAlt } from 'ui/src/components/icons'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -46,12 +46,13 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { setClipboardImage } from 'uniswap/src/utils/clipboard'
+import { setClipboard, setClipboardImage } from 'uniswap/src/utils/clipboard'
 import { useNearestThemeColorFromImageUri } from 'uniswap/src/utils/colors'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
+import { shortenHash } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
@@ -195,6 +196,19 @@ function NFTItemScreenContents({
   const rightElement = useMemo(
     () => <RightElement asset={asset} isSpam={isSpam} owner={owner} />,
     [asset, isSpam, owner],
+  )
+
+  const onPressCopyAddress = useCallback(
+    async (_: GestureResponderEvent) => {
+      await setClipboard(address)
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Copied,
+          copyType: CopyNotificationType.Address,
+        }),
+      )
+    },
+    [address, dispatch],
   )
 
   return (
@@ -355,6 +369,25 @@ function NFTItemScreenContents({
                     />
                   ) : null}
 
+                  {asset?.nftContract?.address ? (
+                    <AssetMetadata
+                      color={colors.neutral2.val}
+                      title={t('tokens.nfts.details.contract.address')}
+                      valueComponent={
+                        <TouchableArea
+                          alignItems="center"
+                          flexDirection="row"
+                          gap="$spacing6"
+                          justifyContent="center"
+                          onPress={onPressCopyAddress}
+                        >
+                          <Text variant="body2">{shortenHash(asset?.nftContract?.address)}</Text>
+                          <CopyAlt color="$neutral3" size="$icon.16" />
+                        </TouchableArea>
+                      }
+                    />
+                  ) : null}
+
                   {owner && (
                     <AssetMetadata
                       color={colors.neutral2.val}
@@ -418,7 +451,7 @@ function AssetMetadata({
 function RightElement({ asset, owner, isSpam }: { asset: GQLNftAsset; owner?: string; isSpam?: boolean }): JSX.Element {
   const colors = useSporeColors()
 
-  const { menuActions, onContextMenuPress, onlyShare } = useNFTContextMenu({
+  const { menuActions, onContextMenuPress } = useNFTContextMenu({
     contractAddress: asset?.nftContract?.address,
     tokenId: asset?.tokenId,
     owner,
@@ -430,17 +463,11 @@ function RightElement({ asset, owner, isSpam }: { asset: GQLNftAsset; owner?: st
   return (
     <Flex alignItems="center" height={iconSizes.icon40} justifyContent="center" width={iconSizes.icon40}>
       {menuActions.length > 0 ? (
-        onlyShare ? (
-          <TouchableOpacity hitSlop={24} onPress={menuActions[0]?.onPress}>
-            <ShareIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
-          </TouchableOpacity>
-        ) : (
-          <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
-            <TouchableArea p="$spacing16">
-              <EllipsisIcon color={colors.neutral1.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
-            </TouchableArea>
-          </ContextMenu>
-        )
+        <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
+          <TouchableArea p="$spacing16">
+            <EllipsisIcon color={colors.neutral1.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
+          </TouchableArea>
+        </ContextMenu>
       ) : undefined}
     </Flex>
   )

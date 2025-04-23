@@ -35,7 +35,10 @@ import { PositionField } from 'types/position'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
@@ -68,6 +71,16 @@ export function CreatePositionContextProvider({
     })
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   }, [initialState])
+
+  // initialState.currencyInputs can change because it relies on async data to populate token0 and token1
+  useEffect(() => {
+    if (initialState.currencyInputs) {
+      setPositionState((prevState) => ({
+        ...prevState,
+        currencyInputs: { ...prevState.currencyInputs, ...initialState.currencyInputs },
+      }))
+    }
+  }, [initialState.currencyInputs])
 
   return (
     <CreatePositionContext.Provider
@@ -184,15 +197,14 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   })
 
   if (approvalError) {
-    logger.info(
-      'CreateTxContextProvider',
-      'CreateTxContextProvider',
-      parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' }),
-      {
-        error: JSON.stringify(approvalError),
-        addLiquidityApprovalParams: JSON.stringify(addLiquidityApprovalParams),
+    const message = parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' })
+
+    logger.error(message, {
+      tags: {
+        file: 'CreateTxContextProvider',
+        function: 'useEffect',
       },
-    )
+    })
   }
 
   const gasFeeToken0USD = useUSDCurrencyAmountOfGasFee(
@@ -254,15 +266,18 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   }, [createError, createCalldataQueryParams, addLiquidityApprovalParams])
 
   if (createError) {
-    logger.info(
-      'CreateTxContextProvider',
-      'CreateTxContextProvider',
-      parseErrorMessageTitle(createError, { defaultTitle: 'unknown CreateLpPositionCalldataQuery' }),
-      {
-        error: JSON.stringify(createError),
-        createCalldataQueryParams: JSON.stringify(createCalldataQueryParams),
+    const message = parseErrorMessageTitle(createError, { defaultTitle: 'unknown CreateLpPositionCalldataQuery' })
+
+    logger.error(message, {
+      tags: {
+        file: 'CreateTxContextProvider',
+        function: 'useEffect',
       },
-    )
+    })
+
+    sendAnalyticsEvent(InterfaceEventNameLocal.CreatePositionFailed, {
+      message,
+    })
   }
 
   const dependentAmountFallback = useCreatePositionDependentAmountFallback(
@@ -282,7 +297,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     !!actualGasFee || needsApprovals /* skip */,
   )
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
-    createCalldata?.create?.chainId,
+    toSupportedChainId(createCalldata?.create?.chainId) ?? undefined,
     actualGasFee || calculatedGasFee,
   )
 

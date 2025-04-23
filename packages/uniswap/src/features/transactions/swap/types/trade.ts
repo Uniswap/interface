@@ -4,7 +4,6 @@ import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade, PriorityOrderTrade as IPri
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { Route as V4RouteSDK } from '@uniswap/v4-sdk'
-import { AxiosError } from 'axios'
 import { BridgeQuoteResponse, ClassicQuoteResponse, DutchQuoteResponse, DutchV3QuoteResponse, PriorityQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -84,7 +83,11 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
     tradeType: TradeType
   }) {
     const orderInfo = transformToV3DutchOrderInfo(quote.quote.orderInfo)
-    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
+    const { expectedAmountIn, expectedAmountOut} = quote.quote
+    const expectedAmounts = expectedAmountIn && expectedAmountOut ? { expectedAmountIn, expectedAmountOut  } : undefined
+
+    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType, expectedAmounts })
+
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
     this.swapFee = getSwapFee(quote)
@@ -226,7 +229,7 @@ export type TradeWithSlippage = Exclude<Trade, BridgeTrade>
 export interface TradeWithStatus<T extends Trade = Trade> {
   isLoading: boolean
   isFetching?: boolean
-  error: Error | AxiosError | null
+  error: Error | null
   trade: T | null
   indicativeTrade: IndicativeTrade | undefined
   isIndicativeLoading: boolean
@@ -260,12 +263,7 @@ export enum ApprovalAction {
   // either native token or allowance is sufficient, no approval or permit needed
   None = 'none',
 
-  // not enough allowance and token cannot be approved through .permit instead
-  Approve = 'approve',
-
-  // not enough allowance but token can be approved through permit signature
-  Permit = 'permit',
-
+  // erc20 approval is needed for the permit2 contract
   Permit2Approve = 'permit2-approve',
 
   // revoke required before token can be approved
@@ -277,19 +275,19 @@ export enum ApprovalAction {
 
 export type TokenApprovalInfo =
   | {
-      action: ApprovalAction.None | ApprovalAction.Permit | ApprovalAction.Unknown
-      txRequest: null
-      cancelTxRequest: null
+    action: ApprovalAction.None | ApprovalAction.Unknown
+    txRequest: null
+    cancelTxRequest: null
     }
   | {
-      action: ApprovalAction.Approve | ApprovalAction.Permit2Approve
-      txRequest: providers.TransactionRequest
-      cancelTxRequest: null
-    } | {
-      action: ApprovalAction.RevokeAndPermit2Approve
-      txRequest: providers.TransactionRequest
-      cancelTxRequest: providers.TransactionRequest
-    }
+    action: ApprovalAction.Permit2Approve
+    txRequest: providers.TransactionRequest
+    cancelTxRequest: null
+  } | {
+    action: ApprovalAction.RevokeAndPermit2Approve
+    txRequest: providers.TransactionRequest
+    cancelTxRequest: providers.TransactionRequest
+  }
 
 // Converts from BE type to SDK type
 function transformToV2DutchOrderInfo(orderInfo: DutchOrderInfoV2): UnsignedV2DutchOrderInfo {
@@ -334,8 +332,8 @@ function transformToV3DutchOrderInfo(orderInfo: DutchOrderInfoV3): UnsignedV3Dut
       token: output.token ?? '',
       startAmount: BigNumber.from(output.startAmount),
       curve: {
-        relativeBlocks: orderInfo.input.curve?.relativeBlocks ?? [],
-        relativeAmounts: orderInfo.input.curve?.relativeAmounts?.map((amount) => BigInt(amount)) ?? [],
+        relativeBlocks: output.curve.relativeBlocks ?? [],
+        relativeAmounts: output.curve.relativeAmounts?.map((amount) => BigInt(amount)) ?? [],
       },
       minAmount: BigNumber.from(output.minAmount),
       adjustmentPerGweiBaseFee: BigNumber.from(output.adjustmentPerGweiBaseFee),

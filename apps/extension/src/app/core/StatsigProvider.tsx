@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { getStatsigEnvironmentTier } from 'src/app/version'
-import Statsig from 'statsig-js' // Use JS package for browser
 import { config } from 'uniswap/src/config'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
-import { StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
+import { StatsigClient, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
+import { statsigBaseConfig } from 'uniswap/src/features/gating/statsigBaseConfig'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 async function getStatsigUser(): Promise<StatsigUser> {
@@ -27,6 +27,7 @@ export function ExtensionStatsigProvider({
   appName: string
 }): JSX.Element {
   const { data: storedUser } = useAsyncData(getStatsigUser)
+  const [initFinished, setInitFinished] = useState(false)
   const [user, setUser] = useState<StatsigUser>({
     userID: undefined,
     custom: {
@@ -34,7 +35,6 @@ export function ExtensionStatsigProvider({
     },
     appVersion: process.env.VERSION,
   })
-  const [initFinished, setInitFinished] = useState(false)
 
   useEffect(() => {
     if (storedUser && initFinished) {
@@ -42,31 +42,23 @@ export function ExtensionStatsigProvider({
     }
   }, [storedUser, initFinished])
 
-  const options: StatsigOptions = {
-    environment: {
-      tier: getStatsigEnvironmentTier(),
-    },
-    api: uniswapUrls.statsigProxyUrl,
-    disableAutoMetricsLogging: true,
-    disableErrorLogging: true,
-    initCompletionCallback: () => {
-      setInitFinished(true)
-      initializeDatadog(appName).catch(() => undefined)
-    },
+  const onStatsigInit = (): void => {
+    setInitFinished(true)
+    initializeDatadog(appName).catch(() => undefined)
   }
 
   return (
-    <StatsigProvider options={options} sdkKey={config.statsigApiKey} user={user} waitForInitialization={false}>
+    <StatsigProviderWrapper user={user} onInit={onStatsigInit}>
       {children}
-    </StatsigProvider>
+    </StatsigProviderWrapper>
   )
 }
 
 export async function initStatSigForBrowserScripts(): Promise<void> {
-  await Statsig.initialize(config.statsigApiKey, await getStatsigUser(), {
-    api: uniswapUrls.statsigProxyUrl,
-    environment: {
-      tier: getStatsigEnvironmentTier(),
-    },
+  const statsigClient = new StatsigClient(config.statsigApiKey, await getStatsigUser(), statsigBaseConfig)
+  await statsigClient.initializeAsync().catch((error) => {
+    logger.error(error, {
+      tags: { file: 'StatsigProvider.tsx', function: 'initStatSigForBrowserScripts' },
+    })
   })
 }

@@ -2,7 +2,7 @@ import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { ColumnCenter } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Flag, Settings } from 'react-feather'
 import { useDispatch } from 'react-redux'
 import { useCloseModal, useToggleModal } from 'state/application/hooks'
@@ -11,7 +11,8 @@ import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Button } from 'ui/src'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { StatsigContext } from 'uniswap/src/features/gating/sdk/statsig'
+import { getOverrides } from 'uniswap/src/features/gating/utils'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 const Box = styled.div`
@@ -50,11 +51,8 @@ const SettingsContainer = styled(ColumnCenter)`
 `
 
 export default function DevFlagsBox() {
-  const statsigOverrides = Statsig.initializeCalled()
-    ? Statsig.getAllOverrides()
-    : { gates: {}, configs: {}, layers: {} }
-  const configOverrides = Object.entries(statsigOverrides.configs)
-  const gateOverrides = Object.entries(statsigOverrides.gates)
+  const { client: statsigClient } = useContext(StatsigContext)
+  const { gateOverrides, configOverrides } = getOverrides(statsigClient)
 
   const overrides = [...gateOverrides, ...configOverrides].map(([name, value]) => Override(name, value))
 

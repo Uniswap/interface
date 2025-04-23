@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
 import { createAction } from '@reduxjs/toolkit'
@@ -12,6 +13,10 @@ import {
   DappRequestType,
   DappResponseType,
   ErrorResponse,
+  GetCallsStatusRequest,
+  GetCallsStatusResponse,
+  SendCallsRequest,
+  SendCallsResponse,
   SendTransactionResponse,
   SignMessageRequest,
   SignMessageResponse,
@@ -26,7 +31,13 @@ import { AppRoutes, HomeQueryParams } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { call, put, select, take } from 'typed-redux-saga'
-import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import {
+  chainIdToHexadecimalString,
+  hexadecimalStringToInt,
+  toSupportedChainId,
+} from 'uniswap/src/features/chains/utils'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import {
@@ -213,7 +224,9 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     isConnectedToDapp &&
     (ACCOUNT_REQUEST_TYPES.includes(requestParams.dappRequest.type) ||
       ACCOUNT_INFO_TYPES.includes(requestParams.dappRequest.type) ||
-      requestParams.dappRequest.type === DappRequestType.RevokePermissions)
+      requestParams.dappRequest.type === DappRequestType.RevokePermissions ||
+      requestParams.dappRequest.type === DappRequestType.SendCalls || // temporarily until we have a real implementation
+      requestParams.dappRequest.type === DappRequestType.GetCallsStatus)
 
   if (shouldAutoConfirmRequest) {
     yield* put(confirmRequest({ ...requestParams, dappInfo }))
@@ -406,4 +419,87 @@ export function* handleUniswapOpenSidebarRequest(request: UniswapOpenSidebarRequ
     requestId: request.requestId,
   }
   yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, response)
+}
+
+/**
+ * Handle wallet_sendCalls request
+ * This method allows dapps to send a batch of calls to the wallet
+ */
+export function* handleSendCalls(request: SendCallsRequest, { id }: SenderTabInfo) {
+  const eip5792MethodsEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.Eip5792Methods)) ?? false
+
+  if (!eip5792MethodsEnabled) {
+    const errorResponse: ErrorResponse = {
+      type: DappResponseType.ErrorResponse,
+      error: serializeError(rpcErrors.methodNotSupported()),
+      requestId: request.requestId,
+    }
+
+    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+    return
+  }
+
+  // Mock response data
+  // TODO: Implement actual response data
+  const response: SendCallsResponse = {
+    type: DappResponseType.SendCallsResponse,
+    requestId: request.requestId,
+    response: {
+      id: request.sendCallsParams.id || 'mock-batch-id (will be txID or `id` from request)',
+      capabilities: request.sendCallsParams.capabilities || {},
+    },
+  }
+
+  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+}
+
+/**
+ * Handle wallet_getCallsStatus request
+ * This method returns the status of a call batch that was sent via wallet_sendCalls
+ */
+export function* handleGetCallsStatus(request: GetCallsStatusRequest, { id }: SenderTabInfo, dappInfo: DappInfo) {
+  const eip5792MethodsEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.Eip5792Methods)) ?? false
+
+  if (!eip5792MethodsEnabled) {
+    const errorResponse: ErrorResponse = {
+      type: DappResponseType.ErrorResponse,
+      error: serializeError(rpcErrors.methodNotSupported()),
+      requestId: request.requestId,
+    }
+
+    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+    return
+  }
+
+  // Mock response data
+  // TODO: Implement actual response data
+  const response: GetCallsStatusResponse = {
+    type: DappResponseType.GetCallsStatusResponse,
+    requestId: request.requestId,
+    response: {
+      version: '1.0',
+      id: request.batchId,
+      chainId: dappInfo.lastChainId ? chainIdToHexadecimalString(dappInfo.lastChainId) : '0x1',
+      status: 100,
+      receipts: [
+        {
+          logs: [
+            {
+              address: '0x1234567890123456789012345678901234567890',
+              data: '0x0000000000000000000000000000000000000000000000000000000000000001',
+              topics: ['0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'],
+            },
+          ],
+          status: '0x1', // Success
+          blockHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+          blockNumber: '0x1',
+          gasUsed: '0x5208', // 21000
+          transactionHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+        },
+      ],
+      capabilities: {},
+    },
+  }
+
+  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
 }

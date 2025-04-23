@@ -13,8 +13,6 @@ import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCi
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const StyledDropdownButton = {
   borderRadius: '$rounded16',
@@ -38,6 +36,8 @@ type PositionsHeaderProps = {
   onStatusChange: (toggledStatus: PositionStatus) => void
 }
 
+const PROTOCOL_VERSIONS = [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
+
 export function PositionsHeader({
   showFilters = true,
   selectedChain,
@@ -50,16 +50,7 @@ export function PositionsHeader({
   const { t } = useTranslation()
   const { chains } = useEnabledChains()
   const navigate = useNavigate()
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const media = useMedia()
-
-  const protocolVersions = useMemo(
-    () =>
-      isV4DataEnabled
-        ? [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
-        : [ProtocolVersion.V3, ProtocolVersion.V2],
-    [isV4DataEnabled],
-  )
 
   const statusFilterOptions = useMemo(() => {
     return [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE, PositionStatus.CLOSED].map((status) => {
@@ -95,7 +86,7 @@ export function PositionsHeader({
   }, [selectedStatus, onStatusChange, t])
 
   const versionFilterOptions = useMemo(() => {
-    return protocolVersions.map((version) => (
+    return PROTOCOL_VERSIONS.map((version) => (
       <LabeledCheckbox
         key={`PositionsHeader-version-${version}`}
         py="$spacing4"
@@ -106,11 +97,11 @@ export function PositionsHeader({
         onCheckPressed={() => onVersionChange(version)}
       />
     ))
-  }, [protocolVersions, selectedVersions, onVersionChange])
+  }, [selectedVersions, onVersionChange])
 
   const createOptions = useMemo(
     () =>
-      protocolVersions.map((version) => {
+      PROTOCOL_VERSIONS.map((version) => {
         const protocolVersionLabel = getProtocolVersionLabel(version)
         return (
           <Flex
@@ -127,7 +118,7 @@ export function PositionsHeader({
           </Flex>
         )
       }),
-    [navigate, protocolVersions],
+    [navigate],
   )
 
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false)
@@ -152,7 +143,7 @@ export function PositionsHeader({
             flexGrow={1}
             {...ClickableTamaguiStyle}
             onPress={() => {
-              navigate(`/positions/create/${isV4DataEnabled ? 'v4' : 'v3'}`)
+              navigate('/positions/create/v4')
             }}
           >
             <Plus size={20} color="$surface1" />

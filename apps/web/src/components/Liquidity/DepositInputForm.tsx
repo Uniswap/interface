@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { DepositInfo } from 'components/Liquidity/types'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { useNativeTokenPercentageBufferExperiment } from 'pages/Pool/Positions/create/hooks/useNativeTokenPercentageBufferExperiment'
 import { ReactNode, useState } from 'react'
 import { PositionField } from 'types/position'
 import { Flex } from 'ui/src'
@@ -52,6 +53,7 @@ export function DepositInputForm({
   amount1Loading,
   autofocus = true,
 }: InputFormProps) {
+  const bufferPercentage = useNativeTokenPercentageBufferExperiment()
   const [focusedInputField, setFocusedInputField] = useState(autofocus ? PositionField.TOKEN0 : undefined)
 
   // TODO(WEB-4920): when the backend returns the logo info make sure that there is no call being made
@@ -86,6 +88,7 @@ export function DepositInputForm({
             currencyField={CurrencyField.INPUT}
             currencyAmount={currencyAmounts?.[PositionField.TOKEN0]}
             currencyBalance={currencyBalances?.[PositionField.TOKEN0]}
+            nativeTokenPercentageBuffer={bufferPercentage}
             onSetExactAmount={handleUserInput(PositionField.TOKEN0)}
             onToggleIsFiatMode={() => undefined}
             usdValue={currencyAmountsUSDValue?.[PositionField.TOKEN0]}
@@ -111,6 +114,7 @@ export function DepositInputForm({
             currencyField={CurrencyField.INPUT}
             currencyAmount={currencyAmounts?.[PositionField.TOKEN1]}
             currencyBalance={currencyBalances?.[PositionField.TOKEN1]}
+            nativeTokenPercentageBuffer={bufferPercentage}
             onSetExactAmount={handleUserInput(PositionField.TOKEN1)}
             onToggleIsFiatMode={() => undefined}
             usdValue={currencyAmountsUSDValue?.[PositionField.TOKEN1]}

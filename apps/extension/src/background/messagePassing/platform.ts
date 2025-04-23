@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { MessageParsers } from 'uniswap/src/extension/messagePassing/platform'
 import { logger } from 'utilities/src/logger/logger'
 
 const EXTENSION_CONTEXT_INVALIDATED_CHROMIUM_ERROR = 'Extension context invalidated.'
@@ -97,9 +98,6 @@ class ChromeMessageChannel {
   }
 }
 
-export type MessageParsers<T extends string, R extends { [key in T]: { type: key } }> = {
-  [key in T]: (message: unknown) => R[key]
-}
 abstract class TypedMessageChannel<
   T extends string,
   R extends { [key in T]: { type: key } },

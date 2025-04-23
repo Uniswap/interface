@@ -1,4 +1,4 @@
-import { Message } from 'src/background/messagePassing/messageTypes'
+import { Message } from 'uniswap/src/extension/messagePassing/messageTypes'
 
 type MessageValidator<T extends Message> = (message: unknown) => message is T
 

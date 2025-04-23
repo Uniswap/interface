@@ -77,6 +77,7 @@ type ButtonConfig = {
   onClick: () => void
   disabled?: boolean
   textColor?: keyof DefaultTheme
+  isLoading?: boolean
 }
 
 type ButtonsConfig = {
@@ -93,18 +94,19 @@ export interface DialogProps {
   body?: ReactNode
   onCancel: () => void
   buttonsConfig?: ButtonsConfig
+  removeIconBackground?: boolean
 }
 
 /**
  * All the content of the dialog that doesn't relate to the modal presentation.
  * Use this if you want to use the dialog within a different modal.
  */
-export function DialogContent({ icon, title, description, body, buttonsConfig }: DialogProps) {
+export function DialogContent({ icon, title, description, body, buttonsConfig, removeIconBackground }: DialogProps) {
   const { left, right, gap } = buttonsConfig ?? {}
   return (
     <ColumnCenter gap="lg">
       <ColumnCenter gap="16px">
-        <IconContainer>{icon}</IconContainer>
+        {removeIconBackground ? icon : <IconContainer>{icon}</IconContainer>}
         <ColumnCenter gap="sm">
           <TitleText>{title}</TitleText>
           <DescriptionText>{description}</DescriptionText>
@@ -117,10 +119,11 @@ export function DialogContent({ icon, title, description, body, buttonsConfig }:
             <Button
               size="small"
               onPress={left.onClick}
-              isDisabled={left.disabled}
+              isDisabled={left.disabled || left.isLoading}
               height={40}
               emphasis={getButtonEmphasis(left.type)}
               variant={getButtonVariant(left.type)}
+              loading={left.isLoading}
             >
               {left.title}
             </Button>

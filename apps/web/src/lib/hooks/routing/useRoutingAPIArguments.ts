@@ -6,9 +6,8 @@ import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference, URAQuoteType } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ArbitrumXV2SamplingProperties, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useUniswapXPriorityOrderFlag } from 'uniswap/src/features/transactions/swap/utils/protocols'
 
 /**
@@ -36,11 +35,7 @@ export function useRoutingAPIArguments({
   const uniswapXForceSyntheticQuotes = useFeatureFlag(FeatureFlags.UniswapXSyntheticQuote)
   const isPriorityOrdersEnabled = useUniswapXPriorityOrderFlag(tokenIn?.chainId)
   const isXv2 = useFeatureFlag(FeatureFlags.UniswapXv2)
-  const xv2ArbitrumRoutingType = useExperimentValue<
-    Experiments.ArbitrumXV2Sampling,
-    ArbitrumXV2SamplingProperties.RoutingType,
-    'CLASSIC' | 'DUTCH_V2' | 'DUTCH_V3'
-  >(Experiments.ArbitrumXV2Sampling, ArbitrumXV2SamplingProperties.RoutingType, 'CLASSIC')
+  const isDutchV3Enabled = useFeatureFlag(FeatureFlags.ArbitrumDutchV3)
 
   // Don't enable fee logic if this is a quote for pricing
   const sendPortionEnabled = routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
@@ -54,9 +49,9 @@ export function useRoutingAPIArguments({
     ? isPriorityOrder
       ? URAQuoteType.PRIORITY
       : isArbitrum
-        ? xv2ArbitrumRoutingType === 'DUTCH_V2'
-          ? URAQuoteType.DUTCH_V2
-          : URAQuoteType.DUTCH_V3
+        ? isDutchV3Enabled
+          ? URAQuoteType.DUTCH_V3
+          : URAQuoteType.DUTCH_V1
         : isXv2
           ? URAQuoteType.DUTCH_V2
           : URAQuoteType.DUTCH_V1

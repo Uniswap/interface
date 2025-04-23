@@ -1,4 +1,4 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useAtom } from 'jotai'
 import { useTranslation } from 'react-i18next'

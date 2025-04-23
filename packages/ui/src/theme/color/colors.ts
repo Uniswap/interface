@@ -256,7 +256,7 @@ const sporeDark = {
   statusWarning2: 'rgba(255, 191, 23, 0.08)',
   statusWarning2Hovered: 'rgba(255, 191, 23, 0.16)',
   statusCritical: '#FF593C',
-  statusCriticalHovered: '##FF401F',
+  statusCriticalHovered: '#FF401F',
   statusCritical2: 'rgba(255, 89, 60, 0.12)',
   statusCritical2Hovered: 'rgba(255, 89, 60, 0.2)',
 }
@@ -312,8 +312,6 @@ export const colorsLight = {
 
   DEP_backgroundBranded: '#FCF7FF',
   DEP_backgroundOverlay: opacifyRaw(60, colors.white),
-
-  DEP_accentWarning: DEP_accentColors.goldVibrant,
 
   DEP_accentBranded: DEP_accentColors.magentaVibrant,
   DEP_shadowBranded: DEP_accentColors.magentaVibrant,
@@ -400,8 +398,6 @@ export const colorsDark = {
 
   DEP_backgroundBranded: '#100D1C',
   DEP_backgroundOverlay: opacifyRaw(10, colors.white),
-
-  DEP_accentWarning: colors.yellowVibrant,
 
   DEP_accentBranded: DEP_accentColors.magentaVibrant,
   // TODO(MOB-160): accommodate one-off color in cleaner way

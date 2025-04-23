@@ -41,10 +41,15 @@ import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 
+import { isArcBrowser } from 'src/app/utils/chrome'
 import { getIsDefaultProviderFromStorage } from 'src/app/utils/provider'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ZodError } from 'zod'
+
+// arc styles aren't available on load
+const ARC_STYLE_INJECTION_DELAY = ONE_SECOND_MS
 
 let _provider: JsonRpcProvider | undefined
 let _chainId: string | undefined
@@ -276,3 +281,20 @@ addWindowMessageListener<WindowEthereumConfigRequest>(
   undefined,
   { removeAfterHandled: true },
 )
+
+// check for arc stylesheet properties on load
+// notify background script if arc browser detected so we can disable the extension
+window.addEventListener('load', () => {
+  // if styles aren't available at all, then we cannot check for the arc styles
+  const isStylesAvailable = document.documentElement && !!getComputedStyle(document.documentElement).length
+  if (!isStylesAvailable) {
+    return
+  }
+
+  setTimeout(async () => {
+    await contentScriptUtilityMessageChannel.sendMessage({
+      type: ContentScriptUtilityMessageType.ArcBrowserCheck,
+      isArcBrowser: isArcBrowser(),
+    })
+  }, ARC_STYLE_INJECTION_DELAY)
+})

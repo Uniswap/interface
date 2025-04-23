@@ -22,7 +22,8 @@ import { fromUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
+import { isUwULinkAllowlistType } from 'uniswap/src/features/gating/typeGuards'
 import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -312,7 +313,7 @@ function* _sendAnalyticsEvent(deepLinkAction: DeepLinkActionResult, coldStart: b
 }
 
 export function* handleGoToFiatOnRampDeepLink() {
-  const disableForKorea = Statsig.checkGate(getFeatureFlagName(FeatureFlags.DisableFiatOnRampKorea))
+  const disableForKorea = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.DisableFiatOnRampKorea))
   if (disableForKorea) {
     navigate(ModalName.KoreaCexTransferInfoModal)
   } else {
@@ -379,7 +380,7 @@ export function* parseAndValidateUserAddress(userAddress: string | null) {
 
 function* handleScantasticDeepLink(scantasticQueryParams: string): Generator {
   const params = parseScantasticParams(scantasticQueryParams)
-  const scantasticEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.Scantastic))
+  const scantasticEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.Scantastic))
 
   if (!params || !scantasticEnabled) {
     Alert.alert(i18n.t('walletConnect.error.scantastic.title'), i18n.t('walletConnect.error.scantastic.message'), [
@@ -402,10 +403,15 @@ function* handleUwuLinkDeepLink(uri: string): Generator {
     const uwulinkData = parseUwuLinkDataFromDeeplink(decodedUri)
     const parsedUwulinkRequest: UwULinkRequest = JSON.parse(uwulinkData)
 
-    const uwuLinkAllowList = getDynamicConfigValue(DynamicConfigs.UwuLink, UwuLinkConfigKey.Allowlist, {
-      contracts: [],
-      tokenRecipients: [],
-    })
+    const uwuLinkAllowList = getDynamicConfigValue(
+      DynamicConfigs.UwuLink,
+      UwuLinkConfigKey.Allowlist,
+      {
+        contracts: [],
+        tokenRecipients: [],
+      },
+      isUwULinkAllowlistType,
+    )
 
     const isAllowed = isAllowedUwuLinkRequest(parsedUwulinkRequest, uwuLinkAllowList)
 
@@ -437,7 +443,7 @@ function* handleUwuLinkDeepLink(uri: string): Generator {
       contractManager,
     })
 
-    yield* put(addRequest(uwuLinkTxnRequest))
+    yield* put(addRequest(uwuLinkTxnRequest.request))
   } catch {
     Alert.alert(i18n.t('walletConnect.error.uwu.title'), i18n.t('walletConnect.error.uwu.scan'), [
       {

@@ -21,7 +21,7 @@ const Badge = styled(Text, {
   variants: {
     badgeVariant: {
       [BadgeVariant.SOFT]: { backgroundColor: '$accent2', color: '$accent1' },
-      [BadgeVariant.WARNING]: { backgroundColor: '$DEP_accentWarning', color: '$surface1' },
+      [BadgeVariant.WARNING]: { backgroundColor: '$statusWarning', color: '$surface1' },
     },
     size: {
       small: {

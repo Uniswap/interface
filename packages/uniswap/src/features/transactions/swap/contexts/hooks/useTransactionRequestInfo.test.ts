@@ -8,7 +8,7 @@ import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/contexts/hooks/usePermit2Signature'
 import { useTransactionRequestInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTransactionRequestInfo'
 import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/contexts/hooks/useWrapTransactionRequest'
-import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/useV4SwapEnabled'
+import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { createMockDerivedSwapInfo, createMockTokenApprovalInfo } from 'uniswap/src/test/fixtures/transactions/swap'
@@ -17,7 +17,7 @@ jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery')
 jest.mock('uniswap/src/features/transactions/swap/contexts/hooks/usePermit2Signature')
 jest.mock('uniswap/src/features/transactions/swap/contexts/hooks/useWrapTransactionRequest')
 jest.mock('uniswap/src/features/gas/hooks')
-jest.mock('uniswap/src/features/transactions/swap/useV4SwapEnabled')
+jest.mock('uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled')
 jest.mock('uniswap/src/features/gating/hooks', () => {
   return {
     ...jest.requireActual('uniswap/src/features/gating/hooks'),
@@ -86,7 +86,6 @@ describe('useTransactionRequestInfo', () => {
         derivedSwapInfo: mockDerivedSwapInfo,
         tokenApprovalInfo: createMockTokenApprovalInfo(),
         account: mockAccount,
-        skip: false,
       }),
     )
 
@@ -114,7 +113,6 @@ describe('useTransactionRequestInfo', () => {
         derivedSwapInfo: mockDerivedSwapInfo,
         tokenApprovalInfo: createMockTokenApprovalInfo(),
         account: mockAccount,
-        skip: false,
       }),
     )
 

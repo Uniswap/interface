@@ -54,6 +54,7 @@ interface PresetAmountButtonProps {
   elementName?: ElementNameType
   percentage?: PresetPercentage
   transactionType?: TransactionType
+  nativeTokenPercentageBuffer?: number
   buttonProps?: ButtonProps
 }
 
@@ -65,12 +66,17 @@ export function PresetAmountButton({
   onSetPresetValue,
   currencyField,
   transactionType,
+  nativeTokenPercentageBuffer,
   buttonProps,
 }: PresetAmountButtonProps): JSX.Element {
   const isNativeAsset = !!currencyBalance?.currency.isNative
   const [isShowingMaxNativeBalanceModal, setIsShowingMaxNativeBalanceModal] = useState(false)
 
-  const maxInputAmount = useMaxAmountSpend({ currencyAmount: currencyBalance, txType: transactionType })
+  const maxInputAmount = useMaxAmountSpend({
+    currencyAmount: currencyBalance,
+    txType: transactionType,
+    nativeTokenPercentageBuffer,
+  })
   const presetValueAmount = useMemo(() => {
     if (percentage === 100) {
       return maxInputAmount

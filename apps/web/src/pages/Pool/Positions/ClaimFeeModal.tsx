@@ -26,7 +26,8 @@ import { ClaimLPFeesRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   CollectFeesTxAndGasInfo,
@@ -166,15 +167,17 @@ export function ClaimFeeModal() {
 
   // prevent logging of the empty error object for now since those are burying signals
   if (error && Object.keys(error).length > 0) {
-    logger.info(
-      'ClaimFeeModal',
-      'ClaimFeeModal',
-      parseErrorMessageTitle(error, { defaultTitle: 'unknown ClaimLPFeesCalldataQuery' }),
-      {
-        error: JSON.stringify(error),
-        claimLpFeesParams: JSON.stringify(claimLpFeesParams),
+    const message = parseErrorMessageTitle(error, { defaultTitle: 'unknown ClaimLPFeesCalldataQuery' })
+    logger.error(message, {
+      tags: {
+        file: 'ClaimFeeModal',
+        function: 'useEffect',
       },
-    )
+    })
+
+    sendAnalyticsEvent(InterfaceEventNameLocal.CollectLiquidityFailed, {
+      message,
+    })
   }
 
   const txInfo = useMemo((): CollectFeesTxAndGasInfo | undefined => {

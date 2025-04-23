@@ -15,8 +15,6 @@ import {
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const DEFAULT_QUERY_SIZE = 20
 
@@ -27,7 +25,6 @@ export function usePoolsFromTokenAddress(
 ) {
   const { defaultChainId } = useEnabledChains()
   const chain = toGraphQLChain(chainId ?? defaultChainId)
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const {
     loading: loadingV4,
     error: errorV4,
@@ -39,7 +36,6 @@ export function usePoolsFromTokenAddress(
       tokenAddress,
       chain,
     },
-    skip: !isV4DataEnabled,
   })
   const {
     loading: loadingV3,
@@ -67,7 +63,7 @@ export function usePoolsFromTokenAddress(
     },
     skip: !chainId,
   })
-  const loading = (loadingV4 && isV4DataEnabled) || loadingV3 || loadingV2
+  const loading = loadingV4 || loadingV3 || loadingV2
 
   const loadingMoreV4 = useRef(false)
   const loadingMoreV3 = useRef(false)
@@ -75,7 +71,7 @@ export function usePoolsFromTokenAddress(
   const sizeRef = useRef(DEFAULT_QUERY_SIZE)
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
-      if ((loadingMoreV4.current && isV4DataEnabled) || loadingMoreV3.current || loadingMoreV2.current) {
+      if (loadingMoreV4.current || loadingMoreV3.current || loadingMoreV2.current) {
         return
       }
       loadingMoreV4.current = true
@@ -140,35 +136,27 @@ export function usePoolsFromTokenAddress(
         },
       })
     },
-    [
-      dataV2?.topV2Pairs,
-      dataV3?.topV3Pools,
-      dataV4?.topV4Pools,
-      fetchMoreV2,
-      fetchMoreV3,
-      fetchMoreV4,
-      isV4DataEnabled,
-    ],
+    [dataV2?.topV2Pairs, dataV3?.topV3Pools, dataV4?.topV4Pools, fetchMoreV2, fetchMoreV3, fetchMoreV4],
   )
 
   return useMemo(() => {
-    const topV4Pools: TablePool[] = isV4DataEnabled
-      ? dataV4?.topV4Pools?.map((pool) => {
-          return {
-            hash: pool.poolId,
-            token0: pool.token0,
-            token1: pool.token1,
-            tvl: pool.totalLiquidity?.value,
-            volume24h: pool.volume24h?.value,
-            volume30d: pool.volume30d?.value,
-            volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
-            apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
-            feeTier: pool.feeTier,
-            protocolVersion: pool.protocolVersion,
-            hookAddress: pool.hook?.address,
-          } as TablePool
-        }) ?? []
-      : []
+    const topV4Pools: TablePool[] =
+      dataV4?.topV4Pools?.map((pool) => {
+        return {
+          hash: pool.poolId,
+          token0: pool.token0,
+          token1: pool.token1,
+          tvl: pool.totalLiquidity?.value,
+          volume24h: pool.volume24h?.value,
+          volume30d: pool.volume30d?.value,
+          volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
+          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
+          feeTier: pool.feeTier,
+          protocolVersion: pool.protocolVersion,
+          hookAddress: pool.hook?.address,
+        } as TablePool
+      }) ?? []
+
     const topV3Pools: TablePool[] =
       dataV3?.topV3Pools?.map((pool) => {
         return {
@@ -212,6 +200,5 @@ export function usePoolsFromTokenAddress(
     loadMore,
     loading,
     sortState,
-    isV4DataEnabled,
   ])
 }

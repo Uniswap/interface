@@ -12,7 +12,7 @@ import {
   useGasFeeHighRelativeToValue,
 } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
+import { NetworkFeeWarning } from 'uniswap/src/features/transactions/modals/NetworkFeeWarning'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isInterface } from 'utilities/src/platform'
 

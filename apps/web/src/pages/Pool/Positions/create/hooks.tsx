@@ -15,6 +15,7 @@ import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { useDefaultInitialPrice } from 'pages/Pool/Positions/create/hooks/useDefaultInitialPrice'
+import { useNativeTokenPercentageBufferExperiment } from 'pages/Pool/Positions/create/hooks/useNativeTokenPercentageBufferExperiment'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,
@@ -349,13 +350,20 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
 
 export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   const account = useAccount()
+  const bufferPercentage = useNativeTokenPercentageBufferExperiment()
   const { protocolVersion, address, token0, token1, exactField, exactAmounts, deposit0Disabled, deposit1Disabled } =
     state
 
   const { balance: token0Balance } = useOnChainCurrencyBalance(token0, address)
   const { balance: token1Balance } = useOnChainCurrencyBalance(token1, address)
-  const token0MaxAmount = useMaxAmountSpend({ currencyAmount: token0Balance })
-  const token1MaxAmount = useMaxAmountSpend({ currencyAmount: token1Balance })
+  const token0MaxAmount = useMaxAmountSpend({
+    currencyAmount: token0Balance,
+    nativeTokenPercentageBuffer: bufferPercentage,
+  })
+  const token1MaxAmount = useMaxAmountSpend({
+    currencyAmount: token1Balance,
+    nativeTokenPercentageBuffer: bufferPercentage,
+  })
 
   const [independentToken, dependentToken] = exactField === PositionField.TOKEN0 ? [token0, token1] : [token1, token0]
   const independentAmount = tryParseCurrencyAmount(exactAmounts[exactField], independentToken)

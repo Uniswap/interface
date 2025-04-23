@@ -13,7 +13,7 @@ const ButtonContent = ({ compact }: { compact: boolean }) => {
 
   if (userSlippageTolerance === SlippageTolerance.Auto) {
     return (
-      <Flex row p="6px 12px" borderRadius="16px">
+      <Flex row px="spacing6" py="spacing12" borderRadius="$rounded16">
         <Settings height="24px" width="24px" fill="neutral2" />
       </Flex>
     )
@@ -24,11 +24,12 @@ const ButtonContent = ({ compact }: { compact: boolean }) => {
   return (
     <Flex
       row
-      p="6px 12px"
-      borderRadius="16px"
+      px="$spacing6"
+      py="$spacing12"
+      borderRadius="$rounded16"
       data-testid="settings-icon-with-slippage"
-      gap="sm"
-      backgroundColor={isInvalidSlippage ? 'accentWarningSoft' : 'surface2'}
+      gap="$gap8"
+      backgroundColor={isInvalidSlippage ? '$statusWarning2' : '$surface2'}
     >
       <ThemedText.Caption color={isInvalidSlippage ? 'accentWarning' : 'neutral2'}>
         {compact ? (

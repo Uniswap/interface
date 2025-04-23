@@ -15,8 +15,11 @@ import {
   IncreaseLPPositionRequest,
   IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   IncreasePositionTxAndGasInfo,
@@ -81,15 +84,13 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   })
 
   if (approvalError) {
-    logger.info(
-      'IncreaseLiquidityTxContext',
-      'IncreaseLiquidityTxContext',
-      parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' }),
-      {
-        error: JSON.stringify(approvalError),
-        increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
+    const message = parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' })
+    logger.error(message, {
+      tags: {
+        file: 'IncreaseLiquidityTxContext',
+        function: 'useEffect',
       },
-    )
+    })
   }
 
   const {
@@ -202,15 +203,17 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
 
   if (calldataError) {
-    logger.info(
-      'IncreaseLiquidityTxContext',
-      'IncreaseLiquidityTxContext',
-      parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' }),
-      {
-        error: JSON.stringify(calldataError),
-        increaseCalldataQueryParams: JSON.stringify(increaseCalldataQueryParams),
+    const message = parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' })
+    logger.error(message, {
+      tags: {
+        file: 'IncreaseLiquidityTxContext',
+        function: 'useEffect',
       },
-    )
+    })
+
+    sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
+      message,
+    })
   }
 
   const fallbackDependentAmount = useIncreasePositionDependentAmountFallback(
@@ -220,7 +223,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
   const { value: calculatedGasFee } = useTransactionGasFee(increase, !!actualGasFee)
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
-    increaseCalldata?.increase?.chainId,
+    toSupportedChainId(increaseCalldata?.increase?.chainId) ?? undefined,
     actualGasFee || calculatedGasFee,
   )
 

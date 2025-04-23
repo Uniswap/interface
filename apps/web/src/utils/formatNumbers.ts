@@ -309,6 +309,19 @@ const fiatTokenPricesFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatterOptions: SEVEN_SIG_FIGS__SCI_NOTATION_CURRENCY },
 ]
 
+const fiatRewardsFormatter: FormatterRule[] = [
+  { exact: 0, formatterOptions: NO_DECIMALS_CURRENCY },
+  {
+    upperBound: 0.00000001,
+    hardCodedInput: { input: 0.00000001, prefix: '<' },
+    formatterOptions: ONE_SIG_FIG_CURRENCY,
+  },
+  { upperBound: 1, formatterOptions: THREE_SIG_FIGS_CURRENCY },
+  { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: 1e16, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
+  { upperBound: Infinity, formatterOptions: SEVEN_SIG_FIGS__SCI_NOTATION_CURRENCY },
+]
+
 const fiatTokenStatsFormatter: FormatterRule[] = [
   // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
   { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: ONE_SIG_FIG_CURRENCY },
@@ -433,6 +446,9 @@ export enum NumberType {
   // fiat prices everywhere except Token Details flow
   FiatTokenPrice = 'fiat-token-price',
 
+  // fiat values for rewards
+  FiatRewards = 'fiat-rewards',
+
   // fiat values for market cap, TVL, volume in the Token Details screen
   FiatTokenStats = 'fiat-token-stats',
 
@@ -477,6 +493,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.ChartFiatValue]: chartFiatValueFormatter,
   [NumberType.ChartVolumePriceScale]: chartVolumePriceScale,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
+  [NumberType.FiatRewards]: fiatRewardsFormatter,
   [NumberType.FiatTokenStats]: fiatTokenStatsFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,
   [NumberType.PortfolioBalance]: portfolioBalanceFormatter,

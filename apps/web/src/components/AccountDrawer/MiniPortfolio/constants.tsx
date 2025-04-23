@@ -37,6 +37,11 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: i18n.t('common.collected.fees'),
     [TransactionStatus.Failed]: i18n.t('common.collect.fees.failed'),
   },
+  [TransactionType.LP_INCENTIVES_CLAIM_REWARDS]: {
+    [TransactionStatus.Pending]: i18n.t('pool.incentives.collectingRewards'),
+    [TransactionStatus.Confirmed]: i18n.t('pool.incentives.collectedRewards'),
+    [TransactionStatus.Failed]: i18n.t('pool.incentives.collectFailedNoRetry'),
+  },
   [TransactionType.APPROVAL]: {
     [TransactionStatus.Pending]: i18n.t('common.approving'),
     [TransactionStatus.Confirmed]: i18n.t('common.approved'),
@@ -178,6 +183,7 @@ export const CancelledTransactionTitleTable: { [key in TransactionType]: string 
   [TransactionType.COLLECT_FEES]: i18n.t('common.collect.fees.cancelled'),
   [TransactionType.APPROVAL]: i18n.t('common.approval.cancelled'),
   [TransactionType.CLAIM]: i18n.t('common.claim.cancelled'),
+  [TransactionType.LP_INCENTIVES_CLAIM_REWARDS]: i18n.t('pool.incentives.collectRewardsCancelled'),
   [TransactionType.BUY]: i18n.t('common.buy.cancelled'),
   [TransactionType.SEND]: i18n.t('common.send.cancelled'),
   [TransactionType.RECEIVE]: i18n.t('common.receive.cancelled'),

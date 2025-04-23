@@ -163,7 +163,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
                 placeholder="0"
                 $width={inputAmount && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
                 maxDecimals={6}
-                testId="buy-form-amount-input"
+                testId={TestID.BuyFormAmountInput}
               />
               <NumericalInputMimic ref={hiddenObserver.ref}>{inputAmount}</NumericalInputMimic>
             </NumericalInputWrapper>

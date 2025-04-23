@@ -1,6 +1,7 @@
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { SwapFlow, type SwapFlowProps } from 'uniswap/src/features/transactions/swap/SwapFlow'
+import { SwapDependenciesContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContextProvider'
 import { SwapFormContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/ProtocolPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Slippage/Slippage'
@@ -25,13 +26,9 @@ export function WalletSwapFlow({ onSubmitSwap, ...props }: WalletSwapFlowProps):
         hideSettings={props.hideHeader}
         hideFooter={props.hideFooter}
       >
-        <SwapFlow
-          {...props}
-          settings={SETTINGS}
-          swapCallback={swapCallback}
-          wrapCallback={wrapCallback}
-          onSubmitSwap={onSubmitSwap}
-        />
+        <SwapDependenciesContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
+          <SwapFlow {...props} settings={SETTINGS} onSubmitSwap={onSubmitSwap} />
+        </SwapDependenciesContextProvider>
       </SwapFormContextProvider>
     </TransactionSettingsContextProvider>
   )

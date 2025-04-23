@@ -1004,6 +1004,7 @@ export function generateCreateCalldataQueryParams({
   derivedPriceRangeInfo,
   derivedDepositInfo,
   independentField,
+  slippageTolerance,
 }: {
   account?: AccountMeta
   approvalCalldata?: CheckApprovalLPResponse
@@ -1013,6 +1014,7 @@ export function generateCreateCalldataQueryParams({
   derivedPriceRangeInfo: PriceRangeInfo
   derivedDepositInfo: DepositInfo
   independentField: PositionField
+  slippageTolerance?: number
 }): CreateLPPositionRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
   const currencies = derivedPositionInfo.currencies
@@ -1065,6 +1067,7 @@ export function generateCreateCalldataQueryParams({
       independentAmount: independentAmount?.quotient.toString(),
       independentToken,
       defaultDependentAmount: dependentAmount?.quotient.toString(),
+      slippageTolerance,
       position: {
         pool: {
           token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
@@ -1123,6 +1126,7 @@ export function generateCreateCalldataQueryParams({
     independentToken,
     initialDependentAmount: initialPrice && dependentAmount?.quotient?.toString(), // only set this if there is an initialPrice
     initialPrice,
+    slippageTolerance,
     position: {
       tickLower,
       tickUpper,
