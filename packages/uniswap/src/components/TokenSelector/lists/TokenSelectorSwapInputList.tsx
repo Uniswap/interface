@@ -18,15 +18,17 @@ import {
 } from 'uniswap/src/components/TokenSelector/utils'
 import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
+import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isMobileApp } from 'utilities/src/platform'
 
+// eslint-disable-next-line complexity
 function useTokenSectionsForSwapInput({
   activeAccountAddress,
   chainFilter,
+  oppositeSelectedToken: output,
 }: TokenSectionsHookProps): GqlResult<TokenSection<TokenSelectorItemTypes>[]> {
   const isTokenSelectorTrendingTokensEnabled = useFeatureFlag(FeatureFlags.TokenSelectorTrendingTokens)
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
@@ -51,34 +53,55 @@ function useTokenSectionsForSwapInput({
     loading: favoriteTokenOptionsLoading,
   } = useFavoriteTokensOptions(activeAccountAddress, chainFilter)
 
-  const { data: commonTokenOptions } = useCommonTokensOptionsWithFallback(
-    activeAccountAddress,
-    chainFilter ?? defaultChainId,
-  )
+  const {
+    data: commonTokenOptions,
+    error: commonTokenOptionsError,
+    refetch: refetchCommonTokenOptions,
+    loading: commonTokenOptionsLoading,
+  } = useCommonTokensOptionsWithFallback(activeAccountAddress, chainFilter ?? defaultChainId)
+
+  const {
+    data: bridgingTokenOptions,
+    error: bridgingTokenOptionsError,
+    refetch: refetchBridgingTokenOptions,
+    loading: bridgingTokenOptionsLoading,
+    shouldNest: shouldNestBridgingTokens,
+  } = useBridgingTokensOptions({ oppositeSelectedToken: output, walletAddress: activeAccountAddress, chainFilter })
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
   const error =
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
     (!popularTokenOptions && popularTokenOptionsError) ||
-    (!favoriteTokenOptions && favoriteTokenOptionsError)
+    (!favoriteTokenOptions && favoriteTokenOptionsError) ||
+    (!commonTokenOptions && commonTokenOptionsError) ||
+    (!bridgingTokenOptions && bridgingTokenOptionsError)
 
   const loading =
     (!portfolioTokenOptions && portfolioTokenOptionsLoading) ||
     (!popularTokenOptions && popularTokenOptionsLoading) ||
-    (!favoriteTokenOptions && favoriteTokenOptionsLoading)
+    (!favoriteTokenOptions && favoriteTokenOptionsLoading) ||
+    (!commonTokenOptions && commonTokenOptionsLoading) ||
+    (!bridgingTokenOptions && bridgingTokenOptionsLoading)
 
   const refetchAll = useCallback(() => {
     refetchPortfolioTokenOptions?.()
     refetchPopularTokenOptions?.()
     refetchFavoriteTokenOptions?.()
-  }, [refetchPopularTokenOptions, refetchPortfolioTokenOptions, refetchFavoriteTokenOptions])
+    refetchCommonTokenOptions?.()
+    refetchBridgingTokenOptions?.()
+  }, [
+    refetchPopularTokenOptions,
+    refetchPortfolioTokenOptions,
+    refetchFavoriteTokenOptions,
+    refetchCommonTokenOptions,
+    refetchBridgingTokenOptions,
+  ])
 
-  const isTestnet = chainFilter && isTestnetChain(chainFilter)
-
+  const suggestedSectionOptions = useMemo(() => [commonTokenOptions ?? []], [commonTokenOptions])
   const suggestedSection = useTokenOptionsSection({
     sectionKey: TokenOptionSection.SuggestedTokens,
-    tokenOptions: [(isTestnet ? commonTokenOptions : []) ?? []],
+    tokenOptions: suggestedSectionOptions,
   })
 
   const portfolioSection = useTokenOptionsSection({
@@ -99,6 +122,14 @@ function useTokenSectionsForSwapInput({
     sectionKey: TokenOptionSection.PopularTokens,
     tokenOptions: isTokenSelectorTrendingTokensEnabled ? popularTokenOptions : popularMinusPortfolioTokens,
   })
+  const bridgingSectionTokenOptions: TokenSelectorItemTypes[] = useMemo(
+    () => (shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : bridgingTokenOptions ?? []),
+    [bridgingTokenOptions, shouldNestBridgingTokens],
+  )
+  const bridgingSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.BridgingTokens,
+    tokenOptions: bridgingSectionTokenOptions,
+  })
 
   const sections = useMemo(() => {
     if (isSwapListLoading({ loading, portfolioSection, popularSection, isTestnetModeEnabled })) {
@@ -111,6 +142,7 @@ function useTokenSectionsForSwapInput({
 
     return [
       ...(suggestedSection ?? []),
+      ...(bridgingSection ?? []),
       ...(portfolioSection ?? []),
       ...(recentSection ?? []),
       // TODO(WEB-3061): Favorited wallets/tokens
@@ -126,6 +158,7 @@ function useTokenSectionsForSwapInput({
     portfolioSection,
     recentSection,
     isTestnetModeEnabled,
+    bridgingSection,
   ])
 
   return useMemo(
@@ -144,6 +177,7 @@ function _TokenSelectorSwapInputList({
   activeAccountAddress,
   chainFilter,
   isKeyboardOpen,
+  oppositeSelectedToken,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
@@ -155,6 +189,7 @@ function _TokenSelectorSwapInputList({
   } = useTokenSectionsForSwapInput({
     activeAccountAddress,
     chainFilter,
+    oppositeSelectedToken,
   })
 
   return (

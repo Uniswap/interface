@@ -1,7 +1,8 @@
+import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text, isWeb, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -59,9 +60,11 @@ export interface TokenSelectorProps {
   chainId?: UniverseChainId
   chainIds?: UniverseChainId[]
   input?: TradeableAsset
+  output?: TradeableAsset
   isSurfaceReady?: boolean
   isLimits?: boolean
   onClose: () => void
+  focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
   onSelectChain?: (chainId: UniverseChainId | null) => void
   onSelectCurrency: ({
     currency,
@@ -81,6 +84,7 @@ export function TokenSelectorContent({
   flow,
   variation,
   input,
+  output,
   activeAccountAddress,
   chainId,
   chainIds,
@@ -238,6 +242,7 @@ export function TokenSelectorContent({
       case TokenSelectorVariation.SwapInput:
         return (
           <TokenSelectorSwapInputList
+            oppositeSelectedToken={output}
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
             isKeyboardOpen={isKeyboardOpen}
@@ -247,7 +252,7 @@ export function TokenSelectorContent({
       case TokenSelectorVariation.SwapOutput:
         return (
           <TokenSelectorSwapOutputList
-            input={input}
+            oppositeSelectedToken={input}
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
             isKeyboardOpen={isKeyboardOpen}
@@ -262,15 +267,16 @@ export function TokenSelectorContent({
     searchFilter,
     isTestnetModeEnabled,
     variation,
-    chainFilter,
-    isKeyboardOpen,
-    onSelectCurrencyCallback,
     activeAccountAddress,
+    chainFilter,
+    onSelectCurrencyCallback,
     debouncedParsedSearchFilter,
     debouncedSearchFilter,
+    isKeyboardOpen,
     parsedChainFilter,
     input,
     onSendEmptyActionPress,
+    output,
   ])
 
   return (
@@ -352,7 +358,7 @@ function TokenSelectorModalContent(props: TokenSelectorProps): JSX.Element {
 
 function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
   const colors = useSporeColors()
-  const { isModalOpen, onClose } = props
+  const { isModalOpen, onClose, focusHook } = props
 
   return (
     <Modal
@@ -369,6 +375,7 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       padding="$none"
       snapPoints={['65%', '100%']}
       height={isInterface ? '100vh' : undefined}
+      focusHook={focusHook}
       onClose={onClose}
     >
       <TokenSelectorModalContent {...props} />

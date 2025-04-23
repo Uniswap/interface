@@ -31,7 +31,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 
@@ -132,6 +132,8 @@ function TDPSwapComponent() {
 
   // Other token to prefill the swap form with
   const initialInputCurrency = useSwapInitialInputCurrency()
+  // If the initial input currency is the same as the TDP currency, then we are selling the TDP currency
+  const isSell = areCurrenciesEqual(initialInputCurrency, currency)
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
@@ -142,7 +144,7 @@ function TDPSwapComponent() {
         syncTabToUrl={false}
         chainId={currency.chainId}
         initialInputCurrency={initialInputCurrency}
-        initialOutputCurrency={currency}
+        initialOutputCurrency={isSell ? undefined : currency}
         onCurrencyChange={handleCurrencyChange}
         tokenColor={tokenColor}
       />

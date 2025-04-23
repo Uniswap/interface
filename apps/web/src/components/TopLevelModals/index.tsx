@@ -15,13 +15,10 @@ import DevFlagsBox from 'dev/DevFlagsBox'
 import { useAccount } from 'hooks/useAccount'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import Bag from 'nft/components/bag/Bag'
-import TransactionCompleteModal from 'nft/components/collection/TransactionCompleteModal'
 import { IncreaseLiquidityModal } from 'pages/IncreaseLiquidity/IncreaseLiquidityModal'
 import { ClaimFeeModal } from 'pages/Pool/Positions/ClaimFeeModal'
 import { RemoveLiquidityModal } from 'pages/RemoveLiquidity/RemoveLiquidityModal'
 import { useCloseModal, useModalIsOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { useMedia } from 'ui/src'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
@@ -31,9 +28,9 @@ export default function TopLevelModals() {
   const isLandingPage = useIsPage(PageType.LANDING)
   const media = useMedia()
 
-  const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
-  const addressClaimToggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
+  const addressClaimOpen = useModalIsOpen(ModalName.AddressClaim)
+  const addressClaimToggle = useToggleModal(ModalName.AddressClaim)
+  const blockedAccountModalOpen = useModalIsOpen(ModalName.BlockedAccount)
   const isAddLiquidityModalOpen = useModalIsOpen(ModalName.AddLiquidity)
   const isRemoveLiquidityModalOpen = useModalIsOpen(ModalName.RemoveLiquidity)
   const isClaimFeeModalOpen = useModalIsOpen(ModalName.ClaimFee)
@@ -62,13 +59,11 @@ export default function TopLevelModals() {
     <>
       <AddressClaimModal isOpen={addressClaimOpen} connectedAddress={account.address} onDismiss={addressClaimToggle} />
       <ConnectedAccountBlocked account={account.address} isOpen={accountBlocked} />
-      <Bag />
       <UniwalletModal />
 
       <Banners />
 
       <OffchainActivityModal />
-      <TransactionCompleteModal />
       {account.address && <ReceiveCryptoModal />}
       {account.address && <AddressQRModal accountAddress={account.address} />}
       <UkDisclaimerModal />

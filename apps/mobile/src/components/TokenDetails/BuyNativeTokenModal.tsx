@@ -38,13 +38,11 @@ export function BuyNativeTokenModal({
     return null
   }
 
+  const isMainnet = chainId === UniverseChainId.Mainnet
   const chainName = getChainInfo(chainId).label
-  const formattedChainName = chainId === UniverseChainId.Mainnet ? '' : `(${chainName})`
-
-  const nativeTokenSymbol =
-    chainId === UniverseChainId.Mainnet
-      ? nativeCurrencyInfo.currency.symbol ?? ''
-      : `${chainName} ${nativeCurrencyInfo.currency.symbol ?? ''}`
+  const nativeTokenSymbol = nativeCurrencyInfo.currency.symbol ?? ''
+  const nativeTokenName = nativeCurrencyInfo.currency.name ?? ''
+  const tokenSymbol = currencyInfo.currency.symbol ?? ''
 
   return (
     <Modal isDismissible alignment="top" name={ModalName.BuyNativeToken} onClose={onClose}>
@@ -53,14 +51,21 @@ export function BuyNativeTokenModal({
           <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon48} />
           <Flex centered gap="$spacing8">
             <Text variant="subheading1">
-              {t('token.zeroNativeBalance.title', { nativeTokenName: nativeCurrencyInfo.currency.name ?? '' })}
-              {formattedChainName}
+              {isMainnet
+                ? t('token.zeroNativeBalance.title.mainnet', { nativeTokenName })
+                : t('token.zeroNativeBalance.title.otherChains', { nativeTokenName, chainName })}
             </Text>
             <Text color="$neutral2" textAlign="center" variant="body3" px="$spacing8">
-              {t('token.zeroNativeBalance.description', {
-                tokenSymbol: currencyInfo.currency.symbol ?? '',
-                nativeTokenSymbol,
-              })}
+              {t('token.zeroNativeBalance.subtitle', { tokenSymbol })}
+            </Text>
+            <Text color="$neutral2" textAlign="center" variant="body3" px="$spacing8">
+              {isMainnet
+                ? t('token.zeroNativeBalance.description.mainnet', { tokenSymbol })
+                : t('token.zeroNativeBalance.description.otherChains', {
+                    tokenSymbol,
+                    nativeTokenSymbol,
+                    chainName,
+                  })}
             </Text>
           </Flex>
           <LearnMoreLink

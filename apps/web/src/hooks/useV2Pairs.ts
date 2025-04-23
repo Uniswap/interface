@@ -12,6 +12,7 @@ export enum PairState {
 }
 
 export function useV2Pairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {
+  const chainId = currencies[0]?.[0]?.chainId
   const tokens = useMemo(
     () => currencies.map(([currencyA, currencyB]) => [currencyA?.wrapped, currencyB?.wrapped]),
     [currencies],
@@ -65,9 +66,10 @@ export function useV2Pairs(currencies: [Currency | undefined, Currency | undefin
               },
             ],
             functionName: 'getReserves',
+            chainId,
           }) as const,
       )
-    }, [pairAddresses]),
+    }, [pairAddresses, chainId]),
   })
 
   return useMemo(() => {

@@ -1,4 +1,4 @@
-import { DappResponseType } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 
 export type PendingResponseInfo = {
   type: DappResponseType

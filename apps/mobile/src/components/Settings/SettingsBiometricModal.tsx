@@ -1,9 +1,9 @@
-import { Action } from '@reduxjs/toolkit'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useDispatch } from 'react-redux'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import { enroll } from 'src/features/biometrics/biometrics-utils'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
@@ -18,7 +18,6 @@ import {
   setRequiredForAppAccess,
   setRequiredForTransactions,
 } from 'src/features/biometricsSettings/slice'
-import { closeModal } from 'src/features/modals/modalSlice'
 import { openSettings } from 'src/utils/linking'
 import { Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -44,6 +43,7 @@ export function SettingsBiometricModal(): JSX.Element {
   const [showUnsafeWarningModal, setShowUnsafeWarningModal] = useState(false)
   const [unsafeWarningModalType, setUnsafeWarningModalType] = useState<BiometricSettingType | null>(null)
   const onCloseModal = useCallback(() => setShowUnsafeWarningModal(false), [])
+  const { onClose } = useReactNavigationModal()
 
   const { touchId } = useDeviceSupportsBiometricAuth()
   const biometricsMethod = useBiometricName(touchId)
@@ -188,10 +188,7 @@ export function SettingsBiometricModal(): JSX.Element {
   }
 
   return (
-    <Modal
-      name={ModalName.BiometricsModal}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.BiometricsModal }))}
-    >
+    <Modal name={ModalName.BiometricsModal} onClose={onClose}>
       <BiometricAuthWarningModal
         isOpen={showUnsafeWarningModal}
         isTouchIdDevice={touchId}

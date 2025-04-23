@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/core'
 import { useState } from 'react'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -55,7 +56,7 @@ const SWAP_REVIEW_SCREEN_TRANSITION_DELAY = 450
 function SwapFormScreenDelayedRender({ settings }: { settings: SwapSettingConfig[] }): JSX.Element {
   const { isContentHidden } = useDelayedRender(SWAP_FORM_SCREEN_TRANSITION_DELAY)
 
-  return <SwapFormScreen settings={settings} hideContent={isContentHidden} />
+  return <SwapFormScreen settings={settings} hideContent={isContentHidden} focusHook={useFocusEffect} />
 }
 
 // We add a short hardcoded delay to allow the sheet to animate quickly when going from Form -> Review.

@@ -1,8 +1,9 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { TRADING_API_CACHE_KEY, migrateLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { migrateLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { MigrateLPPositionRequest, MigrateLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useMigrateV3LpPositionCalldataQuery({
   params,
@@ -11,7 +12,7 @@ export function useMigrateV3LpPositionCalldataQuery({
   MigrateLPPositionRequest,
   MigrateLPPositionResponse
 >): UseQueryResult<MigrateLPPositionResponse> {
-  const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.migrate, params]
+  const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.migrate, params]
 
   return useQuery<MigrateLPPositionResponse>({
     queryKey,

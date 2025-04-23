@@ -10,11 +10,13 @@ import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithContextMenu'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
+const POLL_INTERVAL = 15 * ONE_SECOND_MS
 
 export const NftsTab = memo(
   forwardRef<FlashList<unknown>, TabProps>(function _NftsTab(
@@ -27,6 +29,7 @@ export const NftsTab = memo(
       onRefresh,
       headerHeight = 0,
       renderedInModal = false,
+      isActiveTab = false,
     },
     ref,
   ) {
@@ -51,7 +54,7 @@ export const NftsTab = memo(
         }
 
         return (
-          <Flex fill m="$spacing4">
+          <Flex m="$spacing4">
             <NftViewWithContextMenu index={index} item={item} owner={owner} onPress={onPressNft} />
           </Flex>
         )
@@ -84,6 +87,7 @@ export const NftsTab = memo(
           refreshing={refreshing}
           renderNFTItem={renderNFTItem}
           renderedInModal={renderedInModal}
+          pollInterval={isActiveTab ? POLL_INTERVAL : 0}
           onContentSizeChange={onContentSizeChange}
           onRefresh={onRefresh}
           onScroll={scrollHandler}

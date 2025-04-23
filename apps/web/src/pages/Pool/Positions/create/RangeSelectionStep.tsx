@@ -29,6 +29,7 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { fonts, zIndexes } from 'ui/src/theme'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 enum RangeSelectionInput {
   MIN = 0,
@@ -413,6 +414,7 @@ function RangeInput({
       {showIncrementButtons && (
         <Flex gap={10}>
           <TouchableArea
+            testID={`${TestID.RangeInputIncrement}-${input}`}
             alignItems="center"
             justifyContent="center"
             onPress={handleIncrement}
@@ -425,6 +427,7 @@ function RangeInput({
             <Plus size={16} />
           </TouchableArea>
           <TouchableArea
+            testID={`${TestID.RangeInputDecrement}-${input}`}
             alignItems="center"
             justifyContent="center"
             onPress={handleDecrement}
@@ -740,8 +743,8 @@ export const SelectPriceRangeStep = ({
               </Flex>
               <LiquidityRangeInput
                 key={buildRangeInputKey({ derivedPositionInfo, priceRangeState })}
-                currency0={quoteCurrency}
-                currency1={baseCurrency}
+                quoteCurrency={quoteCurrency}
+                baseCurrency={baseCurrency}
                 feeTier={fee.feeAmount}
                 hook={hook}
                 tickSpacing={derivedPositionInfo.pool?.tickSpacing}

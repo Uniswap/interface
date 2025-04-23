@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
@@ -198,6 +199,7 @@ function SendFormContent({
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Send}
           variation={TokenSelectorVariation.BalancesOnly}
+          focusHook={useFocusEffect}
           onClose={onHideTokenSelector}
           onSelectCurrency={onSelectCurrency}
         />

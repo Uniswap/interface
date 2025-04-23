@@ -4,7 +4,6 @@ import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useCallback } from 'react'
 import { Trans } from 'react-i18next'
 import { useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { ThemedText } from 'theme/components'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
@@ -23,9 +22,9 @@ const QR_CODE_SIZE = 240
 
 export function AddressQRModal({ accountAddress }: { accountAddress: Address }) {
   const colors = useSporeColors()
-  const toggleModal = useToggleModal(ApplicationModal.RECEIVE_CRYPTO_QR)
-  const isOpen = useModalIsOpen(ApplicationModal.RECEIVE_CRYPTO_QR)
-  const openReceiveCryptoModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO })
+  const toggleModal = useToggleModal(ModalName.ReceiveCryptoQr)
+  const isOpen = useModalIsOpen(ModalName.ReceiveCryptoQr)
+  const openReceiveCryptoModal = useOpenModal({ name: ModalName.ReceiveCryptoModal })
   const { data: ENSName } = useENSName(accountAddress)
   const { unitag } = useUnitagByAddress(accountAddress)
   const hasSecondaryIdentifier = ENSName || unitag?.username

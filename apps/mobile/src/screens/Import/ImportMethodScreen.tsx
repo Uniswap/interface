@@ -17,15 +17,13 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { authenticateWithPasskeyForSeedPhraseExport } from 'uniswap/src/features/passkey/embeddedWallet'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
-import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { exportSeedPhrase } from 'wallet/src/features/passkeys/passkeys'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 interface ImportMethodOption {
   title: (t: AppTFunction) => string
@@ -39,10 +37,10 @@ interface ImportMethodOption {
 
 const options: ImportMethodOption[] = [
   {
-    title: (t: AppTFunction) => t('onboarding.import.method.passkey.title'),
-    blurb: (t: AppTFunction) => t('onboarding.import.method.passkey.message'),
+    title: (t: AppTFunction) => t('onboarding.import.selectMethod.passkey.title'),
+    blurb: (t: AppTFunction) => t('onboarding.import.selectMethod.passkey.subtitle'),
     icon: <Passkey color="$accent1" size="$icon.18" />,
-    nav: OnboardingScreens.WelcomeSplash,
+    nav: OnboardingScreens.PasskeyImport,
     importType: ImportType.Passkey,
     name: ElementName.OnboardingPasskey,
     testID: TestID.OnboardingPasskey,
@@ -78,8 +76,6 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   const isDarkMode = useIsDarkMode()
   const entryPoint = params?.entryPoint
   const [isLoadingPasskey, setIsLoadingPasskey] = useState(false)
-
-  const { generateImportedAccounts } = useOnboardingContext()
 
   useNavigationHeader(navigation)
 
@@ -123,29 +119,24 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
 
     if (importType === ImportType.Passkey) {
       setIsLoadingPasskey(true)
-      const mnemonic = await exportSeedPhrase()
-      if (!mnemonic) {
+      const credential = await authenticateWithPasskeyForSeedPhraseExport()
+
+      if (!credential) {
         navigate(ModalName.PasskeysHelp)
         setIsLoadingPasskey(false)
         return
       }
 
-      const mnemonicId = await Keyring.importMnemonic(mnemonic)
-      const account = (await generateImportedAccounts({ mnemonicId }))[0]
-
-      if (!account) {
-        throw new Error('No account generated')
-      }
-
       navigation.navigate({
-        name: OnboardingScreens.WelcomeSplash,
+        name: OnboardingScreens.PasskeyImport,
         params: {
           importType,
           entryPoint,
-          address: account.address,
+          passkeyCredential: credential,
         },
         merge: true,
       })
+      setIsLoadingPasskey(false)
       return
     }
 

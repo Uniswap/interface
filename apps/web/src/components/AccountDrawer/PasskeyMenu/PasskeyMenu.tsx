@@ -11,7 +11,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'reac
 import { LifeBuoy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Button, Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Anchor, Button, Flex, Image, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CHROME_LOGO } from 'ui/src/assets'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Trash } from 'ui/src/components/icons/Trash'
@@ -157,6 +157,18 @@ const AuthenticatorRow = ({
   )
 }
 
+function LoadingPasskeyRow() {
+  return (
+    <Flex row gap="$gap12" alignItems="center" pb="$padding16">
+      <Loader.Box borderRadius="$roundedFull" height={40} width={40} opacity={0.5} />
+      <Flex gap="$gap8">
+        <Loader.Box borderRadius="$rounded12" height={14} width={72} opacity={0.5} />
+        <Loader.Box borderRadius="$rounded12" height={12} width={112} opacity={0.5} />
+      </Flex>
+    </Flex>
+  )
+}
+
 export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -239,26 +251,32 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
       )}
       {passkeyMenuModalState === undefined || !isMobileWeb ? (
         <MenuColumn gap="12px">
-          {authenticators.map((authenticator) => (
-            <AuthenticatorRow
-              key={authenticator.id}
-              authenticator={authenticator}
-              setPasskeyMenuModalState={setPasskeyMenuModalState}
-              setSelectedAuthenticator={setSelectedAuthenticator}
-            />
-          ))}
-          <Flex row alignSelf="stretch">
-            <Button
-              py="$padding16"
-              variant="branded"
-              emphasis="secondary"
-              onPress={() => setPasskeyMenuModalState(PasskeyMenuModalState.ADD_PASSKEY)}
-            >
-              <Text variant="buttonLabel2" color="$accent1">
-                {t('common.passkeys.add')}
-              </Text>
-            </Button>
-          </Flex>
+          {authenticators.length ? (
+            <>
+              {authenticators.map((authenticator) => (
+                <AuthenticatorRow
+                  key={authenticator.id}
+                  authenticator={authenticator}
+                  setPasskeyMenuModalState={setPasskeyMenuModalState}
+                  setSelectedAuthenticator={setSelectedAuthenticator}
+                />
+              ))}
+              <Flex row alignSelf="stretch">
+                <Button
+                  py="$padding16"
+                  variant="branded"
+                  emphasis="secondary"
+                  onPress={() => setPasskeyMenuModalState(PasskeyMenuModalState.ADD_PASSKEY)}
+                >
+                  <Text variant="buttonLabel2" color="$accent1">
+                    {t('common.passkeys.add')}
+                  </Text>
+                </Button>
+              </Flex>
+            </>
+          ) : (
+            Array.from({ length: 3 }).map((_, index) => <LoadingPasskeyRow key={index} />)
+          )}
         </MenuColumn>
       ) : null}
     </SlideOutMenu>

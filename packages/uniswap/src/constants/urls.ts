@@ -1,5 +1,5 @@
 import { config } from 'uniswap/src/config'
-import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
+import { isBetaEnv, isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
 enum TrafficFlows {
@@ -13,6 +13,8 @@ enum TrafficFlows {
 }
 
 const FLOWS_USING_BETA = [TrafficFlows.FOR]
+
+const isDevOrBeta = isDevEnv() || isBetaEnv()
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
 
@@ -61,7 +63,7 @@ export const uniswapUrls = {
     revokeExplainer: `${helpUrl}/articles/15724901841037-How-to-revoke-a-token-approval`,
     supportedNetworks: `${helpUrl}/articles/14569415293325`,
     swapFeeInfo: `${helpUrl}/articles/20131678274957`,
-    passkeysInfo: helpUrl, // TODO(WALL-6336): add Help link
+    passkeysInfo: `${helpUrl}/articles/35522111260173`,
     swapProtection: `${helpUrl}/articles/18814993155853`,
     swapSlippage: `${helpUrl}/articles/8643879653261-What-is-Price-Slippage-`,
     tokenWarning: `${helpUrl}/articles/8723118437133-What-are-token-warnings-`,
@@ -78,6 +80,10 @@ export const uniswapUrls = {
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   chromeExtension: 'http://uniswap.org/ext',
+
+  // Download links
+  appStoreDownloadUrl: 'https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476',
+  playStoreDownloadUrl: 'https://play.google.com/store/apps/details?id=com.uniswap.mobile&pcampaignid=web_share',
 
   // Core API Urls
   apiOrigin: 'https://api.uniswap.org',
@@ -97,6 +103,9 @@ export const uniswapUrls = {
   forApiUrl: config.forApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
   tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
 
+  // Merkl Docs for LP Incentives
+  merklDocsUrl: 'https://docs.merkl.xyz/earn-with-merkl/faq-earn#how-are-aprs-calculated',
+
   // Embedded Wallet URL's
   // Totally fine that these are public
   evervaultDevUrl: 'https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com',
@@ -111,6 +120,7 @@ export const uniswapUrls = {
     indicativeQuote: `${tradingApiVersionPrefix}/indicative_quote`,
     approval: `${tradingApiVersionPrefix}/check_approval`,
     swap: `${tradingApiVersionPrefix}/swap`,
+    swap5792: `${tradingApiVersionPrefix}/swap_5792`,
     order: `${tradingApiVersionPrefix}/order`,
     orders: `${tradingApiVersionPrefix}/orders`,
     swaps: `${tradingApiVersionPrefix}/swaps`,
@@ -145,10 +155,15 @@ export const uniswapUrls = {
   // Feedback Links
   walletFeedbackForm:
     'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform',
+
+  dataApiServiceUrl: `${getCloudflareApiBaseUrl()}/v2/data.v1.DataApiService`,
+  dataApiServicePaths: {
+    report: '/SubmitReport',
+  },
 }
 
 function getCloudflarePrefix(flow?: TrafficFlows): string {
-  if (flow && isDevEnv() && FLOWS_USING_BETA.includes(flow)) {
+  if (flow && isDevOrBeta && FLOWS_USING_BETA.includes(flow)) {
     return `beta`
   }
 
@@ -172,7 +187,7 @@ function getCloudflarePrefix(flow?: TrafficFlows): string {
 }
 
 function getServicePrefix(flow?: TrafficFlows): string {
-  if (flow && !(isDevEnv() && FLOWS_USING_BETA.includes(flow))) {
+  if (flow && !(isDevOrBeta && FLOWS_USING_BETA.includes(flow))) {
     return flow + '.'
   } else {
     return ''

@@ -175,7 +175,7 @@ export function SettingsScreen(): JSX.Element {
             icon: <ContrastIcon {...svgProps} />,
           },
           {
-            modal: ModalName.FiatCurrencySelector,
+            navigationModal: ModalName.FiatCurrencySelector,
             text: t('settings.setting.currency.title'),
             currentSetting: currentFiatCurrencyInfo.code,
             icon: <Coins {...iconProps} />,
@@ -224,7 +224,7 @@ export function SettingsScreen(): JSX.Element {
           ...(deviceSupportsBiometrics
             ? [
                 {
-                  modal: ModalName.BiometricsModal,
+                  navigationModal: ModalName.BiometricsModal,
                   isHidden: !isTouchIdSupported && !isFaceIdSupported,
                   text: isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod,
                   icon: isAndroid ? (

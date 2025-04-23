@@ -50,7 +50,9 @@ export const slice = createSlice({
       state,
       { payload: { nftKey, isVisible } }: PayloadAction<{ nftKey: string; isVisible: boolean }>,
     ) => {
-      state.nfts[nftKey] = { ...state.nfts[nftKey], isVisible }
+      // Ensure state.nfts exists
+      state.nfts ??= {}
+      state.nfts[nftKey] = { isVisible }
     },
   },
 })

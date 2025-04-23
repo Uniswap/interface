@@ -26,7 +26,7 @@ export enum FeatureFlags {
   UniswapXPriorityOrdersBase,
   UniswapXPriorityOrdersOptimism,
   UniswapXPriorityOrdersUnichain,
-  TokenSearchV2,
+  ServiceBasedSwapTransactionInfo,
 
   // Wallet
   DisableFiatOnRampKorea,
@@ -43,6 +43,7 @@ export enum FeatureFlags {
   UwULink,
   BlurredLockScreen,
   Eip5792Methods,
+  SmartWallet,
 
   // Web
   AATestWeb,
@@ -78,8 +79,8 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.MonadTestnet, 'monad_testnet'],
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.SearchRevamp, 'search_revamp'],
+  [FeatureFlags.ServiceBasedSwapTransactionInfo, 'new_swap_transaction_info_arch'],
   [FeatureFlags.Soneium, 'soneium'],
-  [FeatureFlags.TokenSearchV2, 'token_search_v2'],
   [FeatureFlags.TokenSelectorTrendingTokens, 'token_selector_trending_tokens'],
   [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
   [FeatureFlags.UniswapX, 'uniswapx'],
@@ -129,6 +130,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PrivateRpc, 'mev-blocker'],
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
+  [FeatureFlags.SmartWallet, 'smart-wallet'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])
 

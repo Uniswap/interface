@@ -1,14 +1,5 @@
-import { SortBy } from 'nft/hooks'
 import { SellOrder } from 'nft/types/sell'
 import { MediaType, NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-export enum TokenType {
-  ERC20 = 'ERC20',
-  ERC721 = 'ERC721',
-  ERC1155 = 'ERC1155',
-  Dust = 'Dust',
-  Cryptopunk = 'Cryptopunk',
-}
 
 export interface PriceInfo {
   ETHPrice: string
@@ -18,12 +9,12 @@ export interface PriceInfo {
   basePrice: string
 }
 
-export interface Rarity {
+interface Rarity {
   primaryProvider: string
   providers?: { provider: string; rank?: number; url?: string; score?: number }[]
 }
 
-export interface Trait {
+interface Trait {
   trait_type: string
   trait_value: string
   display_type?: any
@@ -104,27 +95,4 @@ export enum Markets {
   Zora = 'zora',
   Blur = 'blur',
   Ensvision = 'ensvision',
-}
-
-export const isPooledMarket = (market?: Markets): boolean => {
-  if (!market) {
-    return false
-  }
-  return market === Markets.NFTX || market === Markets.NFT20 || market === Markets.Sudoswap
-}
-
-// index starts at 1 for boolean reasons
-export interface DropDownOption {
-  displayText: string
-  onClick: () => void
-  reverseIndex?: number
-  reverseOnClick?: () => void
-  sortBy?: SortBy
-  isSelected?: boolean
-}
-
-export enum DetailsOrigin {
-  COLLECTION = 'collection',
-  PROFILE = 'profile',
-  EXPLORE = 'explore',
 }

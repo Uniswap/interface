@@ -3,13 +3,14 @@ import styled, { useTheme } from 'lib/styled-components'
 import { ArrowDown } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
+import { styled as TamaguiStyled } from 'ui/src'
 
-const StyledArrowWrapper = styled(ArrowWrapper)`
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0;
-`
+const StyledArrowWrapper = TamaguiStyled(ArrowWrapper, {
+  position: 'absolute',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  margin: 0,
+})
 
 const LoadingWrapper = styled.div`
   display: flex;

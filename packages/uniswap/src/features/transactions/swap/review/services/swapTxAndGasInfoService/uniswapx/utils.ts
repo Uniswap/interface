@@ -12,25 +12,20 @@ import {
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
+// TODO(WEB-7432): Remove deprecated UniswapX Wrap logic
 export function processUniswapXResponse({
   wrapTransactionRequestInfo,
-  permitSignature,
   permitData,
-  permitDataLoading,
   needsWrap,
 }: {
-  wrapTransactionRequestInfo: TransactionRequestInfo
-  permitSignature: string | undefined
+  wrapTransactionRequestInfo?: TransactionRequestInfo
   permitData: NullablePermit | undefined
-  permitDataLoading: boolean
-  needsWrap: boolean
+  needsWrap?: boolean
 }): TransactionRequestInfo {
-  if (needsWrap) {
+  if (needsWrap && wrapTransactionRequestInfo) {
     return {
       ...wrapTransactionRequestInfo, // Extend the wrap response if a wrap is needed
-      permitSignature,
       permitData,
-      permitDataLoading,
     }
   }
 
@@ -39,9 +34,7 @@ export function processUniswapXResponse({
     gasEstimate: {},
     transactionRequest: undefined,
     swapRequestArgs: undefined,
-    permitSignature,
     permitData,
-    permitDataLoading,
   }
 }
 

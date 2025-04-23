@@ -5,7 +5,6 @@ import { DappInfo } from 'src/app/features/dapp/store'
 import { saveAccount } from 'src/app/features/dappRequests/accounts'
 import { SenderTabInfo } from 'src/app/features/dappRequests/slice'
 import {
-  DappResponseType,
   ErrorResponse,
   GetPermissionsRequest,
   GetPermissionsResponse,
@@ -19,6 +18,7 @@ import { Permission } from 'src/contentScript/WindowEthereumRequestTypes'
 import { ExtensionEthMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { call, put } from 'typed-redux-saga'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
+import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { extractBaseUrl } from 'utilities/src/format/urls'

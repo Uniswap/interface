@@ -7,6 +7,8 @@ import { Accordion, Flex, Text } from 'ui/src'
 import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
 import { AccordionHeader } from 'uniswap/src/components/gating/GatingOverrides'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 
 export function ServerOverrides(): JSX.Element {
   const dispatch = useDispatch()
@@ -21,6 +23,13 @@ export function ServerOverrides(): JSX.Element {
     dispatch(setCustomEndpoint({}))
     setUrl('')
     setKey('')
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.Success,
+        title: 'Custom endpoint cleared',
+        hideDelay: 3000,
+      }),
+    )
   }
 
   const setEndpoint = (): void => {
@@ -28,6 +37,13 @@ export function ServerOverrides(): JSX.Element {
       dispatch(
         setCustomEndpoint({
           customEndpoint: { url, key },
+        }),
+      )
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Success,
+          title: `Custom endpoint configured successfully (${url})`,
+          hideDelay: 3000,
         }),
       )
     } else {

@@ -1,4 +1,4 @@
-import { BottomSheetTextInput as GorhomBottomSheetTextInput } from '@gorhom/bottom-sheet'
+import type { BottomSheetTextInput as GorhomBottomSheetTextInput } from '@gorhom/bottom-sheet'
 import { ComponentProps } from 'react'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'

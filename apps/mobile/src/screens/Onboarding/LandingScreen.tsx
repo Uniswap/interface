@@ -20,7 +20,6 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { isE2EMode } from 'utilities/src/environment/constants'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -40,9 +39,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
 
   useEffect(() => {
     // disables looping animation during e2e tests which was preventing js thread from idle
-    if (!isE2EMode) {
-      actionButtonsOpacity.value = withDelay(LANDING_ANIMATION_DURATION, withTiming(1, { duration: ONE_SECOND_MS }))
-    }
+    actionButtonsOpacity.value = withDelay(LANDING_ANIMATION_DURATION, withTiming(1, { duration: ONE_SECOND_MS }))
   }, [actionButtonsOpacity])
 
   // Disables testnet mode on mount if enabled (eg upon removing a wallet)

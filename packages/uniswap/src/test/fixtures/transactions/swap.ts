@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   DutchOrderInfoV2,
   DutchOutput,
@@ -31,6 +32,7 @@ export const createMockTradeWithStatus = (
   outputAmount: CurrencyAmount<Token>,
 ): TradeWithStatus => ({
   trade: new ClassicTrade({
+    quote: { quote: {} } as ClassicQuoteResponse,
     tradeType: TradeType.EXACT_INPUT,
     deadline: TWENTY_MINUTES_FROM_NOW,
     v2Routes: [],

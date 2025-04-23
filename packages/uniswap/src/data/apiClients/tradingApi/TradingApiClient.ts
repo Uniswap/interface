@@ -16,6 +16,8 @@ import {
   ClassicQuote,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
+  CreateSwap5792Request,
+  CreateSwap5792Response,
   CreateSwap7702Request,
   CreateSwap7702Response,
   CreateSwapRequest,
@@ -82,8 +84,6 @@ export type BridgeQuoteResponse = QuoteResponse & {
   routing: Routing.BRIDGE
 }
 
-export const TRADING_API_CACHE_KEY = 'TradingApi'
-
 const TradingApiClient = createApiClient({
   baseUrl: uniswapUrls.tradingApiUrl,
   additionalHeaders: {
@@ -121,6 +121,18 @@ export async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Prom
 
 export async function fetchSwap({ v4Enabled, ...params }: WithV4Flag<CreateSwapRequest>): Promise<CreateSwapResponse> {
   return await TradingApiClient.post<CreateSwapResponse>(uniswapUrls.tradingApiPaths.swap, {
+    body: JSON.stringify(params),
+    headers: {
+      'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
+    },
+  })
+}
+
+export async function fetchSwap5792({
+  v4Enabled,
+  ...params
+}: WithV4Flag<CreateSwap5792Request>): Promise<CreateSwap5792Response> {
+  return await TradingApiClient.post<CreateSwap5792Response>(uniswapUrls.tradingApiPaths.swap5792, {
     body: JSON.stringify(params),
     headers: {
       'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,

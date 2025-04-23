@@ -3,16 +3,16 @@ import { DialogV2 } from 'components/Dialog/DialogV2'
 import { useFormattedTokenRewards } from 'components/Liquidity/hooks/LpIncentiveClaim/useFormattedTokenRewards'
 import { useLpIncentiveClaimButtonConfig } from 'components/Liquidity/hooks/LpIncentiveClaim/useLpIncentiveClaimButtonConfig'
 import { useLpIncentiveClaimMutation } from 'components/Liquidity/hooks/LpIncentiveClaim/useLpIncentiveClaimMutation'
+import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Image, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { UNI } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
@@ -30,7 +30,7 @@ export function LpIncentiveClaimModal({
   isOpen,
   onClose,
   onSuccess,
-  token = UNI[UniverseChainId.Mainnet],
+  token = LP_INCENTIVES_REWARD_TOKEN,
   tokenRewards,
   isPendingTransaction = false,
   iconUrl,
@@ -50,7 +50,12 @@ export function LpIncentiveClaimModal({
         return
       }
 
-      // TODO | LP_INCENTIVES - do we need to surface this error in datadog?
+      logger.error(error, {
+        tags: {
+          file: 'LpIncentiveClaimModal',
+          function: 'useLpIncentiveClaimMutation',
+        },
+      })
       setError(t('pool.incentives.collectFailed'))
     },
   })

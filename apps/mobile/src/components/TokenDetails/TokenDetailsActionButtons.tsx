@@ -1,10 +1,11 @@
-import { useMemo } from 'react'
-import { StyledContextMenu, StyledContextMenuAction } from 'src/components/ContextMenu/StyledContextMenu'
+import React, { useMemo } from 'react'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { Button, Flex, GeneratedIcon, getContrastPassingTextColor } from 'ui/src'
 import { IconButton } from 'ui/src/components/buttons/IconButton/IconButton'
 import { GridView, X } from 'ui/src/components/icons'
 import { opacify, validColor } from 'ui/src/theme'
+import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -61,7 +62,7 @@ export function TokenDetailsActionButtons({
   }
   onPressDisabled?: () => void
   userHasBalance: boolean
-  actionMenuOptions: StyledContextMenuAction[]
+  actionMenuOptions: MenuOptionItem[]
 }): JSX.Element {
   const { currencyInfo, isChainEnabled, tokenColor } = useTokenDetailsContext()
   const { value: actionMenuOpen, setFalse: closeActionMenu, toggle: toggleActionMenu } = useBooleanState(false)
@@ -74,10 +75,10 @@ export function TokenDetailsActionButtons({
   const lightTokenColor = validTokenColor ? opacify(12, validTokenColor) : undefined
 
   const actionsWithIcons = useMemo(() => {
-    return actionMenuOptions.map((action) => {
+    return actionMenuOptions.map((action): MenuOptionItem => {
       return {
         ...action,
-        iconColor: tokenColor ?? undefined,
+        iconColor: tokenColor,
       }
     })
   }, [actionMenuOptions, tokenColor])
@@ -105,11 +106,12 @@ export function TokenDetailsActionButtons({
           onPressDisabled={onPressDisabled}
         />
         {userHasBalance && !disabled && (
-          <StyledContextMenu
-            isAboveTrigger
-            isLeftOfTrigger
-            actions={actionsWithIcons}
+          <ContextMenu
+            isPlacementAbove
+            offsetY={20}
+            menuItems={actionsWithIcons}
             isOpen={actionMenuOpen}
+            triggerMode={ContextMenuTriggerMode.Primary}
             closeMenu={closeActionMenu}
             onPressAny={(e) => {
               sendAnalyticsEvent(MobileEventName.TokenDetailsContextMenuAction, {
@@ -129,7 +131,7 @@ export function TokenDetailsActionButtons({
                 onPress={toggleActionMenu}
               />
             </Trace>
-          </StyledContextMenu>
+          </ContextMenu>
         )}
       </Flex>
     </Flex>

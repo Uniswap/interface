@@ -23,11 +23,12 @@ import {
   isTransactionRequest,
   setDidOpenFromDeepLink,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
-import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import { UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'

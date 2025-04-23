@@ -11,13 +11,13 @@ import { useCallback, useMemo, useRef } from 'react'
 import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { useCloseModal, useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { ThemedText } from 'theme/components'
 import { transitions } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { Flex, HeightAnimator, TouchableArea, styled } from 'ui/src'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const MenuFlyout = styled(Flex, {
   minWidth: '20.125rem',
@@ -50,9 +50,9 @@ export default function MigrateV2SettingsTab({
   const showDeadlineSettings = !isL2ChainId(chainId)
   const toggleButtonNode = useRef<HTMLDivElement | null>(null)
   const menuNode = useRef<HTMLDivElement | null>(null)
-  const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
+  const isOpen = useModalIsOpen(ModalName.Settings)
 
-  const closeModal = useCloseModal(ApplicationModal.SETTINGS)
+  const closeModal = useCloseModal(ModalName.Settings)
   const closeMenu = useCallback(() => closeModal(), [closeModal])
   const toggleMenu = useToggleSettingsMenu()
 

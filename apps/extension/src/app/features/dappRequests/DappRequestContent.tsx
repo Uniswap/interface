@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
-import { DappRequestType } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
@@ -240,6 +240,7 @@ function DappRequestFooter({
             gasFee={transactionGasFeeResult}
             isUniswapX={isUniswapX}
             showNetworkLogo={!!transactionGasFeeResult}
+            requestMethod={request.dappRequest.type}
           />
         )}
         <AddressFooter

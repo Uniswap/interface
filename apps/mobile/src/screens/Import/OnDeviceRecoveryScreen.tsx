@@ -73,7 +73,7 @@ export function OnDeviceRecoveryScreen({
 
   const clearNonSelectedStoredMnemonics = async (): Promise<void> => {
     await Promise.all(
-      mnemonicIds.map(async (mnemonicId) => {
+      mnemonicIds.map(async (mnemonicId: string) => {
         if (mnemonicId !== selectedMnemonicId) {
           return Keyring.removeMnemonic(mnemonicId)
         }
@@ -202,10 +202,14 @@ export function OnDeviceRecoveryScreen({
                     screenLoading={screenLoading}
                     showAllWallets={showAllWallets}
                     onLoadComplete={onWalletLoad}
-                    onPressCard={(recoveryAddressesInfos) => {
+                    onPressCard={async (recoveryAddressesInfos) => {
                       setSelectedMnemonicId(mnemonicId)
                       setSelectedRecoveryWalletInfos(recoveryAddressesInfos)
-                      setShowConfirmationModal(true)
+                      if (mnemonicIds.length > 1) {
+                        setShowConfirmationModal(true)
+                      } else {
+                        await onPressConfirm()
+                      }
 
                       sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
                         element: ElementName.OnDeviceRecoveryWallet,

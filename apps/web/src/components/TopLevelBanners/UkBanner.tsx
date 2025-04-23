@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { useOpenModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled } from 'ui/src'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const BannerWrapper = styled(Flex, {
   gap: '$gap8',
@@ -40,7 +40,7 @@ export const useRenderUkBanner = () => {
 
 export function UkBanner() {
   const { t } = useTranslation()
-  const openDisclaimer = useOpenModal({ name: ApplicationModal.UK_DISCLAIMER })
+  const openDisclaimer = useOpenModal({ name: ModalName.UkDisclaimer })
 
   return (
     <BannerWrapper>

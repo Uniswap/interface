@@ -1,8 +1,17 @@
 import { useAccount } from 'hooks/useAccount'
 import { useLpIncentivesTransactionState } from 'hooks/useLpIncentivesTransactionState'
+import { useAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useState } from 'react'
 import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+
+// This is used as check to avoid showing user rewards they just claimed
+// This date/amount will be saved on successful rewards claim, and checked against when rewards refetches on page refresh
+export const lpIncentivesLastClaimedAtom = atomWithStorage<{ timestamp: number; amount: string } | null>(
+  'lpIncentivesLastClaimed',
+  null,
+)
 
 interface UseLpIncentivesResult {
   isPendingTransaction: boolean
@@ -21,21 +30,38 @@ export function useLpIncentives(): UseLpIncentivesResult {
   const [tokenRewards, setTokenRewards] = useState('0')
   const [hasCollectedRewards, setHasCollectedRewards] = useState(false)
   const account = useAccount()
+  const [, setLastClaimed] = useAtom(lpIncentivesLastClaimedAtom)
 
   const { refetch } = useGetPoolsRewards(
     { walletAddress: account?.address, chainIds: [UniverseChainId.Mainnet], reload: true },
     Boolean(account?.address),
   )
 
-  const onTransactionSuccess = useCallback(() => {
+  const onTransactionSuccess = useCallback(async () => {
+    // Immediately mark as collected locally and close modal
     setIsModalOpen(false)
     setHasCollectedRewards(true)
 
     // Reload rewards data from the API
     if (account?.address) {
-      refetch()
+      try {
+        // Refetch and wait for the result
+        const { data: rewardsData } = await refetch()
+
+        // If the refetched data still shows rewards, store it temporarily
+        // This handles the delay between tx success and backend update
+        const rewardsAmount = rewardsData?.totalUnclaimedAmountUni
+        if (rewardsAmount && rewardsAmount !== '0') {
+          setLastClaimed({ timestamp: Date.now(), amount: rewardsAmount })
+        } else {
+          // If refetch shows 0 rewards, clear the temporary storage
+          setLastClaimed(null)
+        }
+      } catch (error) {
+        setLastClaimed(null)
+      }
     }
-  }, [refetch, account?.address])
+  }, [refetch, account?.address, setLastClaimed])
 
   const openModal = useCallback(() => {
     setIsModalOpen(true)

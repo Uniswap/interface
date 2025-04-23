@@ -3,72 +3,70 @@
 exports[`SortButton renders without error 1`] = `
 [
   <View
-    hitSlop={
-      {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
-      }
-    }
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
     style={
       {
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
+        "alignItems": "center",
+        "backgroundColor": {
+          "dynamic": {
+            "dark": "rgba(255,255,255,0.12)",
+            "light": "rgba(34,34,34,0.05)",
           },
-        ],
+        },
+        "borderBottomLeftRadius": 20,
+        "borderBottomRightRadius": 20,
+        "borderTopLeftRadius": 20,
+        "borderTopRightRadius": 20,
+        "flexDirection": "row",
+        "gap": 4,
+        "justifyContent": "center",
+        "paddingLeft": 12,
+        "paddingRight": 8,
       }
     }
   >
     <View
-      collapsable={false}
-      style={
+      hitSlop={
         {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "gap": 8,
-          "justifyContent": "center",
-          "paddingBottom": 8,
-          "paddingTop": 8,
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
         }
       }
-      testID="dropdown-toggle"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        }
+      }
     >
       <View
+        collapsable={false}
         style={
           {
             "alignItems": "center",
-            "backgroundColor": {
-              "dynamic": {
-                "dark": "rgba(255,255,255,0.12)",
-                "light": "rgba(34,34,34,0.05)",
-              },
-            },
-            "borderBottomLeftRadius": 20,
-            "borderBottomRightRadius": 20,
-            "borderTopLeftRadius": 20,
-            "borderTopRightRadius": 20,
             "flexDirection": "row",
-            "gap": 4,
+            "gap": 8,
             "justifyContent": "center",
             "paddingBottom": 8,
-            "paddingLeft": 12,
-            "paddingRight": 8,
             "paddingTop": 8,
           }
         }
+        testID="dropdown-toggle"
       >
         <Text
           allowFontScaling={true}
@@ -100,101 +98,13 @@ exports[`SortButton renders without error 1`] = `
           jestAnimatedStyle={
             {
               "value": {
-                "borderBottomLeftRadius": {
-                  "callStart": null,
-                  "callback": [Function],
-                  "current": 999999,
-                  "finished": true,
-                  "lastTimestamp": 0,
-                  "omega0": 31.622776601683793,
-                  "omega1": NaN,
-                  "onFrame": [Function],
-                  "onStart": [Function],
-                  "reduceMotion": false,
-                  "startTimestamp": 0,
-                  "startValue": 999999,
-                  "timestamp": 0,
-                  "toValue": 999999,
-                  "velocity": 0,
-                  "zeta": 1.1858541225631423,
-                },
-                "borderBottomRightRadius": {
-                  "callStart": null,
-                  "callback": [Function],
-                  "current": 999999,
-                  "finished": true,
-                  "lastTimestamp": 0,
-                  "omega0": 31.622776601683793,
-                  "omega1": NaN,
-                  "onFrame": [Function],
-                  "onStart": [Function],
-                  "reduceMotion": false,
-                  "startTimestamp": 0,
-                  "startValue": 999999,
-                  "timestamp": 0,
-                  "toValue": 999999,
-                  "velocity": 0,
-                  "zeta": 1.1858541225631423,
-                },
-                "borderTopLeftRadius": {
-                  "callStart": null,
-                  "callback": [Function],
-                  "current": 999999,
-                  "finished": true,
-                  "lastTimestamp": 0,
-                  "omega0": 31.622776601683793,
-                  "omega1": NaN,
-                  "onFrame": [Function],
-                  "onStart": [Function],
-                  "reduceMotion": false,
-                  "startTimestamp": 0,
-                  "startValue": 999999,
-                  "timestamp": 0,
-                  "toValue": 999999,
-                  "velocity": 0,
-                  "zeta": 1.1858541225631423,
-                },
-                "borderTopRightRadius": {
-                  "callStart": null,
-                  "callback": [Function],
-                  "current": 999999,
-                  "finished": true,
-                  "lastTimestamp": 0,
-                  "omega0": 31.622776601683793,
-                  "omega1": NaN,
-                  "onFrame": [Function],
-                  "onStart": [Function],
-                  "reduceMotion": false,
-                  "startTimestamp": 0,
-                  "startValue": 999999,
-                  "timestamp": 0,
-                  "toValue": 999999,
-                  "velocity": 0,
-                  "zeta": 1.1858541225631423,
-                },
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
                 "transform": [
                   {
-                    "rotate": {
-                      "__prefix": "",
-                      "__suffix": "deg",
-                      "callStart": null,
-                      "callback": [Function],
-                      "current": "270deg",
-                      "finished": true,
-                      "lastTimestamp": 0,
-                      "omega0": 31.622776601683793,
-                      "omega1": NaN,
-                      "onFrame": [Function],
-                      "onStart": [Function],
-                      "reduceMotion": false,
-                      "startTimestamp": 0,
-                      "startValue": 270,
-                      "strippedCurrent": 270,
-                      "timestamp": 0,
-                      "toValue": 270,
-                      "velocity": 0,
-                      "zeta": 1.1858541225631423,
-                    },
+                    "rotate": "270deg",
                   },
                 ],
               },

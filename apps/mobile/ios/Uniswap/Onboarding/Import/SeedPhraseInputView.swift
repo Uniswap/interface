@@ -226,8 +226,14 @@ struct SeedPhraseInput: View {
                   Spacer()
                   RelativeOffsetView(y: 0.5) {
                     PasteButton(
-                      pasteButtonText: viewModel.strings.pasteButton,
-                      onPaste: handlePastePress
+                      pasteButtonText:  viewModel.strings.pasteButton,
+                      onPaste: handlePaste,
+                      onPasteStart: {
+                        viewModel.onPasteStart([:])
+                      },
+                      onPasteEnd: {
+                        viewModel.onPasteEnd([:])
+                      }
                     )
                   }
                   Spacer()
@@ -293,17 +299,7 @@ struct SeedPhraseInput: View {
     }
   }
 
-  private func handlePastePress(pastedText: String) {
-    // Arbitrary time necessary for callbacks to trigger while permission modal is opened
-    let debounceTime = 0.1
-
-    viewModel.onPasteStart([:])
-    DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
-      viewModel.input = pastedText
-
-      DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
-        viewModel.onPasteEnd([:])
-      }
-    }
+  private func handlePaste(pastedText: String) {
+    viewModel.input = pastedText
   }
 }

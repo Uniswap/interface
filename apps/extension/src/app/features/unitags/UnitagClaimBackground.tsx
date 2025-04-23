@@ -52,7 +52,7 @@ export function UnitagClaimBackground({ children }: PropsWithChildren<{ blurAll:
 
   return (
     <Flex centered height="100%" width="100%">
-      <Flex centered zIndex={zIndexes.default}>
+      <Flex centered height="100%" width="100%" zIndex={zIndexes.default}>
         {children}
       </Flex>
 

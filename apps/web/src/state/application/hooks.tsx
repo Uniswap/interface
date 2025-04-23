@@ -1,7 +1,6 @@
 import { PopupType } from 'components/Popups/types'
 import { useCallback } from 'react'
 import {
-  ApplicationModal,
   CloseModalParams,
   OpenModalParams,
   addSuppressedPopups,
@@ -11,16 +10,16 @@ import {
 } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
-import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
-export function useModalIsOpen(modal: ApplicationModal | ModalNameType): boolean {
+export function useModalIsOpen(modal: ModalNameType): boolean {
   const openModal = useAppSelector((state: InterfaceState) => state.application.openModal?.name)
   return openModal === modal
 }
 
 // TODO(WEB-4889): Remove this
 /** @deprecated - use separate open and close modal hooks for new modals instead */
-export function useToggleModal(modal: ApplicationModal): () => void {
+export function useToggleModal(modal: ModalNameType): () => void {
   const isOpen = useModalIsOpen(modal)
   const dispatch = useAppDispatch()
 
@@ -44,19 +43,19 @@ export function useOpenModal(modal: OpenModalParams): () => void {
 }
 
 export function useToggleSettingsMenu(): () => void {
-  return useToggleModal(ApplicationModal.SETTINGS)
+  return useToggleModal(ModalName.Settings)
 }
 
 export function useShowClaimPopup(): boolean {
-  return useModalIsOpen(ApplicationModal.CLAIM_POPUP)
+  return useModalIsOpen(ModalName.ClaimPopup)
 }
 
 export function useToggleShowClaimPopup(): () => void {
-  return useToggleModal(ApplicationModal.CLAIM_POPUP)
+  return useToggleModal(ModalName.ClaimPopup)
 }
 
 export function useTogglePrivacyPolicy(): () => void {
-  return useToggleModal(ApplicationModal.PRIVACY_POLICY)
+  return useToggleModal(ModalName.PrivacyPolicy)
 }
 
 // returns functions to suppress and unsuppress popups by type

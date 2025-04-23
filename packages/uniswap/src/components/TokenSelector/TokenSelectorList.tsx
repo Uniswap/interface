@@ -11,6 +11,8 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
@@ -42,6 +44,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
   const { currencyInfo } = tokenOption
+  const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
 
   const onPress = useCallback(
     () => onSelectCurrency(currencyInfo, section, index),
@@ -79,6 +82,15 @@ const TokenOptionItem = memo(function _TokenOptionItem({
     onPress()
   }, [onPress])
 
+  const legacyTokenOptionItemProps = {
+    balance: balanceText,
+    isKeyboardOpen,
+    quantity: tokenOption.quantity,
+    quantityFormatted: quantityText,
+    showWarnings,
+    tokenWarningDismissed,
+  }
+
   return (
     <BaseTokenOptionItem
       option={tokenOption}
@@ -96,7 +108,6 @@ const TokenOptionItem = memo(function _TokenOptionItem({
         ) : undefined
       }
       showDisabled={Boolean((showWarnings && isBlocked) || tokenOption.isUnsupported)}
-      balance={balanceText}
       modalInfo={{
         modal: (
           <TokenWarningModal
@@ -109,13 +120,8 @@ const TokenOptionItem = memo(function _TokenOptionItem({
         modalShouldShow: showWarnings && shouldShowWarningModalOnPress,
         modalSetIsOpen: setShowWarningModal,
       }}
-      // TODO: clean up legacy token selector variables:
-      isKeyboardOpen={isKeyboardOpen}
-      quantity={tokenOption.quantity}
-      quantityFormatted={quantityText}
-      showWarnings={showWarnings}
-      tokenWarningDismissed={tokenWarningDismissed}
       onPress={onPressTokenOption}
+      {...(!searchRevampEnabled && legacyTokenOptionItemProps)} // TODO: clean up legacy token selector variables
     />
   )
 })

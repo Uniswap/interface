@@ -16,7 +16,6 @@ import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hook
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
 
 jest.mock('hooks/useIsWindowVisible')
-jest.mock('state/routing/usePreviewTrade')
 jest.mock('./slice', () => {
   return {
     useGetQuoteQuery: jest.fn(),

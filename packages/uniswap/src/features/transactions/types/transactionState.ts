@@ -24,16 +24,25 @@ export interface TransactionState {
   customDeadline?: number
   selectedProtocols?: FrontendSupportedProtocol[]
   fiatOffRampMetaData?: FiatOffRampMetaData
+  filteredChainIdsOverride?: {
+    [CurrencyField.INPUT]?: UniverseChainId
+    [CurrencyField.OUTPUT]?: UniverseChainId
+  }
 }
 
 export const prepareSwapFormState = ({
   inputCurrencyId,
   outputCurrencyId,
   defaultChainId,
+  filteredChainIdsOverride,
 }: {
   inputCurrencyId?: CurrencyId
   outputCurrencyId?: CurrencyId
   defaultChainId: UniverseChainId
+  filteredChainIdsOverride?: {
+    [CurrencyField.INPUT]?: UniverseChainId
+    [CurrencyField.OUTPUT]?: UniverseChainId
+  }
 }): TransactionState => {
   return {
     exactCurrencyField: CurrencyField.INPUT,
@@ -48,5 +57,6 @@ export const prepareSwapFormState = ({
       chainId: currencyIdToChain(outputCurrencyId) ?? defaultChainId,
       type: AssetType.Currency,
     } : null,
+    filteredChainIdsOverride,
   }
 }

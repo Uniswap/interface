@@ -2,6 +2,7 @@ import { NavigatorScreenParams, useNavigation } from '@react-navigation/native'
 import { memo, useCallback } from 'react'
 import { ValueOf } from 'react-native-gesture-handler/lib/typescript/typeUtils'
 import { useDispatch } from 'react-redux'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import {
   AppStackNavigationProp,
   OnboardingStackNavigationProp,
@@ -33,18 +34,22 @@ export interface SettingsSectionItemComponent {
 }
 
 type SettingsModal =
-  | typeof ModalName.FiatCurrencySelector
   | typeof ModalName.LanguageSelector
   | typeof ModalName.SettingsAppearance
-  | typeof ModalName.BiometricsModal
   | typeof ModalName.PortfolioBalanceModal
   | typeof ModalName.PermissionsModal
+
+type SettingsNavigationModal =
+  | typeof ModalName.BiometricsModal
+  | typeof ModalName.FiatCurrencySelector
   | typeof ModalName.EditProfileSettingsModal
   | typeof ModalName.EditLabelSettingsModal
+  | typeof ModalName.ConnectionsDappListModal
 
 export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList | typeof MobileScreens.OnboardingStack
   modal?: SettingsModal
+  navigationModal?: SettingsNavigationModal
   screenProps?: ValueOf<SettingsStackParamList> | NavigatorScreenParams<OnboardingStackParamList>
   externalLink?: string
   action?: JSX.Element
@@ -71,6 +76,7 @@ export const SettingsRow = memo(
     page: {
       screen,
       modal,
+      navigationModal,
       screenProps,
       externalLink,
       disabled,
@@ -100,10 +106,12 @@ export const SettingsRow = memo(
         navigation.navigate(screen, screenProps)
       } else if (modal) {
         dispatch(openModal({ name: modal }))
+      } else if (navigationModal) {
+        navigate(navigationModal)
       } else if (externalLink) {
         await openUri(externalLink)
       }
-    }, [checkIfCanProceed, onToggle, screen, navigation, screenProps, modal, dispatch, externalLink])
+    }, [checkIfCanProceed, onToggle, screen, navigation, screenProps, modal, navigationModal, dispatch, externalLink])
 
     return (
       <TouchableArea disabled={Boolean(action)} onPress={handleRow}>
@@ -129,6 +137,7 @@ export const SettingsRow = memo(
           <RowRightContent
             screen={screen}
             modal={modal}
+            navigationModal={navigationModal}
             externalLink={externalLink}
             disabled={disabled}
             action={action}
@@ -164,6 +173,7 @@ const RowRightContent = memo(
   ({
     screen,
     modal,
+    navigationModal,
     externalLink,
     disabled,
     action,
@@ -173,7 +183,15 @@ const RowRightContent = memo(
     colors,
   }: Pick<
     SettingsSectionItem,
-    'screen' | 'modal' | 'externalLink' | 'disabled' | 'action' | 'currentSetting' | 'onToggle' | 'isToggleEnabled'
+    | 'screen'
+    | 'modal'
+    | 'navigationModal'
+    | 'externalLink'
+    | 'disabled'
+    | 'action'
+    | 'currentSetting'
+    | 'onToggle'
+    | 'isToggleEnabled'
   > & {
     colors: ReturnType<typeof useSporeColors>
   }): JSX.Element | null => {
@@ -197,7 +215,7 @@ const RowRightContent = memo(
       )
     }
 
-    if (screen || modal) {
+    if (screen || modal || navigationModal) {
       return (
         <Flex centered row>
           {currentSetting &&

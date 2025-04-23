@@ -1,26 +1,40 @@
+import { Currency } from '@uniswap/sdk-core'
 import React, { ReactNode, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { isWeb } from 'utilities/src/platform'
+
+const COPY_ADDRESS_CLOSE_DELAY = 400
 
 interface TokenOptionItemContextMenuProps {
   children: ReactNode
-  tokenInfo: {
-    address: string
-    chain: number
-    isNative: boolean
-  }
+  currency: Currency
+  isOpen: boolean
+  openMenu?: () => void
+  closeMenu: () => void
 }
 
-function _TokenOptionItemContextMenu({ children, tokenInfo }: TokenOptionItemContextMenuProps): JSX.Element {
+function _TokenOptionItemContextMenu({
+  children,
+  currency,
+  isOpen,
+  openMenu,
+  closeMenu,
+}: TokenOptionItemContextMenuProps): JSX.Element {
   const { t } = useTranslation()
   const { navigateToTokenDetails } = useUniswapContext()
+  const dispatch = useDispatch()
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const [copied, setCopied] = useState(false)
@@ -29,43 +43,54 @@ function _TokenOptionItemContextMenu({ children, tokenInfo }: TokenOptionItemCon
     if (isTestnetModeEnabled) {
       return
     }
-
-    navigateToTokenDetails(buildCurrencyId(tokenInfo.chain, tokenInfo.address))
-  }, [isTestnetModeEnabled, navigateToTokenDetails, tokenInfo.chain, tokenInfo.address])
+    closeMenu()
+    navigateToTokenDetails(currencyId(currency))
+  }, [isTestnetModeEnabled, navigateToTokenDetails, currency, closeMenu])
 
   const onCopyAddress = useCallback(async (): Promise<void> => {
-    await setClipboard(tokenInfo.address)
+    await setClipboard(currencyAddress(currency))
+    if (!isWeb) {
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Copied,
+          copyType: CopyNotificationType.Address,
+        }),
+      )
+    }
     setCopied(true)
     setTimeout(() => {
       setCopied(false)
-    }, 400)
-  }, [tokenInfo.address])
+    }, COPY_ADDRESS_CLOSE_DELAY)
+  }, [dispatch, currency])
 
-  const dropdownOptions = useMemo(
+  const dropdownOptions: MenuOptionItem[] = useMemo(
     () => [
       {
-        key: 'token-selector-copy-address',
         onPress: onCopyAddress,
-        disabled: tokenInfo.isNative,
+        disabled: currency.isNative,
         label: copied ? t('notification.copied.address') : t('common.copy.address'),
         Icon: copied ? CheckCircleFilled : CopyAlt,
-        closeDelay: 400,
-        iconProps: {
-          color: copied ? '$statusSuccess' : '$neutral2',
-        },
+        closeDelay: COPY_ADDRESS_CLOSE_DELAY,
+        iconColor: copied ? '$statusSuccess' : '$neutral2',
       },
       {
-        key: 'token-selector-token-info',
         onPress: onNavigateToTokenDetails,
         label: t('token.details'),
         Icon: InfoCircleFilled,
+        iconColor: '$neutral2',
       },
     ],
-    [onNavigateToTokenDetails, t, onCopyAddress, copied, tokenInfo.isNative],
+    [onCopyAddress, currency.isNative, copied, t, onNavigateToTokenDetails],
   )
 
   return (
-    <ContextMenu menuStyleProps={{ minWidth: 200 }} menuItems={dropdownOptions}>
+    <ContextMenu
+      menuItems={dropdownOptions}
+      triggerMode={ContextMenuTriggerMode.Secondary}
+      isOpen={isOpen}
+      closeMenu={closeMenu}
+      openMenu={openMenu}
+    >
       {children}
     </ContextMenu>
   )

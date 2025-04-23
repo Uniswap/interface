@@ -25,6 +25,7 @@ interface TokenBalanceItemProps {
   onPressToken?: (currencyId: CurrencyId) => void
   isLoading?: boolean
   padded?: boolean
+  isHidden: boolean
 }
 
 /**
@@ -37,6 +38,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   onPressToken,
   isLoading,
   padded,
+  isHidden,
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
 
@@ -79,7 +81,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         </Flex>
       </Flex>
 
-      {currencyInfo.isSpam === true ? undefined : (
+      {currencyInfo.isSpam === true && isHidden ? undefined : (
         <TokenBalanceRightSideColumn portfolioBalanceId={portfolioBalanceId} isLoading={isLoading} />
       )}
     </TouchableArea>

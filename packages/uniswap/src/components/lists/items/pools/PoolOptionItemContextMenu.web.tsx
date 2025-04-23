@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
@@ -6,14 +6,19 @@ import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { PoolOptionItemContextMenuProps } from 'uniswap/src/components/lists/items/pools/PoolOptionItemContextMenu'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openURL } from 'uniswap/src/utils/link'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { isExtension } from 'utilities/src/platform'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
-function _PoolOptionItemContextMenu({ children, poolInfo }: PoolOptionItemContextMenuProps): JSX.Element {
+export const PoolOptionItemContextMenu = memo(function _PoolOptionItemContextMenu({
+  children,
+  poolInfo,
+}: PoolOptionItemContextMenuProps): JSX.Element {
   const { poolId, chain } = poolInfo
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -51,9 +56,7 @@ function _PoolOptionItemContextMenu({ children, poolInfo }: PoolOptionItemContex
         label: copied ? t('notification.copied.address') : t('common.copy.address'),
         Icon: copied ? CheckCircleFilled : CopyAlt,
         closeDelay: 400,
-        iconProps: {
-          color: copied ? '$statusSuccess' : '$neutral2',
-        },
+        iconColor: copied ? '$statusSuccess' : '$neutral2',
       },
       {
         key: 'token-selector-token-info',
@@ -65,11 +68,17 @@ function _PoolOptionItemContextMenu({ children, poolInfo }: PoolOptionItemContex
     [onNavigateToPoolDetails, t, onCopyAddress, copied],
   )
 
+  const { value: isOpen, setTrue: openContextMenu, setFalse: closeContextMenu } = useBooleanState(false)
+
   return (
-    <ContextMenu menuStyleProps={{ minWidth: 200 }} menuItems={dropdownOptions}>
+    <ContextMenu
+      menuItems={dropdownOptions}
+      triggerMode={ContextMenuTriggerMode.Secondary}
+      isOpen={isOpen}
+      closeMenu={closeContextMenu}
+      openMenu={openContextMenu}
+    >
       {children}
     </ContextMenu>
   )
-}
-
-export const PoolOptionItemContextMenu = React.memo(_PoolOptionItemContextMenu)
+})

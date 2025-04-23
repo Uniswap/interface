@@ -17,8 +17,8 @@ import { Plus, X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
-import { Button, Flex, useIsTouchDevice, useMedia } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
+import { Button, Flex, Spacer, useIsTouchDevice, useMedia } from 'ui/src'
+import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { breakpoints } from 'ui/src/theme'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -50,12 +50,6 @@ const PoolDetailsStatsButtonsRow = styled(Row)`
     }
     z-index: ${Z_INDEX.sticky};
   }
-`
-
-const ButtonBubble = styled(LoadingBubble)`
-  height: 44px;
-  width: 50%;
-  border-radius: 900px;
 `
 
 const SwapModalWrapper = styled(Column)<{ open?: boolean }>`
@@ -185,10 +179,11 @@ export function PoolDetailsStatsButtons({
 
   if (loading || !currency0 || !currency1) {
     return (
-      <PoolDetailsStatsButtonsRow data-testid="pdp-buttons-loading-skeleton">
-        <ButtonBubble />
-        <ButtonBubble />
-      </PoolDetailsStatsButtonsRow>
+      <Flex row justifyContent="space-between" data-testid="pdp-buttons-loading-skeleton" mb="$spacing12">
+        <LoadingBubble containerWidth="50%" width="95%" />
+        <Spacer size="$spacing6" />
+        <LoadingBubble containerWidth="50%" width="95%" />
+      </Flex>
     )
   }
 
@@ -197,7 +192,7 @@ export function PoolDetailsStatsButtons({
       <PoolButtonsWrapper isMobile={isMobile}>
         <Flex row justifyContent="center" gap={screenSizeLargerThanTablet ? '$spacing12' : '$spacing8'} width="100%">
           <PoolButton
-            icon={swapModalOpen ? <X size="$icon.20" /> : <ArrowUpDown size="$icon.20" />}
+            icon={swapModalOpen ? <X size="$icon.20" /> : <CoinConvert size="$icon.20" />}
             onPress={toggleSwapModalOpen}
             isOpen={swapModalOpen}
             data-testid={`pool-details-${swapModalOpen ? 'close' : 'swap'}-button`}

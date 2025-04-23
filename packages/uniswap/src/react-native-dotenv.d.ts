@@ -6,6 +6,7 @@ declare module 'react-native-dotenv' {
   export const APPSFLYER_APP_ID: string
   export const DATADOG_CLIENT_TOKEN: string
   export const DATADOG_PROJECT_ID: string
+  export const IS_E2E_TEST: string
   export const UNISWAP_API_KEY: string
   export const INFURA_KEY: string
   export const SIMPLEHASH_API_KEY: string

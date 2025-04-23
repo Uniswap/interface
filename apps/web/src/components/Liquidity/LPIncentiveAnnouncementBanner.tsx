@@ -148,7 +148,7 @@ function DesktopBanner({ handleClose }: { handleClose: () => void }) {
           <CoinStack size={24} />
         </IconContainer>
       </IconBorderWrapper>
-      <LpIncentiveBannerContent />
+      <LpIncentiveBannerContent handleClose={handleClose} />
     </BannerContainer>
   )
 }
@@ -161,7 +161,7 @@ function MobileBanner({ handleClose }: { handleClose: () => void }) {
       <IconContainer>
         <CoinStack size={20} />
       </IconContainer>
-      <LpIncentiveBannerContent />
+      <LpIncentiveBannerContent handleClose={handleClose} />
     </BannerContainerMobile>
   )
 }
@@ -174,10 +174,15 @@ function BannerXButton({ handleClose }: { handleClose: () => void }) {
   )
 }
 
-function LpIncentiveBannerContent() {
+function LpIncentiveBannerContent({ handleClose }: { handleClose: () => void }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const LpContentWrapper = isMobileWeb ? BannerContentContainerMobile : BannerContentContainer
+
+  const onClickViewMore = () => {
+    handleClose()
+    navigate('/explore/pools')
+  }
 
   return (
     <LpContentWrapper>
@@ -198,9 +203,14 @@ function LpIncentiveBannerContent() {
         }}
       >
         <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
-          <LearnMoreLink textVariant="body4" textColor="$neutral2" url={uniswapUrls.helpArticleUrls.lpIncentiveInfo} />
+          <LearnMoreLink
+            textVariant="body4"
+            textColor="$neutral2"
+            url={uniswapUrls.helpArticleUrls.lpIncentiveInfo}
+            hoverStyle={{ color: '$neutral3' }}
+          />
         </Trace>
-        <Button size="small" emphasis="primary" maxWidth="fit-content" onPress={() => navigate('/positions')}>
+        <Button size="small" emphasis="primary" maxWidth="fit-content" onPress={onClickViewMore}>
           {t('pool.viewPools')}
         </Button>
       </Flex>

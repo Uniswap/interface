@@ -1,14 +1,12 @@
-import { Action } from '@reduxjs/toolkit'
 import { default as React, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
-import { closeModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
 import { Flex, Text } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -23,15 +21,16 @@ import { ChangeUnitagModal } from 'wallet/src/features/unitags/ChangeUnitagModal
 import { DeleteUnitagModal } from 'wallet/src/features/unitags/DeleteUnitagModal'
 import { EditUnitagProfileContent } from 'wallet/src/features/unitags/EditUnitagProfileContent'
 
-export function EditProfileSettingsModal(): JSX.Element {
-  const { initialState } = useSelector(selectModalState(ModalName.EditProfileSettingsModal))
-  const address = initialState?.address ?? ''
-  const entryPoint = initialState?.accessPoint ?? MobileScreens.SettingsWallet
+export function EditProfileSettingsModal({
+  route,
+}: AppStackScreenProp<typeof ModalName.EditProfileSettingsModal>): JSX.Element {
+  const { onClose } = useReactNavigationModal()
+  const { address, accessPoint } = route.params
+  const entryPoint = accessPoint ?? MobileScreens.SettingsWallet
 
   const { unitag: retrievedUnitag } = useUnitagByAddress(address)
   const unitag = retrievedUnitag?.username
 
-  const dispatch = useDispatch()
   const { t } = useTranslation()
   const { keyboardHeight } = useBottomSheetSafeKeyboard()
 
@@ -48,7 +47,7 @@ export function EditProfileSettingsModal(): JSX.Element {
   }
 
   const onBack = (): void => {
-    dispatch(closeModal({ name: ModalName.EditProfileSettingsModal }))
+    onClose()
   }
 
   const onCloseChangeModal = (): void => {
@@ -66,19 +65,15 @@ export function EditProfileSettingsModal(): JSX.Element {
     ]
   }, [t])
   const onPressBack = (): void => {
-    dispatch(closeModal({ name: ModalName.EditProfileSettingsModal }))
+    onClose()
 
     if (!isUpdatingWalletProfile) {
-      navigateBackFromEditingWallet(dispatch, entryPoint, address)
+      navigateBackFromEditingWallet(entryPoint, address)
     }
   }
 
   return (
-    <Modal
-      fullScreen
-      name={ModalName.EditProfileSettingsModal}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.EditProfileSettingsModal }))}
-    >
+    <Modal fullScreen name={ModalName.EditProfileSettingsModal} onClose={onClose}>
       <KeyboardAvoidingView
         behavior={isIOS ? 'padding' : undefined}
         contentContainerStyle={styles.expand}

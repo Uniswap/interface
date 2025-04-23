@@ -2,7 +2,6 @@ import Navbar from 'components/NavBar/index'
 import { MobileAppPromoBanner, useMobileAppPromoBannerEligible } from 'components/TopLevelBanners/MobileAppPromoBanner'
 import { UkBanner, useRenderUkBanner } from 'components/TopLevelBanners/UkBanner'
 import { useScroll } from 'hooks/useScroll'
-import { useBag } from 'nft/hooks'
 import { GRID_AREAS } from 'pages/App/utils/shared'
 import { memo } from 'react'
 import { Flex } from 'ui/src'
@@ -10,8 +9,7 @@ import { zIndexes } from 'ui/src/theme'
 
 export const Header = memo(function Header() {
   const { isScrolledDown } = useScroll()
-  const isBagExpanded = useBag((state) => state.bagExpanded)
-  const isHeaderTransparent = !isScrolledDown && !isBagExpanded
+  const isHeaderTransparent = !isScrolledDown
   const renderUkBanner = useRenderUkBanner()
   const extensionEligible = useMobileAppPromoBannerEligible()
 

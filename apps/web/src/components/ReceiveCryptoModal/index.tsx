@@ -6,7 +6,6 @@ import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { useCallback, useState } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -14,8 +13,8 @@ import { logger } from 'utilities/src/logger/logger'
 
 export function ReceiveCryptoModal() {
   const account = useAccount()
-  const toggleModal = useToggleModal(ApplicationModal.RECEIVE_CRYPTO)
-  const isOpen = useModalIsOpen(ApplicationModal.RECEIVE_CRYPTO)
+  const toggleModal = useToggleModal(ModalName.ReceiveCryptoModal)
+  const isOpen = useModalIsOpen(ModalName.ReceiveCryptoModal)
 
   const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
   const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()

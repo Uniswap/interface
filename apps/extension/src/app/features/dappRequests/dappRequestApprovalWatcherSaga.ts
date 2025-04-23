@@ -30,8 +30,6 @@ import {
   BaseSendTransactionRequestSchema,
   ChangeChainRequest,
   ChangeChainRequestSchema,
-  DappRequestType,
-  DappResponseType,
   ErrorResponse,
   GetAccountRequest,
   GetAccountRequestSchema,
@@ -59,6 +57,7 @@ import {
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { ExtensionState } from 'src/store/extensionReducer'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { logger } from 'utilities/src/logger/logger'
 

@@ -12,6 +12,7 @@ import { SendForm } from 'pages/Swap/Send/SendForm'
 import { DeadlineOverride } from 'pages/Swap/settings/DeadlineOverride'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
@@ -36,6 +37,7 @@ import { TransactionSettingKey } from 'uniswap/src/features/transactions/setting
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
 import { SwapDependenciesContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContextProvider'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
 import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/ProtocolPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Slippage/Slippage'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
@@ -80,6 +82,7 @@ export default function SwapPage() {
           initialTypedValue={initialTypedValue}
           initialIndependentField={initialField}
           syncTabToUrl={true}
+          usePersistedFilteredChainIds
         />
       </PageWrapper>
       {location.pathname === '/swap' && <SwitchLocaleLink />}
@@ -106,6 +109,7 @@ export function Swap({
   syncTabToUrl,
   swapRedirectCallback,
   tokenColor,
+  usePersistedFilteredChainIds = false,
 }: {
   chainId?: UniverseChainId
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -118,6 +122,7 @@ export function Swap({
   hideFooter?: boolean
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
+  usePersistedFilteredChainIds?: boolean
 }) {
   const isExplorePage = useIsPage(PageType.EXPLORE)
 
@@ -128,6 +133,7 @@ export function Swap({
   const output = currencyToAsset(initialOutputCurrency)
 
   const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
+  const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
 
   const prefilledState = useSwapPrefilledState({
     input,
@@ -137,6 +143,7 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
     selectingCurrencyChainId: swapOutputChainId,
     skipFocusOnCurrencyField: isMobileWeb,
+    filteredChainIdsOverride: usePersistedFilteredChainIds ? persistedFilteredChainIds : undefined,
   })
 
   return (

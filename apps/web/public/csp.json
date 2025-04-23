@@ -106,6 +106,7 @@
     "https://mainnet.era.zksync.io/",
     "https://8mr3mthjba.execute-api.us-east-2.amazonaws.com",
     "https://mainnet.unichain.org/",
+    "https://api.web3modal.org",
     "wss://*.uniswap.org",
     "wss://relay.walletconnect.com",
     "wss://relay.walletconnect.org",

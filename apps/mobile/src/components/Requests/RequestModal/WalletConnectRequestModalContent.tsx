@@ -16,10 +16,11 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangleFilled from 'ui/src/assets/icons/alert-triangle-filled.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { EthMethod, isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
+import { isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
@@ -111,6 +112,7 @@ export function WalletConnectRequestModalContent({
                   }
             }
             showNetworkLogo={hasGasFee}
+            requestMethod={request.type}
           />
           <AddressFooter activeAccountAddress={request.account} px="$spacing8" />
         </Flex>

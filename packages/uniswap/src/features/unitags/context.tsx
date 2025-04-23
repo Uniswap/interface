@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
-import { UNITAGS_API_CACHE_KEY } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { logger } from 'utilities/src/logger/logger'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 // TODO(WALL-4257): Delete this context provider once we're fully migrated to react-query.
 //                  We can just call `resetQueries` directly where needed instead.
@@ -19,7 +19,7 @@ export function UnitagUpdaterContextProvider({ children }: PropsWithChildren<unk
   const queryClient = useQueryClient()
 
   const triggerRefetchUnitags = (): void => {
-    queryClient.resetQueries({ queryKey: [UNITAGS_API_CACHE_KEY] }).catch((error) => {
+    queryClient.resetQueries({ queryKey: [ReactQueryCacheKey.UnitagsApi] }).catch((error) => {
       logger.error(error, {
         tags: {
           file: 'unitags/context.tsx',

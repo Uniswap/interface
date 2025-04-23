@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
-import { useFocusEffect } from '@react-navigation/core'
+import { useIsFocused } from '@react-navigation/core'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -22,7 +22,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
-import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 import { ExpandoRow } from 'wallet/src/components/ExpandoRow/ExpandoRow'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
@@ -82,27 +81,12 @@ const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBal
 
     const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
-    // The following logic is meant to speed up the screen transition from the token details screen back to the home screen.
-    // When we call `navigation.goBack()`, a re-render is triggered *before* the animation begins.
-    // In order for that first re-render to be fast, we use `cachedData` so that it renders a memoized `FlatList` of tokens,
-    // (this `FlatList` is the most expensive component on this screen).
-    // After the transition ends, we set focus to `true` to trigger a re-render using the latest `data`.
+    const [localIsFocused, setLocalIsFocused] = useState<boolean>(true)
 
-    const [isFocused, setIsFocused] = useState<boolean>(true)
-    const [cachedRows, setCachedRows] = useState<TokenBalanceListRow[] | null>(null)
+    const reactNavigationIsFocused = useIsFocused()
 
-    const rowsRef = useValueAsRef(rows)
-
-    useFocusEffect(
-      useCallback(() => {
-        return (): void => {
-          // We save the cached data to avoid a re-render when the user navigates back to it.
-          // This speeds up the animation while preserving the scroll position.
-          setCachedRows(rowsRef.current)
-          setIsFocused(false)
-        }
-      }, [rowsRef]),
-    )
+    // used for window size adjustment based on focus state (smaller window size when out of focus)
+    const isFocused = localIsFocused || reactNavigationIsFocused
 
     const navigation = useAppStackNavigation()
 
@@ -111,7 +95,7 @@ const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBal
       // when the user goes from the token details screen back to the home screen, so we want this state to change *after* the animation is done instead of *before*.
       const unsubscribeTransitionEnd = navigation.addListener('transitionEnd', (e) => {
         if (!e.data.closing) {
-          setIsFocused(true)
+          setLocalIsFocused(true)
         }
       })
 
@@ -160,7 +144,7 @@ const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBal
       [],
     )
 
-    const data = balancesById ? (isFocused ? rows : cachedRows) : undefined
+    const data = balancesById ? rows : undefined
 
     // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
     return (
@@ -266,13 +250,21 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     return (
       <TokenBalanceItem
         padded
+        isHidden={portfolioBalance?.isHidden ?? false}
         portfolioBalanceId={portfolioBalance.id}
         isLoading={isWarmLoading}
         currencyInfo={portfolioBalance.currencyInfo}
         onPressToken={onPressToken}
       />
     )
-  }, [hasPortfolioBalance, portfolioBalance?.id, portfolioBalance?.currencyInfo, isWarmLoading, onPressToken])
+  }, [
+    hasPortfolioBalance,
+    portfolioBalance?.id,
+    portfolioBalance?.isHidden,
+    portfolioBalance?.currencyInfo,
+    isWarmLoading,
+    onPressToken,
+  ])
 
   if (item === HIDDEN_TOKEN_BALANCES_ROW) {
     return <HiddenTokensRowWrapper />

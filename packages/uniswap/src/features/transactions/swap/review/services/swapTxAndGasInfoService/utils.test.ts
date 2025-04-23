@@ -66,7 +66,6 @@ describe('processWrapResponse', () => {
       maxFeePerGas: '100000000000',
       maxPriorityFeePerGas: '1000000000',
     })
-    expect(result.permitSignature).toBeUndefined()
     expect(result.gasEstimate.wrapEstimates).toBe(gasFeeResult.gasEstimates)
     expect(result.swapRequestArgs).toBeUndefined()
   })
@@ -379,9 +378,7 @@ describe('createProcessSwapResponse', () => {
       error: null,
       swapQuote,
       isSwapLoading: false,
-      signature: '0x789',
       permitData: { fakePermitField: 'hi' },
-      permitDataLoading: false,
       swapRequestParams: { quote: swapQuote, v4Enabled: false },
       isRevokeNeeded: false,
     })
@@ -395,9 +392,7 @@ describe('createProcessSwapResponse', () => {
         error: null,
       },
       transactionRequest: response.swap,
-      permitSignature: '0x789',
       permitData: { fakePermitField: 'hi' },
-      permitDataLoading: false,
       gasEstimate: {
         swapEstimates: {
           activeEstimate: response.gasEstimates[0],
@@ -423,10 +418,8 @@ describe('createProcessSwapResponse', () => {
       error: null,
       swapQuote,
       isSwapLoading: false,
-      signature: undefined,
       permitData: undefined,
-      permitDataLoading: false,
-      swapRequestParams: undefined,
+      swapRequestParams: { quote: swapQuote, v4Enabled: false },
       isRevokeNeeded: false,
     })
 

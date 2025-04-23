@@ -5,6 +5,7 @@ import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/Limits
 import { UniExtensionPoolsMenu } from 'components/AccountDrawer/MiniPortfolio/Pools/UniExtensionPoolsMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import PasskeyMenu from 'components/AccountDrawer/PasskeyMenu/PasskeyMenu'
+import PortfolioBalanceMenu from 'components/AccountDrawer/PortfolioBalanceMenu'
 import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import WalletModal from 'components/WalletModal'
@@ -32,6 +33,7 @@ function DefaultMenu() {
   const closeSettings = useCallback(() => setMenu(MenuState.DEFAULT), [setMenu])
   const openLanguageSettings = useCallback(() => setMenu(MenuState.LANGUAGE_SETTINGS), [setMenu])
   const openLocalCurrencySettings = useCallback(() => setMenu(MenuState.LOCAL_CURRENCY_SETTINGS), [setMenu])
+  const openPortfolioBalanceSettings = useCallback(() => setMenu(MenuState.PORTFOLIO_BALANCE), [setMenu])
   const closeLimitsMenu = useCallback(() => setMenu(MenuState.DEFAULT), [setMenu])
   const { isOpen: drawerOpen } = useAccountDrawer()
   const openPasskeySettings = useCallback(() => setMenu(MenuState.PASSKEYS), [setMenu])
@@ -46,6 +48,7 @@ function DefaultMenu() {
       [MenuState.OTHER_WALLETS]: 1,
       [MenuState.LANGUAGE_SETTINGS]: 2,
       [MenuState.LOCAL_CURRENCY_SETTINGS]: 2,
+      [MenuState.PORTFOLIO_BALANCE]: 2,
       [MenuState.LIMITS]: 2,
       [MenuState.PASSKEYS]: 2,
     } as const
@@ -96,10 +99,14 @@ function DefaultMenu() {
             openLanguageSettings={openLanguageSettings}
             openLocalCurrencySettings={openLocalCurrencySettings}
             openPasskeySettings={openPasskeySettings}
+            openPortfolioBalanceSettings={openPortfolioBalanceSettings}
           />
         )
+
       case MenuState.LANGUAGE_SETTINGS:
         return <LanguageMenu onClose={openSettings} />
+      case MenuState.PORTFOLIO_BALANCE:
+        return <PortfolioBalanceMenu onClose={openSettings} />
       case MenuState.LOCAL_CURRENCY_SETTINGS:
         return <LocalCurrencyMenu onClose={openSettings} />
       case MenuState.LIMITS:
@@ -116,6 +123,7 @@ function DefaultMenu() {
     menu,
     openLanguageSettings,
     openLocalCurrencySettings,
+    openPortfolioBalanceSettings,
     openPasskeySettings,
     openSettings,
   ])

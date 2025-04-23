@@ -32,7 +32,7 @@ export type TokenSection<T extends ItemType> = {
 export type TokenSectionsHookProps = {
   activeAccountAddress?: string
   chainFilter: UniverseChainId | null
-  input?: TradeableAsset
+  oppositeSelectedToken?: TradeableAsset
   isKeyboardOpen?: boolean
 }
 

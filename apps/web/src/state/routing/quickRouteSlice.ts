@@ -76,6 +76,3 @@ export const quickRouteApi = createApi({
     }),
   }),
 })
-
-export const { useGetQuickRouteQuery } = quickRouteApi
-export const useGetQuickRouteQueryState = quickRouteApi.endpoints.getQuickRoute.useQueryState

@@ -6,13 +6,13 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import {
   ApproveSendTransactionRequest,
   DappRequest as DappRequestBaseType,
-  DappRequestType,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'

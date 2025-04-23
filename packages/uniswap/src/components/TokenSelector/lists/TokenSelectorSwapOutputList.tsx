@@ -29,7 +29,7 @@ import { isMobileApp } from 'utilities/src/platform'
 function useTokenSectionsForSwapOutput({
   activeAccountAddress,
   chainFilter,
-  input,
+  oppositeSelectedToken: input,
 }: TokenSectionsHookProps): GqlResult<TokenSection<TokenSelectorItemTypes>[]> {
   const isTokenSelectorTrendingTokensEnabled = useFeatureFlag(FeatureFlags.TokenSelectorTrendingTokens)
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
@@ -69,7 +69,7 @@ function useTokenSectionsForSwapOutput({
     refetch: refetchBridgingTokenOptions,
     loading: bridgingTokenOptionsLoading,
     shouldNest: shouldNestBridgingTokens,
-  } = useBridgingTokensOptions({ input, walletAddress: activeAccountAddress, chainFilter })
+  } = useBridgingTokensOptions({ oppositeSelectedToken: input, walletAddress: activeAccountAddress, chainFilter })
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
@@ -187,7 +187,7 @@ function _TokenSelectorSwapOutputList({
   activeAccountAddress,
   chainFilter,
   isKeyboardOpen,
-  input,
+  oppositeSelectedToken: input,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
@@ -200,7 +200,7 @@ function _TokenSelectorSwapOutputList({
   } = useTokenSectionsForSwapOutput({
     activeAccountAddress,
     chainFilter,
-    input,
+    oppositeSelectedToken: input,
   })
   return (
     <TokenSelectorList

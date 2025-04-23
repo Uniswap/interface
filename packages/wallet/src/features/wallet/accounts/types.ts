@@ -21,6 +21,7 @@ export interface WalletAccountFields {
 export interface SignerMnemonicAccount extends WalletAccountFields, SignerMnemonicAccountMeta {
   derivationIndex: number
   mnemonicId: string
+  smartWalletConsent?: boolean
 }
 
 export interface ReadOnlyAccount extends WalletAccountFields, ReadOnlyAccountMeta {}

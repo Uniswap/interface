@@ -2,7 +2,6 @@ import * as Card from 'nft/components/card/containers'
 import { MarketplaceContainer } from 'nft/components/card/icons'
 import { MediaContainer } from 'nft/components/card/media'
 import { detailsHref, getNftDisplayComponent, useSelectAsset } from 'nft/components/card/utils'
-import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio, UniformAspectRatios, WalletAsset } from 'nft/types'
 import { ReactNode } from 'react'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -27,7 +26,7 @@ interface NftCardProps {
   hideDetails?: boolean
 }
 
-export interface NftCardDisplayProps {
+interface NftCardDisplayProps {
   primaryInfo?: ReactNode
   primaryInfoIcon?: ReactNode
   primaryInfoRight?: ReactNode
@@ -69,10 +68,6 @@ export const NftCard = ({
     isDisabled,
     onClick: onButtonClick,
   })
-  const { bagExpanded, setBagExpanded } = useBag((state) => ({
-    bagExpanded: state.bagExpanded,
-    setBagExpanded: state.setBagExpanded,
-  }))
 
   const { formatNumberOrString } = useFormatter()
   const collectionNft = 'marketplace' in asset
@@ -91,9 +86,6 @@ export const NftCard = ({
       detailsHref={onCardClick ? undefined : detailsHref(asset)}
       testId={testId}
       onClick={() => {
-        if (bagExpanded) {
-          setBagExpanded({ bagExpanded: false })
-        }
         onCardClick?.()
         sendAnalyticsEvent?.()
       }}

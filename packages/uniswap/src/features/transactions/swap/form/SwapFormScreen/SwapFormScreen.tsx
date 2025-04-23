@@ -1,4 +1,6 @@
 /* eslint-disable complexity */
+import type { BottomSheetView } from '@gorhom/bottom-sheet'
+import { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, isWeb } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
@@ -28,6 +30,7 @@ interface SwapFormScreenProps {
   hideFooter?: boolean
   settings: SwapSettingConfig[]
   tokenColor?: string
+  focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
 }
 
 /**
@@ -38,6 +41,7 @@ export function SwapFormScreen({
   hideContent,
   settings = [Slippage, ProtocolPreference],
   tokenColor,
+  focusHook,
 }: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
   const { selectingCurrencyField, hideSettings, derivedSwapInfo } = useSwapFormContext()
@@ -56,7 +60,7 @@ export function SwapFormScreen({
         </SwapFormScreenContextProvider>
       )}
 
-      <SwapTokenSelector isModalOpen={showTokenSelector} />
+      <SwapTokenSelector isModalOpen={showTokenSelector} focusHook={focusHook} />
     </TransactionModalInnerContainer>
   )
 }

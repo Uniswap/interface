@@ -5,13 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedRef } from 'react-native-reanimated'
-import { useSelector } from 'react-redux'
-import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { Screen } from 'src/components/layout/Screen'
-import { selectModalState } from 'src/features/modals/selectModalState'
 import { Flex, flexStyles } from 'ui/src'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
@@ -23,7 +20,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
 import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
 import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
@@ -33,20 +30,8 @@ import { useDebounce } from 'utilities/src/time/timing'
 const MIN_SEARCH_INPUT_HEIGHT = 52
 
 export function ExploreScreen(): JSX.Element {
-  const modalInitialState = useSelector(selectModalState(ModalName.Explore)).initialState
-  const navigation = useExploreStackNavigation()
   const { chains } = useEnabledChains()
-
   const { isSheetReady } = useBottomSheetContext()
-
-  // The ExploreStack is not directly accessible from outside
-  // (e.g., navigating from Home to NFTItem within ExploreStack), due to its mount within Modal.
-  // To bypass this limitation, we use an initialState to define a specific screen within ExploreStack.
-  useEffect(() => {
-    if (modalInitialState) {
-      navigation.navigate(modalInitialState.screen, modalInitialState.params)
-    }
-  }, [modalInitialState, navigation])
 
   const { t } = useTranslation()
 

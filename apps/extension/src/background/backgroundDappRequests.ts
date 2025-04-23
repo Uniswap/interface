@@ -6,8 +6,6 @@ import { SenderTabInfo } from 'src/app/features/dappRequests/slice'
 import {
   ChangeChainRequest,
   DappRequest,
-  DappRequestType,
-  DappResponseType,
   RevokePermissionsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
@@ -26,6 +24,7 @@ import {
 import { openSidePanel } from 'src/background/utils/chromeSidePanelUtils'
 import { ExtensionEthMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'

@@ -13,7 +13,6 @@ import {
   fetchExportSeedPhraseRequest,
   fetchListAuthenticatorsRequest,
   fetchRegisterNewAuthenticatorRequest,
-  fetchSecuredChallengeRequest,
   fetchSignMessagesRequest,
   fetchSignTransactionRequest,
   fetchSignTypedDataRequest,
@@ -94,24 +93,6 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<`0x${stri
   return undefined
 }
 
-export async function getSecuredChallengeOptions({
-  type,
-  action,
-  b64EncryptionPublicKey,
-}: {
-  type: AuthenticationTypes
-  action: Action
-  b64EncryptionPublicKey: string
-}): Promise<string> {
-  const securedChallengeResponse = await fetchSecuredChallengeRequest({
-    type,
-    action,
-    b64EncryptionPublicKey,
-  })
-
-  return securedChallengeResponse.challengeOptions
-}
-
 // Authentication
 
 async function authenticateWithPasskey(action: Action): Promise<string | undefined> {
@@ -134,6 +115,10 @@ async function authenticateWithPasskey(action: Action): Promise<string | undefin
     }
   }
   return undefined
+}
+
+export async function authenticateWithPasskeyForSeedPhraseExport(): Promise<string | undefined> {
+  return await authenticateWithPasskey(Action.EXPORT_SEED_PHRASE)
 }
 
 export async function signInWithPasskey(): Promise<`0x${string}` | undefined> {

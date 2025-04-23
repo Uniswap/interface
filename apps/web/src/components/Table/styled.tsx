@@ -239,7 +239,7 @@ export const TableText = ({ children, ...props }: PropsWithChildren<TextProps>) 
   const { width } = useTableSize()
 
   return (
-    <Text {...props} variant={width <= breakpoints.lg ? 'body3' : 'body2'} color="$neutral1">
+    <Text variant={width <= breakpoints.lg ? 'body3' : 'body2'} color="$neutral1" {...props}>
       {children}
     </Text>
   )

@@ -1,4 +1,5 @@
 import StatusIcon from 'components/Identicon/StatusIcon'
+import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
 import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
@@ -9,6 +10,7 @@ import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
 import { AdaptiveWebPopoverContent, Button, Flex, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { X } from 'ui/src/components/icons/X'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -153,9 +155,14 @@ function shouldShowModal(
   account: ReturnType<typeof useAccount>,
   isEmbeddedWalletEnabled: boolean,
   isOpenRef: MutableRefObject<boolean>,
+  recentConnectorId?: string,
 ) {
   return (
-    !!walletAddress && !(account.isConnected || account.isConnecting) && isEmbeddedWalletEnabled && !isOpenRef.current
+    !!walletAddress &&
+    !(account.isConnected || account.isConnecting) &&
+    isEmbeddedWalletEnabled &&
+    !isOpenRef.current &&
+    recentConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
   )
 }
 
@@ -169,15 +176,16 @@ export function RecentlyConnectedModal() {
   const openModal = useOpenModal({ name: ModalName.RecentlyConnectedModal })
   const { signInWithPasskey } = useSignInWithPasskey({ onSuccess: closeModal })
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const recentConnectorId = useRecentConnectorId()
 
   const walletDisplay = useWalletDisplay(walletAddress)
 
   useEffect(() => {
-    if (shouldShowModal(walletAddress, account, isEmbeddedWalletEnabled, isOpenRef)) {
+    if (shouldShowModal(walletAddress, account, isEmbeddedWalletEnabled, isOpenRef, recentConnectorId)) {
       openModal()
       isOpenRef.current = true
     }
-  }, [walletAddress, account, isEmbeddedWalletEnabled, openModal])
+  }, [walletAddress, account, isEmbeddedWalletEnabled, openModal, recentConnectorId])
 
   useEffect(() => {
     if (account.isConnected && isOpen) {

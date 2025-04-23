@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer'
 import { exportEncryptedSeedPhrase } from 'uniswap/src/features/passkey/embeddedWallet'
 
 export async function exportSeedPhrase(): Promise<string | undefined> {

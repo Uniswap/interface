@@ -93,11 +93,12 @@ export function RecoveryPhraseModal() {
       <ModalContent
         title={t('setting.recoveryPhrase.title')}
         subtext={t('setting.recoveryPhrase.view.warning.message1')}
-        logo={
+        header={
           <Flex p="$spacing12" background="$surface3" borderRadius="$rounded12">
             <LockedDocument size="$icon.24" />
           </Flex>
         }
+        maxWidth={undefined}
       >
         <Flex
           p="$spacing32"

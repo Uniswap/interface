@@ -4,8 +4,14 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { DynamicConfigDropdown } from 'uniswap/src/components/gating/DynamicConfigDropdown'
 import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
 import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
-import { EMBEDDED_WALLET_BASE_URL_OPTIONS } from 'uniswap/src/components/gating/dynamicConfigOverrides'
-import { DynamicConfigs, EmbeddedWalletConfigKey } from 'uniswap/src/features/gating/configs'
+import {
+  EMBEDDED_WALLET_BASE_URL_OPTIONS,
+  FORCE_UPGRADE_STATUS_OPTIONS,
+  FORCE_UPGRADE_TRANSLATIONS_OPTIONS,
+} from 'uniswap/src/components/gating/dynamicConfigOverrides'
+import { useForceUpgradeStatus } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeStatus'
+import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeTranslations'
+import { DynamicConfigs, EmbeddedWalletConfigKey, ForceUpgradeConfigKey } from 'uniswap/src/features/gating/configs'
 import { Experiments, Layers } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
@@ -135,6 +141,22 @@ export function GatingOverrides(): JSX.Element {
                 label="Embedded Wallet Base URL"
                 options={EMBEDDED_WALLET_BASE_URL_OPTIONS}
                 selected={useEmbeddedWalletBaseUrl()}
+              />
+
+              <DynamicConfigDropdown
+                config={DynamicConfigs.ForceUpgrade}
+                configKey={ForceUpgradeConfigKey.Status}
+                label="Force Upgrade Status"
+                options={FORCE_UPGRADE_STATUS_OPTIONS}
+                selected={useForceUpgradeStatus()}
+              />
+
+              <DynamicConfigDropdown
+                config={DynamicConfigs.ForceUpgrade}
+                configKey={ForceUpgradeConfigKey.Translations}
+                label="Force Upgrade Translations"
+                options={FORCE_UPGRADE_TRANSLATIONS_OPTIONS}
+                selected={JSON.stringify(useForceUpgradeTranslations())}
               />
             </Flex>
           </Accordion.Content>

@@ -8,10 +8,10 @@ import { useEffect } from 'react'
 import { Heart, X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { useModalIsOpen, useShowClaimPopup, useToggleModal, useToggleShowClaimPopup } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { ThemedText } from 'theme/components'
 import { Button, Flex } from 'ui/src'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const StyledClaimPopup = styled(AutoColumn)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);
@@ -55,8 +55,8 @@ export default function ClaimPopup() {
   const toggleShowClaimPopup = useToggleShowClaimPopup()
 
   // toggle for showing this modal
-  const showClaimModal = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
-  const toggleClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+  const showClaimModal = useModalIsOpen(ModalName.AddressClaim)
+  const toggleClaimModal = useToggleModal(ModalName.AddressClaim)
 
   // const userHasAvailableclaim = useUserHasAvailableClaim()
   const userHasAvailableclaim: boolean = useUserHasAvailableClaim(account.address)

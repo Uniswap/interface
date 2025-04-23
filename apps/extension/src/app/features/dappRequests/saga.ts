@@ -10,8 +10,6 @@ import { DappRequestStoreItem, SenderTabInfo, dappRequestActions } from 'src/app
 import {
   BaseSendTransactionRequest,
   ChangeChainRequest,
-  DappRequestType,
-  DappResponseType,
   ErrorResponse,
   GetCallsStatusRequest,
   GetCallsStatusResponse,
@@ -36,6 +34,7 @@ import {
   hexadecimalStringToInt,
   toSupportedChainId,
 } from 'uniswap/src/features/chains/utils'
+import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'

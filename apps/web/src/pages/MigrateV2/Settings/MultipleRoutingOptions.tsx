@@ -57,7 +57,7 @@ const DEFAULT_ROUTING_PREFERENCE: RoutingPreference = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
 }
 
-export const routingPreferencesAtom = atom(DEFAULT_ROUTING_PREFERENCE)
+const routingPreferencesAtom = atom(DEFAULT_ROUTING_PREFERENCE)
 const routePreferenceOptionsAtom = atom<RoutePreferenceOptionsType>(DEFAULT_ROUTE_PREFERENCE_OPTIONS)
 
 function UniswapXPreferenceLabel() {

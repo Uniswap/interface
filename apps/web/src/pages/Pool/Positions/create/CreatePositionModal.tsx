@@ -97,8 +97,9 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
       getLiquidityRangeChartProps({
         positionInfo: derivedPositionInfo,
         priceRangeInfo: derivedPriceRangeInfo,
+        pricesInverted: priceInverted,
       }),
-    [derivedPositionInfo, derivedPriceRangeInfo],
+    [derivedPositionInfo, derivedPriceRangeInfo, priceInverted],
   )
 
   const handleCreate = useCallback(() => {

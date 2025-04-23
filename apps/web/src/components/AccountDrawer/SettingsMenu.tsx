@@ -1,8 +1,5 @@
 import { AnalyticsToggle } from 'components/AccountDrawer/AnalyticsToggle'
-import { GitVersionRow } from 'components/AccountDrawer/GitVersionRow'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
-import { SmallBalanceToggle } from 'components/AccountDrawer/SmallBalanceToggle'
-import { SpamToggle } from 'components/AccountDrawer/SpamToggle'
 import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
@@ -10,12 +7,11 @@ import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useOpenModal } from 'state/application/hooks'
 import { ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
-import { ClickableStyle } from 'theme/components/styles'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { LockedDocument } from 'ui/src/components/icons/LockedDocument'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
@@ -26,18 +22,6 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 const Container = styled(Column)`
   height: 100%;
   justify-content: space-between;
-`
-
-const ToggleWrapper = styled.div<{ currencyConversionEnabled?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: '10px';
-`
-
-const SettingsButtonWrapper = styled(Row)`
-  ${ClickableStyle}
-  padding: 16px 0px;
 `
 
 const StyledChevron = styled(ChevronRight)`
@@ -56,18 +40,20 @@ const SettingsButton = ({
   showArrow = true,
 }: {
   title: ReactNode
-  currentState: ReactNode
+  currentState?: ReactNode
   onClick: () => void
   testId?: string
   showArrow?: boolean
 }) => (
-  <SettingsButtonWrapper data-testid={testId} align="center" justify="space-between" onClick={onClick}>
-    <ThemedText.SubHeaderSmall color="textPrimary">{title}</ThemedText.SubHeaderSmall>
+  <Flex row justifyContent="space-between" py="$padding12" onPress={onClick} testID={testId}>
+    <Text variant="body3" color="$neutral1">
+      {title}
+    </Text>
     <LanguageLabel gap="xs" align="center" width="min-content">
-      <ThemedText.LabelSmall color="textPrimary">{currentState}</ThemedText.LabelSmall>
+      {currentState && <ThemedText.LabelSmall color="neutral2">{currentState}</ThemedText.LabelSmall>}
       {showArrow && <StyledChevron size={20} />}
     </LanguageLabel>
-  </SettingsButtonWrapper>
+  </Flex>
 )
 
 export default function SettingsMenu({
@@ -75,12 +61,15 @@ export default function SettingsMenu({
   openLanguageSettings,
   openLocalCurrencySettings,
   openPasskeySettings,
+  openPortfolioBalanceSettings,
 }: {
   onClose: () => void
   openLanguageSettings: () => void
   openLocalCurrencySettings: () => void
   openPasskeySettings: () => void
+  openPortfolioBalanceSettings: () => void
 }) {
+  const { t } = useTranslation()
   const activeLanguage = useCurrentLanguage()
   const activeLocalCurrency = useAppFiatCurrency()
   const languageInfo = useLanguageInfo(activeLanguage)
@@ -91,45 +80,43 @@ export default function SettingsMenu({
   return (
     <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose}>
       <Container>
-        <Flex>
-          <ToggleWrapper>
-            <ThemeToggle />
-            <SmallBalanceToggle />
-            <SpamToggle />
-            <AnalyticsToggle />
-            <TestnetsToggle />
-          </ToggleWrapper>
+        <Flex gap="$gap12">
+          <ThemeToggle />
 
-          <Column>
+          <SettingsButton
+            title={t('settings.setting.currency.title')}
+            currentState={activeLocalCurrency}
+            onClick={openLocalCurrencySettings}
+            testId="local-currency-settings-button"
+          />
+          <SettingsButton
+            title={t('common.language')}
+            currentState={languageInfo.displayName}
+            onClick={openLanguageSettings}
+            testId="language-settings-button"
+          />
+          <SettingsButton
+            title={t('settings.setting.smallBalances.title')}
+            onClick={openPortfolioBalanceSettings}
+            testId="portfolio-balance-settings-button"
+          />
+          {connectedWithEmbeddedWallet && (
             <SettingsButton
-              title={<Trans i18nKey="common.language" />}
-              currentState={languageInfo.displayName}
-              onClick={openLanguageSettings}
-              testId="language-settings-button"
+              title={t('settings.setting.passKey.title')}
+              currentState={<Passkey color="$neutral1" size="$icon.24" />}
+              onClick={openPasskeySettings}
             />
+          )}
+          {connectedWithEmbeddedWallet && (
             <SettingsButton
-              title={<Trans i18nKey="common.currency" />}
-              currentState={activeLocalCurrency}
-              onClick={openLocalCurrencySettings}
-              testId="local-currency-settings-button"
+              title={t('settings.setting.connectedWithEmbeddedWallet.title')}
+              currentState={<LockedDocument size="$icon.24" />}
+              onClick={openRecoveryPhraseModal}
             />
-            {connectedWithEmbeddedWallet && (
-              <SettingsButton
-                title="Passkeys"
-                currentState={<Passkey color="$neutral1" size="$icon.24" />}
-                onClick={openPasskeySettings}
-              />
-            )}
-            {connectedWithEmbeddedWallet && (
-              <SettingsButton
-                title="View Recovery Phrase"
-                currentState={<LockedDocument size="$icon.24" />}
-                onClick={openRecoveryPhraseModal}
-              />
-            )}
-          </Column>
+          )}
         </Flex>
-        <GitVersionRow />
+        <TestnetsToggle />
+        <AnalyticsToggle />
       </Container>
     </SlideOutMenu>
   )

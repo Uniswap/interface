@@ -6,13 +6,13 @@ import { useContext, useState } from 'react'
 import { Flag, Settings } from 'react-feather'
 import { useDispatch } from 'react-redux'
 import { useCloseModal, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Button } from 'ui/src'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { StatsigContext } from 'uniswap/src/features/gating/sdk/statsig'
 import { getOverrides } from 'uniswap/src/features/gating/utils'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 const Box = styled.div`
@@ -60,7 +60,7 @@ export default function DevFlagsBox() {
 
   const [isOpen, setIsOpen] = useState(false)
   const toggleOpen = () => setIsOpen((open) => !open)
-  const toggleFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
+  const toggleFeatureFlagsModal = useToggleModal(ModalName.FeatureFlags)
   const closeFeatureFlagsModal = useCloseModal()
 
   const dispatch = useDispatch()

@@ -1,50 +1,36 @@
-import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { closeModal } from 'src/features/modals/modalSlice'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { Check } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { setCurrentFiatCurrency } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function SettingsFiatCurrencyModal(): JSX.Element {
-  const dispatch = useDispatch()
   const { t } = useTranslation()
   const selectedCurrency = useAppFiatCurrency()
+  const { onClose } = useReactNavigationModal()
 
   // render
   const renderItem = useCallback(
     ({ item: currency }: { item: FiatCurrency }) => (
-      <FiatCurrencyOption
-        active={selectedCurrency === currency}
-        currency={currency}
-        onPress={(): void => {
-          dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))
-        }}
-      />
+      <FiatCurrencyOption active={selectedCurrency === currency} currency={currency} onPress={onClose} />
     ),
-    [dispatch, selectedCurrency],
+    [selectedCurrency, onClose],
   )
 
   return (
-    <Modal
-      fullScreen
-      name={ModalName.FiatCurrencySelector}
-      onClose={() => {
-        dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))
-      }}
-    >
+    <Modal fullScreen name={ModalName.FiatCurrencySelector} onClose={onClose}>
       <Text pb="$spacing12" textAlign="center" variant="subheading1">
         {t('settings.setting.currency.title')}
       </Text>
-      <BottomSheetFlatList
+      <AnimatedBottomSheetFlashList
         data={ORDERED_CURRENCIES}
-        focusHook={useBottomSheetFocusHook}
         keyExtractor={(item: FiatCurrency) => item}
         renderItem={renderItem}
       />

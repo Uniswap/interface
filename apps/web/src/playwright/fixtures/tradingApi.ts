@@ -39,3 +39,21 @@ export async function stubTradingApiSwap(page: Page) {
     })
   })
 }
+
+export async function stubTradingApiCreatePosition(page: Page) {
+  await page.route('https://trading-api-labs.interface.gateway.uniswap.org/v1/lp/create', async (route) => {
+    const request = route.request()
+    const postData = request.postDataJSON()
+
+    // Modify the request to set simulateTransaction to false
+    // because we can't actually simulate the transaction or it will fail
+    const modifiedData = {
+      ...postData,
+      simulateTransaction: false,
+    }
+
+    await route.continue({
+      postData: JSON.stringify(modifiedData),
+    })
+  })
+}

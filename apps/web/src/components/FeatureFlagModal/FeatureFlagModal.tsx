@@ -3,7 +3,6 @@ import styledDep from 'lib/styled-components'
 import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import { ChangeEvent, PropsWithChildren, useCallback } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { Button, Flex, ModalCloseIcon, Text, styled } from 'ui/src'
 import { LayerRow } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -121,9 +120,11 @@ function DynamicConfigDropdown<
   const handleSelectChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
-      getOverrideAdapter().overrideDynamicConfig(config, { [configKey]: selectedValues })
+      getOverrideAdapter().overrideDynamicConfig(config, {
+        [configKey]: allowMultiple ? selectedValues : selectedValues[0],
+      })
     },
-    [config, configKey, parser],
+    [allowMultiple, config, configKey, parser],
   )
   return (
     <CenteredRow key={config}>
@@ -151,7 +152,7 @@ function DynamicConfigDropdown<
 }
 
 export default function FeatureFlagModal() {
-  const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
+  const open = useModalIsOpen(ModalName.FeatureFlags)
   const closeModal = useCloseModal()
   const removeAllOverrides = () => {
     getOverrideAdapter().removeAllOverrides()
@@ -169,7 +170,6 @@ export default function FeatureFlagModal() {
           <ModalCloseIcon onClose={closeModal} />
         </CenteredRow>
         <Flex maxHeight="600px" pb="$gap8" overflow="scroll" $md={{ maxHeight: 'unset' }}>
-          <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
           <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
           <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
           <FeatureFlagOption
@@ -199,6 +199,12 @@ export default function FeatureFlagModal() {
             flag={FeatureFlags.TokenSelectorTrendingTokens}
             label="Enable 24h volume trending tokens in Token Selector"
           />
+          <FeatureFlagGroup name="Swap Refactor">
+            <FeatureFlagOption
+              flag={FeatureFlags.ServiceBasedSwapTransactionInfo}
+              label="Enable service-based swap transaction info"
+            />
+          </FeatureFlagGroup>
           <FeatureFlagGroup name="Embedded Wallet">
             <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
             <DynamicConfigDropdown
@@ -213,7 +219,6 @@ export default function FeatureFlagModal() {
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Search">
             <FeatureFlagOption flag={FeatureFlags.SearchRevamp} label="Enable search revamp" />
-            <FeatureFlagOption flag={FeatureFlags.TokenSearchV2} label="Enable new token search gql query results" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />

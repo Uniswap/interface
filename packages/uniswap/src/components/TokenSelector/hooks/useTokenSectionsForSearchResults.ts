@@ -46,7 +46,7 @@ export function useTokenSectionsForSearchResults(
     error: bridgingTokenOptionsError,
     refetch: refetchBridgingTokenOptions,
     loading: bridgingTokenOptionsLoading,
-  } = useBridgingTokensOptions({ input, walletAddress: address, chainFilter })
+  } = useBridgingTokensOptions({ oppositeSelectedToken: input, walletAddress: address, chainFilter })
 
   // Only call search endpoint if isBalancesOnlySearch is false
   const {
@@ -68,13 +68,13 @@ export function useTokenSectionsForSearchResults(
   }, [searchResultCurrencies])
 
   const searchResults = useMemo(() => {
-    return formatSearchResults(selectedNetworkResults, portfolioBalancesById, searchFilter)
-  }, [selectedNetworkResults, portfolioBalancesById, searchFilter])
+    return formatSearchResults(selectedNetworkResults, portfolioBalancesById)
+  }, [selectedNetworkResults, portfolioBalancesById])
 
   // Format other networks search results if they exist
   const otherNetworksResults = useMemo(() => {
-    return formatSearchResults(otherNetworksSearchResults, portfolioBalancesById, searchFilter)
-  }, [otherNetworksSearchResults, portfolioBalancesById, searchFilter])
+    return formatSearchResults(otherNetworksSearchResults, portfolioBalancesById)
+  }, [otherNetworksSearchResults, portfolioBalancesById])
 
   const loading =
     portfolioTokenOptionsLoading ||

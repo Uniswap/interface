@@ -121,15 +121,8 @@ export function useOnSelectCurrency({
       }
 
       if (!isBridgePair) {
-        // If selecting output, set the input and output chainIds
-        // If selecting input and output is already selected, also set the input chainId
-        if (field === CurrencyField.OUTPUT || !!swapCtx.output) {
-          swapCtx.filteredChainIds[CurrencyField.INPUT] = currency.chainId
-          swapCtx.filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
-          // If selecting input, only set the output chainId
-        } else {
-          swapCtx.filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
-        }
+        swapCtx.filteredChainIds[CurrencyField.INPUT] = currency.chainId
+        swapCtx.filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
 
         newState.filteredChainIds = swapCtx.filteredChainIds
       }

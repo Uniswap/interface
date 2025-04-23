@@ -1,5 +1,4 @@
-import { SVGProps } from 'components/Logo/UniIcon'
-import { useMemo } from 'react'
+import { SVGProps, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, useSporeColors } from 'ui/src'
 
@@ -142,7 +141,7 @@ const Container = styled(Flex, {
   },
 })
 
-type NavIconProps = SVGProps & {
+type NavIconProps = SVGProps<SVGSVGElement> & {
   clickable?: boolean
   onClick?: () => void
 }

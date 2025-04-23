@@ -2,7 +2,7 @@ import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableStyle, EllipsisStyle } from 'theme/components/styles'
+import { Flex } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -135,10 +136,10 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
 
   if (loading || !chainId) {
     return (
-      <Row gap="8px" padding="6px 0px">
-        <SmallDetailBubble />
-        <DetailBubble $width={117} />
-      </Row>
+      <Flex gap="$spacing8">
+        <LoadingBubble containerWidth="100%" width="100%" />
+        <LoadingBubble containerWidth="100%" width="100%" />
+      </Flex>
     )
   }
 

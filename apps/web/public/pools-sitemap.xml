@@ -10890,4 +10890,54 @@
     <lastmod>2025-04-12T13:55:37.821Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0xc275a7390966e4bcbf331b837cd7316c4a3efa83</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0x1e1dfff79d95725aaafd6b47af4fbc28d859ce28</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/optimism/0x7de4c593fe83417ca6ef98d7cf59c99d304f41c9</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0xd38d1ab8a150e6ee0ae70c86a8e9fb0c83255b76</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x06d7874037e622d6ef42294cf32eb259806cb1c6</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/celo/0x37fd96e1d24f69f20172ab97040f806284a31ae5</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/celo/0xa4bc5aa6229e6f2baa4b8851b19342a1d1217c08</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/unichain/0x1d6ae37db0e36305019fb3d4bad2750b8784adf9</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/unichain/0x5c90b076af8cb73ef064efc09eae7936132bebcf</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/avalanche/0x9a601b332698e64aa90fd468ce858d504e43e7df</loc>
+    <lastmod>2025-04-18T19:39:08.964Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

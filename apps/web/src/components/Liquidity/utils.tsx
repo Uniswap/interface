@@ -359,6 +359,8 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       totalApr: position.position.value.poolPosition?.totalApr,
       unclaimedRewardsAmountUni: position.position.value.poolPosition?.unclaimedRewardsAmountUni,
       boostedApr: position.position.value.poolPosition?.boostedApr,
+      token0Address: v4Position?.token0?.address,
+      token1Address: v4Position?.token1?.address,
     }
   } else {
     return undefined
@@ -574,6 +576,7 @@ export function getDefaultFeeTiersWithData({
       title: t(`fee.bestForVeryStable`),
       selectionPercent: feeTierData[FeeAmount.LOWEST]?.percentage,
       tvl: feeTierData[FeeAmount.LOWEST]?.tvl,
+      boostedApr: feeTierData[FeeAmount.LOWEST]?.boostedApr,
     },
     {
       tier: FeeAmount.LOW_200,
@@ -581,6 +584,7 @@ export function getDefaultFeeTiersWithData({
       title: '',
       selectionPercent: feeTierData[FeeAmount.LOW_200]?.percentage,
       tvl: feeTierData[FeeAmount.LOW_200]?.tvl,
+      boostedApr: feeTierData[FeeAmount.LOW_200]?.boostedApr,
     },
     {
       tier: FeeAmount.LOW_300,
@@ -588,6 +592,7 @@ export function getDefaultFeeTiersWithData({
       title: '',
       selectionPercent: feeTierData[FeeAmount.LOW_300]?.percentage,
       tvl: feeTierData[FeeAmount.LOW_300]?.tvl,
+      boostedApr: feeTierData[FeeAmount.LOW_300]?.boostedApr,
     },
     {
       tier: FeeAmount.LOW_400,
@@ -595,6 +600,7 @@ export function getDefaultFeeTiersWithData({
       title: '',
       selectionPercent: feeTierData[FeeAmount.LOW_400]?.percentage,
       tvl: feeTierData[FeeAmount.LOW_400]?.tvl,
+      boostedApr: feeTierData[FeeAmount.LOW_400]?.boostedApr,
     },
     {
       tier: FeeAmount.LOW,
@@ -602,6 +608,7 @@ export function getDefaultFeeTiersWithData({
       title: t(`fee.bestForStablePairs`),
       selectionPercent: feeTierData[FeeAmount.LOW]?.percentage,
       tvl: feeTierData[FeeAmount.LOW]?.tvl,
+      boostedApr: feeTierData[FeeAmount.LOW]?.boostedApr,
     },
     {
       tier: FeeAmount.MEDIUM,
@@ -609,6 +616,7 @@ export function getDefaultFeeTiersWithData({
       title: t(`fee.bestForMost`),
       selectionPercent: feeTierData[FeeAmount.MEDIUM]?.percentage,
       tvl: feeTierData[FeeAmount.MEDIUM]?.tvl,
+      boostedApr: feeTierData[FeeAmount.MEDIUM]?.boostedApr,
     },
     {
       tier: FeeAmount.HIGH,
@@ -616,6 +624,7 @@ export function getDefaultFeeTiersWithData({
       title: t(`fee.bestForExotic`),
       selectionPercent: feeTierData[FeeAmount.HIGH]?.percentage,
       tvl: feeTierData[FeeAmount.HIGH]?.tvl,
+      boostedApr: feeTierData[FeeAmount.HIGH]?.boostedApr,
     },
   ] as const
 
@@ -643,16 +652,15 @@ export function isDynamicFeeTierAmount(
   return feeAmountNumber === DYNAMIC_FEE_DATA.feeAmount
 }
 
-// TODO | LP_INCENTIVES: assuming there is another method in codebase that already does this
 export function formatTokenAmount(amount: string, decimals: number): string {
   try {
     const formatted = formatUnits(BigInt(amount), decimals)
-    // Split by decimal point and truncate to 8 decimal places
+    // Split by decimal point and truncate to 3 decimal places
     const [whole, decimal] = formatted.split('.')
     if (!decimal) {
       return whole
     }
-    return `${whole}.${decimal.slice(0, 8)}`
+    return `${whole}.${decimal.slice(0, 3)}`
   } catch (e) {
     return '0'
   }

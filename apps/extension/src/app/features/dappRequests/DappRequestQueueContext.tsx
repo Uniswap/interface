@@ -8,8 +8,8 @@ import {
   rejectRequest,
 } from 'src/app/features/dappRequests/saga'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
-import { DappResponseType } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { ExtensionState } from 'src/store/extensionReducer'
+import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestAction } from 'uniswap/src/features/telemetry/types'

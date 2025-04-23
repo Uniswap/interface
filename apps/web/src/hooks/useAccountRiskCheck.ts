@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
-import { ApplicationModal, setOpenModal } from 'state/application/reducer'
+import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
 export default function useAccountRiskCheck(account: string | null | undefined) {
@@ -17,7 +18,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
     }
 
     if (isBlocked) {
-      dispatch(setOpenModal({ name: ApplicationModal.BLOCKED_ACCOUNT }))
+      dispatch(setOpenModal({ name: ModalName.BlockedAccount }))
     }
   }, [account, isBlockedLoading, isBlocked, dispatch])
 }

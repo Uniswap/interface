@@ -67,7 +67,6 @@ function tokenOptionComparator(tokenOption: TokenOption, otherTokenOption: Token
 export function formatSearchResults(
   searchResultCurrencies: CurrencyInfo[] | undefined,
   portfolioBalancesById: Record<string, PortfolioBalance> | undefined,
-  searchFilter: string | null,
 ): TokenOption[] | undefined {
   if (!searchResultCurrencies) {
     return undefined
@@ -77,20 +76,6 @@ export function formatSearchResults(
     const portfolioBalanceResult = portfolioBalancesById?.[currencyInfo.currencyId.toLowerCase()]
     // Use currencyInfo from Search Results because the search query fetches protectionInfo but portfolioBalances does not
     return portfolioBalanceResult ? { ...portfolioBalanceResult, currencyInfo } : createEmptyBalanceOption(currencyInfo)
-  })
-
-  // Sort to bring exact matches to the top
-  formattedOptions.sort((res1: TokenOption, res2: TokenOption) => {
-    const res1Match = isExactTokenOptionMatch(res1, searchFilter || '')
-    const res2Match = isExactTokenOptionMatch(res2, searchFilter || '')
-
-    if (res1Match && !res2Match) {
-      return -1
-    } else if (!res1Match && res2Match) {
-      return 1
-    } else {
-      return 0
-    }
   })
 
   return formattedOptions
@@ -150,13 +135,6 @@ export function mergeSearchResultsWithBridgingTokens(
 
 export function isTokenOptionArray(option: TokenSelectorItemTypes): option is TokenOption[] {
   return Array.isArray(option)
-}
-
-function isExactTokenOptionMatch(searchResult: TokenOption, query: string): boolean {
-  return (
-    searchResult.currencyInfo.currency.name?.toLowerCase() === query.toLowerCase() ||
-    searchResult.currencyInfo.currency.symbol?.toLowerCase() === query.toLowerCase()
-  )
 }
 
 export function useTokenOptionsSection<T extends TokenSelectorItemTypes>({

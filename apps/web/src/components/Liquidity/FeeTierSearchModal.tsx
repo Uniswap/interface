@@ -2,6 +2,7 @@
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { MAX_FEE_TIER_DECIMALS, useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from 'components/Liquidity/utils'
+import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { StyledPercentInput } from 'components/PercentInput'
 import { ZERO_ADDRESS } from 'constants/misc'
 import ms from 'ms'
@@ -21,6 +22,8 @@ import { Search } from 'ui/src/components/icons/Search'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -68,6 +71,7 @@ export function FeeTierSearchModal() {
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
   const withDynamicFeeTier = Boolean(hook)
+  const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const { feeTierData, hasExistingFeeTiers } = useAllFeeTierPoolData({
     chainId,
     protocolVersion,
@@ -389,7 +393,12 @@ export function FeeTierSearchModal() {
                     }}
                   >
                     <Flex>
-                      <Text variant="subheading2">{pool.formattedFee}</Text>
+                      <Flex row alignItems="center">
+                        <Text variant="subheading2">{pool.formattedFee}</Text>
+                        {isLpIncentivesEnabled && pool.boostedApr !== undefined && pool.boostedApr > 0 && (
+                          <LpIncentivesAprDisplay lpIncentiveRewardApr={pool.boostedApr} isSmall ml="$spacing8" />
+                        )}
+                      </Flex>
                       <Flex row gap="$gap12" alignItems="center">
                         <Text variant="body3" color="$neutral2">
                           {pool.totalLiquidityUsd === 0

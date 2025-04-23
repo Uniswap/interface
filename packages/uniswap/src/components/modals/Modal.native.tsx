@@ -78,6 +78,7 @@ function BottomSheetModalContents({
   animatedPosition: providedAnimatedPosition,
   containerComponent,
   footerComponent,
+  focusHook,
   fullScreen,
   hideHandlebar,
   backgroundColor,
@@ -284,7 +285,9 @@ function BottomSheetModalContents({
           {overrideInnerContainer ? (
             children
           ) : (
-            <BottomSheetView style={bottomSheetViewStyles}>{children}</BottomSheetView>
+            <BottomSheetView style={bottomSheetViewStyles} focusHook={focusHook}>
+              {children}
+            </BottomSheetView>
           )}
         </BottomSheetContextProvider>
       </Trace>

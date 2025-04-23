@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react'
-import { ElementAfterText, Flex, TextProps, TouchableArea } from 'ui/src'
+import { ElementAfterText, Flex, TextProps, TouchableArea, TouchableAreaProps } from 'ui/src'
 import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isInterface } from 'utilities/src/platform'
@@ -12,6 +12,7 @@ export interface OptionItemProps {
   badge?: JSX.Element
   titleProps?: TextProps
   onPress: () => void
+  onLongPress?: TouchableAreaProps['onLongPress']
   disabled?: boolean
   testID?: string
   modalInfo?: {
@@ -29,6 +30,7 @@ function _OptionItem({
   badge,
   titleProps,
   onPress,
+  onLongPress,
   disabled,
   testID,
   modalInfo,
@@ -67,6 +69,7 @@ function _OptionItem({
         opacity={disabled ? 0.5 : 1}
         width="100%"
         onPress={onPressOption}
+        onLongPress={onLongPress}
       >
         <Flex
           row

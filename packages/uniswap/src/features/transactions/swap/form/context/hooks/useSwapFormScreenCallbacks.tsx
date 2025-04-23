@@ -205,6 +205,14 @@ export function useSwapFormScreenCallbacks({
           ? CurrencyField.OUTPUT
           : CurrencyField.INPUT
 
+    // If for a bridge, when currencies are switched, update the new output to the old output chainId and change input to all networks
+    const newFilteredChainIds = isBridge
+      ? {
+          input: undefined,
+          output: output?.chainId,
+        }
+      : undefined
+
     updateSwapForm({
       exactCurrencyField: newExactCurrencyField,
       focusOnCurrencyField: newExactCurrencyField,
@@ -214,6 +222,7 @@ export function useSwapFormScreenCallbacks({
       ...(exactOutputWouldFailIfCurrenciesSwitched && exactFieldIsInput && !isFiatMode
         ? { exactAmountToken: formattedDerivedValueRef.current }
         : undefined),
+      ...(isBridge ? { filteredChainIds: newFilteredChainIds } : undefined),
     })
 
     // When we have FOT disable exact output logic, the cursor gets out of sync when switching currencies

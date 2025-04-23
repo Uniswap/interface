@@ -4,7 +4,6 @@ import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
 import { useAccount } from 'hooks/useAccount'
 import { useTranslation } from 'react-i18next'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { CopyToClipboard } from 'theme/components/CopyHelper'
 import { Flex, GeneratedIcon, HeightAnimator, IconButton, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
@@ -13,6 +12,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
 function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
@@ -23,7 +23,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   const account = useAccount()
   const { unitag } = useUnitagByAddress(account.address)
   const { data: ENSName } = useENSName(account.address)
-  const openAddressQRModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO_QR })
+  const openAddressQRModal = useOpenModal({ name: ModalName.ReceiveCryptoQr })
 
   const onPressShowWalletQr = (): void => {
     onClose()
@@ -70,7 +70,7 @@ type ChooseProviderProps = {
 export function ChooseProvider({ setConnectedProvider, setErrorProvider }: ChooseProviderProps): JSX.Element {
   const { t } = useTranslation()
   const account = useAccount()
-  const toggleModal = useToggleModal(ApplicationModal.RECEIVE_CRYPTO)
+  const toggleModal = useToggleModal(ModalName.ReceiveCryptoModal)
   const providers = useCexTransferProviders()
 
   return (

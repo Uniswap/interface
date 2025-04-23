@@ -35,6 +35,7 @@ import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { transactionSettingsReducer } from 'uniswap/src/features/transactions/settings/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
+import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/contexts/slice'
 import { VisibilityState } from 'uniswap/src/features/visibility/slice'
 
 /**
@@ -85,6 +86,7 @@ type ExpectedAppState = CombinedState<{
   readonly portfolio: PortfolioState
   readonly visibility: VisibilityState
   readonly walletCapabilities: WalletCapabilitiesState
+  readonly swapSettings: SwapSettingsState
 }>
 
 assert<Equals<InterfaceState, ExpectedAppState>>()

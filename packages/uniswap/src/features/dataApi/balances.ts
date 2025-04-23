@@ -15,6 +15,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult, SpamCode } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
@@ -306,12 +307,16 @@ export function usePortfolioValueModifiers(addresses?: Address | Address[]): Por
  * Returns NativeCurrency with highest balance.
  *
  * @param address to get portfolio balances for
+ * @param chainId if present will only return the NativeCurrency with the highest balance for the given chainId
  * @returns CurrencyId of the NativeCurrency with highest balance
  *
  */
-export function useHighestBalanceNativeCurrencyId(address: Address): CurrencyId | undefined {
+export function useHighestBalanceNativeCurrencyId(address: Address, chainId?: UniverseChainId): CurrencyId | undefined {
   const { data } = useSortedPortfolioBalances({ address })
-  return data?.balances.find((balance) => balance.currencyInfo.currency.isNative)?.currencyInfo.currencyId
+  return data?.balances.find(
+    (balance) =>
+      balance.currencyInfo.currency.isNative && (!chainId || balance.currencyInfo.currency.chainId === chainId),
+  )?.currencyInfo.currencyId
 }
 
 /**

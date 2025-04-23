@@ -4,23 +4,27 @@ import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCloseModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Button, Flex, Text } from 'ui/src'
-import { MultiDevice } from 'ui/src/components/icons/MultiDevice'
+import { Button, Flex } from 'ui/src'
+import { Faceid } from 'ui/src/components/icons/Faceid'
+import { Fingerprint } from 'ui/src/components/icons/Fingerprint'
 import { Passkey } from 'ui/src/components/icons/Passkey'
-import { PasskeyFingerprint } from 'ui/src/components/icons/PasskeyFingerprint'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function PasskeyGenerationModal({
   unitag,
   setPage,
+  onClose,
+  goBack,
 }: {
   unitag: string
   setPage: Dispatch<SetStateAction<Page>>
+  onClose: () => void
+  goBack: () => void
 }) {
   const { t } = useTranslation()
-  const closeModal = useCloseModal(ApplicationModal.GET_THE_APP)
+  const closeModal = useCloseModal(ModalName.GetTheApp)
 
   const onSuccess = useEvent(() => {
     closeModal()
@@ -30,52 +34,48 @@ export function PasskeyGenerationModal({
   const { signInWithPasskey } = useSignInWithPasskey({ createNewWallet: true, unitag, onSuccess })
 
   return (
-    <ModalContent title={t('onboarding.passkey.create')} logo={<Passkey color="$neutral1" size={56} pt="$spacing12" />}>
-      <Flex gap="$gap16" alignItems="center">
-        <Flex
-          flexDirection="row"
-          background="$surface2"
-          borderColor="$accent2"
-          py="$padding20"
-          px="$spacing4"
-          gap="$gap12"
-          borderWidth="$spacing1"
-          borderStyle="solid"
-          borderRadius="$rounded20"
-        >
-          <Flex width="172px" gap={10}>
-            <Flex flexDirection="row" gap="$gap8" alignItems="center" mx="auto">
-              <PasskeyFingerprint size="$icon.16" />
-              <Text variant="subheading2">{t('common.selfCustodial')}</Text>
-            </Flex>
-            <Text variant="body3" textAlign="center" color="$neutral2">
-              {t('onboarding.passkey.account.protection')}
-            </Text>
+    <ModalContent
+      title={t('onboarding.passkey.secure')}
+      subtext={t('onboarding.passkey.secure.description')}
+      header={
+        <Flex position="relative" height={48} width={80} alignItems="center" justifyContent="center">
+          <Flex
+            position="absolute"
+            backgroundColor="$surface3Solid"
+            p="$spacing12"
+            borderRadius="$rounded16"
+            transform={[{ rotate: '-15deg' }, { translateY: -5 }]}
+            left={0}
+          >
+            <Fingerprint size="$icon.24" color="$neutral1" />
           </Flex>
-          <Flex alignSelf="stretch" width={1} minWidth={1} background="$surface3" />
-          <Flex width="172px" gap={10}>
-            <Flex flexDirection="row" gap="$gap8" alignItems="center" mx="auto">
-              <MultiDevice size="$icon.16" />
-              <Text variant="subheading2">{t('common.multiDevice')}</Text>
-            </Flex>
-            <Text variant="body3" textAlign="center" color="$neutral2" textWrap="wrap">
-              {t('onboarding.passkey.biometric.scan')}
-            </Text>
+          <Flex
+            position="absolute"
+            backgroundColor="$surface2"
+            p="$spacing12"
+            borderRadius="$rounded16"
+            transform={[{ rotate: '15deg' }]}
+            borderWidth={2}
+            borderColor="$surface1"
+            right={0}
+          >
+            <Faceid size="$icon.24" color="$neutral1" />
           </Flex>
         </Flex>
-        <Text
-          mt="$spacing24"
-          variant="buttonLabel3"
-          color="$neutral2"
-          {...ClickableTamaguiStyle}
-          onPress={() => setPage(Page.GetApp)}
+      }
+      learnMoreLink={uniswapUrls.helpArticleUrls.passkeysInfo} // TODO(WEB-7390): add learn more link
+      onClose={onClose}
+      goBack={goBack}
+    >
+      <Flex px="$spacing32" mb="$spacing32" width="100%">
+        <Button
+          fill={false}
+          icon={<Passkey size="$icon.24" />}
+          variant="branded"
+          size="large"
+          onPress={() => signInWithPasskey()}
         >
-          {t('onboarding.passkey.use.recovery.phrase')}
-        </Text>
-        <Button variant="branded" py="$spacing16" width="100%" onPress={() => signInWithPasskey()}>
-          <Text color="white" variant="buttonLabel1">
-            {t('common.create')}
-          </Text>
+          {t('onboarding.passkey.create')}
         </Button>
       </Flex>
     </ModalContent>

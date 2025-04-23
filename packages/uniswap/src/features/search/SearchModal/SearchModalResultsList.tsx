@@ -23,8 +23,8 @@ export function useSectionsForSearchResults(
   } = useSearchTokens(searchFilter, chainFilter, /*skip*/ false)
 
   const searchResults = useMemo(() => {
-    return formatSearchResults(searchResultCurrencies, undefined, searchFilter)
-  }, [searchFilter, searchResultCurrencies])
+    return formatSearchResults(searchResultCurrencies, undefined)
+  }, [searchResultCurrencies])
 
   const searchTokensSection = useTokenOptionsSection({
     sectionKey: TokenOptionSection.SearchResults,

@@ -12,7 +12,6 @@ import {
 } from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
 import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/lists/TokenSectionHeader'
 import { ItemType } from 'uniswap/src/components/lists/types'
-import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function EmptyResults(): JSX.Element {
@@ -107,7 +106,6 @@ function _SelectorBaseList<T extends ItemType>({
       </Flex>
       <TokenSectionBaseList<T>
         ListEmptyComponent={emptyElement || <EmptyResults />}
-        focusHook={useBottomSheetFocusHook}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}

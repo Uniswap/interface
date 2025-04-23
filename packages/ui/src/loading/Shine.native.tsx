@@ -1,6 +1,6 @@
 import MaskedView from '@react-native-masked-view/masked-view'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { LayoutRectangle, StyleSheet } from 'react-native'
 import Reanimated, {
   interpolate,
@@ -13,7 +13,15 @@ import { Flex } from 'ui/src/components/layout'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { ShineProps } from 'ui/src/loading/ShineProps'
 import { opacify } from 'ui/src/theme'
-const SHIMMER_DURATION = 2000 // 2 seconds
+import { useEvent } from 'utilities/src/react/hooks'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+
+const SHIMMER_DURATION = ONE_SECOND_MS * 2
+
+const LINEAR_GRADIENT_END = { x: 1, y: 0 }
+const LINEAR_GRADIENT_START = { x: 0, y: 0 }
+
+const BLACK_HEX_COLOR = '#000000'
 
 export function Shine({ children, disabled }: ShineProps): JSX.Element {
   const colors = useSporeColors()
@@ -23,12 +31,10 @@ export function Shine({ children, disabled }: ShineProps): JSX.Element {
 
   useEffect(() => {
     xPosition.value = withRepeat(withTiming(1, { duration: SHIMMER_DURATION }), Infinity, false)
-
-    // only want to do this once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [xPosition])
 
   const animatedStyle = useAnimatedStyle(() => ({
+    ...StyleSheet.absoluteFillObject,
     transform: [
       {
         translateX: interpolate(xPosition.value, [0, 1], [layout ? -layout.width : 0, layout ? layout.width : 0]),
@@ -36,37 +42,48 @@ export function Shine({ children, disabled }: ShineProps): JSX.Element {
     ],
   }))
 
+  const handleOnLayout = useEvent(
+    (event: { nativeEvent: { layout: React.SetStateAction<LayoutRectangle | null | undefined> } }): void => {
+      setLayout(event.nativeEvent.layout)
+    },
+  )
+
+  const gradientColors: [string, string, string] = useMemo(() => {
+    const hexColorForOpacifying = ((): string => {
+      const maybeColor = colors.black.val
+
+      if (maybeColor.startsWith('#') && colors.black.val.length === 7) {
+        return maybeColor
+      }
+
+      return BLACK_HEX_COLOR
+    })()
+
+    return [opacify(0, hexColorForOpacifying), opacify(44, hexColorForOpacifying), opacify(0, hexColorForOpacifying)]
+  }, [colors.black.val])
+
+  const maskedViewStyle = useMemo(() => ({ width: layout?.width, height: layout?.height }), [layout])
+
   if (disabled) {
     return children
   }
 
   if (!layout) {
     return (
-      <Flex
-        opacity={0}
-        onLayout={(event: {
-          nativeEvent: { layout: React.SetStateAction<LayoutRectangle | null | undefined> }
-        }): void => {
-          setLayout(event.nativeEvent.layout)
-        }}
-      >
+      <Flex opacity={0} onLayout={handleOnLayout}>
         {children}
       </Flex>
     )
   }
 
   return (
-    <MaskedView maskElement={children} style={{ width: layout.width, height: layout.height }}>
+    <MaskedView maskElement={children} style={maskedViewStyle}>
       <Flex grow backgroundColor="$neutral2" height="100%" overflow="hidden" />
-      <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
+      <Reanimated.View style={animatedStyle}>
         <LinearGradient
-          colors={[
-            opacify(0, colors.neutral2.val.slice(0, 7)),
-            opacify(44, colors.surface2.val.slice(0, 7)),
-            opacify(0, colors.neutral2.val.slice(0, 7)),
-          ]}
-          end={{ x: 1, y: 0 }}
-          start={{ x: 0, y: 0 }}
+          colors={gradientColors}
+          end={LINEAR_GRADIENT_END}
+          start={LINEAR_GRADIENT_START}
           style={StyleSheet.absoluteFill}
         />
       </Reanimated.View>

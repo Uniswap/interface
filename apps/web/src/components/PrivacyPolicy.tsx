@@ -7,7 +7,6 @@ import { useEffect, useMemo, useRef } from 'react'
 import { ArrowDown, Info } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { ModalCloseIcon } from 'ui/src'
@@ -40,8 +39,8 @@ const StyledLinkOut = styled(ArrowDown)`
 
 export function PrivacyPolicyModal() {
   const node = useRef<HTMLDivElement>()
-  const open = useModalIsOpen(ApplicationModal.PRIVACY_POLICY)
-  const closeModal = useCloseModal(ApplicationModal.PRIVACY_POLICY)
+  const open = useModalIsOpen(ModalName.PrivacyPolicy)
+  const closeModal = useCloseModal(ModalName.PrivacyPolicy)
   const { t } = useTranslation()
 
   useEffect(() => {

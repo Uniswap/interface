@@ -118,16 +118,18 @@ export function useBridgingTokenWithHighestBalance({
 }
 
 export function useBridgingTokensOptions({
-  input,
+  oppositeSelectedToken,
   walletAddress,
   chainFilter,
 }: {
-  input: TradeableAsset | undefined
+  oppositeSelectedToken: TradeableAsset | undefined
   walletAddress: Address | undefined
   chainFilter: UniverseChainId | null
 }): GqlResult<TokenOption[] | undefined> & { shouldNest?: boolean } {
-  const tokenIn = input?.address ? getTokenAddressFromChainForTradingApi(input.address, input.chainId) : undefined
-  const tokenInChainId = toTradingApiSupportedChainId(input?.chainId)
+  const tokenIn = oppositeSelectedToken?.address
+    ? getTokenAddressFromChainForTradingApi(oppositeSelectedToken.address, oppositeSelectedToken.chainId)
+    : undefined
+  const tokenInChainId = toTradingApiSupportedChainId(oppositeSelectedToken?.chainId)
   const {
     data: bridgingTokens,
     isLoading: loadingBridgingTokens,
@@ -153,7 +155,7 @@ export function useBridgingTokensOptions({
 
   const tokenOptions = useBridgingTokensToTokenOptions(bridgingTokens?.tokens, portfolioBalancesById)
   // Filter out tokens that are not on the current chain, unless the input token is the same as the current chain
-  const isSameChain = input?.chainId === chainFilter
+  const isSameChain = oppositeSelectedToken?.chainId === chainFilter
   const shouldFilterByChain = chainFilter !== null && !isSameChain
   const filteredTokenOptions = useMemo(
     () => filter(tokenOptions ?? null, shouldFilterByChain ? chainFilter : null),

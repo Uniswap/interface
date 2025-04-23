@@ -1,8 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ExploreModalState } from 'src/app/modals/ExploreModalState'
-import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
-import { EditWalletSettingsModalState } from 'src/components/Settings/EditWalletModal/EditWalletSettingsModalState'
-import { ManageWalletsModalState } from 'src/components/Settings/ManageWalletsModalState'
 import { ModalsState } from 'src/features/modals/ModalsState'
 import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -20,31 +16,6 @@ import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants
  *
  * *********** DEPRECATION NOTICE ***********
  */
-
-type BiometricsModalParams = {
-  name: typeof ModalName.BiometricsModal
-  initialState?: undefined
-}
-
-type EditProfileSettingsModalParams = {
-  name: typeof ModalName.EditProfileSettingsModal
-  initialState?: EditWalletSettingsModalState
-}
-
-type EditLabelSettingsModalParams = {
-  name: typeof ModalName.EditLabelSettingsModal
-  initialState?: EditWalletSettingsModalState
-}
-
-type ExploreModalParams = {
-  name: typeof ModalName.Explore
-  initialState?: ExploreModalState
-}
-
-type FiatCurrencySelectorParams = {
-  name: typeof ModalName.FiatCurrencySelector
-  initialState?: undefined
-}
 
 type FiatOnRampAggregatorModalParams = {
   name: typeof ModalName.FiatOnRampAggregator
@@ -66,19 +37,9 @@ type PortfolioBalanceModalParams = {
   initialState?: undefined
 }
 
-type ManageWalletsModalParams = {
-  name: typeof ModalName.ManageWalletsModal
-  initialState?: ManageWalletsModalState
-}
-
 type WalletConnectModalParams = {
   name: typeof ModalName.WalletConnectScan
   initialState: ScannerModalState
-}
-
-type ConnectionsDappListModalParams = {
-  name: typeof ModalName.ConnectionsDappListModal
-  initialState: ConnectionsDappsListModalState
 }
 
 type SwapModalParams = { name: typeof ModalName.Swap; initialState?: TransactionState }
@@ -96,17 +57,10 @@ type PermissionsModalParams = {
 }
 
 export type OpenModalParams =
-  | BiometricsModalParams
-  | ConnectionsDappListModalParams
-  | EditLabelSettingsModalParams
-  | EditProfileSettingsModalParams
-  | ExploreModalParams
-  | FiatCurrencySelectorParams
   | FiatOnRampAggregatorModalParams
   | PortfolioBalanceModalParams
   | PermissionsModalParams
   | LanguageSelectorModalParams
-  | ManageWalletsModalParams
   | SendModalParams
   | SettingsAppearanceModalParams
   | SwapModalParams

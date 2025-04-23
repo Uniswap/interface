@@ -4,8 +4,8 @@ import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import { useOpenModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { Anchor, Flex, TextProps, styled, useIsTouchDevice } from 'ui/src'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { openDownloadApp } from 'utils/openDownloadApp'
 
@@ -43,7 +43,7 @@ const DownloadCTA = styled(Anchor, {
 
 export function DownloadApp({ onClick }: { onClick?: () => void }) {
   const { t } = useTranslation()
-  const openGetTheAppModal = useOpenModal({ name: ApplicationModal.GET_THE_APP })
+  const openGetTheAppModal = useOpenModal({ name: ModalName.GetTheApp })
   const isTouchDevice = useIsTouchDevice()
   const isMobileDrawer = useIsMobileDrawer()
 

@@ -5,7 +5,6 @@ import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
 import { getPoolFromRest } from 'components/Liquidity/utils'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { checkIsNative, useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -214,6 +213,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       poolOrPairLoading: poolIsLoading,
       isPoolOutOfSync,
       poolId: pool?.poolId,
+      boostedApr: pool?.boostedApr,
       defaultInitialPrice,
       isDefaultInitialPriceLoading,
       refetchPoolData,
@@ -233,6 +233,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     isDefaultInitialPriceLoading,
     v3Pool,
     refetchPoolData,
+    pool?.boostedApr,
   ])
 }
 
@@ -428,7 +429,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   const { t } = useTranslation()
   const error = useMemo(() => {
     if (!account.isConnected) {
-      return <ConnectWalletButtonText />
+      return t('common.connectWallet.button')
     }
 
     if (

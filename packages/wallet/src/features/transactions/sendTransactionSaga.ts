@@ -105,6 +105,14 @@ export function* sendTransaction(params: SendTransactionParams) {
       provider,
       params.analytics,
     )
+
+    // Log metric for successfully submitted transactions to datadog for alerting %
+    logger.info('sendTransactionSaga', 'sendTransaction', 'Transaction successfully submitted', {
+      chainId,
+      transactionType: typeInfo.type,
+      hash: transactionResponse.hash,
+    })
+
     return { transactionResponse }
   } catch (error) {
     yield* put(transactionActions.finalizeTransaction({ ...unsubmittedTransaction, status: TransactionStatus.Failed }))
@@ -120,10 +128,10 @@ export function* sendTransaction(params: SendTransactionParams) {
         ...options,
       }
 
-      // Log warning for alerting
+      // Log warning for alerting for datadog metrics
       logger.warn('sendTransactionSaga', 'sendTransaction', 'RPC Failure', { errorMessage: error.message, ...logExtra })
 
-      // Log error for full error details
+      // Log error for full error details to RUM
       logger.error(error, {
         tags: { file: 'sendTransactionSaga', function: 'sendTransaction' },
         extra: logExtra,

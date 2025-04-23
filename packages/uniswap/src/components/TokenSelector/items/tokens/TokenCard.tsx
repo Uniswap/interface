@@ -32,7 +32,15 @@ function _TokenCard({
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       onPress={onPress}
     >
-      <Flex centered backgroundColor="$surface2" borderRadius="$rounded16" px="$spacing16" py="$spacing12" gap="$gap4">
+      <Flex
+        centered
+        backgroundColor="$surface2"
+        hoverStyle={{ backgroundColor: '$surface1Hovered' }}
+        borderRadius="$rounded16"
+        px="$spacing16"
+        py="$spacing12"
+        gap="$gap4"
+      >
         <TokenLogo
           chainId={currency.chainId}
           name={currency.name}

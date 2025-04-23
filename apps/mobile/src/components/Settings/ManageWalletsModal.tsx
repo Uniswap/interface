@@ -3,8 +3,13 @@ import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
-import { useDispatch, useSelector } from 'react-redux'
-import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
+import { navigate } from 'src/app/navigation/rootNavigation'
+import {
+  AppStackScreenProp,
+  OnboardingStackNavigationProp,
+  SettingsStackNavigationProp,
+} from 'src/app/navigation/types'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { RemoveWalletContent } from 'src/components/RemoveWallet/RemoveWalletContent'
 import {
   SettingsRow,
@@ -13,8 +18,6 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Button, Flex, useSporeColors } from 'ui/src'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
@@ -32,17 +35,16 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
-export function ManageWalletsModal(): JSX.Element {
+export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalName.ManageWalletsModal>): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
   const colors = useSporeColors()
   const addressToAccount = useAccounts()
+  const { onClose } = useReactNavigationModal()
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
 
   const [isRemoveWalletOpen, setRemoveWalletState] = useState(false)
 
-  const { initialState } = useSelector(selectModalState(ModalName.ManageWalletsModal))
-  const address = initialState?.address ?? ''
+  const { address } = route.params
 
   const currentAccount = addressToAccount[address]
   const { sessions } = useWalletConnect(address)
@@ -73,13 +75,13 @@ export function ManageWalletsModal(): JSX.Element {
           navigation={navigation}
           page={item}
           checkIfCanProceed={() => {
-            dispatch(closeModal({ name: ModalName.ManageWalletsModal }))
+            onClose()
             return item.checkIfCanProceed ? item.checkIfCanProceed() : true
           }}
         />
       )
     },
-    [navigation, dispatch],
+    [navigation, onClose],
   )
 
   const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
@@ -95,24 +97,22 @@ export function ManageWalletsModal(): JSX.Element {
     }
 
     const editNicknameSectionOption: SettingsSectionItem = {
-      modal: ModalName.EditLabelSettingsModal,
+      navigationModal: ModalName.EditLabelSettingsModal,
       text: t('settings.setting.wallet.action.editLabel'),
       icon: <Edit color="$neutral2" size="$icon.24" />,
       screenProps: { address },
       isHidden: !!ensName || !!unitag?.username,
       checkIfCanProceed: (): boolean => {
-        dispatch(
-          openModal({
-            name: ModalName.EditLabelSettingsModal,
-            initialState: { address, accessPoint: MobileScreens.SettingsWallet },
-          }),
-        )
+        navigate(ModalName.EditLabelSettingsModal, {
+          address,
+          accessPoint: MobileScreens.SettingsWallet,
+        })
         return false
       },
     }
 
     const editLabelSectionOption: SettingsSectionItem = {
-      modal: ModalName.EditProfileSettingsModal,
+      navigationModal: ModalName.EditProfileSettingsModal,
       text: unitag?.username
         ? t('settings.setting.wallet.action.editProfile')
         : t('settings.setting.wallet.action.editLabel'),
@@ -124,12 +124,10 @@ export function ManageWalletsModal(): JSX.Element {
       screenProps: { address },
       isHidden: currentAccount?.type === AccountType.Readonly,
       checkIfCanProceed: (): boolean => {
-        dispatch(
-          openModal({
-            name: ModalName.EditProfileSettingsModal,
-            initialState: { address, accessPoint: MobileScreens.SettingsWallet },
-          }),
-        )
+        navigate(ModalName.EditProfileSettingsModal, {
+          address,
+          accessPoint: MobileScreens.SettingsWallet,
+        })
         return false
       },
     }
@@ -142,24 +140,22 @@ export function ManageWalletsModal(): JSX.Element {
             : [editNicknameSectionOption]),
           ...(ensName === undefined || unitag?.username !== undefined ? [editLabelSectionOption] : []),
           {
-            screen: MobileScreens.ConnectionsDappListModal,
+            navigationModal: ModalName.ConnectionsDappListModal,
             text: t('settings.setting.wallet.connections.title'),
             count: sessions.length,
             icon: <GlobalIcon {...iconProps} />,
             isHidden: currentAccount?.type === AccountType.Readonly,
             checkIfCanProceed: (): boolean => {
-              dispatch(openModal({ name: ModalName.ConnectionsDappListModal, initialState: { address } }))
+              navigate(ModalName.ConnectionsDappListModal, {
+                address,
+              })
               return false
             },
           },
         ],
       },
     ]
-  }, [onlyLabeledWallet, ensName, unitag, dispatch, address, sessions, colors, currentAccount?.type, t])
-
-  const onClose = useCallback((): void => {
-    dispatch(closeModal({ name: ModalName.ManageWalletsModal }))
-  }, [dispatch])
+  }, [onlyLabeledWallet, ensName, unitag, address, sessions, colors, currentAccount?.type, t])
 
   return (
     <Modal backgroundColor={colors.surface1.val} name={ModalName.ManageWalletsModal} onClose={onClose}>

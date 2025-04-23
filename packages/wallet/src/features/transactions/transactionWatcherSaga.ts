@@ -652,7 +652,20 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       if (status === TransactionStatus.Success) {
         logSwapSuccess({ ...baseProperties, hash })
       } else {
+        // Log to amplitude
         sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, { ...baseProperties, hash })
+        // Log to datadog
+        if (type === TransactionType.Swap && status === TransactionStatus.Failed) {
+          logger.warn('swapFlowLoggers', 'logSwapFinalized', 'Onchain Swap Failure', {
+            hash,
+            chainId,
+            quoteId,
+            inputCurrencyId,
+            outputCurrencyId,
+            gasUsed,
+            gasUseEstimate,
+          })
+        }
       }
     }
   }

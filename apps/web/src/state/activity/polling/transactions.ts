@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -14,6 +13,8 @@ import { isPendingTx } from 'state/transactions/utils'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RetryOptions, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TransactionReceipt } from 'viem'
+import { usePublicClient } from 'wagmi'
 
 interface Transaction {
   addedTime: number
@@ -65,8 +66,8 @@ function usePendingTransactions(chainId?: UniverseChainId) {
 }
 
 export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
-  const { provider } = useWeb3React()
   const account = useAccount()
+  const publicClient = usePublicClient()
 
   const pendingTransactions = usePendingTransactions(account.chainId)
   const hasPending = pendingTransactions.length > 0
@@ -77,14 +78,14 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
   const dispatch = useAppDispatch()
 
   const getReceipt = useCallback(
-    (tx: PendingTransactionDetails) => {
-      if (!provider || !account.chainId) {
-        throw new Error('No provider or chainId')
+    (tx: PendingTransactionDetails): { promise: Promise<TransactionReceipt>; cancel: () => void } => {
+      if (!publicClient || !account.chainId) {
+        throw new Error('No publicClient or chainId')
       }
       const retryOptions = getChainInfo(account.chainId)?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
-          provider.getTransactionReceipt(tx.hash).then(async (receipt) => {
+          publicClient.getTransactionReceipt({ hash: tx.hash as `0x${string}` }).then(async (receipt) => {
             if (receipt === null) {
               if (account.isConnected) {
                 // Remove transactions past their deadline or - if there is no deadline - older than 6 hours.
@@ -104,11 +105,11 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
         retryOptions,
       )
     },
-    [account.chainId, account.isConnected, blockTimestamp, provider, removeTransaction],
+    [account.chainId, account.isConnected, blockTimestamp, publicClient, removeTransaction],
   )
 
   useEffect(() => {
-    if (!account.chainId || !provider || !lastBlockNumber || !hasPending) {
+    if (!account.chainId || !publicClient || !lastBlockNumber || !hasPending) {
       return undefined
     }
 
@@ -126,7 +127,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               chainId: account.chainId,
               original: tx,
               update: {
-                status: receipt.status === 1 ? TransactionStatus.Confirmed : TransactionStatus.Failed,
+                status: receipt.status === 'success' ? TransactionStatus.Confirmed : TransactionStatus.Failed,
                 info: tx.info,
               },
             })
@@ -145,7 +146,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
     }
   }, [
     account.chainId,
-    provider,
+    publicClient,
     lastBlockNumber,
     getReceipt,
     pendingTransactions,
