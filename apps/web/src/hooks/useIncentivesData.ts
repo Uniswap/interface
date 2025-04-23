@@ -281,7 +281,6 @@ export function useIncentivesData(poolAddress?: string) {
       setIncentivesData(incentivesData.data.incentives);
       const ethPriceUSD = parseFloat(incentivesData.data.bundle.ethPriceUSD);
       const positions = positionsData.data.positions;
-      console.log('positions', positions)
 
       const incentives = incentivesData.data.incentives.map(
         (inc: IncentiveData) => {
@@ -325,9 +324,7 @@ export function useIncentivesData(poolAddress?: string) {
     ): Promise<ProcessedIncentive> => {
       const positionOnIncentiveIds = [];
       const positionOnIncentive = [];
-      const positionOnPoolIds = userPositionsInPools.map(position => Number(position.id));
-      console.log('userPositionsInPools', userPositionsInPools)
-      console.log('positionOnPoolIds', positionOnPoolIds)
+      const positionOnPoolIds = userPositions.map(position => Number(position.id));
       let hasUserPositionInIncentive = false;
       let currentReward: { reward: string } | undefined = undefined;
 
@@ -341,11 +338,6 @@ export function useIncentivesData(poolAddress?: string) {
         try {
           for (const position of userPositions) {
             const stakeInfo = await v3StakerContract.stakes(position.id, incentive.id);
-            // const stakeInfo = await v3StakerContract.deposits(position.id);
-            // console.log('position.id', position.id)
-            // console.log('stakeInfo', stakeInfo)
-            // console.log('stakeInfo.liquidity', stakeInfo.liquidity)
-
             if (stakeInfo.liquidity > 0) {
               hasUserPositionInIncentive = true;
               const reward = await v3StakerContract.rewards(

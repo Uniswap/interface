@@ -160,10 +160,10 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
       <ButtonsContainer >
         <ButtonPrimary
           onClick={handleBulkStakeWithRefresh}
-          disabled={isBulkStaking || !hasAvailableIncentives || hasStakedIncentives}
+          disabled={isBulkStaking  || isStaking || !hasAvailableIncentives || hasStakedIncentives}
           style={{ padding: '8px', fontSize: '14px', height: '32px', whiteSpace: 'nowrap', width: '120px' }}
         >
-          {isBulkStaking ? (
+          {isBulkStaking || isStaking ? (
             <Trans i18nKey="common.staking" />
           ) : (
             <Trans i18nKey="common.stakeAll" />
@@ -171,10 +171,10 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
         </ButtonPrimary>
         <ButtonPrimary
           onClick={handleBulkUnstakeWithRefresh}
-          disabled={isBulkUnstaking || !hasStakedIncentives}
+          disabled={isBulkUnstaking || isUnstaking || !hasStakedIncentives}
           style={{ padding: '8px', fontSize: '14px', height: '32px', whiteSpace: 'nowrap', width: '120px' }}
         >
-          {isBulkUnstaking ? (
+          {isBulkUnstaking || isUnstaking ? (
             <Trans i18nKey="common.unstaking" />
           ) : (
             <Trans i18nKey="common.unstakeAll" />
@@ -199,14 +199,6 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
           const isActive = incentive.status === 'active';
           const hasStaked = incentive.positionOnIncentiveIds?.includes(Number(tokenId));
           const canStake = incentive.positionOnPoolIds?.includes(Number(tokenId)) && !hasStaked;
-
-          if( incentive.status === 'active') {
-            console.log('incentive.positionOnPoolIds?', incentive.positionOnPoolIds)
-            console.log('incentive.positionOnIncentiveIds', incentive.positionOnIncentiveIds)
-            console.log('hasStaked', hasStaked)
-            console.log('canStake', canStake)
-
-          }
           const rewardToken = new Token(
             1,
             incentive.rewardToken.id,
@@ -263,9 +255,9 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                         handleStakeWithRefresh(incentive);
                       }}
                       disabled={!isActive || !canStake || isStaking || isBulkStaking}
-                      style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px' }}
+                      style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px', marginRight: '8px', marginLeft: '12px' }}
                     >
-                      {isStaking  ? (
+                      {isStaking || isBulkStaking ? (
                         <Trans i18nKey="common.staking" />
                       ) : (
                         <Trans i18nKey="common.stake" />
@@ -277,9 +269,9 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                         handleUnstakeWithRefresh(incentive);
                       }}
                       disabled={!hasStaked || isUnstaking  || isBulkUnstaking}
-                      style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px' }}
+                      style={{ padding: '8px', fontSize: '14px', height: '32px', width: '120px', marginRight: '8px' }}
                     >
-                      {isUnstaking  ? (
+                      {isUnstaking || isBulkUnstaking ? (
                         <Trans i18nKey="common.unstaking" />
                       ) : (
                         <Trans i18nKey="common.unstake" />
