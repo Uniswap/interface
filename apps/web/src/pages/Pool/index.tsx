@@ -219,7 +219,6 @@ export default function Pool() {
   );
 
   const { userPositionsInIncentives: stakingPositions, isLoading: isStakingPositionsLoading } = useIncentivesData();
-  console.log('stakingPositions', stakingPositions)
 
   const [openPositions, closedPositions] = positions?.reduce<
     [PositionDetails[], PositionDetails[]]
@@ -238,13 +237,7 @@ export default function Pool() {
     ],
     [closedPositions, openPositions, userHideClosedPositions]
   );
-  // console.log("userSelectedPositionSet", userSelectedPositionSet.length);
-
   const filteredPositions = userSelectedPositionSet;
-  // const filteredPositions = useFilterPossiblyMaliciousPositions(
-  //   userSelectedPositionSet
-  // );
-  // console.log("filteredPositions", filteredPositions.length);
 
   if (!isSupportedChain) {
     return <WrongNetworkCard />;

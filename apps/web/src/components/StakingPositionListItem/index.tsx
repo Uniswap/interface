@@ -48,7 +48,6 @@ const FeeTierText = styled(ThemedText.SubHeader)`
 `
 
 export default function StakingPositionListItem({ position }: { position: PositionsResponse & { reward?: string } }) {
-  console.log('position', position)
   const positionSummaryLink = `/pool/${position.id}`
   const currency0 = useCurrency(getAddress(position.pool.token0?.id ?? ''))
   const currency1 = useCurrency(getAddress(position.pool.token1?.id ?? ''))

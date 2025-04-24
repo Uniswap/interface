@@ -59,7 +59,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       const isDeposited = deposit.owner === address;
 
       if (!isDeposited) {
-        // First deposit the NFT to the staker contract
         const incentiveKey = [
           incentiveData.rewardToken.id,
           incentiveData.poolAddress,
@@ -146,10 +145,8 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         incentive.rewardToken.id,
         address
       );
-      console.log('Reward amount before claim:', reward.toString());
       
       if (reward.lte(0)) {
-        console.log('No rewards available to claim');
         return;
       }
 
@@ -159,7 +156,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         reward
       );
       const claimReceipt = await claimTx.wait();
-      console.log('Claim transaction receipt:', claimReceipt);
     } catch (error) {
       console.error('Error claiming:', error);
     } finally {
@@ -185,7 +181,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       const isDeposited = deposit.owner === address;
 
       if (!isDeposited) {
-        // First deposit the NFT to the staker contract
         const incentiveKeys = await Promise.all(
           incentivesToStake.map(async (incentive) => {
             const key = [
@@ -212,7 +207,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         await transferTx.wait();
       }
 
-      // Now stake in all incentives
       const stakeCalls = incentivesToStake.map((incentive) => {
         const incentiveKey = {
           rewardToken: incentive.rewardToken.id,
@@ -247,7 +241,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       const stakedIncentives = allIncentives.filter(
         (incentive) => incentive.hasUserPositionInIncentive && incentive.hasUserPositionInPool
       );
-      console.log('stakedIncentives', stakedIncentives)
 
       if (stakedIncentives.length === 0) {
         throw new Error('No staked incentives to unstake from');
@@ -267,10 +260,7 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         })
       );
 
-      console.log('incentiveKeys', incentiveKeys)
-      console.log('tokenId', tokenId)
       const unstakeCalls = incentiveKeys.map((key) => {
-        console.log('key', key)
         const callData = v3StakerContract.interface.encodeFunctionData('unstakeToken', [
           key,
           tokenId
@@ -283,7 +273,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       });
 
       const receipt = await unstakeTx.wait();
-      console.log('receipt', receipt)
 
     } catch (error) {
       console.error('Error in bulk unstaking:', error);
@@ -304,7 +293,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         []
       );
       const withdrawReceipt = await withdrawTx.wait();
-      // Refresh deposit status after successful withdrawal
       await checkDepositStatus();
     } catch (error) {
       console.error('Error in bulk withdrawal:', error);
@@ -318,11 +306,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
     if (!v3StakerContract) return null;
     try {
       const stake = await v3StakerContract.stakes(positionId, incentiveId);
-      console.log('Stake status:', {
-        positionId,
-        incentiveId,
-        liquidity: stake.toString()
-      });
       return stake;
     } catch (error) {
       console.error('Error checking stake status:', error);
