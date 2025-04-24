@@ -297,7 +297,7 @@ export const IncentiveTable = ({
         const data = pool?.row?.original;
         if (!data) return null;
 
-        if (!data.hasUserPosition && !data.userHasTokensToDeposit) {
+        if (!data.hasUserPositionInPool && !data.userHasTokensToDeposit) {
           return (
             <Cell minWidth={125} justifyContent="flex-end">
               <ActionButtons>
@@ -339,7 +339,7 @@ export const IncentiveTable = ({
                 $variant="primary"
                 onClick={() => onDeposit?.(data)}
               >
-                {data.hasUserPosition ? (
+                {data.hasUserPositionInPool ? (
                   <Trans i18nKey="common.incentives.position" />
                 ) : (
                   <Trans i18nKey="common.incentives.deposit" />

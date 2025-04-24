@@ -25,7 +25,7 @@ export default function Incentives() {
   const incentivesToShow = isEndedTab ? endedIncentives : activeIncentives;
 
   const handleDeposit = (incentive: ProcessedIncentive) => {
-    if (incentive.hasUserPosition) {
+    if (incentive.hasUserPositionInPool) {
       return navigate(`/#/pool/${incentive.poolId}`);
     } else {
       return navigate(

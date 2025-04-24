@@ -341,7 +341,7 @@ export const INCENTIVES_QUERY = `
     incentives(subgraphError: deny) {
       id
       reward
-      reward {
+      rewardToken {
         id
         symbol
         decimals
@@ -349,6 +349,9 @@ export const INCENTIVES_QUERY = `
       pool {
         id
         feeTier
+        incentives {
+          id
+        }
         token0 {
           id
           symbol

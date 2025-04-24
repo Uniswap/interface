@@ -10,6 +10,7 @@ export interface TokenInfoDetails {
   logoURI: string;
 }
 
+
 interface TaraxaMainnetListResponse {
   tokens: TokenInfoDetails[];
 }

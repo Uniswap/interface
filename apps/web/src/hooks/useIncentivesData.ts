@@ -8,6 +8,7 @@ import {
 import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
 import { useTokenList } from "hooks/useTokenList";
 import { useMultipleTokenBalances } from "hooks/useMultipleTokenBalances";
+import { useV3StakerContract } from "hooks/useV3StakerContract";
 
 interface IncentiveData {
   id: string;
@@ -88,27 +89,37 @@ export interface ProcessedIncentive {
   totalAPR: number;
   tradeFeesPercentage: number;
   tokenRewardsPercentage: number;
-  hasUserPosition: boolean;
+  hasUserPositionInPool: boolean;
+  hasUserPositionInIncentive: boolean;
   ended: boolean;
   reward: string;
-  rewardSymbol: string;
+  rewardToken: {
+    id: string;
+    symbol: string;
+    decimals: number;
+  };
   poolAddress: string;
   poolId?: number;
   userHasTokensToDeposit: boolean;
   daily24hAPR: number;
   weeklyRewards: number;
   weeklyRewardsUSD: number;
-}
-
-interface IncentivesResponse {
-  incentives: IncentiveData[];
-  bundle: {
-    ethPriceUSD: string;
+  accruedRewards: string;
+  startTime: number;
+  endTime: number;
+  vestingPeriod: string;
+  refundee: string;
+  currentReward?: {
+    reward: string;
+    maxReward: string;
+    secondsInside: number;
   };
 }
 
-export function useIncentivesData() {
+
+export function useIncentivesData(poolAddress?: string) {
   const account = useAccount();
+  const v3StakerContract = useV3StakerContract();
   const [activeIncentives, setActiveIncentives] = useState<
     ProcessedIncentive[]
   >([]);
@@ -143,11 +154,21 @@ export function useIncentivesData() {
     }
   }, [balances, isBalancesLoading]);
 
+  const getIncentivesQuery = useCallback(() => {
+    const baseQuery = INCENTIVES_QUERY;
+    if (!poolAddress) return baseQuery;
+
+    return baseQuery.replace(
+      'incentives(',
+      `incentives(where: { pool: "${poolAddress.toLowerCase()}" },`
+    );
+  }, [poolAddress]);
+
   useEffect(() => {
     if (account.address) {
       fetchData();
     }
-  }, [account.address]);
+  }, [account.address, poolAddress]);
 
   const fetchData = async () => {
     if (!account.address) return;
@@ -162,7 +183,7 @@ export function useIncentivesData() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            query: INCENTIVES_QUERY,
+            query: getIncentivesQuery(),
             variables: { userAddress: account.address },
           }),
         }),
@@ -174,7 +195,10 @@ export function useIncentivesData() {
       }
 
       if (!incentivesData.data?.incentives?.length) {
-        console.error("No incentives data found");
+        setActiveIncentives([]);
+        setEndedIncentives([]);
+        setIncentivesData([]);
+        setIsLoading(false);
         return;
       }
 
@@ -192,12 +216,9 @@ export function useIncentivesData() {
         }
       );
 
-      setActiveIncentives(
-        incentives.filter((inc: ProcessedIncentive) => !inc.ended)
-      );
-      setEndedIncentives(
-        incentives.filter((inc: ProcessedIncentive) => inc.ended)
-      );
+      const processedIncentives = await Promise.all(incentives);
+      setActiveIncentives(processedIncentives.filter((inc: ProcessedIncentive) => !inc.ended));
+      setEndedIncentives(processedIncentives.filter((inc: ProcessedIncentive) => inc.ended));
       setUserPositions(incentivesData.data.userPositions);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -224,7 +245,7 @@ export function useIncentivesData() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              query: INCENTIVES_QUERY,
+              query: getIncentivesQuery(),
               variables: { userAddress: account.address },
             }),
           }
@@ -236,8 +257,9 @@ export function useIncentivesData() {
           processIncentive(inc, positions, storedBalances, ethPriceUSD)
         );
 
-        setActiveIncentives(incentives.filter((inc) => !inc.ended));
-        setEndedIncentives(incentives.filter((inc) => inc.ended));
+        const processedIncentives = await Promise.all(incentives);
+        setActiveIncentives(processedIncentives.filter((inc) => !inc.ended));
+        setEndedIncentives(processedIncentives.filter((inc) => inc.ended));
       };
 
       processIncentives();
@@ -245,16 +267,46 @@ export function useIncentivesData() {
   }, [storedBalances, isBalancesLoading, incentivesData, account.address]);
 
   const processIncentive = useCallback(
-    (
+    async (
       incentive: IncentiveData,
       userPositions: PositionsResponse[],
       currentBalances: Record<string, { balance: number }>,
       ethPriceUSD: number
-    ): ProcessedIncentive => {
+    ): Promise<ProcessedIncentive> => {
       const userPosition = userPositions.find(
         (pos) => pos.pool.id.toLowerCase() === incentive.pool.id.toLowerCase()
       );
-      const hasUserPosition = userPosition ? true : false;
+      const hasUserPositionInPool = userPosition ? true : false;
+      
+      let hasUserPositionInIncentive = false;
+      let currentReward = undefined;
+      if (userPosition && v3StakerContract) {
+        try {
+          const stakeInfo = await v3StakerContract.stakes(userPosition.id, incentive.id);
+          hasUserPositionInIncentive = stakeInfo.liquidity > 0;
+
+          if (hasUserPositionInIncentive) {
+            const incentiveKey = {
+              rewardToken: incentive.rewardToken.id,
+              pool: incentive.pool.id,
+              startTime: incentive.startTime,
+              endTime: incentive.endTime,
+              vestingPeriod: parseInt(incentive.vestingPeriod),
+              refundee: incentive.refundee,
+            };
+
+            const [reward, maxReward, secondsInside] = await v3StakerContract.getRewardInfo(incentiveKey, userPosition.id);
+            currentReward = {
+              reward: formatUnits(reward, incentive.rewardToken.decimals),
+              maxReward: formatUnits(maxReward, incentive.rewardToken.decimals),
+              secondsInside: secondsInside.toNumber()
+            };
+          }
+        } catch (error) {
+          console.warn('Error checking stake status:', error);
+          hasUserPositionInIncentive = false;
+        }
+      }
 
       const token0Info = findTokenByAddress(
         tokenList,
@@ -306,6 +358,13 @@ export function useIncentivesData() {
       const weeklyRewards = adjustedDailyReward * 7;
       const weeklyRewardsUSD = dailyRewardsUSD * 7;
 
+      // Calculate accrued rewards
+      const currentTime = Math.floor(Date.now() / 1000);
+      const startTime = parseInt(incentive.startTime);
+      const endTime = parseInt(incentive.endTime);
+      const timeElapsed = Math.min(currentTime - startTime, endTime - startTime);
+      const accruedRewards = (timeElapsed * rewardPerSecond) / Math.pow(10, decimals);
+
       return {
         id: incentive.id,
         poolId: userPosition?.id,
@@ -323,8 +382,13 @@ export function useIncentivesData() {
           BigInt(incentive.reward),
           incentive.rewardToken.decimals
         ),
-        rewardSymbol: incentive.rewardToken.symbol,
-        hasUserPosition,
+        rewardToken: {
+          id: incentive.rewardToken.id,
+          symbol: incentive.rewardToken.symbol,
+          decimals: incentive.rewardToken.decimals, 
+        },
+        hasUserPositionInPool,
+        hasUserPositionInIncentive,
         poolAddress: incentive.pool.id,
         token0Symbol: incentive.pool.token0.symbol,
         token1Symbol: incentive.pool.token1.symbol,
@@ -338,9 +402,15 @@ export function useIncentivesData() {
         daily24hAPR,
         weeklyRewards,
         weeklyRewardsUSD,
+        accruedRewards: accruedRewards.toFixed(6),
+        startTime,
+        endTime,
+        vestingPeriod: incentive.vestingPeriod,
+        refundee: incentive.refundee,
+        currentReward,
       };
     },
-    [tokenList]
+    [tokenList, v3StakerContract]
   );
 
   if (isLoadingTokenList || (isBalancesLoading && incentivesData.length > 0)) {
