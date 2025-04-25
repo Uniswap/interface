@@ -1713,110 +1713,6 @@ function PositionPageContent() {
                   </DarkCard>
                 </AutoColumn>
               </ResponsiveRow>
-              <DarkCard>
-                <AutoColumn gap="md">
-                  <RowBetween>
-                    <RowFixed>
-                      <Label display="flex" style={{ marginRight: "12px" }}>
-                        <Trans i18nKey="pool.priceRange" />
-                      </Label>
-                      <HideExtraSmall>
-                        <>
-                          <RangeBadge removed={removed} inRange={inRange} />
-                          <span style={{ width: "8px" }} />
-                        </>
-                      </HideExtraSmall>
-                    </RowFixed>
-                    <RowFixed>
-                      {currencyBase && currencyQuote && (
-                        <RateToggle
-                          currencyA={currencyBase}
-                          currencyB={currencyQuote}
-                          handleRateToggle={() =>
-                            setManuallyInverted(!manuallyInverted)
-                          }
-                        />
-                      )}
-                    </RowFixed>
-                  </RowBetween>
-
-                  <RowBetween>
-                    <LightCard padding="12px" width="100%">
-                      <AutoColumn gap="sm" justify="center">
-                        <ExtentsText>
-                          <Trans i18nKey="pool.minPrice" />
-                        </ExtentsText>
-                        <ThemedText.DeprecatedMediumHeader textAlign="center">
-                          {formatTickPrice({
-                            price: priceLower,
-                            atLimit: tickAtLimit,
-                            direction: Bound.LOWER,
-                            numberType: NumberType.TokenTx,
-                          })}
-                        </ThemedText.DeprecatedMediumHeader>
-                        <ExtentsText>
-                          {" "}
-                          <Trans
-                            i18nKey="common.feesEarnedPerBase"
-                            values={{
-                              symbolA: currencyQuote?.symbol,
-                              symbolB: currencyBase?.symbol,
-                            }}
-                          />
-                        </ExtentsText>
-
-                        {inRange && (
-                          <Text fontSize={11} color="$neutral3">
-                            <Trans i18nKey="pool.position.100" />
-                          </Text>
-                        )}
-                      </AutoColumn>
-                    </LightCard>
-
-                    <DoubleArrow>⟷</DoubleArrow>
-                    <LightCard padding="12px" width="100%">
-                      <AutoColumn gap="sm" justify="center">
-                        <ExtentsText>
-                          <Trans i18nKey="pool.maxPrice" />
-                        </ExtentsText>
-                        <ThemedText.DeprecatedMediumHeader textAlign="center">
-                          {formatTickPrice({
-                            price: priceUpper,
-                            atLimit: tickAtLimit,
-                            direction: Bound.UPPER,
-                            numberType: NumberType.TokenTx,
-                          })}
-                        </ThemedText.DeprecatedMediumHeader>
-                        <ExtentsText>
-                          {" "}
-                          <Trans
-                            i18nKey="common.feesEarnedPerBase"
-                            values={{
-                              symbolA: currencyQuote?.symbol,
-                              symbolB: currencyBase?.symbol,
-                            }}
-                          />
-                        </ExtentsText>
-
-                        {inRange && (
-                          <Text fontSize={11} color="$neutral3">
-                            <Trans
-                              i18nKey="pool.position.100.at"
-                              values={{ symbol: currencyQuote?.symbol }}
-                            />
-                          </Text>
-                        )}
-                      </AutoColumn>
-                    </LightCard>
-                  </RowBetween>
-                  <CurrentPriceCard
-                    inverted={inverted}
-                    pool={pool}
-                    currencyQuote={currencyQuote}
-                    currencyBase={currencyBase}
-                  />
-                </AutoColumn>
-              </DarkCard>
               {incentiveId ? (
                 <DarkCard>
                   <AutoColumn gap="md">
@@ -1846,6 +1742,110 @@ function PositionPageContent() {
             )}
           </RightPane>
         </PageWrapper>
+        <DarkCard style={{ width: '98%' }}>
+          <AutoColumn gap="md">
+            <RowBetween>
+              <RowFixed>
+                <Label display="flex" style={{ marginRight: "12px" }}>
+                  <Trans i18nKey="pool.priceRange" />
+                </Label>
+                <HideExtraSmall>
+                  <>
+                    <RangeBadge removed={removed} inRange={inRange} />
+                    <span style={{ width: "8px" }} />
+                  </>
+                </HideExtraSmall>
+              </RowFixed>
+              <RowFixed>
+                {currencyBase && currencyQuote && (
+                  <RateToggle
+                    currencyA={currencyBase}
+                    currencyB={currencyQuote}
+                    handleRateToggle={() =>
+                      setManuallyInverted(!manuallyInverted)
+                    }
+                  />
+                )}
+              </RowFixed>
+            </RowBetween>
+
+            <RowBetween>
+              <LightCard padding="12px" width="100%">
+                <AutoColumn gap="sm" justify="center">
+                  <ExtentsText>
+                    <Trans i18nKey="pool.minPrice" />
+                  </ExtentsText>
+                  <ThemedText.DeprecatedMediumHeader textAlign="center">
+                    {formatTickPrice({
+                      price: priceLower,
+                      atLimit: tickAtLimit,
+                      direction: Bound.LOWER,
+                      numberType: NumberType.TokenTx,
+                    })}
+                  </ThemedText.DeprecatedMediumHeader>
+                  <ExtentsText>
+                    {" "}
+                    <Trans
+                      i18nKey="common.feesEarnedPerBase"
+                      values={{
+                        symbolA: currencyQuote?.symbol,
+                        symbolB: currencyBase?.symbol,
+                      }}
+                    />
+                  </ExtentsText>
+
+                  {inRange && (
+                    <Text fontSize={11} color="$neutral3">
+                      <Trans i18nKey="pool.position.100" />
+                    </Text>
+                  )}
+                </AutoColumn>
+              </LightCard>
+
+              <DoubleArrow>⟷</DoubleArrow>
+              <LightCard padding="12px" width="100%">
+                <AutoColumn gap="sm" justify="center">
+                  <ExtentsText>
+                    <Trans i18nKey="pool.maxPrice" />
+                  </ExtentsText>
+                  <ThemedText.DeprecatedMediumHeader textAlign="center">
+                    {formatTickPrice({
+                      price: priceUpper,
+                      atLimit: tickAtLimit,
+                      direction: Bound.UPPER,
+                      numberType: NumberType.TokenTx,
+                    })}
+                  </ThemedText.DeprecatedMediumHeader>
+                  <ExtentsText>
+                    {" "}
+                    <Trans
+                      i18nKey="common.feesEarnedPerBase"
+                      values={{
+                        symbolA: currencyQuote?.symbol,
+                        symbolB: currencyBase?.symbol,
+                      }}
+                    />
+                  </ExtentsText>
+
+                  {inRange && (
+                    <Text fontSize={11} color="$neutral3">
+                      <Trans
+                        i18nKey="pool.position.100.at"
+                        values={{ symbol: currencyQuote?.symbol }}
+                      />
+                    </Text>
+                  )}
+                </AutoColumn>
+              </LightCard>
+            </RowBetween>
+            <CurrentPriceCard
+              inverted={inverted}
+              pool={pool}
+              currencyQuote={currencyQuote}
+              currencyBase={currencyBase}
+            />
+          </AutoColumn>
+        </DarkCard>
         <SwitchLocaleLink />
       </>
     </Trace>
