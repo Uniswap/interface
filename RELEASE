@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmPJ67xPvHcYEk5YWu59uGkE5Mv6QBSSTWwzBTy72Eoeo4`
-- CIDv1: `bafybeiaogowvdnmwgmzi4yqbtzsn27ej4xhanmrcacyu2ejjwuyc4apwym`
+- CIDv0: `QmcDLYNCmBY8GZivEGAw4fwyeT24YpT1FqttKTkcRFfivc`
+- CIDv1: `bafybeigoeqbd3sgqs3ry32353einpmrcuy5p45hutcmjp4qummebbwhw7e`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiaogowvdnmwgmzi4yqbtzsn27ej4xhanmrcacyu2ejjwuyc4apwym.ipfs.dweb.link/
-- [ipfs://QmPJ67xPvHcYEk5YWu59uGkE5Mv6QBSSTWwzBTy72Eoeo4/](ipfs://QmPJ67xPvHcYEk5YWu59uGkE5Mv6QBSSTWwzBTy72Eoeo4/)
+- https://bafybeigoeqbd3sgqs3ry32353einpmrcuy5p45hutcmjp4qummebbwhw7e.ipfs.dweb.link/
+- [ipfs://QmcDLYNCmBY8GZivEGAw4fwyeT24YpT1FqttKTkcRFfivc/](ipfs://QmcDLYNCmBY8GZivEGAw4fwyeT24YpT1FqttKTkcRFfivc/)
 
-### 5.80.1 (2025-04-23)
+### 5.80.2 (2025-04-25)
 
 
 ### Bug Fixes
 
-* **web:** uninitialized v2 pools (#18808) 551de59
+* **web:** reenable logging in statsig config (#18894) ae7ebce
 
 
