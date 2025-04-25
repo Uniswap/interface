@@ -14,7 +14,7 @@ import styled from "styled-components";
 import { useBulkPosition } from "hooks/useBulkPosition";
 
 const Container = styled.div`
-  height: 420px;
+  height: 410px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -71,6 +71,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
   const hasStakedIncentives = useMemo(() => {
     return allIncentives.some(incentive => incentive.positionOnIncentiveIds?.includes(tokenId));
   }, [allIncentives]);
+  console.log('hasStakedIncentives', hasStakedIncentives)
 
   const hasAllIncetivesStaked = useMemo(() => {
     return allIncentives.every(incentive => incentive.positionOnIncentiveIds?.includes(tokenId));
