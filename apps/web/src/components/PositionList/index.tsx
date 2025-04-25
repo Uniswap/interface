@@ -113,9 +113,9 @@ export default function PositionList({
           </ToggleWrap>
         )}
       </MobileHeader>
-      {positions.map((p) => {
+      {positions.map((p, i) => {
         if (isStakingPosition(p)) {
-          return <StakingPositionListItem key={p.id} position={p} />
+          return <StakingPositionListItem key={i} position={p} />
         } else {
           return (
             <PositionListItem

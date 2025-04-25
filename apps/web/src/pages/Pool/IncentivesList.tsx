@@ -1,5 +1,5 @@
 import { Token } from "@taraswap/sdk-core";
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { Trans } from "i18n";
 import { LoadingRows, IncentiveCard, IncentiveHeader, IncentiveContent, IncentiveStatus } from "./styled";
 import { ThemedText } from "theme/components";
@@ -12,9 +12,6 @@ import { useIncentivesData, type ProcessedIncentive } from "hooks/useIncentivesD
 import { ScrollBarStyles } from "components/Common";
 import styled from "styled-components";
 import { useBulkPosition } from "hooks/useBulkPosition";
-import { address } from "nft/components/explore/Cells/Cells.css";
-import { useV3StakerContract } from "hooks/useV3StakerContract";
-import { useAccount } from "hooks/useAccount";
 
 const Container = styled.div`
   height: 420px;
@@ -66,15 +63,17 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
   } = useBulkPosition(tokenId, poolAddress, allIncentives);
 
   const hasAvailableIncentives = useMemo(() => {
-    return activeIncentives.some(incentive => {
-      console.log('incentive', incentive)
-      return incentive.positionOnPoolIds?.includes(tokenId) && !incentive.positionOnIncentiveIds?.includes(tokenId)
-    }
+    return activeIncentives.some(incentive => 
+       incentive.positionOnPoolIds?.includes(tokenId) && !incentive.positionOnIncentiveIds?.includes(tokenId)
     );
   }, [activeIncentives]);
 
   const hasStakedIncentives = useMemo(() => {
     return allIncentives.some(incentive => incentive.positionOnIncentiveIds?.includes(tokenId));
+  }, [allIncentives]);
+
+  const hasAllIncetivesStaked = useMemo(() => {
+    return allIncentives.every(incentive => incentive.positionOnIncentiveIds?.includes(tokenId));
   }, [allIncentives]);
 
   const handleStakeWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
@@ -160,7 +159,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
       <ButtonsContainer >
         <ButtonPrimary
           onClick={handleBulkStakeWithRefresh}
-          disabled={isBulkStaking  || isStaking || !hasAvailableIncentives || hasStakedIncentives}
+          disabled={isBulkStaking  || isStaking || !hasAvailableIncentives || hasAllIncetivesStaked}
           style={{ padding: '8px', fontSize: '14px', height: '32px', whiteSpace: 'nowrap', width: '120px' }}
         >
           {isBulkStaking || isStaking ? (
@@ -213,6 +212,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
                   <CurrencyLogo
                     currency={rewardToken}
                     size={24}
+                    style={{ marginRight: '8px' }}
                     logoURI={`https://raw.githubusercontent.com/taraswap/assets/master/logos/${getAddress(rewardToken.address)}/logo.png`}
                   />
                   <ThemedText.DeprecatedMain>

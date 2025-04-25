@@ -116,12 +116,6 @@ const formatValue = (value: string) => {
   }
 };
 
-interface PoolTokenImageProps {
-  pool: {
-    token0LogoURI: string;
-    token1LogoURI: string;
-  };
-}
 const PoolTokenImage = ({ pool }: { pool: ProcessedIncentive }) => {
   const LOGO_DEFAULT_SIZE = 30;
   return (

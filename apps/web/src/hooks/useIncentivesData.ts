@@ -116,10 +116,12 @@ export interface ProcessedIncentive {
   positionOnIncentiveIds?: number[];
   positionOnPoolIds?: number[];
   hasUserPositionInPool: boolean;
+  incentiveId: string;
 }
 
 export interface PositionWithReward extends PositionsResponse {
   reward: string;
+  incentiveId: string;
 }
 
 export function useIncentivesData(poolAddress?: string) {
@@ -350,9 +352,11 @@ export function useIncentivesData(poolAddress?: string) {
               positionOnIncentiveIds.push(Number(position.id));
               positionOnIncentive.push(position);
               setUserPositionsInIncentives(prevPositions => {
-                const positionExists = prevPositions.some(p => Number(p.id) === Number(position.id));
+                const positionExists = prevPositions.some((p) => {
+                  return Number(p.id) === Number(position.id) && p.incentiveId === incentive.id
+                } );
                 if (!positionExists) {
-                  return [...prevPositions, { ...position, reward: currentReward?.reward ?? '0' }];
+                  return [...prevPositions, { ...position, reward: currentReward?.reward ?? '0', incentiveId: incentive.id }];
                 }
                 return prevPositions;
               });
@@ -423,6 +427,7 @@ export function useIncentivesData(poolAddress?: string) {
 
       return {
         id: incentive.id,
+        incentiveId: incentive.id,
         poolId: userPositions.length > 0 ? incentive.pool.id : undefined,
         poolName: `${incentive.pool.token0.symbol}-${incentive.pool.token1.symbol}`,
         positionOnIncentiveIds,
