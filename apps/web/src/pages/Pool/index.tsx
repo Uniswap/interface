@@ -218,7 +218,7 @@ export default function Pool() {
     account.address
   );
 
-  const { userPositionsInIncentives: stakingPositions, isLoading: isStakingPositionsLoading } = useIncentivesData();
+  const { userPositionsInIncentives: stakingPositions = [], positionsToWithdraw = [], isLoading: isStakingPositionsLoading } = useIncentivesData();
 
   const [openPositions, closedPositions] = positions?.reduce<
     [PositionDetails[], PositionDetails[]]
@@ -386,9 +386,9 @@ export default function Pool() {
             <MainContentWrapper>
               {isStakingPositionsLoading ? (
                 <PositionsLoadingPlaceholder />
-              ) : stakingPositions && stakingPositions.length > 0 ? (
+              ) : [...stakingPositions, ...positionsToWithdraw].length > 0 ? (
                 <PositionList
-                  positions={stakingPositions}
+                  positions={[...stakingPositions, ...positionsToWithdraw]}
                   isStakingList={true}
                 />
               ) : (

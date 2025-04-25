@@ -67,43 +67,6 @@ export default function StakingPositionListItem({ position }: { position: Positi
           <Trans i18nKey="common.rewards" />: {position.reward}
         </ThemedText.BodyPrimary>
       </RowBetween>
-
-      {/* <RangeLineItem>
-        <RangeText>
-          <ExtentsText>
-            <Trans i18nKey="pool.min.label" />
-            &nbsp;
-          </ExtentsText>
-          <span>{position.tickLower.tickIdx}</span>
-          <Trans
-            i18nKey="common.xPerY"
-            components={{
-              x: <HoverInlineText text={position.token0.symbol} />,
-              y: <HoverInlineText text={position.token1.symbol} />,
-            }}
-          />
-        </RangeText>
-        <HideSmall>
-          <DoubleArrow>↔</DoubleArrow>
-        </HideSmall>
-        <SmallOnly>
-          <DoubleArrow>↔</DoubleArrow>
-        </SmallOnly>
-        <RangeText>
-          <ExtentsText>
-            <Trans i18nKey="pool.max.label" />
-            &nbsp;
-          </ExtentsText>
-          <span>{position.tickUpper.tickIdx}</span>
-          <Trans
-            i18nKey="common.xPerY"
-            components={{
-              x: <HoverInlineText text={position.token0.symbol} />,
-              y: <HoverInlineText text={position.token1.symbol} />,
-            }}
-          />
-        </RangeText>
-      </RangeLineItem> */}
     </LinkRow>
   )
 } 

@@ -339,9 +339,9 @@ export const IncentiveTable = ({
               >
                 {data.hasUserPositionInPool ? (
                   <Trans i18nKey="common.incentives.position" />
-                ) : (
+                ) : data.userHasTokensToDeposit && !data.hasUserPositionInPool && !data.hasUserPositionInIncentive ? (
                   <Trans i18nKey="common.incentives.deposit" />
-                )}
+                ) : null}
               </ActionButton>
             </ActionButtons>
           </Cell>

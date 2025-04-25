@@ -26,7 +26,7 @@ export default function Incentives() {
 
   const handleDeposit = (incentive: ProcessedIncentive) => {
     if (incentive.hasUserPositionInPool) {
-      return navigate(`/#/pool/${incentive.poolId}`);
+      return navigate(`/#/pool/${incentive.poolPositionId}`);
     } else {
       return navigate(
         `/#/add/${incentive.token0Address}/${incentive.token1Address}`
