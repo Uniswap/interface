@@ -32,20 +32,19 @@ export function useLpIncentives(): UseLpIncentivesResult {
   const account = useAccount()
   const [, setLastClaimed] = useAtom(lpIncentivesLastClaimedAtom)
 
+  // Refetch rewards on transaction success with "reload" true to bust the Merkl cache for users wallet address
   const { refetch } = useGetPoolsRewards(
     { walletAddress: account?.address, chainIds: [UniverseChainId.Mainnet], reload: true },
-    Boolean(account?.address),
+    false,
   )
 
   const onTransactionSuccess = useCallback(async () => {
-    // Immediately mark as collected locally and close modal
     setIsModalOpen(false)
     setHasCollectedRewards(true)
 
     // Reload rewards data from the API
     if (account?.address) {
       try {
-        // Refetch and wait for the result
         const { data: rewardsData } = await refetch()
 
         // If the refetched data still shows rewards, store it temporarily

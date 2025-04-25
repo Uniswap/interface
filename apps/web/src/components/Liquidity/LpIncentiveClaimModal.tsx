@@ -60,8 +60,10 @@ export function LpIncentiveClaimModal({
     },
   })
 
-  const handleClaim = useEvent(() => {
-    sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsRetry)
+  const handleClaim = useEvent(({ skipAnalytics = false } = {}) => {
+    if (!skipAnalytics) {
+      sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsRetry)
+    }
     setError(null)
     claim()
   })
@@ -69,14 +71,14 @@ export function LpIncentiveClaimModal({
   // Only auto-claim when the modal opens and there's no pending transaction
   useEffect(() => {
     if (isOpen && !isPendingTransaction) {
-      handleClaim()
+      handleClaim({ skipAnalytics: true })
     }
   }, [isOpen, isPendingTransaction, handleClaim])
 
   const buttonConfig = useLpIncentiveClaimButtonConfig({
     isLoading: isPending,
     isPendingTransaction,
-    onClaim: handleClaim,
+    onClaim: () => handleClaim(), // Don't skip analytics for manual claim
   })
 
   return (

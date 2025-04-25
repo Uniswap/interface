@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmSR5NDYo4zoKKUQJ6fbr7QBw8VzMSYTPLCKWFrnEy3siH`
-- CIDv1: `bafybeib4sdzwnyzjkgip3tbxxpwp76goocrdu77z5cnshiitjqcpnv2pci`
+- CIDv0: `QmNZFM3Tfk8WQxYkSq5Wst6ZEcZMGWi3JWdjEmzzLL6CgQ`
+- CIDv1: `bafybeiadhirdveghtb4gap6kftmp7vfaa67op3ojcarjxf5f3pt2oqface`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeib4sdzwnyzjkgip3tbxxpwp76goocrdu77z5cnshiitjqcpnv2pci.ipfs.dweb.link/
-- [ipfs://QmSR5NDYo4zoKKUQJ6fbr7QBw8VzMSYTPLCKWFrnEy3siH/](ipfs://QmSR5NDYo4zoKKUQJ6fbr7QBw8VzMSYTPLCKWFrnEy3siH/)
+- https://bafybeiadhirdveghtb4gap6kftmp7vfaa67op3ojcarjxf5f3pt2oqface.ipfs.dweb.link/
+- [ipfs://QmNZFM3Tfk8WQxYkSq5Wst6ZEcZMGWi3JWdjEmzzLL6CgQ/](ipfs://QmNZFM3Tfk8WQxYkSq5Wst6ZEcZMGWi3JWdjEmzzLL6CgQ/)
 
-### 5.80.3 (2025-04-25)
+### 5.80.4 (2025-04-25)
 
 
 ### Bug Fixes
 
-* **web:** prod hotfix v4 eth pair liq chart fix (#18899) bab7ea8
+* **web:** lp incentives bugfixes (#18833) d337c45
 
 
