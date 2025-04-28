@@ -42,18 +42,20 @@ const ScrollableContent = styled.div`
 function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress: string }) {
   const [expandedIncentive, setExpandedIncentive] = useState<string | null>(null);
   const [isTokenOwner, setIsTokenOwner] = useState(false);
+  const [isBulkStaking, setIsBulkStaking] = useState(false);
+  const [isBulkUnstaking, setIsBulkUnstaking] = useState(false);
+  const [isBulkWithdrawing, setIsBulkWithdrawing] = useState(false);
+  const [isStaking, setIsStaking] = useState(false);
+  const [isUnstaking, setIsUnstaking] = useState(false);
+  const [isClaiming, setIsClaiming] = useState(false);
+  const [currentIncentiveId, setCurrentIncentiveId] = useState<string | null>(null);
 
   const { activeIncentives, endedIncentives, isLoading, error, refetch: refetchIncentives } = useIncentivesData(poolAddress);
   const allIncentives = [...activeIncentives, ...endedIncentives];
 
   const {
-    isBulkStaking,
-    isBulkUnstaking,
-    isBulkWithdrawing,
-    isStaking,
-    isUnstaking,
-    isClaiming,
     isDeposited,
+    getIncentiveData,
     handleStake,
     handleUnstake,
     handleClaim,
@@ -79,57 +81,97 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
 
   const handleStakeWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
     try {
-      console.log('incentive', incentive)
-      await handleStake(incentive);
-      await refetchIncentives();
+      setIsStaking(true);
+      setCurrentIncentiveId(incentive.id);
+      const tx = await handleStake(incentive);
+      if (tx) {
+        await tx.wait();
+        await refetchIncentives();
+      }
     } catch (error) {
       console.error('Error in stake with refresh:', error);
+    } finally {
+      setIsStaking(false);
+      setCurrentIncentiveId(null);
     }
   }, [handleStake, refetchIncentives]);
 
   const handleUnstakeWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
     try {
-      await handleUnstake(incentive);
-      await refetchIncentives();
+      setIsUnstaking(true);
+      setCurrentIncentiveId(incentive.id);
+      const tx = await handleUnstake(incentive);
+      if (tx) {
+        await tx.wait();
+        await refetchIncentives();
+      }
     } catch (error) {
       console.error('Error in unstake with refresh:', error);
+    } finally {
+      setIsUnstaking(false);
+      setCurrentIncentiveId(null);
     }
   }, [handleUnstake, refetchIncentives]);
 
   const handleClaimWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
     try {
-      await handleClaim(incentive);
-      await refetchIncentives();
+      setIsClaiming(true);
+      setCurrentIncentiveId(incentive.id);
+      const tx = await handleClaim(incentive);
+      if (tx) {
+        await tx.wait();
+        await refetchIncentives();
+      }
     } catch (error) {
       console.error('Error in claim with refresh:', error);
+    } finally {
+      setIsClaiming(false);
+      setCurrentIncentiveId(null);
     }
   }, [handleClaim, refetchIncentives]);
 
   const handleBulkStakeWithRefresh = useCallback(async () => {
     try {
-      await handleBulkStake();
-      await refetchIncentives();
+      setIsBulkStaking(true);
+      const tx = await handleBulkStake();
+      if (tx) {
+        await tx.wait();
+        await refetchIncentives();
+      }
     } catch (error) {
       console.error('Error in bulk staking with refresh:', error);
+    } finally {
+      setIsBulkStaking(false);
     }
   }, [handleBulkStake, refetchIncentives]);
 
   const handleBulkUnstakeWithRefresh = useCallback(async () => {
     try {
-      await handleBulkUnstake();
-      await refetchIncentives();
+      setIsBulkUnstaking(true);
+      const tx = await handleBulkUnstake();
+      if (tx) {
+        await tx.wait();
+        await refetchIncentives();
+      }
     } catch (error) {
       console.error('Error in bulk unstaking with refresh:', error);
+    } finally {
+      setIsBulkUnstaking(false);
     }
   }, [handleBulkUnstake, refetchIncentives]);
 
   const handleBulkWithdrawWithRefresh = useCallback(async () => {
     try {
-      await handleBulkWithdraw();
-      await refetchIncentives();
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      setIsBulkWithdrawing(true);
+      const tx = await handleBulkWithdraw();
+      if (tx) {
+        await tx.wait();
+        await refetchIncentives();
+      }
     } catch (error) {
       console.error('Error in bulk withdrawal with refresh:', error);
+    } finally {
+      setIsBulkWithdrawing(false);
     }
   }, [handleBulkWithdraw, refetchIncentives]);
 

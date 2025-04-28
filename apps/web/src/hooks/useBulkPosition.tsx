@@ -10,13 +10,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
   const { address } = useAccount();
   const v3StakerContract = useV3StakerContract();
   const nftManagerPositionsContract = useV3NFTPositionManagerContract();
-  const [isBulkStaking, setIsBulkStaking] = useState(false);
-  const [isBulkUnstaking, setIsBulkUnstaking] = useState(false);
-  const [isBulkWithdrawing, setIsBulkWithdrawing] = useState(false);
-  const [isStaking, setIsStaking] = useState(false);
-  const [isUnstaking, setIsUnstaking] = useState(false);
-  const [isClaiming, setIsClaiming] = useState(false);
-  const [currentIncentiveId, setCurrentIncentiveId] = useState<string | null>(null);
   const [isDeposited, setIsDeposited] = useState<boolean>(false);
 
   const checkDepositStatus = useCallback(async () => {
@@ -46,8 +39,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
 
   const handleStake = useCallback(async (incentive: ProcessedIncentive) => {
     if (!v3StakerContract || !address || !nftManagerPositionsContract) return;
-    setIsStaking(true);
-    setCurrentIncentiveId(incentive.id);
 
     try {
       const incentiveData = await getIncentiveData(incentive.id);
@@ -91,19 +82,15 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       };
 
       const stakeTx = await v3StakerContract.stakeToken(incentiveKey, Number(tokenId));
-      const stakeReceipt = await stakeTx.wait();
+      return stakeTx;
     } catch (error) {
       console.error('Error staking:', error);
-    } finally {
-      setIsStaking(false);
-      setCurrentIncentiveId(null);
+      throw error;
     }
   }, [v3StakerContract, tokenId, address, getIncentiveData, nftManagerPositionsContract]);
 
   const handleUnstake = useCallback(async (incentive: ProcessedIncentive) => {
     if (!v3StakerContract || !address || !nftManagerPositionsContract) return;
-    setIsUnstaking(true);
-    setCurrentIncentiveId(incentive.id);
 
     try {
       const incentiveData = await getIncentiveData(incentive.id);
@@ -121,19 +108,15 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       };
 
       const unstakeTx = await v3StakerContract.unstakeToken(incentiveKey, tokenId);
-      await unstakeTx.wait();
+      return unstakeTx;
     } catch (error) {
       console.error('Error unstaking:', error);
-    } finally {
-      setIsUnstaking(false);
-      setCurrentIncentiveId(null);
+      throw error;
     }
   }, [v3StakerContract, tokenId, address, getIncentiveData, nftManagerPositionsContract]);
 
   const handleClaim = useCallback(async (incentive: ProcessedIncentive) => {
     if (!v3StakerContract || !address) return;
-    setIsClaiming(true);
-    setCurrentIncentiveId(incentive.id);
 
     try {
       const incentiveData = await getIncentiveData(incentive.id);
@@ -155,18 +138,15 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         address,
         reward
       );
-      const claimReceipt = await claimTx.wait();
+      return claimTx;
     } catch (error) {
       console.error('Error claiming:', error);
-    } finally {
-      setIsClaiming(false);
-      setCurrentIncentiveId(null);
+      throw error;
     }
   }, [v3StakerContract, address, getIncentiveData]);
 
   const handleBulkStake = useCallback(async () => {
     if (!v3StakerContract || !address || !nftManagerPositionsContract) return;
-    setIsBulkStaking(true);
 
     try {
       const incentivesToStake = allIncentives.filter(
@@ -222,20 +202,15 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       const stakeTx = await v3StakerContract.multicall(stakeCalls, {
         gasLimit: 500000
       });
-      const receipt = await stakeTx.wait();
-
+      return stakeTx;
     } catch (error) {
       console.error('Error in bulk staking:', error);
       throw error;
-    } finally {
-      setIsBulkStaking(false);
     }
   }, [v3StakerContract, tokenId, address, allIncentives, nftManagerPositionsContract]);
 
-
   const handleBulkUnstake = useCallback(async () => {
     if (!v3StakerContract || !address || !nftManagerPositionsContract) return;
-    setIsBulkUnstaking(true);
 
     try {
       const stakedIncentives = allIncentives.filter(
@@ -271,36 +246,27 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       const unstakeTx = await v3StakerContract.multicall(unstakeCalls, {
         gasLimit: 500000
       });
-
-      const receipt = await unstakeTx.wait();
-
+      return unstakeTx;
     } catch (error) {
       console.error('Error in bulk unstaking:', error);
       throw error;
-    } finally {
-      setIsBulkUnstaking(false);
     }
   }, [v3StakerContract, tokenId, address, allIncentives, nftManagerPositionsContract]);
 
-
   const handleBulkWithdraw = useCallback(async () => {
     if (!v3StakerContract || !address || !nftManagerPositionsContract) return;
-    setIsBulkWithdrawing(true);
     try {
       const withdrawTx = await v3StakerContract.withdrawToken(
         tokenId,
         address,
         []
       );
-      const withdrawReceipt = await withdrawTx.wait();
-      await checkDepositStatus();
+      return withdrawTx;
     } catch (error) {
       console.error('Error in bulk withdrawal:', error);
       throw error;
-    } finally {
-      setIsBulkWithdrawing(false);
     }
-  }, [v3StakerContract, tokenId, address, nftManagerPositionsContract, checkDepositStatus]);
+  }, [v3StakerContract, tokenId, address, nftManagerPositionsContract]);
 
   const checkStakeStatus = useCallback(async (positionId: number, incentiveId: string) => {
     if (!v3StakerContract) return null;
@@ -314,13 +280,6 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
   }, [v3StakerContract]);
 
   return {
-    isBulkStaking,
-    isBulkUnstaking,
-    isBulkWithdrawing,
-    isStaking,
-    isUnstaking,
-    isClaiming,
-    currentIncentiveId,
     isDeposited,
     getIncentiveData,
     handleStake,
