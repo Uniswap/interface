@@ -157,8 +157,7 @@ const RightPane = styled.div`
   max-width: 40%;
   overflow: hidden;
   width: 100%;
-  height: fit-content;
-  padding-top: 75px;
+  padding-top: 7%;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     max-width: 100%;

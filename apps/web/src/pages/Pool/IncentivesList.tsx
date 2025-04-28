@@ -14,7 +14,7 @@ import styled from "styled-components";
 import { useBulkPosition } from "hooks/useBulkPosition";
 
 const Container = styled.div`
-  height: 410px;
+  height: 425px;
   width: 100%;
   display: flex;
   flex-direction: column;
