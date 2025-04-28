@@ -16,6 +16,7 @@ import {
   setFiatOnrampAvailability,
   setOpenModal,
 } from './reducer'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
 
 export function useModalIsOpen(modal: ApplicationModal): boolean {
   const openModal = useAppSelector((state: AppState) => state.application.openModal)
@@ -195,5 +196,20 @@ export function useSuppressPopups(popupTypes: PopupType[]): {
   return {
     suppressPopups,
     unsuppressPopups,
+  }
+}
+
+export function useClients() {
+  const dataClient = useMemo(
+    () =>
+      new ApolloClient({
+        uri: process.env.REACT_APP_INDEXER_SUBGRAPH_TARASWAP,
+        cache: new InMemoryCache(),
+      }),
+    []
+  )
+
+  return {
+    dataClient,
   }
 }

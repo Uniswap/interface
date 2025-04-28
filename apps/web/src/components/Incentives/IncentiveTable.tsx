@@ -102,19 +102,7 @@ interface IncentiveTableProps {
   onDeposit?: (incentive: ProcessedIncentive) => void;
 }
 
-const formatValue = (value: string) => {
-  try {
-    return formatCurrencyAmount({
-      amount: CurrencyAmount.fromRawAmount(
-        new Token(1, "0x0000000000000000000000000000000000000000", 18, "USD"),
-        Math.floor(parseFloat(value) * 1e18).toString()
-      ),
-      type: NumberType.FiatTokenPrice,
-    });
-  } catch {
-    return "$0.00";
-  }
-};
+
 
 const PoolTokenImage = ({ pool }: { pool: ProcessedIncentive }) => {
   const LOGO_DEFAULT_SIZE = 30;
@@ -199,7 +187,7 @@ export const IncentiveTable = ({
             minWidth={130}
             style={{ padding: allIncentivesEnded ? "12px 4px" : undefined }}
           >
-            <ThemedText.BodyPrimary>Liquidity</ThemedText.BodyPrimary>
+            <ThemedText.BodyPrimary>TVL</ThemedText.BodyPrimary>
           </Cell>
         ),
         cell: (pool) => {
@@ -211,7 +199,7 @@ export const IncentiveTable = ({
               style={{ padding: allIncentivesEnded ? "12px 4px" : undefined }}
             >
               <ThemedText.BodyPrimary>
-                {formatValue(data.liquidity)}
+                {data.liquidity}
               </ThemedText.BodyPrimary>
             </Cell>
           );
@@ -235,7 +223,7 @@ export const IncentiveTable = ({
               style={{ padding: allIncentivesEnded ? "12px 4px" : undefined }}
             >
               <ThemedText.BodyPrimary>
-                {formatValue(data.volume24h)}
+                {data.volume24h}
               </ThemedText.BodyPrimary>
             </Cell>
           );
@@ -251,15 +239,11 @@ export const IncentiveTable = ({
           const data = pool?.row?.original;
           if (!data) return null;
 
-          if (data.status !== 'active') {
-            return null;
-          }
-
           if (allIncentivesEnded) {
             return (
               <Cell minWidth={10}>
-                <ThemedText.BodyPrimary style={{ marginLeft: "70px" }}>
-                  {formatValue(data.feesUSD)}
+                <ThemedText.BodyPrimary style={{ marginLeft: "25px" }}>
+                  {data.feesUSD}
                 </ThemedText.BodyPrimary>
                 <SwapButton
                   onClick={() =>
@@ -281,7 +265,7 @@ export const IncentiveTable = ({
           return (
             <Cell minWidth={130} style={{ marginRight: "20px" }}>
               <ThemedText.BodyPrimary>
-                {formatValue(data.feesUSD)}
+                {data.feesUSD}
               </ThemedText.BodyPrimary>
             </Cell>
           );

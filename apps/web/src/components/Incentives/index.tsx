@@ -16,7 +16,7 @@ const StyledLightCard = styled(LightCard)`
 `;
 
 export default function Incentives() {
-  const { activeIncentives, endedIncentives, isLoading } = useIncentivesData();
+  const { activeIncentives, endedIncentives, isLoading, error } = useIncentivesData();
   const navigate = useNavigate();
   const location = useLocation();
   const account = useAccount();
@@ -39,6 +39,36 @@ export default function Incentives() {
       <StyledLightCard>
         <ThemedText.BodySecondary>
           Connect wallet to see real-time APR
+        </ThemedText.BodySecondary>
+      </StyledLightCard>
+    );
+  }
+
+  if (error) {
+    return (
+      <StyledLightCard>
+        <ThemedText.BodySecondary>
+          Error loading incentives data. Please try again later.
+        </ThemedText.BodySecondary>
+      </StyledLightCard>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <StyledLightCard>
+        <ThemedText.BodySecondary>
+          Loading incentives data...
+        </ThemedText.BodySecondary>
+      </StyledLightCard>
+    );
+  }
+
+  if (!incentivesToShow || incentivesToShow.length === 0) {
+    return (
+      <StyledLightCard>
+        <ThemedText.BodySecondary>
+          No {isEndedTab ? 'ended' : 'active'} incentives found.
         </ThemedText.BodySecondary>
       </StyledLightCard>
     );
