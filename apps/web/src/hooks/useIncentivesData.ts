@@ -18,7 +18,6 @@ interface IncentiveData {
     id: string;
     symbol: string;
     decimals: number;
-    derivedETH: string;
   };
   pool: {
     id: string;
@@ -320,15 +319,18 @@ export function useIncentivesData(poolAddress?: string) {
 
       const timeRange =
         parseInt(incentive.endTime) - parseInt(incentive.startTime);
+      const currentTime = Math.floor(Date.now() / 1000);
+      const timeElapsed = Math.min(currentTime - parseInt(incentive.startTime), timeRange);
+      const remainingTime = timeRange - timeElapsed;
       const rewardPerSecond = parseFloat(incentive.reward) / timeRange;
 
-      const rewardToken = incentive.pool.token1;
-      const rewardTokenPriceUSD =
-        parseFloat(rewardToken.derivedETH || "0") * ethPrice;
+      const rewardToken = incentive.rewardToken;
+      const rewardTokenPriceUSD = poolData?.token1Price ? parseFloat(poolData.token1Price) : 0;
 
       const dailyRewardRate = rewardPerSecond * 86400;
       const decimals = rewardToken.decimals || 18;
       const adjustedDailyReward = dailyRewardRate / Math.pow(10, decimals);
+ 
 
       const dailyRewardsUSD = adjustedDailyReward * rewardTokenPriceUSD;
       const annualizedRewardsUSD = dailyRewardsUSD * 365;
@@ -348,10 +350,8 @@ export function useIncentivesData(poolAddress?: string) {
       const weeklyRewards = adjustedDailyReward * 7;
       const weeklyRewardsUSD = dailyRewardsUSD * 7;
 
-      const currentTime = Math.floor(Date.now() / 1000);
       const startTime = parseInt(incentive.startTime);
       const endTime = parseInt(incentive.endTime);
-      const timeElapsed = Math.min(currentTime - startTime, endTime - startTime);
       const accruedRewards = (timeElapsed * rewardPerSecond) / Math.pow(10, decimals);
 
       const processedIncentive: ProcessedIncentive = {
@@ -413,7 +413,6 @@ export function useIncentivesData(poolAddress?: string) {
   }, [incentivesData]);
 
   const { data: poolsData, loading: poolsLoading } = usePoolDatas(poolAddresses);
-  console.log('poolsData', poolsData)
 
   const fetchData = async () => {
     if (!account.address) return;

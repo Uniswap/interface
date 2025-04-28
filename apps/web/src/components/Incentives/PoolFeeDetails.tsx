@@ -186,7 +186,7 @@ export const PoolFeeDetails: React.FC<PoolFeeDetailsProps> = React.memo(
                 input: weeklyRewards,
                 type: NumberType.TokenNonTx,
               })}{" "}
-              {rewardTokenSymbol} ($
+              {rewardTokenSymbol} (
               {formatNumber({
                 input: weeklyRewardsUSD,
                 type: NumberType.FiatTokenPrice,
