@@ -310,21 +310,13 @@ export function useIncentivesData(poolAddress?: string) {
         incentive.pool.token1.id
       );
 
-      const dailyFees = parseFloat(
-        incentive.pool.poolDayData[0]?.feesUSD || "0"
-      );
-      const dailyVolume = parseFloat(
-        incentive.pool.poolDayData[0]?.volumeUSD || "1"
-      );
-      const tvlUSD = poolData?.tvlUSD ?? parseFloat(incentive.pool.totalValueLockedUSD || "1");
-      const volumeUSD = poolData?.volumeUSD ?? parseFloat(incentive.pool.volumeUSD || "0");
+      const tvlUSD = poolData?.tvlUSD ;
+      const volumeUSD = poolData?.volumeUSD ;
       const feeTierBps = incentive.pool.feeTier;
       const feeRate = feeTierBps / 1e6;
-      const feesUSD = poolData?.volumeUSD
-        ? (poolData.volumeUSD * feeRate)
-        : parseFloat(incentive.pool.feesUSD || "0");
-      const annualizedFees = dailyFees * 365;
-      const tradingFeeAPR = (annualizedFees / dailyVolume) * 100;
+      const feesUSD = volumeUSD * feeRate;
+      const annualizedFees = feesUSD * 365;
+      const tradingFeeAPR = tvlUSD > 0 ? (annualizedFees / tvlUSD) * 100 : 0;
 
       const timeRange =
         parseInt(incentive.endTime) - parseInt(incentive.startTime);
