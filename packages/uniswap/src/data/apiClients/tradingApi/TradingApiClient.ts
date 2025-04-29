@@ -48,6 +48,8 @@ import {
   WalletCheckDelegationResponseBody,
   WalletEncode7702RequestBody,
 } from 'uniswap/src/data/tradingApi/__generated__'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
@@ -88,6 +90,7 @@ const TradingApiClient = createApiClient({
   baseUrl: uniswapUrls.tradingApiUrl,
   additionalHeaders: {
     'x-api-key': config.tradingApiKey,
+    'x-uniquote-enabled': getFeatureFlag(FeatureFlags.UniquoteEnabled) ? 'true' : 'false',
   },
 })
 
