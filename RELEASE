@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmdBE9twnqZcftEmPMTNYyfm7qxkAANFeSMhVxHD1MtyNu`
-- CIDv1: `bafybeig4ovh5dhuiambfcabacoemcxmvuql5tcl3vscbctdzinmcodysby`
+- CIDv0: `QmV6wxRgkV16x6Gemmdg8UW9HD5zDgjLef844S1wk32H1a`
+- CIDv1: `bafybeidep4w2hwdtu4uhxrg6xuk7rdlfjf7j7zq53mo2whxi6k3jeuvfbe`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeig4ovh5dhuiambfcabacoemcxmvuql5tcl3vscbctdzinmcodysby.ipfs.dweb.link/
-- [ipfs://QmdBE9twnqZcftEmPMTNYyfm7qxkAANFeSMhVxHD1MtyNu/](ipfs://QmdBE9twnqZcftEmPMTNYyfm7qxkAANFeSMhVxHD1MtyNu/)
+- https://bafybeidep4w2hwdtu4uhxrg6xuk7rdlfjf7j7zq53mo2whxi6k3jeuvfbe.ipfs.dweb.link/
+- [ipfs://QmV6wxRgkV16x6Gemmdg8UW9HD5zDgjLef844S1wk32H1a/](ipfs://QmV6wxRgkV16x6Gemmdg8UW9HD5zDgjLef844S1wk32H1a/)
 
-## 5.81.0 (2025-04-29)
+### 5.81.1 (2025-04-29)
 
 
-### Features
+### Bug Fixes
 
-* **web:** pass uniquote enabled to trading api requests (#19010) 155876e
+* **web:** add additional statsig api urls to our csp.json file (#19035) 209df5d
 
 
