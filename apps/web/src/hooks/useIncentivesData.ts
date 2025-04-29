@@ -149,6 +149,9 @@ export function useIncentivesData(poolAddress?: string) {
   const { tokenList, isLoadingTokenList } = useTokenList();
   const [incentivesData, setIncentivesData] = useState<IncentiveData[]>([]);
   const [ethPriceUSD, setEthPriceUSD] = useState<number>(0);
+  const [lastProcessedTime, setLastProcessedTime] = useState<number>(0);
+
+  const accountAddress = useMemo(() => account.address, [account.address]);
 
   const getIncentivesQuery = useCallback(() => {
     const baseQuery = INCENTIVES_QUERY;
@@ -222,6 +225,7 @@ export function useIncentivesData(poolAddress?: string) {
       ethPrice: number,
       poolData?: any
     ): Promise<ProcessedIncentive> => {
+      console.log(`[useIncentivesData] Processing incentive: ${incentive.id}`);
       const positionOnIncentiveIds = [];
       const positionOnIncentive: UserPosition[] = [];
       const positionOnPoolIds = userPositions.map(position => Number(position.id));
@@ -405,7 +409,7 @@ export function useIncentivesData(poolAddress?: string) {
 
       return processedIncentive;
     },
-    [tokenList, v3StakerContract, account.address]
+    [tokenList, v3StakerContract, accountAddress]
   );
 
   const poolAddresses = useMemo(() => {
@@ -414,8 +418,10 @@ export function useIncentivesData(poolAddress?: string) {
 
   const { data: poolsData, loading: poolsLoading } = usePoolDatas(poolAddresses);
 
-  const fetchData = async () => {
-    if (!account.address) return;
+  const fetchData = useCallback(async () => {
+    if (!accountAddress) {
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -427,14 +433,14 @@ export function useIncentivesData(poolAddress?: string) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             query: getIncentivesQuery(),
-            variables: { userAddress: account.address },
+            variables: { userAddress: accountAddress },
           }),
         }),
         fetch("https://indexer.lswap.app/subgraphs/name/taraxa/uniswap-v3/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            query: getUserPositionsQuery(account.address),
+            query: getUserPositionsQuery(accountAddress),
           }),
         }),
       ]);
@@ -468,14 +474,18 @@ export function useIncentivesData(poolAddress?: string) {
       const positions = positionsData.data?.positions || [];
       setUserPositionsInPools(positions);
     } catch (error) {
-      console.error("Error fetching data:", error);
       setError(error);
       setIsLoading(false);
     }
-  };
+  }, [accountAddress, getIncentivesQuery]);
 
   useEffect(() => {
     if (!poolsLoading && poolsData && incentivesData.length > 0) {
+      const now = Date.now();
+      if (now - lastProcessedTime < 10000) {
+        return;
+      }
+
       const processIncentives = async () => {
         try {
           const processedIncentives = await Promise.all(
@@ -499,11 +509,14 @@ export function useIncentivesData(poolAddress?: string) {
             return 0;
           });
 
-          setActiveIncentives(sortedIncentives.filter((inc: ProcessedIncentive) => inc.status === 'active'));
-          setEndedIncentives(sortedIncentives.filter((inc: ProcessedIncentive) => inc.status === 'inactive' || inc.status === 'ended'));
+          const active = sortedIncentives.filter((inc: ProcessedIncentive) => inc.status === 'active');
+          const ended = sortedIncentives.filter((inc: ProcessedIncentive) => inc.status === 'inactive' || inc.status === 'ended');
+          
+          setActiveIncentives(active);
+          setEndedIncentives(ended);
+          setLastProcessedTime(now);
           setIsLoading(false);
         } catch (error) {
-          console.error("Error processing incentives:", error);
           setError(error);
           setIsLoading(false);
         }
@@ -511,13 +524,13 @@ export function useIncentivesData(poolAddress?: string) {
 
       processIncentives();
     }
-  }, [poolsData, poolsLoading, incentivesData, userPositionsInPools, storedBalances, ethPriceUSD, processIncentive]);
+  }, [poolsData, poolsLoading, incentivesData, userPositionsInPools, storedBalances, ethPriceUSD, processIncentive, lastProcessedTime]);
 
   useEffect(() => {
-    if (account.address) {
+    if (accountAddress) {
       fetchData();
     }
-  }, [account.address, poolAddress]);
+  }, [accountAddress, poolAddress, fetchData]);
 
   return {
     activeIncentives,

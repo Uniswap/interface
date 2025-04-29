@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import styled from "styled-components";
 import { FeeDistributionBar } from "./FeeDistributionBar";
 import { MouseoverTooltip } from "components/Tooltip";
@@ -124,105 +124,119 @@ const FullWidthDistributionBar = styled.div`
   justify-content: flex-end;
 `;
 
-export const PoolFeeDetails: React.FC<PoolFeeDetailsProps> = React.memo(
-  ({
-    rewardTokenImage,
-    rewardTokenSymbol,
-    rewardTokenAddress,
+const PoolFeeDetailsContent: React.FC<PoolFeeDetailsProps> = React.memo(({
+  rewardTokenImage,
+  rewardTokenSymbol,
+  rewardTokenAddress,
+  tradeFeesPercentage,
+  tokenRewardsPercentage,
+  daily24hAPR,
+  weeklyRewards,
+  weeklyRewardsUSD,
+  incentiveId,
+}) => {
+  
+  const { formatDelta, formatNumber } = useFormatter();
+  const chartData = useMemo(() => {
+    return [
+      {
+        value: tradeFeesPercentage,
+        color: "#40B66B",
+      },
+      {
+        value: tokenRewardsPercentage,
+        color: "#FFFFFF",
+      },
+    ];
+  }, [tradeFeesPercentage, tokenRewardsPercentage, incentiveId]);
+
+  const formattedDailyAPR = useMemo(() => {
+    return formatDelta(daily24hAPR);
+  }, [daily24hAPR, formatDelta, incentiveId]);
+
+  const formattedWeeklyRewards = useMemo(() => {
+    return formatNumber({
+      input: weeklyRewards,
+      type: NumberType.TokenNonTx,
+    });
+  }, [weeklyRewards, formatNumber, incentiveId]);
+
+  const formattedWeeklyRewardsUSD = useMemo(() => {
+    return formatNumber({
+      input: weeklyRewardsUSD,
+      type: NumberType.FiatTokenPrice,
+    });
+  }, [weeklyRewardsUSD, formatNumber, incentiveId]);
+
+  const tooltipContent = useMemo(() => {
+    return (
+      <TooltipContent>
+        <TooltipHeader>
+          <TooltipTitle>Total APR</TooltipTitle>
+          <TooltipValue>{formattedDailyAPR}</TooltipValue>
+        </TooltipHeader>
+        <ChartSection>
+          <DonutChart data={chartData} size={120} thickness={16} />
+          <LegendContainer>
+            <LegendItem>
+              <LegendLabel>
+                <LegendDot color="#40B66B" />
+                Trade fees
+              </LegendLabel>
+              <LegendValue>
+                {formatDelta((tradeFeesPercentage * daily24hAPR) / 100)}
+              </LegendValue>
+            </LegendItem>
+            <LegendItem>
+              <LegendLabel>
+                <LegendDot color="#FFFFFF" />
+                {rewardTokenSymbol}
+              </LegendLabel>
+              <LegendValue>
+                {formatDelta((tokenRewardsPercentage * daily24hAPR) / 100)}
+              </LegendValue>
+            </LegendItem>
+          </LegendContainer>
+        </ChartSection>
+        <WeeklyRewards>
+          <WeeklyRewardsTitle>Weekly Rewards</WeeklyRewardsTitle>
+          <WeeklyRewardsValue>
+            <TokenIcon src={rewardTokenImage} alt={rewardTokenSymbol} />
+            {formattedWeeklyRewards} {rewardTokenSymbol} ({formattedWeeklyRewardsUSD})
+          </WeeklyRewardsValue>
+        </WeeklyRewards>
+      </TooltipContent>
+    );
+  }, [
+    formattedDailyAPR,
+    chartData,
     tradeFeesPercentage,
     tokenRewardsPercentage,
     daily24hAPR,
-    weeklyRewards,
-    weeklyRewardsUSD,
-  }) => {
-    const { formatDelta, formatNumber } = useFormatter();
+    rewardTokenSymbol,
+    rewardTokenImage,
+    formattedWeeklyRewards,
+    formattedWeeklyRewardsUSD,
+    formatDelta,
+    incentiveId
+  ]);
 
-    const tooltipContent = useMemo(() => {
-      const chartData = [
-        {
-          value: tradeFeesPercentage,
-          color: "#40B66B",
-        },
-        {
-          value: tokenRewardsPercentage,
-          color: "#FFFFFF",
-        },
-      ];
+  return (
+    <MouseoverTooltip text={tooltipContent} placement="top">
+      <Container>
+        <FullWidthDistributionBar>
+          <FeeDistributionBar
+            tradeFeesPercentage={tradeFeesPercentage}
+            tokenRewardsPercentage={tokenRewardsPercentage}
+            daily24hAPR={daily24hAPR}
+            rewardTokenImage={rewardTokenImage}
+            rewardTokenSymbol={rewardTokenSymbol}
+            rewardTokenAddress={rewardTokenAddress}
+          />
+        </FullWidthDistributionBar>
+      </Container>
+    </MouseoverTooltip>
+  );
+});
 
-      return (
-        <TooltipContent>
-          <TooltipHeader>
-            <TooltipTitle>Total APR</TooltipTitle>
-            <TooltipValue>{formatDelta(daily24hAPR)}</TooltipValue>
-          </TooltipHeader>
-          <ChartSection>
-            <DonutChart data={chartData} size={120} thickness={16} />
-            <LegendContainer>
-              <LegendItem>
-                <LegendLabel>
-                  <LegendDot color="#40B66B" />
-                  Trade fees
-                </LegendLabel>
-                <LegendValue>
-                  {formatDelta((tradeFeesPercentage * daily24hAPR) / 100)}
-                </LegendValue>
-              </LegendItem>
-              <LegendItem>
-                <LegendLabel>
-                  <LegendDot color="#FFFFFF" />
-                  {rewardTokenSymbol}
-                </LegendLabel>
-                <LegendValue>
-                  {formatDelta((tokenRewardsPercentage * daily24hAPR) / 100)}
-                </LegendValue>
-              </LegendItem>
-            </LegendContainer>
-          </ChartSection>
-          <WeeklyRewards>
-            <WeeklyRewardsTitle>Weekly Rewards</WeeklyRewardsTitle>
-            <WeeklyRewardsValue>
-              <TokenIcon src={rewardTokenImage} alt={rewardTokenSymbol} />
-              {formatNumber({
-                input: weeklyRewards,
-                type: NumberType.TokenNonTx,
-              })}{" "}
-              {rewardTokenSymbol} (
-              {formatNumber({
-                input: weeklyRewardsUSD,
-                type: NumberType.FiatTokenPrice,
-              })}
-              )
-            </WeeklyRewardsValue>
-          </WeeklyRewards>
-        </TooltipContent>
-      );
-    }, [
-      tradeFeesPercentage,
-      tokenRewardsPercentage,
-      daily24hAPR,
-      weeklyRewards,
-      weeklyRewardsUSD,
-      rewardTokenSymbol,
-      rewardTokenImage,
-      formatDelta,
-      formatNumber,
-    ]);
-
-    return (
-      <MouseoverTooltip text={tooltipContent} placement="top">
-        <Container>
-          <FullWidthDistributionBar>
-            <FeeDistributionBar
-              tradeFeesPercentage={tradeFeesPercentage}
-              tokenRewardsPercentage={tokenRewardsPercentage}
-              daily24hAPR={daily24hAPR}
-              rewardTokenImage={rewardTokenImage}
-              rewardTokenSymbol={rewardTokenSymbol}
-              rewardTokenAddress={rewardTokenAddress}
-            />
-          </FullWidthDistributionBar>
-        </Container>
-      </MouseoverTooltip>
-    );
-  }
-);
+export const PoolFeeDetails = React.memo(PoolFeeDetailsContent);
