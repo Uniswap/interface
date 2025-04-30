@@ -25,6 +25,8 @@ const Header = styled(CenteredRow)`
   width: 100%;
   max-width: 500px;
   justify-content: space-between;
+  margin-bottom: 10px;
+  border: none;
 `;
 
 const CloseButton = styled.button`
@@ -53,13 +55,23 @@ const PositionsContainer = styled.div`
 const PositionWrapper = styled.div<{ selected: boolean }>`
   cursor: pointer;
   border: 2px solid ${({ theme, selected }) =>
-    selected ? theme.accent1 : 'transparent'};
+    selected ? theme.accent1 : theme.surface3};
   border-radius: 8px;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
+  margin-bottom: 8px;
 
   &:hover {
-    border-color: ${({ theme }) => theme.accent2};
+    border-color: ${({ theme }) => theme.accent1};
+    background: ${({ theme }) => theme.surface2};
+    transform: scale(1.01);
   }
+
+  ${({ selected, theme }) =>
+    selected &&
+    `
+    background: ${theme.surface2};
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  `}
 `;
 
 const ModalWrapper = styled(Wrapper)`
@@ -84,7 +96,6 @@ interface ChoosePositionModalProps {
 const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
   show,
   onHide,
-  onSelectPosition,
   positionIds,
   token0Address,
   token1Address,
@@ -109,12 +120,6 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
     getUserPositionsGql();
   }, [getUserPositionsGql]);
 
-  const handleConfirmSelection = () => {
-    if (selectedPosition) {
-      onSelectPosition(selectedPosition);
-      onHide();
-    }
-  };
 
   const hasPositions = relevantPositions.length > 0;
 
