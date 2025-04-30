@@ -117,7 +117,7 @@ export interface ProcessedIncentive {
   positionOnPoolIds?: number[];
   hasUserPositionInPool: boolean;
   canWithdraw: boolean;
-  poolPositionId?: number;
+  poolPositionIds?: number[];
 }
 
 export interface PositionWithReward extends PositionsResponse {
@@ -225,7 +225,6 @@ export function useIncentivesData(poolAddress?: string) {
       ethPrice: number,
       poolData?: any
     ): Promise<ProcessedIncentive> => {
-      console.log(`[useIncentivesData] Processing incentive: ${incentive.id}`);
       const positionOnIncentiveIds = [];
       const positionOnIncentive: UserPosition[] = [];
       const positionOnPoolIds = userPositions.map(position => Number(position.id));
@@ -364,7 +363,9 @@ export function useIncentivesData(poolAddress?: string) {
         poolName: `${incentive.pool.token0.symbol}-${incentive.pool.token1.symbol}`,
         positionOnIncentiveIds,
         positionOnPoolIds,
-        poolPositionId: userPositions.filter(position => position.pool.id === incentive.pool.id)[0]?.id ? Number(userPositions.filter(position => position.pool.id === incentive.pool.id)[0]?.id) : undefined,
+        poolPositionIds: userPositions
+          .filter(position => position.pool.id === incentive.pool.id)
+          .map(position => Number(position.id)),
         hasUserPositionInPool: userPositions.filter(position => position.pool.id === incentive.pool.id).length > 0,
         feeTier: `${(incentive.pool.feeTier / 10000).toFixed(2)}%`,
         liquidity: formatValue(tvlUSD),
