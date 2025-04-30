@@ -19,11 +19,12 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
 import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
+import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { useDebounce } from 'utilities/src/time/timing'
 
 // From design to avoid layout thrash as icons show and hide
@@ -49,6 +50,7 @@ export function ExploreScreen(): JSX.Element {
 
   const onSearchChangeText = (newSearchFilter: string): void => {
     setSearchQuery(newSearchFilter)
+    textInputRef.current?.setNativeProps({ text: newSearchFilter })
   }
 
   const onSearchFocus = (): void => {
@@ -114,10 +116,11 @@ export function ExploreScreen(): JSX.Element {
                 debouncedSearchFilter={debouncedSearchQuery}
                 parsedChainFilter={selectedChain}
                 searchFilter={searchQuery ?? ''}
+                activeTab={SearchTab.All}
                 onSelect={() => {}}
               />
             ) : (
-              <SearchModalNoQueryList chainFilter={selectedChain} onSelect={() => {}} />
+              <SearchModalNoQueryList chainFilter={selectedChain} activeTab={SearchTab.All} onSelect={() => {}} />
             )
           ) : debouncedSearchQuery.length === 0 ? (
             // Mimic ScrollView behavior with FlatList

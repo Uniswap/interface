@@ -2,8 +2,8 @@ import { createSelector, Selector } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/mobileReducer'
 import {
   WalletConnectPendingSession,
-  WalletConnectRequest,
   WalletConnectSession,
+  WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 
 export const makeSelectSessions = (): Selector<MobileState, WalletConnectSession[] | undefined, [Maybe<Address>]> =>
@@ -24,7 +24,7 @@ export const makeSelectSessions = (): Selector<MobileState, WalletConnectSession
     },
   )
 
-export const selectPendingRequests = (state: MobileState): WalletConnectRequest[] => {
+export const selectPendingRequests = (state: MobileState): WalletConnectSigningRequest[] => {
   return state.walletConnect.pendingRequests
 }
 

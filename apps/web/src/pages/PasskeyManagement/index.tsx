@@ -2,13 +2,13 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
+import { useModalState } from 'hooks/useModalState'
 import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { useAtom } from 'jotai'
 import Swap from 'pages/Swap'
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useCloseModal } from 'state/application/hooks'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -106,7 +106,7 @@ export default function PasskeyManagement() {
   const accountDrawerHasBeenOpenedRef = useRef<boolean>(accountDrawer.isOpen)
   const passkeyConnectionAttemptedRef = useRef<boolean>(false)
   const navigate = useNavigate()
-  const closeRecentlyConnectedModal = useCloseModal(ModalName.RecentlyConnectedModal)
+  const { closeModal: closeRecentlyConnectedModal } = useModalState(ModalName.RecentlyConnectedModal)
 
   const navigateToPasskeyManagement = useEvent(() => {
     setTimeout(() => {

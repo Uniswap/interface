@@ -3,7 +3,7 @@ import { rpcErrors, serializeError } from '@metamask/rpc-errors'
 import { removeDappConnection } from 'src/app/features/dapp/actions'
 import { DappInfo } from 'src/app/features/dapp/store'
 import { saveAccount } from 'src/app/features/dappRequests/accounts'
-import { SenderTabInfo } from 'src/app/features/dappRequests/slice'
+import type { SenderTabInfo } from 'src/app/features/dappRequests/shared'
 import {
   ErrorResponse,
   GetPermissionsRequest,

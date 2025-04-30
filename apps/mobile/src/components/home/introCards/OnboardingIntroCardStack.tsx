@@ -28,6 +28,7 @@ import { INTRO_CARD_MIN_HEIGHT, IntroCardStack } from 'wallet/src/components/int
 import { useSharedIntroCards } from 'wallet/src/components/introCards/useSharedIntroCards'
 import { selectHasViewedNotificationsCard } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasViewedNotificationsCard } from 'wallet/src/features/behaviorHistory/slice'
+import { hasExternalBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type OnboardingIntroCardStackProps = {
@@ -43,7 +44,7 @@ export function OnboardingIntroCardStack({
   const activeAccount = useActiveAccountWithThrow()
   const address = activeAccount.address
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
-  const hasBackups = activeAccount.backups && activeAccount.backups.length > 0
+  const externalBackups = hasExternalBackup(activeAccount)
 
   const { notificationPermissionsEnabled } = useNotificationOSPermissionsEnabled()
   const notificationOnboardingCardEnabled = useFeatureFlag(FeatureFlags.NotificationOnboardingCard)
@@ -102,7 +103,7 @@ export function OnboardingIntroCardStack({
       })
     }
 
-    if (!hasBackups) {
+    if (!externalBackups) {
       output.push({
         loggingName: OnboardingCardLoggingName.RecoveryBackup,
         graphic: {
@@ -149,7 +150,7 @@ export function OnboardingIntroCardStack({
       })
     }
     return output
-  }, [hasBackups, showEmptyWalletState, isSignerAccount, sharedCards, t, showEnableNotificationsCard, dispatch])
+  }, [externalBackups, showEmptyWalletState, isSignerAccount, sharedCards, t, showEnableNotificationsCard, dispatch])
 
   const handleSwiped = useCallback(
     (_card: IntroCardProps, index: number) => {

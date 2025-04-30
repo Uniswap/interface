@@ -7,9 +7,9 @@ import {
 } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { RemoveLiquidityReview } from 'components/RemoveLiquidity/RemoveLiquidityReview'
 import { RemoveLiquidityTxContextProvider } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
+import { useModalState } from 'hooks/useModalState'
 import { RemoveLiquidityForm } from 'pages/RemoveLiquidity/RemoveLiquidityForm'
 import { useTranslation } from 'react-i18next'
-import { useCloseModal } from 'state/application/hooks'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { MIN_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
@@ -18,7 +18,7 @@ import { TransactionSettingsContextProvider } from 'uniswap/src/features/transac
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 
 function RemoveLiquidityModalInner() {
-  const closeModal = useCloseModal(ModalName.RemoveLiquidity)
+  const { closeModal } = useModalState(ModalName.RemoveLiquidity)
   const { t } = useTranslation()
   const { step, setStep } = useRemoveLiquidityModalContext()
 

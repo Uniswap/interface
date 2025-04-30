@@ -1,4 +1,4 @@
-import { ItemType, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
+import { OnchainItemListType, TokenSelectorItemTypes } from 'uniswap/src/components/lists/items/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -6,24 +6,30 @@ import { FiatNumberType } from 'utilities/src/format/types'
 
 export type OnSelectCurrency = (
   currency: CurrencyInfo,
-  section: TokenSection<TokenSelectorItemTypes>,
+  section: OnchainItemSection<TokenSelectorItemTypes>,
   index: number,
 ) => void
 
-export enum TokenOptionSection {
-  YourTokens = 'yourTokens',
-  PopularTokens = 'popularTokens',
-  RecentTokens = 'recentTokens',
-  FavoriteTokens = 'favoriteTokens',
+export enum OnchainItemSectionName {
   SearchResults = 'searchResults',
+  RecentSearches = 'recentSearches',
+
+  YourTokens = 'yourTokens',
+  TrendingTokens = 'trendingTokens',
+  FavoriteTokens = 'favoriteTokens',
   SuggestedTokens = 'suggestedTokens',
   BridgingTokens = 'bridgingTokens',
   OtherChainsTokens = 'otherNetworksTokens',
+
+  TrendingPools = 'trendingPools',
+  Tokens = 'tokens',
+  Pools = 'pools',
+  // add wallets & NFT collections
 }
 
-export type TokenSection<T extends ItemType> = {
+export type OnchainItemSection<T extends OnchainItemListType> = {
   data: T[]
-  sectionKey: TokenOptionSection
+  sectionKey: OnchainItemSectionName
   name?: string
   rightElement?: JSX.Element
   endElement?: JSX.Element

@@ -32,9 +32,7 @@ export function useRoutingAPIArguments({
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   protocolPreferences?: Protocol[]
 }): GetQuoteArgs | SkipToken {
-  const uniswapXForceSyntheticQuotes = useFeatureFlag(FeatureFlags.UniswapXSyntheticQuote)
   const isPriorityOrdersEnabled = useUniswapXPriorityOrderFlag(tokenIn?.chainId)
-  const isXv2 = useFeatureFlag(FeatureFlags.UniswapXv2)
   const isDutchV3Enabled = useFeatureFlag(FeatureFlags.ArbitrumDutchV3)
 
   // Don't enable fee logic if this is a quote for pricing
@@ -52,9 +50,7 @@ export function useRoutingAPIArguments({
         ? isDutchV3Enabled
           ? URAQuoteType.DUTCH_V3
           : URAQuoteType.DUTCH_V1
-        : isXv2
-          ? URAQuoteType.DUTCH_V2
-          : URAQuoteType.DUTCH_V1
+        : URAQuoteType.DUTCH_V2
     : URAQuoteType.CLASSIC
 
   return useMemo(
@@ -76,7 +72,7 @@ export function useRoutingAPIArguments({
             protocolPreferences,
             tradeType,
             needsWrapIfUniswapX: tokenIn.isNative,
-            uniswapXForceSyntheticQuotes,
+            uniswapXForceSyntheticQuotes: false,
             sendPortionEnabled,
             routingType,
           },
@@ -88,7 +84,6 @@ export function useRoutingAPIArguments({
       routerPreference,
       protocolPreferences,
       tradeType,
-      uniswapXForceSyntheticQuotes,
       sendPortionEnabled,
       routingType,
     ],

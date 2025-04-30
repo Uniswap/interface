@@ -1,7 +1,7 @@
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionModal } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
+import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
+import { TransactionModalProps } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalProps'
 
-import { TransactionModalProps } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalProps'
 import {
   TransactionSettingsContext,
   useTransactionSettingsContext,

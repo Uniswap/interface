@@ -123,7 +123,6 @@ function PositionPage() {
 
   const dispatch = useAppDispatch()
 
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const navigate = useNavigate()
@@ -307,29 +306,27 @@ function PositionPage() {
             />
             {isOwner && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
-                {positionInfo.version === ProtocolVersion.V3 &&
-                  status !== PositionStatus.CLOSED &&
-                  isMigrateToV4Enabled && (
-                    <MouseoverTooltip
-                      text={t('pool.migrateLiquidityDisabledTooltip')}
-                      disabled={!showV4UnsupportedTooltip}
-                      style={media.sm ? { width: '100%', display: 'block' } : {}}
+                {positionInfo.version === ProtocolVersion.V3 && status !== PositionStatus.CLOSED && (
+                  <MouseoverTooltip
+                    text={t('pool.migrateLiquidityDisabledTooltip')}
+                    disabled={!showV4UnsupportedTooltip}
+                    style={media.sm ? { width: '100%', display: 'block' } : {}}
+                  >
+                    <Button
+                      size="small"
+                      emphasis="secondary"
+                      $sm={{ width: '100%' }}
+                      fill={false}
+                      isDisabled={showV4UnsupportedTooltip}
+                      opacity={showV4UnsupportedTooltip ? 0.5 : 1}
+                      onPress={() => {
+                        navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                      }}
                     >
-                      <Button
-                        size="small"
-                        emphasis="secondary"
-                        $sm={{ width: '100%' }}
-                        fill={false}
-                        isDisabled={showV4UnsupportedTooltip}
-                        opacity={showV4UnsupportedTooltip ? 0.5 : 1}
-                        onPress={() => {
-                          navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
-                        }}
-                      >
-                        {t('pool.migrateToV4')}
-                      </Button>
-                    </MouseoverTooltip>
-                  )}
+                      {t('pool.migrateToV4')}
+                    </Button>
+                  </MouseoverTooltip>
+                )}
                 <Button
                   size="small"
                   emphasis="secondary"

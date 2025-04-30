@@ -70,7 +70,7 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
   let waitingForWrap = Boolean(wrapTxHash)
 
   const order = {
-    routing: Routing.DUTCH_V2,
+    routing,
     orderHash,
     id: txId ?? createTransactionId(),
     chainId,

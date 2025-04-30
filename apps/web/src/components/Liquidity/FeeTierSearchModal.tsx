@@ -277,29 +277,30 @@ export function FeeTierSearchModal() {
               {t('fee.tier.alreadyExists', { formattedTVL: '$289.6K' })}
             </Text> */}
             {/* TODO(WEB-4920): search existing fee tiers for close matches and optionally similar list */}
-
-            <Button
-              variant="default"
-              isDisabled={!createFeeValue || createFeeValue === ''}
-              onPress={() => {
-                setPositionState((prevState) => ({
-                  ...prevState,
-                  fee: {
-                    feeAmount: feeHundredthsOfBips,
-                    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips),
-                  },
-                }))
-                sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
-                  action: FeePoolSelectAction.SEARCH,
-                  fee_tier: feeHundredthsOfBips,
-                  is_new_fee_tier: Boolean(feeTierData[feeHundredthsOfBips]),
-                  ...trace,
-                })
-                onClose()
-              }}
-            >
-              {feeTierData[feeHundredthsOfBips] ? t('fee.tier.select.existing.button') : t('fee.tier.create.button')}
-            </Button>
+            <Flex row>
+              <Button
+                variant="default"
+                isDisabled={!createFeeValue || createFeeValue === ''}
+                onPress={() => {
+                  setPositionState((prevState) => ({
+                    ...prevState,
+                    fee: {
+                      feeAmount: feeHundredthsOfBips,
+                      tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips),
+                    },
+                  }))
+                  sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
+                    action: FeePoolSelectAction.SEARCH,
+                    fee_tier: feeHundredthsOfBips,
+                    is_new_fee_tier: Boolean(feeTierData[feeHundredthsOfBips]),
+                    ...trace,
+                  })
+                  onClose()
+                }}
+              >
+                {feeTierData[feeHundredthsOfBips] ? t('fee.tier.select.existing.button') : t('fee.tier.create.button')}
+              </Button>
+            </Flex>
           </Flex>
         ) : (
           <>

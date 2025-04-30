@@ -89,7 +89,6 @@ function useDropdownOptions(
   isVisible?: boolean,
 ): MenuOptionItem[] {
   const { t } = useTranslation()
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
   const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
 
   const dispatch = useAppDispatch()
@@ -187,7 +186,6 @@ function useDropdownOptions(
 
     const showMigrateV3Option =
       isOpenLiquidityPosition &&
-      isMigrateToV4Enabled &&
       !isV4UnsupportedChain(liquidityPosition.chainId) &&
       liquidityPosition.version !== ProtocolVersion.V4
 
@@ -212,7 +210,6 @@ function useDropdownOptions(
   }, [
     account.chainId,
     dispatch,
-    isMigrateToV4Enabled,
     isOpenLiquidityPosition,
     isVisible,
     liquidityPosition,
@@ -316,7 +313,7 @@ export function LiquidityPositionCard({
   return (
     <ContextMenu
       menuItems={dropdownOptions}
-      isPlacementRight={isMiniVersion}
+      isPlacementRight={!isMiniVersion}
       disabled={disabled}
       triggerMode={ContextMenuTriggerMode.Secondary}
       isOpen={isOpenContextMenu}

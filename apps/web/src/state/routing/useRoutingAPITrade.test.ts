@@ -61,7 +61,7 @@ const MOCK_ARGS: GetQuoteArgs = {
   uniswapXForceSyntheticQuotes: false,
   sendPortionEnabled: true,
   protocolPreferences: undefined,
-  routingType: URAQuoteType.DUTCH_V1,
+  routingType: URAQuoteType.DUTCH_V2,
 }
 
 describe('#useRoutingAPITrade ExactIn', () => {

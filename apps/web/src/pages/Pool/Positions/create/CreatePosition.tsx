@@ -21,7 +21,7 @@ import {
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { DepositStep } from 'pages/Pool/Positions/create/Deposit'
 import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
-import { SelectPriceRangeStep, SelectPriceRangeStepV2 } from 'pages/Pool/Positions/create/RangeSelectionStep'
+import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import ResetCreatePositionFormModal from 'pages/Pool/Positions/create/ResetCreatePositionsFormModal'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { useInitialPoolInputs } from 'pages/Pool/Positions/create/hooks'
@@ -86,7 +86,7 @@ function CreatePositionInner() {
       <Trace logImpression section={SectionName.CreatePositionPriceRangeStep}>
         <EditSelectTokensStep />
         <Container>
-          {v2Selected ? <SelectPriceRangeStepV2 /> : <SelectPriceRangeStep />}
+          <SelectPriceRangeStep />
           <DepositStep />
           <ErrorCallout errorMessage={error} onPress={refetch} />
         </Container>

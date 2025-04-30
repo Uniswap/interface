@@ -84,6 +84,7 @@ import {
   v7Schema,
   v80Schema,
   v81Schema,
+  v82Schema,
   v83Schema,
   v84Schema,
   v8Schema,
@@ -1609,8 +1610,8 @@ describe('Redux state migrations', () => {
 
   it('migrates from v82 to v83', () => {
     // v82 didn't have a new schema
-    const v81Stub = { ...v81Schema }
-    const v83 = migrations[83](v81Stub)
+    const v82Stub = { ...v82Schema }
+    const v83 = migrations[83](v82Stub)
 
     expect(v83.pushNotifications.generalUpdatesEnabled).toBe(false)
     expect(v83.pushNotifications.priceAlertsEnabled).toBe(false)

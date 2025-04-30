@@ -207,12 +207,11 @@ export default function TokenDetails() {
           <ActivitySection />
         </LeftPanel>
         <RightPanel>
-          {showRightPanel && (
-            <>
-              <TDPSwapComponent />
-              <BalanceSummary />
-            </>
-          )}
+          {/* Uses display to preserve component state */}
+          <Flex display={showRightPanel ? 'flex' : 'none'}>
+            <TDPSwapComponent />
+            <BalanceSummary />
+          </Flex>
           <TokenDescription />
         </RightPanel>
         <MobileBottomBar hide={isTouchDevice && scrollDirection === ScrollDirection.DOWN}>

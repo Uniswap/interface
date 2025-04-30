@@ -1,13 +1,12 @@
+import { useModalState } from 'hooks/useModalState'
 import { useTranslation } from 'react-i18next'
-import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { Button, Flex, ModalCloseIcon, Spacer, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function UkDisclaimerModal() {
   const { t } = useTranslation()
-  const isOpen = useModalIsOpen(ModalName.UkDisclaimer)
-  const closeModal = useCloseModal()
+  const { isOpen, closeModal } = useModalState(ModalName.UkDisclaimer)
 
   return (
     <Modal name={ModalName.UkDisclaimer} isModalOpen={isOpen} onClose={closeModal} padding={0}>

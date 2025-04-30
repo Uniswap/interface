@@ -35,6 +35,7 @@ import { MenuContentItem } from 'wallet/src/components/menu/types'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanActiveAddressClaimUnitag'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import {
   useActiveAccountAddressWithThrow,
@@ -128,7 +129,7 @@ export function AccountSwitcherScreen(): JSX.Element {
         wallet_type: ImportType.CreateAdditional,
         accounts_imported_count: 1,
         wallets_imported: [pendingWallet.address],
-        cloud_backup_used: pendingWallet.backups?.includes(BackupType.Cloud) ?? false,
+        cloud_backup_used: hasBackup(BackupType.Cloud, pendingWallet),
         modal: ModalName.AccountSwitcher,
       })
 

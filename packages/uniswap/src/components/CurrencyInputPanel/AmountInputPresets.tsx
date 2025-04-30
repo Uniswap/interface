@@ -14,7 +14,6 @@ interface AmountInputPresetsProps {
   hoverLtr?: boolean
   currencyAmount: CurrencyAmount<Currency> | null | undefined
   currencyBalance: CurrencyAmount<Currency>
-  nativeTokenPercentageBuffer?: number
   transactionType?: TransactionType
   buttonProps?: ButtonProps
   onSetPresetValue: (amount: string, percentage: PresetPercentage) => void
@@ -24,7 +23,6 @@ export function AmountInputPresets({
   hoverLtr,
   currencyAmount,
   currencyBalance,
-  nativeTokenPercentageBuffer,
   transactionType,
   buttonProps,
   onSetPresetValue,
@@ -65,7 +63,6 @@ export function AmountInputPresets({
             percentage={percent}
             currencyAmount={currencyAmount}
             currencyBalance={currencyBalance}
-            nativeTokenPercentageBuffer={nativeTokenPercentageBuffer}
             currencyField={CurrencyField.INPUT}
             transactionType={transactionType}
             elementName={ElementName.PresetPercentage}

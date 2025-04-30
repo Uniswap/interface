@@ -22,6 +22,7 @@ import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOn
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
@@ -37,7 +38,7 @@ interface ImportMnemonicArgs {
 
 interface GenerateImportedAccountsArgs {
   mnemonicId: string
-  backupType?: BackupType.Cloud | BackupType.Manual
+  backupType: BackupType
 }
 
 export interface OnboardingContext {
@@ -51,7 +52,6 @@ export interface OnboardingContext {
   }: GenerateImportedAccountsArgs) => Promise<SignerMnemonicAccount[]>
   generateAccountsAndImportAddresses: (selectedAddresses: string[]) => Promise<SignerMnemonicAccount[] | undefined>
   addBackupMethod: (backupMethod: BackupType) => void
-  hasBackup: (address: string, backupType?: BackupType) => boolean | undefined
   selectImportedAccounts: (accountAddresses: string[]) => Promise<SignerMnemonicAccount[]>
   finishOnboarding: ({
     importType,
@@ -90,7 +90,6 @@ const initialOnboardingContext: OnboardingContext = {
   generateImportedAccounts: async () => [],
   generateAccountsAndImportAddresses: async () => [],
   addBackupMethod: () => undefined,
-  hasBackup: () => undefined,
   selectImportedAccounts: async () => [],
   finishOnboarding: async (_params: {
     importType: ImportType
@@ -377,18 +376,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   }
 
   /**
-   * Checks if account of given address has a certain type of backup or any backup if a second
-   * parameter is not provided
-   */
-  const hasBackup = (address: string, backupType?: BackupType): boolean | undefined => {
-    return getAllOnboardingAccounts()
-      .find((account) => account.address === address)
-      ?.backups?.some((backup) =>
-        backupType ? backup === backupType : backup === BackupType.Cloud || backup === BackupType.Manual,
-      )
-  }
-
-  /**
    * Returns an array of accounts imported accounts or an array with a single
    * pending account depending on flow it is invoked in.
    */
@@ -483,9 +470,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
         flow: extensionOnboardingFlow,
         accounts_imported_count: onboardingAddresses.length,
         wallets_imported: onboardingAddresses,
-        cloud_backup_used: Object.values(onboardingAccounts).some((acc: Account) =>
-          acc.backups?.includes(BackupType.Cloud),
-        ),
+        cloud_backup_used: Object.values(onboardingAccounts).some((acc: Account) => hasBackup(BackupType.Cloud, acc)),
       })
     }
 
@@ -554,7 +539,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
         getOnboardingOrImportedAccount,
         setRecoveredImportedAccounts: setImportedAccounts,
         addBackupMethod,
-        hasBackup,
         generateOnboardingAccount,
         generateInitialAddresses,
         generateAdditionalAddresses,

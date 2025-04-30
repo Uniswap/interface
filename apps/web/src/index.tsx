@@ -38,7 +38,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
@@ -138,17 +137,15 @@ createRoot(container).render(
                         <GraphqlProviders>
                           <LocalizationContextProvider>
                             <BlockNumberProvider>
-                              <UnitagUpdaterContextProvider>
-                                <Updaters />
-                                <ThemeProvider>
-                                  <TamaguiProvider>
-                                    <PortalProvider>
-                                      <ThemedGlobalStyle />
-                                      <App />
-                                    </PortalProvider>
-                                  </TamaguiProvider>
-                                </ThemeProvider>
-                              </UnitagUpdaterContextProvider>
+                              <Updaters />
+                              <ThemeProvider>
+                                <TamaguiProvider>
+                                  <PortalProvider>
+                                    <ThemedGlobalStyle />
+                                    <App />
+                                  </PortalProvider>
+                                </TamaguiProvider>
+                              </ThemeProvider>
                             </BlockNumberProvider>
                           </LocalizationContextProvider>
                         </GraphqlProviders>

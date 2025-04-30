@@ -2,6 +2,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { Scrim } from 'components/AccountDrawer/Scrim'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import useDisableScrolling from 'hooks/useDisableScrolling'
+import { useModalState } from 'hooks/useModalState'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Portal } from 'nft/components/common/Portal'
 import MaxSlippageSettings from 'pages/MigrateV2/Settings/MaxSlippageSettings'
@@ -10,7 +11,6 @@ import TransactionDeadlineSettings from 'pages/MigrateV2/Settings/TransactionDea
 import { useCallback, useMemo, useRef } from 'react'
 import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { useCloseModal, useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ThemedText } from 'theme/components'
 import { transitions } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
@@ -50,11 +50,9 @@ export default function MigrateV2SettingsTab({
   const showDeadlineSettings = !isL2ChainId(chainId)
   const toggleButtonNode = useRef<HTMLDivElement | null>(null)
   const menuNode = useRef<HTMLDivElement | null>(null)
-  const isOpen = useModalIsOpen(ModalName.Settings)
+  const { isOpen, closeModal, toggleModal } = useModalState(ModalName.Settings)
 
-  const closeModal = useCloseModal(ModalName.Settings)
   const closeMenu = useCallback(() => closeModal(), [closeModal])
-  const toggleMenu = useToggleSettingsMenu()
 
   const isMobile = useIsMobile()
   const isOpenMobile = isOpen && isMobile
@@ -78,7 +76,7 @@ export default function MigrateV2SettingsTab({
 
   return (
     <Flex position="relative" ref={toggleButtonNode}>
-      <MenuButton disabled={!isChainSupported} isActive={isOpen} compact={compact} onClick={toggleMenu} />
+      <MenuButton disabled={!isChainSupported} isActive={isOpen} compact={compact} onClick={toggleModal} />
       {isOpenDesktop && <MenuFlyout ref={menuNode}>{Settings}</MenuFlyout>}
       {isOpenMobile && (
         <Portal>

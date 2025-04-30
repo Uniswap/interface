@@ -6,17 +6,21 @@ import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 
 import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text, isWeb, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { zIndexes } from 'ui/src/theme'
+import { spacing, zIndexes } from 'ui/src/theme'
 import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/useFilterCallbacks'
 import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
 import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
 import { TokenSelectorSwapInputList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapInputList'
 import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapOutputList'
-import { TokenOptionSection, TokenSection, TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import {
+  OnchainItemSection,
+  OnchainItemSectionName,
+  TokenSelectorFlow,
+} from 'uniswap/src/components/TokenSelector/types'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
-import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
+import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/items/types'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
@@ -34,7 +38,7 @@ import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -137,7 +141,7 @@ export function TokenSelectorContent({
       : undefined
 
   const onSelectCurrencyCallback = useCallback(
-    (currencyInfo: CurrencyInfo, section: TokenSection<TokenSelectorItemTypes>, index: number): void => {
+    (currencyInfo: CurrencyInfo, section: OnchainItemSection<TokenSelectorItemTypes>, index: number): void => {
       const searchContext: SearchContext = {
         category: section.sectionKey,
         query: debouncedSearchFilter ?? undefined,
@@ -164,7 +168,7 @@ export function TokenSelectorContent({
         preselect_asset: false,
       })
 
-      const forceIsBridgePair = section.sectionKey === TokenOptionSection.BridgingTokens
+      const forceIsBridgePair = section.sectionKey === OnchainItemSectionName.BridgingTokens
       onSelectCurrency({
         currency: currencyInfo.currency,
         field: currencyField,
@@ -293,35 +297,35 @@ export function TokenSelectorContent({
               <ModalCloseIcon onClose={onClose} />
             </Flex>
           )}
-          <Flex px="$spacing16" py="$spacing4">
-            <SearchTextInput
-              autoFocus={shouldAutoFocusSearch}
-              backgroundColor="$surface2"
-              endAdornment={
-                <Flex row alignItems="center">
-                  {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
-                  <NetworkFilter
-                    includeAllNetworks={!isTestnetModeEnabled}
-                    chainIds={chainIds || enabledChains}
-                    selectedChain={chainFilter}
-                    styles={isExtension || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}
-                    onDismiss={dismissNativeKeyboard}
-                    onPressChain={(newChainId) => {
-                      onChangeChainFilter(newChainId)
-                      onSelectChain?.(newChainId)
-                    }}
-                  />
-                </Flex>
-              }
-              placeholder={t('tokens.selector.search.placeholder')}
-              px="$spacing16"
-              py="$none"
-              value={searchFilter ?? ''}
-              onCancel={isWeb ? undefined : onCancel}
-              onChangeText={onChangeText}
-              onFocus={onFocus}
-            />
-          </Flex>
+          <SearchTextInput
+            autoFocus={shouldAutoFocusSearch}
+            backgroundColor="$surface2"
+            endAdornment={
+              <Flex row alignItems="center">
+                {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
+                <NetworkFilter
+                  includeAllNetworks={!isTestnetModeEnabled}
+                  chainIds={chainIds || enabledChains}
+                  selectedChain={chainFilter}
+                  styles={isExtension || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}
+                  onDismiss={dismissNativeKeyboard}
+                  onPressChain={(newChainId) => {
+                    onChangeChainFilter(newChainId)
+                    onSelectChain?.(newChainId)
+                  }}
+                />
+              </Flex>
+            }
+            placeholder={t('tokens.selector.search.placeholder')}
+            px="$spacing16"
+            py="$none"
+            mx={spacing.spacing16}
+            my="$spacing4"
+            value={searchFilter ?? ''}
+            onCancel={isWeb ? undefined : onCancel}
+            onChangeText={onChangeText}
+            onFocus={onFocus}
+          />
           {isLimits && (
             <Flex
               row

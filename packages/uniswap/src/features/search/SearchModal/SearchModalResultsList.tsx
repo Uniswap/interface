@@ -1,95 +1,83 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
-import { formatSearchResults, useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import { isWeb } from 'ui/src'
+import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
+import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
+import { useOnchainItemListSection } from 'uniswap/src/components/TokenSelector/utils'
 import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
-import { PoolOption, SearchModalItemTypes } from 'uniswap/src/components/lists/types'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SearchModalItemTypes } from 'uniswap/src/components/lists/items/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
+import { useSearchTokensRest } from 'uniswap/src/features/dataApi/searchTokensRest'
 import { SearchModalList } from 'uniswap/src/features/search/SearchModal/SearchModalList'
-import { isWeb } from 'utilities/src/platform'
+import { MOCK_POOL_OPTION_ITEM } from 'uniswap/src/features/search/SearchModal/mocks'
+import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 
 export function useSectionsForSearchResults(
   chainFilter: UniverseChainId | null,
   searchFilter: string | null,
-): GqlResult<TokenSection<SearchModalItemTypes>[]> {
+  activeTab: SearchTab,
+): GqlResult<OnchainItemSection<SearchModalItemTypes>[]> {
   const {
     data: searchResultCurrencies,
     error: searchTokensError,
     refetch: refetchSearchTokens,
     loading: searchTokensLoading,
-  } = useSearchTokens(searchFilter, chainFilter, /*skip*/ false)
-
-  const searchResults = useMemo(() => {
-    return formatSearchResults(searchResultCurrencies, undefined)
-  }, [searchResultCurrencies])
-
-  const searchTokensSection = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.SearchResults,
-    tokenOptions: searchResults,
+  } = useSearchTokensRest({
+    searchQuery: searchFilter,
+    chainFilter,
+    skip: !searchFilter || (activeTab !== SearchTab.Tokens && activeTab !== SearchTab.All),
   })
 
-  // on web, add search results sections for pools
-  const MOCK_POOLS_SECTION: TokenSection<PoolOption>[] = useMemo(
-    () => [
-      {
-        sectionKey: TokenOptionSection.PopularTokens, // temp
-        data: [
-          {
-            poolId: '0x1234567890123456789012345678901234567890',
-            chainId: UniverseChainId.Unichain,
-            token0CurrencyInfo: {
-              currency: {
-                chainId: UniverseChainId.Unichain,
-                address: '0x1234567890123456789012345678901234567890',
-                decimals: 18,
-                name: 'Unichain',
-                symbol: 'UNI',
-              },
-            },
-            token1CurrencyInfo: {
-              currency: {
-                chainId: UniverseChainId.Unichain,
-                address: '0x1234567890123456789012345678901234567890',
-                decimals: 18,
-                name: 'Unichain',
-                symbol: 'UNI',
-              },
-            },
-            hookAddress: '0x1234567890123456789012345678901234567890',
-            protocolVersion: ProtocolVersion.V3,
-            feeTier: 3000,
-          } as PoolOption,
-        ],
-      },
-    ],
-    [],
-  )
+  const tokenSearchResults = useCurrencyInfosToTokenOptions({ currencyInfos: searchResultCurrencies })
+  const tokenSearchResultsSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.Tokens,
+    options: tokenSearchResults,
+  })
+
+  const poolSearchResultsSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.Pools,
+    options: Array(isWeb ? 4 : 0).fill(MOCK_POOL_OPTION_ITEM),
+  })
 
   // on mobile, add search results sections for wallet & NFT
 
   const loading = searchTokensLoading
-  const error = !searchResults && searchTokensError
+  const error = !tokenSearchResults && searchTokensError
   const refetchAll = useCallback(() => {
     refetchSearchTokens?.()
   }, [refetchSearchTokens])
 
-  const sections = useMemo(
-    () => [...(searchTokensSection ?? []), ...(isWeb ? MOCK_POOLS_SECTION : [])],
-    [MOCK_POOLS_SECTION, searchTokensSection],
-  )
+  return useMemo(() => {
+    let sections: OnchainItemSection<SearchModalItemTypes>[] = []
+    switch (activeTab) {
+      case SearchTab.All:
+        sections = [...(tokenSearchResultsSection ?? []), ...(poolSearchResultsSection ?? [])]
+        break
+      case SearchTab.Tokens:
+        sections = tokenSearchResultsSection ?? []
+        break
+      case SearchTab.Pools:
+        sections = poolSearchResultsSection ?? []
+    }
 
-  return useMemo(
-    () => ({
+    return {
       data: sections,
       loading,
       error: error || undefined,
       refetch: refetchAll,
-    }),
-    [error, loading, refetchAll, sections],
-  )
+    }
+  }, [activeTab, error, loading, poolSearchResultsSection, refetchAll, tokenSearchResultsSection])
+}
+
+interface SearchModalResultsListProps {
+  chainFilter: UniverseChainId | null
+  parsedChainFilter: UniverseChainId | null
+  searchFilter: string
+  debouncedSearchFilter: string | null
+  debouncedParsedSearchFilter: string | null
+  activeTab: SearchTab
+  onSelect: (item: SearchModalItemTypes) => void
 }
 
 function _SearchModalResultsList({
@@ -98,15 +86,9 @@ function _SearchModalResultsList({
   searchFilter,
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
+  activeTab,
   onSelect,
-}: {
-  chainFilter: UniverseChainId | null
-  parsedChainFilter: UniverseChainId | null
-  searchFilter: string
-  debouncedSearchFilter: string | null
-  debouncedParsedSearchFilter: string | null
-  onSelect: (item: SearchModalItemTypes) => void
-}): JSX.Element {
+}: SearchModalResultsListProps): JSX.Element {
   const { t } = useTranslation()
   const {
     data: sections,
@@ -116,6 +98,7 @@ function _SearchModalResultsList({
   } = useSectionsForSearchResults(
     chainFilter ?? parsedChainFilter,
     debouncedParsedSearchFilter ?? debouncedSearchFilter,
+    activeTab,
   )
 
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)

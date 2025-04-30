@@ -2,11 +2,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex, QRCodeDisplay, Text, isWeb, useMedia, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
 export function WalletQRCode({ address }: { address: Address }): JSX.Element | null {

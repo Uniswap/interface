@@ -3,11 +3,11 @@ import tokenLogo from 'assets/images/token-logo.png'
 import { AutoColumn } from 'components/deprecated/Column'
 import { CardBGImage, CardNoise } from 'components/earn/styled'
 import { useAccount } from 'hooks/useAccount'
+import { useModalState } from 'hooks/useModalState'
 import styled, { keyframes } from 'lib/styled-components'
 import { useEffect } from 'react'
 import { Heart, X } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { useModalIsOpen, useShowClaimPopup, useToggleModal, useToggleShowClaimPopup } from 'state/application/hooks'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { ThemedText } from 'theme/components'
 import { Button, Flex } from 'ui/src'
@@ -51,12 +51,10 @@ export default function ClaimPopup() {
   const account = useAccount()
 
   // dont store these in persisted state yet
-  const showClaimPopup: boolean = useShowClaimPopup()
-  const toggleShowClaimPopup = useToggleShowClaimPopup()
+  const { isOpen: claimPopupIsOpen, toggleModal: toggleClaimPopup } = useModalState(ModalName.ClaimPopup)
 
   // toggle for showing this modal
-  const showClaimModal = useModalIsOpen(ModalName.AddressClaim)
-  const toggleClaimModal = useToggleModal(ModalName.AddressClaim)
+  const { isOpen: showClaimModal, toggleModal: toggleClaimModal } = useModalState(ModalName.AddressClaim)
 
   // const userHasAvailableclaim = useUserHasAvailableClaim()
   const userHasAvailableclaim: boolean = useUserHasAvailableClaim(account.address)
@@ -65,7 +63,7 @@ export default function ClaimPopup() {
   // listen for available claim and show popup if needed
   useEffect(() => {
     if (userHasAvailableclaim) {
-      toggleShowClaimPopup()
+      toggleClaimPopup()
     }
     // the toggleShowClaimPopup function changes every time the popup changes, so this will cause an infinite loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,11 +82,11 @@ export default function ClaimPopup() {
       }}
     >
       <Flex $platform-web={{ position: 'fixed' }} maxWidth={348} width="100%" zIndex="$fixed" animation="fast">
-        {showClaimPopup && !showClaimModal && (
+        {claimPopupIsOpen && !showClaimModal && (
           <StyledClaimPopup gap="md">
             <CardBGImage />
             <CardNoise />
-            <StyledClose stroke="white" onClick={toggleShowClaimPopup} />
+            <StyledClose stroke="white" onClick={toggleClaimPopup} />
             <AutoColumn style={{ padding: '2rem 0', zIndex: 10 }} justify="center">
               <UniToken width="48px" src={tokenLogo} />{' '}
               <ThemedText.DeprecatedWhite style={{ marginTop: '1rem' }} fontSize={36} fontWeight={535}>

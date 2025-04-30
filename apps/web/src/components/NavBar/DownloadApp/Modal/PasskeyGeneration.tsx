@@ -1,9 +1,9 @@
 import { Page } from 'components/NavBar/DownloadApp/Modal'
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
+import { useModalState } from 'hooks/useModalState'
 import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCloseModal } from 'state/application/hooks'
 import { Button, Flex } from 'ui/src'
 import { Faceid } from 'ui/src/components/icons/Faceid'
 import { Fingerprint } from 'ui/src/components/icons/Fingerprint'
@@ -24,14 +24,21 @@ export function PasskeyGenerationModal({
   goBack: () => void
 }) {
   const { t } = useTranslation()
-  const closeModal = useCloseModal(ModalName.GetTheApp)
+  const { closeModal } = useModalState(ModalName.GetTheApp)
 
   const onSuccess = useEvent(() => {
     closeModal()
     setPage(Page.GetStarted)
   })
 
-  const { signInWithPasskey } = useSignInWithPasskey({ createNewWallet: true, unitag, onSuccess })
+  const { signInWithPasskey } = useSignInWithPasskey({
+    createNewWallet: true,
+    unitag,
+    onSuccess,
+    onError: () => {
+      setPage(Page.GetStarted)
+    },
+  })
 
   return (
     <ModalContent

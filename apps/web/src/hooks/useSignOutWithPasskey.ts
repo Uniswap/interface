@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
 import { disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
 import { logger } from 'utilities/src/logger/logger'
@@ -22,25 +22,27 @@ interface SignOutWithPasskeyOptions {
 export function useSignOutWithPasskey({ onSuccess, onError }: SignOutWithPasskeyOptions = {}) {
   const { setIsConnected } = useEmbeddedWalletState()
 
-  const { mutate: signOutWithPasskey, ...rest } = useMutation({
-    mutationFn: async () => {
+  const { mutate: signOutWithPasskey, ...rest } = usePasskeyAuthWithHelpModal(
+    async () => {
       await disconnectWallet()
       return true
     },
-    onSuccess: () => {
-      setIsConnected(false)
-      onSuccess?.()
+    {
+      onSuccess: () => {
+        setIsConnected(false)
+        onSuccess?.()
+      },
+      onError: (error: Error) => {
+        logger.error(error, {
+          tags: {
+            file: 'useSignOutWithPasskey',
+            function: 'signOutWithPasskey',
+          },
+        })
+        onError?.(error)
+      },
     },
-    onError: (error: Error) => {
-      logger.error(error, {
-        tags: {
-          file: 'useSignOutWithPasskey',
-          function: 'signOutWithPasskey',
-        },
-      })
-      onError?.(error)
-    },
-  })
+  )
 
   return { signOutWithPasskey, ...rest }
 }

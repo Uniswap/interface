@@ -5,7 +5,7 @@ import { Icon } from 'react-feather'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import useResizeObserver from 'use-resize-observer'
 
-export const IconHoverText = styled.span`
+const IconHoverText = styled.span`
   color: ${({ theme }) => theme.neutral1};
   position: absolute;
   top: 28px;

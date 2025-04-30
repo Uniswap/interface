@@ -26,6 +26,7 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted, selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
@@ -109,7 +110,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         wallet_type: ImportType.CreateAdditional,
         accounts_imported_count: 1,
         wallets_imported: [newAccount.address],
-        cloud_backup_used: newAccount.backups?.includes(BackupType.Cloud) ?? false,
+        cloud_backup_used: hasBackup(BackupType.Cloud, newAccount),
         modal: ModalName.AccountSwitcher,
       })
     }

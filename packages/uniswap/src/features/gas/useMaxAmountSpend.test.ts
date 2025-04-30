@@ -50,36 +50,6 @@ describe(useMaxAmountSpend, () => {
     expect(amount1Spend?.quotient.toString()).toEqual('0')
   })
 
-  it('handles no percentage to subtract', () => {
-    const MIN_ETH_FOR_GAS = useMinEthForGas()
-    const amount = CurrencyAmount.fromRawAmount(
-      MAINNET_CURRENCY,
-      JSBI.add(JSBI.BigInt(1e18), JSBI.BigInt(MIN_ETH_FOR_GAS)),
-    )
-    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount })
-    expect(amount1Spend?.quotient.toString()).toEqual('1000000000000000000')
-  })
-
-  it('handles percentage to subtract', () => {
-    const MIN_ETH_FOR_GAS = useMinEthForGas()
-    const amount = CurrencyAmount.fromRawAmount(
-      MAINNET_CURRENCY,
-      JSBI.add(JSBI.BigInt(1e18), JSBI.BigInt(MIN_ETH_FOR_GAS)),
-    )
-    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount, nativeTokenPercentageBuffer: 10 })
-    expect(amount1Spend?.quotient.toString()).toEqual('899800000000000000')
-  })
-
-  it('handles half a percent', () => {
-    const MIN_ETH_FOR_GAS = useMinEthForGas()
-    const amount = CurrencyAmount.fromRawAmount(
-      MAINNET_CURRENCY,
-      JSBI.add(JSBI.BigInt(1e18), JSBI.BigInt(MIN_ETH_FOR_GAS)),
-    )
-    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount, nativeTokenPercentageBuffer: 0.5 })
-    expect(amount1Spend?.quotient.toString()).toEqual('994990000000000000')
-  })
-
   // Polygon
 
   it('reserves gas for large amounts on Polygon', () => {

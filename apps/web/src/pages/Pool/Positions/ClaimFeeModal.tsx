@@ -7,11 +7,11 @@ import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
+import { useModalState } from 'hooks/useModalState'
 import useSelectChain from 'hooks/useSelectChain'
 import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useCloseModal } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Switch, Text } from 'ui/src'
@@ -93,7 +93,7 @@ export function ClaimFeeModal() {
   const canUnwrap1 = canUnwrapCurrency(currency1Amount?.currency, positionInfo?.version)
   const canUnwrap = positionInfo && chainId && (canUnwrap0 || canUnwrap1)
 
-  const onClose = useCloseModal(ModalName.ClaimFee)
+  const { closeModal } = useModalState(ModalName.ClaimFee)
   const {
     feeValue0: token0Fees,
     feeValue1: token1Fees,
@@ -214,7 +214,7 @@ export function ClaimFeeModal() {
         setCurrentStep: setCurrentTransactionStep,
         setSteps: () => undefined,
         onSuccess: () => {
-          onClose()
+          closeModal()
         },
         onFailure: () => {
           setCurrentTransactionStep(undefined)
@@ -238,12 +238,12 @@ export function ClaimFeeModal() {
   }
 
   return (
-    <Modal name={ModalName.ClaimFee} onClose={onClose} isDismissible>
+    <Modal name={ModalName.ClaimFee} onClose={closeModal} isDismissible>
       <Flex gap="$gap16">
         <GetHelpHeader
           link={uniswapUrls.helpRequestUrl}
           title={t('pool.collectFees')}
-          closeModal={onClose}
+          closeModal={closeModal}
           closeDataTestId="ClaimFeeModal-close-icon"
         />
         {token0Fees && token1Fees && (

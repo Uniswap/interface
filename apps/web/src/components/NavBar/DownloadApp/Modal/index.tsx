@@ -4,9 +4,9 @@ import { ChooseUnitagModal } from 'components/NavBar/DownloadApp/Modal/ChooseUni
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
 import { DownloadAppsModal } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
 import { PasskeyGenerationModal } from 'components/NavBar/DownloadApp/Modal/PasskeyGeneration'
+import { useModalState } from 'hooks/useModalState'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
-import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { AnimateTransition, Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -28,8 +28,7 @@ export function GetTheAppModal() {
   const initialPage = isEmbeddedWalletEnabled ? Page.GetStarted : Page.GetApp
 
   const [page, setPage] = useAtom(downloadAppModalPageAtom)
-  const isOpen = useModalIsOpen(ModalName.GetTheApp)
-  const closeModal = useCloseModal()
+  const { isOpen, closeModal } = useModalState(ModalName.GetTheApp)
   const close = useCallback(() => {
     closeModal()
     setTimeout(() => setPage(initialPage), 500)
@@ -43,7 +42,7 @@ export function GetTheAppModal() {
 
   return (
     <Trace modal={InterfaceModalName.GETTING_STARTED_MODAL}>
-      <Modal name={ModalName.DownloadApp} isModalOpen={isOpen} maxWidth="fit-content" onClose={closeModal} padding={0}>
+      <Modal name={ModalName.DownloadApp} isModalOpen={isOpen} maxWidth="fit-content" onClose={close} padding={0}>
         <Flex data-testid="download-uniswap-modal" position="relative" userSelect="none">
           {/* The Page enum value corresponds to the modal page's index */}
           <AnimateTransition currentIndex={page} animationType={page === Page.GetStarted ? 'forward' : 'backward'}>

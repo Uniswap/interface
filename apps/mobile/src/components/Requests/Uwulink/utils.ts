@@ -1,5 +1,5 @@
 import { parseEther } from 'ethers/lib/utils'
-import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import {
@@ -114,7 +114,7 @@ export async function getFormattedUwuLinkTxnRequest({
   allowList,
   providerManager,
   contractManager,
-}: HandleUwuLinkRequestParams): Promise<{ request: WalletConnectRequest; account: string }> {
+}: HandleUwuLinkRequestParams): Promise<{ request: WalletConnectSigningRequest; account: string }> {
   const newRequest = {
     sessionId: UWULINK_PREFIX, // session/internalId is WalletConnect specific, but not needed here
     internalId: UWULINK_PREFIX,

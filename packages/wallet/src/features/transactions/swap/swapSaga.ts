@@ -20,11 +20,10 @@ import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import {
-  CalculatedNonce,
-  SendTransactionParams,
-  sendTransaction,
-  tryGetNonce,
-} from 'wallet/src/features/transactions/sendTransactionSaga'
+  ExecuteTransactionParams,
+  executeTransaction,
+} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import { CalculatedNonce, tryGetNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import { wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
@@ -81,7 +80,7 @@ export function* approveAndSwap(params: SwapParams) {
         submitViaPrivateRpc,
         userSubmissionTimestampMs,
       }
-      const sendTransactionParams: SendTransactionParams = {
+      const executeTransactionParams: ExecuteTransactionParams = {
         chainId,
         account,
         options,
@@ -91,7 +90,7 @@ export function* approveAndSwap(params: SwapParams) {
       }
 
       // TODO(WEB-4406) - Refactor the approval submission's rpc call latency to not delay wrap submission
-      approveTxHash = (yield* call(sendTransaction, sendTransactionParams)).transactionResponse.hash
+      approveTxHash = (yield* call(executeTransaction, executeTransactionParams)).transactionResponse.hash
       nonce = nonce ? nonce + 1 : undefined
     }
 
@@ -140,7 +139,7 @@ export function* approveAndSwap(params: SwapParams) {
         submitViaPrivateRpc,
         userSubmissionTimestampMs,
       }
-      const sendTransactionParams: SendTransactionParams = {
+      const executeTransactionParams: ExecuteTransactionParams = {
         txId,
         chainId,
         account,
@@ -149,7 +148,7 @@ export function* approveAndSwap(params: SwapParams) {
         analytics,
         transactionOriginType: TransactionOriginType.Internal,
       }
-      yield* call(sendTransaction, sendTransactionParams)
+      yield* call(executeTransaction, executeTransactionParams)
       yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
     } else if (swapTxContext.routing === Routing.CLASSIC) {
       const options: TransactionOptions = {
@@ -157,7 +156,7 @@ export function* approveAndSwap(params: SwapParams) {
         submitViaPrivateRpc,
         userSubmissionTimestampMs,
       }
-      const sendTransactionParams: SendTransactionParams = {
+      const executeTransactionParams: ExecuteTransactionParams = {
         txId,
         chainId,
         account,
@@ -166,7 +165,7 @@ export function* approveAndSwap(params: SwapParams) {
         analytics,
         transactionOriginType: TransactionOriginType.Internal,
       }
-      yield* call(sendTransaction, sendTransactionParams)
+      yield* call(executeTransaction, executeTransactionParams)
       yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
     }
   } catch (error) {

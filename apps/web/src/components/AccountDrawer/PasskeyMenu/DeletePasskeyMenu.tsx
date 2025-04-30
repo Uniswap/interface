@@ -4,6 +4,7 @@ import { GenericPasskeyMenuModal, PasskeyMenuModalState } from 'components/Accou
 import StatusIcon from 'components/Identicon/StatusIcon'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
+import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Flex, Text } from 'ui/src'
@@ -18,12 +19,14 @@ export function DeletePasskeyMenu({
   refreshAuthenticators,
   authenticator,
   isLastAuthenticator = false,
+  credential,
 }: {
   show: boolean
   setPasskeyMenuModalState: Dispatch<SetStateAction<PasskeyMenuModalState | undefined>>
   refreshAuthenticators: () => void
   authenticator: Authenticator
   isLastAuthenticator?: boolean
+  credential?: string
 }) {
   const { t } = useTranslation()
   const { disconnect } = useDisconnect()
@@ -36,8 +39,30 @@ export function DeletePasskeyMenu({
   const { formatFiatPrice } = useFormatter()
   const [acknowledged, setAcknowledged] = useState(false)
 
+  const { mutate: handleDeleteAuthenticator } = usePasskeyAuthWithHelpModal(
+    async () => {
+      return await deleteAuthenticator({ authenticator, credential })
+    },
+    {
+      onSuccess: async (success) => {
+        if (success && isLastAuthenticator) {
+          await disconnectWallet()
+          disconnect()
+          accountDrawer.close()
+        } else if (success) {
+          setPasskeyMenuModalState(undefined)
+          await refreshAuthenticators()
+        }
+      },
+      onError: async () => {
+        setPasskeyMenuModalState(undefined)
+        await refreshAuthenticators()
+      },
+    },
+  )
+
   return (
-    <GenericPasskeyMenuModal show={show}>
+    <GenericPasskeyMenuModal show={show} onClose={() => setPasskeyMenuModalState(undefined)}>
       <Flex p="$gap12" borderRadius="$rounded12" backgroundColor="$statusCritical2">
         <Trash color="$statusCritical" size={24} />
       </Flex>
@@ -98,17 +123,7 @@ export function DeletePasskeyMenu({
           py="$padding12"
           variant="critical"
           emphasis="primary"
-          onPress={async () => {
-            const success = await deleteAuthenticator(authenticator)
-            if (success && isLastAuthenticator) {
-              await disconnectWallet()
-              disconnect()
-              accountDrawer.close()
-            } else {
-              setPasskeyMenuModalState(undefined)
-              await refreshAuthenticators()
-            }
-          }}
+          onPress={() => handleDeleteAuthenticator()}
           isDisabled={!acknowledged}
         >
           {t('common.button.delete')}

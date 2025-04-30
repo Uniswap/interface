@@ -32,6 +32,7 @@ import {
   Lock,
   RotatableChevron,
   Settings,
+  Sliders,
   Wrench,
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -40,8 +41,11 @@ import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistor
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { setCurrentFiatCurrency, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
+import { SmartWalletAdvancedSettingsModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ConnectionCardLoggingName } from 'uniswap/src/features/telemetry/types'
@@ -67,10 +71,12 @@ export function SettingsScreen(): JSX.Element {
   const currentLanguageInfo = useCurrentLanguageInfo()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const hasViewedConnectionMigration = useSelector(selectHasViewedConnectionMigration)
+  const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
 
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
   const [isPortfolioBalanceModalOpen, setIsPortfolioBalanceModalOpen] = useState(false)
   const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
+  const [isAdvancedModalOpen, setIsAdvancedModalOpen] = useState(false)
   const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false)
   const [isDefaultProvider, setIsDefaultProvider] = useState(true)
 
@@ -106,6 +112,8 @@ export function SettingsScreen(): JSX.Element {
   }
   const handleTestnetModalClose = useCallback(() => setIsTestnetModalOpen(false), [])
 
+  const handleAdvancedModalClose = useCallback(() => setIsAdvancedModalOpen(false), [])
+
   useEffect(() => {
     getIsDefaultProviderFromStorage()
       .then((newIsDefaultProvider) => setIsDefaultProvider(newIsDefaultProvider))
@@ -139,6 +147,12 @@ export function SettingsScreen(): JSX.Element {
         />
       ) : undefined}
       <TestnetModeModal isOpen={isTestnetModalOpen} onClose={handleTestnetModalClose} />
+      <SmartWalletAdvancedSettingsModal
+        isTestnetEnabled={isTestnetModeEnabled}
+        onTestnetModeToggled={handleTestnetModeToggle}
+        isOpen={isAdvancedModalOpen}
+        onClose={handleAdvancedModalClose}
+      />
       <Flex fill backgroundColor="$surface1" gap="$spacing8">
         <ScreenHeader title={t('settings.title')} />
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -196,13 +210,20 @@ export function SettingsScreen(): JSX.Element {
               title={t('settings.setting.smallBalances.title')}
               onPress={(): void => setIsPortfolioBalanceModalOpen(true)}
             />
-
-            <SettingsToggleRow
-              Icon={Wrench}
-              checked={isTestnetModeEnabled}
-              title={t('settings.setting.wallet.testnetMode.title')}
-              onCheckedChange={handleTestnetModeToggle}
-            />
+            {isSmartWalletEnabled ? (
+              <SettingsItem
+                Icon={Sliders}
+                title={t('settings.setting.advanced.title')}
+                onPress={(): void => setIsAdvancedModalOpen(true)}
+              />
+            ) : (
+              <SettingsToggleRow
+                Icon={Wrench}
+                checked={isTestnetModeEnabled}
+                title={t('settings.setting.wallet.testnetMode.title')}
+                onCheckedChange={handleTestnetModeToggle}
+              />
+            )}
           </SettingsSection>
           {!hasViewedConnectionMigration && (
             <Flex pt="$padding8">

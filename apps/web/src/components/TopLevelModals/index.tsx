@@ -1,83 +1,66 @@
-import { OffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import UniwalletModal from 'components/AccountDrawer/UniwalletModal'
-import { AddressQRModal } from 'components/AddressQRModal'
-import { Banners } from 'components/Banner/shared/Banners'
-import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
-import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
-import { GetTheAppModal } from 'components/NavBar/DownloadApp/Modal'
-import { PrivacyChoicesModal } from 'components/PrivacyChoices'
-import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { ReceiveCryptoModal } from 'components/ReceiveCryptoModal'
-import { RecoveryPhraseModal } from 'components/RecoveryPhrase/Modal'
-import { UkDisclaimerModal } from 'components/TopLevelModals/UkDisclaimerModal'
-import AddressClaimModal from 'components/claim/AddressClaimModal'
-import DevFlagsBox from 'dev/DevFlagsBox'
+import { ModalRenderer } from 'components/TopLevelModals/modalRegistry'
 import { useAccount } from 'hooks/useAccount'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { IncreaseLiquidityModal } from 'pages/IncreaseLiquidity/IncreaseLiquidityModal'
-import { ClaimFeeModal } from 'pages/Pool/Positions/ClaimFeeModal'
-import { RemoveLiquidityModal } from 'pages/RemoveLiquidity/RemoveLiquidityModal'
-import { useCloseModal, useModalIsOpen, useToggleModal } from 'state/application/hooks'
-import { useMedia } from 'ui/src'
+import { PasskeysHelpModalTypeAtom } from 'hooks/usePasskeyAuthWithHelpModal'
+import { useAtomValue } from 'jotai/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { shortenAddress } from 'utilities/src/addresses'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 export default function TopLevelModals() {
   const isLandingPage = useIsPage(PageType.LANDING)
-  const media = useMedia()
-
-  const addressClaimOpen = useModalIsOpen(ModalName.AddressClaim)
-  const addressClaimToggle = useToggleModal(ModalName.AddressClaim)
-  const blockedAccountModalOpen = useModalIsOpen(ModalName.BlockedAccount)
-  const isAddLiquidityModalOpen = useModalIsOpen(ModalName.AddLiquidity)
-  const isRemoveLiquidityModalOpen = useModalIsOpen(ModalName.RemoveLiquidity)
-  const isClaimFeeModalOpen = useModalIsOpen(ModalName.ClaimFee)
-  const isTestnetModeModalOpen = useModalIsOpen(ModalName.TestnetMode)
-  const closeTestnetModeModal = useCloseModal(ModalName.TestnetMode)
-
   const account = useAccount()
+  const { unitag } = useUnitagByAddress(account.address)
+  const accountName = unitag?.username
+    ? unitag.username + '.uni.eth'
+    : account.address
+      ? shortenAddress(account.address)
+      : undefined
   useAccountRiskCheck(account.address)
-  const accountBlocked = Boolean(blockedAccountModalOpen && account.isConnected)
+  const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)
+
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
 
-  // On mobile landing page we need to be very careful about what modals we show
+  // On landing page we need to be very careful about what modals we show
   // because too many modals attached to the dom can cause performance issues
   // and potentially lead to crashes. Only add modals here if they are strictly
   // necessary and add minimal overhead to the dom.
-  if (isLandingPage && media.sm) {
+  if (isLandingPage) {
     return (
       <>
-        <PrivacyPolicyModal />
-        <PrivacyChoicesModal />
+        <ModalRenderer modalName={ModalName.PrivacyPolicy} />
+        <ModalRenderer modalName={ModalName.PrivacyChoices} />
+        <ModalRenderer modalName={ModalName.GetTheApp} />
+        <ModalRenderer modalName={ModalName.FeatureFlags} />
+        <ModalRenderer modalName={ModalName.UniWalletConnect} />
+        <ModalRenderer modalName={ModalName.BlockedAccount} />
+        {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
       </>
     )
   }
 
   return (
     <>
-      <AddressClaimModal isOpen={addressClaimOpen} connectedAddress={account.address} onDismiss={addressClaimToggle} />
-      <ConnectedAccountBlocked account={account.address} isOpen={accountBlocked} />
-      <UniwalletModal />
-
-      <Banners />
-
-      <OffchainActivityModal />
-      {account.address && <ReceiveCryptoModal />}
-      {account.address && <AddressQRModal accountAddress={account.address} />}
-      <UkDisclaimerModal />
-      <TestnetModeModal isOpen={isTestnetModeModalOpen} onClose={closeTestnetModeModal} showCloseButton />
-      <GetTheAppModal />
-      <PrivacyPolicyModal />
-      <PrivacyChoicesModal />
-      <FeatureFlagModal />
-      {shouldShowDevFlags && <DevFlagsBox />}
-
-      {isAddLiquidityModalOpen && <IncreaseLiquidityModal />}
-      {isRemoveLiquidityModalOpen && <RemoveLiquidityModal />}
-      {isClaimFeeModalOpen && <ClaimFeeModal />}
-      <RecoveryPhraseModal />
+      <ModalRenderer modalName={ModalName.AddressClaim} />
+      <ModalRenderer modalName={ModalName.BlockedAccount} />
+      <ModalRenderer modalName={ModalName.UniWalletConnect} />
+      <ModalRenderer modalName={ModalName.Banners} />
+      <ModalRenderer modalName={ModalName.OffchainActivity} />
+      <ModalRenderer modalName={ModalName.TransactionConfirmation} />
+      <ModalRenderer modalName={ModalName.UkDisclaimer} />
+      <ModalRenderer modalName={ModalName.TestnetMode} componentProps={{ showCloseButton: true }} />
+      <ModalRenderer modalName={ModalName.GetTheApp} />
+      <ModalRenderer modalName={ModalName.PrivacyPolicy} />
+      <ModalRenderer modalName={ModalName.PrivacyChoices} />
+      <ModalRenderer modalName={ModalName.FeatureFlags} />
+      {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
+      <ModalRenderer modalName={ModalName.AddLiquidity} />
+      <ModalRenderer modalName={ModalName.RemoveLiquidity} />
+      <ModalRenderer modalName={ModalName.ClaimFee} />
+      <ModalRenderer modalName={ModalName.RecoveryPhrase} />
+      <ModalRenderer modalName={ModalName.PasskeysHelp} componentProps={{ type: passkeysHelpModalType, accountName }} />
     </>
   )
 }

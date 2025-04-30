@@ -1,4 +1,5 @@
 import Column from 'components/deprecated/Column'
+import { ModalState } from 'hooks/useModalState'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { Trans } from 'react-i18next'
@@ -8,29 +9,26 @@ import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-
+import { useAccount } from 'wagmi'
 const ContentWrapper = styled(Column)`
   align-items: center;
   margin: 32px;
   text-align: center;
   font-size: 12px;
 `
-interface ConnectedAccountBlockedProps {
-  account?: string | null
-  isOpen: boolean
-}
 
-export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedProps) {
+export default function ConnectedAccountBlocked(props: ModalState) {
+  const account = useAccount()
   const theme = useTheme()
   return (
-    <Modal name={ModalName.AccountBlocked} isModalOpen={props.isOpen} onClose={Function.prototype()} padding={0}>
+    <Modal name={ModalName.AccountBlocked} isModalOpen={props.isOpen} onClose={props.closeModal} padding={0}>
       <ContentWrapper>
         <Slash size="22px" color={theme.neutral2} />
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>
           <Trans i18nKey="common.blockedAddress" />
         </ThemedText.DeprecatedLargeHeader>
         <Text color="$neutral2" fontSize={14} mb={12}>
-          {props.account}
+          {account.address}
         </Text>
         <ThemedText.DeprecatedMain fontSize={12} marginBottom={12}>
           <Trans

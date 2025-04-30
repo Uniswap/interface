@@ -45,7 +45,6 @@ import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebu
 import { getReduxPersistor } from 'src/store/store'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 
 const supportsSidePanel = checksIfSupportsSidePanel()
@@ -214,10 +213,8 @@ export default function OnboardingApp(): JSX.Element {
   return (
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Onboarding}>
-        <UnitagUpdaterContextProvider>
-          <PrimaryAppInstanceDebuggerLazy />
-          <RouterProvider router={router} />
-        </UnitagUpdaterContextProvider>
+        <PrimaryAppInstanceDebuggerLazy />
+        <RouterProvider router={router} />
       </BaseAppContainer>
     </PersistGate>
   )

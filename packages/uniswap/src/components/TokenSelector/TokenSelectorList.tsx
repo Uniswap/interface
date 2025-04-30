@@ -2,11 +2,11 @@ import { memo, useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Text } from 'ui/src'
 import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
-import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectCurrency, OnchainItemSection } from 'uniswap/src/components/TokenSelector/types'
+import { ItemRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
-import { ItemRowInfo } from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
 import { TokenOptionItem as BaseTokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
-import { TokenOption, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
+import { TokenOption, TokenSelectorItemTypes } from 'uniswap/src/components/lists/items/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -36,7 +36,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   isKeyboardOpen,
 }: {
   tokenOption: TokenOption
-  section: TokenSection<TokenOption>
+  section: OnchainItemSection<TokenOption>
   index: number
   showWarnings: boolean
   showTokenAddress?: boolean
@@ -128,7 +128,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
 
 interface TokenSelectorListProps {
   onSelectCurrency: OnSelectCurrency
-  sections?: TokenSection<TokenSelectorItemTypes>[]
+  sections?: OnchainItemSection<TokenSelectorItemTypes>[]
   chainFilter?: UniverseChainId | null
   showTokenWarnings: boolean
   refetch?: () => void
@@ -171,34 +171,31 @@ function _TokenSelectorList({
     [expandedItems],
   )
 
-  const renderItem = useCallback(
-    ({ item, section, index }: ItemRowInfo<TokenSelectorItemTypes>) => {
-      if (isHorizontalListTokenItem(item)) {
-        return (
-          <HorizontalTokenList
-            tokens={item}
-            section={section as TokenSection<TokenOption[]>}
-            index={index}
-            expanded={isExpandedItem(item)}
-            onSelectCurrency={onSelectCurrency}
-            onExpand={() => handleExpand(item)}
-          />
-        )
-      }
+  const renderItem = ({ item, section, index }: ItemRowInfo<TokenSelectorItemTypes>): JSX.Element => {
+    if (isHorizontalListTokenItem(item)) {
       return (
-        <TokenOptionItem
+        <HorizontalTokenList
+          tokens={item}
+          section={section as OnchainItemSection<TokenOption[]>}
           index={index}
-          isKeyboardOpen={isKeyboardOpen}
-          section={section as TokenSection<TokenOption>}
-          showTokenAddress={showTokenAddress}
-          showWarnings={showTokenWarnings}
-          tokenOption={item}
+          expanded={isExpandedItem(item)}
           onSelectCurrency={onSelectCurrency}
+          onExpand={() => handleExpand(item)}
         />
       )
-    },
-    [onSelectCurrency, showTokenAddress, showTokenWarnings, isKeyboardOpen, handleExpand, isExpandedItem],
-  )
+    }
+    return (
+      <TokenOptionItem
+        index={index}
+        isKeyboardOpen={isKeyboardOpen}
+        section={section as OnchainItemSection<TokenOption>}
+        showTokenAddress={showTokenAddress}
+        showWarnings={showTokenWarnings}
+        tokenOption={item}
+        onSelectCurrency={onSelectCurrency}
+      />
+    )
+  }
 
   return (
     <SelectorBaseList

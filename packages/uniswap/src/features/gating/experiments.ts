@@ -7,6 +7,7 @@ export enum Experiments {
   AccountCTAs = 'signin_login_connect_ctas',
   SwapPresets = 'swap_presets',
   NativeTokenPercentageBuffer = 'lp_native_eth_buffer',
+  PrivateRpc = 'private_rpc',
 }
 
 export enum Layers {
@@ -37,8 +38,14 @@ export enum SwapPresetsProperties {
   OutputEnabled = 'outputEnabled',
 }
 
+export enum PrivateRpcProperties {
+  FlashbotsEnabled = 'flashbots_enabled',
+  RefundPercent = 'refund_percent',
+}
+
 export type ExperimentProperties = {
   [Experiments.SwapPresets]: SwapPresetsProperties
+  [Experiments.PrivateRpc]: PrivateRpcProperties
 }
 
 // will be a spread of all experiment properties in that layer

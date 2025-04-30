@@ -1,9 +1,9 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { MobileAppLogo } from 'components/Icons/MobileAppLogo'
 import { useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
+import { useModalState } from 'hooks/useModalState'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
-import { useOpenModal } from 'state/application/hooks'
 import { Anchor, Flex, TextProps, styled, useIsTouchDevice } from 'ui/src'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
@@ -43,7 +43,7 @@ const DownloadCTA = styled(Anchor, {
 
 export function DownloadApp({ onClick }: { onClick?: () => void }) {
   const { t } = useTranslation()
-  const openGetTheAppModal = useOpenModal({ name: ModalName.GetTheApp })
+  const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp)
   const isTouchDevice = useIsTouchDevice()
   const isMobileDrawer = useIsMobileDrawer()
 

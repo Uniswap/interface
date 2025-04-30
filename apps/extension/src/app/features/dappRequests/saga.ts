@@ -1,12 +1,23 @@
 /* eslint-disable max-lines */
 import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
-import { createAction } from '@reduxjs/toolkit'
 import { createSearchParams } from 'react-router-dom'
 import { changeChain } from 'src/app/features/dapp/changeChain'
 import { DappInfo, dappStore } from 'src/app/features/dapp/store'
 import { getActiveConnectedAccount } from 'src/app/features/dapp/utils'
-import { DappRequestStoreItem, SenderTabInfo, dappRequestActions } from 'src/app/features/dappRequests/slice'
+import {
+  addRequest,
+  confirmRequest,
+  confirmRequestNoDappInfo,
+  rejectRequest,
+} from 'src/app/features/dappRequests/actions'
+import type {
+  DappRequestNoDappInfo,
+  DappRequestRejectParams,
+  DappRequestWithDappInfo,
+  SenderTabInfo,
+} from 'src/app/features/dappRequests/shared'
+import { dappRequestActions, selectIsRequestConfirming } from 'src/app/features/dappRequests/slice'
 import {
   BaseSendTransactionRequest,
   ChangeChainRequest,
@@ -46,36 +57,19 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
-import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import {
+  ExecuteTransactionParams,
+  executeTransaction,
+} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
 
-export interface DappRequestRejectParams {
-  errorResponse: ErrorResponse
-  senderTabInfo: SenderTabInfo
-}
-
-type OptionalTransactionTypeInfo = {
-  transactionTypeInfo?: TransactionTypeInfo
-}
-export type DappRequestNoDappInfo = Omit<DappRequestStoreItem, 'dappInfo'> & OptionalTransactionTypeInfo
-export type DappRequestWithDappInfo = Required<DappRequestStoreItem> & OptionalTransactionTypeInfo
 export function isDappRequestWithDappInfo(
   request: DappRequestNoDappInfo | DappRequestWithDappInfo,
 ): request is DappRequestWithDappInfo {
   return 'dappInfo' in request && Boolean(request.dappInfo)
 }
-
-export const addRequest = createAction<DappRequestNoDappInfo>(`dappRequest/handleRequest`)
-
-/** This is for requests where the dapp info is not passed along as part of the request because it
- * does not exist yet (i.e. GetAccountRequest). In these cases the dappInfo will need to be saved.
- */
-export const confirmRequestNoDappInfo = createAction<DappRequestNoDappInfo>('dappRequest/confirmSaveConnectionRequest')
-export const confirmRequest = createAction<DappRequestWithDappInfo>(`dappRequest/confirmRequest`)
-export const rejectRequest = createAction<DappRequestRejectParams>(`dappRequest/rejectRequest`)
-export const rejectAllRequests = createAction('dappRequest/rejectAllRequests')
 
 export function* dappRequestWatcher() {
   while (true) {
@@ -101,7 +95,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
   if (requestParams.dappRequest.type === DappRequestType.UniswapOpenSidebar) {
     // We can auto-confirm these requests since they are only for navigating to a certain tab
     // At this point the sidebar is already open
-    yield* put(confirmRequestNoDappInfo(requestParams))
+    yield* call(handleConfirmRequestNoDappInfo, requestParams)
     return
   }
   const activeAccount = yield* select(selectActiveAccount)
@@ -148,9 +142,9 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     const chainId = toSupportedChainId(hexadecimalStringToInt(requestParams.dappRequest.chainId))
     if (chainId) {
       if (dappInfo) {
-        yield* put(confirmRequest({ ...requestParams, dappInfo }))
+        yield* call(handleConfirmRequestWithDappInfo, { ...requestParams, dappInfo })
       } else {
-        yield* put(confirmRequestNoDappInfo(requestParams))
+        yield* call(handleConfirmRequestNoDappInfo, requestParams)
       }
       if (isWalletUnlocked) {
         yield* put(
@@ -228,7 +222,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
       requestParams.dappRequest.type === DappRequestType.GetCallsStatus)
 
   if (shouldAutoConfirmRequest) {
-    yield* put(confirmRequest({ ...requestParams, dappInfo }))
+    yield* call(handleConfirmRequestWithDappInfo, { ...requestParams, dappInfo })
   } else {
     yield* put(
       dappRequestActions.add({
@@ -257,7 +251,7 @@ export function* handleSendTransaction(
 
   const provider = yield* call(getProvider, lastChainId)
 
-  const sendTransactionParams: SendTransactionParams = {
+  const sendTransactionParams: ExecuteTransactionParams = {
     chainId: lastChainId,
     account,
     options: { request: transactionRequest },
@@ -272,7 +266,7 @@ export function* handleSendTransaction(
     transactionOriginType: TransactionOriginType.External,
   }
 
-  const { transactionResponse } = yield* call(sendTransaction, sendTransactionParams)
+  const { transactionResponse } = yield* call(executeTransaction, sendTransactionParams)
 
   // Trigger a pending transaction notification after we send the transaction to chain
   yield* put(
@@ -501,4 +495,23 @@ export function* handleGetCallsStatus(request: GetCallsStatusRequest, { id }: Se
   }
 
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
+}
+
+function* isRequestConfirming(requestId: string) {
+  const isConfirming = yield* select(selectIsRequestConfirming, requestId)
+  return isConfirming
+}
+
+function* handleConfirmRequestWithDappInfo(request: DappRequestWithDappInfo) {
+  if (yield* isRequestConfirming(request.dappRequest.requestId)) {
+    return
+  }
+  yield* put(confirmRequest(request))
+}
+
+function* handleConfirmRequestNoDappInfo(request: DappRequestNoDappInfo) {
+  if (yield* isRequestConfirming(request.dappRequest.requestId)) {
+    return
+  }
+  yield* put(confirmRequestNoDappInfo(request))
 }

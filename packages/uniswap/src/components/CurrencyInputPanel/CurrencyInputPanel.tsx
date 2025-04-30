@@ -42,7 +42,6 @@ type CurrencyInputPanelProps = {
   autoFocus?: boolean
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   currencyBalance: Maybe<CurrencyAmount<Currency>>
-  nativeTokenPercentageBuffer?: number
   currencyField: CurrencyField
   currencyInfo: Maybe<CurrencyInfo>
   isLoading?: boolean
@@ -89,7 +88,6 @@ export const CurrencyInputPanel = memo(
         autoFocus,
         currencyAmount,
         currencyBalance,
-        nativeTokenPercentageBuffer,
         currencyField,
         currencyInfo,
         focus,
@@ -420,7 +418,6 @@ export const CurrencyInputPanel = memo(
                     buttonProps={{ py: '$spacing4' }}
                     currencyAmount={currencyAmount}
                     currencyBalance={currencyBalance}
-                    nativeTokenPercentageBuffer={nativeTokenPercentageBuffer}
                     onSetPresetValue={handleSetPresetValue}
                   />
                 </Flex>
@@ -455,7 +452,6 @@ export const CurrencyInputPanel = memo(
                       currencyBalance={currencyBalance}
                       currencyField={currencyField}
                       transactionType={transactionType}
-                      nativeTokenPercentageBuffer={nativeTokenPercentageBuffer}
                       onSetPresetValue={handleSetPresetValue}
                     />
                   )}

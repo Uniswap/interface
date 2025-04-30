@@ -1,5 +1,5 @@
+import { useModalState } from 'hooks/useModalState'
 import { useTranslation } from 'react-i18next'
-import { useOpenModal } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -40,7 +40,7 @@ export const useRenderUkBanner = () => {
 
 export function UkBanner() {
   const { t } = useTranslation()
-  const openDisclaimer = useOpenModal({ name: ModalName.UkDisclaimer })
+  const { openModal: openDisclaimer } = useModalState(ModalName.UkDisclaimer)
 
   return (
     <BannerWrapper>

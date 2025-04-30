@@ -18,7 +18,7 @@ export function ModalContent({
   ...rest
 }: PropsWithChildren<{
   title: string
-  subtext?: string
+  subtext?: string | ReactNode
   header?: ReactNode
   footer?: ReactNode
   learnMoreLink?: string
@@ -50,9 +50,13 @@ export function ModalContent({
               <Text variant="heading3" color="$neutral1">
                 {title}
               </Text>
-              <Text variant="body2" color="$neutral2" textAlign="center">
-                {subtext}
-              </Text>
+              {typeof subtext === 'string' ? (
+                <Text variant="body2" color="$neutral2" textAlign="center">
+                  {subtext}
+                </Text>
+              ) : (
+                subtext
+              )}
               {learnMoreLink && (
                 <ExternalLink href={learnMoreLink}>
                   <Text variant="buttonLabel1">{t('common.button.learn')}</Text>

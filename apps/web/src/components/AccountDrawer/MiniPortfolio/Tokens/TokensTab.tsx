@@ -164,7 +164,6 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
       ) : (
         <ContextMenu
           menuItems={menuItems}
-          isPlacementRight
           triggerMode={ContextMenuTriggerMode.Secondary}
           isOpen={contextMenuIsOpen}
           closeMenu={closeContextMenu}

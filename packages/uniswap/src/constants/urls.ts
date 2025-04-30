@@ -17,6 +17,7 @@ const FLOWS_USING_BETA = [TrafficFlows.FOR]
 const isDevOrBeta = isDevEnv() || isBetaEnv()
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
+const EMBEDDED_WALLET_HOSTNAME = isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
@@ -111,6 +112,7 @@ export const uniswapUrls = {
   evervaultDevUrl: 'https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com',
   evervaultStagingUrl: 'https://embedded-wallet-staging.app-907329d19a06.enclave.evervault.com',
   evervaultProductionUrl: 'https://embedded-wallet.app-907329d19a06.enclave.evervault.com',
+  passkeysManagementUrl: `https://${EMBEDDED_WALLET_HOSTNAME}/manage/passkey`,
 
   // API Paths
   trmPath: '/v1/screen',

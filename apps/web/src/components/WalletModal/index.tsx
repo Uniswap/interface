@@ -8,10 +8,10 @@ import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
 import { useReducer } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useOpenModal } from 'state/application/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { transitions } from 'theme/styles'
 import { Flex, Separator, Text } from 'ui/src'
@@ -37,7 +37,7 @@ export default function WalletModal() {
     !connectors.some((c) => c.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) &&
     recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID &&
     isEmbeddedWalletEnabled
-  const openGetTheAppModal = useOpenModal({ name: ModalName.GetTheApp })
+  const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp)
   const [, setPage] = useAtom(downloadAppModalPageAtom)
   const handleOpenGetTheAppModal = useEvent(() => {
     openGetTheAppModal()

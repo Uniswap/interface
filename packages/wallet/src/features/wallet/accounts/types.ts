@@ -3,6 +3,7 @@ import { ReadOnlyAccountMeta, SignerMnemonicAccountMeta } from 'uniswap/src/feat
 export enum BackupType {
   Manual = 'manual',
   Cloud = 'cloud',
+  Passkey = 'passkey',
 }
 
 export type AccountCustomizations = {

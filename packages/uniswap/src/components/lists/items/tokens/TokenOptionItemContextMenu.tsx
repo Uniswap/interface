@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenu, ContextMenuProps, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -21,8 +21,9 @@ interface TokenOptionItemContextMenuProps {
   children: ReactNode
   currency: Currency
   isOpen: boolean
-  openMenu?: () => void
-  closeMenu: () => void
+  openMenu?: ContextMenuProps['openMenu']
+  closeMenu: ContextMenuProps['closeMenu']
+  triggerMode?: ContextMenuTriggerMode
 }
 
 function _TokenOptionItemContextMenu({
@@ -31,6 +32,7 @@ function _TokenOptionItemContextMenu({
   isOpen,
   openMenu,
   closeMenu,
+  triggerMode = ContextMenuTriggerMode.Secondary,
 }: TokenOptionItemContextMenuProps): JSX.Element {
   const { t } = useTranslation()
   const { navigateToTokenDetails } = useUniswapContext()
@@ -86,10 +88,11 @@ function _TokenOptionItemContextMenu({
   return (
     <ContextMenu
       menuItems={dropdownOptions}
-      triggerMode={ContextMenuTriggerMode.Secondary}
+      triggerMode={triggerMode}
       isOpen={isOpen}
       closeMenu={closeMenu}
       openMenu={openMenu}
+      offsetY={4}
     >
       {children}
     </ContextMenu>

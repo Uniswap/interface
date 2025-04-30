@@ -1,9 +1,17 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import React, { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
+import { StyleProp, ViewStyle } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
+import { PermitInfo } from 'src/components/Requests/RequestModal/ClientDetails'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { SignRequest, WalletConnectRequest, isTransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  SignRequest,
+  WalletConnectSigningRequest,
+  WalletSendCallsEncodedRequest,
+  isBatchedTransactionRequest,
+  isTransactionRequest,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { TextVariantTokens, iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -16,6 +24,7 @@ import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
+import { ExpandoRow } from 'wallet/src/components/ExpandoRow/ExpandoRow'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import {
   SpendingDetails,
@@ -24,7 +33,9 @@ import {
 import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
 import { useTransactionCurrencies } from 'wallet/src/utils/useTransactionCurrencies'
 
-const getStrMessage = (request: WalletConnectRequest): string => {
+const MAX_MODAL_MESSAGE_HEIGHT = 200
+
+const getStrMessage = (request: WalletConnectSigningRequest): string => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
     return request.message || request.rawMessage
   }
@@ -159,10 +170,11 @@ function TransactionDetails({
 }
 
 type Props = {
-  request: WalletConnectRequest
+  request: WalletConnectSigningRequest
+  permitInfo?: PermitInfo
 }
 
-function isSignTypedDataRequest(request: WalletConnectRequest): request is SignRequest {
+function isSignTypedDataRequest(request: WalletConnectSigningRequest): request is SignRequest {
   return request.type === EthMethod.SignTypedData || request.type === EthMethod.SignTypedDataV4
 }
 
@@ -191,10 +203,50 @@ export function RequestDetailsContent({ request }: Props): JSX.Element {
   )
 }
 
-export function RequestDetails({ request }: Props): JSX.Element {
+function BatchRequestDetailsContent({ request: { calls } }: { request: WalletSendCallsEncodedRequest }): JSX.Element {
+  const { t } = useTranslation()
+
   return (
-    <ScrollView>
-      <RequestDetailsContent request={request} />
-    </ScrollView>
+    <ExpandoRow
+      label={t('walletConnect.request.bundledTransactions.label', { count: calls.length })}
+      // TODO: Implement expanding logic
+      isExpanded={false}
+      onPress={() => {}}
+    />
   )
+}
+
+export function RequestDetails({ request, permitInfo }: Props): JSX.Element {
+  if (isBatchedTransactionRequest(request)) {
+    return <BatchRequestDetailsContent request={request} />
+  }
+
+  return (
+    <Flex backgroundColor="$surface2" borderColor="$surface3" borderRadius="$rounded16" borderWidth="$spacing1">
+      {!permitInfo && (
+        <SectionContainer style={requestMessageStyle}>
+          <ScrollView>
+            <RequestDetailsContent request={request} />
+          </ScrollView>
+        </SectionContainer>
+      )}
+    </Flex>
+  )
+}
+
+const requestMessageStyle: StyleProp<ViewStyle> = {
+  // need a fixed height here or else modal gets confused about total height
+  maxHeight: MAX_MODAL_MESSAGE_HEIGHT,
+  overflow: 'hidden',
+}
+
+export function SectionContainer({
+  children,
+  style,
+}: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>): JSX.Element | null {
+  return children ? (
+    <Flex p="$spacing16" style={style}>
+      {children}
+    </Flex>
+  ) : null
 }

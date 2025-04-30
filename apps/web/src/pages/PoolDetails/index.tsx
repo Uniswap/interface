@@ -14,13 +14,12 @@ import { calculateApr } from 'graphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { useColor } from 'hooks/useColor'
 import styled, { useTheme } from 'lib/styled-components'
-import NotFound from 'pages/NotFound'
 import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
-import { useMemo, useReducer } from 'react'
+import { useEffect, useMemo, useReducer } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeProvider } from 'theme'
 import { Flex } from 'ui/src'
@@ -114,6 +113,7 @@ export default function PoolDetailsPage() {
     () => calculateApr(poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier),
     [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier],
   )
+  const navigate = useNavigate()
 
   const { darkMode, surface2, accent1 } = useTheme()
   const color0 = useColor(token0 && gqlToCurrency(token0), {
@@ -150,8 +150,14 @@ export default function PoolDetailsPage() {
     )
   }, [isLPIncentivesEnabled, poolData])
 
+  useEffect(() => {
+    if (poolNotFound) {
+      navigate('/explore')
+    }
+  }, [poolNotFound, navigate])
+
   if (poolNotFound) {
-    return <NotFound />
+    return null
   }
 
   return (

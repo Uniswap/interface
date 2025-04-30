@@ -14,17 +14,7 @@ import { Minus, Plus } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
 import { tryParsePrice } from 'state/mint/v3/utils'
-import {
-  AnimatePresence,
-  Button,
-  Flex,
-  FlexProps,
-  SegmentedControl,
-  Text,
-  TouchableArea,
-  useMedia,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatePresence, Button, Flex, SegmentedControl, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { fonts, zIndexes } from 'ui/src/theme'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
@@ -41,7 +31,7 @@ enum RangeSelection {
   CUSTOM = 'CUSTOM',
 }
 
-function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Currency, Currency>; isLoading?: boolean }) {
+export function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Currency, Currency>; isLoading?: boolean }) {
   return (
     <Flex gap="$gap4" row alignItems="center" $md={{ row: false, alignItems: 'flex-start' }}>
       {isLoading ? (
@@ -445,16 +435,6 @@ function RangeInput({
   )
 }
 
-export const SelectPriceRangeStepV2 = ({ onContinue }: { onContinue?: () => void } & FlexProps) => {
-  const { t } = useTranslation()
-  return (
-    <>
-      <InitialPriceInput />
-      {onContinue ?? <Button onPress={onContinue}>{t('common.button.continue')}</Button>}
-    </>
-  )
-}
-
 export const SelectPriceRangeStep = ({
   positionInfo,
   onContinue,
@@ -655,16 +635,7 @@ export const SelectPriceRangeStep = ({
   ])
 
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
-    return (
-      <>
-        <InitialPriceInput />
-        {onContinue && (
-          <Button onPress={onContinue} isDisabled={invalidState}>
-            {t('common.button.continue')}
-          </Button>
-        )}
-      </>
-    )
+    return <InitialPriceInput />
   }
 
   const isDisabled = initialPosition?.isOutOfRange

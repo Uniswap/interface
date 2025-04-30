@@ -15,18 +15,15 @@ const NATIVE_CURRENCY_DECIMAL_OFFSET = NATIVE_CURRENCY_DECIMAL - 4
  * @param currencyAmount to return max of
  * @param transactionType to determine cost of transaction
  * @param isExtraTx adds a gas buffer to cover one additional transaction
- * @param nativeTokenPercentageBuffer percent of the native token balance to subtract, taken before the gas buffer
  */
 export function useMaxAmountSpend({
   currencyAmount,
   txType,
   isExtraTx = false,
-  nativeTokenPercentageBuffer = 0,
 }: {
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   txType?: TransactionType
   isExtraTx?: boolean
-  nativeTokenPercentageBuffer?: number
 }): Maybe<CurrencyAmount<Currency>> {
   const minAmountPerTx = useGetMinAmount(currencyAmount?.currency.chainId, txType)
   const multiplierAsPercent = useLowBalanceWarningGasPercentage()
@@ -34,12 +31,6 @@ export function useMaxAmountSpend({
   if (!currencyAmount || !minAmountPerTx) {
     return undefined
   }
-
-  // Calculate the remaining percentage (e.g., for 10% reduction, multiply by 0.9)
-  const remainingPercentage = JSBI.subtract(
-    JSBI.BigInt(10000),
-    JSBI.BigInt(Math.floor(nativeTokenPercentageBuffer * 100)),
-  )
 
   // if isExtraTx: minAmountPerTx * multiplierAsPercent / 100%
   // else: minAmountPerTx
@@ -53,23 +44,12 @@ export function useMaxAmountSpend({
   }
 
   // If amount is negative then set it to 0
-  if (JSBI.lessThan(currencyAmount.quotient, minAmount)) {
-    return getCurrencyAmount({
-      value: '0',
-      valueType: ValueType.Raw,
-      currency: currencyAmount.currency,
-    })
-  }
+  const amount = JSBI.greaterThan(currencyAmount.quotient, minAmount)
+    ? JSBI.subtract(currencyAmount.quotient, minAmount).toString()
+    : '0'
 
-  // total amount is 1 eth (1000000000000000000)
-  const totalAmount = currencyAmount.quotient
-  // remaining amount is 97.5% of 1 eth (975000000000000000)
-  // or if no percentage is subtracted, it's 100% of 1 eth (1000000000000000000)
-  const remainingAmount = JSBI.divide(JSBI.multiply(totalAmount, remainingPercentage), JSBI.BigInt(10000))
-  // final amount is remaining amount minus minAmount (975000000000000000 - 800000000000000)
-  const finalAmount = JSBI.subtract(remainingAmount, minAmount)
   return getCurrencyAmount({
-    value: finalAmount.toString(),
+    value: amount,
     valueType: ValueType.Raw,
     currency: currencyAmount.currency,
   })

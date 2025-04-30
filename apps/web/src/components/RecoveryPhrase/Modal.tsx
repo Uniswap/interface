@@ -1,9 +1,10 @@
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
+import { useModalState } from 'hooks/useModalState'
+import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import ms from 'ms'
 import { useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Loader, Text, styled } from 'ui/src'
@@ -48,8 +49,7 @@ function Seed({ seed, position, revealed }: { seed?: string; position: number; r
 
 export function RecoveryPhraseModal() {
   const { t } = useTranslation()
-  const isOpen = useModalIsOpen(ModalName.RecoveryPhrase)
-  const closeModal = useCloseModal()
+  const { isOpen, closeModal } = useModalState(ModalName.RecoveryPhrase)
   const [seedPhrase, setSeedPhrase] = useState<string[] | undefined>(undefined)
   const [isRevealed, setIsRevealed] = useState(false)
   const handleClose = () => {
@@ -59,11 +59,16 @@ export function RecoveryPhraseModal() {
   }
   const seedPhraseContentRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(seedPhraseContentRef, () => setIsRevealed(false))
-
-  const fetchSeedPhrase = async () => {
-    const retrievedSeedPhrase = await exportSeedPhrase()
-    setSeedPhrase(retrievedSeedPhrase?.split(' '))
-  }
+  const { mutate: exportSeedPhraseWithHelpModal } = usePasskeyAuthWithHelpModal(
+    async (): Promise<string | undefined> => {
+      return await exportSeedPhrase()
+    },
+    {
+      onSuccess: (seedPhrase) => {
+        setSeedPhrase(seedPhrase?.split(' '))
+      },
+    },
+  )
 
   // After revealing passphrase, hide it after 1 minute
   const handleReveal = () => {
@@ -75,9 +80,9 @@ export function RecoveryPhraseModal() {
 
   useEffect(() => {
     if (isOpen) {
-      fetchSeedPhrase()
+      exportSeedPhraseWithHelpModal()
     }
-  }, [isOpen])
+  }, [exportSeedPhraseWithHelpModal, isOpen])
 
   return (
     <Modal

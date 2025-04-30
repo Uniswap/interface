@@ -7,12 +7,12 @@ import { RecentlyConnectedModal } from 'components/Web3Status/RecentlyConnectedM
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
+import { useModalState } from 'hooks/useModalState'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { RefObject, forwardRef, useCallback, useEffect, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useModalIsOpen } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
 import { Button, ButtonProps, Flex, Popover } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
@@ -171,7 +171,7 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const recentlyConnectedModalIsOpen = useModalIsOpen(ModalName.RecentlyConnectedModal)
+  const { isOpen: recentlyConnectedModalIsOpen } = useModalState(ModalName.RecentlyConnectedModal)
   return (
     <PrefetchBalancesWrapper>
       <Popover

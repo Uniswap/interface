@@ -2,10 +2,10 @@ import StatusIcon from 'components/Identicon/StatusIcon'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
+import { useModalState } from 'hooks/useModalState'
 import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { MutableRefObject, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCloseModal, useModalIsOpen, useOpenModal } from 'state/application/hooks'
 import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
 import { AdaptiveWebPopoverContent, Button, Flex, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
@@ -170,10 +170,8 @@ export function RecentlyConnectedModal() {
   const account = useAccount()
   const { walletAddress: walletAddressFromState } = useEmbeddedWalletState()
   const walletAddress = walletAddressFromState ?? undefined
-  const isOpen = useModalIsOpen(ModalName.RecentlyConnectedModal)
+  const { isOpen, closeModal, openModal } = useModalState(ModalName.RecentlyConnectedModal)
   const isOpenRef = useRef(isOpen)
-  const closeModal = useCloseModal(ModalName.RecentlyConnectedModal)
-  const openModal = useOpenModal({ name: ModalName.RecentlyConnectedModal })
   const { signInWithPasskey } = useSignInWithPasskey({ onSuccess: closeModal })
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const recentConnectorId = useRecentConnectorId()
