@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-
 import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
 import Modal from "components/Modal";
 import { Wrapper } from "pages/Farms/styled";
-import styled, { useTheme } from "styled-components";
+import styled from "styled-components";
 import Row from "components/Row";
 import { X } from "react-feather";
-import Column from "components/Column";
 import { ThemedText } from "theme/components";
+import PositionListItem from "components/PositionListItem";
+import { BigNumber } from "@ethersproject/bignumber";
 
 const CenteredRow = styled.div`
   display: flex;
@@ -19,58 +19,11 @@ const CenteredRow = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.surface3};
 `;
 
-export const SaveButton = styled.button`
-  border-radius: 12px;
-  padding: 10px 20px;
-  margin: 10px;
-  background: ${({ theme }) => theme.accent1};
-  font-weight: 600;
-  font-size: 16px;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-
-  :hover {
-    background: ${({ theme }) => theme.accent2};
-    transform: scale(1.05); /* Slight zoom effect */
-  }
-
-  :disabled {
-    background: ${({ theme }) => theme.blur};
-    cursor: not-allowed;
-    transform: none;
-  }
-`;
-
-export const CancelButton = styled.button`
-  border-radius: 12px;
-  padding: 10px 20px;
-  margin: 10px;
-  background: ${({ theme }) => theme.neutral3};
-  font-weight: 600;
-  font-size: 16px;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-
-  :hover {
-    background: ${({ theme }) => theme.accent2};
-    transform: scale(1.05); /* Slight zoom effect */
-  }
-
-  :disabled {
-    background: ${({ theme }) => theme.blur};
-    cursor: not-allowed;
-    transform: none;
-  }
-`;
-
 const Header = styled(CenteredRow)`
   font-weight: 600;
   font-size: 18px;
   width: 100%;
+  max-width: 500px;
   justify-content: space-between;
 `;
 
@@ -82,43 +35,38 @@ const CloseButton = styled.button`
   font-size: 18px;
 `;
 
-const FlagsColumn = styled(Column)`
+const PositionsContainer = styled.div`
   max-height: 600px;
-  padding: 16px;
+  padding: 2px;
   overflow-y: auto;
-  //   background-color: ${({ theme }) => theme.background};
-  border-radius: 8px;
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(120px, 160px)
-  ); /* Reduced max width */
-  gap: 10px; /* Increased gap for better spacing */
-  //   justify-content: center;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  
+  > div {
+    width: 100%;
+    max-width: 500px;
+  }
 `;
 
-const Tile = styled.div<{ selected: boolean }>`
-  padding: 16px;
-  background-color: ${({ theme, selected }) =>
-    selected ? theme.accent1 : "#011a08"};
+const PositionWrapper = styled.div<{ selected: boolean }>`
   cursor: pointer;
+  border: 2px solid ${({ theme, selected }) =>
+    selected ? theme.accent1 : 'transparent'};
   border-radius: 8px;
-  text-align: center;
-  box-shadow: ${({ selected }) =>
-    selected ? "0 4px 6px rgba(0, 0, 0, 0.2)" : "0 2px 4px rgba(0, 0, 0, 0.1)"};
-  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  transition: border-color 0.2s;
 
   &:hover {
-    background-color: ${({ theme }) => theme.accent2};
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    transform: scale(1.05); /* Adds slight zoom effect */
+    border-color: ${({ theme }) => theme.accent2};
   }
+`;
 
-  span {
-    font-size: 16px; /* Increase font size */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Add subtle shadow */
-  }
+const ModalWrapper = styled(Wrapper)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 `;
 
 interface ChoosePositionModalProps {
@@ -126,6 +74,11 @@ interface ChoosePositionModalProps {
   onHide: () => void;
   onSelectPosition: (positionId: number) => void;
   positionIds: number[];
+  token0Address: string;
+  token1Address: string;
+  token0Symbol: string;
+  token1Symbol: string;
+  feeTier: string;
 }
 
 const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
@@ -133,18 +86,17 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
   onHide,
   onSelectPosition,
   positionIds,
+  token0Address,
+  token1Address,
+  feeTier,
 }) => {
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
-  const [relevantPositions, setRelevantPositions] = useState<
-    PositionsResponse[]
-  >([]);
+  const [relevantPositions, setRelevantPositions] = useState<PositionsResponse[]>([]);
 
-  const { fetchPositionsWithIds, isLoading: isLoadingDepositData } =
-    useTotalPositions();
+  const { fetchPositionsWithIds, isLoading: isLoadingDepositData } = useTotalPositions();
 
   const getUserPositionsGql = useCallback(async () => {
-    if (!positionIds) return;
-
+    if (!positionIds?.length) return;
     const positions = await fetchPositionsWithIds(positionIds.map(String));
     setRelevantPositions(positions);
   }, [fetchPositionsWithIds, positionIds]);
@@ -155,7 +107,7 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
 
   useEffect(() => {
     getUserPositionsGql();
-  }, [positionIds]);
+  }, [getUserPositionsGql]);
 
   const handleConfirmSelection = () => {
     if (selectedPosition) {
@@ -167,8 +119,8 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
   const hasPositions = relevantPositions.length > 0;
 
   return (
-    <Modal isOpen={show && hasPositions} onDismiss={onHide} slideIn>
-      <Wrapper>
+    <Modal isOpen={show && hasPositions} onDismiss={onHide} maxHeight={80} maxWidth={450}>
+      <ModalWrapper>
         <Header>
           <Row width="100%" justify="space-between">
             <span>Choose Position</span>
@@ -177,39 +129,32 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
             </CloseButton>
           </Row>
         </Header>
-        <FlagsColumn>
+        <PositionsContainer>
           {hasPositions ? (
-            <>
-              {relevantPositions
-                .map((p) => p.id)
-                .map((id) => (
-                  <Tile
-                    key={id}
-                    selected={selectedPosition === id}
-                    onClick={() => handleSelectPosition(id)}
-                  >
-                    <span>Position ID: {id}</span>
-                  </Tile>
-                ))}
-            </>
+            relevantPositions.map((position) => (
+              <PositionWrapper
+                key={position.id}
+                selected={selectedPosition === Number(position.id)}
+                onClick={() => handleSelectPosition(Number(position.id))}
+              >
+                <PositionListItem
+                  token0={token0Address}
+                  token1={token1Address}
+                  tokenId={BigNumber.from(position.id)}
+                  fee={parseInt(feeTier.replace('%', '')) * 10000}
+                  liquidity={BigNumber.from(position.liquidity)}
+                  tickLower={Number(position.tickLower.tickIdx)}
+                  tickUpper={Number(position.tickUpper.tickIdx)}
+                />
+              </PositionWrapper>
+            ))
           ) : (
             <ThemedText.BodyPrimary>
               No positions available for this pool.
             </ThemedText.BodyPrimary>
           )}
-        </FlagsColumn>
-        {hasPositions && (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <SaveButton
-              onClick={handleConfirmSelection}
-              disabled={!selectedPosition}
-            >
-              Confirm
-            </SaveButton>
-            <CancelButton onClick={() => onHide()}>Close</CancelButton>
-          </div>
-        )}
-      </Wrapper>
+        </PositionsContainer>
+      </ModalWrapper>
     </Modal>
   );
 };

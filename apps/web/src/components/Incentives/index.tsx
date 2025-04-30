@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ProcessedIncentive, useIncentivesData } from "hooks/useIncentivesData";
 import { IncentiveTable } from "./IncentiveTable";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { ThemedText } from "theme/components";
 import { useAccount } from "../../hooks/useAccount";
 import { LiquidityTab } from "../../pages/Farms";
+import ChoosePositionModal from "./ChoosePositionModal";
 
 const StyledLightCard = styled(LightCard)`
   padding: 20px;
@@ -17,6 +18,8 @@ const StyledLightCard = styled(LightCard)`
 
 export default function Incentives() {
   const { activeIncentives, endedIncentives, isLoading, error } = useIncentivesData();
+  const [showPositionModal, setShowPositionModal] = useState(false);
+  const [selectedIncentive, setSelectedIncentive] = useState<ProcessedIncentive | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const account = useAccount();
@@ -26,12 +29,24 @@ export default function Incentives() {
 
   const handleDeposit = (incentive: ProcessedIncentive) => {
     if (incentive.hasUserPositionInPool) {
-      return navigate(`/#/pool/${incentive.poolPositionId}`);
-    } else {
-      return navigate(
+      if (incentive.poolPositionIds && incentive.poolPositionIds.length > 1) {
+        setSelectedIncentive(incentive);
+        setShowPositionModal(true);
+        return;
+      }  
+      if (incentive.poolPositionIds && incentive.poolPositionIds[0]) {
+        navigate(`/#/pool/${incentive.poolPositionIds?.[0]}`);
+        return;
+      }
+
+      navigate(
         `/#/add/${incentive.token0Address}/${incentive.token1Address}`
       );
     }
+  };
+
+  const handleSelectPosition = (positionId: number) => {
+    navigate(`/#/pool/${positionId}`);
   };
 
   if (!account.isConnected) {
@@ -75,10 +90,28 @@ export default function Incentives() {
   }
 
   return (
-    <IncentiveTable
-      incentives={incentivesToShow}
-      isLoading={isLoading}
-      onDeposit={handleDeposit}
-    />
+    <>
+      <IncentiveTable
+        incentives={incentivesToShow}
+        isLoading={isLoading}
+        onDeposit={handleDeposit}
+      />
+      {selectedIncentive && (
+        <ChoosePositionModal
+          show={showPositionModal}
+          onHide={() => {
+            setShowPositionModal(false);
+            setSelectedIncentive(null);
+          }}
+          onSelectPosition={handleSelectPosition}
+          positionIds={selectedIncentive.poolPositionIds || []}
+          token0Address={selectedIncentive.token0Address}
+          token1Address={selectedIncentive.token1Address}
+          token0Symbol={selectedIncentive.token0Symbol}
+          token1Symbol={selectedIncentive.token1Symbol}
+          feeTier={selectedIncentive.feeTier}
+        />
+      )}
+    </>
   );
 }
