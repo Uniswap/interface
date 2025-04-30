@@ -48,14 +48,12 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
   const [isStaking, setIsStaking] = useState(false);
   const [isUnstaking, setIsUnstaking] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
-  const [currentIncentiveId, setCurrentIncentiveId] = useState<string | null>(null);
 
   const { activeIncentives, endedIncentives, isLoading, error, refetch: refetchIncentives } = useIncentivesData(poolAddress);
   const allIncentives = [...activeIncentives, ...endedIncentives];
 
   const {
     isDeposited,
-    getIncentiveData,
     handleStake,
     handleUnstake,
     handleClaim,
@@ -73,7 +71,6 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
   const hasStakedIncentives = useMemo(() => {
     return allIncentives.some(incentive => incentive.positionOnIncentiveIds?.includes(tokenId));
   }, [allIncentives]);
-  console.log('hasStakedIncentives', hasStakedIncentives)
 
   const hasAllIncetivesStaked = useMemo(() => {
     return allIncentives.every(incentive => incentive.positionOnIncentiveIds?.includes(tokenId));
@@ -82,51 +79,45 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
   const handleStakeWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
     try {
       setIsStaking(true);
-      setCurrentIncentiveId(incentive.id);
       const tx = await handleStake(incentive);
       if (tx) {
-        await tx.wait();
+        await tx.wait(2);
         await refetchIncentives();
       }
     } catch (error) {
       console.error('Error in stake with refresh:', error);
     } finally {
       setIsStaking(false);
-      setCurrentIncentiveId(null);
     }
   }, [handleStake, refetchIncentives]);
 
   const handleUnstakeWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
     try {
       setIsUnstaking(true);
-      setCurrentIncentiveId(incentive.id);
       const tx = await handleUnstake(incentive);
       if (tx) {
-        await tx.wait();
+        await tx.wait(2);
         await refetchIncentives();
       }
     } catch (error) {
       console.error('Error in unstake with refresh:', error);
     } finally {
       setIsUnstaking(false);
-      setCurrentIncentiveId(null);
     }
   }, [handleUnstake, refetchIncentives]);
 
   const handleClaimWithRefresh = useCallback(async (incentive: ProcessedIncentive) => {
     try {
       setIsClaiming(true);
-      setCurrentIncentiveId(incentive.id);
       const tx = await handleClaim(incentive);
       if (tx) {
-        await tx.wait();
+        await tx.wait(2);
         await refetchIncentives();
       }
     } catch (error) {
       console.error('Error in claim with refresh:', error);
     } finally {
       setIsClaiming(false);
-      setCurrentIncentiveId(null);
     }
   }, [handleClaim, refetchIncentives]);
 
@@ -135,7 +126,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
       setIsBulkStaking(true);
       const tx = await handleBulkStake();
       if (tx) {
-        await tx.wait();
+        await tx.wait(2);
         await refetchIncentives();
       }
     } catch (error) {
@@ -150,7 +141,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
       setIsBulkUnstaking(true);
       const tx = await handleBulkUnstake();
       if (tx) {
-        await tx.wait();
+        await tx.wait(2);
         await refetchIncentives();
       }
     } catch (error) {
@@ -165,7 +156,7 @@ function IncentivesList({ tokenId, poolAddress }: { tokenId: number, poolAddress
       setIsBulkWithdrawing(true);
       const tx = await handleBulkWithdraw();
       if (tx) {
-        await tx.wait();
+        await tx.wait(2);
         await refetchIncentives();
       }
     } catch (error) {

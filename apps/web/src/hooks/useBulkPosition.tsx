@@ -246,12 +246,14 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       const unstakeTx = await v3StakerContract.multicall(unstakeCalls, {
         gasLimit: 500000
       });
+      await unstakeTx.wait();
+      await checkDepositStatus();
       return unstakeTx;
     } catch (error) {
       console.error('Error in bulk unstaking:', error);
       throw error;
     }
-  }, [v3StakerContract, tokenId, address, allIncentives, nftManagerPositionsContract]);
+  }, [v3StakerContract, tokenId, address, allIncentives, nftManagerPositionsContract, checkDepositStatus]);
 
   const handleBulkWithdraw = useCallback(async () => {
     if (!v3StakerContract || !address || !nftManagerPositionsContract) return;
@@ -261,12 +263,14 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
         address,
         []
       );
+      await withdrawTx.wait();
+      await checkDepositStatus();
       return withdrawTx;
     } catch (error) {
       console.error('Error in bulk withdrawal:', error);
       throw error;
     }
-  }, [v3StakerContract, tokenId, address, nftManagerPositionsContract]);
+  }, [v3StakerContract, tokenId, address, nftManagerPositionsContract, checkDepositStatus]);
 
   const checkStakeStatus = useCallback(async (positionId: number, incentiveId: string) => {
     if (!v3StakerContract) return null;
@@ -278,6 +282,10 @@ export const useBulkPosition = (tokenId: number, poolAddress: string, allIncenti
       return null;
     }
   }, [v3StakerContract]);
+
+  useEffect(() => {
+    checkDepositStatus();
+  }, [checkDepositStatus, allIncentives]);
 
   return {
     isDeposited,
