@@ -13392,7 +13392,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-window@npm:*, @types/react-window@npm:^1.8.5":
+"@types/react-window@npm:*, @types/react-window@npm:1.8.8, @types/react-window@npm:^1.8.5":
   version: 1.8.8
   resolution: "@types/react-window@npm:1.8.8"
   dependencies:
@@ -43842,7 +43842,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@testing-library/react-native": 11.5.0
     "@types/react": ^18.0.15
-    "@types/react-window": 1.8.2
+    "@types/react-window": 1.8.8
     "@types/zxcvbn": 4.4.2
     "@uniswap/analytics-events": 2.32.0
     "@uniswap/eslint-config": "workspace:^"

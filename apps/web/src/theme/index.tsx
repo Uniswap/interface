@@ -173,7 +173,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.accent1}; 
+    color: ${({ theme }) => theme.accent1};
   }
 
   :root {

@@ -7,7 +7,7 @@ import { AutoRow } from "components/Row";
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from "components/Tokens/constants";
 import { Trans } from "i18n";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { StyledInternalLink, ThemedText } from "theme/components";
 
@@ -21,8 +21,6 @@ import { TitleRow } from "nft/components/profile/list/shared";
 import Incentives from "components/Incentives";
 import Create from "components/Create";
 import FAQ from "components/FAQ";
-import EndedIncentives from "components/Incentives/EndedIncentives";
-import { IncentivesDataProvider } from "components/Incentives/IncentivesDataProvider";
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -99,7 +97,7 @@ const Pages: Array<Page> = [
   {
     title: <Trans i18nKey="common.incentives.ended" />,
     key: LiquidityTab.EndedIncentives,
-    component: EndedIncentives,
+    component: Incentives,
     loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
   },
   {
@@ -157,19 +155,24 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
 
   const [currentTab, setCurrentTab] = useState(initialKey);
 
-  // to allow backward navigation between tabs
-  const { tab: tabName } = useExploreParams();
-  const tab = tabName ?? LiquidityTab.Incentives;
+  // Get the current path and set the tab accordingly
+  const { pathname } = useLocation();
   const chain = useChainFromUrlParam() ?? CHAIN_INFO[ChainId.MAINNET];
+
   useEffect(() => {
-    const tabIndex = Pages.findIndex((page) => page.key === tab);
-    if (tabIndex !== -1) {
-      setCurrentTab(tabIndex);
-    }
+    const path = pathname.split("/").pop();
+    setCurrentTab(Pages.findIndex((page) => page.key === path));
     resetManualOutage();
-  }, [resetManualOutage, tab]);
+  }, [pathname, resetManualOutage]);
 
   const { component: Page, key: currentKey } = Pages[currentTab];
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (currentKey && pathname !== `/farms/${currentKey}`) {
+      navigate(`/farms/${currentKey}`, { replace: true });
+    }
+  }, [currentKey, pathname, navigate]);
 
   return (
     <Trace
@@ -219,9 +222,7 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
             })}
           </TabBar>
         </NavWrapper>
-        <IncentivesDataProvider>
-          <Page />
-        </IncentivesDataProvider>
+        <Page />
       </ExploreContainer>
     </Trace>
   );

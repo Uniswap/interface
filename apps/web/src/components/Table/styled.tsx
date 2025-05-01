@@ -1,51 +1,68 @@
-import { ChainId } from '@taraswap/sdk-core'
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ButtonLight } from 'components/Button'
-import Column from 'components/Column'
-import { HideScrollBarStyles } from 'components/Common'
-import Row from 'components/Row'
-import { useAbbreviatedTimeString } from 'components/Table/utils'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { OrderDirection, getTokenDetailsURL, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
-import { useCurrency } from 'hooks/Tokens'
-import { useActiveLocale } from 'hooks/useActiveLocale'
-import { Trans } from 'i18n'
-import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
-import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components'
-import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
-import { Z_INDEX } from 'theme/zIndex'
-import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ChainId } from "@taraswap/sdk-core";
+import { PortfolioLogo } from "components/AccountDrawer/MiniPortfolio/PortfolioLogo";
+import { ButtonLight } from "components/Button";
+import Column from "components/Column";
+import { HideScrollBarStyles } from "components/Common";
+import Row from "components/Row";
+import { useAbbreviatedTimeString } from "components/Table/utils";
+import { MouseoverTooltip, TooltipSize } from "components/Tooltip";
+import { NATIVE_CHAIN_ID } from "constants/tokens";
+import {
+  OrderDirection,
+  getTokenDetailsURL,
+  supportedChainIdFromGQLChain,
+  unwrapToken,
+} from "graphql/data/util";
+import { useCurrency } from "hooks/Tokens";
+import { useActiveLocale } from "hooks/useActiveLocale";
+import { Trans } from "i18n";
+import {
+  ArrowDown,
+  CornerLeftUp,
+  ExternalLink as ExternalLinkIcon,
+} from "react-feather";
+import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
+import {
+  ClickableStyle,
+  EllipsisStyle,
+  ExternalLink,
+  ThemedText,
+} from "theme/components";
+import { Z_INDEX } from "theme/zIndex";
+import { Token } from "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks";
 
-export const SHOW_RETURN_TO_TOP_OFFSET = 500
-export const LOAD_MORE_BOTTOM_OFFSET = 50
+export const SHOW_RETURN_TO_TOP_OFFSET = 500;
+export const LOAD_MORE_BOTTOM_OFFSET = 50;
 
-export const TableContainer = styled(Column)<{ $maxWidth?: number; $maxHeight?: number }>`
+export const TableContainer = styled(Column)<{
+  $maxWidth?: number;
+  $maxHeight?: number;
+}>`
   max-width: ${({ $maxWidth }) => $maxWidth}px;
   max-height: ${({ $maxHeight }) => $maxHeight}px;
   // Center layout
   justify-content: center;
   align-items: center;
   margin: 0px auto 24px auto;
-`
+`;
 const StickyStyles = css`
   top: 73px;
   position: sticky;
   position: -webkit-sticky;
   z-index: ${Z_INDEX.under_dropdown};
-`
+`;
 export const TableHead = styled.div<{ $isSticky?: boolean }>`
   width: 100%;
   position: relative;
-  ${({ $isSticky }) => ($isSticky ? StickyStyles : '')}
+  ${({ $isSticky }) => ($isSticky ? StickyStyles : "")}
   // Place header at bottom of container (top of container used to add distance from nav / hide rows)
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   // Solid background that matches surface, in order to hide rows as they scroll behind header
   background: ${({ theme }) => theme.surface1};
-`
+`;
 export const TableBodyContainer = styled(Column)`
   width: 100%;
   position: relative;
@@ -57,18 +74,18 @@ export const TableBodyContainer = styled(Column)`
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;
   ${HideScrollBarStyles}
-`
+`;
 export const ReturnButton = styled(ButtonLight)`
   font-size: 16px;
   border-radius: 900px;
   width: fit-content;
   margin-top: 8px;
-`
+`;
 export const ReturnIcon = styled(CornerLeftUp)`
   width: 16px;
   height: 16px;
   margin-right: 8px;
-`
+`;
 export const ReturnButtonContainer = styled(Row)<{ $top?: number }>`
   position: absolute;
   justify-content: center;
@@ -76,13 +93,13 @@ export const ReturnButtonContainer = styled(Row)<{ $top?: number }>`
   left: 50%;
   transform: translateX(-50%);
   width: max-content;
-`
+`;
 export const LoadingIndicatorContainer = styled(Row)<{ show: boolean }>`
   position: sticky;
   justify-content: center;
   margin-top: -48px;
-  visibility: ${({ show }) => (show ? 'visible' : 'hidden')};
-`
+  visibility: ${({ show }) => (show ? "visible" : "hidden")};
+`;
 export const LoadingIndicator = styled(Row)`
   background: ${({ theme }) => theme.accent2};
   border-radius: 8px;
@@ -94,98 +111,103 @@ export const LoadingIndicator = styled(Row)`
   gap: 8px;
   height: 34px;
   z-index: ${Z_INDEX.under_dropdown};
-`
+`;
 
 const TableRow = styled(Row)`
-  padding: 0px 12px;
-  width: fit-content;
-  min-width: 100%;
+  padding: 0px;
+  width: 100%;
   display: flex;
   min-height: 64px;
-`
+  box-sizing: border-box;
+`;
 export const DataRow = styled(TableRow)`
   @media not all and (hover: none) {
     :hover {
       background: ${({ theme }) => theme.surface3};
     }
   }
-`
+`;
 export const NoDataFoundTableRow = styled(TableRow)`
   justify-content: center;
-`
+`;
 
 export const HeaderRow = styled(TableRow)<{ $dimmed?: boolean }>`
   border: 1px solid ${({ theme }) => theme.surface3};
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
   overflow: auto;
-  width: unset;
+  width: 100%;
   min-height: 52px;
   background: ${({ theme }) => theme.surface2};
   ${HideScrollBarStyles}
   overscroll-behavior: none;
 
-  ${({ $dimmed }) => $dimmed && 'opacity: 0.4;'}
-`
+  ${({ $dimmed }) => $dimmed && "opacity: 0.4;"}
+`;
 export const CellContainer = styled.div`
   display: flex;
-  flex-grow: 1;
+  flex: 0 0 auto;
+  align-items: center;
 
   &:last-child {
     justify-content: flex-end;
+    margin-right: 12px;
   }
 
   &:first-child {
-    flex-grow: 0;
+    margin-left: 12px;
   }
-`
+`;
 export const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;
   ${ClickableStyle}
   color: ${({ theme }) => theme.neutral1};
-`
+`;
 const StyledInternalLink = styled(Link)`
   text-decoration: none;
   ${ClickableStyle}
   color: ${({ theme }) => theme.neutral1};
-`
+`;
 
 export const TableRowLink = styled(Link)`
   color: none;
   text-decoration: none;
   cursor: pointer;
-`
+`;
 
 export const ClickableHeaderRow = styled(Row)<{ $justify?: string }>`
-  justify-content: ${({ $justify }) => $justify ?? 'flex-end'};
+  justify-content: ${({ $justify }) => $justify ?? "flex-end"};
   cursor: pointer;
   width: 100%;
   gap: 4px;
   ${ClickableStyle}
-`
+`;
 export const HeaderArrow = styled(ArrowDown)<{ direction: OrderDirection }>`
   height: 16px;
   width: 16px;
   color: ${({ theme }) => theme.neutral1};
-  transform: ${({ direction }) => (direction === 'asc' ? 'rotate(180deg)' : 'rotate(0deg)')};
-`
-export const HeaderSortText = styled(ThemedText.BodySecondary)<{ $active?: boolean }>`
+  transform: ${({ direction }) =>
+    direction === "asc" ? "rotate(180deg)" : "rotate(0deg)"};
+`;
+export const HeaderSortText = styled(ThemedText.BodySecondary)<{
+  $active?: boolean;
+}>`
   ${({ $active, theme }) => $active && `color: ${theme.neutral1};`}
-`
+`;
 
 export const FilterHeaderRow = styled(Row)<{ modalOpen?: boolean }>`
   ${({ modalOpen }) => !modalOpen && ClickableStyle}
   cursor: pointer;
   user-select: none;
   gap: 4px;
-`
+`;
 const StyledTimestampRow = styled(StyledExternalLink)`
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
   width: 100%;
-`
+`;
 const StyledExternalLinkIcon = styled(ExternalLinkIcon)`
   display: none;
   height: 16px;
@@ -194,7 +216,7 @@ const StyledExternalLinkIcon = styled(ExternalLinkIcon)`
   ${StyledTimestampRow}:hover & {
     display: block;
   }
-`
+`;
 
 /**
  * Converts the given timestamp to an abbreviated format (s,m,h) for timestamps younger than 1 day
@@ -205,21 +227,27 @@ const StyledExternalLinkIcon = styled(ExternalLinkIcon)`
  * @param link: link to open on click
  * @returns JSX.Element containing the formatted timestamp
  */
-export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: string }) => {
-  const locale = useActiveLocale()
+export const TimestampCell = ({
+  timestamp,
+  link,
+}: {
+  timestamp: number;
+  link: string;
+}) => {
+  const locale = useActiveLocale();
   const options: Intl.DateTimeFormatOptions = {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
   const fullDate = new Date(timestamp * 1000)
     .toLocaleString(locale, options)
     .toLocaleLowerCase(locale)
-    .replace(/\s(am|pm)/, '$1')
+    .replace(/\s(am|pm)/, "$1");
 
-  const abbreviatedTime = useAbbreviatedTimeString(timestamp * 1000)
+  const abbreviatedTime = useAbbreviatedTimeString(timestamp * 1000);
 
   return (
     <StyledTimestampRow href={link}>
@@ -228,22 +256,22 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
       </MouseoverTooltip>
       <StyledExternalLinkIcon />
     </StyledTimestampRow>
-  )
-}
+  );
+};
 
 const TokenSymbolText = styled(ThemedText.BodyPrimary)`
   ${EllipsisStyle}
-`
+`;
 /**
  * Given a token displays the Token's Logo and Symbol with a link to its TDP
  * @param token
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
 export const TokenLinkCell = ({ token }: { token: Token }) => {
-  const chainId = supportedChainIdFromGQLChain(token.chain) ?? ChainId.MAINNET
-  const unwrappedToken = unwrapToken(chainId, token)
-  const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
-  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
+  const chainId = supportedChainIdFromGQLChain(token.chain) ?? ChainId.MAINNET;
+  const unwrappedToken = unwrapToken(chainId, token);
+  const isNative = unwrappedToken.address === NATIVE_CHAIN_ID;
+  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId);
   return (
     <StyledInternalLink
       to={getTokenDetailsURL({
@@ -258,8 +286,10 @@ export const TokenLinkCell = ({ token }: { token: Token }) => {
           images={isNative ? undefined : [token.project?.logo?.url]}
           currencies={isNative ? [nativeCurrency] : undefined}
         />
-        <TokenSymbolText>{unwrappedToken?.symbol ?? <Trans i18nKey="common.UNKNOWN" />}</TokenSymbolText>
+        <TokenSymbolText>
+          {unwrappedToken?.symbol ?? <Trans i18nKey="common.UNKNOWN" />}
+        </TokenSymbolText>
       </Row>
     </StyledInternalLink>
-  )
-}
+  );
+};
