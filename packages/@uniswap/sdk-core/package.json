@@ -8,7 +8,6 @@
   ],
   "license": "MIT",
   "main": "src/index.ts",
-  "module": "dist/sdk-core.esm.js",
   "files": [
     "src"
   ],
