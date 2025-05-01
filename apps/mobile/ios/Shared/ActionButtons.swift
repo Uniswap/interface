@@ -88,12 +88,21 @@ struct CopyButton: View {
 struct PasteButton: View {
   var pasteButtonText: String
   var onPaste: (String) -> Void
-  
+  var onPasteStart: () -> Void
+  var onPasteEnd: () -> Void
+
   var body: some View {
     ActionButton(
       action: {
-        if let pastedText = UIPasteboard.general.string {
-          onPaste(pastedText)
+        let debounceTime = 0.1
+        onPasteStart()  // Call onPasteStart just before accessing the clipboard
+        DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
+          if let pastedText = UIPasteboard.general.string {
+            onPaste(pastedText)
+          }
+          DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
+            onPasteEnd() // Call onPasteEnd after attempting to paste
+          }
         }
       },
       text: pasteButtonText,

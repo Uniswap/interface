@@ -8,6 +8,8 @@ import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-naviga
 import { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
+import { EditWalletSettingsModalState } from 'src/components/Settings/EditWalletModal/EditWalletSettingsModalState'
+import { ManageWalletsModalState } from 'src/components/Settings/ManageWalletsModalState'
 import { BuyNativeTokenModalState } from 'src/components/TokenDetails/BuyNativeTokenModalState'
 import { UnitagsIntroModalState } from 'src/components/unitags/UnitagsIntroModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
@@ -15,6 +17,8 @@ import { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchM
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { PasskeyManagementModalState } from 'uniswap/src/features/passkey/PasskeyManagementModal'
+import { SmartWalletAdvancedSettingsModalState } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModalState } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -44,8 +48,8 @@ type CloudBackupFormParams = {
   password: string
 }
 
-type WelcomeSplashParams = {
-  address: Address
+type PasskeyImportParams = {
+  passkeyCredential: string
 }
 
 export type ExploreStackParamList = {
@@ -59,6 +63,15 @@ export type ExploreStackParamList = {
     currencyId: string
   }
 }
+
+type InnerExploreStackParamList = Omit<ExploreStackParamList, MobileScreens.Explore>
+
+// The ExploreModalState allows a Screen and its Params to be defined, except for the initial Explore screen.
+// This workaround facilitates navigation to any screen within the ExploreStack from outside.
+// Implementation of this lives inside screens/ExploreScreen
+type ExploreModalState = {
+  [V in keyof InnerExploreStackParamList]: { screen: V; params: InnerExploreStackParamList[V] }
+}[keyof InnerExploreStackParamList]
 
 export type FiatOnRampStackParamList = {
   [FiatOnRampScreens.AmountInput]: undefined
@@ -82,12 +95,8 @@ export type SettingsStackParamList = {
   [MobileScreens.SettingsWalletEdit]: { address: Address }
   [MobileScreens.SettingsWalletManageConnection]: { address: Address }
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
-  [ModalName.BiometricsModal]: undefined
   [ModalName.NotificationsOSSettings]: undefined
   [ModalName.SettingsAppearance]: undefined
-  [ModalName.ConnectionsDappListModal]: ConnectionsDappsListModalState
-  [ModalName.EditProfileSettingsModal]: undefined
-  [ModalName.EditLabelSettingsModal]: undefined
   [ModalName.UnitagsIntro]: UnitagsIntroModalState
   [ModalName.RestoreWallet]: undefined
 }
@@ -107,7 +116,7 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.Landing]: OnboardingStackBaseParams
   [OnboardingScreens.Notifications]: OnboardingStackBaseParams
   [OnboardingScreens.WelcomeWallet]: OnboardingStackBaseParams
-  [OnboardingScreens.WelcomeSplash]: WelcomeSplashParams & OnboardingStackBaseParams
+  [OnboardingScreens.PasskeyImport]: PasskeyImportParams & OnboardingStackBaseParams
   [OnboardingScreens.Security]: OnboardingStackBaseParams
 
   // import
@@ -144,6 +153,7 @@ export type AppStackParamList = {
   }
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
   [MobileScreens.Storybook]: undefined
+  [ModalName.Explore]: ExploreModalState | undefined
   [ModalName.NotificationsOSSettings]: undefined
   [ModalName.FundWallet]: undefined
   [ModalName.KoreaCexTransferInfoModal]: undefined
@@ -164,7 +174,15 @@ export type AppStackParamList = {
   [ModalName.BuyNativeToken]: BuyNativeTokenModalState
   [ModalName.HiddenTokenInfoModal]: undefined
   [ModalName.ScreenshotWarning]: { acknowledgeText?: string } | undefined
+  [ModalName.PasskeyManagement]: PasskeyManagementModalState
   [ModalName.PasskeysHelp]: undefined
+  [ModalName.BiometricsModal]: undefined
+  [ModalName.FiatCurrencySelector]: undefined
+  [ModalName.ManageWalletsModal]: ManageWalletsModalState
+  [ModalName.EditLabelSettingsModal]: EditWalletSettingsModalState
+  [ModalName.EditProfileSettingsModal]: EditWalletSettingsModalState
+  [ModalName.ConnectionsDappListModal]: ConnectionsDappsListModalState
+  [ModalName.SmartWalletAdvancedSettingsModal]: SmartWalletAdvancedSettingsModalState
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

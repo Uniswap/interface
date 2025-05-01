@@ -5,7 +5,7 @@ import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-c
 import { useDispatch, useSelector } from 'react-redux'
 import { GeneratedIcon, isWeb } from 'ui/src'
 import { Eye, EyeOff, Flag } from 'ui/src/components/icons'
-import { reportNftSpamToSimpleHash } from 'uniswap/src/data/apiClients/simpleHashApi/SimpleHashApiClient'
+import { TokenReportEventType, submitTokenReport } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -71,7 +71,12 @@ export function useNFTContextMenu({
   }, [contractAddress, handleShareNft, tokenId])
 
   const onPressReport = useCallback(async () => {
-    if (!nftKey || !chainId) {
+    if (!nftKey || !chainId || !contractAddress) {
+      logger.warn('useNftContextMenu', 'onPressReport', 'Missing required parameters for reporting', {
+        nftKey,
+        chainId,
+        contractAddress,
+      })
       return
     }
 
@@ -80,25 +85,32 @@ export function useNFTContextMenu({
     }
 
     try {
-      await reportNftSpamToSimpleHash({
-        contractAddress,
-        tokenId,
+      await submitTokenReport({
         chainId,
+        address: contractAddress,
+        event: TokenReportEventType.FalseNegative,
       })
+
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Success,
+          title: t('notification.spam.NFT.successful'),
+        }),
+      )
     } catch (e) {
       logger.error(e, {
-        tags: { file: 'useNftContextMenu.tsx', function: 'useSimpleHashNftReport' },
+        tags: { file: 'useNftContextMenu.tsx', function: 'onPressReport' },
       })
+
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Error,
+          errorMessage: t('notification.spam.NFT.failed'),
+        }),
+      )
       return
     }
-
-    dispatch(
-      pushNotification({
-        type: AppNotificationType.Success,
-        title: t('notification.spam.NFT.successful'),
-      }),
-    )
-  }, [t, dispatch, contractAddress, isVisible, chainId, nftKey, tokenId])
+  }, [t, dispatch, contractAddress, isVisible, chainId, nftKey])
 
   const onPressHiddenStatus = useCallback(() => {
     if (!nftKey) {

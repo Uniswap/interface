@@ -97,9 +97,7 @@ export function useTokenContextMenu({ tokenBalance }: TokenMenuParams): MenuOpti
         Icon: copied ? CheckCircleFilled : CopyAlt,
         disabled: isNative,
         closeDelay: 400,
-        iconProps: {
-          color: copied ? '$statusSuccess' : '$neutral2',
-        },
+        iconColor: copied ? '$statusSuccess' : '$neutral2',
       },
       {
         label: t('common.button.swap'),

@@ -3,6 +3,7 @@ import { ReadOnlyAccountMeta, SignerMnemonicAccountMeta } from 'uniswap/src/feat
 export enum BackupType {
   Manual = 'manual',
   Cloud = 'cloud',
+  Passkey = 'passkey',
 }
 
 export type AccountCustomizations = {
@@ -21,6 +22,7 @@ export interface WalletAccountFields {
 export interface SignerMnemonicAccount extends WalletAccountFields, SignerMnemonicAccountMeta {
   derivationIndex: number
   mnemonicId: string
+  smartWalletConsent?: boolean
 }
 
 export interface ReadOnlyAccount extends WalletAccountFields, ReadOnlyAccountMeta {}

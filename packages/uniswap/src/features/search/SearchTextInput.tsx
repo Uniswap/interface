@@ -16,7 +16,7 @@ import { ViewGestureHandler } from 'uniswap/src/components/ViewGestureHandler/Vi
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 
 const DEFAULT_MIN_HEIGHT = 48
@@ -43,6 +43,8 @@ export type SearchTextInputProps = InputProps & {
   showShadow?: boolean
   py?: SpaceTokens
   px?: SpaceTokens
+  mx?: number
+  my?: SpaceTokens
   hideIcon?: boolean
   minHeight?: number
   cancelBehaviorType?: CancelBehaviorType
@@ -61,9 +63,12 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       onClose,
       onChangeText,
       onFocus,
+      onKeyPress,
       placeholder,
       py = '$spacing12',
       px = '$spacing16',
+      mx = spacing.none,
+      my,
       showShadow,
       value,
       hideIcon,
@@ -137,8 +142,9 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           borderRadius="$roundedFull"
           gap="$spacing8"
           minHeight={minHeight}
-          ml={showBackChevron && isFocus ? cancelChevronWidth + spacing.spacing8 + spacing.spacing2 : 0}
-          mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
+          ml={showBackChevron && isFocus ? cancelChevronWidth + spacing.spacing8 + spacing.spacing2 + mx : mx}
+          mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 + mx : mx}
+          my={my}
           px={px}
           py={py}
           {...(showShadow && {
@@ -198,6 +204,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 onChangeText={onChangeTextInput}
                 onFocus={onTextInputFocus}
                 onSubmitEditing={dismissNativeKeyboard}
+                onKeyPress={onKeyPress}
               />
             </ViewGestureHandler>
           </Flex>

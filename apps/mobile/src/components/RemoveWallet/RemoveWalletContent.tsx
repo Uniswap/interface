@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AssociatedAccountsList } from 'src/components/RemoveWallet/AssociatedAccountsList'
 import { RemoveLastMnemonicWalletFooter } from 'src/components/RemoveWallet/RemoveLastMnemonicWalletFooter'
 import { RemoveWalletStep, useModalContent } from 'src/components/RemoveWallet/useModalContent'
-import { navigateToOnboardingImportMethod } from 'src/components/RemoveWallet/utils'
+import { determineRemoveWalletConditions } from 'src/components/RemoveWallet/utils/determineRemoveWalletConditions'
+import { navigateToOnboardingImportMethod } from 'src/components/RemoveWallet/utils/navigateToOnboardingImportMethod'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { Button, Flex, Text, ThemeKeys, useSporeColors } from 'ui/src'
@@ -14,42 +15,35 @@ import { ElementName, WalletEventName } from 'uniswap/src/features/telemetry/con
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { selectSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
+import { useAccounts, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
 type RemoveWalletContentProps = {
   address?: Address
+  replaceMnemonic?: boolean
   onClose?: () => void
 }
 
-export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentProps): JSX.Element | null => {
+export const RemoveWalletContent = ({
+  address,
+  replaceMnemonic = false,
+  onClose,
+}: RemoveWalletContentProps): JSX.Element | null => {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
 
-  const addressToAccount = useAccounts()
-  const associatedAccounts = useSelector(selectSignerMnemonicAccounts)
-
-  const account = (address && addressToAccount[address]) || undefined
-  // If address was not provided, it means we need to remove all mnemonics.
-  // This happens when user wants to replace mnemonic with a new one
-  const isReplacing = !address
-
-  const isRemovingMnemonic = Boolean(associatedAccounts.find((acc) => areAddressesEqual(address, acc.address)))
-
-  const isRemovingLastMnemonic = isRemovingMnemonic && associatedAccounts.length === 1
-  const isRemovingRecoveryPhrase = isReplacing || isRemovingLastMnemonic
-
-  const hasAccountsLeft = Object.keys(addressToAccount).length > (isReplacing ? associatedAccounts.length : 1)
+  const signerAccounts = useSignerAccounts()
+  const accountsMap = useAccounts()
+  const { targetAccount, hasAccountsLeftAfterRemoval, accountsToRemove, shouldRemoveMnemonic } =
+    determineRemoveWalletConditions({ accountsMap, signerAccounts, targetAddress: address, replaceMnemonic })
 
   const [inProgress, setInProgress] = useState(false)
   const [currentStep, setCurrentStep] = useState<RemoveWalletStep>(
-    isRemovingRecoveryPhrase ? RemoveWalletStep.Warning : RemoveWalletStep.Final,
+    shouldRemoveMnemonic ? RemoveWalletStep.Warning : RemoveWalletStep.Final,
   )
 
   const handleOnClose = useCallback((): void => {
@@ -60,11 +54,11 @@ export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentPro
 
   const onRemoveWallet = useCallback((): void => {
     handleOnClose()
-    if (!hasAccountsLeft) {
+    if (!hasAccountsLeftAfterRemoval) {
       // user has no accounts left, so we bring onboarding back
       dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
       navigateToOnboardingImportMethod()
-    } else if (isReplacing) {
+    } else if (replaceMnemonic) {
       // there are account left and it's replacing, user has view-only accounts left
       navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.ImportMethod,
@@ -74,12 +68,10 @@ export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentPro
         },
       })
     }
-    const accountsToRemove = isReplacing ? associatedAccounts : account ? [account] : []
 
-    // Remove mnemonic if it's replacing or there is only one signer mnemonic account left
-    if (isReplacing || associatedAccounts.length === 1) {
-      if (associatedAccounts[0]) {
-        Keyring.removeMnemonic(associatedAccounts[0].mnemonicId)
+    if (shouldRemoveMnemonic) {
+      if (signerAccounts[0]) {
+        Keyring.removeMnemonic(signerAccounts[0].mnemonicId)
           .then(() => {
             // Only remove accounts if mnemonic is successfully removed
             dispatch(
@@ -109,7 +101,15 @@ export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentPro
     })
 
     setInProgress(false)
-  }, [account, associatedAccounts, dispatch, isReplacing, hasAccountsLeft, handleOnClose])
+  }, [
+    signerAccounts,
+    dispatch,
+    replaceMnemonic,
+    hasAccountsLeftAfterRemoval,
+    handleOnClose,
+    accountsToRemove,
+    shouldRemoveMnemonic,
+  ])
 
   const { trigger } = useBiometricPrompt(
     () => {
@@ -147,11 +147,11 @@ export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentPro
   }
 
   const modalContent = useModalContent({
-    account,
-    isReplacing,
+    account: targetAccount,
+    isReplacing: replaceMnemonic,
     currentStep,
-    isRemovingRecoveryPhrase,
-    associatedAccounts,
+    isRemovingRecoveryPhrase: shouldRemoveMnemonic,
+    associatedAccounts: signerAccounts,
   })
 
   if (!modalContent) {
@@ -185,9 +185,9 @@ export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentPro
         </Flex>
       </Flex>
       <Flex centered gap="$spacing16">
-        {currentStep === RemoveWalletStep.Final && isRemovingRecoveryPhrase ? (
+        {currentStep === RemoveWalletStep.Final && shouldRemoveMnemonic ? (
           <>
-            <AssociatedAccountsList accounts={associatedAccounts} />
+            <AssociatedAccountsList accounts={signerAccounts} />
             <RemoveLastMnemonicWalletFooter inProgress={inProgress} onPress={onPress} />
           </>
         ) : (
@@ -200,7 +200,7 @@ export const RemoveWalletContent = ({ address, onClose }: RemoveWalletContentPro
               size="large"
               emphasis="secondary"
               loading={inProgress}
-              testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
+              testID={shouldRemoveMnemonic ? ElementName.Continue : ElementName.Remove}
               onPress={onPress}
             >
               {actionButtonLabel}

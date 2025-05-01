@@ -16,6 +16,8 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
@@ -162,15 +164,16 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   }, [calldataError, decreaseCalldataQueryParams])
 
   if (calldataError) {
-    logger.info(
-      'RemoveLiquidityTxAndGasInfo',
-      'RemoveLiquidityTxAndGasInfo',
-      parseErrorMessageTitle(calldataError, { defaultTitle: 'DecreaseLpPositionCalldataQuery' }),
-      {
-        error: JSON.stringify(calldataError),
-        decreaseCalldataQueryParams: JSON.stringify(decreaseCalldataQueryParams),
+    const message = parseErrorMessageTitle(calldataError, { defaultTitle: 'DecreaseLpPositionCalldataQuery' })
+    logger.error(message, {
+      tags: {
+        file: 'RemoveLiquidityTxAndGasInfo',
+        function: 'useEffect',
       },
-    )
+    })
+    sendAnalyticsEvent(InterfaceEventNameLocal.DecreaseLiquidityFailed, {
+      message,
+    })
   }
 
   const { value: estimatedGasFee } = useTransactionGasFee(decreaseCalldata?.decrease, !!decreaseCalldata?.gasFee)

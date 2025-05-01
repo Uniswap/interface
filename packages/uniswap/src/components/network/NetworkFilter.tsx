@@ -123,7 +123,7 @@ export function NetworkFilter({
         ...styles,
       }}
       testID="chain-selector"
-      onDismiss={onDismiss}
+      onPress={onDismiss}
     >
       {showUnsupportedConnectedChainWarning ? (
         <AlertTriangle color="$neutral2" size={20} />

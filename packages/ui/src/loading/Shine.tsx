@@ -1,39 +1,6 @@
-import { Flex, FlexProps } from 'ui/src/components/layout'
-import { ShineProps } from 'ui/src/loading/ShineProps'
+import type { ShineProps } from 'ui/src/loading/ShineProps'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
-const shineKeyframe = `
-  @keyframes shine {
-    from {
-      -webkit-mask-position: 150%;
-    }
-    to {
-      -webkit-mask-position: -50%;
-    }
-  }
-`
-
-export function Shine({ children, disabled, ...rest }: ShineProps & FlexProps): JSX.Element {
-  return (
-    <>
-      <style>{shineKeyframe}</style>
-      <Flex
-        {...rest}
-        style={
-          disabled
-            ? undefined
-            : {
-                WebkitMaskImage: `linear-gradient(-75deg, rgba(0,0,0,0.5) 30%, #000 50%, rgba(0,0,0,0.5) 70%)`,
-                WebkitMaskSize: '200%',
-                animationName: 'shine',
-                animationDuration: '1s',
-                animationTimingFunction: 'linear',
-                animationIterationCount: 'infinite',
-                animationDelay: rest['$platform-web']?.animationDelay,
-              }
-        }
-      >
-        {children}
-      </Flex>
-    </>
-  )
+export function Shine(_props: ShineProps): JSX.Element {
+  throw new PlatformSplitStubError('Shine')
 }

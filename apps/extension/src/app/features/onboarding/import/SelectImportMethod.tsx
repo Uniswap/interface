@@ -1,10 +1,14 @@
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 import { OptionCard } from 'src/app/components/buttons/OptionCard'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
-import { IMPORT_PASSKEY_STATE_KEY } from 'src/app/features/onboarding/import/InitiatePasskeyAuth'
+import {
+  InitiatePasskeyAuthLocationState,
+  SelectImportMethodLocationState,
+} from 'src/app/features/onboarding/import/types'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Flex, Square } from 'ui/src'
+import { Flex, Square, Text } from 'ui/src'
 import { PapersText, Passkey, QrCode, WalletFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -12,6 +16,9 @@ import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src
 
 export function SelectImportMethod(): JSX.Element {
   const { t } = useTranslation()
+  const locationState = useLocation().state as SelectImportMethodLocationState | undefined
+
+  const showErrorMessage = locationState?.showErrorMessage
 
   return (
     <Trace
@@ -35,18 +42,13 @@ export function SelectImportMethod(): JSX.Element {
           onBack={(): void => navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })}
         >
           <Flex gap="$spacing16" mt="$spacing24" width="100%">
-            <OptionCard
-              Icon={Passkey}
-              title={t('onboarding.import.selectMethod.passkey.title')}
-              subtitle={t('onboarding.import.selectMethod.passkey.subtitle')}
-              onPress={(): void =>
-                navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.ImportPasskey}`, {
-                  replace: true,
-                  state: { [IMPORT_PASSKEY_STATE_KEY]: true },
-                })
-              }
-            />
-
+            {showErrorMessage && (
+              <Flex mb="$spacing8">
+                <Text color="$statusCritical" variant="body3" textAlign="center" width="100%">
+                  {t('onboarding.import.selectMethod.errorMessage')}
+                </Text>
+              </Flex>
+            )}
             <OptionCard
               Icon={PapersText}
               title={t('onboarding.import.selectMethod.recoveryPhrase.title')}
@@ -62,6 +64,18 @@ export function SelectImportMethod(): JSX.Element {
               subtitle={t('onboarding.import.selectMethod.mobileApp.subtitle')}
               onPress={(): void =>
                 navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Scan}`, { replace: true })
+              }
+            />
+
+            <OptionCard
+              Icon={Passkey}
+              title={t('onboarding.import.selectMethod.passkey.title')}
+              subtitle={t('onboarding.import.selectMethod.passkey.subtitle')}
+              onPress={(): void =>
+                navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.ImportPasskey}`, {
+                  replace: true,
+                  state: { importPasskey: true } satisfies InitiatePasskeyAuthLocationState,
+                })
               }
             />
           </Flex>

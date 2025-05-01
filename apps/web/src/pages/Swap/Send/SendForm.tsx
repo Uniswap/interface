@@ -1,6 +1,5 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
@@ -73,6 +72,7 @@ enum SendSpeedBump {
 
 function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFormProps) {
   const account = useAccount()
+  const { t } = useTranslation()
 
   const accountDrawer = useAccountDrawer()
 
@@ -195,7 +195,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
           >
             <Flex row>
               <Button variant="branded" emphasis="secondary" size="large" fill onPress={accountDrawer.open}>
-                <ConnectWalletButtonText />
+                {t('common.connectWallet.button')}
               </Button>
             </Flex>
           </Trace>

@@ -13,4 +13,9 @@ export enum InterfaceEventNameLocal {
   LocalCurrencySelected = 'Local Currency Selected',
   NoQuoteReceivedFromQuickrouteAPI = 'No quote received from quickroute API',
   NoQuoteReceivedFromRoutingAPI = 'No quote received from routing API',
+  CreatePositionFailed = 'Create Position Failed',
+  IncreaseLiquidityFailed = 'Increase Liquidity Failed',
+  DecreaseLiquidityFailed = 'Decrease Liquidity Failed',
+  MigrateLiquidityFailed = 'Migrate Liquidity Failed',
+  CollectLiquidityFailed = 'Collect Liquidity Failed',
 }

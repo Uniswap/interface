@@ -3,13 +3,13 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
 import {
   DiscriminatedQuoteResponse,
-  TRADING_API_CACHE_KEY,
   WithV4Flag,
   fetchQuote,
 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { QuoteRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useTradingApiQuoteQuery({
   params,
@@ -18,7 +18,7 @@ export function useTradingApiQuoteQuery({
   WithV4Flag<QuoteRequest & { isUSDQuote?: boolean }>,
   DiscriminatedQuoteResponse
 >): UseQueryResult<DiscriminatedQuoteResponse> {
-  const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.quote, params]
+  const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.quote, params]
 
   return useQueryWithImmediateGarbageCollection<DiscriminatedQuoteResponse>({
     queryKey,

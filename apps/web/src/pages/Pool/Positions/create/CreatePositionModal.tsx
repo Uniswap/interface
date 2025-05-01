@@ -97,8 +97,9 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
       getLiquidityRangeChartProps({
         positionInfo: derivedPositionInfo,
         priceRangeInfo: derivedPriceRangeInfo,
+        pricesInverted: priceInverted,
       }),
-    [derivedPositionInfo, derivedPriceRangeInfo],
+    [derivedPositionInfo, derivedPriceRangeInfo, priceInverted],
   )
 
   const handleCreate = useCallback(() => {
@@ -321,17 +322,13 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               />
             </Flex>
             {currentTransactionStep ? (
-              <Flex>
-                <Button size="large" variant="branded" loading={true} key="create-position-confirm">
-                  {t('common.confirmWallet')}
-                </Button>
-              </Flex>
+              <Button size="large" variant="branded" loading={true} key="create-position-confirm" fill={false}>
+                {t('common.confirmWallet')}
+              </Button>
             ) : (
-              <Flex row>
-                <Button size="large" variant="branded" onPress={handleCreate} isDisabled={!txInfo?.action}>
-                  {t('common.button.create')}
-                </Button>
-              </Flex>
+              <Button size="large" variant="branded" onPress={handleCreate} isDisabled={!txInfo?.action} fill={false}>
+                {t('common.button.create')}
+              </Button>
             )}
           </>
         )}

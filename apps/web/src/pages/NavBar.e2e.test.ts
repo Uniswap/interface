@@ -5,7 +5,7 @@ const companyMenu = [
   {
     label: 'Company',
     items: [
-      { label: 'Careers', href: 'https://boards.greenhouse.io/uniswaplabs' },
+      { label: 'Careers', href: 'https://careers.uniswap.org/' },
       { label: 'Blog', href: 'https://blog.uniswap.org/' },
     ],
   },

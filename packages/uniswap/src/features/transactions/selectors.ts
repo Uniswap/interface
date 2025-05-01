@@ -35,11 +35,8 @@ export const selectSwapTransactionsCount = createSelector(selectTransactions, (t
   return swapTransactionCount
 })
 
-export const makeSelectAddressTransactions = (): Selector<
-  UniswapState,
-  TransactionDetails[] | undefined,
-  [Address | null]
-> =>
+export type AddressTransactionsSelector = Selector<UniswapState, TransactionDetails[] | undefined, [Address | null]>
+export const makeSelectAddressTransactions = (): AddressTransactionsSelector =>
   createSelector(
     selectTransactions,
     (_: UniswapState, address: Address | null) => address,

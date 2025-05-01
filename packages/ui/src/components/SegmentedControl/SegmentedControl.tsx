@@ -3,7 +3,7 @@ import { AnimatePresence, ColorTokens, SpaceTokens, TabLayout, Tabs, TabsTabProp
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { assert } from 'utilities/src/errors'
-import { isMobileApp } from 'utilities/src/platform'
+import { isMobileApp, isWeb } from 'utilities/src/platform'
 
 const TOGGLE_PADDING = 4
 
@@ -292,7 +292,7 @@ export function SegmentedControl<T extends string = string>({
               height={activeAt.height}
               width={activeAt.width}
               x={activeAt.x - TOGGLE_PADDING + activeIndicatorXAdjustment}
-              y={activeAt.y - TOGGLE_PADDING + activeIndicatorYAdjustment - (!outlined ? 1 : 0)}
+              y={activeAt.y - TOGGLE_PADDING + activeIndicatorYAdjustment - (isWeb && !outlined ? 1 : 0)}
             />
           )}
         </AnimatePresence>

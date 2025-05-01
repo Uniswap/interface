@@ -98,7 +98,6 @@ describe('useSwapTxAndGasInfo', () => {
           },
         },
       },
-      permitSignature: undefined,
       swapRequestArgs: undefined,
     }
 

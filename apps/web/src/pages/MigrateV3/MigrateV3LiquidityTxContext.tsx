@@ -14,6 +14,8 @@ import {
   ProtocolItems,
   UniversalRouterVersion,
 } from 'uniswap/src/data/tradingApi/__generated__'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   LiquidityTransactionType,
   MigrateV3PositionTxAndGasInfo,
@@ -84,15 +86,13 @@ export function MigrateV3PositionTxContextProvider({
   })
 
   if (approvalError) {
-    logger.info(
-      'MigrateV3LiquidityTxContext',
-      'MigrateV3LiquidityTxContext',
-      parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' }),
-      {
-        error: JSON.stringify(approvalError),
-        increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
+    const message = parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' })
+    logger.error(message, {
+      tags: {
+        file: 'MigrateV3LiquidityTxContext',
+        function: 'useEffect',
       },
-    )
+    })
   }
 
   const approvalsNeeded = !approvalLoading && Boolean(migrateTokenApprovals?.permitData)
@@ -213,15 +213,17 @@ export function MigrateV3PositionTxContextProvider({
   }, [migrateError, migratePositionRequestArgs])
 
   if (migrateError) {
-    logger.info(
-      'MigrateV3LiquidityTxContext',
-      'MigrateV3LiquidityTxContext',
-      parseErrorMessageTitle(migrateError, { defaultTitle: 'unknown MigrateLpPositionCalldataQuery' }),
-      {
-        error: JSON.stringify(migrateError),
-        migrateCalldataQueryParams: JSON.stringify(migratePositionRequestArgs),
+    const message = parseErrorMessageTitle(migrateError, { defaultTitle: 'unknown MigrateLpPositionCalldataQuery' })
+    logger.error(message, {
+      tags: {
+        file: 'MigrateV3LiquidityTxContext',
+        function: 'useEffect',
       },
-    )
+    })
+
+    sendAnalyticsEvent(InterfaceEventNameLocal.MigrateLiquidityFailed, {
+      message,
+    })
   }
 
   const validatedValue: MigrateV3PositionTxAndGasInfo | undefined = useMemo(() => {

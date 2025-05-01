@@ -13,7 +13,6 @@ import {
   fetchExportSeedPhraseRequest,
   fetchListAuthenticatorsRequest,
   fetchRegisterNewAuthenticatorRequest,
-  fetchSecuredChallengeRequest,
   fetchSignMessagesRequest,
   fetchSignTransactionRequest,
   fetchSignTypedDataRequest,
@@ -24,6 +23,7 @@ import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 
 export {
+  Action,
   Authenticator,
   RegistrationOptions_AuthenticatorAttachment as AuthenticatorAttachment,
   AuthenticatorNameType,
@@ -51,11 +51,10 @@ async function registerNewPasskey({
     if (registrationError instanceof Error && registrationError.name === 'AbortError') {
       logger.debug('embeddedWallet.ts', 'registerNewPasskey', 'User aborted registration')
     } else {
-      // TODO[EW]: Add more in depth error handling
       logger.debug('embeddedWallet.ts', 'registerNewPasskey', `Error during registration: ${registrationError}`)
     }
+    throw registrationError
   }
-  return undefined
 }
 
 export async function createNewEmbeddedWallet(unitag: string): Promise<`0x${string}` | undefined> {
@@ -83,6 +82,7 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<`0x${stri
       }
       return createWalletResp.walletAddress as `0x${string}`
     }
+    return undefined
   } catch (error) {
     logger.error(error, {
       tags: {
@@ -90,31 +90,13 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<`0x${stri
         function: 'createNewEmbeddedWallet',
       },
     })
+    throw error
   }
-  return undefined
-}
-
-export async function getSecuredChallengeOptions({
-  type,
-  action,
-  b64EncryptionPublicKey,
-}: {
-  type: AuthenticationTypes
-  action: Action
-  b64EncryptionPublicKey: string
-}): Promise<string> {
-  const securedChallengeResponse = await fetchSecuredChallengeRequest({
-    type,
-    action,
-    b64EncryptionPublicKey,
-  })
-
-  return securedChallengeResponse.challengeOptions
 }
 
 // Authentication
 
-async function authenticateWithPasskey(action: Action): Promise<string | undefined> {
+export async function authenticateWithPasskey(action: Action): Promise<string | undefined> {
   try {
     const challenge = await fetchChallengeRequest({
       type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
@@ -132,8 +114,12 @@ async function authenticateWithPasskey(action: Action): Promise<string | undefin
         },
       })
     }
+    throw error
   }
-  return undefined
+}
+
+export async function authenticateWithPasskeyForSeedPhraseExport(): Promise<string | undefined> {
+  return await authenticateWithPasskey(Action.EXPORT_SEED_PHRASE)
 }
 
 export async function signInWithPasskey(): Promise<`0x${string}` | undefined> {
@@ -146,6 +132,7 @@ export async function signInWithPasskey(): Promise<`0x${string}` | undefined> {
     if (signInResp?.walletAddress) {
       return signInResp.walletAddress as `0x${string}`
     }
+    return undefined
   } catch (error) {
     logger.error(error, {
       tags: {
@@ -153,8 +140,8 @@ export async function signInWithPasskey(): Promise<`0x${string}` | undefined> {
         function: 'signInWithPasskey',
       },
     })
+    throw error
   }
-  return undefined
 }
 
 export async function signMessagesWithPasskey(messages: string[]): Promise<string[] | undefined> {
@@ -169,7 +156,7 @@ export async function signMessagesWithPasskey(messages: string[]): Promise<strin
         function: 'signMessagesWithPasskey',
       },
     })
-    return undefined
+    throw error
   }
 }
 
@@ -188,7 +175,7 @@ export async function signTransactionWithPasskey(transactions: string[]): Promis
         function: 'signTransactionWithPasskey',
       },
     })
-    return undefined
+    throw error
   }
 }
 
@@ -207,7 +194,7 @@ export async function signTypedDataWithPasskey(typedDataBatch: string[]): Promis
         function: 'signTypedDataWithPasskey',
       },
     })
-    return undefined
+    throw error
   }
 }
 
@@ -229,15 +216,13 @@ export async function exportEncryptedSeedPhrase(encryptionKey: string): Promise<
         function: 'exportEncryptedSeedPhrase',
       },
     })
+    throw error
   }
-  return undefined
 }
 
 export async function disconnectWallet(): Promise<void> {
-  logger.debug('embeddedWallet.ts', 'disconnectWallet', 'Attempting to disconnect wallet')
   try {
     await fetchDisconnectRequest()
-    logger.debug('embeddedWallet.ts', 'disconnectWallet', 'Wallet disconnected')
   } catch (error) {
     logger.error(error, {
       tags: {
@@ -245,25 +230,40 @@ export async function disconnectWallet(): Promise<void> {
         function: 'disconnectWallet',
       },
     })
+    throw error
   }
 }
 
 export async function listAuthenticators(): Promise<Authenticator[]> {
-  const credential = await authenticateWithPasskey(Action.LIST_AUTHENTICATORS)
-  const listAuthenticatorsResp = await fetchListAuthenticatorsRequest({ credential: JSON.stringify(credential) })
-  return listAuthenticatorsResp.authenticators
+  try {
+    const credential = await authenticateWithPasskey(Action.LIST_AUTHENTICATORS)
+    const listAuthenticatorsResp = await fetchListAuthenticatorsRequest({ credential: JSON.stringify(credential) })
+    return listAuthenticatorsResp.authenticators
+  } catch (error) {
+    logger.error(error, {
+      tags: {
+        file: 'embeddedWallet.ts',
+        function: 'listAuthenticators',
+      },
+    })
+    throw error
+  }
 }
 
 export async function registerNewAuthenticator({
   authenticatorAttachment,
+  existingCredential,
+  username,
 }: {
   authenticatorAttachment: AuthenticatorAttachment
+  existingCredential?: string
+  username?: string
 }): Promise<boolean | undefined> {
   try {
-    const existingCredential = await authenticateWithPasskey(Action.REGISTER_NEW_AUTHENTICATION_TYPES)
     const newPasskeyCredential = await registerNewPasskey({
       authenticatorAttachment,
       action: Action.REGISTER_NEW_AUTHENTICATION_TYPES,
+      username,
     })
     if (newPasskeyCredential && existingCredential) {
       await fetchRegisterNewAuthenticatorRequest({
@@ -274,6 +274,7 @@ export async function registerNewAuthenticator({
       })
       return true
     }
+    return false
   } catch (error) {
     logger.error(error, {
       tags: {
@@ -281,14 +282,18 @@ export async function registerNewAuthenticator({
         function: 'registerNewAuthenticator',
       },
     })
-    return false
+    throw error
   }
-  return false
 }
 
-export async function deleteAuthenticator(authenticator: Authenticator): Promise<boolean | undefined> {
+export async function deleteAuthenticator({
+  authenticator,
+  credential,
+}: {
+  authenticator: Authenticator
+  credential?: string
+}): Promise<boolean | undefined> {
   try {
-    const credential = await authenticateWithPasskey(Action.DELETE_RECORD)
     if (credential) {
       await fetchDeleteAuthenticatorRequest({
         credential,
@@ -306,6 +311,6 @@ export async function deleteAuthenticator(authenticator: Authenticator): Promise
         function: 'deleteAuthenticator',
       },
     })
-    return false
+    throw error
   }
 }

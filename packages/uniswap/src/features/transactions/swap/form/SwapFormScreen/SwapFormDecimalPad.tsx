@@ -11,7 +11,7 @@ import {
   DecimalPadCalculatedSpaceId,
   DecimalPadInput,
   DecimalPadInputRef,
-} from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
+} from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useDecimalPadControlledField'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'

@@ -66,7 +66,6 @@ export function ChainConnectivityWarning() {
   const info = getChainInfo(chainId ?? defaultChainId)
   const label = info.label
 
-  const isNFTPage = useIsPage(PageType.NFTS)
   const isLandingPage = useIsPage(PageType.LANDING)
 
   const waitMsBeforeWarning = useMemo(
@@ -79,7 +78,7 @@ export function ChainConnectivityWarning() {
   const warning = Boolean(!!blockTime && machineTime - Number(blockTime) * 1000 > waitMsBeforeWarning)
   const isMonadDown = chainId === UniverseChainId.MonadTestnet && isMonadDownFlag
 
-  if (hide || (!isMonadDown && (!warning || isNFTPage || isLandingPage))) {
+  if (hide || (!isMonadDown && (!warning || isLandingPage))) {
     return null
   }
 

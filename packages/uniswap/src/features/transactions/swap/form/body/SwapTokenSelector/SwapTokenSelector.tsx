@@ -1,3 +1,5 @@
+import type { BottomSheetView } from '@gorhom/bottom-sheet'
+import { ComponentProps } from 'react'
 import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
@@ -7,8 +9,14 @@ import { useHideTokenSelector } from 'uniswap/src/features/transactions/swap/for
 import { useOnSelectCurrency } from 'uniswap/src/features/transactions/swap/form/hooks/useOnSelectCurrency'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JSX.Element | null {
-  const { selectingCurrencyField, input } = useSwapFormContext()
+export function SwapTokenSelector({
+  isModalOpen,
+  focusHook,
+}: {
+  isModalOpen: boolean
+  focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
+}): JSX.Element | null {
+  const { selectingCurrencyField, input, output } = useSwapFormContext()
 
   const activeAccountAddress = useAccountMeta()?.address
   const chainId = useChainId()
@@ -32,6 +40,7 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       activeAccountAddress={activeAccountAddress}
       chainId={chainId}
       input={input}
+      output={output}
       currencyField={selectingCurrencyField}
       flow={TokenSelectorFlow.Swap}
       variation={
@@ -39,6 +48,7 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
           ? TokenSelectorVariation.SwapInput
           : TokenSelectorVariation.SwapOutput
       }
+      focusHook={focusHook}
       onClose={handleHideTokenSelector}
       onSelectCurrency={onSelectCurrency}
     />

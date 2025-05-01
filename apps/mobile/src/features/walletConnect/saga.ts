@@ -10,6 +10,7 @@ import { EventChannel, eventChannel } from 'redux-saga'
 import { MobileState } from 'src/app/mobileReducer'
 import { registerWCClientForPushNotifications } from 'src/features/walletConnect/api'
 import { fetchDappDetails } from 'src/features/walletConnect/fetchDappDetails'
+import { getMockedEncodedBatchedTransaction } from 'src/features/walletConnect/mocks'
 import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
@@ -27,16 +28,17 @@ import {
   removeSession,
   setHasPendingSessionError,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { call, fork, put, select, take } from 'typed-redux-saga'
+import { call, delay, fork, put, select, take } from 'typed-redux-saga'
 import { config } from 'uniswap/src/config'
 import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import i18n from 'uniswap/src/i18n'
-import { EthEvent, EthMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { EthEvent, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -324,23 +326,16 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
     }
     case EthMethod.SendCalls: {
       // capabilities as part of sendCallsRequest is subject to change
-      const { capabilities } = parseSendCallsRequest(topic, id, chainId, dapp, requestParams, accountAddress)
+      const request = parseSendCallsRequest(topic, id, chainId, dapp, requestParams, accountAddress)
 
-      // Mock response data
-      const response = {
-        id,
-        capabilities,
+      yield* delay(300) // to emulate a network request
+      const requestWithEncodedTransaction = {
+        ...request,
+        // TODO: replace this with a real call to Wallet API /encode endpoint
+        encodedTransaction: getMockedEncodedBatchedTransaction(request.account),
       }
 
-      yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
-        topic,
-        response: {
-          id,
-          jsonrpc: '2.0',
-          result: response,
-        },
-      })
-
+      yield* put(addRequest(requestWithEncodedTransaction))
       break
     }
     case EthMethod.GetCallsStatus: {

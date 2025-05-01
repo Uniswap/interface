@@ -1,13 +1,14 @@
-import { PropsWithChildren, useCallback } from 'react'
+import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
-import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
-import { DappRequestType } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { useIsDappRequestConfirming } from 'src/app/features/dappRequests/hooks'
+import { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
 import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
@@ -15,6 +16,8 @@ import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/tra
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useDebouncedCallback } from 'utilities/src/react/useDebouncedCallback'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
@@ -184,6 +187,7 @@ function DappRequestFooter({
     request.dappRequest.type === DappRequestType.SendTransaction ? request.dappRequest.transaction.chainId : undefined
   const currentChainId = chainId || sendTransactionChainId || activeChain || defaultChainId
   const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(currentChainId, currentAccount.address)
+  const isRequestConfirming = useIsDappRequestConfirming(request.dappRequest.requestId)
 
   const hasSufficientGas = hasSufficientFundsIncludingGas({
     gasFee: transactionGasFeeResult?.value,
@@ -198,7 +202,11 @@ function DappRequestFooter({
       ? transactionGasFeeResult?.value && hasSufficientGas
       : true
 
-  const handleOnConfirm = useCallback(async () => {
+  const handleOnConfirm = useEvent(async () => {
+    if (isRequestConfirming) {
+      return
+    }
+
     if (onConfirm) {
       onConfirm()
     } else {
@@ -208,9 +216,12 @@ function DappRequestFooter({
     if (maybeCloseOnConfirm && shouldCloseSidebar) {
       setTimeout(window.close, WINDOW_CLOSE_DELAY)
     }
-  }, [request, maybeCloseOnConfirm, onConfirm, defaultOnConfirm, shouldCloseSidebar])
+  })
 
-  const handleOnCancel = useCallback(async () => {
+  // This is strictly a UI debounce to prevent submitting the same confirmation multiple times.
+  const [debouncedHandleOnConfirm, isConfirming] = useDebouncedCallback(handleOnConfirm)
+
+  const handleOnCancel = useEvent(async () => {
     if (onCancel) {
       onCancel()
     } else {
@@ -220,7 +231,10 @@ function DappRequestFooter({
     if (shouldCloseSidebar) {
       setTimeout(window.close, WINDOW_CLOSE_DELAY)
     }
-  }, [request, onCancel, defaultOnCancel, shouldCloseSidebar])
+  })
+
+  const isDisabled = !isConfirmEnabled || disableConfirm || isConfirming || isRequestConfirming
+  const isLoading = isRequestConfirming || isConfirming
 
   return (
     <>
@@ -240,6 +254,7 @@ function DappRequestFooter({
             gasFee={transactionGasFeeResult}
             isUniswapX={isUniswapX}
             showNetworkLogo={!!transactionGasFeeResult}
+            requestMethod={request.dappRequest.type}
           />
         )}
         <AddressFooter
@@ -252,11 +267,12 @@ function DappRequestFooter({
             {t('common.button.cancel')}
           </Button>
           <Button
-            isDisabled={!isConfirmEnabled || disableConfirm}
+            isDisabled={isDisabled}
+            loading={isLoading}
             flexBasis={1}
             size="medium"
             variant="branded"
-            onPress={handleOnConfirm}
+            onPress={debouncedHandleOnConfirm}
           >
             {confirmText}
           </Button>

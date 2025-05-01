@@ -637,7 +637,8 @@ const v81SchemaIntermediate = {
 delete v81SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
 export const v81Schema = v81SchemaIntermediate
 
-// v82 had a migration but no schema update so skipping it here
+export const v82Schema = v81Schema
+
 export const v83Schema = {
   ...v81Schema,
   pushNotifications: {

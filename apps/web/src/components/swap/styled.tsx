@@ -1,5 +1,5 @@
 import { AutoColumn } from 'components/deprecated/Column'
-import styled, { css } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -19,40 +19,36 @@ export const PageWrapper = TamaguiStyled(Flex, {
   },
 })
 
-export const ArrowWrapper = styled.div<{ clickable: boolean }>`
-  border-radius: 12px;
-  height: 40px;
-  width: 40px;
-  position: relative;
-  margin-top: -18px;
-  margin-bottom: -18px;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: ${({ theme }) => theme.surface2};
-  border: 4px solid;
-  border-color: ${({ theme }) => theme.surface1};
+export const ArrowWrapper = TamaguiStyled(Flex, {
+  display: 'flex',
+  borderRadius: '$rounded12',
+  height: 40,
+  width: 40,
+  position: 'relative',
+  mt: -18,
+  mb: -18,
+  ml: 'auto',
+  mr: 'auto',
+  backgroundColor: '$surface2',
+  borderWidth: '$spacing4',
+  borderStyle: 'solid',
+  borderColor: '$surface1',
+  zIndex: 2,
 
-  z-index: 2;
-  ${({ clickable }) =>
-    clickable
-      ? css`
-          :hover {
-            cursor: pointer;
-            opacity: 0.8;
-          }
-        `
-      : null}
-`
+  variants: {
+    clickable: {
+      true: {
+        hoverStyle: {
+          cursor: 'pointer',
+          opacity: 0.8,
+        },
+      },
+    },
+  },
+})
 
 // styles
-export const Dots = styled.span`
-  &::after {
-    display: inline-block;
-    animation: ellipsis 1.25s infinite;
-    content: '.';
-    width: 1em;
-    text-align: left;
-  }
+const dotsKeyframe = `
   @keyframes ellipsis {
     0% {
       content: '.';
@@ -64,7 +60,29 @@ export const Dots = styled.span`
       content: '...';
     }
   }
-`
+    `
+
+const DotsComponent = TamaguiStyled(Flex, {
+  display: 'inline',
+  className: 'dots-animation',
+})
+
+export const Dots = ({ children }: { children: ReactNode }) => {
+  return (
+    <>
+      <style>{`
+      ${dotsKeyframe}
+      .dots-animation::after {
+        display: inline-block;
+        animation: ellipsis 1.25s infinite;
+        content: '.';
+        width: 1em;
+        text-align: left;
+      }`}</style>
+      <DotsComponent>{children}</DotsComponent>
+    </>
+  )
+}
 
 const SwapCallbackErrorInner = styled.div`
   background-color: ${({ theme }) => transparentize(0.9, theme.critical)};

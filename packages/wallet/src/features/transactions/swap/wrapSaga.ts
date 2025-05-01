@@ -13,7 +13,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
-import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import { executeTransaction } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export type WrapParams = {
@@ -54,7 +54,7 @@ export function* wrap(params: WrapParams) {
       request: txRequest,
     }
 
-    const result = yield* call(sendTransaction, {
+    const result = yield* call(executeTransaction, {
       txId,
       chainId: inputCurrencyAmount.currency.chainId,
       account,

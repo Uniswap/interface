@@ -7,18 +7,17 @@ import {
   DappRequestQueueProvider,
   useDappRequestQueueContext,
 } from 'src/app/features/dappRequests/DappRequestQueueContext'
+import { rejectAllRequests } from 'src/app/features/dappRequests/actions'
 import { ConnectionRequestContent } from 'src/app/features/dappRequests/requestContent/Connection/ConnectionRequestContent'
 import { EthSendRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/EthSend'
 import { PersonalSignRequestContent } from 'src/app/features/dappRequests/requestContent/PersonalSign/PersonalSignRequestContent'
 import { SignTypedDataRequestContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/SignTypedDataRequestContent'
-import { rejectAllRequests } from 'src/app/features/dappRequests/saga'
-import { isDappRequestStoreItemForEthSendTxn } from 'src/app/features/dappRequests/slice'
+import { isDappRequestStoreItemForEthSendTxn, selectAllDappRequests } from 'src/app/features/dappRequests/slice'
 import {
   isConnectionRequest,
   isSignMessageRequest,
   isSignTypedDataRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { ExtensionState } from 'src/store/extensionReducer'
 import { AnimatePresence, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ReceiptText, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes, zIndexes } from 'ui/src/theme'
@@ -28,14 +27,14 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 const REJECT_MESSAGE_HEIGHT = 48
 
 export function DappRequestQueue(): JSX.Element {
-  const pendingDappRequests = useSelector((state: ExtensionState) => state.dappRequests.pending)
-  const areRequestsPending = pendingDappRequests.length > 0
+  const dappRequests = useSelector(selectAllDappRequests)
+  const requestsExist = dappRequests.length > 0
 
   return (
     <Modal
       alignment="top"
       backgroundColor="$transparent"
-      isModalOpen={areRequestsPending}
+      isModalOpen={requestsExist}
       name={ModalName.DappRequest}
       padding="$none"
       zIndex={zIndexes.overlay}

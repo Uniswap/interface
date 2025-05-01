@@ -48,6 +48,7 @@ import { loadLocaleData } from 'src/polyfills/intl-delayed'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
+import { config } from 'uniswap/src/config'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -69,10 +70,9 @@ import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { datadogEnabledBuild, isE2EMode } from 'utilities/src/environment/constants'
+import { datadogEnabledBuild } from 'utilities/src/environment/constants'
 import { isTestEnv } from 'utilities/src/environment/env'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
@@ -109,7 +109,7 @@ if (__DEV__ && !isTestEnv()) {
 
 // Log boxes on simulators can block e2e tap event when they cover buttons placed at
 // the bottom of the screen and cause tests to fail.
-if (isE2EMode) {
+if (config.isE2ETest) {
   LogBox.ignoreAllLogs()
 }
 
@@ -118,7 +118,7 @@ initAppsFlyer()
 
 function App(): JSX.Element | null {
   useEffect(() => {
-    if (!__DEV__ && !isE2EMode) {
+    if (!__DEV__) {
       attachUnhandledRejectionHandler()
       setAttributesToDatadog({ buildNumber: DeviceInfo.getBuildNumber() }).catch(() => undefined)
     }
@@ -265,22 +265,20 @@ function AppOuter(): JSX.Element | null {
             <LocalizationContextProvider>
               <GestureHandlerRootView style={flexStyles.fill}>
                 <WalletContextProvider>
-                  <UnitagUpdaterContextProvider>
-                    <DataUpdaters />
-                    <NavigationContainer>
-                      <MobileWalletNavigationProvider>
-                        <WalletUniswapProvider>
-                          <BottomSheetModalProvider>
-                            <AppModals />
-                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                              <AppInner />
-                            </PerformanceProfiler>
-                          </BottomSheetModalProvider>
-                        </WalletUniswapProvider>
-                        <NotificationToastWrapper />
-                      </MobileWalletNavigationProvider>
-                    </NavigationContainer>
-                  </UnitagUpdaterContextProvider>
+                  <DataUpdaters />
+                  <NavigationContainer>
+                    <MobileWalletNavigationProvider>
+                      <WalletUniswapProvider>
+                        <BottomSheetModalProvider>
+                          <AppModals />
+                          <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                            <AppInner />
+                          </PerformanceProfiler>
+                        </BottomSheetModalProvider>
+                      </WalletUniswapProvider>
+                      <NotificationToastWrapper />
+                    </MobileWalletNavigationProvider>
+                  </NavigationContainer>
                 </WalletContextProvider>
               </GestureHandlerRootView>
             </LocalizationContextProvider>

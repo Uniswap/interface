@@ -3,27 +3,6 @@ import { PositionInfo } from 'components/Liquidity/types'
 import { PopupType } from 'components/Popups/types'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
-// TODO(WEB-4888): remove this type
-/** @deprecated add new Modals to the ModalName object in uniswap/src/features/telemetry/constants */
-export enum ApplicationModal {
-  ADDRESS_CLAIM = 0,
-  BLOCKED_ACCOUNT = 1,
-  CLAIM_POPUP = 2,
-  DELEGATE = 3,
-  EXECUTE = 4,
-  FEATURE_FLAGS = 5,
-  FIAT_ONRAMP = 6,
-  RECEIVE_CRYPTO = 7,
-  RECEIVE_CRYPTO_QR = 8,
-  RECOVERY_PHRASE = 9,
-  PRIVACY_POLICY = 10,
-  QUEUE = 11,
-  SETTINGS = 12,
-  VOTE = 13,
-  UK_DISCLAIMER = 14,
-  GET_THE_APP = 15,
-}
-
 export type LiquidityModalInitialState = PositionInfo
 
 type AddLiquidityModalParams = {
@@ -42,12 +21,12 @@ type ClaimFeeModalParams = {
 }
 
 export type OpenModalParams =
-  | { name: ModalNameType | ApplicationModal; initialState?: undefined }
+  | { name: ModalNameType; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
   | ClaimFeeModalParams
 
-export type CloseModalParams = ModalNameType | ApplicationModal
+type CloseModalParams = ModalNameType
 
 export interface ApplicationState {
   readonly chainId: number | null

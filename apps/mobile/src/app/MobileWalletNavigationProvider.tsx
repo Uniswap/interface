@@ -1,9 +1,9 @@
 import { PropsWithChildren, useCallback } from 'react'
 import { Share } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { exploreNavigationRef } from 'src/app/navigation/navigation'
+import { exploreNavigationRef } from 'src/app/navigation/navigationRef'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { closeModal, openModal } from 'src/features/modals/modalSlice'
+import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
@@ -178,16 +178,19 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
 
 function useNavigateToTokenDetails(): (currencyId: string) => void {
   const appNavigation = useAppStackNavigation()
+  const dispatch = useDispatch()
 
   return useCallback(
     (currencyId: string): void => {
-      if (exploreNavigationRef.isFocused()) {
+      dispatch(closeModal({ name: ModalName.Swap }))
+      dispatch(closeAllModals())
+      if (exploreNavigationRef.current && exploreNavigationRef.isFocused()) {
         exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
       } else {
         appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
       }
     },
-    [appNavigation],
+    [appNavigation, dispatch],
   )
 }
 

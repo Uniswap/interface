@@ -4,9 +4,8 @@ import { providers } from 'ethers/lib/ethers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-
-const ONCHAIN_ENS_CACHE_KEY = 'OnchainENS'
 
 export enum EnsLookupType {
   Name = 'name',
@@ -78,7 +77,7 @@ async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | nul
 
 function useEnsQuery(type: EnsLookupType, nameOrAddress?: string | null) {
   return useQuery<string | null>({
-    queryKey: [ONCHAIN_ENS_CACHE_KEY, type, nameOrAddress],
+    queryKey: [ReactQueryCacheKey.OnchainENS, type, nameOrAddress],
     queryFn: nameOrAddress
       ? async (): ReturnType<typeof getOnChainEnsFetch> =>
           await getOnChainEnsFetch({ type, nameOrAddress, chainId: UniverseChainId.Mainnet })

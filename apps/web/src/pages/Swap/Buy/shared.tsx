@@ -29,7 +29,7 @@ const ConnectingBackgroundImageFadeLayer = styled(Flex, {
 })
 
 interface ConnectingViewWrapperProps {
-  closeModal: () => void
+  closeModal?: () => void
   onBack?: () => void
 }
 
@@ -44,7 +44,7 @@ export function ConnectingViewWrapper({ children, closeModal, onBack }: PropsWit
         background={`radial-gradient(70% 50% at center, transparent 0%, ${colors.surface1.val} 100%)`}
       />
       <Flex flexDirection="row-reverse" alignItems="center" justifyContent="space-between" zIndex={2}>
-        <ModalCloseIcon testId="ConnectingViewWrapper-close" onClose={closeModal} />
+        {closeModal && <ModalCloseIcon testId="ConnectingViewWrapper-close" onClose={closeModal} />}
         {onBack && (
           <ArrowLeft data-testid="ConnectingViewWrapper-back" fill={theme.neutral2} onClick={onBack} cursor="pointer" />
         )}

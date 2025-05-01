@@ -1,14 +1,10 @@
-import { MouseoverTooltip } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { getMarketplaceIcon } from 'nft/components/card/utils'
 import { CollectionSelectedAssetIcon } from 'nft/components/iconExports'
 import { Markets } from 'nft/types'
-import { AlertTriangle, Check, Tag } from 'react-feather'
-import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
+import { Check, Tag } from 'react-feather'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`
   position: absolute;
@@ -80,82 +76,4 @@ export const MarketplaceContainer = ({
   }
 
   return <StyledMarketplaceContainer>{getMarketplaceIcon(marketplace)}</StyledMarketplaceContainer>
-}
-
-const SuspiciousIcon = styled(AlertTriangle)`
-  width: 16px;
-  height: 16px;
-  color: ${({ theme }) => theme.critical};
-`
-
-interface RankingProps {
-  provider: { url?: string; rank?: number }
-}
-
-const RarityLogoContainer = styled(Row)`
-  margin-right: 8px;
-  width: 16px;
-`
-
-const RarityText = styled(ThemedText.BodySmall)`
-  display: flex;
-`
-
-const RarityInfo = styled(ThemedText.BodySmall)`
-  flex-shrink: 0;
-  color: ${({ theme }) => theme.neutral2};
-  background: ${({ theme }) => theme.surface3};
-  padding: 4px 6px;
-  border-radius: 4px;
-  font-weight: 535 !important;
-  line-height: 12px;
-  text-align: right;
-  cursor: pointer;
-`
-
-export const Ranking = ({ provider }: RankingProps) => {
-  const { formatNumber } = useFormatter()
-
-  if (!provider.rank) {
-    return null
-  }
-
-  return (
-    <RarityInfo>
-      <MouseoverTooltip
-        text={
-          <Row>
-            <RarityLogoContainer>
-              <img src="/nft/svgs/gem.svg" width={16} height={16} />
-            </RarityLogoContainer>
-            <RarityText>Ranking by Rarity Sniper</RarityText>
-          </Row>
-        }
-        placement="top"
-      >
-        # {formatNumber({ input: provider.rank, type: NumberType.WholeNumber })}
-      </MouseoverTooltip>
-    </RarityInfo>
-  )
-}
-
-const SuspiciousIconContainer = styled(Row)`
-  flex-shrink: 0;
-`
-
-export const Suspicious = () => {
-  return (
-    <MouseoverTooltip
-      text={
-        <ThemedText.BodySmall>
-          <Trans i18nKey="nft.blockedOpenSea" />
-        </ThemedText.BodySmall>
-      }
-      placement="top"
-    >
-      <SuspiciousIconContainer>
-        <SuspiciousIcon />
-      </SuspiciousIconContainer>
-    </MouseoverTooltip>
-  )
 }

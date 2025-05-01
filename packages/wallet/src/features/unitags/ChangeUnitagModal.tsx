@@ -8,19 +8,19 @@ import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { changeUnitag } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
-import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCanClaimUnitagName'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
 import { parseUnitagErrorCode } from 'uniswap/src/features/unitags/utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -57,7 +57,7 @@ export function ChangeUnitagModal({
 
   const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(unitagToCheck)
   const { errorCode } = useCanAddressClaimUnitag(address, true)
-  const { triggerRefetchUnitags } = useUnitagUpdater()
+  const resetUnitagsQueries = useResetUnitagsQueries()
 
   const isUnitagEdited = unitag !== newUnitag
   const isUnitagInvalid = newUnitag === unitagToCheck && !!canClaimUnitagNameError && !loadingUnitagErrorCheck
@@ -129,7 +129,7 @@ export function ChangeUnitagModal({
       // If change succeeded, exit the modal and display a success message
       if (changeResponse.success) {
         sendAnalyticsEvent(UnitagEventName.UnitagChanged)
-        triggerRefetchUnitags()
+        resetUnitagsQueries()
         dispatch(
           pushNotification({
             type: AppNotificationType.Success,

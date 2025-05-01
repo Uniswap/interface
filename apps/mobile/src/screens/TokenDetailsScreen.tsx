@@ -1,12 +1,10 @@
 import { useApolloClient } from '@apollo/client'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
-import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { StyledContextMenuAction } from 'src/components/ContextMenu/StyledContextMenu'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
 import { ContractAddressExplainerModal } from 'src/components/TokenDetails/ContractAddressExplainerModal'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
@@ -18,14 +16,14 @@ import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats
 import { useTokenDetailsCTAVariant } from 'src/components/TokenDetails/useTokenDetailsCTAVariant'
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { closeModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
+import { useIsInModal } from 'src/components/modals/useIsInModal'
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsHeaders'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, Separator } from 'ui/src'
 import { ArrowDownCircle, ArrowUpCircle, Bank, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import {
@@ -103,33 +101,15 @@ const TokenDetailsQuery = memo(function _TokenDetailsQuery(): JSX.Element {
 })
 
 const TokenDetails = memo(function _TokenDetails(): JSX.Element {
-  const inModal = useSelector(selectModalState(ModalName.Explore)).isOpen
-  const dispatch = useDispatch()
-
-  // #region Handle modal race condition
-  // This is a workaround to prevent a crash. The TDP can open as a full screen
-  // or in the Explore BSM. When this happens the TDP switches to components
-  // that can only be used in a modal causing a crash.
-  // This code closes the Explore modal when the TDP is opened as a full screen
-  // screen and disallows dynamically changing the TDP components based on the
-  // Explore modal state.
-  // This behavior should not be needed when we make the TDP full screen only.
-  const initialModalState = useRef<boolean | null>(null)
-  if (initialModalState.current === null) {
-    initialModalState.current = inModal
-  } else if (initialModalState.current !== null && initialModalState.current !== inModal && inModal) {
-    dispatch(closeModal({ name: ModalName.Explore }))
-  }
-  // #endregion
-
   const centerElement = useMemo(() => <HeaderTitleElement />, [])
   const rightElement = useMemo(() => <HeaderRightElement />, [])
+  const inModal = useIsInModal(MobileScreens.Explore, true)
 
   return (
     <>
       <HeaderScrollScreen
-        showHandleBar={initialModalState.current}
-        renderedInModal={initialModalState.current}
+        showHandleBar={inModal}
+        renderedInModal={inModal}
         centerElement={centerElement}
         rightElement={rightElement}
       >
@@ -319,14 +299,16 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     onPressSwap,
   })
 
-  const actionMenuOptions: StyledContextMenuAction[] = useMemo(
+  const actionMenuOptions: MenuOptionItem[] = useMemo(
     () => [
-      ...(fiatOnRampCurrency ? [{ title: t('common.button.buy'), icon: Bank, onPress: onPressBuyFiatOnRamp }] : []),
-      ...(hasTokenBalance && fiatOnRampCurrency
-        ? [{ title: t('common.button.sell'), icon: ArrowUpCircle, onPress: () => onPressBuyFiatOnRamp(true) }]
+      ...(fiatOnRampCurrency
+        ? [{ label: t('common.button.buy'), Icon: Bank, onPress: () => onPressBuyFiatOnRamp() }]
         : []),
-      ...(hasTokenBalance ? [{ title: t('common.button.send'), icon: SendRoundedAirplane, onPress: onPressSend }] : []),
-      { title: t('common.button.receive'), icon: ArrowDownCircle, onPress: navigateToReceive },
+      ...(hasTokenBalance && fiatOnRampCurrency
+        ? [{ label: t('common.button.sell'), Icon: ArrowUpCircle, onPress: () => onPressBuyFiatOnRamp(true) }]
+        : []),
+      ...(hasTokenBalance ? [{ label: t('common.button.send'), Icon: SendRoundedAirplane, onPress: onPressSend }] : []),
+      { label: t('common.button.receive'), Icon: ArrowDownCircle, onPress: navigateToReceive },
     ],
     [fiatOnRampCurrency, hasTokenBalance, onPressBuyFiatOnRamp, t, onPressSend, navigateToReceive],
   )

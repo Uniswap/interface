@@ -1,7 +1,7 @@
-import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
+import { OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
 
 export interface SearchContext {
-  category?: TokenOptionSection
+  category?: OnchainItemSectionName
   query?: string
   position?: number
   suggestionCount?: number

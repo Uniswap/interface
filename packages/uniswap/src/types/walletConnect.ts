@@ -1,23 +1,11 @@
+import { EthMethod } from "uniswap/src/features/dappRequests/types"
+
 export enum WalletConnectEvent {
   Connected = 0,
   Disconnected = 1,
   NetworkChanged = 2,
   TransactionConfirmed = 3,
   TransactionFailed = 4,
-}
-
-// derived from this list https://docs.walletconnect.com/json-rpc-api-methods/ethereum#eth_signtypeddata
-export enum EthMethod {
-  EthSign = 'eth_sign',
-  EthSendTransaction = 'eth_sendTransaction',
-  SignTypedData = 'eth_signTypedData',
-  SignTypedDataV4 = 'eth_signTypedData_v4',
-  SwitchChain = 'wallet_switchEthereumChain',
-  GetCapabilities = 'wallet_getCapabilities',
-  SendCalls = 'wallet_sendCalls',
-  GetCallsStatus = 'wallet_getCallsStatus',
-  AddChain = 'wallet_addEthereumChain',
-  PersonalSign = 'personal_sign',
 }
 
 export enum UwULinkMethod {

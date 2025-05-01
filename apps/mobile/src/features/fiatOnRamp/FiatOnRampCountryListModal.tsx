@@ -1,4 +1,3 @@
-import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
@@ -8,6 +7,7 @@ import { Loader } from 'src/components/loading/loaders'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
+import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -97,7 +97,7 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
           {isLoading ? (
             <CountryListPlaceholder itemsCount={10} />
           ) : (
-            <BottomSheetFlatList
+            <AnimatedBottomSheetFlashList
               ListEmptyComponent={<Flex />}
               bounces={true}
               contentContainerStyle={{ paddingBottom: insets.bottom + spacing.spacing12 }}

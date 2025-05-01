@@ -5,7 +5,6 @@ import { Option } from 'components/WalletModal/Option'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import { useAtom } from 'jotai'
 import { Trans } from 'react-i18next'
 import { transitions } from 'theme/styles'
@@ -15,7 +14,6 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 
 export function OtherWalletsModal() {
   const showMoonpayText = useShowMoonpayText()
-  const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
   const connectors = useOrderedConnections({ showSecondaryConnectors: true })
   const recentConnectorId = useRecentConnectorId()
@@ -23,7 +21,7 @@ export function OtherWalletsModal() {
   return (
     <Flex
       backgroundColor="$surface1"
-      pt={isUniExtensionAvailable ? 16 : 14}
+      pt="$spacing16"
       px="$spacing16"
       pb="$spacing20"
       flex={1}

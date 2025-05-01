@@ -7,7 +7,7 @@ import {
   OrderType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-export interface ListingMarket {
+interface ListingMarket {
   name: string
   fee: number
 }
@@ -33,7 +33,7 @@ export interface SellOrder {
   protocolParameters: Record<string, unknown>
 }
 
-export interface Listing {
+interface Listing {
   price?: number
   marketplace: ListingMarket
   overrideFloorPrice?: boolean
@@ -74,46 +74,3 @@ export interface WalletAsset {
   chain?: Chain
 }
 
-export interface WalletCollection {
-  address: string
-  name: string
-  image: string
-  floorPrice: number
-  count: number
-}
-
-export enum ListingStatus {
-  APPROVED = 'Approved',
-  CONTINUE = 'Continue',
-  DEFINED = 'Defined',
-  FAILED = 'Failed',
-  PAUSED = 'Paused',
-  PENDING = 'Pending',
-  REJECTED = 'Rejected',
-  SIGNING = 'Signing',
-}
-
-export interface AssetRow {
-  image?: string
-  name?: string
-  status: ListingStatus
-  marketplace: ListingMarket
-  callback?: () => Promise<void>
-}
-
-export interface ListingRow extends AssetRow {
-  asset: WalletAsset
-  price?: number
-}
-
-export interface CollectionRow extends AssetRow {
-  collectionAddress?: string
-  isVerified?: boolean
-  nftStandard?: NftStandard
-}
-
-// Creating this as an enum and not boolean as we will likely have a success screen state to show
-export enum ProfilePageStateType {
-  VIEWING = 0,
-  LISTING = 1,
-}

@@ -67,8 +67,8 @@ const PlusMinusButton = ({ children, ...props }: TouchableAreaProps) => {
  * Note that the min value can be negative.
  */
 export function LiquidityRangeInput({
-  currency0,
-  currency1,
+  quoteCurrency,
+  baseCurrency,
   feeTier,
   tickSpacing,
   protocolVersion,
@@ -81,8 +81,8 @@ export function LiquidityRangeInput({
   disableBrushInteraction = false,
   setFallbackRangePrices,
 }: {
-  currency0: Currency
-  currency1: Currency
+  quoteCurrency: Currency
+  baseCurrency: Currency
   feeTier: number | string
   tickSpacing?: number
   protocolVersion: ProtocolVersion
@@ -95,13 +95,13 @@ export function LiquidityRangeInput({
   setMaxPrice: (maxPrice?: number) => void
   setFallbackRangePrices: () => void
 }) {
-  const chainInfo = getChainInfo(currency0.chainId)
+  const chainInfo = getChainInfo(quoteCurrency.chainId)
   const colors = useSporeColors()
   const { t } = useTranslation()
 
-  const sortedCurrencies = getSortedCurrenciesTupleWithWrap(currency0, currency1, protocolVersion)
-  const currency1MaybeWrapped = getCurrencyWithWrap(currency1, protocolVersion)
-  const isReversed = currency1MaybeWrapped?.equals(sortedCurrencies[0]) ?? false
+  const sortedCurrencies = getSortedCurrenciesTupleWithWrap(quoteCurrency, baseCurrency, protocolVersion)
+  const baseCurrencyMaybeWrapped = getCurrencyWithWrap(baseCurrency, protocolVersion)
+  const isReversed = baseCurrencyMaybeWrapped?.equals(sortedCurrencies[0]) ?? false
 
   const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
 
@@ -115,7 +115,7 @@ export function LiquidityRangeInput({
       isV3: protocolVersion === ProtocolVersion.V3,
       isV2: false,
     },
-    currency0,
+    quoteCurrency,
     protocolVersion,
     getCurrencyAddressWithWrap(sortedCurrencies[0], protocolVersion),
   )
@@ -402,8 +402,8 @@ export function LiquidityRangeInput({
                   setMinPrice(domain[0])
                   setMaxPrice(domain[1])
                 }}
-                currency0={currency0}
-                currency1={currency1}
+                quoteCurrency={quoteCurrency}
+                baseCurrency={baseCurrency}
                 isMobile={isMobileWeb}
               />
             )}

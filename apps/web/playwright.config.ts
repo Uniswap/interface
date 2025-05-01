@@ -1,13 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv'
-import ms from 'ms'
 import path from 'path'
 
 if (process.env.CI !== 'true') {
   dotenv.config({ path: path.resolve(__dirname, '.env.local') })
 }
-
-const DEFAULT_TIMEOUT = ms('30s')
 
 export default defineConfig({
   testDir: './src/pages',
@@ -15,13 +12,8 @@ export default defineConfig({
   // TODO: WEB-7311 - Increase number of workers
   workers: 1,
   fullyParallel: true,
-  timeout: ms('10m'),
   reporter: process.env.CI && process.env.REPORT_TO_SLACK ? [['blob', 'list']] : 'list',
-  expect: {
-    timeout: DEFAULT_TIMEOUT,
-  },
   use: {
-    actionTimeout: DEFAULT_TIMEOUT,
     screenshot: 'off',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',

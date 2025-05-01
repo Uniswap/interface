@@ -91,6 +91,12 @@ function getWarningFlags({
     )
   }
 
+  if (tokenProtectionWarning === TokenProtectionWarning.PotentialHoneypot) {
+    flags.push(
+      <WarningFlag key="potential-honeypot-warning">{t('token.safety.warning.flaggedAsSuspicious')}</WarningFlag>,
+    )
+  }
+
   if (currencyInfo.safetyInfo?.tokenList === TokenList.NonDefault) {
     flags.push(<WarningFlag key="exchange-warning">{t('token.safety.warning.notListedOnExchanges')}</WarningFlag>)
   }

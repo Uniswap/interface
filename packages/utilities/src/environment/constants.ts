@@ -1,6 +1,5 @@
 import { isRNDev } from 'utilities/src/environment/env'
 
-export const isE2EMode = Boolean(process.env.E2E_MODE)
 export const isJestRun = !!process.env.JEST_WORKER_ID
 export const isNonJestDev = isRNDev() && !isJestRun
 /**

@@ -27,7 +27,6 @@ import {
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { isE2EMode } from 'utilities/src/environment/constants'
 import { isInterface } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -134,8 +133,7 @@ export function useSwapTransactionRequestInfo({
     isLoading: isSwapLoading,
   } = useTradingApiSwapQuery({
     params: shouldSkipSwapRequest ? undefined : swapRequestParams,
-    // Disable polling during e2e testing because it was preventing js thread from going idle
-    refetchInterval: isE2EMode ? undefined : tradingApiSwapRequestMs,
+    refetchInterval: tradingApiSwapRequestMs,
     staleTime: tradingApiSwapRequestMs,
     // We add a small buffer in case connection is too slow
     immediateGcTime: tradingApiSwapRequestMs + ONE_SECOND_MS * 5,
@@ -150,9 +148,7 @@ export function useSwapTransactionRequestInfo({
         error,
         swapQuote,
         isSwapLoading,
-        signature: signatureInfo.signature,
         permitData,
-        permitDataLoading: signatureInfo.isLoading,
         swapRequestParams,
         isRevokeNeeded: tokenApprovalInfo?.action === ApprovalAction.RevokeAndPermit2Approve,
       }),
@@ -160,8 +156,6 @@ export function useSwapTransactionRequestInfo({
       data,
       error,
       isSwapLoading,
-      signatureInfo.signature,
-      signatureInfo.isLoading,
       permitData,
       swapQuote,
       swapRequestParams,
@@ -201,19 +195,14 @@ function useUniswapXTransactionRequestInfo({
 
   const permitData = derivedSwapInfo.trade.trade?.quote?.permitData
 
-  // On interface, we do not fetch signature until after swap is clicked, as it requires user interaction.
-  const signatureInfo = usePermit2SignatureWithData({ permitData, skip: isInterface })
-
   return useMemo(
     () =>
       processUniswapXResponse({
         wrapTransactionRequestInfo,
-        permitSignature: signatureInfo.signature,
-        permitDataLoading: signatureInfo.isLoading,
         permitData,
         needsWrap: isWrapApplicable,
       }),
-    [wrapTransactionRequestInfo, signatureInfo.signature, signatureInfo.isLoading, permitData, isWrapApplicable],
+    [wrapTransactionRequestInfo, permitData, isWrapApplicable],
   )
 }
 

@@ -84,6 +84,7 @@ export type TabProps = {
   renderedInModal?: boolean
   refreshing?: boolean
   onRefresh?: () => void
+  isActiveTab?: boolean
   headerHeight?: number
   testID?: TestIDType
 }

@@ -1,5 +1,4 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { DappRequestType, DappResponseType } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import {
   contentScriptToBackgroundMessageChannel,
   dappResponseMessageChannel,
@@ -13,6 +12,7 @@ import { UniswapMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
 import { getPendingResponseInfo } from 'src/contentScript/methodHandlers/utils'
 import { WindowEthereumRequest } from 'src/contentScript/types'
+import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { logger } from 'utilities/src/logger/logger'
 
 /**

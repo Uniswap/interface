@@ -1,3 +1,5 @@
+import path from 'path'
+
 export const Mocks = {
   FiatOnRamp: {
     get_country: '../mocks/fiatOnRamp/get-country.json',
@@ -7,15 +9,18 @@ export const Mocks = {
     quotes: '../mocks/fiatOnRamp/quotes.json',
   },
   PortfolioBalances: {
-    test_wallet: '../mocks/graphql/PortfolioBalances/test_wallet.json',
+    test_wallet: path.resolve(__dirname, '../mocks/graphql/PortfolioBalances/test_wallet.json'),
   },
   Token: {
-    token_warning: '../mocks/graphql/Token/token_warning.json',
+    token_warning: path.resolve(__dirname, '../mocks/graphql/Token/token_warning.json'),
   },
   TokenProjects: {
-    token_spam: '../mocks/graphql/TokenProjects/token_warning.json',
+    token_spam: path.resolve(__dirname, '../mocks/graphql/TokenProjects/token_warning.json'),
   },
   TokenWeb: {
-    token_warning: '../mocks/graphql/TokenWeb/token_warning.json',
+    token_warning: path.resolve(__dirname, '../mocks/graphql/TokenWeb/token_warning.json'),
+  },
+  Positions: {
+    get_position: path.resolve(__dirname, '../mocks/rest/positions/get_position.json'),
   },
 }

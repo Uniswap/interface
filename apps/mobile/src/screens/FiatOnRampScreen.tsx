@@ -56,7 +56,7 @@ import {
   DecimalPadCalculatedSpaceId,
   DecimalPadInput,
   DecimalPadInputRef,
-} from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
+} from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
@@ -512,6 +512,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               errorText={errorText}
               fiatCurrencyInfo={meldSupportedFiatCurrency}
               notAvailableInThisRegion={notAvailableInThisRegion}
+              portfolioBalance={portfolioBalance}
               predefinedAmountsSupported={predefinedAmountsSupported}
               quoteAmount={selectedQuote?.destinationAmount ?? 0}
               sourceAmount={selectedQuote?.sourceAmount ?? 0}
@@ -519,17 +520,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               selectTokenLoading={isFORLoading}
               value={value}
               onChoosePredefinedValue={(val: string): void => {
-                if (isOffRamp) {
-                  const quantity = portfolioBalance?.quantity
-                  if (!quantity) {
-                    return
-                  }
-
-                  const percentOfBalance = (quantity * (parseFloat(val) / 100)).toString()
-                  onChangeValue(percentOfBalance, 'chip', true)
-                } else {
-                  onChangeValue(val, 'chip', false)
-                }
+                onChangeValue(val, 'chip', isOffRamp)
               }}
               onEnterAmount={(amount: string, newIsTokenInputMode?: boolean): void => {
                 onChangeValue(amount, 'textInput', newIsTokenInputMode)
@@ -563,15 +554,10 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               {quoteCurrency.currencyInfo && (
                 <TokenSelectorBalanceDisplay
                   disabled={notAvailableInThisRegion}
-                  isOffRamp={isOffRamp}
                   portfolioBalance={portfolioBalance}
-                  tokenAmount={tokenAmount}
                   selectedCurrencyInfo={quoteCurrency.currencyInfo}
                   onPress={(): void => {
                     setShowTokenSelector(true)
-                  }}
-                  onMaxPress={(amount: string): void => {
-                    onChangeValue(amount, 'maxButton', true)
                   }}
                 />
               )}

@@ -49,8 +49,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
@@ -86,7 +84,6 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const { protocolVersion } = positionState
   const { setPriceRangeState } = usePriceRangeContext()
   const { setDepositState } = useDepositContext()
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const selectChain = useSelectChain()
@@ -106,7 +103,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const currency0FiatAmount = useUSDCValue(currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(currency1Amount) ?? undefined
 
-  if (!isMigrateToV4Enabled || !isSameAddress(account?.address, owner)) {
+  if (!isSameAddress(account?.address, owner)) {
     navigate('/positions')
   }
 

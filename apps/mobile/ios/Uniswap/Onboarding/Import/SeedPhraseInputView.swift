@@ -72,7 +72,7 @@ class SeedPhraseInputView: UIView {
     set { vc.rootView.viewModel.onPasteEnd = newValue }
     get { return vc.rootView.viewModel.onPasteEnd }
   }
-  
+
   @objc
   var onSubmitError: RCTDirectEventBlock {
     set { vc.rootView.viewModel.onSubmitError = newValue }
@@ -138,6 +138,20 @@ struct SeedPhraseTextView: UIViewRepresentable {
         func textViewDidChange(_ textView: UITextView) {
             parent.text = textView.text
         }
+
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            // Sync isFocused binding when user focuses the input
+            DispatchQueue.main.async {
+                self.parent.isFocused = true
+            }
+        }
+
+        func textViewDidEndEditing(_ textView: UITextView) {
+            // Sync isFocused binding when user blurs the input
+            DispatchQueue.main.async {
+                self.parent.isFocused = false
+            }
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -160,7 +174,7 @@ struct SeedPhraseTextView: UIViewRepresentable {
         uiView.text = text
 
         if isFocused {
-            if !uiView.isFirstResponder {
+            if !uiView.isFirstResponder, uiView.window != nil {
                 uiView.becomeFirstResponder()
             }
         } else {
@@ -226,8 +240,14 @@ struct SeedPhraseInput: View {
                   Spacer()
                   RelativeOffsetView(y: 0.5) {
                     PasteButton(
-                      pasteButtonText: viewModel.strings.pasteButton,
-                      onPaste: handlePastePress
+                      pasteButtonText:  viewModel.strings.pasteButton,
+                      onPaste: handlePaste,
+                      onPasteStart: {
+                        viewModel.onPasteStart([:])
+                      },
+                      onPasteEnd: {
+                        viewModel.onPasteEnd([:])
+                      }
                     )
                   }
                   Spacer()
@@ -293,17 +313,7 @@ struct SeedPhraseInput: View {
     }
   }
 
-  private func handlePastePress(pastedText: String) {
-    // Arbitrary time necessary for callbacks to trigger while permission modal is opened
-    let debounceTime = 0.1
-
-    viewModel.onPasteStart([:])
-    DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
-      viewModel.input = pastedText
-
-      DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
-        viewModel.onPasteEnd([:])
-      }
-    }
+  private func handlePaste(pastedText: String) {
+    viewModel.input = pastedText
   }
 }

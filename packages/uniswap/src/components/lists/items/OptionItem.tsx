@@ -1,8 +1,19 @@
 import { memo, useCallback } from 'react'
-import { ElementAfterText, Flex, TextProps, TouchableArea } from 'ui/src'
+import { ElementAfterText, Flex, TextProps, TouchableArea, TouchableAreaProps, isWeb } from 'ui/src'
 import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { KeyAction } from 'utilities/src/device/keyboard/types'
+import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
 import { isInterface } from 'utilities/src/platform'
+import noop from 'utilities/src/react/noop'
+
+// Props for manually managing the focused row index of a list
+// i.e. via keyboard ArrowUp/ArrowDown navigation
+export interface FocusedRowControl {
+  rowIndex: number // this item's row index
+  focusedRowIndex: number | undefined // index of the list's focused row
+  setFocusedRowIndex: (index: number | undefined) => void
+}
 
 export interface OptionItemProps {
   image: JSX.Element
@@ -12,6 +23,7 @@ export interface OptionItemProps {
   badge?: JSX.Element
   titleProps?: TextProps
   onPress: () => void
+  onLongPress?: TouchableAreaProps['onLongPress']
   disabled?: boolean
   testID?: string
   modalInfo?: {
@@ -19,6 +31,7 @@ export interface OptionItemProps {
     modalShouldShow: boolean
     modalSetIsOpen: (isOpen: boolean) => void
   }
+  focusedRowControl?: FocusedRowControl
 }
 
 function _OptionItem({
@@ -29,9 +42,11 @@ function _OptionItem({
   badge,
   titleProps,
   onPress,
+  onLongPress,
   disabled,
   testID,
   modalInfo,
+  focusedRowControl,
 }: OptionItemProps): JSX.Element {
   const isKeyboardOpen = useIsKeyboardOpen()
 
@@ -59,14 +74,38 @@ function _OptionItem({
     onPress()
   }, [modalShouldShow, modal, isKeyboardOpen, modalSetIsOpen, onPress])
 
+  // Custom keyboard list nav behavior using arrow + enter keys
+  const { focusedRowIndex, rowIndex, setFocusedRowIndex } = focusedRowControl ?? {}
+  const keyboardNavEnabled = isWeb && focusedRowControl && setFocusedRowIndex
+  const isFocused = focusedRowIndex !== undefined && focusedRowIndex === rowIndex
+  useKeyDown({
+    keys: ['Enter'],
+    keyAction: KeyAction.UP,
+    disabled: !keyboardNavEnabled,
+    callback: isFocused ? onPressOption : noop,
+    shouldTriggerInInput: true,
+  })
+  const focusedStyleProps: TouchableAreaProps = keyboardNavEnabled
+    ? {
+        backgroundColor: isFocused ? '$surface1Hovered' : undefined,
+        onMouseEnter: (): void => {
+          setFocusedRowIndex?.(rowIndex)
+        },
+        onMouseLeave: (): void => {
+          setFocusedRowIndex?.(undefined)
+        },
+      }
+    : { hoverStyle: { backgroundColor: '$surface1Hovered' } }
+
   return (
     <>
       <TouchableArea
+        {...focusedStyleProps}
         animation="300ms"
-        hoverStyle={{ backgroundColor: '$surface1Hovered' }}
         opacity={disabled ? 0.5 : 1}
         width="100%"
         onPress={onPressOption}
+        onLongPress={onLongPress}
       >
         <Flex
           row

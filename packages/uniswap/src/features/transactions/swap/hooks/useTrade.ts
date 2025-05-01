@@ -188,8 +188,8 @@ export function useTrade({
   }
 
   const isLoading = (amount && isDebouncing) || queryIsLoading
-
   const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
+
   const indicative = useIndicativeTrade({
     quoteRequestArgs,
     currencyIn,

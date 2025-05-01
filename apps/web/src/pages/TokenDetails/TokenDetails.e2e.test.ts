@@ -24,3 +24,18 @@ test('token with warning and low trading volume should have all information popu
   await expect(page.getByText('No stats available')).toBeVisible()
   await expect(page.getByText('No token information available')).toBeVisible()
 })
+
+test('disconnected wallet on testnet tdp should set testnet mode', async ({ page }) => {
+  await page.goto('/explore/tokens/ethereum_sepolia/0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531?eagerlyConnect=false')
+  await expect(page.getByText('Yay').first()).toBeVisible()
+})
+
+test('connected wallet on testnet tdp should not set testnet mode', async ({ page }) => {
+  await page.goto('/explore/tokens/ethereum_sepolia/0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531')
+  await expect(page.getByText('Yay')).not.toBeVisible()
+})
+
+test('redirect to explore if token is not found', async ({ page }) => {
+  await page.goto('/explore/tokens/ethereum/0x123')
+  await expect(page).toHaveURL('/explore')
+})

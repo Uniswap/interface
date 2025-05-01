@@ -1,7 +1,8 @@
 import type { Middleware, PreloadedState, Reducer, StoreEnhancer } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
-import createSagaMiddleware, { Saga } from 'redux-saga'
+import createSagaMiddleware, { Saga, SagaIterator, SagaMiddleware } from 'redux-saga'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
+import { createSagaEffectRunner } from 'wallet/src/state/createSagaEffectRunner'
 import { rootWalletSaga } from 'wallet/src/state/saga'
 import { WalletStateReducersOnly } from 'wallet/src/state/walletReducer'
 
@@ -17,6 +18,30 @@ interface CreateStoreProps {
   // middlewares to before after the default middleware
   middlewareBefore?: Array<Middleware<unknown>>
   preloadedState?: PreloadedState<WalletStateReducersOnly>
+}
+
+// Module-level container for saga middleware instance
+// Only initialized inside createStore to avoid timing issues
+const sagaContainer: {
+  middleware?: SagaMiddleware
+} = {}
+
+/**
+ * Get saga middleware instance, throws if not initialized
+ */
+export function getSagaMiddleware(): SagaMiddleware {
+  if (!sagaContainer.middleware) {
+    throw new Error('Saga middleware not initialized. Must call createStore first.')
+  }
+  return sagaContainer.middleware
+}
+
+/**
+ * Get a saga effect runner using the initialized middleware
+ * This will throw if called before createStore
+ */
+export const runSagaEffect = <T>(effect: SagaIterator<T>): Promise<T> => {
+  return createSagaEffectRunner(getSagaMiddleware())(effect)
 }
 
 // Disable eslint rule to infer return type from the returned value
@@ -37,6 +62,10 @@ export function createStore({
       contracts: walletContextValue.contracts,
     },
   })
+
+  // Store the middleware in the module-level container
+  // so we can use it in the saga effect runner
+  sagaContainer.middleware = sagaMiddleware
 
   const store = configureStore({
     reducer,

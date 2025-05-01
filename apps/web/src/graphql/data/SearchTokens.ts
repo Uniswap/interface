@@ -14,13 +14,12 @@ function isExploreSupportedToken(token: GqlSearchToken | undefined): token is To
   return token !== undefined && isBackendSupportedChain(token.chain)
 }
 
-export function useSearchTokens(searchQuery: string = '') {
+export function useSearchTokensGql(searchQuery: string = '') {
   const { gqlChains: chains } = useEnabledChains()
   const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
-  const tokenSearchV2Enabled = useFeatureFlag(FeatureFlags.TokenSearchV2)
 
   const { data, loading, error } = useSearchTokensWebQuery({
-    variables: { searchQuery, chains, tokenSearchV2Enabled },
+    variables: { searchQuery, chains, tokenSearchV2Enabled: true },
     skip: searchQuery === '' || searchRevampEnabled, // if search revamp is enabled, we call useSearchTokens in `SearchModalResultsList` instead
   })
 

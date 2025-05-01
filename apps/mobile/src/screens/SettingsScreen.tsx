@@ -18,6 +18,7 @@ import { WalletSettings } from 'src/components/Settings/WalletSettings'
 import { SettingsList } from 'src/components/Settings/lists/SettingsList'
 import { SectionData } from 'src/components/Settings/lists/types'
 import { ScreenWithHeader } from 'src/components/layout/screens/ScreenWithHeader'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { useBiometricsState } from 'src/features/biometrics/useBiometricsState'
 import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import { useBiometricName } from 'src/features/biometricsSettings/hooks'
@@ -44,6 +45,8 @@ import {
   Language,
   LikeSquare,
   LineChartDots,
+  Passkey,
+  Sliders,
   TouchId,
   WavePulse,
   Wrench,
@@ -52,6 +55,8 @@ import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -63,6 +68,7 @@ import { isDevEnv } from 'utilities/src/environment/env'
 import { isAndroid } from 'utilities/src/platform'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 // avoids rendering during animation which makes it laggy
@@ -75,6 +81,7 @@ export function SettingsScreen(): JSX.Element {
   const colors = useSporeColors()
   const { deviceSupportsBiometrics } = useBiometricsState()
   const { t } = useTranslation()
+  const { onClose } = useReactNavigationModal()
 
   // check if device supports biometric authentication, if not, hide option
   const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } = useDeviceSupportsBiometricAuth()
@@ -83,6 +90,7 @@ export function SettingsScreen(): JSX.Element {
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { originName: currentLanguage } = useCurrentLanguageInfo()
+  const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
 
   const { hapticsEnabled, setHapticsEnabled } = useHapticFeedback()
 
@@ -103,6 +111,7 @@ export function SettingsScreen(): JSX.Element {
         enabled: newIsTestnetMode,
         location: 'settings',
       })
+    onClose()
 
     setTimeout(() => {
       // trigger before toggling on (ie disabling analytics)
@@ -118,12 +127,13 @@ export function SettingsScreen(): JSX.Element {
         fireAnalytic()
       }
     }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, isTestnetModeEnabled, navigation])
+  }, [dispatch, onClose, isTestnetModeEnabled, navigation])
 
   // Signer account info
   const signerAccount = useSignerAccounts()[0]
   // We sync backup state across all accounts under the same mnemonic, so can check status with any account.
-  const hasCloudBackup = signerAccount?.backups?.includes(BackupType.Cloud)
+  const hasCloudBackup = hasBackup(BackupType.Cloud, signerAccount)
+  const hasPasskeyBackup = hasBackup(BackupType.Passkey, signerAccount)
   const noSignerAccountImported = !signerAccount
   const { walletNeedsRestore } = useWalletRestore()
 
@@ -175,7 +185,7 @@ export function SettingsScreen(): JSX.Element {
             icon: <ContrastIcon {...svgProps} />,
           },
           {
-            modal: ModalName.FiatCurrencySelector,
+            navigationModal: ModalName.FiatCurrencySelector,
             text: t('settings.setting.currency.title'),
             currentSetting: currentFiatCurrencyInfo.code,
             icon: <Coins {...iconProps} />,
@@ -209,12 +219,26 @@ export function SettingsScreen(): JSX.Element {
             isToggleEnabled: hapticsEnabled,
             onToggle: onToggleEnableHaptics,
           },
-          {
-            text: t('settings.setting.wallet.testnetMode.title'),
-            icon: <Wrench {...iconProps} />,
-            isToggleEnabled: isTestnetModeEnabled,
-            onToggle: handleTestnetModeToggle,
-          },
+          ...(isSmartWalletEnabled
+            ? [
+                {
+                  navigationModal: ModalName.SmartWalletAdvancedSettingsModal,
+                  text: t('settings.setting.advanced.title'),
+                  icon: <Sliders {...iconProps} />,
+                  navigationProps: {
+                    isTestnetEnabled: isTestnetModeEnabled,
+                    onTestnetModeToggled: () => handleTestnetModeToggle(),
+                  },
+                },
+              ]
+            : [
+                {
+                  text: t('settings.setting.wallet.testnetMode.title'),
+                  icon: <Wrench {...iconProps} size="$icon.20" />,
+                  isToggleEnabled: isTestnetModeEnabled,
+                  onToggle: handleTestnetModeToggle,
+                },
+              ]),
         ],
       },
       {
@@ -224,7 +248,7 @@ export function SettingsScreen(): JSX.Element {
           ...(deviceSupportsBiometrics
             ? [
                 {
-                  modal: ModalName.BiometricsModal,
+                  navigationModal: ModalName.BiometricsModal,
                   isHidden: !isTouchIdSupported && !isFaceIdSupported,
                   text: isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod,
                   icon: isAndroid ? (
@@ -264,6 +288,13 @@ export function SettingsScreen(): JSX.Element {
             }),
             icon: <Cloud color="$neutral2" size="$icon.24" />,
             isHidden: noSignerAccountImported,
+          },
+          {
+            navigationModal: ModalName.PasskeyManagement,
+            isHidden: !hasPasskeyBackup,
+            text: t('common.passkeys'),
+            icon: <Passkey {...iconProps} />,
+            navigationProps: { address: signerAccount?.address },
           },
           {
             modal: ModalName.PermissionsModal,
@@ -348,7 +379,9 @@ export function SettingsScreen(): JSX.Element {
     signerAccount?.address,
     walletNeedsRestore,
     hasCloudBackup,
+    hasPasskeyBackup,
     isTestnetModeEnabled,
+    isSmartWalletEnabled,
     handleTestnetModeToggle,
     notificationOSPermission,
     navigation,

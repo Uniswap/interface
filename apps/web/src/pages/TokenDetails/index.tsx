@@ -1,6 +1,5 @@
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
-import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
@@ -11,10 +10,11 @@ import { useSrcColor } from 'hooks/useColor'
 import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from 'pages/TokenDetails/TDPContext'
 import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { useSporeColors } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -22,7 +22,8 @@ import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__ge
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isAddress } from 'utilities/src/addresses'
+import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
@@ -90,7 +91,7 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
 }
 
 function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
-  const { tokenAddress } = useParams<{ tokenAddress: string }>()
+  const { tokenAddress } = useParams<{ tokenAddress: string; chainName: string }>()
   if (!tokenAddress) {
     throw new Error('Invalid token details route: token address URL param is undefined')
   }
@@ -155,11 +156,12 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 
 export default function TokenDetailsPage() {
   const { t } = useTranslation()
-  const account = useAccount()
-  const pageChainId = account.chainId ?? UniverseChainId.Mainnet
   const contextValue = useCreateTDPContext()
-  const { tokenColor, address, currency, currencyChain, currencyChainId, tokenQuery } = contextValue
+  const { address, currency, currencyChain, currencyChainId, tokenQuery } = contextValue
+  const { isConnected } = useAccount()
   const isSupportedChain = useIsSupportedChainId(currencyChainId)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const tokenQueryData = tokenQuery.data?.token
   const metatagProperties = useMemo(() => {
@@ -177,6 +179,26 @@ export default function TokenDetailsPage() {
   }, [address, currency, currencyChain, currencyChainId, tokenQueryData?.name, tokenQueryData?.symbol])
   const metatags = useDynamicMetatags(metatagProperties)
 
+  // set testnet mode based on chain type when wallet is disconnected
+  useEffect(() => {
+    if (isConnected) {
+      return
+    }
+
+    if (currencyChainId && isTestnetChain(currencyChainId)) {
+      dispatch(setIsTestnetModeEnabled(true))
+    } else {
+      dispatch(setIsTestnetModeEnabled(false))
+    }
+  }, [isConnected, currencyChainId, dispatch])
+
+  // redirect to /explore if token is not found
+  useEffect(() => {
+    if (!tokenQuery.loading && (!currency || !isSupportedChain)) {
+      navigate('/explore')
+    }
+  }, [isSupportedChain, currency, tokenQuery.loading, navigate])
+
   return (
     <>
       <Helmet>
@@ -186,7 +208,11 @@ export default function TokenDetailsPage() {
         ))}
       </Helmet>
       {(() => {
-        if (currency && isSupportedChain) {
+        if (tokenQuery.loading || !currency) {
+          return <TokenDetailsPageSkeleton />
+        }
+
+        if (isSupportedChain) {
           return (
             <TDPProvider contextValue={contextValue}>
               <TokenDetails />
@@ -194,17 +220,7 @@ export default function TokenDetailsPage() {
           )
         }
 
-        if (tokenQuery.loading) {
-          return <TokenDetailsPageSkeleton />
-        } else {
-          return (
-            <InvalidTokenDetails
-              tokenColor={tokenColor}
-              pageChainId={pageChainId}
-              isInvalidAddress={!isAddress(address)}
-            />
-          )
-        }
+        return null
       })()}
     </>
   )

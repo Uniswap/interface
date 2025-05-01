@@ -343,12 +343,6 @@ export const USE_DISCONNECTED_ACCOUNT = {
   chainId: 1,
 } as unknown as UseAccountReturnType
 
-export const USE_CONNECTED_ACCOUNT = {
-  address: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
-  chainId: 1,
-  isConnected: true,
-} as unknown as UseAccountReturnType
-
 // Fiat On Ramp countries
 
 export const US: FORCountry = {

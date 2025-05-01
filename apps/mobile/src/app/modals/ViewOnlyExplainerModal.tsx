@@ -23,7 +23,9 @@ export function ViewOnlyExplainerModal(): JSX.Element {
   const onPressImportWallet = (): void => {
     onClose()
     if (hasImportedSeedPhrase && activeAccountAddress) {
-      navigate(ModalName.RemoveWallet)
+      navigate(ModalName.RemoveWallet, {
+        replaceMnemonic: true,
+      })
     } else {
       navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.SeedPhraseInput,

@@ -1,8 +1,9 @@
 import { QueryFunction, QueryKey, UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { TRADING_API_CACHE_KEY, fetchWalletEncoding7702 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { fetchWalletEncoding7702 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { Encode7702ResponseBody, WalletEncode7702RequestBody } from 'uniswap/src/data/tradingApi/__generated__'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export type WalletEncode7702Params = {
   calls: WalletEncode7702RequestBody['calls']
@@ -26,7 +27,7 @@ export function useWalletEncode7702Query({
 }
 
 const walletEncode7702QueryKey = (params?: WalletEncode7702Params): QueryKey => {
-  return [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.wallet.encode7702, params]
+  return [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.wallet.encode7702, params]
 }
 
 const walletEncode7702QueryFn = (

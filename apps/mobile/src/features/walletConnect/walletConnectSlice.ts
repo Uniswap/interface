@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DappInfo, EthMethod, EthSignMethod, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { DappInfo, EthSignMethod, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { Call, Capability } from 'wallet/src/features/dappRequests/types'
 
 export type WalletConnectPendingSession = {
@@ -55,6 +56,10 @@ export interface WalletSendCallsRequest extends BaseRequest {
   version: string
 }
 
+export interface WalletSendCallsEncodedRequest extends WalletSendCallsRequest {
+  encodedTransaction: EthTransaction
+}
+
 export interface WalletGetCallsStatusRequest extends BaseRequest {
   id: string
   type: EthMethod.GetCallsStatus
@@ -76,10 +81,18 @@ export interface UwuLinkErc20Request extends BaseRequest {
   transaction: EthTransaction // the formatted transaction, prepared by the wallet
 }
 
-export type WalletConnectRequest = SignRequest | TransactionRequest | UwuLinkErc20Request | WalletSendCallsRequest
+export type WalletConnectSigningRequest =
+  | SignRequest
+  | TransactionRequest
+  | UwuLinkErc20Request
+  | WalletSendCallsEncodedRequest
 
-export const isTransactionRequest = (request: WalletConnectRequest): request is TransactionRequest =>
+export const isTransactionRequest = (request: WalletConnectSigningRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send
+
+export const isBatchedTransactionRequest = (
+  request: WalletConnectSigningRequest,
+): request is WalletSendCallsEncodedRequest => request.type === EthMethod.SendCalls
 
 export interface WalletConnectState {
   byAccount: {
@@ -88,7 +101,7 @@ export interface WalletConnectState {
     }
   }
   pendingSession: WalletConnectPendingSession | null
-  pendingRequests: WalletConnectRequest[]
+  pendingRequests: WalletConnectSigningRequest[]
   didOpenFromDeepLink?: boolean
   hasPendingSessionError?: boolean
 }
@@ -142,7 +155,7 @@ const slice = createSlice({
       state.pendingSession = null
     },
 
-    addRequest: (state, action: PayloadAction<WalletConnectRequest>) => {
+    addRequest: (state, action: PayloadAction<WalletConnectSigningRequest>) => {
       state.pendingRequests.push(action.payload)
     },
 

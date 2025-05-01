@@ -41,7 +41,7 @@ export function ProviderOption({
     <FORQuoteItem
       key={serviceProvider.name}
       serviceProvider={serviceProvider}
-      hoverIcon={<ExternalLink position="absolute" right="$spacing12" size={20} />}
+      hoverIcon={<ExternalLink position="absolute" right="$spacing12" size={20} color="$neutral2" />}
       isLoading={isLoading}
       onPress={async () => {
         if (data) {

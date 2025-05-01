@@ -25,6 +25,7 @@ describe('PoolTable', () => {
       isLoading: true,
       isError: false,
       topPools: [],
+      topBoostedPools: [],
     })
 
     const { asFragment } = render(<ExploreTopPoolTable />)
@@ -37,6 +38,7 @@ describe('PoolTable', () => {
       isLoading: false,
       isError: true,
       topPools: [],
+      topBoostedPools: [],
     })
 
     const { asFragment } = render(<ExploreTopPoolTable />)
@@ -64,6 +66,7 @@ describe('PoolTable', () => {
     ]
     mocked(useExploreContextTopPools).mockReturnValue({
       topPools: mockData,
+      topBoostedPools: mockData,
       isLoading: false,
       isError: false,
     })

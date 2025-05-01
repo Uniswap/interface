@@ -33,7 +33,6 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { isE2EMode } from 'utilities/src/environment/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { isExtension, isInterfaceDesktop, isMobileWeb } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -542,17 +541,14 @@ function useRefetchAnimationStyle({
 
   const loadingFlexProgress = useSharedValue(1)
 
-  // disables looping animation during e2e tests which was preventing js thread from idle
-  if (!isE2EMode) {
-    loadingFlexProgress.value = withRepeat(
-      withSequence(
-        withTiming(0.4, { duration: 400, easing: Easing.ease }),
-        withTiming(1, { duration: 400, easing: Easing.ease }),
-      ),
-      -1,
-      true,
-    )
-  }
+  loadingFlexProgress.value = withRepeat(
+    withSequence(
+      withTiming(0.4, { duration: 400, easing: Easing.ease }),
+      withTiming(1, { duration: 400, easing: Easing.ease }),
+    ),
+    -1,
+    true,
+  )
 
   const previousAmount = usePrevious(currencyAmount)
 

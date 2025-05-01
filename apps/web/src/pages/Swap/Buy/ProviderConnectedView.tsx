@@ -13,7 +13,7 @@ const StyledLink = styled(ExternalLink)`
 `
 
 interface ProviderConnectedViewProps {
-  closeModal: () => void
+  closeModal?: () => void
   selectedServiceProvider: FORServiceProvider
 }
 

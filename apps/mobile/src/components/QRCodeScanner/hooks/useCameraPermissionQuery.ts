@@ -1,8 +1,9 @@
 import { queryOptions, useQuery, UseQueryResult } from '@tanstack/react-query'
 import { Camera, PermissionResponse } from 'expo-camera'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export const cameraPermissionQuery = queryOptions({
-  queryKey: ['cameraPermission'],
+  queryKey: [ReactQueryCacheKey.CameraPermission],
   queryFn: async () => {
     return await Camera.getCameraPermissionsAsync()
   },

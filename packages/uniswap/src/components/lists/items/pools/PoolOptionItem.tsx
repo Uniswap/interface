@@ -3,7 +3,7 @@ import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import Badge from 'uniswap/src/components/badge/Badge'
-import { OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
+import { FocusedRowControl, OptionItem } from 'uniswap/src/components/lists/items/OptionItem'
 import { PoolOptionItemContextMenu } from 'uniswap/src/components/lists/items/pools/PoolOptionItemContextMenu'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -20,6 +20,7 @@ interface PoolOptionItemProps {
   protocolVersion: ProtocolVersion
   hookAddress?: string
   feeTier: number
+  focusedRowControl?: FocusedRowControl
 }
 
 function _PoolOptionItem({
@@ -31,6 +32,7 @@ function _PoolOptionItem({
   protocolVersion,
   hookAddress,
   feeTier,
+  focusedRowControl,
 }: PoolOptionItemProps): JSX.Element {
   const poolName = `${token0CurrencyInfo.currency.symbol}/${token1CurrencyInfo.currency.symbol}`
 
@@ -67,6 +69,7 @@ function _PoolOptionItem({
           </Badge>
         </Flex>
       }
+      focusedRowControl={focusedRowControl}
       onPress={onPress}
     />
   )

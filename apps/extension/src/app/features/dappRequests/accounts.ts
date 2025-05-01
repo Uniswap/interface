@@ -4,11 +4,10 @@ import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import { saveDappConnection } from 'src/app/features/dapp/actions'
 import { DappInfo, dappStore } from 'src/app/features/dapp/store'
 import { getOrderedConnectedAddresses } from 'src/app/features/dapp/utils'
-import { SenderTabInfo } from 'src/app/features/dappRequests/slice'
+import type { SenderTabInfo } from 'src/app/features/dappRequests/shared'
 import {
   AccountResponse,
   DappRequest,
-  DappResponseType,
   ErrorResponse,
   GetAccountRequest,
   RequestAccountRequest,
@@ -17,6 +16,7 @@ import { dappResponseMessageChannel } from 'src/background/messagePassing/messag
 import { call, put, select } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
+import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'

@@ -11,7 +11,6 @@ import {
   useCurrentPriceAdjustment,
 } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import Column from 'components/deprecated/Column'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { ZERO_PERCENT } from 'constants/misc'
@@ -33,7 +32,7 @@ import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { Anchor, Button, Flex, Text, styled as tamaguiStyled, useIsShortMobileDevice } from 'ui/src'
+import { Anchor, Button, Flex, styled as TamaguiStyled, Text, useIsShortMobileDevice } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -57,12 +56,12 @@ const CustomHeightSwapSection = styled(SwapSection)`
   height: unset;
 `
 
-const ShortArrowWrapper = styled(ArrowWrapper)`
-  margin-top: -22px;
-  margin-bottom: -22px;
-`
+const ShortArrowWrapper = TamaguiStyled(ArrowWrapper, {
+  mt: -22,
+  mb: -22,
+})
 
-const LearnMore = tamaguiStyled(Text, {
+const LearnMore = TamaguiStyled(Text, {
   variant: 'body3',
   color: '$accent1',
   animation: '100ms',
@@ -497,7 +496,7 @@ function SubmitOrderButton({
     }
 
     if (!account.isConnected) {
-      return <ConnectWalletButtonText />
+      return t('common.connectWallet.button')
     }
 
     if (hasInsufficientFunds) {

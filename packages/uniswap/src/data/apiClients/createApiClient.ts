@@ -23,7 +23,9 @@ export function createApiClient({
 }: {
   baseUrl: string
   includeBaseUniswapHeaders?: boolean
-  additionalHeaders?: HeadersInit
+  additionalHeaders?: HeadersInit & {
+    'x-uniquote-enabled'?: string
+  }
 }): {
   readonly fetch: (path: string, options: StandardFetchOptions) => Promise<Response>
   readonly get: <T>(path: string, options?: CustomOptions) => Promise<T>

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
-import { TransactionScreen } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'

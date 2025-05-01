@@ -32,6 +32,8 @@ export enum ExtensionOnboardingScreens {
 
   // Import Flow
   SelectImportMethod = 'SelectImportMethod',
+  InitiatePasskeyAuth = 'InitiatePasskeyAuth',
+  PasskeyImport = 'PasskeyImport',
   SeedPhraseInput = 'SeedPhraseInput',
   SelectWallet = 'SelectWallet',
 

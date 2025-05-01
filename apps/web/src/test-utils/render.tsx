@@ -15,7 +15,6 @@ import store from 'state'
 import { ThemeProvider } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 
 const queryClient = new QueryClient()
 
@@ -36,14 +35,12 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
                   <TokenBalancesProvider>
                     <ReactRouterUrlProvider>
                       <MockedBlockNumberProvider>
-                        <UnitagUpdaterContextProvider>
-                          <ThemeProvider>
-                            <TamaguiProvider>
-                              <Web3ProviderUpdater />
-                              {children}
-                            </TamaguiProvider>
-                          </ThemeProvider>
-                        </UnitagUpdaterContextProvider>
+                        <ThemeProvider>
+                          <TamaguiProvider>
+                            <Web3ProviderUpdater />
+                            {children}
+                          </TamaguiProvider>
+                        </ThemeProvider>
                       </MockedBlockNumberProvider>
                     </ReactRouterUrlProvider>
                   </TokenBalancesProvider>

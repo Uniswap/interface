@@ -12,10 +12,6 @@ interface PoolData {
   token1Image?: string
 }
 
-interface NftCollectionData {
-  isVerified: boolean
-}
-
 export interface Data {
   title: string
   image: string
@@ -24,7 +20,6 @@ export interface Data {
   ogImage?: string
   poolData?: PoolData
   tokenData?: TokenData
-  nftCollectionData?: NftCollectionData
 }
 
 const CACHE_NAME = 'functions-cache' as const

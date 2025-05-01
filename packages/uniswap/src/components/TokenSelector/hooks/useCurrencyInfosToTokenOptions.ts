@@ -1,7 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { useMemo } from 'react'
-import { TokenOption } from 'uniswap/src/components/lists/types'
-import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
@@ -43,6 +42,14 @@ export function currencyInfosToTokenOptions(currencyInfos?: Maybe<CurrencyInfo>[
       quantity: null,
       balanceUSD: undefined,
     }))
+}
+
+export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOption {
+  return {
+    currencyInfo,
+    balanceUSD: null,
+    quantity: null,
+  }
 }
 
 export function useCurrencyInfosToTokenOptions({

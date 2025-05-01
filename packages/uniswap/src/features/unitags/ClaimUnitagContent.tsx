@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { AnimatePresence, Button, Flex, FlexProps, Input, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
@@ -15,7 +16,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagInfoModal } from 'uniswap/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
-import { useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCanClaimUnitagName'
+import { getUnitagFormatError, useCanClaimUnitagName } from 'uniswap/src/features/unitags/hooks/useCanClaimUnitagName'
 import { getYourNameString } from 'uniswap/src/features/unitags/utils'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
@@ -25,17 +26,20 @@ import {
   UnitagScreens,
 } from 'uniswap/src/types/screens/mobile'
 import { shortenAddress } from 'utilities/src/addresses'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension, isMobileApp, isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWeb } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useDebounce } from 'utilities/src/time/timing'
 
+const VERIFICATION_DEBOUNCE_MS = 700
 const MAX_UNITAG_CHAR_LENGTH = 20
 
 const MAX_INPUT_FONT_SIZE = 36
 const MIN_INPUT_FONT_SIZE = 22
 const MAX_CHAR_PIXEL_WIDTH = 20
-const SLIDE_IN_AMOUNT = isExtension ? 0 : 40
+const SLIDE_IN_AMOUNT = isWeb ? 0 : 40
 
 // Used in dynamic font size width calculation to ignore `.` characters
 const UNITAG_SUFFIX_CHARS_ONLY = UNITAG_SUFFIX.replaceAll('.', '')
@@ -70,9 +74,10 @@ export function ClaimUnitagContent({
 
   const [showTextInputView, setShowTextInputView] = useState(true)
   const [unitagInputValue, setUnitagInputValue] = useState<string | undefined>(undefined)
-  const [isCheckingUnitag, setIsCheckingUnitag] = useState(false)
-  const [shouldBlockContinue, setShouldBlockContinue] = useState(false)
-  const [unitagToCheck, setUnitagToCheck] = useState<string | undefined>(undefined)
+  const [isUnitagAvailable, setIsUnitagAvailable] = useState(false)
+  const [unitagAvailableError, setUnitagAvailableError] = useState<string>()
+  const [showVerificationLoading, setShowVerificationLoading] = useState(false)
+
   const [unitagNameinputMinWidth, setUnitagNameInputMinWidth] = useState<number | undefined>(undefined)
   const [addressError, setAddressError] = useState<string>()
 
@@ -84,23 +89,16 @@ export function ClaimUnitagContent({
     }
   }, [addressViewOpacity])
 
-  const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(unitagToCheck)
+  const debouncedInputValue = useDebounce(unitagInputValue, VERIFICATION_DEBOUNCE_MS)
+  const { error: canClaimUnitagNameError, loading: isCheckingUnitag } = useCanClaimUnitagName(
+    debouncedInputValue || undefined, // set to undefined if the input is empty to clear the error
+  )
 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
     MAX_CHAR_PIXEL_WIDTH,
     MAX_INPUT_FONT_SIZE,
     MIN_INPUT_FONT_SIZE,
   )
-
-  /*
-   * Resets the unitag to check
-   * Called onFocus, as well as `onChangeText`
-   */
-  const resetUnitagToCheck = useCallback(() => {
-    if (unitagToCheck) {
-      setUnitagToCheck(undefined)
-    }
-  }, [unitagToCheck])
 
   const focusUnitagTextInput = useCallback((): void | null => {
     textInputRef.current?.focus()
@@ -116,8 +114,6 @@ export function ClaimUnitagContent({
 
   useEffect(() => {
     const unsubscribe = navigationEventConsumer?.addListener('focus', () => {
-      resetUnitagToCheck()
-
       // When returning back to this screen, handle animating the Unitag logo out and text input in
       if (showTextInputView) {
         return
@@ -143,19 +139,17 @@ export function ClaimUnitagContent({
     setShowTextInputView,
     addressViewOpacity,
     unitagInputContainerTranslateY,
-    resetUnitagToCheck,
     focusUnitagTextInput,
   ])
 
   const onChangeTextInput = useCallback(
     (text: string): void => {
-      setShouldBlockContinue(false)
-      setUnitagToCheck(undefined)
-
-      // This handles the case where the user has already checked a unitag, received an error, and proceeds to change their inputted text
-      resetUnitagToCheck()
+      setIsUnitagAvailable(false)
+      setShowVerificationLoading(false)
+      setUnitagAvailableError(undefined)
 
       if (text.length > MAX_UNITAG_CHAR_LENGTH) {
+        setUnitagAvailableError(getUnitagFormatError(text, t))
         return
       }
 
@@ -167,7 +161,7 @@ export function ClaimUnitagContent({
 
       setUnitagInputValue(text?.trim())
     },
-    [inputPlaceholder, onSetFontSize, resetUnitagToCheck],
+    [inputPlaceholder, onSetFontSize, t],
   )
 
   const onPressAddressTooltip = useCallback((): void => {
@@ -216,10 +210,8 @@ export function ClaimUnitagContent({
     ],
   )
 
-  // Handle when useUnitagError completes loading and returns a result after onPressContinue is called
   useEffect(() => {
-    if (isCheckingUnitag && !!unitagToCheck && !loadingUnitagErrorCheck) {
-      setIsCheckingUnitag(false)
+    if (!!debouncedInputValue && !isCheckingUnitag) {
       // If unitagError or addressError is defined, it's rendered in UI
       if (entryPoint === OnboardingScreens.Landing && !unitagAddress) {
         const err = new Error('unitagAddress should always be defined')
@@ -227,34 +219,32 @@ export function ClaimUnitagContent({
           tags: { file: 'ClaimUnitagScreen', function: 'navigateWithAnimation' },
         })
         setAddressError(t('unitags.claim.error.default'))
-        setShouldBlockContinue(true)
+        setIsUnitagAvailable(false)
         return
       } else if (!canClaimUnitagNameError) {
-        navigateWithAnimation(unitagToCheck)
+        setIsUnitagAvailable(true)
       } else {
         sendAnalyticsEvent(UnitagEventName.UnitagClaimAvailabilityDisplayed, {
           result: 'unavailable',
         })
-        setShouldBlockContinue(true)
+        setIsUnitagAvailable(false)
+        setUnitagAvailableError(canClaimUnitagNameError)
       }
     }
-  }, [
-    canClaimUnitagNameError,
-    loadingUnitagErrorCheck,
-    unitagToCheck,
-    isCheckingUnitag,
-    navigateWithAnimation,
-    entryPoint,
-    unitagAddress,
-    t,
-  ])
+  }, [canClaimUnitagNameError, debouncedInputValue, isCheckingUnitag, entryPoint, unitagAddress, t])
 
-  const onPressContinue = (): void => {
-    if (unitagInputValue && unitagInputValue !== unitagToCheck) {
-      setIsCheckingUnitag(true)
-      setUnitagToCheck(unitagInputValue)
+  const shouldBlockContinue = (entryPoint === OnboardingScreens.Landing && !unitagAddress) || !unitagInputValue
+
+  const onPressContinue = useEvent((): void => {
+    if (isCheckingUnitag) {
+      setShowVerificationLoading(true)
+      return
     }
-  }
+
+    if (unitagInputValue && isUnitagAvailable) {
+      navigateWithAnimation(unitagInputValue)
+    }
+  })
 
   const webStyling: FlexProps = isWeb
     ? {
@@ -317,13 +307,13 @@ export function ClaimUnitagContent({
                 <TextInput
                   ref={textInputRef}
                   autoFocus={!isMobileApp}
-                  blurOnSubmit={!isExtension}
+                  blurOnSubmit={!isWeb}
                   autoCapitalize="none"
                   autoCorrect={false}
                   borderWidth="$none"
-                  borderRadius={isExtension ? 0 : undefined}
+                  borderRadius={isWeb ? 0 : undefined}
                   fontFamily="$heading"
-                  fontSize={isExtension ? fonts.subheading1.fontSize : fontSize}
+                  fontSize={isWeb ? fonts.subheading1.fontSize : fontSize}
                   fontWeight="$book"
                   numberOfLines={1}
                   p="$none"
@@ -333,7 +323,7 @@ export function ClaimUnitagContent({
                   testID={TestID.WalletNameInput}
                   textAlign="left"
                   value={unitagInputValue}
-                  width={isExtension ? '100%' : undefined}
+                  width={isWeb ? '100%' : undefined}
                   minWidth={unitagNameinputMinWidth}
                   onChangeText={onChangeTextInput}
                   onSubmitEditing={onPressContinue}
@@ -346,7 +336,7 @@ export function ClaimUnitagContent({
                   enterStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
                   exitStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
                   fontFamily="$heading"
-                  fontSize={isExtension ? fonts.subheading1.fontSize : fontSize}
+                  fontSize={isWeb ? fonts.subheading1.fontSize : fontSize}
                   fontWeight="$book"
                   lineHeight={fonts.heading2.lineHeight}
                 >
@@ -373,30 +363,71 @@ export function ClaimUnitagContent({
           </AnimatedFlex>
         )}
 
-        <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight} mt={unitagAddress ? undefined : '$spacing24'}>
-          <Text color="$statusCritical" textAlign="center" variant="body2">
-            {canClaimUnitagNameError || addressError}
-          </Text>
+        <AvailabilityStatus
+          unitagAvailableError={unitagAvailableError}
+          addressError={addressError}
+          isUnitagAvailable={isUnitagAvailable}
+          showTextInputView={showTextInputView}
+          mt="$spacing4"
+          mb={unitagAddress ? undefined : '$spacing20'}
+        />
+      </Flex>
+      {/* Wrap button in a TouchableArea to add onPress capabilities when the button is disabled. */}
+      <TouchableArea disabledStyle={{ cursor: 'default' }} disabled={shouldBlockContinue} onPress={onPressContinue}>
+        <Flex row justifyContent="flex-end">
+          <Button
+            size="large"
+            variant="branded"
+            isDisabled={shouldBlockContinue || !isUnitagAvailable}
+            testID={TestID.Continue}
+            loading={showVerificationLoading && isCheckingUnitag} // the validation happens really quickly so only show a loading spinner when the user explicitly tries to continue and we're still checking availability
+            onPress={onPressContinue}
+          >
+            {t('common.button.continue')}
+          </Button>
         </Flex>
-      </Flex>
-      <Flex row justifyContent="flex-end">
-        <Button
-          size="large"
-          variant="branded"
-          isDisabled={
-            (entryPoint === OnboardingScreens.Landing && !unitagAddress) ||
-            !unitagInputValue ||
-            isCheckingUnitag ||
-            shouldBlockContinue
-          }
-          testID={TestID.Continue}
-          loading={isCheckingUnitag}
-          onPress={onPressContinue}
-        >
-          {t('common.button.continue')}
-        </Button>
-      </Flex>
+      </TouchableArea>
       <UnitagInfoModal isOpen={showInfoModal} unitagAddress={unitagAddress} onClose={handleHideInfoModal} />
     </>
+  )
+}
+
+const animationProps: FlexProps = {
+  animation: 'quick',
+  enterStyle: { opacity: 0, y: 10 },
+}
+
+function AvailabilityStatus({
+  unitagAvailableError,
+  addressError,
+  isUnitagAvailable,
+  showTextInputView,
+  ...rest
+}: {
+  unitagAvailableError: string | undefined
+  addressError: string | undefined
+  isUnitagAvailable: boolean
+  showTextInputView: boolean
+} & FlexProps): JSX.Element {
+  const { t } = useTranslation()
+  return (
+    <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight} {...rest}>
+      <AnimatePresence>
+        {unitagAvailableError || addressError ? (
+          <Flex key="error" {...animationProps}>
+            <Text key="error" color="$statusCritical" textAlign="center" variant="body2">
+              {unitagAvailableError || addressError}
+            </Text>
+          </Flex>
+        ) : isUnitagAvailable && showTextInputView ? (
+          <Flex key="available" row alignItems="center" gap="$spacing4" {...animationProps}>
+            <CheckmarkCircle color="$accent1" size="$icon.16" />
+            <Text textAlign="center" variant="body2">
+              {t('unitags.claim.available')}
+            </Text>
+          </Flex>
+        ) : null}
+      </AnimatePresence>
+    </Flex>
   )
 }

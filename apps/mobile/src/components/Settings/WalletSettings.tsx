@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { openModal } from 'src/features/modals/modalSlice'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { Flex, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -19,7 +18,6 @@ interface Account {
 
 export function WalletSettings(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
   const allAccounts = useAccountsList()
   const [showAll, setShowAll] = useState(false)
 
@@ -33,12 +31,9 @@ export function WalletSettings(): JSX.Element {
   }
 
   const handleNavigation = (address: string): void => {
-    dispatch(
-      openModal({
-        name: ModalName.ManageWalletsModal,
-        initialState: { address },
-      }),
-    )
+    navigate(ModalName.ManageWalletsModal, {
+      address,
+    })
   }
 
   const renderAccountRow = (account: Account): JSX.Element => {

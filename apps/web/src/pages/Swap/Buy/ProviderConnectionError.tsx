@@ -9,7 +9,7 @@ import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/
 
 interface ProviderConnectionErrorProps {
   onBack: () => void
-  closeModal: () => void
+  closeModal?: () => void
   selectedServiceProvider: FORServiceProvider
 }
 

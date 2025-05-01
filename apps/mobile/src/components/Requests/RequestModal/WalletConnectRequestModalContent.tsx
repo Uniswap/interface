@@ -1,39 +1,37 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { useNetInfo } from '@react-native-community/netinfo'
-import React, { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { ClientDetails, PermitInfo } from 'src/components/Requests/RequestModal/ClientDetails'
-import { RequestDetails } from 'src/components/Requests/RequestModal/RequestDetails'
+import { RequestDetails, SectionContainer } from 'src/components/Requests/RequestModal/RequestDetails'
 import {
   SignRequest,
   TransactionRequest,
-  WalletConnectRequest,
+  WalletConnectSigningRequest,
+  WalletSendCallsEncodedRequest,
   isTransactionRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangleFilled from 'ui/src/assets/icons/alert-triangle-filled.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { EthMethod, isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
+import { isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
 
-const MAX_MODAL_MESSAGE_HEIGHT = 200
+const isPotentiallyUnsafe = (request: WalletConnectSigningRequest): boolean => request.type !== EthMethod.PersonalSign
 
-const isPotentiallyUnsafe = (request: WalletConnectRequest): boolean => request.type !== EthMethod.PersonalSign
-
-export const methodCostsGas = (request: WalletConnectRequest): request is TransactionRequest =>
-  request.type === EthMethod.EthSendTransaction
+export const getDoesMethodCostGas = (request: WalletConnectSigningRequest): boolean =>
+  request.type === EthMethod.EthSendTransaction || request.type === EthMethod.SendCalls
 
 /** If the request is a permit then parse the relevant information otherwise return undefined. */
-const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined => {
+const getPermitInfo = (request: WalletConnectSigningRequest): PermitInfo | undefined => {
   if (request.type !== EthMethod.SignTypedDataV4) {
     return undefined
   }
@@ -60,7 +58,7 @@ const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined =>
 type WalletConnectRequestModalContentProps = {
   gasFee: GasFeeResult
   hasSufficientFunds: boolean
-  request: SignRequest | TransactionRequest
+  request: SignRequest | TransactionRequest | WalletSendCallsEncodedRequest
   isBlocked: boolean
 }
 
@@ -84,19 +82,13 @@ export function WalletConnectRequestModalContent({
     height: animatedFooterHeight.value,
   }))
 
-  const hasGasFee = methodCostsGas(request)
+  const hasGasFee = getDoesMethodCostGas(request)
 
   return (
     <>
       <ClientDetails permitInfo={permitInfo} request={request} />
       <Flex pt="$spacing8">
-        <Flex backgroundColor="$surface2" borderColor="$surface3" borderRadius="$rounded16" borderWidth="$spacing1">
-          {!permitInfo && (
-            <SectionContainer style={requestMessageStyle}>
-              <RequestDetails request={request} />
-            </SectionContainer>
-          )}
-        </Flex>
+        <RequestDetails request={request} permitInfo={permitInfo} />
         <Flex gap="$spacing8" mb="$spacing12" pt="$spacing20" px="$spacing4">
           <NetworkFeeFooter
             chainId={chainId}
@@ -111,6 +103,7 @@ export function WalletConnectRequestModalContent({
                   }
             }
             showNetworkLogo={hasGasFee}
+            requestMethod={request.type}
           />
           <AddressFooter activeAccountAddress={request.account} px="$spacing8" />
         </Flex>
@@ -151,23 +144,12 @@ export function WalletConnectRequestModalContent({
   )
 }
 
-function SectionContainer({
-  children,
-  style,
-}: PropsWithChildren<{ style?: StyleProp<ViewStyle> }>): JSX.Element | null {
-  return children ? (
-    <Flex p="$spacing16" style={style}>
-      {children}
-    </Flex>
-  ) : null
-}
-
 function WarningSection({
   request,
   showUnsafeWarning,
   isBlockedAddress,
 }: {
-  request: WalletConnectRequest
+  request: WalletConnectSigningRequest
   showUnsafeWarning: boolean
   isBlockedAddress: boolean
 }): JSX.Element | null {
@@ -194,10 +176,4 @@ function WarningSection({
   }
 
   return null
-}
-
-const requestMessageStyle: StyleProp<ViewStyle> = {
-  // need a fixed height here or else modal gets confused about total height
-  maxHeight: MAX_MODAL_MESSAGE_HEIGHT,
-  overflow: 'hidden',
 }
