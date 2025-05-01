@@ -1,6 +1,7 @@
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DepositState } from 'components/Liquidity/types'
+import { BigNumber, ethers } from 'ethers'
 import {
   CreatePositionContext,
   CreateTxContext,
@@ -32,9 +33,13 @@ import {
 } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
+import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
+import { CheckApprovalLPResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -55,6 +60,7 @@ export function CreatePositionContextProvider({
     { step: TransactionStep; accepted: boolean } | undefined
   >()
   const derivedPositionInfo = useDerivedPositionInfo(positionState)
+  console.log('derivedPositionInfo', derivedPositionInfo)
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
   const [dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData] = useState<DynamicFeeTierSpeedbumpData>({
     open: false,
@@ -153,6 +159,13 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
   )
 }
 
+function getTokenTransferApproval(address: string, amount: BigNumber, rpcUrl: string, signer: string) {
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+  const tokenContract = new ethers.Contract(address, ERC20_ABI, provider.getSigner(signer))
+
+  return tokenContract.approve('0x8800d8e9c028e5c9e445D9bA9BD430eeCa992613', amount)
+}
+
 export function CreateTxContextProvider({ children }: { children: React.ReactNode }) {
   const account = useAccountMeta()
   const { derivedPositionInfo, positionState, currentTransactionStep } = useCreatePositionContext()
@@ -172,9 +185,9 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     })
   }, [account, derivedDepositInfo, derivedPositionInfo, positionState])
   const {
-    data: approvalCalldata,
-    error: approvalError,
-    isLoading: approvalLoading,
+    //data: approvalCalldata,
+    //error: approvalError,
+    //isLoading: approvalLoading,
     refetch: approvalRefetch,
   } = useCheckLpApprovalQuery({
     params: addLiquidityApprovalParams,
@@ -182,6 +195,32 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     retry: false,
     enabled: !!addLiquidityApprovalParams && !hasError && !hasCreateErrorResponse,
   })
+
+  const rpcUrl = getChainInfo(UniverseChainId.SmartBCH).rpcUrls.default.http[0]
+
+  const approvalCalldata: CheckApprovalLPResponse =
+    addLiquidityApprovalParams != null
+      ? {
+          gasFeeToken0Approval: getTokenTransferApproval(
+            addLiquidityApprovalParams?.token0,
+            addLiquidityApprovalParams?.amount0,
+            rpcUrl,
+            addLiquidityApprovalParams.walletAddress,
+          ),
+          gasFeeToken1Approval: getTokenTransferApproval(
+            addLiquidityApprovalParams?.token1,
+            addLiquidityApprovalParams?.amount1,
+            rpcUrl,
+            addLiquidityApprovalParams.walletAddress,
+          ),
+        }
+      : undefined
+
+  console.log('approvalCalldata', approvalCalldata)
+
+  const approvalError = null
+
+  const approvalLoading = false
 
   if (approvalError) {
     logger.info(

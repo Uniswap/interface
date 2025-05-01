@@ -22,9 +22,16 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
   chainIds?: UniverseChainId[]
+  tokenIds?: string[]
 }
 
-export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, chainIds }: CurrencySearchProps) {
+export function CurrencySearch({
+  currencyField,
+  onCurrencySelect,
+  onDismiss,
+  chainIds,
+  tokenIds,
+}: CurrencySearchProps) {
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
     useMultichainContext()
@@ -72,6 +79,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, cha
           isLimits={currentTab === SwapTab.Limit}
           chainId={!isMultichainContext || isUserSelectedToken ? chainId : undefined}
           chainIds={chainIds ?? chains}
+          tokenIds={tokenIds}
           currencyField={currencyField}
           flow={TokenSelectorFlow.Swap}
           isSurfaceReady={true}

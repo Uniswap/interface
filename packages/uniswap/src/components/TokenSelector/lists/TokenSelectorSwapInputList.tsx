@@ -144,31 +144,30 @@ function _TokenSelectorSwapInputList({
   onSelectCurrency,
   activeAccountAddress,
   chainFilter,
+  tokenFilter,
   isKeyboardOpen,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
+  tokenFilter?: string[]
 }): JSX.Element {
-  const {
-    data: sections,
-    loading,
-    error,
-    refetch,
-  } = useTokenSectionsForSwapInput({
-    activeAccountAddress,
-    chainFilter,
-  })
+  const data = useMemo(() => {
+    if (tokenFilter != null) {
+      return smartBCHTokenOptions.filter((t) => tokenFilter.includes(t.currencyInfo.currencyId))
+    }
+    return smartBCHTokenOptions
+  }, [tokenFilter])
 
   return (
     <TokenSelectorList
       showTokenAddress
       chainFilter={chainFilter}
-      hasError={Boolean(error)}
+      hasError={false}
       isKeyboardOpen={isKeyboardOpen}
-      loading={loading}
-      refetch={refetch}
+      loading={false}
+      refetch={() => {}}
       sections={[
         {
-          data: smartBCHTokenOptions,
+          data,
           sectionKey: TokenOptionSection.SuggestedTokens,
         },
       ]}

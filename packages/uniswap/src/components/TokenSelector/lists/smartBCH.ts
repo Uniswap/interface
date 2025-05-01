@@ -287,7 +287,8 @@ const logoUriMap = {
 }
 
 // Function to convert a Token (Currency) to a TokenOption
-function toTokenOption(token: Token, logoUrl: string): TokenOption {
+export function toTokenOption(token: Token): TokenOption {
+  const logoUrl = logoUriMap[token.address as keyof typeof logoUriMap] // Get the logoUrl from the map
   return {
     currencyInfo: {
       currency: token,
@@ -403,6 +404,5 @@ export const SMARTBCH_TOKENS = [
 
 // Convert each Token to a TokenOption
 export const smartBCHTokenOptions = SMARTBCH_TOKENS.map((token) => {
-  const logoUrl = logoUriMap[token.address as keyof typeof logoUriMap] // Get the logoUrl from the map
-  return toTokenOption(token, logoUrl)
+  return toTokenOption(token)
 })

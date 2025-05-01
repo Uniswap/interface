@@ -66,9 +66,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   const { chainId } = useMultichainContext()
   const {
     currencyInputs: { TOKEN0: token0Input, TOKEN1: token1Input },
-    protocolVersion,
   } = state
-
+  const protocolVersion = 3
   const TOKEN0 = token0Input
   const TOKEN1 = token1Input
 

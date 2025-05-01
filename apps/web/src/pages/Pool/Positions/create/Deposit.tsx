@@ -120,7 +120,7 @@ export const DepositStep = () => {
           size="large"
           variant="branded"
           onPress={handleReview}
-          isDisabled={disabled}
+          isDisabled={false}
           key="Position-Create-DepositButton"
           loading={requestLoading}
         >

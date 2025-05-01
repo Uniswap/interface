@@ -44,9 +44,9 @@ export const useCreatePositionContext = () => {
 export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   priceInverted: false,
   fullRange: true,
-  minPrice: '',
-  maxPrice: '',
-  initialPrice: '',
+  minPrice: '1',
+  maxPrice: '800000',
+  initialPrice: '800000',
 }
 
 export const PriceRangeContext = React.createContext<PriceRangeContextType>({

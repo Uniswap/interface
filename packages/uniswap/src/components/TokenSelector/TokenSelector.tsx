@@ -45,6 +45,7 @@ export enum TokenSelectorVariation {
   // Swap input and output sections specced in 'Multichain UX: Token Selector and Swap' doc on Notion
   SwapInput = 'swap-input', // balances, recent searches, favorites, popular
   SwapOutput = 'swap-output', // suggested bases, balances, recent searches, favorites, popular
+  Pool = 'pool',
 }
 
 export interface TokenSelectorProps {
@@ -55,6 +56,7 @@ export interface TokenSelectorProps {
   activeAccountAddress?: string
   chainId?: UniverseChainId
   chainIds?: UniverseChainId[]
+  tokenIds?: string[]
   input?: TradeableAsset
   isSurfaceReady?: boolean
   isLimits?: boolean
@@ -71,6 +73,7 @@ export function TokenSelectorContent({
   activeAccountAddress,
   chainId,
   chainIds,
+  tokenIds,
   isSurfaceReady = true,
   isLimits,
   onClose,
@@ -221,6 +224,7 @@ export function TokenSelectorContent({
           <TokenSelectorSwapInputList
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
+            tokenFilter={tokenIds}
             isKeyboardOpen={isKeyboardOpen}
             onSelectCurrency={onSelectCurrencyCallback}
           />
@@ -231,6 +235,7 @@ export function TokenSelectorContent({
             input={input}
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
+            tokenFilter={tokenIds}
             isKeyboardOpen={isKeyboardOpen}
             onSelectCurrency={onSelectCurrencyCallback}
           />

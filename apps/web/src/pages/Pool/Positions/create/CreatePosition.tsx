@@ -190,7 +190,9 @@ const Toolbar = ({
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { positionState, setPositionState, setStep, reset: resetCreatePositionState } = useCreatePositionContext()
-  const { protocolVersion } = positionState
+  const protocolVersion = 3
+  //const { protocolVersion } = positionState
+  console.log('protocolVersion', protocolVersion)
   const { setPriceRangeState } = usePriceRangeContext()
   const [versionDropdownOpen, setVersionDropdownOpen] = useState(false)
 
@@ -241,11 +243,11 @@ const Toolbar = ({
       if (versionUrl) {
         navigate(`/positions/create/${versionUrl}`)
       }
-
+      console.log('version', version)
       setPositionState((prevState) => ({
         ...DEFAULT_POSITION_STATE,
         currencyInputs: prevState.currencyInputs,
-        protocolVersion: version,
+        protocolVersion: 3,
       }))
       setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
       setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)

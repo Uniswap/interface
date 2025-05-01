@@ -103,6 +103,8 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
 
   const handleCreate = useCallback(() => {
     const isValidTx = isValidLiquidityTxContext(txInfo)
+    console.log('txInfo', txInfo)
+    console.log('isValidTx', isValidTx)
     if (
       !account ||
       account?.type !== AccountType.SignerMnemonic ||
@@ -328,7 +330,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Flex>
             ) : (
               <Flex row>
-                <Button size="large" variant="branded" onPress={handleCreate} isDisabled={!txInfo?.action}>
+                <Button size="large" variant="branded" onPress={handleCreate} isDisabled={false}>
                   {t('common.button.create')}
                 </Button>
               </Flex>
