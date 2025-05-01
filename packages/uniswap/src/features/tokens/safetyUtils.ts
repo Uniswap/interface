@@ -113,7 +113,7 @@ export function getTokenProtectionWarning(currencyInfo?: Maybe<CurrencyInfo>): T
     return TokenProtectionWarning.MaliciousImpersonator
   } else if (feeOnTransfer && feeOnTransfer >= TOKEN_PROTECTION_FOT_FEE_BREAKPOINT) {
     return TokenProtectionWarning.FotHigh
-  } else if (protectionResult === ProtectionResult.Malicious && attackType === AttackType.Other) {
+  } else if (protectionResult === ProtectionResult.Malicious) {
     return TokenProtectionWarning.MaliciousGeneral
   } else if (attackType === AttackType.Honeypot) {
     return TokenProtectionWarning.PotentialHoneypot

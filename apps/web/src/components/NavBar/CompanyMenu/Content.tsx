@@ -21,7 +21,7 @@ export const useMenuContent = (): MenuSection[] => {
     {
       title: t('common.company'),
       items: [
-        { label: t('common.careers'), href: 'https://boards.greenhouse.io/uniswaplabs' },
+        { label: t('common.careers'), href: 'https://careers.uniswap.org/' },
         { label: t('common.blog'), href: 'https://blog.uniswap.org/' },
       ],
     },

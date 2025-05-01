@@ -205,31 +205,33 @@ const v17SchemaIntermediate = {
 delete v17SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
 export const v17Schema = v17SchemaIntermediate
 
-const v18SchemaIntermediate = {
+export const v18Schema = v17Schema
+
+const v19SchemaIntermediate = {
   ...v17Schema,
   behaviorHistory: {
     ...v17Schema.behaviorHistory,
     hasViewedWelcomeWalletCard: undefined,
   },
 }
-delete v18SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
-export const v18Schema = v18SchemaIntermediate
+delete v19SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
+export const v19Schema = v19SchemaIntermediate
 
-const v19SchemaIntermediate = {
-  ...v18Schema,
+const v20SchemaIntermediate = {
+  ...v19Schema,
   visibility: {
     positions: {},
-    tokens: v18Schema.favorites.tokensVisibility,
-    nfts: v18Schema.favorites.nftsVisibility,
+    tokens: v19Schema.favorites.tokensVisibility,
+    nfts: v19Schema.favorites.nftsVisibility,
   },
   favorites: {
-    ...v18Schema.favorites,
+    ...v19Schema.favorites,
     tokensVisibility: undefined,
     nftsVisibility: undefined,
   },
 }
-delete v19SchemaIntermediate.favorites.tokensVisibility
-delete v19SchemaIntermediate.favorites.nftsVisibility
-export const v19Schema = v19SchemaIntermediate
+delete v20SchemaIntermediate.favorites.tokensVisibility
+delete v20SchemaIntermediate.favorites.nftsVisibility
+const v20Schema = v20SchemaIntermediate
 
-export const getSchema = (): typeof v19Schema => v19Schema
+export const getSchema = (): typeof v20Schema => v20Schema

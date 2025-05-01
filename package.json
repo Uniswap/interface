@@ -70,7 +70,7 @@
     "@uniswap/sdk-core": "7.7.2",
     "@uniswap/v2-sdk": "4.15.2",
     "@vercel/og@0.5.8": "patch:@vercel/og@npm%3A0.5.8#./.yarn/patches/@vercel-og-npm-0.5.8-83a79f2744.patch",
-    "@walletconnect/ethereum-provider": "2.17.1",
+    "@walletconnect/ethereum-provider": "2.20.0",
     "@xmldom/xmldom": "0.7.7",
     "cheerio": "1.0.0-rc.12",
     "cypress": "13.7.3",

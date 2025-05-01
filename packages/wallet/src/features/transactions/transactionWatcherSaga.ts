@@ -12,15 +12,16 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
 import { findLocalGasStrategy } from 'uniswap/src/features/gas/utils'
-import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
+import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { pushNotification, setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { refetchGQLQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchGQLQueriesSaga'
 import {
-  FLASHBOTS_DEFAULT_BLOCK_RANGE,
+  FLASHBOTS_DEFAULT_REFUND_PERCENT,
   waitForFlashbotsProtectReceipt,
 } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
+import { DEFAULT_FLASHBOTS_ENABLED } from 'uniswap/src/features/providers/createEthersProvider'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -652,7 +653,20 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       if (status === TransactionStatus.Success) {
         logSwapSuccess({ ...baseProperties, hash })
       } else {
+        // Log to amplitude
         sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, { ...baseProperties, hash })
+        // Log to datadog
+        if (type === TransactionType.Swap && status === TransactionStatus.Failed) {
+          logger.warn('swapFlowLoggers', 'logSwapFinalized', 'Onchain Swap Failure', {
+            hash,
+            chainId,
+            quoteId,
+            inputCurrencyId,
+            outputCurrencyId,
+            gasUsed,
+            gasUseEstimate,
+          })
+        }
       }
     }
   }
@@ -675,39 +689,33 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
 }
 
 export function logTransactionTimeout(transaction: TransactionDetails) {
-  const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
-    DynamicConfigs.MainnetPrivateRpc,
-    MainnetPrivateRpcConfigKey.UseFlashbots,
-    false,
+  const flashbotsEnabled = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, boolean>(
+    Experiments.PrivateRpc,
+    PrivateRpcProperties.FlashbotsEnabled,
+    DEFAULT_FLASHBOTS_ENABLED,
   )
 
-  const flashbotsBlockRange = getDynamicConfigValue<
-    DynamicConfigs.MainnetPrivateRpc,
-    MainnetPrivateRpcConfigKey,
-    number
-  >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.FlashbotsBlockRange, FLASHBOTS_DEFAULT_BLOCK_RANGE)
-
-  const sendAuthenticationHeader = getDynamicConfigValue<
-    DynamicConfigs.MainnetPrivateRpc,
-    MainnetPrivateRpcConfigKey,
-    boolean
-  >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
+  const flashbotsRefundPercent = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, number>(
+    Experiments.PrivateRpc,
+    PrivateRpcProperties.RefundPercent,
+    FLASHBOTS_DEFAULT_REFUND_PERCENT,
+  )
 
   sendAnalyticsEvent(WalletEventName.PendingTransactionTimeout, {
-    use_flashbots: useFlashbots,
-    flashbots_block_range: flashbotsBlockRange,
-    send_authentication_header: sendAuthenticationHeader,
+    use_flashbots: flashbotsEnabled,
+    flashbots_refund_percent: flashbotsRefundPercent,
     chain_id: transaction.chainId,
     tx_hash: transaction.hash,
+    address: transaction.from,
     private_rpc: (isClassic(transaction) && transaction.options.submitViaPrivateRpc) ?? false,
   })
 
   logger.warn('transactionWatcherSaga', 'logTransactionTimeout', 'Transaction timed out', {
     chain_id: transaction.chainId,
-    use_flashbots: useFlashbots,
-    flashbots_block_range: flashbotsBlockRange,
-    send_authentication_header: sendAuthenticationHeader,
+    flashbots_enabled: flashbotsEnabled,
+    flashbots_refund_percent: flashbotsRefundPercent,
     transaction,
+    address: transaction.from,
   })
 }
 

@@ -2,15 +2,7 @@ import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getTokensOrderByMenuLabel, getTokensOrderBySelectedLabel } from 'src/features/explore/utils'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import {
-  Chart,
-  ChartPie,
-  ChartPyramid,
-  CheckCircleFilled,
-  RotatableChevron,
-  TrendDown,
-  TrendUp,
-} from 'ui/src/components/icons'
+import { Chart, ChartPie, ChartPyramid, CheckCircleFilled, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
@@ -114,23 +106,21 @@ function _SortButton({ orderBy, onOrderByChange }: FilterGroupProps): JSX.Elemen
   }, [MenuItem, menuActions, handleOrderByChange])
 
   return (
-    <ActionSheetDropdown options={options} showArrow={false} styles={{ alignment: 'right' }}>
-      <Flex
-        row
-        centered
-        backgroundColor="$surface3"
-        borderRadius="$rounded20"
-        gap="$spacing4"
-        pl="$spacing12"
-        pr="$spacing8"
-        py="$spacing8"
-      >
+    <Flex
+      row
+      centered
+      backgroundColor="$surface3"
+      borderRadius="$rounded20"
+      gap="$spacing4"
+      pl="$spacing12"
+      pr="$spacing8"
+    >
+      <ActionSheetDropdown showArrow options={options} styles={{ alignment: 'right' }}>
         <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
           {getTokensOrderBySelectedLabel(orderBy, t)}
         </Text>
-        <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
-      </Flex>
-    </ActionSheetDropdown>
+      </ActionSheetDropdown>
+    </Flex>
   )
 }
 

@@ -27,6 +27,8 @@ import { TestMnemonic } from 'src/app/features/onboarding/create/TestMnemonic'
 import { ViewMnemonic } from 'src/app/features/onboarding/create/ViewMnemonic'
 import { ImportMnemonic } from 'src/app/features/onboarding/import/ImportMnemonic'
 import { InitiatePasskeyAuth } from 'src/app/features/onboarding/import/InitiatePasskeyAuth'
+import { PasskeyImport } from 'src/app/features/onboarding/import/PasskeyImport'
+import { PasskeyImportContextProvider } from 'src/app/features/onboarding/import/PasskeyImportContextProvider'
 import { SelectImportMethod } from 'src/app/features/onboarding/import/SelectImportMethod'
 import { SelectWallets } from 'src/app/features/onboarding/import/SelectWallets'
 import { IntroScreen } from 'src/app/features/onboarding/intro/IntroScreen'
@@ -43,7 +45,6 @@ import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebu
 import { getReduxPersistor } from 'src/store/store'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 
 const supportsSidePanel = checksIfSupportsSidePanel()
@@ -107,9 +108,11 @@ const allRoutes = [
     path: OnboardingRoutes.ImportPasskey,
     element: (
       <OnboardingStepsProvider
+        ContainerComponent={PasskeyImportContextProvider}
         key={OnboardingRoutes.ImportPasskey}
         steps={{
           [ImportPasskeySteps.InitiatePasskeyAuth]: <InitiatePasskeyAuth />,
+          [ImportPasskeySteps.PasskeyImport]: <PasskeyImport />,
           // TODO(WALL-6383): modify this flow to ask user to verify their seed phrase.
           [ImportOnboardingSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Import} />,
           [ImportOnboardingSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Import} />,
@@ -210,10 +213,8 @@ export default function OnboardingApp(): JSX.Element {
   return (
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Onboarding}>
-        <UnitagUpdaterContextProvider>
-          <PrimaryAppInstanceDebuggerLazy />
-          <RouterProvider router={router} />
-        </UnitagUpdaterContextProvider>
+        <PrimaryAppInstanceDebuggerLazy />
+        <RouterProvider router={router} />
       </BaseAppContainer>
     </PersistGate>
   )

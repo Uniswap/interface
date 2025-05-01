@@ -76,6 +76,8 @@ export const TestID = {
   PriceExplorerAnimatedNumber: 'price-explorer-animated-number',
   PriceExplorerChart: 'price-explorer-chart',
   PriceText: 'price-text',
+  RangeInputIncrement: 'range-input-increment',
+  RangeInputDecrement: 'range-input-decrement',
   ReadMoreButton: 'read-more-button',
   Remove: 'remove',
   RelativePriceChange: 'relative-price-change',

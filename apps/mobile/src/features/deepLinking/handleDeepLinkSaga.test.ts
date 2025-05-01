@@ -2,6 +2,7 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { navigationRef } from 'src/app/navigation/navigationRef'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { DeepLinkAction } from 'src/features/deepLinking/deepLinkUtils'
 import {
   handleDeepLink,
@@ -14,10 +15,9 @@ import {
 } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
-import { openModal, OpenModalParams } from 'src/features/modals/modalSlice'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   SAMPLE_CURRENCY_ID_1,
@@ -223,16 +223,10 @@ describe(handleDeepLink, () => {
     const path = `nfts/asset/${SAMPLE_SEED_ADDRESS_1}/123`
     const pathUrl = `${UNISWAP_WEB_URL}/${path}`
     const hashedUrl = `${UNISWAP_WEB_URL}/#/${path}`
-    const expectedModal: OpenModalParams = {
-      name: ModalName.Explore,
-      initialState: {
-        screen: MobileScreens.NFTItem,
-        params: {
-          address: SAMPLE_SEED_ADDRESS_1,
-          tokenId: '123',
-          isSpam: false,
-        },
-      },
+    const expectedModalState = {
+      address: SAMPLE_SEED_ADDRESS_1,
+      tokenId: '123',
+      isSpam: false,
     }
 
     await expectSaga(handleDeepLink, {
@@ -244,7 +238,7 @@ describe(handleDeepLink, () => {
     })
       .withState(stateWithActiveAccountAddress)
       .call(handleUniswapAppDeepLink, `#/${path}`, hashedUrl, LinkSource.Share)
-      .put(openModal(expectedModal))
+      .call(navigate, MobileScreens.NFTItem, expectedModalState)
       .returns(undefined)
       .silentRun()
 
@@ -257,7 +251,7 @@ describe(handleDeepLink, () => {
     })
       .withState(stateWithActiveAccountAddress)
       .call(handleUniswapAppDeepLink, path, pathUrl, LinkSource.Share)
-      .put(openModal(expectedModal))
+      .call(navigate, MobileScreens.NFTItem, expectedModalState)
       .returns(undefined)
       .silentRun()
   })
@@ -266,14 +260,8 @@ describe(handleDeepLink, () => {
     const path = `nfts/collection/${SAMPLE_SEED_ADDRESS_1}`
     const pathUrl = `${UNISWAP_WEB_URL}/${path}`
     const hashedUrl = `${UNISWAP_WEB_URL}/#/${path}`
-    const expectedModal: OpenModalParams = {
-      name: ModalName.Explore,
-      initialState: {
-        screen: MobileScreens.NFTCollection,
-        params: {
-          collectionAddress: SAMPLE_SEED_ADDRESS_1,
-        },
-      },
+    const expectedModalState = {
+      collectionAddress: SAMPLE_SEED_ADDRESS_1,
     }
 
     await expectSaga(handleDeepLink, {
@@ -285,7 +273,7 @@ describe(handleDeepLink, () => {
     })
       .withState(stateWithActiveAccountAddress)
       .call(handleUniswapAppDeepLink, `#/${path}`, hashedUrl, LinkSource.Share)
-      .put(openModal(expectedModal))
+      .call(navigate, MobileScreens.NFTCollection, expectedModalState)
       .returns(undefined)
       .silentRun()
 
@@ -298,7 +286,7 @@ describe(handleDeepLink, () => {
     })
       .withState(stateWithActiveAccountAddress)
       .call(handleUniswapAppDeepLink, path, pathUrl, LinkSource.Share)
-      .put(openModal(expectedModal))
+      .call(navigate, MobileScreens.NFTCollection, expectedModalState)
       .returns(undefined)
       .silentRun()
   })
@@ -307,14 +295,8 @@ describe(handleDeepLink, () => {
     const path = `tokens/ethereum/${SAMPLE_SEED_ADDRESS_1}`
     const pathUrl = `${UNISWAP_WEB_URL}/${path}`
     const hashedUrl = `${UNISWAP_WEB_URL}/#/${path}`
-    const expectedModal: OpenModalParams = {
-      name: ModalName.Explore,
-      initialState: {
-        screen: MobileScreens.TokenDetails,
-        params: {
-          currencyId: `1-${SAMPLE_SEED_ADDRESS_1}`,
-        },
-      },
+    const expectedModalState = {
+      currencyId: `1-${SAMPLE_SEED_ADDRESS_1}`,
     }
 
     await expectSaga(handleDeepLink, {
@@ -326,7 +308,7 @@ describe(handleDeepLink, () => {
     })
       .withState(stateWithActiveAccountAddress)
       .call(handleUniswapAppDeepLink, `#/${path}`, hashedUrl, LinkSource.Share)
-      .put(openModal(expectedModal))
+      .call(navigate, MobileScreens.TokenDetails, expectedModalState)
       .returns(undefined)
       .silentRun()
 
@@ -339,7 +321,7 @@ describe(handleDeepLink, () => {
     })
       .withState(stateWithActiveAccountAddress)
       .call(handleUniswapAppDeepLink, path, pathUrl, LinkSource.Share)
-      .put(openModal(expectedModal))
+      .call(navigate, MobileScreens.TokenDetails, expectedModalState)
       .returns(undefined)
       .silentRun()
   })
@@ -389,14 +371,8 @@ describe(handleDeepLink, () => {
     const path = `address/${SAMPLE_SEED_ADDRESS_2}`
     const pathUrl = `${UNISWAP_WEB_URL}/${path}`
     const hashedUrl = `${UNISWAP_WEB_URL}/#/${path}`
-    const expectedModal: OpenModalParams = {
-      name: ModalName.Explore,
-      initialState: {
-        screen: MobileScreens.ExternalProfile,
-        params: {
-          address: SAMPLE_SEED_ADDRESS_2,
-        },
-      },
+    const expectedModalState = {
+      address: SAMPLE_SEED_ADDRESS_2,
     }
 
     await expectSaga(handleDeepLink, {
@@ -408,7 +384,7 @@ describe(handleDeepLink, () => {
     })
       .withState(stateWithActiveAccountAddress)
       .call(handleUniswapAppDeepLink, `#/${path}`, hashedUrl, LinkSource.Share)
-      .put(openModal(expectedModal))
+      .call(navigate, MobileScreens.ExternalProfile, expectedModalState)
       .returns(undefined)
       .silentRun()
 
@@ -421,7 +397,7 @@ describe(handleDeepLink, () => {
     })
       .withState(stateWithActiveAccountAddress)
       .call(handleUniswapAppDeepLink, path, pathUrl, LinkSource.Share)
-      .put(openModal(expectedModal))
+      .call(navigate, MobileScreens.ExternalProfile, expectedModalState)
       .returns(undefined)
       .silentRun()
   })

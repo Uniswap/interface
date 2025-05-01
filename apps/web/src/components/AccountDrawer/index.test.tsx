@@ -1,11 +1,11 @@
 import AccountDrawer, { MODAL_WIDTH } from 'components/AccountDrawer'
-import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
+import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
 import mockMediaSize from 'test-utils/mockMediaSize'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 
-jest.mock('hooks/useUniswapWalletOptions', () => ({
-  useIsUniExtensionAvailable: jest.fn(),
+jest.mock('hooks/useIsUniExtensionConnected', () => ({
+  useIsUniExtensionConnected: jest.fn(),
 }))
 
 jest.mock('tamagui', () => ({
@@ -15,7 +15,7 @@ jest.mock('tamagui', () => ({
 
 describe('AccountDrawer tests', () => {
   it('AccountDrawer default styles', () => {
-    mocked(useIsUniExtensionAvailable).mockReturnValue(true)
+    mocked(useIsUniExtensionConnected).mockReturnValue(true)
     mockMediaSize('xxl')
 
     const { asFragment } = render(<AccountDrawer />)

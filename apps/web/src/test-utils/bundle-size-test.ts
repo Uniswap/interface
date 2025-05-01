@@ -32,10 +32,19 @@ const entryGzipSize = report.reduce(
   0,
 )
 
-// somewhat arbitrary, based on current size (2/11/2025)
-const limit = 2_400_000
+const maxBuffer = 50_000
+// somewhat arbitrary, based on current size (4/18/2025)
+const limit = 2_200_000
+
 if (entryGzipSize > limit) {
   console.error(`Bundle size has grown too big! Entry JS size is ${entryGzipSize}, over the limit of ${limit}.`)
+  process.exit(1)
+}
+
+if (entryGzipSize + maxBuffer < limit) {
+  console.error(
+    `Bundle size has too much buffer! Entry JS size is ${entryGzipSize}, less than the limit of ${limit}. Please bump down the limit to be within ${maxBuffer} of the current bundle size to ensure we retain our bundle size gains!`,
+  )
   process.exit(1)
 }
 

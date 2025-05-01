@@ -76,6 +76,7 @@ export type { DropdownButtonProps } from './components/buttons/DropdownButton/ty
 export { IconButton, type IconButtonProps } from './components/buttons/IconButton/IconButton'
 export * from './components/buttons/PlusMinusButton'
 export * from './components/checkbox'
+export * from './components/dropdownMenuSheet/DropdownMenuSheetItem'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'
 export * from './components/input/utils'
 export { Flex, Inset, Separator, flexStyles, type FlexProps } from './components/layout'

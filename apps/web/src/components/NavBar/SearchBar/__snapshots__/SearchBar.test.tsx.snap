@@ -25,6 +25,11 @@ exports[`disable nft on searchbar should render searchbar on larger screen 1`] =
 }
 
 .c0 {
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  height: 42px;
   position: relative;
 }
 

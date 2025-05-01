@@ -1,5 +1,5 @@
 import { PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import {
   PasswordErrors,
   PasswordStrength,

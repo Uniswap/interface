@@ -1,3 +1,4 @@
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
@@ -7,6 +8,7 @@ import {
   useDepositContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { DisplayCurrentPrice } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { useCallback } from 'react'
@@ -39,7 +41,8 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
   const { setStep, derivedPositionInfo, positionState } = useCreatePositionContext()
   const { reset: resetPriceRangeState } = usePriceRangeContext()
   const { reset: resetDepositState } = useDepositContext()
-  const { currencies, protocolVersion } = derivedPositionInfo
+
+  const { creatingPoolOrPair, currencies, protocolVersion, defaultInitialPrice } = derivedPositionInfo
   const { fee, hook } = positionState
   const [token0, token1] = currencies
   const versionLabel = getProtocolVersionLabel(protocolVersion)
@@ -72,7 +75,11 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
             </Flex>
           </Flex>
         </Flex>
-        <CreatingPoolInfo />
+        {creatingPoolOrPair ? (
+          <CreatingPoolInfo />
+        ) : derivedPositionInfo.protocolVersion === ProtocolVersion.V2 ? (
+          <DisplayCurrentPrice price={defaultInitialPrice} />
+        ) : null}
       </Flex>
     </EditStep>
   )

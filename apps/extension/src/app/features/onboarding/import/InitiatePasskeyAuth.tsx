@@ -1,12 +1,20 @@
 import { Action, AuthenticationTypes } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
+import { usePasskeyImportContext } from 'src/app/features/onboarding/import/PasskeyImportContextProvider'
+import {
+  InitiatePasskeyAuthLocationState,
+  SelectImportMethodLocationState,
+} from 'src/app/features/onboarding/import/types'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
-import { Flex, SpinningLoader, Text } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
-import { fetchExportSeedPhraseRequest } from 'uniswap/src/data/rest/embeddedWallet/requests'
+import { navigate } from 'src/app/navigation/state'
+import { bringWindowToFront, closeWindow, openPopupWindow } from 'src/app/navigation/utils'
+import { Button, Flex, IconButton, SpinningLoader, Text } from 'ui/src'
+import { X } from 'ui/src/components/icons'
+import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
+import { fetchChallengeRequest } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { parseMessage } from 'uniswap/src/extension/messagePassing/platform'
 import {
   ExtensionToInterfaceRequestType,
@@ -15,14 +23,13 @@ import {
   PasskeySignInFlowOpenedSchema,
 } from 'uniswap/src/extension/messagePassing/types/requests'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
-import { getSecuredChallengeOptions } from 'uniswap/src/features/passkey/embeddedWallet'
 import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useInterval } from 'utilities/src/time/timing'
 import { v4 as uuid } from 'uuid'
-import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 /**************************************************************************************************************
  *
@@ -68,12 +75,13 @@ import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
  *
  **************************************************************************************************************/
 
-export const IMPORT_PASSKEY_STATE_KEY = 'importPasskey'
+const POPUP_WIDTH = 420
+const POPUP_HEIGHT = 335
 
 export function InitiatePasskeyAuth(): JSX.Element {
-  const { state } = useLocation()
+  const locationState = useLocation().state as InitiatePasskeyAuthLocationState | undefined
 
-  if (!state || !state[IMPORT_PASSKEY_STATE_KEY]) {
+  if (!locationState?.importPasskey) {
     // This prevents someone else linking directly to this page from a 3rd party website.
     return <Navigate to={`/${TopLevelRoutes.Onboarding}`} replace />
   }
@@ -83,18 +91,30 @@ export function InitiatePasskeyAuth(): JSX.Element {
 
 function InitiatePasskeyAuthContent(): JSX.Element {
   const { t } = useTranslation()
-  const navigate = useNavigate()
 
   const webAppBaseUrl = useEmbeddedWalletBaseUrl()
 
   const { goToNextStep } = useOnboardingSteps()
-  const { addOnboardingAccountMnemonic } = useOnboardingContext()
+  const { importWithCredential } = usePasskeyImportContext()
 
   const initiated = useRef(false)
-  const [loading, setLoading] = useState(false)
+
+  const handleError = (error: unknown, sourceFunction: string): void => {
+    logger.error(error, {
+      tags: {
+        file: 'InitiatePasskeyAuth.tsx',
+        function: sourceFunction,
+      },
+    })
+    navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`, {
+      replace: true,
+      state: { showErrorMessage: true } satisfies SelectImportMethodLocationState,
+    })
+  }
+
+  const popupWindow = useRef<chrome.windows.Window | undefined>(undefined)
 
   useEffect(() => {
-    let popupWindow: chrome.windows.Window | undefined
     let handleMessagePasskeySignInFlowOpened: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
     let handleMessagePasskeyCredentialRetrieved: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
 
@@ -107,12 +127,10 @@ function InitiatePasskeyAuthContent(): JSX.Element {
 
       try {
         const requestId = uuid()
-        const publicKeyBase64 = await Keyring.generateKeyPairForPasskeyWallet()
 
-        const securedChallengeOptions = await getSecuredChallengeOptions({
+        const challengeResponse = await fetchChallengeRequest({
           type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
           action: Action.EXPORT_SEED_PHRASE,
-          b64EncryptionPublicKey: publicKeyBase64,
         })
 
         handleMessagePasskeyCredentialRetrieved = async (message: unknown) => {
@@ -127,41 +145,14 @@ function InitiatePasskeyAuthContent(): JSX.Element {
               'InitiatePasskeyAuth.tsx',
               'handleMessagePasskeyCredentialRetrieved',
               'Mismatched request ID',
-              {
-                requestId,
-                message,
-              },
+              { requestId, message },
             )
             return
           }
 
-          closePopupWindow(popupWindow)
-          setLoading(true)
-
-          try {
-            const seedPhraseResp = await fetchExportSeedPhraseRequest({
-              encryptionKey: publicKeyBase64,
-              credential: parsedMessage.credential,
-            })
-
-            const seedPhrase = await Keyring.decryptMnemonicForPasskey(
-              seedPhraseResp.encryptedSeedPhrase,
-              publicKeyBase64,
-            )
-
-            addOnboardingAccountMnemonic(seedPhrase.split(' '))
-            goToNextStep()
-          } catch (e) {
-            logger.error(e, {
-              tags: {
-                file: 'InitiatePasskeyAuth.tsx',
-                function: 'handleMessagePasskeyCredentialRetrieved',
-              },
-            })
-
-            // TODO(WALL-6378): discuss how to better handle this error instead of simply redirecting back. Should we show the help modal?
-            navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`, { replace: true })
-          }
+          closeWindow(popupWindow.current)
+          importWithCredential(parsedMessage.credential)
+          goToNextStep()
         }
 
         chrome.runtime.onMessageExternal.addListener(handleMessagePasskeyCredentialRetrieved)
@@ -171,94 +162,135 @@ function InitiatePasskeyAuthContent(): JSX.Element {
           _sender: unknown,
           sendResponse: (response: unknown) => void,
         ) => {
-          logger.debug('InitiatePasskeyAuth.tsx', 'handleMessagePasskeySignInFlowOpened', 'Message received', {
-            message,
-          })
-
-          const parsedMessage = parseMessage(message, PasskeySignInFlowOpenedSchema)
-
-          if (!parsedMessage) {
-            return
-          }
-
-          if (parsedMessage.requestId !== requestId) {
-            logger.debug('InitiatePasskeyAuth.tsx', 'handleMessagePasskeySignInFlowOpened', 'Mismatched request ID', {
-              requestId,
+          try {
+            logger.debug('InitiatePasskeyAuth.tsx', 'handleMessagePasskeySignInFlowOpened', 'Message received', {
               message,
             })
-            return
+
+            const parsedMessage = parseMessage(message, PasskeySignInFlowOpenedSchema)
+
+            if (!parsedMessage) {
+              return
+            }
+
+            if (parsedMessage.requestId !== requestId) {
+              logger.debug('InitiatePasskeyAuth.tsx', 'handleMessagePasskeySignInFlowOpened', 'Mismatched request ID', {
+                requestId,
+                message,
+              })
+              return
+            }
+
+            logger.debug(
+              'InitiatePasskeyAuth.tsx',
+              'handleMessagePasskeySignInFlowOpened',
+              `Sending message: ${ExtensionToInterfaceRequestType.PasskeyRequest}`,
+            )
+
+            sendResponse({
+              type: ExtensionToInterfaceRequestType.PasskeyRequest,
+              requestId,
+              challengeJson: challengeResponse.challengeOptions,
+            } satisfies PasskeyRequest)
+          } catch (e) {
+            handleError(e, 'handleMessagePasskeySignInFlowOpened')
           }
-
-          logger.debug(
-            'InitiatePasskeyAuth.tsx',
-            'handleMessagePasskeySignInFlowOpened',
-            `Sending message: ${ExtensionToInterfaceRequestType.PasskeyRequest}`,
-          )
-
-          sendResponse({
-            type: ExtensionToInterfaceRequestType.PasskeyRequest,
-            requestId,
-            challengeJson: securedChallengeOptions,
-          } satisfies PasskeyRequest)
         }
 
         chrome.runtime.onMessageExternal.addListener(handleMessagePasskeySignInFlowOpened)
 
-        // TODO(WALL-6374): center the popup window on the screen
-        popupWindow = await chrome.windows.create({
+        popupWindow.current = await openPopupWindow({
           url: `${webAppBaseUrl}${EXTENSION_PASSKEY_AUTH_PATH}?request_id=${requestId}`,
-          type: 'popup',
-          width: 420,
-          height: 335,
+          width: POPUP_WIDTH,
+          height: POPUP_HEIGHT,
         })
       } catch (e) {
-        logger.error(e, {
-          tags: {
-            file: 'InitiatePasskeyAuth.tsx',
-            function: 'initiatePasskeyAuth',
-          },
-        })
+        handleError(e, 'initiatePasskeyAuth')
       }
     }
 
     initiatePasskeyAuth()
 
     return () => {
-      closePopupWindow(popupWindow)
+      closeWindow(popupWindow.current)
       chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeySignInFlowOpened)
       chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeyCredentialRetrieved)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const [showBringWindowToFrontButton, setShowBringWindowToFrontButton] = useState(false)
+
+  // Checks if the popup window is still open.
+  // If it is not, then the user has closed the window and we simply navigate back to the select import method screen.
+  useInterval(async () => {
+    const windowId = popupWindow.current?.id ?? null
+
+    if (windowId === null) {
+      return
+    }
+
+    try {
+      // Will throw if window does not exist anymore.
+      await chrome.windows.get(windowId)
+      setShowBringWindowToFrontButton(true)
+    } catch (e) {
+      // Window does not exist anymore.
+      navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`, {
+        replace: true,
+      })
+    }
+  }, 1000)
+
+  const onBringWindowToFront = useEvent(async () => {
+    const windowId = popupWindow.current?.id ?? null
+
+    if (windowId === null) {
+      return
+    }
+
+    try {
+      await bringWindowToFront(windowId, { centered: true })
+    } catch (e) {
+      logger.error(e, {
+        tags: {
+          file: 'InitiatePasskeyAuth.tsx',
+          function: 'onBringWindowToFront',
+        },
+      })
+    }
+  })
+
   return (
     <Trace
       logImpression
       properties={{ flow: ExtensionOnboardingFlow.Import }}
-      screen={ExtensionOnboardingScreens.SelectImportMethod}
+      screen={ExtensionOnboardingScreens.InitiatePasskeyAuth}
     >
-      <Flex gap="$spacing16">
-        {loading ? (
-          <SpinningLoader size={iconSizes.icon48} />
-        ) : (
-          <Text>{t('onboarding.importPasskey.continueInSecureWindow')}</Text>
-        )}
+      <Flex row position="absolute" top="$spacing24" right="$spacing24">
+        <IconButton
+          size="small"
+          emphasis="secondary"
+          icon={<X />}
+          onPress={() => navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`)}
+        />
+      </Flex>
+
+      <Flex gap="$spacing32" centered>
+        <UniswapLogo size={80} />
+
+        <Text>{t('onboarding.importPasskey.continueInSecureWindow')}</Text>
+
+        <Flex row height={35} centered>
+          {showBringWindowToFrontButton ? (
+            <Button emphasis="secondary" size="small" onPress={onBringWindowToFront}>
+              {t('onboarding.importPasskey.bringWindowToFront')}
+            </Button>
+          ) : (
+            <SpinningLoader />
+          )}
+        </Flex>
       </Flex>
     </Trace>
   )
-}
-
-function closePopupWindow(popupWindow: chrome.windows.Window | undefined): void {
-  if (!popupWindow?.id) {
-    return
-  }
-
-  chrome.windows.remove(popupWindow.id).catch((error) => {
-    logger.error(error, {
-      tags: {
-        file: 'InitiatePasskeyAuth.tsx',
-        function: 'closePopupWindow',
-      },
-    })
-  })
 }

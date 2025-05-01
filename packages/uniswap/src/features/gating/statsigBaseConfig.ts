@@ -7,6 +7,5 @@ export const statsigBaseConfig: StatsigOptions = {
   environment: {
     tier: getStatsigEnvName(),
   },
-  disableLogging: true,
   overrideAdapter: getOverrideAdapter(),
 }

@@ -11,7 +11,8 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { EthMethod, EthSignMethod } from 'uniswap/src/types/walletConnect'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { EthSignMethod } from 'uniswap/src/types/walletConnect'
 import { GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappRequests/types'
 
 /**

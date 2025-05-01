@@ -3,8 +3,13 @@ import dottedBackgroundDark from 'assets/images/dotted-grid-dark.png'
 import dottedBackground from 'assets/images/dotted-grid.png'
 import tokenLogo from 'assets/images/token-logo.png'
 import { formatTokenAmount } from 'components/Liquidity/utils'
+import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
+import { lpIncentivesLastClaimedAtom } from 'hooks/useLpIncentives'
+import { useAtom } from 'jotai'
+import ms from 'ms'
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import {
   Button,
   Flex,
@@ -24,7 +29,6 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
-import { UNI } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -38,24 +42,26 @@ interface LpIncentiveRewardsCardProps {
   token?: Token
   chainIds?: number[]
   setTokenRewards: (value: string) => void
-  hasCollectedRewards: boolean
+  initialHasCollectedRewards: boolean
 }
+
+const FIVE_MINUTES_MS = ms('5m')
 
 function LpIncentiveRewardsCard({
   onCollectRewards,
-  token = UNI[UniverseChainId.Mainnet],
+  token = LP_INCENTIVES_REWARD_TOKEN,
   walletAddress,
   chainIds = [UniverseChainId.Mainnet as number],
   setTokenRewards,
-  hasCollectedRewards,
+  initialHasCollectedRewards,
 }: LpIncentiveRewardsCardProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const shadowPropsShort = useShadowPropsShort()
   const shadowPropsMedium = useShadowPropsMedium()
   const isDarkMode = useIsDarkMode()
   const media = useMedia()
   const isSmallScreen = media.sm
-  const showRewards = !!walletAddress
 
   const {
     data: rewardsData,
@@ -63,34 +69,58 @@ function LpIncentiveRewardsCard({
     error,
   } = useGetPoolsRewards({ walletAddress, chainIds }, Boolean(walletAddress))
 
-  // TODO | LP_INCENTIVES: determine number of decimals to show in claim modal
-  // Also determine what constitutes a claimable amount (i.e. is 0.0001 a claimable amount?)
+  const [lastClaimed, setLastClaimed] = useAtom(lpIncentivesLastClaimedAtom)
+
+  // TODO: refactor business logic into separate hook
+  // Determine if rewards are effectively claimed, considering initial state and recent optimistic updates
+  const effectivelyClaimed = useMemo(() => {
+    if (initialHasCollectedRewards) {
+      return true
+    }
+    if (!lastClaimed || !rewardsData?.totalUnclaimedAmountUni) {
+      return false
+    }
+
+    const timeDiff = Date.now() - lastClaimed.timestamp
+
+    return timeDiff < FIVE_MINUTES_MS && rewardsData.totalUnclaimedAmountUni === lastClaimed.amount
+  }, [initialHasCollectedRewards, lastClaimed, rewardsData?.totalUnclaimedAmountUni])
+
   const { lpIncentiveRewards, userHasRewards } = useMemo(() => {
-    // If rewards have been claimed, return 0 regardless of fetched data
-    if (hasCollectedRewards) {
+    if (effectivelyClaimed) {
       return {
         lpIncentiveRewards: '0',
         userHasRewards: false,
       }
     }
 
+    const threshold = BigInt(10) ** BigInt(token.decimals - 3)
     const rewards = rewardsData?.totalUnclaimedAmountUni ?? '0'
     return {
       lpIncentiveRewards: formatTokenAmount(rewards, token.decimals),
-      userHasRewards: BigInt(rewards) > BigInt(0),
+      userHasRewards: BigInt(rewards) >= threshold, // Returns true if rewards are at least 0.001 UNI
     }
-  }, [rewardsData?.totalUnclaimedAmountUni, token.decimals, hasCollectedRewards])
+  }, [effectivelyClaimed, rewardsData?.totalUnclaimedAmountUni, token.decimals])
+
+  const isCollectButtonDisabled = useMemo(() => Boolean(!userHasRewards || error), [userHasRewards, error])
 
   useEffect(() => {
     // If rewards have been claimed, set token rewards to 0
-    if (hasCollectedRewards) {
+    if (effectivelyClaimed) {
       setTokenRewards('0')
       return
     }
 
     const rewards = rewardsData?.totalUnclaimedAmountUni ?? '0'
     setTokenRewards(rewards)
-  }, [rewardsData?.totalUnclaimedAmountUni, setTokenRewards, hasCollectedRewards])
+  }, [rewardsData?.totalUnclaimedAmountUni, setTokenRewards, effectivelyClaimed])
+
+  // Clear last claimed from local storage if timestamp past expiration
+  useEffect(() => {
+    if (lastClaimed && Date.now() - lastClaimed.timestamp > FIVE_MINUTES_MS) {
+      setLastClaimed(null)
+    }
+  }, [lastClaimed, setLastClaimed])
 
   const renderRewardsAmount = () => {
     if (isLoading) {
@@ -98,7 +128,7 @@ function LpIncentiveRewardsCard({
         <Skeleton>
           <FlexLoader
             borderRadius="$rounded4"
-            height={isSmallScreen ? 20 : 40}
+            height={isSmallScreen ? 20 : 36}
             opacity={0.4}
             width={isSmallScreen ? 46 : 100}
             marginBottom="$spacing4"
@@ -125,7 +155,7 @@ function LpIncentiveRewardsCard({
   return (
     <TouchableArea group cursor="default">
       <Flex
-        height={showRewards ? (isSmallScreen ? 142 : 192) : 95}
+        height={isSmallScreen ? 142 : 192}
         p={isSmallScreen ? '$spacing16' : '$spacing24'}
         justifyContent="space-between"
         backgroundColor="$surface2"
@@ -150,74 +180,70 @@ function LpIncentiveRewardsCard({
           transition="transform 0.2s ease-out"
           $group-hover={{ transform: 'scale(1.2)' }}
         />
-        {showRewards && (
-          <Flex row justifyContent="space-between">
-            <Flex width="100%" gap="$spacing2">
-              <Flex row justifyContent="space-between">
-                <Flex row gap="$spacing8" alignItems="center">
-                  {renderRewardsAmount()}
-                  {!error && (
-                    <Image
-                      src={tokenLogo}
-                      width={isSmallScreen ? 24 : 28}
-                      height={isSmallScreen ? 24 : 28}
-                      objectFit="cover"
-                    />
-                  )}
-                </Flex>
-                <Button
-                  emphasis="primary"
-                  size={isSmallScreen ? 'xxsmall' : 'small'}
-                  maxWidth="fit-content"
-                  onPress={onCollectRewards}
-                  isDisabled={Boolean(!userHasRewards || error)}
-                >
-                  {t('pool.incentives.collectRewards')}
-                </Button>
-              </Flex>
-              <Flex row gap="$spacing6">
-                <Text variant={isSmallScreen ? 'body4' : 'body3'} color="$neutral2">
-                  {error ? t('pool.incentives.yourRewards.error') : t('pool.incentives.rewardsEarned')}
-                </Text>
-                {!isMobileWeb && (
-                  <InfoTooltip
-                    placement="top"
-                    trigger={
-                      <TouchableArea>
-                        <InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
-                      </TouchableArea>
-                    }
-                    text={
-                      <Flex gap="$spacing4">
-                        <Text variant="body4" color="$neutral1">
-                          {error
-                            ? t('pool.incentives.yourRewards.error.description')
-                            : t('pool.incentives.administeredRewards')}
-                        </Text>
-                        {!error && (
-                          <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
-                            <LearnMoreLink
-                              textVariant="buttonLabel4"
-                              url={uniswapUrls.helpArticleUrls.lpIncentiveInfo}
-                            />
-                          </Trace>
-                        )}
-                      </Flex>
-                    }
+        <Flex row justifyContent="space-between">
+          <Flex width="100%" gap="$spacing2">
+            <Flex row justifyContent="space-between">
+              <Flex row gap="$spacing8" alignItems="center">
+                {renderRewardsAmount()}
+                {!error && (
+                  <Image
+                    src={tokenLogo}
+                    width={isSmallScreen ? 24 : 28}
+                    height={isSmallScreen ? 24 : 28}
+                    objectFit="cover"
                   />
                 )}
               </Flex>
+              <Button
+                emphasis="primary"
+                size={isSmallScreen ? 'xxsmall' : 'small'}
+                maxWidth="fit-content"
+                onPress={onCollectRewards}
+                borderColor={isCollectButtonDisabled ? '$neutral3' : 'unset'}
+                isDisabled={isCollectButtonDisabled}
+              >
+                {t('pool.incentives.collectRewards')}
+              </Button>
+            </Flex>
+            <Flex row gap="$spacing6">
+              <Text variant={isSmallScreen ? 'body4' : 'body3'} color="$neutral2">
+                {error ? t('pool.incentives.yourRewards.error') : t('pool.incentives.rewardsEarned')}
+              </Text>
+              {!isMobileWeb && (
+                <InfoTooltip
+                  placement="top"
+                  trigger={
+                    <TouchableArea>
+                      <InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
+                    </TouchableArea>
+                  }
+                  text={
+                    <Flex gap="$spacing4">
+                      <Text variant="body4" color="$neutral1">
+                        {error
+                          ? t('pool.incentives.yourRewards.error.description')
+                          : t('pool.incentives.administeredRewards')}
+                      </Text>
+                      {!error && (
+                        <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
+                          <LearnMoreLink textVariant="buttonLabel4" url={uniswapUrls.helpArticleUrls.lpIncentiveInfo} />
+                        </Trace>
+                      )}
+                    </Flex>
+                  }
+                />
+              )}
             </Flex>
           </Flex>
-        )}
+        </Flex>
         <Flex gap="$spacing2">
           <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
-            <TouchableArea onPress={() => window.open(uniswapUrls.helpArticleUrls.lpIncentiveInfo, '_blank')}>
+            <TouchableArea onPress={() => navigate('/explore/pools')}>
               <Flex group="item" row gap="$spacing6" alignItems="center" hoverStyle={{ opacity: 0.8 }}>
                 <Text variant={isSmallScreen ? 'body4' : 'body3'} color="$neutral1">
                   {t('pool.incentives.uni.findMore')}
                 </Text>
-                <Flex transition="fast" $group-item-hover={{ transform: 'translateX(2px)' }}>
+                <Flex animation="simple" enterStyle={{ x: 0 }} x={0} $group-item-hover={{ x: 4 }}>
                   <ArrowRight color="$neutral1" size={isSmallScreen ? iconSizes.icon12 : iconSizes.icon16} />
                 </Flex>
               </Flex>

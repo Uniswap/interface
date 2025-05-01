@@ -1,6 +1,6 @@
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 
 export interface EditWalletSettingsModalState {
-  address?: Address
+  address: Address
   accessPoint?: UnitagScreens.UnitagConfirmation | MobileScreens.SettingsWallet
 }

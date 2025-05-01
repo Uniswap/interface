@@ -12,11 +12,11 @@ import { SendReviewScreen } from 'src/features/send/SendReviewScreen'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionModal } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
+import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { SendContextProvider, useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 export function SendFlow(): JSX.Element {

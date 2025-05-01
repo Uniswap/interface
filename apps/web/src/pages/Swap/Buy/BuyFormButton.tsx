@@ -1,5 +1,4 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { useTranslation } from 'react-i18next'
 import { Button, useIsShortMobileDevice, type ButtonProps } from 'ui/src'
@@ -24,7 +23,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
   if (!account.isConnected) {
     return (
       <Button size={buttonSize} variant="branded" emphasis="secondary" fill onPress={accountDrawer.open}>
-        <ConnectWalletButtonText />
+        {t('common.connectWallet.button')}
       </Button>
     )
   }

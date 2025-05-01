@@ -1,5 +1,4 @@
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
-import { DappResponseType } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import {
   DeprecatedEthMethods,
   ExtensionEthMethods,
@@ -8,6 +7,7 @@ import {
   UnsupportedEthMethods,
 } from 'src/contentScript/methodHandlers/requestMethods'
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
+import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { logger } from 'utilities/src/logger/logger'
 
 export function isProviderDirectMethod(method: string): boolean {

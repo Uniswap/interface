@@ -12,12 +12,11 @@ import {
   GRAPHQL_URL_OVERRIDE,
   INCLUDE_PROTOTYPE_FEATURES,
   INFURA_KEY,
+  IS_E2E_TEST,
   ONESIGNAL_APP_ID,
   QUICKNODE_ENDPOINT_NAME,
   QUICKNODE_ENDPOINT_TOKEN,
   SCANTASTIC_API_URL_OVERRIDE,
-  SIMPLEHASH_API_KEY,
-  SIMPLEHASH_API_URL,
   STATSIG_API_KEY,
   STATSIG_PROXY_URL_OVERRIDE,
   TRADING_API_KEY,
@@ -49,6 +48,7 @@ export interface Config {
   appsflyerAppId: string
   datadogClientToken: string
   datadogProjectId: string
+  isE2ETest: boolean
   forApiUrlOverride: string
   graphqlUrlOverride: string
   includePrototypeFeatures: string
@@ -57,8 +57,6 @@ export interface Config {
   quicknodeEndpointName: string
   quicknodeEndpointToken: string
   scantasticApiUrlOverride: string
-  simpleHashApiKey: string
-  simpleHashApiUrl: string
   statsigProxyUrlOverride: string
   statsigApiKey: string
   tradingApiKey: string
@@ -91,6 +89,7 @@ const _config: Config = {
   datadogClientToken:
     process.env.REACT_APP_DATADOG_CLIENT_TOKEN || process.env.DATADOG_CLIENT_TOKEN || DATADOG_CLIENT_TOKEN,
   datadogProjectId: process.env.REACT_APP_DATADOG_PROJECT_ID || process.env.DATADOG_PROJECT_ID || DATADOG_PROJECT_ID,
+  isE2ETest: process.env.IS_E2E_TEST?.toLowerCase() === 'true' || IS_E2E_TEST?.toLowerCase() === 'true',
   forApiUrlOverride: process.env.FOR_API_URL_OVERRIDE || FOR_API_URL_OVERRIDE,
   graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE || GRAPHQL_URL_OVERRIDE,
   infuraKey: process.env.REACT_APP_INFURA_KEY || INFURA_KEY,
@@ -101,8 +100,6 @@ const _config: Config = {
   quicknodeEndpointToken:
     process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN || process.env.QUICKNODE_ENDPOINT_TOKEN || QUICKNODE_ENDPOINT_TOKEN,
   scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE || SCANTASTIC_API_URL_OVERRIDE,
-  simpleHashApiKey: process.env.SIMPLEHASH_API_KEY || SIMPLEHASH_API_KEY,
-  simpleHashApiUrl: process.env.SIMPLEHASH_API_URL || SIMPLEHASH_API_URL,
   statsigApiKey: process.env.REACT_APP_STATSIG_API_KEY || process.env.STATSIG_API_KEY || STATSIG_API_KEY,
   statsigProxyUrlOverride: process.env.STATSIG_PROXY_URL_OVERRIDE || STATSIG_PROXY_URL_OVERRIDE,
   tradingApiKey: process.env.REACT_APP_TRADING_API_KEY || process.env.TRADING_API_KEY || TRADING_API_KEY,

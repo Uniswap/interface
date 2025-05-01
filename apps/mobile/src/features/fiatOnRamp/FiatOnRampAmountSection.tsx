@@ -14,9 +14,13 @@ import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 
@@ -29,7 +33,7 @@ const MIN_SCREEN_HEIGHT = 667 // iPhone SE 3rd Gen
 const MAX_CHAR_PIXEL_WIDTH = 46
 
 const PREDEFINED_ONRAMP_AMOUNTS = [100, 300, 1000]
-const PREDEFINED_OFFRAMP_PERCENTAGES = [25, 50, 75]
+const PREDEFINED_OFFRAMP_PERCENTAGES = [25, 50, 75, 100]
 
 type OnChangeAmount = (amount: string, newIsTokenInputMode?: boolean) => void
 
@@ -59,6 +63,7 @@ interface FiatOnRampAmountSectionProps {
   notAvailableInThisRegion?: boolean
   fiatCurrencyInfo: FiatCurrencyInfo
   onSelectionChange?: (start: number, end: number) => void
+  portfolioBalance?: PortfolioBalance | null
 }
 
 export type FiatOnRampAmountSectionRef = {
@@ -84,6 +89,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       sourceAmount,
       currency,
       selectTokenLoading,
+      portfolioBalance,
     },
     forwardedRef,
   ): JSX.Element {
@@ -268,6 +274,10 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
                 currentAmount={value}
                 disabled={notAvailableInThisRegion}
                 fiatCurrencyInfo={fiatCurrencyInfo}
+                // 100 is used to special-case the offramp Max Button
+                isMaxAmount={isOffRamp && amount === 100}
+                currency={currency}
+                portfolioBalance={portfolioBalance}
                 onPress={onChoosePredefinedValue}
               />
             ))}
@@ -308,6 +318,9 @@ function PredefinedAmount({
   fiatCurrencyInfo,
   disabled,
   isOffRamp,
+  isMaxAmount,
+  currency,
+  portfolioBalance,
 }: {
   amount: number
   currentAmount: string
@@ -315,11 +328,42 @@ function PredefinedAmount({
   fiatCurrencyInfo: FiatCurrencyInfo
   disabled?: boolean
   isOffRamp?: boolean
+  isMaxAmount?: boolean
+  currency?: FiatOnRampCurrency
+  portfolioBalance?: PortfolioBalance | null
 }): JSX.Element {
   const colors = useSporeColors()
   const { addFiatSymbolToNumber } = useLocalizationContext()
+  const { t } = useTranslation()
+  const currencyBalance =
+    currency?.currencyInfo?.currency && portfolioBalance?.quantity
+      ? getCurrencyAmount({
+          value: portfolioBalance.quantity.toString(),
+          valueType: ValueType.Exact,
+          currency: currency.currencyInfo.currency,
+        })
+      : undefined
+
+  const maxSpendableAmount = useMaxAmountSpend({
+    currencyAmount: currencyBalance,
+    txType: TransactionType.Send,
+  })
+
+  const handlePress = useCallback(async (): Promise<void> => {
+    if (!isOffRamp) {
+      onPress(amount.toString())
+    } else if (isMaxAmount && maxSpendableAmount && currency?.currencyInfo) {
+      onPress(maxSpendableAmount.toExact())
+    } else {
+      const percentOfBalance = (parseFloat(currencyBalance?.toExact() ?? '0') * (amount / 100)).toString()
+      onPress(percentOfBalance)
+    }
+  }, [isMaxAmount, maxSpendableAmount, currency?.currencyInfo, onPress, currencyBalance, amount, isOffRamp])
+
   const formattedAmount = isOffRamp
-    ? `${amount}%`
+    ? isMaxAmount
+      ? t('common.max')
+      : `${amount}%`
     : addFiatSymbolToNumber({
         value: amount,
         currencyCode: fiatCurrencyInfo.code,
@@ -329,12 +373,7 @@ function PredefinedAmount({
   const highlighted = currentAmount === amount.toString()
 
   return (
-    <TouchableOpacity
-      disabled={disabled}
-      onPress={async (): Promise<void> => {
-        onPress(amount.toString())
-      }}
-    >
+    <TouchableOpacity disabled={disabled} onPress={handlePress}>
       <Pill
         backgroundColor={!disabled && highlighted ? '$surface2' : '$surface1'}
         customBorderColor={disabled ? colors.surface2.val : colors.surface3.val}

@@ -5,7 +5,6 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
-import { openModal } from 'src/features/modals/modalSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -109,30 +108,28 @@ export function AccountCardItem({
     onClose()
 
     if (selectedAccount?.type === AccountType.SignerMnemonic && !onlyLabeledWallet) {
-      dispatch(
-        openModal({
-          name: ModalName.EditProfileSettingsModal,
-          initialState: { address, accessPoint: UnitagScreens.UnitagConfirmation },
-        }),
-      )
+      navigate(ModalName.EditProfileSettingsModal, {
+        address,
+        accessPoint: UnitagScreens.UnitagConfirmation,
+      })
     } else {
-      dispatch(
-        openModal({
-          name: ModalName.EditLabelSettingsModal,
-          initialState: { address, accessPoint: UnitagScreens.UnitagConfirmation },
-        }),
-      )
+      navigate(ModalName.EditLabelSettingsModal, {
+        address,
+        accessPoint: UnitagScreens.UnitagConfirmation,
+      })
     }
-  }, [selectedAccount?.type, onlyLabeledWallet, address, dispatch, onClose])
+  }, [selectedAccount?.type, onlyLabeledWallet, address, onClose])
 
   const onPressConnectionSettings = useCallback(() => {
     onClose()
 
     //Wait 300ms to open the the connection Modal and avoid overlapping animation
     setTimeout(() => {
-      dispatch(openModal({ name: ModalName.ConnectionsDappListModal, initialState: { address } }))
+      navigate(ModalName.ConnectionsDappListModal, {
+        address,
+      })
     }, MODAL_CLOSE_WAIT_TIME)
-  }, [address, dispatch, onClose])
+  }, [address, onClose])
 
   const onPressRemoveWallet = useCallback(() => {
     onClose()

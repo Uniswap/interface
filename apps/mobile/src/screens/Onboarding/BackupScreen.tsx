@@ -26,6 +26,7 @@ import { isAndroid } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup, hasExternalBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = CompositeScreenProps<
@@ -40,10 +41,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
 
-  const { getOnboardingOrImportedAccount, hasBackup } = useOnboardingContext()
+  const { getOnboardingOrImportedAccount } = useOnboardingContext()
   const onboardingContextAccount = getOnboardingOrImportedAccount()
   const activeAccount = useActiveAccount()
-  const address = onboardingContextAccount?.address || activeAccount?.address
+  const account = onboardingContextAccount || activeAccount
+  const address = account?.address
 
   const isCreatingNew =
     params?.importType === ImportType.CreateNew || params?.entryPoint === OnboardingEntryPoint.BackupCard
@@ -126,10 +128,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const showSkipOption =
-    hasBackup(address) && (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
+    hasExternalBackup(account) &&
+    (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
 
-  const hasCloudBackup = hasBackup(address, BackupType.Cloud)
-  const hasManualBackup = hasBackup(address, BackupType.Manual)
+  const hasCloudBackup = hasBackup(BackupType.Cloud, account)
+  const hasManualBackup = hasBackup(BackupType.Manual, account)
 
   const options = []
   options.push(

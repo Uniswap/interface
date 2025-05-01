@@ -52,9 +52,7 @@ import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
-  permitSignature: string | undefined
   permitData?: NullablePermit
-  permitDataLoading?: boolean
   gasFeeResult: GasFeeResult
   gasEstimate: SwapGasFeeEstimation
   swapRequestArgs: CreateSwapRequest | undefined
@@ -76,7 +74,6 @@ export function processWrapResponse({
   return {
     gasFeeResult,
     transactionRequest: wrapTxRequestWithGasFee,
-    permitSignature: undefined,
     gasEstimate,
     swapRequestArgs: undefined,
   }
@@ -183,9 +180,7 @@ export function createProcessSwapResponse({ activeGasStrategy }: { activeGasStra
     error,
     swapQuote,
     isSwapLoading,
-    signature,
     permitData,
-    permitDataLoading,
     swapRequestParams,
     isRevokeNeeded,
   }: {
@@ -193,9 +188,7 @@ export function createProcessSwapResponse({ activeGasStrategy }: { activeGasStra
     error: Error | null
     swapQuote: ClassicQuote | BridgeQuote | undefined
     isSwapLoading: boolean
-    signature: string | undefined
     permitData: NullablePermit | undefined
-    permitDataLoading: boolean
     swapRequestParams: WithV4Flag<CreateSwapRequest> | undefined
     isRevokeNeeded: boolean
   }): TransactionRequestInfo {
@@ -231,9 +224,7 @@ export function createProcessSwapResponse({ activeGasStrategy }: { activeGasStra
     return {
       gasFeeResult,
       transactionRequest: response?.swap,
-      permitSignature: signature,
       permitData,
-      permitDataLoading,
       gasEstimate,
       swapRequestArgs: swapRequestParams,
     }
@@ -292,6 +283,8 @@ export function createLogSwapRequestErrors({
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, formatter, trace }),
         // we explicitly log it here to show on Datadog dashboard
         chainLabel: getChainLabel(derivedSwapInfo.chainId),
+        requestId: quote?.requestId,
+        quoteId: swapQuote?.quoteId,
         error: result.gasFeeResult.error,
         simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined,
         txRequest: result.transactionRequest,

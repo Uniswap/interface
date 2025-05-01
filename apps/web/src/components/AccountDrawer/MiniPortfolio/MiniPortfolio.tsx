@@ -9,7 +9,6 @@ import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import Column from 'components/deprecated/Column'
 import { AutoRow } from 'components/deprecated/Row'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
-import { PageType, useIsPage } from 'hooks/useIsPage'
 import { atom, useAtom } from 'jotai'
 import styled, { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
@@ -99,10 +98,9 @@ const Pages: Array<Page> = [
 
 export default function MiniPortfolio({ account }: { account: string }) {
   const theme = useTheme()
-  const isNFTPage = useIsPage(PageType.NFTS)
   const [lastPage, setLastPage] = useAtom(lastPageAtom)
-  // Resumes at the last viewed page, unless you are on an NFT page
-  const [currentPage, setCurrentPage] = useState(isNFTPage ? 1 : lastPage)
+  // Resumes at the last viewed page
+  const [currentPage, setCurrentPage] = useState(lastPage)
   useEffect(() => void setLastPage(currentPage), [currentPage, setLastPage])
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()

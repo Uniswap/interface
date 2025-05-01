@@ -40,7 +40,10 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     await selectImportedAccounts(selectedAddresses)
 
     navigation.navigate({
-      name: params?.importType === ImportType.Restore ? OnboardingScreens.Notifications : OnboardingScreens.Backup,
+      name:
+        params?.importType === ImportType.Restore || params?.importType === ImportType.Passkey
+          ? OnboardingScreens.Notifications
+          : OnboardingScreens.Backup,
       params,
       merge: true,
     })

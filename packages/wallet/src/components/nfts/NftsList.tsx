@@ -47,7 +47,9 @@ type NftsListProps = Omit<
     'renderItem'
   >,
   'data'
->
+> & {
+  pollInterval?: number
+}
 
 export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _NftsTab(
   {
@@ -66,6 +68,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     onScroll,
     refreshing,
     onRefresh,
+    pollInterval,
     ...rest
   },
   ref,
@@ -83,6 +86,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       filter: { filterSpam: false },
       chains: gqlChains,
     },
+    pollInterval,
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend
   })

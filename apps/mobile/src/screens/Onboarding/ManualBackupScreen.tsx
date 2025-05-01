@@ -25,6 +25,7 @@ import { ManualPageViewScreen, MobileScreens, OnboardingScreens } from 'uniswap/
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
@@ -98,14 +99,14 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }, [view, t])
 
   useEffect(() => {
-    if (confirmContinueButtonPressed && account?.backups?.includes(BackupType.Manual)) {
+    if (confirmContinueButtonPressed && hasBackup(BackupType.Manual, account)) {
       if (params.entryPoint === OnboardingEntryPoint.BackupCard) {
         navigate(MobileScreens.Home)
       } else {
         navigation.replace(OnboardingScreens.Notifications, params)
       }
     }
-  }, [confirmContinueButtonPressed, navigation, params, account?.backups])
+  }, [confirmContinueButtonPressed, navigation, params, account])
 
   // Manually log as page views as these screens are not captured in navigation events
   useEffect(() => {

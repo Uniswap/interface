@@ -11,7 +11,7 @@ import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap
 import { ViewOnlyButton } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/ViewOnlyButton'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/hooks/useSlippageSettings'
 import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 

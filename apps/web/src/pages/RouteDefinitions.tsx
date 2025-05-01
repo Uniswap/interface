@@ -1,20 +1,18 @@
-import { useAtom } from 'jotai'
 import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 import { ReactNode, Suspense, lazy, useMemo } from 'react'
 import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
 import { RemoveLiquidityV2WithTokenRedirects } from 'pages/LegacyPool/redirects'
 import Swap from 'pages/Swap'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import i18n from 'uniswap/src/i18n'
 
 const CreatePosition = lazy(() => import('pages/Pool/Positions/create/CreatePosition'))
-const Profile = lazy(() => import('nft/pages/profile'))
-const Asset = lazy(() => import('nft/pages/asset/Asset'))
 const AddLiquidityV3WithTokenRedirects = lazy(() => import('pages/AddLiquidityV3/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
@@ -37,11 +35,12 @@ const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const ExtensionPasskeySignInPopUp = lazy(() => import('pages/ExtensionPasskeyAuthPopUp'))
+const PasskeyManagement = lazy(() => import('pages/PasskeyManagement'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
-  shouldDisableNFTRoutes?: boolean
+  isEmbeddedWalletEnabled?: boolean
 }
 
 /**
@@ -50,15 +49,15 @@ interface RouterConfig {
 export function useRouterConfig(): RouterConfig {
   const browserRouterEnabled = isBrowserRouterEnabled()
   const { hash } = useLocation()
-  const [shouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   return useMemo(
     () => ({
       browserRouterEnabled,
       hash,
-      shouldDisableNFTRoutes: Boolean(shouldDisableNFTRoutes),
+      isEmbeddedWalletEnabled,
     }),
-    [browserRouterEnabled, hash, shouldDisableNFTRoutes],
+    [browserRouterEnabled, hash, isEmbeddedWalletEnabled],
   )
 }
 
@@ -71,12 +70,12 @@ const StaticTitlesAndDescriptions = {
   DetailsPageBaseTitle: i18n.t('common.buyAndSell'),
   TDPDescription: i18n.t('title.realTime'),
   PDPDescription: i18n.t('title.tradeTokens'),
-  NFTTitle: i18n.t('title.explore'),
   MigrateTitle: i18n.t('title.migratev2'),
   MigrateTitleV3: i18n.t('title.migratev3'),
   MigrateDescription: i18n.t('title.easilyRemove'),
   MigrateDescriptionV4: i18n.t('title.easilyRemoveV4'),
   AddLiquidityDescription: i18n.t('title.earnFees'),
+  PasskeyManagementTitle: i18n.t('title.managePasskeys'),
 }
 
 export interface RouteDefinition {
@@ -331,30 +330,15 @@ export const routes: RouteDefinition[] = [
     getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
   }),
   createRouteDefinition({
-    path: '/nfts/asset/:contractAddress/:tokenId',
-    getElement: () => (
-      <Suspense fallback={null}>
-        <Asset />
-      </Suspense>
-    ),
-    enabled: (args) => !args.shouldDisableNFTRoutes,
-    getTitle: () => StaticTitlesAndDescriptions.NFTTitle,
-  }),
-  createRouteDefinition({
-    path: '/nfts/profile',
-    getElement: () => (
-      <Suspense fallback={null}>
-        <Profile />
-      </Suspense>
-    ),
-    enabled: (args) => !args.shouldDisableNFTRoutes,
-    getTitle: () => StaticTitlesAndDescriptions.NFTTitle,
-    getDescription: () => i18n.t('title.manageNFT'),
-  }),
-  createRouteDefinition({
     path: EXTENSION_PASSKEY_AUTH_PATH,
     getElement: () => <ExtensionPasskeySignInPopUp />,
     getTitle: () => i18n.t('title.extensionPasskeySignIn'),
+  }),
+  createRouteDefinition({
+    path: '/manage/passkey/:walletAddress',
+    getElement: () => <PasskeyManagement />,
+    getTitle: () => StaticTitlesAndDescriptions.PasskeyManagementTitle,
+    enabled: (args) => args.isEmbeddedWalletEnabled ?? false,
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),

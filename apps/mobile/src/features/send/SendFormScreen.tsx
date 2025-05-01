@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
@@ -20,11 +21,11 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
   TransactionModalFooterContainer,
   TransactionModalInnerContainer,
-} from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
@@ -198,6 +199,7 @@ function SendFormContent({
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Send}
           variation={TokenSelectorVariation.BalancesOnly}
+          focusHook={useFocusEffect}
           onClose={onHideTokenSelector}
           onSelectCurrency={onSelectCurrency}
         />

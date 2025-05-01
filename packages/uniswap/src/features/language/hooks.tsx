@@ -289,15 +289,14 @@ type SupportedLocale = keyof ForceUpgradeTranslations
  */
 export function useLocalizedStatsigLanguage(): SupportedLocale | null {
   const { i18n } = useTranslation()
-  const currentLanguage = useCurrentLanguage()
-
+  const parsedLocale = parseLocale(i18n.resolvedLanguage)
   const resources = i18n.services.backendConnector.options.resources as Record<string, { statsigKey?: SupportedLocale }>
 
-  if (typeof currentLanguage !== 'string' || !(currentLanguage in resources)) {
+  if (typeof parsedLocale !== 'string' || !(parsedLocale in resources)) {
     return null
   }
 
-  return resources[currentLanguage]?.statsigKey ?? null
+  return resources[parsedLocale]?.statsigKey ?? null
 }
 
 // Locale

@@ -1,6 +1,6 @@
-import { useMutation } from '@tanstack/react-query'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { useConnect } from 'hooks/useConnect'
+import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import {
@@ -9,7 +9,6 @@ import {
   signMessagesWithPasskey,
 } from 'uniswap/src/features/passkey/embeddedWallet'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
-import { logger } from 'utilities/src/logger/logger'
 
 interface SignInWithPasskeyOptions {
   createNewWallet?: boolean
@@ -44,8 +43,8 @@ export function useSignInWithPasskey({
   })
   const claimUnitag = useClaimUnitag()
 
-  const { mutate: signInWithPasskey, ...rest } = useMutation<string>({
-    mutationFn: async (): Promise<string> => {
+  const { mutate: signInWithPasskey, ...rest } = usePasskeyAuthWithHelpModal<string>(
+    async (): Promise<string> => {
       const walletAddress = createNewWallet ? await createNewEmbeddedWallet(unitag ?? '') : await signInWithPasskeyAPI()
       if (!walletAddress) {
         throw new Error(`Failed to ${createNewWallet ? 'create wallet for' : 'sign in with'} passkey`)
@@ -75,22 +74,16 @@ export function useSignInWithPasskey({
 
       return walletAddress
     },
-    onSuccess: (walletAddress) => {
-      setWalletAddress(walletAddress)
-      setIsConnected(true)
-      connection.connect({ connector })
-      onSuccess?.()
+    {
+      onSuccess: (walletAddress) => {
+        setWalletAddress(walletAddress)
+        setIsConnected(true)
+        connection.connect({ connector })
+        onSuccess?.()
+      },
+      onError,
     },
-    onError: (error: Error) => {
-      logger.error(error, {
-        tags: {
-          file: 'useSignInWithPasskey',
-          function: 'signInWithPasskey',
-        },
-      })
-      onError?.(error)
-    },
-  })
+  )
 
   return { signInWithPasskey, ...rest }
 }

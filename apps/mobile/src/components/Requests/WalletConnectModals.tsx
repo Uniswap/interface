@@ -7,7 +7,7 @@ import { WalletConnectModal } from 'src/components/Requests/ScanSheet/WalletConn
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
-  WalletConnectRequest,
+  WalletConnectSigningRequest,
   removePendingSession,
   removeRequest,
   setDidOpenFromDeepLink,
@@ -105,7 +105,7 @@ export function WalletConnectModals(): JSX.Element {
 }
 
 type RequestModalProps = {
-  currRequest: WalletConnectRequest
+  currRequest: WalletConnectSigningRequest
 }
 
 function RequestModal({ currRequest }: RequestModalProps): JSX.Element {

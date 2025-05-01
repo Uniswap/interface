@@ -1,13 +1,12 @@
-import { Action } from '@reduxjs/toolkit'
 import { default as React, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { AppStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
-import { closeModal } from 'src/features/modals/modalSlice'
-import { selectModalState } from 'src/features/modals/selectModalState'
 import { Button, Flex, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -16,19 +15,22 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isIOS } from 'utilities/src/platform'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
-export function EditLabelSettingsModal(): JSX.Element {
+export function EditLabelSettingsModal({
+  route,
+}: AppStackScreenProp<typeof ModalName.EditLabelSettingsModal>): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const { initialState } = useSelector(selectModalState(ModalName.EditLabelSettingsModal))
-  const address = initialState?.address ?? ''
-  const entryPoint = initialState?.accessPoint ?? MobileScreens.SettingsWallet
+  const { onClose } = useReactNavigationModal()
+
+  const { address, accessPoint } = route.params
+  const entryPoint = accessPoint ?? MobileScreens.SettingsWallet
 
   const displayName = useDisplayName(address)
   const [nickname, setNickname] = useState(displayName?.name)
@@ -58,19 +60,14 @@ export function EditLabelSettingsModal(): JSX.Element {
   }
 
   const onPressBack = (): void => {
-    dispatch(closeModal({ name: ModalName.EditLabelSettingsModal }))
-
+    onClose()
     if (!isUpdatingWalletLabel) {
-      navigateBackFromEditingWallet(dispatch, entryPoint, address)
+      navigateBackFromEditingWallet(entryPoint, address)
     }
   }
 
   return (
-    <Modal
-      fullScreen
-      name={ModalName.EditLabelSettingsModal}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.EditLabelSettingsModal }))}
-    >
+    <Modal fullScreen name={ModalName.EditLabelSettingsModal} onClose={onClose}>
       {/* This GestureDetector is used to consume all pan gestures and prevent
            keyboard from flickering (see https://github.com/Uniswap/universe/pull/8242) */}
       <GestureDetector gesture={Gesture.Pan()}>

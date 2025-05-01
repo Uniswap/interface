@@ -7,13 +7,8 @@ import { UNISWAP_LOGO } from 'ui/src/assets'
 import { imageSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
-import {
-  DynamicConfigs,
-  ForceUpgradeConfigKey,
-  ForceUpgradeStatus,
-  ForceUpgradeTranslations,
-} from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { useForceUpgradeStatus } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeStatus'
+import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeTranslations'
 import { useLocalizedStatsigLanguage } from 'uniswap/src/features/language/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -37,17 +32,8 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
   const colors = useSporeColors()
   const statsigLanguage = useLocalizedStatsigLanguage()
 
-  const forceUpgradeStatusString = useDynamicConfigValue<
-    DynamicConfigs.ForceUpgrade,
-    ForceUpgradeConfigKey,
-    ForceUpgradeStatus
-  >(DynamicConfigs.ForceUpgrade, ForceUpgradeConfigKey.Status, 'not-required')
-
-  const upgradeTextTranslations = useDynamicConfigValue<
-    DynamicConfigs.ForceUpgrade,
-    ForceUpgradeConfigKey,
-    ForceUpgradeTranslations
-  >(DynamicConfigs.ForceUpgrade, ForceUpgradeConfigKey.Translations, {})
+  const forceUpgradeStatusString = useForceUpgradeStatus()
+  const upgradeTextTranslations = useForceUpgradeTranslations()
 
   const { description: translatedDescription, title: translatedTitle } = useMemo<Translation>(() => {
     if (!statsigLanguage) {
@@ -88,6 +74,9 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
   const mnemonicId = signerAccounts.length > 0 ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId : undefined
 
   const onPressConfirm = async (): Promise<void> => {
+    if (isRecommended) {
+      onClose()
+    }
     if (isMobileApp) {
       await openUri(MOBILE_APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
     } else {
@@ -184,7 +173,7 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
               mnemonicId && (
                 <Flex row width="100%">
                   <Button size="medium" emphasis="secondary" onPress={onPressViewRecovery}>
-                    {t('forceUpgrade.action.recoveryPhrase')}
+                    {t('forceUpgrade.action.backup')}
                   </Button>
                 </Flex>
               )

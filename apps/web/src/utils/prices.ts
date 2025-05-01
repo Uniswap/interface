@@ -105,7 +105,7 @@ export function warningSeverity(priceImpact: Percent | undefined): WarningSeveri
   return 0
 }
 
-export function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error' | undefined {
+function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error' | undefined {
   if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_HIGH)) {
     return 'error'
   }

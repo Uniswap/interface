@@ -3,5 +3,6 @@ import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/conte
 export const useIsAmountSelectionInvalid = (): boolean => {
   const { exactAmountToken, exactAmountFiat } = useSwapFormContext()
 
-  return !exactAmountFiat && !exactAmountToken
+  // Cast string to number to ensure that string "0" is treated as falsy
+  return !Number(exactAmountFiat) && !Number(exactAmountToken)
 }

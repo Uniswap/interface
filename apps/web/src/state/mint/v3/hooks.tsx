@@ -11,7 +11,6 @@ import {
   tickToPrice as tickToPriceV3,
 } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { PoolState, usePool } from 'hooks/usePools'
@@ -20,7 +19,7 @@ import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { FeeData } from 'pages/Pool/Positions/create/types'
 import { ReactNode, useCallback, useMemo } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { useCurrencyBalances } from 'state/connection/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -140,6 +139,7 @@ export function useV3DerivedMintInfo(
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
   isTaxed: boolean
 } {
+  const { t } = useTranslation()
   const account = useAccount()
 
   const { independentField, typedValue, leftRangeTypedValue, rightRangeTypedValue, startPriceTypedValue } =
@@ -453,7 +453,7 @@ export function useV3DerivedMintInfo(
 
   let errorMessage: ReactNode | undefined
   if (!account.isConnected) {
-    errorMessage = <ConnectWalletButtonText />
+    errorMessage = t('common.connectWallet.button')
   }
 
   if (poolState === PoolState.INVALID) {

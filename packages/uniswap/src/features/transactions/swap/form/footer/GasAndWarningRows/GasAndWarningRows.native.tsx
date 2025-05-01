@@ -5,15 +5,15 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
-import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
+import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/footer/hooks/useDebouncedGasInfo'
 import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/footer/tradeInfo/TradeInfoRow'
 import { SwapWarningModal } from 'uniswap/src/features/transactions/swap/form/modals/SwapWarningModal'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 
 export function GasAndWarningRows(): JSX.Element {
   const isShort = useMedia().short

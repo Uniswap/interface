@@ -40,7 +40,7 @@ export enum OnboardingScreens {
   Landing = 'OnboardingLanding',
   Notifications = 'OnboardingNotifications',
   WelcomeWallet = 'WelcomeWallet',
-  WelcomeSplash = 'WelcomeSplash',
+  PasskeyImport = 'PasskeyImport',
   Security = 'OnboardingSecurity',
 
   // import

@@ -6,7 +6,7 @@ import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionModal } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
+import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { SendContextProvider } from 'wallet/src/features/transactions/contexts/SendContext'
 
 export function SendFlow(): JSX.Element {

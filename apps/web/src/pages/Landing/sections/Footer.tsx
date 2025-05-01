@@ -1,14 +1,15 @@
 import { MenuItem, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
+import { useModalState } from 'hooks/useModalState'
 import deprecatedStyled from 'lib/styled-components'
 import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useTogglePrivacyPolicy } from 'state/application/hooks'
 import { Anchor, Flex, Separator, Text, styled } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const SOCIAL_ICONS_SIZE = `${iconSizes.icon32}px`
 
@@ -74,7 +75,7 @@ function FooterSection({ title, items }: { title: string; items: MenuItem[] }) {
 
 export function Footer() {
   const { t } = useTranslation()
-  const togglePrivacyPolicy = useTogglePrivacyPolicy()
+  const { toggleModal: togglePrivacyPolicy } = useModalState(ModalName.PrivacyPolicy)
   const tabsContent = useTabsContent()
   const appSectionItems: MenuItem[] = useMemo(() => {
     return tabsContent.map((tab) => ({

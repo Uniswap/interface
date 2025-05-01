@@ -13,6 +13,7 @@ export const LearnMoreLink = ({
   centered = false,
   display,
   componentType = 'TouchableArea',
+  hoverStyle,
 }: {
   url: string
   textVariant?: TextProps['variant']
@@ -20,6 +21,7 @@ export const LearnMoreLink = ({
   centered?: boolean
   display?: TouchableAreaProps['display']
   componentType?: 'Button' | 'TouchableArea'
+  hoverStyle?: TextProps['hoverStyle']
 }): JSX.Element => {
   const { t } = useTranslation()
 
@@ -39,7 +41,7 @@ export const LearnMoreLink = ({
     </Text>
   ) : (
     <TouchableArea display={display} style={{ textAlign: centered ? 'center' : 'left' }} onPress={handleOnPress}>
-      <Text color={textColor} variant={textVariant}>
+      <Text color={textColor} variant={textVariant} hoverStyle={hoverStyle}>
         {t('common.button.learn')}
       </Text>
     </TouchableArea>

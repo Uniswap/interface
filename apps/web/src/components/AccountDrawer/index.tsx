@@ -2,10 +2,11 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Web3StatusRef } from 'components/Web3Status'
+import { useAccount } from 'hooks/useAccount'
 import useDisableScrolling from 'hooks/useDisableScrolling'
+import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
-import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import { useAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import { ChevronsRight } from 'react-feather'
@@ -55,12 +56,12 @@ const Container = styled(Flex, {
   '$platform-web': { position: 'fixed' },
   top: DRAWER_SPECS.MARGIN,
   right: '0',
-  zIndex: zIndexes.fixed,
+  zIndex: zIndexes.dropdown,
   variants: {
     open: {
       true: { right: DRAWER_SPECS.MARGIN },
     },
-    isUniExtensionAvailable: {
+    isUniExtensionConnected: {
       true: ExtensionContainerStyles,
       false: {
         width: DRAWER_SPECS.WIDTH_XL,
@@ -135,15 +136,12 @@ function AccountDropdown({ isOpen, onClose, children }: AccountDrawerProps) {
   const shadowProps = useShadowPropsMedium()
   const scrollbarStyles = useScrollbarStyles()
   const modalRef = useRef<HTMLDivElement>(null)
-  const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const [web3StatusRef] = useAtom(Web3StatusRef)
 
   useOnClickOutside(
     modalRef,
     () => {
-      if (isUniExtensionAvailable) {
-        onClose()
-      }
+      onClose()
     },
     // Prevents quick close & re-open when tapping the Web3Status
     // stopPropagation does not work here
@@ -207,8 +205,9 @@ function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
 
 function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
   const accountDrawer = useAccountDrawer()
-  const isUniExtensionAvailable = useIsUniExtensionAvailable()
+  const isUniExtensionConnected = useIsUniExtensionConnected()
   const media = useMedia()
+  const isAccountConnected = useAccount().isConnected
 
   if (media.md) {
     return (
@@ -216,7 +215,7 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
         {children}
       </WebBottomSheet>
     )
-  } else if (!isUniExtensionAvailable) {
+  } else if (!isUniExtensionConnected && isAccountConnected) {
     return (
       <Container data-testid="account-drawer">
         <AccountSideDrawer isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
@@ -226,7 +225,7 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
     )
   } else {
     return (
-      <Container data-testid="account-drawer" isUniExtensionAvailable>
+      <Container data-testid="account-drawer" isUniExtensionConnected>
         <AccountDropdown isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
           {children}
         </AccountDropdown>

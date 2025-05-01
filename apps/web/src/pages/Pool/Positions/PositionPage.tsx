@@ -13,6 +13,7 @@ import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import type { PositionInfo } from 'components/Liquidity/types'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
+import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useCurrencyInfo } from 'hooks/Tokens'
@@ -22,6 +23,7 @@ import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import NotFound from 'pages/NotFound'
 import { LegacyPositionPage } from 'pages/Pool/Positions/LegacyPositionPage'
 import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
+import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { BodyWrapper, LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -49,7 +51,6 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme/breakpoints'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { UNI } from 'uniswap/src/constants/tokens'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -122,7 +123,6 @@ function PositionPage() {
 
   const dispatch = useAppDispatch()
 
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const navigate = useNavigate()
@@ -143,6 +143,12 @@ function PositionPage() {
   } = useV3OrV4PositionDerivedInfo(positionInfo)
 
   const [priceInverted, setPriceInverted] = useState(false)
+
+  const [baseCurrency, quoteCurrency] = getInvertedTuple(
+    [currency0Amount?.currency, currency1Amount?.currency],
+    priceInverted,
+  )
+
   const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
   const [timePeriodDropdownOpen, setTimePeriodDropdownOpen] = useState(false)
   const [mainViewDropdownOpen, setMainViewDropdownOpen] = useState(false)
@@ -228,7 +234,7 @@ function PositionPage() {
     )
   }
 
-  if (!position || !positionInfo || !currency0Amount || !currency1Amount) {
+  if (!position || !positionInfo || !currency0Amount || !currency1Amount || !baseCurrency || !quoteCurrency) {
     return (
       <NotFound
         title={<Text variant="heading2">{t('position.notFound')}</Text>}
@@ -300,29 +306,27 @@ function PositionPage() {
             />
             {isOwner && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
-                {positionInfo.version === ProtocolVersion.V3 &&
-                  status !== PositionStatus.CLOSED &&
-                  isMigrateToV4Enabled && (
-                    <MouseoverTooltip
-                      text={t('pool.migrateLiquidityDisabledTooltip')}
-                      disabled={!showV4UnsupportedTooltip}
-                      style={media.sm ? { width: '100%', display: 'block' } : {}}
+                {positionInfo.version === ProtocolVersion.V3 && status !== PositionStatus.CLOSED && (
+                  <MouseoverTooltip
+                    text={t('pool.migrateLiquidityDisabledTooltip')}
+                    disabled={!showV4UnsupportedTooltip}
+                    style={media.sm ? { width: '100%', display: 'block' } : {}}
+                  >
+                    <Button
+                      size="small"
+                      emphasis="secondary"
+                      $sm={{ width: '100%' }}
+                      fill={false}
+                      isDisabled={showV4UnsupportedTooltip}
+                      opacity={showV4UnsupportedTooltip ? 0.5 : 1}
+                      onPress={() => {
+                        navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                      }}
                     >
-                      <Button
-                        size="small"
-                        emphasis="secondary"
-                        $sm={{ width: '100%' }}
-                        fill={false}
-                        isDisabled={showV4UnsupportedTooltip}
-                        opacity={showV4UnsupportedTooltip ? 0.5 : 1}
-                        onPress={() => {
-                          navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
-                        }}
-                      >
-                        {t('pool.migrateToV4')}
-                      </Button>
-                    </MouseoverTooltip>
-                  )}
+                      {t('pool.migrateToV4')}
+                    </Button>
+                  </MouseoverTooltip>
+                )}
                 <Button
                   size="small"
                   emphasis="secondary"
@@ -409,8 +413,8 @@ function PositionPage() {
               {mainView === 'chart' ? (
                 <WrappedLiquidityPositionRangeChart
                   version={positionInfo.version}
-                  currency0={priceInverted ? currency1Amount.currency : currency0Amount.currency}
-                  currency1={priceInverted ? currency0Amount.currency : currency1Amount.currency}
+                  quoteCurrency={quoteCurrency}
+                  baseCurrency={baseCurrency}
                   poolAddressOrId={positionInfo.poolId}
                   chainId={positionInfo.chainId}
                   tickSpacing={positionInfo.tickSpacing}
@@ -540,6 +544,7 @@ function PositionPage() {
                     }}
                     dropdownStyle={{
                       width: 160,
+                      left: 0,
                     }}
                     hideChevron
                     isOpen={timePeriodDropdownOpen}
@@ -751,7 +756,7 @@ const APRSection = ({
   lpIncentiveRewardApr?: number
   totalApr?: number
 }) => {
-  const { address, chainId, symbol } = UNI[UniverseChainId.Mainnet]
+  const { address, chainId, symbol } = LP_INCENTIVES_REWARD_TOKEN
   const currencyInfo = useCurrencyInfo(address, chainId)
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
@@ -818,7 +823,7 @@ const EarningsSection = ({
   const colors = useSporeColors()
   const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
-  const { lpIncentivesFormattedEarnings, uniLpRewardsCurrencyAmount, uniLpRewardsFiatValue } =
+  const { uniLpRewardsCurrencyAmount, uniLpRewardsFiatValue, totalEarningsFiatValue, hasRewards, hasFees } =
     useLpIncentivesFormattedEarnings({
       liquidityPosition: positionInfo,
       fiatFeeValue0,
@@ -829,7 +834,7 @@ const EarningsSection = ({
   const [currencyInfo0, currencyInfo1, rewardCurrencyInfo] = useCurrencyInfos([
     currencyId(currency0Amount.currency),
     currencyId(currency1Amount.currency),
-    buildCurrencyId(UniverseChainId.Mainnet, UNI[UniverseChainId.Mainnet].address),
+    buildCurrencyId(UniverseChainId.Mainnet, LP_INCENTIVES_REWARD_TOKEN.address),
   ])
 
   const token0Color = useSrcColor(
@@ -848,24 +853,15 @@ const EarningsSection = ({
     colors.surface2.val,
   ).tokenColor
 
-  const totalFeesFiatValue = useMemo(() => {
-    const values = [fiatFeeValue0, fiatFeeValue1].filter((v): v is CurrencyAmount<Currency> => v !== undefined)
-    if (values.length === 0) {
-      return undefined
-    }
-    const [initial, ...rest] = values
-    return rest.reduce((acc, curr) => acc.add(curr), initial)
-  }, [fiatFeeValue0, fiatFeeValue1])
-
   const bars = useMemo(() => {
     const percent0 =
-      totalFeesFiatValue?.greaterThan(0) && fiatFeeValue0
-        ? new Percent(fiatFeeValue0.quotient, totalFeesFiatValue.quotient)
+      totalEarningsFiatValue?.greaterThan(0) && fiatFeeValue0
+        ? new Percent(fiatFeeValue0.quotient, totalEarningsFiatValue.quotient)
         : undefined
 
     const percent1 =
-      totalFeesFiatValue?.greaterThan(0) && fiatFeeValue1
-        ? new Percent(fiatFeeValue1.quotient, totalFeesFiatValue.quotient)
+      totalEarningsFiatValue?.greaterThan(0) && fiatFeeValue1
+        ? new Percent(fiatFeeValue1.quotient, totalEarningsFiatValue.quotient)
         : undefined
 
     if (!percent0 || !percent1 || !token0Color || !token1Color || !currencyInfo0 || !currencyInfo1) {
@@ -875,13 +871,12 @@ const EarningsSection = ({
     const rewards =
       isLpIncentivesEnabled &&
       rewardTokenColor &&
-      uniLpRewardsCurrencyAmount?.greaterThan(0) &&
-      uniLpRewardsCurrencyAmount &&
-      lpIncentivesFormattedEarnings
+      uniLpRewardsFiatValue?.greaterThan(0) &&
+      totalEarningsFiatValue?.greaterThan(0) &&
+      hasRewards
         ? [
             {
-              // TODO | LP_INCENTIVES: determine if we can show correct numerator, this always shows 100% for now
-              value: new Percent(uniLpRewardsCurrencyAmount.quotient, uniLpRewardsCurrencyAmount.quotient),
+              value: new Percent(uniLpRewardsFiatValue.quotient, totalEarningsFiatValue.quotient),
               color: rewardTokenColor,
               currencyInfo: rewardCurrencyInfo as CurrencyInfo,
             },
@@ -894,18 +889,18 @@ const EarningsSection = ({
       ...rewards,
     ]
   }, [
-    currencyInfo0,
-    currencyInfo1,
+    totalEarningsFiatValue,
     fiatFeeValue0,
     fiatFeeValue1,
-    isLpIncentivesEnabled,
-    rewardCurrencyInfo,
-    uniLpRewardsCurrencyAmount,
-    rewardTokenColor,
     token0Color,
     token1Color,
-    totalFeesFiatValue,
-    lpIncentivesFormattedEarnings,
+    currencyInfo0,
+    currencyInfo1,
+    isLpIncentivesEnabled,
+    rewardTokenColor,
+    uniLpRewardsFiatValue,
+    hasRewards,
+    rewardCurrencyInfo,
   ])
 
   const feeRows = useMemo(() => {
@@ -928,7 +923,7 @@ const EarningsSection = ({
   }, [currencyInfo0, currencyInfo1, feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1])
 
   const rewardRows = useMemo(() => {
-    if (!isLpIncentivesEnabled || !rewardCurrencyInfo || !lpIncentivesFormattedEarnings) {
+    if (!isLpIncentivesEnabled || !rewardCurrencyInfo || !hasRewards) {
       return []
     }
 
@@ -936,22 +931,16 @@ const EarningsSection = ({
       {
         currencyInfo: rewardCurrencyInfo,
         currencyAmount: uniLpRewardsCurrencyAmount || CurrencyAmount.fromRawAmount(rewardCurrencyInfo.currency, 0),
-        fiatValue: uniLpRewardsFiatValue || CurrencyAmount.fromRawAmount(rewardCurrencyInfo.currency, 0),
+        fiatValue: uniLpRewardsFiatValue,
       },
     ]
-  }, [
-    isLpIncentivesEnabled,
-    rewardCurrencyInfo,
-    uniLpRewardsCurrencyAmount,
-    uniLpRewardsFiatValue,
-    lpIncentivesFormattedEarnings,
-  ])
+  }, [isLpIncentivesEnabled, rewardCurrencyInfo, uniLpRewardsCurrencyAmount, uniLpRewardsFiatValue, hasRewards])
 
   return (
     <SectionContainer>
       <Flex gap="$gap8">
         <Text color="$neutral2" variant="body2">
-          {isLpIncentivesEnabled ? t('pool.earnings') : t('common.feesEarned')}
+          {isLpIncentivesEnabled && hasRewards ? t('pool.earnings') : t('common.feesEarned')}
         </Text>
         {positionInfo.status === PositionStatus.CLOSED ? (
           <Text variant="heading2">
@@ -963,11 +952,9 @@ const EarningsSection = ({
         ) : (
           <>
             <Text variant="heading2" mb="$spacing12">
-              {lpIncentivesFormattedEarnings ? (
-                lpIncentivesFormattedEarnings
-              ) : totalFeesFiatValue ? (
+              {totalEarningsFiatValue ? (
                 formatCurrencyAmount({
-                  amount: totalFeesFiatValue,
+                  amount: totalEarningsFiatValue,
                   type: NumberType.FiatRewards,
                 })
               ) : (
@@ -989,7 +976,7 @@ const EarningsSection = ({
 
             {isLpIncentivesEnabled ? (
               <>
-                {lpIncentivesFormattedEarnings && rewardRows.length > 0 && (
+                {hasRewards && rewardRows.length > 0 && (
                   <>
                     <Text color="$neutral2" variant="body2" mb="$spacing12">
                       {t('pool.rewards')}
@@ -997,14 +984,9 @@ const EarningsSection = ({
                     <LiquidityPositionAmountRows rows={rewardRows} />
                   </>
                 )}
-                {(fiatFeeValue0?.greaterThan(0) || fiatFeeValue1?.greaterThan(0)) && feeRows.length > 0 && (
+                {hasFees && feeRows.length > 0 && (
                   <>
-                    <Text
-                      color="$neutral2"
-                      variant="body2"
-                      mb="$spacing12"
-                      mt={lpIncentivesFormattedEarnings ? '$spacing24' : '$none'}
-                    >
+                    <Text color="$neutral2" variant="body2" mb="$spacing12" mt={hasRewards ? '$spacing24' : '$none'}>
                       {t('common.fees')}
                     </Text>
                     <LiquidityPositionAmountRows rows={feeRows} />
@@ -1015,7 +997,7 @@ const EarningsSection = ({
               feeRows.length > 0 && <LiquidityPositionAmountRows rows={feeRows} />
             )}
 
-            {!lpIncentivesFormattedEarnings && totalFeesFiatValue?.equalTo(0) && (
+            {(!totalEarningsFiatValue || totalEarningsFiatValue.equalTo(0)) && (
               <Text variant="body3" color="$neutral3">
                 {t('pool.earnings.empty')}
               </Text>

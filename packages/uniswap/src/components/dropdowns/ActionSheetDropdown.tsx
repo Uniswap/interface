@@ -43,7 +43,6 @@ type ActionSheetDropdownProps = PropsWithChildren<{
   options: MenuItemProp[]
   styles?: ActionSheetDropdownStyleProps & { backdropOpacity?: number }
   testID?: string
-  onDismiss?: () => void
   showArrow?: boolean
   closeOnSelect?: boolean
   onPress?: FlexProps['onPress']
@@ -53,7 +52,6 @@ export function ActionSheetDropdown({
   children,
   styles,
   testID,
-  onDismiss,
   showArrow,
   closeOnSelect = true,
   onPress,
@@ -65,7 +63,6 @@ export function ActionSheetDropdown({
   const [toggleMeasurements, setToggleMeasurements] = useState<ToggleMeasurements>(null)
 
   const openDropdown = (event: GestureResponderEvent): void => {
-    onDismiss?.()
     onPress?.(event)
 
     const containerNode = containerRef?.current

@@ -186,6 +186,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
   return (
     <TokenContextMenu portfolioBalance={portfolioBalance}>
       <TokenBalanceItem
+        isHidden={portfolioBalance.isHidden ?? false}
         isLoading={isWarmLoading}
         portfolioBalanceId={portfolioBalance.id}
         currencyInfo={portfolioBalance.currencyInfo}

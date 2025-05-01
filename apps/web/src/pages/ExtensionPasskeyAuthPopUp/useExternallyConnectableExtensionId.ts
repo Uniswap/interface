@@ -5,7 +5,7 @@ import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensio
 export function useExternallyConnectableExtensionId(): string {
   const extensionId = useDynamicConfigValue<
     DynamicConfigs.ExternallyConnectableExtension,
-    ExternallyConnectableExtensionConfigKey,
+    ExternallyConnectableExtensionConfigKey.ExtensionId,
     string
   >(
     DynamicConfigs.ExternallyConnectableExtension,

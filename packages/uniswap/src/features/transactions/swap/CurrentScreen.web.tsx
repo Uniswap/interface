@@ -4,7 +4,7 @@ import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
 import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'

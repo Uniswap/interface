@@ -9,8 +9,7 @@ import { createEthersProvider } from 'uniswap/src/features/providers/createEther
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
-
-const ONCHAIN_BALANCES_CACHE_KEY = 'OnchainBalances'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export type BalanceLookupParams = {
   currencyAddress?: Address
@@ -50,7 +49,7 @@ export function useOnChainCurrencyBalance(
   const refetchInterval = getPollingIntervalByBlocktime(currency?.chainId)
 
   const { data, error } = useQuery<{ balance?: string }>({
-    queryKey: [ONCHAIN_BALANCES_CACHE_KEY, accountAddress, currency],
+    queryKey: [ReactQueryCacheKey.OnchainBalances, accountAddress, currency],
     queryFn:
       currency && accountAddress
         ? async (): ReturnType<typeof getOnChainBalancesFetch> =>

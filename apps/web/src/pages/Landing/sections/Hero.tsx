@@ -12,7 +12,7 @@ import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { Flex, Text, useMedia } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 
 interface HeroProps {
   scrollToRef: () => void
@@ -125,6 +125,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               chainId={defaultChainId}
               initialInputCurrency={initialInputCurrency}
               swapRedirectCallback={swapRedirectCallback}
+              usePersistedFilteredChainIds
             />
           </Flex>
         </RiseIn>

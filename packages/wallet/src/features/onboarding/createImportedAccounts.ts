@@ -6,7 +6,7 @@ import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/ac
 
 export const createImportedAccounts = async (
   mnemonicId: string,
-  backupType?: BackupType,
+  backupType: BackupType,
 ): Promise<SignerMnemonicAccount[]> => {
   const addresses = await Promise.all(
     Array(NUMBER_OF_WALLETS_TO_GENERATE)
@@ -19,7 +19,7 @@ export const createImportedAccounts = async (
     timeImportedMs: dayjs().valueOf(),
     derivationIndex: index,
     mnemonicId,
-    backups: backupType ? [backupType] : undefined,
+    backups: [backupType],
     pushNotificationsEnabled: true,
   }))
   return importedAccounts

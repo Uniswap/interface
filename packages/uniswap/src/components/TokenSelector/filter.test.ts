@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
-import { TokenOption } from 'uniswap/src/components/lists/types'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { DAI, DAI_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'

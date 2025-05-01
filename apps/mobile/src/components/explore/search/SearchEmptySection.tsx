@@ -18,7 +18,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 
 const TrendUpIcon = <TrendUp color="$neutral2" size="$icon.24" />
 

@@ -389,7 +389,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       switch (route?.key) {
         case SectionName.HomeTokensTab:
           return (
-            <Freeze freeze={tabIndex !== 0 && isHomeScreenBlur}>
+            <Freeze freeze={tabIndex !== HomeScreenTabIndex.Tokens && isHomeScreenBlur}>
               {isLayoutReady && (
                 <Animated.View entering={FadeIn}>
                   <TokensTab
@@ -408,7 +408,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           )
         case SectionName.HomeNFTsTab:
           return (
-            <Freeze freeze={tabIndex !== 1 && isHomeScreenBlur}>
+            <Freeze freeze={tabIndex !== HomeScreenTabIndex.NFTs && isHomeScreenBlur}>
               <NftsTab
                 ref={nftsTabScrollRef}
                 containerProps={sharedProps}
@@ -417,13 +417,14 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 refreshing={refreshing}
                 scrollHandler={nftsTabScrollHandler}
                 testID={TestID.NFTsTab}
+                isActiveTab={tabIndex === HomeScreenTabIndex.NFTs && !isHomeScreenBlur}
                 onRefresh={onRefreshHomeData}
               />
             </Freeze>
           )
         case SectionName.HomeActivityTab:
           return (
-            <Freeze freeze={tabIndex !== 2 && isHomeScreenBlur}>
+            <Freeze freeze={tabIndex !== HomeScreenTabIndex.Activity && isHomeScreenBlur}>
               <ActivityTab
                 ref={activityTabScrollRef}
                 containerProps={sharedProps}

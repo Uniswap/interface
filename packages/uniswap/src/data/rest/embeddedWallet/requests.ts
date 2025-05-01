@@ -1,4 +1,4 @@
-import { createPromiseClient } from '@connectrpc/connect'
+import { createPromiseClient, StreamResponse, UnaryResponse } from '@connectrpc/connect'
 import { createConnectTransport } from '@connectrpc/connect-web'
 import { EmbeddedWalletService } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_connect'
 import {
@@ -7,6 +7,7 @@ import {
   ChallengeResponse,
   CreateWalletResponse,
   DeleteAuthenticatorResponse,
+  DisconnectWalletResponse,
   ExportSeedPhraseResponse,
   ListAuthenticatorsResponse,
   RegisterNewAuthenticatorResponse,
@@ -18,15 +19,26 @@ import {
   WalletSigninResponse,
 } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
+import { getVersionHeader, REQUEST_SOURCE } from 'uniswap/src/data/constants'
+import { isProdEnv } from 'utilities/src/environment/env'
+import { isMobileApp } from 'utilities/src/platform'
 
 const enclaveTransport = createConnectTransport({
-  baseUrl: uniswapUrls.evervaultDevUrl,
+  baseUrl: isProdEnv() ? uniswapUrls.evervaultProductionUrl : uniswapUrls.evervaultStagingUrl,
   credentials: 'include',
+  interceptors: [
+    (next) =>
+      (request): Promise<UnaryResponse | StreamResponse> => {
+        if (isMobileApp) {
+          request.header.set('Origin', uniswapUrls.requestOriginUrl)
+        }
+        request.header.set('x-request-source', REQUEST_SOURCE)
+        request.header.set('x-app-version', getVersionHeader())
+        return next(request)
+      },
+  ],
 })
 export const EMBEDDED_WALLET_CLIENT = createPromiseClient(EmbeddedWalletService, enclaveTransport)
-
-const EW_CACHE_KEY = 'EmbeddedWallet'
 
 /* DATA FETCHING FUNCTIONS */
 export async function fetchChallengeRequest({
@@ -38,10 +50,7 @@ export async function fetchChallengeRequest({
   action: Action
   options?: RegistrationOptions
 }): Promise<ChallengeResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'challenge', type, action, options],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.challenge({ type, action, options }),
-  })
+  return await EMBEDDED_WALLET_CLIENT.challenge({ type, action, options })
 }
 
 export async function fetchSecuredChallengeRequest({
@@ -53,24 +62,15 @@ export async function fetchSecuredChallengeRequest({
   action: Action
   b64EncryptionPublicKey: string
 }): Promise<SecuredChallengeResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'securedChallenge', type, action, b64EncryptionPublicKey],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.securedChallenge({ type, action, b64EncryptionPublicKey }),
-  })
+  return await EMBEDDED_WALLET_CLIENT.securedChallenge({ type, action, b64EncryptionPublicKey })
 }
 
 export async function fetchCreateWalletRequest({ credential }: { credential: string }): Promise<CreateWalletResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'createWallet', credential],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.createWallet({ credential }),
-  })
+  return await EMBEDDED_WALLET_CLIENT.createWallet({ credential })
 }
 
 export async function fetchWalletSigninRequest({ credential }: { credential: string }): Promise<WalletSigninResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'walletSignin', credential],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.walletSignin({ credential }),
-  })
+  return await EMBEDDED_WALLET_CLIENT.walletSignin({ credential })
 }
 
 export async function fetchSignMessagesRequest({
@@ -80,10 +80,7 @@ export async function fetchSignMessagesRequest({
   messages: string[]
   credential: string | undefined
 }): Promise<SignMessagesResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'signMessages', messages, credential],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.signMessages({ messages, credential }),
-  })
+  return await EMBEDDED_WALLET_CLIENT.signMessages({ messages, credential })
 }
 
 export async function fetchSignTransactionRequest({
@@ -93,10 +90,7 @@ export async function fetchSignTransactionRequest({
   transactions: string[]
   credential: string | undefined
 }): Promise<SignTransactionsResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'signTransaction', transactions, credential],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.signTransactions({ transactions, credential }),
-  })
+  return await EMBEDDED_WALLET_CLIENT.signTransactions({ transactions, credential })
 }
 
 export async function fetchSignTypedDataRequest({
@@ -106,10 +100,7 @@ export async function fetchSignTypedDataRequest({
   typedDataBatch: string[]
   credential: string | undefined
 }): Promise<SignTypedDataBatchResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'signTypedData', typedDataBatch, credential],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.signTypedDataBatch({ typedDataBatch, credential }),
-  })
+  return await EMBEDDED_WALLET_CLIENT.signTypedDataBatch({ typedDataBatch, credential })
 }
 
 export async function fetchExportSeedPhraseRequest({
@@ -119,17 +110,11 @@ export async function fetchExportSeedPhraseRequest({
   encryptionKey: string
   credential: string
 }): Promise<ExportSeedPhraseResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'exportSeedPhrase', credential, encryptionKey],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.exportSeedPhrase({ credential, b64EncryptionPublicKey: encryptionKey }),
-  })
+  return await EMBEDDED_WALLET_CLIENT.exportSeedPhrase({ credential, b64EncryptionPublicKey: encryptionKey })
 }
 
-export async function fetchDisconnectRequest(): Promise<void> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'disconnect'],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.disconnectWallet({}),
-  })
+export async function fetchDisconnectRequest(): Promise<DisconnectWalletResponse> {
+  return await EMBEDDED_WALLET_CLIENT.disconnectWallet({})
 }
 
 export async function fetchListAuthenticatorsRequest({
@@ -137,10 +122,7 @@ export async function fetchListAuthenticatorsRequest({
 }: {
   credential: string
 }): Promise<ListAuthenticatorsResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [EW_CACHE_KEY, 'listAuthenticatorsRequest', credential],
-    queryFn: () => EMBEDDED_WALLET_CLIENT.listAuthenticators({ credential }),
-  })
+  return await EMBEDDED_WALLET_CLIENT.listAuthenticators({ credential })
 }
 
 export async function fetchRegisterNewAuthenticatorRequest({
@@ -154,21 +136,11 @@ export async function fetchRegisterNewAuthenticatorRequest({
   existingCredential: string
   existingAuthenticationType: AuthenticationTypes
 }): Promise<RegisterNewAuthenticatorResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: [
-      'addAuthenticator',
-      newCredential,
-      newAuthenticationType,
-      existingCredential,
-      existingAuthenticationType,
-    ],
-    queryFn: () =>
-      EMBEDDED_WALLET_CLIENT.registerNewAuthenticator({
-        newCredential,
-        newAuthenticationType,
-        existingCredential,
-        existingAuthenticationType,
-      }),
+  return await EMBEDDED_WALLET_CLIENT.registerNewAuthenticator({
+    newCredential,
+    newAuthenticationType,
+    existingCredential,
+    existingAuthenticationType,
   })
 }
 
@@ -183,14 +155,10 @@ export async function fetchDeleteAuthenticatorRequest({
   authenticatorId: string
   authenticatorType: string
 }): Promise<DeleteAuthenticatorResponse> {
-  return await SharedQueryClient.fetchQuery({
-    queryKey: ['deleteAuthenticator', credential, authenticationType, authenticatorId, authenticatorType],
-    queryFn: () =>
-      EMBEDDED_WALLET_CLIENT.deleteAuthenticator({
-        credential,
-        type: authenticationType,
-        authenticatorId,
-        authenticatorType,
-      }),
+  return await EMBEDDED_WALLET_CLIENT.deleteAuthenticator({
+    credential,
+    type: authenticationType,
+    authenticatorId,
+    authenticatorType,
   })
 }

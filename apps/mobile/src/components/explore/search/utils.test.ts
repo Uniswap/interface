@@ -4,25 +4,23 @@ import {
   formatTokenSearchResults,
   gqlNFTToNFTCollectionSearchResult,
 } from 'src/components/explore/search/utils'
-import { Chain, ExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { amount, ethToken, nftCollection, nftContract, token, tokenMarket } from 'uniswap/src/test/fixtures'
 import { createArray } from 'uniswap/src/test/utils'
 
-type ExploreSearchResult = NonNullable<ExploreSearchQuery>
-
 describe(formatTokenSearchResults, () => {
   it('returns undefined if there is no data', () => {
-    expect(formatTokenSearchResults(undefined, '', null)).toEqual(undefined)
+    expect(formatTokenSearchResults(undefined, null)).toEqual(undefined)
   })
 
   it('filters out duplicate results', () => {
     const searchToken = token()
     const data = createArray(2, () => searchToken)
 
-    const result = formatTokenSearchResults(data, '', null)
+    const result = formatTokenSearchResults(data, null)
 
     expect(result).toHaveLength(1)
     expect(result?.[0]?.address).toEqual(data[0].address)
@@ -45,7 +43,7 @@ describe(formatTokenSearchResults, () => {
       }),
     ]
 
-    const result = formatTokenSearchResults(data, '', null)
+    const result = formatTokenSearchResults(data, null)
 
     // Filters out the first token (both tokens share the same project id)
     expect(result).toHaveLength(1)
@@ -53,24 +51,11 @@ describe(formatTokenSearchResults, () => {
     expect(result?.[0]?.address).toEqual(changedAddress)
   })
 
-  it('sorts results by best search query match', () => {
-    const data: ExploreSearchResult['searchTokens'] = [
-      token({ name: 'UniswapStartingName' }),
-      token({ name: 'Uniswap' }),
-    ]
-
-    const result = formatTokenSearchResults(data, 'uniswap', null)
-
-    expect(result).toHaveLength(2)
-    expect(result?.[0]?.name).toEqual('Uniswap')
-    expect(result?.[1]?.name).toEqual('UniswapStartingName')
-  })
-
   it('properly formats token search result', () => {
     const searchToken = token()
     const data = [searchToken]
 
-    const result = formatTokenSearchResults(data, '', null)
+    const result = formatTokenSearchResults(data, null)
 
     expect(result).toHaveLength(1)
     expect(result?.[0]?.type).toEqual(SearchResultType.Token)

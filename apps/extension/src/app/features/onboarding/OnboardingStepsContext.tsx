@@ -16,6 +16,7 @@ export enum SelectImportMethodSteps {
 
 export enum ImportPasskeySteps {
   InitiatePasskeyAuth = 'initiatePasskeyAuth',
+  PasskeyImport = 'passkeyImport',
 }
 
 export enum ImportOnboardingSteps {

@@ -68,6 +68,7 @@ type BaseCreatePositionInfo = {
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {
   protocolVersion: ProtocolVersion.V4
   pool?: V4Pool
+  boostedApr?: number
 }
 
 export type CreateV3PositionInfo = BaseCreatePositionInfo & {

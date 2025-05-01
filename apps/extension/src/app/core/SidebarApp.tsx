@@ -11,7 +11,7 @@ import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
 import { DappContextProvider } from 'src/app/features/dapp/DappContext'
-import { addRequest } from 'src/app/features/dappRequests/saga'
+import { addRequest } from 'src/app/features/dappRequests/actions'
 import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
 import { SendFlow } from 'src/app/features/send/SendFlow'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
@@ -36,10 +36,10 @@ import {
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
 import { getReduxPersistor } from 'src/store/store'
+import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
 import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UnitagUpdaterContextProvider, useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -183,7 +183,7 @@ function SidebarWrapper(): JSX.Element {
   useDappRequestPortListener()
   useTestnetModeForLoggingAndAnalytics()
 
-  const { triggerRefetchUnitags } = useUnitagUpdater()
+  const resetUnitagsQueries = useResetUnitagsQueries()
 
   useEffect(() => {
     dispatch(syncAppWithDeviceLanguage())
@@ -193,10 +193,10 @@ function SidebarWrapper(): JSX.Element {
     return backgroundToSidePanelMessageChannel.addMessageListener(
       BackgroundToSidePanelRequestType.RefreshUnitags,
       () => {
-        triggerRefetchUnitags()
+        resetUnitagsQueries()
       },
     )
-  }, [triggerRefetchUnitags])
+  }, [resetUnitagsQueries])
 
   return (
     <>
@@ -235,12 +235,10 @@ export default function SidebarApp(): JSX.Element {
   return (
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Sidebar}>
-        <UnitagUpdaterContextProvider>
-          <DappContextProvider>
-            <PrimaryAppInstanceDebuggerLazy />
-            <RouterProvider router={router} />
-          </DappContextProvider>
-        </UnitagUpdaterContextProvider>
+        <DappContextProvider>
+          <PrimaryAppInstanceDebuggerLazy />
+          <RouterProvider router={router} />
+        </DappContextProvider>
       </BaseAppContainer>
     </PersistGate>
   )

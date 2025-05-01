@@ -2,7 +2,7 @@ import React from 'react'
 import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { HeaderText } from 'src/components/Requests/RequestModal/HeaderText'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -17,7 +17,7 @@ export function ClientDetails({
   request,
   permitInfo,
 }: {
-  request: WalletConnectRequest
+  request: WalletConnectSigningRequest
   permitInfo?: PermitInfo
 }): JSX.Element {
   const { dapp } = request

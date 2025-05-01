@@ -14,8 +14,8 @@ export function TickTooltip({
   currentTick,
   contentWidth,
   axisLabelPaneWidth,
-  currency0,
-  currency1,
+  quoteCurrency,
+  baseCurrency,
 }: {
   hoverY: number
   hoveredTick: ChartEntry
@@ -23,15 +23,17 @@ export function TickTooltip({
   currentTick?: number
   contentWidth: number
   axisLabelPaneWidth: number
-  currency0: Currency
-  currency1: Currency
+  quoteCurrency: Currency
+  baseCurrency: Currency
 }) {
   const { formatCurrencyAmount, formatPercent } = useFormatter()
 
-  const amount0LockedUSD = useUSDCValue(tryParseCurrencyAmount(hoveredTick.amount0Locked?.toFixed(2), currency0))
-  const amount1LockedUSD = useUSDCValue(tryParseCurrencyAmount(hoveredTick.amount1Locked?.toFixed(2), currency1))
+  const amountBaseLockedUSD = useUSDCValue(tryParseCurrencyAmount(hoveredTick.amount1Locked?.toFixed(2), baseCurrency))
+  const amountQuoteLockedUSD = useUSDCValue(
+    tryParseCurrencyAmount(hoveredTick.amount0Locked?.toFixed(2), quoteCurrency),
+  )
 
-  if (!amount0LockedUSD || !amount1LockedUSD) {
+  if (!amountQuoteLockedUSD || !amountBaseLockedUSD) {
     return null
   }
 
@@ -52,21 +54,21 @@ export function TickTooltip({
       {(currentPrice >= hoveredTick.price0 || hoveredTick.tick === currentTick) && (
         <Flex justifyContent="space-between" row alignItems="center" gap="$gap8">
           <Flex row gap="$gap4" alignItems="center">
-            <DoubleCurrencyLogo currencies={[currency0]} size={iconSizes.icon16} />
-            <Text variant="body4">{currency0.symbol}</Text>
+            <DoubleCurrencyLogo currencies={[quoteCurrency]} size={iconSizes.icon16} />
+            <Text variant="body4">{quoteCurrency.symbol}</Text>
           </Flex>
           <Flex row alignItems="center" gap="$gap4">
             <Text variant="body4">
               {formatCurrencyAmount({
-                amount: amount0LockedUSD,
+                amount: amountQuoteLockedUSD,
                 type: NumberType.FiatTokenStats,
               })}
             </Text>
-            {amount1LockedUSD && (
+            {amountBaseLockedUSD && (
               <Text variant="body4" color="$neutral2">
                 {formatPercent(
                   hoveredTick.tick === currentTick
-                    ? new Percent(amount0LockedUSD.quotient, amount1LockedUSD.add(amount0LockedUSD).quotient)
+                    ? new Percent(amountQuoteLockedUSD.quotient, amountBaseLockedUSD.add(amountQuoteLockedUSD).quotient)
                     : new Percent(1, 1),
                 )}
               </Text>
@@ -77,21 +79,21 @@ export function TickTooltip({
       {(currentPrice <= hoveredTick.price0 || hoveredTick.tick === currentTick) && (
         <Flex justifyContent="space-between" row alignItems="center" gap="$gap8">
           <Flex row gap="$gap4" alignItems="center">
-            <DoubleCurrencyLogo currencies={[currency1]} size={iconSizes.icon16} />
-            <Text variant="body4">{currency1.symbol}</Text>
+            <DoubleCurrencyLogo currencies={[baseCurrency]} size={iconSizes.icon16} />
+            <Text variant="body4">{baseCurrency.symbol}</Text>
           </Flex>
           <Flex row alignItems="center" gap="$gap4">
             <Text variant="body4">
               {formatCurrencyAmount({
-                amount: amount1LockedUSD,
+                amount: amountBaseLockedUSD,
                 type: NumberType.FiatTokenStats,
               })}
             </Text>
-            {amount0LockedUSD && (
+            {amountQuoteLockedUSD && (
               <Text variant="body4" color="$neutral2">
                 {formatPercent(
                   hoveredTick.tick === currentTick
-                    ? new Percent(amount1LockedUSD.quotient, amount0LockedUSD.add(amount1LockedUSD).quotient)
+                    ? new Percent(amountBaseLockedUSD.quotient, amountQuoteLockedUSD.add(amountBaseLockedUSD).quotient)
                     : new Percent(1, 1),
                 )}
               </Text>

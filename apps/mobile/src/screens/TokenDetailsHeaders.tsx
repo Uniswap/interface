@@ -1,7 +1,6 @@
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
-import { StyledContextMenu } from 'src/components/ContextMenu/StyledContextMenu'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
@@ -20,6 +19,8 @@ import {
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
@@ -101,26 +102,28 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
   // Should be the same color as heart icon in not favorited state next to it
   const ellipsisColor = isDarkMode ? colors.neutral2.get() : colors.neutral2.get()
 
-  const actionsWithIcons = useMemo(() => {
+  const actionsWithIcons: MenuOptionItem[] = useMemo(() => {
     const actionTypeToIcon = getActionTypeToMobileIcon(isVisible)
 
-    return menuActions.map((action) => {
+    return menuActions.map((action): MenuOptionItem => {
       return {
         ...action,
-        icon: actionTypeToIcon[action.name],
-        iconColor: colors.neutral2.val ?? undefined,
+        label: action.title,
+        Icon: actionTypeToIcon[action.name],
+        textColor: action.destructive ? colors.statusCritical.val : undefined,
+        iconColor: action.destructive ? colors.statusCritical.val : colors.neutral2.val ?? undefined,
       }
     })
-  }, [menuActions, isVisible, colors.neutral2])
+  }, [isVisible, menuActions, colors.statusCritical.val, colors.neutral2.val])
 
   return (
     <AnimatedFlex row alignItems="center" entering={FadeIn} gap="$spacing12">
-      <StyledContextMenu
-        isLeftOfTrigger
-        actions={actionsWithIcons}
+      <ContextMenu
+        menuItems={actionsWithIcons}
+        triggerMode={ContextMenuTriggerMode.Primary}
         isOpen={isMenuOpen}
-        closeMenu={closeMenu}
         openMenu={openMenu}
+        closeMenu={closeMenu}
         onPressAny={(e) => {
           sendAnalyticsEvent(MobileEventName.TokenDetailsContextMenuAction, {
             action: e.name,
@@ -134,7 +137,7 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
         >
           <EllipsisIcon color={ellipsisColor} height={iconSizes.icon16} width={iconSizes.icon16} />
         </Flex>
-      </StyledContextMenu>
+      </ContextMenu>
       <TokenDetailsFavoriteButton currencyId={currencyId} />
     </AnimatedFlex>
   )

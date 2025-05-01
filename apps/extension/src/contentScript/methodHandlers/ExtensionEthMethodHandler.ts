@@ -1,11 +1,7 @@
 /* eslint-disable max-lines */
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { getPermissions } from 'src/app/features/dappRequests/permissions'
-import {
-  DappRequestType,
-  DappResponseType,
-  SendTransactionRequest,
-} from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import {
   contentScriptToBackgroundMessageChannel,
   dappResponseMessageChannel,
@@ -47,6 +43,7 @@ import { getPendingResponseInfo, postUnauthorizedError } from 'src/contentScript
 import { WindowEthereumRequest } from 'src/contentScript/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
+import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 

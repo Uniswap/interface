@@ -1,21 +1,24 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
-import { TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
 import {
-  formatSearchResults,
   mergeSearchResultsWithBridgingTokens,
-  useTokenOptionsSection,
+  useOnchainItemListSection,
 } from 'uniswap/src/components/TokenSelector/utils'
-import { TokenOption } from 'uniswap/src/components/lists/types'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
+import { useSearchTokensGql } from 'uniswap/src/features/dataApi/searchTokensGql'
+import { useSearchTokensRest } from 'uniswap/src/features/dataApi/searchTokensRest'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export function useTokenSectionsForSearchResults(
   address: string | undefined,
@@ -23,7 +26,7 @@ export function useTokenSectionsForSearchResults(
   searchFilter: string | null,
   isBalancesOnlySearch: boolean,
   input: TradeableAsset | undefined,
-): GqlResult<TokenSection<TokenOption>[]> {
+): GqlResult<OnchainItemSection<TokenOption>[]> {
   const { t } = useTranslation()
 
   const {
@@ -46,15 +49,41 @@ export function useTokenSectionsForSearchResults(
     error: bridgingTokenOptionsError,
     refetch: refetchBridgingTokenOptions,
     loading: bridgingTokenOptionsLoading,
-  } = useBridgingTokensOptions({ input, walletAddress: address, chainFilter })
+  } = useBridgingTokensOptions({ oppositeSelectedToken: input, walletAddress: address, chainFilter })
 
   // Only call search endpoint if isBalancesOnlySearch is false
+  const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
   const {
-    data: searchResultCurrencies,
-    error: searchTokensError,
-    refetch: refetchSearchTokens,
-    loading: searchTokensLoading,
-  } = useSearchTokens(searchFilter, chainFilter, /*skip*/ isBalancesOnlySearch)
+    data: searchResultCurrenciesGql,
+    error: searchTokensErrorGql,
+    refetch: refetchSearchTokensGql,
+    loading: searchTokensLoadingGql,
+  } = useSearchTokensGql(searchFilter, chainFilter, /*skip*/ isBalancesOnlySearch || searchRevampEnabled)
+
+  const {
+    data: searchResultCurrenciesRest,
+    error: searchTokensErrorRest,
+    refetch: refetchSearchTokensRest,
+    loading: searchTokensLoadingRest,
+  } = useSearchTokensRest({
+    searchQuery: searchFilter,
+    chainFilter,
+    skip: isBalancesOnlySearch || !searchRevampEnabled,
+  })
+
+  const { searchResultCurrencies, searchTokensError, refetchSearchTokens, searchTokensLoading } = searchRevampEnabled
+    ? {
+        searchResultCurrencies: searchResultCurrenciesRest,
+        searchTokensError: searchTokensErrorRest,
+        refetchSearchTokens: refetchSearchTokensRest,
+        searchTokensLoading: searchTokensLoadingRest,
+      }
+    : {
+        searchResultCurrencies: searchResultCurrenciesGql,
+        searchTokensError: searchTokensErrorGql,
+        refetchSearchTokens: refetchSearchTokensGql,
+        searchTokensLoading: searchTokensLoadingGql,
+      }
 
   const [selectedNetworkResults, otherNetworksSearchResults] = useMemo((): [CurrencyInfo[], CurrencyInfo[]] => {
     if (!searchResultCurrencies) {
@@ -67,14 +96,16 @@ export function useTokenSectionsForSearchResults(
     return [selected, other]
   }, [searchResultCurrencies])
 
-  const searchResults = useMemo(() => {
-    return formatSearchResults(selectedNetworkResults, portfolioBalancesById, searchFilter)
-  }, [selectedNetworkResults, portfolioBalancesById, searchFilter])
+  const searchResults = useCurrencyInfosToTokenOptions({
+    currencyInfos: selectedNetworkResults,
+    portfolioBalancesById,
+  })
 
   // Format other networks search results if they exist
-  const otherNetworksResults = useMemo(() => {
-    return formatSearchResults(otherNetworksSearchResults, portfolioBalancesById, searchFilter)
-  }, [otherNetworksSearchResults, portfolioBalancesById, searchFilter])
+  const otherNetworksResults = useCurrencyInfosToTokenOptions({
+    currencyInfos: otherNetworksSearchResults,
+    portfolioBalancesById,
+  })
 
   const loading =
     portfolioTokenOptionsLoading ||
@@ -82,16 +113,16 @@ export function useTokenSectionsForSearchResults(
     (!isBalancesOnlySearch && searchTokensLoading) ||
     bridgingTokenOptionsLoading
 
-  const searchResultsSections = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.SearchResults,
+  const searchResultsSections = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.SearchResults,
     // Use local search when only searching balances
-    tokenOptions: isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
+    options: isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
   })
 
   // Create section for other chains search results if they exist
-  const otherNetworksSection = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.OtherChainsTokens,
-    tokenOptions: otherNetworksResults,
+  const otherNetworksSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.OtherChainsTokens,
+    options: otherNetworksResults,
   })
 
   // If there are bridging options, we need to extract them from the search results and then prepend them as a new section above.

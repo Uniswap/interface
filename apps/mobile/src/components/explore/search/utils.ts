@@ -18,7 +18,6 @@ type ExploreSearchResult = NonNullable<ExploreSearchQuery>
 // Formats the tokens portion of explore search results into sorted array of TokenSearchResult
 export function formatTokenSearchResults(
   data: ExploreSearchResult['searchTokens'],
-  searchQuery: string,
   selectedChain: UniverseChainId | null,
 ): TokenSearchResult[] | undefined {
   if (!data) {
@@ -65,27 +64,7 @@ export function formatTokenSearchResults(
     return tokensMap
   }, {})
 
-  return Object.values(tokenResultsMap)
-    .slice(0, MAX_TOKEN_RESULTS_COUNT)
-    .sort((res1: TokenSearchResult, res2: TokenSearchResult) => {
-      const res1Match = isExactTokenSearchResultMatch(res1, searchQuery)
-      const res2Match = isExactTokenSearchResultMatch(res2, searchQuery)
-
-      if (res1Match && !res2Match) {
-        return -1
-      } else if (!res1Match && res2Match) {
-        return 1
-      } else {
-        return 0
-      }
-    })
-}
-
-function isExactTokenSearchResultMatch(searchResult: TokenSearchResult, query: string): boolean {
-  return (
-    searchResult.name?.toLowerCase() === query.toLowerCase() ||
-    searchResult.symbol.toLowerCase() === query.toLowerCase()
-  )
+  return Object.values(tokenResultsMap).slice(0, MAX_TOKEN_RESULTS_COUNT)
 }
 
 export function formatNFTCollectionSearchResults(

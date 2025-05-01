@@ -319,7 +319,7 @@ const ReanimatedNumber = ({
 
   const colors = useSporeColors()
 
-  const scaleWraper = useAnimatedStyle(() => {
+  const scaleWrapper = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: -SCREEN_WIDTH / 2 }, { scale: scale.value }, { translateX: SCREEN_WIDTH / 2 }],
     }
@@ -394,7 +394,7 @@ const ReanimatedNumber = ({
   }
 
   return (
-    <Animated.View style={scaleWraper} testID={TestID.PortfolioBalance}>
+    <Animated.View style={scaleWrapper} testID={TestID.PortfolioBalance}>
       <Flex row alignItems="flex-start" backgroundColor="$surface1" borderRadius="$rounded4" width={MAX_DEVICE_WIDTH}>
         <TopAndBottomGradient />
         <Shine disabled={!warmLoading}>

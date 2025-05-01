@@ -1,11 +1,8 @@
 import { NavDropdown, NavDropdownTabWrapper } from 'components/NavBar/NavDropdown/index'
 import { TabsItem, TabsSection, useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import { useKeyDown } from 'hooks/useKeyPress'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Flex, Popover, Text, styled } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const TabText = styled(Text, {
   justifyContent: 'center',
@@ -23,26 +20,13 @@ const TabText = styled(Text, {
   },
 })
 
-const QuickKey = styled(Flex, {
-  width: '$spacing20',
-  height: '$spacing20',
-  centered: true,
-  gap: '$spacing8',
-  borderRadius: '$rounded4',
-  opacity: 0.5,
-  background: '$surface3',
-})
-
 interface TItemProps {
   icon?: JSX.Element
   label: string
-  quickKey: string
   path: string
   closeMenu: () => void
 }
-function Item({ icon, label, quickKey, path, closeMenu }: TItemProps) {
-  const navHotkeysEnabled = useFeatureFlag(FeatureFlags.NavigationHotkeys)
-
+function Item({ icon, label, path, closeMenu }: TItemProps) {
   return (
     <NavLink to={path} style={{ textDecoration: 'none' }} onClick={closeMenu}>
       <Flex
@@ -60,13 +44,6 @@ function Item({ icon, label, quickKey, path, closeMenu }: TItemProps) {
         <Text variant="buttonLabel2" width="100%" color="$neutral2">
           {label}
         </Text>
-        {navHotkeysEnabled && (
-          <QuickKey>
-            <Text variant="body3" color="$neutral2">
-              {quickKey}
-            </Text>
-          </QuickKey>
-        )}
       </Flex>
     </NavLink>
   )
@@ -84,10 +61,8 @@ const Tab = ({
   items?: TabsItem[]
 }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const navigate = useNavigate()
   const popoverRef = useRef<Popover>(null)
   const location = useLocation()
-  const navHotkeysEnabled = useFeatureFlag(FeatureFlags.NavigationHotkeys)
 
   const closeMenu = useCallback(() => {
     popoverRef.current?.close()
@@ -102,31 +77,6 @@ const Tab = ({
     </NavLink>
   )
 
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (!items || !isOpen) {
-        return
-      }
-      const item = items.find((i) => i.quickKey.toUpperCase() === event.key || i.quickKey.toLowerCase() === event.key)
-      if (!item) {
-        return
-      }
-      if (item.internal) {
-        navigate(item.href)
-      } else {
-        window.location.href = item.href
-      }
-      closeMenu()
-    },
-    [items, navigate, closeMenu, isOpen],
-  )
-
-  useKeyDown({
-    callback: handleKeyDown,
-    keys: items?.map((i) => i.quickKey.toLowerCase()),
-    disabled: !navHotkeysEnabled || !isOpen,
-  })
-
   if (!items) {
     return Label
   }
@@ -136,12 +86,11 @@ const Tab = ({
       <Popover.Trigger data-testid={`${label}-tab`}>{Label}</Popover.Trigger>
       <NavDropdown isOpen={isOpen} dataTestId={`${label}-menu`}>
         <NavDropdownTabWrapper>
-          {items.map((item, index) => (
+          {items?.map((item, index) => (
             <Item
               key={`${item.label}_${index}`}
               icon={item.icon}
               label={item.label}
-              quickKey={item.quickKey}
               path={item.href}
               closeMenu={closeMenu}
             />

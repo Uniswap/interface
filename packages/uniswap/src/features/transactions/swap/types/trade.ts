@@ -162,7 +162,7 @@ export class ClassicTrade<
   TOutput extends Currency = Currency,
   TTradeType extends TradeType = TradeType,
 > extends RouterSDKTrade<TInput, TOutput, TTradeType> {
-  readonly quote?: ClassicQuoteResponse
+  readonly quote: ClassicQuoteResponse
   readonly routing = Routing.CLASSIC
   readonly deadline: number
   readonly slippageTolerance: number
@@ -174,7 +174,7 @@ export class ClassicTrade<
     deadline,
     ...routes
   }: {
-    readonly quote?: ClassicQuoteResponse
+    readonly quote: ClassicQuoteResponse
     readonly deadline: number
     readonly v2Routes: {
       routev2: V2RouteSDK<TInput, TOutput>

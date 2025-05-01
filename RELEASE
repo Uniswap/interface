@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQToF1qiuAjejy6i8taYNKVGVw2eehvVKb8mimGtzmdnt`
-- CIDv1: `bafybeia7rqlhhzrec6fjpzeo2eh3ayuiiqrkqehr2puihgnpw5xabvisqu`
+- CIDv0: `QmY6iPUuY57eq3gtoFaqtJ885ysk1SQDbHi4nawcXmYM7s`
+- CIDv1: `bafybeierals42wkadswmgvlto7rbuywzpzfcmgqcywdlzqbvgylukagtoy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,51 +10,72 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeia7rqlhhzrec6fjpzeo2eh3ayuiiqrkqehr2puihgnpw5xabvisqu.ipfs.dweb.link/
-- [ipfs://QmQToF1qiuAjejy6i8taYNKVGVw2eehvVKb8mimGtzmdnt/](ipfs://QmQToF1qiuAjejy6i8taYNKVGVw2eehvVKb8mimGtzmdnt/)
+- https://bafybeierals42wkadswmgvlto7rbuywzpzfcmgqcywdlzqbvgylukagtoy.ipfs.dweb.link/
+- [ipfs://QmY6iPUuY57eq3gtoFaqtJ885ysk1SQDbHi4nawcXmYM7s/](ipfs://QmY6iPUuY57eq3gtoFaqtJ885ysk1SQDbHi4nawcXmYM7s/)
 
-## 5.79.0 (2025-04-16)
+## 5.82.0 (2025-04-30)
 
 
 ### Features
 
-* **web:** [EW] add EW redux state and Recently Signed In Modal (#18035) f78e203
-* **web:** [EW] add ExternallyConnectableExtension dynamic config to select which extension the web app will communicate with (#18226) 211a6f8
-* **web:** [EW] Add new passkeys to wallet (#14816) a06b597
-* **web:** [EW] Be able to delete passkeys (#14817) 53cf094
-* **web:** [EW] Modify Sign In Connector (#17668) eb6e89f
-* **web:** add apr section to position page (#18078) 328c45a
-* **web:** add low network native balance warning for send (#18248) 1eb12a9
-* **web:** add username to EW registration (#18084) 5ac58a5
-* **web:** allow Low network token balance warning to show for interface (#18102) d756982
-* **web:** lp incentive position card updates (#18044) d50e225
-* **web:** update positions page with lp incentive boost treatments (#18026) 4211bdc
+* **web:** add more CF cacheing for CSS resources (#18689) 3ddb1e3
+* **web:** add more CF caching headers for public assets (#18678) 4f9b98e
+* **web:** add more menu to hover state search modal (#18469) d4a85b5
+* **web:** add pools mock sections (#17257) 3a6bc2c
+* **web:** add tabs to search modal (#17180) 4e62ad9
+* **web:** Add verify to add/delete passkey (#18627) b872b40
+* **web:** bidirectional table scroll buttons (#18876) c647127
+* **web:** defer initializations of AssetActivityProvider and TokenBalancesProvider (#18057) b1e68cf
+* **web:** feature-gate pool search and tabs on web (#18273) 78ea6ec
+* **web:** implement keyboard focus hover state on OptionItem (#17179) ebfea5c
+* **web:** lazy load top level modals (#18056) 6a38462
+* **web:** minip updates (#18613) 248bdec
+* **web:** more CF caching for js chunks (#18679) 89611fe
+* **web:** pass uniquote enabled to trading api requests (#19018) 955bbac
+* **web:** show help modal on passkey error (#18682) 15039cf
+* **web:** top boosted pools (#18569) cbcb803
+* **web:** useMutate for refreshing authenticators (#18628) 3a24751
 
 
 ### Bug Fixes
 
-* **web:** fixing arb v3 (#18421) (#18503) 6d6599f
-* **web:** handle async token0 or token1 in create context (#18395) ad71e5e
-* **web:** hotfix staging fix safari dropdown (#18468) b19c84c
-* **web:** move to 1 worker and fix wallet connection (#18348) c38af7e
-* **web:** only use mainnet in legacy searchbardropdown (#17966) de03a5d
-* **web:** tooltip on hover tamagui bug (#18349) 4c9c8aa
-* **web:** web staging builds (#18402) 8aff715
+* **web:** [pdp] redirect if no pool found (#18412) 8e95934
+* **web:** [tdp] redirect if no token found (#18408) 997977e
+* **web:** [tdp] switch testnet/mainnet mode when wallet is disconnected (#18406) 571fced
+* **web:** add additional statsig api urls to our csp.json file (#19036) d7a9320
+* **web:** add more context to Datadog resource events (#18743) 00d6e11
+* **web:** add web3modal to csp to fix wallet connect error (#18771) d57bd82
+* **web:** bug bash polish (#18594) ba4f511
+* **web:** clean up modal util hooks (#18535) db8ff2b
+* **web:** dd- allow 100% sample rate on interface staging (#18267) abb113a
+* **web:** DevFlagsBox behavior (#18749) 4a93d4e
+* **web:** do not render top level modals when shouldOverridePageLayout=true (#18691) 7f63a56
+* **web:** fix button size in FeeTierSearchModal (#18911) 5936720
+* **web:** fix closeModal util hook (#18783) b76e2d8
+* **web:** fix invalid robots.txt (#18690) f910fd3
+* **web:** fix resetting of modal after closing (#18872) 317f04a
+* **web:** fix uniwalletmodal opening bug (#18871) c4de0d2
+* **web:** lp incentives bugfixes (#18830) 4e3b289
+* **web:** migrate Card components to tamagui (#18481) 1f43821
+* **web:** migrate containers in MigrateV2Pair to tamagui (#18482) 374dd77
+* **web:** optimize images for app store logos and lazy-load QR code (#18635) cb119ef
+* **web:** pass chainId to useReadContracts (#18663) c4aa5b5
+* **web:** remove applied percent buffer logic from useMaxAmountSpend (#18834) f88ac25
+* **web:** remove more dead feature flags (#18538) b9ef4a8
+* **web:** replace dotted bg gradient png with css (#18803) bf8cfea
+* **web:** search revamp web polish (#18416) 86f034e
+* **web:** settings spacing fix (#18874) b36aa67
+* **web:** show price for v2 create (#18917) e80273c
+* **web:** slideOutMenu adjustments (#18629) 3715c68
+* **web:** start migrating MigrateV2Pair to spore / tamagui (#18480) 5d8a2d0
+* **web:** temp skip snapshot test on LimitPriceInputPanel.test.tsx (#18630) 435fe3b
+* **web:** uninitialized v2 pools (#18807) 8f390da
+* **web:** v2 migrate page UI fixes (#18479) 858807d
+* **web:** v4 native pair liq chart fix (#18893) c008acc
 
 
 ### Continuous Integration
 
-* **web:** update sitemaps 7d9688f
-
-
-### Code Refactoring
-
-* **web:** kill multicall (#15064) ef6c894
-* **web:** move x-specifics to getUniswapXSwapTxAndGasInfo (#18180) 35560f7
-* **web:** rm unused indicativeTrade field from swapTxAndGasInfo (#18177) 3161013
-* **web:** rm useMultipleContractSingleData in legacy v2 hook (#15062) ab7b73e
-* **web:** rm useMultipleContractSingleData in usePools (#15063) 2dba888
-* **web:** rm useMultipleContractSingleData in useV2Pairs (#15061) 7549b71
-* **web:** rm useMultipleContractSingleData usage in useCurrencyBalance (#15059) 11995d0
+* **web:** update sitemaps a994dde
 
 

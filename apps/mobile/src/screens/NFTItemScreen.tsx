@@ -5,12 +5,12 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GestureResponderEvent, StatusBar, StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading/loaders'
+import { useIsInModal } from 'src/components/modals/useIsInModal'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
-import { selectModalState } from 'src/features/modals/selectModalState'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackground'
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
@@ -141,7 +141,7 @@ function NFTItemScreenContents({
     }
   }
 
-  const inModal = useSelector(selectModalState(ModalName.Explore)).isOpen
+  const inModal = useIsInModal(ModalName.Explore)
 
   const traceProperties: Record<string, Maybe<string | boolean>> = useMemo(() => {
     const baseProps = {

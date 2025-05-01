@@ -1,5 +1,4 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import {
   LiquidityPositionStatusIndicator,
@@ -7,7 +6,7 @@ import {
 } from 'components/Liquidity/LiquidityPositionStatusIndicator'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,15 +15,12 @@ import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Button, Circle, Flex, Text, useMedia } from 'ui/src'
 
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
-import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import { UNI } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 
 interface LiquidityPositionInfoProps {
@@ -36,7 +32,6 @@ interface LiquidityPositionInfoProps {
   linkToPool?: boolean
   includeLpIncentives?: boolean
   includeNetwork?: boolean
-  poolApr?: number
   lpIncentiveRewardApr?: number
 }
 
@@ -63,7 +58,6 @@ export function LiquidityPositionInfo({
   linkToPool = false,
   includeLpIncentives = false,
   includeNetwork = false,
-  poolApr,
 }: LiquidityPositionInfoProps) {
   const { currency0Amount, currency1Amount, status, feeTier, v4hook, version, chainId } = positionInfo
   const versionLabel = getProtocolVersionLabel(version)
@@ -71,7 +65,7 @@ export function LiquidityPositionInfo({
   const chainInfo = getChainInfo(positionInfo.chainId)
   const media = useMedia()
   const { t } = useTranslation()
-  const { formatPercent } = useLocalizationContext()
+  const { formatPercent: _ } = useLocalizationContext()
   const lpIncentiveRewardApr =
     positionInfo.version === ProtocolVersion.V4 && Boolean(positionInfo.boostedApr)
       ? positionInfo.boostedApr
@@ -89,10 +83,9 @@ export function LiquidityPositionInfo({
     return !shouldHideInRange
   }, [positionInfo.version, showMigrateButton, media.lg, media.md, media.xxl, media.xl])
 
-  const [currency0Info, currency1Info, rewardCurrencyInfo] = useCurrencyInfos([
+  const [currency0Info, currency1Info] = useCurrencyInfos([
     currencyId(currency0Amount.currency),
     currencyId(currency1Amount.currency),
-    buildCurrencyId(UniverseChainId.Mainnet, UNI[UniverseChainId.Mainnet].address),
   ])
 
   const includeNetworkInLogo = useMemo(
@@ -169,27 +162,16 @@ export function LiquidityPositionInfo({
               </Flex>
             )}
             {includeLpIncentives && lpIncentiveRewardApr && (
-              <MouseoverTooltip
-                padding={0}
-                text={
-                  <LPIncentiveFeeStatTooltip
-                    currency0Amount={currency0Amount}
-                    currency1Amount={currency1Amount}
-                    poolApr={poolApr}
-                    lpIncentiveRewardApr={lpIncentiveRewardApr}
-                    totalApr={positionInfo.version === ProtocolVersion.V4 ? positionInfo.totalApr : undefined}
-                  />
-                }
-                size={TooltipSize.Small}
-                placement="top"
-              >
-                <Flex row gap="$spacing6" alignItems="center" cursor="pointer">
-                  <CurrencyLogo currencyInfo={rewardCurrencyInfo} size={16} />
-                  <Text variant="body3" color="$accent1">
-                    {t('pool.rewardAPR.percent', { pct: formatPercent(lpIncentiveRewardApr) })}
-                  </Text>
-                </Flex>
-              </MouseoverTooltip>
+              <LpIncentivesAprDisplay
+                lpIncentiveRewardApr={lpIncentiveRewardApr}
+                hideBackground
+                tooltipProps={{
+                  currency0Info,
+                  currency1Info,
+                  poolApr: positionInfo.apr,
+                  totalApr: positionInfo.version === ProtocolVersion.V4 ? positionInfo.totalApr : undefined,
+                }}
+              />
             )}
           </Flex>
         )}

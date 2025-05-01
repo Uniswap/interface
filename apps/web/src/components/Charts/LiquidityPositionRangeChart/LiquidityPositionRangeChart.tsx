@@ -23,6 +23,7 @@ import { CrosshairMode, ISeriesApi, LineStyle, LineType, UTCTimestamp } from 'li
 import { CreatePositionInfo, PriceRangeInfo } from 'pages/Pool/Positions/create/types'
 import {
   getCurrencyAddressWithWrap,
+  getInvertedTuple,
   getPoolIdOrAddressFromCreatePositionInfo,
   getSortedCurrenciesTupleWithWrap,
 } from 'pages/Pool/Positions/create/utils'
@@ -317,8 +318,8 @@ interface LiquidityPositionRangeChartProps {
   version: ProtocolVersion
   poolAddressOrId?: string
   chainId: UniverseChainId
-  currency0: Currency
-  currency1: Currency
+  quoteCurrency: Currency
+  baseCurrency: Currency
   positionStatus?: PositionStatus
   // Note: this should be representative of the ordering/prices you want to display.
   // e.g. if the callsite supports inverting the prices, you should switch and invert the prices before passing them here.
@@ -344,10 +345,12 @@ interface LiquidityPositionRangeChartProps {
 export function getLiquidityRangeChartProps({
   positionInfo,
   priceRangeInfo,
+  pricesInverted,
   interactive,
 }: {
   positionInfo: CreatePositionInfo
   priceRangeInfo: PriceRangeInfo
+  pricesInverted: boolean
   interactive?: boolean
 }): LiquidityPositionRangeChartProps | undefined {
   const { currencies, protocolVersion } = positionInfo
@@ -368,11 +371,13 @@ export function getLiquidityRangeChartProps({
           priceUpper: priceRangeInfo.prices[1],
         }
 
+  const [baseCurrency, quoteCurrency] = getInvertedTuple([currencies[0], currencies[1]], pricesInverted)
+
   return {
     poolAddressOrId,
     version: protocolVersion,
-    currency0: currencies[0],
-    currency1: currencies[1],
+    quoteCurrency,
+    baseCurrency,
     chainId: currencies[0].chainId,
     priceOrdering,
     positionStatus:
@@ -408,8 +413,8 @@ export function LiquidityPositionRangeChartLoader({
 
 function LiquidityPositionRangeChart({
   version,
-  currency0,
-  currency1,
+  quoteCurrency,
+  baseCurrency,
   poolAddressOrId,
   chainId,
   positionStatus,
@@ -443,12 +448,12 @@ function LiquidityPositionRangeChart({
       }
     : undefined
   const sortedCurrencies = useMemo(
-    () => getSortedCurrenciesTupleWithWrap(currency0, currency1, version),
-    [currency0, currency1, version],
+    () => getSortedCurrenciesTupleWithWrap(quoteCurrency, baseCurrency, version),
+    [quoteCurrency, baseCurrency, version],
   )
   const priceData = usePoolPriceChartData(
     variables,
-    currency0,
+    quoteCurrency,
     version,
     getCurrencyAddressWithWrap(sortedCurrencies[0], version),
   )
@@ -495,7 +500,7 @@ function LiquidityPositionRangeChart({
     poolId: poolAddressOrId,
     currencyA: sortedCurrencies[0],
     currencyB: sortedCurrencies[1],
-    invertPrices: currency0.equals(sortedCurrencies[0]),
+    invertPrices: quoteCurrency.equals(sortedCurrencies[0]),
     version,
     feeAmount: Number(feeTier),
     tickSpacing,
@@ -619,8 +624,8 @@ function LiquidityPositionRangeChart({
               axisLabelPaneWidth: Y_AXIS_WIDTH,
             }}
             onBrushDomainChange={() => {}}
-            currency0={currency0}
-            currency1={currency1}
+            quoteCurrency={quoteCurrency}
+            baseCurrency={baseCurrency}
             isMobile={isMobileWeb}
           />
         </Flex>

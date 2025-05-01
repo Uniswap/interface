@@ -16,6 +16,8 @@ import {
   ClassicQuote,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
+  CreateSwap5792Request,
+  CreateSwap5792Response,
   CreateSwap7702Request,
   CreateSwap7702Response,
   CreateSwapRequest,
@@ -46,6 +48,8 @@ import {
   WalletCheckDelegationResponseBody,
   WalletEncode7702RequestBody,
 } from 'uniswap/src/data/tradingApi/__generated__'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
@@ -82,8 +86,6 @@ export type BridgeQuoteResponse = QuoteResponse & {
   routing: Routing.BRIDGE
 }
 
-export const TRADING_API_CACHE_KEY = 'TradingApi'
-
 const TradingApiClient = createApiClient({
   baseUrl: uniswapUrls.tradingApiUrl,
   additionalHeaders: {
@@ -93,6 +95,13 @@ const TradingApiClient = createApiClient({
 
 export type WithV4Flag<T> = T & { v4Enabled: boolean }
 
+export const getFeatureFlaggedHeaders = (): Record<string, string> => {
+  const uniquoteEnabled = getFeatureFlag(FeatureFlags.UniquoteEnabled)
+  return {
+    'x-uniquote-enabled': uniquoteEnabled ? 'true' : 'false',
+  }
+}
+
 export async function fetchQuote({
   v4Enabled,
   ...params
@@ -101,6 +110,7 @@ export async function fetchQuote({
     body: JSON.stringify(params),
     headers: {
       'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
+      ...getFeatureFlaggedHeaders(),
     },
     on404: () => {
       logger.warn('TradingApiClient', 'fetchQuote', 'Quote 404', {
@@ -116,6 +126,9 @@ export async function fetchQuote({
 export async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Promise<IndicativeQuoteResponse> {
   return await TradingApiClient.post<IndicativeQuoteResponse>(uniswapUrls.tradingApiPaths.indicativeQuote, {
     body: JSON.stringify(params),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 
@@ -124,6 +137,20 @@ export async function fetchSwap({ v4Enabled, ...params }: WithV4Flag<CreateSwapR
     body: JSON.stringify(params),
     headers: {
       'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
+      ...getFeatureFlaggedHeaders(),
+    },
+  })
+}
+
+export async function fetchSwap5792({
+  v4Enabled,
+  ...params
+}: WithV4Flag<CreateSwap5792Request>): Promise<CreateSwap5792Response> {
+  return await TradingApiClient.post<CreateSwap5792Response>(uniswapUrls.tradingApiPaths.swap5792, {
+    body: JSON.stringify(params),
+    headers: {
+      'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
+      ...getFeatureFlaggedHeaders(),
     },
   })
 }
@@ -131,12 +158,18 @@ export async function fetchSwap({ v4Enabled, ...params }: WithV4Flag<CreateSwapR
 export async function fetchCheckApproval(params: ApprovalRequest): Promise<ApprovalResponse> {
   return await TradingApiClient.post<ApprovalResponse>(uniswapUrls.tradingApiPaths.approval, {
     body: JSON.stringify(params),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 
 export async function submitOrder(params: OrderRequest): Promise<OrderResponse> {
   return await TradingApiClient.post<OrderResponse>(uniswapUrls.tradingApiPaths.order, {
     body: JSON.stringify(params),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 
@@ -144,6 +177,9 @@ export async function fetchOrders({ orderIds }: { orderIds: string[] }): Promise
   return await TradingApiClient.get<GetOrdersResponse>(uniswapUrls.tradingApiPaths.orders, {
     params: {
       orderIds: orderIds.join(','),
+    },
+    headers: {
+      ...getFeatureFlaggedHeaders(),
     },
   })
 }
@@ -154,6 +190,9 @@ export async function fetchSwappableTokens(params: SwappableTokensParams): Promi
       tokenIn: params.tokenIn,
       tokenInChainId: params.tokenInChainId,
     },
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 
@@ -162,6 +201,9 @@ export async function createLpPosition(params: CreateLPPositionRequest): Promise
     body: JSON.stringify({
       ...params,
     }),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 export async function decreaseLpPosition(params: DecreaseLPPositionRequest): Promise<DecreaseLPPositionResponse> {
@@ -169,6 +211,9 @@ export async function decreaseLpPosition(params: DecreaseLPPositionRequest): Pro
     body: JSON.stringify({
       ...params,
     }),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 export async function increaseLpPosition(params: IncreaseLPPositionRequest): Promise<IncreaseLPPositionResponse> {
@@ -176,6 +221,9 @@ export async function increaseLpPosition(params: IncreaseLPPositionRequest): Pro
     body: JSON.stringify({
       ...params,
     }),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 export async function checkLpApproval(
@@ -186,7 +234,10 @@ export async function checkLpApproval(
     body: JSON.stringify({
       ...params,
     }),
-    headers,
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+      ...headers,
+    },
   })
 }
 
@@ -195,6 +246,9 @@ export async function claimLpFees(params: ClaimLPFeesRequest): Promise<ClaimLPFe
     body: JSON.stringify({
       ...params,
     }),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 
@@ -204,6 +258,9 @@ export async function fetchSwaps(params: { txHashes: TransactionHash[]; chainId:
       txHashes: params.txHashes.join(','),
       chainId: params.chainId,
     },
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 
@@ -212,6 +269,9 @@ export async function migrateLpPosition(params: MigrateLPPositionRequest): Promi
     body: JSON.stringify({
       ...params,
     }),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 
@@ -220,6 +280,9 @@ export async function fetchClaimLpIncentiveRewards(params: ClaimLPRewardsRequest
     body: JSON.stringify({
       ...params,
     }),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 
@@ -228,6 +291,9 @@ export async function fetchWalletEncoding7702(params: WalletEncode7702RequestBod
     body: JSON.stringify({
       ...params,
     }),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }
 
@@ -241,6 +307,9 @@ export async function checkWalletDelegation(
         walletAddress: params.walletAddress,
         chainIds: params.chainIds.join(','),
       },
+      headers: {
+        ...getFeatureFlaggedHeaders(),
+      },
     },
   )
 }
@@ -250,5 +319,8 @@ export async function fetchCreateSwap7702(params: CreateSwap7702Request): Promis
     body: JSON.stringify({
       ...params,
     }),
+    headers: {
+      ...getFeatureFlaggedHeaders(),
+    },
   })
 }

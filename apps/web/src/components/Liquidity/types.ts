@@ -88,6 +88,8 @@ type V4PositionInfo = BasePositionInfo & {
   totalApr?: number
   unclaimedRewardsAmountUni?: string
   boostedApr?: number
+  token0Address?: string
+  token1Address?: string
 }
 
 export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo
@@ -100,4 +102,5 @@ export type FeeTierData = {
   percentage: Percent
   tvl: string
   created: boolean
+  boostedApr?: number
 }

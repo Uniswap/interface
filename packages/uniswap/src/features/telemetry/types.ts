@@ -22,10 +22,11 @@ import {
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
-import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
+import { OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import {
   ExtensionEventName,
@@ -49,7 +50,7 @@ import { ImportType } from 'uniswap/src/types/onboarding'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import { UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -96,10 +97,10 @@ type KeyringMissingMnemonicProperties = {
 
 export type PendingTransactionTimeoutProperties = {
   use_flashbots: boolean
-  flashbots_block_range: number
-  send_authentication_header: boolean
+  flashbots_refund_percent: number
   private_rpc: boolean
   chain_id: number
+  address: string
   tx_hash?: string
 }
 
@@ -532,6 +533,21 @@ export type UniverseEventProperties = {
   [InterfaceEventNameLocal.UniswapXSignatureRequested]: Record<string, unknown> // TODO specific type
   [InterfaceEventNameLocal.UniswapXOrderPostError]: Record<string, unknown> // TODO specific type
   [InterfaceEventNameLocal.UniswapXOrderSubmitted]: Record<string, unknown> // TODO specific type
+  [InterfaceEventNameLocal.CreatePositionFailed]: {
+    message: string
+  }
+  [InterfaceEventNameLocal.IncreaseLiquidityFailed]: {
+    message: string
+  }
+  [InterfaceEventNameLocal.DecreaseLiquidityFailed]: {
+    message: string
+  }
+  [InterfaceEventNameLocal.MigrateLiquidityFailed]: {
+    message: string
+  }
+  [InterfaceEventNameLocal.CollectLiquidityFailed]: {
+    message: string
+  }
   [InterfaceEventName.NAVBAR_SEARCH_EXITED]: {
     navbar_search_input_text: string
     hasInput: boolean
@@ -835,8 +851,8 @@ export type UniverseEventProperties = {
         AssetDetailsBaseProperties &
         SearchResultContextProperties & {
           field: CurrencyField
-          tokenSection?: TokenOptionSection
           preselect_asset: boolean
+          tokenSection?: OnchainItemSectionName
         })
     | InterfaceTokenSelectedProperties
   [UniswapEventName.BlockaidFeesMismatch]: {
@@ -887,7 +903,7 @@ export type UniverseEventProperties = {
     newBackupCount: number
   }
   [WalletEventName.BackupMethodRemoved]: {
-    backupMethodType: 'manual' | 'cloud'
+    backupMethodType: 'manual' | 'cloud' | 'passkey'
     newBackupCount: number
   }
   [WalletEventName.DappRequestCardPressed]: DappRequestCardEventProperties

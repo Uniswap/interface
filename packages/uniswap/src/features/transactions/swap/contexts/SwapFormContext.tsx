@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
@@ -9,6 +10,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSwapAnalytics } from 'uniswap/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useDerivedSwapInfo'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
+import { updateFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/slice'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -91,6 +94,8 @@ export function SwapFormContextProvider({
   const exactAmountFiatRef = useRef<string>('')
   const exactAmountTokenRef = useRef<string>('')
   const { defaultChainId } = useEnabledChains()
+  const dispatch = useDispatch()
+  const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
   const defaultState = useMemo(() => getDefaultState(defaultChainId), [defaultChainId])
   const [swapForm, setSwapForm] = useState<SwapFormState>(prefilledState ?? defaultState)
   const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
@@ -210,6 +215,13 @@ export function SwapFormContextProvider({
 
       if ('exactAmountToken' in newState) {
         exactAmountTokenRef.current = newState.exactAmountToken ?? ''
+      }
+
+      // Update chainFilter redux state if swap form update includes a change to filteredChainIds
+      if ('filteredChainIds' in newState) {
+        dispatch(
+          updateFilteredChainIds({ filteredChainIds: newState.filteredChainIds ?? persistedFilteredChainIds ?? {} }),
+        )
       }
 
       setSwapForm((prevState) => {

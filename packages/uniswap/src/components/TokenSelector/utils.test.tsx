@@ -1,4 +1,4 @@
-import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
+import { OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
 import { isSwapListLoading } from 'uniswap/src/components/TokenSelector/utils'
 
 describe(isSwapListLoading, () => {
@@ -7,18 +7,18 @@ describe(isSwapListLoading, () => {
       isSwapListLoading({
         loading: true,
         portfolioSection: undefined,
-        popularSection: undefined,
+        trendingSection: undefined,
         isTestnetModeEnabled: false,
       }),
     ).toBe(true)
   })
 
-  it('returns false if loading, testnet mode is on, portfolioSection is defined, and popularSection is undefined', () => {
+  it('returns false if loading, testnet mode is on, portfolioSection is defined, and trendingSection is undefined', () => {
     expect(
       isSwapListLoading({
         loading: true,
-        portfolioSection: [{ sectionKey: TokenOptionSection.YourTokens, data: [] }],
-        popularSection: undefined,
+        portfolioSection: [{ sectionKey: OnchainItemSectionName.YourTokens, data: [] }],
+        trendingSection: undefined,
         isTestnetModeEnabled: true,
       }),
     ).toBe(false)
@@ -28,8 +28,8 @@ describe(isSwapListLoading, () => {
     expect(
       isSwapListLoading({
         loading: true,
-        portfolioSection: [{ sectionKey: TokenOptionSection.YourTokens, data: [] }],
-        popularSection: [{ sectionKey: TokenOptionSection.PopularTokens, data: [] }],
+        portfolioSection: [{ sectionKey: OnchainItemSectionName.YourTokens, data: [] }],
+        trendingSection: [{ sectionKey: OnchainItemSectionName.TrendingTokens, data: [] }],
         isTestnetModeEnabled: false,
       }),
     ).toBe(false)
@@ -37,8 +37,8 @@ describe(isSwapListLoading, () => {
     expect(
       isSwapListLoading({
         loading: true,
-        portfolioSection: [{ sectionKey: TokenOptionSection.YourTokens, data: [] }],
-        popularSection: [{ sectionKey: TokenOptionSection.PopularTokens, data: [] }],
+        portfolioSection: [{ sectionKey: OnchainItemSectionName.YourTokens, data: [] }],
+        trendingSection: [{ sectionKey: OnchainItemSectionName.TrendingTokens, data: [] }],
         isTestnetModeEnabled: true,
       }),
     ).toBe(false)

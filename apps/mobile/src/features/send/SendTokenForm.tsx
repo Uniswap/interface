@@ -18,8 +18,8 @@ import {
   DecimalPadCalculatedSpaceId,
   DecimalPadInput,
   DecimalPadInputRef,
-} from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
-import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+} from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
+import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
@@ -27,7 +27,7 @@ import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/bod
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
 import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'

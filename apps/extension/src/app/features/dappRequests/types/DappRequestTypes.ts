@@ -11,42 +11,7 @@ import { HomeTabs } from 'src/app/navigation/constants'
 import { MessageSchema } from 'uniswap/src/extension/messagePassing/messageTypes'
 import { PermissionRequestSchema, PermissionSchema } from 'src/contentScript/WindowEthereumRequestTypes'
 import { z } from 'zod'
-
-// ENUMS
-
-export enum DappRequestType {
-  ChangeChain = 'ChangeChain',
-  GetAccount = 'GetAccount',
-  GetChainId = 'GetChainId',
-  GetPermissions = 'GetPermissions',
-  RequestAccount = 'RequestAccount',
-  RequestPermissions = 'RequestPermissions',
-  RevokePermissions = 'RevokePermissions',
-  SendTransaction = 'SendTransaction',
-  SignMessage = 'SignMessage',
-  SignTransaction = 'SignTransaction',
-  SignTypedData = 'SignTypedData',
-  UniswapOpenSidebar = 'UniswapOpenSidebar',
-  SendCalls = 'SendCalls',
-  GetCallsStatus = 'GetCallsStatus',
-}
-
-export enum DappResponseType {
-  AccountResponse = 'AccountResponse',
-  ChainIdResponse = 'ChainIdResponse',
-  ChainChangeResponse = 'ChainChangeResponse',
-  ErrorResponse = 'ErrorResponse',
-  GetPermissionsResponse = 'GetPermissions',
-  RequestPermissionsResponse = 'RequestPermissions',
-  RevokePermissionsResponse = 'RevokePermissions',
-  SignTransactionResponse = 'SignTransactionResponse',
-  SendTransactionResponse = 'SendTransactionResponse',
-  SignTypedDataResponse = 'SignTypedDataResponse',
-  SignMessageResponse = 'SignMessageResponse',
-  UniswapOpenSidebarResponse = 'UniswapOpenSidebarResponse',
-  SendCallsResponse = 'SendCallsResponse',
-  GetCallsStatusResponse = 'GetCallsStatusResponse',
-}
+import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 
 // SCHEMAS + TYPES
 

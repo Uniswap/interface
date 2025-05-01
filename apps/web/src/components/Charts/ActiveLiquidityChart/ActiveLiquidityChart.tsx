@@ -69,8 +69,8 @@ function scaleToInteger(a: number, precision = 18) {
  */
 export function ActiveLiquidityChart({
   id = 'ActiveLiquidityChart2',
-  currency0,
-  currency1,
+  quoteCurrency,
+  baseCurrency,
   data: { series, current, min, max },
   dimensions: { width, height, contentWidth, axisLabelPaneWidth },
   brushDomain,
@@ -83,8 +83,8 @@ export function ActiveLiquidityChart({
   barColor,
 }: {
   id?: string
-  currency0: Currency
-  currency1: Currency
+  quoteCurrency: Currency
+  baseCurrency: Currency
   data: {
     series: ChartEntry[]
     current: number
@@ -155,8 +155,8 @@ export function ActiveLiquidityChart({
           currentPrice={current}
           contentWidth={contentWidth}
           axisLabelPaneWidth={axisLabelPaneWidth}
-          currency0={currency0}
-          currency1={currency1}
+          quoteCurrency={quoteCurrency}
+          baseCurrency={baseCurrency}
         />
       ) : null}
       {showDiffIndicators && (

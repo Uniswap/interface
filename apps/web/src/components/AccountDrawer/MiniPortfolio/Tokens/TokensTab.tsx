@@ -19,12 +19,14 @@ import { ThemedText } from 'theme/components'
 import { EllipsisStyle } from 'theme/components/styles'
 import { Text, Tooltip } from 'ui/src'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSortedPortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { getChainUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -82,6 +84,7 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
 
+  const { value: contextMenuIsOpen, setTrue: openContextMenu, setFalse: closeContextMenu } = useBooleanState(false)
   const menuItems = useTokenContextMenu({
     tokenBalance,
   })
@@ -101,6 +104,7 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
         address: tokenAddress,
         chain: chainId,
         chainUrlParam: getChainUrlParam(chainId),
+        inputAddress: tokenAddress,
       }),
     )
     accountDrawer.close()
@@ -158,7 +162,13 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
           <Tooltip.Trigger>{portfolioRow}</Tooltip.Trigger>
         </Tooltip>
       ) : (
-        <ContextMenu menuStyleProps={{ minWidth: '200px' }} menuItems={menuItems} alignContentLeft>
+        <ContextMenu
+          menuItems={menuItems}
+          triggerMode={ContextMenuTriggerMode.Secondary}
+          isOpen={contextMenuIsOpen}
+          closeMenu={closeContextMenu}
+          openMenu={openContextMenu}
+        >
           {portfolioRow}
         </ContextMenu>
       )}

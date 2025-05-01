@@ -4,6 +4,7 @@ import { View } from 'react-native'
 import { Flex } from 'ui/src'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2.web'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { renderWithProviders } from 'uniswap/src/test/render'
 
 describe('ContextMenu', () => {
@@ -21,7 +22,13 @@ describe('ContextMenu', () => {
 
   it('renders without error', () => {
     const tree = renderWithProviders(
-      <ContextMenu menuItems={mockMenuItems}>
+      <ContextMenu
+        menuItems={mockMenuItems}
+        triggerMode={ContextMenuTriggerMode.Secondary}
+        isOpen={true}
+        closeMenu={jest.fn()}
+        openMenu={jest.fn()}
+      >
         <Flex>Trigger</Flex>
       </ContextMenu>,
     )
@@ -30,9 +37,14 @@ describe('ContextMenu', () => {
   })
 
   describe('opens the menu', () => {
-    it('on right-click by default', () => {
+    it('on right-click', () => {
       const { getByTestId, queryByText } = renderWithProviders(
-        <ContextMenu menuItems={mockMenuItems}>
+        <ContextMenu
+          menuItems={mockMenuItems}
+          triggerMode={ContextMenuTriggerMode.Secondary}
+          isOpen={true}
+          closeMenu={jest.fn()}
+        >
           <View testID="trigger">
             <Flex>Trigger</Flex>
           </View>
@@ -54,9 +66,14 @@ describe('ContextMenu', () => {
       expect(queryByText('Option 2')).toBeTruthy()
     })
 
-    it('on left-click if onLeftClick is true', () => {
+    it('on left-click', () => {
       const { getByTestId, queryByText } = renderWithProviders(
-        <ContextMenu menuItems={mockMenuItems} onLeftClick>
+        <ContextMenu
+          menuItems={mockMenuItems}
+          triggerMode={ContextMenuTriggerMode.Primary}
+          isOpen={true}
+          closeMenu={jest.fn()}
+        >
           <View testID="trigger">
             <Flex>Trigger</Flex>
           </View>
@@ -81,7 +98,7 @@ describe('ContextMenu', () => {
   describe('handles edge cases', () => {
     it('does not open the menu if no menuItems are provided', () => {
       const { getByTestId, queryByRole } = renderWithProviders(
-        <ContextMenu menuItems={[]}>
+        <ContextMenu menuItems={[]} triggerMode={ContextMenuTriggerMode.Secondary} isOpen={true} closeMenu={jest.fn()}>
           <View testID="trigger">
             <Flex>Trigger</Flex>
           </View>
@@ -100,10 +117,13 @@ describe('ContextMenu', () => {
 
     it('does not crash if trigger element is not found', () => {
       const { queryByRole } = renderWithProviders(
-        <ContextMenu menuItems={mockMenuItems}>
-          <View testID="trigger">
-            <Flex>Trigger</Flex>
-          </View>
+        <ContextMenu
+          menuItems={mockMenuItems}
+          triggerMode={ContextMenuTriggerMode.Secondary}
+          isOpen={true}
+          closeMenu={jest.fn()}
+        >
+          {null}
         </ContextMenu>,
       )
 

@@ -2,25 +2,31 @@ import { Fragment, PropsWithChildren, useRef, useState } from 'react'
 import { Popover } from 'ui/src'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenuProps } from 'uniswap/src/components/menus/ContextMenuV2'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
 
 export function ContextMenu({
-  children,
   menuItems,
-  menuStyleProps,
-  onLeftClick = false,
-  alignContentLeft = false,
+  isPlacementAbove = false,
+  isPlacementRight = false,
+  offsetX = 0,
+  offsetY = 0,
+  triggerMode,
   disabled = false,
-  ...rest
+  children,
+  isOpen,
+  closeMenu,
+  openMenu,
 }: PropsWithChildren<ContextMenuProps>): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null)
   const triggerContainerRef = useRef<HTMLDivElement>(null)
-  const [showMenu, setShowMenu] = useState(false)
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 })
 
+  const isLeftClick = triggerMode === ContextMenuTriggerMode.Primary
+
   useOnClickOutside(containerRef, () => {
-    setShowMenu(false)
+    closeMenu()
   })
 
   const onContextMenu = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -30,7 +36,7 @@ export function ContextMenu({
 
     e.preventDefault()
     e.stopPropagation()
-    setShowMenu(true)
+    openMenu?.()
 
     // Capture raw click coords
     const { clientX, clientY } = e
@@ -38,12 +44,12 @@ export function ContextMenu({
   }
 
   function getRelativeCoordinates(): { x: number; y: number } {
-    if (!triggerContainerRef.current) {
+    if (isLeftClick || !triggerContainerRef.current) {
       return { x: 0, y: 0 }
     }
 
     const rect = triggerContainerRef.current.getBoundingClientRect()
-    const relativeX = alignContentLeft ? menuPosition.x - rect.right : menuPosition.x - rect.left
+    const relativeX = isPlacementRight ? menuPosition.x - rect.left : menuPosition.x - rect.right
     const relativeY = menuPosition.y - rect.top - rect.height
 
     return {
@@ -61,11 +67,21 @@ export function ContextMenu({
   return (
     <Popover
       allowFlip
-      open={showMenu}
+      open={isOpen}
       strategy="absolute"
-      placement={alignContentLeft ? 'bottom-end' : 'bottom-start'}
-      offset={{ mainAxis: y, crossAxis: x }}
-      {...rest}
+      placement={
+        isPlacementAbove
+          ? isPlacementRight
+            ? 'top-start' // above & to the right
+            : 'top-end' // above & to the left
+          : isPlacementRight
+            ? 'bottom-start' // below & to the right
+            : 'bottom-end' // below & to the left
+      }
+      offset={{
+        mainAxis: y + (isPlacementAbove ? -offsetY : offsetY),
+        crossAxis: x + (isPlacementRight ? offsetX : -offsetX),
+      }}
     >
       {/*
         We attach the context menu event handler conditionally:
@@ -74,9 +90,9 @@ export function ContextMenu({
         This ensures that left-click events are not blocked from propagating,
         keeping normal click behavior intact.
       */}
-      <Popover.Trigger onMouseDown={onLeftClick ? onContextMenu : undefined}>
+      <Popover.Trigger onMouseDown={isLeftClick ? onContextMenu : undefined}>
         {/* eslint-disable-next-line react/forbid-elements */}
-        <div ref={triggerContainerRef} onContextMenu={onLeftClick ? undefined : onContextMenu}>
+        <div ref={triggerContainerRef} onContextMenu={isLeftClick ? undefined : onContextMenu}>
           {children}
         </div>
       </Popover.Trigger>
@@ -91,13 +107,7 @@ export function ContextMenu({
           transform: [{ translateY: -4 }],
         }}
       >
-        <MenuContent
-          items={menuItems}
-          onItemClick={() => {
-            setShowMenu(false)
-          }}
-          {...menuStyleProps}
-        />
+        <MenuContent items={menuItems} handleCloseMenu={closeMenu} />
       </Popover.Content>
     </Popover>
   )

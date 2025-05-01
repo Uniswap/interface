@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/constants'
 import { currencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
-import { TokenOption } from 'uniswap/src/components/lists/types'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
@@ -10,14 +10,17 @@ import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHis
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
-export function useRecentlySearchedTokens(chainFilter: UniverseChainId | null): TokenOption[] | undefined {
+export function useRecentlySearchedTokens(
+  chainFilter: UniverseChainId | null,
+  numberOfResults = MAX_RECENT_SEARCH_RESULTS,
+): TokenOption[] | undefined {
   const searchHistory = useSelector(selectSearchHistory)
 
   const searchHistoryCurrencyInfos = useSearchHistoryToCurrencyInfos(
     searchHistory
       .filter((searchResult): searchResult is TokenSearchResult => searchResult.type === SearchResultType.Token)
       .filter((searchResult) => (chainFilter ? searchResult.chainId === chainFilter : true))
-      .slice(0, MAX_RECENT_SEARCH_RESULTS),
+      .slice(0, numberOfResults),
   )
 
   return useMemo(() => {

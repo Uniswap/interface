@@ -1,17 +1,26 @@
 import { providers } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
-import { TransactionRequest, UwuLinkErc20Request } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  TransactionRequest,
+  UwuLinkErc20Request,
+  WalletSendCallsEncodedRequest,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { DappInfo, EthMethod, EthSignMethod, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { DappInfo, EthSignMethod, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
-import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import { SendCallsResult } from 'wallet/src/features/dappRequests/types'
+import {
+  ExecuteTransactionParams,
+  executeTransaction,
+} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
@@ -31,10 +40,10 @@ type SignTransactionParams = {
   requestInternalId: string
   transaction: providers.TransactionRequest
   account: Account
-  method: EthMethod.EthSendTransaction
+  method: EthMethod.EthSendTransaction | EthMethod.SendCalls
   dapp: DappInfo
   chainId: UniverseChainId
-  request: TransactionRequest | UwuLinkErc20Request
+  request: TransactionRequest | UwuLinkErc20Request | WalletSendCallsEncodedRequest
 }
 
 function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
@@ -42,9 +51,9 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
   const { defaultChainId } = yield* getEnabledChainIdsSaga()
   try {
     const signerManager = yield* call(getSignerManager)
-    let signature = ''
+    let result: string | SendCallsResult = ''
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
-      signature = yield* call(signMessage, params.message, account, signerManager)
+      result = yield* call(signMessage, params.message, account, signerManager)
 
       // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
       if (params.dapp.source === 'uwulink' && params.dapp.name === 'Uniswap Cafe') {
@@ -56,9 +65,9 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         )
       }
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
-      signature = yield* call(signTypedDataMessage, params.message, account, signerManager)
+      result = yield* call(signTypedDataMessage, params.message, account, signerManager)
     } else if (method === EthMethod.EthSendTransaction && params.request.type === UwULinkMethod.Erc20Send) {
-      const txParams: SendTransactionParams = {
+      const txParams: ExecuteTransactionParams = {
         chainId: params.transaction.chainId || defaultChainId,
         account,
         options: {
@@ -73,10 +82,10 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         },
         transactionOriginType: TransactionOriginType.External,
       }
-      const { transactionResponse } = yield* call(sendTransaction, txParams)
-      signature = transactionResponse.hash
+      const { transactionResponse } = yield* call(executeTransaction, txParams)
+      result = transactionResponse.hash
     } else if (method === EthMethod.EthSendTransaction) {
-      const txParams: SendTransactionParams = {
+      const txParams: ExecuteTransactionParams = {
         chainId: params.transaction.chainId || defaultChainId,
         account,
         options: {
@@ -88,8 +97,35 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         },
         transactionOriginType: TransactionOriginType.External,
       }
-      const { transactionResponse } = yield* call(sendTransaction, txParams)
-      signature = transactionResponse.hash
+      const { transactionResponse } = yield* call(executeTransaction, txParams)
+      result = transactionResponse.hash
+
+      // Trigger a pending transaction notification after we send the transaction to chain
+      yield* put(
+        pushNotification({
+          type: AppNotificationType.TransactionPending,
+          chainId: txParams.chainId,
+        }),
+      )
+    } else if (method === EthMethod.SendCalls) {
+      const txParams: ExecuteTransactionParams = {
+        chainId: params.transaction.chainId || defaultChainId,
+        account,
+        options: {
+          request: params.transaction,
+        },
+        typeInfo: {
+          type: TransactionType.WCConfirm,
+          dapp: params.dapp,
+        },
+        transactionOriginType: TransactionOriginType.External,
+      }
+
+      // TODO: When delegation/batching SC is deployed - add the actual send transaction here, but for now we just mock the data
+      const { transactionResponse } = {
+        transactionResponse: { hash: '0xade180ed77cf8198273df1f7eae17c3c7e46de3c5d20dc384339c862efc02817' },
+      }
+      result = { id: transactionResponse.hash, capabilities: {} }
 
       // Trigger a pending transaction notification after we send the transaction to chain
       yield* put(
@@ -106,7 +142,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         response: {
           id: Number(requestInternalId),
           jsonrpc: '2.0',
-          result: signature,
+          result,
         },
       })
     } else if (params.dapp.source === 'uwulink' && params.dapp.webhook) {
@@ -116,7 +152,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ method: params.method, response: signature, chainId }),
+        body: JSON.stringify({ method: params.method, response: result, chainId }),
         // TODO: consider adding analytics to track UwuLink usage
       }).catch((error) =>
         logger.error(error, {

@@ -1,11 +1,13 @@
 /* eslint-disable complexity */
+import type { BottomSheetView } from '@gorhom/bottom-sheet'
+import { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, isWeb } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
-import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapFormDecimalPad } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormDecimalPad'
 import { SwapFormScreenDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails'
@@ -28,6 +30,7 @@ interface SwapFormScreenProps {
   hideFooter?: boolean
   settings: SwapSettingConfig[]
   tokenColor?: string
+  focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
 }
 
 /**
@@ -38,6 +41,7 @@ export function SwapFormScreen({
   hideContent,
   settings = [Slippage, ProtocolPreference],
   tokenColor,
+  focusHook,
 }: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
   const { selectingCurrencyField, hideSettings, derivedSwapInfo } = useSwapFormContext()
@@ -56,7 +60,7 @@ export function SwapFormScreen({
         </SwapFormScreenContextProvider>
       )}
 
-      <SwapTokenSelector isModalOpen={showTokenSelector} />
+      <SwapTokenSelector isModalOpen={showTokenSelector} focusHook={focusHook} />
     </TransactionModalInnerContainer>
   )
 }
