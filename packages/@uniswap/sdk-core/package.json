@@ -1,0 +1,85 @@
+{
+  "name": "@uniswap/sdk-core",
+  "description": "⚒️ An SDK for building applications on top of Uniswap V3",
+  "repository": "https://github.com/Uniswap/sdks.git",
+  "keywords": [
+    "uniswap",
+    "ethereum"
+  ],
+  "license": "MIT",
+  "main": "src/index.ts",
+  "module": "dist/sdk-core.esm.js",
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "tsdx build",
+    "lint": "tsdx lint src",
+    "release": "semantic-release",
+    "start": "tsdx watch",
+    "test": "tsdx test"
+  },
+  "dependencies": {
+    "@ethersproject/address": "^5.0.2",
+    "@ethersproject/bytes": "^5.7.0",
+    "@ethersproject/keccak256": "5.7.0",
+    "@ethersproject/strings": "5.7.0",
+    "big.js": "^5.2.2",
+    "decimal.js-light": "^2.5.0",
+    "jsbi": "^3.1.4",
+    "tiny-invariant": "^1.1.0",
+    "toformat": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/big.js": "^4.0.5",
+    "@types/jest": "^24.0.25",
+    "babel-eslint": "10.1.0",
+    "eslint-config-react-app": "7.0.1",
+    "eslint-plugin-flowtype": "8.0.3",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "tsdx": "^0.14.1"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "semi": false,
+    "singleQuote": true
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "release": {
+    "extends": "semantic-release-monorepo",
+    "branches": [
+      {
+        "name": "main",
+        "prerelease": false
+      }
+    ],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular",
+          "releaseRules": "../../publishing/release-rules.cjs"
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      [
+        "@semantic-release/exec",
+        {
+          "successCmd": "git restore yarn.lock && yarn",
+          "failCmd": "git restore yarn.lock && yarn",
+          "execCwd": "../.."
+        }
+      ]
+    ]
+  }
+}
