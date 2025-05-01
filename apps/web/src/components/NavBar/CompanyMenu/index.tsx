@@ -62,7 +62,7 @@ export function CompanyMenu() {
             <NavIcon color="#d0462d" />
             {isLargeScreen && (
               <Text variant="subheading1" color="#d0462d" userSelect="none">
-                TANGOswap
+                TangoSwap
               </Text>
             )}
           </UniIcon>
