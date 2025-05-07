@@ -81,8 +81,6 @@ export default function Incentives() {
   }
 
   if ((!incentivesToShow || incentivesToShow.length === 0) && !isLoading) {
-    console.log('isLoading', isLoading)
-    console.log('incentivesToShow', incentivesToShow)
     return (
       <StyledLightCard>
         <ThemedText.BodySecondary>

@@ -165,33 +165,12 @@ export function useIncentivesData(poolAddress?: string) {
   const [lastProcessedTime, setLastProcessedTime] = useState<number>(0);
 
   const accountAddress = useMemo(() => account.address, [account.address]);
-
-  // Create tokens array for all token1s in incentives
-  const tokens = useMemo(() => {
-    if (!incentivesData.length || !account.chainId) return [];
-    
-    return incentivesData.map(incentive => {
-      const token1Address = incentive.pool.token1.id;
-      const token1Info = findTokenByAddress(tokenList, token1Address);
-      if (token1Info && account.chainId) {
-        return new Token(
-          account.chainId,
-          token1Address,
-          token1Info.decimals || 18,
-          token1Info.symbol,
-          token1Info.name
-        );
-      }
-      return undefined;
-    }).filter((token): token is Token => token !== undefined);
-  }, [incentivesData, account.chainId, tokenList]);
-
   const tokenAddresses = useMemo(() => {
     if (!incentivesData.length) return [];
     return incentivesData.map(incentive => incentive.pool.token1.id);
   }, [incentivesData]);
 
-  const { balances, isBalancesLoading } = useMultipleTokenBalances(tokenAddresses);
+  const { balances } = useMultipleTokenBalances(tokenAddresses);
 
   const getStakersQuery = useCallback((incentiveId: string) => {
     return `
