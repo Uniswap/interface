@@ -37,16 +37,16 @@ export default function Incentives() {
         return;
       }
       if (incentive.poolPositionIds && incentive.poolPositionIds[0]) {
-        navigate(`/#/pools/${incentive.poolPositionIds?.[0]}`);
+        navigate(`/pools/${incentive.poolPositionIds?.[0]}`);
         return;
       }
 
-      navigate(`/#/add/${incentive.token0Address}/${incentive.token1Address}`);
+      navigate(`/add/${incentive.token0Address}/${incentive.token1Address}`);
     }
   };
 
   const handleSelectPosition = (positionId: number) => {
-    navigate(`/#/pools/${positionId}`);
+    navigate(`/pools/${positionId}`);
   };
 
   if (!account.isConnected) {
