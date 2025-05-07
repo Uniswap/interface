@@ -1,6 +1,6 @@
 import { Flex, useIsDarkMode } from 'ui/src'
 import { OnboardingUnicon } from 'ui/src/components/icons'
-import { DEP_accentColors, opacify, validColor } from 'ui/src/theme'
+import { DEP_accentColors, iconSizes, opacify, validColor } from 'ui/src/theme'
 
 export const UniconElement = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
@@ -12,7 +12,7 @@ export const UniconElement = (): JSX.Element => {
       p="$spacing8"
       transform={[{ rotateZ: '-4deg' }]}
     >
-      <OnboardingUnicon color={DEP_accentColors.violet400} size="$icon.28" />
+      <OnboardingUnicon color={DEP_accentColors.violet400} size={iconSizes.icon28} />
     </Flex>
   )
 }

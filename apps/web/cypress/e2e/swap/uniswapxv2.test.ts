@@ -1,4 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getTestSelector, setupHardhat } from '../../utils'
@@ -31,7 +32,9 @@ describe('UniswapX v2', () => {
       stubNonPriceQuoteWith(QuoteWithEthInput)
       cy.intercept(Xv2OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
       cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx-v2/openStatusResponse.json' })
-      cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`)
+      cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`, {
+        featureFlags: [{ flag: FeatureFlags.UniswapXv2, value: true }],
+      })
     })
 
     it('can swap using uniswapX with ETH as input', () => {
@@ -135,7 +138,9 @@ describe('UniswapX v2', () => {
       stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)
       cy.intercept(Xv2OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
       cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx-v2/openStatusResponse.json' }).as('orderStatusOpen')
-      cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+      cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+        featureFlags: [{ flag: FeatureFlags.UniswapXv2, value: true }],
+      })
     })
 
     it('can swap exact-in trades using uniswapX', () => {

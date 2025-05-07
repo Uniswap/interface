@@ -13,7 +13,6 @@ import { PasskeyImportLoading } from 'wallet/src/features/onboarding/PasskeyImpo
 import { WelcomeSplash } from 'wallet/src/features/onboarding/WelcomeSplash'
 import { fetchSeedPhrase } from 'wallet/src/features/passkeys/passkeys'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.PasskeyImport>
 
@@ -34,7 +33,7 @@ export function PasskeyImportScreen({ navigation, route: { params } }: Props): J
     const importAndGenerateAccount = async (): Promise<void> => {
       const mnemonic = await fetchSeedPhrase(params.passkeyCredential)
       const importedAddress = await Keyring.importMnemonic(mnemonic)
-      await generateImportedAccounts({ mnemonicId: importedAddress, backupType: BackupType.Passkey })
+      await generateImportedAccounts({ mnemonicId: importedAddress })
       if (!importedAddress) {
         throw new Error(`Failed to generate account for mnemonic ${mnemonic}`)
       }

@@ -18,7 +18,6 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
   isEditingSlippage: boolean
   autoSlippageEnabled: boolean
   showSlippageWarning: boolean
-  showSlippageCritical: boolean
   inputSlippageTolerance: string
   inputWarning: string | undefined
   autoSlippageTolerance: number
@@ -215,7 +214,6 @@ export function useSlippageSettings(params?: { saveOnBlur?: boolean; isBridgeTra
     isEditingSlippage,
     autoSlippageEnabled,
     showSlippageWarning,
-    showSlippageCritical: parsedInputSlippageTolerance >= SLIPPAGE_CRITICAL_TOLERANCE,
     inputSlippageTolerance: autoSlippageEnabled
       ? currentSlippageToleranceNum.toFixed(2).toString()
       : inputSlippageTolerance,

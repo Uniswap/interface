@@ -18,8 +18,10 @@ import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
-import { QrCode, Scan } from 'ui/src/components/icons'
+import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { QrCode } from 'ui/src/components/icons'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
+import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -289,7 +291,11 @@ export function WalletConnectModal({
             onPress={onPressBottomToggle}
           >
             <Flex row alignItems="center" gap="$spacing12">
-              {isScanningQr ? <QrCode color="$neutral1" size="$icon.24" /> : <Scan color="$neutral1" size="$icon.24" />}
+              {isScanningQr ? (
+                <QrCode color="$neutral1" size="$icon.24" />
+              ) : (
+                <ScanQRIcon color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
+              )}
               <Text color={colors.neutral1.val} variant="buttonLabel2">
                 {isScanningQr ? t('qrScanner.recipient.action.show') : t('qrScanner.recipient.action.scan')}
               </Text>

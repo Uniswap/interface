@@ -9,16 +9,19 @@ import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export default function NFTs({ account }: { account: string }) {
   const accountDrawer = useAccountDrawer()
   const { gqlChains, isTestnetModeEnabled } = useEnabledChains()
 
+  const isL2NFTsEnabled = useFeatureFlag(FeatureFlags.L2NFTs)
   const { walletAssets, loading, hasNext, loadMore } = useNftBalance({
     ownerAddress: account,
     first: DEFAULT_NFT_QUERY_AMOUNT,
     skip: !accountDrawer.isOpen,
-    chains: isTestnetModeEnabled ? gqlChains : [Chain.Ethereum, Chain.Zora],
+    chains: isTestnetModeEnabled ? gqlChains : isL2NFTsEnabled ? [Chain.Ethereum, Chain.Zora] : undefined,
   })
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()

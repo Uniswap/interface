@@ -2,11 +2,11 @@ import { useFocusEffect } from '@react-navigation/core'
 import { useState } from 'react'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionModalFooterContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
+import { TransactionModalFooterContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals'
 import { SwapFormButton } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/SwapFormButton'
@@ -21,7 +21,7 @@ export function CurrentScreen({
   onSubmitSwap,
 }: {
   settings: SwapSettingConfig[]
-  onSubmitSwap?: () => Promise<void> | void
+  onSubmitSwap?: () => Promise<void>
   tokenColor?: string
 }): JSX.Element {
   const { screen } = useTransactionModalContext()
@@ -60,7 +60,7 @@ function SwapFormScreenDelayedRender({ settings }: { settings: SwapSettingConfig
 }
 
 // We add a short hardcoded delay to allow the sheet to animate quickly when going from Form -> Review.
-function SwapReviewScreenDelayedRender({ onSubmitSwap }: { onSubmitSwap?: () => Promise<void> | void }): JSX.Element {
+function SwapReviewScreenDelayedRender({ onSubmitSwap }: { onSubmitSwap?: () => Promise<void> }): JSX.Element {
   const { isContentHidden } = useDelayedRender(SWAP_REVIEW_SCREEN_TRANSITION_DELAY)
 
   return <SwapReviewScreen hideContent={isContentHidden} onSubmitSwap={onSubmitSwap} />

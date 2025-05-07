@@ -7,7 +7,7 @@ import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { NFTCollectionData } from 'src/features/nfts/collection/types'
 import { Flex, FlexProps, Text, useExtractedColors, useSporeColors } from 'ui/src'
-import { Verified } from 'ui/src/components/icons'
+import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { Ethereum } from 'ui/src/components/logos/Ethereum'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -136,7 +136,9 @@ export function NFTCollectionHeader({
             <Text loading={loading} loadingPlaceholderText="Collection Name" variant="subheading1">
               {data?.name ?? '-'}
             </Text>
-            {data?.isVerified ? <Verified color="$accent1" size="$icon.16" /> : null}
+            {data?.isVerified ? (
+              <VerifiedIcon color={colors.accent1.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
+            ) : null}
           </Flex>
 
           <Flex row gap="$spacing8" justifyContent="space-between">

@@ -212,21 +212,15 @@ function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
 }
 
 function useNavigateToNftCollection(): (args: NavigateToNftCollectionArgs) => void {
-  const appNavigation = useAppStackNavigation()
+  const navigation = useAppStackNavigation()
 
   return useCallback(
     ({ collectionAddress }: NavigateToNftCollectionArgs): void => {
-      if (exploreNavigationRef.current && exploreNavigationRef.isFocused()) {
-        exploreNavigationRef.navigate(MobileScreens.NFTCollection, {
-          collectionAddress,
-        })
-      } else {
-        appNavigation.navigate(MobileScreens.NFTCollection, {
-          collectionAddress,
-        })
-      }
+      navigation.navigate(MobileScreens.NFTCollection, {
+        collectionAddress,
+      })
     },
-    [appNavigation],
+    [navigation],
   )
 }
 

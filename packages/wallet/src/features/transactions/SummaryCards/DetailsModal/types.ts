@@ -8,8 +8,6 @@ import {
   OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
-  Permit2ApproveTransactionInfo,
-  SendCallsTransactionInfo,
   UnknownTransactionInfo,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -93,16 +91,6 @@ export function isWrapTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo i
 
 export function isUnknownTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is UnknownTransactionInfo {
   return typeInfo.type === TransactionType.Unknown
-}
-
-export function isSendCallsTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is SendCallsTransactionInfo {
-  return typeInfo.type === TransactionType.SendCalls
-}
-
-export function isPermit2ApproveTransactionInfo(
-  typeInfo: TransactionTypeInfo,
-): typeInfo is Permit2ApproveTransactionInfo {
-  return typeInfo.type === TransactionType.Permit2Approve
 }
 
 export type TransactionParticipantRowProps = {

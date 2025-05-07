@@ -17,6 +17,7 @@ export type TabsSection = {
 
 export type TabsItem = MenuItem & {
   icon?: JSX.Element
+  quickKey: string
 }
 
 export const useTabsContent = (): TabsSection[] => {
@@ -33,24 +34,28 @@ export const useTabsContent = (): TabsSection[] => {
         {
           label: t('common.swap'),
           icon: <SwapV2 fill={theme.neutral2} />,
+          quickKey: 'U',
           href: '/swap',
           internal: true,
         },
         {
           label: t('swap.limit'),
           icon: <Limit fill={theme.neutral2} />,
+          quickKey: 'L',
           href: '/limit',
           internal: true,
         },
         {
           label: t('common.send.button'),
           icon: <Send fill={theme.neutral2} />,
+          quickKey: 'E',
           href: '/send',
           internal: true,
         },
         {
           label: t('common.buy.label'),
           icon: <CreditCardIcon fill={theme.neutral2} />,
+          quickKey: 'B',
           href: '/buy',
           internal: true,
         },
@@ -61,10 +66,11 @@ export const useTabsContent = (): TabsSection[] => {
       href: '/explore',
       isActive: pathname.startsWith('/explore') || pathname.startsWith('/nfts'),
       items: [
-        { label: t('common.tokens'), href: '/explore/tokens', internal: true },
-        { label: t('common.pools'), href: '/explore/pools', internal: true },
+        { label: t('common.tokens'), quickKey: 'T', href: '/explore/tokens', internal: true },
+        { label: t('common.pools'), quickKey: 'P', href: '/explore/pools', internal: true },
         {
           label: t('common.transactions'),
+          quickKey: 'X',
           href: '/explore/transactions',
           internal: true,
         },
@@ -77,11 +83,13 @@ export const useTabsContent = (): TabsSection[] => {
       items: [
         {
           label: t('nav.tabs.viewPositions'),
+          quickKey: 'V',
           href: '/positions',
           internal: true,
         },
         {
           label: t('nav.tabs.createPosition'),
+          quickKey: 'V',
           href: '/positions/create',
           internal: true,
         },

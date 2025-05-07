@@ -4,14 +4,12 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import { ApproveRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Approve/ApproveRequestContent'
 import { FallbackEthSendRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/FallbackEthSend/FallbackEthSend'
 import { LPRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/LP/LPRequestContent'
-import { Permit2ApproveRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Permit2Approve/Permit2ApproveRequestContent'
 import { SwapRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapRequestContent'
 import { WrapRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Wrap/WrapRequestContent'
 import { DappRequestStoreItemForEthSendTxn } from 'src/app/features/dappRequests/slice'
 import {
   isApproveRequest,
   isLPRequest,
-  isPermit2ApproveRequest,
   isSwapRequest,
   isWrapRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
@@ -89,16 +87,6 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
     case isSwapRequest(dappRequest):
       content = (
         <SwapRequestContent
-          parsedCalldata={dappRequest.parsedCalldata}
-          transactionGasFeeResult={transactionGasFeeResult}
-          onCancel={onCancelRequest}
-          onConfirm={onConfirmRequest}
-        />
-      )
-      break
-    case isPermit2ApproveRequest(dappRequest):
-      content = (
-        <Permit2ApproveRequestContent
           dappRequest={dappRequest}
           transactionGasFeeResult={transactionGasFeeResult}
           onCancel={onCancelRequest}

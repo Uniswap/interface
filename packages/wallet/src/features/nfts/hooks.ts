@@ -32,7 +32,6 @@ export function useNFT(owner: Address = '', address?: Address, tokenId?: string)
 export function useGroupNftsByVisibility(
   nftDataItems: Array<NFTItem> | undefined,
   showHidden: boolean,
-  allPagesFetched: boolean,
 ): {
   nfts: Array<NFTItem | string>
   numHidden: number
@@ -63,17 +62,16 @@ export function useGroupNftsByVisibility(
     return {
       nfts: [
         ...shown,
-        ...((hidden.length &&
-          allPagesFetched && [
-            // to fill the gap for odd number of shown elements in 2 columns layout
-            ...(shown.length % 2 ? [EMPTY_NFT_ITEM] : []),
-            HIDDEN_NFTS_ROW,
-          ]) ||
+        ...((hidden.length && [
+          // to fill the gap for odd number of shown elements in 2 columns layout
+          ...(shown.length % 2 ? [EMPTY_NFT_ITEM] : []),
+          HIDDEN_NFTS_ROW,
+        ]) ||
           []),
-        ...((showHidden && allPagesFetched && hidden) || []),
+        ...((showHidden && hidden) || []),
       ],
       numHidden: hidden.length,
       numShown: shown.length,
     }
-  }, [nftDataItems, nftVisibility, showHidden, allPagesFetched])
+  }, [nftDataItems, nftVisibility, showHidden])
 }

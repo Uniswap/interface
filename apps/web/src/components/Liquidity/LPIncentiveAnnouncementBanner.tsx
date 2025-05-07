@@ -1,3 +1,4 @@
+import dottedBackgroundImage from 'assets/images/dotted-background-gradient.png'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -55,17 +56,12 @@ const DottedTopBackground = styled(Flex, {
   position: 'absolute',
   width: '100%',
   height: '32%',
-  backgroundImage: 'radial-gradient(circle at 0.5px 0.5px, rgba(255, 255, 255, 0.2) 0.5px, transparent 0.5px)',
-  backgroundSize: '10px 10px',
-  backgroundColor: 'transparent',
-  backgroundRepeat: 'repeat',
-  maskImage: 'linear-gradient(to bottom, black 20%, transparent 100%)',
-  '$platform-web': {
-    WebkitMaskImage: 'linear-gradient(to bottom, black 20%, transparent 100%)',
-  },
+  backgroundImage: `url(${dottedBackgroundImage})`,
+  backgroundSize: 'cover',
   mixBlendMode: 'exclusion',
   $xs: {
     top: 0,
+    backgroundSize: 'cover',
   },
 })
 
@@ -152,7 +148,7 @@ function DesktopBanner({ handleClose }: { handleClose: () => void }) {
           <CoinStack size={24} />
         </IconContainer>
       </IconBorderWrapper>
-      <LpIncentiveBannerContent handleClose={handleClose} />
+      <LpIncentiveBannerContent />
     </BannerContainer>
   )
 }
@@ -165,7 +161,7 @@ function MobileBanner({ handleClose }: { handleClose: () => void }) {
       <IconContainer>
         <CoinStack size={20} />
       </IconContainer>
-      <LpIncentiveBannerContent handleClose={handleClose} />
+      <LpIncentiveBannerContent />
     </BannerContainerMobile>
   )
 }
@@ -178,15 +174,10 @@ function BannerXButton({ handleClose }: { handleClose: () => void }) {
   )
 }
 
-function LpIncentiveBannerContent({ handleClose }: { handleClose: () => void }) {
+function LpIncentiveBannerContent() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const LpContentWrapper = isMobileWeb ? BannerContentContainerMobile : BannerContentContainer
-
-  const onClickViewMore = () => {
-    handleClose()
-    navigate('/explore/pools')
-  }
 
   return (
     <LpContentWrapper>
@@ -201,19 +192,15 @@ function LpIncentiveBannerContent({ handleClose }: { handleClose: () => void }) 
         alignItems="center"
         justifyContent="space-between"
         gap="$spacing2"
+        backgroundImage={dottedBackgroundImage}
         $sm={{
           mt: '$spacing12',
         }}
       >
         <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
-          <LearnMoreLink
-            textVariant="body4"
-            textColor="$neutral2"
-            url={uniswapUrls.helpArticleUrls.lpIncentiveInfo}
-            hoverStyle={{ color: '$neutral3' }}
-          />
+          <LearnMoreLink textVariant="body4" textColor="$neutral2" url={uniswapUrls.helpArticleUrls.lpIncentiveInfo} />
         </Trace>
-        <Button size="small" emphasis="primary" maxWidth="fit-content" onPress={onClickViewMore}>
+        <Button size="small" emphasis="primary" maxWidth="fit-content" onPress={() => navigate('/positions')}>
           {t('pool.viewPools')}
         </Button>
       </Flex>

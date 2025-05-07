@@ -24,7 +24,7 @@ export function useInterfaceWrap(): {
 
   const onInterfaceWrap = useMemo(() => {
     const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
-    const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequests?.[0]
+    const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequest
     if (!wrapCallback || !txRequest || !isInterfaceWrap || !account || !inputCurrencyAmount) {
       return undefined
     }

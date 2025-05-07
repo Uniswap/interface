@@ -1,5 +1,5 @@
 #!/bin/bash
-MAX_SIZE=21.1
+MAX_SIZE=21
 MAX_BUFFER=0.5
 
 # Check OS type and use appropriate stat command

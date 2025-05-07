@@ -5,7 +5,7 @@ import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPosi
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionPriceRangeTile } from 'components/Liquidity/LiquidityPositionPriceRangeTile'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { usePositionDerivedInfo } from 'components/Liquidity/hooks'
+import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -26,6 +26,8 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -91,6 +93,8 @@ export function LegacyPositionPage() {
 
   const dispatch = useAppDispatch()
 
+  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
+
   const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -106,7 +110,7 @@ export function LegacyPositionPage() {
     fiatValue0,
     fiatValue1,
     priceOrdering,
-  } = usePositionDerivedInfo(positionInfo)
+  } = useV3OrV4PositionDerivedInfo(positionInfo)
 
   if (positionLoading) {
     return (
@@ -186,26 +190,28 @@ export function LegacyPositionPage() {
             <LiquidityPositionInfo positionInfo={positionInfo} linkToPool />
             {isOwner && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
-                {positionInfo.version === ProtocolVersion.V3 && status !== PositionStatus.CLOSED && (
-                  <MouseoverTooltip
-                    text={t('pool.migrateLiquidityDisabledTooltip')}
-                    disabled={!showV4UnsupportedTooltip}
-                  >
-                    <Flex row>
-                      <Button
-                        size="small"
-                        emphasis="secondary"
-                        isDisabled={showV4UnsupportedTooltip}
-                        opacity={showV4UnsupportedTooltip ? 0.5 : 1}
-                        onPress={() => {
-                          navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
-                        }}
-                      >
-                        <Trans i18nKey="pool.migrateToV4" />
-                      </Button>
-                    </Flex>
-                  </MouseoverTooltip>
-                )}
+                {positionInfo.version === ProtocolVersion.V3 &&
+                  status !== PositionStatus.CLOSED &&
+                  isMigrateToV4Enabled && (
+                    <MouseoverTooltip
+                      text={t('pool.migrateLiquidityDisabledTooltip')}
+                      disabled={!showV4UnsupportedTooltip}
+                    >
+                      <Flex row>
+                        <Button
+                          size="small"
+                          emphasis="secondary"
+                          isDisabled={showV4UnsupportedTooltip}
+                          opacity={showV4UnsupportedTooltip ? 0.5 : 1}
+                          onPress={() => {
+                            navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                          }}
+                        >
+                          <Trans i18nKey="pool.migrateToV4" />
+                        </Button>
+                      </Flex>
+                    </MouseoverTooltip>
+                  )}
                 <Flex row>
                   <Button
                     size="small"

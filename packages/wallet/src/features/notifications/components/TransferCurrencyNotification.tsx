@@ -1,5 +1,4 @@
 import { Unitag } from 'ui/src/components/icons'
-import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TransferCurrencyTxNotification } from 'uniswap/src/features/notifications/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -11,6 +10,7 @@ import { NotificationToast } from 'wallet/src/features/notifications/components/
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { formTransferCurrencyNotificationTitle } from 'wallet/src/features/notifications/utils'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 export function TransferCurrencyNotification({
   notification,

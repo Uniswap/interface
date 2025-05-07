@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
-import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -19,7 +18,6 @@ export const mockPool = new Pool(
 describe(requireAcceptNewTrade, () => {
   describe('ClassicTrade', () => {
     const oldTrade = new ClassicTrade({
-      quote: { quote: {} } as ClassicQuoteResponse,
       v4Routes: [],
       v3Routes: [
         {
@@ -36,7 +34,6 @@ describe(requireAcceptNewTrade, () => {
 
     it('returns false when prices are within threshold', () => {
       const newTrade = new ClassicTrade({
-        quote: { quote: {} } as ClassicQuoteResponse,
         v4Routes: [],
         v3Routes: [
           {
@@ -56,7 +53,6 @@ describe(requireAcceptNewTrade, () => {
 
     it('returns true when prices move above threshold', () => {
       const newTrade = new ClassicTrade({
-        quote: { quote: {} } as ClassicQuoteResponse,
         v4Routes: [],
         v3Routes: [
           {
@@ -76,7 +72,6 @@ describe(requireAcceptNewTrade, () => {
 
     it('returns false when new price is better', () => {
       const newTrade = new ClassicTrade({
-        quote: { quote: {} } as ClassicQuoteResponse,
         v4Routes: [],
         v3Routes: [
           {

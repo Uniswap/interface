@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, SpaceTokens, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
+import { iconSizes } from 'ui/src/theme'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isMobileApp } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -54,7 +55,7 @@ const TooltipWarning = (): JSX.Element => {
   return (
     <Tooltip placement="top">
       <Tooltip.Trigger>
-        <AlertTriangleFilled color="$neutral3" size="$icon.16" />
+        <AlertTriangleFilled color="$neutral3" size={iconSizes.icon16} />
       </Tooltip.Trigger>
       <Tooltip.Content ml="$spacing12" px="$none" py="$none">
         <Flex

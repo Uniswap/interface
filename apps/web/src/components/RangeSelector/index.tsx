@@ -1,8 +1,8 @@
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter'
+import { AutoRow } from 'components/deprecated/Row'
 import { Trans } from 'react-i18next'
 import { Bound } from 'state/mint/v3/actions'
-import { Flex } from 'ui/src'
 
 // currencyA is the base token
 export default function RangeSelector({
@@ -40,9 +40,8 @@ export default function RangeSelector({
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
   return (
-    <Flex gap="$gap8" width="100%">
+    <AutoRow gap="md">
       <StepCounter
-        width="100%"
         value={ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? '0' : leftPrice?.toSignificant(8) ?? ''}
         onUserInput={onLeftRangeInput}
         decrement={isSorted ? getDecrementLower : getIncrementUpper}
@@ -56,7 +55,6 @@ export default function RangeSelector({
         tokenB={currencyB?.symbol}
       />
       <StepCounter
-        width="100%"
         value={ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? '∞' : rightPrice?.toSignificant(8) ?? ''}
         onUserInput={onRightRangeInput}
         decrement={isSorted ? getDecrementUpper : getIncrementLower}
@@ -69,6 +67,6 @@ export default function RangeSelector({
         tokenB={currencyB?.symbol}
         title={<Trans i18nKey="common.highPrice" />}
       />
-    </Flex>
+    </AutoRow>
   )
 }

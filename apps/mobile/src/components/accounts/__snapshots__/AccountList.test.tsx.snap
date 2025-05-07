@@ -25,7 +25,6 @@ exports[`AccountList renders without error 1`] = `
               "mnemonicId": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
               "name": "Test Account",
               "pushNotificationsEnabled": true,
-              "smartWalletConsent": false,
               "timeImportedMs": 10,
               "type": "signerMnemonic",
             },

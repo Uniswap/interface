@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { BlockedAddressModal } from 'uniswap/src/features/transactions/modals/BlockedAddressModal'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 
 export function BlockedAddressWarning({
   isRecipientBlocked,

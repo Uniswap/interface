@@ -13,3 +13,15 @@ export enum TokenMetadataDisplayType {
   TVL = 2,
   Symbol = 3,
 }
+
+export type DisplayName = {
+  name: string
+  type: DisplayNameType
+}
+
+export enum DisplayNameType {
+  Address = 0,
+  ENS = 1,
+  Local = 2,
+  Unitag = 3,
+}

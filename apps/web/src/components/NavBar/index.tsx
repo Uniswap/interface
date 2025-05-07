@@ -46,6 +46,16 @@ const Right = deprecatedStyled(Row)`
   justify-content: flex-end;
   ${NavItems}
 `
+const SearchContainer = styled(UnpositionedFlex, {
+  width: 'max-content',
+  flex: 1,
+  flexShrink: 1,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  alignItems: 'flex-start',
+  height: 42,
+})
 
 function useShouldHideChainSelector() {
   const isLandingPage = useIsPage(PageType.LANDING)
@@ -93,7 +103,9 @@ export default function Navbar() {
           {areTabsVisible && <Tabs />}
         </Left>
 
-        {!collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
+        <SearchContainer>
+          {!collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
+        </SearchContainer>
 
         <Right>
           {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}

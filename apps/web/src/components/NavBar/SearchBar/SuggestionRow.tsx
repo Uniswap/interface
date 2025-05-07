@@ -225,10 +225,7 @@ export function SuggestionRow({
         <PriceChangeContainer>
           {isToken ? (
             <>
-              <DeltaArrow
-                delta={suggestion.market?.pricePercentChange?.value}
-                formattedDelta={formatDelta(suggestion.market?.pricePercentChange?.value)}
-              />
+              <DeltaArrow delta={suggestion.market?.pricePercentChange?.value} />
               <ThemedText.BodySmall>
                 <DeltaText delta={suggestion.market?.pricePercentChange?.value}>
                   {formatDelta(Math.abs(suggestion.market?.pricePercentChange?.value ?? 0))}

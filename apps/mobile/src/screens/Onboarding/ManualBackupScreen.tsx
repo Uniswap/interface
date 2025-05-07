@@ -12,7 +12,8 @@ import { useLockScreenOnBlur } from 'src/features/lockScreen/hooks/useLockScreen
 import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpModal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
-import { EyeSlash, FileListLock, GraduationCap, Key, Lock, PapersText, Pen } from 'ui/src/components/icons'
+import LockIcon from 'ui/src/assets/icons/lock.svg'
+import { EyeSlash, FileListLock, GraduationCap, Key, PapersText, Pen } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -24,7 +25,6 @@ import { ManualPageViewScreen, MobileScreens, OnboardingScreens } from 'uniswap/
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
@@ -98,14 +98,14 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }, [view, t])
 
   useEffect(() => {
-    if (confirmContinueButtonPressed && hasBackup(BackupType.Manual, account)) {
+    if (confirmContinueButtonPressed && account?.backups?.includes(BackupType.Manual)) {
       if (params.entryPoint === OnboardingEntryPoint.BackupCard) {
         navigate(MobileScreens.Home)
       } else {
         navigation.replace(OnboardingScreens.Notifications, params)
       }
     }
-  }, [confirmContinueButtonPressed, navigation, params, account])
+  }, [confirmContinueButtonPressed, navigation, params, account?.backups])
 
   // Manually log as page views as these screens are not captured in navigation events
   useEffect(() => {
@@ -227,7 +227,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
     >
       <Flex centered gap="$spacing16" pb="$spacing24" pt="$spacing24" px="$spacing24">
         <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-          <Lock color="$neutral1" size="$icon.24" />
+          <LockIcon color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
         <Text color="$neutral1" variant="body1">
           {t('onboarding.recoveryPhrase.warning.final.title')}

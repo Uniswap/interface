@@ -12,7 +12,6 @@ import {
   BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
-  PermitTransactionInfo,
   TransactionDetails,
   TransactionInfo,
   TransactionType,
@@ -31,15 +30,14 @@ import {
   TransactionStepFailedError,
   UnexpectedTransactionStateError,
 } from 'uniswap/src/features/transactions/errors'
-import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
-import { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
-import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import {
   OnChainTransactionStep,
   SignatureTransactionStep,
+  TokenApprovalTransactionStep,
+  TokenRevocationTransactionStep,
   TransactionStep,
   TransactionStepType,
-} from 'uniswap/src/features/transactions/steps/types'
+} from 'uniswap/src/features/transactions/swap/types/steps'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -223,13 +221,6 @@ function transformTransactionResponse(response: TransactionResponse | Transactio
   return { hash: response.hash, data: response.input, nonce: response.nonce }
 }
 
-interface HandlePermitStepParams extends Omit<HandleOnChainStepParams<Permit2TransactionStep>, 'info'> {}
-export function* handlePermitTransactionStep(params: HandlePermitStepParams) {
-  const { step } = params
-  const info = getPermitTransactionInfo(step)
-  return yield* call(handleOnChainStep, { ...params, info })
-}
-
 interface HandleApprovalStepParams
   extends Omit<HandleOnChainStepParams<TokenApprovalTransactionStep | TokenRevocationTransactionStep>, 'info'> {}
 export function* handleApprovalTransactionStep(params: HandleApprovalStepParams) {
@@ -258,19 +249,10 @@ export function* handleApprovalTransactionStep(params: HandleApprovalStepParams)
 }
 
 function getApprovalTransactionInfo(
-  approvalStep: TokenApprovalTransactionStep | TokenRevocationTransactionStep | Permit2TransactionStep,
+  approvalStep: TokenApprovalTransactionStep | TokenRevocationTransactionStep,
 ): ApproveTransactionInfo {
   return {
     type: TransactionType.APPROVAL,
-    tokenAddress: approvalStep.token.address,
-    spender: approvalStep.spender,
-    amount: approvalStep.amount,
-  }
-}
-
-function getPermitTransactionInfo(approvalStep: Permit2TransactionStep): PermitTransactionInfo {
-  return {
-    type: TransactionType.PERMIT,
     tokenAddress: approvalStep.token.address,
     spender: approvalStep.spender,
     amount: approvalStep.amount,
@@ -316,7 +298,7 @@ function* findDuplicativeTx(
 }
 
 // Saga to wait for the specific action while asyncTask is running
-export function* watchForInterruption(ignoreInterrupt = false) {
+function* watchForInterruption(ignoreInterrupt = false) {
   if (ignoreInterrupt) {
     return { throwIfInterrupted: noop }
   }
@@ -366,7 +348,7 @@ async function getProvider(): Promise<Web3Provider> {
   return provider
 }
 
-export async function getSigner(account: string): Promise<JsonRpcSigner> {
+async function getSigner(account: string): Promise<JsonRpcSigner> {
   return (await getProvider()).getSigner(account)
 }
 

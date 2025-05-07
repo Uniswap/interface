@@ -8,7 +8,7 @@ import {
   TransactionType,
 } from 'state/transactions/types'
 import { call } from 'typed-redux-saga'
-import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { createSaga } from 'uniswap/src/utils/saga'
 
 function* lpIncentivesClaim(params: LpIncentivesClaimParams) {

@@ -1,14 +1,45 @@
+import { GoogleChromeLogo } from 'components/Icons/GoogleChromeLogo'
+import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { Page } from 'components/NavBar/DownloadApp/Modal'
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
 import { TokenCarousel } from 'components/NavBar/DownloadApp/Modal/TokenCarousel'
-import { DownloadWalletRow } from 'components/WalletModal/DownloadWalletRow'
 import { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Image } from 'ui/src'
+import { Button, Flex, Image, Text, TouchableArea } from 'ui/src'
 import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
+import { Arrow } from 'ui/src/components/arrow/Arrow'
+import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+
+function Footer({ onPress }: { onPress: () => void }) {
+  const { t } = useTranslation()
+  return (
+    <TouchableArea onPress={onPress}>
+      <Flex
+        row
+        alignItems="center"
+        py="$padding12"
+        px="$padding16"
+        backgroundColor="$accent2"
+        justifyContent="space-between"
+      >
+        <Text variant="buttonLabel3" color="$accent1">
+          {t('common.getUniswapWallet')}
+        </Text>
+        <Flex row alignItems="center" gap="$spacing8">
+          <AppStoreLogo size={iconSizes.icon20} />
+          <GoogleChromeLogo width={iconSizes.icon20} height={iconSizes.icon20} />
+          <Flex backgroundColor="black" py="$spacing2" px="$spacing2" borderRadius="$rounded4">
+            <GooglePlayStoreLogo />
+          </Flex>
+          <Arrow direction="e" size={iconSizes.icon16} />
+        </Flex>
+      </Flex>
+    </TouchableArea>
+  )
+}
 
 function Header() {
   return (
@@ -35,6 +66,7 @@ function Header() {
     </Flex>
   )
 }
+
 export function GetStarted({
   onClose,
   setPage,
@@ -53,20 +85,11 @@ export function GetStarted({
       title={t('downloadApp.modal.getStarted.title')}
       subtext={t('downloadApp.modal.getStarted.description')}
       onClose={onClose}
+      maxWidth="480px"
       header={<Header />}
-      footer={
-        <DownloadWalletRow
-          onPress={() => setPage(Page.GetApp)}
-          px="$spacing16"
-          mx="$spacing4"
-          mb="$spacing4"
-          borderBottomLeftRadius="$rounded16"
-          borderBottomRightRadius="$rounded16"
-          $md={{ mb: '$spacing12', mx: '$spacing12' }}
-        />
-      }
+      footer={<Footer onPress={() => setPage(Page.GetApp)} />}
     >
-      <Flex gap="$spacing20" width="100%" px="$spacing32" pb="$spacing24">
+      <Flex gap="$spacing16" width="100%" px="$spacing32" pb="$spacing24">
         <Flex row>
           <Button
             variant="branded"

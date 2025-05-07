@@ -19,7 +19,7 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
-import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
+import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 

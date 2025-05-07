@@ -637,8 +637,7 @@ const v81SchemaIntermediate = {
 delete v81SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
 export const v81Schema = v81SchemaIntermediate
 
-export const v82Schema = v81Schema
-
+// v82 had a migration but no schema update so skipping it here
 export const v83Schema = {
   ...v81Schema,
   pushNotifications: {
@@ -672,13 +671,8 @@ const v85SchemaIntermediate = {
 }
 delete v85SchemaIntermediate.favorites.tokensVisibility
 delete v85SchemaIntermediate.favorites.nftsVisibility
-export const v85Schema = v85SchemaIntermediate
-
-const v86Schema = {
-  ...v85Schema,
-  batchedTransactions: {},
-}
+const v85Schema = v85SchemaIntermediate
 
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v86Schema => v86Schema
+export const getSchema = (): typeof v85Schema => v85Schema

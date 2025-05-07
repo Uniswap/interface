@@ -2,14 +2,14 @@ import React from 'react'
 import { SEARCH_ITEM_ICON_SIZE, SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/constants'
 import { SearchWalletItemBase } from 'src/components/explore/search/items/SearchWalletItemBase'
 import { Flex, Text } from 'ui/src'
-import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
-import { SearchContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { UnitagSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
+import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type SearchUnitagItemProps = {
   searchResult: UnitagSearchResult

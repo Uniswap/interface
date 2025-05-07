@@ -3,11 +3,7 @@ import { Wallet } from 'state/wallets/types'
 
 const WALLET: Wallet = { account: '0x123', walletName: 'test' }
 
-const INITIAL_STATE = {
-  connectedWallets: [] as Wallet[],
-  switchingChain: false as const,
-  delegatedState: {} as Record<string, string>,
-}
+const INITIAL_STATE = { connectedWallets: [] as Wallet[], switchingChain: false as const }
 
 describe('wallets reducer', () => {
   describe('connectedWallets', () => {
@@ -16,7 +12,7 @@ describe('wallets reducer', () => {
         type: 'wallets/addConnectedWallet',
         payload: WALLET,
       }
-      const expectedState = { connectedWallets: [WALLET], switchingChain: false, delegatedState: {} }
+      const expectedState = { connectedWallets: [WALLET], switchingChain: false }
       expect(walletsReducer(INITIAL_STATE, action)).toEqual(expectedState)
     })
 
@@ -25,7 +21,7 @@ describe('wallets reducer', () => {
         type: 'wallets/addConnectedWallet',
         payload: WALLET,
       }
-      const expectedState = { connectedWallets: [WALLET], switchingChain: false, delegatedState: {} }
+      const expectedState = { connectedWallets: [WALLET], switchingChain: false }
       expect(walletsReducer({ ...INITIAL_STATE, connectedWallets: [WALLET] }, action)).toEqual(expectedState)
     })
   })
@@ -36,7 +32,7 @@ describe('wallets reducer', () => {
         type: 'wallets/startSwitchingChain',
         payload: 1,
       }
-      const expectedState = { connectedWallets: [], switchingChain: 1, delegatedState: {} }
+      const expectedState = { connectedWallets: [], switchingChain: 1 }
       expect(walletsReducer(INITIAL_STATE, action)).toEqual(expectedState)
     })
 

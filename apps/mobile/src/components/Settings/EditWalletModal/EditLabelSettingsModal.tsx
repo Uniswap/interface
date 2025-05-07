@@ -4,23 +4,23 @@ import { KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from '
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { useDispatch } from 'react-redux'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
 import { Button, Flex, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isIOS } from 'utilities/src/platform'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 export function EditLabelSettingsModal({
   route,
@@ -33,7 +33,7 @@ export function EditLabelSettingsModal({
   const entryPoint = accessPoint ?? MobileScreens.SettingsWallet
 
   const displayName = useDisplayName(address)
-  const [nickname, setNickname] = useState(displayName?.type === DisplayNameType.Local ? displayName?.name : '')
+  const [nickname, setNickname] = useState(displayName?.name)
   const [isUpdatingWalletLabel, setIsUpdatingWalletLabel] = useState(false)
 
   const accountNameIsEditable =
@@ -57,7 +57,6 @@ export function EditLabelSettingsModal({
         newName: nickname?.trim() ?? '',
       }),
     )
-    onPressBack()
   }
 
   const onPressBack = (): void => {
@@ -97,7 +96,7 @@ export function EditLabelSettingsModal({
                 <TextInput
                   ref={inputRef}
                   autoCapitalize="none"
-                  color="$neutral1"
+                  color="$neutral2"
                   disabled={!accountNameIsEditable}
                   fontFamily="$subHeading"
                   fontSize={fonts.subheading1.fontSize}

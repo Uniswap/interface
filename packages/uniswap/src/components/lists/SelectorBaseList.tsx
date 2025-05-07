@@ -4,15 +4,15 @@ import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
+import { TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import {
   ItemRowInfo,
-  OnchainItemList,
-  OnchainItemListRef,
-} from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
-import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { SectionHeader, SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
-import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
-import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
+  TokenSectionBaseList,
+  TokenSectionBaseListRef,
+} from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
+import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/lists/TokenSectionHeader'
+import { ItemType } from 'uniswap/src/components/lists/types'
+import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function EmptyResults(): JSX.Element {
@@ -26,8 +26,8 @@ function EmptyResults(): JSX.Element {
   )
 }
 
-interface SelectorBaseListProps<T extends OnchainItemListOption> {
-  sections?: OnchainItemSection<T>[]
+interface SelectorBaseListProps<T extends ItemType> {
+  sections?: TokenSection<T>[]
   chainFilter?: UniverseChainId | null
   refetch?: () => void
   loading?: boolean
@@ -37,10 +37,9 @@ interface SelectorBaseListProps<T extends OnchainItemListOption> {
   renderItem: (info: ItemRowInfo<T>) => JSX.Element
   keyExtractor: (item: T, index: number) => string
   expandedItems?: string[]
-  focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
 }
 
-function _SelectorBaseList<T extends OnchainItemListOption>({
+function _SelectorBaseList<T extends ItemType>({
   renderItem,
   sections,
   chainFilter,
@@ -51,10 +50,9 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
   errorText,
   keyExtractor,
   expandedItems,
-  focusedRowControl,
 }: SelectorBaseListProps<T>): JSX.Element {
   const { t } = useTranslation()
-  const sectionListRef = useRef<OnchainItemListRef>()
+  const sectionListRef = useRef<TokenSectionBaseListRef>()
 
   useEffect(() => {
     if (sections?.length) {
@@ -67,7 +65,7 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
   }, [chainFilter, sections?.length])
 
   const renderSectionHeader = useCallback(
-    ({ section }: { section: SectionHeaderProps }): JSX.Element => (
+    ({ section }: { section: TokenSectionHeaderProps }): JSX.Element => (
       <SectionHeader
         rightElement={section.rightElement}
         endElement={section.endElement}
@@ -99,23 +97,23 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
 
   return (
     <AnimateTransition animationType="fade" currentIndex={(!sections || !sections.length) && loading ? 0 : 1}>
-      <Flex grow px="$spacing20">
-        <Flex height={ITEM_SECTION_HEADER_ROW_HEIGHT} justifyContent="center" py="$spacing12" width={80}>
+      <Flex grow px="$spacing16">
+        <Flex height={ITEM_SECTION_HEADER_ROW_HEIGHT} justifyContent="center" py="$spacing16" width={80}>
           <Skeleton>
             <Loader.Box height={fonts.subheading2.lineHeight} />
           </Skeleton>
         </Flex>
         <Loader.Token gap="$none" repeat={15} />
       </Flex>
-      <OnchainItemList<T>
+      <TokenSectionBaseList<T>
         ListEmptyComponent={emptyElement || <EmptyResults />}
+        focusHook={useBottomSheetFocusHook}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
         sectionListRef={sectionListRef}
         sections={sections ?? []}
         expandedItems={expandedItems}
-        focusedRowControl={focusedRowControl}
       />
     </AnimateTransition>
   )

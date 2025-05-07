@@ -5,7 +5,7 @@ import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetails
 import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ChartBar, ChartPie, ChartPyramid, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
-import { DEP_accentColors, validColor } from 'ui/src/theme'
+import { DEP_accentColors, iconSizes, validColor } from 'ui/src/theme'
 import { useTokenProjectDescriptionQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   useTokenBasicInfoPartsFragment,
@@ -72,7 +72,7 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
     <Flex gap="$spacing8">
       <StatsRow
         label={t('token.stats.marketCap')}
-        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
+        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
         <Text textAlign="right" variant="body2">
           {convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
@@ -81,7 +81,7 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
 
       <StatsRow
         label={t('token.stats.fullyDilutedValuation')}
-        statsIcon={<ChartPyramid color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
+        statsIcon={<ChartPyramid color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
         <Text textAlign="right" variant="body2">
           {convertFiatAmountFormatted(fullyDilutedValuation, NumberType.FiatTokenStats)}
@@ -90,7 +90,7 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
 
       <StatsRow
         label={t('token.stats.volume')}
-        statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
+        statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
         <Text textAlign="right" variant="body2">
           {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
@@ -99,7 +99,7 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
 
       <StatsRow
         label={t('token.stats.priceHighYear')}
-        statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
+        statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
         <Text textAlign="right" variant="body2">
           {convertFiatAmountFormatted(priceHight52W, NumberType.FiatTokenDetails)}
@@ -108,7 +108,7 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
 
       <StatsRow
         label={t('token.stats.priceLowYear')}
-        statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size="$icon.16" />}
+        statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
         <Text textAlign="right" variant="body2">
           {convertFiatAmountFormatted(priceLow52W, NumberType.FiatTokenDetails)}

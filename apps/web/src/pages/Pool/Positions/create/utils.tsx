@@ -38,16 +38,15 @@ import { tryParsePrice, tryParseTick } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
-import type {
+import {
   CheckApprovalLPRequest,
   CheckApprovalLPResponse,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
+  IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import { IndependentToken } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { CreatePositionTxAndGasInfo, LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { getTickToPrice, getV4TickToPrice } from 'utils/getTickToPrice'
@@ -920,13 +919,11 @@ export function generateAddLiquidityApprovalParams({
   positionState,
   derivedPositionInfo,
   derivedDepositInfo,
-  generatePermitAsTransaction,
 }: {
   account?: AccountMeta
   positionState: PositionState
   derivedPositionInfo: CreatePositionInfo
   derivedDepositInfo: DepositInfo
-  generatePermitAsTransaction?: boolean
 }): CheckApprovalLPRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
   const currencies = derivedPositionInfo.currencies
@@ -951,8 +948,6 @@ export function generateAddLiquidityApprovalParams({
     token1: getCurrencyAddressForTradingApi(currencies[1]),
     amount0: currencyAmounts?.TOKEN0?.quotient.toString(),
     amount1: currencyAmounts?.TOKEN1?.quotient.toString(),
-    generatePermitAsTransaction:
-      positionState.protocolVersion === ProtocolVersion.V4 ? generatePermitAsTransaction : undefined,
   } satisfies CheckApprovalLPRequest
 }
 
@@ -1009,7 +1004,6 @@ export function generateCreateCalldataQueryParams({
   derivedPriceRangeInfo,
   derivedDepositInfo,
   independentField,
-  slippageTolerance,
 }: {
   account?: AccountMeta
   approvalCalldata?: CheckApprovalLPResponse
@@ -1019,7 +1013,6 @@ export function generateCreateCalldataQueryParams({
   derivedPriceRangeInfo: PriceRangeInfo
   derivedDepositInfo: DepositInfo
   independentField: PositionField
-  slippageTolerance?: number
 }): CreateLPPositionRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
   const currencies = derivedPositionInfo.currencies
@@ -1035,14 +1028,7 @@ export function generateCreateCalldataQueryParams({
     return undefined
   }
 
-  const {
-    token0Approval,
-    token1Approval,
-    positionTokenApproval,
-    permitData,
-    token0PermitTransaction,
-    token1PermitTransaction,
-  } = approvalCalldata ?? {}
+  const { token0Approval, token1Approval, positionTokenApproval, permitData } = approvalCalldata ?? {}
 
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
     if (derivedPositionInfo.protocolVersion !== derivedPriceRangeInfo.protocolVersion) {
@@ -1072,21 +1058,13 @@ export function generateCreateCalldataQueryParams({
     const dependentAmount = currencyAmounts[dependentField]
 
     return {
-      simulateTransaction: !(
-        permitData ||
-        token0PermitTransaction ||
-        token1PermitTransaction ||
-        token0Approval ||
-        token1Approval ||
-        positionTokenApproval
-      ),
+      simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval),
       protocol: apiProtocolItems,
       walletAddress: account.address,
       chainId: currencyAmounts.TOKEN0.currency.chainId,
       independentAmount: independentAmount?.quotient.toString(),
       independentToken,
       defaultDependentAmount: dependentAmount?.quotient.toString(),
-      slippageTolerance,
       position: {
         pool: {
           token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
@@ -1137,14 +1115,7 @@ export function generateCreateCalldataQueryParams({
   const dependentAmount = currencyAmounts[dependentField]
 
   return {
-    simulateTransaction: !(
-      permitData ||
-      token0PermitTransaction ||
-      token1PermitTransaction ||
-      token0Approval ||
-      token1Approval ||
-      positionTokenApproval
-    ),
+    simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval),
     protocol: apiProtocolItems,
     walletAddress: account.address,
     chainId: currencyAmounts.TOKEN0.currency.chainId,
@@ -1152,7 +1123,6 @@ export function generateCreateCalldataQueryParams({
     independentToken,
     initialDependentAmount: initialPrice && dependentAmount?.quotient?.toString(), // only set this if there is an initialPrice
     initialPrice,
-    slippageTolerance,
     position: {
       tickLower,
       tickUpper,
@@ -1164,7 +1134,7 @@ export function generateCreateCalldataQueryParams({
         hooks: positionState.hook,
       },
     },
-  } satisfies CreateLPPositionRequest
+  }
 }
 
 export function generateCreatePositionTxRequest({
@@ -1211,12 +1181,8 @@ export function generateCreatePositionTxRequest({
     return undefined
   }
 
-  const validatedToken0PermitTransaction = validateTransactionRequest(approvalCalldata?.token0PermitTransaction)
-  const validatedToken1PermitTransaction = validateTransactionRequest(approvalCalldata?.token1PermitTransaction)
-
   const txRequest = validateTransactionRequest(createCalldata.create)
-  if (!txRequest && !(validatedToken0PermitTransaction || validatedToken1PermitTransaction)) {
-    // Allow missing txRequest if mismatched (unsigned flow using token0PermitTransaction/2)
+  if (!txRequest) {
     return undefined
   }
 
@@ -1227,7 +1193,7 @@ export function generateCreatePositionTxRequest({
 
   return {
     type: LiquidityTransactionType.Create,
-    unsigned: Boolean(validatedPermitRequest),
+    unsigned: Boolean(approvalCalldata?.permitData),
     protocolVersion: derivedPositionInfo.protocolVersion,
     createPositionRequestArgs: queryParams,
     action: {
@@ -1245,9 +1211,7 @@ export function generateCreatePositionTxRequest({
     approvePositionTokenRequest: undefined,
     revokeToken0Request: validatedRevoke0Request,
     revokeToken1Request: validatedRevoke1Request,
-    permit: validatedPermitRequest ? { method: PermitMethod.TypedData, typedData: validatedPermitRequest } : undefined,
-    token0PermitTransaction: validatedToken0PermitTransaction,
-    token1PermitTransaction: validatedToken1PermitTransaction,
+    permit: validatedPermitRequest,
   } satisfies CreatePositionTxAndGasInfo
 }
 

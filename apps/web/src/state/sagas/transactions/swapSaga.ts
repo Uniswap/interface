@@ -8,8 +8,6 @@ import useSelectChain from 'hooks/useSelectChain'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { handleAtomicSendCalls } from 'state/sagas/transactions/5792'
-import { useGetOnPressRetry } from 'state/sagas/transactions/retry'
 import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
   HandleOnChainStepParams,
@@ -17,7 +15,6 @@ import {
   getSwapTransactionInfo,
   handleApprovalTransactionStep,
   handleOnChainStep,
-  handlePermitTransactionStep,
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
 import { handleWrapStep } from 'state/sagas/transactions/wrapSaga'
@@ -37,21 +34,20 @@ import {
   TransactionStepFailedError,
   UnexpectedTransactionStateError,
 } from 'uniswap/src/features/transactions/errors'
-import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import {
   SwapTransactionStep,
   SwapTransactionStepAsync,
-  SwapTransactionStepBatched,
-} from 'uniswap/src/features/transactions/swap/steps/swap'
+  TransactionStep,
+  TransactionStepType,
+} from 'uniswap/src/features/transactions/swap/types/steps'
 import {
   SetCurrentStepFn,
   SwapCallback,
   SwapCallbackParams,
 } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import {
-  PermitMethod,
   ValidatedBridgeSwapTxAndGasInfo,
   ValidatedClassicSwapTxAndGasInfo,
   ValidatedSwapTxContext,
@@ -59,20 +55,13 @@ import {
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
-import { generateSwapTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateSwapTransactionSteps'
+import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-
-interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
-  step: SwapTransactionStep | SwapTransactionStepAsync
-  signature?: string
-  trade: ClassicTrade | BridgeTrade
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
-}
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
   step: SwapTransactionStep | SwapTransactionStepAsync
@@ -106,45 +95,6 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
     onModification,
   })
 
-  handleSwapTransactionAnalytics({ ...params, hash })
-
-  popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
-
-  return
-}
-
-interface HandleSwapBatchedStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
-  step: SwapTransactionStepBatched
-  trade: ClassicTrade | BridgeTrade
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
-}
-function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) {
-  const { trade, step } = params
-
-  const info = getSwapTransactionInfo(trade)
-
-  const batchId = yield* handleAtomicSendCalls({
-    ...params,
-    info,
-    step,
-    ignoreInterrupt: true, // We avoid interruption during the swap step, since it is too late to give user a new trade once the swap is submitted.
-    shouldWaitForConfirmation: false,
-  })
-  handleSwapTransactionAnalytics({ ...params, batchId })
-
-  popupRegistry.addPopup({ type: PopupType.Transaction, hash: batchId }, batchId)
-
-  return
-}
-
-function handleSwapTransactionAnalytics(params: {
-  trade: ClassicTrade | BridgeTrade
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
-  hash?: string
-  batchId?: string
-}) {
-  const { trade, analytics, hash, batchId } = params
-
   sendAnalyticsEvent(
     SwapEventName.SWAP_SIGNED,
     formatSwapSignedAnalyticsEventProperties({
@@ -158,11 +108,12 @@ function handleSwapTransactionAnalytics(params: {
       txHash: hash,
       portfolioBalanceUsd: analytics.total_balances_usd,
       trace: analytics,
-      isBatched: Boolean(batchId),
-      includedPermitTransactionStep: analytics.included_permit_transaction_step,
-      batchId,
     }),
   )
+
+  popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
+
+  return
 }
 
 function* getSwapTxRequest(step: SwapTransactionStep | SwapTransactionStepAsync, signature: string | undefined) {
@@ -188,9 +139,8 @@ type SwapParams = {
   swapTxContext: ValidatedSwapTxContext
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
-  getOnPressRetry: (error: Error | undefined) => (() => void) | undefined
   onSuccess: () => void
-  onFailure: (error?: Error, onPressRetry?: () => void) => void
+  onFailure: (error?: Error) => void
   v4Enabled: boolean
 }
 
@@ -199,7 +149,7 @@ function* swap(params: SwapParams) {
   const { swapTxContext, setSteps, selectChain, startChainId, v4Enabled, onFailure } = params
 
   try {
-    const steps = yield* call(generateSwapTransactionSteps, swapTxContext, v4Enabled)
+    const steps = yield* call(generateTransactionSteps, swapTxContext, v4Enabled)
     setSteps(steps)
 
     // Switch chains if needed
@@ -257,17 +207,9 @@ function* classicSwap(
           signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
           break
         }
-        case TransactionStepType.Permit2Transaction: {
-          yield* call(handlePermitTransactionStep, { account, step, setCurrentStep })
-          break
-        }
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
           yield* call(handleSwapTransactionStep, { account, signature, step, setCurrentStep, trade, analytics })
-          break
-        }
-        case TransactionStepType.SwapTransactionBatched: {
-          yield* call(handleSwapTransactionBatchedStep, { account, step, setCurrentStep, trade, analytics })
           break
         }
         default: {
@@ -279,8 +221,7 @@ function* classicSwap(
       if (displayableError) {
         logger.error(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
       }
-      const onPressRetry = params.getOnPressRetry(displayableError)
-      onFailure(displayableError, onPressRetry)
+      onFailure(displayableError)
       return
     }
   }
@@ -372,8 +313,6 @@ export function useSwapCallback(): SwapCallback {
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
-  const getOnPressRetry = useGetOnPressRetry()
-
   return useCallback(
     (args: SwapCallbackParams) => {
       const {
@@ -392,10 +331,6 @@ export function useSwapCallback(): SwapCallback {
       } = args
       const { trade, gasFee } = swapTxContext
 
-      const isClassicSwap = isClassic(swapTxContext)
-      const isBatched = isClassicSwap && swapTxContext.txRequests && swapTxContext.txRequests.length > 1
-      const includedPermitTransactionStep = isClassicSwap && swapTxContext.permit?.method === PermitMethod.Transaction
-
       const analytics = getBaseTradeAnalyticsProperties({
         formatter,
         trade,
@@ -405,14 +340,11 @@ export function useSwapCallback(): SwapCallback {
         preselectAsset,
         portfolioBalanceUsd,
         trace,
-        isBatched,
-        includedPermitTransactionStep,
       })
       const swapParams = {
         swapTxContext,
         account,
         analytics,
-        getOnPressRetry,
         onSuccess,
         onFailure,
         setCurrentStep,
@@ -428,7 +360,7 @@ export function useSwapCallback(): SwapCallback {
       sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
         ...analytics,
         estimated_network_fee_wei: gasFee.value,
-        gas_limit: isClassicSwap ? swapTxContext.txRequests?.[0]?.gasLimit?.toString() : undefined,
+        gas_limit: isClassic(swapTxContext) ? swapTxContext.txRequest?.gasLimit?.toString() : undefined,
         transaction_deadline_seconds: trade.deadline,
         swap_quote_block_number: blockNumber,
         is_auto_slippage: isAutoSlippage,
@@ -439,16 +371,6 @@ export function useSwapCallback(): SwapCallback {
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [
-      formatter,
-      portfolioBalanceUsd,
-      trace,
-      selectChain,
-      startChainId,
-      v4SwapEnabled,
-      appDispatch,
-      swapStartTimestamp,
-      getOnPressRetry,
-    ],
+    [formatter, portfolioBalanceUsd, trace, selectChain, startChainId, v4SwapEnabled, appDispatch, swapStartTimestamp],
   )
 }

@@ -2,26 +2,36 @@ import { memo, useCallback, useMemo, useRef } from 'react'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptionsWithFallback'
 import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
+import { usePopularTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/usePopularTokensOptions'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
-import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
-import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
-import { isSwapListLoading } from 'uniswap/src/components/TokenSelector/utils'
-import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
-import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import {
+  OnSelectCurrency,
+  TokenOptionSection,
+  TokenSection,
+  TokenSectionsHookProps,
+} from 'uniswap/src/components/TokenSelector/types'
+import {
+  isSwapListLoading,
+  tokenOptionDifference,
+  useTokenOptionsSection,
+} from 'uniswap/src/components/TokenSelector/utils'
+import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isMobileApp } from 'utilities/src/platform'
 
 // eslint-disable-next-line complexity
 function useTokenSectionsForSwapOutput({
   activeAccountAddress,
   chainFilter,
-  oppositeSelectedToken: input,
-}: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenSelectorOption>[]> {
+  input,
+}: TokenSectionsHookProps): GqlResult<TokenSection<TokenSelectorItemTypes>[]> {
+  const isTokenSelectorTrendingTokensEnabled = useFeatureFlag(FeatureFlags.TokenSelectorTrendingTokens)
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
 
   const {
@@ -32,11 +42,11 @@ function useTokenSectionsForSwapOutput({
   } = usePortfolioTokenOptions(activeAccountAddress, chainFilter)
 
   const {
-    data: trendingTokenOptions,
-    error: trendingTokenOptionsError,
-    refetch: refetchTrendingTokenOptions,
-    loading: trendingTokenOptionsLoading,
-  } = useTrendingTokensOptions(activeAccountAddress, chainFilter)
+    data: popularTokenOptions,
+    error: popularTokenOptionsError,
+    refetch: refetchPopularTokenOptions,
+    loading: popularTokenOptionsLoading,
+  } = usePopularTokensOptions(activeAccountAddress, chainFilter)
 
   const {
     data: favoriteTokenOptions,
@@ -50,8 +60,8 @@ function useTokenSectionsForSwapOutput({
     error: commonTokenOptionsError,
     refetch: refetchCommonTokenOptions,
     loading: commonTokenOptionsLoading,
-    // if there is no chain filter, first check if the input token has a chainId, fallback to defaultChainId
-  } = useCommonTokensOptionsWithFallback(activeAccountAddress, chainFilter ?? input?.chainId ?? defaultChainId)
+    // if there is no chain filter then we show default chain tokens
+  } = useCommonTokensOptionsWithFallback(activeAccountAddress, chainFilter ?? defaultChainId)
 
   const {
     data: bridgingTokenOptions,
@@ -59,20 +69,20 @@ function useTokenSectionsForSwapOutput({
     refetch: refetchBridgingTokenOptions,
     loading: bridgingTokenOptionsLoading,
     shouldNest: shouldNestBridgingTokens,
-  } = useBridgingTokensOptions({ oppositeSelectedToken: input, walletAddress: activeAccountAddress, chainFilter })
+  } = useBridgingTokensOptions({ input, walletAddress: activeAccountAddress, chainFilter })
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
   const error =
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
-    (!trendingTokenOptions && trendingTokenOptionsError) ||
+    (!popularTokenOptions && popularTokenOptionsError) ||
     (!favoriteTokenOptions && favoriteTokenOptionsError) ||
     (!commonTokenOptions && commonTokenOptionsError) ||
     (!bridgingTokenOptions && bridgingTokenOptionsError)
 
   const loading =
     (!portfolioTokenOptions && portfolioTokenOptionsLoading) ||
-    (!trendingTokenOptions && trendingTokenOptionsLoading) ||
+    (!popularTokenOptions && popularTokenOptionsLoading) ||
     (!favoriteTokenOptions && favoriteTokenOptionsLoading) ||
     (!commonTokenOptions && commonTokenOptionsLoading) ||
     (!bridgingTokenOptions && bridgingTokenOptionsLoading)
@@ -81,7 +91,7 @@ function useTokenSectionsForSwapOutput({
 
   refetchAllRef.current = (): void => {
     refetchPortfolioTokenOptions?.()
-    refetchTrendingTokenOptions?.()
+    refetchPopularTokenOptions?.()
     refetchFavoriteTokenOptions?.()
     refetchCommonTokenOptions?.()
     refetchBridgingTokenOptions?.()
@@ -94,39 +104,45 @@ function useTokenSectionsForSwapOutput({
   // we draw the Suggested pills as a single item of a section list, so `data` is TokenOption[][]
 
   const suggestedSectionOptions = useMemo(() => [commonTokenOptions ?? []], [commonTokenOptions])
-  const suggestedSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.SuggestedTokens,
-    options: suggestedSectionOptions,
+  const suggestedSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.SuggestedTokens,
+    tokenOptions: suggestedSectionOptions,
   })
 
-  const portfolioSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.YourTokens,
-    options: portfolioTokenOptions,
+  const portfolioSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.YourTokens,
+    tokenOptions: portfolioTokenOptions,
   })
-  const recentSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.RecentSearches,
-    options: recentlySearchedTokenOptions,
+  const recentSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.RecentTokens,
+    tokenOptions: recentlySearchedTokenOptions,
   })
-  const favoriteSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.FavoriteTokens,
-    options: favoriteTokenOptions,
-  })
-  const trendingSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.TrendingTokens,
-    options: trendingTokenOptions,
+  const favoriteSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.FavoriteTokens,
+    tokenOptions: favoriteTokenOptions,
   })
 
-  const bridgingSectionTokenOptions: TokenSelectorOption[] = useMemo(
+  const popularMinusPortfolioTokens = useMemo(
+    () => tokenOptionDifference(popularTokenOptions, portfolioTokenOptions),
+    [popularTokenOptions, portfolioTokenOptions],
+  )
+  const popularSection = useTokenOptionsSection({
+    // TODO(WEB-5917): Rename to trendingTokens once feature flag is fully on
+    sectionKey: TokenOptionSection.PopularTokens,
+    tokenOptions: isTokenSelectorTrendingTokensEnabled ? popularTokenOptions : popularMinusPortfolioTokens,
+  })
+
+  const bridgingSectionTokenOptions: TokenSelectorItemTypes[] = useMemo(
     () => (shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : bridgingTokenOptions ?? []),
     [bridgingTokenOptions, shouldNestBridgingTokens],
   )
-  const bridgingSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.BridgingTokens,
-    options: bridgingSectionTokenOptions,
+  const bridgingSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.BridgingTokens,
+    tokenOptions: bridgingSectionTokenOptions,
   })
 
   const sections = useMemo(() => {
-    if (isSwapListLoading({ loading, portfolioSection, trendingSection, isTestnetModeEnabled })) {
+    if (isSwapListLoading({ loading, portfolioSection, popularSection, isTestnetModeEnabled })) {
       return undefined
     }
 
@@ -142,12 +158,12 @@ function useTokenSectionsForSwapOutput({
       // TODO(WEB-3061): Favorited wallets/tokens
       // Extension & interface do not support favoriting but has a default list, so we can't rely on empty array check
       ...(isMobileApp ? favoriteSection ?? [] : []),
-      ...(trendingSection ?? []),
+      ...(popularSection ?? []),
     ]
   }, [
     loading,
     portfolioSection,
-    trendingSection,
+    popularSection,
     suggestedSection,
     bridgingSection,
     recentSection,
@@ -171,7 +187,7 @@ function _TokenSelectorSwapOutputList({
   activeAccountAddress,
   chainFilter,
   isKeyboardOpen,
-  oppositeSelectedToken: input,
+  input,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
@@ -184,7 +200,7 @@ function _TokenSelectorSwapOutputList({
   } = useTokenSectionsForSwapOutput({
     activeAccountAddress,
     chainFilter,
-    oppositeSelectedToken: input,
+    input,
   })
   return (
     <TokenSelectorList

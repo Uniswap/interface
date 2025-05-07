@@ -1,11 +1,9 @@
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
-import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -149,11 +147,9 @@ export function getTokenDetailsURL({
   }
   const chainInfo = toGraphQLChain(chain)
 
-  const adjustedAddress = isNativeCurrencyAddress(chain, address) ? NATIVE_TOKEN_PLACEHOLDER : address
-
   const chainName = chainUrlParam || String(chainInfo)?.toLowerCase() || Chain.Ethereum.toLowerCase()
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
+  return `/explore/tokens/${chainName}/${address}${inputAddressSuffix}`
 }
 
 export function getPoolDetailsURL(address: string, chain: UniverseChainId): string {

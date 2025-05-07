@@ -1,5 +1,5 @@
 fragment TokenPrice on Token {
-  id
+  id  
   project {
     id
     markets(currencies: [USD]) {
@@ -84,14 +84,6 @@ query V4Pool($chain: Chain!, $poolId: String!) {
       value
       timestamp
     }
-    rewardsCampaign {
-      id
-      boostedApr
-      startTimestamp
-      endTimestamp
-      totalRewardAllocation
-      distributedRewards
-    }
     totalLiquidity {
       value
     }
@@ -112,7 +104,7 @@ query PoolPriceHistory($chain: Chain!, $addressOrId: String!, $duration: History
       timestamp
     }
   }
-  v3Pool(chain: $chain, address: $addressOrId)
+  v3Pool(chain: $chain, address: $addressOrId) 
   @include (if: $isV3) {
     id
     priceHistory(duration: $duration) {
@@ -135,7 +127,7 @@ query PoolPriceHistory($chain: Chain!, $addressOrId: String!, $duration: History
 }
 
 query PoolVolumeHistory($chain: Chain!, $addressOrId: String!, $duration: HistoryDuration!, $isV4: Boolean!, $isV3: Boolean!, $isV2: Boolean!) {
-  v4Pool(chain: $chain, poolId: $addressOrId)
+  v4Pool(chain: $chain, poolId: $addressOrId) 
   @include (if: $isV4) {
     id
     historicalVolume(duration: $duration) {
@@ -144,7 +136,7 @@ query PoolVolumeHistory($chain: Chain!, $addressOrId: String!, $duration: Histor
       timestamp
     }
   }
-  v3Pool(chain: $chain, address: $addressOrId)
+  v3Pool(chain: $chain, address: $addressOrId) 
   @include (if: $isV3) {
     id
     historicalVolume(duration: $duration) {
@@ -153,7 +145,7 @@ query PoolVolumeHistory($chain: Chain!, $addressOrId: String!, $duration: Histor
       timestamp
     }
   }
-  v2Pair(chain: $chain, address: $addressOrId)
+  v2Pair(chain: $chain, address: $addressOrId) 
   @include (if: $isV2) {
     id
     historicalVolume(duration: $duration) {

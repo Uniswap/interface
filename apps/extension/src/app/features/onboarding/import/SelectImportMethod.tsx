@@ -35,7 +35,7 @@ export function SelectImportMethod(): JSX.Element {
               height={iconSizes.icon48}
               width={iconSizes.icon48}
             >
-              <WalletFilled color="$neutral1" size="$icon.24" />
+              <WalletFilled color="$neutral1" size={iconSizes.icon24} />
             </Square>
           }
           title={t('onboarding.import.selectMethod.title')}

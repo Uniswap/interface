@@ -44,12 +44,12 @@ export function ContextMenu({
   }
 
   function getRelativeCoordinates(): { x: number; y: number } {
-    if (isLeftClick || !triggerContainerRef.current) {
+    if (!triggerContainerRef.current) {
       return { x: 0, y: 0 }
     }
 
     const rect = triggerContainerRef.current.getBoundingClientRect()
-    const relativeX = isPlacementRight ? menuPosition.x - rect.left : menuPosition.x - rect.right
+    const relativeX = isPlacementRight ? menuPosition.x - rect.right : menuPosition.x - rect.left
     const relativeY = menuPosition.y - rect.top - rect.height
 
     return {
@@ -72,11 +72,11 @@ export function ContextMenu({
       placement={
         isPlacementAbove
           ? isPlacementRight
-            ? 'top-start' // above & to the right
-            : 'top-end' // above & to the left
+            ? 'top-end' // above & to the right
+            : 'top-start' // above & to the left
           : isPlacementRight
-            ? 'bottom-start' // below & to the right
-            : 'bottom-end' // below & to the left
+            ? 'bottom-end' // below & to the right
+            : 'bottom-start' // below & to the left
       }
       offset={{
         mainAxis: y + (isPlacementAbove ? -offsetY : offsetY),

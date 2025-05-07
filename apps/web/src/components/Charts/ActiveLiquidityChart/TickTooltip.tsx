@@ -12,7 +12,6 @@ export function TickTooltip({
   hoveredTick,
   currentPrice,
   currentTick,
-  containerHeight,
   contentWidth,
   axisLabelPaneWidth,
   quoteCurrency,
@@ -22,7 +21,6 @@ export function TickTooltip({
   hoveredTick: ChartEntry
   currentPrice: number
   currentTick?: number
-  containerHeight: number
   contentWidth: number
   axisLabelPaneWidth: number
   quoteCurrency: Currency
@@ -39,9 +37,6 @@ export function TickTooltip({
     return null
   }
 
-  const atTop = hoverY < 20
-  const atBottom = containerHeight - hoverY < 20
-
   return (
     <Flex
       position="absolute"
@@ -55,7 +50,6 @@ export function TickTooltip({
       borderWidth="$spacing1"
       backgroundColor="$surface2"
       pointerEvents="none"
-      transform={atBottom ? 'translateY(-12px)' : atTop ? 'translateY(14px)' : undefined}
     >
       {(currentPrice >= hoveredTick.price0 || hoveredTick.tick === currentTick) && (
         <Flex justifyContent="space-between" row alignItems="center" gap="$gap8">

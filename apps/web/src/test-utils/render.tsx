@@ -15,7 +15,7 @@ import store from 'state'
 import { ThemeProvider } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
-import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
+import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 
 const queryClient = new QueryClient()
 
@@ -36,12 +36,14 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
                   <TokenBalancesProvider>
                     <ReactRouterUrlProvider>
                       <MockedBlockNumberProvider>
-                        <ThemeProvider>
-                          <TamaguiProvider>
-                            <Web3ProviderUpdater />
-                            <MockedMismatchProvider>{children}</MockedMismatchProvider>
-                          </TamaguiProvider>
-                        </ThemeProvider>
+                        <UnitagUpdaterContextProvider>
+                          <ThemeProvider>
+                            <TamaguiProvider>
+                              <Web3ProviderUpdater />
+                              {children}
+                            </TamaguiProvider>
+                          </ThemeProvider>
+                        </UnitagUpdaterContextProvider>
                       </MockedBlockNumberProvider>
                     </ReactRouterUrlProvider>
                   </TokenBalancesProvider>
@@ -52,22 +54,6 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
         </QueryClientProvider>
       </Provider>
     </HelmetProvider>
-  )
-}
-
-function MockedMismatchProvider({ children }: PropsWithChildren) {
-  return (
-    <MismatchContextProvider
-      address={undefined}
-      chainId={undefined}
-      mismatchCallback={() => Promise.resolve(false)}
-      onHasAnyMismatch={() => {}}
-      chains={[1]}
-      defaultChainId={1}
-      isTestnetModeEnabled={false}
-    >
-      {children}
-    </MismatchContextProvider>
   )
 }
 

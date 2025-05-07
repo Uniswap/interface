@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { CHART_WIDTH } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
-import { LPIncentiveRewardsBadge } from 'components/Liquidity/LPIncentiveRewardsBadge'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
@@ -12,14 +12,15 @@ import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, styled, useMedia } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
+import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 interface LiquidityPositionFeeStatsProps extends LiquidityPositionMinMaxRangeProps {
   version: ProtocolVersion
   cardHovered: boolean
-  currency0Info: Maybe<CurrencyInfo>
-  currency1Info: Maybe<CurrencyInfo>
+  currency0Amount: CurrencyAmount<Currency>
+  currency1Amount: CurrencyAmount<Currency>
   formattedUsdValue?: string
   formattedUsdFees?: string
   formattedLpIncentiveEarnings?: string
@@ -27,7 +28,6 @@ interface LiquidityPositionFeeStatsProps extends LiquidityPositionMinMaxRangePro
   feeApr?: string
   apr?: number
   lpIncentiveRewardApr?: number
-  hasRewards?: boolean
 }
 
 const PrimaryText = styled(Text, {
@@ -95,17 +95,18 @@ export function LiquidityPositionFeeStats({
   tickSpacing,
   version,
   apr,
-  currency0Info,
-  currency1Info,
+  currency0Amount,
+  currency1Amount,
   cardHovered,
   pricesInverted,
   setPricesInverted,
   lpIncentiveRewardApr,
   totalApr,
-  hasRewards,
 }: LiquidityPositionFeeStatsProps) {
   const { t } = useTranslation()
-  const earningsOrFees = hasRewards ? formattedLpIncentiveEarnings : formattedUsdFees ?? '-'
+  const hasLPIncentiveRewards = !!lpIncentiveRewardApr
+  const hasLpIncentiveEarnings = !!formattedLpIncentiveEarnings
+  const earningsOrFees = hasLpIncentiveEarnings ? formattedLpIncentiveEarnings : formattedUsdFees ?? '-'
 
   return (
     <Flex
@@ -146,14 +147,14 @@ export function LiquidityPositionFeeStats({
               <PrimaryText>{earningsOrFees}</PrimaryText>
             )}
             <SecondaryText variant="body3" color="$neutral2">
-              {hasRewards ? t('pool.earnings') : t('common.fees')}
+              {hasLpIncentiveEarnings || hasLPIncentiveRewards ? t('pool.earnings') : t('common.fees')}
             </SecondaryText>
           </FeeStat>
         </WrapChildrenForMediaSize>
-        {lpIncentiveRewardApr ? (
+        {hasLPIncentiveRewards ? (
           <LPIncentiveFeeStat
-            currency0Info={currency0Info}
-            currency1Info={currency1Info}
+            currency0Amount={currency0Amount}
+            currency1Amount={currency1Amount}
             poolApr={apr}
             lpIncentiveRewardApr={lpIncentiveRewardApr}
             totalApr={totalApr}
@@ -279,14 +280,14 @@ function APRFeeStat({ apr }: { apr?: number }) {
 }
 
 function LPIncentiveFeeStat({
-  currency0Info,
-  currency1Info,
+  currency0Amount,
+  currency1Amount,
   lpIncentiveRewardApr,
   poolApr,
   totalApr,
 }: {
-  currency0Info: Maybe<CurrencyInfo>
-  currency1Info: Maybe<CurrencyInfo>
+  currency0Amount: CurrencyAmount<Currency>
+  currency1Amount: CurrencyAmount<Currency>
   lpIncentiveRewardApr: number
   poolApr?: number
   totalApr?: number
@@ -300,8 +301,8 @@ function LPIncentiveFeeStat({
         padding={0}
         text={
           <LPIncentiveFeeStatTooltip
-            currency0Info={currency0Info}
-            currency1Info={currency1Info}
+            currency0Amount={currency0Amount}
+            currency1Amount={currency1Amount}
             poolApr={poolApr}
             lpIncentiveRewardApr={lpIncentiveRewardApr}
             totalApr={totalApr}
@@ -315,7 +316,31 @@ function LPIncentiveFeeStat({
             <Text variant="body2" color="$neutral1">
               {poolApr ? formatPercent(poolApr) : '-'}
             </Text>
-            <LPIncentiveRewardsBadge formattedRewardApr={formatPercent(lpIncentiveRewardApr)} />
+            <Badge
+              badgeVariant={BadgeVariant.SOFT}
+              borderRadius="$rounded6"
+              py="$spacing2"
+              paddingLeft="$spacing4"
+              paddingRight="$spacing4"
+              marginBottom="$spacing1"
+            >
+              <Flex row gap="$spacing4" alignItems="center">
+                <Text variant="buttonLabel4" color="$accent1">
+                  +{formatPercent(lpIncentiveRewardApr)}
+                </Text>
+                <Flex
+                  row
+                  gap="$spacing2"
+                  alignItems="center"
+                  justifyContent="center"
+                  backgroundColor="white"
+                  borderRadius="$roundedFull"
+                  padding="$spacing2"
+                >
+                  <UniswapLogo size="$icon.8" />
+                </Flex>
+              </Flex>
+            </Badge>
           </Flex>
           <SecondaryText variant="body3" color="$neutral2">
             {t('pool.totalAPR')}

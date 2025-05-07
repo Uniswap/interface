@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { Sparkle } from 'ui/src/components/icons/Sparkle'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { SmartWalletModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -16,6 +15,7 @@ export function PostSwapSmartWalletNudge({
   onClose,
   onEnableSmartWallet,
 }: PostSwapSmartWalletNudgeProps): JSX.Element {
+  const colors = useSporeColors()
   const { t } = useTranslation()
   return (
     <SmartWalletModal
@@ -31,7 +31,7 @@ export function PostSwapSmartWalletNudge({
           justifyContent="center"
           mb="$spacing4"
         >
-          <Sparkle color="$accent1" size="$icon.24" />
+          <Sparkle color={colors.accent1.val} size="$icon.24" />
         </Flex>
       }
       title={t('smartWallets.postSwapNudge.title')}
@@ -40,7 +40,7 @@ export function PostSwapSmartWalletNudge({
       primaryButtonOnClick={onEnableSmartWallet}
       secondaryButtonText={t('common.button.notNow')}
       secondaryButtonOnClick={onClose}
-      learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
+      learnMoreUrl="#"
       modalName={ModalName.PostSwapSmartWalletNudge}
       onClose={onClose}
     />

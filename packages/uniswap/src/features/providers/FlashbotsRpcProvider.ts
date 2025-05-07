@@ -49,6 +49,7 @@ export type SignerInfo = {
 }
 
 export const FLASHBOTS_RPC_URL = 'https://rpc.flashbots.net/fast?originId=uniswapwallet'
+export const FLASHBOTS_DEFAULT_BLOCK_RANGE = 10
 export const FLASHBOTS_DEFAULT_REFUND_PERCENT = 50 // Default for fast mode
 
 /**
@@ -59,14 +60,15 @@ export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
 
   /**
    * Create a Flashbots RPC provider.
+   * @param blockRange - The maximum number of blocks in which the transaction will be included.
+   *    @default 10
+   *    @see {@link https://docs.flashbots.net/flashbots-protect/settings-guide#block-range}
    * @param signer - The signer to use for authenticated requests.
-   * @param refundPercent - The percentage of the transaction fee to refund to the user. 0 <= refundPercent <= 100
-   *    @default 50
-   *    @see {@link https://docs.flashbots.net/flashbots-protect/settings-guide#refunds}
    */
-  constructor(signerInfo?: SignerInfo, refundPercent?: number) {
+  constructor(blockRange: number, signerInfo?: SignerInfo, refundPercent?: number) {
+    const blockRangeString = blockRange > 0 ? `&blockRange=${blockRange}` : ''
     const refundString = getRefundString(signerInfo?.address, refundPercent)
-    const url = `${FLASHBOTS_RPC_URL}${refundString}`
+    const url = `${FLASHBOTS_RPC_URL}${blockRangeString}${refundString}`
     super(url, signerInfo?.signer)
   }
 

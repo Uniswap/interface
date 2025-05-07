@@ -272,7 +272,6 @@ export type UniversalRouterCommand = z.infer<typeof UniversalRouterCommandSchema
 export const UniversalRouterCallSchema = z.object({
   commands: z.array(UniversalRouterCommandSchema),
 })
-export type UniversalRouterCall = z.infer<typeof UniversalRouterCallSchema>
 
 // VALIDATORS + UTILS
 export function isURCommandASwap(

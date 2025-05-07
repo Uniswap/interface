@@ -28,13 +28,11 @@ describe('swapFlowLoggers', () => {
 
   it('logSwapSuccess calls sendAnalyticsEvent with correct parameters', () => {
     const mockHash = 'mockHash'
-    const mockBatchId = undefined
     const mockChainId = 1
     const mockAnalyticsContext = { page: 'mockContext' }
 
     logSwapFinalized(
       mockHash,
-      mockBatchId,
       mockChainId,
       mockChainId,
       mockAnalyticsContext,

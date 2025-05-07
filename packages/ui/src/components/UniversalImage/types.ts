@@ -41,7 +41,6 @@ export interface UniversalImageProps {
   fastImage?: boolean
   testID?: string
   allowLocalUri?: boolean
-  autoplay?: boolean
   onLoad?: () => void
 }
 

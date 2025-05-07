@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScanModal'
-import { Flex, Loader, Text, TouchableArea } from 'ui/src'
-import { Scan } from 'ui/src/components/icons'
+import { Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { iconSizes } from 'ui/src/theme'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
 import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
@@ -25,9 +26,11 @@ interface RecipientSelectProps {
 }
 
 function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element {
+  const colors = useSporeColors()
+
   return (
     <TouchableArea testID={TestID.SelectRecipient} onPress={onPress}>
-      <Scan color="$neutral2" size="$icon.20" />
+      <ScanQRIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
     </TouchableArea>
   )
 }

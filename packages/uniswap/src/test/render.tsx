@@ -17,6 +17,7 @@ import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from 'ui/s
 import { config } from 'ui/src/tamagui.config'
 import { UrlContext } from 'uniswap/src/contexts/UrlContext'
 import { SharedPersistQueryClientProvider } from 'uniswap/src/data/apiClients/SharedPersistQueryClientProvider'
+import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import 'uniswap/src/i18n'
 import { UniswapState, uniswapReducer } from 'uniswap/src/state/uniswapReducer'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
@@ -150,9 +151,11 @@ function SharedUniswapProvider({ children }: Pick<TamaguiProviderProps, 'childre
   return (
     <UrlContext.Provider value={{ useParsedQueryString: () => ({}) as ParsedQs, usePathname: () => '' }}>
       <SharedPersistQueryClientProvider>
-        <OGTamaguiProvider config={config} defaultTheme="dark">
-          {children}
-        </OGTamaguiProvider>
+        <UnitagUpdaterContextProvider>
+          <OGTamaguiProvider config={config} defaultTheme="dark">
+            {children}
+          </OGTamaguiProvider>
+        </UnitagUpdaterContextProvider>
       </SharedPersistQueryClientProvider>
     </UrlContext.Provider>
   )

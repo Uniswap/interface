@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { Flex } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
-import { zIndexes } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -87,6 +87,6 @@ export const BridgeIcon = (
     backgroundColor="$statusSuccess"
     p="$spacing1"
   >
-    <Shuffle size="$icon.12" color="$surface1" backgroundColor="$statusSuccess" />
+    <Shuffle size={iconSizes.icon12} color="$surface1" backgroundColor="$statusSuccess" />
   </Flex>
 )

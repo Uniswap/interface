@@ -1,7 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { LpIncentivesPoolDetailsRewardsDistribution } from 'components/LpIncentives/LpIncentivesPoolDetailsRewardsDistribution'
 import ChartSection from 'components/Pools/PoolDetails/ChartSection'
-import { PoolDetailsApr } from 'components/Pools/PoolDetails/PoolDetailsApr'
 import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
 import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
@@ -10,27 +8,22 @@ import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTab
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { PoolData, usePoolData } from 'graphql/data/pools/usePoolData'
-import { calculateApr } from 'graphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { useColor } from 'hooks/useColor'
 import styled, { useTheme } from 'lib/styled-components'
-import { ExploreTab } from 'pages/Explore/constants'
+import NotFound from 'pages/NotFound'
 import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
-import { useEffect, useMemo, useReducer } from 'react'
+import { useMemo, useReducer } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeProvider } from 'theme'
-import { Flex } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants/trace'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
@@ -65,6 +58,20 @@ const LeftColumn = styled(Column)`
 const HR = styled.hr`
   border: 0.5px solid ${({ theme }) => theme.surface3};
   width: 100%;
+`
+
+const RightColumn = styled(Column)`
+  gap: 24px;
+  width: 360px;
+
+  @media (max-width: ${breakpoints.xl}px) {
+    margin: 44px 0px;
+    width: 100%;
+    min-width: unset;
+    & > *:first-child {
+      margin-top: -24px;
+    }
+  }
 `
 
 const TokenDetailsWrapper = styled(Column)`
@@ -109,13 +116,6 @@ export default function PoolDetailsPage() {
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id)
   const [token0, token1] = isReversed ? [unwrappedTokens?.[1], unwrappedTokens?.[0]] : unwrappedTokens
-  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
-
-  const poolApr = useMemo(
-    () => calculateApr(poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier),
-    [poolData?.volumeUSD24H, poolData?.tvlUSD, poolData?.feeTier],
-  )
-  const navigate = useNavigate()
 
   const { darkMode, surface2, accent1 } = useTheme()
   const color0 = useColor(token0 && gqlToCurrency(token0), {
@@ -143,25 +143,9 @@ export default function PoolDetailsPage() {
   }, [chainInfo?.label, poolData?.token0.symbol, poolData?.token1.symbol])
   const metatags = useDynamicMetatags(metatagProperties)
 
-  const showRewardsDistribution = useMemo(() => {
-    return Boolean(
-      isLPIncentivesEnabled &&
-        poolData &&
-        poolData.rewardsCampaign?.boostedApr &&
-        poolData.rewardsCampaign.boostedApr > 0,
-    )
-  }, [isLPIncentivesEnabled, poolData])
-
-  useEffect(() => {
-    if (poolNotFound) {
-      navigate(`/explore/pools?type=${ExploreTab.Pools}&result=${ModalName.NotFound}`)
-    }
-  }, [poolNotFound, navigate])
-
   if (poolNotFound) {
-    return null
+    return <NotFound />
   }
-
   return (
     <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
       <Helmet>
@@ -204,7 +188,6 @@ export default function PoolDetailsPage() {
                   feeTier={poolData?.feeTier}
                   hookAddress={poolData?.hookAddress}
                   protocolVersion={poolData?.protocolVersion}
-                  rewardsApr={poolData?.rewardsCampaign?.boostedApr}
                   toggleReversed={toggleReversed}
                   loading={loading}
                 />
@@ -224,26 +207,15 @@ export default function PoolDetailsPage() {
               protocolVersion={poolData?.protocolVersion}
             />
           </LeftColumn>
-          <Flex gap="$spacing24" width={360} $xl={{ width: '100%', mt: 44, minWidth: 'unset' }}>
-            <Flex $xl={{ marginTop: -24 }}>
-              <PoolDetailsStatsButtons
-                chainId={chainInfo?.id}
-                token0={token0}
-                token1={token1}
-                feeTier={poolData?.feeTier}
-                protocolVersion={poolData?.protocolVersion}
-                loading={loading}
-              />
-            </Flex>
-            {poolData && (
-              <PoolDetailsApr
-                poolApr={poolApr}
-                rewardsApr={isLPIncentivesEnabled ? poolData?.rewardsCampaign?.boostedApr : undefined}
-              />
-            )}
-            {showRewardsDistribution && (
-              <LpIncentivesPoolDetailsRewardsDistribution rewardsCampaign={poolData?.rewardsCampaign} />
-            )}
+          <RightColumn>
+            <PoolDetailsStatsButtons
+              chainId={chainInfo?.id}
+              token0={token0}
+              token1={token1}
+              feeTier={poolData?.feeTier}
+              protocolVersion={poolData?.protocolVersion}
+              loading={loading}
+            />
             <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainInfo?.id} loading={loading} />
             <TokenDetailsWrapper>
               <TokenDetailsHeader>
@@ -272,7 +244,7 @@ export default function PoolDetailsPage() {
                 />
               </LinksContainer>
             </TokenDetailsWrapper>
-          </Flex>
+          </RightColumn>
         </PageWrapper>
       </Trace>
     </ThemeProvider>

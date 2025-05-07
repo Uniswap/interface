@@ -1,32 +1,18 @@
 /* eslint-disable max-lines */
 import { Provider, TransactionResponse } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
+import { createAction } from '@reduxjs/toolkit'
 import { createSearchParams } from 'react-router-dom'
 import { changeChain } from 'src/app/features/dapp/changeChain'
 import { DappInfo, dappStore } from 'src/app/features/dapp/store'
 import { getActiveConnectedAccount } from 'src/app/features/dapp/utils'
-import {
-  addRequest,
-  confirmRequest,
-  confirmRequestNoDappInfo,
-  rejectRequest,
-} from 'src/app/features/dappRequests/actions'
-import type {
-  DappRequestNoDappInfo,
-  DappRequestRejectParams,
-  DappRequestWithDappInfo,
-  SenderTabInfo,
-} from 'src/app/features/dappRequests/shared'
-import { dappRequestActions, selectIsRequestConfirming } from 'src/app/features/dappRequests/slice'
+import { DappRequestStoreItem, SenderTabInfo, dappRequestActions } from 'src/app/features/dappRequests/slice'
 import {
   BaseSendTransactionRequest,
   ChangeChainRequest,
   ErrorResponse,
   GetCallsStatusRequest,
   GetCallsStatusResponse,
-  GetCapabilitiesRequest,
-  GetCapabilitiesResponse,
-  ParsedCall,
   SendCallsRequest,
   SendCallsResponse,
   SendTransactionResponse,
@@ -42,13 +28,15 @@ import { isWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { AppRoutes, HomeQueryParams } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
-import getCalldataInfoFromTransaction from 'src/background/utils/getCalldataInfoFromTransaction'
 import { call, put, select, take } from 'typed-redux-saga'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import {
+  chainIdToHexadecimalString,
+  hexadecimalStringToInt,
+  toSupportedChainId,
+} from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import {
@@ -58,23 +46,36 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
-import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
-import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
-import { generateBatchId } from 'wallet/src/features/batchedTransactions/utils'
-import { Call } from 'wallet/src/features/dappRequests/types'
-import {
-  ExecuteTransactionParams,
-  executeTransaction,
-} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
 
+export interface DappRequestRejectParams {
+  errorResponse: ErrorResponse
+  senderTabInfo: SenderTabInfo
+}
+
+type OptionalTransactionTypeInfo = {
+  transactionTypeInfo?: TransactionTypeInfo
+}
+export type DappRequestNoDappInfo = Omit<DappRequestStoreItem, 'dappInfo'> & OptionalTransactionTypeInfo
+export type DappRequestWithDappInfo = Required<DappRequestStoreItem> & OptionalTransactionTypeInfo
 export function isDappRequestWithDappInfo(
   request: DappRequestNoDappInfo | DappRequestWithDappInfo,
 ): request is DappRequestWithDappInfo {
   return 'dappInfo' in request && Boolean(request.dappInfo)
 }
+
+export const addRequest = createAction<DappRequestNoDappInfo>(`dappRequest/handleRequest`)
+
+/** This is for requests where the dapp info is not passed along as part of the request because it
+ * does not exist yet (i.e. GetAccountRequest). In these cases the dappInfo will need to be saved.
+ */
+export const confirmRequestNoDappInfo = createAction<DappRequestNoDappInfo>('dappRequest/confirmSaveConnectionRequest')
+export const confirmRequest = createAction<DappRequestWithDappInfo>(`dappRequest/confirmRequest`)
+export const rejectRequest = createAction<DappRequestRejectParams>(`dappRequest/rejectRequest`)
+export const rejectAllRequests = createAction('dappRequest/rejectAllRequests')
 
 export function* dappRequestWatcher() {
   while (true) {
@@ -97,30 +98,10 @@ const ACCOUNT_INFO_TYPES = [DappRequestType.GetChainId, DappRequestType.GetAccou
  */
 // eslint-disable-next-line complexity
 function* handleRequest(requestParams: DappRequestNoDappInfo) {
-  if (
-    requestParams.dappRequest.type === DappRequestType.SendCalls ||
-    requestParams.dappRequest.type === DappRequestType.GetCallsStatus ||
-    requestParams.dappRequest.type === DappRequestType.GetCapabilities
-  ) {
-    const eip5792MethodsEnabled = getFeatureFlag(FeatureFlags.Eip5792Methods) ?? false
-    if (!eip5792MethodsEnabled) {
-      const response: DappRequestRejectParams = {
-        errorResponse: {
-          type: DappResponseType.ErrorResponse,
-          error: serializeError(rpcErrors.methodNotSupported()),
-          requestId: requestParams.dappRequest.requestId,
-        },
-        senderTabInfo: requestParams.senderTabInfo,
-      }
-      yield* put(rejectRequest(response))
-      return
-    }
-  }
-
   if (requestParams.dappRequest.type === DappRequestType.UniswapOpenSidebar) {
     // We can auto-confirm these requests since they are only for navigating to a certain tab
     // At this point the sidebar is already open
-    yield* call(handleConfirmRequestNoDappInfo, requestParams)
+    yield* put(confirmRequestNoDappInfo(requestParams))
     return
   }
   const activeAccount = yield* select(selectActiveAccount)
@@ -133,7 +114,7 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
       },
       senderTabInfo: requestParams.senderTabInfo,
     }
-    yield* put(rejectRequest(response))
+    rejectRequest(response)
     return
   }
 
@@ -167,9 +148,9 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     const chainId = toSupportedChainId(hexadecimalStringToInt(requestParams.dappRequest.chainId))
     if (chainId) {
       if (dappInfo) {
-        yield* call(handleConfirmRequestWithDappInfo, { ...requestParams, dappInfo })
+        yield* put(confirmRequest({ ...requestParams, dappInfo }))
       } else {
-        yield* call(handleConfirmRequestNoDappInfo, requestParams)
+        yield* put(confirmRequestNoDappInfo(requestParams))
       }
       if (isWalletUnlocked) {
         yield* put(
@@ -237,66 +218,17 @@ function* handleRequest(requestParams: DappRequestNoDappInfo) {
     }
   }
 
-  if (requestParams.dappRequest.type === DappRequestType.SendCalls) {
-    try {
-      const parsedChainId = requestParams.dappRequest.chainId
-      const formattedChainId = HexadecimalNumberSchema.parse(parsedChainId)
-      const chainId = toSupportedChainId(formattedChainId)
-
-      if (dappInfo?.lastChainId !== chainId) {
-        throw new Error('Chain ID on message does not match the chain ID set on the extension.')
-      }
-
-      const parsedCalls = requestParams.dappRequest.calls.map((call): Call | ParsedCall => ({
-        ...call,
-        ...(call.data ? getCalldataInfoFromTransaction(call.data, call.to, chainId) : {}),
-      }))
-
-      const parsedRequestParams = {
-        ...requestParams,
-        dappRequest: { ...requestParams.dappRequest, calls: parsedCalls },
-      }
-
-      yield* put(
-        dappRequestActions.add({
-          ...parsedRequestParams,
-          dappInfo,
-        }),
-      )
-      return
-    } catch (error) {
-      logger.error(error, { tags: { file: 'saga.ts', function: 'handleRequest' } })
-      const response: DappRequestRejectParams = {
-        errorResponse: {
-          type: DappResponseType.ErrorResponse,
-          error: serializeError(
-            providerErrors.custom({
-              code: 4902,
-              message:
-                error instanceof Error
-                  ? error.message
-                  : 'Chain ID on message from dApp is missing or does not match the chain ID set on the extension.',
-            }),
-          ),
-          requestId: requestParams.dappRequest.requestId,
-        },
-        senderTabInfo: requestParams.senderTabInfo,
-      }
-      yield* put(rejectRequest(response))
-    }
-  }
-
   const shouldAutoConfirmRequest =
     dappInfo &&
     isConnectedToDapp &&
     (ACCOUNT_REQUEST_TYPES.includes(requestParams.dappRequest.type) ||
       ACCOUNT_INFO_TYPES.includes(requestParams.dappRequest.type) ||
       requestParams.dappRequest.type === DappRequestType.RevokePermissions ||
-      requestParams.dappRequest.type === DappRequestType.GetCallsStatus ||
-      requestParams.dappRequest.type === DappRequestType.GetCapabilities)
+      requestParams.dappRequest.type === DappRequestType.SendCalls || // temporarily until we have a real implementation
+      requestParams.dappRequest.type === DappRequestType.GetCallsStatus)
 
   if (shouldAutoConfirmRequest) {
-    yield* call(handleConfirmRequestWithDappInfo, { ...requestParams, dappInfo })
+    yield* put(confirmRequest({ ...requestParams, dappInfo }))
   } else {
     yield* put(
       dappRequestActions.add({
@@ -325,7 +257,7 @@ export function* handleSendTransaction(
 
   const provider = yield* call(getProvider, lastChainId)
 
-  const sendTransactionParams: ExecuteTransactionParams = {
+  const sendTransactionParams: SendTransactionParams = {
     chainId: lastChainId,
     account,
     options: { request: transactionRequest },
@@ -340,7 +272,7 @@ export function* handleSendTransaction(
     transactionOriginType: TransactionOriginType.External,
   }
 
-  const { transactionResponse } = yield* call(executeTransaction, sendTransactionParams)
+  const { transactionResponse } = yield* call(sendTransaction, sendTransactionParams)
 
   // Trigger a pending transaction notification after we send the transaction to chain
   yield* put(
@@ -489,178 +421,84 @@ export function* handleUniswapOpenSidebarRequest(request: UniswapOpenSidebarRequ
 }
 
 /**
- * Handle wallet_getCapabilities request
- * This method returns the capabilities supported by the wallet for specific chains
- */
-export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTabInfo: SenderTabInfo) {
-  const response: GetCapabilitiesResponse = {
-    type: DappResponseType.GetCapabilitiesResponse,
-    requestId: request.requestId,
-    // TODO: Implement this
-    // https://linear.app/uniswap/issue/WALL-6679/implement-getcapabilities-on-extensionwc-instead-of-hardcoded-values
-    response: {
-      [`0x${UniverseChainId.Sepolia.toString(16)}`]: { atomic: { status: 'supported' } },
-      [`0x${UniverseChainId.UnichainSepolia.toString(16)}`]: { atomic: { status: 'supported' } },
-    },
-  }
-  yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, response)
-}
-
-/**
  * Handle wallet_sendCalls request
  * This method allows dapps to send a batch of calls to the wallet
  */
-export function* handleSendCalls(
-  request: SendCallsRequest,
-  { id }: SenderTabInfo,
-  dappInfo: DappInfo,
-  transactionTypeInfo?: TransactionTypeInfo,
-) {
-  const isSendCallTransaction = transactionTypeInfo?.type === TransactionType.SendCalls
-  if (!isSendCallTransaction || !transactionTypeInfo?.encodedTransaction || !transactionTypeInfo?.encodedRequestId) {
+export function* handleSendCalls(request: SendCallsRequest, { id }: SenderTabInfo) {
+  const eip5792MethodsEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.Eip5792Methods)) ?? false
+
+  if (!eip5792MethodsEnabled) {
     const errorResponse: ErrorResponse = {
       type: DappResponseType.ErrorResponse,
-      error: serializeError(rpcErrors.invalidInput()),
+      error: serializeError(rpcErrors.methodNotSupported()),
       requestId: request.requestId,
     }
+
     yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
     return
   }
 
-  try {
-    const chainId = toSupportedChainId(hexadecimalStringToInt(request.chainId))
-    if (!chainId) {
-      const errorResponse: ErrorResponse = {
-        type: DappResponseType.ErrorResponse,
-        error: serializeError(rpcErrors.invalidParams('Invalid chainId')),
-        requestId: request.requestId,
-      }
-      yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
-      return
-    }
-
-    const activeAccount = yield* select(selectActiveAccount)
-    if (!activeAccount) {
-      const errorResponse: ErrorResponse = {
-        type: DappResponseType.ErrorResponse,
-        error: serializeError(rpcErrors.internal('No active account found')),
-        requestId: request.requestId,
-      }
-      yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
-      return
-    }
-
-    // Generate or use provided batch ID
-    const batchId = request.id || generateBatchId()
-
-    const { encodedTransaction, encodedRequestId } = transactionTypeInfo
-    const sendTransactionParams: ExecuteTransactionParams = {
-      chainId,
-      account: activeAccount,
-      typeInfo: {
-        type: TransactionType.SendCalls,
-        encodedTransaction,
-        encodedRequestId,
-        dappInfo: {
-          name: dappInfo.displayName,
-          address: encodedTransaction.to,
-          icon: dappInfo.iconUrl,
-        },
-      },
-      options: {
-        request: encodedTransaction,
-      },
-      transactionOriginType: TransactionOriginType.External,
-    }
-
-    const { transactionResponse } = yield* call(executeTransaction, sendTransactionParams)
-
-    yield* put(
-      addBatchedTransaction({
-        batchId,
-        txHashes: [transactionResponse.hash], // Assuming single tx for now, might need update if batching changes
-        requestId: encodedRequestId,
-        chainId,
-      }),
-    )
-
-    const response: SendCallsResponse = {
-      type: DappResponseType.SendCallsResponse,
-      requestId: request.requestId,
-      response: {
-        id: batchId,
-        capabilities: request.capabilities || {},
-      },
-    }
-
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
-  } catch (error) {
-    logger.error(error, {
-      tags: { file: 'dappRequestSaga', function: 'handleSendCalls' },
-      extra: { request },
-    })
-
-    const errorResponse: ErrorResponse = {
-      type: DappResponseType.ErrorResponse,
-      error: serializeError(rpcErrors.internal(error instanceof Error ? error.message : 'Failed to send calls')),
-      requestId: request.requestId,
-    }
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
+  // Mock response data
+  // TODO: Implement actual response data
+  const response: SendCallsResponse = {
+    type: DappResponseType.SendCallsResponse,
+    requestId: request.requestId,
+    response: {
+      id: request.sendCallsParams.id || 'mock-batch-id (will be txID or `id` from request)',
+      capabilities: request.sendCallsParams.capabilities || {},
+    },
   }
+
+  yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
 }
 
 /**
  * Handle wallet_getCallsStatus request
  * This method returns the status of a call batch that was sent via wallet_sendCalls
  */
-export function* handleGetCallsStatus(request: GetCallsStatusRequest, { id }: SenderTabInfo, _dappInfo: DappInfo) {
-  const activeAccount = yield* select(selectActiveAccount)
-  if (!activeAccount) {
+export function* handleGetCallsStatus(request: GetCallsStatusRequest, { id }: SenderTabInfo, dappInfo: DappInfo) {
+  const eip5792MethodsEnabled = getStatsigClient().checkGate(getFeatureFlagName(FeatureFlags.Eip5792Methods)) ?? false
+
+  if (!eip5792MethodsEnabled) {
     const errorResponse: ErrorResponse = {
       type: DappResponseType.ErrorResponse,
-      error: serializeError(rpcErrors.internal('No active account found')),
+      error: serializeError(rpcErrors.methodNotSupported()),
       requestId: request.requestId,
     }
+
     yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
     return
   }
 
-  const { data, error } = yield* call(getCallsStatusHelper, request.batchId, activeAccount.address)
-
-  if (error || !data) {
-    const errorResponse: ErrorResponse = {
-      type: DappResponseType.ErrorResponse,
-      error: serializeError(rpcErrors.invalidParams(error)),
-      requestId: request.requestId,
-    }
-    yield* call(dappResponseMessageChannel.sendMessageToTab, id, errorResponse)
-    return
-  }
-
+  // Mock response data
+  // TODO: Implement actual response data
   const response: GetCallsStatusResponse = {
     type: DappResponseType.GetCallsStatusResponse,
     requestId: request.requestId,
-    response: data,
+    response: {
+      version: '1.0',
+      id: request.batchId,
+      chainId: dappInfo.lastChainId ? chainIdToHexadecimalString(dappInfo.lastChainId) : '0x1',
+      status: 100,
+      receipts: [
+        {
+          logs: [
+            {
+              address: '0x1234567890123456789012345678901234567890',
+              data: '0x0000000000000000000000000000000000000000000000000000000000000001',
+              topics: ['0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'],
+            },
+          ],
+          status: '0x1', // Success
+          blockHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+          blockNumber: '0x1',
+          gasUsed: '0x5208', // 21000
+          transactionHash: '0x0000000000000000000000000000000000000000000000000000000000000000',
+        },
+      ],
+      capabilities: {},
+    },
   }
 
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)
-}
-
-function* isRequestConfirming(requestId: string) {
-  const isConfirming = yield* select(selectIsRequestConfirming, requestId)
-  return isConfirming
-}
-
-function* handleConfirmRequestWithDappInfo(request: DappRequestWithDappInfo) {
-  if (yield* isRequestConfirming(request.dappRequest.requestId)) {
-    return
-  }
-  yield* put(confirmRequest(request))
-}
-
-function* handleConfirmRequestNoDappInfo(request: DappRequestNoDappInfo) {
-  if (yield* isRequestConfirming(request.dappRequest.requestId)) {
-    return
-  }
-  yield* put(confirmRequestNoDappInfo(request))
 }

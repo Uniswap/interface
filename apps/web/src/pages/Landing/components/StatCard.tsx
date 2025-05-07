@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 import styled, { keyframes, useTheme } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
+import { opacify } from 'theme/utils'
 import { Flex } from 'ui/src'
-import { opacify } from 'ui/src/theme'
 
 const Mask = motion(styled.div`
   position: relative;

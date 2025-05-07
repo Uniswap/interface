@@ -2,13 +2,12 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Text, TouchableArea } from 'ui/src'
-import { MAX_DEFAULT_TRENDING_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
+import { MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
+import { usePopularTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/usePopularTokensOptions'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
-import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
-import { TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
-import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { TokenOption } from 'uniswap/src/components/lists/items/types'
-import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import { TokenOptionSection, TokenSection, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
+import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 
@@ -26,10 +25,10 @@ function ClearAll({ onPress }: { onPress: () => void }): JSX.Element {
 export function useTokenSectionsForEmptySearch({
   activeAccountAddress,
   chainFilter,
-}: Omit<TokenSectionsHookProps, 'input' | 'isKeyboardOpen'>): GqlResult<OnchainItemSection<TokenOption>[]> {
+}: Omit<TokenSectionsHookProps, 'input' | 'isKeyboardOpen'>): GqlResult<TokenSection<TokenOption>[]> {
   const dispatch = useDispatch()
 
-  const { data: trendingTokenOptions, loading } = useTrendingTokensOptions(activeAccountAddress, chainFilter)
+  const { data: popularTokenOptions, loading } = usePopularTokensOptions(activeAccountAddress, chainFilter)
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
@@ -38,20 +37,18 @@ export function useTokenSectionsForEmptySearch({
     dispatch(clearSearchHistory())
   }, [dispatch])
 
-  const recentSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.RecentSearches,
-    options: recentlySearchedTokenOptions,
+  const recentSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.RecentTokens,
+    tokenOptions: recentlySearchedTokenOptions,
     endElement: <ClearAll onPress={onPressClearSearchHistory} />,
   })
 
-  const trendingSection = useOnchainItemListSection({
-    sectionKey: OnchainItemSectionName.TrendingTokens,
-    options: trendingTokenOptions?.slice(0, MAX_DEFAULT_TRENDING_TOKEN_RESULTS_AMOUNT),
+  const popularSection = useTokenOptionsSection({
+    // TODO(WEB-5917): Rename to trendingTokens once feature flag is fully on
+    sectionKey: TokenOptionSection.PopularTokens,
+    tokenOptions: popularTokenOptions?.slice(0, MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT),
   })
-  const sections = useMemo(
-    () => [...(recentSection ?? []), ...(trendingSection ?? [])],
-    [trendingSection, recentSection],
-  )
+  const sections = useMemo(() => [...(recentSection ?? []), ...(popularSection ?? [])], [popularSection, recentSection])
 
   return useMemo(
     () => ({

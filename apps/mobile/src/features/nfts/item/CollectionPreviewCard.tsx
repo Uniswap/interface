@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Loader } from 'src/components/loading/loaders'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { RotatableChevron, Verified } from 'ui/src/components/icons'
+import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { Currency, NftItemScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
@@ -63,7 +64,9 @@ export function CollectionPreviewCard({
                   {collection?.name || fallbackData?.collectionName || '-'}
                 </Text>
               </Flex>
-              {collection?.isVerified && <Verified color="$accent1" size="$icon.16" />}
+              {collection?.isVerified && (
+                <VerifiedIcon color={colors.accent1.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
+              )}
             </Flex>
             {collection?.markets?.[0]?.floorPrice && (
               <Flex row gap="$spacing4">

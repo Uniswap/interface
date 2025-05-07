@@ -1,5 +1,4 @@
-import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
-import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
+import { ItemType, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -7,14 +6,33 @@ import { FiatNumberType } from 'utilities/src/format/types'
 
 export type OnSelectCurrency = (
   currency: CurrencyInfo,
-  section: OnchainItemSection<TokenSelectorOption>,
+  section: TokenSection<TokenSelectorItemTypes>,
   index: number,
 ) => void
+
+export enum TokenOptionSection {
+  YourTokens = 'yourTokens',
+  PopularTokens = 'popularTokens',
+  RecentTokens = 'recentTokens',
+  FavoriteTokens = 'favoriteTokens',
+  SearchResults = 'searchResults',
+  SuggestedTokens = 'suggestedTokens',
+  BridgingTokens = 'bridgingTokens',
+  OtherChainsTokens = 'otherNetworksTokens',
+}
+
+export type TokenSection<T extends ItemType> = {
+  data: T[]
+  sectionKey: TokenOptionSection
+  name?: string
+  rightElement?: JSX.Element
+  endElement?: JSX.Element
+}
 
 export type TokenSectionsHookProps = {
   activeAccountAddress?: string
   chainFilter: UniverseChainId | null
-  oppositeSelectedToken?: TradeableAsset
+  input?: TradeableAsset
   isKeyboardOpen?: boolean
 }
 

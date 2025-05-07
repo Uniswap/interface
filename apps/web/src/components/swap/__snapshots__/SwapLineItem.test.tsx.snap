@@ -115,7 +115,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c5 {
@@ -786,7 +786,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c5 {
@@ -1460,7 +1460,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c17 {
@@ -1477,7 +1477,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c5 {
@@ -2164,7 +2164,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c17 {
@@ -2181,7 +2181,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c5 {
@@ -2868,7 +2868,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c17 {
@@ -2885,7 +2885,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c5 {
@@ -3617,7 +3617,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c17 {
@@ -3634,7 +3634,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c5 {
@@ -4379,7 +4379,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c17 {
@@ -4396,7 +4396,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c5 {
@@ -5139,7 +5139,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   background: #FFFFFF;
   border-radius: 12px;
   border: 1px solid rgba(34,34,34,0.05);
-  box-shadow: 0px 6px 12px -3px rgba(0,0,0,0.05), 0px 2px 5px -2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
 .c10 {

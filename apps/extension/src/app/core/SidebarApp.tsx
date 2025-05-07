@@ -11,10 +11,9 @@ import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
 import { DappContextProvider } from 'src/app/features/dapp/DappContext'
-import { addRequest } from 'src/app/features/dappRequests/actions'
+import { addRequest } from 'src/app/features/dappRequests/saga'
 import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
 import { SendFlow } from 'src/app/features/send/SendFlow'
-import { BackupRecoveryPhraseScreen } from 'src/app/features/settings/BackupRecoveryPhrase/BackupRecoveryPhraseScreen'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
@@ -37,10 +36,10 @@ import {
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
 import { getReduxPersistor } from 'src/store/store'
-import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
 import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UnitagUpdaterContextProvider, useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -82,10 +81,6 @@ const router = createHashRouter([
           {
             path: SettingsRoutes.ViewRecoveryPhrase,
             element: <ViewRecoveryPhraseScreen />,
-          },
-          {
-            path: SettingsRoutes.BackupRecoveryPhrase,
-            element: <BackupRecoveryPhraseScreen />,
           },
           {
             path: SettingsRoutes.RemoveRecoveryPhrase,
@@ -188,7 +183,7 @@ function SidebarWrapper(): JSX.Element {
   useDappRequestPortListener()
   useTestnetModeForLoggingAndAnalytics()
 
-  const resetUnitagsQueries = useResetUnitagsQueries()
+  const { triggerRefetchUnitags } = useUnitagUpdater()
 
   useEffect(() => {
     dispatch(syncAppWithDeviceLanguage())
@@ -198,10 +193,10 @@ function SidebarWrapper(): JSX.Element {
     return backgroundToSidePanelMessageChannel.addMessageListener(
       BackgroundToSidePanelRequestType.RefreshUnitags,
       () => {
-        resetUnitagsQueries()
+        triggerRefetchUnitags()
       },
     )
-  }, [resetUnitagsQueries])
+  }, [triggerRefetchUnitags])
 
   return (
     <>
@@ -240,10 +235,12 @@ export default function SidebarApp(): JSX.Element {
   return (
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Sidebar}>
-        <DappContextProvider>
-          <PrimaryAppInstanceDebuggerLazy />
-          <RouterProvider router={router} />
-        </DappContextProvider>
+        <UnitagUpdaterContextProvider>
+          <DappContextProvider>
+            <PrimaryAppInstanceDebuggerLazy />
+            <RouterProvider router={router} />
+          </DappContextProvider>
+        </UnitagUpdaterContextProvider>
       </BaseAppContainer>
     </PersistGate>
   )

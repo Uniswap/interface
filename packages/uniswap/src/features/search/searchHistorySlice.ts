@@ -1,29 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { isPoolSearchResult, SearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { SearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
 
 const SEARCH_HISTORY_LENGTH = 5
 
 // eslint-disable-next-line consistent-return
 export function searchResultId(searchResult: SearchResult): string {
-  const { type } = searchResult
-  const address = isPoolSearchResult(searchResult) ? searchResult.poolId : searchResult.address
-  const normalizedAddress = address?.toLowerCase() ?? null
-
-  switch (type) {
+  switch (searchResult.type) {
     case SearchResultType.Token:
-      return `token-${searchResult.chainId}-${normalizedAddress}`
+      return `token-${searchResult.chainId}-${searchResult.address}`
     case SearchResultType.ENSAddress:
-      return `ens-${normalizedAddress}`
+      return `ens-${searchResult.address}`
     case SearchResultType.Unitag:
-      return `unitag-${normalizedAddress}`
+      return `unitag-${searchResult.address}`
     case SearchResultType.WalletByAddress:
-      return `wallet-${normalizedAddress}`
+      return `wallet-${searchResult.address}`
     case SearchResultType.Etherscan:
-      return `etherscan-${normalizedAddress}`
+      return `etherscan-${searchResult.address}`
     case SearchResultType.NFTCollection:
-      return `nftCollection-${searchResult.chainId}-${normalizedAddress}`
-    case SearchResultType.Pool:
-      return `pool-${searchResult.chainId}-${normalizedAddress}-${searchResult.feeTier}`
+      return `nftCollection-${searchResult.chainId}-${searchResult.address}`
   }
 }
 

@@ -15,7 +15,7 @@ import {
 } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
-import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/walletConnectClient'
+import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

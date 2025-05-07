@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Button, Flex, useIsShortMobileDevice } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { Warning, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import { PermitMethod, SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -107,16 +107,12 @@ export const getActionName = (
   swapTxContext?: SwapTxAndGasInfo,
   warning?: Warning,
 ): string => {
-  const hasPermitTx =
-    swapTxContext && isClassic(swapTxContext) ? swapTxContext?.permit?.method === PermitMethod.Transaction : false
-  const hasApproveTx = Boolean(swapTxContext?.approveTxRequest)
-
   switch (true) {
     case wrapType === WrapType.Wrap:
       return t('swap.button.wrap')
     case wrapType === WrapType.Unwrap:
       return t('swap.button.unwrap')
-    case isInterface && (hasPermitTx || hasApproveTx):
+    case isInterface && Boolean(swapTxContext?.approveTxRequest):
       return t('swap.approveAndSwap')
     case isInterface && swapTxContext && isClassic(swapTxContext) && swapTxContext.unsigned:
       return t('swap.signAndSwap')

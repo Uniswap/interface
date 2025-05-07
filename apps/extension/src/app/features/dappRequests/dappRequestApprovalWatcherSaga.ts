@@ -2,12 +2,6 @@
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { getAccount, getAccountRequest } from 'src/app/features/dappRequests/accounts'
-import {
-  confirmRequest,
-  confirmRequestNoDappInfo,
-  rejectAllRequests,
-  rejectRequest,
-} from 'src/app/features/dappRequests/actions'
 import { getChainId, getChainIdNoDappInfo } from 'src/app/features/dappRequests/getChainId'
 import {
   handleGetPermissionsRequest,
@@ -15,21 +9,22 @@ import {
   handleRevokePermissions,
 } from 'src/app/features/dappRequests/permissions'
 import {
+  DappRequestNoDappInfo,
+  DappRequestRejectParams,
+  DappRequestWithDappInfo,
   changeChainSaga,
+  confirmRequest,
+  confirmRequestNoDappInfo,
   handleGetCallsStatus,
-  handleGetCapabilities,
   handleSendCalls,
   handleSendTransaction,
   handleSignMessage,
   handleSignTypedData,
   handleUniswapOpenSidebarRequest,
+  rejectAllRequests,
+  rejectRequest,
 } from 'src/app/features/dappRequests/saga'
-import type {
-  DappRequestNoDappInfo,
-  DappRequestRejectParams,
-  DappRequestWithDappInfo,
-} from 'src/app/features/dappRequests/shared'
-import { dappRequestActions, selectAllDappRequests } from 'src/app/features/dappRequests/slice'
+import { dappRequestActions } from 'src/app/features/dappRequests/slice'
 import {
   BaseSendTransactionRequest,
   BaseSendTransactionRequestSchema,
@@ -40,8 +35,6 @@ import {
   GetAccountRequestSchema,
   GetCallsStatusRequest,
   GetCallsStatusRequestSchema,
-  GetCapabilitiesRequest,
-  GetCapabilitiesRequestSchema,
   GetChainIdRequest,
   GetChainIdRequestSchema,
   GetPermissionsRequest,
@@ -62,6 +55,7 @@ import {
   UniswapOpenSidebarRequestSchema,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
+import { ExtensionState } from 'src/store/extensionReducer'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
@@ -72,16 +66,16 @@ function* dappRequestApproval({
   payload: request,
 }: PayloadAction<DappRequestWithDappInfo | DappRequestNoDappInfo | DappRequestRejectParams>) {
   if (type === rejectAllRequests.type) {
-    const existingRequests = yield* select(selectAllDappRequests)
+    const pendingRequests = yield* select((state: ExtensionState) => state.dappRequests.pending)
 
-    for (const existingRequest of existingRequests) {
+    for (const pendingRequest of pendingRequests) {
       const errorResponse: ErrorResponse = {
         type: DappResponseType.ErrorResponse,
         error: serializeError(providerErrors.userRejectedRequest()),
-        requestId: existingRequest.dappRequest.requestId,
+        requestId: pendingRequest.dappRequest.requestId,
       }
 
-      yield* call(dappResponseMessageChannel.sendMessageToTab, existingRequest.senderTabInfo.id, errorResponse)
+      yield* call(dappResponseMessageChannel.sendMessageToTab, pendingRequest.senderTabInfo.id, errorResponse)
     }
 
     yield* put(dappRequestActions.removeAll())
@@ -185,22 +179,9 @@ function* dappRequestApproval({
           yield* call(handleSignTypedData, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
           break
         }
-        case DappRequestType.GetCapabilities: {
-          const validatedRequest: GetCapabilitiesRequest = GetCapabilitiesRequestSchema.parse(
-            confirmedRequest.dappRequest,
-          )
-          yield* call(handleGetCapabilities, validatedRequest, confirmedRequest.senderTabInfo)
-          break
-        }
         case DappRequestType.SendCalls: {
           const validatedRequest: SendCallsRequest = SendCallsRequestSchema.parse(confirmedRequest.dappRequest)
-          yield* call(
-            handleSendCalls,
-            validatedRequest,
-            confirmedRequest.senderTabInfo,
-            confirmedRequest.dappInfo,
-            confirmedRequest.transactionTypeInfo,
-          )
+          yield* call(handleSendCalls, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
           break
         }
         case DappRequestType.GetCallsStatus: {

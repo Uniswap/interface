@@ -4,11 +4,11 @@ import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
-import { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
+import { DecimalPadInputRef } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useDecimalPadControlledField'
 import { useSwapFormHoverStyles } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useSwapFormHoverStyles'

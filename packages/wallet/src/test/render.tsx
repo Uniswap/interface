@@ -12,6 +12,7 @@ import {
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { WalletNavigationContextState, WalletNavigationProvider } from 'wallet/src/contexts/WalletNavigationContext'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
@@ -70,7 +71,9 @@ export function renderWithProviders(
     return (
       <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
         <SharedWalletProvider reduxStore={store}>
-          <WalletNavigationProvider {...mockNavigationFunctions}>{children}</WalletNavigationProvider>
+          <WalletNavigationProvider {...mockNavigationFunctions}>
+            <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
+          </WalletNavigationProvider>
         </SharedWalletProvider>
       </AutoMockedApolloProvider>
     )

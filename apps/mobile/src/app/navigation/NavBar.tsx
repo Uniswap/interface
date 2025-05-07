@@ -12,7 +12,7 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -25,11 +25,9 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
@@ -130,26 +128,18 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: Swa
 
   const isDarkMode = useIsDarkMode()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
-  const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
-  const inputCurrencyId = useHighestBalanceNativeCurrencyId(
-    activeAccountAddress,
-    persistedFilteredChainIds?.[CurrencyField.INPUT],
-  )
+  const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress)
 
   const onPress = useCallback(async () => {
     dispatch(
       openModal({
         name: ModalName.Swap,
-        initialState: prepareSwapFormState({
-          inputCurrencyId,
-          defaultChainId,
-          filteredChainIdsOverride: persistedFilteredChainIds,
-        }),
+        initialState: prepareSwapFormState({ inputCurrencyId, defaultChainId }),
       }),
     )
 
     await hapticFeedback.light()
-  }, [dispatch, inputCurrencyId, defaultChainId, hapticFeedback, persistedFilteredChainIds])
+  }, [dispatch, inputCurrencyId, defaultChainId, hapticFeedback])
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])

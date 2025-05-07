@@ -242,7 +242,7 @@ export function ScanToOnboard(): JSX.Element {
             height={iconSizes.icon48}
             width={iconSizes.icon48}
           >
-            <Mobile color="$neutral1" size="$icon.24" />
+            <Mobile color="$neutral1" size={iconSizes.icon24} />
           </Square>
         }
         subtitle={t('onboarding.scan.subtitle')}
@@ -320,7 +320,7 @@ export function ScanToOnboard(): JSX.Element {
             p="$spacing12"
             width="100%"
           >
-            <Wifi size="$icon.20" />
+            <Wifi size={iconSizes.icon20} />
             <Text color="$neutral2" variant="body4">
               {t('onboarding.scan.wifi')}
             </Text>

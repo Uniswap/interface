@@ -9,14 +9,12 @@ export enum ExtensionScreens {
   PopupOpenExtension = 'PopupOpenExtension',
   UnsupportedBrowserScreen = 'UnsupportedBrowserScreen',
   ManageDappConnectionsScreen = 'ManageDappConnectionsScreen',
-  Settings = 'Settings',
 }
 
 export enum ExtensionOnboardingFlow {
   New = 'New',
-  Import = 'Import', // Import via seed phrase
+  Import = 'Import',
   Scantastic = 'Scantastic',
-  Passkey = 'Passkey',
 }
 
 export enum ExtensionOnboardingScreens {

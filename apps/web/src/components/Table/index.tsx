@@ -13,8 +13,7 @@ import {
 import { useParentSize } from '@visx/responsive'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ErrorModal } from 'components/Table/ErrorBox'
-import { ScrollButton, ScrollButtonProps } from 'components/Table/ScrollButton'
-import { TableSizeProvider, useTableSize } from 'components/Table/TableSizeProvider'
+import { TableSizeProvider } from 'components/Table/TableSizeProvider'
 import {
   CellContainer,
   DataRow,
@@ -37,9 +36,10 @@ import { Trans } from 'react-i18next'
 import { LinkProps } from 'react-router-dom'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { ThemedText } from 'theme/components'
-import { Flex } from 'ui/src'
+import { Flex, TouchableArea, useMedia } from 'ui/src'
+import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { UseSporeColorsReturn, useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { INTERFACE_NAV_HEIGHT, breakpoints, zIndexes } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -70,11 +70,8 @@ const TableRow = ({ row }: { row: Row<RowData> }) => {
   const linkState = rowOriginal.linkState
   const rowTestId = rowOriginal.testId
   const colors = useSporeColors()
-  const { width: tableWidth } = useTableSize()
-  const rowHeight = useMemo(
-    () => (tableWidth <= breakpoints.lg ? ROW_HEIGHT_MOBILE_WEB : ROW_HEIGHT_DESKTOP),
-    [tableWidth],
-  )
+  const media = useMedia()
+  const rowHeight = useMemo(() => (media.lg ? ROW_HEIGHT_MOBILE_WEB : ROW_HEIGHT_DESKTOP), [media.lg])
   const cells = row
     .getVisibleCells()
     .map((cell: Cell<RowData, any>) => <TableCell key={cell.id} cell={cell} colors={colors} />)
@@ -153,6 +150,27 @@ const TableBody = forwardRef<HTMLDivElement, TableBodyProps<RowData>>(({ table, 
 
 TableBody.displayName = 'TableBody'
 
+const ScrollButton = ({ onPress, opacity }: { onPress: () => void; opacity?: number }) => (
+  <TouchableArea onPress={onPress}>
+    <Flex
+      boxShadow="0 0 20px 0 rgba(0, 0, 0, 0.1)"
+      borderRadius="$roundedFull"
+      transform="translateY(-50%)"
+      backgroundColor="$surface2"
+      hoverStyle={{ backgroundColor: '$surface2Hovered' }}
+      p="$spacing12"
+      borderWidth={1}
+      borderStyle="solid"
+      borderColor="$surface3"
+      $platform-web={{ backdropFilter: 'blur(2px)' }}
+      opacity={opacity}
+      transition="opacity 0.2s ease-in-out"
+    >
+      <ArrowRight color="$neutral1" size="$icon.12" />
+    </Flex>
+  </TouchableArea>
+)
+
 export function Table<T extends RowData>({
   columns,
   data,
@@ -175,8 +193,7 @@ export function Table<T extends RowData>({
   forcePinning?: boolean
 }) {
   const [loadingMore, setLoadingMore] = useState(false)
-  const [showScrollRightButton, setShowScrollRightButton] = useState(false)
-  const [showScrollLeftButton, setShowScrollLeftButton] = useState(false)
+  const [showScrollButton, setShowScrollButton] = useState(false)
   const colors = useSporeColors()
   const [pinnedColumns, setPinnedColumns] = useState<string[]>([])
 
@@ -273,13 +290,9 @@ export function Table<T extends RowData>({
 
     const horizontalScrollHandler = () => {
       const maxScrollLeft = container.scrollWidth - container.clientWidth
-      const nextShowScrollRightButton = container.scrollLeft < maxScrollLeft
-      if (showScrollRightButton !== nextShowScrollRightButton) {
-        setShowScrollRightButton(nextShowScrollRightButton)
-      }
-      const nextShowScrollLeftButton = container.scrollLeft > 0
-      if (showScrollLeftButton !== nextShowScrollLeftButton) {
-        setShowScrollLeftButton(nextShowScrollLeftButton)
+      const nextShowScrollButton = container.scrollLeft < maxScrollLeft
+      if (showScrollButton !== nextShowScrollButton) {
+        setShowScrollButton(nextShowScrollButton)
       }
     }
 
@@ -288,7 +301,7 @@ export function Table<T extends RowData>({
     return () => {
       container.removeEventListener('scroll', horizontalScrollHandler)
     }
-  }, [loading, showScrollLeftButton, showScrollRightButton, tableBodyRef])
+  }, [loading, showScrollButton, tableBodyRef])
 
   const headerHeight = useMemo(() => {
     const header = document.getElementById('AppHeader')
@@ -305,39 +318,15 @@ export function Table<T extends RowData>({
     return 0
   }, [headerHeight, height, isSticky, maxHeight])
 
-  const onScrollButtonPress = useCallback(
-    (direction: ScrollButtonProps['direction']) => () => {
-      const container = tableBodyRef.current?.parentElement
-      if (!container) {
-        return
-      }
+  const onScrollButtonPress = useCallback(() => {
+    const container = tableBodyRef.current?.parentElement
+    if (!container) {
+      return
+    }
 
-      const numPinnedVisibleColumns = table.getLeftVisibleLeafColumns().length
-      const regularColumns = table.getAllColumns().slice(numPinnedVisibleColumns)
-      const widths = regularColumns.map((column) => column.getSize())
-      const cumulativeWidths = widths.reduce(
-        (acc, current) => {
-          const lastSum = acc.length > 0 ? acc[acc.length - 1] : 0
-          return [...acc, lastSum + current]
-        },
-        [0] as number[],
-      )
+    container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' })
+  }, [tableBodyRef])
 
-      if (direction === 'left') {
-        cumulativeWidths.reverse()
-      }
-
-      const nextScrollLeft = cumulativeWidths.find((width) => {
-        if (direction === 'left') {
-          return width < container.scrollLeft
-        }
-        return width > container.scrollLeft
-      })
-
-      container.scrollTo({ left: nextScrollLeft, behavior: 'smooth' })
-    },
-    [table],
-  )
   const hasPinnedColumns = useMemo(() => pinnedColumns.length > 0, [pinnedColumns])
 
   const tableSize = useMemo(() => ({ width, height, top, left }), [width, height, top, left])
@@ -349,25 +338,8 @@ export function Table<T extends RowData>({
           <TableHead $isSticky={isSticky} $top={headerHeight}>
             {hasPinnedColumns && (
               <>
-                <Flex
-                  position="absolute"
-                  top={scrollButtonTop}
-                  left={table.getLeftTotalSize()}
-                  pl="$spacing12"
-                  zIndex={zIndexes.default}
-                >
-                  <ScrollButton
-                    onPress={onScrollButtonPress('left')}
-                    opacity={showScrollLeftButton ? 1 : 0}
-                    direction="left"
-                  />
-                </Flex>
                 <Flex position="absolute" top={scrollButtonTop} right={0} pr="$spacing12" zIndex={zIndexes.default}>
-                  <ScrollButton
-                    onPress={onScrollButtonPress('right')}
-                    opacity={showScrollRightButton ? 1 : 0}
-                    direction="right"
-                  />
+                  <ScrollButton onPress={onScrollButtonPress} opacity={showScrollButton ? 1 : 0} />
                 </Flex>
                 <TableScrollMask
                   top={isSticky ? '$spacing12' : 0}

@@ -3,8 +3,8 @@ import { Linking } from 'react-native'
 import { BUNDLE_ID } from 'utilities/src/environment/env.native'
 import { isIOS } from 'utilities/src/platform'
 
-export async function dismissInAppBrowser(): Promise<void> {
-  await WebBrowser.dismissBrowser()
+export function dismissInAppBrowser(): void {
+  WebBrowser.dismissBrowser()
 }
 
 export async function openSettings(): Promise<void> {

@@ -7,7 +7,6 @@ import { useMemo } from 'react'
 import { Erc721 } from 'uniswap/src/abis/types/Erc721'
 import { NonfungiblePositionManager } from 'uniswap/src/abis/types/v3/NonfungiblePositionManager'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 type TokenId = number | JSBI | BigNumber
 
@@ -48,7 +47,7 @@ export function usePositionTokenURI(
 ): UsePositionTokenURIResult {
   const contract = useNFTPositionManagerContract(version ?? ProtocolVersion.V3, chainId)
   const { data, isLoading, error } = useQuery({
-    queryKey: [ReactQueryCacheKey.PositionTokenURI, tokenId, chainId, version],
+    queryKey: ['PositionTokenURI', tokenId, chainId, version],
     queryFn: async () => {
       const input = tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)
       if (!input) {

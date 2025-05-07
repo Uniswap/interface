@@ -16,6 +16,7 @@ exports[`renders UnitagName with a name 1`] = `
       "alignItems": "center",
       "alignSelf": "center",
       "flexDirection": "row",
+      "gap": 4,
       "opacity": 0,
     }
   }
@@ -59,7 +60,6 @@ exports[`renders UnitagName with a name 1`] = `
     style={
       {
         "flexDirection": "row",
-        "marginLeft": 4,
         "opacity": 0,
         "position": "absolute",
         "right": -24,
@@ -94,6 +94,7 @@ exports[`renders UnitagName without a name 1`] = `
       "alignItems": "center",
       "alignSelf": "center",
       "flexDirection": "row",
+      "gap": 4,
       "opacity": 0,
     }
   }
@@ -126,7 +127,6 @@ exports[`renders UnitagName without a name 1`] = `
     style={
       {
         "flexDirection": "row",
-        "marginLeft": 4,
         "position": "absolute",
         "right": -24,
         "top": -4,

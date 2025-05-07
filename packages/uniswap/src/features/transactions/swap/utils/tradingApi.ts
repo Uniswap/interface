@@ -11,7 +11,6 @@ import {
   AutoSlippage,
   BridgeQuote,
   ClassicQuote,
-  HooksOptions,
   ProtocolItems,
   Quote,
   QuoteRequest,
@@ -30,8 +29,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
@@ -447,7 +445,6 @@ type UseQuoteRoutingParamsArgs = {
   tokenInChainId: UniverseChainId | undefined
   tokenOutChainId: UniverseChainId | undefined
   isUSDQuote?: boolean
-  isV4HookPoolsEnabled?: boolean
 }
 
 export function useQuoteRoutingParams({
@@ -455,14 +452,11 @@ export function useQuoteRoutingParams({
   tokenInChainId,
   tokenOutChainId,
   isUSDQuote,
-  isV4HookPoolsEnabled = true,
-}: UseQuoteRoutingParamsArgs): Pick<QuoteRequest, 'routingPreference' | 'protocols' | 'hooksOptions'> {
+}: UseQuoteRoutingParamsArgs): Pick<QuoteRequest, 'routingPreference' | 'protocols'> {
   const protocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
-  const v4HooksToggleFFEnabled = useFeatureFlag(FeatureFlags.SwapSettingsV4HooksToggle)
 
   return useMemo(() => {
     // for USD quotes, we avoid routing through UniswapX
-    // hooksOptions should not be sent for USD quotes
     if (isUSDQuote) {
       return {
         protocols: [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4],
@@ -474,26 +468,9 @@ export function useQuoteRoutingParams({
       return { routingPreference: RoutingPreference.BEST_PRICE }
     }
 
-    if (!v4HooksToggleFFEnabled) {
-      return { protocols }
-    } else {
-      let finalProtocols = [...protocols]
-      let hooksOptions: HooksOptions
-
-      if (isV4HookPoolsEnabled) {
-        if (!protocols.includes(ProtocolItems.V4)) {
-          finalProtocols = [...protocols, ProtocolItems.V4] // we need to re-add v4 to protocols if v4 hooks is toggled on
-          hooksOptions = HooksOptions.V4_HOOKS_ONLY
-        } else {
-          hooksOptions = HooksOptions.V4_HOOKS_INCLUSIVE
-        }
-      } else {
-        hooksOptions = HooksOptions.V4_NO_HOOKS
-      }
-
-      return { protocols: finalProtocols, hooksOptions }
-    }
-  }, [isUSDQuote, tokenInChainId, tokenOutChainId, protocols, isV4HookPoolsEnabled, v4HooksToggleFFEnabled])
+    // For normal quotes, we only need to specify protocols
+    return { protocols }
+  }, [isUSDQuote, tokenInChainId, tokenOutChainId, protocols])
 }
 
 type UseQuoteSlippageParamsArgs = {

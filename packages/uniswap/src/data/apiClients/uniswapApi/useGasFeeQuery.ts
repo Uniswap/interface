@@ -3,28 +3,22 @@ import { UseQueryResult, skipToken } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
-import { GasFeeResultWithoutState, createFetchGasFee } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
-import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
-import { useEvent } from 'utilities/src/react/hooks'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { UNISWAP_API_CACHE_KEY, fetchGasFee } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
+import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { GasFeeResponse } from 'uniswap/src/features/gas/types'
 
 export function useGasFeeQuery({
   params,
   ...rest
 }: UseQueryWithImmediateGarbageCollectionApiHelperHookArgs<
-  { tx: TransactionRequest; fallbackGasLimit?: number },
-  GasFeeResultWithoutState
->): UseQueryResult<GasFeeResultWithoutState> {
-  const activeGasStrategy = useActiveGasStrategy(params?.tx.chainId, 'general')
-  const shadowGasStrategies = useShadowGasStrategies(params?.tx.chainId, 'general')
+  TransactionRequest & { gasStrategies: GasStrategy[] },
+  GasFeeResponse
+>): UseQueryResult<GasFeeResponse> {
+  const queryKey = [UNISWAP_API_CACHE_KEY, uniswapUrls.gasServicePath, params]
 
-  const fetchGasFee = useEvent(createFetchGasFee({ activeGasStrategy, shadowGasStrategies }))
-
-  const queryKey = [ReactQueryCacheKey.UniswapApi, uniswapUrls.gasServicePath, params]
-
-  return useQueryWithImmediateGarbageCollection<GasFeeResultWithoutState>({
+  return useQueryWithImmediateGarbageCollection<GasFeeResponse>({
     queryKey,
-    queryFn: params ? (): Promise<GasFeeResultWithoutState> => fetchGasFee(params) : skipToken,
+    queryFn: params ? async (): ReturnType<typeof fetchGasFee> => await fetchGasFee(params) : skipToken,
     ...rest,
   })
 }

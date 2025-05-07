@@ -1,4 +1,3 @@
-import { MismatchToastItem } from 'components/Popups/MismatchToastItem'
 import {
   FailedNetworkSwitchPopup,
   TransactionPopupContent,
@@ -51,9 +50,6 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
           icon={<BridgeToast inputChainId={content.inputChainId} outputChainId={content.outputChainId} />}
         />
       )
-    }
-    case PopupType.Mismatch: {
-      return <MismatchToastItem onDismiss={onClose} />
     }
   }
 }

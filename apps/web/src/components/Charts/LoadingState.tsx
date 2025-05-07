@@ -8,8 +8,8 @@ import { PropsWithChildren, ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
+import { opacify } from 'theme/utils'
 import { Flex } from 'ui/src'
-import { opacify } from 'ui/src/theme'
 
 const ChartErrorContainer = styled(Row)`
   position: absolute;
@@ -165,7 +165,7 @@ export function ChartSkeleton({
   hideYAxis?: boolean
 }) {
   const theme = useTheme()
-  const neutral3Opacified = theme.neutral3
+  const neutral3Opacified = opacify(25, theme.neutral3)
 
   const fillColor = errorText || dim ? neutral3Opacified : theme.neutral3
   const tickColor = errorText ? opacify(12.5, theme.neutral3) : neutral3Opacified

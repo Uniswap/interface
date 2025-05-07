@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useProvider } from 'uniswap/src/contexts/UniswapContext'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -12,59 +12,46 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
-export function getWrappedNativeContract(chainId: UniverseChainId): Weth {
-  return new Contract(getWrappedNativeAddress(chainId), WETH_ABI) as Weth
+export async function getWethContract(chainId: UniverseChainId, provider: providers.Provider): Promise<Weth> {
+  return new Contract(getWrappedNativeAddress(chainId), WETH_ABI, provider) as Weth
 }
 
 export function useWrapTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
   account?: AccountMeta,
 ): providers.TransactionRequest | undefined {
-  const { wrapType, currencyAmounts, trade } = derivedSwapInfo
+  const { chainId, wrapType, currencyAmounts, trade } = derivedSwapInfo
+  const provider = useProvider(chainId)
   const isUniswapXWrap = Boolean(trade.trade && isUniswapX(trade.trade) && trade.trade.needsWrap)
 
-  const transactionFetcher = useCallback(() => {
-    const currencyAmountIn = currencyAmounts.input
-    const from = account?.address
-    if (!currencyAmountIn || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
-      return undefined
-    }
-
-    return getWrapTransactionRequest({ currencyAmountIn, from })
-  }, [account, isUniswapXWrap, wrapType, currencyAmounts.input])
+  const transactionFetcher = useCallback(
+    () =>
+      getWrapTransactionRequest(provider, isUniswapXWrap, chainId, account?.address, wrapType, currencyAmounts.input),
+    [provider, isUniswapXWrap, chainId, account, wrapType, currencyAmounts.input],
+  )
 
   return useAsyncData(transactionFetcher).data
 }
 
-function isValidWrapInputCurrency(currency: Currency): boolean {
-  return currency.isNative || currency.equals(nativeOnChain(currency.chainId).wrapped)
-}
-
-/**
- * Generates a transaction request for wrapping/unwrapping native currency
- * @param ctx - Transaction context containing input amount and sender address
- * @throws {Error} If input validation or request generation fails
- * @returns Populated transaction request
- */
-export async function getWrapTransactionRequest(ctx: {
-  currencyAmountIn: CurrencyAmount<Currency>
-  from: Address | undefined
-}): Promise<providers.TransactionRequest> {
-  const { currencyAmountIn, from } = ctx
-  const { currency } = currencyAmountIn
-  const { chainId } = currency
-  const wrappedNativeContract = getWrappedNativeContract(chainId)
-
-  if (!isValidWrapInputCurrency(currency)) {
-    throw new Error('Invalid wrap input currency')
+export const getWrapTransactionRequest = async (
+  provider: providers.Provider | undefined,
+  isUniswapXWrap: boolean,
+  chainId: UniverseChainId,
+  address: Address | undefined,
+  wrapType: WrapType,
+  currencyAmountIn: Maybe<CurrencyAmount<Currency>>,
+): Promise<providers.TransactionRequest | undefined> => {
+  if (!currencyAmountIn || !provider || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
+    return undefined
   }
 
-  const value = `0x${currencyAmountIn.quotient.toString(16)}`
-  const isWrap = currency.isNative
+  const wethContract = await getWethContract(chainId, provider)
+  const wethTx =
+    wrapType === WrapType.Wrap || isUniswapXWrap
+      ? await wethContract.populateTransaction.deposit({
+          value: `0x${currencyAmountIn.quotient.toString(16)}`,
+        })
+      : await wethContract.populateTransaction.withdraw(`0x${currencyAmountIn.quotient.toString(16)}`)
 
-  const tx = isWrap
-    ? await wrappedNativeContract.populateTransaction.deposit({ value, from })
-    : await wrappedNativeContract.populateTransaction.withdraw(value)
-
-  return { ...tx, from, chainId }
+  return { ...wethTx, from: address, chainId }
 }

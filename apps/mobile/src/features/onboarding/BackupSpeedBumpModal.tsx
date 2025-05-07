@@ -10,7 +10,7 @@ import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 const PREVIEW_BOX_HEIGHT = 122
 
 type BackupSpeedBumpModalProps = {
-  backupType: BackupType.Cloud | BackupType.Manual
+  backupType: BackupType
 
   onContinue: () => void
   onClose: () => void

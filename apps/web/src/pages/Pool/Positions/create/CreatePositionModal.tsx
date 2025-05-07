@@ -40,7 +40,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
-import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useAccount } from 'wagmi'
@@ -322,13 +322,17 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               />
             </Flex>
             {currentTransactionStep ? (
-              <Button size="large" variant="branded" loading={true} key="create-position-confirm" fill={false}>
-                {t('common.confirmWallet')}
-              </Button>
+              <Flex>
+                <Button size="large" variant="branded" loading={true} key="create-position-confirm">
+                  {t('common.confirmWallet')}
+                </Button>
+              </Flex>
             ) : (
-              <Button size="large" variant="branded" onPress={handleCreate} isDisabled={!txInfo?.action} fill={false}>
-                {t('common.button.create')}
-              </Button>
+              <Flex row>
+                <Button size="large" variant="branded" onPress={handleCreate} isDisabled={!txInfo?.action}>
+                  {t('common.button.create')}
+                </Button>
+              </Flex>
             )}
           </>
         )}

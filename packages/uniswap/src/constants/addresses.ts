@@ -34,6 +34,3 @@ export function getNativeAddress(chainId: UniverseChainId): string {
 export function getWrappedNativeAddress(chainId: UniverseChainId): string {
   return getChainInfo(chainId).wrappedNativeCurrency.address
 }
-
-// TODO: Load this from config or backend once we have it (WALL-6592)
-export const UNISWAP_DELEGATION_ADDRESS: Address = '0x227380efd3392EC33cf148Ade5e0a89D33121814'

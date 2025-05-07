@@ -11,10 +11,10 @@ import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNClo
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
-import { Button, Flex, Text } from 'ui/src'
-import { Check } from 'ui/src/components/icons'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import Checkmark from 'ui/src/assets/icons/check.svg'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { spacing } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -39,6 +39,7 @@ export function SettingsCloudBackupStatus({
   const { t } = useTranslation()
   const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
+  const colors = useSporeColors()
   const dispatch = useDispatch()
   const accounts = useAccounts()
   const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
@@ -123,7 +124,7 @@ export function SettingsCloudBackupStatus({
                 </Text>
 
                 {/* @TODO: [MOB-249] Add non-backed up state once we have more options on this page  */}
-                <Check color="$statusSuccess" size="$icon.24" />
+                <Checkmark color={colors.statusSuccess.val} height={iconSizes.icon24} width={iconSizes.icon24} />
               </Flex>
               {googleDriveEmail && (
                 <Text color="$neutral3" variant="buttonLabel3">

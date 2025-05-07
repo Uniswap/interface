@@ -16,6 +16,7 @@ import { useSearchParams } from 'react-router-dom'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea, WebBottomSheet, useMedia, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
+import { iconSizes } from 'ui/src/theme'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
@@ -162,7 +163,7 @@ function MobileTokenActions({ mobileSheetOpen, toggleMobileSheet, HeaderActions 
   return (
     <Flex>
       <TouchableArea height={32} onPress={() => toggleMobileSheet(true)} {...ActionButtonStyle}>
-        <MoreHorizontal size="$icon.20" color={colors.neutral2.val} />
+        <MoreHorizontal size={iconSizes.icon20} color={colors.neutral2.val} />
       </TouchableArea>
       <WebBottomSheet isOpen={mobileSheetOpen} onClose={() => toggleMobileSheet(false)}>
         <Flex gap="$spacing8" mb="$spacing16">

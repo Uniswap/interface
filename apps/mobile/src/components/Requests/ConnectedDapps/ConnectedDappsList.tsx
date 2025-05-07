@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { DappConnectionItem } from 'src/components/Requests/ConnectedDapps/DappConnectionItem'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { openModal } from 'src/features/modals/modalSlice'
-import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
+import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import {
   WalletConnectSession,
   removePendingSession,

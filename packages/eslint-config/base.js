@@ -99,7 +99,6 @@ module.exports = {
         },
       },
       rules: {
-        'local-rules/prevent-this-method-destructure': 'error',
         curly: 'error',
         '@typescript-eslint/prefer-enum-initializers': 'error',
         '@typescript-eslint/no-explicit-any': 'off',

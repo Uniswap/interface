@@ -5,7 +5,8 @@ import { LinkButton, LinkButtonType, type LinkButtonProps } from 'src/components
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, Text } from 'ui/src'
-import { GlobeFilled, XTwitter } from 'ui/src/components/icons'
+import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
+import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
 import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -46,7 +47,7 @@ export function TokenDetailsLinks(): JSX.Element {
         : null,
       homepageUrl
         ? {
-            Icon: GlobeFilled,
+            Icon: GlobeIcon,
             buttonType: LinkButtonType.Link,
             element: ElementName.TokenLinkWebsite,
             label: t('token.links.website'),
@@ -56,7 +57,7 @@ export function TokenDetailsLinks(): JSX.Element {
         : null,
       twitterName
         ? {
-            Icon: XTwitter,
+            Icon: TwitterIcon,
             buttonType: LinkButtonType.Link,
             element: ElementName.TokenLinkTwitter,
             label: t('token.links.twitter'),

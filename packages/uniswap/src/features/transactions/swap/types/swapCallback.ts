@@ -1,7 +1,7 @@
 import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
 import { PresetPercentage } from "uniswap/src/components/CurrencyInputPanel/PresetAmountButton";
 import { SignerMnemonicAccountMeta } from "uniswap/src/features/accounts/types"
-import { TransactionStep } from "uniswap/src/features/transactions/steps/types";
+import { TransactionStep } from "uniswap/src/features/transactions/swap/types/steps";
 import { ValidatedSwapTxContext } from "uniswap/src/features/transactions/swap/types/swapTxAndGasInfo"
 
 export type SetCurrentStepFn = (args: { step: TransactionStep; accepted: boolean }) => void
@@ -15,7 +15,7 @@ export interface SwapCallbackParams {
   presetPercentage?: PresetPercentage
   preselectAsset?: boolean
   onSuccess: () => void
-  onFailure: (error?: Error, onPressRetry?: () => void) => void
+  onFailure: (error?: Error) => void
   txId?: string
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void

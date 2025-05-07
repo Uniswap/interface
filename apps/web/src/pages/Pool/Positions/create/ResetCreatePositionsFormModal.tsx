@@ -1,6 +1,6 @@
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { QuestionInCircle } from 'ui/src/components/icons/QuestionInCircle'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -16,6 +16,7 @@ export default function ResetCreatePositionFormModal({
   onClose,
   onHandleReset,
 }: ResetCreatePositionFormModalProps) {
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   const handleReset = () => {
@@ -38,7 +39,7 @@ export default function ResetCreatePositionFormModal({
       </Flex>
       <Flex flexDirection="column" alignItems="center" gap="$spacing16">
         <Flex gap="$gap16" backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
-          <QuestionInCircle size={20} color="$neutral1" />
+          <QuestionInCircle size={20} color={colors.neutral1.val} />
         </Flex>
         <Flex centered rowGap="$spacing2">
           <Text variant="subheading1">{t('common.areYouSure')}</Text>

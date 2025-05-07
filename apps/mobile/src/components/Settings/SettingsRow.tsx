@@ -10,15 +10,12 @@ import {
   SettingsStackNavigationProp,
   SettingsStackParamList,
 } from 'src/app/navigation/types'
-import { ConnectionsDappsListModalState } from 'src/components/Settings/ConnectionsDappModal/ConnectionsDappsListModalState'
-import { EditWalletSettingsModalState } from 'src/components/Settings/EditWalletModal/EditWalletSettingsModalState'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, Skeleton, Switch, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { SmartWalletAdvancedSettingsModalState } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -48,18 +45,12 @@ type SettingsNavigationModal =
   | typeof ModalName.EditProfileSettingsModal
   | typeof ModalName.EditLabelSettingsModal
   | typeof ModalName.ConnectionsDappListModal
-  | typeof ModalName.SmartWalletAdvancedSettingsModal
-  | typeof ModalName.PasskeyManagement
 
 export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList | typeof MobileScreens.OnboardingStack
   modal?: SettingsModal
   navigationModal?: SettingsNavigationModal
   screenProps?: ValueOf<SettingsStackParamList> | NavigatorScreenParams<OnboardingStackParamList>
-  navigationProps?:
-    | ConnectionsDappsListModalState
-    | EditWalletSettingsModalState
-    | SmartWalletAdvancedSettingsModalState
   externalLink?: string
   action?: JSX.Element
   disabled?: boolean
@@ -87,7 +78,6 @@ export const SettingsRow = memo(
       modal,
       navigationModal,
       screenProps,
-      navigationProps,
       externalLink,
       disabled,
       action,
@@ -117,22 +107,11 @@ export const SettingsRow = memo(
       } else if (modal) {
         dispatch(openModal({ name: modal }))
       } else if (navigationModal) {
-        navigate(navigationModal, navigationProps)
+        navigate(navigationModal)
       } else if (externalLink) {
         await openUri(externalLink)
       }
-    }, [
-      checkIfCanProceed,
-      onToggle,
-      screen,
-      navigation,
-      screenProps,
-      navigationProps,
-      modal,
-      navigationModal,
-      dispatch,
-      externalLink,
-    ])
+    }, [checkIfCanProceed, onToggle, screen, navigation, screenProps, modal, navigationModal, dispatch, externalLink])
 
     return (
       <TouchableArea disabled={Boolean(action)} onPress={handleRow}>

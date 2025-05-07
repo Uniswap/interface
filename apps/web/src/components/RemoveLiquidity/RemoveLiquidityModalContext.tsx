@@ -1,7 +1,7 @@
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { LiquidityModalInitialState } from 'state/application/reducer'
-import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 
 export enum DecreaseLiquidityStep {
   Input = 0,

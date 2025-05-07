@@ -11,6 +11,7 @@ import {
   TokenHeaderItem,
   WalletHeaderItem,
 } from 'src/components/explore/search/constants'
+import { useWalletSearchResults } from 'src/components/explore/search/hooks'
 import { SearchENSAddressItem } from 'src/components/explore/search/items/SearchENSAddressItem'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
 import { SearchNFTCollectionItem } from 'src/components/explore/search/items/SearchNFTCollectionItem'
@@ -31,8 +32,7 @@ import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { SearchContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
-import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/hooks/useWalletSearchResults'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import {
   NFTCollectionSearchResult,
   SearchResultType,

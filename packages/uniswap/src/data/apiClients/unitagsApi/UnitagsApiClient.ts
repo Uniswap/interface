@@ -19,6 +19,8 @@ import {
   UnitagUsernameResponse,
 } from 'uniswap/src/features/unitags/types'
 
+export const UNITAGS_API_CACHE_KEY = 'UnitagsApi'
+
 const UnitagsApiClient = createApiClient({
   baseUrl: uniswapUrls.unitagsApiUrl,
 })

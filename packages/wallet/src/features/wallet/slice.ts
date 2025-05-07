@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RankingType } from 'uniswap/src/data/types'
-import { AccountType } from 'uniswap/src/features/accounts/types'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -152,21 +151,6 @@ const slice = createSlice({
         account.hasBalanceOrActivity = hasBalanceOrActivity
       }
     },
-    setSmartWalletConsent: (state, action: PayloadAction<{ address: Address; smartWalletConsent: boolean }>) => {
-      const { address, smartWalletConsent } = action.payload
-      const id = getValidAddress(address, true)
-      if (!id) {
-        logger.error(new Error('Unexpected call to `setSmartWalletConsent` with invalid `address`'), {
-          extra: { payload: action.payload },
-          tags: { file: 'wallet/slice.ts', function: 'setSmartWalletConsent' },
-        })
-        return
-      }
-      const account = state.accounts[id]
-      if (account && account.type === AccountType.SignerMnemonic) {
-        account.smartWalletConsent = smartWalletConsent
-      }
-    },
   },
 })
 
@@ -183,7 +167,6 @@ export const {
   setSwapProtectionSetting,
   setAppRating,
   setHasBalanceOrActivity,
-  setSmartWalletConsent,
 } = slice.actions
 
 export const walletReducer = slice.reducer

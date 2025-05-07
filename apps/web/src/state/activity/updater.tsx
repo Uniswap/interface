@@ -2,7 +2,6 @@ import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback } from 'react'
-import { usePollPendingBatchTransactions } from 'state/activity/polling/batch'
 import { usePollPendingBridgeTransactions } from 'state/activity/polling/bridge'
 import { usePollPendingOrders } from 'state/activity/polling/orders'
 import { usePollPendingTransactions } from 'state/activity/polling/transactions'
@@ -10,12 +9,7 @@ import { ActivityUpdate, OnActivityUpdate } from 'state/activity/types'
 import { useAppDispatch } from 'state/hooks'
 import { updateSignature } from 'state/signatures/reducer'
 import { SignatureType } from 'state/signatures/types'
-import {
-  addTransaction,
-  applyTransactionHashToBatch,
-  confirmBridgeDeposit,
-  finalizeTransaction,
-} from 'state/transactions/reducer'
+import { addTransaction, confirmBridgeDeposit, finalizeTransaction } from 'state/transactions/reducer'
 import { TransactionType } from 'state/transactions/types'
 import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
@@ -35,7 +29,6 @@ export function ActivityStateUpdater() {
 
 function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: OnActivityUpdate }) {
   usePollPendingTransactions(onActivityUpdate)
-  usePollPendingBatchTransactions(onActivityUpdate)
   usePollPendingBridgeTransactions(onActivityUpdate)
   usePollPendingOrders(onActivityUpdate)
   return null
@@ -50,15 +43,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
       const popupDismissalTime = isL2ChainId(activity.chainId) ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
       if (activity.type === 'transaction') {
         const { chainId, original, update } = activity
-
-        // TODO(WEB-7631): Make batch handling explicit
-        if (activity.original.batchInfo && update.hash) {
-          dispatch(
-            applyTransactionHashToBatch({ batchId: activity.original.batchInfo.batchId, chainId, hash: update.hash }),
-          )
-        }
-
-        const hash = update.hash ?? original.hash
+        const hash = original.hash
 
         // If a bridging deposit transaction is successful, we update `depositConfirmed`but keep activity pending until the cross-chain bridge transaction confirm in bridge.ts
         if (
@@ -72,14 +57,11 @@ function useOnActivityUpdate(): OnActivityUpdate {
 
         dispatch(finalizeTransaction({ chainId, hash, ...update }))
 
-        const batchId = original.batchInfo?.batchId
-
         if (original.info.type === TransactionType.SWAP) {
-          logSwapFinalized(hash, batchId, chainId, chainId, analyticsContext, update.status, original.info.type)
+          logSwapFinalized(hash, chainId, chainId, analyticsContext, update.status, original.info.type)
         } else if (original.info.type === TransactionType.BRIDGE) {
           logSwapFinalized(
             hash,
-            batchId,
             original.info.inputChainId,
             original.info.outputChainId,
             analyticsContext,

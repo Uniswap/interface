@@ -6,10 +6,9 @@ import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useAtom } from 'jotai'
-import React from 'react'
 import { Trans } from 'react-i18next'
 import { transitions } from 'theme/styles'
-import { Flex, Separator, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 
@@ -47,6 +46,7 @@ export function OtherWalletsModal() {
       <Flex gap="$gap16">
         <Flex row grow alignItems="flex-start">
           <Flex
+            gap={2}
             borderRadius="$rounded16"
             overflow="hidden"
             width="100%"
@@ -55,16 +55,10 @@ export function OtherWalletsModal() {
           >
             {/* If uniswap mobile was the last used connector it will be show on the primary window */}
             {recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID && (
-              <>
-                <Option connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
-                {connectors.length > 0 && <Separator />}
-              </>
+              <Option connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
             )}
-            {connectors.map((c, index) => (
-              <React.Fragment key={c.uid + index}>
-                <Option connectorId={c.id} detected={c.isInjected} />
-                {index < connectors.length - 1 && <Separator />}
-              </React.Fragment>
+            {connectors.map((c) => (
+              <Option connectorId={c.id} key={c.uid} detected={c.isInjected} />
             ))}
           </Flex>
         </Flex>

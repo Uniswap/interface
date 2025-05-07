@@ -6,12 +6,10 @@ import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/
 import { Screen } from 'src/components/layout/Screen'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
+import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
-import { Lock } from 'ui/src/components/icons'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import AnimatedNumber from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
-import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -20,6 +18,7 @@ import i18next from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
+import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import {
   useCreateOnboardingAccountIfNone,
@@ -27,6 +26,7 @@ import {
 } from 'wallet/src/features/onboarding/OnboardingContext'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WelcomeWallet>,
@@ -137,7 +137,7 @@ function NextButtonIcon(): JSX.Element {
     <Flex grow row alignItems="center" justifyContent="space-between">
       <Flex row alignItems="center" gap="$spacing8">
         <Flex backgroundColor={opacify(10, colors.white.val)} borderRadius="$roundedFull" p="$spacing8">
-          <Lock color="$white" size="$icon.16" />
+          <LockIcon color={colors.white.val} height={iconSizes.icon16} width={iconSizes.icon16} />
         </Flex>
         <Text color="$white" variant="buttonLabel1">
           {t('onboarding.wallet.continue')}

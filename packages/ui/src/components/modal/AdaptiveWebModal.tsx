@@ -204,11 +204,11 @@ export function AdaptiveWebModal({
             bordered
             elevate
             animateOnly={['transform', 'opacity']}
-            animation={isOpen ? 'fast' : 'fastExit'}
+            animation={isOpen ? 'fastHeavy' : 'fastExitHeavy'}
             borderColor="$surface3"
             borderRadius="$rounded16"
-            enterStyle={{ x: 0, y: isTopAligned ? -12 : 12, opacity: 0 }}
-            exitStyle={{ x: 0, y: isTopAligned ? -12 : 10, opacity: 0 }}
+            enterStyle={{ x: 0, y: isTopAligned ? -20 : 20, opacity: 0 }}
+            exitStyle={{ x: 0, y: isTopAligned ? -20 : 10, opacity: 0 }}
             gap={gap ?? '$spacing4'}
             m="$spacing16"
             maxHeight="calc(100vh - 32px)"

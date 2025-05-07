@@ -1,5 +1,5 @@
 import { Animated } from 'react-native'
-import { Flex, GetThemeValueForKey, Separator, Text, TouchableArea, useLayoutAnimationOnChange } from 'ui/src'
+import { Flex, GetThemeValueForKey, Separator, Text, TouchableArea } from 'ui/src'
 import { AnglesDownUp } from 'ui/src/components/icons/AnglesDownUp'
 import { SortVertical } from 'ui/src/components/icons/SortVertical'
 
@@ -11,8 +11,6 @@ export type ExpandoRowProps = {
 }
 
 export function ExpandoRow({ label, isExpanded, onPress, mx }: ExpandoRowProps): JSX.Element {
-  useLayoutAnimationOnChange(isExpanded)
-
   return (
     <TouchableArea activeOpacity={1} mx={mx} testID="expando-row" onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="$spacing8">

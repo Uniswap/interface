@@ -66,7 +66,7 @@ export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }
           {symbol}
         </Text>
         <Flex row alignItems="center">
-          <DeltaArrow delta={pricePercentChange} formattedDelta={formatDelta(pricePercentChange)} />
+          <DeltaArrow delta={pricePercentChange} />
           <Text variant="body2">{formatDelta(pricePercentChange)}</Text>
         </Flex>
       </Flex>

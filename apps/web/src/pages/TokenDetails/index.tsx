@@ -1,5 +1,6 @@
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
+import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
@@ -7,21 +8,21 @@ import { gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSrcColor } from 'hooks/useColor'
-import { ExploreTab } from 'pages/Explore/constants'
 import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from 'pages/TokenDetails/TDPContext'
 import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { useSporeColors } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants/trace'
+import { isAddress } from 'utilities/src/addresses'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
@@ -89,7 +90,7 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
 }
 
 function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
-  const { tokenAddress } = useParams<{ tokenAddress: string; chainName: string }>()
+  const { tokenAddress } = useParams<{ tokenAddress: string }>()
   if (!tokenAddress) {
     throw new Error('Invalid token details route: token address URL param is undefined')
   }
@@ -154,9 +155,11 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 
 export default function TokenDetailsPage() {
   const { t } = useTranslation()
+  const account = useAccount()
+  const pageChainId = account.chainId ?? UniverseChainId.Mainnet
   const contextValue = useCreateTDPContext()
-  const { address, currency, currencyChain, currencyChainId, tokenQuery } = contextValue
-  const navigate = useNavigate()
+  const { tokenColor, address, currency, currencyChain, currencyChainId, tokenQuery } = contextValue
+  const isSupportedChain = useIsSupportedChainId(currencyChainId)
 
   const tokenQueryData = tokenQuery.data?.token
   const metatagProperties = useMemo(() => {
@@ -174,13 +177,6 @@ export default function TokenDetailsPage() {
   }, [address, currency, currencyChain, currencyChainId, tokenQueryData?.name, tokenQueryData?.symbol])
   const metatags = useDynamicMetatags(metatagProperties)
 
-  // redirect to /explore if token is not found
-  useEffect(() => {
-    if (!tokenQuery.loading && !currency) {
-      navigate(`/explore?type=${ExploreTab.Tokens}&result=${ModalName.NotFound}`)
-    }
-  }, [currency, tokenQuery.loading, navigate])
-
   return (
     <>
       <Helmet>
@@ -190,15 +186,25 @@ export default function TokenDetailsPage() {
         ))}
       </Helmet>
       {(() => {
-        if (tokenQuery.loading || !currency) {
-          return <TokenDetailsPageSkeleton />
+        if (currency && isSupportedChain) {
+          return (
+            <TDPProvider contextValue={contextValue}>
+              <TokenDetails />
+            </TDPProvider>
+          )
         }
 
-        return (
-          <TDPProvider contextValue={contextValue}>
-            <TokenDetails />
-          </TDPProvider>
-        )
+        if (tokenQuery.loading) {
+          return <TokenDetailsPageSkeleton />
+        } else {
+          return (
+            <InvalidTokenDetails
+              tokenColor={tokenColor}
+              pageChainId={pageChainId}
+              isInvalidAddress={!isAddress(address)}
+            />
+          )
+        }
       })()}
     </>
   )

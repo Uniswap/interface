@@ -39,8 +39,4 @@ export type ButtonProps = Omit<CustomButtonFrameProps, 'variant' | 'disabled'> &
      * The Datadog action name for the button
      */
     'dd-action-name'?: string
-    /**
-     * Callback function to be called when the button is disabled
-     */
-    onDisabledPress?: () => void
   }

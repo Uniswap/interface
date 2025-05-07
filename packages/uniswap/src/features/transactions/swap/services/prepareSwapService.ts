@@ -4,7 +4,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   SwapRedirectFn,
   TransactionScreen,
-} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'

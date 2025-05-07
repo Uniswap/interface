@@ -1,9 +1,5 @@
-import { ExploreTab } from 'pages/Explore/constants'
-import { Suspense, lazy } from 'react'
+import Explore, { ExploreTab } from 'pages/Explore'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
-import { Loader } from 'ui/src/loading/Loader'
-
-const Explore = lazy(() => import('pages/Explore'))
 
 // This function is needed to disambiguate URL params because useParams struggles to distinguish between /explore/:chainName and /explore/:tab
 export function useExploreParams(): {
@@ -46,9 +42,5 @@ export default function RedirectExplore() {
     }
   }
 
-  return (
-    <Suspense fallback={<Loader.Box />}>
-      <Explore initialTab={tab} />
-    </Suspense>
-  )
+  return <Explore initialTab={tab} />
 }

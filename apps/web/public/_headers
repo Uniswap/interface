@@ -17,14 +17,5 @@
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 
-/static/media/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/static/js/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/static/css/*
-  Cache-Control: public, max-age=31536000, immutable
-
 /favicon.ico
   Cache-Control: public, max-age=31536000, immutable

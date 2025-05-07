@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { fetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { TRADING_API_CACHE_KEY, fetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
@@ -18,7 +18,6 @@ import {
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { logger } from 'utilities/src/logger/logger'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 
 export type SwappableTokensParams = {
@@ -92,7 +91,7 @@ export function usePrefetchSwappableTokens(input: Maybe<TradeableAsset>): void {
 }
 
 const swappableTokensQueryKey = (params?: SwappableTokensParams): QueryKey => {
-  return [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.swappableTokens, params]
+  return [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.swappableTokens, params]
 }
 
 const swappableTokensQueryFn = (

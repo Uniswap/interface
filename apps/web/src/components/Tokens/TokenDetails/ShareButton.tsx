@@ -9,9 +9,9 @@ import { Link } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { colors } from 'theme/colors'
+import { opacify } from 'theme/utils'
 import { Text, useMedia, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
-import { opacify } from 'ui/src/theme'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const TWITTER_WIDTH = 560
@@ -69,7 +69,7 @@ export default function ShareButton({ name, utmSource }: { name: string; utmSour
     >
       <ShareAction onClick={() => setCopied(currentLocation)}>
         {isCopied ? (
-          <Check size="$icon.16" p={1} color="$statusSuccess" />
+          <Check size={16} p={1} color={colors.statusSuccess.val} />
         ) : (
           <Link width="18px" height="18px" color={colors.neutral1.val} />
         )}

@@ -133,7 +133,7 @@ export function WebNavigation(): JSX.Element {
         <NotificationToastWrapper />
         {shouldRestoreScroll && <ScrollRestoration />}
         {childrenMemo}
-        {isLoggedIn && <ForceUpgradeModal />}
+        <ForceUpgradeModal />
       </WalletUniswapProvider>
     </SideBarNavigationProvider>
   )

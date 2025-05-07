@@ -9,7 +9,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClaimHandler'
 
 const IMAGE_ASPECT_RATIO = 0.42
@@ -62,11 +62,11 @@ export function UnitagBanner({
   })
 
   const onPressClaimNow = (): void => {
+    dismissNativeKeyboard()
+    handleClaim()
     if (onPressClaim) {
       onPressClaim()
     }
-    dismissNativeKeyboard()
-    handleClaim()
   }
 
   const baseButtonStyle: TouchableAreaProps = {

@@ -7,7 +7,6 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import { useMemo } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { TickProcessed } from 'utils/computeSurroundingTicks'
 
 /**
@@ -90,7 +89,7 @@ export function useDensityChartData({
 
   const { data: formattedData } = useQuery({
     queryKey: [
-      ReactQueryCacheKey.DensityChartData,
+      'densityChartData',
       poolId,
       currencyA,
       currencyB,

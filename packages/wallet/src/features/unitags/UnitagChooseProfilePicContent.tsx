@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
-import { imageSizes, spacing } from 'ui/src/theme'
+import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
@@ -127,13 +127,11 @@ export function UnitagChooseProfilePicContent({
             testID={TestID.Edit}
           >
             <Flex backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'} borderRadius="$roundedFull" p={8}>
-              <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size="$icon.16" />
+              <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
             </Flex>
           </Flex>
         </TouchableArea>
-        <Flex row>
-          {isMobileApp && <UnitagName animateText textProps={{ fontSize: unitagFontSize }} name={unitag} />}
-        </Flex>
+        <Flex row>{isMobileApp && <UnitagName fontSize={unitagFontSize} name={unitag} />}</Flex>
         {!!claimError && (
           <Text color="$statusCritical" variant="body2">
             {claimError}

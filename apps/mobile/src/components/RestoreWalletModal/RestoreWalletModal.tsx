@@ -6,6 +6,7 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { Button, Flex, useSporeColors } from 'ui/src'
 import { ArrowDownCircle, WalletFilled } from 'ui/src/components/icons'
+import { iconSizes } from 'ui/src/theme'
 import { spacing } from 'ui/src/theme/spacing'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -85,9 +86,9 @@ export function RestoreWalletModal(): JSX.Element | null {
             shadowOpacity={SHADOW_OPACITY}
             shadowRadius={SHADOW_RADIUS}
           >
-            <WalletFilled color="$neutral1" size="$icon.24" />
+            <WalletFilled color="$neutral1" size={iconSizes.icon24} />
             <Flex position="absolute" bottom={ICON_OFFSET} right={ICON_OFFSET}>
-              <ArrowDownCircle color="$accent1" size="$icon.24" />
+              <ArrowDownCircle color="$accent1" size={iconSizes.icon24} />
             </Flex>
           </Flex>
         </Flex>

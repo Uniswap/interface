@@ -16,7 +16,7 @@ import { ViewGestureHandler } from 'uniswap/src/components/ViewGestureHandler/Vi
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 
 const DEFAULT_MIN_HEIGHT = 48
@@ -43,8 +43,6 @@ export type SearchTextInputProps = InputProps & {
   showShadow?: boolean
   py?: SpaceTokens
   px?: SpaceTokens
-  mx?: SpaceTokens
-  my?: SpaceTokens
   hideIcon?: boolean
   minHeight?: number
   cancelBehaviorType?: CancelBehaviorType
@@ -63,12 +61,9 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       onClose,
       onChangeText,
       onFocus,
-      onKeyPress,
       placeholder,
       py = '$spacing12',
       px = '$spacing16',
-      mx,
-      my,
       showShadow,
       value,
       hideIcon,
@@ -115,7 +110,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const animationDirection = cancelBehaviorType === CancelBehaviorType.BackChevron ? 'marginLeft' : 'marginRight'
 
     return (
-      <Flex row shrink alignItems="center" mx={mx}>
+      <Flex row shrink alignItems="center">
         {showBackChevron && (
           <Flex
             animation="200ms"
@@ -144,7 +139,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           minHeight={minHeight}
           ml={showBackChevron && isFocus ? cancelChevronWidth + spacing.spacing8 + spacing.spacing2 : 0}
           mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
-          my={my}
           px={px}
           py={py}
           {...(showShadow && {
@@ -204,7 +198,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 onChangeText={onChangeTextInput}
                 onFocus={onTextInputFocus}
                 onSubmitEditing={dismissNativeKeyboard}
-                onKeyPress={onKeyPress}
               />
             </ViewGestureHandler>
           </Flex>

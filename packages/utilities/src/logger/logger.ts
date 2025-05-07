@@ -1,5 +1,4 @@
 import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { isTestEnv } from 'utilities/src/environment/env'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
 import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
@@ -42,23 +41,6 @@ export const logger = {
   setDatadogEnabled: (enabled: boolean): void => {
     datadogEnabled = enabled || localDevDatadogEnabled
   },
-}
-
-export type Logger = typeof logger
-
-const noopLogger: Logger = {
-  debug: () => {},
-  info: () => {},
-  warn: () => {},
-  error: () => {},
-  setDatadogEnabled: () => {},
-}
-
-export function getLogger(): Logger {
-  if (isTestEnv()) {
-    return noopLogger
-  }
-  return logger
 }
 
 function logMessage(

@@ -15,7 +15,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { hasURL } from 'utils/urlChecks'
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
@@ -26,7 +25,7 @@ function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[]
 
 function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId: UniverseChainId) {
   return apolloQueryOptions({
-    queryKey: [ReactQueryCacheKey.PositionCurrencyInfo, position],
+    queryKey: ['positionCurrencyInfo', position],
     queryFn: async () => {
       const queries = [
         apolloClient.query<TokenQuery>({

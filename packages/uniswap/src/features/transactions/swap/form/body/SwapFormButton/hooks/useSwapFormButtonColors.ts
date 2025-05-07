@@ -1,6 +1,6 @@
 import { useColorsFromTokenColor, type ButtonProps, type ColorTokens } from 'ui/src'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useIsBlockingWithCustomMessage } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/hooks/useIsBlockingWithCustomMessage'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/hooks/useIsSwapButtonDisabled'

@@ -176,7 +176,7 @@ export function OTPInput(): JSX.Element {
             height={iconSizes.icon48}
             width={iconSizes.icon48}
           >
-            <Mobile color="$neutral1" size="$icon.24" />
+            <Mobile color="$neutral1" size={iconSizes.icon24} />
           </Square>
         }
         nextButtonEnabled={false}

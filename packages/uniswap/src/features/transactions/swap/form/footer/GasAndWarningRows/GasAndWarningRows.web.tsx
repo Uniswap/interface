@@ -1,6 +1,6 @@
 import { Flex } from 'ui/src'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/footer/hooks/useDebouncedGasInfo'
 import { TradeInfoRow } from 'uniswap/src/features/transactions/swap/form/footer/tradeInfo/TradeInfoRow'

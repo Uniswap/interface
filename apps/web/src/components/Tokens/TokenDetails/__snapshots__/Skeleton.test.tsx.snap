@@ -273,6 +273,12 @@ exports[`TDP Skeleton should render correctly 1`] = `
   width: 50%;
 }
 
+@media screen and (max-width:640px) {
+  .c12 {
+    min-width: 168px;
+  }
+}
+
 <span
     class=""
     style="display: contents;"

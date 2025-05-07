@@ -1,28 +1,22 @@
 /* eslint-disable max-lines */
 import { ApolloError } from '@apollo/client'
-import { ConnectError } from '@connectrpc/connect'
-import { UseQueryResult } from '@tanstack/react-query'
-import { TokenRankingsResponse, TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
 import { useAllCommonBaseCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useAllCommonBaseCurrencies'
 import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptionsWithFallback'
-import {
-  createEmptyBalanceOption,
-  useCurrencyInfosToTokenOptions,
-} from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
+import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useFavoriteCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteCurrencies'
 import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
+import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/useFilterCallbacks'
+import { usePopularTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/usePopularTokensOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
-import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
-import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
+import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { Chain, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
-import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import {
@@ -50,17 +44,6 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 expect.extend({ toIncludeSameMembers })
 
 jest.mock('uniswap/src/features/telemetry/send')
-
-jest.mock('uniswap/src/data/rest/tokenRankings', () => ({
-  useTokenRankingsQuery: jest.fn(),
-  CustomRankingType: {
-    Trending: 'TRENDING',
-  },
-  tokenRankingsStatToCurrencyInfo: jest.fn(),
-}))
-const mockTokenRankings = jest.requireMock('uniswap/src/data/rest/tokenRankings')
-const mockUseTokenRankingsQuery = mockTokenRankings.useTokenRankingsQuery
-const mockTokenRankingsStatToCurrencyInfo = mockTokenRankings.tokenRankingsStatToCurrencyInfo
 
 const eth = ethToken()
 const dai = daiToken()
@@ -90,10 +73,6 @@ const queryResolver =
     }
     return result as T
   }
-
-const errorResolver = (error: Error) => (): never => {
-  throw error
-}
 
 describe(useAllCommonBaseCurrencies, () => {
   const projects = createArray(3, tokenProject)
@@ -381,7 +360,7 @@ describe(useCurrencyInfosToTokenOptions, () => {
       input: { currencyInfos, sortAlphabetically: false, portfolioBalancesById: balancesById },
       output: [
         // ETH exists in the balancesById so we will get its balance
-        { ...balancesById[ethInfo.currencyId], type: OnchainItemListOptionType.Token },
+        balancesById[ethInfo.currencyId],
         // USDC and Arbitrum DAI do not exist in the balancesById so we will create empty balance options
         createEmptyBalanceOption(usdcBaseInfo),
         createEmptyBalanceOption(arbitrumDaiInfo),
@@ -396,7 +375,7 @@ describe(useCurrencyInfosToTokenOptions, () => {
         // USDC does not exist in the portfolioBalancesById so we will create empty balance options
         createEmptyBalanceOption(usdcBaseInfo), // Chain name: Base ETH
         // ETH exists in the portfolioBalancesById so we will get its balance
-        { ...balancesById[ethInfo.currencyId], type: OnchainItemListOptionType.Token }, // Chain name: ETH
+        balancesById[ethInfo.currencyId], // Chain name: ETH
       ],
     },
   ]
@@ -501,16 +480,10 @@ describe(usePortfolioTokenOptions, () => {
     const shownTokenBalances = [ethTokenBalance, usdcTokenBalance]
 
     // Portfolio balances
-    const ethPortfolioBalanceTokenOption: TokenOption = {
-      ...portfolioBalance({ fromBalance: ethTokenBalance }),
-      type: OnchainItemListOptionType.Token,
-    }
-    const usdcPortfolioBalanceTokenOption: TokenOption = {
-      ...portfolioBalance({ fromBalance: usdcTokenBalance }),
-      type: OnchainItemListOptionType.Token,
-    }
+    const ethPortfolioBalance = portfolioBalance({ fromBalance: ethTokenBalance })
+    const usdcPortfolioBalance = portfolioBalance({ fromBalance: usdcTokenBalance })
     const hiddenTokenBalances = createArray(2, () => tokenBalance({ isHidden: true }))
-    const shownPortfolioBalanceTokenOptions = [ethPortfolioBalanceTokenOption, usdcPortfolioBalanceTokenOption]
+    const shownPortfolioBalances = [ethPortfolioBalance, usdcPortfolioBalance]
 
     const Portfolio = portfolio({ tokenBalances: [...shownTokenBalances, ...hiddenTokenBalances] })
     const { resolvers } = queryResolvers({
@@ -526,7 +499,7 @@ describe(usePortfolioTokenOptions, () => {
         test: 'returns only shown tokens after data is fetched',
         input: [SAMPLE_SEED_ADDRESS_1, null],
         output: {
-          data: shownPortfolioBalanceTokenOptions,
+          data: shownPortfolioBalances,
           loading: false,
           refetch: expect.any(Function),
           error: undefined,
@@ -536,7 +509,7 @@ describe(usePortfolioTokenOptions, () => {
         test: 'returns shown tokens filtered by chain',
         input: [SAMPLE_SEED_ADDRESS_1, fromGraphQLChain(usdcTokenBalance.token.chain)],
         output: {
-          data: [usdcPortfolioBalanceTokenOption],
+          data: [usdcPortfolioBalance],
           loading: false,
           refetch: expect.any(Function),
           error: undefined,
@@ -546,7 +519,7 @@ describe(usePortfolioTokenOptions, () => {
         test: 'returns shown tokens starting with "et" (ETH) filtered by search filter',
         input: [SAMPLE_SEED_ADDRESS_1, null, 'et'],
         output: {
-          data: [ethPortfolioBalanceTokenOption],
+          data: [ethPortfolioBalance],
           loading: false,
           refetch: expect.any(Function),
           error: undefined,
@@ -556,7 +529,7 @@ describe(usePortfolioTokenOptions, () => {
         test: 'returns shown tokens starting with "us" (USDC) filtered by search filter',
         input: [SAMPLE_SEED_ADDRESS_1, null, 'us'],
         output: {
-          data: [usdcPortfolioBalanceTokenOption],
+          data: [usdcPortfolioBalance],
           loading: false,
           refetch: expect.any(Function),
           error: undefined,
@@ -587,170 +560,64 @@ describe(usePortfolioTokenOptions, () => {
   })
 })
 
-describe(useTrendingTokensOptions, () => {
-  beforeEach(() => {
-    // Reset all mocks before each test
-    mockUseTokenRankingsQuery.mockReset()
-    mockTokenRankingsStatToCurrencyInfo.mockReset()
+// for usePopularTokensOptions, dummy placeholder implementation of useTokenRankingsQuery REST hook, which is used only if token_selector_trending_tokens feature flag is enabled
+// Test fails to compile if this is not mocked
+jest.mock('uniswap/src/data/rest/tokenRankings', () => ({
+  useTokenRankingsQuery: (): { data: undefined; isLoading: boolean; isError: boolean } => ({
+    data: undefined,
+    isLoading: true,
+    isError: false,
+  }),
+}))
 
-    // Mock the currency info conversion function
-    mockTokenRankingsStatToCurrencyInfo.mockImplementation((tokenRankingsStat: TokenRankingsStat) => ({
-      currencyId: buildCurrencyId(
-        fromGraphQLChain(tokenRankingsStat.chain) ?? UniverseChainId.Mainnet,
-        tokenRankingsStat.address,
-      ),
-      currency: {
-        address: tokenRankingsStat.address,
-        chainId: fromGraphQLChain(tokenRankingsStat.chain) ?? UniverseChainId.Mainnet,
-        name: tokenRankingsStat.name,
-        symbol: tokenRankingsStat.symbol,
-        decimals: tokenRankingsStat.decimals,
-      },
-      logoUrl: tokenRankingsStat.logo,
-      safetyLevel: SafetyLevel.Verified,
-    }))
-  })
-
+describe(usePopularTokensOptions, () => {
   const topTokens = createArray(3, token)
-  const tokenRankingsResponse = {
-    tokenRankings: {
-      TRENDING: {
-        tokens: topTokens.map((t) => ({
-          chain: t.chain,
-          address: t.address,
-          name: t.name,
-          symbol: t.symbol,
-          decimals: t.decimals,
-        })),
-      },
-    },
-  } as unknown as TokenRankingsResponse
   const tokenBalances = topTokens.map((t) => tokenBalance({ token: t }))
   const portfolios = [portfolio({ tokenBalances })]
 
-  it('returns undefined when there is no data', async () => {
-    mockUseTokenRankingsQuery.mockReturnValue({
-      data: {
-        tokenRankings: {
-          TRENDING: {
-            tokens: [],
-          },
-        },
-      } as unknown as TokenRankingsResponse,
-      isLoading: false,
-      isFetching: false,
-      error: null,
-    } as UseQueryResult<TokenRankingsResponse, ConnectError>)
-
-    // Set up GraphQL resolvers
-    const { resolvers } = queryResolvers({
-      portfolios: queryResolver(portfolios),
-    })
-
-    const { result } = renderHook(() => useTrendingTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
-      resolvers,
-    })
-
-    expect(result.current.loading).toBe(true)
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        loading: false,
-        data: [],
+  const cases = [
+    {
+      test: 'returns undefined when there is no data',
+      input: { topTokens: null, portfolios },
+      output: { data: undefined },
+    },
+    {
+      test: 'returns error and empty balance options if portfolios query fails',
+      input: { portfolios: new Error('Test'), topTokens },
+      // data won't be undefined because top tokens are still being fetched
+      // and empty balance options will be returned for theses tokens
+      output: { data: expect.anything(), error: new ApolloError({ errorMessage: 'Test' }) },
+    },
+    {
+      test: 'returns error if topTokens query fails',
+      input: { topTokens: new Error('Test'), portfolios },
+      output: { error: new ApolloError({ errorMessage: 'Test' }) },
+    },
+    {
+      test: 'returns popular token options when there is data',
+      input: { portfolios, topTokens },
+      output: {
+        data: expect.toIncludeSameMembers(tokenBalances.map((t) => portfolioBalance({ fromBalance: t }))),
         error: undefined,
-        refetch: expect.any(Function),
-      })
-    })
-  })
+      },
+    },
+  ]
 
-  it('returns error and empty balance options if portfolios query fails', async () => {
-    // Mock the REST API to return success with data
-    mockUseTokenRankingsQuery.mockReturnValue({
-      data: tokenRankingsResponse,
-      isLoading: false,
-      isFetching: false,
-      error: null,
-    })
-
-    // Set up GraphQL resolvers with an error
-    const { resolvers } = queryResolvers({
-      portfolios: errorResolver(new Error('Test')),
-    })
-
-    const { result } = renderHook(() => useTrendingTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
+  it.each(cases)('$test', async ({ input, output }) => {
+    const { resolvers } = queryResolvers(
+      Object.fromEntries(Object.entries(input).map(([name, resolver]) => [name, queryResolver(resolver)])),
+    )
+    const { result } = renderHook(() => usePopularTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
       resolvers,
     })
 
-    expect(result.current.loading).toBe(true)
+    expect(result.current.loading).toEqual(true)
+
     await waitFor(() => {
       expect(result.current).toEqual({
         loading: false,
-        // data won't be undefined because top tokens are still being fetched
-        // and empty balance options will be returned for these tokens
-        data: expect.anything(),
-        error: new ApolloError({ errorMessage: 'Test' }),
         refetch: expect.any(Function),
-      })
-    })
-  })
-
-  it('returns error if token rankings query fails', async () => {
-    // Mock the REST API to return an error
-    mockUseTokenRankingsQuery.mockReturnValue({
-      data: undefined,
-      isLoading: false,
-      isFetching: false,
-      error: new Error('Failed to fetch trending tokens'),
-    })
-
-    // Set up GraphQL resolvers
-    const { resolvers } = queryResolvers({
-      portfolios: queryResolver(portfolios),
-    })
-
-    const { result } = renderHook(() => useTrendingTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
-      resolvers,
-    })
-
-    expect(result.current.loading).toBe(true)
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        data: undefined,
-        loading: false,
-        error: new Error('Failed to fetch trending tokens'),
-        refetch: expect.any(Function),
-      })
-    })
-  })
-
-  it('returns trending token options when there is data', async () => {
-    mockUseTokenRankingsQuery.mockReturnValue({
-      data: tokenRankingsResponse,
-      isLoading: false,
-      isFetching: false,
-      error: null,
-    })
-
-    // Set up GraphQL resolvers
-    const { resolvers } = queryResolvers({
-      portfolios: queryResolver(portfolios),
-    })
-
-    const { result } = renderHook(() => useTrendingTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
-      resolvers,
-    })
-
-    expect(result.current.loading).toBe(true)
-    await waitFor(() => {
-      expect(result.current).toEqual({
-        loading: false,
-        data: expect.toIncludeSameMembers(
-          tokenBalances.map((t) => ({
-            ...portfolioBalance({ fromBalance: t }),
-            type: OnchainItemListOptionType.Token,
-          })),
-        ),
-        error: undefined,
-        refetch: expect.any(Function),
+        ...output,
       })
     })
   })
@@ -784,12 +651,7 @@ describe(useCommonTokensOptionsWithFallback, () => {
         tokenProjects: [tokenProject({ tokens })],
       },
       output: {
-        data: expect.toIncludeSameMembers(
-          tokenBalances.map((t) => ({
-            ...portfolioBalance({ fromBalance: t }),
-            type: OnchainItemListOptionType.Token,
-          })),
-        ),
+        data: expect.toIncludeSameMembers(tokenBalances.map((t) => portfolioBalance({ fromBalance: t }))),
         error: undefined,
       },
     },
@@ -803,8 +665,8 @@ describe(useCommonTokensOptionsWithFallback, () => {
       output: {
         data: expect.toIncludeSameMembers([
           // DAI and ETH have Mainnet chain
-          { ...portfolioBalance({ fromBalance: ethBalance }), type: OnchainItemListOptionType.Token },
-          { ...portfolioBalance({ fromBalance: daiBalance }), type: OnchainItemListOptionType.Token },
+          portfolioBalance({ fromBalance: ethBalance }),
+          portfolioBalance({ fromBalance: daiBalance }),
         ]),
         error: undefined,
       },
@@ -859,9 +721,7 @@ describe(useFavoriteTokensOptions, () => {
       },
       output: {
         data: expect.toIncludeSameMembers(
-          favoriteTokenBalances.map((balance) => {
-            return { ...portfolioBalance({ fromBalance: balance }), type: OnchainItemListOptionType.Token }
-          }),
+          favoriteTokenBalances.map((balance) => portfolioBalance({ fromBalance: balance })),
         ),
         error: undefined,
       },
@@ -876,8 +736,8 @@ describe(useFavoriteTokensOptions, () => {
       output: {
         data: expect.toIncludeSameMembers([
           // DAI and ETH have Mainnet chain
-          { ...portfolioBalance({ fromBalance: ethBalance }), type: OnchainItemListOptionType.Token },
-          { ...portfolioBalance({ fromBalance: daiBalance }), type: OnchainItemListOptionType.Token },
+          portfolioBalance({ fromBalance: ethBalance }),
+          portfolioBalance({ fromBalance: daiBalance }),
         ]),
         error: undefined,
       },

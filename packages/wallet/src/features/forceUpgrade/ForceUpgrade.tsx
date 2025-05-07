@@ -74,9 +74,6 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
   const mnemonicId = signerAccounts.length > 0 ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId : undefined
 
   const onPressConfirm = async (): Promise<void> => {
-    if (isRecommended) {
-      onClose()
-    }
     if (isMobileApp) {
       await openUri(MOBILE_APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)
     } else {
@@ -173,7 +170,7 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
               mnemonicId && (
                 <Flex row width="100%">
                   <Button size="medium" emphasis="secondary" onPress={onPressViewRecovery}>
-                    {t('forceUpgrade.action.backup')}
+                    {t('forceUpgrade.action.recoveryPhrase')}
                   </Button>
                 </Flex>
               )

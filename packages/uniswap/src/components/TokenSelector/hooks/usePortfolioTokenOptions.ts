@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
-import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -19,14 +19,8 @@ export function usePortfolioTokenOptions(
     balancesById: portfolioBalancesById,
   })
 
-  const portfolioBalances: TokenOption[] | undefined = useMemo(
-    () =>
-      shownTokens
-        ? sortPortfolioBalances({ balances: shownTokens, isTestnetModeEnabled }).map((balance) => ({
-            ...balance,
-            type: OnchainItemListOptionType.Token,
-          }))
-        : undefined,
+  const portfolioBalances = useMemo(
+    () => (shownTokens ? sortPortfolioBalances({ balances: shownTokens, isTestnetModeEnabled }) : undefined),
     [shownTokens, isTestnetModeEnabled],
   )
 

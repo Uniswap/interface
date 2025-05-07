@@ -1,29 +1,25 @@
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { ReactComponent as UniswapLogo } from 'assets/svg/uniswap_app_logo.svg'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Magic } from 'ui/src/components/icons/Magic'
-import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 type LPIncentiveFeeStatTooltipProps = {
-  currency0Info: Maybe<CurrencyInfo>
-  currency1Info: Maybe<CurrencyInfo>
+  currency0Amount: CurrencyAmount<Currency>
+  currency1Amount: CurrencyAmount<Currency>
   totalApr?: number
   poolApr?: number
   lpIncentiveRewardApr?: number
-  chainId?: UniverseChainId
 }
 
 function LPIncentiveFeeStatTooltip({
-  currency0Info,
-  currency1Info,
+  currency0Amount,
+  currency1Amount,
   poolApr,
   lpIncentiveRewardApr,
   totalApr,
-  chainId = UniverseChainId.Mainnet,
 }: LPIncentiveFeeStatTooltipProps) {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
@@ -42,14 +38,7 @@ function LPIncentiveFeeStatTooltip({
     >
       <TooltipRow>
         <TooltipLabel
-          icon={
-            <SplitLogo
-              inputCurrencyInfo={currency0Info}
-              outputCurrencyInfo={currency1Info}
-              size={16}
-              chainId={chainId}
-            />
-          }
+          icon={<DoubleCurrencyLogo currencies={[currency0Amount?.currency, currency1Amount?.currency]} size={16} />}
           label={t('pool.aprText')}
         />
         <Text variant="body4" color="$neutral1">
@@ -58,7 +47,20 @@ function LPIncentiveFeeStatTooltip({
       </TooltipRow>
       <TooltipRow>
         <TooltipLabel
-          icon={<CurrencyLogo currency={LP_INCENTIVES_REWARD_TOKEN} size={16} />}
+          icon={
+            <Flex
+              row
+              gap="$spacing4"
+              alignItems="center"
+              justifyContent="center"
+              backgroundColor="white"
+              borderRadius="$roundedFull"
+              width="$spacing16"
+              height="$spacing16"
+            >
+              <UniswapLogo width={12} height={12} />
+            </Flex>
+          }
           label={t('pool.rewardAPR')}
         />
         <Text variant="body4" color="$neutral1">

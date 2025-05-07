@@ -84,7 +84,7 @@ describe('useSwapTxAndGasInfo', () => {
     }
 
     const mockSwapTxInfo: TransactionRequestInfo = {
-      txRequests: [{ to: '0x456', chainId: 1 }],
+      transactionRequest: { to: '0x456', chainId: 1 },
       gasFeeResult: { value: '123', isLoading: false, error: null },
       gasEstimate: {
         swapEstimates: {
@@ -98,6 +98,7 @@ describe('useSwapTxAndGasInfo', () => {
           },
         },
       },
+      permitSignature: undefined,
       swapRequestArgs: undefined,
     }
 
@@ -115,7 +116,7 @@ describe('useSwapTxAndGasInfo', () => {
     expect(result.current).toMatchObject<ClassicSwapTxAndGasInfo>({
       routing: Routing.CLASSIC,
       trade: expect.any(Object),
-      txRequests: expect.any(Array),
+      txRequest: expect.any(Object),
       approveTxRequest: expect.any(Object),
       revocationTxRequest: expect.any(Object),
       gasFee: { value: '400123', isLoading: false, error: null },
