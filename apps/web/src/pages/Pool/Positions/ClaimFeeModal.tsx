@@ -2,16 +2,16 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import { useModalLiquidityInitialState, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { useModalLiquidityInitialState, usePositionDerivedInfo } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
+import { useModalState } from 'hooks/useModalState'
 import useSelectChain from 'hooks/useSelectChain'
 import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'pages/Pool/Positions/create/utils'
 import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useCloseModal } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Switch, Text } from 'ui/src'
@@ -26,7 +26,8 @@ import { ClaimLPFeesRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   CollectFeesTxAndGasInfo,
@@ -34,7 +35,7 @@ import {
   isValidLiquidityTxContext,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -92,13 +93,13 @@ export function ClaimFeeModal() {
   const canUnwrap1 = canUnwrapCurrency(currency1Amount?.currency, positionInfo?.version)
   const canUnwrap = positionInfo && chainId && (canUnwrap0 || canUnwrap1)
 
-  const onClose = useCloseModal(ModalName.ClaimFee)
+  const { closeModal } = useModalState(ModalName.ClaimFee)
   const {
     feeValue0: token0Fees,
     feeValue1: token1Fees,
     fiatFeeValue0: token0FeesUsd,
     fiatFeeValue1: token1FeesUsd,
-  } = useV3OrV4PositionDerivedInfo(positionInfo)
+  } = usePositionDerivedInfo(positionInfo)
 
   const currency0 = getCurrencyWithOptionalUnwrap({
     currency: token0Fees?.currency,
@@ -166,15 +167,17 @@ export function ClaimFeeModal() {
 
   // prevent logging of the empty error object for now since those are burying signals
   if (error && Object.keys(error).length > 0) {
-    logger.info(
-      'ClaimFeeModal',
-      'ClaimFeeModal',
-      parseErrorMessageTitle(error, { defaultTitle: 'unknown ClaimLPFeesCalldataQuery' }),
-      {
-        error: JSON.stringify(error),
-        claimLpFeesParams: JSON.stringify(claimLpFeesParams),
+    const message = parseErrorMessageTitle(error, { defaultTitle: 'unknown ClaimLPFeesCalldataQuery' })
+    logger.error(message, {
+      tags: {
+        file: 'ClaimFeeModal',
+        function: 'useEffect',
       },
-    )
+    })
+
+    sendAnalyticsEvent(InterfaceEventNameLocal.CollectLiquidityFailed, {
+      message,
+    })
   }
 
   const txInfo = useMemo((): CollectFeesTxAndGasInfo | undefined => {
@@ -211,7 +214,7 @@ export function ClaimFeeModal() {
         setCurrentStep: setCurrentTransactionStep,
         setSteps: () => undefined,
         onSuccess: () => {
-          onClose()
+          closeModal()
         },
         onFailure: () => {
           setCurrentTransactionStep(undefined)
@@ -235,12 +238,12 @@ export function ClaimFeeModal() {
   }
 
   return (
-    <Modal name={ModalName.ClaimFee} onClose={onClose} isDismissible>
+    <Modal name={ModalName.ClaimFee} onClose={closeModal} isDismissible>
       <Flex gap="$gap16">
         <GetHelpHeader
           link={uniswapUrls.helpRequestUrl}
           title={t('pool.collectFees')}
-          closeModal={onClose}
+          closeModal={closeModal}
           closeDataTestId="ClaimFeeModal-close-icon"
         />
         {token0Fees && token1Fees && (

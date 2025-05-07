@@ -2,7 +2,6 @@ import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { LinkHorizontalAlt } from 'ui/src/components/icons/LinkHorizontalAlt'
-import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { Pill } from 'uniswap/src/components/pill/Pill'
@@ -48,7 +47,7 @@ export const UnitagInfoModal = ({
             width={FIXED_INFO_PILL_WIDTH}
           />
           <Flex p="$spacing2" shadowColor="$accent1" shadowOpacity={1} shadowRadius="$spacing16">
-            <LinkHorizontalAlt color={colors.neutral3.get()} size={iconSizes.icon24} />
+            <LinkHorizontalAlt color="$neutral3" size="$icon.24" />
           </Flex>
           <Pill
             customBackgroundColor={colors.surface1.val}

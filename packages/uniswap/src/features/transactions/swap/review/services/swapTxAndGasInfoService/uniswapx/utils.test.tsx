@@ -11,10 +11,12 @@ describe('processUniswapXResponse', () => {
       isLoading: false,
       error: null,
     },
-    transactionRequest: {
-      to: '0x123',
-      data: '0x456',
-    },
+    txRequests: [
+      {
+        to: '0x123',
+        data: '0x456',
+      },
+    ],
     gasEstimate: {
       wrapEstimates: {
         activeEstimate: {
@@ -29,43 +31,34 @@ describe('processUniswapXResponse', () => {
       },
     },
     swapRequestArgs: undefined,
-    permitSignature: undefined,
   } satisfies TransactionRequestInfo
 
   it('should extend wrap response when wrap is needed', () => {
     // Given
-    const permitSignature = '0x789'
     const permitData = { fakePermitField: 'hi' }
 
     // When
     const result = processUniswapXResponse({
       wrapTransactionRequestInfo: baseWrapTransactionRequestInfo,
-      permitSignature,
       permitData,
-      permitDataLoading: false,
       needsWrap: true,
     })
 
     // Then
     expect(result).toEqual({
       ...baseWrapTransactionRequestInfo,
-      permitSignature,
       permitData,
-      permitDataLoading: false,
     })
   })
 
   it('should return zero gas fee when no wrap is needed', () => {
     // Given
-    const permitSignature = '0x789'
     const permitData = { fakePermitField: 'hi' }
 
     // When
     const result = processUniswapXResponse({
       wrapTransactionRequestInfo: baseWrapTransactionRequestInfo,
-      permitSignature,
       permitData,
-      permitDataLoading: false,
       needsWrap: false,
     })
 
@@ -80,9 +73,7 @@ describe('processUniswapXResponse', () => {
       gasEstimate: {},
       transactionRequest: undefined,
       swapRequestArgs: undefined,
-      permitSignature,
       permitData,
-      permitDataLoading: false,
     })
   })
 })

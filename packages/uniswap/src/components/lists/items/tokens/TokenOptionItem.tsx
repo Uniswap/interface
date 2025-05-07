@@ -1,11 +1,13 @@
 import { memo, useCallback, useState } from 'react'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import Check from 'ui/src/assets/icons/check.svg'
-import { iconSizes } from 'ui/src/theme'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { Check } from 'ui/src/components/icons/Check'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { OptionItem, OptionItemProps } from 'uniswap/src/components/lists/items/OptionItem'
-import { TokenOptionItemContextMenu } from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
-import { TokenOption } from 'uniswap/src/components/lists/types'
+import { FocusedRowControl, OptionItem, OptionItemProps } from 'uniswap/src/components/lists/items/OptionItem'
+import {
+  TokenContextMenuAction,
+  TokenOptionItemContextMenu,
+} from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
@@ -13,9 +15,30 @@ import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isInterface, isWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+
+export enum TokenContextMenuVariant {
+  Search = 'search',
+  TokenSelector = 'tokenSelector',
+}
+
+const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuAction[]> = {
+  [TokenContextMenuVariant.Search]: [
+    TokenContextMenuAction.CopyAddress,
+    ...(isWeb ? [] : [TokenContextMenuAction.Favorite]),
+    TokenContextMenuAction.Swap,
+    TokenContextMenuAction.Send,
+    TokenContextMenuAction.Receive,
+    TokenContextMenuAction.Share,
+  ],
+  [TokenContextMenuVariant.TokenSelector]: [
+    TokenContextMenuAction.CopyAddress,
+    ...(isWeb ? [] : [TokenContextMenuAction.Favorite]),
+    TokenContextMenuAction.ViewDetails,
+  ],
+}
 
 // @deprecated
 interface LegacyTokenOptionItemProps {
@@ -44,7 +67,6 @@ const LegacyBaseTokenOptionItem = memo(function LegacyBaseTokenOptionItem({
 }: LegacyTokenOptionItemProps): JSX.Element {
   const { currencyInfo } = option
   const { currency } = currencyInfo
-  const colors = useSporeColors()
 
   const severity = getTokenWarningSeverity(currencyInfo)
   // in token selector, we only show the warning icon if token is >=Medium severity
@@ -98,7 +120,7 @@ const LegacyBaseTokenOptionItem = memo(function LegacyBaseTokenOptionItem({
 
       {isSelected && (
         <Flex grow alignItems="flex-end" justifyContent="center">
-          <Check color={colors.accent1.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
+          <Check color="$accent1" size="$icon.20" />
         </Flex>
       )}
 
@@ -157,7 +179,12 @@ function _LegacyTokenOptionItem(props: LegacyTokenOptionItemProps): JSX.Element 
   }, [onPress])
 
   return (
-    <TokenOptionItemContextMenu currency={currency} isOpen={isContextMenuOpen} closeMenu={closeContextMenu}>
+    <TokenOptionItemContextMenu
+      actions={CONTEXT_MENU_ACTIONS[TokenContextMenuVariant.TokenSelector]}
+      currency={currency}
+      isOpen={isContextMenuOpen}
+      closeMenu={closeContextMenu}
+    >
       <TouchableArea
         animation="300ms"
         width="100%"
@@ -193,6 +220,8 @@ export interface TokenOptionItemProps {
   rightElement?: JSX.Element
   showDisabled?: boolean
   modalInfo?: OptionItemProps['modalInfo']
+  focusedRowControl?: FocusedRowControl
+  contextMenuVariant: TokenContextMenuVariant
 }
 
 function isLegacyTokenOptionItemProps(
@@ -204,7 +233,16 @@ function isLegacyTokenOptionItemProps(
 const BaseTokenOptionItem = memo(function _BaseTokenOptionItem(
   props: TokenOptionItemProps & { openContextMenu?: () => void },
 ): JSX.Element {
-  const { option, onPress, showTokenAddress, rightElement, showDisabled, modalInfo, openContextMenu } = props
+  const {
+    option,
+    onPress,
+    showTokenAddress,
+    rightElement,
+    showDisabled,
+    modalInfo,
+    focusedRowControl,
+    openContextMenu,
+  } = props
   const { currencyInfo } = option
   const { currency } = currencyInfo
 
@@ -248,6 +286,7 @@ const BaseTokenOptionItem = memo(function _BaseTokenOptionItem(
       disabled={showDisabled}
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       modalInfo={modalInfo}
+      focusedRowControl={focusedRowControl}
       onPress={onPress}
       onLongPress={openContextMenu}
     />
@@ -262,6 +301,7 @@ export const TokenOptionItem = memo(function _TokenOptionItem(
   if (!isLegacyTokenOptionItemProps(props)) {
     return (
       <TokenOptionItemContextMenu
+        actions={CONTEXT_MENU_ACTIONS[props.contextMenuVariant]}
         currency={props.option.currencyInfo.currency}
         isOpen={isContextMenuOpen}
         closeMenu={closeContextMenu}

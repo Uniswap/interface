@@ -1,12 +1,11 @@
-import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { Check } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { setCurrentFiatCurrency } from 'uniswap/src/features/settings/slice'
@@ -30,9 +29,8 @@ export function SettingsFiatCurrencyModal(): JSX.Element {
       <Text pb="$spacing12" textAlign="center" variant="subheading1">
         {t('settings.setting.currency.title')}
       </Text>
-      <BottomSheetFlatList
+      <AnimatedBottomSheetFlashList
         data={ORDERED_CURRENCIES}
-        focusHook={useBottomSheetFocusHook}
         keyExtractor={(item: FiatCurrency) => item}
         renderItem={renderItem}
       />
@@ -48,7 +46,6 @@ interface FiatCurrencyOptionProps {
 
 function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionProps): JSX.Element {
   const dispatch = useDispatch()
-  const colors = useSporeColors()
   const { name, code } = useFiatCurrencyInfo(currency)
 
   const changeCurrency = useCallback(() => {
@@ -65,7 +62,7 @@ function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionPro
             {code}
           </Text>
         </Flex>
-        {active && <Check color={colors.accent1.val} size="$icon.24" />}
+        {active && <Check color="$accent1" size="$icon.24" />}
       </Flex>
     </TouchableArea>
   )

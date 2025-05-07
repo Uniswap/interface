@@ -79,3 +79,12 @@ export const appRatingFeedbackProvidedMsSelector = (state: WalletState): number 
 
 export const selectHasBalanceOrActivityForAddress = (state: WalletState, address: Address): boolean | undefined =>
   state.wallet.accounts[address]?.hasBalanceOrActivity
+
+export const selectHasSmartWalletConsent = createSelector(
+  selectAccounts,
+  (_: WalletState, address: Address) => address,
+  (accounts, address) => {
+    const account = accounts[address]
+    return account?.type === AccountType.SignerMnemonic && account.smartWalletConsent === true
+  },
+)

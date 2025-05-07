@@ -1,0 +1,49 @@
+{
+  "position": {
+    "chainId": 1,
+    "protocolVersion": "PROTOCOL_VERSION_V4",
+    "v4Position": {
+      "poolPosition": {
+        "tokenId": "13298",
+        "tickLower": "-887270",
+        "tickUpper": "887270",
+        "liquidity": "49387053232",
+        "token0": {
+          "chainId": 1,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "ETH",
+          "decimals": 18,
+          "name": "Ethereum",
+          "isNative": true
+        },
+        "token1": {
+          "chainId": 1,
+          "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+          "symbol": "USDT",
+          "decimals": 6,
+          "name": "Tether USD"
+        },
+        "feeTier": "500",
+        "currentTick": "-202299",
+        "currentPrice": "3207989918599918700969750",
+        "tickSpacing": "10",
+        "token0UncollectedFees": "122157438",
+        "token1UncollectedFees": "0",
+        "amount0": "1219718758116679",
+        "amount1": "1999707",
+        "poolId": "0x72331fcb696b0151904c03584b66dc8365bc63f8a144d89a773384e3a579ca73",
+        "totalLiquidityUsd": "593894.940668435895000287501906924",
+        "currentLiquidity": "20745140031091761",
+        "apr": 11.534362134720784,
+        "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "totalApr": 11.534362134720784
+      },
+      "hooks": [
+        {
+          "address": "0x0000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    "status": "POSITION_STATUS_IN_RANGE"
+  }
+}

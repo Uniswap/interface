@@ -10,8 +10,7 @@ import RNQRGenerator from 'rn-qr-generator'
 import { useCameraPermissionQuery } from 'src/components/QRCodeScanner/hooks/useCameraPermissionQuery'
 import { useRequestCameraPermissionOnMountEffect } from 'src/components/QRCodeScanner/hooks/useRequestCameraPermissionOnMountEffect'
 import { Button, Flex, SpinningLoader, Text, ThemeName, useSporeColors } from 'ui/src'
-import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
-import { Global, PhotoStacked } from 'ui/src/components/icons'
+import { CameraScan, Global, PhotoStacked } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
@@ -176,7 +175,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           </Flex>
           {!shouldFreezeCamera ? (
             // camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners)
-            <CameraScan color={colors.white.val} height={scannerSize} strokeWidth={5} width={scannerSize} />
+            <CameraScan color="$white" size={scannerSize} strokeWidth={5} />
           ) : (
             // camera has been frozen (has seen a barcode) — show the loading spinner and "Connecting..." or "Loading..."
             <Flex height={scannerSize} width={scannerSize}>

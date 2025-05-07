@@ -5,7 +5,6 @@ import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/Tra
 import {
   BridgeQuote,
   ClassicQuote,
-  CreateSwapResponse,
   QuoteResponse,
   Routing,
   TransactionFailureReason,
@@ -15,6 +14,7 @@ import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { UNKNOWN_SIM_ERROR } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
+import { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import {
   createPrepareSwapRequestParams,
   createProcessSwapResponse,
@@ -59,14 +59,13 @@ describe('processWrapResponse', () => {
 
     // Then
     expect(result.gasFeeResult).toEqual(gasFeeResult)
-    expect(result.transactionRequest).toEqual({
+    expect(result.txRequests?.[0]).toEqual({
       to: '0x123',
       value: '1000000',
       gasLimit: '21000',
       maxFeePerGas: '100000000000',
       maxPriorityFeePerGas: '1000000000',
     })
-    expect(result.permitSignature).toBeUndefined()
     expect(result.gasEstimate.wrapEstimates).toBe(gasFeeResult.gasEstimates)
     expect(result.swapRequestArgs).toBeUndefined()
   })
@@ -96,6 +95,7 @@ describe('createPrepareSwapRequestParams', () => {
       selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
       slippageWarningModalSeen: false,
       updateTransactionSettings: () => undefined,
+      isV4HookPoolsEnabled: false,
     }
     const alreadyApproved = true
 
@@ -354,13 +354,15 @@ describe('createProcessSwapResponse', () => {
 
     const response = {
       requestId: '123',
-      swap: {
-        to: '0x123',
-        data: '0x456',
-        from: '0x123',
-        value: '0',
-        chainId: 1,
-      },
+      transactions: [
+        {
+          to: '0x123',
+          data: '0x456',
+          from: '0x123',
+          value: '0',
+          chainId: 1,
+        },
+      ],
       gasEstimates: [
         {
           strategy: DEFAULT_GAS_STRATEGY,
@@ -371,7 +373,7 @@ describe('createProcessSwapResponse', () => {
           gasFee: '1000',
         },
       ],
-    } as const satisfies CreateSwapResponse
+    } as const satisfies SwapData
 
     // When
     const result = processSwapResponse({
@@ -379,9 +381,7 @@ describe('createProcessSwapResponse', () => {
       error: null,
       swapQuote,
       isSwapLoading: false,
-      signature: '0x789',
       permitData: { fakePermitField: 'hi' },
-      permitDataLoading: false,
       swapRequestParams: { quote: swapQuote, v4Enabled: false },
       isRevokeNeeded: false,
     })
@@ -394,10 +394,8 @@ describe('createProcessSwapResponse', () => {
         isLoading: false,
         error: null,
       },
-      transactionRequest: response.swap,
-      permitSignature: '0x789',
+      txRequests: response.transactions,
       permitData: { fakePermitField: 'hi' },
-      permitDataLoading: false,
       gasEstimate: {
         swapEstimates: {
           activeEstimate: response.gasEstimates[0],
@@ -423,10 +421,8 @@ describe('createProcessSwapResponse', () => {
       error: null,
       swapQuote,
       isSwapLoading: false,
-      signature: undefined,
       permitData: undefined,
-      permitDataLoading: false,
-      swapRequestParams: undefined,
+      swapRequestParams: { quote: swapQuote, v4Enabled: false },
       isRevokeNeeded: false,
     })
 

@@ -1,7 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { useMemo } from 'react'
-import { TokenOption } from 'uniswap/src/components/lists/types'
-import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
+import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
@@ -39,10 +38,20 @@ export function currencyInfosToTokenOptions(currencyInfos?: Maybe<CurrencyInfo>[
   return currencyInfos
     ?.filter((cI): cI is CurrencyInfo => Boolean(cI))
     .map((currencyInfo) => ({
+      type: OnchainItemListOptionType.Token,
       currencyInfo,
       quantity: null,
       balanceUSD: undefined,
     }))
+}
+
+export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOption {
+  return {
+    type: OnchainItemListOptionType.Token,
+    currencyInfo,
+    balanceUSD: null,
+    quantity: null,
+  }
 }
 
 export function useCurrencyInfosToTokenOptions({
@@ -69,9 +78,11 @@ export function useCurrencyInfosToTokenOptions({
         })
       : currencyInfos
 
-    return sortedCurrencyInfos.map(
-      (currencyInfo) =>
-        portfolioBalancesById?.[currencyInfo.currencyId.toLowerCase()] ?? createEmptyBalanceOption(currencyInfo),
-    )
+    return sortedCurrencyInfos.map((currencyInfo) => {
+      const portfolioBalance = portfolioBalancesById?.[currencyInfo.currencyId.toLowerCase()]
+      return portfolioBalance
+        ? { type: OnchainItemListOptionType.Token, ...portfolioBalance }
+        : createEmptyBalanceOption(currencyInfo)
+    })
   }, [currencyInfos, portfolioBalancesById, sortAlphabetically])
 }

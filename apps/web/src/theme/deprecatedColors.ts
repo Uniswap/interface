@@ -1,5 +1,5 @@
 import { colors } from 'theme/colors'
-import { opacify } from 'theme/utils'
+import { opacify } from 'ui/src/theme'
 
 function getDeprecatedTheme(darkMode: boolean) {
   return {

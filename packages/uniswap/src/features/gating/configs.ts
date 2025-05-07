@@ -16,16 +16,15 @@ export enum DynamicConfigs {
   OnDeviceRecovery = 'on_device_recovery',
   UwuLink = 'uwulink_config',
   GasStrategies = 'gas_strategy',
-  MainnetPrivateRpc = 'mainnet_private_rpc',
   DatadogSessionSampleRate = 'datadog_session_sample_rate',
   DatadogIgnoredErrors = 'datadog_ignored_errors',
   EmbeddedWallet = 'embedded_wallet',
 
   // Web
-  QuickRouteChains = 'quick_route_chains',
   AstroChain = 'astro_chain',
   BlockedNftCollections = 'blocked_nft_collections',
   ExternallyConnectableExtension = 'externally_connectable_extension',
+  LPConfig = 'lp_config',
 }
 
 // Config values go here for easy access
@@ -137,13 +136,6 @@ export type GasStrategies = {
   strategies: GasStrategyWithConditions[]
 }
 
-export enum MainnetPrivateRpcConfigKey {
-  UseFlashbots = 'use_flashbots',
-  FlashbotsBlockRange = 'flashbots_block_range',
-  FlashbotsRefundPercent = 'flashbots_refund_percent',
-  SendFlashbotsAuthenticationHeader = 'send_authentication_header',
-}
-
 // Web
 export enum QuickRouteChainsConfigKey {
   Chains = 'quick_route_chains',
@@ -151,6 +143,11 @@ export enum QuickRouteChainsConfigKey {
 
 export enum AstroChainConfigKey {
   Url = 'url',
+}
+
+export enum LPConfigKey {
+  DefaultSlippage = 'defaultSlippage',
+  V4SlippageOverride = 'v4SlippageOverride',
 }
 
 export type DynamicConfigKeys = {
@@ -164,16 +161,15 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.ForceUpgrade]: ForceUpgradeConfigKey
   [DynamicConfigs.OnDeviceRecovery]: OnDeviceRecoveryConfigKey
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey
-  [DynamicConfigs.MainnetPrivateRpc]: MainnetPrivateRpcConfigKey
   [DynamicConfigs.DatadogIgnoredErrors]: DatadogIgnoredErrorsConfigKey
   [DynamicConfigs.DatadogSessionSampleRate]: DatadogSessionSampleRateKey
   [DynamicConfigs.EmbeddedWallet]: EmbeddedWalletConfigKey
 
   // Web
-  [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
   [DynamicConfigs.BlockedNftCollections]: BlockedNftCollectionsConfigKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
+  [DynamicConfigs.LPConfig]: LPConfigKey
 }
 
 // This type must match the format in statsig dynamic config for uwulink

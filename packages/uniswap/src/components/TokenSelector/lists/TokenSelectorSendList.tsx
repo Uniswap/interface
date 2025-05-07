@@ -4,21 +4,17 @@ import { Flex } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
-import {
-  OnSelectCurrency,
-  TokenOptionSection,
-  TokenSection,
-  TokenSectionsHookProps,
-} from 'uniswap/src/components/TokenSelector/types'
-import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
-import { SectionHeader } from 'uniswap/src/components/lists/TokenSectionHeader'
-import { TokenOption } from 'uniswap/src/components/lists/types'
+import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
+import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { SectionHeader } from 'uniswap/src/components/lists/SectionHeader'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 
 function useTokenSectionsForSend({
   activeAccountAddress,
   chainFilter,
-}: TokenSectionsHookProps): GqlResult<TokenSection<TokenOption>[]> {
+}: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenOption>[]> {
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
@@ -29,9 +25,9 @@ function useTokenSectionsForSend({
   const loading = portfolioTokenOptionsLoading
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
 
-  const sections = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.YourTokens,
-    tokenOptions: portfolioTokenOptions,
+  const sections = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.YourTokens,
+    options: portfolioTokenOptions,
   })
 
   return useMemo(
@@ -50,7 +46,7 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
 
   return (
     <Flex>
-      <SectionHeader sectionKey={TokenOptionSection.YourTokens} />
+      <SectionHeader sectionKey={OnchainItemSectionName.YourTokens} />
       <Flex pt="$spacing16" px="$spacing16">
         <BaseCard.EmptyState
           buttonLabel={

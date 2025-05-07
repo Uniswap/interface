@@ -18,6 +18,7 @@ import { promiseMinDelay } from 'utilities/src/time/timing'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = {
@@ -59,14 +60,14 @@ export function CloudBackupProcessingAnimation({
 
   // Handle finished backing up to Cloud
   useEffect(() => {
-    if (account?.backups?.includes(BackupType.Cloud)) {
+    if (hasBackup(BackupType.Cloud, account)) {
       doneProcessing()
       // Show success state for 1s before navigating
       const timer = setTimeout(onBackupComplete, ONE_SECOND_MS)
       return () => clearTimeout(timer)
     }
     return undefined
-  }, [account?.backups, onBackupComplete])
+  }, [account, onBackupComplete])
 
   // Handle backup to Cloud when screen appears
   const backup = useCallback(async () => {

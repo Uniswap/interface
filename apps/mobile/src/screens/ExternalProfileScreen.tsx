@@ -14,12 +14,12 @@ import { ProfileHeader } from 'src/features/externalProfile/ProfileHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type Props = NativeStackScreenProps<AppStackParamList, MobileScreens.ExternalProfile> & {
   renderedInModal?: boolean

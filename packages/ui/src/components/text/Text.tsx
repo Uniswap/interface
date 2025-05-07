@@ -118,6 +118,18 @@ export const TextFrame = styled(TamaguiText, {
   },
 })
 
+const Heading1 = styled(TextFrame, {
+  tag: 'h1',
+})
+
+const Heading2 = styled(TextFrame, {
+  tag: 'h2',
+})
+
+const Heading3 = styled(TextFrame, {
+  tag: 'h3',
+})
+
 type TextFrameProps = GetProps<typeof TextFrame>
 
 export type TextProps = TextFrameProps & {
@@ -162,6 +174,16 @@ export const TextLoaderWrapper = ({
   return inner
 }
 
+const TEXT_COMPONENTS = {
+  heading1: Heading1,
+  heading2: Heading2,
+  heading3: Heading3,
+} as const
+
+const getTextComponent = (variant: TextProps['variant']): typeof TextFrame => {
+  return TEXT_COMPONENTS[variant as keyof typeof TEXT_COMPONENTS] ?? TextFrame
+}
+
 /**
  * Use this component instead of the default React Native <Text> component anywhere text shows up throughout the app, so we can use the design system values for colors and sizes, and make sure all text looks and behaves the same way
  * @param loading Whether the text inside the component is still loading or not. Set this to true if whatever content goes inside the <Text> component is coming from a variable that might still be loading. This prop is optional and defaults to false. This prop can also be set to "no-shimmer" to enable a loading state without the shimmer effect.
@@ -170,18 +192,19 @@ export const TextLoaderWrapper = ({
 export const Text = TextFrame.styleable<TextProps>(
   ({ loading = false, allowFontScaling, loadingPlaceholderText = '000.00', ...rest }: TextProps, ref): JSX.Element => {
     const enableFontScaling = useEnableFontScaling(allowFontScaling)
+    const TextComponent = getTextComponent(rest.variant)
 
     if (loading) {
       return (
         <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
-          <TextFrame ref={ref} allowFontScaling={enableFontScaling} color="$transparent" opacity={0} {...rest}>
+          <TextComponent ref={ref} allowFontScaling={enableFontScaling} color="$transparent" opacity={0} {...rest}>
             {/* Important that `children` isn't used or rendered by <Text> when `loading` is true, because if the child of a <Text> component is a dynamic variable that might not be finished fetching yet, it'll result in an error until it's finished loading. We use `loadingPlaceholderText` to set the size of the loading element instead. */}
             {loadingPlaceholderText}
-          </TextFrame>
+          </TextComponent>
         </TextLoaderWrapper>
       )
     }
 
-    return <TextFrame allowFontScaling={enableFontScaling} color="$neutral1" {...rest} />
+    return <TextComponent allowFontScaling={enableFontScaling} color="$neutral1" {...rest} />
   },
 )

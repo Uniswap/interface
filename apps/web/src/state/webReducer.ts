@@ -40,6 +40,7 @@ export const interfacePersistedStateList: Array<keyof typeof interfaceReducers> 
   'signatures',
   'lists',
   'fiatOnRampTransactions',
+  'walletCapabilities',
 ]
 
 export type InterfaceState = ReturnType<typeof interfaceReducer>

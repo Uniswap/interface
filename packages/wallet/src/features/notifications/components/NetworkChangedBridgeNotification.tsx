@@ -27,7 +27,7 @@ export function NetworkChangedBridgeNotification({
               {fromNetwork}
             </Text>
           </Flex>
-          <Shuffle color="$neutral2" size={iconSizes.icon16} />
+          <Shuffle color="$neutral2" size="$icon.16" />
           <Flex row centered gap="$spacing4">
             <NetworkLogo chainId={notification.toChainId} size={iconSizes.icon20} />
             <Text variant="body2" color="$neutral1">

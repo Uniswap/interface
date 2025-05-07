@@ -7,6 +7,7 @@ import { HookModal } from 'components/Liquidity/HookModal'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { getDefaultFeeTiersWithData, hasLPFoTTransferError, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -25,6 +26,7 @@ import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { PositionField } from 'types/position'
 import { Button, DropdownButton, DropdownButtonProps, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
+import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
 import { iconSizes } from 'ui/src/theme'
@@ -32,6 +34,8 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -79,11 +83,12 @@ export const CurrencySelector = ({
   )
 }
 
-interface FeeTier {
+interface FeeTierData {
   value: FeeData
   title: string
   selectionPercent?: Percent
   tvl: string
+  boostedApr?: number
 }
 
 const FeeTierContainer = styled(Flex, {
@@ -102,10 +107,12 @@ const FeeTier = ({
   feeTier,
   selected,
   onSelect,
+  isLpIncentivesEnabled,
 }: {
-  feeTier: FeeTier
+  feeTier: FeeTierData
   selected: boolean
   onSelect: (value: FeeData) => void
+  isLpIncentivesEnabled?: boolean
 }) => {
   const { t } = useTranslation()
   const { formatPercent } = useFormatter()
@@ -120,20 +127,29 @@ const FeeTier = ({
       <Flex gap="$spacing8">
         <Flex row gap={10} justifyContent="space-between">
           <Text variant="buttonLabel3">{formatPercent(new Percent(feeTier.value.feeAmount, 1000000))}</Text>
-          {selected && <CheckCircleFilled size={iconSizes.icon16} />}
+          {selected && <CheckCircleFilled size="$icon.16" />}
         </Flex>
         <Text variant="body4">{feeTier.title}</Text>
       </Flex>
-      <Flex gap="$spacing2">
-        <Text variant="body4" color="$neutral2">
-          {feeTier.tvl === '0' ? '0' : formatNumberOrString({ value: feeTier.tvl, type: NumberType.FiatTokenStats })}{' '}
-          {t('common.totalValueLocked')}
-        </Text>
-        {feeTier.selectionPercent && feeTier.selectionPercent.greaterThan(0) && (
-          <Text variant="body4" color="$neutral2">
-            {formatPercent(feeTier.selectionPercent)} select
-          </Text>
-        )}
+      <Flex mt="$spacing16" gap="$spacing2" alignItems="flex-end">
+        <Flex row justifyContent="space-between" width="100%" alignItems="flex-end">
+          <Flex>
+            <Text variant="body4" color="$neutral2">
+              {feeTier.tvl === '0'
+                ? '0'
+                : formatNumberOrString({ value: feeTier.tvl, type: NumberType.FiatTokenStats })}
+              {t('common.totalValueLocked')}
+            </Text>
+            {feeTier.selectionPercent && feeTier.selectionPercent.greaterThan(0) && (
+              <Text variant="body4" color="$neutral2">
+                {formatPercent(feeTier.selectionPercent)} select
+              </Text>
+            )}
+          </Flex>
+          {isLpIncentivesEnabled && feeTier.boostedApr !== undefined && feeTier.boostedApr > 0 && (
+            <LpIncentivesAprDisplay lpIncentiveRewardApr={feeTier.boostedApr} isSmall />
+          )}
+        </Flex>
       </Flex>
     </FeeTierContainer>
   )
@@ -149,6 +165,7 @@ export function SelectTokensStep({
   const { setSelectedChainId } = useMultichainContext()
   const trace = useTrace()
   const [hookModalOpen, setHookModalOpen] = useState(false)
+  const isLpIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const {
     positionState: { hook, userApprovedHook, currencyInputs, fee, protocolVersion },
@@ -241,6 +258,11 @@ export function SelectTokensStep({
   })
 
   const feeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion, t })
+  const feeTierHasLpRewards = useMemo(
+    () => feeTiers.some((tier) => tier.boostedApr && tier.boostedApr > 0) && isLpIncentivesEnabled,
+    [feeTiers, isLpIncentivesEnabled],
+  )
+
   const [defaultFeeTierSelected, setDefaultFeeTierSelected] = useState(false)
   const mostUsedFeeTier = useMemo(() => {
     if (hasExistingFeeTiers && feeTierData && Object.keys(feeTierData).length > 0) {
@@ -329,6 +351,18 @@ export function SelectTokensStep({
 
   const hasError = isV4UnsupportedTokenSelected || Boolean(wrappedNativeWarning) || Boolean(fotErrorToken)
 
+  const lpIncentiveRewardApr = useMemo(() => {
+    if (!isLpIncentivesEnabled || protocolVersion !== ProtocolVersion.V4) {
+      return undefined
+    }
+
+    // This component makes 2 API calls to ListPools -- one for current selected fee tier, and one to get all pools for all fee tiers
+    // to ensure the current selected fee tier rewards APR matches the same fee tier in the fee tier selector,
+    // grab the rewards tier from the fee tier directly
+    const matchingFeeTier = feeTiers.find((tier) => tier.value.feeAmount === fee.feeAmount)
+    return matchingFeeTier?.boostedApr && matchingFeeTier.boostedApr > 0 ? matchingFeeTier.boostedApr : undefined
+  }, [isLpIncentivesEnabled, protocolVersion, feeTiers, fee.feeAmount])
+
   return (
     <>
       {hook && (
@@ -396,75 +430,118 @@ export function SelectTokensStep({
 
             {protocolVersion !== ProtocolVersion.V2 && (
               <Flex gap="$spacing8" pointerEvents={hasError ? 'none' : 'auto'} opacity={hasError ? 0.5 : 1}>
-                <Flex
-                  row
-                  py="$spacing12"
-                  px="$spacing16"
-                  gap="$spacing24"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  borderRadius="$rounded12"
-                  borderWidth="$spacing1"
-                  borderColor="$surface3"
-                >
-                  <Flex gap="$gap4" flex={1} minWidth={0}>
-                    <Flex row gap="$gap8" alignItems="center">
-                      <Text variant="subheading2" color="$neutral1">
-                        {isDynamicFeeTier(fee) ? (
-                          <Trans i18nKey="fee.tier.dynamic" />
-                        ) : (
-                          <Trans
-                            i18nKey="fee.tierExact"
-                            values={{ fee: formatPercent(new Percent(fee.feeAmount, 1000000), 4) }}
-                          />
-                        )}
-                      </Text>
-                      {fee.feeAmount === mostUsedFeeTier?.fee.feeAmount ? (
-                        <MouseoverTooltip text={t('fee.tier.recommended.description')}>
-                          <Flex
-                            justifyContent="center"
-                            borderRadius="$rounded6"
-                            backgroundColor="$surface3"
-                            px={7}
-                            py={2}
-                            $md={{ display: 'none' }}
-                          >
+                <Flex borderRadius="$rounded12" borderWidth="$spacing1" borderColor="$surface3">
+                  <Flex
+                    row
+                    gap="$spacing24"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    py="$spacing12"
+                    px="$spacing16"
+                  >
+                    <Flex gap="$gap4" flex={1} minWidth={0}>
+                      <Flex row gap="$gap8" alignItems="center">
+                        <Text variant="subheading2" color="$neutral1">
+                          {isDynamicFeeTier(fee) ? (
+                            <Trans i18nKey="fee.tier.dynamic" />
+                          ) : (
+                            <Trans
+                              i18nKey="fee.tierExact"
+                              values={{ fee: formatPercent(new Percent(fee.feeAmount, 1000000), 4) }}
+                            />
+                          )}
+                        </Text>
+                        {fee.feeAmount === mostUsedFeeTier?.fee.feeAmount ? (
+                          <MouseoverTooltip text={t('fee.tier.recommended.description')}>
+                            <Flex
+                              justifyContent="center"
+                              borderRadius="$rounded6"
+                              backgroundColor="$surface3"
+                              px={7}
+                              py={2}
+                              $md={{ display: 'none' }}
+                            >
+                              <Text variant="buttonLabel4">
+                                <Trans i18nKey="fee.tier.highestTvl" />
+                              </Text>
+                            </Flex>
+                          </MouseoverTooltip>
+                        ) : feeTiers.find((tier) => tier.value.feeAmount === fee.feeAmount) ? null : (
+                          <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
                             <Text variant="buttonLabel4">
-                              <Trans i18nKey="fee.tier.highestTvl" />
+                              <Trans i18nKey="fee.tier.new" />
                             </Text>
                           </Flex>
-                        </MouseoverTooltip>
-                      ) : feeTiers.find((tier) => tier.value.feeAmount === fee.feeAmount) ? null : (
-                        <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
-                          <Text variant="buttonLabel4">
-                            <Trans i18nKey="fee.tier.new" />
-                          </Text>
-                        </Flex>
+                        )}
+                        {lpIncentiveRewardApr && (
+                          <LpIncentivesAprDisplay
+                            lpIncentiveRewardApr={lpIncentiveRewardApr}
+                            $md={{ display: 'none' }}
+                            isSmall
+                          />
+                        )}
+                      </Flex>
+                      <Text variant="body3" color="$neutral2">
+                        <Trans i18nKey="fee.tier.label" />
+                      </Text>
+                      {lpIncentiveRewardApr && (
+                        <LpIncentivesAprDisplay
+                          lpIncentiveRewardApr={lpIncentiveRewardApr}
+                          display="none"
+                          $md={{ display: 'flex' }}
+                          isSmall
+                        />
                       )}
                     </Flex>
-                    <Text variant="body3" color="$neutral2">
-                      <Trans i18nKey="fee.tier.label" />
-                    </Text>
+                    <Button
+                      fill={false}
+                      isDisabled={!currencyInputs.TOKEN0 || !currencyInputs.TOKEN1}
+                      size="xsmall"
+                      maxWidth="fit-content"
+                      emphasis="secondary"
+                      onPress={toggleShowMoreFeeTiersEnabled}
+                      $md={{ width: 32 }}
+                      icon={
+                        <RotatableChevron
+                          direction={isShowMoreFeeTiersEnabled ? 'up' : 'down'}
+                          width={iconSizes.icon20}
+                          height={iconSizes.icon20}
+                        />
+                      }
+                      iconPosition="after"
+                    >
+                      {isShowMoreFeeTiersEnabled ? t('common.less') : t('common.more')}
+                    </Button>
                   </Flex>
-                  <Button
-                    fill={false}
-                    isDisabled={!currencyInputs.TOKEN0 || !currencyInputs.TOKEN1}
-                    size="xsmall"
-                    maxWidth="fit-content"
-                    emphasis="secondary"
-                    onPress={toggleShowMoreFeeTiersEnabled}
-                    $md={{ width: 32 }}
-                    icon={
-                      <RotatableChevron
-                        direction={isShowMoreFeeTiersEnabled ? 'up' : 'down'}
-                        width={iconSizes.icon20}
-                        height={iconSizes.icon20}
-                      />
-                    }
-                    iconPosition="after"
-                  >
-                    {isShowMoreFeeTiersEnabled ? t('common.less') : t('common.more')}
-                  </Button>
+                  {!lpIncentiveRewardApr && feeTierHasLpRewards && !isShowMoreFeeTiersEnabled && (
+                    <Flex
+                      row
+                      alignItems="center"
+                      gap="$spacing12"
+                      mt="$spacing4"
+                      p="$spacing12"
+                      $sm={{ p: '$spacing6', gap: '$spacing6' }}
+                      backgroundColor="$accent2"
+                      borderBottomLeftRadius="$rounded12"
+                      borderBottomRightRadius="$rounded12"
+                      width="100%"
+                    >
+                      <InfoCircleFilled color="$accent1" size="$icon.16" />
+                      <Text variant="body3" color="$accent1" mt="$spacing2" $sm={{ variant: 'body4', mt: '$spacing1' }}>
+                        {t('pool.incentives.similarPoolHasRewards')}
+                      </Text>
+                      <Text
+                        mt="$spacing2"
+                        variant="body3"
+                        color="$neutral1"
+                        $sm={{ variant: 'body4', mt: '$spacing1' }}
+                        {...ClickableTamaguiStyle}
+                        onPress={toggleShowMoreFeeTiersEnabled}
+                      >
+                        {t('pool.incentives.switchPools')}
+                      </Text>
+                    </Flex>
+                  )}
                 </Flex>
                 <HeightAnimator open={isShowMoreFeeTiersEnabled}>
                   <Flex flexDirection="column" display="flex" gap="$gap12">
@@ -472,9 +549,9 @@ export function SelectTokensStep({
                       $platform-web={{
                         display: 'grid',
                       }}
-                      gridTemplateColumns="repeat(4, 1fr)"
+                      gridTemplateColumns={feeTierHasLpRewards ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)'}
                       $md={{
-                        gridTemplateColumns: 'repeat(2, 1fr)',
+                        gridTemplateColumns: feeTierHasLpRewards ? 'repeat(1, 1fr)' : 'repeat(2, 1fr)',
                       }}
                       gap={10}
                     >
@@ -484,6 +561,7 @@ export function SelectTokensStep({
                           feeTier={feeTier}
                           selected={feeTier.value.feeAmount === fee.feeAmount}
                           onSelect={handleFeeTierSelect}
+                          isLpIncentivesEnabled={isLpIncentivesEnabled}
                         />
                       ))}
                     </Flex>

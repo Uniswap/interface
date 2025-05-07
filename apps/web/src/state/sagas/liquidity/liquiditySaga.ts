@@ -6,6 +6,7 @@ import {
   handleApprovalTransactionStep,
   handleOnChainStep,
   HandleOnChainStepParams,
+  handlePermitTransactionStep,
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
 import {
@@ -21,23 +22,24 @@ import { call } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
+import { CollectFeesTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/collectFees'
+import { DecreasePositionTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/decreasePosition'
+import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/liquidity/steps/generateLPTransactionSteps'
+import {
+  IncreasePositionTransactionStep,
+  IncreasePositionTransactionStepAsync,
+} from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
+import {
+  MigratePositionTransactionStep,
+  MigratePositionTransactionStepAsync,
+} from 'uniswap/src/features/transactions/liquidity/steps/migrate'
 import {
   LiquidityAction,
   LiquidityTransactionType,
   ValidatedLiquidityTxContext,
 } from 'uniswap/src/features/transactions/liquidity/types'
-import {
-  CollectFeesTransactionStep,
-  DecreasePositionTransactionStep,
-  IncreasePositionTransactionStep,
-  IncreasePositionTransactionStepAsync,
-  MigratePositionTransactionStep,
-  MigratePositionTransactionStepAsync,
-  TransactionStep,
-  TransactionStepType,
-} from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { currencyId } from 'utils/currencyId'
@@ -71,7 +73,7 @@ function* getLiquidityTxRequest(
   if (
     step.type === TransactionStepType.IncreasePositionTransaction ||
     step.type === TransactionStepType.DecreasePositionTransaction ||
-    step.type === TransactionStepType.MigratePositionTransactionStep ||
+    step.type === TransactionStepType.MigratePositionTransaction ||
     step.type === TransactionStepType.CollectFeesTransactionStep
   ) {
     return step.txRequest
@@ -168,11 +170,15 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
           signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
           break
         }
+        case TransactionStepType.Permit2Transaction: {
+          yield* call(handlePermitTransactionStep, { account, step, setCurrentStep })
+          break
+        }
         case TransactionStepType.IncreasePositionTransaction:
         case TransactionStepType.IncreasePositionTransactionAsync:
         case TransactionStepType.DecreasePositionTransaction:
-        case TransactionStepType.MigratePositionTransactionStep:
-        case TransactionStepType.MigratePositionTransactionStepAsync:
+        case TransactionStepType.MigratePositionTransaction:
+        case TransactionStepType.MigratePositionTransactionAsync:
         case TransactionStepType.CollectFeesTransactionStep:
           yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature, analytics })
           break
@@ -194,7 +200,7 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
 function* liquidity(params: LiquidityParams) {
   const { liquidityTxContext, startChainId, selectChain, onFailure } = params
 
-  const steps = yield* call(generateTransactionSteps, liquidityTxContext)
+  const steps = yield* call(generateLPTransactionSteps, liquidityTxContext)
   params.setSteps(steps)
 
   // Switch chains if needed

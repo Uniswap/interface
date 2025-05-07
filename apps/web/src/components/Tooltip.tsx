@@ -41,7 +41,9 @@ const TooltipContainer = styled.div<{ size: TooltipSize; padding?: number }>`
   background: ${({ theme }) => theme.surface1};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
-  box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
+  box-shadow:
+    0px 6px 12px -3px ${({ theme }) => transparentize(0.95, theme.shadow1)},
+    0px 2px 5px -2px ${({ theme }) => transparentize(0.97, theme.shadow1)};
 `
 
 type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &

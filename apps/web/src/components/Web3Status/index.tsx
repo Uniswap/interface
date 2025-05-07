@@ -7,14 +7,14 @@ import { RecentlyConnectedModal } from 'components/Web3Status/RecentlyConnectedM
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
+import { useModalState } from 'hooks/useModalState'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { RefObject, forwardRef, useCallback, useEffect, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useModalIsOpen } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
-import { Button, ButtonProps, Flex, Popover } from 'ui/src'
+import { Button, ButtonProps, Flex, Popover, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { breakpoints } from 'ui/src/theme'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
@@ -27,7 +27,6 @@ import { isIFramed } from 'utils/isIFramed'
 
 const TextStyled = styled.span<{ marginRight?: number }>`
   flex: 1 1 auto;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 1rem;
@@ -123,7 +122,9 @@ function Web3StatusInner() {
     return (
       <Web3StatusGeneric loading isDisabled onPress={handleWalletDropdownClick} ref={ref}>
         <AddressAndChevronContainer $loading={true}>
-          <TextStyled marginRight={hasUnitag ? 8 : undefined}>{accountIdentifier}</TextStyled>
+          <Text variant="body2" marginRight={hasUnitag ? '$spacing8' : undefined}>
+            {accountIdentifier}
+          </Text>
           {hasUnitag ? <Unitag size={18} /> : undefined}
         </AddressAndChevronContainer>
       </Web3StatusGeneric>
@@ -147,7 +148,9 @@ function Web3StatusInner() {
             </TextStyled>
           ) : (
             <AddressAndChevronContainer>
-              <TextStyled marginRight={hasUnitag ? 8 : undefined}>{accountIdentifier}</TextStyled>
+              <Text variant="body2" marginRight={hasUnitag ? '$spacing8' : undefined}>
+                {accountIdentifier}
+              </Text>
               {hasUnitag && <Unitag size={18} />}
             </AddressAndChevronContainer>
           )}
@@ -171,7 +174,7 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const recentlyConnectedModalIsOpen = useModalIsOpen(ModalName.RecentlyConnectedModal)
+  const { isOpen: recentlyConnectedModalIsOpen } = useModalState(ModalName.RecentlyConnectedModal)
   return (
     <PrefetchBalancesWrapper>
       <Popover
@@ -179,7 +182,7 @@ export default function Web3Status() {
         stayInFrame
         allowFlip
         open={recentlyConnectedModalIsOpen}
-        offset={{ mainAxis: 8, crossAxis: -8 }}
+        offset={{ mainAxis: 8, crossAxis: -4 }}
       >
         <Popover.Trigger>
           <Web3StatusInner />

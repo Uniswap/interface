@@ -18,7 +18,9 @@ import {
   OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
+  Permit2ApproveTransactionInfo,
   ReceiveTokenTransactionInfo,
+  SendCallsTransactionInfo,
   SendTokenTransactionInfo,
   TransactionDetails,
   UnknownTransactionInfo,
@@ -39,7 +41,9 @@ import {
   isOffRampSaleTransactionInfo,
   isOnRampPurchaseTransactionInfo,
   isOnRampTransferTransactionInfo,
+  isPermit2ApproveTransactionInfo,
   isReceiveTokenTransactionInfo,
+  isSendCallsTransactionInfo,
   isSendTokenTransactionInfo,
   isSwapTransactionInfo,
   isWCConfirmTransactionInfo,
@@ -110,6 +114,11 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
       return <OffRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isLocalOnRampTransactionInfo(typeInfo) || isLocalOffRampTransactionInfo(typeInfo)) {
       return null // Local FOR transactions are never visible
+    } else if (isSendCallsTransactionInfo(typeInfo)) {
+      return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    } else if (isPermit2ApproveTransactionInfo(typeInfo)) {
+      // TODO: Add Permit2ApproveHeaderLogo
+      return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else {
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     }
@@ -247,8 +256,11 @@ function WrapHeaderLogo({ transactionDetails, typeInfo }: SpecificHeaderLogoProp
 function UnknownHeaderLogo({
   transactionDetails,
   typeInfo,
-}: SpecificHeaderLogoProps<UnknownTransactionInfo>): JSX.Element {
+}: SpecificHeaderLogoProps<
+  UnknownTransactionInfo | SendCallsTransactionInfo | Permit2ApproveTransactionInfo
+>): JSX.Element {
   const colors = useSporeColors()
+  // Check if dappInfo exists since it may not exist on all transaction types
   return typeInfo.dappInfo?.icon ? (
     <DappLogoWithWCBadge
       circular

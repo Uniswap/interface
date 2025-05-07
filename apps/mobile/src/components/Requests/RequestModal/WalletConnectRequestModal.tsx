@@ -5,26 +5,31 @@ import React, { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
+import { ActionCannotBeCompletedContent } from 'src/components/Requests/RequestModal/ActionCannotBeCompletedContent'
 import { KidSuperCheckinModal } from 'src/components/Requests/RequestModal/KidSuperCheckinModal'
 import { UwULinkErc20SendModal } from 'src/components/Requests/RequestModal/UwULinkErc20SendModal'
 import {
   WalletConnectRequestModalContent,
-  methodCostsGas,
+  getDoesMethodCostGas,
 } from 'src/components/Requests/RequestModal/WalletConnectRequestModalContent'
 import { useHasSufficientFunds } from 'src/components/Requests/RequestModal/hooks'
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
-import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { signWcRequestActions } from 'src/features/walletConnect/signWcRequestSaga'
+import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
-  WalletConnectRequest,
+  WalletConnectSigningRequest,
+  isBatchedTransactionRequest,
   isTransactionRequest,
   setDidOpenFromDeepLink,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { spacing } from 'ui/src/theme'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { isSignTypedDataRequest } from 'uniswap/src/features/dappRequests/utils'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
@@ -36,7 +41,7 @@ import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 interface Props {
   onClose: () => void
-  request: WalletConnectRequest
+  request: WalletConnectSigningRequest
 }
 
 const VALID_REQUEST_TYPES = [
@@ -46,6 +51,7 @@ const VALID_REQUEST_TYPES = [
   EthMethod.EthSign,
   EthMethod.EthSendTransaction,
   UwULinkMethod.Erc20Send,
+  EthMethod.WalletSendCalls,
 ]
 
 export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
@@ -55,11 +61,13 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const chainId = request.chainId
 
   const tx: providers.TransactionRequest | undefined = useMemo(() => {
-    if (!isTransactionRequest(request)) {
-      return undefined
+    if (isTransactionRequest(request)) {
+      return { ...request.transaction, chainId }
     }
-
-    return { ...request.transaction, chainId }
+    if (isBatchedTransactionRequest(request)) {
+      return { ...request.encodedTransaction, chainId }
+    }
+    return undefined
   }, [chainId, request])
 
   const signerAccounts = useSignerAccounts()
@@ -70,7 +78,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     account: request.account,
     chainId,
     gasFee,
-    value: isTransactionRequest(request) ? request.transaction.value : undefined,
+    value: tx?.value?.toString(),
   })
 
   const { isBlocked: isSenderBlocked, isBlockedLoading: isSenderBlockedLoading } = useIsBlockedActiveAddress()
@@ -78,6 +86,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
   const isBlocked = isSenderBlocked ?? isRecipientBlocked
   const isBlockedLoading = isSenderBlockedLoading || isRecipientBlockedLoading
+
+  const getHasMismatch = useHasAccountMismatchCallback()
+  const hasMismatch = chainId ? getHasMismatch(chainId) : false
 
   const checkConfirmEnabled = (): boolean => {
     if (!netInfo.isInternetReachable) {
@@ -92,7 +103,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       return false
     }
 
-    if (methodCostsGas(request)) {
+    if (getDoesMethodCostGas(request)) {
       return !!(tx && hasSufficientFunds && gasFee.value && !gasFee.error && !gasFee.isLoading)
     }
 
@@ -147,7 +158,11 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       return
     }
 
-    if (request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send) {
+    if (
+      request.type === EthMethod.EthSendTransaction ||
+      request.type === UwULinkMethod.Erc20Send ||
+      request.type === EthMethod.WalletSendCalls
+    ) {
       if (!tx) {
         return
       }
@@ -160,7 +175,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
         signWcRequestActions.trigger({
           sessionId: request.sessionId,
           requestInternalId: request.internalId,
-          method: EthMethod.EthSendTransaction,
+          method: request.type === EthMethod.WalletSendCalls ? EthMethod.WalletSendCalls : EthMethod.EthSendTransaction,
           transaction: txnWithFormattedGasEstimates,
           account: signerAccount,
           dapp: request.dapp,
@@ -168,8 +183,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           request,
         }),
       )
-    } else if (request.type === EthMethod.SendCalls) {
-      // TODO: Implement
     } else {
       dispatch(
         signWcRequestActions.trigger({
@@ -241,6 +254,10 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     )
   }
 
+  if (hasMismatch && isSignTypedDataRequest(request)) {
+    return <ActionCannotBeCompletedContent request={request} onReject={onReject} />
+  }
+
   // KidSuper Uniswap Cafe check-in screen
   if (request.type === EthMethod.PersonalSign && request.dapp.name === 'Uniswap Cafe') {
     return (
@@ -248,19 +265,20 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     )
   }
 
-  if (request.type === EthMethod.SendCalls) {
-    // TODO: Implement
-    return null
-  }
-
   return (
     <ModalWithOverlay
       confirmationButtonText={
-        isTransactionRequest(request) ? t('common.button.accept') : t('walletConnect.request.button.sign')
+        isTransactionRequest(request) || isBatchedTransactionRequest(request)
+          ? t('common.button.accept')
+          : t('walletConnect.request.button.sign')
       }
       disableConfirm={!confirmEnabled}
       name={ModalName.WCSignRequest}
       scrollDownButtonText={t('walletConnect.request.button.scrollDown')}
+      contentContainerStyle={{
+        paddingHorizontal: spacing.none,
+        paddingTop: spacing.spacing12,
+      }}
       onClose={handleClose}
       onConfirm={onConfirmPress}
       onReject={onReject}

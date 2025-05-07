@@ -23,6 +23,7 @@ import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userP
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import {
   useActiveAccount,
   useSignerAccounts,
@@ -116,7 +117,7 @@ export function TraceUserProperties(): null {
     }
     setUserProperty(MobileUserPropertyName.ActiveWalletAddress, activeAccount.address)
     setUserProperty(MobileUserPropertyName.ActiveWalletType, activeAccount.type)
-    setUserProperty(MobileUserPropertyName.IsCloudBackedUp, Boolean(activeAccount.backups?.includes(BackupType.Cloud)))
+    setUserProperty(MobileUserPropertyName.IsCloudBackedUp, hasBackup(BackupType.Cloud, activeAccount))
     setUserProperty(MobileUserPropertyName.IsPushEnabled, Boolean(activeAccount.pushNotificationsEnabled))
 
     setUserProperty(MobileUserPropertyName.IsHideSmallBalancesEnabled, hideSmallBalances)

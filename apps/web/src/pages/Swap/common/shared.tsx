@@ -37,6 +37,7 @@ export const NumericalInputMimic = styled.span`
 
 export const NumericalInputSymbolContainer = styled.span<{ showPlaceholder: boolean; $fontSize?: number }>`
   user-select: none;
+  color: ${({ theme }) => theme.neutral1};
   ${NumericalInputFontStyle}
   ${({ showPlaceholder }) =>
     showPlaceholder &&

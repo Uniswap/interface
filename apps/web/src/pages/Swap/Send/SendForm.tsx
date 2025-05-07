@@ -14,9 +14,10 @@ import { useTranslation } from 'react-i18next'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
 import { Button, Flex } from 'ui/src'
+import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { useIsSmartContractAddress } from 'utils/transfer'
 
 type SendFormProps = {
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -73,6 +74,7 @@ enum SendSpeedBump {
 function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFormProps) {
   const account = useAccount()
   const { t } = useTranslation()
+  const { defaultChainId } = useEnabledChains()
 
   const accountDrawer = useAccountDrawer()
 
@@ -81,12 +83,14 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     [SendSpeedBump.NEW_ADDRESS_SPEED_BUMP]: false,
     [SendSpeedBump.SMART_CONTRACT_SPEED_BUMP]: false,
   })
-  const { setSendState, derivedSendInfo } = useSendContext()
+  const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { inputError, parsedTokenAmount, recipientData, transaction, gasFee } = derivedSendInfo
 
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
     recipientData?.address,
+    sendState.inputCurrency?.chainId ?? defaultChainId,
   )
+
   const { transfers: recentTransfers, loading: transfersLoading } = useGroupedRecentTransfers(account.address)
   const isRecentAddress = useMemo(() => {
     if (!recipientData?.address) {

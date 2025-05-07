@@ -18,6 +18,8 @@ export interface UniswapBehaviorHistoryState {
     bridgingAnimationSeen?: boolean
     isFirstUnichainBridgeSelection?: boolean
   }
+  // whether we have shown the mismatch toast (related to wallet capabilities & wallet bytecode)
+  hasShownMismatchToast?: boolean
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
@@ -34,6 +36,7 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
     bridgingAnimationSeen: false,
     isFirstUnichainBridgeSelection: true,
   },
+  hasShownMismatchToast: false,
 }
 
 const slice = createSlice({
@@ -84,6 +87,9 @@ const slice = createSlice({
     resetUniswapBehaviorHistory: (_state, _action: PayloadAction) => {
       return initialUniswapBehaviorHistoryState
     },
+    setHasShownMismatchToast: (state, action: PayloadAction<boolean>) => {
+      state.hasShownMismatchToast = action.payload
+    },
   },
 })
 
@@ -100,6 +106,7 @@ export const {
   setHasSeenBridgingAnimation,
   resetUniswapBehaviorHistory,
   setHasViewedContractAddressExplainer,
+  setHasShownMismatchToast,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

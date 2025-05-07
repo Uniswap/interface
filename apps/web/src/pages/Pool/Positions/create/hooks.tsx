@@ -14,6 +14,7 @@ import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { useDefaultInitialPrice } from 'pages/Pool/Positions/create/hooks/useDefaultInitialPrice'
+import { useNativeTokenPercentageBufferExperiment } from 'pages/Pool/Positions/create/hooks/useNativeTokenPercentageBufferExperiment'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,
@@ -52,6 +53,7 @@ import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
+import { applyNativeTokenPercentageBuffer } from 'uniswap/src/features/gas/utils'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -159,7 +161,9 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
   const { price: defaultInitialPrice, isLoading: isDefaultInitialPriceLoading } = useDefaultInitialPrice({
     currencies: state.currencyInputs,
-    skip: !creatingPoolOrPair,
+    // V2 create flow doesn't show the liquidity range chart so we always want
+    // to get the default initial price for DisplayCurrentPrice in deposit step
+    skip: !creatingPoolOrPair && pool?.protocolVersion === ProtocolVersion.V2,
   })
 
   return useMemo(() => {
@@ -212,6 +216,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       poolOrPairLoading: poolIsLoading,
       isPoolOutOfSync,
       poolId: pool?.poolId,
+      boostedApr: pool?.boostedApr,
       defaultInitialPrice,
       isDefaultInitialPriceLoading,
       refetchPoolData,
@@ -231,6 +236,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     isDefaultInitialPriceLoading,
     v3Pool,
     refetchPoolData,
+    pool?.boostedApr,
   ])
 }
 
@@ -346,15 +352,30 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
   return useDepositInfo(depositInfoProps)
 }
 
+export function useTokenBalanceWithBuffer(currencyBalance: Maybe<CurrencyAmount<Currency>>, bufferPercentage: number) {
+  return useMemo(() => {
+    if (!currencyBalance) {
+      return undefined
+    }
+
+    return applyNativeTokenPercentageBuffer(currencyBalance, bufferPercentage)
+  }, [currencyBalance, bufferPercentage])
+}
+
 export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   const account = useAccount()
+  const bufferPercentage = useNativeTokenPercentageBufferExperiment()
   const { protocolVersion, address, token0, token1, exactField, exactAmounts, deposit0Disabled, deposit1Disabled } =
     state
 
   const { balance: token0Balance } = useOnChainCurrencyBalance(token0, address)
   const { balance: token1Balance } = useOnChainCurrencyBalance(token1, address)
-  const token0MaxAmount = useMaxAmountSpend({ currencyAmount: token0Balance })
-  const token1MaxAmount = useMaxAmountSpend({ currencyAmount: token1Balance })
+
+  const token0BalanceWithBuffer = useTokenBalanceWithBuffer(token0Balance, bufferPercentage)
+  const token1BalanceWithBuffer = useTokenBalanceWithBuffer(token1Balance, bufferPercentage)
+
+  const token0MaxAmount = useMaxAmountSpend({ currencyAmount: token0BalanceWithBuffer })
+  const token1MaxAmount = useMaxAmountSpend({ currencyAmount: token1BalanceWithBuffer })
 
   const [independentToken, dependentToken] = exactField === PositionField.TOKEN0 ? [token0, token1] : [token1, token0]
   const independentAmount = tryParseCurrencyAmount(exactAmounts[exactField], independentToken)

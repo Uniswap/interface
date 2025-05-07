@@ -12,15 +12,16 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
 import { findLocalGasStrategy } from 'uniswap/src/features/gas/utils'
-import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
+import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { pushNotification, setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { refetchGQLQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchGQLQueriesSaga'
 import {
-  FLASHBOTS_DEFAULT_BLOCK_RANGE,
+  FLASHBOTS_DEFAULT_REFUND_PERCENT,
   waitForFlashbotsProtectReceipt,
 } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
+import { DEFAULT_FLASHBOTS_ENABLED } from 'uniswap/src/features/providers/createEthersProvider'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -45,6 +46,7 @@ import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/
 import {
   BridgeTransactionDetails,
   FinalizedTransactionDetails,
+  OnChainTransactionDetails,
   QueuedOrderStatus,
   TEMPORARY_TRANSACTION_STATUSES,
   TransactionDetails,
@@ -224,7 +226,7 @@ export function* watchTransaction({
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
   const options = isUniswapX(transaction) ? undefined : transaction.options
-  const timeoutTask = yield* fork(handleTimeout, transaction)
+  const timeoutTask = yield* fork(handleTimeout, transaction, apolloClient, provider)
 
   const { updatedTransaction, cancelTx, replace, invalidated } = yield* race({
     updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
@@ -297,11 +299,14 @@ export async function waitForReceipt(
   return txReceipt
 }
 
-function* handleTimeout(transaction: TransactionDetails) {
+function* handleTimeout(
+  transaction: TransactionDetails,
+  apolloClient: ApolloClient<NormalizedCacheObject>,
+  provider: providers.Provider,
+) {
   if (
     isUniswapX(transaction) ||
     !transaction.options?.timeoutTimestampMs ||
-    transaction.options.timeoutLogged ||
     !TEMPORARY_TRANSACTION_STATUSES.includes(transaction.status)
   ) {
     return
@@ -312,15 +317,101 @@ function* handleTimeout(transaction: TransactionDetails) {
     yield* delay(delayToTimeout)
   }
 
-  yield* call(logTransactionTimeout, transaction)
-  yield* call(maybeLogGasEstimateAccuracy, transaction)
-  // Mark as logged so we don't log it again
-  yield* put(
-    transactionActions.updateTransactionWithoutWatch({
-      ...transaction,
-      options: { ...transaction.options, timeoutLogged: true },
-    }),
-  )
+  if (!transaction.options.timeoutLogged) {
+    yield* call(logTransactionTimeout, transaction)
+    // Mark as logged so we don't log it again
+    yield* put(
+      transactionActions.updateTransactionWithoutWatch({
+        ...transaction,
+        options: { ...transaction.options, timeoutLogged: true },
+      }),
+    )
+  }
+
+  const isInvalidated = yield* call(checkIfTransactionInvalidated, transaction, provider)
+  if (isInvalidated) {
+    const failedTransaction = { ...transaction, status: TransactionStatus.Failed } as FinalizedTransactionDetails
+    yield* call(finalizeTransaction, {
+      transaction: failedTransaction,
+      apolloClient,
+    })
+  }
+}
+
+/**
+ * Checks if a transaction that timed out waiting for receipt is potentially invalidated.
+ * A transaction is considered invalidated if:
+ * - The provider doesn't know about the transaction (it's not confirmed nor in the mempool)
+ * - The next nonce of the account is higher than the nonce of the transaction (the transaction nonce is not valid anymore)
+ * @returns true if the transaction is considered invalidated, false otherwise.
+ */
+export function* checkIfTransactionInvalidated(
+  transaction: OnChainTransactionDetails,
+  provider: providers.Provider,
+): Generator<unknown, boolean> {
+  if (transaction.options.request.nonce === undefined || !transaction.hash) {
+    // We can't check if the transaction is invalidated
+    return false
+  }
+
+  const tx = yield* call([provider, provider.getTransaction], transaction.hash)
+  if (tx) {
+    // Transaction is known to the provider, so it's still valid
+    return false
+  }
+
+  if (!tx && !transaction.options.submitViaPrivateRpc) {
+    // If submitted via public RPC and not found, we can consider it lost/invalidated
+    return true
+  }
+
+  const requestNonce = BigNumber.from(transaction.options.request.nonce).toNumber()
+  const nextNonce = yield* call([provider, provider.getTransactionCount], transaction.from)
+  if (nextNonce > requestNonce) {
+    // Transaction nonce is not valid anymore, it can't be included in a future block
+    return true
+  }
+
+  // Transaction could still be around and included in a future block, so we don't consider it invalidated
+  return false
+}
+
+/**
+ * Flashbots transactions won't return a receipt until they're included, and will fail silently.
+ * We need to use Flashbots Protect API to get a status update until the tx is included or fails.
+ * @see {@link https://protect.flashbots.net/tx/docs}
+ */
+function* getFlashbotsTransactionStatus(transaction: TransactionDetails, hash: string) {
+  try {
+    const flashbotsReceipt = yield* call(waitForFlashbotsProtectReceipt, hash)
+
+    switch (flashbotsReceipt.status) {
+      case 'FAILED':
+        logger.warn(
+          'transactionWatcherSaga',
+          'getFlashbotsTransactionStatus',
+          `Flashbots Protect transaction failed with simulation error: ${flashbotsReceipt.simError}`,
+          { transaction, flashbotsReceipt },
+        )
+        return TransactionStatus.Failed
+      case 'CANCELLED':
+        return TransactionStatus.Canceled
+      case 'INCLUDED':
+        return TransactionStatus.Success
+      case 'UNKNOWN': // Transaction not found by Flashbots Protect, might have been submitted through another provider
+      default:
+        return undefined
+    }
+  } catch (error) {
+    logger.error('Error fetching Flashbots Protect transaction status', {
+      tags: {
+        file: 'transactionWatcherSaga',
+        function: 'getFlashbotsTransactionStatus',
+      },
+      extra: { transaction, error },
+    })
+    return undefined
+  }
 }
 
 function* waitForRemoteUpdate(transaction: TransactionDetails, provider: providers.Provider) {
@@ -358,36 +449,10 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
   }
 
   if (isClassic(transaction) && transaction.options?.submitViaPrivateRpc) {
-    try {
-      // Flashbots transactions won't return a receipt until they're included, and will fail silently.
-      // We need to use Flashbots Protect API to get a status update until the tx is included or fails.
-      // @see {@link https://protect.flashbots.net/tx/docs}
-      const flashbotsReceipt = yield* call(waitForFlashbotsProtectReceipt, hash)
-
-      switch (flashbotsReceipt.status) {
-        case 'FAILED':
-          logger.warn(
-            'transactionWatcherSaga',
-            'waitForRemoteUpdate',
-            `Flashbots Protect transaction failed with simulation error: ${flashbotsReceipt.simError}`,
-            { transaction, flashbotsReceipt },
-          )
-          return { ...transaction, status: TransactionStatus.Failed }
-        case 'CANCELLED':
-          return { ...transaction, status: TransactionStatus.Canceled }
-        case 'UNKNOWN': // Transaction not found by Flashbots Protect, might have been submitted by another provider
-        case 'INCLUDED': // Transaction successfully included in a block
-        default:
-        // Continue with the regular logic, which will try to fetch the ethers receipt
-      }
-    } catch (error) {
-      logger.error('Error fetching Flashbots Protect transaction status', {
-        tags: {
-          file: 'transactionWatcherSaga',
-          function: 'waitForRemoteUpdate',
-        },
-        extra: { transaction, error },
-      })
+    const flashbotsStatus = yield* call(getFlashbotsTransactionStatus, transaction, hash)
+    if (flashbotsStatus === TransactionStatus.Failed || flashbotsStatus === TransactionStatus.Canceled) {
+      // Status is final and we won't get a receipt from ethers. Return early and finalize the transaction
+      return { ...transaction, status: flashbotsStatus }
     }
   }
 
@@ -688,39 +753,33 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
 }
 
 export function logTransactionTimeout(transaction: TransactionDetails) {
-  const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
-    DynamicConfigs.MainnetPrivateRpc,
-    MainnetPrivateRpcConfigKey.UseFlashbots,
-    false,
+  const flashbotsEnabled = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, boolean>(
+    Experiments.PrivateRpc,
+    PrivateRpcProperties.FlashbotsEnabled,
+    DEFAULT_FLASHBOTS_ENABLED,
   )
 
-  const flashbotsBlockRange = getDynamicConfigValue<
-    DynamicConfigs.MainnetPrivateRpc,
-    MainnetPrivateRpcConfigKey,
-    number
-  >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.FlashbotsBlockRange, FLASHBOTS_DEFAULT_BLOCK_RANGE)
-
-  const sendAuthenticationHeader = getDynamicConfigValue<
-    DynamicConfigs.MainnetPrivateRpc,
-    MainnetPrivateRpcConfigKey,
-    boolean
-  >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
+  const flashbotsRefundPercent = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, number>(
+    Experiments.PrivateRpc,
+    PrivateRpcProperties.RefundPercent,
+    FLASHBOTS_DEFAULT_REFUND_PERCENT,
+  )
 
   sendAnalyticsEvent(WalletEventName.PendingTransactionTimeout, {
-    use_flashbots: useFlashbots,
-    flashbots_block_range: flashbotsBlockRange,
-    send_authentication_header: sendAuthenticationHeader,
+    use_flashbots: flashbotsEnabled,
+    flashbots_refund_percent: flashbotsRefundPercent,
     chain_id: transaction.chainId,
     tx_hash: transaction.hash,
+    address: transaction.from,
     private_rpc: (isClassic(transaction) && transaction.options.submitViaPrivateRpc) ?? false,
   })
 
   logger.warn('transactionWatcherSaga', 'logTransactionTimeout', 'Transaction timed out', {
     chain_id: transaction.chainId,
-    use_flashbots: useFlashbots,
-    flashbots_block_range: flashbotsBlockRange,
-    send_authentication_header: sendAuthenticationHeader,
+    flashbots_enabled: flashbotsEnabled,
+    flashbots_refund_percent: flashbotsRefundPercent,
     transaction,
+    address: transaction.from,
   })
 }
 

@@ -50,6 +50,8 @@ export function useTrade({
   skip,
   selectedProtocols,
   isDebouncing,
+  getGeneratePermitAsTransaction,
+  isV4HookPoolsEnabled,
 }: UseTradeArgs): TradeWithStatus {
   const activeAccountAddress = account?.address
 
@@ -69,11 +71,14 @@ export function useTrade({
   const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
   const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
 
+  const generatePermitAsTransaction = getGeneratePermitAsTransaction?.(currencyIn?.chainId)
+
   const routingParams = useQuoteRoutingParams({
     selectedProtocols,
     tokenInChainId: currencyIn?.chainId,
     tokenOutChainId: currencyOut?.chainId,
     isUSDQuote,
+    isV4HookPoolsEnabled,
   })
   const slippageParams = useQuoteSlippageParams({
     customSlippageTolerance,
@@ -103,6 +108,7 @@ export function useTrade({
     }
     return {
       amount: amount.quotient.toString(),
+      generatePermitAsTransaction,
       gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
       isUSDQuote,
       swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
@@ -120,6 +126,7 @@ export function useTrade({
     activeAccountAddress,
     activeGasStrategy,
     amount,
+    generatePermitAsTransaction,
     isUSDQuote,
     requestTradeType,
     routingParams,
@@ -188,8 +195,8 @@ export function useTrade({
   }
 
   const isLoading = (amount && isDebouncing) || queryIsLoading
-
   const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
+
   const indicative = useIndicativeTrade({
     quoteRequestArgs,
     currencyIn,

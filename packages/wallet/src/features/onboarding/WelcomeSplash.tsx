@@ -3,9 +3,9 @@ import Animated, { Easing, FadeIn, FadeInDown, RotateInUpLeft } from 'react-nati
 import { Button, Flex, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { isExtension } from 'utilities/src/platform'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 
 export function WelcomeSplash({
   address,

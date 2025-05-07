@@ -2,8 +2,10 @@ import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent, Token } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentiveFeeStatTooltip'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import {
@@ -29,10 +31,19 @@ import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useExploreContextTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
 import { Flex, Text, styled, useMedia } from 'ui/src'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { Chain, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UNI } from 'uniswap/src/constants/tokens'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { getChainUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -71,6 +82,9 @@ interface PoolTableValues {
   link: string
   protocolVersion?: string
   feeTier?: number
+  rewardApr?: number
+  token0CurrencyId?: string
+  token1CurrencyId?: string
 }
 
 function PoolDescription({
@@ -90,19 +104,6 @@ function PoolDescription({
       <EllipsisText>
         {token0?.symbol}/{token1?.symbol}
       </EllipsisText>
-      {/* TODO: Figure out if still needed for the table */}
-      {/* <Flex row gap="$gap4" alignItems="center">
-         {hookAddress && (
-          <ExternalLink
-            href={getExplorerLink(chainId, hookAddress, ExplorerDataType.ADDRESS)}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <PoolDetailsBadge variant="body4" {...ClickableTamaguiStyle}>
-              {shortenAddress(hookAddress, 0, 4)}
-            </PoolDetailsBadge>
-          </ExternalLink>
-        )}
-      </Flex> */}
     </Flex>
   )
 }
@@ -144,13 +145,20 @@ function PoolTableHeader({
     [PoolSortFields.Volume30D]: t('pool.volume.thirtyDay'),
     [PoolSortFields.VolOverTvl]: undefined,
     [PoolSortFields.Apr]: t('pool.apr.description'),
+    [PoolSortFields.RewardApr]: (
+      <>
+        {t('pool.incentives.merklDocs')}
+        <LearnMoreLink textVariant="buttonLabel4" url={uniswapUrls.merklDocsUrl} />
+      </>
+    ),
   }
   const HEADER_TEXT = {
     [PoolSortFields.TVL]: t('common.totalValueLocked'),
     [PoolSortFields.Volume24h]: t('stats.volume.1d.short'),
     [PoolSortFields.Volume30D]: t('pool.volume.thirtyDay.short'),
-    [PoolSortFields.Apr]: t('pool.apr'),
+    [PoolSortFields.Apr]: t('pool.aprText'),
     [PoolSortFields.VolOverTvl]: t('pool.volOverTvl'),
+    [PoolSortFields.RewardApr]: 'Reward APR',
   }
 
   return (
@@ -177,7 +185,6 @@ interface TopPoolTableProps {
   isLoading: boolean
   isError: boolean
 }
-
 export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
@@ -185,6 +192,7 @@ export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
 
   const resetSortMethod = useResetAtom(sortMethodAtom)
   const resetSortAscending = useResetAtom(sortAscendingAtom)
+
   useEffect(() => {
     resetSortMethod()
     resetSortAscending()
@@ -256,6 +264,7 @@ export function PoolsTable({
   const filterString = useAtomValue(exploreSearchStringAtom)
   const { defaultChainId } = useEnabledChains()
   const { t } = useTranslation()
+  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
 
   const poolTableValues: PoolTableValues[] | undefined = useMemo(
     () =>
@@ -263,12 +272,24 @@ export function PoolsTable({
         const poolSortRank = index + 1
         const isGqlPool = 'hash' in pool
         const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as Chain) ?? defaultChainId
+
+        const token0Address = pool.token0?.address || getNativeAddress(chainId)
+        const token1Address = pool.token1?.address || getNativeAddress(chainId)
+        const currency0Id =
+          pool.protocolVersion === ProtocolVersion.V4 && token0Address
+            ? buildCurrencyId(chainId, token0Address)
+            : undefined
+        const currency1Id =
+          pool.protocolVersion === ProtocolVersion.V4 && token1Address
+            ? buildCurrencyId(chainId, token1Address)
+            : undefined
+
         return {
           index: poolSortRank,
           poolDescription: (
             <PoolDescription
-              token0={unwrapToken(chainId, pool.token0)}
-              token1={unwrapToken(chainId, pool.token1)}
+              token0={unwrapToken(chainId, pool.token0) as TokenStats | Token | undefined}
+              token1={unwrapToken(chainId, pool.token1) as TokenStats | Token | undefined}
               chainId={chainId}
             />
           ),
@@ -279,7 +300,10 @@ export function PoolsTable({
           volume30d: isGqlPool ? pool.volume30d : giveExploreStatDefaultValue(pool.volume30Day?.value),
           volOverTvl: pool.volOverTvl,
           apr: pool.apr,
+          rewardApr: pool.boostedApr,
           link: `/explore/pools/${getChainUrlParam(chainId ?? defaultChainId)}/${isGqlPool ? pool.hash : pool.id}`,
+          token0CurrencyId: currency0Id,
+          token1CurrencyId: currency1Id,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {
@@ -325,7 +349,7 @@ export function PoolsTable({
         : null,
       columnHelper.accessor((row) => row.poolDescription, {
         id: 'poolDescription',
-        size: media.lg ? 170 : 240,
+        size: media.lg ? 170 : 180,
         header: () => (
           <HeaderCell justifyContent="flex-start">
             <Text variant="body3" color="$neutral2">
@@ -341,27 +365,27 @@ export function PoolsTable({
       }),
       columnHelper.accessor((row) => row.protocolVersion, {
         id: 'protocolVersion',
-        size: 120,
+        size: 80,
         header: () => (
-          <HeaderCell justifyContent="flex-start">
+          <HeaderCell justifyContent="flex-end">
             <Text variant="body3" color="$neutral2">
               {t('common.protocol')}
             </Text>
           </HeaderCell>
         ),
         cell: (protocolVersion) => (
-          <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+          <Cell justifyContent="flex-end" loading={showLoadingSkeleton}>
             <TableText>{protocolVersion.getValue?.() ?? '-'}</TableText>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => row.feeTier, {
         id: 'feeTier',
-        size: 120,
+        size: 80,
         header: () => (
           <HeaderCell>
             <Text variant="body3" color="$neutral2">
-              {t('common.fee')}
+              {t('fee.tier')}
             </Text>
           </HeaderCell>
         ),
@@ -374,7 +398,7 @@ export function PoolsTable({
       !hiddenColumns?.includes(PoolSortFields.TVL)
         ? columnHelper.accessor((row) => row.tvl, {
             id: 'tvl',
-            size: 100,
+            size: 110,
             header: () => (
               <HeaderCell>
                 <PoolTableHeader
@@ -394,7 +418,7 @@ export function PoolsTable({
       !hiddenColumns?.includes(PoolSortFields.Apr)
         ? columnHelper.accessor((row) => row.apr, {
             id: 'apr',
-            size: 100,
+            size: 120,
             header: () => (
               <HeaderCell>
                 <PoolTableHeader
@@ -411,6 +435,39 @@ export function PoolsTable({
             ),
           })
         : null,
+      !hiddenColumns?.includes(PoolSortFields.RewardApr) && isLPIncentivesEnabled
+        ? columnHelper.accessor((row) => row.rewardApr, {
+            id: PoolSortFields.RewardApr,
+            size: 130,
+            header: () => (
+              <HeaderCell>
+                <PoolTableHeader
+                  category={PoolSortFields.RewardApr}
+                  isCurrentSortMethod={sortMethod === PoolSortFields.RewardApr}
+                  direction={orderDirection}
+                />
+              </HeaderCell>
+            ),
+            sortingFn: 'basic',
+            cell: ({ row }) => {
+              if (!row?.original) {
+                return null
+              }
+
+              const { apr, token0CurrencyId, token1CurrencyId, rewardApr } = row.original
+
+              return (
+                <RewardAprCell
+                  apr={apr}
+                  rewardApr={rewardApr}
+                  token0CurrencyId={token0CurrencyId}
+                  token1CurrencyId={token1CurrencyId}
+                  isLoading={showLoadingSkeleton}
+                />
+              )
+            },
+          })
+        : null,
       !hiddenColumns?.includes(PoolSortFields.Volume24h)
         ? columnHelper.accessor((row) => row.volume24h, {
             id: 'volume24h',
@@ -424,13 +481,15 @@ export function PoolsTable({
                 />
               </HeaderCell>
             ),
-            cell: (volume24h) => (
-              <Cell loading={showLoadingSkeleton}>
-                <TableText>
-                  {formatNumber({ input: volume24h.getValue?.(), type: NumberType.FiatTokenStats })}
-                </TableText>
-              </Cell>
-            ),
+            cell: (volume24h) => {
+              return (
+                <Cell loading={showLoadingSkeleton}>
+                  <TableText>
+                    {formatNumber({ input: volume24h.getValue?.(), type: NumberType.FiatTokenStats })}
+                  </TableText>
+                </Cell>
+              )
+            },
           })
         : null,
       !hiddenColumns?.includes(PoolSortFields.Volume30D)
@@ -483,7 +542,17 @@ export function PoolsTable({
         : null,
     ]
     return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
-  }, [formatNumber, formatPercent, hiddenColumns, orderDirection, showLoadingSkeleton, sortMethod, t, media.lg])
+  }, [
+    media.lg,
+    hiddenColumns,
+    isLPIncentivesEnabled,
+    showLoadingSkeleton,
+    t,
+    sortMethod,
+    orderDirection,
+    formatNumber,
+    formatPercent,
+  ])
 
   return (
     <Table
@@ -497,5 +566,55 @@ export function PoolsTable({
       defaultPinnedColumns={['index', 'poolDescription']}
       forcePinning={forcePinning}
     />
+  )
+}
+
+interface RewardAprCellProps {
+  apr: Percent
+  isLoading: boolean
+  rewardApr?: number
+  token0CurrencyId?: string
+  token1CurrencyId?: string
+}
+
+function RewardAprCell({ apr, isLoading, rewardApr, token0CurrencyId, token1CurrencyId }: RewardAprCellProps) {
+  const { formatPercent } = useLocalizationContext()
+  const currency0Info = useCurrencyInfo(token0CurrencyId)
+  const currency1Info = useCurrencyInfo(token1CurrencyId)
+
+  const poolApr = parseFloat(apr.toFixed(2))
+  const totalApr = poolApr + (rewardApr ?? 0)
+
+  if (!rewardApr) {
+    return (
+      <Cell loading={isLoading} gap="$spacing2">
+        <TableText color="$neutral3">-</TableText>
+      </Cell>
+    )
+  }
+
+  return (
+    <MouseoverTooltip
+      padding={0}
+      text={
+        <LPIncentiveFeeStatTooltip
+          currency0Info={currency0Info}
+          currency1Info={currency1Info}
+          poolApr={poolApr}
+          lpIncentiveRewardApr={rewardApr}
+          totalApr={totalApr}
+        />
+      }
+      size={TooltipSize.Small}
+      placement="top"
+    >
+      <Cell loading={isLoading} gap="$spacing2">
+        <TableText color="$neutral3">+</TableText>
+        <TableText color="$accent1" mr="$spacing4">
+          {formatPercent(rewardApr)}
+        </TableText>
+        <CurrencyLogo currency={UNI[UniverseChainId.Mainnet]} size={16} />
+      </Cell>
+    </MouseoverTooltip>
   )
 }

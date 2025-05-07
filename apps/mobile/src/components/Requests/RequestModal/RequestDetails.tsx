@@ -1,21 +1,23 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import React, { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
+import { StyleProp, ViewStyle } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { LinkButton } from 'src/components/buttons/LinkButton'
-import { SignRequest, WalletConnectRequest, isTransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import { TextVariantTokens, iconSizes } from 'ui/src/theme'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { PermitInfo } from 'src/components/Requests/RequestModal/ClientDetails'
+import {
+  SignRequest,
+  WalletConnectSigningRequest,
+  isBatchedTransactionRequest,
+  isTransactionRequest,
+} from 'src/features/walletConnect/walletConnectSlice'
+import { Flex, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { useENSName } from 'uniswap/src/features/ens/api'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
+import { BatchedRequestDetailsContent } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
+import { AddressButton } from 'wallet/src/components/buttons/AddressButton'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import {
   SpendingDetails,
@@ -24,36 +26,28 @@ import {
 import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
 import { useTransactionCurrencies } from 'wallet/src/utils/useTransactionCurrencies'
 
-const getStrMessage = (request: WalletConnectRequest): string => {
+const MAX_MODAL_MESSAGE_HEIGHT = 200
+const MAX_TYPED_DATA_PARSE_DEPTH = 3
+
+const commonCardStyles = {
+  backgroundColor: '$surface2' as const,
+  borderColor: '$surface3' as const,
+  borderRadius: '$rounded16' as const,
+  borderWidth: '$spacing1' as const,
+}
+
+const requestMessageStyle: StyleProp<ViewStyle> = {
+  // need a fixed height here or else modal gets confused about total height
+  maxHeight: MAX_MODAL_MESSAGE_HEIGHT,
+  overflow: 'hidden',
+}
+
+const getStrMessage = (request: WalletConnectSigningRequest): string => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
     return request.message || request.rawMessage
   }
 
   return ''
-}
-
-type AddressButtonProps = {
-  address: string
-  chainId: number
-  textVariant?: TextVariantTokens
-}
-
-const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {
-  const { data: name } = useENSName(address)
-  const colors = useSporeColors()
-  const { defaultChainId } = useEnabledChains()
-  const supportedChainId = toSupportedChainId(chainId) ?? defaultChainId
-
-  return (
-    <LinkButton
-      iconColor={colors.neutral3.val}
-      label={name || shortenAddress(address)}
-      size={iconSizes.icon16}
-      textVariant="body3"
-      url={getExplorerLink(supportedChainId, address, ExplorerDataType.ADDRESS)}
-      {...rest}
-    />
-  )
 }
 
 type KeyValueRowProps = {
@@ -72,8 +66,6 @@ const KeyValueRow = ({ objKey, children }: KeyValueRowProps): JSX.Element => {
     </Flex>
   )
 }
-
-const MAX_TYPED_DATA_PARSE_DEPTH = 3
 
 // recursively parses typed data objects and adds margin to left
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -158,15 +150,16 @@ function TransactionDetails({
   )
 }
 
-type Props = {
-  request: WalletConnectRequest
+type RequestDetailsProps = {
+  request: WalletConnectSigningRequest
+  permitInfo?: PermitInfo
 }
 
-function isSignTypedDataRequest(request: WalletConnectRequest): request is SignRequest {
+function isSignTypedDataRequest(request: WalletConnectSigningRequest): request is SignRequest {
   return request.type === EthMethod.SignTypedData || request.type === EthMethod.SignTypedDataV4
 }
 
-export function RequestDetailsContent({ request }: Props): JSX.Element {
+export function RequestDetailsContent({ request }: RequestDetailsProps): JSX.Element {
   const { t } = useTranslation()
 
   if (isSignTypedDataRequest(request)) {
@@ -191,10 +184,27 @@ export function RequestDetailsContent({ request }: Props): JSX.Element {
   )
 }
 
-export function RequestDetails({ request }: Props): JSX.Element {
+export function RequestDetails({ request, permitInfo }: RequestDetailsProps): JSX.Element {
+  if (isBatchedTransactionRequest(request)) {
+    return <BatchedRequestDetailsContent calls={request.calls} chainId={request.chainId} />
+  }
+
   return (
-    <ScrollView>
-      <RequestDetailsContent request={request} />
-    </ScrollView>
+    <Flex
+      backgroundColor={commonCardStyles.backgroundColor}
+      borderColor={commonCardStyles.borderColor}
+      borderRadius={commonCardStyles.borderRadius}
+      borderWidth={commonCardStyles.borderWidth}
+      my="$spacing4"
+      mx="$spacing24"
+    >
+      {!permitInfo && (
+        <Flex p="$spacing16" style={requestMessageStyle}>
+          <ScrollView>
+            <RequestDetailsContent request={request} />
+          </ScrollView>
+        </Flex>
+      )}
+    </Flex>
   )
 }

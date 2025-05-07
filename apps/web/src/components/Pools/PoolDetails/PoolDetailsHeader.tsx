@@ -5,6 +5,7 @@ import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
 import { PoolDetailsBadge } from 'components/Pools/PoolTable/PoolTable'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
@@ -30,6 +31,8 @@ import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-ap
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { getChainUrlParam } from 'utils/chainParams'
@@ -310,6 +313,8 @@ interface PoolDetailsHeaderProps {
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean
   hookAddress?: string
+  poolApr?: Percent
+  rewardsApr?: number
 }
 
 export function PoolDetailsHeader({
@@ -322,6 +327,7 @@ export function PoolDetailsHeader({
   hookAddress,
   toggleReversed,
   loading,
+  rewardsApr,
 }: PoolDetailsHeaderProps) {
   const media = useMedia()
   const shouldColumnBreak = media.md
@@ -330,6 +336,8 @@ export function PoolDetailsHeader({
     () => (token0 && token1 ? [gqlToCurrency(token0), gqlToCurrency(token1)] : []),
     [token0, token1],
   )
+  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
+  const showRewards = isLPIncentivesEnabled && rewardsApr && rewardsApr > 0
 
   if (loading) {
     return (
@@ -351,8 +359,8 @@ export function PoolDetailsHeader({
   return (
     <HeaderContainer>
       {shouldColumnBreak ? (
-        <Column gap="sm" style={{ width: '100%' }}>
-          <Row gap="md" justify="space-between">
+        <Flex gap="$spacing4" width="100%">
+          <Flex row gap="$spacing8" justifyContent="space-between">
             <DoubleCurrencyLogo currencies={currencies} data-testid="double-token-logo" />
             <PoolDetailsHeaderActions
               chainId={chainId}
@@ -362,7 +370,7 @@ export function PoolDetailsHeader({
               token1={token1}
               protocolVersion={protocolVersion}
             />
-          </Row>
+          </Flex>
           <PoolDetailsTitle
             token0={token0}
             token1={token1}
@@ -371,30 +379,34 @@ export function PoolDetailsHeader({
             protocolVersion={protocolVersion}
             toggleReversed={toggleReversed}
           />
-        </Column>
+          {showRewards && <LpIncentivesAprDisplay lpIncentiveRewardApr={rewardsApr} hideBackground />}
+        </Flex>
       ) : (
-        <>
-          <Row gap="md">
-            <DoubleCurrencyLogo currencies={currencies} data-testid="double-token-logo" />
-            <PoolDetailsTitle
-              token0={token0}
-              token1={token1}
-              chainId={chainId}
-              feeTier={feeTier}
-              protocolVersion={protocolVersion}
-              toggleReversed={toggleReversed}
-              hookAddress={hookAddress}
-            />
-          </Row>
-          <PoolDetailsHeaderActions
-            chainId={chainId}
-            poolAddress={poolAddress}
-            poolName={poolName}
-            token0={token0}
-            token1={token1}
-            protocolVersion={protocolVersion}
-          />
-        </>
+        <Flex row gap={showRewards ? '$spacing16' : '$spacing12'} alignItems="center" width="100%">
+          <DoubleCurrencyLogo size={showRewards ? 56 : 30} currencies={currencies} data-testid="double-token-logo" />
+          <Flex flex={1}>
+            <Flex row justifyContent="space-between" alignItems="center" width="100%">
+              <PoolDetailsTitle
+                token0={token0}
+                token1={token1}
+                chainId={chainId}
+                feeTier={feeTier}
+                protocolVersion={protocolVersion}
+                toggleReversed={toggleReversed}
+                hookAddress={hookAddress}
+              />
+              <PoolDetailsHeaderActions
+                chainId={chainId}
+                poolAddress={poolAddress}
+                poolName={poolName}
+                token0={token0}
+                token1={token1}
+                protocolVersion={protocolVersion}
+              />
+            </Flex>
+            {showRewards && <LpIncentivesAprDisplay lpIncentiveRewardApr={rewardsApr} hideBackground />}
+          </Flex>
+        </Flex>
       )}
     </HeaderContainer>
   )

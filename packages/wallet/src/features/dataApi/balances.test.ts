@@ -41,6 +41,7 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { createArray } from 'uniswap/src/test/utils'
 import { queryResolvers } from 'uniswap/src/test/utils/resolvers'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { ACCOUNT, ACCOUNT2 } from 'wallet/src/test/fixtures'
 import { act, renderHook, waitFor } from 'wallet/src/test/test-utils'
@@ -414,7 +415,7 @@ describe(usePortfolioTotalValue, () => {
 })
 
 describe(useHighestBalanceNativeCurrencyId, () => {
-  it('returns undefined if there is no native currency', async () => {
+  it('returns ETH if there is no native currency with highest balance', async () => {
     const { resolvers } = queryResolvers({
       portfolios: () => [portfolio({ tokenBalances: [daiTokenBalance] })],
     })
@@ -424,7 +425,7 @@ describe(useHighestBalanceNativeCurrencyId, () => {
 
     await act(() => undefined) // wait for query to complete
 
-    expect(result.current).toEqual(undefined)
+    expect(result.current).toEqual(ethCurrencyId)
   })
 
   it('returns native currency id with the highest balance', async () => {
@@ -437,6 +438,23 @@ describe(useHighestBalanceNativeCurrencyId, () => {
     await waitFor(() => {
       expect(result.current).toEqual(ethCurrencyId) // ETH currency is native
     })
+  })
+
+  it('returns specific chain native currency when chainId is provided and no balance found', async () => {
+    const { resolvers } = queryResolvers({
+      portfolios: () => [portfolio({ tokenBalances: [daiTokenBalance] })],
+    })
+    const { result } = renderHook(
+      () => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1, UniverseChainId.Polygon),
+      {
+        resolvers,
+      },
+    )
+
+    await act(() => undefined) // wait for query to complete
+
+    const polygonNativeId = currencyId(POLYGON_CURRENCY)
+    expect(result.current).toEqual(polygonNativeId)
   })
 })
 

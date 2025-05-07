@@ -72,7 +72,7 @@ class SeedPhraseInputView: UIView {
     set { vc.rootView.viewModel.onPasteEnd = newValue }
     get { return vc.rootView.viewModel.onPasteEnd }
   }
-  
+
   @objc
   var onSubmitError: RCTDirectEventBlock {
     set { vc.rootView.viewModel.onSubmitError = newValue }
@@ -138,6 +138,20 @@ struct SeedPhraseTextView: UIViewRepresentable {
         func textViewDidChange(_ textView: UITextView) {
             parent.text = textView.text
         }
+
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            // Sync isFocused binding when user focuses the input
+            DispatchQueue.main.async {
+                self.parent.isFocused = true
+            }
+        }
+
+        func textViewDidEndEditing(_ textView: UITextView) {
+            // Sync isFocused binding when user blurs the input
+            DispatchQueue.main.async {
+                self.parent.isFocused = false
+            }
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -160,7 +174,7 @@ struct SeedPhraseTextView: UIViewRepresentable {
         uiView.text = text
 
         if isFocused {
-            if !uiView.isFirstResponder {
+            if !uiView.isFirstResponder, uiView.window != nil {
                 uiView.becomeFirstResponder()
             }
         } else {

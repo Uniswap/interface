@@ -6,7 +6,6 @@ import {
   DEFAULT_HEADERS,
   GOOGLE_CONVERSION_DATETIME_FORMAT,
   GOOGLE_CONVERSION_URL,
-  PERSONAL3_CONVERSION_URL,
   REDDIT_CONVERSION_URL,
   TWITTER_CONVERSION_URL,
 } from 'uniswap/src/data/rest/conversionTracking/constants'
@@ -33,20 +32,6 @@ const buildTwitterProxyRequest = ({
       },
     ],
   }),
-})
-
-const buildPersona3ProxyRequest = ({
-  lead,
-  address,
-  eventId,
-  eventName,
-}: BuildProxyRequestArgs): PartialMessage<ProxyRequest> => ({
-  requestType: eventName,
-  identifier: hashAddress(address),
-  to: `${PERSONAL3_CONVERSION_URL}?ev=${eventId}&rq=${lead.id}`,
-  method: RequestType.POST,
-  headers: DEFAULT_HEADERS,
-  body: JSON.stringify({ timestamp: addJitter(new Date()).valueOf() }),
 })
 
 const buildRedditProxyRequest = ({
@@ -104,8 +89,6 @@ export const buildProxyRequest = (args: BuildProxyRequestArgs): PartialMessage<P
   switch (lead.type) {
     case PlatformIdType.Twitter:
       return buildTwitterProxyRequest(args)
-    case PlatformIdType.Persona3:
-      return buildPersona3ProxyRequest(args)
     case PlatformIdType.Reddit:
       return buildRedditProxyRequest(args)
     case PlatformIdType.Google:

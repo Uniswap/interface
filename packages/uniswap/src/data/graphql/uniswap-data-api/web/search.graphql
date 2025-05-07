@@ -1,4 +1,4 @@
-query SearchTrendingTokensWeb($chain: Chain!) {
+query SearchPopularTokensWeb($chain: Chain!) {
   topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: POPULARITY) {
     ...SimpleTokenDetails
     market(currency: USD) {

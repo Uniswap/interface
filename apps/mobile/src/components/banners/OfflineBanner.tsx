@@ -4,16 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { BANNER_HEIGHT, BottomBanner } from 'src/components/banners/BottomBanner'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
-import { useSporeColors } from 'ui/src'
-import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
-import { iconSizes } from 'ui/src/theme'
+import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 const EXTRA_MARGIN = 5
 
 export function OfflineBanner(): JSX.Element | null {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const netInfo = useNetInfo()
 
   // don't show the offline banner in onboarding
@@ -33,7 +30,7 @@ export function OfflineBanner(): JSX.Element | null {
   return showBanner ? (
     <BottomBanner
       backgroundColor="$surface2"
-      icon={<InfoCircle color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />}
+      icon={<InfoCircle color="$neutral1" size="$icon.24" />}
       text={t('home.banner.offline')}
       translateY={BANNER_HEIGHT - EXTRA_MARGIN}
     />

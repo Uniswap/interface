@@ -65,6 +65,10 @@ function sortPools(sortState: PoolTableSortState, pools?: PoolStat[]) {
           : a.apr.greaterThan(b.apr)
             ? 1
             : -1
+      case PoolSortFields.RewardApr:
+        return sortState.sortDirection === OrderDirection.Desc
+          ? (b.boostedApr ?? 0) - (a.boostedApr ?? 0)
+          : (a.boostedApr ?? 0) - (b.boostedApr ?? 0)
       default:
         return sortState.sortDirection === OrderDirection.Desc
           ? giveExploreStatDefaultValue(b?.totalLiquidity?.value) -
@@ -83,6 +87,7 @@ function convertPoolStatsToPoolStat(poolStats: PoolStats): PoolStat {
       giveExploreStatDefaultValue(poolStats.totalLiquidity?.value),
       poolStats.feeTier ?? V2_BIPS,
     ),
+    boostedApr: poolStats.boostedApr,
     feeTier: poolStats.feeTier ?? V2_BIPS,
     volOverTvl: calculate1DVolOverTvl(poolStats.volume1Day?.value, poolStats.totalLiquidity?.value),
     hookAddress: poolStats.hook?.address,
@@ -121,11 +126,18 @@ export function useExploreContextTopPools(sortState: PoolTableSortState, protoco
 export function useTopPools(topPoolData: TopPoolData, sortState: PoolTableSortState, protocol?: ProtocolVersion) {
   const { data, isLoading, isError } = topPoolData
   const poolStatsByProtocol = getPoolDataByProtocol(data, protocol)
-  const sortedPoolStats = useMemo(() => {
+
+  const { sortedPoolStats, boostedPoolStats } = useMemo(() => {
     const poolStats = poolStatsByProtocol?.map((poolStat: PoolStats) => convertPoolStatsToPoolStat(poolStat))
-    return sortPools(sortState, poolStats)
+    const sortedPools = sortPools(sortState, poolStats)
+    const boostedPools = sortedPools
+      ?.filter((pool) => typeof pool.boostedApr === 'number' && pool.boostedApr > 0)
+      .sort((a, b) => (b.boostedApr ?? 0) - (a.boostedApr ?? 0))
+
+    return { sortedPoolStats: sortedPools, boostedPoolStats: boostedPools }
   }, [poolStatsByProtocol, sortState])
+
   const filteredPoolStats = useFilteredPools(sortedPoolStats)
 
-  return { topPools: filteredPoolStats, isLoading, isError }
+  return { topPools: filteredPoolStats, topBoostedPools: boostedPoolStats, isLoading, isError }
 }

@@ -2,19 +2,20 @@ import { createAdaptiveRefetchContext } from 'graphql/data/apollo/AdaptiveRefetc
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import ms from 'ms'
-import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
 import {
   ActivityWebQueryResult,
   useActivityWebLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useInterval } from 'utilities/src/time/timing'
 
 const { Provider: AdaptiveAssetActivityProvider, useQuery: useAssetActivityQuery } =
   createAdaptiveRefetchContext<ActivityWebQueryResult>()
 
-export function AssetActivityProvider({ children }: PropsWithChildren) {
+function AssetActivityProviderInternal({ children }: PropsWithChildren) {
   const account = useAccount()
   const previousAccount = usePrevious(account.address)
   const { isTestnetModeEnabled, gqlChains } = useEnabledChains()
@@ -23,23 +24,25 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
   const fiatOnRampTransactions = useFiatOnRampTransactions()
 
   const [lazyFetch, query] = useActivityWebLazyQuery()
-  const fetch = useCallback(
-    () =>
-      lazyFetch({
-        variables: {
-          account: account.address ?? '',
-          chains: gqlChains,
-          // Backend will return off-chain activities even if gqlChains are all testnets.
-          includeOffChain: !isTestnetModeEnabled,
-          // Include the externalsessionIDs of all fiat on-ramp transactions in the local store,
-          // so that the backend can find the transactions without signature authentication.
-          onRampTransactionIDs: Object.values(fiatOnRampTransactions).map(
-            (transaction) => transaction.externalSessionId,
-          ),
-        },
-      }),
-    [lazyFetch, account.address, gqlChains, isTestnetModeEnabled, fiatOnRampTransactions],
+  const transactionIds = useMemo(
+    () => Object.values(fiatOnRampTransactions).map((tx) => tx.externalSessionId),
+    [fiatOnRampTransactions],
   )
+
+  const variables = useMemo(
+    () => ({
+      account: account.address ?? '',
+      chains: gqlChains,
+      // Backend will return off-chain activities even if gqlChains are all testnets.
+      includeOffChain: !isTestnetModeEnabled,
+      // Include the externalsessionIDs of all fiat on-ramp transactions in the local store,
+      // so that the backend can find the transactions without signature authentication.
+      onRampTransactionIDs: transactionIds,
+    }),
+    [account.address, gqlChains, isTestnetModeEnabled, transactionIds],
+  )
+
+  const fetch = useEvent(() => lazyFetch({ variables }))
 
   useInterval(async () => {
     if (
@@ -60,6 +63,19 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
       {children}
     </AdaptiveAssetActivityProvider>
   )
+}
+
+export function AssetActivityProvider({ children }: PropsWithChildren) {
+  const [initialized, setInitialized] = useState(false)
+
+  useEffect(() => {
+    setInitialized(true)
+  }, [])
+
+  if (!initialized) {
+    return children // Immediately render children first without provider overhead.
+  }
+  return <AssetActivityProviderInternal>{children}</AssetActivityProviderInternal>
 }
 
 export function useAssetActivity() {

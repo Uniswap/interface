@@ -43,7 +43,7 @@ export function isDevEnv(): boolean {
 
 export function isBetaEnv(): boolean {
   if (isInterface) {
-    // This is set in vercel builds and deploys from web/staging.
+    // This is set in vercel builds for all pre-production envs, including `web/staging` and all other branches.
     return Boolean(process.env.REACT_APP_STAGING)
   } else if (isExtension) {
     if (!chrome.runtime) {

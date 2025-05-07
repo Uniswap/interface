@@ -23,6 +23,7 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
     loading,
     iconPosition: propIconPosition = 'before',
     isDisabled: propDisabled,
+    onPress,
     ...props
   },
   ref,
@@ -30,6 +31,7 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
   useLayoutAnimationOnChange(shouldAnimateBetweenLoadingStates ? loading : false)
 
   const isDisabled = getIsButtonDisabled({ isDisabled: propDisabled, loading })
+  const handleOnPress = isDisabled && props.onDisabledPress ? props.onDisabledPress : onPress
   const iconPosition = getIconPosition(propIconPosition)
 
   // We need to check if the children is a string, a Trans tag, or a custom component that likely renders a Trans tag, in which case we will pass it as a child to the `CustomButtonText` component
@@ -49,6 +51,7 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
       custom-background-color={customBackgroundColor}
       dd-action-name={props['dd-action-name'] ?? (typeof children === 'string' ? children : undefined)}
       {...props}
+      onPress={handleOnPress}
     >
       <ThemedIcon
         custom-background-color={customBackgroundColor}

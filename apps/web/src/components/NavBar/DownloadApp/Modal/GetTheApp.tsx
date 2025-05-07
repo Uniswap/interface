@@ -1,19 +1,28 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import AppStoreBadge from 'assets/images/app-store-badge.png'
 import ExtensionIllustration from 'assets/images/extensionIllustration.png'
+import PlayStoreBadge from 'assets/images/play-store-badge.png'
 import WalletIllustration from 'assets/images/walletIllustration.png'
-import { ReactComponent as AppStoreBadge } from 'assets/svg/app-store-badge.svg'
-import { ReactComponent as PlayStoreBadge } from 'assets/svg/play-store-badge.svg'
 import { AndroidLogo } from 'components/Icons/AndroidLogo'
 import { AppleLogo } from 'components/Icons/AppleLogo'
 import { GoogleChromeLogo } from 'components/Icons/GoogleChromeLogo'
-import { WalletOneLinkQR } from 'components/WalletOneLinkQR'
 import Column from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { Wiggle } from 'pages/Landing/components/animations'
-import { PropsWithChildren, ReactNode, useState } from 'react'
+import { PropsWithChildren, ReactNode, Suspense, lazy, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
-import { AnimatedPager, Flex, FlexProps, Image, ModalCloseIcon, Text, TouchableArea, useSporeColors } from 'ui/src'
+import {
+  AnimatedPager,
+  Flex,
+  FlexProps,
+  Image,
+  Loader,
+  ModalCloseIcon,
+  Text,
+  TouchableArea,
+  useSporeColors,
+} from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { iconSizes, zIndexes } from 'ui/src/theme'
@@ -22,6 +31,11 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
+
+const LazyWalletOneLinkQR = lazy(async () => {
+  const module = await import('components/WalletOneLinkQR')
+  return { default: module.WalletOneLinkQR }
+})
 
 const BadgeLink = styled(ExternalLink)`
   stroke: none;
@@ -111,14 +125,16 @@ function DownloadMobile() {
       my="$spacing24"
     >
       <BadgeLink href="https://uniswapwallet.onelink.me/8q3y/m4i9qsez?af_qr=true">
-        <WalletOneLinkQR width={200} height={200} />
+        <Suspense fallback={<Loader.Box width={200} height={200} />}>
+          <LazyWalletOneLinkQR width={200} height={200} />
+        </Suspense>
       </BadgeLink>
       <Flex row justifyContent="center" gap="$spacing16">
         <BadgeLink href="https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476">
-          <AppStoreBadge />
+          <Image src={AppStoreBadge} alt="App Store Badge" width={150} height={50} />
         </BadgeLink>
         <BadgeLink href="https://play.google.com/store/apps/details?id=com.uniswap.mobile&pcampaignid=web_share">
-          <PlayStoreBadge />
+          <Image src={PlayStoreBadge} alt="Play Store Badge" width={170} height={50} />
         </BadgeLink>
       </Flex>
     </ModalContent>
@@ -204,12 +220,12 @@ export function DownloadAppsModal({ goBack, onClose }: { goBack: () => void; onC
       >
         {showBackButton && (
           <TouchableArea onPress={onPressBack}>
-            <BackArrow size={iconSizes.icon24} color="$neutral2" hoverColor="$neutral2Hovered" />
+            <BackArrow size="$icon.24" color="$neutral2" hoverColor="$neutral2Hovered" />
           </TouchableArea>
         )}
         <ModalCloseIcon onClose={onClose} data-testid="get-the-app-close-button" />
       </Flex>
-      <Flex data-testid="download-uniswap-modal" position="relative" userSelect="none">
+      <Flex position="relative" userSelect="none">
         {/* The Page enum value corresponds to the modal page's index */}
         <AnimatedPager currentIndex={page}>
           <DownloadApps setPage={setPage} />

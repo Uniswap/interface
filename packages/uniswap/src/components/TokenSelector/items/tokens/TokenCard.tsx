@@ -2,8 +2,9 @@ import { memo } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
-import { TokenOption } from 'uniswap/src/components/lists/types'
+import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
+import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 function _TokenCard({
@@ -15,7 +16,7 @@ function _TokenCard({
   onSelectCurrency: OnSelectCurrency
   token: TokenOption
   index: number
-  section: TokenSection<TokenOption[]>
+  section: OnchainItemSection<TokenOption[]>
 }): JSX.Element {
   const { currency, logoUrl } = token.currencyInfo
 
@@ -32,7 +33,15 @@ function _TokenCard({
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       onPress={onPress}
     >
-      <Flex centered backgroundColor="$surface2" borderRadius="$rounded16" px="$spacing16" py="$spacing12" gap="$gap4">
+      <Flex
+        centered
+        backgroundColor="$surface2"
+        hoverStyle={{ backgroundColor: '$surface1Hovered' }}
+        borderRadius="$rounded16"
+        px="$spacing16"
+        py="$spacing12"
+        gap="$gap4"
+      >
         <TokenLogo
           chainId={currency.chainId}
           name={currency.name}

@@ -1,5 +1,7 @@
+import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -9,13 +11,69 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
 import { isWeb } from 'utilities/src/platform'
 
-export function PasskeysHelpModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }): JSX.Element {
-  const colors = useSporeColors()
-  const { t } = useTranslation()
+export enum PasskeysHelpModalTypes {
+  Default = 'default',
+  InvalidPasskey = 'invalidPasskey',
+  TechnicalError = 'technicalIssue',
+}
 
+interface PasskeyModalContent {
+  title: (t: TFunction) => string
+  subtitle: (t: TFunction) => string
+  icon: JSX.Element
+}
+
+const passkeysHelpModalContent: Record<PasskeysHelpModalTypes, PasskeyModalContent> = {
+  [PasskeysHelpModalTypes.Default]: {
+    title: (t: TFunction) => t('passkeys.help.modal.title'),
+    subtitle: (t: TFunction) => t('passkeys.help.modal.subtitle'),
+    icon: (
+      <Flex centered borderRadius="$rounded12" p="$spacing12" backgroundColor="$surface3">
+        <Passkey color="$neutral1" size="$icon.24" />
+      </Flex>
+    ),
+  },
+  [PasskeysHelpModalTypes.InvalidPasskey]: {
+    title: (t: TFunction) => t('passkeys.help.modal.title.invalidPasskey'),
+    subtitle: (t: TFunction) => t('passkeys.help.modal.subtitle.invalidPasskey'),
+    icon: (
+      <Flex centered borderRadius="$rounded12" p="$spacing12" backgroundColor="$redLight">
+        <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
+      </Flex>
+    ),
+  },
+  [PasskeysHelpModalTypes.TechnicalError]: {
+    title: (t: TFunction) => t('passkeys.help.modal.title.technicalError'),
+    subtitle: (t: TFunction) => t('passkeys.help.modal.subtitle.technicalError'),
+    icon: (
+      <Flex centered borderRadius="$rounded12" p="$spacing12" backgroundColor="$redLight">
+        <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
+      </Flex>
+    ),
+  },
+}
+
+export function PasskeysHelpModal({
+  isOpen,
+  onClose,
+  type = PasskeysHelpModalTypes.Default,
+  accountName,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  type?: PasskeysHelpModalTypes
+  accountName?: string
+}): JSX.Element {
+  const { t } = useTranslation()
+  const colors = useSporeColors()
   const onPressGetHelp = async (): Promise<void> => {
     await openUri(uniswapUrls.helpArticleUrls.passkeysInfo)
   }
+  const displayName = accountName ?? t('common.thisAccount')
+  const modalContent = passkeysHelpModalContent[type]
+  const title = modalContent.title(t)
+  const subtitle = modalContent.subtitle(t)
+  const icon = modalContent.icon
 
   return (
     <Modal
@@ -32,36 +90,37 @@ export function PasskeysHelpModal({ isOpen, onClose }: { isOpen: boolean; onClos
         pt="$spacing12"
         px={isWeb ? '$none' : '$spacing24'}
       >
-        <Flex
-          centered
-          borderRadius="$rounded12"
-          mb="$spacing8"
-          p="$spacing12"
-          style={{
-            backgroundColor: colors.surface2.get(),
-          }}
-        >
-          <Passkey color="$neutral1" size="$icon.24" />
-        </Flex>
+        {icon}
 
         <Text textAlign="center" variant="subheading1">
-          {t('passkeys.help.modal.title')}
+          {title}
         </Text>
 
-        <Text color="$neutral2" textAlign="center" variant="body3">
-          {t('passkeys.help.modal.subtitle')}
+        <Text color="$neutral2" textAlign="center" variant="subheading2">
+          {subtitle}
+          {type === PasskeysHelpModalTypes.InvalidPasskey && (
+            <Text
+              color={accountName ? '$neutral1' : '$neutral2'}
+              textAlign="center"
+              variant="subheading2"
+              display="inline-flex"
+            >
+              {displayName}.
+            </Text>
+          )}
         </Text>
 
         <Flex row alignSelf="stretch" gap="$spacing12" pt="$spacing24">
-          <Trace logPress element={ElementName.BackButton} modal={ModalName.PasskeysHelp}>
-            <Button emphasis="secondary" onPress={onClose}>
-              {t('common.button.close')}
+          <Trace logPress element={ElementName.Confirm} modal={ModalName.PasskeysHelp}>
+            <Button testID={TestID.Confirm} emphasis="secondary" onPress={onPressGetHelp}>
+              <Text variant="buttonLabel2">{t('common.getHelp.button')}</Text>
             </Button>
           </Trace>
-
-          <Trace logPress element={ElementName.Confirm} modal={ModalName.PasskeysHelp}>
-            <Button testID={TestID.Confirm} variant="branded" emphasis="secondary" onPress={onPressGetHelp}>
-              {t('common.getHelp.button')}
+          <Trace logPress element={ElementName.BackButton} modal={ModalName.PasskeysHelp}>
+            <Button emphasis="primary" onPress={onClose}>
+              <Text variant="buttonLabel2" color="$surface1">
+                {t('common.button.close')}
+              </Text>
             </Button>
           </Trace>
         </Flex>

@@ -42,7 +42,7 @@ export function ClaimUnitagScreen(): JSX.Element {
       <OnboardingScreen
         Icon={
           <Square backgroundColor="$surface2" borderRadius="$rounded12" size={iconSizes.icon48}>
-            <Person color="$neutral1" size={iconSizes.icon24} />
+            <Person color="$neutral1" size="$icon.24" />
           </Square>
         }
         subtitle={t('unitags.onboarding.claim.subtitle')}

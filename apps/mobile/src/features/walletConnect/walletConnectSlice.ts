@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { DappInfo, EthSignMethod, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
+import { DappInfo, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { Call, Capability } from 'wallet/src/features/dappRequests/types'
 
 export type WalletConnectPendingSession = {
@@ -42,8 +42,8 @@ export interface TransactionRequest extends BaseRequest {
   transaction: EthTransaction
 }
 
-export interface WalletCapabilitiesRequest extends Omit<BaseRequest, 'chainId'> {
-  type: EthMethod.GetCapabilities
+export interface WalletGetCapabilitiesRequest extends Omit<BaseRequest, 'chainId'> {
+  type: EthMethod.WalletGetCapabilities
   account: Address // Wallet address
   chainIds?: UniverseChainId[] // Optional array of chain IDs
 }
@@ -52,13 +52,18 @@ export interface WalletSendCallsRequest extends BaseRequest {
   calls: Call[]
   capabilities: Record<string, Capability>
   id: string
-  type: EthMethod.SendCalls
+  type: EthMethod.WalletSendCalls
   version: string
+}
+
+export interface WalletSendCallsEncodedRequest extends WalletSendCallsRequest {
+  encodedTransaction: EthTransaction
+  encodedRequestId: string
 }
 
 export interface WalletGetCallsStatusRequest extends BaseRequest {
   id: string
-  type: EthMethod.GetCallsStatus
+  type: EthMethod.WalletGetCallsStatus
 }
 
 export interface UwuLinkErc20Request extends BaseRequest {
@@ -77,10 +82,18 @@ export interface UwuLinkErc20Request extends BaseRequest {
   transaction: EthTransaction // the formatted transaction, prepared by the wallet
 }
 
-export type WalletConnectRequest = SignRequest | TransactionRequest | UwuLinkErc20Request | WalletSendCallsRequest
+export type WalletConnectSigningRequest =
+  | SignRequest
+  | TransactionRequest
+  | UwuLinkErc20Request
+  | WalletSendCallsEncodedRequest
 
-export const isTransactionRequest = (request: WalletConnectRequest): request is TransactionRequest =>
+export const isTransactionRequest = (request: WalletConnectSigningRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send
+
+export const isBatchedTransactionRequest = (
+  request: WalletConnectSigningRequest,
+): request is WalletSendCallsEncodedRequest => request.type === EthMethod.WalletSendCalls
 
 export interface WalletConnectState {
   byAccount: {
@@ -89,7 +102,7 @@ export interface WalletConnectState {
     }
   }
   pendingSession: WalletConnectPendingSession | null
-  pendingRequests: WalletConnectRequest[]
+  pendingRequests: WalletConnectSigningRequest[]
   didOpenFromDeepLink?: boolean
   hasPendingSessionError?: boolean
 }
@@ -143,7 +156,7 @@ const slice = createSlice({
       state.pendingSession = null
     },
 
-    addRequest: (state, action: PayloadAction<WalletConnectRequest>) => {
+    addRequest: (state, action: PayloadAction<WalletConnectSigningRequest>) => {
       state.pendingRequests.push(action.payload)
     },
 

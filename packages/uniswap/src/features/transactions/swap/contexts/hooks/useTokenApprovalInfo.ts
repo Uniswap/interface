@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
 import { ApprovalRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
@@ -10,6 +11,7 @@ import {
   useShadowGasStrategies,
 } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
+import { useIsSmartWalletFlow } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/hooks'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -35,6 +37,14 @@ export type ApprovalTxInfo = {
   approvalGasFeeResult: GasFeeResult
   revokeGasFeeResult: GasFeeResult
 }
+
+function useApprovalWillBeBatchedWithSwap(chainId: UniverseChainId): boolean {
+  const isSmartWalletFlow = useIsSmartWalletFlow()
+  const canBatchTransactions = useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(chainId))
+
+  return Boolean(isSmartWalletFlow || canBatchTransactions)
+}
+
 export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalTxInfo {
   const { account, chainId, wrapType, currencyInAmount, currencyOutAmount, routing } = params
 
@@ -90,7 +100,8 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     shadowGasStrategies,
   ])
 
-  const shouldSkip = !approvalRequestArgs || isWrap || !address
+  const approvalWillBeBatchedWithSwap = useApprovalWillBeBatchedWithSwap(chainId)
+  const shouldSkip = !approvalRequestArgs || isWrap || !address || approvalWillBeBatchedWithSwap
 
   const { data, isLoading, error } = useCheckApprovalQuery({
     params: shouldSkip ? undefined : approvalRequestArgs,
@@ -109,7 +120,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     }
 
     // Approval is N/A for wrap transactions or unconnected state.
-    if (isWrap || !address) {
+    if (isWrap || !address || approvalWillBeBatchedWithSwap) {
       return {
         action: ApprovalAction.None,
         txRequest: null,
@@ -150,7 +161,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
       txRequest: null,
       cancelTxRequest: null,
     }
-  }, [address, approvalRequestArgs, data, error, isWrap])
+  }, [address, approvalRequestArgs, approvalWillBeBatchedWithSwap, data, error, isWrap])
 
   return useMemo(() => {
     const activeEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))

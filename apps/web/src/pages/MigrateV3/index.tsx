@@ -27,6 +27,7 @@ import {
 import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
+import { useLPSlippageValue } from 'pages/Pool/Positions/create/hooks/useLPSlippageValues'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
@@ -49,15 +50,13 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isSameAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -86,7 +85,6 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const { protocolVersion } = positionState
   const { setPriceRangeState } = usePriceRangeContext()
   const { setDepositState } = useDepositContext()
-  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const selectChain = useSelectChain()
@@ -106,7 +104,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const currency0FiatAmount = useUSDCValue(currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(currency1Amount) ?? undefined
 
-  if (!isMigrateToV4Enabled || !isSameAddress(account?.address, owner)) {
+  if (!isSameAddress(account?.address, owner)) {
     navigate('/positions')
   }
 
@@ -267,6 +265,7 @@ export default function MigrateV3() {
   const { tokenId } = useParams<{ tokenId: string }>()
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
+  const autoSlippageTolerance = useLPSlippageValue(ProtocolVersion.V3)
   const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
@@ -322,7 +321,10 @@ export default function MigrateV3() {
       }}
     >
       <MultichainContextProvider initialChainId={chainId}>
-        <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
+        <TransactionSettingsContextProvider
+          settingKey={TransactionSettingKey.LP}
+          autoSlippageTolerance={autoSlippageTolerance}
+        >
           <CreatePositionContextProvider
             initialState={{
               initialPosition,

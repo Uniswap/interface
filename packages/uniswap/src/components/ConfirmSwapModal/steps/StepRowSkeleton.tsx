@@ -8,7 +8,7 @@ import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 export interface StepRowProps<TStepType extends TransactionStep> {
@@ -88,7 +88,7 @@ export function StepRowSkeleton(props: StepRowSkeletonProps): JSX.Element {
         </Flex>
       </Flex>
       {!!secondsRemaining && <Timer secondsRemaining={secondsRemaining} />}
-      {status === StepStatus.Complete && <Check color="$statusSuccess" size={iconSizes.icon16} />}
+      {status === StepStatus.Complete && <Check color="$statusSuccess" size="$icon.16" />}
     </Flex>
   )
 }

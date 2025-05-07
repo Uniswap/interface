@@ -70,7 +70,7 @@ export function EnterPasswordModal({
           {showPasswordError ? t('setting.recoveryPhrase.remove.password.error') : ''}
         </Text>
         <Flex row width="100%">
-          <Button isDisabled={!password.length} emphasis="secondary" onPress={checkPassword}>
+          <Button isDisabled={!password.length} emphasis="primary" onPress={checkPassword}>
             {t('common.button.continue')}
           </Button>
         </Flex>

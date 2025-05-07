@@ -32,14 +32,16 @@ import {
 } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -169,7 +171,11 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const { derivedPositionInfo, positionState, currentTransactionStep } = useCreatePositionContext()
   const { derivedDepositInfo, depositState } = useDepositContext()
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
-  const swapSettings = useTransactionSettingsContext()
+  const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
+
+  const generatePermitAsTransaction = useUniswapContext().getGeneratePermitAsTransaction?.(
+    derivedPositionInfo.currencies[0]?.chainId,
+  )
 
   const hasError = Boolean(derivedDepositInfo.error)
   const [hasCreateErrorResponse, setHasCreateErrorResponse] = useState(false)
@@ -180,8 +186,9 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       positionState,
       derivedPositionInfo,
       derivedDepositInfo,
+      generatePermitAsTransaction,
     })
-  }, [account, derivedDepositInfo, derivedPositionInfo, positionState])
+  }, [account, derivedDepositInfo, derivedPositionInfo, positionState, generatePermitAsTransaction])
   const {
     data: approvalCalldata,
     error: approvalError,
@@ -195,15 +202,14 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   })
 
   if (approvalError) {
-    logger.info(
-      'CreateTxContextProvider',
-      'CreateTxContextProvider',
-      parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' }),
-      {
-        error: JSON.stringify(approvalError),
-        addLiquidityApprovalParams: JSON.stringify(addLiquidityApprovalParams),
+    const message = parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' })
+
+    logger.error(message, {
+      tags: {
+        file: 'CreateTxContextProvider',
+        function: 'useEffect',
       },
-    )
+    })
   }
 
   const gasFeeToken0USD = useUSDCurrencyAmountOfGasFee(
@@ -213,6 +219,14 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const gasFeeToken1USD = useUSDCurrencyAmountOfGasFee(
     derivedPositionInfo.currencies?.[1]?.chainId,
     approvalCalldata?.gasFeeToken1Approval,
+  )
+  const gasFeeToken0PermitUSD = useUSDCurrencyAmountOfGasFee(
+    derivedPositionInfo.currencies?.[0]?.chainId,
+    approvalCalldata?.gasFeeToken0Permit,
+  )
+  const gasFeeToken1PermitUSD = useUSDCurrencyAmountOfGasFee(
+    derivedPositionInfo.currencies?.[1]?.chainId,
+    approvalCalldata?.gasFeeToken1Permit,
   )
 
   const createCalldataQueryParams = useMemo(() => {
@@ -225,6 +239,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       derivedPriceRangeInfo,
       derivedDepositInfo,
       independentField: depositState.exactField,
+      slippageTolerance: customSlippageTolerance,
     })
   }, [
     account,
@@ -235,6 +250,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     positionState,
     priceRangeState,
     depositState.exactField,
+    customSlippageTolerance,
   ])
 
   const isUserCommittedToCreate =
@@ -254,7 +270,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     refetch: createRefetch,
   } = useCreateLpPositionCalldataQuery({
     params: createCalldataQueryParams,
-    deadlineInMinutes: swapSettings.customDeadline,
+    deadlineInMinutes: customDeadline,
     refetchInterval: hasCreateErrorResponse ? false : 5 * ONE_SECOND_MS,
     retry: false,
     enabled: isQueryEnabled,
@@ -265,15 +281,18 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   }, [createError, createCalldataQueryParams, addLiquidityApprovalParams])
 
   if (createError) {
-    logger.info(
-      'CreateTxContextProvider',
-      'CreateTxContextProvider',
-      parseErrorMessageTitle(createError, { defaultTitle: 'unknown CreateLpPositionCalldataQuery' }),
-      {
-        error: JSON.stringify(createError),
-        createCalldataQueryParams: JSON.stringify(createCalldataQueryParams),
+    const message = parseErrorMessageTitle(createError, { defaultTitle: 'unknown CreateLpPositionCalldataQuery' })
+
+    logger.error(message, {
+      tags: {
+        file: 'CreateTxContextProvider',
+        function: 'useEffect',
       },
-    )
+    })
+
+    sendAnalyticsEvent(InterfaceEventNameLocal.CreatePositionFailed, {
+      message,
+    })
   }
 
   const dependentAmountFallback = useCreatePositionDependentAmountFallback(
@@ -286,7 +305,9 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     approvalCalldata?.token0Approval ||
     approvalCalldata?.token1Approval ||
     approvalCalldata?.token0Cancel ||
-    approvalCalldata?.token1Cancel
+    approvalCalldata?.token1Cancel ||
+    approvalCalldata?.token0PermitTransaction ||
+    approvalCalldata?.token1PermitTransaction
   )
   const { value: calculatedGasFee } = useTransactionGasFee(
     createCalldata?.create,
@@ -298,14 +319,14 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   )
 
   const totalGasFee = useMemo(() => {
-    const fees = [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd]
+    const fees = [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd, gasFeeToken0PermitUSD, gasFeeToken1PermitUSD]
     return fees.reduce((total, fee) => {
       if (fee && total) {
         return total.add(fee)
       }
       return total || fee
     })
-  }, [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd])
+  }, [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd, gasFeeToken0PermitUSD, gasFeeToken1PermitUSD])
 
   const validatedValue = useMemo(() => {
     const txInfo = generateCreatePositionTxRequest({

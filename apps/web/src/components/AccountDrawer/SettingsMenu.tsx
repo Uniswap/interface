@@ -4,11 +4,11 @@ import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
+import { useModalState } from 'hooks/useModalState'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import { useOpenModal } from 'state/application/hooks'
 import { ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
 import { Flex, Text } from 'ui/src'
@@ -21,7 +21,6 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const Container = styled(Column)`
   height: 100%;
-  justify-content: space-between;
 `
 
 const StyledChevron = styled(ChevronRight)`
@@ -73,7 +72,7 @@ export default function SettingsMenu({
   const activeLanguage = useCurrentLanguage()
   const activeLocalCurrency = useAppFiatCurrency()
   const languageInfo = useLanguageInfo(activeLanguage)
-  const openRecoveryPhraseModal = useOpenModal({ name: ModalName.RecoveryPhrase })
+  const { openModal: openRecoveryPhraseModal } = useModalState(ModalName.RecoveryPhrase)
   const connectedWithEmbeddedWallet =
     useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
 
@@ -102,7 +101,7 @@ export default function SettingsMenu({
           />
           {connectedWithEmbeddedWallet && (
             <SettingsButton
-              title={t('settings.setting.passKey.title')}
+              title={t('common.passkeys')}
               currentState={<Passkey color="$neutral1" size="$icon.24" />}
               onClick={openPasskeySettings}
             />

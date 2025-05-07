@@ -282,14 +282,6 @@ export const WalletGetCapabilitiesRequestSchema = EthereumRequestWithIdSchema.ex
 
 export type WalletGetCapabilitiesRequest = z.infer<typeof WalletGetCapabilitiesRequestSchema>
 
-export type WalletGetCapabilitiesResponse = {
-  [chainId: string]: {
-    [capability: string]: {
-      supported: boolean
-    }
-  }
-}
-
 export const UniswapOpenSidebarRequestSchema = EthereumRequestWithIdSchema.extend({
   method: z.literal('uniswap_openSidebar'),
   params: z.array(z.unknown()),
@@ -325,13 +317,22 @@ export const WalletSendCallsRequestSchema = EthereumRequestWithIdSchema.extend({
     throw new Error('First element of the array must match SendCallsParamsSchema')
   }
 
-  const sendCallsParams = parseResult.data
+  if (!parseResult.data.from) {
+    throw new Error('From address must be specified')
+  }
+
+  const { calls, chainId, from, id, capabilities, version } = parseResult.data
 
   return {
     requestId,
     method,
     params,
-    sendCallsParams,
+    calls,
+    chainId,
+    from,
+    id,
+    capabilities,
+    version,
   }
 })
 

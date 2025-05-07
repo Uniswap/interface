@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { createContext, useCallback, useContext } from 'react'
 import { ColorTokens, Flex, FlexProps, Popover } from 'ui/src'
 import { IconSizeTokens } from 'ui/src/theme'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
@@ -11,20 +11,19 @@ import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap
 import { ViewOnlyButton } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/ViewOnlyButton'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/hooks/useSlippageSettings'
 import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
-export function SwapFormSettings({
-  settings,
-  adjustTopAlignment = true,
-  adjustRightAlignment = true,
-  position = 'absolute',
-  iconColor = '$neutral2',
-  iconSize,
-  defaultTitle,
-  isBridgeTrade,
-}: {
+export function SwapFormSettings(props: SwapFormSettingsProps): JSX.Element {
+  return (
+    <SwapFormSettingsProvider>
+      <SwapFormSettingsInner {...props} />
+    </SwapFormSettingsProvider>
+  )
+}
+
+interface SwapFormSettingsProps {
   settings: SwapSettingConfig[]
   adjustTopAlignment?: boolean
   adjustRightAlignment?: boolean
@@ -33,29 +32,34 @@ export function SwapFormSettings({
   iconSize?: IconSizeTokens
   defaultTitle?: string
   isBridgeTrade?: boolean
-}): JSX.Element {
+}
+
+function SwapFormSettingsInner({
+  settings,
+  adjustTopAlignment = true,
+  adjustRightAlignment = true,
+  position = 'absolute',
+  iconColor = '$neutral2',
+  iconSize,
+  defaultTitle,
+  isBridgeTrade,
+}: SwapFormSettingsProps): JSX.Element {
   const account = useAccountMeta()
   const { customSlippageTolerance, slippageWarningModalSeen, updateTransactionSettings } =
     useTransactionSettingsContext()
   const { autoSlippageTolerance } = useSlippageSettings()
 
   const {
-    value: isTransactionSettingsModalVisible,
-    setTrue: handleShowTransactionSettingsModal,
-    setFalse: handleHideTransactionSettingsModal,
-  } = useBooleanState(false)
-
-  const {
-    value: showViewOnlyModal,
-    setTrue: handleShowViewOnlyModal,
-    setFalse: handleHideViewOnlyModal,
-  } = useBooleanState(false)
-
-  const {
-    value: showSlippageWarningModal,
-    setTrue: handleShowSlippageWarningModal,
-    setFalse: handleHideSlippageWarningModal,
-  } = useBooleanState(false)
+    isTransactionSettingsModalVisible,
+    showViewOnlyModal,
+    showSlippageWarningModal,
+    handleShowTransactionSettingsModal,
+    handleHideTransactionSettingsModal,
+    handleShowViewOnlyModal,
+    handleHideViewOnlyModal,
+    handleShowSlippageWarningModal,
+    handleHideSlippageWarningModal,
+  } = useSwapFormSettingsContext()
 
   const onPressSwapSettings = useCallback((): void => {
     handleShowTransactionSettingsModal()
@@ -145,4 +149,74 @@ export function SwapFormSettings({
       </Flex>
     </>
   )
+}
+
+interface SwapFormSettingsContextType {
+  isTransactionSettingsModalVisible: boolean
+  showViewOnlyModal: boolean
+  showSlippageWarningModal: boolean
+  handleShowTransactionSettingsModal: () => void
+  handleHideTransactionSettingsModal: () => void
+  handleShowViewOnlyModal: () => void
+  handleHideViewOnlyModal: () => void
+  handleShowSlippageWarningModal: () => void
+  handleHideSlippageWarningModal: () => void
+}
+
+const SwapFormSettingsContext = createContext<SwapFormSettingsContextType>({
+  isTransactionSettingsModalVisible: false,
+  showViewOnlyModal: false,
+  showSlippageWarningModal: false,
+  handleShowTransactionSettingsModal: () => {},
+  handleHideTransactionSettingsModal: () => {},
+  handleShowViewOnlyModal: () => {},
+  handleHideViewOnlyModal: () => {},
+  handleShowSlippageWarningModal: () => {},
+  handleHideSlippageWarningModal: () => {},
+})
+
+const SwapFormSettingsProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
+  const {
+    value: isTransactionSettingsModalVisible,
+    setTrue: handleShowTransactionSettingsModal,
+    setFalse: handleHideTransactionSettingsModal,
+  } = useBooleanState(false)
+
+  const {
+    value: showViewOnlyModal,
+    setTrue: handleShowViewOnlyModal,
+    setFalse: handleHideViewOnlyModal,
+  } = useBooleanState(false)
+
+  const {
+    value: showSlippageWarningModal,
+    setTrue: handleShowSlippageWarningModal,
+    setFalse: handleHideSlippageWarningModal,
+  } = useBooleanState(false)
+
+  return (
+    <SwapFormSettingsContext.Provider
+      value={{
+        isTransactionSettingsModalVisible,
+        showViewOnlyModal,
+        showSlippageWarningModal,
+        handleShowTransactionSettingsModal,
+        handleHideTransactionSettingsModal,
+        handleShowViewOnlyModal,
+        handleHideViewOnlyModal,
+        handleShowSlippageWarningModal,
+        handleHideSlippageWarningModal,
+      }}
+    >
+      {children}
+    </SwapFormSettingsContext.Provider>
+  )
+}
+
+export const useSwapFormSettingsContext = (): SwapFormSettingsContextType => {
+  const context = useContext(SwapFormSettingsContext)
+  if (!context) {
+    throw new Error('useSwapFormSettingsContext must be used within a SwapFormSettingsProvider')
+  }
+  return context
 }

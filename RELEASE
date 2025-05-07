@@ -1,9 +1,23 @@
-## Extension
+IPFS hash of the deployment:
+- CIDv0: `QmU9wyRHeEDCqSEuSTD4u5Lk8eBgmMMuGBwMmAPus7w6QA`
+- CIDv1: `bafybeicwnbam37o45c22srwjzkjoe2zjcrsuu2pp7fi6px554lqdttpaam`
 
-We are back with some new updates! Here’s the latest:
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Revolut Integration: Our EU users can now buy crypto via Revolut and benefit from expanded onramp coverage options.
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-Other changes:
-  - The activity tab now has a “Today” section to house your most recent transactions.
-  - Various bug fixes and performance improvements.
+IPFS gateways:
+- https://bafybeicwnbam37o45c22srwjzkjoe2zjcrsuu2pp7fi6px554lqdttpaam.ipfs.dweb.link/
+- [ipfs://QmU9wyRHeEDCqSEuSTD4u5Lk8eBgmMMuGBwMmAPus7w6QA/](ipfs://QmU9wyRHeEDCqSEuSTD4u5Lk8eBgmMMuGBwMmAPus7w6QA/)
+
+### 5.83.2 (2025-05-07)
+
+
+### Bug Fixes
+
+* **web:** handle isTokenOptionArray check for bridging section (prod) (#19364) 6ce156e
+
+

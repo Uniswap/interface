@@ -64,11 +64,13 @@ export interface TablePool {
   feeTier: number
   protocolVersion: ProtocolVersion
   hookAddress?: string
+  boostedApr?: number
 }
 
 export enum PoolSortFields {
   TVL = 'TVL',
   Apr = 'APR',
+  RewardApr = 'Reward APR',
   Volume24h = '1 day volume',
   Volume30D = '30 day volume',
   VolOverTvl = '1 day volume/TVL',

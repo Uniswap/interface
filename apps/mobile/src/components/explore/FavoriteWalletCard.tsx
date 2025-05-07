@@ -7,14 +7,14 @@ import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, TouchableArea, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
-import { borderRadii, iconSizes, opacify } from 'ui/src/theme'
+import { borderRadii, iconSizes } from 'ui/src/theme'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { removeWatchedAddress } from 'uniswap/src/features/favorites/slice'
 import { isIOS } from 'utilities/src/platform'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 export type FavoriteWalletCardProps = {
   address: Address
@@ -73,7 +73,7 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
         overflow={isIOS ? 'hidden' : 'visible'}
         activeOpacity={isEditing ? 1 : undefined}
         backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
-        borderColor={opacify(0.05, colors.surface3.val)}
+        borderColor={colors.surface3.val}
         borderRadius="$rounded16"
         borderWidth={isDarkMode ? '$none' : '$spacing1'}
         disabled={isEditing}

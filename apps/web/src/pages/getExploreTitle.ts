@@ -1,4 +1,4 @@
-import { ExploreTab } from 'pages/Explore'
+import { ExploreTab } from 'pages/Explore/constants'
 import { capitalize } from 'tsafe/capitalize'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'

@@ -97,10 +97,6 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   cursor: pointer;
 }
 
-.c2:hover {
-  cursor: pointer;
-}
-
 .c3 {
   padding: 8px 0;
   height: unset;
