@@ -80,7 +80,7 @@ export default function Incentives() {
     );
   }
 
-  if ((!incentivesToShow || incentivesToShow.length === 0) && !isLoading) {
+  if (!incentivesToShow && !isLoading) {
     return (
       <StyledLightCard>
         <ThemedText.BodySecondary>

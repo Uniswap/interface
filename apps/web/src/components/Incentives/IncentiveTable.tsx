@@ -15,6 +15,7 @@ import { getAddress } from "ethers/lib/utils";
 import { PoolFeeDetails } from "./PoolFeeDetails";
 import { useMemo } from "react";
 import { useScreenSize } from "hooks/screenSize";
+import Loader from "components/Icons/LoadingSpinner";
 
 const StyledPoolRow = styled(Row) <{ $isMobile?: boolean }>`
   align-items: center;
@@ -407,6 +408,6 @@ export const IncentiveTable = ({
   }, [columnHelper, navigate, onDeposit, allIncentivesEnded, isMobile]);
 
   return (
-    <Table columns={columns} data={incentives || []} loading={isLoading} />
+    <Table columns={columns} data={incentives} loading={isLoading} />
   );
 };
