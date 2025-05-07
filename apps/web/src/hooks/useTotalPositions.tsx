@@ -23,6 +23,14 @@ export interface PositionsResponse {
     incentives: {
       id: string;
     }[];
+    token0?: {
+      id: string;
+      symbol: string;
+    };
+    token1?: {
+      id: string;
+      symbol: string;
+    };
   };
   liquidity: number;
   depositedToken0: string;

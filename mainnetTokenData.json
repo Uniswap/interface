@@ -62,11 +62,35 @@
     },
     {
       "chainId": 841,
+      "address": "0x31E7b8CF625aA83ac77441b7245f97acA25aa4C5",
+      "name": "Wrapped Staked TARA",
+      "symbol": "wstTARA",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0x31E7b8CF625aA83ac77441b7245f97acA25aa4C5/logo.png"
+    },
+    {
+      "chainId": 841,
       "address": "0xaad94afea296dcf8c97d05dbf3733a245c3ea78f",
       "name": "ChadPu",
       "symbol": "CHDPU",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0xaad94Afea296DCF8c97D05dbf3733A245c3Ea78F/logo.png"
+    },
+    {
+      "chainId": 841,
+      "address": "0xf9ba22c56c04040115224c8048c21406fc8ac1a7",
+      "name": "BITRA",
+      "symbol": "BTR",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0xf9BA22c56c04040115224c8048C21406fc8Ac1a7/logo.png"
+    },
+    {
+      "chainId": 841,
+      "address": "0x4aFcFbF183C743362CeE976e5E94A3E5FB729935",
+      "name": "FOMOGOD",
+      "symbol": "FOMOG",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0x4aFcFbF183C743362CeE976e5E94A3E5FB729935/logo.png"
     }
   ],
   "version": {

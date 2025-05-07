@@ -1,4 +1,3 @@
-import { NetworkStatus } from "@apollo/client";
 import {
   ChainId,
   Currency,
@@ -13,7 +12,6 @@ import {
   useSupportedChainId,
 } from "constants/chains";
 import { nativeOnChain } from "constants/tokens";
-import { PollingInterval } from "graphql/data/util";
 import { useEffect, useMemo, useState } from "react";
 import {
   ClassicTrade,
@@ -21,14 +19,8 @@ import {
   TradeState,
 } from "state/routing/types";
 import { useRoutingAPITrade } from "state/routing/useRoutingAPITrade";
-import {
-  Chain,
-  useTokenSpotPriceQuery,
-} from "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks";
-import { getNativeTokenDBAddress } from "utils/nativeTokens";
 
 import useIsWindowVisible from "./useIsWindowVisible";
-import useStablecoinPrice from "./useStablecoinPrice";
 import { useTokenEthPrice, useTokenUsdPrice } from "./useTokenUsdPrice";
 
 // ETH amounts used when calculating spot price for a given currency.

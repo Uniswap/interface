@@ -1,9 +1,13 @@
 import PositionListItem from 'components/PositionListItem'
+import StakingPositionListItem from 'components/StakingPositionListItem'
 import { Trans } from 'i18n'
 import React from 'react'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
+import { ProcessedIncentive, UserPosition } from 'hooks/useIncentivesData'
+import { PositionsResponse } from 'hooks/useTotalPositions'
+import { BigNumber } from '@ethersproject/bignumber'
 
 const DesktopHeader = styled.div`
   display: none;
@@ -60,48 +64,73 @@ const ToggleLabel = styled.button`
 `
 
 type PositionListProps = React.PropsWithChildren<{
-  positions: PositionDetails[]
-  setUserHideClosedPositions: any
-  userHideClosedPositions: boolean
+  positions: PositionDetails[] | (PositionsResponse & { reward?: string })[]
+  setUserHideClosedPositions?: (value: boolean) => void
+  userHideClosedPositions?: boolean
+  isStakingList?: boolean
 }>
+
+function isStakingPosition(position: PositionDetails | (PositionsResponse & { reward?: string })): position is PositionsResponse & { reward?: string } {
+  return 'id' in position && 'minter' in position && 'owner' in position && 'pool' in position
+}
 
 export default function PositionList({
   positions,
   setUserHideClosedPositions,
   userHideClosedPositions,
+  isStakingList = false,
 }: PositionListProps) {
   return (
     <>
       <DesktopHeader>
         <div>
-          <Trans i18nKey="pool.position" />
+          <Trans i18nKey={isStakingList ? "pool.stakingPositions" : "pool.position"} />
           {positions && ' (' + positions.length + ')'}
         </div>
 
-        <ToggleLabel
-          id="desktop-hide-closed-positions"
-          onClick={() => {
-            setUserHideClosedPositions(!userHideClosedPositions)
-          }}
-        >
-          {userHideClosedPositions ? <Trans i18nKey="pool.showClosed" /> : <Trans i18nKey="pool.hideClosed" />}
-        </ToggleLabel>
-      </DesktopHeader>
-      <MobileHeader>
-        <Trans i18nKey="pool.position" />
-        <ToggleWrap>
+        {!isStakingList && setUserHideClosedPositions && (
           <ToggleLabel
+            id="desktop-hide-closed-positions"
             onClick={() => {
               setUserHideClosedPositions(!userHideClosedPositions)
             }}
           >
             {userHideClosedPositions ? <Trans i18nKey="pool.showClosed" /> : <Trans i18nKey="pool.hideClosed" />}
           </ToggleLabel>
-        </ToggleWrap>
+        )}
+      </DesktopHeader>
+      <MobileHeader>
+        <Trans i18nKey={isStakingList ? "pool.stakingPositions" : "pool.position"} />
+        {!isStakingList && setUserHideClosedPositions && (
+          <ToggleWrap>
+            <ToggleLabel
+              onClick={() => {
+                setUserHideClosedPositions(!userHideClosedPositions)
+              }}
+            >
+              {userHideClosedPositions ? <Trans i18nKey="pool.showClosed" /> : <Trans i18nKey="pool.hideClosed" />}
+            </ToggleLabel>
+          </ToggleWrap>
+        )}
       </MobileHeader>
-      {positions.map((p) => (
-        <PositionListItem key={p.tokenId.toString()} {...p} />
-      ))}
+      {positions.map((p, i) => {
+        if (isStakingPosition(p)) {
+          return <StakingPositionListItem key={i} position={p} />
+        } else {
+          return (
+            <PositionListItem
+              key={p.tokenId.toString()}
+              token0={p.token0}
+              token1={p.token1}
+              tokenId={p.tokenId}
+              fee={p.fee}
+              liquidity={p.liquidity}
+              tickLower={p.tickLower}
+              tickUpper={p.tickUpper}
+            />
+          )
+        }
+      })}
     </>
   )
 }

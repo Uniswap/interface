@@ -16,20 +16,32 @@ export type RewardToken = {
   symbol: string;
 };
 
-export type Incentive = {
-  contract: string;
-  endTime: string;
-  ended: boolean;
+export interface Incentive {
   id: string;
+  reward: string;
+  rewardToken: {
+    id: string;
+    symbol: string;
+    decimals: number;
+  };
   pool: {
     id: string;
+    feeTier: number;
+    token0: {
+      id: string;
+      symbol: string;
+    };
+    token1: {
+      id: string;
+      symbol: string;
+    };
   };
-  reward: string;
-  rewardToken: RewardToken;
   startTime: string;
+  endTime: string;
   vestingPeriod: string;
   refundee: string;
-};
+  status: 'active' | 'ended' | 'inactive';
+}
 
 export type TokenInfoDetails = {
   chainId: number;
@@ -340,22 +352,48 @@ export const INCENTIVES_QUERY = `
   query incentives {
     incentives(subgraphError: deny) {
       id
-      ended
       reward
-      contract
+      rewardToken {
+        id
+        symbol
+        decimals
+      }
+      pool {
+        id
+        feeTier
+        incentives {
+          id
+        }
+        token0 {
+          id
+          symbol
+          name
+          decimals
+        }
+        token1 {
+          id
+          symbol
+          name
+          decimals
+          derivedETH
+        }
+        liquidity
+        totalValueLockedUSD
+        feesUSD
+        volumeUSD
+        poolDayData(first: 1, orderBy: date, orderDirection: desc) {
+          feesUSD
+          volumeUSD
+        }
+      }
       startTime
       endTime
       vestingPeriod
-      rewardToken {
-        id
-        decimals
-        symbol
-      }
-      pool{
-        id
-        feeTier
-      }
       refundee
+      ended
+    }
+    bundle(id: "1") {
+      ethPriceUSD
     }
   }
 `;
@@ -376,6 +414,7 @@ export const POOL_QUERY = `
         name
         id
         symbol
+        derivedETH
       }
       liquidity
       feeTier
