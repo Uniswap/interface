@@ -23,7 +23,7 @@ export function getInitialLogoUrl(
   }
 
   if (checksummedAddress) {
-    return `https://raw.githubusercontent.com/taraswap/assets/master/logos/${checksummedAddress}/logo.png`;
+    return `https://raw.githubusercontent.com/taraswap/assets/main/logos/${checksummedAddress}/logo.png`;
   } else {
     return backupImg ?? undefined;
   }

@@ -376,7 +376,7 @@ function IncentivesList({
                     currency={rewardToken}
                     size={24}
                     style={{ marginRight: "8px" }}
-                    logoURI={`https://raw.githubusercontent.com/taraswap/assets/master/logos/${getAddress(
+                    logoURI={`https://raw.githubusercontent.com/taraswap/assets/main/logos/${getAddress(
                       rewardToken.address
                     )}/logo.png`}
                   />

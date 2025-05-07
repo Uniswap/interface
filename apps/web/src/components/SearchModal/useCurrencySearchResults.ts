@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from "react";
 import { Currency } from "@taraswap/sdk-core";
 import {
   CrossChainCurrencyListRow,
@@ -309,49 +309,57 @@ export function useCurrencySearchResults({
 export const useCrossChainCurrencySearchResults = ({
   searchQuery,
   selectedCurrency,
-  otherSelectedCurrency
+  otherSelectedCurrency,
 }: CrossChainCurrencySearchParams) => {
-
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchCurrency, setSearchCurrency] = useState<CrossChainCurrency | null>(null);
+  const [searchCurrency, setSearchCurrency] =
+    useState<CrossChainCurrency | null>(null);
   const [allCurrencyRows, setAllCurrencyRows] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null);
 
   const initRows = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
 
     const apiUrl = process.env.REACT_APP_TELESWAP_API_URL;
     const apiKey = process.env.REACT_APP_TELESWAP_API_KEY;
 
     if (!apiUrl || !apiKey) {
-      setError("API configuration is missing. Please check your environment variables.");
+      setError(
+        "API configuration is missing. Please check your environment variables."
+      );
       setAllCurrencyRows([]);
       return;
     }
 
     const response = await fetch(`${apiUrl}/token`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Teleswap-X-API-Key': apiKey
-      }
+        "Content-Type": "application/json",
+        "Teleswap-X-API-Key": apiKey,
+      },
     });
 
-    let allCurrencies = await response.json()
+    let allCurrencies = await response.json();
     if (searchQuery) {
-      allCurrencies = allCurrencies.filter((currency: CrossChainCurrency) => currency.name.toLowerCase().includes(searchQuery.toLowerCase()) || currency.symbol.toLowerCase().includes(searchQuery.toLowerCase()));
+      allCurrencies = allCurrencies.filter(
+        (currency: CrossChainCurrency) =>
+          currency.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          currency.symbol.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
-    setAllCurrencyRows(allCurrencies)
-    setLoading(false)
+    setAllCurrencyRows(allCurrencies);
+    setLoading(false);
   }, [searchQuery]);
 
   useEffect(() => {
-    initRows()
-  }, [initRows])
+    initRows();
+  }, [initRows]);
 
   return {
     loading,
     searchCurrency,
-    allCurrencyRows: (allCurrencyRows ?? []).map(crossChainCurrencyListRowMapper),
-  }
-}
+    allCurrencyRows: (allCurrencyRows ?? []).map(
+      crossChainCurrencyListRowMapper
+    ),
+  };
+};

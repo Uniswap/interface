@@ -56,8 +56,9 @@ function useTokensFromMap(
 export function useFallbackListTokens(chainId: Maybe<ChainId>): {
   [address: string]: Token;
 } {
-  const fallbackListTokens = useCombinedInactiveLists();
-  const tokensFromMap = useTokensFromMap(fallbackListTokens, chainId);
+  // const fallbackListTokens = useCombinedInactiveLists();
+  const taraxaTokens = useTaraxaList();
+  const tokensFromMap = useTokensFromMap(taraxaTokens, chainId);
   const userAddedTokens = useUserAddedTokens();
   return useMemo(() => {
     return (

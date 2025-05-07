@@ -65,6 +65,6 @@ export function getTokenLogoURI(
   }
 
   if (networkName) {
-    return `https://raw.githubusercontent.com/taraswap/assets/master/logos/${address}/logo.png`;
+    return `https://raw.githubusercontent.com/taraswap/assets/main/logos/${address}/logo.png`;
   }
 }
