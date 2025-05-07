@@ -37,7 +37,7 @@ export default function Incentives() {
         return;
       }
       if (incentive.poolPositionIds && incentive.poolPositionIds[0]) {
-        navigate(`/#/pool/${incentive.poolPositionIds?.[0]}`);
+        navigate(`/#/pools/${incentive.poolPositionIds?.[0]}`);
         return;
       }
 
@@ -46,7 +46,7 @@ export default function Incentives() {
   };
 
   const handleSelectPosition = (positionId: number) => {
-    navigate(`/#/pool/${positionId}`);
+    navigate(`/#/pools/${positionId}`);
   };
 
   if (!account.isConnected) {
