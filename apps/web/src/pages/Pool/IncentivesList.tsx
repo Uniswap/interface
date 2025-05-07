@@ -4,7 +4,6 @@ import { Trans } from "i18n";
 import {
   LoadingRows,
   IncentiveCard,
-  IncentiveHeader,
   IncentiveContent,
   IncentiveStatus,
 } from "./styled";
@@ -39,6 +38,20 @@ const ButtonsContainer = styled(Row)`
   gap: 8px;
   justify-content: center;
   z-index: 1;
+
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 8px 0;
+    & > button, & > label, & > div {
+      width: 100% !important;
+      min-width: 0;
+      font-size: 12px !important;
+      height: 28px !important;
+      padding: 6px !important;
+    }
+  }
 `;
 
 const ScrollableContent = styled.div`
@@ -57,6 +70,61 @@ const ToggleLabel = styled.button`
   color: ${({ theme }) => theme.accent1};
   font-size: 14px;
   font-weight: 485;
+`;
+
+const ToggleRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    gap: 2px;
+    & > button, & > label, & > div {
+      font-size: 12px;
+    }
+  }
+`;
+
+const SmallToggle = styled(Toggle)`
+  transform: scale(0.8);
+  margin-left: 0;
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    transform: scale(0.6);
+  }
+`;
+
+const StyledCurrencyLogo = styled(CurrencyLogo)`
+  margin-right: 8px;
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    margin-right: 4px !important;
+  }
+`;
+
+const IncentiveHeaderRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  min-width: 0;
+  gap: 4px;
+  padding: 12px;
+  font-size: 12px;
+  @media (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    gap: 2px;
+    font-size: 12px;
+  }
+`;
+
+const IncentiveHeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 `;
 
 function IncentivesList({
@@ -334,15 +402,17 @@ function IncentivesList({
             <Trans i18nKey="common.withdraw" />
           )}
         </ButtonPrimary>
-        <ToggleLabel>
-          <ThemedText.BodySmall color="neutral2">
-            <Trans i18nKey="common.showEndedIncentives" />
-          </ThemedText.BodySmall>
-        </ToggleLabel>
-        <Toggle
-          isActive={showEndedIncentives}
-          toggle={() => setShowEndedIncentives(!showEndedIncentives)}
-        />
+        <ToggleRow>
+          <ToggleLabel as="label">
+            <ThemedText.BodySmall color="neutral2">
+              <Trans i18nKey="common.showEndedIncentives" />
+            </ThemedText.BodySmall>
+          </ToggleLabel>
+          <SmallToggle
+            isActive={showEndedIncentives}
+            toggle={() => setShowEndedIncentives(!showEndedIncentives)}
+          />
+        </ToggleRow>
       </ButtonsContainer>
 
       <ScrollableContent>
@@ -370,9 +440,9 @@ function IncentivesList({
                 setExpandedIncentive(isExpanded ? null : incentive.id)
               }
             >
-              <IncentiveHeader>
-                <RowFixed>
-                  <CurrencyLogo
+              <IncentiveHeaderContainer>
+                <IncentiveHeaderRow>
+                  <StyledCurrencyLogo
                     currency={rewardToken}
                     size={24}
                     style={{ marginRight: "8px" }}
@@ -390,19 +460,17 @@ function IncentivesList({
                       (Staked)
                     </ThemedText.DeprecatedMain>
                   )}
-                </RowFixed>
-                <RowFixed>
-                  <IncentiveStatus isActive={isActive}>
-                    {isActive ? (
-                      <Trans i18nKey="common.active" />
-                    ) : incentive.status === "inactive" ? (
-                      <Trans i18nKey="common.inactive" />
-                    ) : (
-                      <Trans i18nKey="common.ended" />
-                    )}
-                  </IncentiveStatus>
-                </RowFixed>
-              </IncentiveHeader>
+                </IncentiveHeaderRow>
+                <IncentiveStatus isActive={isActive}>
+                  {isActive ? (
+                    <Trans i18nKey="common.active" />
+                  ) : incentive.status === "inactive" ? (
+                    <Trans i18nKey="common.inactive" />
+                  ) : (
+                    <Trans i18nKey="common.ended" />
+                  )}
+                </IncentiveStatus>
+              </IncentiveHeaderContainer>
               {isExpanded && (
                 <IncentiveContent>
                   <RowBetween>
@@ -410,7 +478,7 @@ function IncentivesList({
                       <Trans i18nKey="common.pendingRewards" />
                     </ThemedText.DeprecatedMain>
                     <RowFixed>
-                      <CurrencyLogo
+                      <StyledCurrencyLogo
                         currency={rewardToken}
                         size={20}
                         style={{ marginRight: "8px" }}
@@ -429,7 +497,7 @@ function IncentivesList({
                       <Trans i18nKey="common.accruedRewards" />
                     </ThemedText.DeprecatedMain>
                     <RowFixed>
-                      <CurrencyLogo
+                      <StyledCurrencyLogo
                         currency={rewardToken}
                         size={20}
                         style={{ marginRight: "8px" }}
