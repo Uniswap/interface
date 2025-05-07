@@ -30,12 +30,7 @@ export async function handleGetCapabilities(): Promise<GetCapabilitiesResult | n
     if (error instanceof Error && error.message.includes('getCapabilities timeout')) {
       return null
     }
-    getLogger().error(error || new Error('Unknown error getting capabilities'), {
-      tags: {
-        file: 'useWalletCapabilities.ts',
-        function: 'handleGetCapabilities',
-      },
-    })
+    getLogger().warn('useWalletCapabilities', 'handleGetCapabilities', `Error getting capabilities: ${error}`)
     return null
   } finally {
     // prevent memory leaks

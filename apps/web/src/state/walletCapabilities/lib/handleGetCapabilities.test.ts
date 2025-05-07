@@ -18,6 +18,7 @@ jest.mock('components/Web3Provider/wagmiConfig', () => ({
 jest.mock('utilities/src/logger/logger', () => ({
   getLogger: jest.fn(() => ({
     error: jest.fn(),
+    warn: jest.fn(),
   })),
 }))
 
@@ -41,14 +42,14 @@ describe('walletCapabilities', () => {
 
     it('returns null for invalid response', async () => {
       // Make sure the logger is properly mocked before the test
-      const mockLoggerError = jest.fn()
-      ;(getLogger as jest.Mock).mockReturnValue({ error: mockLoggerError })
+      const mockLoggerWarn = jest.fn()
+      ;(getLogger as jest.Mock).mockReturnValue({ error: jest.fn(), warn: mockLoggerWarn })
 
       // Invalid mock response (missing 0x prefix)
       ;(wagmi_getCapabilities as jest.Mock).mockResolvedValue({ asdada: { atomic: { status: 'supported' } } })
 
       expect(await handleGetCapabilities()).toBeNull()
-      expect(mockLoggerError).toHaveBeenCalled()
+      expect(mockLoggerWarn).toHaveBeenCalled()
     })
 
     it('returns null on timeout', async () => {
@@ -60,12 +61,12 @@ describe('walletCapabilities', () => {
 
     it('returns null on error', async () => {
       // Make sure the logger is properly mocked before the test
-      const mockLoggerError = jest.fn()
-      ;(getLogger as jest.Mock).mockReturnValue({ error: mockLoggerError })
+      const mockLoggerWarn = jest.fn()
+      ;(getLogger as jest.Mock).mockReturnValue({ error: jest.fn(), warn: mockLoggerWarn })
       ;(wagmi_getCapabilities as jest.Mock).mockRejectedValue(new Error('API error'))
 
       expect(await handleGetCapabilities()).toBeNull()
-      expect(mockLoggerError).toHaveBeenCalled()
+      expect(mockLoggerWarn).toHaveBeenCalled()
     })
   })
 

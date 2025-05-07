@@ -36,10 +36,7 @@ export function opacifyRaw(opacity: number, color: string): string {
     }
     throw new Error(`provided color ${color} is neither a hex nor an rgb color`)
   } catch (e) {
-    logger.error(e, {
-      tags: { file: 'color/utils', function: 'opacifyRaw' },
-      extra: { args: [opacity, color] },
-    })
+    logger.warn('color/utils', 'opacifyRaw', `Error opacifying color ${color} with opacity ${opacity}: ${e}`)
   }
   return color
 }
