@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmUj5V9H1syj86KL9kWgvvrwnXSTAaVQ2ofHobz2QzRMqi`
-- CIDv1: `bafybeic64tvawllez263e3osp27qz3ozcdh4zeh4avoex4wsbiumnpn2je`
+- CIDv0: `QmZhoBxu3NSUWqBfrYJS6VMdehd3Bppjn1MvDwqkig2nX7`
+- CIDv1: `bafybeifi3nlynboyldsbh3j4u4jyyedhotevlnfldvujyfibecj6yq4ldy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,9 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeic64tvawllez263e3osp27qz3ozcdh4zeh4avoex4wsbiumnpn2je.ipfs.dweb.link/
-- [ipfs://QmUj5V9H1syj86KL9kWgvvrwnXSTAaVQ2ofHobz2QzRMqi/](ipfs://QmUj5V9H1syj86KL9kWgvvrwnXSTAaVQ2ofHobz2QzRMqi/)
+- https://bafybeifi3nlynboyldsbh3j4u4jyyedhotevlnfldvujyfibecj6yq4ldy.ipfs.dweb.link/
+- [ipfs://QmZhoBxu3NSUWqBfrYJS6VMdehd3Bppjn1MvDwqkig2nX7/](ipfs://QmZhoBxu3NSUWqBfrYJS6VMdehd3Bppjn1MvDwqkig2nX7/)
 
-### 5.83.3 (2025-05-07)
-
-
-### Bug Fixes
-
-* **web:** fix key open search modal (#19370) 7ad6115
+### 5.83.4 (2025-05-07)
 
 

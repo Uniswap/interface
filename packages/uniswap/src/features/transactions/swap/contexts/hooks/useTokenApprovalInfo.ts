@@ -11,7 +11,6 @@ import {
   useShadowGasStrategies,
 } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
-import { useIsSmartWalletFlow } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/hooks'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -38,11 +37,12 @@ export type ApprovalTxInfo = {
   revokeGasFeeResult: GasFeeResult
 }
 
-function useApprovalWillBeBatchedWithSwap(chainId: UniverseChainId): boolean {
-  const isSmartWalletFlow = useIsSmartWalletFlow()
+function useApprovalWillBeBatchedWithSwap(chainId: UniverseChainId, routing: Routing | undefined): boolean {
   const canBatchTransactions = useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(chainId))
 
-  return Boolean(isSmartWalletFlow || canBatchTransactions)
+  const isBatchableFlow = Boolean(routing && !isUniswapX({ routing }))
+
+  return Boolean(canBatchTransactions) && isBatchableFlow
 }
 
 export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalTxInfo {
@@ -100,7 +100,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     shadowGasStrategies,
   ])
 
-  const approvalWillBeBatchedWithSwap = useApprovalWillBeBatchedWithSwap(chainId)
+  const approvalWillBeBatchedWithSwap = useApprovalWillBeBatchedWithSwap(chainId, routing)
   const shouldSkip = !approvalRequestArgs || isWrap || !address || approvalWillBeBatchedWithSwap
 
   const { data, isLoading, error } = useCheckApprovalQuery({
