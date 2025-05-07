@@ -15,8 +15,9 @@ import { getAddress } from "ethers/lib/utils";
 import { PoolFeeDetails } from "./PoolFeeDetails";
 import { useMemo } from "react";
 import { useScreenSize } from "hooks/screenSize";
+import Loader from "components/Icons/LoadingSpinner";
 
-const StyledPoolRow = styled(Row)<{ $isMobile?: boolean }>`
+const StyledPoolRow = styled(Row) <{ $isMobile?: boolean }>`
   align-items: center;
   margin-left: ${({ $isMobile }) => ($isMobile ? "0" : "4px")};
   gap: ${({ $isMobile }) => ($isMobile ? "0" : "12px")};
@@ -46,7 +47,7 @@ const TokenImageWrapper = styled.div<{
   `}
 `;
 
-const ActionButtons = styled(Row)<{
+const ActionButtons = styled(Row) <{
   $leftAlign?: boolean;
   $isMobile?: boolean;
 }>`
@@ -79,7 +80,7 @@ const ActionButton = styled.button<{
   cursor: pointer;
   border: 1px solid
     ${({ theme, $variant }) =>
-      $variant === "primary" ? theme.accent1 : theme.surface3};
+    $variant === "primary" ? theme.accent1 : theme.surface3};
   background: ${({ theme, $variant }) =>
     $variant === "primary" ? theme.accent1 : "transparent"};
   color: ${({ theme }) => theme.neutral1};
@@ -95,7 +96,7 @@ const PoolNameContainer = styled.div<{ $isMobile?: boolean }>`
   margin-left: ${({ $isMobile }) => ($isMobile ? "0" : "2px")};
 `;
 
-const PoolName = styled(ThemedText.BodyPrimary)<{ $isMobile?: boolean }>`
+const PoolName = styled(ThemedText.BodyPrimary) <{ $isMobile?: boolean }>`
   && {
     font-size: ${({ $isMobile }) => ($isMobile ? "12px" : "16px")};
     font-weight: 500;
@@ -103,7 +104,7 @@ const PoolName = styled(ThemedText.BodyPrimary)<{ $isMobile?: boolean }>`
   }
 `;
 
-const FeeLabel = styled(ThemedText.BodySecondary)<{ $isMobile?: boolean }>`
+const FeeLabel = styled(ThemedText.BodySecondary) <{ $isMobile?: boolean }>`
   && {
     font-size: ${({ $isMobile }) => ($isMobile ? "12px" : "14px")};
     color: ${({ theme }) => theme.neutral2};
@@ -376,26 +377,16 @@ export const IncentiveTable = ({
         }
 
         return (
-          <Cell minWidth={isMobile ? 10 : 255} justifyContent="flex-end">
+          <Cell minWidth={isMobile ? 10 : 125} justifyContent="flex-end">
             <ActionButtons $isMobile={isMobile}>
-              <SwapButton
-                $isMobile={isMobile}
-                onClick={() =>
-                  navigate(
-                    `/swap?inputCurrency=${getAddress(
-                      data.token0Address
-                    )}&outputCurrency=${getAddress(
-                      data.token1Address
-                    )}&chain=taraxa`
-                  )
-                }
-              >
-                <Swap />
-              </SwapButton>
               <ActionButton
                 $variant="primary"
                 $isMobile={isMobile}
                 onClick={() => onDeposit?.(data)}
+                style={{
+                  marginLeft: isMobile ? "0px" : !data.hasUserPositionInPool &&
+                    !data.hasUserPositionInIncentive ? "50px" : "60px"
+                }}
               >
                 {data.hasUserPositionInPool ? (
                   <Trans i18nKey="common.incentives.position" />
@@ -417,6 +408,6 @@ export const IncentiveTable = ({
   }, [columnHelper, navigate, onDeposit, allIncentivesEnded, isMobile]);
 
   return (
-    <Table columns={columns} data={incentives || []} loading={isLoading} />
+    <Table columns={columns} data={incentives} loading={isLoading} />
   );
 };

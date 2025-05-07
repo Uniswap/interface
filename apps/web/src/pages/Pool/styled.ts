@@ -166,4 +166,5 @@ export const IncentiveStatus = styled.div<IncentiveStatusProps>`
   border-radius: 8px;
   font-size: 12px;
   display: inline-block;
+  margin-right: 10px;
 `; 
