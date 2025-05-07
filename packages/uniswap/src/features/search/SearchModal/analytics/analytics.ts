@@ -43,7 +43,9 @@ export function sendSearchOptionItemClickedAnalytics({
           chainId: currency.chainId,
           suggestion_type: searchContext?.isHistory
             ? NavBarSearchTypes.RECENT_SEARCH
-            : NavBarSearchTypes.TOKEN_SUGGESTION,
+            : searchContext?.query && searchContext?.query.length > 0
+              ? NavBarSearchTypes.TOKEN_SUGGESTION
+              : NavBarSearchTypes.TOKEN_TRENDING,
           total_suggestions: searchContext?.suggestionCount,
           query_text: searchContext?.query ?? '',
           selected_search_result_name: currency.name ?? '',
