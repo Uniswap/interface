@@ -320,6 +320,7 @@ export function useIncentivesData(poolAddress?: string) {
       );
       const positions = positionsData.data?.positions || [];
       setUserPositionsInPools(positions);
+      setIsLoading(false);
     } catch (error) {
       setError(error);
       setIsLoading(false);
