@@ -51,7 +51,7 @@ const TradeFeesBar = styled.div<{ width: string }>`
   left: 0;
   top: 0;
   height: 100%;
-  background: #40b66b;
+  background: #ffffff;
   width: ${(props) => props.width};
   border-radius: 4px 0 0 4px;
   z-index: 1;
@@ -62,7 +62,7 @@ const TokenRewardsBar = styled.div<{ width: string; offset: string }>`
   left: ${(props) => props.offset};
   top: 0;
   height: 100%;
-  background: #ffffff;
+  background: #40b66b;
   width: ${(props) => props.width};
   border-radius: 0 4px 4px 0;
   z-index: 1;

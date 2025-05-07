@@ -31,7 +31,6 @@ import { Dots } from "components/swap/styled";
 import {
   SupportedInterfaceChainId,
   chainIdToBackendChain,
-  useChainFromUrlParam,
   useIsSupportedChainId,
   useSupportedChainId,
 } from "constants/chains";
@@ -76,7 +75,7 @@ import {
   StyledRouterLink,
   ThemedText,
 } from "theme/components";
-import { Button, Text } from "ui/src";
+import { Text } from "ui/src";
 import Trace from "uniswap/src/features/telemetry/Trace";
 import { sendAnalyticsEvent } from "uniswap/src/features/telemetry/send";
 import { logger } from "utilities/src/logger/logger";
@@ -94,15 +93,10 @@ import { TransactionType } from "../../state/transactions/types";
 import { calculateGasMargin } from "../../utils/calculateGasMargin";
 import { ExplorerDataType, getExplorerLink } from "../../utils/getExplorerLink";
 import { LoadingRows } from "./styled";
-import { STAKER_ADDRESS, useV3StakerContract } from "hooks/useV3StakerContract";
 import usePosition from "hooks/usePosition";
 import useTokenPosition from "hooks/useTokenPosition";
 import { formatEther } from "ethers/lib/utils";
-import { useIncentivesData, ProcessedIncentive } from 'hooks/useIncentivesData'
-import { IncentiveKey } from 'hooks/usePosition'
-import { EXACT_INCENTIVE_QUERY } from 'components/Incentives/types'
-import { parseUnits } from 'viem'
-import IncentivesList from './IncentivesList'
+import IncentivesList from "./IncentivesList";
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;
@@ -127,12 +121,14 @@ const PageWrapper = styled.div`
     box-sizing: border-box;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) =>
+      `${theme.breakpoint.md}px`}) {
     padding: 16px;
     flex-direction: column;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) =>
+      `${theme.breakpoint.sm}px`}) {
     padding: 16px;
     flex-direction: column;
   }
@@ -145,7 +141,8 @@ const LeftPane = styled.div`
   overflow: hidden;
   width: 100%;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) =>
+      `${theme.breakpoint.md}px`}) {
     max-width: 100%;
     width: 100%;
   }
@@ -159,7 +156,8 @@ const RightPane = styled.div`
   width: 100%;
   padding-top: 7%;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) =>
+      `${theme.breakpoint.md}px`}) {
     max-width: 100%;
     width: 100%;
     min-width: 0;
@@ -1622,11 +1620,15 @@ function PositionPageContent() {
                               onClick={() => setShowConfirm(true)}
                             >
                               {!!collectMigrationHash && !isCollectPending ? (
-                                <ThemedText.DeprecatedMain color={theme.neutral1}>
+                                <ThemedText.DeprecatedMain
+                                  color={theme.neutral1}
+                                >
                                   <Trans i18nKey="pool.collected" />
                                 </ThemedText.DeprecatedMain>
                               ) : isCollectPending || collecting ? (
-                                <ThemedText.DeprecatedMain color={theme.neutral1}>
+                                <ThemedText.DeprecatedMain
+                                  color={theme.neutral1}
+                                >
                                   {" "}
                                   <Dots>
                                     <Trans i18nKey="pool.collecting" />
@@ -1634,7 +1636,9 @@ function PositionPageContent() {
                                 </ThemedText.DeprecatedMain>
                               ) : (
                                 <>
-                                  <ThemedText.DeprecatedMain color={theme.white}>
+                                  <ThemedText.DeprecatedMain
+                                    color={theme.white}
+                                  >
                                     <Trans i18nKey="pool.collectingFees" />
                                   </ThemedText.DeprecatedMain>
                                 </>
@@ -1736,12 +1740,15 @@ function PositionPageContent() {
           <RightPane>
             {account?.address && (
               <DarkCardWithOverflow>
-                <IncentivesList tokenId={Number(tokenId?.toString() ?? 0)} poolAddress={poolAddress ?? ""} />
+                <IncentivesList
+                  tokenId={Number(tokenId?.toString() ?? 0)}
+                  poolAddress={poolAddress ?? ""}
+                />
               </DarkCardWithOverflow>
             )}
           </RightPane>
         </PageWrapper>
-        <DarkCard style={{ width: '98%' }}>
+        <DarkCard style={{ width: "98%" }}>
           <AutoColumn gap="md">
             <RowBetween>
               <RowFixed>

@@ -18,8 +18,8 @@ import { useScreenSize } from "hooks/screenSize";
 
 const StyledPoolRow = styled(Row)<{ $isMobile?: boolean }>`
   align-items: center;
-  margin-left: ${({ $isMobile }) => ($isMobile ? '0' : '4px')};
-  gap: ${({ $isMobile }) => ($isMobile ? '0' : '12px')};
+  margin-left: ${({ $isMobile }) => ($isMobile ? "0" : "4px")};
+  gap: ${({ $isMobile }) => ($isMobile ? "0" : "12px")};
 `;
 
 const TokenContainer = styled.div`
@@ -28,9 +28,12 @@ const TokenContainer = styled.div`
   gap: -8px;
 `;
 
-const TokenImageWrapper = styled.div<{ $hasImage?: boolean; $isMobile?: boolean }>`
-  width: ${({ $isMobile }) => ($isMobile ? '16px' : '30px')};
-  height: ${({ $isMobile }) => ($isMobile ? '16px' : '30px')};
+const TokenImageWrapper = styled.div<{
+  $hasImage?: boolean;
+  $isMobile?: boolean;
+}>`
+  width: ${({ $isMobile }) => ($isMobile ? "16px" : "30px")};
+  height: ${({ $isMobile }) => ($isMobile ? "16px" : "30px")};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,8 +46,11 @@ const TokenImageWrapper = styled.div<{ $hasImage?: boolean; $isMobile?: boolean 
   `}
 `;
 
-const ActionButtons = styled(Row)<{ $leftAlign?: boolean; $isMobile?: boolean }>`
-  gap: ${({ $isMobile }) => ($isMobile ? '4px' : '8px')};
+const ActionButtons = styled(Row)<{
+  $leftAlign?: boolean;
+  $isMobile?: boolean;
+}>`
+  gap: ${({ $isMobile }) => ($isMobile ? "4px" : "8px")};
   width: 100%;
   justify-content: ${({ $leftAlign }) =>
     $leftAlign ? "flex-start" : "flex-end"};
@@ -53,19 +59,22 @@ const ActionButtons = styled(Row)<{ $leftAlign?: boolean; $isMobile?: boolean }>
 const SwapButton = styled.div<{ $isMobile?: boolean }>`
   cursor: pointer;
   transform: rotate(90deg);
-  margin-left: ${({ $isMobile }) => ($isMobile ? '4px' : '20px')};
+  margin-left: ${({ $isMobile }) => ($isMobile ? "4px" : "20px")};
   display: flex;
   align-items: center;
   svg {
-    width: ${({ $isMobile }) => ($isMobile ? '14px' : '24px')};
-    height: ${({ $isMobile }) => ($isMobile ? '14px' : '24px')};
+    width: ${({ $isMobile }) => ($isMobile ? "14px" : "24px")};
+    height: ${({ $isMobile }) => ($isMobile ? "14px" : "24px")};
   }
 `;
 
-const ActionButton = styled.button<{ $variant?: "primary"; $isMobile?: boolean }>`
-  padding: ${({ $isMobile }) => ($isMobile ? '2px 4px' : '8px 12px')};
+const ActionButton = styled.button<{
+  $variant?: "primary";
+  $isMobile?: boolean;
+}>`
+  padding: ${({ $isMobile }) => ($isMobile ? "2px 4px" : "8px 12px")};
   border-radius: 6px;
-  font-size: ${({ $isMobile }) => ($isMobile ? '10px' : '14px')};
+  font-size: ${({ $isMobile }) => ($isMobile ? "10px" : "14px")};
   font-weight: 500;
   cursor: pointer;
   border: 1px solid
@@ -83,26 +92,26 @@ const ActionButton = styled.button<{ $variant?: "primary"; $isMobile?: boolean }
 const PoolNameContainer = styled.div<{ $isMobile?: boolean }>`
   display: flex;
   flex-direction: column;
-  margin-left: ${({ $isMobile }) => ($isMobile ? '0' : '2px')};
+  margin-left: ${({ $isMobile }) => ($isMobile ? "0" : "2px")};
 `;
 
 const PoolName = styled(ThemedText.BodyPrimary)<{ $isMobile?: boolean }>`
   && {
-    font-size: ${({ $isMobile }) => ($isMobile ? '12px' : '16px')};
+    font-size: ${({ $isMobile }) => ($isMobile ? "12px" : "16px")};
     font-weight: 500;
-    margin-bottom: ${({ $isMobile }) => ($isMobile ? '1px' : '4px')};
+    margin-bottom: ${({ $isMobile }) => ($isMobile ? "1px" : "4px")};
   }
 `;
 
 const FeeLabel = styled(ThemedText.BodySecondary)<{ $isMobile?: boolean }>`
   && {
-    font-size: ${({ $isMobile }) => ($isMobile ? '12px' : '14px')};
+    font-size: ${({ $isMobile }) => ($isMobile ? "12px" : "14px")};
     color: ${({ theme }) => theme.neutral2};
     background: ${({ theme }) => theme.surface2};
-    padding: ${({ $isMobile }) => ($isMobile ? '0 2px' : '2px 6px')};
+    padding: ${({ $isMobile }) => ($isMobile ? "0 2px" : "2px 6px")};
     border-radius: 4px;
     width: fit-content;
-    margin-top: ${({ $isMobile }) => ($isMobile ? '1px' : '4px')};
+    margin-top: ${({ $isMobile }) => ($isMobile ? "1px" : "4px")};
   }
 `;
 
@@ -112,7 +121,13 @@ interface IncentiveTableProps {
   onDeposit?: (incentive: ProcessedIncentive) => void;
 }
 
-const PoolTokenImage = ({ pool, isMobile }: { pool: ProcessedIncentive, isMobile?: boolean }) => {
+const PoolTokenImage = ({
+  pool,
+  isMobile,
+}: {
+  pool: ProcessedIncentive;
+  isMobile?: boolean;
+}) => {
   const LOGO_DEFAULT_SIZE = isMobile ? 22 : 30;
   return (
     <TokenContainer>
@@ -150,11 +165,12 @@ export const IncentiveTable = ({
   const columnHelper = createColumnHelper<ProcessedIncentive>();
   const navigate = useNavigate();
   const isScreenSize = useScreenSize();
-  const isMobile = !isScreenSize['sm'];
+  const isMobile = !isScreenSize["sm"];
 
   const allIncentivesEnded = useMemo(
     () =>
-      incentives.length > 0 && incentives.every((incentive) => incentive.status !== 'active'),
+      incentives.length > 0 &&
+      incentives.every((incentive) => incentive.status !== "active"),
     [incentives]
   );
 
@@ -279,9 +295,7 @@ export const IncentiveTable = ({
 
             return (
               <Cell minWidth={130} style={{ marginRight: "20px" }}>
-                <ThemedText.BodyPrimary>
-                  {data.feesUSD}
-                </ThemedText.BodyPrimary>
+                <ThemedText.BodyPrimary>{data.feesUSD}</ThemedText.BodyPrimary>
               </Cell>
             );
           },
@@ -302,19 +316,29 @@ export const IncentiveTable = ({
             if (!data) return null;
 
             return (
-              <Cell minWidth={isMobile ? 90 : 150} justifyContent={isMobile ? "flex-end" : "flex-start"}>
-                { !isMobile ? <PoolFeeDetails
-                  key={data.id}
-                  incentiveId={data.id}
-                  rewardTokenImage={data.token1LogoURI}
-                  rewardTokenSymbol={data.token1Symbol}
-                  rewardTokenAddress={data.token1Address}
-                  tradeFeesPercentage={data.tradeFeesPercentage}
-                  tokenRewardsPercentage={data.tokenRewardsPercentage}
-                  daily24hAPR={data.daily24hAPR}
-                  weeklyRewards={data.weeklyRewards}
-                  weeklyRewardsUSD={data.weeklyRewardsUSD}
-                /> : <ThemedText.BodyPrimary >{data.daily24hAPR.toFixed(2)}%</ThemedText.BodyPrimary>}
+              <Cell
+                minWidth={isMobile ? 90 : 150}
+                justifyContent={isMobile ? "flex-end" : "flex-start"}
+              >
+                {!isMobile ? (
+                  <PoolFeeDetails
+                    key={data.id}
+                    incentiveId={data.id}
+                    rewardTokenImage={data.rewardToken.logoURI}
+                    rewardTokenSymbol={data.rewardToken.symbol}
+                    rewardTokenAddress={data.rewardToken.id}
+                    tradeFeesPercentage={data.tradeFeesPercentage}
+                    tokenRewardsPercentage={data.tokenRewardsPercentage}
+                    daily24hAPR={data.daily24hAPR}
+                    weeklyRewards={data.weeklyRewards}
+                    weeklyRewardsUSD={data.weeklyRewardsUSD}
+                    endsAt={new Date(data.endTime * 1000)}
+                  />
+                ) : (
+                  <ThemedText.BodyPrimary>
+                    {data.daily24hAPR.toFixed(2)}%
+                  </ThemedText.BodyPrimary>
+                )}
               </Cell>
             );
           },
@@ -323,16 +347,17 @@ export const IncentiveTable = ({
     }
 
     const idColumn = columnHelper.accessor("id", {
-      header: () => <Cell minWidth={isMobile ? 10 :125} />,
+      header: () => <Cell minWidth={isMobile ? 10 : 125} />,
       cell: (pool) => {
         const data = pool?.row?.original;
         if (!data) return null;
 
         if (!data.hasUserPositionInPool && !data.userHasTokensToDeposit) {
           return (
-            <Cell minWidth={isMobile ? 10 :125} justifyContent="flex-end">
+            <Cell minWidth={isMobile ? 10 : 125} justifyContent="flex-end">
               <ActionButtons>
-                <SwapButton $isMobile={isMobile}
+                <SwapButton
+                  $isMobile={isMobile}
                   onClick={() =>
                     navigate(
                       `/swap?inputCurrency=${getAddress(
@@ -351,9 +376,10 @@ export const IncentiveTable = ({
         }
 
         return (
-          <Cell minWidth={isMobile ? 10 :255} justifyContent="flex-end">
+          <Cell minWidth={isMobile ? 10 : 255} justifyContent="flex-end">
             <ActionButtons $isMobile={isMobile}>
-              <SwapButton $isMobile={isMobile}
+              <SwapButton
+                $isMobile={isMobile}
                 onClick={() =>
                   navigate(
                     `/swap?inputCurrency=${getAddress(
@@ -373,7 +399,9 @@ export const IncentiveTable = ({
               >
                 {data.hasUserPositionInPool ? (
                   <Trans i18nKey="common.incentives.position" />
-                ) : data.userHasTokensToDeposit && !data.hasUserPositionInPool && !data.hasUserPositionInIncentive ? (
+                ) : data.userHasTokensToDeposit &&
+                  !data.hasUserPositionInPool &&
+                  !data.hasUserPositionInIncentive ? (
                   <Trans i18nKey="common.incentives.deposit" />
                 ) : null}
               </ActionButton>

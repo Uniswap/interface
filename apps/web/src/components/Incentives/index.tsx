@@ -17,9 +17,11 @@ const StyledLightCard = styled(LightCard)`
 `;
 
 export default function Incentives() {
-  const { activeIncentives, endedIncentives, isLoading, error } = useIncentivesData();
+  const { activeIncentives, endedIncentives, isLoading, error } =
+    useIncentivesData();
   const [showPositionModal, setShowPositionModal] = useState(false);
-  const [selectedIncentive, setSelectedIncentive] = useState<ProcessedIncentive | null>(null);
+  const [selectedIncentive, setSelectedIncentive] =
+    useState<ProcessedIncentive | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const account = useAccount();
@@ -33,15 +35,13 @@ export default function Incentives() {
         setSelectedIncentive(incentive);
         setShowPositionModal(true);
         return;
-      }  
+      }
       if (incentive.poolPositionIds && incentive.poolPositionIds[0]) {
         navigate(`/#/pool/${incentive.poolPositionIds?.[0]}`);
         return;
       }
 
-      navigate(
-        `/#/add/${incentive.token0Address}/${incentive.token1Address}`
-      );
+      navigate(`/#/add/${incentive.token0Address}/${incentive.token1Address}`);
     }
   };
 
@@ -60,6 +60,7 @@ export default function Incentives() {
   }
 
   if (error) {
+    console.error("error", error);
     return (
       <StyledLightCard>
         <ThemedText.BodySecondary>
@@ -83,7 +84,7 @@ export default function Incentives() {
     return (
       <StyledLightCard>
         <ThemedText.BodySecondary>
-          No {isEndedTab ? 'ended' : 'active'} incentives found.
+          No {isEndedTab ? "ended" : "active"} incentives found.
         </ThemedText.BodySecondary>
       </StyledLightCard>
     );
