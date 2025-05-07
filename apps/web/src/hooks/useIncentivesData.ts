@@ -10,6 +10,8 @@ import { useTokenList } from "hooks/useTokenList";
 import { useV3StakerContract } from "hooks/useV3StakerContract";
 import { usePoolDatas } from "hooks/usePoolDatas";
 import { useTokenEthPrice } from "./useTokenUsdPrice";
+import { Token } from "@taraswap/sdk-core";
+import { useMultipleTokenBalances } from "./useMultipleTokenBalances";
 
 interface IncentiveData {
   id: string;
@@ -157,15 +159,39 @@ export function useIncentivesData(poolAddress?: string) {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [storedBalances, setStoredBalances] = useState<
-    Record<string, { balance: number }>
-  >({});
   const { tokenList, isLoadingTokenList } = useTokenList();
   const [incentivesData, setIncentivesData] = useState<IncentiveData[]>([]);
   const [ethPriceUSD, setEthPriceUSD] = useState<number>(0);
   const [lastProcessedTime, setLastProcessedTime] = useState<number>(0);
 
   const accountAddress = useMemo(() => account.address, [account.address]);
+
+  // Create tokens array for all token1s in incentives
+  const tokens = useMemo(() => {
+    if (!incentivesData.length || !account.chainId) return [];
+    
+    return incentivesData.map(incentive => {
+      const token1Address = incentive.pool.token1.id;
+      const token1Info = findTokenByAddress(tokenList, token1Address);
+      if (token1Info && account.chainId) {
+        return new Token(
+          account.chainId,
+          token1Address,
+          token1Info.decimals || 18,
+          token1Info.symbol,
+          token1Info.name
+        );
+      }
+      return undefined;
+    }).filter((token): token is Token => token !== undefined);
+  }, [incentivesData, account.chainId, tokenList]);
+
+  const tokenAddresses = useMemo(() => {
+    if (!incentivesData.length) return [];
+    return incentivesData.map(incentive => incentive.pool.token1.id);
+  }, [incentivesData]);
+
+  const { balances, isBalancesLoading } = useMultipleTokenBalances(tokenAddresses);
 
   const getStakersQuery = useCallback((incentiveId: string) => {
     return `
@@ -336,7 +362,6 @@ export function useIncentivesData(poolAddress?: string) {
     async (
       incentive: IncentiveData,
       userPositions: UserPosition[],
-      currentBalances: Record<string, { balance: number }>,
       ethPrice: number,
       poolData?: any
     ): Promise<ProcessedIncentive> => {
@@ -490,8 +515,10 @@ export function useIncentivesData(poolAddress?: string) {
       const tokenRewardsPercentage =
         totalAPR > 0 ? (tokenRewardsAPR / totalAPR) * 100 : 0;
 
-      const userHasTokensToDeposit =
-        currentBalances[incentive.pool.token1.id]?.balance > 0;
+      const token1Balance = balances[incentive.pool.token1.id.toLowerCase()]?.balance;
+      const token0Balance = balances[incentive.pool.token0.id.toLowerCase()]?.balance;
+      const hasTokensToDeposit = Boolean(token1Balance && token1Balance > 0 && token0Balance && token0Balance > 0);
+
 
       const daily24hAPR = totalAPR / 365;
       const weeklyRewards = adjustedDailyReward * 7;
@@ -544,7 +571,7 @@ export function useIncentivesData(poolAddress?: string) {
         token1LogoURI: token1Info?.logoURI || "",
         feesUSD: formatValue(feesUSD),
         status: status as "active" | "ended" | "inactive",
-        userHasTokensToDeposit,
+        userHasTokensToDeposit: hasTokensToDeposit,
         daily24hAPR,
         weeklyRewards,
         weeklyRewardsUSD,
@@ -559,7 +586,7 @@ export function useIncentivesData(poolAddress?: string) {
 
       return processedIncentive;
     },
-    [tokenList, v3StakerContract, accountAddress, incentivesData]
+    [tokenList, v3StakerContract, accountAddress, incentivesData, balances]
   );
 
   const poolAddresses = useMemo(() => {
@@ -590,7 +617,6 @@ export function useIncentivesData(poolAddress?: string) {
               return processIncentive(
                 inc,
                 userPositionsInPools,
-                storedBalances,
                 ethPriceUSD,
                 poolData
               );
@@ -624,13 +650,13 @@ export function useIncentivesData(poolAddress?: string) {
       };
 
       processIncentives();
+      setIsLoading(false);
     }
   }, [
     poolsData,
     poolsLoading,
     incentivesData,
     userPositionsInPools,
-    storedBalances,
     ethPriceUSD,
     processIncentive,
     lastProcessedTime,

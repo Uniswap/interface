@@ -40,9 +40,9 @@ export default function Incentives() {
         navigate(`/pools/${incentive.poolPositionIds?.[0]}`);
         return;
       }
-
-      navigate(`/add/${incentive.token0Address}/${incentive.token1Address}`);
     }
+    navigate(`/add/${incentive.token0Address}/${incentive.token1Address}`);
+
   };
 
   const handleSelectPosition = (positionId: number) => {
@@ -80,7 +80,9 @@ export default function Incentives() {
     );
   }
 
-  if (!incentivesToShow || incentivesToShow.length === 0) {
+  if ((!incentivesToShow || incentivesToShow.length === 0) && !isLoading) {
+    console.log('isLoading', isLoading)
+    console.log('incentivesToShow', incentivesToShow)
     return (
       <StyledLightCard>
         <ThemedText.BodySecondary>

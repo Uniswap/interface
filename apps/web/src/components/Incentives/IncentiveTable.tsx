@@ -378,20 +378,6 @@ export const IncentiveTable = ({
         return (
           <Cell minWidth={isMobile ? 10 : 255} justifyContent="flex-end">
             <ActionButtons $isMobile={isMobile}>
-              <SwapButton
-                $isMobile={isMobile}
-                onClick={() =>
-                  navigate(
-                    `/swap?inputCurrency=${getAddress(
-                      data.token0Address
-                    )}&outputCurrency=${getAddress(
-                      data.token1Address
-                    )}&chain=taraxa`
-                  )
-                }
-              >
-                <Swap />
-              </SwapButton>
               <ActionButton
                 $variant="primary"
                 $isMobile={isMobile}
