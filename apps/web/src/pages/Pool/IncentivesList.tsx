@@ -363,7 +363,6 @@ function IncentivesList({
           );
 
           const pendingRewards = pendingRewardsMap[incentive.id] || 0;
-
           return (
             <IncentiveCard
               key={incentive.id}
@@ -420,7 +419,8 @@ function IncentivesList({
                         )}/logo.png`}
                       />
                       <ThemedText.DeprecatedMain>
-                        {pendingRewards.toFixed(6) || 0} {rewardToken.symbol}
+                        {pendingRewards.toFixed(6) || "0"} &nbsp;
+                        {rewardToken.symbol}
                       </ThemedText.DeprecatedMain>
                     </RowFixed>
                   </RowBetween>
@@ -438,8 +438,10 @@ function IncentivesList({
                         )}/logo.png`}
                       />
                       <ThemedText.DeprecatedMain>
-                        {Number(incentive.currentReward?.reward).toFixed(6) ||
-                          "0"}
+                        {Number(incentive.currentReward?.reward || 0).toFixed(
+                          6
+                        ) || "0"}
+                        &nbsp;
                         {rewardToken.symbol}
                       </ThemedText.DeprecatedMain>
                     </RowFixed>
