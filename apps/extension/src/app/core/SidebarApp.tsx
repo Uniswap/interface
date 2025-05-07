@@ -14,6 +14,7 @@ import { DappContextProvider } from 'src/app/features/dapp/DappContext'
 import { addRequest } from 'src/app/features/dappRequests/actions'
 import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
 import { SendFlow } from 'src/app/features/send/SendFlow'
+import { BackupRecoveryPhraseScreen } from 'src/app/features/settings/BackupRecoveryPhrase/BackupRecoveryPhraseScreen'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
@@ -81,6 +82,10 @@ const router = createHashRouter([
           {
             path: SettingsRoutes.ViewRecoveryPhrase,
             element: <ViewRecoveryPhraseScreen />,
+          },
+          {
+            path: SettingsRoutes.BackupRecoveryPhrase,
+            element: <BackupRecoveryPhraseScreen />,
           },
           {
             path: SettingsRoutes.RemoveRecoveryPhrase,

@@ -13,6 +13,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export enum Page {
   GetStarted = 0,
@@ -43,7 +44,7 @@ export function GetTheAppModal() {
   return (
     <Trace modal={InterfaceModalName.GETTING_STARTED_MODAL}>
       <Modal name={ModalName.DownloadApp} isModalOpen={isOpen} maxWidth="fit-content" onClose={close} padding={0}>
-        <Flex data-testid="download-uniswap-modal" position="relative" userSelect="none">
+        <Flex data-testid={TestID.DownloadUniswapModal} position="relative" userSelect="none">
           {/* The Page enum value corresponds to the modal page's index */}
           <AnimateTransition currentIndex={page} animationType={page === Page.GetStarted ? 'forward' : 'backward'}>
             <GetStarted

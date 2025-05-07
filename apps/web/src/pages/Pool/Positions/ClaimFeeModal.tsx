@@ -2,7 +2,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import { useModalLiquidityInitialState, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { useModalLiquidityInitialState, usePositionDerivedInfo } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -35,7 +35,7 @@ import {
   isValidLiquidityTxContext,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -99,7 +99,7 @@ export function ClaimFeeModal() {
     feeValue1: token1Fees,
     fiatFeeValue0: token0FeesUsd,
     fiatFeeValue1: token1FeesUsd,
-  } = useV3OrV4PositionDerivedInfo(positionInfo)
+  } = usePositionDerivedInfo(positionInfo)
 
   const currency0 = getCurrencyWithOptionalUnwrap({
     currency: token0Fees?.currency,

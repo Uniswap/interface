@@ -117,6 +117,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             borderRadius="$rounded24"
             backgroundColor="$surface1"
             maxWidth="100%"
+            enterStyle={{ opacity: 0 }}
           >
             <Swap
               hideHeader

@@ -19,6 +19,7 @@ export enum FeatureFlags {
   PortionFields,
   SearchRevamp,
   Soneium,
+  SwapSettingsV4HooksToggle,
   TwoSecondSwapQuotePollingInterval,
   UniquoteEnabled,
   UniswapX,
@@ -26,6 +27,11 @@ export enum FeatureFlags {
   UniswapXPriorityOrdersOptimism,
   UniswapXPriorityOrdersUnichain,
   ServiceBasedSwapTransactionInfo,
+  SmartWallet,
+  ForcePermitTransactions,
+  EnablePermitMismatchUX,
+  ViemProviderEnabled,
+  ForceDisableWalletGetCapabilities,
 
   // Wallet
   DisableFiatOnRampKorea,
@@ -42,12 +48,13 @@ export enum FeatureFlags {
   UwULink,
   BlurredLockScreen,
   Eip5792Methods,
-  SmartWallet,
   ExecuteTransactionV2,
+  RestoreSeedPhrase,
 
   // Web
   AATestWeb,
   ConversionTracking,
+  DummyFlagTest,
   GoogleConversionTracking,
   GqlTokenLists,
   LimitsFees,
@@ -58,6 +65,7 @@ export enum FeatureFlags {
   TraceJsonRpc,
   TwitterConversionTracking,
   UniversalSwap,
+  BatchedSwaps,
 }
 /* eslint-enable @typescript-eslint/prefer-enum-initializers */
 
@@ -67,27 +75,35 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.BlockaidFotLogging, 'blockaid_fot_logging'],
   [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
+  [FeatureFlags.EnablePermitMismatchUX, 'enable_permit2_mismatch_ux'],
   [FeatureFlags.ExecuteTransactionV2, 'new_execute_transaction_arch'],
+  [FeatureFlags.ForceDisableWalletGetCapabilities, 'force_disable_wallet_get_capabilities'],
+  [FeatureFlags.ForcePermitTransactions, 'force_permit_transactions'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
   [FeatureFlags.InstantTokenBalanceUpdate, 'instant-token-balance-update'],
   [FeatureFlags.MonadTestnet, 'monad_testnet'],
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.SearchRevamp, 'search_revamp'],
   [FeatureFlags.ServiceBasedSwapTransactionInfo, 'new_swap_transaction_info_arch'],
+  [FeatureFlags.SmartWallet, 'smart-wallet'],
   [FeatureFlags.Soneium, 'soneium'],
+  [FeatureFlags.SwapSettingsV4HooksToggle, 'swap_settings_v4_hooks_toggle'],
   [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
   [FeatureFlags.UniquoteEnabled, 'uniquote_enabled'],
   [FeatureFlags.UniswapX, 'uniswapx'],
   [FeatureFlags.UniswapXPriorityOrdersBase, 'uniswapx_priority_orders_base'],
   [FeatureFlags.UniswapXPriorityOrdersOptimism, 'uniswapx_priority_orders_optimism'],
   [FeatureFlags.UniswapXPriorityOrdersUnichain, 'uniswapx_priority_orders_unichain'],
+  [FeatureFlags.ViemProviderEnabled, 'viem_provider_enabled'],
 ])
 
 // These names must match the gate name on statsig
 export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   ...SHARED_FEATURE_FLAG_NAMES,
   [FeatureFlags.AATestWeb, 'aatest_web'],
+  [FeatureFlags.BatchedSwaps, 'batched_swaps'],
   [FeatureFlags.ConversionTracking, 'conversion-tracking'],
+  [FeatureFlags.DummyFlagTest, 'dummy_flag_test'],
   [FeatureFlags.GoogleConversionTracking, 'google_conversion_tracking'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
@@ -115,9 +131,9 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.NotificationUnfundedWalletsIOS, 'notification_unfunded_wallet_ios'],
   [FeatureFlags.OnboardingKeyring, 'onboarding-keyring'],
   [FeatureFlags.PrivateRpc, 'mev-blocker'],
+  [FeatureFlags.RestoreSeedPhrase, 'restore-seed-phrase'],
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
-  [FeatureFlags.SmartWallet, 'smart-wallet'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])
 

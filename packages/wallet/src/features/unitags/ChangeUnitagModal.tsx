@@ -306,7 +306,7 @@ function ChangeUnitagConfirmModal({
           {t('unitags.editUsername.confirm.subtitle')}
         </Text>
         <Flex py="$spacing32">
-          <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
+          <UnitagName animateText name={unitag} textProps={{ fontSize: fonts.heading3.fontSize }} />
         </Flex>
         <Flex row gap="$spacing12" width="100%">
           {isMobileApp && (

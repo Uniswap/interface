@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { addConnectedWallet } from 'state/wallets/reducer'
+import { addConnectedWallet, updateDelegatedState } from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
+import { useEvent } from 'utilities/src/react/hooks'
 
 export function useConnectedWallets(): [Wallet[], (wallet: Wallet) => void] {
   const dispatch = useAppDispatch()
@@ -13,4 +14,11 @@ export function useConnectedWallets(): [Wallet[], (wallet: Wallet) => void] {
     [dispatch],
   )
   return [connectedWallets, addWallet]
+}
+
+export function useUpdateDelegatedState(): (input: { chainId: string; address: string }) => void {
+  const dispatch = useAppDispatch()
+  return useEvent((input: { chainId: string; address: string }) => {
+    dispatch(updateDelegatedState(input))
+  })
 }

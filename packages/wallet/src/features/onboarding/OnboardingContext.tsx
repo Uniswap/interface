@@ -50,7 +50,13 @@ export interface OnboardingContext {
     mnemonicId,
     backupType,
   }: GenerateImportedAccountsArgs) => Promise<SignerMnemonicAccount[]>
-  generateAccountsAndImportAddresses: (selectedAddresses: string[]) => Promise<SignerMnemonicAccount[] | undefined>
+  generateAccountsAndImportAddresses: ({
+    selectedAddresses,
+    backupType,
+  }: {
+    selectedAddresses: string[]
+    backupType: BackupType
+  }) => Promise<SignerMnemonicAccount[] | undefined>
   addBackupMethod: (backupMethod: BackupType) => void
   selectImportedAccounts: (accountAddresses: string[]) => Promise<SignerMnemonicAccount[]>
   finishOnboarding: ({
@@ -256,9 +262,13 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     return generatedAddresses
   }
 
-  const generateAccountsAndImportAddresses = async (
-    selectedAddresses: string[],
-  ): Promise<SignerMnemonicAccount[] | undefined> => {
+  const generateAccountsAndImportAddresses = async ({
+    selectedAddresses,
+    backupType,
+  }: {
+    selectedAddresses: string[]
+    backupType: BackupType
+  }): Promise<SignerMnemonicAccount[] | undefined> => {
     const mnemonicId = generatedAddresses?.[0]
     if (!generatedAddresses || !mnemonicId) {
       throw new Error('No addresses to generate accounts for')
@@ -289,7 +299,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       timeImportedMs: dayjs().valueOf(),
       derivationIndex: index,
       mnemonicId,
-      backups: [BackupType.Manual],
+      backups: [backupType],
       pushNotificationsEnabled: true,
     }))
 
@@ -588,6 +598,19 @@ export function useCreateOnboardingAccountIfNone(): void {
   }, [generateOnboardingAccount, onboardingAccount])
 }
 
+function getImportType(
+  onboardingAccountAddress: string | undefined,
+  extensionOnboardingFlow: ExtensionOnboardingFlow | undefined,
+): ImportType {
+  if (extensionOnboardingFlow === ExtensionOnboardingFlow.Passkey) {
+    return ImportType.Passkey
+  }
+  if (onboardingAccountAddress) {
+    return ImportType.CreateNew
+  }
+  return ImportType.RestoreMnemonic
+}
+
 /**
  * Triggers onboarding finish on screen mount for extension only
  * Extracted into hook for reusability.
@@ -598,8 +621,7 @@ export function useFinishOnboarding(
   pendingClaim?: boolean,
 ): void {
   const { finishOnboarding, getOnboardingAccountAddress } = useOnboardingContext()
-  const onboardingAccountAddress = getOnboardingAccountAddress()
-  const importType = onboardingAccountAddress ? ImportType.CreateNew : ImportType.RestoreMnemonic
+  const importType = getImportType(getOnboardingAccountAddress(), extensionOnboardingFlow)
 
   useEffect(() => {
     if (pendingClaim) {

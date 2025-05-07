@@ -134,7 +134,7 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
               })}
             </ThemedText.SubHeader>
             <Row justify="flex-end">
-              <DeltaArrow delta={percentChange24} />
+              <DeltaArrow delta={percentChange24} formattedDelta={formatDelta(percentChange24)} />
               <ThemedText.BodySecondary>{formatDelta(percentChange24)}</ThemedText.BodySecondary>
             </Row>
           </>

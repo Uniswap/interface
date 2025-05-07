@@ -220,12 +220,12 @@ export function DownloadAppsModal({ goBack, onClose }: { goBack: () => void; onC
       >
         {showBackButton && (
           <TouchableArea onPress={onPressBack}>
-            <BackArrow size={iconSizes.icon24} color="$neutral2" hoverColor="$neutral2Hovered" />
+            <BackArrow size="$icon.24" color="$neutral2" hoverColor="$neutral2Hovered" />
           </TouchableArea>
         )}
         <ModalCloseIcon onClose={onClose} data-testid="get-the-app-close-button" />
       </Flex>
-      <Flex data-testid="download-uniswap-modal" position="relative" userSelect="none">
+      <Flex position="relative" userSelect="none">
         {/* The Page enum value corresponds to the modal page's index */}
         <AnimatedPager currentIndex={page}>
           <DownloadApps setPage={setPage} />

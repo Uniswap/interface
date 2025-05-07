@@ -1,21 +1,3 @@
-// List of eth methods that the extension will handle
-/* eslint-disable @typescript-eslint/naming-convention */
-export enum ExtensionEthMethods {
-  eth_chainId = 'eth_chainId',
-  eth_requestAccounts = 'eth_requestAccounts',
-  eth_accounts = 'eth_accounts',
-  eth_sendTransaction = 'eth_sendTransaction',
-  personal_sign = 'personal_sign',
-  wallet_switchEthereumChain = 'wallet_switchEthereumChain',
-  wallet_getPermissions = 'wallet_getPermissions',
-  wallet_requestPermissions = 'wallet_requestPermissions',
-  wallet_revokePermissions = 'wallet_revokePermissions',
-  wallet_getCapabilities = 'wallet_getCapabilities',
-  wallet_sendCalls = 'wallet_sendCalls',
-  wallet_getCallsStatus = 'wallet_getCallsStatus',
-  eth_signTypedData_v4 = 'eth_signTypedData_v4',
-}
-
 // Custom Uniswap methods that the extension will handle
 /* eslint-disable @typescript-eslint/naming-convention */
 export enum UniswapMethods {

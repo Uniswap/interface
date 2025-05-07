@@ -87,6 +87,7 @@ import {
   v82Schema,
   v83Schema,
   v84Schema,
+  v85Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
@@ -115,6 +116,7 @@ import { transactionDetails } from 'uniswap/src/test/fixtures'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
+import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialTelemetryState } from 'wallet/src/features/telemetry/slice'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -123,6 +125,7 @@ import { createMigrate } from 'wallet/src/state/createMigrate'
 import { HAYDEN_ETH_ADDRESS } from 'wallet/src/state/walletMigrations'
 import {
   testActivatePendingAccounts,
+  testAddBatchedTransactions,
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
   testDeleteWelcomeWalletCard,
@@ -182,6 +185,7 @@ describe('Redux state migrations', () => {
     // Add new slices here!
     const initialState = {
       appearanceSettings: initialAppearanceSettingsState,
+      batchedTransactions: initialBatchedTransactionsState,
       biometricSettings: initialBiometricsSettingsState,
       blocks: { byChainId: {} },
       chains: {
@@ -1623,5 +1627,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v84 to v85', () => {
     testMoveTokenAndNFTVisibility(migrations[85], v84Schema)
+  })
+
+  it('migrates from v85 to v86', () => {
+    testAddBatchedTransactions(migrations[86], v85Schema)
   })
 })

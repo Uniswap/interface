@@ -99,7 +99,12 @@ const sharedRules = {
       message: 'Import from internal module uniswap/src/features/gating instead',
     },
   ],
-  patterns: [],
+  patterns: [
+    {
+      group: ['ui/src/assets/icons/*.svg'],
+      message: "Please do not import SVG files directly from `ui/src/assets/icons/*.svg`. Use generated icon components instead, e.g., `ui/src/components/icons/{iconName}`.",
+    },
+  ],
 }
 
 

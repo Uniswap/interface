@@ -2,12 +2,9 @@ import { datadogRum } from '@datadog/browser-rum'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
-import {
-  TokenApprovalTransactionStep,
-  TokenRevocationTransactionStep,
-  TransactionStep,
-  TransactionStepType,
-} from 'uniswap/src/features/transactions/swap/types/steps'
+import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
+import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { isInterface } from 'utilities/src/platform'
 
 /** Superclass used to differentiate categorized/known transaction errors from generic/unknown errors. */
@@ -112,6 +109,7 @@ export function getErrorContent(
   error: Error,
 ): {
   title: string
+  buttonText?: string
   message: string
   supportArticleURL?: string
 } {
@@ -131,6 +129,7 @@ function getStepSpecificErrorContent(
   error: TransactionStepFailedError,
 ): {
   title: string
+  buttonText?: string
   message: string
   supportArticleURL?: string
 } {
@@ -146,6 +145,13 @@ function getStepSpecificErrorContent(
       return {
         title: t('common.swap.failed'),
         message: t('swap.fail.message'),
+        supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
+      }
+    case TransactionStepType.SwapTransactionBatched:
+      return {
+        title: t('swap.fail.batched.title'),
+        buttonText: t('swap.fail.batched.retry'),
+        message: t('swap.fail.batched'),
         supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
       }
     case TransactionStepType.UniswapXSignature:

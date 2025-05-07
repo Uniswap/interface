@@ -22,7 +22,7 @@ import {
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
-import { OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
+import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -185,6 +185,9 @@ export type SwapTradeBaseProperties = {
     input: TokenProtectionWarning
     output: TokenProtectionWarning
   }
+  is_batch?: boolean
+  batch_id?: string
+  included_permit_transaction_step?: boolean
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -197,6 +200,7 @@ type BaseSwapTransactionResultProperties = {
   chain_id_in?: number
   chain_id_out?: number
   hash: string
+  batch_id?: string
   added_time?: number
   confirmed_time?: number
   gas_used?: number
@@ -271,6 +275,7 @@ export type InterfaceSearchResultSelectionProperties = {
   selected_search_result_name?: string
   selected_search_result_address?: string
   total_suggestions?: number
+  chainId?: UniverseChainId
 } & ITraceContext
 
 type WrapProperties = {
@@ -577,6 +582,15 @@ export type UniverseEventProperties = {
     recipient: string
   }
   [InterfaceEventName.TOKEN_SELECTOR_OPENED]: undefined
+  [InterfaceEventNameLocal.LimitedWalletSupportToastDismissed]: {
+    chainId: string
+  }
+  [InterfaceEventNameLocal.LimitedWalletSupportToastShown]: {
+    chainId: string
+  }
+  [InterfaceEventNameLocal.LimitedWalletSupportToastLearnMoreButtonClicked]: {
+    chainId: string
+  }
   [LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED]: LiquidityAnalyticsProperties
   [LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER]: {
     action: FeePoolSelectAction
@@ -801,6 +815,8 @@ export type UniverseEventProperties = {
     swap_flow_duration_milliseconds?: number
     is_hold_to_swap?: boolean
     is_fiat_input_mode?: boolean
+    is_batch?: boolean
+    included_permit_transaction_step?: boolean
   } & SwapTradeBaseProperties
   [SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED]: {
     error?: ApolloError | FetchBaseQueryError | SerializedError | Error | string
@@ -874,6 +890,10 @@ export type UniverseEventProperties = {
   [UniswapEventName.LpIncentiveCollectRewardsRetry]: undefined
   [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
   [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
+  [UniswapEventName.SmartWalletMismatchDetected]: {
+    chainId: string
+    delegatedAddress: string
+  }
   [UnitagEventName.UnitagBannerActionTaken]: {
     action: 'claim' | 'dismiss'
     entryPoint: 'home' | 'settings'
@@ -899,11 +919,11 @@ export type UniverseEventProperties = {
   }
 
   [WalletEventName.BackupMethodAdded]: {
-    backupMethodType: 'manual' | 'cloud' | 'passkey'
+    backupMethodType: 'manual' | 'cloud' | 'passkey' | 'maybe-manual'
     newBackupCount: number
   }
   [WalletEventName.BackupMethodRemoved]: {
-    backupMethodType: 'manual' | 'cloud' | 'passkey'
+    backupMethodType: 'manual' | 'cloud' | 'passkey' | 'maybe-manual'
     newBackupCount: number
   }
   [WalletEventName.DappRequestCardPressed]: DappRequestCardEventProperties

@@ -295,7 +295,7 @@ function StatItem({ title, value, delta }: { title: ReactNode; value: number; de
         </StatItemText>
         {!!delta && (
           <Flex row width="max-content" py="$spacing4" $lg={{ py: 0 }}>
-            <DeltaArrow delta={delta} />
+            <DeltaArrow delta={delta} formattedDelta={formatDelta(delta)} />
             <ThemedText.BodySecondary>{formatDelta(delta)}</ThemedText.BodySecondary>
           </Flex>
         )}

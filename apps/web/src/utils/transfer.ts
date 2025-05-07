@@ -1,7 +1,6 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import type { Web3Provider } from '@ethersproject/providers'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
@@ -89,25 +88,4 @@ async function getTokenTransferRequest(
   }
 
   return undefined
-}
-
-// TODO: https://linear.app/uniswap/issue/WEB-3495/import-useasyncdata-from-mobile
-export function useIsSmartContractAddress(address?: string): {
-  loading: boolean
-  isSmartContractAddress: boolean
-} {
-  const { provider } = useWeb3React()
-
-  const fetchIsSmartContractAddress = useCallback(async () => {
-    if (!address) {
-      return false
-    }
-    const code = await provider?.getCode(address)
-    // provider.getCode(address) will return a hex string if a smart contract is deployed at that address
-    // returning just 0x means there's no code and it's not a smart contract
-    return code !== '0x'
-  }, [provider, address])
-
-  const { data, isLoading } = useAsyncData(fetchIsSmartContractAddress)
-  return { isSmartContractAddress: !!data, loading: isLoading }
 }

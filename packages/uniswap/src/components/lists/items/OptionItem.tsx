@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react'
-import { ElementAfterText, Flex, TextProps, TouchableArea, TouchableAreaProps, isWeb } from 'ui/src'
+import { Flex, FlexProps, Text, TextProps, TouchableArea, isWeb } from 'ui/src'
 import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
@@ -17,13 +17,13 @@ export interface FocusedRowControl {
 
 export interface OptionItemProps {
   image: JSX.Element
-  title: string
+  title: string | JSX.Element
   subtitle?: JSX.Element
   rightElement?: JSX.Element
   badge?: JSX.Element
   titleProps?: TextProps
   onPress: () => void
-  onLongPress?: TouchableAreaProps['onLongPress']
+  onLongPress?: () => void
   disabled?: boolean
   testID?: string
   modalInfo?: {
@@ -85,7 +85,7 @@ function _OptionItem({
     callback: isFocused ? onPressOption : noop,
     shouldTriggerInInput: true,
   })
-  const focusedStyleProps: TouchableAreaProps = keyboardNavEnabled
+  const focusedStyleProps: FlexProps = keyboardNavEnabled
     ? {
         backgroundColor: isFocused ? '$surface1Hovered' : undefined,
         onMouseEnter: (): void => {
@@ -100,10 +100,10 @@ function _OptionItem({
   return (
     <>
       <TouchableArea
-        {...focusedStyleProps}
         animation="300ms"
         opacity={disabled ? 0.5 : 1}
         width="100%"
+        px="$spacing12"
         onPress={onPressOption}
         onLongPress={onLongPress}
       >
@@ -112,28 +112,35 @@ function _OptionItem({
           alignItems="center"
           gap="$spacing8"
           justifyContent="space-between"
-          px="$spacing16"
-          py="$spacing12"
+          p="$spacing8"
           style={{
             pointerEvents: 'auto',
           }}
+          borderRadius="$rounded16"
+          {...focusedStyleProps}
           testID={testID}
         >
           <Flex row shrink alignItems="center" gap="$spacing12">
             {image}
             <Flex shrink>
-              <ElementAfterText
-                text={title}
-                element={badge}
-                textProps={{
-                  variant: 'body1',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  ...titleProps,
-                }}
-                wrapperProps={{ gap: '$spacing8' }}
-              />
+              <Flex row alignItems="center" gap="$spacing8">
+                {typeof title === 'string' ? (
+                  <Text
+                    color="$neutral1"
+                    variant="body1"
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    numberOfLines={1}
+                    {...titleProps}
+                  >
+                    {title}
+                  </Text>
+                ) : (
+                  title
+                )}
+                {badge}
+              </Flex>
               {subtitle}
             </Flex>
           </Flex>

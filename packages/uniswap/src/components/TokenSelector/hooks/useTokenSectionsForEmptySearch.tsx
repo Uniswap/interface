@@ -5,13 +5,10 @@ import { Text, TouchableArea } from 'ui/src'
 import { MAX_DEFAULT_TRENDING_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
 import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
-import {
-  OnchainItemSection,
-  OnchainItemSectionName,
-  TokenSectionsHookProps,
-} from 'uniswap/src/components/TokenSelector/types'
-import { useOnchainItemListSection } from 'uniswap/src/components/TokenSelector/utils'
+import { TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
+import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 

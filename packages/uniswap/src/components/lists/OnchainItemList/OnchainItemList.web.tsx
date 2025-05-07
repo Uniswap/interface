@@ -1,6 +1,6 @@
 import isArray from 'lodash/isArray'
 import isEqual from 'lodash/isEqual'
-import React, { CSSProperties, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { CSSProperties, Fragment, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { LayoutChangeEvent } from 'react-native'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -8,42 +8,42 @@ import { VariableSizeList as List } from 'react-window'
 import { Flex, useWindowDimensions } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
-import { OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
 import {
   ItemRowInfo,
   OnchainItemListProps,
   SectionRowInfo,
 } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
-import { OnchainItemListType } from 'uniswap/src/components/lists/items/types'
+import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
 
-const ITEM_ROW_HEIGHT = 68
+const ITEM_ROW_HEIGHT = 64
 
 type OnchainItemListRowInfo = {
   key: Key | undefined
 }
-type ListSectionRowInfo<T extends OnchainItemListType> = SectionRowInfo &
+type ListSectionRowInfo<T extends OnchainItemListOption> = SectionRowInfo &
   OnchainItemListRowInfo &
   Pick<OnchainItemListProps<T>, 'renderSectionHeader'>
-type ListItemRowInfo<T extends OnchainItemListType> = ItemRowInfo<T> &
+type ListItemRowInfo<T extends OnchainItemListOption> = ItemRowInfo<T> &
   OnchainItemListRowInfo &
   Pick<OnchainItemListProps<T>, 'renderItem'>
 
-type OnchainItemListData<T extends OnchainItemListType> = ListItemRowInfo<T> | ListSectionRowInfo<T>
+type OnchainItemListData<T extends OnchainItemListOption> = ListItemRowInfo<T> | ListSectionRowInfo<T>
 
-function isSectionHeader<T extends OnchainItemListType>(
+function isSectionHeader<T extends OnchainItemListOption>(
   rowInfo: OnchainItemListData<T>,
 ): rowInfo is ListSectionRowInfo<T> {
   return !('renderItem' in rowInfo)
 }
 
-function isHorizontalTokenRowInfo<T extends OnchainItemListType>(rowInfo: OnchainItemListData<T>): boolean {
+function isHorizontalTokenRowInfo<T extends OnchainItemListOption>(rowInfo: OnchainItemListData<T>): boolean {
   const isHeader = isSectionHeader(rowInfo)
   return !isHeader && isArray(rowInfo.item)
 }
 
-export function OnchainItemList<T extends OnchainItemListType>({
+export function OnchainItemList<T extends OnchainItemListOption>({
   ListEmptyComponent,
   keyExtractor,
   renderItem,
@@ -241,6 +241,9 @@ export function OnchainItemList<T extends OnchainItemListType>({
       {!sections.length && ListEmptyComponent}
       <AutoSizer disableWidth>
         {({ height }: { height: number }): JSX.Element => {
+          if (!sections.length) {
+            return <Fragment />
+          }
           return (
             <Flex position="relative">
               <Flex position="absolute" top={0} width="100%" zIndex={zIndexes.sticky}>
@@ -270,7 +273,7 @@ export function OnchainItemList<T extends OnchainItemListType>({
   )
 }
 
-function OnchainItemListRow<T extends OnchainItemListType>({
+function OnchainItemListRow<T extends OnchainItemListOption>({
   index,
   data,
   style,
@@ -300,14 +303,14 @@ function OnchainItemListRow<T extends OnchainItemListType>({
   )
 }
 
-type RowProps<T extends OnchainItemListType> = {
+type RowProps<T extends OnchainItemListOption> = {
   index: number
   itemData: ListItemRowInfo<T> | ListSectionRowInfo<T>
   style?: CSSProperties
   windowWidth: number
   updateRowHeight?: (index: number, height: number) => void
 }
-function _Row<T extends OnchainItemListType>({ index, itemData, style, updateRowHeight }: RowProps<T>): JSX.Element {
+function _Row<T extends OnchainItemListOption>({ index, itemData, style, updateRowHeight }: RowProps<T>): JSX.Element {
   const rowRef = useRef<HTMLElement>(null)
 
   const handleLayout = useCallback(

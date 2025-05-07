@@ -114,9 +114,9 @@ const allRoutes = [
           [ImportPasskeySteps.InitiatePasskeyAuth]: <InitiatePasskeyAuth />,
           [ImportPasskeySteps.PasskeyImport]: <PasskeyImport />,
           // TODO(WALL-6383): modify this flow to ask user to verify their seed phrase.
-          [ImportOnboardingSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Import} />,
-          [ImportOnboardingSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Import} />,
-          [ImportOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.Import} />,
+          [ImportOnboardingSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Passkey} />,
+          [ImportOnboardingSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Passkey} />,
+          [ImportOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.Passkey} />,
         }}
       />
     ),

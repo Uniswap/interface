@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { CopyButton } from 'src/app/components/buttons/CopyButton'
 import { Flex, Separator, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -109,6 +111,19 @@ export function SeedPhraseDisplay({ mnemonicId }: { mnemonicId: string }): JSX.E
       })
     }
   }
+
+  useEffect(() => {
+    sendAnalyticsEvent(WalletEventName.ViewRecoveryPhrase)
+
+    // Clear clipboard when the component unmounts
+    return () => {
+      navigator.clipboard.writeText('').catch((error) => {
+        logger.error(error, {
+          tags: { file: 'SeedPhraseDisplay.tsx', function: 'navigator.clipboard.writeText' },
+        })
+      })
+    }
+  }, [])
 
   return (
     <Flex

@@ -1,13 +1,11 @@
 import { useIsFocused } from '@react-navigation/core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
+import { checkCloudBackupOrShowAlert } from 'src/components/mnemonic/cloudImportUtils'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
-import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { openSettings } from 'src/utils/linking'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
@@ -160,25 +158,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     const onPressRestore = async (): Promise<void> => {
-      const cloudStorageAvailable = await isCloudStorageAvailable()
-
-      if (!cloudStorageAvailable) {
-        Alert.alert(
-          isAndroid
-            ? t('account.cloud.error.unavailable.title.android')
-            : t('account.cloud.error.unavailable.title.ios'),
-          isAndroid
-            ? t('account.cloud.error.unavailable.message.android')
-            : t('account.cloud.error.unavailable.message.ios'),
-          [
-            {
-              text: t('account.cloud.error.unavailable.button.settings'),
-              onPress: openSettings,
-              style: 'default',
-            },
-            { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
-          ],
-        )
+      const hasCloudBackup = await checkCloudBackupOrShowAlert(t)
+      if (!hasCloudBackup) {
         return
       }
 

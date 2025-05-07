@@ -39,7 +39,7 @@ export const HorizontalTokenList = memo(function _HorizontalTokenList({
       gap="$spacing4"
       flexWrap="wrap"
       py="$spacing8"
-      mx="$spacing16"
+      mx="$spacing20"
       animation={expanded ? '300ms' : undefined}
       height={containerHeight}
     >

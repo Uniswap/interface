@@ -27,6 +27,8 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
     onChangeSlippageInput,
     onFocusSlippageInput,
     onBlurSlippageInput,
+    showSlippageWarning,
+    showSlippageCritical,
   } = useSlippageSettings({ saveOnBlur })
 
   useEffect(() => {
@@ -48,6 +50,35 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
     [parsedInputValue, autoSlippageEnabled, autoSlippageTolerance],
   )
 
+  const borderColor = useMemo(() => {
+    if (isEditingSlippage) {
+      if (showSlippageCritical) {
+        return '$statusCritical'
+      }
+      if (showSlippageWarning) {
+        return '$statusWarning'
+      }
+      return '$accent1'
+    }
+    if (showSlippageCritical) {
+      return '$statusCritical'
+    }
+    if (showSlippageWarning) {
+      return '$statusWarning'
+    }
+    return '$surface3'
+  }, [showSlippageWarning, isEditingSlippage, showSlippageCritical])
+
+  const hoverBorderColor = useMemo(() => {
+    if (showSlippageCritical) {
+      return '$statusCriticalHovered'
+    }
+    if (showSlippageWarning) {
+      return '$statusWarningHovered'
+    }
+    return '$surface3Hovered'
+  }, [showSlippageCritical, showSlippageWarning])
+
   return (
     <Flex
       row
@@ -61,14 +92,17 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
       <Flex
         row
         backgroundColor={backgroundColor}
-        borderColor={isEditingSlippage ? '$DEP_accentSoft' : '$surface3'}
+        borderColor={borderColor}
         borderRadius="$rounded16"
         borderWidth="$spacing1"
         gap="$spacing8"
         p="$spacing4"
         pr="$spacing8"
         style={inputAnimatedStyle}
-        $group-hover={{ borderColor: '$surface3Hovered', backgroundColor: '$surface1Hovered' }}
+        $group-hover={{
+          borderColor: hoverBorderColor,
+          backgroundColor: '$surface1Hovered',
+        }}
       >
         <Flex
           centered

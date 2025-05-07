@@ -52,8 +52,13 @@ export enum ExtensionUserPropertyName {
   // alphabetize additional values.
 }
 
+export enum InterfaceUserPropertyName {
+  IsDelegatedEOA = 'is_delegated_eoa',
+  SupportsAtomicBatching = 'supports_atomic_batching',
+}
+
 export function setUserProperty(
-  property: MobileUserPropertyName | ExtensionUserPropertyName | CustomUserProperties,
+  property: MobileUserPropertyName | ExtensionUserPropertyName | CustomUserProperties | InterfaceUserPropertyName,
   value: UserPropertyValue,
   insert?: boolean,
 ): void {

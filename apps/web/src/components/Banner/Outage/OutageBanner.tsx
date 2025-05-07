@@ -8,6 +8,7 @@ import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { capitalize } from 'tsafe'
 import { Flex, Text, styled as tamaguiStyled } from 'ui/src'
 import { iconSizes, zIndexes } from 'ui/src/theme'
+import { useShadowPropsShort } from 'ui/src/theme/shadows'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainUrlParam } from 'utils/chainParams'
@@ -36,6 +37,7 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
   const { defaultChainId } = useEnabledChains()
   const chainName = capitalize(getChainUrlParam(chainId ?? defaultChainId))
   const versionDescription = version ? ' ' + version.toString().toLowerCase() : ''
+  const shadowProps = useShadowPropsShort()
 
   if (hidden) {
     return null
@@ -45,15 +47,18 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
     <Flex
       width={360}
       maxWidth="95%"
-      $platform-web={{ position: 'fixed' }}
-      bottom={40}
-      right={20}
-      backgroundColor={theme.surface2}
+      backgroundColor={theme.surface1}
       zIndex={zIndexes.sticky}
       borderRadius="$rounded20"
       borderStyle="solid"
       borderWidth={1.3}
       borderColor={theme.surface3}
+      $platform-web={{
+        position: 'fixed',
+        bottom: 40,
+        right: 20,
+        ...(shadowProps['$platform-web'] || {}),
+      }}
       $lg={{
         bottom: 62,
       }}
@@ -75,7 +80,7 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
           backgroundColor={theme.warning2}
           borderRadius="$rounded12"
         >
-          <Globe size={28} color={theme.warning2} />
+          <Globe size={28} color={theme.warning} />
         </Flex>
         <Flex gap="$spacing2" p={10} $xs={{ maxWidth: 270 }} flexShrink={1}>
           <Text variant="body2" color={theme.neutral1}>

@@ -28,7 +28,7 @@ const passkeysHelpModalContent: Record<PasskeysHelpModalTypes, PasskeyModalConte
     title: (t: TFunction) => t('passkeys.help.modal.title'),
     subtitle: (t: TFunction) => t('passkeys.help.modal.subtitle'),
     icon: (
-      <Flex centered borderRadius="$rounded12" mb="$spacing8" p="$spacing12" backgroundColor="$surface2">
+      <Flex centered borderRadius="$rounded12" p="$spacing12" backgroundColor="$surface3">
         <Passkey color="$neutral1" size="$icon.24" />
       </Flex>
     ),
@@ -37,7 +37,7 @@ const passkeysHelpModalContent: Record<PasskeysHelpModalTypes, PasskeyModalConte
     title: (t: TFunction) => t('passkeys.help.modal.title.invalidPasskey'),
     subtitle: (t: TFunction) => t('passkeys.help.modal.subtitle.invalidPasskey'),
     icon: (
-      <Flex centered borderRadius="$rounded12" mb="$spacing8" p="$spacing12" backgroundColor="$redLight">
+      <Flex centered borderRadius="$rounded12" p="$spacing12" backgroundColor="$redLight">
         <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
       </Flex>
     ),
@@ -46,7 +46,7 @@ const passkeysHelpModalContent: Record<PasskeysHelpModalTypes, PasskeyModalConte
     title: (t: TFunction) => t('passkeys.help.modal.title.technicalError'),
     subtitle: (t: TFunction) => t('passkeys.help.modal.subtitle.technicalError'),
     icon: (
-      <Flex centered borderRadius="$rounded12" mb="$spacing8" p="$spacing12" backgroundColor="$redLight">
+      <Flex centered borderRadius="$rounded12" p="$spacing12" backgroundColor="$redLight">
         <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
       </Flex>
     ),

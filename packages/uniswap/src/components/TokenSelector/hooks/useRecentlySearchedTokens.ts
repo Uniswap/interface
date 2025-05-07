@@ -13,7 +13,7 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/curren
 export function useRecentlySearchedTokens(
   chainFilter: UniverseChainId | null,
   numberOfResults = MAX_RECENT_SEARCH_RESULTS,
-): TokenOption[] | undefined {
+): TokenOption[] {
   const searchHistory = useSelector(selectSearchHistory)
 
   const searchHistoryCurrencyInfos = useSearchHistoryToCurrencyInfos(
@@ -24,7 +24,7 @@ export function useRecentlySearchedTokens(
   )
 
   return useMemo(() => {
-    return currencyInfosToTokenOptions(searchHistoryCurrencyInfos)
+    return currencyInfosToTokenOptions(searchHistoryCurrencyInfos) ?? []
   }, [searchHistoryCurrencyInfos])
 }
 

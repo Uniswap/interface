@@ -143,6 +143,7 @@ assert<Equals<ApplicationState, ExpectedApplicationState>>()
 interface ExpectedWalletState {
   connectedWallets: Wallet[]
   switchingChain: UniverseChainId | false
+  delegatedState: Record<string, string>
 }
 
 assert<Equals<ConnectedWalletsState, ExpectedWalletState>>()

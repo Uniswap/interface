@@ -91,7 +91,7 @@ export function createExecuteSwapService(ctx: {
       return
     }
 
-    const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequest
+    const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequests?.[0]
 
     if (!txRequest || !input.inputCurrencyAmount || !input.wrapType) {
       return

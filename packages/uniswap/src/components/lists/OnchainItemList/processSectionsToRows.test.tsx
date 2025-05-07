@@ -1,12 +1,11 @@
 import { Token } from '@uniswap/sdk-core'
-import type { OnchainItemSection } from 'uniswap/src/components/TokenSelector/types'
-import { OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
 import {
   ProcessedRow,
   ProcessedRowType,
   processSectionsToRows,
 } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
-import { isPoolOption, type TokenOption } from 'uniswap/src/components/lists/items/types'
+import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { OnchainItemListOptionType, type TokenOption } from 'uniswap/src/components/lists/items/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
 
@@ -28,6 +27,7 @@ describe('processSectionsToRows', () => {
   }
 
   const mockTokenOption: TokenOption = {
+    type: OnchainItemListOptionType.Token,
     currencyInfo: mockCurrencyInfo,
     quantity: null,
     balanceUSD: null,
@@ -157,7 +157,7 @@ describe('processSectionsToRows', () => {
 
     items.forEach((item, index) => {
       expect(item.data.index).toBe(index)
-      if (!isPoolOption(item.data.item) && !Array.isArray(item.data.item)) {
+      if (!Array.isArray(item.data.item) && item.data.item.type === OnchainItemListOptionType.Token) {
         expect(item.data.item.currencyInfo.currencyId).toBe(String(index + 1))
       }
     })

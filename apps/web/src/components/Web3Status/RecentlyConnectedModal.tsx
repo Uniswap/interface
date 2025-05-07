@@ -7,15 +7,15 @@ import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
 import { MutableRefObject, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
-import { AdaptiveWebPopoverContent, Button, Flex, Text } from 'ui/src'
+import { AdaptiveWebPopoverContent, Button, Flex, Text, useShadowPropsShort } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { X } from 'ui/src/components/icons/X'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { useENSName } from 'uniswap/src/features/ens/api'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
 
@@ -30,14 +30,16 @@ interface RecentlyConnectedModalUIProps {
   onClose: () => void
 }
 
-function useWalletDisplay(walletAddress: string | undefined) {
-  const { data: ensName } = useENSName(walletAddress)
-  const { unitag } = useUnitagByAddress(walletAddress)
+export function useWalletDisplay(walletAddress: string | undefined) {
+  const displayName = useOnchainDisplayName(walletAddress, {
+    showShortenedEns: true,
+    includeUnitagSuffix: true,
+  })
 
   return {
-    displayName: unitag?.username ?? ensName ?? shortenAddress(walletAddress),
-    showUnitagIcon: !!unitag?.username,
-    showShortAddress: !!(ensName || unitag?.username),
+    displayName: displayName?.name ?? shortenAddress(walletAddress),
+    showUnitagIcon: displayName?.type === DisplayNameType.Unitag,
+    showShortAddress: displayName?.type === DisplayNameType.Unitag || displayName?.type === DisplayNameType.ENS,
     shortAddress: shortenAddress(walletAddress),
   }
 }
@@ -53,6 +55,7 @@ function RecentlyConnectedModalUI({
   onClose,
 }: RecentlyConnectedModalUIProps) {
   const { t } = useTranslation()
+  const shadowProps = useShadowPropsShort()
   const modalRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(modalRef, onClose)
   const isMobile = useIsMobile()
@@ -90,10 +93,11 @@ function RecentlyConnectedModalUI({
           alignItems: 'center',
           width: '100%',
         }}
+        {...shadowProps}
       >
         <Flex row gap="$spacing12" overflow="hidden">
           <StatusIcon address={walletAddress} size={isMobile ? 40 : 48} />
-          <Flex gap="$spacing8" width="75%" $md={{ gap: 0 }}>
+          <Flex gap="$spacing4" width="75%" $md={{ gap: 0 }} justifyContent="center">
             <Flex row gap="$spacing4" alignItems="center">
               <Text variant="body1" numberOfLines={1} textOverflow="ellipsis" whiteSpace="nowrap">
                 {displayName}

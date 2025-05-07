@@ -3,7 +3,15 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Position as V3Position } from '@uniswap/v3-sdk'
 import { Position as V4Position } from '@uniswap/v4-sdk'
-import { FeeTierData, PositionInfo, PriceOrdering } from 'components/Liquidity/types'
+import {
+  BasePositionDerivedInfo,
+  FeeTierData,
+  PositionDerivedInfo,
+  PositionInfo,
+  PriceOrdering,
+  V2PositionDerivedInfo,
+  V3OrV4PositionDerivedInfo,
+} from 'components/Liquidity/types'
 import {
   calculateInvertedValues,
   getDefaultFeeTiersForChainWithDynamicFeeTier,
@@ -19,6 +27,7 @@ import { useTranslation } from 'react-i18next'
 import { LiquidityModalInitialState } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { Bound } from 'state/mint/v3/actions'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -125,10 +134,7 @@ export function useAllFeeTierPoolData({
   }, [poolData, sortedCurrencies, chainId, withDynamicFeeTier, formatPercent, protocolVersion, t])
 }
 
-/**
- * V3-specific hooks for a position parsed using parseRestPosition.
- */
-export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
+export function usePositionDerivedInfo(positionInfo?: PositionInfo): PositionDerivedInfo {
   const {
     token0UncollectedFees,
     token1UncollectedFees,
@@ -139,8 +145,8 @@ export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
     tickUpper,
     apr,
   } = positionInfo ?? {}
-  const { price: price0 } = useUSDCPrice(currency0Amount?.currency)
-  const { price: price1 } = useUSDCPrice(currency1Amount?.currency)
+  const { price: price0 } = useUSDCPrice(currency0Amount?.currency, PollingInterval.Normal)
+  const { price: price1 } = useUSDCPrice(currency1Amount?.currency, PollingInterval.Normal)
 
   const { feeValue0, feeValue1 } = useMemo(() => {
     if (!currency0Amount || !currency1Amount) {
@@ -190,8 +196,8 @@ export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
     return getPriceOrderingFromPositionForUI(positionInfo.position)
   }, [liquidity, tickLower, tickUpper, positionInfo])
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    const baseInfo: BasePositionDerivedInfo = {
       fiatFeeValue0,
       fiatFeeValue1,
       fiatValue0,
@@ -199,18 +205,30 @@ export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
       priceOrdering,
       feeValue0,
       feeValue1,
-      token0CurrentPrice:
-        positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
-          ? positionInfo.pool?.token0Price
-          : undefined,
-      token1CurrentPrice:
-        positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
-          ? positionInfo.pool?.token1Price
-          : undefined,
       apr,
-    }),
-    [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, feeValue0, feeValue1, positionInfo, apr],
-  )
+      token0CurrentPrice: undefined,
+      token1CurrentPrice: undefined,
+    }
+    if (!positionInfo) {
+      return baseInfo
+    }
+
+    if (positionInfo.version === ProtocolVersion.V2) {
+      return {
+        ...baseInfo,
+        version: ProtocolVersion.V2,
+        token0CurrentPrice: undefined,
+        token1CurrentPrice: undefined,
+      } satisfies V2PositionDerivedInfo
+    }
+
+    return {
+      ...baseInfo,
+      version: positionInfo.version,
+      token0CurrentPrice: positionInfo.pool?.token0Price,
+      token1CurrentPrice: positionInfo.pool?.token1Price,
+    } satisfies V3OrV4PositionDerivedInfo
+  }, [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, feeValue0, feeValue1, positionInfo, apr])
 }
 
 export function useGetRangeDisplay({

@@ -1,4 +1,4 @@
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -24,7 +24,6 @@ export function BridgeTransactionDetails({
   onClose?: () => void
   disableClick?: boolean
 }): JSX.Element {
-  const colors = useSporeColors()
   const formatter = useLocalizationContext()
 
   const inputCurrency = useCurrencyInfo(typeInfo.inputCurrencyId)
@@ -61,7 +60,7 @@ export function BridgeTransactionDetails({
         />
       </TouchableArea>
 
-      <ArrowDown color={colors.neutral3.get()} size={20} />
+      <ArrowDown color="$neutral3" size="$icon.20" />
 
       <TouchableArea onPress={disableClick ? undefined : onPressOutputToken}>
         <CurrencyValueWithIcon

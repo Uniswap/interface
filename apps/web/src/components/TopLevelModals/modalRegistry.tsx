@@ -3,7 +3,6 @@ import { useModalState } from 'hooks/useModalState'
 import { Suspense, lazy, memo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-
 const AddressClaimModal = lazy(() => import('components/claim/AddressClaimModal'))
 const ConnectedAccountBlocked = lazy(() => import('components/ConnectedAccountBlocked'))
 const UniwalletModal = lazy(() => import('components/AccountDrawer/UniwalletModal'))
@@ -30,6 +29,8 @@ const PrivacyChoicesModal = lazy(() =>
 )
 const FeatureFlagModal = lazy(() => import('components/FeatureFlagModal/FeatureFlagModal'))
 const DevFlagsBox = lazy(() => import('dev/DevFlagsBox'))
+const TokenNotFoundModal = lazy(() => import('components/NotFoundModal/TokenNotFoundModal'))
+const PoolNotFoundModal = lazy(() => import('components/NotFoundModal/PoolNotFoundModal'))
 const IncreaseLiquidityModal = lazy(() =>
   import('pages/IncreaseLiquidity/IncreaseLiquidityModal').then((module) => ({
     default: module.IncreaseLiquidityModal,
@@ -46,6 +47,12 @@ const RecoveryPhraseModal = lazy(() =>
 )
 const PasskeysHelpModal = lazy(() =>
   import('uniswap/src/features/passkey/PasskeysHelpModal').then((module) => ({ default: module.PasskeysHelpModal })),
+)
+
+const DelegationMismatchModal = lazy(() =>
+  import('components/delegation/DelegationMismatchModal').then((module) => ({
+    default: module.default,
+  })),
 )
 
 const ModalLoadingFallback = memo(() => null)
@@ -120,6 +127,14 @@ export const modalRegistry: ModalRegistry = {
     component: RecoveryPhraseModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.RecoveryPhrase,
   },
+  [ModalName.TokenNotFound]: {
+    component: TokenNotFoundModal,
+    shouldMount: (state) => state.application.openModal?.name === ModalName.TokenNotFound,
+  },
+  [ModalName.PoolNotFound]: {
+    component: PoolNotFoundModal,
+    shouldMount: (state) => state.application.openModal?.name === ModalName.PoolNotFound,
+  },
   [ModalName.DevFlags]: {
     component: DevFlagsBox,
     shouldMount: () => true,
@@ -127,6 +142,10 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.PasskeysHelp]: {
     component: PasskeysHelpModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.PasskeysHelp,
+  },
+  [ModalName.DelegationMismatch]: {
+    component: DelegationMismatchModal,
+    shouldMount: (state) => state.application.openModal?.name === ModalName.DelegationMismatch,
   },
 } as const
 

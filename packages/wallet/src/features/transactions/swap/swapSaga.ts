@@ -7,7 +7,7 @@ import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
-import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { PermitMethod, ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
@@ -94,6 +94,35 @@ export function* approveAndSwap(params: SwapParams) {
       nonce = nonce ? nonce + 1 : undefined
     }
 
+    // Permit transaction logic (smart account mismatch case)
+    if (swapTxContext.routing === Routing.CLASSIC && swapTxContext.permit?.method === PermitMethod.Transaction) {
+      const permitTxRequest = swapTxContext.permit.txRequest
+
+      const typeInfo: ApproveTransactionInfo = {
+        type: TransactionType.Approve,
+        tokenAddress: permitTxRequest.to,
+        spender: permit2Address(chainId),
+        swapTxId: txId,
+        gasEstimates: gasFeeEstimation?.approvalEstimates,
+      }
+      const options: TransactionOptions = {
+        request: { ...permitTxRequest, nonce },
+        submitViaPrivateRpc,
+        userSubmissionTimestampMs,
+      }
+      const executeTransactionParams: ExecuteTransactionParams = {
+        chainId,
+        account,
+        options,
+        typeInfo,
+        analytics,
+        transactionOriginType: TransactionOriginType.Internal,
+      }
+
+      yield* call(executeTransaction, executeTransactionParams)
+      nonce = nonce ? nonce + 1 : undefined
+    }
+
     // Default to input for USD volume amount
     const transactedUSDValue = analytics.token_in_amount_usd
 
@@ -123,7 +152,7 @@ export function* approveAndSwap(params: SwapParams) {
         analytics,
         approveTxHash,
         wrapTxHash,
-        permit,
+        permit: permit.typedData,
         quote,
         routing: swapTxContext.routing,
         typeInfo,
@@ -135,7 +164,7 @@ export function* approveAndSwap(params: SwapParams) {
       yield* call(submitUniswapXOrder, submitOrderParams)
     } else if (swapTxContext.routing === Routing.BRIDGE) {
       const options: TransactionOptions = {
-        request: { ...swapTxContext.txRequest, nonce },
+        request: { ...swapTxContext.txRequests?.[0], nonce },
         submitViaPrivateRpc,
         userSubmissionTimestampMs,
       }
@@ -152,7 +181,7 @@ export function* approveAndSwap(params: SwapParams) {
       yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
     } else if (swapTxContext.routing === Routing.CLASSIC) {
       const options: TransactionOptions = {
-        request: { ...swapTxContext.txRequest, nonce },
+        request: { ...swapTxContext.txRequests?.[0], nonce },
         submitViaPrivateRpc,
         userSubmissionTimestampMs,
       }

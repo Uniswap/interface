@@ -1,15 +1,10 @@
 import { Action } from '@reduxjs/toolkit'
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import Check from 'ui/src/assets/icons/check.svg'
-import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
-import MoonIcon from 'ui/src/assets/icons/moon.svg'
-import SunIcon from 'ui/src/assets/icons/sun.svg'
-import { iconSizes } from 'ui/src/theme'
+import { Flex, GeneratedIcon, Text, TouchableArea } from 'ui/src'
+import { Check, Contrast, Moon, Sun } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
@@ -33,21 +28,21 @@ export function SettingsAppearanceModal(): JSX.Element {
         </Flex>
         <Flex>
           <AppearanceOption
-            Icon={ContrastIcon}
+            Icon={Contrast}
             active={currentTheme === 'system'}
             option={AppearanceSettingType.System}
             subtitle={t('settings.setting.appearance.option.device.subtitle')}
             title={t('settings.setting.appearance.option.device.title')}
           />
           <AppearanceOption
-            Icon={SunIcon}
+            Icon={Sun}
             active={currentTheme === 'light'}
             option={AppearanceSettingType.Light}
             subtitle={t('settings.setting.appearance.option.light.subtitle')}
             title={t('settings.setting.appearance.option.light.title')}
           />
           <AppearanceOption
-            Icon={MoonIcon}
+            Icon={Moon}
             active={currentTheme === 'dark'}
             option={AppearanceSettingType.Dark}
             subtitle={t('settings.setting.appearance.option.dark.subtitle')}
@@ -64,11 +59,10 @@ interface AppearanceOptionProps {
   title: string
   subtitle: string
   option: AppearanceSettingType
-  Icon: React.FC<SvgProps>
+  Icon: GeneratedIcon
 }
 
 function AppearanceOption({ active, title, subtitle, Icon, option }: AppearanceOptionProps): JSX.Element {
-  const colors = useSporeColors()
   const dispatch = useDispatch()
 
   const showCheckMarkOpacity = active ? 1 : 0
@@ -81,7 +75,7 @@ function AppearanceOption({ active, title, subtitle, Icon, option }: AppearanceO
       py="$spacing12"
       onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}
     >
-      <Icon color={colors.neutral2.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
+      <Icon color="$neutral2" size="$icon.24" strokeWidth={1.5} />
       <Flex row shrink>
         <Flex shrink ml="$spacing16">
           <Text color="$neutral1" variant="subheading2">
@@ -92,7 +86,7 @@ function AppearanceOption({ active, title, subtitle, Icon, option }: AppearanceO
           </Text>
         </Flex>
         <Flex grow alignItems="flex-end" justifyContent="center" style={{ opacity: showCheckMarkOpacity }}>
-          <Check color={colors.accent1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+          <Check color="$accent1" size="$icon.24" strokeWidth={5} />
         </Flex>
       </Flex>
     </TouchableArea>

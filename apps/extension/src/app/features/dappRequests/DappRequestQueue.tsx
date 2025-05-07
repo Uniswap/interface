@@ -11,8 +11,13 @@ import { rejectAllRequests } from 'src/app/features/dappRequests/actions'
 import { ConnectionRequestContent } from 'src/app/features/dappRequests/requestContent/Connection/ConnectionRequestContent'
 import { EthSendRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/EthSend'
 import { PersonalSignRequestContent } from 'src/app/features/dappRequests/requestContent/PersonalSign/PersonalSignRequestContent'
+import { SendCallsRequestHandler } from 'src/app/features/dappRequests/requestContent/SendCalls/SendCallsRequestContent'
 import { SignTypedDataRequestContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/SignTypedDataRequestContent'
-import { isDappRequestStoreItemForEthSendTxn, selectAllDappRequests } from 'src/app/features/dappRequests/slice'
+import {
+  isDappRequestStoreItemForEthSendTxn,
+  isDappRequestStoreItemForSendCallsTxn,
+  selectAllDappRequests,
+} from 'src/app/features/dappRequests/slice'
 import {
   isConnectionRequest,
   isSignMessageRequest,
@@ -76,7 +81,7 @@ function DappRequestQueueContent(): JSX.Element {
             minHeight={REJECT_MESSAGE_HEIGHT}
             p="$spacing12"
           >
-            <ReceiptText color="$neutral2" size={iconSizes.icon20} />
+            <ReceiptText color="$neutral2" size="$icon.20" />
             <Flex grow>
               <Text color="$neutral2" variant="body4">
                 <Trans
@@ -110,9 +115,9 @@ function DappRequestQueueContent(): JSX.Element {
         borderRadius="$rounded24"
         gap="$spacing12"
         mb="$spacing12"
-        p="$spacing12"
         top={totalRequestCount > 1 ? 12 : 0}
         width="100%"
+        py="$spacing12"
       >
         {totalRequestCount > 1 && (
           <Flex
@@ -201,6 +206,9 @@ const DappRequest = memo(function _DappRequest(): JSX.Element | null {
   }
   if (isConnectionRequest(request.dappRequest)) {
     return <ConnectionRequestContent />
+  }
+  if (isDappRequestStoreItemForSendCallsTxn(request)) {
+    return <SendCallsRequestHandler request={request} />
   }
 
   return <DappRequestContent confirmText={t('common.button.confirm')} title={t('dapp.request.base.title')} />

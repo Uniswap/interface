@@ -4,7 +4,7 @@ import { SearchWalletItemBase } from 'src/components/explore/search/items/Search
 import { Flex, Text } from 'ui/src'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
-import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { SearchContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { WalletByAddressSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'

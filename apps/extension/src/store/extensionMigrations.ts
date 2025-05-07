@@ -1,5 +1,6 @@
 import { DappRequestStatus } from 'src/app/features/dappRequests/shared'
 import type { DappRequestState } from 'src/app/features/dappRequests/slice'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 export function removeDappInfoToChromeLocalStorage({ dapp: _dapp, ...state }: any): any {
   return state
@@ -42,6 +43,41 @@ export function migratePendingDappRequestsToRecord(state: any): any {
     ...state,
     dappRequests: {
       requests,
+    },
+  }
+}
+
+// Migrates accounts with no backup method to have `maybe-manual` backup method.
+// Before this migration, we were not setting the backup method on accounts created during Extension onboarding,
+// so we're unsure if the user completed the backup flow during onboarding or if they hit "Skip".
+export function migrateUnknownBackupAccountsToMaybeManualBackup(state: any): any {
+  if (!state.wallet?.accounts) {
+    return state
+  }
+
+  // Update each account to have manual backup
+  const updatedAccounts = Object.entries(state.wallet.accounts as Record<Address, { backups?: BackupType[] }>).reduce(
+    (acc, [address, account]) => {
+      // Skip if not an object
+      if (!account || typeof account !== 'object') {
+        return acc
+      }
+
+      acc[address] = {
+        ...account,
+        // Add manual backup if backups array doesn't exist or is empty
+        backups: account.backups?.length ? account.backups : ['maybe-manual'],
+      }
+      return acc
+    },
+    {} as Record<string, any>,
+  )
+
+  return {
+    ...state,
+    wallet: {
+      ...state.wallet,
+      accounts: updatedAccounts,
     },
   }
 }

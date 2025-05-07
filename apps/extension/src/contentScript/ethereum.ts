@@ -6,7 +6,6 @@ import {
   isValidContentScriptToProxyEmission,
   isValidWindowEthereumConfigResponse,
 } from 'src/contentScript/types'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { v4 as uuid } from 'uuid'
 
@@ -56,7 +55,7 @@ function assignWindowEthereum(provider: unknown): void {
     // @ts-expect-error: we're intentionally trying to override this.
     window.ethereum = provider
   } catch (error) {
-    if (isDevEnv()) {
+    if (__DEV__) {
       // Only log in dev env for debugging purposes to avoid spamming DD with these errors.
       logger.error(error, { tags: { file: 'ethereum.ts', function: 'assignWindowEthereum' } })
     }

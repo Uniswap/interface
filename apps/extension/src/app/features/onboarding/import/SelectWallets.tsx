@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SelectWalletsSkeleton } from 'src/app/components/loading/SelectWalletSkeleton'
 import { saveDappConnection } from 'src/app/features/dapp/actions'
@@ -13,11 +13,12 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { useAsyncData, useEvent } from 'utilities/src/react/hooks'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useImportableAccounts } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
 import { useSelectAccounts } from 'wallet/src/features/onboarding/hooks/useSelectAccounts'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.Element {
   const { t } = useTranslation()
@@ -35,13 +36,16 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
 
   const enableSubmit = showError || (selectedAddresses.length > 0 && !isLoading)
 
-  const onSubmit = useCallback(async () => {
+  const onSubmit = useEvent(async () => {
     if (!enableSubmit) {
       return
     }
 
     setButtonClicked(true)
-    const importedAccounts = await generateAccountsAndImportAddresses(selectedAddresses)
+    const importedAccounts = await generateAccountsAndImportAddresses({
+      selectedAddresses,
+      backupType: flow === ExtensionOnboardingFlow.Passkey ? BackupType.Passkey : BackupType.Manual,
+    })
 
     // TODO(EXT-1375): figure out how to better auto connect existing wallets that may have connected via WC or some other method.
     // Once that's solved the feature flag can be turned on/removed.
@@ -51,7 +55,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
 
     goToNextStep()
     setButtonClicked(false)
-  }, [generateAccountsAndImportAddresses, selectedAddresses, goToNextStep, shouldAutoConnect, enableSubmit])
+  })
 
   const title = showError ? t('onboarding.selectWallets.title.error') : t('onboarding.selectWallets.title.default')
 
@@ -62,7 +66,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
       <OnboardingScreen
         Icon={
           <Square backgroundColor="$surface2" borderRadius="$rounded12" size={iconSizes.icon48}>
-            <WalletFilled color="$neutral1" size={iconSizes.icon24} />
+            <WalletFilled color="$neutral1" size="$icon.24" />
           </Square>
         }
         nextButtonEnabled={enableSubmit}

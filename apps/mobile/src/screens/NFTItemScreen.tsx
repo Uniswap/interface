@@ -26,8 +26,7 @@ import {
   passesContrast,
   useSporeColors,
 } from 'ui/src'
-import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
-import { CopyAlt } from 'ui/src/components/icons'
+import { CopyAlt, Ellipsis } from 'ui/src/components/icons'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -39,7 +38,6 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
-import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -103,6 +101,7 @@ function NFTItemScreenContents({
   const asset = data?.nftAssets?.edges[0]?.node
   const owner = (ownerFromProps || asset?.ownerAddress) ?? undefined
   const chainId = fromGraphQLChain(fallbackData?.chain) ?? undefined
+  const contractAddress = address || asset?.nftContract?.address || fallbackData?.contractAddress
 
   const lastSaleData = data?.nftActivity?.edges[0]?.node
   const listingPrice = asset?.listings?.edges?.[0]?.node?.price
@@ -122,9 +121,8 @@ function NFTItemScreenContents({
   const imageDimensions = imageDimensionsExist ? { height: imageHeight, width: imageWidth } : undefined
   const imageAspectRatio = imageDimensions ? imageDimensions.width / imageDimensions.height : 1
   const onPressCollection = (): void => {
-    const collectionAddress = asset?.nftContract?.address ?? fallbackData?.contractAddress
-    if (collectionAddress) {
-      navigation.navigate(MobileScreens.NFTCollection, { collectionAddress })
+    if (contractAddress) {
+      navigation.navigate(MobileScreens.NFTCollection, { collectionAddress: contractAddress })
     }
   }
 
@@ -194,21 +192,31 @@ function NFTItemScreenContents({
   }
 
   const rightElement = useMemo(
-    () => <RightElement asset={asset} isSpam={isSpam} owner={owner} />,
-    [asset, isSpam, owner],
+    () => (
+      <RightElement
+        chainId={chainId}
+        contractAddress={contractAddress}
+        isSpam={isSpam}
+        owner={owner}
+        tokenId={tokenId}
+      />
+    ),
+    [chainId, contractAddress, isSpam, owner, tokenId],
   )
 
   const onPressCopyAddress = useCallback(
     async (_: GestureResponderEvent) => {
-      await setClipboard(address)
-      dispatch(
-        pushNotification({
-          type: AppNotificationType.Copied,
-          copyType: CopyNotificationType.Address,
-        }),
-      )
+      if (contractAddress) {
+        await setClipboard(contractAddress)
+        dispatch(
+          pushNotification({
+            type: AppNotificationType.Copied,
+            copyType: CopyNotificationType.Address,
+          }),
+        )
+      }
     },
-    [address, dispatch],
+    [contractAddress, dispatch],
   )
 
   return (
@@ -369,7 +377,7 @@ function NFTItemScreenContents({
                     />
                   ) : null}
 
-                  {asset?.nftContract?.address ? (
+                  {contractAddress ? (
                     <AssetMetadata
                       color={colors.neutral2.val}
                       title={t('tokens.nfts.details.contract.address')}
@@ -381,7 +389,7 @@ function NFTItemScreenContents({
                           justifyContent="center"
                           onPress={onPressCopyAddress}
                         >
-                          <Text variant="body2">{shortenHash(asset?.nftContract?.address)}</Text>
+                          <Text variant="body2">{shortenHash(contractAddress)}</Text>
                           <CopyAlt color="$neutral3" size="$icon.16" />
                         </TouchableArea>
                       }
@@ -448,16 +456,26 @@ function AssetMetadata({
   )
 }
 
-function RightElement({ asset, owner, isSpam }: { asset: GQLNftAsset; owner?: string; isSpam?: boolean }): JSX.Element {
-  const colors = useSporeColors()
-
+function RightElement({
+  chainId,
+  contractAddress,
+  tokenId,
+  owner,
+  isSpam,
+}: {
+  chainId?: UniverseChainId
+  contractAddress?: string
+  tokenId?: string
+  owner?: string
+  isSpam?: boolean
+}): JSX.Element {
   const { menuActions, onContextMenuPress } = useNFTContextMenu({
-    contractAddress: asset?.nftContract?.address,
-    tokenId: asset?.tokenId,
+    contractAddress,
+    tokenId,
     owner,
     showNotification: true,
     isSpam,
-    chainId: fromGraphQLChain(asset?.nftContract?.chain) ?? undefined,
+    chainId,
   })
 
   return (
@@ -465,7 +483,7 @@ function RightElement({ asset, owner, isSpam }: { asset: GQLNftAsset; owner?: st
       {menuActions.length > 0 ? (
         <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
           <TouchableArea p="$spacing16">
-            <EllipsisIcon color={colors.neutral1.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
+            <Ellipsis color="$neutral1" size="$icon.16" />
           </TouchableArea>
         </ContextMenu>
       ) : undefined}

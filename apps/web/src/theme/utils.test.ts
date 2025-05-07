@@ -1,27 +1,4 @@
-import { getAccent2, getNeutralContrast, opacify, passesContrast } from 'theme/utils'
-
-describe('opacify', () => {
-  it('should return the same color for invalid hex strings', () => {
-    expect(opacify(50, 'blue')).toBe('blue')
-  })
-
-  it('should throw an error for invalid hex format', () => {
-    expect(() => opacify(50, '#12345')).toThrow('provided color #12345 was not in hexadecimal format')
-  })
-
-  it('should handle shorthand hex color correctly', () => {
-    expect(opacify(50, '#123')).toBe('#11223380')
-  })
-
-  it('should handle full hex color correctly', () => {
-    expect(opacify(50, '#112233')).toBe('#11223380')
-  })
-
-  it('should throw an error for out-of-range opacity values', () => {
-    expect(() => opacify(-1, '#123')).toThrow('provided amount should be between 0 and 100')
-    expect(() => opacify(101, '#123')).toThrow('provided amount should be between 0 and 100')
-  })
-})
+import { getAccent2, getNeutralContrast, passesContrast } from 'theme/utils'
 
 describe('passesContrast', () => {
   it('should return true for contrasting colors', () => {

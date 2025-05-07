@@ -106,6 +106,7 @@ export type NavigateToNftItemArgs = {
 
 export type NavigateToNftCollectionArgs = {
   collectionAddress: Address
+  chainId: UniverseChainId
 }
 
 export type NavigateToFiatOnRampArgs = {

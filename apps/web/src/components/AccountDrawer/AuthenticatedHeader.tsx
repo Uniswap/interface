@@ -9,10 +9,12 @@ import { ExtensionDeeplinks } from 'components/AccountDrawer/MiniPortfolio/Exten
 import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio/MiniPortfolio'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ModalState, miniPortfolioModalStateAtom } from 'components/AccountDrawer/constants'
+import { LimitedSupportBanner } from 'components/Banner/LimitedSupportBanner'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import StatusIcon from 'components/Identicon/StatusIcon'
 import { ReceiveCryptoModal } from 'components/ReceiveCryptoModal'
+import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
@@ -26,10 +28,9 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { CopyHelper } from 'theme/components/CopyHelper'
-import { Button, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
 import { Bank } from 'ui/src/components/icons/Bank'
-import { Flex } from 'ui/src/components/layout'
 import { Shine } from 'ui/src/loading/Shine'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
@@ -44,6 +45,7 @@ import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
+import { useHasAccountMismatchOnAnyChain } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
@@ -112,6 +114,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   // denominated portfolio balance on testnet is always 0
   const isPortfolioZero = !isTestnetModeEnabled && balanceUSD === 0
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
+
+  const isDelegationMismatch = useHasAccountMismatchOnAnyChain()
+  const [displayDelegationMismatchModal, setDisplayDelegationMismatchModal] = useState(false)
 
   const { unitag } = useUnitagByAddress(account)
   const showAddress = ENSName || unitag?.username
@@ -184,6 +189,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               </Shine>
             )}
           </Flex>
+          {isDelegationMismatch && <LimitedSupportBanner onPress={() => setDisplayDelegationMismatchModal(true)} />}
           {isUniExtensionConnected ? (
             <ExtensionDeeplinks account={account} />
           ) : (
@@ -232,6 +238,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </Flex>
       </Flex>
       {modalState !== undefined && <ReceiveCryptoModal />}
+      {displayDelegationMismatchModal && (
+        <DelegationMismatchModal onClose={() => setDisplayDelegationMismatchModal(false)} />
+      )}
     </>
   )
 }

@@ -14,6 +14,7 @@ import { calculateApr } from 'graphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { useColor } from 'hooks/useColor'
 import styled, { useTheme } from 'lib/styled-components'
+import { ExploreTab } from 'pages/Explore/constants'
 import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useEffect, useMemo, useReducer } from 'react'
@@ -29,6 +30,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants/trace'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
@@ -152,7 +154,7 @@ export default function PoolDetailsPage() {
 
   useEffect(() => {
     if (poolNotFound) {
-      navigate('/explore')
+      navigate(`/explore/pools?type=${ExploreTab.Pools}&result=${ModalName.NotFound}`)
     }
   }, [poolNotFound, navigate])
 

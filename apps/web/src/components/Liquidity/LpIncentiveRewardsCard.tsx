@@ -214,7 +214,7 @@ function LpIncentiveRewardsCard({
                   placement="top"
                   trigger={
                     <TouchableArea>
-                      <InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
+                      <InfoCircleFilled color="$neutral3" size="$icon.16" />
                     </TouchableArea>
                   }
                   text={

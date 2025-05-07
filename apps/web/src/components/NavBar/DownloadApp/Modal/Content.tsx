@@ -34,7 +34,7 @@ export function ModalContent({
         <Flex row mt="$spacing6" mb="$spacing6" px="$spacing20" width="100%">
           {goBack && (
             <TouchableArea onPress={goBack}>
-              <BackArrow size={iconSizes.icon20} color="$neutral2" hoverColor="$neutral2Hovered" />
+              <BackArrow size="$icon.20" color="$neutral2" hoverColor="$neutral2Hovered" />
             </TouchableArea>
           )}
           {onClose && (

@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import type { ColorTokens } from 'tamagui'
-import { validColor } from 'ui/src/theme'
-import { opacify } from 'ui/src/theme/color/utils'
+import { opacify, validColor } from 'ui/src/theme'
 
 export const useColorsFromTokenColor = (
   tokenColor?: string,

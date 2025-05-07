@@ -1,6 +1,6 @@
 import { PropsWithChildren, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, UniswapXText, isWeb, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, UniswapXText, isWeb } from 'ui/src'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
 import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
@@ -27,7 +27,6 @@ export function RoutingInfo({
   chainId: UniverseChainId
   gasFee: GasFeeResult
 }>): JSX.Element | null {
-  const colors = useSporeColors()
   const { t } = useTranslation()
   const { trade } = useSwapTxContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -116,7 +115,7 @@ export function RoutingInfo({
           modalName: ModalName.SwapReview,
           captionComponent: caption,
           rejectText: t('common.button.close'),
-          icon: <OrderRouting color={colors.neutral1.val} size={24} />,
+          icon: <OrderRouting color="$neutral1" size="$icon.24" />,
           severity: WarningSeverity.None,
           title: t('swap.tradeRoutes'),
         }}

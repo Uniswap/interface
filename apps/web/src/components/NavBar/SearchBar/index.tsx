@@ -6,6 +6,7 @@ import { SearchModal } from 'components/NavBar/SearchBar/SearchModal'
 import Row from 'components/deprecated/Row'
 import { useSearchTokensGql } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
+import { useModalState } from 'hooks/useModalState'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Search } from 'react-feather'
@@ -18,6 +19,7 @@ import { breakpoints } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
@@ -219,32 +221,15 @@ export const SearchBar = ({
 
   const trace = useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH })
 
-  const navbarSearchEventProperties = {
-    navbar_search_input_text: debouncedSearchValue,
-    hasInput: debouncedSearchValue.length > 0,
-    ...trace,
-  }
-
   const placeholderText = poolSearchEnabled ? t('search.input.placeholder') : t('tokens.selector.search.placeholder')
 
+  const { toggleModal: toggleSearchModal } = useModalState(ModalName.Search)
   if (searchRevampEnabled) {
     return (
       <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
-        {isOpen && (
-          <SearchModal
-            isModalOpen={isOpen}
-            onClose={() => {
-              toggleOpen()
-              sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
-            }}
-          />
-        )}
+        <SearchModal />
         {isNavSearchInputVisible ? (
-          <TouchableArea
-            onPress={() => !isOpen && toggleOpen()}
-            data-testid="nav-search-input"
-            width={NAV_SEARCH_MIN_WIDTH}
-          >
+          <TouchableArea onPress={toggleSearchModal} data-testid="nav-search-input" width={NAV_SEARCH_MIN_WIDTH}>
             <Flex
               row
               backgroundColor="$surface2"
@@ -279,7 +264,7 @@ export const SearchBar = ({
             </Flex>
           </TouchableArea>
         ) : (
-          <NavIcon onClick={toggleOpen} label={placeholderText}>
+          <NavIcon onClick={toggleSearchModal} label={placeholderText}>
             <SearchIcon data-cy="nav-search-icon">
               <Search width="20px" height="20px" color={theme.neutral2} />
             </SearchIcon>
@@ -325,7 +310,11 @@ export const SearchBar = ({
                     setSearchValue(event.target.value)
                   }}
                   onBlur={() =>
-                    sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
+                    sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, {
+                      navbar_search_input_text: debouncedSearchValue,
+                      hasInput: Boolean(debouncedSearchValue),
+                      ...trace,
+                    })
                   }
                   value={searchValue}
                 />

@@ -9,7 +9,7 @@ import { Loader } from 'src/components/loading/loaders'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedTouchableArea, Flex, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
-import { borderRadii, fonts, imageSizes, opacify } from 'ui/src/theme'
+import { borderRadii, fonts, imageSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -110,6 +110,7 @@ function FavoriteTokenCard({
       />
     )
   }
+
   return (
     <ContextMenu
       actions={menuActions}
@@ -121,7 +122,7 @@ function FavoriteTokenCard({
       <AnimatedTouchableArea
         activeOpacity={isEditing ? 1 : undefined}
         backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
-        borderColor={isDarkMode ? '$transparent' : opacify(0.05, colors.surface3.val)}
+        borderColor={isDarkMode ? '$transparent' : colors.surface3.val}
         borderRadius="$rounded16"
         overflow={isIOS ? 'hidden' : 'visible'}
         borderWidth={isDarkMode ? '$none' : '$spacing1'}

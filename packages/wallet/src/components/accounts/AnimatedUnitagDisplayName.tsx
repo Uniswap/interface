@@ -1,6 +1,6 @@
 import { IconSizeTokens } from 'ui/src/theme'
+import { DisplayName } from 'uniswap/src/features/accounts/types'
 import { PlatformSplitStubError } from 'utilities/src/errors'
-import { DisplayName } from 'wallet/src/features/wallet/types'
 
 export type AnimatedUnitagDisplayNameProps = {
   displayName: DisplayName

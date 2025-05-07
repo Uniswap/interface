@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmY6iPUuY57eq3gtoFaqtJ885ysk1SQDbHi4nawcXmYM7s`
-- CIDv1: `bafybeierals42wkadswmgvlto7rbuywzpzfcmgqcywdlzqbvgylukagtoy`
+- CIDv0: `QmQY8h9hoqVp2nqyiK9W1VSqyFij9yG2UzMfZGbVR9hcfq`
+- CIDv1: `bafybeibavbtwbt67v3e6xufqkwzfhb47pyuavqudshfmqxp33zuvx5efpa`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,72 +10,97 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeierals42wkadswmgvlto7rbuywzpzfcmgqcywdlzqbvgylukagtoy.ipfs.dweb.link/
-- [ipfs://QmY6iPUuY57eq3gtoFaqtJ885ysk1SQDbHi4nawcXmYM7s/](ipfs://QmY6iPUuY57eq3gtoFaqtJ885ysk1SQDbHi4nawcXmYM7s/)
+- https://bafybeibavbtwbt67v3e6xufqkwzfhb47pyuavqudshfmqxp33zuvx5efpa.ipfs.dweb.link/
+- [ipfs://QmQY8h9hoqVp2nqyiK9W1VSqyFij9yG2UzMfZGbVR9hcfq/](ipfs://QmQY8h9hoqVp2nqyiK9W1VSqyFij9yG2UzMfZGbVR9hcfq/)
 
-## 5.82.0 (2025-04-30)
+## 5.83.0 (2025-05-07)
 
 
 ### Features
 
-* **web:** add more CF cacheing for CSS resources (#18689) 3ddb1e3
-* **web:** add more CF caching headers for public assets (#18678) 4f9b98e
-* **web:** add more menu to hover state search modal (#18469) d4a85b5
-* **web:** add pools mock sections (#17257) 3a6bc2c
-* **web:** add tabs to search modal (#17180) 4e62ad9
-* **web:** Add verify to add/delete passkey (#18627) b872b40
-* **web:** bidirectional table scroll buttons (#18876) c647127
-* **web:** defer initializations of AssetActivityProvider and TokenBalancesProvider (#18057) b1e68cf
-* **web:** feature-gate pool search and tabs on web (#18273) 78ea6ec
-* **web:** implement keyboard focus hover state on OptionItem (#17179) ebfea5c
-* **web:** lazy load top level modals (#18056) 6a38462
-* **web:** minip updates (#18613) 248bdec
-* **web:** more CF caching for js chunks (#18679) 89611fe
-* **web:** pass uniquote enabled to trading api requests (#19018) 955bbac
-* **web:** show help modal on passkey error (#18682) 15039cf
-* **web:** top boosted pools (#18569) cbcb803
-* **web:** useMutate for refreshing authenticators (#18628) 3a24751
+* **web:** add analytics event for embedded wallet sign in (#18908) 4258201
+* **web:** add batched capability to legacy swap tx and gas info (#19139) 7e98a92
+* **web:** add feature flags for permit mismatch (#19007) 0890576
+* **web:** add pools to recent searches (#17403) 5ffc92b
+* **web:** allow slippage in create, increase, and decrease (#18674) 0a37dcc
+* **web:** batch analytics [staging mirror] (#19335) b59b8de
+* **web:** batched swap feature flag (#19169) fd30fb3
+* **web:** clean up web state, smartWallet reducer, hooks, etc (#18961) 0e3840e
+* **web:** create toast component for mismatch case (#18962) 8cbd058
+* **web:** create useMismatchAccount (#18870) f2ce7ed
+* **web:** delegation mismatch modal (#18980) 301a7de
+* **web:** disable uniswapx on quote args if mismatch account (#18907) 185d1a4
+* **web:** gate limit order feature for mismatched delegation (#18979) 840d1f8
+* **web:** implement permit tx step in UI / saga (#18898) 8b7362d
+* **web:** limited support ui in mini p (#18990) daff0c4
+* **web:** multi mismatch calls (#18955) 737f851
+* **web:** mweb sign in connector polish (#18968) 2928718
+* **web:** pass uniquote enabled to trading api requests (#18984) d3ea833
+* **web:** poll 5792 txs (#19138) 36f8910
+* **web:** prevent passkey sign in/up when iframed (#19015) f4174c5
+* **web:** Recently connected modal polish (#18790) f1291d6
+* **web:** retry with standard swap if batched fails (#19303) 8a774d3
+* **web:** Sign In UX polish (#18798) 5805f2d
+* **web:** submit batched transactions (#19079) 8c769ec
+* **web:** track atomic supported chains (#19163) abda850
+* **web:** track delegate status as user properties (#19331) d71c1ac
+* **web:** track user prop delegate status (#19286) (#19308) 8168cfa
+* **web:** update activity type and relevant UI (#19130) f0a6e65
 
 
 ### Bug Fixes
 
-* **web:** [pdp] redirect if no pool found (#18412) 8e95934
-* **web:** [tdp] redirect if no token found (#18408) 997977e
-* **web:** [tdp] switch testnet/mainnet mode when wallet is disconnected (#18406) 571fced
-* **web:** add additional statsig api urls to our csp.json file (#19036) d7a9320
-* **web:** add more context to Datadog resource events (#18743) 00d6e11
-* **web:** add web3modal to csp to fix wallet connect error (#18771) d57bd82
-* **web:** bug bash polish (#18594) ba4f511
-* **web:** clean up modal util hooks (#18535) db8ff2b
-* **web:** dd- allow 100% sample rate on interface staging (#18267) abb113a
-* **web:** DevFlagsBox behavior (#18749) 4a93d4e
-* **web:** do not render top level modals when shouldOverridePageLayout=true (#18691) 7f63a56
-* **web:** fix button size in FeeTierSearchModal (#18911) 5936720
-* **web:** fix closeModal util hook (#18783) b76e2d8
-* **web:** fix invalid robots.txt (#18690) f910fd3
-* **web:** fix resetting of modal after closing (#18872) 317f04a
-* **web:** fix uniwalletmodal opening bug (#18871) c4de0d2
-* **web:** lp incentives bugfixes (#18830) 4e3b289
-* **web:** migrate Card components to tamagui (#18481) 1f43821
-* **web:** migrate containers in MigrateV2Pair to tamagui (#18482) 374dd77
-* **web:** optimize images for app store logos and lazy-load QR code (#18635) cb119ef
-* **web:** pass chainId to useReadContracts (#18663) c4aa5b5
-* **web:** remove applied percent buffer logic from useMaxAmountSpend (#18834) f88ac25
-* **web:** remove more dead feature flags (#18538) b9ef4a8
-* **web:** replace dotted bg gradient png with css (#18803) bf8cfea
-* **web:** search revamp web polish (#18416) 86f034e
-* **web:** settings spacing fix (#18874) b36aa67
-* **web:** show price for v2 create (#18917) e80273c
-* **web:** slideOutMenu adjustments (#18629) 3715c68
-* **web:** start migrating MigrateV2Pair to spore / tamagui (#18480) 5d8a2d0
-* **web:** temp skip snapshot test on LimitPriceInputPanel.test.tsx (#18630) 435fe3b
-* **web:** uninitialized v2 pools (#18807) 8f390da
-* **web:** v2 migrate page UI fixes (#18479) 858807d
-* **web:** v4 native pair liq chart fix (#18893) c008acc
+* **web:** add additional statsig api urls to our csp.json file (#19034) ce2b43a
+* **web:** add uniquote to ff modal (#19032) 073bf6c
+* **web:** Adjust layout of TDP Stats (#18034) 747daed
+* **web:** allow .env.defaults in the public repo (#19164) ed9e9f7
+* **web:** allow access to testnet or mainnet tdps (#19166) 1dec896
+* **web:** change colors of Slippage Input border when in a warning state (#18013) e04838e
+* **web:** change numbers on the landing page (#18431) 7588d1b
+* **web:** Change tooltip shadow color to black and align styling with Spore style (#18028) b531277
+* **web:** check against all chains for mismatch (#19027) 08df5c7
+* **web:** consistent delta arrow for amts close to zero (#18954) b55f4fb
+* **web:** default to eth on mainnet for buy form (#18976) 6cb69dd
+* **web:** display helper modal when token or pool not found (#18801) ff3a040
+* **web:** don't fetch approvals when smartWallet or batched enabled (#19140) ba4a3b6
+* **web:** fix approval call for create + increase (#19224) ffb2f62
+* **web:** Fix styling of outage banner (#19113) 74318ed
+* **web:** fix username in header via Web3Status (#18885) 97e6ed6
+* **web:** Get The App playwright test (#19099) 4c9fa04
+* **web:** improve lp page performance - extraneous quote requests (#18958) 0c8e6e2
+* **web:** log statsig events to datadog (#19042) 72a7bac
+* **web:** missing permit tx (#19327) 4358581
+* **web:** more code splitting (#19086) a137af7
+* **web:** parse both number and hex from getCapabilities (#19200) 9041a85
+* **web:** persist toast forever (#19067) e52c747
+* **web:** revert - track user prop delegate status [staging only] (#19311) c57a266
+* **web:** tick tooltip overlap with graph boundary (#18971) 5e2e849
+* **web:** Update app icon SVG so it renders properly in Safari (#18031) 01c0e75
+* **web:** Update opacify util (#19037) 6dddf59
+* **web:** update tx toast styles (#17640) 57d23a1
+* **web:** use neutral1 color as the default text color for NumericalInputSymbol (#18901) 0e324f2
 
 
 ### Continuous Integration
 
-* **web:** update sitemaps a994dde
+* **web:** update sitemaps 6462060
+
+
+### Tests
+
+* **web:** improved slack reporter (#19107) a828bf4
+* **web:** remaining swap tests (#19090) b52a122
+* **web:** stub gql SearchTokens in LP e2e test (#18964) b754a4a
+* **web:** swap settings e2e tests (#19087) d757545
+* **web:** test statsig flags (#19127) f15d67c
+* **web:** wrap tests (#19091) 2036ab5
+
+
+### Code Refactoring
+
+* **web:** break out fn and useMutation (#18869) 0b940c7
+* **web:** break out what vs how of useRoutingApiAruguments (#18905) 0d1c4d4
+* **web:** clean up routing type condition (#18906) ba8be91
+* **web:** move createGetRoutingAPIArguments to file (#18909) d58014c
 
 

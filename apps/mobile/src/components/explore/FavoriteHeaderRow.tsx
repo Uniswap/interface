@@ -2,7 +2,6 @@ import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function FavoriteHeaderRow({
@@ -26,7 +25,7 @@ export function FavoriteHeaderRow({
       </Text>
       {!isEditing ? (
         <TouchableArea hitSlop={16} testID={TestID.Edit} disabled={disabled} onPress={onPress}>
-          <Ellipsis color="$neutral2" size={iconSizes.icon20} strokeLinecap="round" strokeWidth={1} />
+          <Ellipsis color="$neutral2" size="$icon.20" strokeLinecap="round" strokeWidth={1} />
         </TouchableArea>
       ) : (
         <TouchableArea hitSlop={16} onPress={onPress}>
