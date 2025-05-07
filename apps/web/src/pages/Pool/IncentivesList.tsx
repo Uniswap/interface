@@ -1,5 +1,5 @@
 import { Token } from "@taraswap/sdk-core";
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { Trans } from "i18n";
 import {
   LoadingRows,
@@ -13,7 +13,7 @@ import { RowBetween, RowFixed } from "components/Row";
 import CurrencyLogo from "components/Logo/CurrencyLogo";
 import { ButtonPrimary } from "components/Button";
 import Row from "components/Row";
-import { getAddress } from "ethers/lib/utils";
+import { formatEther, getAddress } from "ethers/lib/utils";
 import {
   useIncentivesData,
   type ProcessedIncentive,
@@ -22,6 +22,7 @@ import { ScrollBarStyles } from "components/Common";
 import styled from "styled-components";
 import { useBulkPosition } from "hooks/useBulkPosition";
 import Toggle from "components/Toggle";
+import { ethers } from "ethers";
 
 const Container = styled.div`
   height: 425px;
@@ -68,6 +69,9 @@ function IncentivesList({
   const [expandedIncentive, setExpandedIncentive] = useState<string | null>(
     null
   );
+  const [pendingRewardsMap, setPendingRewardsMap] = useState<
+    Record<string, number>
+  >({});
   const [isTokenOwner, setIsTokenOwner] = useState(false);
   const [isBulkStaking, setIsBulkStaking] = useState(false);
   const [isBulkUnstaking, setIsBulkUnstaking] = useState(false);
@@ -96,6 +100,7 @@ function IncentivesList({
     handleBulkStake,
     handleBulkUnstake,
     handleBulkWithdraw,
+    getIncentivePendingRewards,
   } = useBulkPosition(tokenId, poolAddress, allIncentives);
 
   const hasAvailableIncentives = useMemo(() => {
@@ -217,6 +222,35 @@ function IncentivesList({
     }
   }, [handleBulkWithdraw, refetchIncentives]);
 
+  const positions = useMemo(
+    () =>
+      allIncentives.map((incentive) => ({
+        tokenId: Number(incentive.id),
+        incentive: incentive,
+      })),
+    [allIncentives]
+  );
+
+  useEffect(() => {
+    const fetchRewards = async () => {
+      const rewards: Record<string, number> = {};
+      for (const incentive of allIncentives) {
+        try {
+          const reward = await getIncentivePendingRewards(incentive);
+          rewards[incentive.id] = Number(ethers.utils.formatEther(reward || 0));
+        } catch (error) {
+          console.error("Error fetching rewards:", error);
+          rewards[incentive.id] = 0;
+        }
+      }
+      setPendingRewardsMap(rewards);
+    };
+
+    fetchRewards();
+    const interval = setInterval(fetchRewards, 10000);
+    return () => clearInterval(interval);
+  }, [allIncentives, getIncentivePendingRewards]);
+
   if (isLoading) {
     return (
       <Container>
@@ -328,6 +362,8 @@ function IncentivesList({
             incentive.rewardToken.symbol
           );
 
+          const pendingRewards = pendingRewardsMap[incentive.id] || 0;
+
           return (
             <IncentiveCard
               key={incentive.id}
@@ -372,6 +408,24 @@ function IncentivesList({
                 <IncentiveContent>
                   <RowBetween>
                     <ThemedText.DeprecatedMain>
+                      <Trans i18nKey="common.pendingRewards" />
+                    </ThemedText.DeprecatedMain>
+                    <RowFixed>
+                      <CurrencyLogo
+                        currency={rewardToken}
+                        size={20}
+                        style={{ marginRight: "8px" }}
+                        logoURI={`https://raw.githubusercontent.com/taraswap/assets/main/logos/${getAddress(
+                          rewardToken.address
+                        )}/logo.png`}
+                      />
+                      <ThemedText.DeprecatedMain>
+                        {pendingRewards.toFixed(6) || 0} {rewardToken.symbol}
+                      </ThemedText.DeprecatedMain>
+                    </RowFixed>
+                  </RowBetween>
+                  <RowBetween>
+                    <ThemedText.DeprecatedMain>
                       <Trans i18nKey="common.accruedRewards" />
                     </ThemedText.DeprecatedMain>
                     <RowFixed>
@@ -379,12 +433,13 @@ function IncentivesList({
                         currency={rewardToken}
                         size={20}
                         style={{ marginRight: "8px" }}
-                        logoURI={`https://raw.githubusercontent.com/taraswap/assets/master/logos/${getAddress(
+                        logoURI={`https://raw.githubusercontent.com/taraswap/assets/main/logos/${getAddress(
                           rewardToken.address
                         )}/logo.png`}
                       />
                       <ThemedText.DeprecatedMain>
-                        {Number(incentive.currentReward?.reward) || "0"}{" "}
+                        {Number(incentive.currentReward?.reward).toFixed(6) ||
+                          "0"}
                         {rewardToken.symbol}
                       </ThemedText.DeprecatedMain>
                     </RowFixed>

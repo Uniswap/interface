@@ -1143,6 +1143,7 @@
   "common.active": "Active",
   "common.ended": "Ended",
   "common.accruedRewards": "Accrued Rewards",
+  "common.pendingRewards": "Pending Rewards",
   "common.rewards": "Rewards",
   "common.stake": "Stake",
   "common.unstake": "Unstake",
