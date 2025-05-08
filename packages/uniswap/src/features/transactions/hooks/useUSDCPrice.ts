@@ -55,10 +55,7 @@ export const STABLECOIN_AMOUNT_OUT: Record<UniverseChainId, CurrencyAmount<Token
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
-export function useUSDCPrice(
-  currency?: Currency,
-  pollInterval: PollingInterval = PollingInterval.Fast,
-): {
+export function useUSDCPrice(currency?: Currency): {
   price: Price<Currency, Currency> | undefined
   isLoading: boolean
 } {
@@ -77,7 +74,7 @@ export function useUSDCPrice(
     amountSpecified,
     otherCurrency: currency,
     tradeType: TradeType.EXACT_OUTPUT,
-    pollInterval,
+    pollInterval: PollingInterval.Fast,
     isUSDQuote: true,
   })
 

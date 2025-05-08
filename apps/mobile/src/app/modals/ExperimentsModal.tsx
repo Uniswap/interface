@@ -1,6 +1,5 @@
 import React from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
-import { MissileaneousDevSection } from 'src/components/experiments/MissileaneousDevSection'
 import { ServerOverrides } from 'src/components/experiments/ServerOverrides'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { Accordion, Separator } from 'ui/src'
@@ -27,7 +26,6 @@ export function ExperimentsModal(): JSX.Element {
           <ServerOverrides />
           <Separator />
           <GatingOverrides />
-          <MissileaneousDevSection />
         </Accordion>
       </ScrollView>
     </Modal>

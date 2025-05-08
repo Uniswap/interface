@@ -5,7 +5,7 @@ import { TextInput, TextInputProps } from 'uniswap/src/components/input/TextInpu
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { useOnMobileAppState } from 'utilities/src/device/appState'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { isMobileWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'

@@ -1,5 +1,4 @@
 import { Unitag } from 'ui/src/components/icons'
-import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { TransferNFTTxNotification } from 'uniswap/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
@@ -9,6 +8,7 @@ import { NotificationToast } from 'wallet/src/features/notifications/components/
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { formTransferNFTNotificationTitle } from 'wallet/src/features/notifications/utils'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 export function TransferNFTNotification({ notification }: { notification: TransferNFTTxNotification }): JSX.Element {
   const { address, assetType, chainId, tokenAddress, tokenId, txType, txStatus, hideDelay } = notification

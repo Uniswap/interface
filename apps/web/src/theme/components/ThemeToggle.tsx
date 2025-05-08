@@ -128,7 +128,7 @@ export function ThemeSelector({
       value: ThemeMode.LIGHT,
       display: (
         <CompactOptionPill data-testid="theme-light">
-          <SunFilled size="$icon.20" color="$neutral1" />
+          <SunFilled size="$icon.20" color={colors.neutral1.get()} />
         </CompactOptionPill>
       ),
     },
@@ -136,7 +136,7 @@ export function ThemeSelector({
       value: ThemeMode.DARK,
       display: (
         <CompactOptionPill data-testid="theme-dark">
-          <MoonFilled size="$icon.20" color="$neutral1" />
+          <MoonFilled size="$icon.20" color={colors.neutral1.get()} />
         </CompactOptionPill>
       ),
     },

@@ -4,7 +4,7 @@ import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOpti
 import { Currency, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import ms from 'ms'
-import { ExploreTab } from 'pages/Explore/constants'
+import { ExploreTab } from 'pages/Explore'
 import { TokenStat } from 'state/explore/types'
 import { ColorTokens } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'

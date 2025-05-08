@@ -12,15 +12,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
-interface RewardsCampaign {
-  id: string
-  boostedApr: number
-  startTimestamp?: number
-  endTimestamp?: number
-  totalRewardAllocation?: string
-  distributedRewards?: string
-}
-
 export interface PoolData {
   // basic pool info
   idOrAddress: string
@@ -46,9 +37,6 @@ export interface PoolData {
   // liquidity
   tvlUSD?: number
   tvlUSDChange?: number
-
-  // lp incentive rewards
-  rewardsCampaign?: RewardsCampaign
 }
 
 type VolumeChange = { value: number; timestamp: number }
@@ -144,7 +132,6 @@ export function usePoolData(
             tvlUSD: pool.totalLiquidity?.value,
             tvlUSDChange: pool.totalLiquidityPercentChange24h?.value,
             hookAddress: 'hook' in pool ? pool?.hook?.address : undefined,
-            rewardsCampaign: 'rewardsCampaign' in pool ? pool.rewardsCampaign : undefined,
           }
         : undefined,
       error: anyError,

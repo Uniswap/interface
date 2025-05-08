@@ -6,9 +6,8 @@ import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/consta
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
+import { RemoveLiquidityV2WithTokenRedirects } from 'pages/LegacyPool/redirects'
 import Swap from 'pages/Swap'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import i18n from 'uniswap/src/i18n'
 
 const CreatePosition = lazy(() => import('pages/Pool/Positions/create/CreatePosition'))
@@ -29,20 +28,15 @@ const PoolFinderRedirects = lazy(() =>
 const LegacyPositionPageRedirects = lazy(() =>
   import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPositionPageRedirects })),
 )
-const RemoveLiquidityV2WithTokenRedirects = lazy(() =>
-  import('pages/LegacyPool/redirects').then((module) => ({ default: module.RemoveLiquidityV2WithTokenRedirects })),
-)
 const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const ExtensionPasskeySignInPopUp = lazy(() => import('pages/ExtensionPasskeyAuthPopUp'))
-const PasskeyManagement = lazy(() => import('pages/PasskeyManagement'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
-  isEmbeddedWalletEnabled?: boolean
 }
 
 /**
@@ -51,15 +45,13 @@ interface RouterConfig {
 export function useRouterConfig(): RouterConfig {
   const browserRouterEnabled = isBrowserRouterEnabled()
   const { hash } = useLocation()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   return useMemo(
     () => ({
       browserRouterEnabled,
       hash,
-      isEmbeddedWalletEnabled,
     }),
-    [browserRouterEnabled, hash, isEmbeddedWalletEnabled],
+    [browserRouterEnabled, hash],
   )
 }
 
@@ -77,7 +69,6 @@ const StaticTitlesAndDescriptions = {
   MigrateDescription: i18n.t('title.easilyRemove'),
   MigrateDescriptionV4: i18n.t('title.easilyRemoveV4'),
   AddLiquidityDescription: i18n.t('title.earnFees'),
-  PasskeyManagementTitle: i18n.t('title.managePasskeys'),
 }
 
 export interface RouteDefinition {
@@ -335,12 +326,6 @@ export const routes: RouteDefinition[] = [
     path: EXTENSION_PASSKEY_AUTH_PATH,
     getElement: () => <ExtensionPasskeySignInPopUp />,
     getTitle: () => i18n.t('title.extensionPasskeySignIn'),
-  }),
-  createRouteDefinition({
-    path: '/manage/passkey/:walletAddress',
-    getElement: () => <PasskeyManagement />,
-    getTitle: () => StaticTitlesAndDescriptions.PasskeyManagementTitle,
-    enabled: (args) => args.isEmbeddedWalletEnabled ?? false,
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),

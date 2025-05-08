@@ -17,8 +17,6 @@ import { Button, Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -29,7 +27,7 @@ type ModalWithOverlayProps = PropsWithChildren<
     confirmationButtonText?: string
     scrollDownButtonText?: string
     onReject: () => void
-    onConfirm?: () => void
+    onConfirm: () => void
     disableConfirm?: boolean
     contentContainerStyle?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
   }
@@ -109,8 +107,6 @@ export function ModalWithOverlay({
     [measureContent],
   )
 
-  const eip5792MethodsEnabled = useFeatureFlag(FeatureFlags.Eip5792Methods) ?? false
-
   return (
     <Modal overrideInnerContainer {...bottomSheetModalProps}>
       <BottomSheetScrollView
@@ -132,7 +128,7 @@ export function ModalWithOverlay({
         confirmationButtonText={confirmationButtonText}
         confirmationEnabled={!disableConfirm && confirmationEnabled}
         scrollDownButtonText={scrollDownButtonText}
-        showScrollDownOverlay={showOverlay && !eip5792MethodsEnabled}
+        showScrollDownOverlay={showOverlay}
         onConfirm={onConfirm}
         onReject={onReject}
         onScrollDownPress={handleScrollDown}
@@ -148,7 +144,7 @@ type ModalFooterProps = {
   scrollDownButtonText?: string
   onScrollDownPress: () => void
   onReject: () => void
-  onConfirm?: () => void
+  onConfirm: () => void
 }
 
 function ModalFooter({
@@ -192,17 +188,15 @@ function ModalFooter({
           {t('common.button.cancel')}
         </Button>
 
-        {confirmationButtonText && (
-          <Button
-            variant="branded"
-            isDisabled={!confirmationEnabled}
-            size="large"
-            testID={TestID.Confirm}
-            onPress={onConfirm}
-          >
-            {confirmationButtonText}
-          </Button>
-        )}
+        <Button
+          variant="branded"
+          isDisabled={!confirmationEnabled}
+          size="large"
+          testID={TestID.Confirm}
+          onPress={onConfirm}
+        >
+          {confirmationButtonText ?? t('common.button.accept')}
+        </Button>
       </Flex>
     </BottomSheetFooter>
   )

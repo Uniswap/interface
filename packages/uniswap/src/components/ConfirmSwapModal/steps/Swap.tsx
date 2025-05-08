@@ -5,13 +5,12 @@ import { Swap } from 'ui/src/components/icons/Swap'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
 import {
   SwapTransactionStep,
   SwapTransactionStepAsync,
-  SwapTransactionStepBatched,
-} from 'uniswap/src/features/transactions/swap/steps/swap'
+  TransactionStepType,
+  UniswapXSignatureStep,
+} from 'uniswap/src/features/transactions/swap/types/steps'
 import noop from 'utilities/src/react/noop'
 
 const SwapIcon = (): JSX.Element => (
@@ -20,7 +19,7 @@ const SwapIcon = (): JSX.Element => (
   </Flex>
 )
 
-type SwapSteps = SwapTransactionStep | SwapTransactionStepAsync | UniswapXSignatureStep | SwapTransactionStepBatched
+type SwapSteps = SwapTransactionStep | SwapTransactionStepAsync | UniswapXSignatureStep
 export function SwapTransactionStepRow({ step, status }: StepRowProps<SwapSteps>): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -45,10 +44,7 @@ export function SwapTransactionStepRow({ step, status }: StepRowProps<SwapSteps>
       title={title}
       icon={<SwapIcon />}
       learnMore={{
-        url:
-          step.type === TransactionStepType.SwapTransactionBatched
-            ? uniswapUrls.helpArticleUrls.batchedSwaps
-            : uniswapUrls.helpArticleUrls.howToSwapTokens,
+        url: uniswapUrls.helpArticleUrls.howToSwapTokens,
         text: t('common.learnMoreSwap'),
       }}
       rippleColor={colors.DEP_blue400.val}

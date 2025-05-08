@@ -88,6 +88,8 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
   })
 
   const nftDataItems = formatNftItems(data)
+  const shouldAddInLoadingItem =
+    networkStatus === NetworkStatus.fetchMore && nftDataItems && nftDataItems.length % 2 === 1
 
   const onListEndReached = useCallback(async () => {
     if (!data?.nftBalances?.pageInfo?.hasNextPage) {
@@ -102,13 +104,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     })
   }, [data?.nftBalances?.pageInfo?.endCursor, data?.nftBalances?.pageInfo?.hasNextPage, fetchMore])
 
-  const { nfts, numHidden, numShown } = useGroupNftsByVisibility(
-    nftDataItems,
-    hiddenNftsExpanded,
-    !data?.nftBalances?.pageInfo?.hasNextPage,
-  )
-
-  const shouldAddInLoadingItem = networkStatus === NetworkStatus.fetchMore && numShown % 2 === 1
+  const { nfts, numHidden, numShown } = useGroupNftsByVisibility(nftDataItems, hiddenNftsExpanded)
 
   const onHiddenRowPressed = useCallback((): void => {
     if (hiddenNftsExpanded && footerHeight) {

@@ -149,7 +149,6 @@ export function ActiveLiquidityChart({
     <>
       {hoverY && hoveredTick ? (
         <TickTooltip
-          containerHeight={height}
           hoverY={hoverY}
           hoveredTick={hoveredTick}
           currentTick={currentTick}
@@ -266,7 +265,7 @@ export function ActiveLiquidityChart({
               />
             )}
 
-            {hoverY && hoveredTick && Number(hoveredTick.amount0Locked) + Number(hoveredTick.amount1Locked) > 0 && (
+            {hoverY && (
               <HorizontalLine
                 value={yScale.invert(hoverY)}
                 yScale={yScale}

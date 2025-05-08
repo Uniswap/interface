@@ -26,10 +26,10 @@ import { WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import {
-  ExecuteTransactionParams,
-  executeTransaction,
-} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
-import { tryGetNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
+  SendTransactionParams,
+  sendTransaction,
+  tryGetNonce,
+} from 'wallet/src/features/transactions/sendTransactionSaga'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import { SwapParams, approveAndSwap, shouldSubmitViaPrivateRpc } from 'wallet/src/features/transactions/swap/swapSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
@@ -121,7 +121,7 @@ const classicSwapParams = {
     routing: Routing.CLASSIC,
     approveTxRequest: mockApproveTxRequest,
     revocationTxRequest: mockRevocationTxRequest,
-    txRequests: [mockSwapTxRequest],
+    txRequest: mockSwapTxRequest,
     trade: mockTrade,
     gasFee: { value: '5', isLoading: false, error: null },
     gasFeeEstimation: {},
@@ -156,7 +156,7 @@ const uniswapXSwapParams = {
 
 const nonce = 1
 
-const expectedSendApprovalParams: ExecuteTransactionParams = {
+const expectedSendApprovalParams: SendTransactionParams = {
   chainId: mockApproveTxRequest.chainId,
   account,
   options: {
@@ -205,8 +205,8 @@ describe(approveAndSwap, () => {
       },
     } satisfies SwapParams
 
-    const expectedSendSwapParams: ExecuteTransactionParams = {
-      chainId: classicSwapParamsWithoutApprove.swapTxContext.txRequests[0].chainId,
+    const expectedSendSwapParams: SendTransactionParams = {
+      chainId: classicSwapParamsWithoutApprove.swapTxContext.txRequest.chainId,
       account: classicSwapParamsWithoutApprove.account,
       options: {
         request: { ...mockSwapTxRequest, nonce },
@@ -225,11 +225,11 @@ describe(approveAndSwap, () => {
       .provide([
         ...sharedProviders,
         [
-          call(executeTransaction, expectedSendSwapParams),
+          call(sendTransaction, expectedSendSwapParams),
           { transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} },
         ],
       ])
-      .call(executeTransaction, expectedSendSwapParams)
+      .call(sendTransaction, expectedSendSwapParams)
       .silentRun()
 
     // `testSaga` ensures that the saga yields specific types of effects in a particular order.
@@ -238,11 +238,11 @@ describe(approveAndSwap, () => {
       .next()
       .call(classicSwapParams.onSuccess)
       .next()
-      .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequests[0].chainId)
+      .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
       .next(false)
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
-      .call(executeTransaction, expectedSendSwapParams)
+      .call(sendTransaction, expectedSendSwapParams)
       .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
       .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
       .next()
@@ -250,8 +250,8 @@ describe(approveAndSwap, () => {
   })
 
   it('sends a swap tx with incremented nonce if an approve tx is sent first', async () => {
-    const expectedSendSwapParams: ExecuteTransactionParams = {
-      chainId: classicSwapParams.swapTxContext.txRequests[0].chainId,
+    const expectedSendSwapParams: SendTransactionParams = {
+      chainId: classicSwapParams.swapTxContext.txRequest.chainId,
       account: classicSwapParams.account,
       options: {
         request: { ...mockSwapTxRequest, nonce: nonce + 1 },
@@ -267,27 +267,27 @@ describe(approveAndSwap, () => {
       .provide([
         ...sharedProviders,
         [
-          call(executeTransaction, expectedSendApprovalParams),
+          call(sendTransaction, expectedSendApprovalParams),
           { transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} },
         ],
         [
-          call(executeTransaction, expectedSendSwapParams),
+          call(sendTransaction, expectedSendSwapParams),
           { transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} },
         ],
       ])
-      .call(executeTransaction, expectedSendSwapParams)
+      .call(sendTransaction, expectedSendSwapParams)
       .silentRun()
     testSaga(approveAndSwap, classicSwapParams)
       .next()
       .call(classicSwapParams.onSuccess)
       .next()
-      .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequests[0].chainId)
+      .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
       .next(false)
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
-      .call(executeTransaction, expectedSendApprovalParams)
+      .call(sendTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
-      .call(executeTransaction, expectedSendSwapParams)
+      .call(sendTransaction, expectedSendSwapParams)
       .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
       .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
       .next()
@@ -303,7 +303,7 @@ describe(approveAndSwap, () => {
       approveTxHash: '0xMockApprovalTxHash',
       wrapTxHash: undefined,
       txId: uniswapXSwapParams.txId,
-      permit: mockPermit.typedData,
+      permit: mockPermit,
       routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,
       quote: uniswapXSwapParams.swapTxContext.trade.quote.quote,
       onSuccess: uniswapXSwapParams.onSuccess,
@@ -314,7 +314,7 @@ describe(approveAndSwap, () => {
       .provide([
         ...sharedProviders,
         [
-          call(executeTransaction, expectedSendApprovalParams),
+          call(sendTransaction, expectedSendApprovalParams),
           { transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} },
         ],
         [call(submitUniswapXOrder, expectedSubmitOrderParams), undefined],
@@ -326,7 +326,7 @@ describe(approveAndSwap, () => {
       .next()
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
-      .call(executeTransaction, expectedSendApprovalParams)
+      .call(sendTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
       .call(submitUniswapXOrder, expectedSubmitOrderParams)
       .next()
@@ -344,7 +344,7 @@ describe(approveAndSwap, () => {
       },
     } satisfies SwapParams
 
-    const expectedSendWrapParams: ExecuteTransactionParams = {
+    const expectedSendWrapParams: SendTransactionParams = {
       chainId: mockWrapTxRequest.chainId,
       account,
       options: { request: { ...mockWrapTxRequest, nonce: nonce + 1 } },
@@ -367,7 +367,7 @@ describe(approveAndSwap, () => {
       approveTxHash: '0xMockApprovalTxHash',
       wrapTxHash: '0xMockWrapTxHash',
       txId: uniswapXSwapParams.txId,
-      permit: mockPermit.typedData,
+      permit: mockPermit,
       onSuccess: uniswapXSwapParams.onSuccess,
       onFailure: uniswapXSwapParams.onFailure,
       routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,
@@ -378,11 +378,11 @@ describe(approveAndSwap, () => {
       .provide([
         ...sharedProviders,
         [
-          call(executeTransaction, expectedSendApprovalParams),
+          call(sendTransaction, expectedSendApprovalParams),
           { transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} },
         ],
         [
-          call(executeTransaction, expectedSendWrapParams),
+          call(sendTransaction, expectedSendWrapParams),
           { transactionResponse: { hash: '0xMockWrapTxHash' }, populatedRequest: {} },
         ],
         [call(submitUniswapXOrder, expectedSubmitOrderParams), undefined],
@@ -394,9 +394,9 @@ describe(approveAndSwap, () => {
       .next()
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
-      .call(executeTransaction, expectedSendApprovalParams)
+      .call(sendTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
-      .call(executeTransaction, expectedSendWrapParams)
+      .call(sendTransaction, expectedSendWrapParams)
       .next({ transactionResponse: { hash: '0xMockWrapTxHash' }, populatedRequest: {} })
       .call(submitUniswapXOrder, expectedSubmitOrderParams)
       .next()

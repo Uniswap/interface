@@ -1,9 +1,9 @@
 import { Flex, FlexProps, Text, TextProps } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { IconSizeTokens } from 'ui/src/theme'
-import { DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { isAndroid } from 'utilities/src/platform'
+import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type DisplayNameProps = {
   displayName?: DisplayName

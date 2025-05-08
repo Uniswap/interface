@@ -1,19 +1,13 @@
 import { PropsWithChildren } from 'react'
-import { Flex, TouchableArea } from 'ui/src'
-import { X } from 'ui/src/components/icons/X'
+import { Flex } from 'ui/src'
 
 export enum PasskeyMenuModalState {
   ADD_PASSKEY = 'ADD_PASSKEY',
   DELETE_PASSKEY = 'DELETE_PASSKEY',
   DELETE_PASSKEY_SPEEDBUMP = 'DELETE_PASSKEY_SPEEDBUMP',
-  VERIFY_PASSKEY = 'VERIFY_PASSKEY',
 }
 
-export function GenericPasskeyMenuModal({
-  show,
-  onClose,
-  children,
-}: PropsWithChildren<{ show: boolean; onClose: () => void }>) {
+export function GenericPasskeyMenuModal({ show, children }: PropsWithChildren<{ show: boolean }>) {
   return (
     <Flex
       display={show ? 'flex' : 'none'}
@@ -23,14 +17,14 @@ export function GenericPasskeyMenuModal({
       transform="translate(-50%, -50%)"
       background="$surface1"
       opacity={1}
-      borderRadius="$rounded20"
+      borderRadius="$rounded12"
       pt={24}
       px="$padding16"
       pb="$padding16"
       gap="$gap16"
       alignItems="center"
       width="max-content"
-      maxWidth={336}
+      maxWidth={300}
       zIndex={2}
       onPress={(e) => {
         e.stopPropagation()
@@ -44,11 +38,6 @@ export function GenericPasskeyMenuModal({
         maxWidth: '100%',
       }}
     >
-      <Flex row width="100%" mb={-8} justifyContent="flex-end" $md={{ display: 'none' }}>
-        <TouchableArea onPress={onClose}>
-          <X size={24} color="$neutral2" />
-        </TouchableArea>
-      </Flex>
       {children}
     </Flex>
   )

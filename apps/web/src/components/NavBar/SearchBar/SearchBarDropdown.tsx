@@ -9,8 +9,8 @@ import QuestionHelper from 'components/QuestionHelper'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import useSearchPopularTokensGql from 'graphql/data/SearchPopularTokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
+import useSearchTrendingTokensGql from 'graphql/data/SearchTrendingTokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEffect, useMemo, useState } from 'react'
 import { Clock, TrendingUp } from 'react-feather'
@@ -146,14 +146,14 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
     [searchHistory],
   )
 
-  const { data: popularTokenData } = useSearchPopularTokensGql()
+  const { data: trendingTokenData } = useSearchTrendingTokensGql()
 
-  const popularTokens = useMemo(
-    () => popularTokenData?.slice(0, 3) ?? [...Array<GqlSearchToken>(3)],
-    [popularTokenData],
+  const trendingTokens = useMemo(
+    () => trendingTokenData?.slice(0, 3) ?? [...Array<GqlSearchToken>(3)],
+    [trendingTokenData],
   )
 
-  const totalSuggestions = hasInput ? tokens.length : Math.min(shortenedHistory.length, 2) + popularTokens?.length ?? 0
+  const totalSuggestions = hasInput ? tokens.length : Math.min(shortenedHistory.length, 2) + trendingTokens?.length ?? 0
 
   // Navigate search results via arrow keys
   useEffect(() => {
@@ -161,7 +161,7 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
       if (event.key === 'ArrowUp') {
         event.preventDefault()
         if (!hoveredIndex) {
-          setHoveredIndex(popularTokens.length - 1)
+          setHoveredIndex(trendingTokens.length - 1)
         } else {
           setHoveredIndex(hoveredIndex - 1)
         }
@@ -180,7 +180,7 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
     return () => {
       document.removeEventListener('keydown', keyDownHandler)
     }
-  }, [toggleOpen, hoveredIndex, totalSuggestions, popularTokens.length])
+  }, [toggleOpen, hoveredIndex, totalSuggestions, trendingTokens.length])
 
   const trace = useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH })
 
@@ -213,7 +213,7 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
       )}
     </Flex>
   ) : (
-    // Recent Searches, Popular Tokens
+    // Recent Searches, Trending Tokens
     <Flex gap="$spacing20">
       {shortenedHistory.length > 0 && (
         <SearchBarDropdownSection
@@ -236,7 +236,7 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
         startingIndex={shortenedHistory.length}
         setHoveredIndex={setHoveredIndex}
         toggleOpen={toggleOpen}
-        suggestions={popularTokens}
+        suggestions={trendingTokens}
         eventProperties={{
           suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
           ...eventProperties,
@@ -244,7 +244,7 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
         header={<Trans i18nKey="explore.search.section.popularTokens" />}
         headerIcon={<TrendingUp width={20} height={20} />}
         headerInfoText={<Trans i18nKey="explore.search.section.popularTokenInfo" />}
-        isLoading={!popularTokenData}
+        isLoading={!trendingTokenData}
       />
     </Flex>
   )

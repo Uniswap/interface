@@ -33,12 +33,9 @@ export const SlideOutMenu = ({
       py="$padding12"
       px="$padding16"
       minHeight="85vh"
-      $md={{
-        minHeight: '0px',
-      }}
     >
       <Flex grow justifyContent="space-between">
-        <Flex grow>
+        <Flex>
           <Flex row mb="$spacing20" justifyContent="space-between" width="100%" alignItems="center">
             <ArrowLeft data-testid="wallet-back" onClick={onClose} size={24} />
             <Text color="$neutral1"> {title}</Text>

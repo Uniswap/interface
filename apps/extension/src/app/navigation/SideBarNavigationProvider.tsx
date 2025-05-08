@@ -1,6 +1,7 @@
 import { PropsWithChildren, useCallback } from 'react'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import { navigateToInterfaceFiatOnRamp } from 'src/app/features/for/utils'
+import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { SidebarLocationState, focusOrCreateTokensExploreTab } from 'src/app/navigation/utils'
@@ -11,7 +12,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
 import {
   NavigateToFiatOnRampArgs,
   NavigateToNftItemArgs,

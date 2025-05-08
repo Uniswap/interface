@@ -3,6 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import {
   AppStackParamList,
   EducationContentType,
@@ -10,9 +11,10 @@ import {
   useOnboardingStackNavigation,
 } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { checkCloudBackupOrShowAlert } from 'src/components/mnemonic/cloudImportUtils'
+import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
+import { openSettings } from 'src/utils/linking'
 import { Flex, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
 import { Cloud, PenLine, QuestionInCircleFilled, ShieldCheck } from 'ui/src/components/icons'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -20,9 +22,10 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
+import { isAndroid } from 'utilities/src/platform'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { hasBackup, hasExternalBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = CompositeScreenProps<
@@ -35,11 +38,12 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const { navigate } = useOnboardingStackNavigation()
   const shadowProps = useShadowPropsShort()
 
-  const { getOnboardingOrImportedAccount } = useOnboardingContext()
+  const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
+
+  const { getOnboardingOrImportedAccount, hasBackup } = useOnboardingContext()
   const onboardingContextAccount = getOnboardingOrImportedAccount()
   const activeAccount = useActiveAccount()
-  const account = onboardingContextAccount || activeAccount
-  const address = account?.address
+  const address = onboardingContextAccount?.address || activeAccount?.address
 
   const isCreatingNew =
     params?.importType === ImportType.CreateNew || params?.entryPoint === OnboardingEntryPoint.BackupCard
@@ -91,9 +95,22 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     })
   }
 
-  const onPressCloudBackup = async (): Promise<void> => {
-    const hasCloudBackup = await checkCloudBackupOrShowAlert(t)
-    if (!hasCloudBackup) {
+  const onPressCloudBackup = (): void => {
+    if (!cloudStorageAvailable) {
+      Alert.alert(
+        isAndroid ? t('account.cloud.error.unavailable.title.android') : t('account.cloud.error.unavailable.title.ios'),
+        isAndroid
+          ? t('account.cloud.error.unavailable.message.android')
+          : t('account.cloud.error.unavailable.message.ios'),
+        [
+          {
+            text: t('account.cloud.error.unavailable.button.settings'),
+            onPress: openSettings,
+            style: 'default',
+          },
+          { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
+        ],
+      )
       return
     }
 
@@ -109,11 +126,10 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const showSkipOption =
-    hasExternalBackup(account) &&
-    (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
+    hasBackup(address) && (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
 
-  const hasCloudBackup = hasBackup(BackupType.Cloud, account)
-  const hasManualBackup = hasBackup(BackupType.Manual, account)
+  const hasCloudBackup = hasBackup(address, BackupType.Cloud)
+  const hasManualBackup = hasBackup(address, BackupType.Manual)
 
   const options = []
   options.push(

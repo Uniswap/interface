@@ -69,7 +69,7 @@ export function useSwapCallback(): SwapCallback {
       sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
         ...analytics,
         estimated_network_fee_wei: gasFee.value,
-        gas_limit: isClassic(swapTxContext) ? toStringish(swapTxContext.txRequests?.[0]?.gasLimit) : undefined,
+        gas_limit: isClassic(swapTxContext) ? toStringish(swapTxContext.txRequest.gasLimit) : undefined,
         transaction_deadline_seconds: trade.deadline,
         swap_quote_block_number: blockNumber,
         is_auto_slippage: isAutoSlippage,

@@ -4,7 +4,6 @@ import { LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { AnimatePresence, Flex, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, Unitag } from 'ui/src/components/icons'
-import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -18,6 +17,7 @@ import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { AnimatedUnitagDisplayNameProps } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 export function AnimatedUnitagDisplayName({
   displayName,

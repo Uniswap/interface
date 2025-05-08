@@ -49,5 +49,4 @@ export const paths = [
   '/nfts/collection/:contractAddress',
   '/nfts/collection/:contractAddress/activity',
   '/auth/passkey/extension',
-  '/manage/passkey/:walletAddress',
 ]

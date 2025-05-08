@@ -20,8 +20,7 @@ import {
   USD_ICON,
   VND_ICON,
 } from 'constants/localCurrencyIcons'
-import { ReactNode, Suspense } from 'react'
-import { Loader } from 'ui/src/loading/Loader'
+import { ReactNode } from 'react'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 
 // some currencies need to be forced to use the narrow symbol and others need to be forced to use symbol
@@ -44,125 +43,45 @@ export function getCurrencySymbolDisplayType(currency: FiatCurrency): 'narrowSym
 export function getLocalCurrencyIcon(localCurrency: FiatCurrency, size = 20): ReactNode {
   switch (localCurrency) {
     case FiatCurrency.UnitedStatesDollar:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <USD_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <USD_ICON width={size} height={size} />
     case FiatCurrency.Euro:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <EUR_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <EUR_ICON width={size} height={size} />
     case FiatCurrency.RussianRuble:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <RUB_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <RUB_ICON width={size} height={size} />
     case FiatCurrency.IndianRupee:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <INR_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <INR_ICON width={size} height={size} />
     case FiatCurrency.BritishPound:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <GBP_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <GBP_ICON width={size} height={size} />
     case FiatCurrency.JapaneseYen:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <JPY_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <JPY_ICON width={size} height={size} />
     case FiatCurrency.SouthKoreanWon:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <KRW_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <KRW_ICON width={size} height={size} />
     case FiatCurrency.VietnameseDong:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <VND_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <VND_ICON width={size} height={size} />
     case FiatCurrency.SingaporeDollar:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <SGD_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <SGD_ICON width={size} height={size} />
     case FiatCurrency.BrazilianReal:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <BRL_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <BRL_ICON width={size} height={size} />
     case FiatCurrency.HongKongDollar:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <HKD_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <HKD_ICON width={size} height={size} />
     case FiatCurrency.CanadianDollar:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <CAD_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <CAD_ICON width={size} height={size} />
     case FiatCurrency.IndonesianRupiah:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <IDR_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <IDR_ICON width={size} height={size} />
     case FiatCurrency.TurkishLira:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <TRY_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <TRY_ICON width={size} height={size} />
     case FiatCurrency.NigerianNaira:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <NGN_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <NGN_ICON width={size} height={size} />
     case FiatCurrency.AustralianDollar:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <AUD_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <AUD_ICON width={size} height={size} />
     case FiatCurrency.PakistaniRupee:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <PKR_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <PKR_ICON width={size} height={size} />
     case FiatCurrency.UkrainianHryvnia:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <UAH_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <UAH_ICON width={size} height={size} />
     case FiatCurrency.ThaiBaht:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <THB_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <THB_ICON width={size} height={size} />
     case FiatCurrency.ChineseYuan:
-      return (
-        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
-          <CNY_ICON width={size} height={size} />
-        </Suspense>
-      )
+      return <CNY_ICON width={size} height={size} />
     default:
       return null
   }

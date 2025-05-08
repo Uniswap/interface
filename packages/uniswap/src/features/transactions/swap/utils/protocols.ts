@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -19,48 +18,16 @@ export function useProtocolsForChain(
   userSelectedProtocols: FrontendSupportedProtocol[],
   chainId?: UniverseChainId,
 ): ProtocolItems[] {
-  const getIsUniswapXSupported = useUniswapContextSelector((state) => state.getIsUniswapXSupported)
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const priorityOrdersAllowed = useUniswapXPriorityOrderFlag(chainId)
   const isDutchV3Enabled = useFeatureFlag(FeatureFlags.ArbitrumDutchV3)
   const arbUniswapXAllowed = chainId === UniverseChainId.ArbitrumOne && isDutchV3Enabled
+
+  const uniswapXAllowedForChain =
+    (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbUniswapXAllowed
   const v4SwapAllowed = useV4SwapEnabled(chainId)
 
-  const getProtocolsForChain = useMemo(
-    () =>
-      createGetProtocolsForChain({
-        getUniswapXEnabled: () =>
-          getIsUniswapXSupported ? uniswapXEnabled && getIsUniswapXSupported(chainId) : uniswapXEnabled,
-        getPriorityOrdersAllowed: () => priorityOrdersAllowed,
-        getV4SwapAllowed: () => v4SwapAllowed,
-        getArbUniswapXAllowed: () => arbUniswapXAllowed,
-      }),
-    [uniswapXEnabled, priorityOrdersAllowed, arbUniswapXAllowed, v4SwapAllowed, getIsUniswapXSupported, chainId],
-  )
-
   return useMemo(() => {
-    return getProtocolsForChain(userSelectedProtocols, chainId)
-  }, [getProtocolsForChain, userSelectedProtocols, chainId])
-}
-
-function createGetProtocolsForChain(ctx: {
-  getUniswapXEnabled: () => boolean
-  getPriorityOrdersAllowed: (chainId?: UniverseChainId) => boolean
-  getV4SwapAllowed: (chainId?: UniverseChainId) => boolean
-  getArbUniswapXAllowed: (chainId?: UniverseChainId) => boolean
-}) {
-  return function getProtocolsForChain(
-    userSelectedProtocols: FrontendSupportedProtocol[],
-    chainId?: UniverseChainId,
-  ): ProtocolItems[] {
-    const uniswapXEnabled = ctx.getUniswapXEnabled()
-    const priorityOrdersAllowed = ctx.getPriorityOrdersAllowed(chainId)
-    const arbUniswapXAllowed = ctx.getArbUniswapXAllowed(chainId)
-    const v4SwapAllowed = ctx.getV4SwapAllowed(chainId)
-
-    const uniswapXAllowedForChain =
-      (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbUniswapXAllowed
-
     let protocols: ProtocolItems[] = [...userSelectedProtocols]
     // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
     if (!uniswapXAllowedForChain || !uniswapXEnabled) {
@@ -83,7 +50,7 @@ function createGetProtocolsForChain(ctx: {
     }
 
     return protocols
-  }
+  }, [uniswapXAllowedForChain, uniswapXEnabled, userSelectedProtocols, v4SwapAllowed, arbUniswapXAllowed])
 }
 
 export function useUniswapXPriorityOrderFlag(chainId?: UniverseChainId): boolean {

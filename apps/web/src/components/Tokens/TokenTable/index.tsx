@@ -179,13 +179,13 @@ function TokenTable({
           testId: `token-table-row-${unwrappedToken.address}`,
           percentChange1hr: (
             <Flex row gap="$gap4" alignItems="center">
-              <DeltaArrow delta={delta1hr} formattedDelta={formatDelta(delta1hr)} />
+              <DeltaArrow delta={delta1hr} />
               <TableText>{formatDelta(delta1hr)}</TableText>
             </Flex>
           ),
           percentChange1d: (
             <Flex row gap="$gap4" alignItems="center">
-              <DeltaArrow delta={delta1d} formattedDelta={formatDelta(delta1d)} />
+              <DeltaArrow delta={delta1d} />
               <TableText>{formatDelta(delta1d)}</TableText>
             </Flex>
           ),

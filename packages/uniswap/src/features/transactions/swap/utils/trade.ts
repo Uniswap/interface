@@ -3,7 +3,6 @@ import { ONE, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
-import { PopulatedTransactionRequestArray } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { ACROSS_DAPP_INFO, isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -186,26 +185,6 @@ export function validateTransactionRequest(
     return { ...request, to: request.to, chainId: request.chainId }
   }
   return undefined
-}
-export function validateTransactionRequests(
-  requests?: providers.TransactionRequest[] | null,
-): PopulatedTransactionRequestArray | undefined {
-  if (!requests?.length) {
-    return undefined
-  }
-
-  const validatedRequests: ValidatedTransactionRequest[] = []
-  for (const request of requests) {
-    const validatedRequest = validateTransactionRequest(request)
-    if (!validatedRequest) {
-      return undefined
-    }
-    validatedRequests.push(validatedRequest)
-  }
-
-  // Satisfy type checker by ensuring array is non-empty
-  const [firstRequest, ...restRequests] = validatedRequests
-  return firstRequest ? [firstRequest, ...restRequests] : undefined
 }
 
 type RemoveUndefined<T> = {

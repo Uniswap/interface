@@ -47,6 +47,12 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
+.c5 {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(34,34,34,0.05);
+}
+
 <div
   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface1 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _width-10037 _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _gap-t-space-gap1569"
   data-testid="send-review-modal"
@@ -236,7 +242,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
       </div>
     </div>
     <div
-      class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+      class="c5"
     />
     <div
       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _justifyContent-space-betwe3241"
@@ -327,6 +333,12 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c5 {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(34,34,34,0.05);
 }
 
 <div
@@ -518,7 +530,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
       </div>
     </div>
     <div
-      class="is_Separator _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _flexShrink-1 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-1px _borderLeftWidth-0px _flexGrow-1 _height-0px _maxHeight-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+      class="c5"
     />
     <div
       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _justifyContent-space-betwe3241"

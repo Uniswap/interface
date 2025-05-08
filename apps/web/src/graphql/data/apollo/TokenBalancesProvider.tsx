@@ -2,7 +2,7 @@ import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activ
 import { AdaptiveTokenBalancesProvider } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { apolloClient } from 'graphql/data/apollo/client'
 import { useAccount } from 'hooks/useAccount'
-import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
 import { useWatchTransactionsCallback } from 'state/sagas/transactions/watcherSaga'
 import { usePendingTransactions } from 'state/transactions/hooks'
 import { usePortfolioBalancesLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -32,7 +32,7 @@ function useHasAccountUpdate() {
   }, [account.address, hasLocalStateUpdate, prevAccount, prevIsTestnetModeEnabled, isTestnetModeEnabled])
 }
 
-function TokenBalancesProviderInternal({ children }: PropsWithChildren) {
+export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const [lazyFetch, query] = usePortfolioBalancesLazyQuery({ errorPolicy: 'all' })
   const account = useAccount()
   const hasAccountUpdate = useHasAccountUpdate()
@@ -89,18 +89,4 @@ function TokenBalancesProviderInternal({ children }: PropsWithChildren) {
       {children}
     </AdaptiveTokenBalancesProvider>
   )
-}
-
-export function TokenBalancesProvider({ children }: PropsWithChildren) {
-  const [initialized, setInitialized] = useState(false)
-
-  useEffect(() => {
-    setInitialized(true)
-  }, [])
-
-  if (!initialized) {
-    return null
-  }
-
-  return <TokenBalancesProviderInternal>{children}</TokenBalancesProviderInternal>
 }

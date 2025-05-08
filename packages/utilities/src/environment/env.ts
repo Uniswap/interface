@@ -5,12 +5,6 @@ export function isTestEnv(): boolean {
 }
 
 export function isPlaywrightEnv(): boolean {
-  // Ugly hack to get around the fact that _playwright_ doesn't have a window object
-  // during setup so we need to early return true here
-  if (typeof window === 'undefined') {
-    return true
-  }
-
   throw new PlatformSplitStubError('isPlaywrightEnv')
 }
 

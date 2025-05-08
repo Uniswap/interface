@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { FunctionComponent, useEffect, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { MnemonicViewer } from 'src/app/components/MnemonicViewer'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
-import { BackupWarningBulletPoints } from 'src/app/features/settings/BackupRecoveryPhrase/BackupWarningBulletPoints'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Flex, LabeledCheckbox, Square, Text } from 'ui/src'
-import { AlertTriangleFilled, FileListLock } from 'ui/src/components/icons'
+import { Circle, Flex, IconProps, LabeledCheckbox, Square, Text } from 'ui/src'
+import { AlertTriangleFilled, EyeOff, FileListLock, Key, PencilDetailed } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
@@ -81,9 +80,9 @@ export function ViewMnemonic(): JSX.Element {
             size={iconSizes.icon48}
           >
             {viewStep === ViewStep.View ? (
-              <FileListLock color="$neutral1" size="$icon.24" />
+              <FileListLock color="$neutral1" size={iconSizes.icon24} />
             ) : (
-              <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
+              <AlertTriangleFilled color="$statusCritical" size={iconSizes.icon24} />
             )}
           </Square>
         }
@@ -103,8 +102,32 @@ export function ViewMnemonic(): JSX.Element {
         onSubmit={onSubmit}
       >
         {viewStep === ViewStep.Info ? (
-          <Flex my="$spacing24">
-            <BackupWarningBulletPoints />
+          <Flex
+            alignItems="flex-start"
+            borderColor="$surface3"
+            borderRadius="$rounded20"
+            borderWidth="$spacing1"
+            gap="$spacing24"
+            my="$spacing24"
+            p="$spacing24"
+          >
+            <Flex row alignItems="center" gap="$spacing16">
+              <WarningIcon Icon={Key} />
+              <Text variant="body2">{t('onboarding.backup.view.warning.message1')}</Text>
+            </Flex>
+            <Flex row alignItems="center" gap="$spacing16">
+              <WarningIcon Icon={PencilDetailed} />
+              <Text variant="body2">{t('onboarding.backup.view.warning.message2')}</Text>
+            </Flex>
+            <Flex row alignItems="center" gap="$spacing16">
+              <WarningIcon Icon={EyeOff} />
+              <Text textAlign="left" variant="body2">
+                <Trans
+                  components={{ u: <Text textDecorationLine="underline" variant="body2" /> }}
+                  i18nKey="onboarding.backup.view.warning.message3"
+                />
+              </Text>
+            </Flex>
           </Flex>
         ) : (
           <Flex gap="$spacing16" my="$spacing24" pt="$spacing8" width="100%">
@@ -120,5 +143,13 @@ export function ViewMnemonic(): JSX.Element {
         )}
       </OnboardingScreen>
     </Trace>
+  )
+}
+
+function WarningIcon({ Icon }: { Icon: FunctionComponent<IconProps> }): JSX.Element {
+  return (
+    <Circle backgroundColor="$statusCritical2" size={iconSizes.icon36}>
+      <Icon color="$statusCritical" size={iconSizes.icon24} />
+    </Circle>
   )
 }

@@ -6,7 +6,7 @@ import { SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/co
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
-import { MAX_DEFAULT_TRENDING_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
+import { MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT } from 'uniswap/src/components/TokenSelector/constants'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
@@ -52,7 +52,7 @@ export function SearchPopularTokens({ selectedChain }: { selectedChain: Universe
 
   const popularTokens = data?.tokenRankings?.[RankingType.Popularity]?.tokens.slice(
     0,
-    MAX_DEFAULT_TRENDING_TOKEN_RESULTS_AMOUNT,
+    MAX_DEFAULT_POPULAR_TOKEN_RESULTS_AMOUNT,
   )
 
   const formattedTokens = useMemo(

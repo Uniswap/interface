@@ -3,7 +3,7 @@ import type { TextInputProps } from 'react-native'
 import { isWeb } from 'ui/src'
 import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { PRESET_MAX, PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/PresetAmountButton'
-import { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
+import { DecimalPadInputRef } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useDecimalPadControlledField'
 import { useOnToggleIsFiatMode } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useOnToggleIsFiatMode'
@@ -205,14 +205,6 @@ export function useSwapFormScreenCallbacks({
           ? CurrencyField.OUTPUT
           : CurrencyField.INPUT
 
-    // If for a bridge, when currencies are switched, update the new output to the old output chainId and change input to all networks
-    const newFilteredChainIds = isBridge
-      ? {
-          input: undefined,
-          output: output?.chainId,
-        }
-      : undefined
-
     updateSwapForm({
       exactCurrencyField: newExactCurrencyField,
       focusOnCurrencyField: newExactCurrencyField,
@@ -222,7 +214,6 @@ export function useSwapFormScreenCallbacks({
       ...(exactOutputWouldFailIfCurrenciesSwitched && exactFieldIsInput && !isFiatMode
         ? { exactAmountToken: formattedDerivedValueRef.current }
         : undefined),
-      ...(isBridge ? { filteredChainIds: newFilteredChainIds } : undefined),
     })
 
     // When we have FOT disable exact output logic, the cursor gets out of sync when switching currencies

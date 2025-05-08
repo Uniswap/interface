@@ -207,43 +207,6 @@ export function usePools(
     }, [poolAddresses, chainId]),
   })
 
-  return useComputePoolState(poolKeys, slot0s, slot0sLoading, liquidities, liquiditiesLoading, poolTokens)
-}
-
-export function useComputePoolState(
-  poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][],
-  slot0s:
-    | (
-        | {
-            error: Error
-            result?: undefined
-            status: 'failure'
-          }
-        | {
-            error?: undefined
-            result: readonly [bigint, number, number, number, number, number, boolean]
-            status: 'success'
-          }
-      )[]
-    | undefined,
-  slot0sLoading: boolean,
-  liquidities:
-    | (
-        | {
-            error: Error
-            result?: undefined
-            status: 'failure'
-          }
-        | {
-            error?: undefined
-            result: bigint
-            status: 'success'
-          }
-      )[]
-    | undefined,
-  liquiditiesLoading: boolean,
-  poolTokens: ([Token, Token, FeeAmount] | undefined)[],
-): [PoolState, Pool | null][] {
   return useMemo(() => {
     return poolKeys.map((_key, index) => {
       if (slot0sLoading || liquiditiesLoading) {
@@ -251,29 +214,24 @@ export function useComputePoolState(
       }
 
       const tokens = poolTokens[index]
-      const slot0 = slot0s?.[index]
-      const liquidity = liquidities?.[index]
+      const slot0 = slot0s?.[index].result
+      const liquidity = liquidities?.[index].result
       if (!tokens || !slot0 || !liquidity) {
         return [PoolState.INVALID, null]
       }
 
-      if (!slot0.result) {
-        return [PoolState.NOT_EXISTS, null]
-      }
-
-      if (typeof liquidity.result !== 'bigint') {
-        return [PoolState.NOT_EXISTS, null]
-      }
-
       const [token0, token1, fee] = tokens
-      const [sqrtPriceX96, tick] = slot0.result
+      const [sqrtPriceX96, tick] = slot0
 
+      if (!slot0 || !liquidity) {
+        return [PoolState.NOT_EXISTS, null]
+      }
       if (!sqrtPriceX96 || sqrtPriceX96 === 0n) {
         return [PoolState.NOT_EXISTS, null]
       }
 
       try {
-        const pool = PoolCache.getPool(token0, token1, fee, sqrtPriceX96.toString(), liquidity.result.toString(), tick)
+        const pool = PoolCache.getPool(token0, token1, fee, sqrtPriceX96.toString(), liquidity.toString(), tick)
         return [PoolState.EXISTS, pool]
       } catch (error) {
         logger.error(error, {

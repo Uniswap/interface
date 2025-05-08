@@ -1,7 +1,8 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
-import { Eye } from 'ui/src/components/icons'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import EyeIcon from 'ui/src/assets/icons/eye.svg'
+import { iconSizes } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -11,6 +12,7 @@ type HeaderContentProps = {
 }
 
 export function SendHeader({ flowName, setShowViewOnlyModal }: HeaderContentProps): JSX.Element {
+  const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
   const { t } = useTranslation()
 
@@ -40,7 +42,7 @@ export function SendHeader({ flowName, setShowViewOnlyModal }: HeaderContentProp
             onPress={(): void => setShowViewOnlyModal(true)}
           >
             <Flex row alignItems="center" gap="$spacing4">
-              <Eye color="$neutral2" size="$icon.16" />
+              <EyeIcon color={colors.neutral2.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
               <Text color="$neutral2" variant="buttonLabel2">
                 {t('swap.header.viewOnly')}
               </Text>

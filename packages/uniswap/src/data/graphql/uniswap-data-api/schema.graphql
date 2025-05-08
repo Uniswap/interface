@@ -12,36 +12,10 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
-) on FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
 ) on FIELD_DEFINITION
 
 """
@@ -53,6 +27,32 @@ directive @aws_lambda on OBJECT | FIELD_DEFINITION
 Tells the service this field/object has access authorized by an OIDC token.
 """
 directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
@@ -464,7 +464,6 @@ type NftAsset {
   creator: NftProfile
   mediaType: MediaType
   isSpam: Boolean
-  protectionInfo: ProtectionInfo
   chain: Chain
 }
 
@@ -1109,15 +1108,6 @@ type Query {
   transactionNotification(chain: Chain!, address: String!, transactionHash: String!, isBridging: Boolean): TransactionNotification
 }
 
-type RewardsCampaign {
-  id: ID!
-  boostedApr: Float!
-  startTimestamp: Int
-  endTimestamp: Int
-  totalRewardAllocation: String
-  distributedRewards: String
-}
-
 enum SafetyLevel {
   VERIFIED
   MEDIUM_WARNING
@@ -1539,7 +1529,6 @@ type V4Pool {
   priceHistory(duration: HistoryDuration!): [TimestampedPoolPrice]
   transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
   ticks(skip: Int, first: Int): [V4PoolTick]
-  rewardsCampaign: RewardsCampaign
 }
 
 type V4PoolHook {

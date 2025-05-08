@@ -12,14 +12,10 @@ import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobi
 import { TamaguiProvider } from 'wallet/src/providers/tamagui-provider'
 import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 
-jest.mock('wallet/src/features/wallet/accounts/utils', () => ({
-  hasExternalBackup: jest.fn(),
-  hasBackup: jest.fn(),
-}))
-
 jest.mock('wallet/src/features/onboarding/OnboardingContext', () => ({
   useOnboardingContext: jest.fn().mockReturnValue({
     getOnboardingOrImportedAccount: jest.fn().mockReturnValue({ address: 'mockedAccountAddress' }),
+    hasBackup: jest.fn(),
   }),
   useCreateImportedAccountsFromMnemonicIfNone: jest.fn(),
 }))

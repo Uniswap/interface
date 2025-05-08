@@ -61,7 +61,7 @@ const baseSubmitOrderParams = {
     encodedOrder: '0xMockEncodedOrder',
     orderInfo: {} as DutchOrderInfo,
   } as unknown as DutchQuoteV2,
-  permit: mockPermit.typedData,
+  permit: mockPermit,
 } satisfies SubmitUniswapXOrderParams
 
 const baseExpectedInitialOrderDetails: UniswapXOrderDetails = {
@@ -106,13 +106,7 @@ describe(submitUniswapXOrder, () => {
       .next(mockSignerManager)
       .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
       .next(mockSigner)
-      .call(
-        signTypedData,
-        mockPermit.typedData.domain,
-        mockPermit.typedData.types,
-        mockPermit.typedData.values,
-        mockSigner,
-      )
+      .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
       .next(mockSignature)
       .call(submitOrder, expectedOrderRequest)
       .next()
@@ -150,13 +144,7 @@ describe(submitUniswapXOrder, () => {
       .next(mockSignerManager)
       .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
       .next(mockSigner)
-      .call(
-        signTypedData,
-        mockPermit.typedData.domain,
-        mockPermit.typedData.types,
-        mockPermit.typedData.values,
-        mockSigner,
-      )
+      .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
       .next(mockSignature)
       .call(submitOrder, expectedOrderRequest)
       .throw(new Error('pretend the order endpoint failed'))
@@ -198,13 +186,7 @@ describe(submitUniswapXOrder, () => {
         .next(mockSignerManager)
         .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
         .next(mockSigner)
-        .call(
-          signTypedData,
-          mockPermit.typedData.domain,
-          mockPermit.typedData.types,
-          mockPermit.typedData.values,
-          mockSigner,
-        )
+        .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
         .next(mockSignature)
         .call(submitOrder, expectedOrderRequest)
         .next()
@@ -246,13 +228,7 @@ describe(submitUniswapXOrder, () => {
         .next(mockSignerManager)
         .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
         .next(mockSigner)
-        .call(
-          signTypedData,
-          mockPermit.typedData.domain,
-          mockPermit.typedData.types,
-          mockPermit.typedData.values,
-          mockSigner,
-        )
+        .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
         .next(mockSignature)
         .call(submitOrder, expectedOrderRequest)
         .next()
@@ -294,13 +270,7 @@ describe(submitUniswapXOrder, () => {
         .next(mockSignerManager)
         .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
         .next(mockSigner)
-        .call(
-          signTypedData,
-          mockPermit.typedData.domain,
-          mockPermit.typedData.types,
-          mockPermit.typedData.values,
-          mockSigner,
-        )
+        .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
         .next(mockSignature)
         .call(submitOrder, expectedOrderRequest)
         .next()

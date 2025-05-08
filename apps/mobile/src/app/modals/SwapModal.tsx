@@ -7,7 +7,7 @@ import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometri
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
+import { useWalletRestore } from 'src/features/wallet/hooks'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'

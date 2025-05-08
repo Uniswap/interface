@@ -982,13 +982,6 @@ export const migrations = {
   84: deleteWelcomeWalletCardBehaviorHistory,
 
   85: moveTokenAndNFTVisibility,
-
-  86: function addBatchedTransactions(state: any) {
-    return {
-      ...state,
-      batchedTransactions: {},
-    }
-  },
 }
 
-export const MOBILE_STATE_VERSION = 86
+export const MOBILE_STATE_VERSION = 85

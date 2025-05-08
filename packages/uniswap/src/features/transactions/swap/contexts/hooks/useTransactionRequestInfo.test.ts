@@ -9,7 +9,6 @@ import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/s
 import { useTransactionRequestInfo } from 'uniswap/src/features/transactions/swap/contexts/hooks/useTransactionRequestInfo'
 import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/contexts/hooks/useWrapTransactionRequest'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
-import { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { createMockDerivedSwapInfo, createMockTokenApprovalInfo } from 'uniswap/src/test/fixtures/transactions/swap'
@@ -49,19 +48,17 @@ describe('useTransactionRequestInfo', () => {
   const swapQueryResult = {
     data: {
       requestId: '123',
-      transactions: [
-        {
-          from: '0x123',
-          data: '0x',
-          value: '0',
-          to: '0xSwap',
-          chainId: UniverseChainId.Mainnet,
-          gasLimit: '500000',
-          maxFeePerGas: '600000',
-          maxPriorityFeePerGas: '700000',
-        },
-      ],
-    } satisfies SwapData,
+      swap: {
+        from: '0x123',
+        data: '0x',
+        value: '0',
+        to: '0xSwap',
+        chainId: UniverseChainId.Mainnet,
+        gasLimit: '500000',
+        maxFeePerGas: '600000',
+        maxPriorityFeePerGas: '700000',
+      },
+    },
     error: null,
     isLoading: false,
   }
@@ -92,7 +89,7 @@ describe('useTransactionRequestInfo', () => {
       }),
     )
 
-    expect(result.current.txRequests?.[0]).toMatchObject<providers.TransactionRequest>({
+    expect(result.current.transactionRequest).toMatchObject<providers.TransactionRequest>({
       to: '0xWrap',
       chainId: UniverseChainId.Mainnet,
       gasLimit: '250000',
@@ -119,7 +116,7 @@ describe('useTransactionRequestInfo', () => {
       }),
     )
 
-    expect(result.current.txRequests?.[0]).toMatchObject<providers.TransactionRequest>({
+    expect(result.current.transactionRequest).toMatchObject<providers.TransactionRequest>({
       to: '0xSwap',
       chainId: UniverseChainId.Mainnet,
       gasLimit: '500000',

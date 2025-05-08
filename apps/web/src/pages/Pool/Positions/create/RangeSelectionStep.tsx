@@ -14,12 +14,21 @@ import { Minus, Plus } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
 import { tryParsePrice } from 'state/mint/v3/utils'
-import { AnimatePresence, Button, Flex, SegmentedControl, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import {
+  AnimatePresence,
+  Button,
+  Flex,
+  FlexProps,
+  SegmentedControl,
+  Text,
+  TouchableArea,
+  useMedia,
+  useSporeColors,
+} from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { fonts, zIndexes } from 'ui/src/theme'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 enum RangeSelectionInput {
   MIN = 0,
@@ -31,7 +40,7 @@ enum RangeSelection {
   CUSTOM = 'CUSTOM',
 }
 
-export function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Currency, Currency>; isLoading?: boolean }) {
+function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Currency, Currency>; isLoading?: boolean }) {
   return (
     <Flex gap="$gap4" row alignItems="center" $md={{ row: false, alignItems: 'flex-start' }}>
       {isLoading ? (
@@ -404,7 +413,6 @@ function RangeInput({
       {showIncrementButtons && (
         <Flex gap={10}>
           <TouchableArea
-            testID={`${TestID.RangeInputIncrement}-${input}`}
             alignItems="center"
             justifyContent="center"
             onPress={handleIncrement}
@@ -417,7 +425,6 @@ function RangeInput({
             <Plus size={16} />
           </TouchableArea>
           <TouchableArea
-            testID={`${TestID.RangeInputDecrement}-${input}`}
             alignItems="center"
             justifyContent="center"
             onPress={handleDecrement}
@@ -432,6 +439,16 @@ function RangeInput({
         </Flex>
       )}
     </Flex>
+  )
+}
+
+export const SelectPriceRangeStepV2 = ({ onContinue }: { onContinue?: () => void } & FlexProps) => {
+  const { t } = useTranslation()
+  return (
+    <>
+      <InitialPriceInput />
+      {onContinue ?? <Button onPress={onContinue}>{t('common.button.continue')}</Button>}
+    </>
   )
 }
 
@@ -635,7 +652,16 @@ export const SelectPriceRangeStep = ({
   ])
 
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
-    return <InitialPriceInput />
+    return (
+      <>
+        <InitialPriceInput />
+        {onContinue && (
+          <Button onPress={onContinue} isDisabled={invalidState}>
+            {t('common.button.continue')}
+          </Button>
+        )}
+      </>
+    )
   }
 
   const isDisabled = initialPosition?.isOutOfRange

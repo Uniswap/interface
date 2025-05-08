@@ -18,8 +18,8 @@ import {
   DecimalPadCalculatedSpaceId,
   DecimalPadInput,
   DecimalPadInputRef,
-} from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
-import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+} from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
+import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
@@ -27,7 +27,7 @@ import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/bod
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
 import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
@@ -244,7 +244,7 @@ export function SendTokenForm(): JSX.Element {
         <WarningModal
           caption={transferWarning.message}
           acknowledgeText={t('common.button.close')}
-          icon={<SendWarningIcon color={transferWarningColor.text} size="$icon.24" />}
+          icon={<SendWarningIcon color={transferWarningColor.text} size={iconSizes.icon24} />}
           isOpen={showWarningModal}
           modalName={ModalName.SendWarning}
           severity={transferWarning.severity}
@@ -350,7 +350,7 @@ export function SendTokenForm(): JSX.Element {
                   px="$spacing16"
                   py="$spacing12"
                 >
-                  <SendWarningIcon color={transferWarningColor.text} size="$icon.16" strokeWidth={1.5} />
+                  <SendWarningIcon color={transferWarningColor.text} size={iconSizes.icon16} strokeWidth={1.5} />
                   <Text adjustsFontSizeToFit color={transferWarningColor.text} variant="body3">
                     {transferWarning.title}
                   </Text>

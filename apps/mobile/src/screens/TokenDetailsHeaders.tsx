@@ -5,10 +5,10 @@ import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetails
 import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
 import { Flex, GeneratedIcon, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import {
   CoinConvert,
   CopyAlt,
-  Ellipsis,
   ExternalLink,
   Eye,
   EyeOff,
@@ -135,7 +135,7 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
           style={{ padding: spacing.spacing8 }}
           testID={TestID.TokenDetailsMoreButton}
         >
-          <Ellipsis color={ellipsisColor} size="$icon.16" />
+          <EllipsisIcon color={ellipsisColor} height={iconSizes.icon16} width={iconSizes.icon16} />
         </Flex>
       </ContextMenu>
       <TokenDetailsFavoriteButton currencyId={currencyId} />

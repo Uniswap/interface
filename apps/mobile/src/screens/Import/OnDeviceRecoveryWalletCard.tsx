@@ -4,9 +4,9 @@ import { ViewProps } from 'react-native'
 import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
 import { Button, Flex, FlexProps, Loader, Text, TouchableArea } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
-import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
+import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
 const cardProps: FlexProps & ViewProps = {

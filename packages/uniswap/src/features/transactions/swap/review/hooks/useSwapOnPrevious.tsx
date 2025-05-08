@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isInterface } from 'utilities/src/platform'

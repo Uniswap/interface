@@ -236,10 +236,10 @@ const StyledTimestampRow = styled(StyledExternalLink, {
 })
 
 export const TableText = ({ children, ...props }: PropsWithChildren<TextProps>) => {
-  const { width: tableWidth } = useTableSize()
+  const { width } = useTableSize()
 
   return (
-    <Text color="$neutral1" variant={tableWidth <= breakpoints.lg ? 'body3' : 'body2'} {...props}>
+    <Text {...props} variant={width <= breakpoints.lg ? 'body3' : 'body2'} color="$neutral1">
       {children}
     </Text>
   )

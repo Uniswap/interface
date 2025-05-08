@@ -3,7 +3,7 @@ import { Flex } from 'ui/src'
 import { easeInEaseOutLayoutAnimation } from 'ui/src/animations/layout/layoutAnimation'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
-import { iconSizes } from 'ui/src/theme'
+import { colors, iconSizes } from 'ui/src/theme'
 import { NetworkLogo, SQUIRCLE_BORDER_RADIUS_RATIO } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import {
   ActionSheetDropdown,
@@ -65,7 +65,7 @@ export function NetworksInSeries({
             height={networkIconSize}
             width={networkIconSize}
           >
-            <Ellipsis color="$white" size="$icon.12" />
+            <Ellipsis color={colors.white} size={iconSizes.icon12} />
           </Flex>
         ) : (
           <NetworkLogo chainId={chainId} shape="square" size={networkIconSize} />

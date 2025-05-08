@@ -1,9 +1,8 @@
-import { DialogV2 } from 'components/Dialog/DialogV2'
+import { Dialog } from 'components/Dialog/Dialog'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { useTranslation } from 'react-i18next'
-import { Flex } from 'ui/src'
+import { Trans, useTranslation } from 'react-i18next'
+import { Button } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export const DynamicFeeTierSpeedbump = () => {
   const { setPositionState, dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData } = useCreatePositionContext()
@@ -36,31 +35,24 @@ export const DynamicFeeTierSpeedbump = () => {
   }
 
   return (
-    <DialogV2
-      icon={
-        <Flex
-          backgroundColor="$surface3"
-          borderRadius="$rounded12"
-          height="$spacing48"
-          width="$spacing48"
-          alignItems="center"
-          justifyContent="center"
-          mb="$spacing4"
-        >
-          <InfoCircleFilled size="$icon.24" color="$neutral" />
-        </Flex>
-      }
-      isOpen={true}
-      title={t('fee.tier.dynamic.create')}
-      subtext={t('fee.tier.dynamic.create.info')}
-      onClose={handleCancel}
-      primaryButtonText={t('common.button.continue')}
-      primaryButtonOnClick={handleConfirm}
-      primaryButtonVariant="default"
-      secondaryButtonText={t('common.button.cancel')}
-      secondaryButtonOnClick={handleCancel}
-      modalName={ModalName.DynamicFeeTierSpeedbump}
-      displayHelpCTA
+    <Dialog
+      icon={<InfoCircleFilled size="$icon.24" color="$neutral1" />}
+      isVisible={true}
+      title={<Trans i18nKey="fee.tier.dynamic.create" />}
+      description={<Trans i18nKey="fee.tier.dynamic.create.info" />}
+      onCancel={handleCancel}
+      buttonsConfig={{
+        left: (
+          <Button size="small" emphasis="secondary" onPress={handleCancel}>
+            {t('common.button.cancel')}
+          </Button>
+        ),
+        right: (
+          <Button size="small" onPress={handleConfirm}>
+            {t('common.button.continue')}
+          </Button>
+        ),
+      }}
     />
   )
 }

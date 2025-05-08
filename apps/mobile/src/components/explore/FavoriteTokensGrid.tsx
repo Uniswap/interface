@@ -7,7 +7,6 @@ import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard from 'src/components/explore/FavoriteTokenCard'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { getTokenValue } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
@@ -23,7 +22,6 @@ type FavoriteTokensGridProps = {
 /** Renders the favorite tokens section on the Explore tab */
 export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTokensGridProps): JSX.Element | null {
   const { t } = useTranslation()
-  const { hapticFeedback } = useHapticFeedback()
   const dispatch = useDispatch()
 
   const [isEditing, setIsEditing] = useState(false)
@@ -36,16 +34,11 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
     }
   }, [favoriteCurrencyIds.length])
 
-  const handleDragStart = useCallback(async () => {
-    await hapticFeedback.light()
-  }, [hapticFeedback])
-
   const handleDragEnd = useCallback<SortableGridDragEndCallback<string>>(
-    async ({ data }) => {
-      await hapticFeedback.light()
+    ({ data }) => {
       dispatch(setFavoriteTokens({ currencyIds: data }))
     },
-    [hapticFeedback, dispatch],
+    [dispatch],
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
@@ -85,7 +78,6 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
           rowGap={GRID_GAP}
           columnGap={GRID_GAP}
           onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
         />
       </AnimatedFlex>
     </Sortable.Layer>

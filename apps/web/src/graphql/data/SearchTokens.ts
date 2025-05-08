@@ -14,7 +14,7 @@ function isExploreSupportedToken(token: GqlSearchToken | undefined): token is To
   return token !== undefined && isBackendSupportedChain(token.chain)
 }
 
-export function useSearchTokensGql(searchQuery: string = '') {
+export function useSearchTokens(searchQuery: string = '') {
   const { gqlChains: chains } = useEnabledChains()
   const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
 

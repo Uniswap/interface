@@ -1,23 +1,20 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { Person, ShieldCheck } from 'ui/src/components/icons'
+import { Person } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
-import { isExtension } from 'utilities/src/platform'
 import { CardType, IntroCardGraphicType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
 import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanActiveAddressClaimUnitag'
 import { useHasAnyAccountsWithUnitag } from 'wallet/src/features/unitags/hooks/useHasAnyAccountsWithUnitag'
 import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClaimHandler'
-import { hasExternalBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type SharedIntroCardsProps = {
   navigateToUnitagClaim: () => void
   navigateToUnitagIntro: () => void
-  navigateToBackupFlow: () => void
 }
 
 type SharedIntroCardReturn = {
@@ -28,13 +25,10 @@ type SharedIntroCardReturn = {
 export function useSharedIntroCards({
   navigateToUnitagClaim,
   navigateToUnitagIntro,
-  navigateToBackupFlow,
 }: SharedIntroCardsProps): SharedIntroCardReturn {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
-
-  const externalBackups = hasExternalBackup(activeAccount)
 
   const hasSkippedUnitagPrompt = useSelector(selectHasSkippedUnitagPrompt)
   const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
@@ -49,22 +43,6 @@ export function useSharedIntroCards({
 
   return useMemo(() => {
     const output: IntroCardProps[] = []
-
-    if (!externalBackups) {
-      output.push({
-        loggingName: OnboardingCardLoggingName.RecoveryBackup,
-        graphic: {
-          type: IntroCardGraphicType.Icon,
-          Icon: ShieldCheck,
-        },
-        title: t('onboarding.home.intro.backup.title'),
-        description: isExtension
-          ? t('onboarding.home.intro.backup.description.extension')
-          : t('onboarding.home.intro.backup.description.mobile'),
-        cardType: CardType.Required,
-        onPress: navigateToBackupFlow,
-      })
-    }
 
     if (shouldPromptUnitag) {
       output.push({
@@ -87,5 +65,5 @@ export function useSharedIntroCards({
       cards: output,
       shouldPromptUnitag,
     }
-  }, [externalBackups, shouldPromptUnitag, t, navigateToBackupFlow, handleUnitagClaim, handleUnitagDismiss])
+  }, [shouldPromptUnitag, t, handleUnitagClaim, handleUnitagDismiss])
 }

@@ -1,32 +1,33 @@
 import { Status } from 'components/AccountDrawer/Status'
-import { ModalState, miniPortfolioModalStateAtom } from 'components/AccountDrawer/constants'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
 import { useAccount } from 'hooks/useAccount'
-import { useUpdateAtom } from 'jotai/utils'
-import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
-import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { useTranslation } from 'react-i18next'
+import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import { CopyToClipboard } from 'theme/components/CopyHelper'
-import { Flex, GeneratedIcon, IconButton, Separator, Text, TouchableArea } from 'ui/src'
+import { Flex, GeneratedIcon, HeightAnimator, IconButton, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
 function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
   return <IconButton emphasis="secondary" size="xxsmall" icon={<Icon />} />
 }
 
-function AccountCardItem(): JSX.Element {
+function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   const account = useAccount()
   const { unitag } = useUnitagByAddress(account.address)
   const { data: ENSName } = useENSName(account.address)
-  const setModalState = useUpdateAtom(miniPortfolioModalStateAtom)
+  const openAddressQRModal = useOpenModal({ name: ModalName.ReceiveCryptoQr })
 
   const onPressShowWalletQr = (): void => {
-    setModalState(ModalState.QR_CODE)
+    onClose()
+    openAddressQRModal()
   }
 
   return (
@@ -62,49 +63,32 @@ function AccountCardItem(): JSX.Element {
 }
 
 type ChooseProviderProps = {
-  providersOnly?: boolean
-  errorProvider?: FORServiceProvider
-  connectedProvider?: FORServiceProvider
   setConnectedProvider: (provider: FORServiceProvider) => void
-  setErrorProvider: (provider: FORServiceProvider | undefined) => void
+  setErrorProvider: (provider: FORServiceProvider) => void
 }
 
-export function ChooseProvider({
-  providersOnly = false,
-  errorProvider,
-  connectedProvider,
-  setConnectedProvider,
-  setErrorProvider,
-}: ChooseProviderProps): JSX.Element {
+export function ChooseProvider({ setConnectedProvider, setErrorProvider }: ChooseProviderProps): JSX.Element {
   const { t } = useTranslation()
   const account = useAccount()
+  const toggleModal = useToggleModal(ModalName.ReceiveCryptoModal)
   const providers = useCexTransferProviders()
-
-  if (errorProvider) {
-    return (
-      <ProviderConnectionError onBack={() => setErrorProvider(undefined)} selectedServiceProvider={errorProvider} />
-    )
-  }
-
-  if (connectedProvider) {
-    return <ProviderConnectedView selectedServiceProvider={connectedProvider} />
-  }
 
   return (
     <Flex grow gap="$spacing24" mb="$spacing16">
-      <Flex gap="$spacing4" p="$spacing8" pt="$spacing24">
+      <GetHelpHeader link={uniswapUrls.helpArticleUrls.transferCryptoHelp} closeModal={toggleModal} />
+      <Flex gap="$spacing4" p="$spacing8">
         <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
-          {providersOnly ? t('home.empty.cexTransfer') : t('fiatOnRamp.receiveCrypto.title')}
+          {t('fiatOnRamp.receiveCrypto.title')}
         </Text>
         <Text color="$neutral2" mt="$spacing2" textAlign="center" variant="body3">
-          {providersOnly ? t('home.empty.cexTransfer.description') : t('fiatOnRamp.receiveCrypto.transferFunds')}
+          {t('fiatOnRamp.receiveCrypto.transferFunds')}
         </Text>
       </Flex>
       <Flex gap="$spacing12">
-        {!providersOnly && <AccountCardItem />}
+        <AccountCardItem onClose={toggleModal} />
         {providers.length > 0 && (
-          <Flex gap="$spacing12">
-            {!providersOnly && (
+          <HeightAnimator animation="fastHeavy">
+            <Flex gap="$spacing12">
               <Flex centered row shrink gap="$spacing12">
                 <Separator />
                 <Text color="$neutral2" textAlign="center" variant="body3">
@@ -112,21 +96,21 @@ export function ChooseProvider({
                 </Text>
                 <Separator />
               </Flex>
-            )}
-            {account.address && (
-              <Flex grow gap="$spacing12">
-                {providers.map((serviceProvider) => (
-                  <ProviderOption
-                    key={serviceProvider.name}
-                    serviceProvider={serviceProvider}
-                    walletAddress={account.address!}
-                    setConnectedProvider={setConnectedProvider}
-                    setErrorProvider={setErrorProvider}
-                  />
-                ))}
-              </Flex>
-            )}
-          </Flex>
+              {account.address && (
+                <Flex grow gap="$spacing12">
+                  {providers.map((serviceProvider) => (
+                    <ProviderOption
+                      key={serviceProvider.name}
+                      serviceProvider={serviceProvider}
+                      walletAddress={account.address!}
+                      setConnectedProvider={setConnectedProvider}
+                      setErrorProvider={setErrorProvider}
+                    />
+                  ))}
+                </Flex>
+              )}
+            </Flex>
+          </HeightAnimator>
         )}
       </Flex>
     </Flex>

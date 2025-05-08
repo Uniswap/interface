@@ -28,7 +28,6 @@ export function TransactionSettingsContextProvider({
   const appDispatch = useDispatch()
   const transactionSettings = useSelector(selectTransactionSettings(settingKey))
   const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
-  const v4HooksToggleFFEnabled = useFeatureFlag(FeatureFlags.SwapSettingsV4HooksToggle)
 
   const updateTransactionSettings = useCallback(
     (newState: Partial<TransactionSettingsState>): void => {
@@ -50,9 +49,8 @@ export function TransactionSettingsContextProvider({
       ...transactionSettings,
       updateTransactionSettings,
       selectedProtocols: transactionSettings.selectedProtocols,
-      isV4HookPoolsEnabled: v4HooksToggleFFEnabled ? transactionSettings.isV4HookPoolsEnabled : false,
     }),
-    [transactionSettings, updateTransactionSettings, v4HooksToggleFFEnabled],
+    [transactionSettings, updateTransactionSettings],
   )
 
   return <TransactionSettingsContext.Provider value={state}>{children}</TransactionSettingsContext.Provider>

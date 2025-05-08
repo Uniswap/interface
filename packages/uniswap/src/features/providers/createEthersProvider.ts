@@ -1,16 +1,15 @@
 import { providers as ethersProviders } from 'ethers/lib/ethers'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
-import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import {
+  FLASHBOTS_DEFAULT_BLOCK_RANGE,
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
   FlashbotsRpcProvider,
   SignerInfo,
 } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { logger } from 'utilities/src/logger/logger'
-
-export const DEFAULT_FLASHBOTS_ENABLED = true
 
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)
 export function createEthersProvider(
@@ -25,20 +24,44 @@ export function createEthersProvider(
         throw new Error(`No private RPC available for chain ${chainId}`)
       }
 
-      const flashbotsEnabled = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, boolean>(
-        Experiments.PrivateRpc,
-        PrivateRpcProperties.FlashbotsEnabled,
-        DEFAULT_FLASHBOTS_ENABLED,
+      const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
+        DynamicConfigs.MainnetPrivateRpc,
+        MainnetPrivateRpcConfigKey.UseFlashbots,
+        false,
       )
 
-      if (chainId === UniverseChainId.Mainnet && flashbotsEnabled) {
-        const flashbotsRefundPercent = getExperimentValue<Experiments.PrivateRpc, PrivateRpcProperties, number>(
-          Experiments.PrivateRpc,
-          PrivateRpcProperties.RefundPercent,
+      if (chainId === UniverseChainId.Mainnet && useFlashbots) {
+        const sendAuthenticationHeader = getDynamicConfigValue<
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey,
+          boolean
+        >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
+
+        const flashbotsBlockRange = getDynamicConfigValue<
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey,
+          number
+        >(
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey.FlashbotsBlockRange,
+          FLASHBOTS_DEFAULT_BLOCK_RANGE,
+        )
+
+        const flashbotsRefundPercent = getDynamicConfigValue<
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey,
+          number
+        >(
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey.FlashbotsRefundPercent,
           FLASHBOTS_DEFAULT_REFUND_PERCENT,
         )
 
-        return new FlashbotsRpcProvider(signerInfo, flashbotsRefundPercent)
+        return new FlashbotsRpcProvider(
+          flashbotsBlockRange,
+          sendAuthenticationHeader ? signerInfo : undefined,
+          flashbotsRefundPercent,
+        )
       }
 
       return new ethersProviders.JsonRpcProvider(privateRPCUrl)

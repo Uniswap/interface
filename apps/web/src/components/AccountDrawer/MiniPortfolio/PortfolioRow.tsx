@@ -11,6 +11,10 @@ export const PortfolioRowWrapper = styled(Row)<{ onClick?: any }>`
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color`};
 
   ${({ onClick }) => onClick && 'cursor: pointer'};
+
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const EndColumn = styled(Column)`

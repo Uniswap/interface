@@ -8,19 +8,16 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import { getCurrencyAddressForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
 import {
+  CheckApprovalLPRequest,
   IncreaseLPPositionRequest,
   IndependentToken,
-  type CheckApprovalLPRequest,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   IncreasePositionTxAndGasInfo,
@@ -28,8 +25,7 @@ import {
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
@@ -53,8 +49,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
   const [hasIncreaseErrorResponse, setHasIncreaseErrorResponse] = useState(false)
 
-  const generatePermitAsTransaction = useUniswapContext().getGeneratePermitAsTransaction?.(positionInfo?.chainId)
-
   const { currencyAmounts, error } = derivedIncreaseLiquidityInfo
   const { exactField } = increaseLiquidityState
 
@@ -73,10 +67,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       token1: getCurrencyAddressForTradingApi(positionInfo.currency1Amount.currency),
       amount0: currencyAmounts?.TOKEN0?.quotient.toString(),
       amount1: currencyAmounts?.TOKEN1?.quotient.toString(),
-      generatePermitAsTransaction:
-        positionInfo.version === ProtocolVersion.V4 ? generatePermitAsTransaction : undefined,
     }
-  }, [positionInfo, account.address, currencyAmounts, generatePermitAsTransaction])
+  }, [positionInfo, account.address, currencyAmounts])
 
   const {
     data: increaseLiquidityTokenApprovals,
@@ -90,13 +82,15 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   })
 
   if (approvalError) {
-    const message = parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' })
-    logger.error(message, {
-      tags: {
-        file: 'IncreaseLiquidityTxContext',
-        function: 'useEffect',
+    logger.info(
+      'IncreaseLiquidityTxContext',
+      'IncreaseLiquidityTxContext',
+      parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' }),
+      {
+        error: JSON.stringify(approvalError),
+        increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
       },
-    })
+    )
   }
 
   const {
@@ -109,11 +103,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     gasFeePositionTokenApproval,
     token0Cancel,
     token1Cancel,
-    token0PermitTransaction,
-    token1PermitTransaction,
-    gasFeeToken0Permit,
-    gasFeeToken1Permit,
-  } = increaseLiquidityTokenApprovals ?? {}
+  } = increaseLiquidityTokenApprovals || {}
   const gasFeeToken0USD = useUSDCurrencyAmountOfGasFee(
     positionInfo?.currency0Amount.currency.chainId,
     gasFeeToken0Approval,
@@ -126,25 +116,9 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     positionInfo?.liquidityToken?.chainId,
     gasFeePositionTokenApproval,
   )
-  const gasFeeToken0PermitUSD = useUSDCurrencyAmountOfGasFee(
-    positionInfo?.currency1Amount.currency.chainId,
-    gasFeeToken0Permit,
-  )
-  const gasFeeToken1PermitUSD = useUSDCurrencyAmountOfGasFee(
-    positionInfo?.currency1Amount.currency.chainId,
-    gasFeeToken1Permit,
-  )
 
   const approvalsNeeded =
-    !approvalLoading &&
-    Boolean(
-      permitData ||
-        token0Approval ||
-        token1Approval ||
-        positionTokenApproval ||
-        token0PermitTransaction ||
-        token1PermitTransaction,
-    )
+    !approvalLoading && Boolean(permitData || token0Approval || token1Approval || positionTokenApproval)
 
   const increaseCalldataQueryParams = useMemo((): IncreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
@@ -229,17 +203,15 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
 
   if (calldataError) {
-    const message = parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' })
-    logger.error(message, {
-      tags: {
-        file: 'IncreaseLiquidityTxContext',
-        function: 'useEffect',
+    logger.info(
+      'IncreaseLiquidityTxContext',
+      'IncreaseLiquidityTxContext',
+      parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' }),
+      {
+        error: JSON.stringify(calldataError),
+        increaseCalldataQueryParams: JSON.stringify(increaseCalldataQueryParams),
       },
-    })
-
-    sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
-      message,
-    })
+    )
   }
 
   const fallbackDependentAmount = useIncreasePositionDependentAmountFallback(
@@ -273,8 +245,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     const permit = validatePermit(permitData)
     const unsigned = Boolean(permitData)
     const txRequest = validateTransactionRequest(increase)
-    const validatedToken0PermitTx = validateTransactionRequest(token0PermitTransaction)
-    const validatedToken1PermitTx = validateTransactionRequest(token1PermitTransaction)
 
     return {
       type: LiquidityTransactionType.Increase,
@@ -290,55 +260,36 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       approvePositionTokenRequest,
       revokeToken0Request,
       revokeToken1Request,
-      permit: permit ? { method: PermitMethod.TypedData, typedData: permit } : undefined, // TODO: make a PermitMethod.Transaction one if we get them from BE
-      token0PermitTransaction: validatedToken0PermitTx,
-      token1PermitTransaction: validatedToken1PermitTx,
+      permit,
       increasePositionRequestArgs: { ...increaseCalldataQueryParams, batchPermitData: permitData ?? undefined },
       txRequest,
       unsigned,
     }
   }, [
-    positionInfo,
     approvalLoading,
     isCalldataLoading,
     increaseCalldata,
-    currencyAmounts?.TOKEN0,
-    currencyAmounts?.TOKEN1,
+    permitData,
+    positionInfo,
+    positionTokenApproval,
     token0Approval,
     token1Approval,
-    positionTokenApproval,
     token0Cancel,
     token1Cancel,
-    permitData,
-    increase,
-    token0PermitTransaction,
-    token1PermitTransaction,
     increaseCalldataQueryParams,
+    increase,
+    currencyAmounts,
   ])
 
   const totalGasFee = useMemo(() => {
-    const fees = [
-      gasFeeToken0USD,
-      gasFeeToken1USD,
-      gasFeeLiquidityTokenUSD,
-      increaseGasFeeUsd,
-      gasFeeToken0PermitUSD,
-      gasFeeToken1PermitUSD,
-    ]
+    const fees = [gasFeeToken0USD, gasFeeToken1USD, gasFeeLiquidityTokenUSD, increaseGasFeeUsd]
     return fees.reduce((total, fee) => {
       if (fee && total) {
         return total.add(fee)
       }
       return total || fee
     })
-  }, [
-    gasFeeToken0USD,
-    gasFeeToken1USD,
-    gasFeeLiquidityTokenUSD,
-    increaseGasFeeUsd,
-    gasFeeToken0PermitUSD,
-    gasFeeToken1PermitUSD,
-  ])
+  }, [gasFeeToken0USD, gasFeeToken1USD, gasFeeLiquidityTokenUSD, increaseGasFeeUsd])
 
   const value = {
     txInfo: increaseLiquidityTxContext,

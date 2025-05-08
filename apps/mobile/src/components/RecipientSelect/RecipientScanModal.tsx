@@ -5,8 +5,10 @@ import 'react-native-reanimated'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
-import { QrCode, Scan } from 'ui/src/components/icons'
+import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { QrCode } from 'ui/src/components/icons'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
+import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -94,9 +96,9 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
             {currentScreenState === ScannerModalState.ScanQr ? (
               <QrCode color="$neutral1" size="$icon.24" />
             ) : (
-              <Scan color="$neutral1" size="$icon.24" />
+              <ScanQRIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
             )}
-            <Text color="$neutral1" variant="buttonLabel2">
+            <Text color={colors.neutral1.val} variant="buttonLabel2">
               {currentScreenState === ScannerModalState.ScanQr
                 ? t('qrScanner.recipient.action.show')
                 : t('qrScanner.recipient.action.scan')}

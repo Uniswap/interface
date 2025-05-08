@@ -9,9 +9,8 @@ import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ethersTransactionRequest, getTxFixtures, transactionDetails } from 'uniswap/src/test/fixtures'
 import * as CreateTransactionId from 'uniswap/src/utils/createTransactionId'
-import { executeTransaction } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
-import { signAndSubmitTransaction } from 'wallet/src/features/transactions/executeTransaction/signAndSubmitTransaction'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
+import { sendTransaction, signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getProvider, getProviderManager, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { ACCOUNT } from 'wallet/src/test/fixtures'
@@ -30,7 +29,7 @@ const { txRequest, txResponse, txTypeInfo } = getTxFixtures(transaction)
 
 const present = dayjs('2022-02-01')
 
-describe(executeTransaction, () => {
+describe(sendTransaction, () => {
   let txnUtilSpy: jest.SpyInstance
 
   beforeAll(() => {
@@ -69,7 +68,7 @@ describe(executeTransaction, () => {
         [call(getSignerManager), signerManager],
         [
           call(
-            signAndSubmitTransaction,
+            signAndSendTransaction,
             transaction.options.request,
             ACCOUNT,
             provider as providers.Provider,

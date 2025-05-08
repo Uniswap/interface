@@ -49,7 +49,7 @@ export function UnitagChooseProfilePicScreen(): JSX.Element {
             height={iconSizes.icon48}
             width={iconSizes.icon48}
           >
-            <Person color="$neutral1" size="$icon.24" />
+            <Person color="$neutral1" size={iconSizes.icon24} />
           </Square>
         }
         title={t('unitags.onboarding.profile.title')}

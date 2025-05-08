@@ -1,15 +1,16 @@
-import { QueryClient, QueryKey, UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
+import { QueryClient, UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { is404Error } from 'uniswap/src/data/apiClients/FetchError'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
-import { fetchIndicativeQuote } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { TRADING_API_CACHE_KEY, fetchIndicativeQuote } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { IndicativeQuoteRequest, IndicativeQuoteResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
-function getTradingApiIndicativeQuoteQueryKey(params: IndicativeQuoteRequest | undefined): QueryKey {
-  return [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.indicativeQuote, params]
+function getTradingApiIndicativeQuoteQueryKey(
+  params: IndicativeQuoteRequest | undefined,
+): Array<string | IndicativeQuoteRequest | undefined> {
+  return [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.indicativeQuote, params]
 }
 
 export function useTradingApiIndicativeQuoteQuery({

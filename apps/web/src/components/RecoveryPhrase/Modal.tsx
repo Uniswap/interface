@@ -1,10 +1,9 @@
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
-import { useModalState } from 'hooks/useModalState'
-import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import ms from 'ms'
 import { useEffect, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Loader, Text, styled } from 'ui/src'
@@ -49,7 +48,8 @@ function Seed({ seed, position, revealed }: { seed?: string; position: number; r
 
 export function RecoveryPhraseModal() {
   const { t } = useTranslation()
-  const { isOpen, closeModal } = useModalState(ModalName.RecoveryPhrase)
+  const isOpen = useModalIsOpen(ModalName.RecoveryPhrase)
+  const closeModal = useCloseModal()
   const [seedPhrase, setSeedPhrase] = useState<string[] | undefined>(undefined)
   const [isRevealed, setIsRevealed] = useState(false)
   const handleClose = () => {
@@ -59,16 +59,11 @@ export function RecoveryPhraseModal() {
   }
   const seedPhraseContentRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(seedPhraseContentRef, () => setIsRevealed(false))
-  const { mutate: exportSeedPhraseWithHelpModal } = usePasskeyAuthWithHelpModal(
-    async (): Promise<string | undefined> => {
-      return await exportSeedPhrase()
-    },
-    {
-      onSuccess: (seedPhrase) => {
-        setSeedPhrase(seedPhrase?.split(' '))
-      },
-    },
-  )
+
+  const fetchSeedPhrase = async () => {
+    const retrievedSeedPhrase = await exportSeedPhrase()
+    setSeedPhrase(retrievedSeedPhrase?.split(' '))
+  }
 
   // After revealing passphrase, hide it after 1 minute
   const handleReveal = () => {
@@ -80,9 +75,9 @@ export function RecoveryPhraseModal() {
 
   useEffect(() => {
     if (isOpen) {
-      exportSeedPhraseWithHelpModal()
+      fetchSeedPhrase()
     }
-  }, [exportSeedPhraseWithHelpModal, isOpen])
+  }, [isOpen])
 
   return (
     <Modal
@@ -98,12 +93,11 @@ export function RecoveryPhraseModal() {
       <ModalContent
         title={t('setting.recoveryPhrase.title')}
         subtext={t('setting.recoveryPhrase.view.warning.message1')}
-        header={
+        logo={
           <Flex p="$spacing12" background="$surface3" borderRadius="$rounded12">
             <LockedDocument size="$icon.24" />
           </Flex>
         }
-        maxWidth={undefined}
       >
         <Flex
           p="$spacing32"

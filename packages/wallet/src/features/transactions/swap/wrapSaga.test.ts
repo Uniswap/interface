@@ -11,7 +11,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { ethersTransactionRequest } from 'uniswap/src/test/fixtures'
-import { executeTransaction } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { WrapParams, wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
@@ -43,7 +43,7 @@ describe(wrap, () => {
   it('successfully wrap native eth', () => {
     testSaga(wrap, params)
       .next()
-      .call(executeTransaction, {
+      .call(sendTransaction, {
         txId: '1',
         transactionOriginType: TransactionOriginType.Internal,
         chainId: UniverseChainId.Mainnet,
@@ -67,7 +67,7 @@ describe(wrap, () => {
     }
     testSaga(wrap, unwrapParams)
       .next()
-      .call(executeTransaction, {
+      .call(sendTransaction, {
         txId: '1',
         transactionOriginType: TransactionOriginType.Internal,
         chainId: UniverseChainId.Mainnet,

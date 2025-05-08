@@ -5,12 +5,7 @@ import {
   IncreaseLPPositionRequest,
   MigrateLPPositionRequest,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import {
-  PermitMethod,
-  PermitTransaction,
-  PermitTypedData,
-} from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { ValidatedPermit, ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 export enum LiquidityTransactionType {
   Create = 'create',
@@ -53,9 +48,7 @@ interface BaseLiquidityTxAndGasInfo {
   approveToken0Request: ValidatedTransactionRequest | undefined
   approveToken1Request: ValidatedTransactionRequest | undefined
   approvePositionTokenRequest: ValidatedTransactionRequest | undefined
-  permit: PermitTypedData | undefined
-  token0PermitTransaction: ValidatedTransactionRequest | undefined
-  token1PermitTransaction: ValidatedTransactionRequest | undefined
+  permit: ValidatedPermit | undefined
   revokeToken0Request: ValidatedTransactionRequest | undefined
   revokeToken1Request: ValidatedTransactionRequest | undefined
   txRequest: ValidatedTransactionRequest | undefined
@@ -93,12 +86,12 @@ export type ValidatedIncreasePositionTxAndGasInfo = Required<IncreasePositionTxA
   (
     | {
         unsigned: true
-        permit: PermitTypedData
+        permit: ValidatedPermit
         txRequest: undefined
       }
     | {
         unsigned: false
-        permit: PermitTransaction | undefined
+        permit: undefined
         txRequest: ValidatedTransactionRequest
       }
   )
@@ -111,12 +104,12 @@ export type ValidatedCreatePositionTxAndGasInfo = Required<CreatePositionTxAndGa
   (
     | {
         unsigned: true
-        permit: PermitTypedData
+        permit: ValidatedPermit
         txRequest: undefined
       }
     | {
         unsigned: false
-        permit: PermitTransaction | undefined
+        permit: undefined
         txRequest: ValidatedTransactionRequest
       }
   )
@@ -125,12 +118,12 @@ export type ValidatedMigrateV3PositionTxAndGasInfo = Required<MigrateV3PositionT
   (
     | {
         unsigned: true
-        permit: PermitTypedData
+        permit: ValidatedPermit
         txRequest: undefined
       }
     | {
         unsigned: false
-        permit: PermitTransaction | undefined
+        permit: undefined
         txRequest: ValidatedTransactionRequest
       }
   )
@@ -159,7 +152,7 @@ function validateLiquidityTxContext(
     const unsigned =
       (liquidityTxContext.type === 'increase' || liquidityTxContext.type === 'create') && liquidityTxContext.unsigned
     if (unsigned) {
-      if (!permit || permit.method !== PermitMethod.TypedData) {
+      if (!permit) {
         return undefined
       }
       return { ...liquidityTxContext, action, unsigned, txRequest: undefined, permit }

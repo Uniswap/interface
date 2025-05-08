@@ -21,7 +21,6 @@ export function UniversalImage({
   testID,
   onLoad,
   allowLocalUri = false,
-  autoplay = true,
 }: UniversalImageProps): JSX.Element | null {
   // Allow calculation of fields as needed
   const [width, setWidth] = useState(size.width)
@@ -117,7 +116,7 @@ export function UniversalImage({
         testID={testID ? `svg-${testID}` : undefined}
         width={size.width}
       >
-        <SvgImage autoplay={autoplay} fallback={fallback} size={size} uri={imageHttpUrl} />
+        <SvgImage autoplay={true} fallback={fallback} size={size} uri={imageHttpUrl} />
       </Flex>
     )
   }

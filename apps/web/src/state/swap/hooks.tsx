@@ -3,7 +3,6 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { CurrencyState, SerializedCurrencyState, SwapState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
@@ -13,7 +12,6 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isAddress } from 'utilities/src/addresses'
 import { getParsedChainId } from 'utils/chainParams'
@@ -218,7 +216,6 @@ export function useInitialCurrencyState(): {
 } {
   const { setIsUserSelectedToken } = useMultichainContext()
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
-  const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
 
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
@@ -240,12 +237,11 @@ export function useInitialCurrencyState(): {
   }, [parsedCurrencyState.inputCurrencyId, parsedCurrencyState.outputCurrencyId, setIsUserSelectedToken])
 
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
-    // Default to native if no query params or chain is not compatible with testnet or mainnet mode
+    // Default to ETH if no query params or chain is not compatible with testnet or mainnet mode
     if (!hasCurrencyQueryParams || !isSupportedChainCompatible) {
-      const initialChainId = persistedFilteredChainIds?.input ?? defaultChainId
       return {
-        initialInputCurrencyAddress: getNativeAddress(initialChainId),
-        initialChainId,
+        initialInputCurrencyAddress: 'ETH',
+        initialChainId: defaultChainId,
       }
     }
     // Handle query params or disconnected state
@@ -260,13 +256,11 @@ export function useInitialCurrencyState(): {
       initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyId ? undefined : 'ETH',
       initialChainId: supportedChainId,
     }
-    // We do not want to rerender on a change to persistedFilteredChainIds
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     hasCurrencyQueryParams,
-    isSupportedChainCompatible,
-    parsedCurrencyState.inputCurrencyId,
     parsedCurrencyState.outputCurrencyId,
+    parsedCurrencyState.inputCurrencyId,
+    isSupportedChainCompatible,
     supportedChainId,
     defaultChainId,
   ])

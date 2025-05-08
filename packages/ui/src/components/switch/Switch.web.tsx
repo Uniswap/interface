@@ -63,7 +63,10 @@ export function Switch({
       }
       return checked ? '$neutral2' : '$neutral3'
     }
-    return '$white'
+    if (isBranded) {
+      return checked ? '$white' : '$neutral1'
+    }
+    return checked ? '$surface1' : '$neutral1'
   })()
 
   const iconColor = ((): string => {

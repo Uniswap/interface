@@ -2,9 +2,9 @@ import { InterfaceElementName } from '@uniswap/analytics-events'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { OptionContainer } from 'components/WalletModal/UniswapWalletOptions'
-import { useModalState } from 'hooks/useModalState'
 import { useState } from 'react'
 import { Trans } from 'react-i18next'
+import { useOpenModal } from 'state/application/hooks'
 import { Flex, Image, Text } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -41,7 +41,7 @@ function BackgroundImage({ backgroundImage, isHovered }: BackgroundImageProps) {
 
 export const DownloadWalletOption = () => {
   const accountDrawer = useAccountDrawer()
-  const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp)
+  const openGetTheAppModal = useOpenModal({ name: ModalName.GetTheApp })
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   // Hovered state is passed from the background component to the background image which is layered underneath the option container
   const [optionHovered, setOptionHovered] = useState(false)

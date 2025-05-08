@@ -1,12 +1,9 @@
-import { ComponentProps } from 'react'
 import { Button, ButtonEmphasis, ButtonVariant, Flex, Square, Text } from 'ui/src'
 
 type SettingsRecoveryPhraseProps = {
   title: string
-  titleColor?: ComponentProps<typeof Text>['color']
   subtitle: string
   icon: React.ReactNode
-  iconBackgroundColor?: ComponentProps<typeof Square>['backgroundColor']
   nextButtonEnabled: boolean
   nextButtonText: string
   nextButtonVariant?: ButtonVariant
@@ -17,10 +14,8 @@ type SettingsRecoveryPhraseProps = {
 
 export function SettingsRecoveryPhrase({
   title,
-  titleColor = '$statusCritical',
   subtitle,
   icon,
-  iconBackgroundColor = '$statusCritical2',
   nextButtonEnabled,
   nextButtonText,
   nextButtonVariant,
@@ -31,11 +26,11 @@ export function SettingsRecoveryPhrase({
   return (
     <Flex grow justifyContent="space-between" p="$spacing4" pt="$spacing24">
       <Flex alignItems="flex-start" gap="$spacing16">
-        <Square backgroundColor={iconBackgroundColor} borderRadius="$rounded8" p="$spacing8">
+        <Square backgroundColor="$statusCritical2" borderRadius="$rounded8" p="$spacing8">
           {icon}
         </Square>
         <Flex gap="$spacing4" mb="$spacing24">
-          <Text color={titleColor} variant="subheading1">
+          <Text color="$statusCritical" variant="subheading1">
             {title}
           </Text>
           <Text color="$neutral2" variant="body3">

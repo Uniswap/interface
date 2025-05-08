@@ -11,7 +11,6 @@ import { CopySheets, Edit, Ellipsis, Globe, TrashFilled } from 'ui/src/component
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
@@ -23,7 +22,8 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountWithThrow, useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type AccountItemProps = {
   address: Address
@@ -42,9 +42,13 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
 
   const [showEditLabelModal, setShowEditLabelModal] = useState(false)
 
-  const accounts = useSignerAccounts()
   const displayName = useDisplayName(address)
-  const accountHasUnitag = displayName?.type === DisplayNameType.Unitag
+
+  const accounts = useSignerAccounts()
+  const activeAccount = useActiveAccountWithThrow()
+  const activeAccountDisplayName = useDisplayName(activeAccount.address)
+  const accountAddress = useDisplayName(address)
+  const activeAccountHasUnitag = accountAddress?.type === DisplayNameType.Unitag
 
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
 
@@ -94,7 +98,7 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         Icon: CopySheets,
       },
       {
-        label: !accountHasUnitag
+        label: !activeAccountHasUnitag
           ? t('account.wallet.menu.edit.title')
           : t('settings.setting.wallet.action.editProfile'),
         onPress: (e: BaseSyntheticEvent): void => {
@@ -134,12 +138,14 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         iconProps: { color: '$statusCritical' },
       },
     ]
-  }, [accountHasUnitag, onPressCopyAddress, navigateTo, t])
+  }, [activeAccountHasUnitag, onPressCopyAddress, navigateTo, t])
 
   return (
     <>
       <WarningModal
-        caption={t('account.recoveryPhrase.remove.mnemonic.description')}
+        caption={t('account.recoveryPhrase.remove.mnemonic.description', {
+          walletNames: [activeAccountDisplayName?.name ?? ''],
+        })}
         rejectText={t('common.button.cancel')}
         acknowledgeText={t('common.button.continue')}
         icon={<TrashFilled color="$statusCritical" size="$icon.24" strokeWidth="$spacing1" />}

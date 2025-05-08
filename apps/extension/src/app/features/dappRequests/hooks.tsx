@@ -1,12 +1,10 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
-import { selectIsRequestConfirming } from 'src/app/features/dappRequests/slice'
+import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import {
   isRequestAccountRequest,
   isRequestPermissionsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { ExtensionState } from 'src/store/extensionReducer'
 import { getBridgingDappUrls } from 'uniswap/src/features/bridging/constants'
 import { useBridgingSupportedChainIds, useNumBridgingChains } from 'uniswap/src/features/bridging/hooks/chains'
 import { selectHasViewedDappRequestBridgingBanner } from 'wallet/src/features/behaviorHistory/selectors'
@@ -43,9 +41,4 @@ export function useShouldShowBridgingRequestCard(
     numBridgingChains,
     shouldShowBridgingRequestCard: isBridgingConnectionRequest && !hasViewedDappRequestBridgingBanner,
   }
-}
-
-export function useIsDappRequestConfirming(requestId: string): boolean {
-  const selector = useCallback((state: ExtensionState) => selectIsRequestConfirming(state, requestId), [requestId])
-  return useSelector(selector)
 }

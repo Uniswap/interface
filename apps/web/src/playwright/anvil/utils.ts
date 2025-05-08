@@ -5,8 +5,6 @@ import { concat, keccak256, pad, toHex } from 'viem/utils'
 
 const TEST_WALLET_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
 
-export const ONE_MILLION_USDT = 1_000_000_000_000n
-
 // This client must be in "anvil" mode:
 export const anvilClient = createTestClient({
   account: privateKeyToAccount(TEST_WALLET_PRIVATE_KEY),

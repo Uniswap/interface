@@ -17,6 +17,7 @@ import { store as appStore, persistedReducer } from 'src/app/store'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
@@ -58,9 +59,11 @@ export function renderWithProviders(
       <AutoMockedApolloProvider resolvers={resolvers}>
         <BlankUrlProvider>
           <SharedWalletProvider reduxStore={store}>
-            <NavigationContainer ref={navigationRef}>
-              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
-            </NavigationContainer>
+            <UnitagUpdaterContextProvider>
+              <NavigationContainer ref={navigationRef}>
+                <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+              </NavigationContainer>
+            </UnitagUpdaterContextProvider>
           </SharedWalletProvider>
         </BlankUrlProvider>
       </AutoMockedApolloProvider>
@@ -125,7 +128,9 @@ export function renderHookWithProviders<P, R>(
         <BlankUrlProvider>
           <NavigationContainer ref={navigationRef}>
             <SharedWalletProvider reduxStore={store}>
-              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+              <UnitagUpdaterContextProvider>
+                <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+              </UnitagUpdaterContextProvider>
             </SharedWalletProvider>
           </NavigationContainer>
         </BlankUrlProvider>

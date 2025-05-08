@@ -1,18 +1,37 @@
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { ColumnCenter } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
-import { useModalState } from 'hooks/useModalState'
+import styled from 'lib/styled-components'
 import { useContext, useState } from 'react'
 import { Flag, Settings } from 'react-feather'
 import { useDispatch } from 'react-redux'
+import { useCloseModal, useToggleModal } from 'state/application/hooks'
 import { ThemedText } from 'theme/components'
-import { Button, Flex, useShadowPropsShort } from 'ui/src'
+import { Z_INDEX } from 'theme/zIndex'
+import { Button } from 'ui/src'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { StatsigContext } from 'uniswap/src/features/gating/sdk/statsig'
 import { getOverrides } from 'uniswap/src/features/gating/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
+const Box = styled.div`
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: ${({ theme }) => theme.surface1};
+  padding: 10px;
+  border: 1px solid ${({ theme }) => theme.surface3};
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 0px rgba(34, 34, 34, 0.04);
+  user-select: none;
+  z-index: ${Z_INDEX.fixed};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    bottom: 70px;
+  }
+`
 const Override = (name: string, value: any) => {
   return (
     <ThemedText.LabelSmall key={name}>
@@ -21,17 +40,28 @@ const Override = (name: string, value: any) => {
   )
 }
 
+const SettingsContainer = styled(ColumnCenter)`
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  border-radius: 12px;
+  :hover {
+    background: ${({ theme }) => theme.surface2};
+  }
+`
+
 export default function DevFlagsBox() {
   const { client: statsigClient } = useContext(StatsigContext)
   const { gateOverrides, configOverrides } = getOverrides(statsigClient)
-  const shadowProps = useShadowPropsShort()
 
   const overrides = [...gateOverrides, ...configOverrides].map(([name, value]) => Override(name, value))
 
   const hasOverrides = overrides.some((g) => g !== null)
 
   const [isOpen, setIsOpen] = useState(false)
-  const { toggleModal: toggleFeatureFlagsModal } = useModalState(ModalName.FeatureFlags)
+  const toggleOpen = () => setIsOpen((open) => !open)
+  const toggleFeatureFlagsModal = useToggleModal(ModalName.FeatureFlags)
+  const closeFeatureFlagsModal = useCloseModal()
 
   const dispatch = useDispatch()
 
@@ -40,29 +70,10 @@ export default function DevFlagsBox() {
   }
 
   return (
-    <Flex
-      $platform-web={{
-        position: 'fixed',
-        ...shadowProps,
-      }}
-      $sm={{
-        bottom: 30,
-      }}
-      bottom="$spacing24"
-      left="$spacing24"
-      zIndex={Number.MAX_SAFE_INTEGER}
-      padding={10}
-      borderWidth={1}
-      borderColor="$surface3"
-      borderRadius="$rounded8"
-      cursor="pointer"
-      backgroundColor="$surface1"
-      hoverStyle={{
-        backgroundColor: '$surface1Hovered',
-      }}
-      testID={TestID.DevFlagsBox}
-      onPress={() => {
-        setIsOpen((prev) => !prev)
+    <Box
+      onClick={() => {
+        toggleOpen()
+        closeFeatureFlagsModal()
       }}
     >
       {isOpen ? (
@@ -75,22 +86,14 @@ export default function DevFlagsBox() {
             size={TooltipSize.Small}
             text="Protip: Set feature flags by adding '?featureFlagOverride={flag_name}' to the URL"
           >
-            <Flex
-              centered
-              width={30}
-              height={30}
-              borderRadius="$rounded8"
-              testID={TestID.DevFlagsSettingsToggle}
-              hoverStyle={{
-                backgroundColor: '$surface1Hovered',
-              }}
-              onPress={(e) => {
+            <SettingsContainer
+              onClick={(e) => {
                 e.stopPropagation()
                 toggleFeatureFlagsModal()
               }}
             >
               <Settings width={15} height={15} />
-            </Flex>
+            </SettingsContainer>
           </MouseoverTooltip>
         </RowBetween>
       ) : (
@@ -103,6 +106,6 @@ export default function DevFlagsBox() {
           Reset behavior history
         </Button>
       )}
-    </Flex>
+    </Box>
   )
 }

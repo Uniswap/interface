@@ -7,14 +7,14 @@ import { WalletConnectModal } from 'src/components/Requests/ScanSheet/WalletConn
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
-  WalletConnectSigningRequest,
+  WalletConnectRequest,
   removePendingSession,
   removeRequest,
   setDidOpenFromDeepLink,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { Flex } from 'ui/src'
-import { Eye } from 'ui/src/components/icons'
+import { Flex, useSporeColors } from 'ui/src'
+import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -105,7 +105,7 @@ export function WalletConnectModals(): JSX.Element {
 }
 
 type RequestModalProps = {
-  currRequest: WalletConnectSigningRequest
+  currRequest: WalletConnectRequest
 }
 
 function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
@@ -113,6 +113,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const colors = useSporeColors()
 
   // TODO: Move returnToPreviousApp() call to onClose but ensure it is not called twice
   const onClose = (): void => {
@@ -128,7 +129,9 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
       <WarningModal
         caption={t('walletConnect.request.warning.message')}
         rejectText={t('common.button.dismiss')}
-        icon={<Eye color="$neutral1" size="$icon.24" />}
+        icon={
+          <EyeIcon color={colors.neutral1.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
+        }
         isOpen={!isRequestFromSignerAccount}
         modalName={ModalName.WCViewOnlyWarning}
         severity={WarningSeverity.None}

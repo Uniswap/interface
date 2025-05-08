@@ -1,5 +1,5 @@
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, refitChartContentAtom } from 'components/Charts/ChartModel'
@@ -188,9 +188,8 @@ export default function ChartSection(props: ChartSectionProps) {
     }
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
-    // Pass currencyA/B to LiquidityChart to avoid wrapping native tokens for v4 pools
     if (activeQuery.chartType === ChartType.LIQUIDITY) {
-      return <LiquidityChart {...selectedChartProps} currencyA={currencyA} currencyB={currencyB} />
+      return <LiquidityChart {...selectedChartProps} />
     }
     if (activeQuery.dataQuality === DataQuality.INVALID || !currencyA || !currencyB) {
       const errorText = loading ? undefined : <Trans i18nKey="chart.error.pools" />
@@ -377,8 +376,8 @@ function LiquidityTooltipDisplay({
 }
 
 function LiquidityChart({
-  currencyA,
-  currencyB,
+  tokenA,
+  tokenB,
   feeTier,
   isReversed,
   chainId,
@@ -387,8 +386,8 @@ function LiquidityChart({
   hooks,
   poolId,
 }: {
-  currencyA: Currency
-  currencyB: Currency
+  tokenA: Token
+  tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
   chainId: UniverseChainId
@@ -398,12 +397,12 @@ function LiquidityChart({
   poolId?: string
 }) {
   const { t } = useTranslation()
-  const tokenADescriptor = currencyA.symbol ?? currencyA.name ?? t('common.tokenA')
-  const tokenBDescriptor = currencyB.symbol ?? currencyB.name ?? t('common.tokenB')
+  const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
+  const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')
 
   const { tickData, activeTick, loading } = useLiquidityBarData({
-    currencyA,
-    currencyB,
+    tokenA,
+    tokenB,
     feeTier,
     isReversed,
     chainId,

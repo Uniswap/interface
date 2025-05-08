@@ -1,6 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { useAccountMeta, useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -32,8 +32,7 @@ export function useDerivedSwapInfo({
     txId,
   } = state
 
-  const { customSlippageTolerance, customDeadline, selectedProtocols, isV4HookPoolsEnabled } =
-    useTransactionSettingsContext()
+  const { customSlippageTolerance, customDeadline, selectedProtocols } = useTransactionSettingsContext()
 
   const account = useAccountMeta()
   const { defaultChainId } = useEnabledChains()
@@ -95,7 +94,6 @@ export function useDerivedSwapInfo({
 
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
 
-  const getGeneratePermitAsTransaction = useUniswapContextSelector((ctx) => ctx.getGeneratePermitAsTransaction)
   const tradeParams = {
     account,
     amountSpecified: isWrap ? null : amountSpecified,
@@ -106,8 +104,6 @@ export function useDerivedSwapInfo({
     selectedProtocols,
     sendPortionEnabled,
     isDebouncing,
-    getGeneratePermitAsTransaction,
-    isV4HookPoolsEnabled,
   }
 
   const trade = useTrade(tradeParams)

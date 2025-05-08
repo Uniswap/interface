@@ -1,11 +1,36 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { OutlineCard } from 'components/Card/cards'
 import { Input as NumericalInput } from 'components/NumericalInput'
-import styled from 'lib/styled-components'
+import { AutoColumn } from 'components/deprecated/Column'
+import styled, { keyframes } from 'lib/styled-components'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { Button, Flex, Text, styled as tamaguiStyled, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, styled as tamaguiStyled } from 'ui/src'
+
+const pulse = (color: string) => keyframes`
+  0% {
+    box-shadow: 0 0 0 0 ${color};
+  }
+
+  70% {
+    box-shadow: 0 0 0 2px ${color};
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 ${color};
+  }
+`
+
+const InputRow = styled.div`
+  display: flex;
+`
+
+const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
+  border-color: ${({ active, theme }) => active && theme.deprecated_stateOverlayPressed};
+  padding: 12px;
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accent1)} 0.8s linear;
+`
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: transparent;
@@ -16,6 +41,10 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 16px;
   `};
+`
+
+const InputColumn = styled(AutoColumn)`
+  width: 100%;
 `
 
 const InputTitle = tamaguiStyled(Text, {
@@ -53,18 +82,24 @@ const StepCounter = ({
   tokenA,
   tokenB,
 }: StepCounterProps) => {
-  const colors = useSporeColors()
+  //  for focus state, styled components doesnt let you select input parent container
+  const [active, setActive] = useState(false)
 
   // let user type value and only update parent value on blur
   const [localValue, setLocalValue] = useState('')
   const [useLocalValue, setUseLocalValue] = useState(false)
 
+  // animation if parent value updates local value
+  const [pulsing, setPulsing] = useState<boolean>(false)
+
   const handleOnFocus = () => {
     setUseLocalValue(true)
+    setActive(true)
   }
 
   const handleOnBlur = useCallback(() => {
     setUseLocalValue(false)
+    setActive(false)
     onUserInput(localValue) // trigger update on parent value
   }, [localValue, onUserInput])
 
@@ -83,14 +118,18 @@ const StepCounter = ({
     if (localValue !== value && !useLocalValue) {
       setTimeout(() => {
         setLocalValue(value) // reset local value to match parent
+        setPulsing(true) // trigger animation
+        setTimeout(function () {
+          setPulsing(false)
+        }, 1800)
       }, 0)
     }
   }, [localValue, useLocalValue, value])
 
   return (
-    <OutlineCard onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
-      <Flex>
-        <Flex width="100%" justifyContent="flex-start">
+    <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
+      <InputRow>
+        <InputColumn justify="flex-start">
           <InputTitle fontSize={12} textAlign="center">
             {title}
           </InputTitle>
@@ -106,9 +145,9 @@ const StepCounter = ({
           <InputTitle fontSize={12} textAlign="left">
             <Trans i18nKey="common.feesEarnedPerBase" values={{ symbolA: tokenB, symbolB: tokenA }} />
           </InputTitle>
-        </Flex>
+        </InputColumn>
 
-        <Flex gap="$gap8">
+        <AutoColumn gap="8px">
           {!locked && (
             <Button
               size="xxsmall"
@@ -118,7 +157,7 @@ const StepCounter = ({
               isDisabled={incrementDisabled}
             >
               <Flex centered>
-                <Plus size={16} color={colors.neutral2.val} />
+                <Plus size={16} />
               </Flex>
             </Button>
           )}
@@ -131,13 +170,13 @@ const StepCounter = ({
               isDisabled={decrementDisabled}
             >
               <Flex centered>
-                <Minus size={16} color={colors.neutral2.val} />
+                <Minus size={16} />
               </Flex>
             </Button>
           )}
-        </Flex>
-      </Flex>
-    </OutlineCard>
+        </AutoColumn>
+      </InputRow>
+    </FocusedOutlineCard>
   )
 }
 

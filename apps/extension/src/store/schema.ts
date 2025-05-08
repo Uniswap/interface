@@ -3,9 +3,6 @@ import { RankingType } from 'uniswap/src/data/types'
 // only add fields that are persisted
 export const initialSchema = {
   dapp: {},
-  dappRequests: {
-    pending: [],
-  },
   favorites: {
     tokens: [],
     watchedAddresses: [],
@@ -53,7 +50,6 @@ export const initialSchema = {
     hasCompletedUnitagsIntroModal: false,
     extensionOnboardingState: 0,
   },
-  batchedTransactions: {},
 }
 
 const v0SchemaIntermediate = {
@@ -209,50 +205,31 @@ const v17SchemaIntermediate = {
 delete v17SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
 export const v17Schema = v17SchemaIntermediate
 
-export const v18Schema = v17Schema
-
-const v19SchemaIntermediate = {
+const v18SchemaIntermediate = {
   ...v17Schema,
   behaviorHistory: {
     ...v17Schema.behaviorHistory,
     hasViewedWelcomeWalletCard: undefined,
   },
 }
-delete v19SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
-export const v19Schema = v19SchemaIntermediate
+delete v18SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
+export const v18Schema = v18SchemaIntermediate
 
-const v20SchemaIntermediate = {
-  ...v19Schema,
+const v19SchemaIntermediate = {
+  ...v18Schema,
   visibility: {
     positions: {},
-    tokens: v19Schema.favorites.tokensVisibility,
-    nfts: v19Schema.favorites.nftsVisibility,
+    tokens: v18Schema.favorites.tokensVisibility,
+    nfts: v18Schema.favorites.nftsVisibility,
   },
   favorites: {
-    ...v19Schema.favorites,
+    ...v18Schema.favorites,
     tokensVisibility: undefined,
     nftsVisibility: undefined,
   },
 }
-delete v20SchemaIntermediate.favorites.tokensVisibility
-delete v20SchemaIntermediate.favorites.nftsVisibility
-export const v20Schema = v20SchemaIntermediate
+delete v19SchemaIntermediate.favorites.tokensVisibility
+delete v19SchemaIntermediate.favorites.nftsVisibility
+export const v19Schema = v19SchemaIntermediate
 
-const v21SchemaIntermediate = {
-  ...v20Schema,
-  dappRequests: {
-    ...v20Schema.dappRequests,
-    pending: undefined,
-    requests: {},
-  },
-}
-delete v21SchemaIntermediate.dappRequests.pending
-export const v21Schema = v21SchemaIntermediate
-
-export const v22Schema = {
-  ...v21Schema,
-  batchedTransactions: {},
-}
-
-const v23Schema = v22Schema
-export const getSchema = (): typeof v23Schema => v23Schema
+export const getSchema = (): typeof v19Schema => v19Schema

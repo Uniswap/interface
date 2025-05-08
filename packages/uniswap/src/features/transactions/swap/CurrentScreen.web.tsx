@@ -4,7 +4,8 @@ import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
 import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
@@ -12,11 +13,10 @@ import { isInterface } from 'utilities/src/platform'
 
 export function CurrentScreen({
   settings,
-  onSubmitSwap,
   tokenColor,
 }: {
   settings: SwapSettingConfig[]
-  onSubmitSwap?: () => Promise<void> | void
+  onSubmitSwap?: () => Promise<void>
   tokenColor?: string
 }): JSX.Element {
   const { screen, setScreen } = useTransactionModalContext()
@@ -40,7 +40,7 @@ export function CurrentScreen({
         onClose={() => setScreen(TransactionScreen.Form)}
       >
         <Trace logImpression section={SectionName.SwapReview}>
-          <SwapReviewScreen hideContent={false} onSubmitSwap={onSubmitSwap} />
+          <SwapReviewScreen hideContent={false} />
         </Trace>
       </Modal>
     </>

@@ -1,12 +1,13 @@
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import {
   DeprecatedEthMethods,
+  ExtensionEthMethods,
   ProviderDirectMethods,
   UniswapMethods,
   UnsupportedEthMethods,
 } from 'src/contentScript/methodHandlers/requestMethods'
 import { PendingResponseInfo } from 'src/contentScript/methodHandlers/types'
-import { DappResponseType, EthMethod, ExtensionEthMethod } from 'uniswap/src/features/dappRequests/types'
+import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { logger } from 'utilities/src/logger/logger'
 
 export function isProviderDirectMethod(method: string): boolean {
@@ -17,26 +18,8 @@ export function isUniswapMethod(method: string): boolean {
   return Object.keys(UniswapMethods).includes(method)
 }
 
-// Since ExtensionEthMethod is a TypeScript type that doesn't exist at runtime,
-// we need to explicitly list its values here for string comparison
-const extensionEthMethodValues: ExtensionEthMethod[] = [
-  EthMethod.EthChainId,
-  EthMethod.EthRequestAccounts,
-  EthMethod.EthAccounts,
-  EthMethod.EthSendTransaction,
-  EthMethod.PersonalSign,
-  EthMethod.WalletSwitchEthereumChain,
-  EthMethod.WalletGetPermissions,
-  EthMethod.WalletRequestPermissions,
-  EthMethod.WalletRevokePermissions,
-  EthMethod.WalletGetCapabilities,
-  EthMethod.WalletSendCalls,
-  EthMethod.WalletGetCallsStatus,
-  EthMethod.SignTypedDataV4,
-]
-
 export function isExtensionEthMethod(method: string): boolean {
-  return extensionEthMethodValues.some((enumValue) => enumValue === method)
+  return Object.keys(ExtensionEthMethods).includes(method)
 }
 
 export function isDeprecatedMethod(method: string): boolean {

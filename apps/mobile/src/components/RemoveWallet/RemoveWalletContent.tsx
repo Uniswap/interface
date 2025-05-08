@@ -10,6 +10,7 @@ import { navigateToOnboardingImportMethod } from 'src/components/RemoveWallet/ut
 import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { Button, Flex, Text, ThemeKeys, useSporeColors } from 'ui/src'
+import { iconSizes, opacify } from 'ui/src/theme'
 import { ElementName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -157,10 +158,9 @@ export const RemoveWalletContent = ({
     return null
   }
 
-  const { title, description, Icon, iconColorLabel, actionButtonLabel, iconBackgroundColor } = modalContent
+  const { title, description, Icon, iconColorLabel, actionButtonLabel } = modalContent
 
   const labelColor: ThemeKeys = iconColorLabel
-  const backgroundColor: ThemeKeys = iconBackgroundColor
 
   return (
     <Flex gap="$spacing24" px="$spacing24" py="$spacing24">
@@ -170,10 +170,10 @@ export const RemoveWalletContent = ({
           borderRadius="$rounded12"
           p="$spacing12"
           style={{
-            backgroundColor: colors[backgroundColor].val,
+            backgroundColor: opacify(12, colors[labelColor].val),
           }}
         >
-          <Icon color={colors[labelColor].val} size="$icon.24" />
+          <Icon color={colors[labelColor].val} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
         <Flex gap="$spacing8">
           <Text textAlign="center" variant="body1">

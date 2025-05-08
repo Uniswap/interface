@@ -1,11 +1,13 @@
 import { useIsFocused } from '@react-navigation/core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
-import { checkCloudBackupOrShowAlert } from 'src/components/mnemonic/cloudImportUtils'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
+import { openSettings } from 'src/utils/linking'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
@@ -24,7 +26,6 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted, selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
@@ -108,7 +109,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         wallet_type: ImportType.CreateAdditional,
         accounts_imported_count: 1,
         wallets_imported: [newAccount.address],
-        cloud_backup_used: hasBackup(BackupType.Cloud, newAccount),
+        cloud_backup_used: newAccount.backups?.includes(BackupType.Cloud) ?? false,
         modal: ModalName.AccountSwitcher,
       })
     }
@@ -158,8 +159,25 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     const onPressRestore = async (): Promise<void> => {
-      const hasCloudBackup = await checkCloudBackupOrShowAlert(t)
-      if (!hasCloudBackup) {
+      const cloudStorageAvailable = await isCloudStorageAvailable()
+
+      if (!cloudStorageAvailable) {
+        Alert.alert(
+          isAndroid
+            ? t('account.cloud.error.unavailable.title.android')
+            : t('account.cloud.error.unavailable.title.ios'),
+          isAndroid
+            ? t('account.cloud.error.unavailable.message.android')
+            : t('account.cloud.error.unavailable.message.ios'),
+          [
+            {
+              text: t('account.cloud.error.unavailable.button.settings'),
+              onPress: openSettings,
+              style: 'default',
+            },
+            { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
+          ],
+        )
         return
       }
 

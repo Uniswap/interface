@@ -5,3 +5,9 @@ export const DetailBubble = styled(LoadingBubble)<{ $height?: number; $width?: n
   height: ${({ $height }) => ($height ? `${$height}px` : '16px')};
   width: ${({ $width }) => ($width ? `${$width}px` : '80px')};
 `
+
+export const SmallDetailBubble = styled(LoadingBubble)`
+  height: 20px;
+  width: 20px;
+  border-radius: 100px;
+`

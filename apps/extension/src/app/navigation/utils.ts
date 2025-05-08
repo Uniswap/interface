@@ -87,14 +87,16 @@ export async function focusOrCreateUnitagTab(address: Address, page: UnitagClaim
 export async function focusOrCreateDappRequestWindow(tabId: number | undefined, windowId: number): Promise<void> {
   const extension = await chrome.management.getSelf()
 
+  const window = await chrome.windows.getCurrent()
+
   const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/popup.html*` })
   const tab = tabs[0]
 
+  // Centering within current window
   const height = 410
   const width = 330
-
-  const { left, top } = await calculatePopupWindowPosition({ width, height })
-
+  const top = Math.round((window.top ?? 0) + ((window.height ?? height) - height) / 2)
+  const left = Math.round((window.left ?? 0) + ((window.width ?? width) - width) / 2)
   let url = `popup.html?windowId=${windowId}`
   if (tabId) {
     url += `&tabId=${tabId}`
@@ -200,78 +202,4 @@ export async function closeCurrentTab(): Promise<void> {
       },
     })
   }
-}
-
-/**
- * Calculates the top and left position of a centered pop up window,
- * making sure it's on the same monitor as the current window.
- */
-async function calculatePopupWindowPosition({
-  width,
-  height,
-}: {
-  width: number
-  height: number
-}): Promise<{ left: number; top: number }> {
-  const currentWindow = await chrome.windows.getCurrent()
-  const currentWindowLeft = currentWindow.left ?? 0
-  const currentWindowTop = currentWindow.top ?? 0
-  const currentWindowWidth = currentWindow.width ?? width
-  const currentWindowHeight = currentWindow.height ?? height
-
-  return {
-    left: Math.round(currentWindowLeft + (currentWindowWidth - width) / 2),
-    top: Math.round(currentWindowTop + (currentWindowHeight - height) / 2),
-  }
-}
-
-/**
- * Opens a popup window centered on the current window, making sure it's on the same monitor.
- */
-export async function openPopupWindow({
-  url,
-  width,
-  height,
-}: {
-  url: string
-  width: number
-  height: number
-}): Promise<chrome.windows.Window> {
-  const { left, top } = await calculatePopupWindowPosition({ width, height })
-
-  const popupWindow = await chrome.windows.create({
-    url,
-    type: 'popup',
-    width,
-    height,
-    left,
-    top,
-  })
-
-  return popupWindow
-}
-
-export function closeWindow(window: chrome.windows.Window | undefined): void {
-  if (!window?.id) {
-    return
-  }
-
-  chrome.windows.remove(window.id).catch((error) => {
-    logger.error(error, {
-      tags: {
-        file: 'navigation/utils.ts',
-        function: 'closeWindow',
-      },
-    })
-  })
-}
-
-export async function bringWindowToFront(windowId: number, options?: { centered?: boolean }): Promise<void> {
-  if (options?.centered) {
-    const window = await chrome.windows.get(windowId)
-    const { left, top } = await calculatePopupWindowPosition({ width: window.width ?? 0, height: window.height ?? 0 })
-    await chrome.windows.update(windowId, { left, top })
-  }
-
-  await chrome.windows.update(windowId, { focused: true })
 }

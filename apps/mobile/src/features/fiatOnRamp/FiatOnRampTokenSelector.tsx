@@ -46,7 +46,7 @@ export function FiatOnRampTokenSelectorModal({
       hideKeyboardOnSwipeDown
       renderBehindBottomInset
       backgroundColor={colors.surface1.val}
-      name={ModalName.FiatOnRampTokenSelector}
+      name={ModalName.FiatOnRampCountryList}
       snapPoints={FOR_MODAL_SNAP_POINTS}
       onClose={onClose}
     >

@@ -1,5 +1,5 @@
 import { datadogLogs } from '@datadog/browser-logs'
-import { RumEvent, RumEventDomainContext, RumFetchResourceEventDomainContext, datadogRum } from '@datadog/browser-rum'
+import { RumEvent, datadogRum } from '@datadog/browser-rum'
 import { config } from 'uniswap/src/config'
 import {
   DatadogIgnoredErrorsConfigKey,
@@ -14,7 +14,6 @@ import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
-import { isBetaEnv } from 'utilities/src/environment/env'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isInterface } from 'utilities/src/platform'
@@ -23,7 +22,7 @@ import { isExtension, isInterface } from 'utilities/src/platform'
 const EXTENSION_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
 const INTERFACE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
 
-function beforeSend(event: RumEvent, context: RumEventDomainContext): boolean {
+function beforeSend(event: RumEvent): boolean {
   // otherwise DataDog will ignore error events
   event.view.url = event.view.url.replace(/^chrome-extension:\/\/[a-z]{32}\//i, '')
   if (event.error && event.type === 'error') {
@@ -46,16 +45,6 @@ function beforeSend(event: RumEvent, context: RumEventDomainContext): boolean {
       writable: false,
       configurable: true,
     })
-  }
-  if (event.type === 'resource' && event.resource.url.includes('graphql')) {
-    const requestBody = (context as RumFetchResourceEventDomainContext).requestInit?.body
-    if (requestBody) {
-      const body = JSON.parse(requestBody as string)
-      event.context = {
-        ...event.context,
-        operationName: body.operationName,
-      }
-    }
   }
 
   return true
@@ -85,12 +74,10 @@ export async function initializeDatadog(appName: string): Promise<void> {
     trackingConsent: undefined,
   }
 
-  const shouldUseFullSampleRate = localDevDatadogEnabled || (isInterface && isBetaEnv())
-
   datadogRum.init({
     ...sharedDatadogConfig,
     applicationId: config.datadogProjectId,
-    sessionSampleRate: shouldUseFullSampleRate ? 100 : sessionSampleRate,
+    sessionSampleRate: localDevDatadogEnabled ? 100 : sessionSampleRate,
     sessionReplaySampleRate: 0,
     trackResources: true,
     trackLongTasks: true,

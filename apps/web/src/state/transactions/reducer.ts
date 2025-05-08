@@ -131,30 +131,6 @@ const localTransactionSlice = createSlice({
 
       tx.info = info
     },
-    applyTransactionHashToBatch(
-      transactions,
-      {
-        payload: { batchId, hash, chainId },
-      }: {
-        payload: {
-          batchId: string
-          chainId: UniverseChainId
-          hash: string
-        }
-      },
-    ) {
-      const hashlessTx = transactions[chainId]?.[batchId]
-      if (!hashlessTx) {
-        return
-      }
-      const txWithHash = { ...hashlessTx, hash }
-
-      // rm tx that was referenced by batchId
-      delete transactions[chainId]?.[batchId]
-
-      // replaces with tx references by hash
-      transactions[chainId][hash] = txWithHash
-    },
     cancelTransaction(
       transactions,
       {
@@ -178,7 +154,6 @@ const localTransactionSlice = createSlice({
 export const {
   addTransaction,
   updateTransactionInfo,
-  applyTransactionHashToBatch,
   clearAllTransactions,
   checkedTransaction,
   finalizeTransaction,

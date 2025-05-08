@@ -1,11 +1,14 @@
 import React, { forwardRef, useState } from 'react'
 import { TextInput as NativeTextInput } from 'react-native'
-import { Flex, TouchableArea } from 'ui/src'
-import { Eye, EyeOff } from 'ui/src/components/icons'
+import { Flex, TouchableArea, useSporeColors } from 'ui/src'
+import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
+import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { iconSizes } from 'ui/src/theme'
 import { TextInput, TextInputProps } from 'uniswap/src/components/input/TextInput'
 
 export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(function _PasswordInput(props, ref) {
+  const colors = useSporeColors()
   const [showPassword, setShowPassword] = useState(false)
 
   const { value, placeholder, onChangeText, returnKeyType, onSubmitEditing, ...rest } = props
@@ -51,7 +54,11 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
         />
         <AnimatedFlex mx="$spacing12">
           <TouchableArea p="$spacing4" onPress={onPressEyeIcon}>
-            {showPassword ? <Eye color="$neutral2" size="$icon.20" /> : <EyeOff color="$neutral2" size="$icon.20" />}
+            {showPassword ? (
+              <EyeIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
+            ) : (
+              <EyeOffIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
+            )}
           </TouchableArea>
         </AnimatedFlex>
       </AnimatedFlex>

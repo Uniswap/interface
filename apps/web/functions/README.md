@@ -13,10 +13,10 @@ However, these server-side injected metatags do not automatically update during 
 Currently, there are 2 types of cloudflare functions developed
 
 - Meta Data Injectors - Workers that inject [Open Graph](https://ogp.me/) standardized meta tags into the `header` of specific webpages.
-  - Currently we support this functionality for two separate webpages: Token Detail Pages & Pool Detail Pages
+  - Currently we support this functionality for three separate webpages: NFT Assets, NFT Collections, and Token Detail Pages
   - These functions query data from GraphQL and then formats them into HTML `meta` tags to be injected
 - Dynamically Generated Images - Utilizes Vercel's [Open Graph Image Generation Library](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation) to create custom thumbnails for specific webpages
-  - Currently supports Token Detail Pages & Pool Detail Pages
+  - Currently supports NFT Assets, NFT Collections, and Token Detail Pages
   - These functions query data from GraphQL, and utilize `Satori` to convert HTML into a png image response which is then returned when the api is called.
   - Can be found in the `api/image` folder.
 

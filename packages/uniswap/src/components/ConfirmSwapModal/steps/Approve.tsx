@@ -2,8 +2,10 @@ import { useTranslation } from 'react-i18next'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
-import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
+import {
+  TokenApprovalTransactionStep,
+  TokenRevocationTransactionStep,
+} from 'uniswap/src/features/transactions/swap/types/steps'
 
 export function TokenApprovalTransactionStepRow({
   step,

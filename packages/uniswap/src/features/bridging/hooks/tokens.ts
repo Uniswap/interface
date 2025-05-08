@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { createEmptyTokenOptionFromBridgingToken } from 'uniswap/src/components/TokenSelector/utils'
-import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
+import { TokenOption } from 'uniswap/src/components/lists/types'
 import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
@@ -118,18 +118,16 @@ export function useBridgingTokenWithHighestBalance({
 }
 
 export function useBridgingTokensOptions({
-  oppositeSelectedToken,
+  input,
   walletAddress,
   chainFilter,
 }: {
-  oppositeSelectedToken: TradeableAsset | undefined
+  input: TradeableAsset | undefined
   walletAddress: Address | undefined
   chainFilter: UniverseChainId | null
 }): GqlResult<TokenOption[] | undefined> & { shouldNest?: boolean } {
-  const tokenIn = oppositeSelectedToken?.address
-    ? getTokenAddressFromChainForTradingApi(oppositeSelectedToken.address, oppositeSelectedToken.chainId)
-    : undefined
-  const tokenInChainId = toTradingApiSupportedChainId(oppositeSelectedToken?.chainId)
+  const tokenIn = input?.address ? getTokenAddressFromChainForTradingApi(input.address, input.chainId) : undefined
+  const tokenInChainId = toTradingApiSupportedChainId(input?.chainId)
   const {
     data: bridgingTokens,
     isLoading: loadingBridgingTokens,
@@ -155,7 +153,7 @@ export function useBridgingTokensOptions({
 
   const tokenOptions = useBridgingTokensToTokenOptions(bridgingTokens?.tokens, portfolioBalancesById)
   // Filter out tokens that are not on the current chain, unless the input token is the same as the current chain
-  const isSameChain = oppositeSelectedToken?.chainId === chainFilter
+  const isSameChain = input?.chainId === chainFilter
   const shouldFilterByChain = chainFilter !== null && !isSameChain
   const filteredTokenOptions = useMemo(
     () => filter(tokenOptions ?? null, shouldFilterByChain ? chainFilter : null),
@@ -211,10 +209,7 @@ function useBridgingTokensToTokenOptions(
 
         const isNative = token.address === NATIVE_ADDRESS_FOR_TRADING_API
         const currencyId = isNative ? buildNativeCurrencyId(chainId) : buildCurrencyId(chainId, token.address)
-        return {
-          ...(portfolioBalancesById?.[currencyId.toLowerCase()] ?? createEmptyTokenOptionFromBridgingToken(token)),
-          type: OnchainItemListOptionType.Token,
-        }
+        return portfolioBalancesById?.[currencyId.toLowerCase()] ?? createEmptyTokenOptionFromBridgingToken(token)
       })
       .filter((tokenOption): tokenOption is TokenOption => tokenOption !== undefined)
   }, [bridgingTokens, portfolioBalancesById])

@@ -8,13 +8,7 @@ module.exports = {
   root: true,
   extends: ['@uniswap/eslint-config/interface', 'plugin:storybook/recommended'],
   plugins: ['rulesdir'],
-  parserOptions: {
-    project: 'tsconfig.eslint.json',
-    tsconfigRootDir: __dirname,
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
+
   rules: {
     // TODO: had to add this rule to avoid errors on monorepo migration that didnt happen in interface
     'cypress/unsafe-to-chain-command': 'off',

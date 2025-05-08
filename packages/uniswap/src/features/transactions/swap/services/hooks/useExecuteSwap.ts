@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import {
   GetExecuteSwapService,
   createExecuteSwapService,
 } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { SetCurrentStepFn, SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'

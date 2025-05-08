@@ -14,7 +14,6 @@ import { persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
 import { ThemedText } from 'theme/components'
 import { Flex, Image, Text, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { ScanQr } from 'ui/src/components/icons/ScanQr'
 import { WalletFilled } from 'ui/src/components/icons/WalletFilled'
@@ -45,7 +44,7 @@ const RecentBadge = () => (
 function EmbeddedWalletIcon() {
   return (
     <Flex p="$spacing6" backgroundColor="$accent2" borderRadius="$rounded8">
-      <Passkey color="$accent1" size="$icon.20" />
+      <Passkey color="$accent1" size={iconSizes.icon20} />
     </Flex>
   )
 }
@@ -99,7 +98,7 @@ function getIcon({
         style={{
           width: iconSize,
           height: iconSize,
-          borderRadius: 8,
+          borderRadius: 12,
           border: `1px solid ${themeColors.surface3.val}`,
         }}
       />
@@ -120,8 +119,6 @@ function getConnectorText({
     return t('common.uniswapMobile')
   } else if (connectorId === AlternativeOption.OTHER_WALLETS) {
     return t('wallet.other')
-  } else if (connectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
-    return t('account.passkey.sign.in.title')
   } else {
     return connector?.name
   }
@@ -131,23 +128,12 @@ function RightSideDetail({
   isPendingConnection,
   isRecent,
   detected,
-  isOtherWallets,
 }: {
   isPendingConnection: boolean
   isRecent: boolean
   detected?: boolean
-  isOtherWallets?: boolean
 }) {
-  if (isPendingConnection) {
-    return <Loader />
-  } else if (isRecent) {
-    return <RecentBadge />
-  } else if (detected) {
-    return <DetectedBadge />
-  } else if (isOtherWallets) {
-    return <Chevron rotate="180deg" size="$icon.24" color="$neutral3" />
-  }
-  return null
+  return isPendingConnection ? <Loader /> : isRecent ? <RecentBadge /> : detected ? <DetectedBadge /> : null
 }
 
 function createWalletConnectionHandler({
@@ -259,10 +245,9 @@ export function Option({
       width="100%"
       justifyContent="space-between"
       position="relative"
-      px="$spacing12"
-      py="$spacing18"
+      p="$spacing18"
       cursor={isDisabled ? 'auto' : 'pointer'}
-      hoverStyle={{ backgroundColor: isDisabled ? '$surface2' : '$surface1Hovered' }}
+      hoverStyle={{ backgroundColor: isDisabled ? '$surface2' : '$surface3' }}
       opacity={isDisabled && !isPendingConnection ? 0.5 : 1}
       data-testid={`wallet-option-${connector?.type}`}
       onPress={handleConnect}
@@ -276,18 +261,13 @@ export function Option({
         }}
         element={InterfaceElementName.WALLET_TYPE_OPTION}
       >
-        <Flex row alignItems="center" gap="$gap12">
+        <Flex row alignItems="center" gap="$gap8">
           {icon}
-          <Text variant="body2" py="$spacing8">
+          <Text variant="buttonLabel2" py="$spacing8">
             {text}
           </Text>
         </Flex>
-        <RightSideDetail
-          isPendingConnection={isPendingConnection}
-          isRecent={isRecent}
-          detected={detected}
-          isOtherWallets={connectorId === AlternativeOption.OTHER_WALLETS}
-        />
+        <RightSideDetail isPendingConnection={isPendingConnection} isRecent={isRecent} detected={detected} />
       </Trace>
     </Flex>
   )

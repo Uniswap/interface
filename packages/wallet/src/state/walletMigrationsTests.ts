@@ -662,9 +662,3 @@ export function testMoveTokenAndNFTVisibility(migration: (state: any) => any, pr
   expect(result.favorites.tokensVisibility).toBeUndefined()
   expect(result.favorites.nftsVisibility).toBeUndefined()
 }
-
-export function testAddBatchedTransactions(migration: (state: any) => any, prevSchema: any): void {
-  const result = migration(prevSchema)
-  expect(result.batchedTransactions).toBeDefined()
-  expect(result.batchedTransactions).toEqual({})
-}

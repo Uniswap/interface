@@ -4,16 +4,14 @@ import { Swap } from 'ui/src/components/icons/Swap' // TODO: update to LP icon
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { CollectFeesSteps } from 'uniswap/src/features/transactions/liquidity/steps/collectFeesSteps'
-import { DecreasePositionTransactionStep } from 'uniswap/src/features/transactions/liquidity/steps/decreasePosition'
 import {
+  CollectFeesSteps,
+  DecreasePositionTransactionStep,
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
-} from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
-import {
   MigratePositionTransactionStep,
   MigratePositionTransactionStepAsync,
-} from 'uniswap/src/features/transactions/liquidity/steps/migrate'
+} from 'uniswap/src/features/transactions/swap/types/steps'
 
 const LPIcon = (): JSX.Element => (
   <Flex centered width="$spacing24" height="$spacing24" borderRadius="$roundedFull" backgroundColor="$DEP_blue400">

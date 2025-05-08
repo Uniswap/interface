@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { X } from 'ui/src/components/icons/X'
+import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
@@ -26,7 +27,7 @@ export default function SlippageWarningModal({ isOpen, onClose }: SlippageWarnin
     >
       {!isMobileApp && !isMobileWeb && (
         <TouchableArea alignSelf="flex-end" onPress={onClose}>
-          <X color="$neutral2" size="$icon.24" />
+          <X color="$neutral2" size={iconSizes.icon24} />
         </TouchableArea>
       )}
       <Flex flexDirection="column" alignItems="center" gap="$gap24">

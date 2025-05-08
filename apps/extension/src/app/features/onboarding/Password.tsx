@@ -66,7 +66,7 @@ export function Password({
       <OnboardingScreen
         Icon={
           <Square backgroundColor="$surface2" borderRadius="$rounded12" size={iconSizes.icon48}>
-            <Lock color="$neutral1" size="$icon.24" />
+            <Lock color="$neutral1" size={iconSizes.icon24} />
           </Square>
         }
         nextButtonEnabled={enableNext}

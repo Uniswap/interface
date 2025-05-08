@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ElementAfterText, Flex, Text, isWeb } from 'ui/src'
+import { ElementAfterText, Flex, Text, isWeb, useSporeColors } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -21,6 +21,7 @@ export function NetworkOption({
   isNew: boolean
 }): JSX.Element {
   const { t } = useTranslation()
+  const colors = useSporeColors()
   const info = chainId && getChainInfo(chainId)
 
   let content: ReactNode = null
@@ -53,7 +54,7 @@ export function NetworkOption({
     <Flex row alignItems="center" justifyContent="space-between" px="$spacing8" py={10}>
       {content}
       <Flex centered height={NETWORK_OPTION_ICON_SIZE} width={NETWORK_OPTION_ICON_SIZE}>
-        {currentlySelected && <CheckmarkCircle color="$neutral1" ml={OPTION_GAP} size="$icon.20" />}
+        {currentlySelected && <CheckmarkCircle color={colors.neutral1.get()} ml={OPTION_GAP} size={iconSizes.icon20} />}
       </Flex>
     </Flex>
   )

@@ -17,8 +17,6 @@ import { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchM
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
-import { PasskeyManagementModalState } from 'uniswap/src/features/passkey/PasskeyManagementModal'
-import { SmartWalletAdvancedSettingsModalState } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModalState } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -174,7 +172,6 @@ export type AppStackParamList = {
   [ModalName.BuyNativeToken]: BuyNativeTokenModalState
   [ModalName.HiddenTokenInfoModal]: undefined
   [ModalName.ScreenshotWarning]: { acknowledgeText?: string } | undefined
-  [ModalName.PasskeyManagement]: PasskeyManagementModalState
   [ModalName.PasskeysHelp]: undefined
   [ModalName.BiometricsModal]: undefined
   [ModalName.FiatCurrencySelector]: undefined
@@ -182,7 +179,6 @@ export type AppStackParamList = {
   [ModalName.EditLabelSettingsModal]: EditWalletSettingsModalState
   [ModalName.EditProfileSettingsModal]: EditWalletSettingsModalState
   [ModalName.ConnectionsDappListModal]: ConnectionsDappsListModalState
-  [ModalName.SmartWalletAdvancedSettingsModal]: SmartWalletAdvancedSettingsModalState
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

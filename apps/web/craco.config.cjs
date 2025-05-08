@@ -91,7 +91,6 @@ module.exports = {
       new ProvidePlugin({
         // - react-markdown requires process.cwd
         process: 'process/browser.js',
-        Buffer: ['buffer', 'Buffer'],
       }),
       new RetryChunkLoadPlugin({
         cacheBust: `function() {

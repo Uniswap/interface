@@ -126,9 +126,12 @@ function getThumbColor(
 ): string {
   'worklet'
   if (disabled && !isOn) {
-    return colors.neutral3.val
+    return isBranded ? colors.neutral2.val : colors.neutral3.val
   }
-  return colors.white.val
+  if (isBranded) {
+    return isOn ? colors.white.val : colors.neutral1.val
+  }
+  return isOn ? colors.surface1.val : colors.neutral1.val
 }
 
 function getIconColor(

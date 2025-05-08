@@ -13,18 +13,24 @@ import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
+import styled, { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { Text } from 'rebass'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { StyledInternalLink } from 'theme/components/Links'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+
+export const MigrateHeader = styled(ThemedText.H1Small)`
+  font-weight: 535;
+`
 
 function EmptyState({ message }: { message: ReactNode }) {
   return (
@@ -54,6 +60,7 @@ function toSushiLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 }
 
 export default function MigrateV2() {
+  const theme = useTheme()
   const account = useAccount()
   const navigate = useNavigate()
   const { state } = useLocation()
@@ -148,9 +155,9 @@ export default function MigrateV2() {
             >
               <Arrow direction="w" color="$neutral1" size={iconSizes.icon24} />
             </TouchableArea>
-            <Text variant="heading3" tag="h1" fontWeight="$medium">
+            <MigrateHeader>
               <Trans i18nKey="migrate.v2Title" />
-            </Text>
+            </MigrateHeader>
             <Flex width={iconSizes.icon48} height={iconSizes.icon36} />
           </Flex>
 
@@ -160,17 +167,17 @@ export default function MigrateV2() {
 
           {!account ? (
             <LightCard padding="40px">
-              <Text variant="body2" color="$neutral3" textAlign="center">
+              <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                 <Trans i18nKey="migrate.connectWallet" />
-              </Text>
+              </ThemedText.DeprecatedBody>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
-              <Text variant="body2" color="$neutral3" textAlign="center">
+              <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                 <Dots>
                   <Trans i18nKey="common.loading" />
                 </Dots>
-              </Text>
+              </ThemedText.DeprecatedBody>
             </LightCard>
           ) : v2Pairs.filter(([, pair]) => !!pair).length > 0 ? (
             <>

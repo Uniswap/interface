@@ -5,7 +5,6 @@ import { ListRenderItemInfo } from 'react-native'
 import { Flex, Inset, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
-import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { FORCurrencyOrBalance, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { getUnsupportedFORTokensWithBalance, isSupportedFORCurrency } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -43,11 +42,8 @@ function TokenOptionItemWrapper({
   const { quantity, balanceUSD } = currencyBalance || {}
   const isUnsupported = !isSupportedFORCurrency(currency)
 
-  const option: TokenOption | null = useMemo(
-    () =>
-      currencyInfo
-        ? { type: OnchainItemListOptionType.Token, currencyInfo, quantity: quantity || null, balanceUSD, isUnsupported }
-        : null,
+  const option = useMemo(
+    () => (currencyInfo ? { currencyInfo, quantity: quantity || null, balanceUSD, isUnsupported } : null),
     [currencyInfo, balanceUSD, quantity, isUnsupported],
   )
   const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])

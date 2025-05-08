@@ -9,13 +9,13 @@ import {
   MAX_UINT160,
   MAX_UINT256,
 } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/constants'
+import { SwapSendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import {
   AmountInMaxParam,
   AmountInParam,
   AmountOutMinParam,
   AmountOutParam,
   Param,
-  UniversalRouterCall,
   UniversalRouterCommand,
   V4SwapExactInParamSchema,
   V4SwapExactInSingleParamSchema,
@@ -50,7 +50,7 @@ export function formatUnits(amount: BigNumberish, units: number): string {
 }
 
 export function useSwapDetails(
-  parsedCalldata: UniversalRouterCall,
+  request: SwapSendTransactionRequest,
   dappUrl: string,
 ): {
   inputIdentifier: string | undefined
@@ -65,19 +65,19 @@ export function useSwapDetails(
   let outputValue: string = '0'
 
   // Attempt to find a V4_SWAP command
-  const v4Command = parsedCalldata.commands.find((command) => command.commandName.startsWith('V4_SWAP'))
+  const v4Command = request.parsedCalldata.commands.find((command) => command.commandName.startsWith('V4_SWAP'))
 
   if (v4Command) {
     // Extract details using the V4 helper
-    const v4Details = getTokenDetailsFromV4SwapCommands(v4Command, parsedCalldata.commands)
+    const v4Details = getTokenDetailsFromV4SwapCommands(v4Command)
     inputAddress = v4Details.inputAddress === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : v4Details.inputAddress
     outputAddress = v4Details.outputAddress === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : v4Details.outputAddress
     inputValue = v4Details.inputValue || '0'
     outputValue = v4Details.outputValue || '0'
   } else {
     // Fallback to V2/V3 extraction
-    const addresses = extractTokenAddresses(parsedCalldata.commands)
-    const amounts = getTokenAmounts(parsedCalldata.commands)
+    const addresses = extractTokenAddresses(request.parsedCalldata.commands)
+    const amounts = getTokenAmounts(request.parsedCalldata.commands)
 
     inputAddress = addresses.inputAddress
     outputAddress = addresses.outputAddress
@@ -199,10 +199,7 @@ function getTokenAddressesFromV2V3SwapCommands(command: UniversalRouterCommand):
   return { inputAddress, outputAddress }
 }
 
-function getTokenDetailsFromV4SwapCommands(
-  command: UniversalRouterCommand,
-  allCommands?: UniversalRouterCommand[],
-): {
+function getTokenDetailsFromV4SwapCommands(command: UniversalRouterCommand): {
   inputAddress?: string
   outputAddress?: string
   inputValue?: string
@@ -321,21 +318,6 @@ function getTokenDetailsFromV4SwapCommands(
 
       default:
         break
-    }
-  }
-
-  // Handle edge case where amountOutMinimum is zero
-  if (allCommands && isZeroBigNumberParam(outputValue)) {
-    const sweepCommand = allCommands.find(isUrCommandSweep)
-    const unwrapWethCommand = allCommands.find(isUrCommandUnwrapWeth)
-
-    const sweepAmountOutParam = sweepCommand?.params.find(isAmountMinParam)
-    const unwrapWethAmountOutParam = unwrapWethCommand?.params.find(isAmountMinParam)
-
-    const fallbackOutputValue = sweepAmountOutParam?.value || unwrapWethAmountOutParam?.value
-
-    if (fallbackOutputValue) {
-      outputValue = fallbackOutputValue
     }
   }
 

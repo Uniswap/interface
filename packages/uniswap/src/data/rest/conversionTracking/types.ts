@@ -2,6 +2,7 @@ export enum PlatformIdType {
   Google = 'gclid',
   Twitter = 'twclid',
   Reddit = 'rdt_cid',
+  Persona3 = 'prsna_id',
 }
 
 export type ConversionLead = {

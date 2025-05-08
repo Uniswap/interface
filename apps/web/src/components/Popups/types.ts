@@ -7,7 +7,6 @@ export enum PopupType {
   FailedSwitchNetwork = 'failedSwitchNetwork',
   SwitchNetwork = 'switchNetwork',
   Bridge = 'bridge',
-  Mismatch = 'mismatch',
 }
 
 export type PopupContent =
@@ -32,7 +31,4 @@ export type PopupContent =
       type: PopupType.Bridge
       inputChainId: UniverseChainId
       outputChainId: UniverseChainId
-    }
-  | {
-      type: PopupType.Mismatch
     }

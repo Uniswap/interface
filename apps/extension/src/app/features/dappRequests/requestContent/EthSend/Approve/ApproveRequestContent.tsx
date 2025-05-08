@@ -94,7 +94,6 @@ export function ApproveRequestContent({
 
   return (
     <DappRequestContent
-      contentHorizontalPadding="$spacing12"
       showNetworkCost
       confirmText={isRevoke ? t('dapp.request.revoke.action') : t('dapp.request.approve.action')}
       headerIcon={<CurrencyLogo hideNetworkLogo currencyInfo={tokenInfo} size={iconSizes.icon40} />}

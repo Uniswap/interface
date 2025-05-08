@@ -9,12 +9,9 @@ export async function registerPasskey(_challenge: string): Promise<string> {
 }
 
 export async function authenticatePasskey(_challenge: string): Promise<string> {
-  // an empty challenge signifies the user is sessioned and no authentication is needed
-  return _challenge.length
-    ? JSON.stringify(
-        await startAuthentication({
-          optionsJSON: JSON.parse(_challenge),
-        }),
-      )
-    : ''
+  return JSON.stringify(
+    await startAuthentication({
+      optionsJSON: JSON.parse(_challenge),
+    }),
+  )
 }

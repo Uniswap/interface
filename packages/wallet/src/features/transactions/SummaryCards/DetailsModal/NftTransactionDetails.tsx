@@ -65,7 +65,7 @@ export function NftTransactionContent({
   const onPressCollection = (): void => {
     // Collection should not be clickable on L2s
     if (chainId === UniverseChainId.Mainnet) {
-      navigateToNftCollection({ collectionAddress: nftSummaryInfo.address, chainId })
+      navigateToNftCollection({ collectionAddress: nftSummaryInfo.address })
       onClose()
     }
   }

@@ -1,8 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { DepositInfo } from 'components/Liquidity/types'
 import { useCurrencyInfo } from 'hooks/Tokens'
-import { useTokenBalanceWithBuffer } from 'pages/Pool/Positions/create/hooks'
-import { useNativeTokenPercentageBufferExperiment } from 'pages/Pool/Positions/create/hooks/useNativeTokenPercentageBufferExperiment'
 import { ReactNode, useState } from 'react'
 import { PositionField } from 'types/position'
 import { Flex } from 'ui/src'
@@ -54,11 +52,7 @@ export function DepositInputForm({
   amount1Loading,
   autofocus = true,
 }: InputFormProps) {
-  const bufferPercentage = useNativeTokenPercentageBufferExperiment()
   const [focusedInputField, setFocusedInputField] = useState(autofocus ? PositionField.TOKEN0 : undefined)
-
-  const token0BalanceWithBuffer = useTokenBalanceWithBuffer(currencyBalances?.[PositionField.TOKEN0], bufferPercentage)
-  const token1BalanceWithBuffer = useTokenBalanceWithBuffer(currencyBalances?.[PositionField.TOKEN1], bufferPercentage)
 
   // TODO(WEB-4920): when the backend returns the logo info make sure that there is no call being made
   // to graphql to retrieve it
@@ -91,7 +85,7 @@ export function DepositInputForm({
             currencyInfo={token0CurrencyInfo}
             currencyField={CurrencyField.INPUT}
             currencyAmount={currencyAmounts?.[PositionField.TOKEN0]}
-            currencyBalance={token0BalanceWithBuffer}
+            currencyBalance={currencyBalances?.[PositionField.TOKEN0]}
             onSetExactAmount={handleUserInput(PositionField.TOKEN0)}
             onToggleIsFiatMode={() => undefined}
             usdValue={currencyAmountsUSDValue?.[PositionField.TOKEN0]}
@@ -116,7 +110,7 @@ export function DepositInputForm({
             currencyInfo={token1CurrencyInfo}
             currencyField={CurrencyField.INPUT}
             currencyAmount={currencyAmounts?.[PositionField.TOKEN1]}
-            currencyBalance={token1BalanceWithBuffer}
+            currencyBalance={currencyBalances?.[PositionField.TOKEN1]}
             onSetExactAmount={handleUserInput(PositionField.TOKEN1)}
             onToggleIsFiatMode={() => undefined}
             usdValue={currencyAmountsUSDValue?.[PositionField.TOKEN1]}

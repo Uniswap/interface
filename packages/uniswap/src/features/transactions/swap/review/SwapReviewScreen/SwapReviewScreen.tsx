@@ -1,8 +1,8 @@
 import { ReactNode, memo } from 'react'
 import { Flex, isWeb } from 'ui/src'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
-import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
-import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useSwapDependencies } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
@@ -30,7 +30,7 @@ import { logger } from 'utilities/src/logger/logger'
 
 interface SwapReviewScreenProps {
   hideContent: boolean
-  onSubmitSwap?: () => Promise<void> | void
+  onSubmitSwap?: () => Promise<void>
 }
 
 export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | null {
@@ -110,7 +110,6 @@ function SwapReviewContent(): JSX.Element | null {
         submissionError={error.submissionError}
         setSubmissionError={error.setSubmissionError}
         resubmitSwap={error.onSwapButtonClick}
-        onPressRetry={error.onPressRetry}
         onClose={onPrev}
       />
     )

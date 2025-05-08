@@ -70,10 +70,7 @@ export function PresetAmountButton({
   const isNativeAsset = !!currencyBalance?.currency.isNative
   const [isShowingMaxNativeBalanceModal, setIsShowingMaxNativeBalanceModal] = useState(false)
 
-  const maxInputAmount = useMaxAmountSpend({
-    currencyAmount: currencyBalance,
-    txType: transactionType,
-  })
+  const maxInputAmount = useMaxAmountSpend({ currencyAmount: currencyBalance, txType: transactionType })
   const presetValueAmount = useMemo(() => {
     if (percentage === 100) {
       return maxInputAmount

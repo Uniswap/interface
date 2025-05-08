@@ -24,7 +24,6 @@ export const createOnboardingAccount = async (
     backups: existingBackups,
     name: `Wallet ${nextDerivationIndex + 1}`,
     pushNotificationsEnabled: true,
-    smartWalletConsent: true,
   }
 }
 

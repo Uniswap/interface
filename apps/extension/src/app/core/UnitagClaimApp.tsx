@@ -22,6 +22,7 @@ import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { Flex } from 'ui/src'
+import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { logger } from 'utilities/src/logger/logger'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
@@ -138,7 +139,9 @@ export default function UnitagClaimApp(): JSX.Element {
 
   return (
     <BaseAppContainer appName={DatadogAppNameTag.UnitagClaim}>
-      <RouterProvider router={router} />
+      <UnitagUpdaterContextProvider>
+        <RouterProvider router={router} />
+      </UnitagUpdaterContextProvider>
     </BaseAppContainer>
   )
 }

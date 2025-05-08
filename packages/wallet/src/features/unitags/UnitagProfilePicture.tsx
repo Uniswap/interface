@@ -1,7 +1,7 @@
 import { Flex, useSporeColors } from 'ui/src'
-import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
 import { isSVGUri } from 'utilities/src/format/urls'
+import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 

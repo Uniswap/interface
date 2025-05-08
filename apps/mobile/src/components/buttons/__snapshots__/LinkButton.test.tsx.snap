@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinkButton renders without error 1`] = `
+<View
+  hitSlop={
+    {
+      "bottom": 5,
+      "left": 5,
+      "right": 5,
+      "top": 5,
+    }
+  }
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "flexDirection": "column",
+      "opacity": 1,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 4,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={true}
+      style={
+        {
+          "color": {
+            "dynamic": {
+              "dark": "#FFFFFF",
+              "light": "#131313",
+            },
+          },
+          "flexShrink": 1,
+          "fontFamily": "Basel Grotesk",
+        }
+      }
+      suppressHighlighting={true}
+    >
+      link text
+    </Text>
+    <svg
+      color={
+        {
+          "dynamic": {
+            "dark": "#FF37C7",
+            "light": "#FF37C7",
+          },
+        }
+      }
+      data-file-name="SvgExternalLink"
+      height={20}
+      strokeWidth={1.5}
+      width={20}
+    />
+  </View>
+</View>
+`;

@@ -17,7 +17,7 @@ export const HorizontalTokenList = memo(function _HorizontalTokenList({
     <FlatList
       horizontal
       contentContainerStyle={{
-        paddingHorizontal: spacing.spacing16,
+        paddingHorizontal: spacing.spacing12,
         paddingVertical: spacing.spacing4,
       }}
       data={suggestedTokens}

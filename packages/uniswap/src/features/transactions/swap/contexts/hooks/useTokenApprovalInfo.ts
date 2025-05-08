@@ -1,6 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
 import { ApprovalRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
@@ -36,15 +35,6 @@ export type ApprovalTxInfo = {
   approvalGasFeeResult: GasFeeResult
   revokeGasFeeResult: GasFeeResult
 }
-
-function useApprovalWillBeBatchedWithSwap(chainId: UniverseChainId, routing: Routing | undefined): boolean {
-  const canBatchTransactions = useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(chainId))
-
-  const isBatchableFlow = Boolean(routing && !isUniswapX({ routing }))
-
-  return Boolean(canBatchTransactions) && isBatchableFlow
-}
-
 export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalTxInfo {
   const { account, chainId, wrapType, currencyInAmount, currencyOutAmount, routing } = params
 
@@ -100,8 +90,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     shadowGasStrategies,
   ])
 
-  const approvalWillBeBatchedWithSwap = useApprovalWillBeBatchedWithSwap(chainId, routing)
-  const shouldSkip = !approvalRequestArgs || isWrap || !address || approvalWillBeBatchedWithSwap
+  const shouldSkip = !approvalRequestArgs || isWrap || !address
 
   const { data, isLoading, error } = useCheckApprovalQuery({
     params: shouldSkip ? undefined : approvalRequestArgs,
@@ -120,7 +109,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     }
 
     // Approval is N/A for wrap transactions or unconnected state.
-    if (isWrap || !address || approvalWillBeBatchedWithSwap) {
+    if (isWrap || !address) {
       return {
         action: ApprovalAction.None,
         txRequest: null,
@@ -161,7 +150,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
       txRequest: null,
       cancelTxRequest: null,
     }
-  }, [address, approvalRequestArgs, approvalWillBeBatchedWithSwap, data, error, isWrap])
+  }, [address, approvalRequestArgs, data, error, isWrap])
 
   return useMemo(() => {
     const activeEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))

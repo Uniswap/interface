@@ -16,7 +16,7 @@ export function SwapTokenSelector({
   isModalOpen: boolean
   focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
 }): JSX.Element | null {
-  const { selectingCurrencyField, input, output } = useSwapFormContext()
+  const { selectingCurrencyField, input } = useSwapFormContext()
 
   const activeAccountAddress = useAccountMeta()?.address
   const chainId = useChainId()
@@ -40,7 +40,6 @@ export function SwapTokenSelector({
       activeAccountAddress={activeAccountAddress}
       chainId={chainId}
       input={input}
-      output={output}
       currencyField={selectingCurrencyField}
       flow={TokenSelectorFlow.Swap}
       variation={

@@ -14,7 +14,7 @@ export function DeletePasskeySpeedbumpMenu({
   const { t } = useTranslation()
 
   return (
-    <GenericPasskeyMenuModal show={show} onClose={() => setPasskeyMenuModalState(undefined)}>
+    <GenericPasskeyMenuModal show={show}>
       <Flex p="$gap12" borderRadius="$rounded12" backgroundColor="$statusCritical2">
         <WarningIcon color="$statusCritical" size={24} />
       </Flex>

@@ -13,7 +13,6 @@ import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useSporeColors } from 'ui/src'
-import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isPathBlocked } from 'utils/blockedPaths'
@@ -40,10 +39,6 @@ export default function App() {
   }, [searchParams, setShouldDisableNFTRoutes])
 
   useFeatureFlagUrlOverrides()
-
-  useEffect(() => {
-    initializeScrollWatcher()
-  }, [])
 
   const metaTags = useDynamicMetatags()
   const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'
@@ -95,7 +90,7 @@ export default function App() {
         </Helmet>
         <UserPropertyUpdater />
         <ResetPageScrollEffect />
-        {shouldOverridePageLayout ? <Body shouldRenderAppChrome={false} /> : <AppLayout />}
+        {shouldOverridePageLayout ? <Body /> : <AppLayout />}
       </Trace>
     </ErrorBoundary>
   )

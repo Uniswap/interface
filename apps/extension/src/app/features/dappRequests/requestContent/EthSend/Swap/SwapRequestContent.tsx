@@ -3,8 +3,8 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import { SwapDisplay } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapDisplay'
 import { ETH_ADDRESS } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/constants'
 import { formatUnits, useSwapDetails } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
+import { SwapSendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { UniswapXSwapRequest } from 'src/app/features/dappRequests/types/Permit2Types'
-import { UniversalRouterCall } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -41,14 +41,14 @@ function getTransactionTypeInfo({
 
 interface SwapRequestContentProps {
   transactionGasFeeResult: GasFeeResult
-  parsedCalldata: UniversalRouterCall
+  dappRequest: SwapSendTransactionRequest
   onCancel: () => Promise<void>
   onConfirm: (transactionTypeInfo?: TransactionTypeInfo) => Promise<void>
 }
 
 export function SwapRequestContent({
   transactionGasFeeResult,
-  parsedCalldata,
+  dappRequest,
   onCancel,
   onConfirm,
 }: SwapRequestContentProps): JSX.Element {
@@ -56,14 +56,14 @@ export function SwapRequestContent({
   const { defaultChainId } = useEnabledChains()
   const activeChain = useDappLastChainId(dappUrl) || defaultChainId
 
-  const { inputIdentifier, outputIdentifier, inputValue, outputValue } = useSwapDetails(parsedCalldata, dappUrl)
+  const { inputIdentifier, outputIdentifier, inputValue, outputValue } = useSwapDetails(dappRequest, dappUrl)
 
   const inputCurrencyInfo = useCurrencyInfo(inputIdentifier)
   const outputCurrencyInfo = useCurrencyInfo(outputIdentifier)
 
-  const isFirstCommandWrappingEth = parsedCalldata.commands[0]?.commandName === 'WRAP_ETH'
+  const isFirstCommandWrappingEth = dappRequest.parsedCalldata.commands[0]?.commandName === 'WRAP_ETH'
   const isLastCommandUnwrappingEth =
-    parsedCalldata.commands[parsedCalldata.commands.length - 1]?.commandName === 'UNWRAP_WETH'
+    dappRequest.parsedCalldata.commands[dappRequest.parsedCalldata.commands.length - 1]?.commandName === 'UNWRAP_WETH'
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(activeChain)
   const nativeCurrency = nativeCurrencyInfo?.currency

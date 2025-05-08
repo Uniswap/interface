@@ -21,6 +21,10 @@ export const StatWrapper = styled.div`
   flex: 1;
   padding-top: 24px;
   padding-bottom: 0px;
+
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    min-width: 168px;
+  }
 `
 const TokenStatsSection = styled.div`
   display: flex;

@@ -2,15 +2,11 @@ import { memo, useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Text } from 'ui/src'
 import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
-import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
-import { ItemRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
-import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
-import {
-  TokenOptionItem as BaseTokenOptionItem,
-  TokenContextMenuVariant,
-} from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
-import { TokenOption, TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
+import { ItemRowInfo } from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
+import { TokenOptionItem as BaseTokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
+import { TokenOption, TokenSelectorItemTypes } from 'uniswap/src/components/lists/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -26,7 +22,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 
-function isHorizontalListTokenItem(data: TokenSelectorOption): data is TokenOption[] {
+function isHorizontalListTokenItem(data: TokenSelectorItemTypes): data is TokenOption[] {
   return Array.isArray(data)
 }
 
@@ -40,7 +36,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   isKeyboardOpen,
 }: {
   tokenOption: TokenOption
-  section: OnchainItemSection<TokenOption>
+  section: TokenSection<TokenOption>
   index: number
   showWarnings: boolean
   showTokenAddress?: boolean
@@ -99,7 +95,6 @@ const TokenOptionItem = memo(function _TokenOptionItem({
     <BaseTokenOptionItem
       option={tokenOption}
       showTokenAddress={showTokenAddress}
-      contextMenuVariant={TokenContextMenuVariant.TokenSelector}
       rightElement={
         tokenOption.quantity && tokenOption.quantity !== 0 ? (
           <>
@@ -133,7 +128,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
 
 interface TokenSelectorListProps {
   onSelectCurrency: OnSelectCurrency
-  sections?: OnchainItemSection<TokenSelectorOption>[]
+  sections?: TokenSection<TokenSelectorItemTypes>[]
   chainFilter?: UniverseChainId | null
   showTokenWarnings: boolean
   refetch?: () => void
@@ -163,7 +158,7 @@ function _TokenSelectorList({
   usePerformanceLogger(DDRumManualTiming.TokenSelectorListRender, [chainFilter])
 
   const handleExpand = useCallback(
-    (item: TokenSelectorOption) => {
+    (item: TokenSelectorItemTypes) => {
       setExpandedItems((prev) => [...prev, key(item)])
     },
     [setExpandedItems],
@@ -176,31 +171,34 @@ function _TokenSelectorList({
     [expandedItems],
   )
 
-  const renderItem = ({ item, section, index }: ItemRowInfo<TokenSelectorOption>): JSX.Element => {
-    if (isHorizontalListTokenItem(item)) {
+  const renderItem = useCallback(
+    ({ item, section, index }: ItemRowInfo<TokenSelectorItemTypes>) => {
+      if (isHorizontalListTokenItem(item)) {
+        return (
+          <HorizontalTokenList
+            tokens={item}
+            section={section as TokenSection<TokenOption[]>}
+            index={index}
+            expanded={isExpandedItem(item)}
+            onSelectCurrency={onSelectCurrency}
+            onExpand={() => handleExpand(item)}
+          />
+        )
+      }
       return (
-        <HorizontalTokenList
-          tokens={item}
-          section={section as OnchainItemSection<TokenOption[]>}
+        <TokenOptionItem
           index={index}
-          expanded={isExpandedItem(item)}
+          isKeyboardOpen={isKeyboardOpen}
+          section={section as TokenSection<TokenOption>}
+          showTokenAddress={showTokenAddress}
+          showWarnings={showTokenWarnings}
+          tokenOption={item}
           onSelectCurrency={onSelectCurrency}
-          onExpand={() => handleExpand(item)}
         />
       )
-    }
-    return (
-      <TokenOptionItem
-        index={index}
-        isKeyboardOpen={isKeyboardOpen}
-        section={section as OnchainItemSection<TokenOption>}
-        showTokenAddress={showTokenAddress}
-        showWarnings={showTokenWarnings}
-        tokenOption={item}
-        onSelectCurrency={onSelectCurrency}
-      />
-    )
-  }
+    },
+    [onSelectCurrency, showTokenAddress, showTokenWarnings, isKeyboardOpen, handleExpand, isExpandedItem],
+  )
 
   return (
     <SelectorBaseList
@@ -218,7 +216,7 @@ function _TokenSelectorList({
   )
 }
 
-function key(item: TokenSelectorOption): CurrencyId {
+function key(item: TokenSelectorItemTypes): CurrencyId {
   if (isHorizontalListTokenItem(item)) {
     return item.map((token) => token.currencyInfo.currencyId).join('-')
   }

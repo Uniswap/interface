@@ -2,7 +2,11 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import { useGetPoolTokenPercentage, usePositionCurrentPrice, usePositionDerivedInfo } from 'components/Liquidity/hooks'
+import {
+  useGetPoolTokenPercentage,
+  usePositionCurrentPrice,
+  useV3OrV4PositionDerivedInfo,
+} from 'components/Liquidity/hooks'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
@@ -24,7 +28,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
-import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -60,7 +64,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     throw new Error('RemoveLiquidityModal must have an initial state when opening')
   }
 
-  const { feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1 } = usePositionDerivedInfo(positionInfo)
+  const { feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1 } = useV3OrV4PositionDerivedInfo(positionInfo)
 
   const { currency0Amount, currency1Amount, chainId, feeTier, version, poolId } = positionInfo
 

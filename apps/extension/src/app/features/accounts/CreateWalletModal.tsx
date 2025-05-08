@@ -4,9 +4,9 @@ import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
+import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 type CreateWalletModalProps = {

@@ -21,8 +21,9 @@ import {
   useMedia,
   useScrollbarStyles,
   useShadowPropsMedium,
+  useSporeColors,
 } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT, iconSizes, zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const DRAWER_SPECS = {
@@ -55,7 +56,7 @@ const Container = styled(Flex, {
   '$platform-web': { position: 'fixed' },
   top: DRAWER_SPECS.MARGIN,
   right: '0',
-  zIndex: zIndexes.dropdown,
+  zIndex: zIndexes.fixed,
   variants: {
     open: {
       true: { right: DRAWER_SPECS.MARGIN },
@@ -165,8 +166,8 @@ function AccountDropdown({ isOpen, onClose, children }: AccountDrawerProps) {
 
 function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
   const scrollbarStyles = useScrollbarStyles()
+  const colors = useSporeColors()
   const accountDrawer = useAccountDrawer()
-  const shadowProps = useShadowPropsMedium()
   const wasAccountDrawerOpen = usePrevious(accountDrawer.isOpen)
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -182,12 +183,12 @@ function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
         <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
           <TouchableArea group zIndex={zIndexes.background} width={60}>
             <CloseDrawer onPress={onClose} data-testid="close-account-drawer">
-              <ChevronsRight color="$neutral2" size="$icon.24" />
+              <ChevronsRight color={colors.neutral2.val} size={iconSizes.icon24} />
             </CloseDrawer>
           </TouchableArea>
         </Trace>
       )}
-      <SideDrawerContainer open={isOpen} {...shadowProps}>
+      <SideDrawerContainer open={isOpen}>
         {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
         <AccountDrawerScrollWrapper
           ref={scrollRef}

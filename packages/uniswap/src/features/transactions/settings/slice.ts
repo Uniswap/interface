@@ -18,12 +18,10 @@ export interface TransactionSettingsState {
   customDeadline?: number
   selectedProtocols: FrontendSupportedProtocol[]
   slippageWarningModalSeen: boolean
-  isV4HookPoolsEnabled: boolean
 }
 
 export const initialTransactionSettingsState: TransactionSettingsState = {
   selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
-  isV4HookPoolsEnabled: true,
   slippageWarningModalSeen: false,
 }
 

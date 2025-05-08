@@ -1,67 +1,36 @@
-import { PropsWithChildren } from 'react'
-import { Flex, FlexProps, useSporeColors } from 'ui/src'
+import styled from 'lib/styled-components'
+import { Box } from 'rebass/styled-components'
 
-const Card = ({ children, ...rest }: PropsWithChildren<FlexProps>) => {
-  return (
-    <Flex width="100%" padding="1rem" borderRadius="$rounded12" {...rest}>
-      {children}
-    </Flex>
-  )
-}
+const Card = styled(Box)<{ width?: string; padding?: string; border?: string; $borderRadius?: string }>`
+  width: ${({ width }) => width ?? '100%'};
+  padding: ${({ padding }) => padding ?? '1rem'};
+  border-radius: ${({ $borderRadius }) => $borderRadius ?? '16px'};
+  border: ${({ border }) => border};
+`
 export default Card
 
-export const LightCard = ({ children, ...rest }: PropsWithChildren<FlexProps>) => {
-  return (
-    <Card backgroundColor="$surface2" borderWidth={1} borderColor="$surface3" {...rest}>
-      {children}
-    </Card>
-  )
-}
+export const LightCard = styled(Card)`
+  border: 1px solid ${({ theme }) => theme.surface3};
+  background-color: ${({ theme }) => theme.surface2};
+`
 
-export const DarkGrayCard = ({ children, ...rest }: PropsWithChildren<FlexProps>) => {
-  return (
-    <Card backgroundColor="$surface3" {...rest}>
-      {children}
-    </Card>
-  )
-}
+export const DarkGrayCard = styled(Card)`
+  background-color: ${({ theme }) => theme.surface3};
+`
 
-export const OutlineCard = ({ children, ...rest }: PropsWithChildren<FlexProps>) => {
-  return (
-    <Card backgroundColor="$surface2" borderWidth={1} borderColor="$surface3" {...rest}>
-      {children}
-    </Card>
-  )
-}
+export const OutlineCard = styled(Card)`
+  border: 1px solid ${({ theme }) => theme.surface3};
+  background-color: ${({ theme }) => theme.surface2};
+`
 
-export const YellowCard = ({ children, ...rest }: PropsWithChildren<FlexProps>) => {
-  const colors = useSporeColors()
-  return (
-    <Card
-      backgroundColor="rgba(243, 132, 30, 0.05)"
-      {...rest}
-      $platform-web={{
-        color: colors.statusWarning.val,
-        ...rest['$platform-web'],
-      }}
-    >
-      {children}
-    </Card>
-  )
-}
+export const YellowCard = styled(Card)`
+  background-color: rgba(243, 132, 30, 0.05);
+  color: ${({ theme }) => theme.deprecated_yellow3};
+  font-weight: 535;
+`
 
-export const BlueCard = ({ children, ...rest }: PropsWithChildren<FlexProps>) => {
-  const colors = useSporeColors()
-  return (
-    <Card
-      backgroundColor="$accent2"
-      {...rest}
-      $platform-web={{
-        color: colors.accent1.val,
-        ...rest['$platform-web'],
-      }}
-    >
-      {children}
-    </Card>
-  )
-}
+export const BlueCard = styled(Card)`
+  background-color: ${({ theme }) => theme.accent2};
+  color: ${({ theme }) => theme.accent1};
+  border-radius: 12px;
+`
