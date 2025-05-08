@@ -220,6 +220,10 @@ export default function Pool() {
 
   const { userPositionsInIncentives: stakingPositions = [], positionsToWithdraw = [], isLoading: isStakingPositionsLoading } = useIncentivesData();
 
+  const uniquePositions = [...new Map([...stakingPositions, ...positionsToWithdraw].map(position => 
+    [position.incentive.id, position]
+  )).values()];
+
   const [openPositions, closedPositions] = positions?.reduce<
     [PositionDetails[], PositionDetails[]]
   >(
@@ -386,9 +390,9 @@ export default function Pool() {
             <MainContentWrapper>
               {isStakingPositionsLoading ? (
                 <PositionsLoadingPlaceholder />
-              ) : [...stakingPositions, ...positionsToWithdraw].length > 0 ? (
+              ) : uniquePositions.length > 0 ? (
                 <PositionList
-                  positions={[...stakingPositions, ...positionsToWithdraw]}
+                  positions={uniquePositions}
                   isStakingList={true}
                 />
               ) : (

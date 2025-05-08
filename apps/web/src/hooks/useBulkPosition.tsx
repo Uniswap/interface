@@ -347,7 +347,18 @@ export const useBulkPosition = (
   );
 
   const getIncentivePendingRewards = useCallback(
-    async (incentive: ProcessedIncentive) => {
+    async (incentive: ProcessedIncentive | {
+      rewardToken: {
+        id: string;
+        symbol: string;
+        decimals: number;
+      };
+      poolAddress: string;
+      startTime: number;
+      endTime: number;
+      vestingPeriod: string;
+      refundee: string;
+    }) => {
       if (!v3StakerContract) return null;
       try {
         const incentiveKey: IncentiveKey = {

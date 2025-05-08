@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { PositionsResponse } from 'hooks/useTotalPositions'
 import { useCurrency } from 'hooks/Tokens'
 import { getAddress } from 'viem'
 import { Percent } from '@uniswap/sdk-core'
@@ -8,8 +7,11 @@ import { Trans } from 'i18n'
 import { Link } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
-import HoverInlineText from 'components/HoverInlineText'
 import { useFormatter } from 'utils/formatNumbers'
+import { useBulkPosition } from 'hooks/useBulkPosition'
+import { PositionWithIncentive } from 'hooks/useIncentivesData'
+import { ethers } from 'ethers'
+import { BigNumber } from 'ethers'
 
 const LinkRow = styled(Link)`
   align-items: center;
@@ -47,11 +49,23 @@ const FeeTierText = styled(ThemedText.SubHeader)`
   color: ${({ theme }) => theme.neutral3};
 `
 
-export default function StakingPositionListItem({ position }: { position: PositionsResponse & { reward?: string } }) {
+export default function StakingPositionListItem({ position }: { position: PositionWithIncentive }) {
   const positionSummaryLink = `/pool/${position.id}`
   const currency0 = useCurrency(getAddress(position.pool.token0?.id ?? ''))
   const currency1 = useCurrency(getAddress(position.pool.token1?.id ?? ''))
   const { formatDelta, formatTickPrice } = useFormatter()
+  const [pendingReward, setPendingReward] = useState<BigNumber>(BigNumber.from(0))
+  const { getIncentivePendingRewards } = useBulkPosition(position.id, position.pool.id, [])
+
+  useEffect(() => {
+    const fetchRewards = async () => {
+      const rewards = await getIncentivePendingRewards(position.incentive)
+      setPendingReward(rewards || BigNumber.from(0))
+    }
+    fetchRewards()
+    const interval = setInterval(fetchRewards, 10000)
+    return () => clearInterval(interval)
+  }, [getIncentivePendingRewards, position.incentive])
 
   return (
     <LinkRow to={positionSummaryLink}>
@@ -64,7 +78,8 @@ export default function StakingPositionListItem({ position }: { position: Positi
           <FeeTierText> {formatDelta(parseFloat(new Percent(position.pool.feeTier, 1_000_000).toSignificant()))}</FeeTierText>
         </PrimaryPositionIdData>
         <ThemedText.BodyPrimary>
-          <Trans i18nKey="common.rewards" />: {position.reward}
+          <Trans i18nKey="common.pendingRewards" />: {Number(ethers.utils.formatEther(pendingReward)).toFixed(6)} &nbsp;
+          {position.incentive.rewardToken.symbol}
         </ThemedText.BodyPrimary>
       </RowBetween>
     </LinkRow>
