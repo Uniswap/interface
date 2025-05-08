@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
+import { ActionCanNotBeCompletedContent } from 'src/app/features/dappRequests/requestContent/ActionCanNotBeCompleted/ActionCanNotBeCompletedContent'
 import { UniswapXSwapRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapRequestContent'
 import { DomainContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/DomainContent'
 import { MaybeExplorerLinkedAddress } from 'src/app/features/dappRequests/requestContent/SignTypeData/MaybeExplorerLinkedAddress'
@@ -10,6 +11,7 @@ import { EIP712Message, isEIP712TypedData } from 'src/app/features/dappRequests/
 import { isPermit2, isUniswapXSwapRequest } from 'src/app/features/dappRequests/types/Permit2Types'
 import { Flex, Text } from 'ui/src'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -42,6 +44,7 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
 
 function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestProps): JSX.Element | null {
   const { t } = useTranslation()
+  const getHasMismatch = useHasAccountMismatchCallback()
 
   const parsedTypedData = JSON.parse(dappRequest.typedData)
 
@@ -51,6 +54,11 @@ function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestP
 
   const { name, version, chainId: domainChainId, verifyingContract, salt } = parsedTypedData?.domain || {}
   const chainId = toSupportedChainId(domainChainId)
+
+  const hasMismatch = chainId ? getHasMismatch(chainId) : false
+  if (hasMismatch) {
+    return <ActionCanNotBeCompletedContent />
+  }
 
   if (isUniswapXSwapRequest(parsedTypedData)) {
     return <UniswapXSwapRequestContent typedData={parsedTypedData} />

@@ -1,6 +1,7 @@
 import { useTheme } from 'lib/styled-components'
 import { ComponentProps } from 'react'
 
+// NOTE: until this view is simplified / optimized, it must stay out of the initial bundle!
 export const WalletOneLinkQR = (props: ComponentProps<'svg'>) => {
   const theme = useTheme()
   const bg = theme.darkMode ? 'black' : 'white'

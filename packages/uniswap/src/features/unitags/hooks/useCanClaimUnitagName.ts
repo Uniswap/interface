@@ -10,7 +10,7 @@ const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
 
 // Helper function to enforce unitag length and alphanumeric characters
-const getUnitagFormatError = (unitag: string, t: TFunction): string | undefined => {
+export const getUnitagFormatError = (unitag: string, t: TFunction): string | undefined => {
   if (unitag.length < MIN_UNITAG_LENGTH) {
     return t('unitags.username.error.min', {
       number: MIN_UNITAG_LENGTH,

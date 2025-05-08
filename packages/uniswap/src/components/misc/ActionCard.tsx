@@ -9,6 +9,8 @@ export interface ActionCardItem {
   elementName: ElementNameType
   badgeText?: string
   containerProps?: FlexProps
+  hoverStyle?: FlexProps
+  leftAlign?: boolean
   onPress?: () => void
   BackgroundImageWrapperCallback?: React.FC<{ children: React.ReactNode }>
 }
@@ -20,6 +22,8 @@ export const ActionCard = ({
   icon,
   elementName,
   containerProps,
+  hoverStyle,
+  leftAlign = false,
   BackgroundImageWrapperCallback,
 }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
@@ -29,16 +33,25 @@ export const ActionCard = ({
       borderRadius="$rounded24"
       borderWidth="$spacing1"
       overflow="hidden"
+      hoverStyle={hoverStyle}
       onPress={onPress}
     >
       <BackgroundWrapper BackgroundImageWrapper={BackgroundImageWrapperCallback}>
-        <Flex centered shrink alignContent="center" gap="$spacing4" px="$spacing20" py="$spacing12" {...containerProps}>
+        <Flex
+          shrink
+          centered={!leftAlign}
+          alignContent="center"
+          gap="$spacing4"
+          px="$spacing20"
+          py="$spacing12"
+          {...containerProps}
+        >
           {icon}
-          <Flex centered shrink alignContent="center">
-            <Text textAlign="center" variant="buttonLabel2">
+          <Flex shrink centered={!leftAlign} alignContent={leftAlign ? 'flex-start' : 'center'}>
+            <Text textAlign={leftAlign ? 'left' : 'center'} variant="buttonLabel2">
               {title}
             </Text>
-            <Text color="$neutral2" textAlign="center" variant="body3">
+            <Text color="$neutral2" textAlign={leftAlign ? 'left' : 'center'} variant="body3">
               {blurb}
             </Text>
           </Flex>

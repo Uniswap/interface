@@ -30,7 +30,7 @@ export function OptionCard({
           height={iconSizes.icon32}
           width={iconSizes.icon32}
         >
-          <Icon color="$accent1" size={iconSizes.icon16} />
+          <Icon color="$accent1" size="$icon.16" />
         </Circle>
 
         <Flex gap="$spacing4">

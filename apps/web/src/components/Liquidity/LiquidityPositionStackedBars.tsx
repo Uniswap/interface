@@ -48,7 +48,7 @@ export const LiquidityPositionStackedBars = ({ bars }: LiquidityPositionStackedB
           <Flex row alignItems="center" gap="$spacing6" key={i}>
             <CurrencyLogo currencyInfo={bar.currencyInfo} size={16} />
             <Text variant="body3" color="$neutral1">
-              {bar.value.equalTo(new Percent(0, 100)) ? '0%' : formatPercent(bar.value.toFixed(6))}
+              {bar.value.equalTo(new Percent(0, 100)) ? '0%' : formatPercent(scale(safePercentToNumber(bar.value)))}
             </Text>
           </Flex>
         ))}

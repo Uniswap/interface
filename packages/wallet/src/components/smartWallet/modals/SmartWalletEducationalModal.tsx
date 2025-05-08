@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Sparkle } from 'ui/src/components/icons/Sparkle'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { SmartWalletModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -10,7 +11,6 @@ interface SmartWalletEducationalModalProps {
 }
 
 export function SmartWalletEducationalModal({ isOpen, onClose }: SmartWalletEducationalModalProps): JSX.Element {
-  const colors = useSporeColors()
   const { t } = useTranslation()
   return (
     <SmartWalletModal
@@ -26,7 +26,7 @@ export function SmartWalletEducationalModal({ isOpen, onClose }: SmartWalletEduc
           justifyContent="center"
           mb="$spacing4"
         >
-          <Sparkle color={colors.accent1.val} size="$icon.24" />
+          <Sparkle color="$accent1" size="$icon.24" />
         </Flex>
       }
       title={t('smartWallets')}
@@ -44,7 +44,7 @@ export function SmartWalletEducationalModal({ isOpen, onClose }: SmartWalletEduc
       primaryButtonVariant="default"
       primaryButtonEmphasis="secondary"
       primaryButtonOnClick={onClose}
-      learnMoreUrl="#"
+      learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
       modalName={ModalName.SmartWalletEducationalModal}
       onClose={onClose}
     />

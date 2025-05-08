@@ -9,9 +9,11 @@ import { PageType, useIsPage } from 'hooks/useIsPage'
 import { BuyForm } from 'pages/Swap/Buy/BuyForm'
 import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
 import { SendForm } from 'pages/Swap/Send/SendForm'
-import { DeadlineOverride } from 'pages/Swap/settings/DeadlineOverride'
+import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
+import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
@@ -23,21 +25,20 @@ import { Flex, SegmentedControl, SegmentedControlOption, Text, Tooltip, styled }
 import { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
 import { SwapDependenciesContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContextProvider'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/ProtocolPreference'
-import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Slippage/Slippage'
+import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -80,6 +81,7 @@ export default function SwapPage() {
           initialTypedValue={initialTypedValue}
           initialIndependentField={initialField}
           syncTabToUrl={true}
+          usePersistedFilteredChainIds
         />
       </PageWrapper>
       {location.pathname === '/swap' && <SwitchLocaleLink />}
@@ -106,6 +108,7 @@ export function Swap({
   syncTabToUrl,
   swapRedirectCallback,
   tokenColor,
+  usePersistedFilteredChainIds = false,
 }: {
   chainId?: UniverseChainId
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -118,16 +121,17 @@ export function Swap({
   hideFooter?: boolean
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
+  usePersistedFilteredChainIds?: boolean
 }) {
   const isExplorePage = useIsPage(PageType.EXPLORE)
-
-  const { isTestnetModeEnabled } = useEnabledChains()
-  const isSharedSwapDisabled = isTestnetModeEnabled && isExplorePage
+  const isModeMismatch = useIsModeMismatch(chainId)
+  const isSharedSwapDisabled = isModeMismatch && isExplorePage
 
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
 
   const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
+  const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
 
   const prefilledState = useSwapPrefilledState({
     input,
@@ -137,6 +141,7 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
     selectingCurrencyChainId: swapOutputChainId,
     skipFocusOnCurrencyField: isMobileWeb,
+    filteredChainIdsOverride: usePersistedFilteredChainIds ? persistedFilteredChainIds : undefined,
   })
 
   return (
@@ -248,6 +253,9 @@ function UniversalSwapFlow({
     }))
   }, [t, currentTab])
 
+  const swapSettings = useWebSwapSettings()
+  const resetDisableOneClickSwap = useResetOverrideOneClickSwapFlag()
+
   return (
     <Flex>
       {!hideHeader && (
@@ -266,7 +274,7 @@ function UniversalSwapFlow({
         <Flex gap="$spacing16">
           <SwapDependenciesContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
             <SwapFlow
-              settings={[Slippage, DeadlineOverride, ProtocolPreference]}
+              settings={swapSettings}
               hideHeader={hideHeader}
               hideFooter={hideFooter}
               onClose={noop}
@@ -274,6 +282,7 @@ function UniversalSwapFlow({
               onCurrencyChange={onCurrencyChange}
               prefilledState={prefilledState}
               tokenColor={tokenColor}
+              onSubmitSwap={resetDisableOneClickSwap}
             />
           </SwapDependenciesContextProvider>
           <SwapBottomCard />

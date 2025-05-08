@@ -9,6 +9,7 @@ import {
   getClassicSwapTxAndGasInfo,
   getFallbackSwapTxAndGasInfo,
   getWrapTxAndGasInfo,
+  usePermitTxInfo,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -46,6 +47,8 @@ export function useSwapTxAndGasInfo({
     tokenApprovalInfo,
   })
 
+  const permitTxInfo = usePermitTxInfo({ quote: trade?.quote })
+
   return useMemo(() => {
     switch (trade?.routing) {
       case Routing.DUTCH_V2:
@@ -55,12 +58,12 @@ export function useSwapTxAndGasInfo({
       case Routing.BRIDGE:
         return getBridgeSwapTxAndGasInfo({ trade, swapTxInfo, approvalTxInfo })
       case Routing.CLASSIC:
-        return getClassicSwapTxAndGasInfo({ trade, swapTxInfo, approvalTxInfo })
+        return getClassicSwapTxAndGasInfo({ trade, swapTxInfo, approvalTxInfo, permitTxInfo })
       default:
         if (isWrapAction(wrapType)) {
           return getWrapTxAndGasInfo({ swapTxInfo })
         }
         return getFallbackSwapTxAndGasInfo({ swapTxInfo, approvalTxInfo })
     }
-  }, [approvalTxInfo, swapTxInfo, trade, wrapType])
+  }, [approvalTxInfo, permitTxInfo, swapTxInfo, trade, wrapType])
 }

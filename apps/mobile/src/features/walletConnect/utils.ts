@@ -1,20 +1,19 @@
 import { WalletKitTypes } from '@reown/walletkit'
 import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
 import { utils } from 'ethers'
-import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
+import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
   SignRequest,
   TransactionRequest,
-  WalletCapabilitiesRequest,
   WalletGetCallsStatusRequest,
+  WalletGetCapabilitiesRequest,
   WalletSendCallsRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { EthSignMethod } from 'uniswap/src/types/walletConnect'
+import { EthMethod, EthSignMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
+import { generateBatchId } from 'wallet/src/features/batchedTransactions/utils'
 import { GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappRequests/types'
-
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.
  * Assumes each namespace has been validated and is supported by the app with `validateProposalNamespaces()`.
@@ -88,7 +87,7 @@ export const getAccountAddressFromEIP155String = (account: string): Address | nu
  * @param dapp Dapp metadata
  * @returns Base request object with common properties
  */
-function createBaseRequest<T extends EthMethod>(
+function createBaseRequest<T extends WalletConnectEthMethod>(
   method: T,
   topic: string,
   internalId: number,
@@ -188,20 +187,20 @@ export const parseTransactionRequest = (
 /**
  * Formats WalletCapabilitiesRequest object from parameters
  *
- * @param {EthMethod.GetCapabilities} method type of method
+ * @param {EthMethod.WalletGetCapabilities} method type of method
  * @param {string} topic id for the WalletConnect session
  * @param {number} internalId id for the WalletConnect request
  * @param {SignClientTypes.Metadata} dapp metadata for the dapp requesting capabilities
  * @param {[string, string[]?]} requestParams parameters of the request [Wallet Address, [Chain IDs]?]
- * @returns {WalletCapabilitiesRequest} formatted request object
+ * @returns {WalletGetCapabilitiesRequest} formatted request object
  */
 export const parseGetCapabilitiesRequest = (
-  method: EthMethod.GetCapabilities,
+  method: EthMethod.WalletGetCapabilities,
   topic: string,
   internalId: number,
   dapp: SignClientTypes.Metadata,
   requestParams: [string, string[]?],
-): WalletCapabilitiesRequest => {
+): WalletGetCapabilitiesRequest => {
   const [address, chainIds] = requestParams
   const parsedChainIds = chainIds
     ?.map((chainId) => toSupportedChainId(chainId))
@@ -210,6 +209,7 @@ export const parseGetCapabilitiesRequest = (
   return {
     ...createBaseRequest(method, topic, internalId, address, dapp), // 0 as chainId since it's not specific to a chain
     chainIds: parsedChainIds,
+    account: address,
   }
 }
 
@@ -222,9 +222,9 @@ export const parseSendCallsRequest = (
   account: Address,
 ): WalletSendCallsRequest => {
   const sendCallsParam = requestParams[0]
-  const requestId = sendCallsParam.id || 'mock-batch-id (will be txID or `id` from request)'
+  const requestId = sendCallsParam.id || generateBatchId()
   return {
-    ...createBaseRequest(EthMethod.SendCalls, topic, internalId, sendCallsParam.from ?? account, dapp),
+    ...createBaseRequest(EthMethod.WalletSendCalls, topic, internalId, sendCallsParam.from ?? account, dapp),
     chainId,
     calls: sendCallsParam.calls,
     capabilities: sendCallsParam.capabilities || {},
@@ -244,7 +244,7 @@ export const parseGetCallsStatusRequest = (
 ): WalletGetCallsStatusRequest => {
   const requestId = requestParams[0]
   return {
-    ...createBaseRequest(EthMethod.GetCallsStatus, topic, internalId, account, dapp),
+    ...createBaseRequest(EthMethod.WalletGetCallsStatus, topic, internalId, account, dapp),
     chainId,
     id: requestId,
   }

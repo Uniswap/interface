@@ -10,7 +10,6 @@ import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { Button, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
 import { Lightning, Ticket, UserSquare } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -83,7 +82,7 @@ export function UnitagsIntroModal({ route }: AppStackScreenProp<typeof ModalName
 function BodyItem({ Icon, title }: { Icon: GeneratedIcon; title: string }): JSX.Element {
   return (
     <Flex row alignItems="center" gap="$spacing16">
-      <Icon color="$accent1" size={iconSizes.icon20} strokeWidth={2} />
+      <Icon color="$accent1" size="$icon.20" strokeWidth={2} />
       <Text color="$neutral2" variant="body3">
         {title}
       </Text>

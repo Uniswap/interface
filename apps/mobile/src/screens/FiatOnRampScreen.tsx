@@ -56,7 +56,7 @@ import {
   DecimalPadCalculatedSpaceId,
   DecimalPadInput,
   DecimalPadInputRef,
-} from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
+} from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'

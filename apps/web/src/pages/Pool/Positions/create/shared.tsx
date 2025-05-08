@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, GeneratedIcon, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { iconSizes } from 'ui/src/theme'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
@@ -41,7 +40,7 @@ export function AdvancedButton({
   return (
     <Flex row gap="$spacing8" alignItems="center">
       <Flex row gap="$spacing4" alignItems="center">
-        <Icon size={iconSizes.icon16} color="$neutral2" />
+        <Icon size="$icon.16" color="$neutral2" />
         <Trace logPress={!!elementName} element={elementName}>
           <Text
             variant="body3"
@@ -61,7 +60,7 @@ export function AdvancedButton({
       {tooltipText && (
         <MouseoverTooltip text={tooltipText} placement="auto" style={{ maxHeight: '16px' }}>
           <Flex>
-            <InfoCircleFilled size={iconSizes.icon16} color="$neutral3" />
+            <InfoCircleFilled size="$icon.16" color="$neutral3" />
           </Flex>
         </MouseoverTooltip>
       )}

@@ -19,6 +19,7 @@ import {
   SwapSettingId,
   type SwapSettingConfig,
 } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
 const POPOVER_WIDTH = 320
@@ -198,7 +199,7 @@ function TransactionSettingsModalInterface({
       shadowRadius={6}
       width={POPOVER_WIDTH}
       isOpen={isOpen}
-      webBottomSheetProps={{ px: '$padding16' }}
+      webBottomSheetProps={{ px: '$padding16', testID: TestID.MobileWebSettingsMenu }}
     >
       <TransactionSettingsModalContent
         defaultTitle={defaultTitle}

@@ -31,7 +31,7 @@ export function PasskeyImport(): JSX.Element {
       <Flex grow height={SCREEN_HEIGHT}>
         <Trace
           logImpression
-          properties={{ flow: ExtensionOnboardingFlow.Import }}
+          properties={{ flow: ExtensionOnboardingFlow.Passkey }}
           screen={ExtensionOnboardingScreens.PasskeyImport}
         >
           {importedAddress ? (

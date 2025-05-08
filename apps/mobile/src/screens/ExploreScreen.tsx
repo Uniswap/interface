@@ -1,30 +1,24 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, TextInput } from 'react-native'
+import { TextInput } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedRef } from 'react-native-reanimated'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
-import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
-import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
+import { ExploreScreenSearchResultsList } from 'src/components/explore/search/ExploreScreenSearchResultsList'
 import { Screen } from 'src/components/layout/Screen'
-import { Flex, flexStyles } from 'ui/src'
+import { Flex } from 'ui/src'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
-import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
+import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
-import { useDebounce } from 'utilities/src/time/timing'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 
 // From design to avoid layout thrash as icons show and hide
 const MIN_SEARCH_INPUT_HEIGHT = 52
@@ -38,17 +32,17 @@ export function ExploreScreen(): JSX.Element {
   const listRef = useAnimatedRef<FlatList>()
   useScrollToTop(listRef)
 
-  const searchRevampEnabled = useFeatureFlag(FeatureFlags.SearchRevamp)
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const debouncedSearchQuery = useDebounce(searchQuery).trim()
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const textInputRef = useRef<TextInput>(null)
-  const [selectedChain, setSelectedChain] = useState<UniverseChainId | null>(null)
   // TODO(WALL-5482): investigate list rendering performance/scrolling issue
   const canRenderList = useRenderNextFrame(!isSearchMode)
 
+  const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
+    useFilterCallbacks(null, ModalName.Search)
+
   const onSearchChangeText = (newSearchFilter: string): void => {
-    setSearchQuery(newSearchFilter)
+    onChangeText(newSearchFilter)
+    textInputRef.current?.setNativeProps({ text: newSearchFilter })
   }
 
   const onSearchFocus = (): void => {
@@ -63,10 +57,6 @@ export function ExploreScreen(): JSX.Element {
     setIsSearchMode(false)
   }
 
-  const onScroll = useCallback(() => {
-    textInputRef.current?.blur()
-  }, [])
-
   return (
     <Screen backgroundColor="$surface1" edges={['top']}>
       <HandleBar backgroundColor="none" />
@@ -80,7 +70,7 @@ export function ExploreScreen(): JSX.Element {
                 <NetworkFilter
                   includeAllNetworks
                   chainIds={chains}
-                  selectedChain={selectedChain}
+                  selectedChain={chainFilter}
                   styles={{ buttonPaddingY: '$none' }}
                   onDismiss={dismissNativeKeyboard}
                   onPressChain={(newChainId) => {
@@ -88,7 +78,7 @@ export function ExploreScreen(): JSX.Element {
                       networkChainId: newChainId ?? 'all',
                     })
 
-                    setSelectedChain(newChainId)
+                    onChangeChainFilter(newChainId)
                   }}
                 />
               </Flex>
@@ -103,40 +93,12 @@ export function ExploreScreen(): JSX.Element {
         />
       </Flex>
       {isSearchMode ? (
-        <KeyboardAvoidingView behavior="height" style={flexStyles.fill}>
-          <Flex p="$spacing4" />
-          {searchRevampEnabled ? (
-            // TODO(WEB-6768): integrate SearchModalList into mobile ExploreScreen
-            searchQuery && searchQuery.length > 0 ? (
-              <SearchModalResultsList
-                chainFilter={selectedChain}
-                debouncedParsedSearchFilter={debouncedSearchQuery}
-                debouncedSearchFilter={debouncedSearchQuery}
-                parsedChainFilter={selectedChain}
-                searchFilter={searchQuery ?? ''}
-                onSelect={() => {}}
-              />
-            ) : (
-              <SearchModalNoQueryList chainFilter={selectedChain} onSelect={() => {}} />
-            )
-          ) : debouncedSearchQuery.length === 0 ? (
-            // Mimic ScrollView behavior with FlatList
-            // Needs to be from gesture handler to work on android within BottomSheelModal
-            <FlatList
-              ListHeaderComponent={<SearchEmptySection selectedChain={selectedChain} />}
-              data={[]}
-              keyExtractor={(): string => 'search-empty-section-container'}
-              keyboardShouldPersistTaps="always"
-              renderItem={null}
-              scrollEventThrottle={16}
-              showsHorizontalScrollIndicator={false}
-              showsVerticalScrollIndicator={false}
-              onScroll={onScroll}
-            />
-          ) : (
-            <SearchResultsSection searchQuery={debouncedSearchQuery} selectedChain={selectedChain} />
-          )}
-        </KeyboardAvoidingView>
+        <ExploreScreenSearchResultsList
+          searchQuery={searchFilter ?? ''}
+          parsedSearchQuery={parsedSearchFilter}
+          chainFilter={chainFilter ?? parsedChainFilter}
+          textInputRef={textInputRef}
+        />
       ) : (
         isSheetReady && canRenderList && <ExploreSections listRef={listRef} />
       )}

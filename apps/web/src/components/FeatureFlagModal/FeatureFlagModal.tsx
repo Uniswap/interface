@@ -1,24 +1,22 @@
-import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
+import { useModalState } from 'hooks/useModalState'
 import styledDep from 'lib/styled-components'
 import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import { ChangeEvent, PropsWithChildren, useCallback } from 'react'
-import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { Button, Flex, ModalCloseIcon, Text, styled } from 'ui/src'
 import { LayerRow } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import {
   DynamicConfigKeys,
   DynamicConfigs,
   ExternallyConnectableExtensionConfigKey,
   NetworkRequestsConfigKey,
-  QuickRouteChainsConfigKey,
 } from 'uniswap/src/features/gating/configs'
 import { Layers } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
 
 const CenteredRow = styled(Flex, {
@@ -152,13 +150,12 @@ function DynamicConfigDropdown<
 }
 
 export default function FeatureFlagModal() {
-  const open = useModalIsOpen(ModalName.FeatureFlags)
-  const closeModal = useCloseModal()
+  const { isOpen, closeModal } = useModalState(ModalName.FeatureFlags)
   const removeAllOverrides = () => {
     getOverrideAdapter().removeAllOverrides()
   }
   return (
-    <Modal name={ModalName.FeatureFlags} isModalOpen={open} onClose={closeModal} padding={0}>
+    <Modal name={ModalName.FeatureFlags} isModalOpen={isOpen} onClose={closeModal} padding={0}>
       <Flex py="$gap20" px="$gap16" gap="$gap8">
         <CenteredRow borderBottomColor="$surface3" borderBottomWidth={1}>
           <Flex row grow alignItems="center" justifyContent="space-between">
@@ -170,35 +167,46 @@ export default function FeatureFlagModal() {
           <ModalCloseIcon onClose={closeModal} />
         </CenteredRow>
         <Flex maxHeight="600px" pb="$gap8" overflow="scroll" $md={{ maxHeight: 'unset' }}>
-          <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
-          <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
-          <FeatureFlagOption
-            flag={FeatureFlags.IndicativeSwapQuotes}
-            label="[Universal Swap Flow Only] Enable Quick Routes"
-          />
-          <FeatureFlagOption flag={FeatureFlags.InstantTokenBalanceUpdate} label="Instant token balance update" />
-          <FeatureFlagOption
-            flag={FeatureFlags.UniswapXPriorityOrdersBase}
-            label="UniswapX Priority Orders (on Base)"
-          />
-          <FeatureFlagOption
-            flag={FeatureFlags.UniswapXPriorityOrdersUnichain}
-            label="UniswapX Priority Orders (on Unichain)"
-          />
-          <FeatureFlagOption
-            flag={FeatureFlags.Eip6936Enabled}
-            label="Enable EIP-6963: Multi Injected Provider Discovery"
-          />
-          <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-          <FeatureFlagOption flag={FeatureFlags.MigrateV3ToV4} label="Enable migrate flow from v3 -> v4" />
-          <FeatureFlagOption flag={FeatureFlags.PositionPageV2} label="Enable Position Page V2" />
-          <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
-          <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
-          <FeatureFlagOption flag={FeatureFlags.ArbitrumDutchV3} label="Enable Dutch V3 on Arbitrum" />
-          <FeatureFlagOption
-            flag={FeatureFlags.TokenSelectorTrendingTokens}
-            label="Enable 24h volume trending tokens in Token Selector"
-          />
+          <FeatureFlagGroup name="Swap Refactor">
+            <FeatureFlagOption
+              flag={FeatureFlags.ServiceBasedSwapTransactionInfo}
+              label="Enable service-based swap transaction info"
+            />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Swap Features">
+            <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
+            <FeatureFlagOption flag={FeatureFlags.IndicativeSwapQuotes} label="Enable Quick Routes" />
+            <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />
+            <FeatureFlagOption flag={FeatureFlags.ViemProviderEnabled} label="Enable Viem Provider" />
+            <FeatureFlagOption flag={FeatureFlags.InstantTokenBalanceUpdate} label="Instant token balance update" />
+            <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
+            <FeatureFlagOption flag={FeatureFlags.EnablePermitMismatchUX} label="Enable Permit2 mismatch detection" />
+            <FeatureFlagOption
+              flag={FeatureFlags.ForcePermitTransactions}
+              label="Force Permit2 transaction instead of signatures, always"
+            />
+            <FeatureFlagOption flag={FeatureFlags.SwapSettingsV4HooksToggle} label="Swap Settings V4 Hooks Toggle" />
+            <FeatureFlagOption
+              flag={FeatureFlags.ForceDisableWalletGetCapabilities}
+              label="Force disable wallet get capabilities result"
+            />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="UniswapX">
+            <FeatureFlagOption flag={FeatureFlags.UniswapX} label="Enable UniswapX" />
+            <FeatureFlagOption
+              flag={FeatureFlags.UniswapXPriorityOrdersBase}
+              label="UniswapX Priority Orders (on Base)"
+            />
+            <FeatureFlagOption
+              flag={FeatureFlags.UniswapXPriorityOrdersUnichain}
+              label="UniswapX Priority Orders (on Unichain)"
+            />
+            <FeatureFlagOption flag={FeatureFlags.ArbitrumDutchV3} label="Enable Dutch V3 on Arbitrum" />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="LP">
+            <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
+            <FeatureFlagOption flag={FeatureFlags.PositionPageV2} label="Enable Position Page V2" />
+          </FeatureFlagGroup>
           <FeatureFlagGroup name="Embedded Wallet">
             <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
             <DynamicConfigDropdown
@@ -213,24 +221,15 @@ export default function FeatureFlagModal() {
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Search">
             <FeatureFlagOption flag={FeatureFlags.SearchRevamp} label="Enable search revamp" />
+            <FeatureFlagOption
+              flag={FeatureFlags.PoolSearch}
+              label="Enable pool search (turn on search_revamp as well to see)"
+            />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
             <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />
             <FeatureFlagOption flag={FeatureFlags.MonadTestnetDown} label="Enable Monad Testnet Down Banner" />
-          </FeatureFlagGroup>
-          <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
-          <FeatureFlagGroup name="Quick routes">
-            <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
-            <DynamicConfigDropdown
-              selected={[useQuickRouteChains()]}
-              options={SUPPORTED_CHAIN_IDS}
-              parser={Number.parseInt}
-              config={DynamicConfigs.QuickRouteChains}
-              configKey={QuickRouteChainsConfigKey.Chains}
-              label="Enable quick routes for these chains"
-              allowMultiple={false}
-            />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Network Requests">
             <DynamicConfigDropdown
@@ -242,14 +241,12 @@ export default function FeatureFlagModal() {
               label="Max refetch attempts"
             />
           </FeatureFlagGroup>
-          <FeatureFlagGroup name="UniswapX Flags">
-            <FeatureFlagOption flag={FeatureFlags.UniswapXSyntheticQuote} label="Force synthetic quotes for UniswapX" />
-            <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
-          </FeatureFlagGroup>
           <FeatureFlagGroup name="Debug">
             <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />
             <FeatureFlagOption flag={FeatureFlags.AATestWeb} label="A/A Test for Web" />
+            {isPlaywrightEnv() && <FeatureFlagOption flag={FeatureFlags.DummyFlagTest} label="Dummy Flag Test" />}
           </FeatureFlagGroup>
+          <FeatureFlagGroup name="Misc"></FeatureFlagGroup>
           <FeatureFlagGroup name="Experiments">
             <Flex ml="$padding8">{/* add `ExperimentRow`s here */}</Flex>
           </FeatureFlagGroup>
@@ -259,13 +256,7 @@ export default function FeatureFlagModal() {
             </Flex>
           </FeatureFlagGroup>
         </Flex>
-        <Button
-          onPress={() => window.location.reload()}
-          variant="default"
-          emphasis="secondary"
-          size="small"
-          fill={false}
-        >
+        <Button onPress={window.location.reload} variant="default" emphasis="secondary" size="small" fill={false}>
           Reload
         </Button>
       </Flex>

@@ -14,8 +14,8 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { executeTransaction } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { SendTokenParams } from 'wallet/src/features/transactions/send/types'
-import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
@@ -30,7 +30,7 @@ export function* sendToken(params: Params) {
     const { txId, account, chainId } = sendTokenParams
     const typeInfo = getSendTypeInfo(sendTokenParams)
     yield* call(validateSend, sendTokenParams)
-    yield* call(sendTransaction, {
+    yield* call(executeTransaction, {
       txId,
       chainId,
       account,

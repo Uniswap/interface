@@ -144,9 +144,12 @@ export function useOrderedConnections(options?: { showSecondaryConnectors?: bool
 
     // Injected connectors should appear next in the list, as the user intentionally installed/uses them.
     if (showSecondaryConnectors) {
+      if (isMobileWeb) {
+        orderedConnectors.push(embeddedWalletConnector)
+      }
       const secondaryConnectors = [walletConnectConnector, coinbaseSdkConnector]
-      // Recent connector should have already been shown on the primary page
-      orderedConnectors.push(...secondaryConnectors.filter((c) => c.id !== recentConnectorId))
+      // Recent connector should have already been shown on the primary page unless on mobile
+      orderedConnectors.push(...secondaryConnectors.filter((c) => c.id !== recentConnectorId || isMobileWeb))
     } else {
       orderedConnectors.push(...injectedConnectors)
       // If embedded wallet is enabled, add it to the top of the list

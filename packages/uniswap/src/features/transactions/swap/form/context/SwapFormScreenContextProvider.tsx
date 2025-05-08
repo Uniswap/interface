@@ -4,11 +4,11 @@ import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
-import { DecimalPadInputRef } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
+import { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import {
   TransactionScreen,
   useTransactionModalContext,
-} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+} from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useDecimalPadControlledField'
 import { useSwapFormHoverStyles } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/hooks/useSwapFormHoverStyles'
@@ -19,7 +19,7 @@ import {
   SwapFormScreenContextState,
 } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
 import { useSwapFormScreenCallbacks } from 'uniswap/src/features/transactions/swap/form/context/hooks/useSwapFormScreenCallbacks'
-import { useSwapNetworkNotification } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapNetworkNotification'
+import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapNetworkChangeEffect'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/form/hooks/useSyncFiatAndTokenAmountUpdater'
 import { getExactOutputWillFail } from 'uniswap/src/features/transactions/swap/utils/getExactOutputWillFail'
 import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
@@ -65,7 +65,7 @@ export function SwapFormScreenContextProvider({
   // If we don't skip this, it also causes a cache-miss on `useTrade`, which would trigger a loading spinner because of a missing `trade`.
   useSyncFiatAndTokenAmountUpdater({ skip: screen !== TransactionScreen.Form })
 
-  useSwapNetworkNotification({
+  useSwapNetworkChangeEffect({
     inputChainId: input?.chainId,
     outputChainId: output?.chainId,
   })

@@ -71,9 +71,9 @@ if (isCI && datadogPropertiesAvailable) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.50"
-def betaVersionName = "1.50"
-def prodVersionName = "1.50"
+def devVersionName = "1.52"
+def betaVersionName = "1.52"
+def prodVersionName = "1.52"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -177,7 +177,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 
     sourceSets {

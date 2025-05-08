@@ -1,8 +1,7 @@
 import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
-import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { AlertTriangleFilled, UniswapX } from 'ui/src/components/icons'
+import { AlertTriangleFilled, SlashCircle, UniswapX } from 'ui/src/components/icons'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -82,20 +81,10 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
   const statusIconFill = colors.surface1.get()
 
   const rightBlock = isCancel ? (
-    <SlashCircleIcon
-      color={colors.statusCritical.val}
-      fill={statusIconFill}
-      fillOpacity={1}
-      height={TXN_STATUS_ICON_SIZE}
-      width={TXN_STATUS_ICON_SIZE}
-    />
+    <SlashCircle color="$statusCritical" fill={statusIconFill} fillOpacity={1} size={TXN_STATUS_ICON_SIZE} />
   ) : status === TransactionStatus.Failed ? (
     <Flex grow alignItems="flex-end" justifyContent="space-between">
-      <AlertTriangleFilled
-        color={colors.statusWarning.val}
-        fill={colors.statusWarning.val}
-        size={TXN_STATUS_ICON_SIZE}
-      />
+      <AlertTriangleFilled color="$statusWarning" fill={colors.statusWarning.val} size={TXN_STATUS_ICON_SIZE} />
     </Flex>
   ) : (
     <Text color="$neutral3" variant="body3">

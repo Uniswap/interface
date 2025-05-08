@@ -5,13 +5,13 @@ import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestCon
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { isNonZeroBigNumber } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedCopySheets, ExternalLink } from 'ui/src/components/icons'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
+import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import {
   SpendingDetails,

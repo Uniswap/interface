@@ -5,6 +5,7 @@ import { Connector } from 'wagmi'
 
 export function useSupportedChainId(chainId?: number | UniverseChainId): UniverseChainId | undefined {
   const { chains } = useEnabledChains()
+
   return chains.includes(chainId as UniverseChainId) ? (chainId as UniverseChainId) : undefined
 }
 

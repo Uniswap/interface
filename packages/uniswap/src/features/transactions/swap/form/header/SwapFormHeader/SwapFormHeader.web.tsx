@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
-import { iconSizes } from 'ui/src/theme'
-import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const SwapFormHeader = (): JSX.Element => {
@@ -27,7 +26,7 @@ export const SwapFormHeader = (): JSX.Element => {
           px="$spacing4"
           py="$spacing4"
         >
-          <X color="$neutral2" size={iconSizes.icon24} />
+          <X color="$neutral2" size="$icon.24" />
         </Flex>
       </TouchableArea>
       <Flex position="absolute" left="50%" transform="translateX(-50%)">

@@ -15,3 +15,15 @@ export interface ReadOnlyAccountMeta {
 }
 
 export type AccountMeta = SignerMnemonicAccountMeta | ReadOnlyAccountMeta
+
+export type DisplayName = {
+  name: string
+  type: DisplayNameType
+}
+
+export enum DisplayNameType {
+  Address = 0,
+  ENS = 1,
+  Local = 2, // Mob/ext-only: represents locally-saved wallet labels & mid-onboarding pending names
+  Unitag = 3,
+}

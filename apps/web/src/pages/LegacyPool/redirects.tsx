@@ -3,13 +3,16 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useCurrency } from 'hooks/Tokens'
 import { useV2Pair } from 'hooks/useV2Pairs'
 import { getCurrencyWithWrap } from 'pages/Pool/Positions/create/utils'
-import PoolFinder from 'pages/PoolFinder'
+import { Suspense, lazy } from 'react'
 import { Navigate, useParams, useSearchParams } from 'react-router-dom'
 import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
+import { Loader } from 'ui/src/loading/Loader'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getChainIdFromChainUrlParam, searchParamToBackendName } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
+
+const PoolFinder = lazy(() => import('pages/PoolFinder'))
 
 // /pool
 export function LegacyPoolRedirects() {
@@ -18,7 +21,11 @@ export function LegacyPoolRedirects() {
 
 // /pool/v2/find
 export function PoolFinderRedirects() {
-  return <PoolFinder />
+  return (
+    <Suspense fallback={<Loader.Box />}>
+      <PoolFinder />
+    </Suspense>
+  )
 }
 
 // /remove/v2/:currencyIdA/:currencyIdB

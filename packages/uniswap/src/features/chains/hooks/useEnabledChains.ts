@@ -5,7 +5,7 @@ import { useConnector } from 'uniswap/src/contexts/UniswapContext'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
 import { ALL_CHAIN_IDS, EnabledChainsInfo, GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getEnabledChains } from 'uniswap/src/features/chains/utils'
+import { getEnabledChains, isTestnetChain } from 'uniswap/src/features/chains/utils'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
@@ -30,27 +30,31 @@ function useConnectorWithCatch(): Connector | undefined {
 }
 
 // Returns the chain ids supported by the connector
-function useConnectorSupportedChains(connector?: Connector): UniverseChainId[] {
+function getConnectorSupportedChains(connector?: Connector): UniverseChainId[] {
   // We need to memoize the connected wallet chain ids to avoid infinite loops
   // caused by modifying the gqlChains returned by useEnabledChains
-  return useMemo(() => {
-    switch (connector?.type) {
-      case CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID:
-      case CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID:
-        // Wagmi currently offers no way to discriminate a Connector as a WalletConnect connector providing access to getNamespaceChainsIds.
-        return (connector as WalletConnectConnector).getNamespaceChainsIds?.().length
-          ? (connector as WalletConnectConnector).getNamespaceChainsIds?.()
-          : ALL_CHAIN_IDS
-      default:
-        return ALL_CHAIN_IDS
-    }
-  }, [connector])
+
+  switch (connector?.type) {
+    case CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID:
+    case CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID:
+      // Wagmi currently offers no way to discriminate a Connector as a WalletConnect connector providing access to getNamespaceChainsIds.
+      return (connector as WalletConnectConnector).getNamespaceChainsIds?.().length
+        ? (connector as WalletConnectConnector).getNamespaceChainsIds?.()
+        : ALL_CHAIN_IDS
+    default:
+      return ALL_CHAIN_IDS
+  }
 }
 
-// Returns the chain ids supported by the user's connected wallet
+// Returns the chain ids supported by the user's connected wallet (note: MUST BE WITHIN UNISWAP CONTEXT)
 function useConnectedWalletSupportedChains(): UniverseChainId[] {
   const connector = useConnectorWithCatch()
-  return useConnectorSupportedChains(connector)
+  return useMemo(() => getConnectorSupportedChains(connector), [connector])
+}
+
+export function useIsModeMismatch(chainId?: UniverseChainId): boolean {
+  const { isTestnetModeEnabled } = useEnabledChains()
+  return isTestnetChain(chainId ?? UniverseChainId.Mainnet) ? !isTestnetModeEnabled : isTestnetModeEnabled
 }
 
 export function useEnabledChains(): EnabledChainsInfo {
@@ -79,6 +83,7 @@ export function useEnabledChains(): EnabledChainsInfo {
   }, [defaultChainId, gqlChains, isTestnetModeEnabled, orderedChains])
 }
 
+// Note: can be used outside of Uniswap context
 export function useEnabledChainsWithConnector(connector?: Connector): {
   chains: UniverseChainId[]
   gqlChains: GqlChainId[]
@@ -86,7 +91,7 @@ export function useEnabledChainsWithConnector(connector?: Connector): {
   isTestnetModeEnabled: boolean
 } {
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
-  const connectedWalletChainIds = useConnectorSupportedChains(connector)
+  const connectedWalletChainIds = useMemo(() => getConnectorSupportedChains(connector), [connector])
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
 
   return useMemo(

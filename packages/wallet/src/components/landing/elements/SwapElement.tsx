@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Flex, Image, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { DAI_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { RightArrow } from 'ui/src/components/icons'
-import { DEP_accentColors, iconSizes, imageSizes, validColor } from 'ui/src/theme'
+import { DEP_accentColors, imageSizes, validColor } from 'ui/src/theme'
 
 export const SwapElement = (): JSX.Element => {
   const sporeColors = useSporeColors()
@@ -40,7 +40,7 @@ export const SwapElement = (): JSX.Element => {
           ETH
         </Text>
       </Flex>
-      <RightArrow color={sporeColors.neutral3.val} size={iconSizes.icon20} />
+      <RightArrow color={sporeColors.neutral3.val} size="$icon.20" />
       <Flex
         centered
         row

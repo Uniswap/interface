@@ -9,13 +9,12 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import { navigateBackFromEditingWallet } from 'src/components/Settings/EditWalletModal/EditWalletNavigation'
 import { Flex, Text } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isIOS } from 'utilities/src/platform'
 import { ChangeUnitagModal } from 'wallet/src/features/unitags/ChangeUnitagModal'
 import { DeleteUnitagModal } from 'wallet/src/features/unitags/DeleteUnitagModal'
@@ -101,7 +100,7 @@ export function EditProfileSettingsModal({
               }}
             >
               <Flex pr="$spacing8">
-                <Ellipsis color="$neutral2" size={iconSizes.icon24} />
+                <Ellipsis color="$neutral2" size="$icon.24" />
               </Flex>
             </ContextMenu>
           }

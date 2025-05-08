@@ -7,6 +7,7 @@ import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { selectBackupReminderLastSeenTs } from 'wallet/src/features/behaviorHistory/selectors'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { hasExternalBackup } from 'wallet/src/features/wallet/accounts/utils'
 
 const BACKUP_REMINDER_DELAY_MS = 20 * ONE_SECOND_MS
 const BACKUP_REMINDER_MIN_TIMEOUT_MS = 2 * ONE_SECOND_MS
@@ -24,6 +25,7 @@ export function useOpenBackupReminderModal(activeAccount: Account): void {
     .routes.some((route) => route.name === ModalName.BackupReminderWarning)
 
   const backupReminderLastSeenTs = useSelector(selectBackupReminderLastSeenTs)
+  const externalBackups = hasExternalBackup(activeAccount)
 
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
   const shouldOpenBackupReminderModal =
@@ -31,7 +33,7 @@ export function useOpenBackupReminderModal(activeAccount: Account): void {
     !isBackupReminderWarningModalOpen &&
     isSignerAccount &&
     !!txns?.length &&
-    !activeAccount.backups
+    !externalBackups
 
   useEffect(() => {
     if (shouldOpenBackupReminderModal && backupReminderLastSeenTs === undefined) {

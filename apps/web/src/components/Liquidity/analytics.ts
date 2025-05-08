@@ -3,7 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { LiquidityAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
-import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -55,8 +55,8 @@ export function getLiquidityEventName(
       return LiquidityEventName.ADD_LIQUIDITY_SUBMITTED
     case TransactionStepType.DecreasePositionTransaction:
       return LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED
-    case TransactionStepType.MigratePositionTransactionStep:
-    case TransactionStepType.MigratePositionTransactionStepAsync:
+    case TransactionStepType.MigratePositionTransaction:
+    case TransactionStepType.MigratePositionTransactionAsync:
       return LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED
     case TransactionStepType.CollectFeesTransactionStep:
       return LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED

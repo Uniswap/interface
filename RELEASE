@@ -1,21 +1,18 @@
-## iOS
+IPFS hash of the deployment:
+- CIDv0: `QmPrqLALpGaKqo51BdmEzdEk1gqMYoigWqcSrSRjB359us`
+- CIDv1: `bafybeiaws4pqenzmeqsuoufsgcyhgtxc5azas2dsnh6i25xpe75b3rybti`
 
-🚀 What's New:
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-- Revolut Integration: EU users can now seamlessly buy crypto through Revolut with expanded coverage options
-- Simplified Selling: Use our new "Max" quick-select button to instantly sell your entire crypto balance to fiat
-- Enhanced Connectivity: Enjoy a smoother WalletConnect experience with popular dapps
-- Streamlined Activity Tab: Find your most recent transactions in the new "Today" section for easier tracking
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-Plus performance improvements and bug fixes to keep your experience fast and reliable!
+IPFS gateways:
+- https://bafybeiaws4pqenzmeqsuoufsgcyhgtxc5azas2dsnh6i25xpe75b3rybti.ipfs.dweb.link/
+- [ipfs://QmPrqLALpGaKqo51BdmEzdEk1gqMYoigWqcSrSRjB359us/](ipfs://QmPrqLALpGaKqo51BdmEzdEk1gqMYoigWqcSrSRjB359us/)
 
-## Android
+### 5.83.6 (2025-05-08)
 
-🚀 What's New:
 
-- Revolut Integration: EU users can now seamlessly buy crypto through Revolut with expanded coverage options
-- Simplified Selling: Use our new "Max" quick-select button to instantly sell your entire crypto balance to fiat
-- Enhanced Connectivity: Enjoy a smoother WalletConnect experience with popular dapps
-- Streamlined Activity Tab: Find your most recent transactions in the new "Today" section for easier tracking
-
-Plus performance improvements and bug fixes!

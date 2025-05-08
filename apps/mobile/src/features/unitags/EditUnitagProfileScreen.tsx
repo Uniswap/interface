@@ -9,10 +9,9 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Flex, Text } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isIOS } from 'utilities/src/platform'
 import { ChangeUnitagModal } from 'wallet/src/features/unitags/ChangeUnitagModal'
 import { DeleteUnitagModal } from 'wallet/src/features/unitags/DeleteUnitagModal'
@@ -81,7 +80,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
                 }}
               >
                 <Flex pr="$spacing8">
-                  <Ellipsis color="$neutral2" size={iconSizes.icon24} />
+                  <Ellipsis color="$neutral2" size="$icon.24" />
                 </Flex>
               </ContextMenu>
             ) : undefined

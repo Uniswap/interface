@@ -6,6 +6,8 @@
 export enum Experiments {
   AccountCTAs = 'signin_login_connect_ctas',
   SwapPresets = 'swap_presets',
+  NativeTokenPercentageBuffer = 'lp_native_eth_buffer',
+  PrivateRpc = 'private_rpc',
 }
 
 export enum Layers {
@@ -20,6 +22,11 @@ export enum AccountCTAsExperimentGroup {
   LogInCreateAccount = 'LogIn-CreateAccount',
 }
 
+export enum NativeTokenPercentageBufferExperimentGroup {
+  Control = 'Control',
+  Buffer1 = 'Buffer1',
+}
+
 // experiment properties
 
 export enum ArbitrumXV2SamplingProperties {
@@ -31,8 +38,14 @@ export enum SwapPresetsProperties {
   OutputEnabled = 'outputEnabled',
 }
 
+export enum PrivateRpcProperties {
+  FlashbotsEnabled = 'flashbots_enabled',
+  RefundPercent = 'refund_percent',
+}
+
 export type ExperimentProperties = {
   [Experiments.SwapPresets]: SwapPresetsProperties
+  [Experiments.PrivateRpc]: PrivateRpcProperties
 }
 
 // will be a spread of all experiment properties in that layer

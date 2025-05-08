@@ -45,7 +45,6 @@ import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebu
 import { getReduxPersistor } from 'src/store/store'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 
 const supportsSidePanel = checksIfSupportsSidePanel()
@@ -115,9 +114,9 @@ const allRoutes = [
           [ImportPasskeySteps.InitiatePasskeyAuth]: <InitiatePasskeyAuth />,
           [ImportPasskeySteps.PasskeyImport]: <PasskeyImport />,
           // TODO(WALL-6383): modify this flow to ask user to verify their seed phrase.
-          [ImportOnboardingSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Import} />,
-          [ImportOnboardingSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Import} />,
-          [ImportOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.Import} />,
+          [ImportOnboardingSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Passkey} />,
+          [ImportOnboardingSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Passkey} />,
+          [ImportOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.Passkey} />,
         }}
       />
     ),
@@ -214,10 +213,8 @@ export default function OnboardingApp(): JSX.Element {
   return (
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Onboarding}>
-        <UnitagUpdaterContextProvider>
-          <PrimaryAppInstanceDebuggerLazy />
-          <RouterProvider router={router} />
-        </UnitagUpdaterContextProvider>
+        <PrimaryAppInstanceDebuggerLazy />
+        <RouterProvider router={router} />
       </BaseAppContainer>
     </PersistGate>
   )

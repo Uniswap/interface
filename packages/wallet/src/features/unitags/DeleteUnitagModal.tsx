@@ -6,12 +6,12 @@ import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { deleteUnitag } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagName } from 'uniswap/src/features/unitags/UnitagName'
-import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
@@ -33,7 +33,7 @@ export function DeleteUnitagModal({
 }): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const { triggerRefetchUnitags } = useUnitagUpdater()
+  const resetUnitagsQueries = useResetUnitagsQueries()
   const account = useAccount(address)
   const signerManager = useWalletSigners()
   const [isDeleting, setIsDeleting] = useState(false)
@@ -66,7 +66,7 @@ export function DeleteUnitagModal({
 
       if (deleteResponse?.success) {
         sendAnalyticsEvent(UnitagEventName.UnitagRemoved)
-        triggerRefetchUnitags()
+        resetUnitagsQueries()
         dispatch(
           pushNotification({
             type: AppNotificationType.Success,
@@ -105,7 +105,7 @@ export function DeleteUnitagModal({
           {t('unitags.delete.confirm.subtitle')}
         </Text>
         <Flex py="$spacing24">
-          <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
+          <UnitagName animateText name={unitag} textProps={{ fontSize: fonts.heading3.fontSize }} />
         </Flex>
         <Flex row width="100%">
           <Button

@@ -10,7 +10,7 @@ import { useEffect, useMemo } from 'react'
 import { Flex } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-const HIDDEN_COLUMNS = [PoolSortFields.VolOverTvl]
+const HIDDEN_COLUMNS = [PoolSortFields.VolOverTvl, PoolSortFields.RewardApr]
 
 export function TokenDetailsPoolsTable({
   chainId,

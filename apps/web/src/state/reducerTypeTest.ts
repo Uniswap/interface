@@ -18,9 +18,8 @@ import { LocalWebTransactionState } from 'state/transactions/reducer'
 import { TransactionDetails } from 'state/transactions/types'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
-import { WalletCapabilitiesState } from 'state/walletCapabilities/reducer'
-import { ConnectedWalletsState } from 'state/wallets/reducer'
-import { Wallet } from 'state/wallets/types'
+import { WalletCapabilitiesState } from 'state/walletCapabilities/types'
+import { ConnectedWalletsState, Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
 import { Equals, assert } from 'tsafe'
 import { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
@@ -35,6 +34,7 @@ import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { transactionSettingsReducer } from 'uniswap/src/features/transactions/settings/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
+import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/contexts/slice'
 import { VisibilityState } from 'uniswap/src/features/visibility/slice'
 
 /**
@@ -85,6 +85,7 @@ type ExpectedAppState = CombinedState<{
   readonly portfolio: PortfolioState
   readonly visibility: VisibilityState
   readonly walletCapabilities: WalletCapabilitiesState
+  readonly swapSettings: SwapSettingsState
 }>
 
 assert<Equals<InterfaceState, ExpectedAppState>>()
@@ -141,6 +142,8 @@ assert<Equals<ApplicationState, ExpectedApplicationState>>()
 interface ExpectedWalletState {
   connectedWallets: Wallet[]
   switchingChain: UniverseChainId | false
+  delegatedState: Record<string, string>
+  activeChainId?: UniverseChainId
 }
 
 assert<Equals<ConnectedWalletsState, ExpectedWalletState>>()

@@ -4,6 +4,7 @@ import METAMASK_ICON from 'assets/wallets/metamask-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import PASSKEY_ICON from 'ui/src/assets/icons/passkey.svg'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 

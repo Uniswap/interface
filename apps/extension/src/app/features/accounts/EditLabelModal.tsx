@@ -8,16 +8,16 @@ import { Person } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { shortenAddress } from 'utilities/src/addresses'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { CardType, IntroCard, IntroCardGraphicType } from 'wallet/src/components/introCards/IntroCard'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanActiveAddressClaimUnitag'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type EditLabelModalProps = {
   isOpen: boolean

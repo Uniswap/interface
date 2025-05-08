@@ -9,7 +9,7 @@ import {
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { Flex } from 'ui/src'
 import { PUSH_NOTIFICATIONS_CARD_BANNER } from 'ui/src/assets'
-import { Buy, ShieldCheck } from 'ui/src/components/icons'
+import { Buy } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -43,7 +43,6 @@ export function OnboardingIntroCardStack({
   const activeAccount = useActiveAccountWithThrow()
   const address = activeAccount.address
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
-  const hasBackups = activeAccount.backups && activeAccount.backups.length > 0
 
   const { notificationPermissionsEnabled } = useNotificationOSPermissionsEnabled()
   const notificationOnboardingCardEnabled = useFeatureFlag(FeatureFlags.NotificationOnboardingCard)
@@ -70,9 +69,20 @@ export function OnboardingIntroCardStack({
     })
   }, [address])
 
+  const navigateToBackupFlow = useCallback((): void => {
+    navigate(MobileScreens.OnboardingStack, {
+      screen: OnboardingScreens.Backup,
+      params: {
+        importType: ImportType.BackupOnly,
+        entryPoint: OnboardingEntryPoint.BackupCard,
+      },
+    })
+  }, [])
+
   const { cards: sharedCards } = useSharedIntroCards({
     navigateToUnitagClaim,
     navigateToUnitagIntro,
+    navigateToBackupFlow,
   })
 
   const cards = useMemo((): IntroCardProps[] => {
@@ -97,28 +107,6 @@ export function OnboardingIntroCardStack({
           navigate(ModalName.FundWallet)
           sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
             element: ElementName.OnboardingIntroCardFundWallet,
-          })
-        },
-      })
-    }
-
-    if (!hasBackups) {
-      output.push({
-        loggingName: OnboardingCardLoggingName.RecoveryBackup,
-        graphic: {
-          type: IntroCardGraphicType.Icon,
-          Icon: ShieldCheck,
-        },
-        title: t('onboarding.home.intro.backup.title'),
-        description: t('onboarding.home.intro.backup.description'),
-        cardType: CardType.Required,
-        onPress: (): void => {
-          navigate(MobileScreens.OnboardingStack, {
-            screen: OnboardingScreens.Backup,
-            params: {
-              importType: ImportType.BackupOnly,
-              entryPoint: OnboardingEntryPoint.BackupCard,
-            },
           })
         },
       })
@@ -149,7 +137,7 @@ export function OnboardingIntroCardStack({
       })
     }
     return output
-  }, [hasBackups, showEmptyWalletState, isSignerAccount, sharedCards, t, showEnableNotificationsCard, dispatch])
+  }, [showEmptyWalletState, isSignerAccount, sharedCards, t, showEnableNotificationsCard, dispatch])
 
   const handleSwiped = useCallback(
     (_card: IntroCardProps, index: number) => {

@@ -370,3 +370,13 @@ export function moveTokenAndNFTVisibility(state: any): any {
   delete newState.favorites.nftsVisibility
   return newState
 }
+
+// Mobile: 86
+// Extension: 22
+export function addBatchedTransactions(state: any): any {
+  const newState = {
+    ...state,
+    batchedTransactions: {},
+  }
+  return newState
+}

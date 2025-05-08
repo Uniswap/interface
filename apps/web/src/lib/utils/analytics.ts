@@ -71,6 +71,9 @@ export function formatCommonPropertiesForTrade(
   trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade,
   allowedSlippage: Percent,
   outputFeeFiatValue?: number,
+  isBatched?: boolean,
+  batchId?: string,
+  includedPermitTransactionStep?: boolean,
 ): SwapTradeBaseProperties {
   const isUniversalSwapFlow =
     trade instanceof ClassicTrade ||
@@ -128,6 +131,9 @@ export function formatCommonPropertiesForTrade(
         ? trade.offchainOrderType
         : undefined,
     transactionOriginType: TransactionOriginType.Internal,
+    is_batch: isBatched,
+    batch_id: batchId,
+    included_permit_transaction_step: includedPermitTransactionStep,
   }
 }
 
@@ -139,6 +145,9 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   timeToSignSinceRequestMs,
   portfolioBalanceUsd,
   trace,
+  isBatched,
+  batchId,
+  includedPermitTransactionStep,
 }: {
   trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade
   allowedSlippage: Percent
@@ -147,6 +156,9 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   timeToSignSinceRequestMs?: number
   portfolioBalanceUsd?: number
   trace: ITraceContext
+  isBatched?: boolean
+  batchId?: string
+  includedPermitTransactionStep?: boolean
 }) => ({
   ...trace,
   total_balances_usd: portfolioBalanceUsd,
@@ -156,7 +168,14 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   // measures the amount of time the user took to sign the permit message or swap tx in their wallet
   time_to_sign_since_request_ms: timeToSignSinceRequestMs,
   ...['routing' in trade ? getRouteAnalyticsData(trade) : undefined],
-  ...formatCommonPropertiesForTrade(trade, allowedSlippage, fiatValues.feeUsd),
+  ...formatCommonPropertiesForTrade(
+    trade,
+    allowedSlippage,
+    fiatValues.feeUsd,
+    isBatched,
+    batchId,
+    includedPermitTransactionStep,
+  ),
 })
 
 function getQuoteMethod(trade: InterfaceTrade) {

@@ -1,4 +1,4 @@
-import { EthMethod } from "uniswap/src/features/dappRequests/types"
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 
 export enum WalletConnectEvent {
   Connected = 0,
@@ -32,11 +32,6 @@ export enum WCRequestOutcome {
   Reject = 'reject',
 }
 
-export type EthSignMethod =
-  | EthMethod.PersonalSign
-  | EthMethod.SignTypedData
-  | EthMethod.EthSign
-  | EthMethod.SignTypedDataV4
 
 interface UwULinkRequestDappInfo {
   name?: string
@@ -45,7 +40,7 @@ interface UwULinkRequestDappInfo {
 }
 
 interface UwULinkBaseRequest {
-  method: EthMethod.EthSendTransaction | EthMethod.PersonalSign | UwULinkMethod.Erc20Send
+  method: | EthMethod.EthSendTransaction | EthMethod.PersonalSign | UwULinkMethod.Erc20Send
   chainId: number
   dapp?: UwULinkRequestDappInfo
   webhook?: string

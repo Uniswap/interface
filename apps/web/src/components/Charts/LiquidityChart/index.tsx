@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool as PoolV3, TICK_SPACINGS, TickMath as TickMathV3, tickToPrice } from '@uniswap/v3-sdk'
-import { Pool as PoolV4 } from '@uniswap/v4-sdk'
+import { Pool as PoolV4, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { LiquidityBarSeries } from 'components/Charts/LiquidityChart/liquidity-bar-series'
 import {
@@ -123,6 +123,7 @@ function maxAmount(token: Token) {
 }
 
 /** Calculates tokens locked in the active tick range based on the current tick */
+// TODO(WEB-7564): determine how to support v4
 async function calculateActiveRangeTokensLocked(
   token0: Token,
   token1: Token,
@@ -224,9 +225,10 @@ export async function calculateTokensLockedV3(
   }
 }
 
+// TODO(WEB-7564): determine if tick math needs to be converted to support v4
 export async function calculateTokensLockedV4(
-  token0: Token,
-  token1: Token,
+  token0: Currency,
+  token1: Currency,
   feeTier: FeeAmount,
   tickSpacing: number,
   hooks: string,
@@ -278,8 +280,8 @@ export async function calculateTokensLockedV4(
 }
 
 export function useLiquidityBarData({
-  tokenA,
-  tokenB,
+  currencyA,
+  currencyB,
   feeTier,
   isReversed,
   chainId,
@@ -288,8 +290,8 @@ export function useLiquidityBarData({
   hooks,
   poolId,
 }: {
-  tokenA: Token
-  tokenB: Token
+  currencyA: Currency
+  currencyB: Currency
   feeTier: FeeAmount
   isReversed: boolean
   chainId: UniverseChainId
@@ -299,9 +301,15 @@ export function useLiquidityBarData({
   poolId?: string
 }) {
   const { formatNumber, formatPrice } = useFormatter()
+
+  // Determine the correct tokens to use based on the protocol version
+  // V3 requires tokens, V4 can handle native or tokens
+  const tokenAWrapped = currencyA.wrapped
+  const tokenBWrapped = currencyB.wrapped
+
   const activePoolData = usePoolActiveLiquidity({
-    currencyA: tokenA,
-    currencyB: tokenB,
+    currencyA,
+    currencyB,
     feeAmount: feeTier,
     version,
     poolId,
@@ -341,15 +349,18 @@ export function useLiquidityBarData({
           activeRangeIndex = index
           activeRangePercentage = (activePoolData.currentTick - t.tick) / TICK_SPACINGS[feeTier]
 
-          price0 = tickToPrice(tokenA, tokenB, t.tick)
+          price0 =
+            version === ProtocolVersion.V3
+              ? tickToPrice(tokenAWrapped, tokenBWrapped, t.tick)
+              : tickToPriceV4(currencyA, currencyB, t.tick)
           price1 = price0.invert()
         }
 
         const { amount0Locked, amount1Locked } = await (version === ProtocolVersion.V3
-          ? calculateTokensLockedV3(tokenA, tokenB, feeTier, t)
+          ? calculateTokensLockedV3(tokenAWrapped, tokenBWrapped, feeTier, t)
           : calculateTokensLockedV4(
-              tokenA,
-              tokenB,
+              currencyA,
+              currencyB,
               feeTier,
               tickSpacing ?? TICK_SPACINGS[feeTier],
               hooks ?? ZERO_ADDRESS,
@@ -379,8 +390,8 @@ export function useLiquidityBarData({
       // For active range, adjust amounts locked to adjust for where current tick/price is within the range
       if (activeRangeIndex !== undefined && activeRangeData) {
         const activeTickTvl = await calculateActiveRangeTokensLocked(
-          tokenA,
-          tokenB,
+          tokenAWrapped,
+          tokenBWrapped,
           feeTier,
           ticksProcessed[activeRangeIndex],
           activePoolData,
@@ -398,7 +409,20 @@ export function useLiquidityBarData({
     }
 
     formatData()
-  }, [activePoolData, tokenA, tokenB, formatNumber, formatPrice, isReversed, feeTier, version, tickSpacing, hooks])
+  }, [
+    activePoolData,
+    currencyA,
+    currencyB,
+    tokenAWrapped,
+    tokenBWrapped,
+    formatNumber,
+    formatPrice,
+    isReversed,
+    feeTier,
+    version,
+    tickSpacing,
+    hooks,
+  ])
 
   return { tickData, activeTick: activePoolData.activeTick, loading: activePoolData.isLoading || !tickData }
 }

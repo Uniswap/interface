@@ -2,68 +2,12 @@
 
 exports[`PoolDetailsStatsButton loading skeleton shown correctly 1`] = `
 <DocumentFragment>
-  .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  gap: 12px;
-  z-index: 1;
-}
-
-.c3 {
-  height: 44px;
-  width: 50%;
-  border-radius: 900px;
-}
-
-@media (max-width:1024px) {
-  .c2 {
-    gap: 8px;
-    position: fixed;
-    bottom: 0px;
-    left: 0;
-    margin: 8px;
-    width: calc(100% - 16px);
-    background: #FFFFFF;
-    padding: 12px 32px;
-    border: 1px solid rgba(34,34,34,0.05);
-    border-radius: 20px;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    z-index: 1020;
-  }
-
-  .c2 > :first-child {
-    margin-right: auto;
-  }
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <div
-      class="c0 c1 c2"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _mb-t-space-spa1360334080"
       data-testid="pdp-buttons-loading-skeleton"
     >
       <style>
@@ -79,13 +23,16 @@ exports[`PoolDetailsStatsButton loading skeleton shown correctly 1`] = `
 
       </style>
       <div
-        class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+        class="_width-_platformweb_5037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
         style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
       >
         <div
-          class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c3"
+          class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-9537"
         />
       </div>
+      <span
+        class="is_Spacer _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-t-space-spa94665591 _minWidth-t-space-spa94665591 _flexShrink-0 _pointerEvents-none _width-t-space-spa94665591 _height-t-space-spa94665591"
+      />
       <style>
         
   @keyframes shine {
@@ -99,11 +46,11 @@ exports[`PoolDetailsStatsButton loading skeleton shown correctly 1`] = `
 
       </style>
       <div
-        class="_width-_platformweb_10037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+        class="_width-_platformweb_5037 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
         style="animation-name: shine; animation-duration: 1s; animation-timing-function: linear; animation-iteration-count: infinite;"
       >
         <div
-          class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-5037 c3"
+          class="_background-_platformweb_linear-grad1382090798 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347300 _width-9537"
         />
       </div>
     </div>
@@ -253,14 +200,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
           >
             <svg
               fill="none"
-              height="100%"
               stroke-width="8"
               style="width: 20.7px; height: 20.7px;"
-              viewBox="0 0 16 16"
-              width="100%"
+              viewBox="0 0 24 24"
             >
               <path
-                d="M7.33336 4.00003V14C7.33336 14.2694 7.1714 14.5127 6.92206 14.6161C6.8394 14.6501 6.75269 14.6667 6.66669 14.6667C6.49336 14.6667 6.32267 14.5987 6.19534 14.4714L2.862 11.1381C2.60134 10.8774 2.60134 10.456 2.862 10.1953C3.12267 9.93468 3.54405 9.93468 3.80471 10.1953L6.00002 12.3907V4.00003C6.00002 3.63203 6.29802 3.33337 6.66669 3.33337C7.03536 3.33337 7.33336 3.63203 7.33336 4.00003ZM13.8047 4.86201L10.4714 1.52868C10.2807 1.33801 9.99532 1.28132 9.74465 1.38399C9.49532 1.48732 9.33336 1.7307 9.33336 2.00003V12C9.33336 12.368 9.63136 12.6667 10 12.6667C10.3687 12.6667 10.6667 12.368 10.6667 12V3.60941L12.862 5.80472C13.1227 6.06539 13.544 6.06539 13.8047 5.80472C14.0654 5.54405 14.0654 5.12268 13.8047 4.86201Z"
+                d="M3.00097 11.8C2.97397 11.8 2.94602 11.799 2.91802 11.796C2.50602 11.751 2.20902 11.38 2.25402 10.969C2.61702 7.65199 4.619 4.79503 7.609 3.32703C7.842 3.21303 8.11699 3.22701 8.33599 3.36401C8.55599 3.50101 8.68999 3.74198 8.68999 4.00098V7.05103C8.68999 7.46503 8.35399 7.80103 7.93999 7.80103C7.52599 7.80103 7.18999 7.46503 7.18999 7.05103V5.31006C5.26699 6.64806 4.00596 8.74896 3.74596 11.132C3.70396 11.515 3.37797 11.8 3.00097 11.8ZM16.391 20.673C19.381 19.206 21.383 16.349 21.745 13.031C21.791 12.619 21.493 12.249 21.081 12.204C20.673 12.16 20.3 12.456 20.255 12.868C19.994 15.251 18.734 17.3519 16.81 18.6899V16.949C16.81 16.535 16.474 16.199 16.06 16.199C15.646 16.199 15.31 16.535 15.31 16.949V19.999C15.31 20.258 15.444 20.499 15.664 20.636C15.785 20.711 15.922 20.749 16.06 20.749C16.173 20.75 16.286 20.725 16.391 20.673ZM12 7C12 9.209 13.791 11 16 11C18.209 11 20 9.209 20 7C20 4.791 18.209 3 16 3C13.791 3 12 4.791 12 7ZM3.99999 17C3.99999 19.209 5.79099 21 7.99999 21C10.209 21 12 19.209 12 17C12 14.791 10.209 13 7.99999 13C5.79099 13 3.99999 14.791 3.99999 17Z"
                 fill="currentColor"
               />
             </svg>

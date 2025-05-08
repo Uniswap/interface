@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
+import StaticRouteIcon from 'assets/svg/static_route.svg'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { getBridgeDescriptor } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -41,6 +42,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import i18n from 'uniswap/src/i18n'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 type FormatNumberFunctionType = ReturnType<typeof useFormatter>['formatNumber']
@@ -339,6 +341,12 @@ export async function transactionToActivity(
       additionalFields = await parseSend(info, chainId, formatNumber)
     } else if (info.type === TransactionType.LP_INCENTIVES_CLAIM_REWARDS) {
       additionalFields = await parseLpIncentivesClaim(info, chainId)
+    } else if (info.type === TransactionType.PERMIT) {
+      additionalFields = {
+        title: i18n.t('common.permit'),
+        descriptor: i18n.t('notification.transaction.unknown.success.short'),
+        logos: [StaticRouteIcon],
+      }
     }
 
     const activity = { ...defaultFields, ...additionalFields }
@@ -361,7 +369,7 @@ export function getTransactionToActivityQueryOptions(
   formatNumber: FormatNumberFunctionType,
 ) {
   return queryOptions({
-    queryKey: ['transactionToActivity', transaction, chainId],
+    queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction, chainId],
     queryFn: async () => transactionToActivity(transaction, chainId, formatNumber),
   })
 }
@@ -371,7 +379,7 @@ export function getSignatureToActivityQueryOptions(
   formatNumber: FormatNumberFunctionType,
 ) {
   return queryOptions({
-    queryKey: ['signatureToActivity', signature],
+    queryKey: [ReactQueryCacheKey.SignatureToActivity, signature],
     queryFn: async () => signatureToActivity(signature, formatNumber),
   })
 }
@@ -434,7 +442,7 @@ export function useLocalActivities(account: string): ActivityMap {
   const { chains } = useEnabledChains()
 
   const { data } = useQuery({
-    queryKey: ['localActivities', account, allTransactions, allSignatures],
+    queryKey: [ReactQueryCacheKey.LocalActivities, account, allTransactions, allSignatures],
     queryFn: async () => {
       const transactions = Object.values(allTransactions)
         .filter(([transaction]) => transaction.from === account)

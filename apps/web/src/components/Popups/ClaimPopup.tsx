@@ -1,39 +1,18 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import tokenLogo from 'assets/images/token-logo.png'
-import { AutoColumn } from 'components/deprecated/Column'
 import { CardBGImage, CardNoise } from 'components/earn/styled'
 import { useAccount } from 'hooks/useAccount'
-import styled, { keyframes } from 'lib/styled-components'
+import { useModalState } from 'hooks/useModalState'
 import { useEffect } from 'react'
-import { Heart, X } from 'react-feather'
+import { Heart } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { useModalIsOpen, useShowClaimPopup, useToggleModal, useToggleShowClaimPopup } from 'state/application/hooks'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
-import { ThemedText } from 'theme/components'
-import { Button, Flex } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { X } from 'ui/src/components/icons/X'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-const StyledClaimPopup = styled(AutoColumn)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);
-  border-radius: 20px;
-  padding: 1.5rem;
-  overflow: hidden;
-  position: relative;
-  max-width: 360px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-`
-
-const StyledClose = styled(X)`
-  position: absolute;
-  right: 10px;
-  top: 10px;
-
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const rotate = keyframes`
+const rotateKeyframe = `
+  @keyframes rotate {
   0% {
     transform: perspective(1000px) rotateY(0deg);
   }
@@ -43,20 +22,14 @@ const rotate = keyframes`
   }
 `
 
-const UniToken = styled.img`
-  animation: ${rotate} 5s cubic-bezier(0.83, 0, 0.17, 1) infinite;
-`
-
 export default function ClaimPopup() {
   const account = useAccount()
 
   // dont store these in persisted state yet
-  const showClaimPopup: boolean = useShowClaimPopup()
-  const toggleShowClaimPopup = useToggleShowClaimPopup()
+  const { isOpen: claimPopupIsOpen, toggleModal: toggleClaimPopup } = useModalState(ModalName.ClaimPopup)
 
   // toggle for showing this modal
-  const showClaimModal = useModalIsOpen(ModalName.AddressClaim)
-  const toggleClaimModal = useToggleModal(ModalName.AddressClaim)
+  const { isOpen: showClaimModal, toggleModal: toggleClaimModal } = useModalState(ModalName.AddressClaim)
 
   // const userHasAvailableclaim = useUserHasAvailableClaim()
   const userHasAvailableclaim: boolean = useUserHasAvailableClaim(account.address)
@@ -65,7 +38,7 @@ export default function ClaimPopup() {
   // listen for available claim and show popup if needed
   useEffect(() => {
     if (userHasAvailableclaim) {
-      toggleShowClaimPopup()
+      toggleClaimPopup()
     }
     // the toggleShowClaimPopup function changes every time the popup changes, so this will cause an infinite loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,22 +56,38 @@ export default function ClaimPopup() {
         pr: '$none',
       }}
     >
+      <style>{rotateKeyframe}</style>
       <Flex $platform-web={{ position: 'fixed' }} maxWidth={348} width="100%" zIndex="$fixed" animation="fast">
-        {showClaimPopup && !showClaimModal && (
-          <StyledClaimPopup gap="md">
+        {claimPopupIsOpen && !showClaimModal && (
+          <Flex
+            gap="$spacing8"
+            borderRadius="$rounded20"
+            padding="$spacing24"
+            overflow="hidden"
+            position="relative"
+            maxWidth={360}
+            style={{
+              background: 'linear-gradient(180deg, #FF007A 0%, #021D43 100%)',
+              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+            }}
+          >
             <CardBGImage />
             <CardNoise />
-            <StyledClose stroke="white" onClick={toggleShowClaimPopup} />
-            <AutoColumn style={{ padding: '2rem 0', zIndex: 10 }} justify="center">
-              <UniToken width="48px" src={tokenLogo} />{' '}
-              <ThemedText.DeprecatedWhite style={{ marginTop: '1rem' }} fontSize={36} fontWeight={535}>
+            <TouchableArea onPress={toggleClaimPopup} ml="auto">
+              <X color="$white" size="$icon.16" />
+            </TouchableArea>
+            <Flex centered py="$spacing32" zIndex={10}>
+              <img
+                width="48px"
+                src={tokenLogo}
+                style={{
+                  animation: `rotate 5s cubic-bezier(0.83, 0, 0.17, 1) infinite`,
+                }}
+              />{' '}
+              <Text variant="heading2" color="white" mt="$spacing16">
                 {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-              </ThemedText.DeprecatedWhite>
-              <ThemedText.DeprecatedWhite
-                style={{ paddingTop: '1.25rem', textAlign: 'center' }}
-                fontWeight={535}
-                color="white"
-              >
+              </Text>
+              <Text variant="subheading2" color="white" mt="$spacing20">
                 <span role="img" aria-label="party">
                   🎉
                 </span>{' '}
@@ -106,22 +95,22 @@ export default function ClaimPopup() {
                 <span role="img" aria-label="party">
                   🎉
                 </span>
-              </ThemedText.DeprecatedWhite>
-              <ThemedText.DeprecatedSubHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
+              </Text>
+              <Text variant="body3" color="white" mt="$spacing8" textAlign="center">
                 <Trans
                   i18nKey="claim.thanks"
                   components={{
                     heart: <Heart size={12} />,
                   }}
                 />
-              </ThemedText.DeprecatedSubHeader>
-            </AutoColumn>
-            <AutoColumn style={{ zIndex: 10 }} justify="center">
+              </Text>
+            </Flex>
+            <Flex centered zIndex={10}>
               <Button variant="branded" fill={false} onPress={toggleClaimModal}>
                 <Trans i18nKey="common.claimUnis" />
               </Button>
-            </AutoColumn>
-          </StyledClaimPopup>
+            </Flex>
+          </Flex>
         )}
       </Flex>
     </Flex>

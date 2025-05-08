@@ -7,7 +7,6 @@ import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransfe
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
@@ -75,7 +74,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
                 height={ICON_SIZE}
                 width={ICON_SIZE}
               >
-                <CopySheets color="$neutral2" size={iconSizes.icon16} />
+                <CopySheets color="$neutral2" size="$icon.16" />
               </Flex>
             </TouchableArea>
             <Flex
@@ -86,7 +85,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
               height={ICON_SIZE}
               width={ICON_SIZE}
             >
-              <QrCode color="$neutral2" size={iconSizes.icon16} />
+              <QrCode color="$neutral2" size="$icon.16" />
             </Flex>
           </Flex>
         </Flex>

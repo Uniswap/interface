@@ -21,8 +21,8 @@ import {
 } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { opacify } from 'theme/utils'
 import { Flex, Text, styled } from 'ui/src'
+import { opacify } from 'ui/src/theme'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimestamp>
@@ -204,7 +204,7 @@ export function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceCh
 
   return (
     <Text variant="body2" display="flex" alignItems="center" gap="$gap4">
-      <DeltaArrow delta={delta} noColor={noColor} />
+      <DeltaArrow delta={delta} formattedDelta={formatDelta(delta)} noColor={noColor} />
       <DeltaText delta={delta}>{formatDelta(delta)}</DeltaText>
     </Text>
   )

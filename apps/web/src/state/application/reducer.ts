@@ -26,7 +26,7 @@ export type OpenModalParams =
   | RemoveLiquidityModalParams
   | ClaimFeeModalParams
 
-export type CloseModalParams = ModalNameType
+type CloseModalParams = ModalNameType
 
 export interface ApplicationState {
   readonly chainId: number | null

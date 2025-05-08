@@ -1,5 +1,4 @@
 import { EmbeddedWalletProvider, Listener, embeddedWalletProvider } from 'connection/EmbeddedWalletProvider'
-import { t } from 'i18next'
 import { getEmbeddedWalletState } from 'state/embeddedWallet/store'
 import {
   ProviderConnectInfo,
@@ -24,7 +23,7 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
 
   return createConnector<Provider, Properties, StorageItem>((config) => ({
     id: 'embeddedUniswapWalletConnector',
-    name: t('account.passkey.sign.in.title'),
+    name: 'Uniswap Embedded Wallet',
     type: 'embeddedUniswapWallet',
     async setup() {
       const provider = await this.getProvider()

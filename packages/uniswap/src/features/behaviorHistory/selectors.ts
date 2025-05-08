@@ -11,3 +11,6 @@ export const selectHasDismissedLowNetworkTokenWarning = (state: UniswapState): b
 
 export const selectHasViewedContractAddressExplainer = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasViewedContractAddressExplainer === true
+
+export const selectHasShownMismatchToast = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasShownMismatchToast === true

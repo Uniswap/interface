@@ -2,7 +2,7 @@ import { rpcErrors, serializeError } from '@metamask/rpc-errors'
 import { removeDappConnection } from 'src/app/features/dapp/actions'
 import { changeChain } from 'src/app/features/dapp/changeChain'
 import { dappStore } from 'src/app/features/dapp/store'
-import { SenderTabInfo } from 'src/app/features/dappRequests/slice'
+import type { SenderTabInfo } from 'src/app/features/dappRequests/shared'
 import {
   ChangeChainRequest,
   DappRequest,
@@ -22,9 +22,8 @@ import {
   DappRequestMessage,
 } from 'src/background/messagePassing/types/requests'
 import { openSidePanel } from 'src/background/utils/chromeSidePanelUtils'
-import { ExtensionEthMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
+import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'
@@ -213,7 +212,7 @@ async function handleRevokePermissions(
   await dappStore.init()
   const revokedPermissions = Object.keys(request.permissions)
 
-  if (revokedPermissions.includes(ExtensionEthMethods.eth_accounts)) {
+  if (revokedPermissions.includes(EthMethod.EthAccounts)) {
     await removeDappConnection(dappUrl)
     await dappResponseMessageChannel.sendMessageToTab(tabId, {
       type: DappResponseType.RevokePermissionsResponse,

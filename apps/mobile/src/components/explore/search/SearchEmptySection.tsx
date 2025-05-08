@@ -8,17 +8,15 @@ import { SearchPopularTokens } from 'src/components/explore/search/SearchPopular
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import ClockIcon from 'ui/src/assets/icons/clock.svg'
-import { InfoCircleFilled, Star, TrendUp } from 'ui/src/components/icons'
+import { Clock, InfoCircleFilled, Star, TrendUp } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 
 const TrendUpIcon = <TrendUp color="$neutral2" size="$icon.24" />
 
@@ -59,12 +57,7 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
                   mb="$spacing4"
                   pr="$spacing20"
                 >
-                  <SectionHeaderText
-                    icon={
-                      <ClockIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
-                    }
-                    title={t('explore.search.section.recent')}
-                  />
+                  <SectionHeaderText icon={<Clock size="$icon.20" />} title={t('explore.search.section.recent')} />
                   <TouchableArea onPress={onPressClearSearchHistory}>
                     <Text color="$accent1" variant="buttonLabel2">
                       {t('explore.search.action.clear')}

@@ -1,13 +1,10 @@
-import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'lib/styled-components'
-import { PropsWithChildren, useEffect, useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
 import { getAccent2, getNeutralContrast } from 'theme/utils'
 import { breakpoints } from 'ui/src/theme'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 
 const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
@@ -75,7 +72,7 @@ function getSettings(darkMode: boolean) {
     fonts,
 
     // shadows
-    shadow1: darkMode ? '#000' : '#2F80ED',
+    shadow1: '#000',
 
     // media queries
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
@@ -139,12 +136,7 @@ export function ThemeProvider({ children, ...overriddenColors }: PropsWithChildr
   // eslint-disable-next-line react-hooks/exhaustive-deps -- only update when darkMode or overriddenColors' entries change
   const themeObject = useMemo(() => getTheme(darkMode, overriddenColors), [darkMode, JSON.stringify(overriddenColors)])
 
-  const walletConnectConnector = useConnectorWithId(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, {
-    shouldThrow: true,
-  }) as WalletConnectConnector
-  useEffect(() => {
-    walletConnectConnector.getProvider().then((p) => p.modal.setTheme({ themeMode: darkMode ? 'dark' : 'light' }))
-  }, [darkMode, walletConnectConnector])
+  // TODO(WEB-7508): set theme for wallet connect modal
 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }

@@ -2,14 +2,12 @@ import { useNavigation } from '@react-navigation/core'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
-import { SvgProps } from 'react-native-svg'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import {
   AppStackScreenProp,
   OnboardingStackNavigationProp,
   SettingsStackNavigationProp,
 } from 'src/app/navigation/types'
-import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { RemoveWalletContent } from 'src/components/RemoveWallet/RemoveWalletContent'
 import {
   SettingsRow,
@@ -17,11 +15,11 @@ import {
   SettingsSectionItem,
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
-import { Button, Flex, useSporeColors } from 'ui/src'
-import GlobalIcon from 'ui/src/assets/icons/global.svg'
-import { Edit } from 'ui/src/components/icons'
+import { Button, Flex, IconProps, useSporeColors } from 'ui/src'
+import { Edit, Global } from 'ui/src/components/icons'
 import { Person } from 'ui/src/components/icons/Person'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -87,13 +85,12 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
   const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
-    const iconProps: SvgProps = {
+    const iconProps: IconProps = {
       color: colors.neutral2.get(),
-      height: iconSizes.icon24,
+      size: iconSizes.icon24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
-      strokeWidth: '2',
-      width: iconSizes.icon24,
+      strokeWidth: 2,
     }
 
     const editNicknameSectionOption: SettingsSectionItem = {
@@ -143,7 +140,7 @@ export function ManageWalletsModal({ route }: AppStackScreenProp<typeof ModalNam
             navigationModal: ModalName.ConnectionsDappListModal,
             text: t('settings.setting.wallet.connections.title'),
             count: sessions.length,
-            icon: <GlobalIcon {...iconProps} />,
+            icon: <Global {...iconProps} />,
             isHidden: currentAccount?.type === AccountType.Readonly,
             checkIfCanProceed: (): boolean => {
               navigate(ModalName.ConnectionsDappListModal, {

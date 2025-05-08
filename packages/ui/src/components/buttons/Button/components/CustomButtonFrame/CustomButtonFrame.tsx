@@ -80,9 +80,17 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
 
         // TODO(WEB-6347): change name back to `disabled`
         // @ts-expect-error we know isDisabled will be ButtonVariantProps['isDisabled']
-        if (props.isDisabled) {
+        if (props.isDisabled && !props.onDisabledPress) {
           return {
             backgroundColor: '$surface2',
+          }
+        }
+
+        // @ts-expect-error we know this will potentially be on `props`
+        if (props.onDisabledPress) {
+          return {
+            backgroundColor: '$surface2',
+            pressStyle: withCommonPressStyle({}),
           }
         }
 
@@ -182,11 +190,21 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
       },
     },
     // TODO(WEB-6347): change variant name back to `disabled`
-    isDisabled: {
-      true: {
-        pointerEvents: 'none',
-        userSelect: 'none',
-      },
+    isDisabled: (untypedIsDisabled, { props }) => {
+      // @ts-expect-error we know this will potentially be on `props`
+      if (props.onDisabledPress) {
+        // `onDisabledPress` takes priority over `isDisabled` here; we still want to show the button as being interactive on hover, click, focus, etc.
+        return {}
+      }
+
+      if (untypedIsDisabled) {
+        return {
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }
+      }
+
+      return {}
     },
     emphasis: {
       primary: {},
@@ -206,6 +224,7 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
 
 type CustomProps = {
   'primary-color'?: string
+  onDisabledPress?: () => void
 }
 
 type CustomButtonWithExtraProps = typeof CustomButtonFrameWithoutCustomProps & {

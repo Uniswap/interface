@@ -1,40 +1,71 @@
-import { memo, useCallback } from 'react'
+import { memo, useEffect, useState } from 'react'
+import { Flex, TouchableArea } from 'ui/src'
+import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
+import { iconSizes } from 'ui/src/theme'
 import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hooks/useAddToSearchHistory'
-import { TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { ItemRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
+import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SelectorBaseList } from 'uniswap/src/components/lists/SelectorBaseList'
-import { ItemRowInfo } from 'uniswap/src/components/lists/TokenSectionBaseList/TokenSectionBaseList'
+import { NFTCollectionOptionItem } from 'uniswap/src/components/lists/items/nfts/NFTCollectionOptionItem'
 import { PoolOptionItem } from 'uniswap/src/components/lists/items/pools/PoolOptionItem'
-import { TokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
-import { SearchModalItemTypes, isPoolOption } from 'uniswap/src/components/lists/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { logger } from 'utilities/src/logger/logger'
+import { TokenContextMenuVariant, TokenOptionItem } from 'uniswap/src/components/lists/items/tokens/TokenOptionItem'
+import {
+  TokenContextMenuAction,
+  TokenOptionItemContextMenu,
+} from 'uniswap/src/components/lists/items/tokens/TokenOptionItemContextMenu'
+import { OnchainItemListOptionType, SearchModalOption } from 'uniswap/src/components/lists/items/types'
+import { ENSAddressOptionItem } from 'uniswap/src/components/lists/items/wallets/ENSAddressOptionItem'
+import { UnitagOptionItem } from 'uniswap/src/components/lists/items/wallets/UnitagOptionItem'
+import { WalletByAddressOptionItem } from 'uniswap/src/components/lists/items/wallets/WalletByAddressOptionItem'
+import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
+import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
+import { isHoverable, isWeb } from 'utilities/src/platform'
+import { usePrevious } from 'utilities/src/react/hooks'
+import noop from 'utilities/src/react/noop'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
-interface SearchModalListProps {
-  onSelect: (item: SearchModalItemTypes) => void
-  sections?: TokenSection<SearchModalItemTypes>[]
-  chainFilter?: UniverseChainId | null
+export interface SearchModalListProps {
+  sections?: OnchainItemSection<SearchModalOption>[]
   refetch?: () => void
   loading?: boolean
   hasError?: boolean
   emptyElement?: JSX.Element
   errorText?: string
+  onSelect?: () => void
+  searchFilters: SearchFilterContext
 }
 
-function _SearchModalList({
-  onSelect,
+export const SearchModalList = memo(function _SearchModalList({
   sections,
-  chainFilter,
   refetch,
   loading,
   hasError,
   emptyElement,
   errorText,
+  onSelect,
+  searchFilters,
 }: SearchModalListProps): JSX.Element {
-  const { registerSearch } = useAddToSearchHistory()
+  const { navigateToTokenDetails, navigateToExternalProfile, navigateToNftCollection } = useUniswapContext()
+  const { registerSearchItem } = useAddToSearchHistory()
 
-  const renderItem = useCallback(
-    ({ item, section, index }: ItemRowInfo<SearchModalItemTypes>) => {
-      if (isPoolOption(item)) {
+  const { value: isContextMenuOpen, setFalse: closeContextMenu, toggle: toggleContextMenu } = useBooleanState(false)
+
+  const [focusedRowIndex, setFocusedRowIndex] = useState<number | undefined>(1) // set to 1st item hovered on first open
+
+  // to handle closing the left-click '...' context menu when the focused row changes
+  const previousFocusedRowIndex = usePrevious(focusedRowIndex)
+  useEffect(() => {
+    if (isWeb && previousFocusedRowIndex !== focusedRowIndex) {
+      closeContextMenu()
+    }
+  }, [previousFocusedRowIndex, focusedRowIndex, closeContextMenu])
+
+  // eslint-disable-next-line consistent-return
+  const renderItem = ({ item, section, rowIndex }: ItemRowInfo<SearchModalOption>): JSX.Element => {
+    switch (item.type) {
+      case OnchainItemListOptionType.Pool:
         return (
           <PoolOptionItem
             token0CurrencyInfo={item.token0CurrencyInfo}
@@ -44,56 +75,184 @@ function _SearchModalList({
             protocolVersion={item.protocolVersion}
             hookAddress={item.hookAddress}
             feeTier={item.feeTier}
+            focusedRowControl={{
+              rowIndex,
+              setFocusedRowIndex,
+              focusedRowIndex,
+            }}
             onPress={() => {
-              // TODO(WEB-6810): add pool to recent searches
-              // registerSearch(currencyInfo)
+              registerSearchItem(item)
 
-              onSelect(item)
+              // TODO: navigate to pool details
 
-              // TODO(WEB-6771): add analytics event when pool option is selected -- see InterfaceEventName.NAVBAR_RESULT_SELECTED
-              logger.debug(
-                'SearchModalList',
-                'renderItem',
-                'logging analytics event for pool option item',
+              sendSearchOptionItemClickedAnalytics({
                 item,
                 section,
-                index,
-              )
+                rowIndex,
+                searchFilters,
+              })
+
+              onSelect?.()
             }}
           />
         )
-      }
+      case OnchainItemListOptionType.Token:
+        return (
+          <TokenOptionItem
+            showTokenAddress
+            option={item}
+            contextMenuVariant={TokenContextMenuVariant.Search}
+            focusedRowControl={{
+              focusedRowIndex,
+              setFocusedRowIndex,
+              rowIndex,
+            }}
+            rightElement={
+              isHoverable && rowIndex === focusedRowIndex ? (
+                <TouchableArea
+                  borderWidth={1}
+                  hoverStyle={{
+                    borderColor: '$surface3Hovered',
+                  }}
+                  borderRadius="$rounded12"
+                  onPress={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    toggleContextMenu()
+                  }}
+                >
+                  <TokenOptionItemContextMenu
+                    actions={[
+                      TokenContextMenuAction.CopyAddress,
+                      ...(isWeb ? [] : [TokenContextMenuAction.Favorite]),
+                      TokenContextMenuAction.Swap,
+                      TokenContextMenuAction.Send,
+                      TokenContextMenuAction.Receive,
+                      TokenContextMenuAction.Share,
+                    ]}
+                    triggerMode={ContextMenuTriggerMode.Primary}
+                    currency={item.currencyInfo.currency}
+                    isOpen={previousFocusedRowIndex === focusedRowIndex && isContextMenuOpen}
+                    openMenu={noop}
+                    closeMenu={noop}
+                  >
+                    <Flex p="$spacing6">
+                      <MoreHorizontal size={iconSizes.icon16} color="$neutral2" />
+                    </Flex>
+                  </TokenOptionItemContextMenu>
+                </TouchableArea>
+              ) : undefined
+            }
+            onPress={() => {
+              registerSearchItem(item)
 
-      return (
-        <TokenOptionItem
-          showTokenAddress
-          option={item}
-          onPress={() => {
-            registerSearch(item.currencyInfo)
+              navigateToTokenDetails(item.currencyInfo.currencyId)
 
-            onSelect(item)
+              sendSearchOptionItemClickedAnalytics({
+                item,
+                section,
+                rowIndex,
+                searchFilters,
+              })
 
-            // TODO(WEB-6771): add analytics event when token option is selected -- see InterfaceEventName.NAVBAR_RESULT_SELECTED
-            logger.debug(
-              'SearchModalList',
-              'renderItem',
-              'logging analytics event for token option item',
-              item,
-              section,
-              index,
-            )
-          }}
-        />
-      )
-    },
-    [onSelect, registerSearch],
-  )
+              onSelect?.()
+            }}
+          />
+        )
+      case OnchainItemListOptionType.WalletByAddress:
+        return (
+          <WalletByAddressOptionItem
+            walletByAddressOption={item}
+            onPress={() => {
+              navigateToExternalProfile({ address: item.address })
+
+              registerSearchItem(item)
+
+              sendSearchOptionItemClickedAnalytics({
+                item,
+                section,
+                rowIndex,
+                searchFilters,
+              })
+
+              onSelect?.()
+            }}
+          />
+        )
+      case OnchainItemListOptionType.ENSAddress:
+        return (
+          <ENSAddressOptionItem
+            ensAddressOption={item}
+            onPress={() => {
+              navigateToExternalProfile({ address: item.address })
+
+              registerSearchItem(item)
+
+              sendSearchOptionItemClickedAnalytics({
+                item,
+                section,
+                rowIndex,
+                searchFilters,
+              })
+
+              onSelect?.()
+            }}
+          />
+        )
+      case OnchainItemListOptionType.Unitag:
+        return (
+          <UnitagOptionItem
+            unitagOption={item}
+            onPress={() => {
+              navigateToExternalProfile({ address: item.address })
+
+              registerSearchItem(item)
+
+              sendSearchOptionItemClickedAnalytics({
+                item,
+                section,
+                rowIndex,
+                searchFilters,
+              })
+
+              onSelect?.()
+            }}
+          />
+        )
+      case OnchainItemListOptionType.NFTCollection:
+        return (
+          <NFTCollectionOptionItem
+            collectionOption={item}
+            onPress={() => {
+              const { address, chainId } = item
+
+              navigateToNftCollection({ collectionAddress: address, chainId })
+
+              registerSearchItem(item)
+
+              sendSearchOptionItemClickedAnalytics({
+                item,
+                section,
+                rowIndex,
+                searchFilters,
+              })
+
+              onSelect?.()
+            }}
+          />
+        )
+    }
+  }
 
   return (
-    <SelectorBaseList<SearchModalItemTypes>
+    <SelectorBaseList<SearchModalOption>
+      focusedRowControl={{
+        focusedRowIndex,
+        setFocusedRowIndex,
+      }}
       renderItem={renderItem}
       sections={sections}
-      chainFilter={chainFilter}
+      chainFilter={searchFilters.searchChainFilter}
       refetch={refetch}
       loading={loading}
       hasError={hasError}
@@ -102,13 +261,22 @@ function _SearchModalList({
       keyExtractor={key}
     />
   )
-}
+})
 
-function key(item: SearchModalItemTypes): string {
-  if (isPoolOption(item)) {
-    return `pool-${item.chainId}-${item.poolId}-${item.protocolVersion}-${item.hookAddress}-${item.feeTier}`
+// eslint-disable-next-line consistent-return
+function key(item: SearchModalOption): string {
+  switch (item.type) {
+    case OnchainItemListOptionType.Pool:
+      return `pool-${item.chainId}-${item.poolId}-${item.protocolVersion}-${item.hookAddress}-${item.feeTier}`
+    case OnchainItemListOptionType.Token:
+      return `token-${item.currencyInfo.currency.chainId}-${item.currencyInfo.currencyId}`
+    case OnchainItemListOptionType.WalletByAddress:
+      return `wallet-${item.address}`
+    case OnchainItemListOptionType.ENSAddress:
+      return `ens-${item.address}`
+    case OnchainItemListOptionType.Unitag:
+      return `unitag-${item.address}`
+    case OnchainItemListOptionType.NFTCollection:
+      return `nft-${item.chainId}-${item.address}`
   }
-  return `token-${item.currencyInfo.currency.chainId}-${item.currencyInfo.currencyId}`
 }
-
-export const SearchModalList = memo(_SearchModalList)

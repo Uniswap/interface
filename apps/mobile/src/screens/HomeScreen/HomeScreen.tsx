@@ -33,7 +33,7 @@ import {
 } from 'src/components/layout/TabHelpers'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
-import { useWalletRestore } from 'src/features/wallet/hooks'
+import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { HomeScreenQuickActions } from 'src/screens/HomeScreen/HomeScreenQuickActions'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'

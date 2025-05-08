@@ -1,4 +1,5 @@
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
+import { useFocusEffect } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +13,6 @@ import { ColorTokens, Flex, GeneratedIcon, Inset, Separator, Text } from 'ui/src
 import { TimePast } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
-import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
 import { FORQuote, InitialQuoteSelection } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
@@ -108,7 +108,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
               bounces
               ListEmptyComponent={<Flex />}
               ListFooterComponent={<Inset all="$spacing36" />}
-              focusHook={useBottomSheetFocusHook}
+              focusHook={useFocusEffect}
               keyExtractor={key}
               keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="always"

@@ -1,9 +1,10 @@
 import { UseQueryResult, skipToken } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
-import { TRADING_API_CACHE_KEY, fetchCheckApproval } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { fetchCheckApproval } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { ApprovalRequest, ApprovalResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useCheckApprovalQuery({
   params,
@@ -12,7 +13,7 @@ export function useCheckApprovalQuery({
   ApprovalRequest,
   ApprovalResponse
 >): UseQueryResult<ApprovalResponse> {
-  const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.approval, params]
+  const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.approval, params]
 
   return useQueryWithImmediateGarbageCollection<ApprovalResponse>({
     queryKey,

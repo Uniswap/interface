@@ -7,14 +7,17 @@ import { Route, Routes } from 'react-router-dom'
 // Annotating it with webpackPreload allows it to be ready when requested.
 const AppChrome = lazy(() => import(/* webpackPreload: true */ './Chrome'))
 
-export const Body = memo(function Body() {
+export const Body = memo(function Body({ shouldRenderAppChrome = true }: { shouldRenderAppChrome?: boolean }) {
   const routerConfig = useRouterConfig()
 
   return (
     <>
-      <Suspense>
-        <AppChrome />
-      </Suspense>
+      {shouldRenderAppChrome ? (
+        <Suspense>
+          <AppChrome />
+        </Suspense>
+      ) : null}
+
       <Suspense fallback={<Loader />}>
         <Routes>
           {routes.map((route: RouteDefinition) =>

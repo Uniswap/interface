@@ -2,7 +2,7 @@ import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { TradeType } from '@uniswap/sdk-core'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 export enum TransactionType {
@@ -39,6 +39,7 @@ export enum TransactionType {
   CREATE_POSITION = 30,
   MIGRATE_LIQUIDITY_V3_TO_V4 = 31,
   LP_INCENTIVES_CLAIM_REWARDS = 32,
+  PERMIT = 33,
 }
 interface BaseTransactionInfo {
   type: TransactionType
@@ -46,6 +47,13 @@ interface BaseTransactionInfo {
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.APPROVAL
+  tokenAddress: string
+  spender: string
+  amount: string
+}
+
+export interface PermitTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.PERMIT
   tokenAddress: string
   spender: string
   amount: string
@@ -202,6 +210,7 @@ export interface SendTransactionInfo {
 
 export type TransactionInfo =
   | ApproveTransactionInfo
+  | PermitTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ClaimTransactionInfo
@@ -226,6 +235,7 @@ export type TransactionInfo =
 interface BaseTransactionDetails {
   status: TransactionStatus
   hash: string
+  batchInfo?: { connectorId?: string; batchId: string; chainId: UniverseChainId }
   addedTime: number
   from: string
   info: TransactionInfo

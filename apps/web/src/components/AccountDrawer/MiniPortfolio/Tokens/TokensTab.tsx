@@ -104,6 +104,7 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
         address: tokenAddress,
         chain: chainId,
         chainUrlParam: getChainUrlParam(chainId),
+        inputAddress: tokenAddress,
       }),
     )
     accountDrawer.close()
@@ -133,7 +134,7 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
               })}
             </ThemedText.SubHeader>
             <Row justify="flex-end">
-              <DeltaArrow delta={percentChange24} />
+              <DeltaArrow delta={percentChange24} formattedDelta={formatDelta(percentChange24)} />
               <ThemedText.BodySecondary>{formatDelta(percentChange24)}</ThemedText.BodySecondary>
             </Row>
           </>
@@ -163,7 +164,6 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
       ) : (
         <ContextMenu
           menuItems={menuItems}
-          isPlacementRight
           triggerMode={ContextMenuTriggerMode.Secondary}
           isOpen={contextMenuIsOpen}
           closeMenu={closeContextMenu}

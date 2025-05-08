@@ -13,7 +13,7 @@ import {
   OnDeviceRecoveryWalletCardLoader,
 } from 'src/screens/Import/OnDeviceRecoveryWalletCard'
 import { RecoveryWalletInfo } from 'src/screens/Import/useOnDeviceRecoveryData'
-import { Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Image, Text, TouchableArea } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { PapersText } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -47,7 +47,6 @@ export function OnDeviceRecoveryScreen({
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const { setRecoveredImportedAccounts } = useOnboardingContext()
   const recoveryLoadingTimeoutMs = useDynamicConfigValue(
     DynamicConfigs.OnDeviceRecovery,
@@ -257,7 +256,7 @@ export function OnDeviceRecoveryScreen({
             })}
             rejectText={t('common.button.back')}
             acknowledgeText={t('common.button.continue')}
-            icon={<PapersText color={colors.neutral1.get()} size="$icon.20" strokeWidth={1.5} />}
+            icon={<PapersText color="$neutral1" size="$icon.20" strokeWidth={1.5} />}
             isOpen={showConfirmationModal}
             modalName={ModalName.OnDeviceRecoveryConfirmation}
             severity={WarningSeverity.None}

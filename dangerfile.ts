@@ -180,7 +180,7 @@ async function processAddChanges() {
         change.content.includes('BottomSheetFlashList'))
     ) {
       warn(
-        `Detected import from '@gorhom/bottom-sheet' for ${change.content.match(/BottomSheetScrollView|BottomSheetFlatList|BottomSheetFlashList/g)?.join(', ')}. Consider adding the focus hook from 'useBottomSheetFocusHook' to ensure scrollables work correctly, especially on Android.`,
+        `Detected import from '@gorhom/bottom-sheet' for ${change.content.match(/BottomSheetScrollView|BottomSheetFlatList|BottomSheetFlashList/g)?.join(', ')}. Consider setting focusHook to 'useFocusEffect' to ensure scrollables work within bottom sheets, especially on Android.`,
       )
     }
   })
@@ -249,6 +249,13 @@ async function processAddChanges() {
     if (/(useSelector|appSelect|select)\(\s*makeSelect/.test(concatenatedAddedLines)) {
       fail(
         `It appears you may be creating a new selector on every render. See PR #5172 for details on how to fix this.`,
+      )
+    }
+
+    // Check for direct string cache key usage with react query
+    if (concatenatedAddedLines.includes(`queryKey: ['`)) {
+      fail(
+        `It appears you're using a direct string cache key with react query. Please use the ReactQueryCacheKey enum instead!`,
       )
     }
   })

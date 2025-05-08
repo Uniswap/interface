@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import { Flex, ModalCloseIcon, TouchableArea, useSporeColors } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { Text } from 'ui/src/components/text/Text'
-import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 function GetHelpButton({ url }: { url?: string }) {
@@ -48,7 +47,7 @@ export function GetHelpHeader({ title, goBack, link, closeModal, closeDataTestId
     <Flex row justifyContent="space-between" alignItems="center" gap="$spacing4" width="100%" className={className}>
       {goBack && (
         <TouchableArea onPress={goBack}>
-          <BackArrow size={iconSizes.icon24} color="$neutral2" hoverColor="$neutral2Hovered" />
+          <BackArrow size="$icon.24" color="$neutral2" hoverColor="$neutral2Hovered" />
         </TouchableArea>
       )}
       {title && (

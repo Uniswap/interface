@@ -3,9 +3,8 @@ import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useSelector } from 'react-redux'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { Flex, IconProps, Text, TouchableArea, useSporeColors } from 'ui/src'
-import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
-import { iconSizes } from 'ui/src/theme'
+import { Flex, GeneratedIcon, IconProps, Text, TouchableArea } from 'ui/src'
+import { CopySheets } from 'ui/src/components/icons'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
@@ -22,7 +21,7 @@ export enum LinkButtonType {
 export type LinkButtonProps = {
   buttonType: LinkButtonType
   label: string
-  Icon?: React.FC<SvgProps & { size?: IconProps['size'] }>
+  Icon?: React.FC<SvgProps & { size?: IconProps['size'] }> | GeneratedIcon
   element: ElementNameType
   openExternalBrowser?: boolean
   isSafeUri?: boolean
@@ -40,7 +39,6 @@ export function LinkButton({
   value,
   testID,
 }: LinkButtonProps): JSX.Element {
-  const colors = useSporeColors()
   const hasViewedContractAddressExplainer = useSelector(selectHasViewedContractAddressExplainer)
   const { openContractAddressExplainerModal, copyAddressToClipboard } = useTokenDetailsContext()
 
@@ -76,13 +74,11 @@ export function LinkButton({
         onPress={onPress}
       >
         <Flex centered row shrink gap="$spacing8" width="auto">
-          {Icon && <Icon color={colors.neutral1.get()} size="$icon.16" />}
+          {Icon && <Icon color="$neutral1" size="$icon.16" />}
           <Text $short={{ variant: 'buttonLabel3' }} color="$neutral1" variant="buttonLabel2">
             {label}
           </Text>
-          {buttonType === LinkButtonType.Copy && (
-            <CopyIcon color={colors.neutral2.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
-          )}
+          {buttonType === LinkButtonType.Copy && <CopySheets color="$neutral2" size="$icon.16" />}
         </Flex>
       </TouchableArea>
     </Trace>

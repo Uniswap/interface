@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { usePositionDerivedInfo } from 'components/Liquidity/hooks'
 import { V3PositionInfo } from 'components/Liquidity/types'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -14,12 +14,15 @@ import {
   ProtocolItems,
   UniversalRouterVersion,
 } from 'uniswap/src/data/tradingApi/__generated__'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   LiquidityTransactionType,
   MigrateV3PositionTxAndGasInfo,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -50,7 +53,7 @@ export function MigrateV3PositionTxContextProvider({
   const [hasMigrateErrorResponse, setHasMigrateErrorResponse] = useState(false)
 
   const { derivedPositionInfo, positionState, currentTransactionStep } = useCreatePositionContext()
-  const { feeValue0, feeValue1 } = useV3OrV4PositionDerivedInfo(positionInfo)
+  const { feeValue0, feeValue1 } = usePositionDerivedInfo(positionInfo)
   const {
     derivedPriceRangeInfo,
     priceRangeState: { fullRange },
@@ -84,15 +87,13 @@ export function MigrateV3PositionTxContextProvider({
   })
 
   if (approvalError) {
-    logger.info(
-      'MigrateV3LiquidityTxContext',
-      'MigrateV3LiquidityTxContext',
-      parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' }),
-      {
-        error: JSON.stringify(approvalError),
-        increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
+    const message = parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' })
+    logger.error(message, {
+      tags: {
+        file: 'MigrateV3LiquidityTxContext',
+        function: 'useEffect',
       },
-    )
+    })
   }
 
   const approvalsNeeded = !approvalLoading && Boolean(migrateTokenApprovals?.permitData)
@@ -188,8 +189,8 @@ export function MigrateV3PositionTxContextProvider({
     !derivedPriceRangeInfo.invalidRange
 
   const isUserCommitedToMigrate =
-    currentTransactionStep?.step.type === TransactionStepType.MigratePositionTransactionStep ||
-    currentTransactionStep?.step.type === TransactionStepType.MigratePositionTransactionStepAsync
+    currentTransactionStep?.step.type === TransactionStepType.MigratePositionTransaction ||
+    currentTransactionStep?.step.type === TransactionStepType.MigratePositionTransactionAsync
   const isQueryEnabled =
     !isUserCommitedToMigrate &&
     !approvalLoading &&
@@ -213,15 +214,17 @@ export function MigrateV3PositionTxContextProvider({
   }, [migrateError, migratePositionRequestArgs])
 
   if (migrateError) {
-    logger.info(
-      'MigrateV3LiquidityTxContext',
-      'MigrateV3LiquidityTxContext',
-      parseErrorMessageTitle(migrateError, { defaultTitle: 'unknown MigrateLpPositionCalldataQuery' }),
-      {
-        error: JSON.stringify(migrateError),
-        migrateCalldataQueryParams: JSON.stringify(migratePositionRequestArgs),
+    const message = parseErrorMessageTitle(migrateError, { defaultTitle: 'unknown MigrateLpPositionCalldataQuery' })
+    logger.error(message, {
+      tags: {
+        file: 'MigrateV3LiquidityTxContext',
+        function: 'useEffect',
       },
-    )
+    })
+
+    sendAnalyticsEvent(InterfaceEventNameLocal.MigrateLiquidityFailed, {
+      message,
+    })
   }
 
   const validatedValue: MigrateV3PositionTxAndGasInfo | undefined = useMemo(() => {
@@ -254,11 +257,15 @@ export function MigrateV3PositionTxContextProvider({
       migratePositionRequestArgs,
       approveToken0Request: undefined,
       approveToken1Request: undefined,
-      permit: validatedPermitRequest,
+      permit: validatedPermitRequest
+        ? { method: PermitMethod.TypedData, typedData: validatedPermitRequest }
+        : undefined,
       protocolVersion: ProtocolVersion.V3,
       approvePositionTokenRequest: undefined,
       revokeToken0Request: undefined,
       revokeToken1Request: undefined,
+      token0PermitTransaction: undefined,
+      token1PermitTransaction: undefined,
       txRequest,
       action: {
         type: LiquidityTransactionType.Migrate,

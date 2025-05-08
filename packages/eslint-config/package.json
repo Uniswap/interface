@@ -25,6 +25,7 @@
     "@rushstack/eslint-patch": "1.5.1",
     "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
+    "@typescript-eslint/utils": "6.20.0",
     "eslint-config-prettier": "8.10.0",
     "eslint-config-turbo": "latest",
     "eslint-import-resolver-typescript": "3.6.3",

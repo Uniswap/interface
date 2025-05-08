@@ -18,6 +18,7 @@ const TRANSACTION_TYPE_TO_SWAP_ROUTING: Record<OnChainSwapTransactionType, SwapR
 
 export function logSwapFinalized(
   hash: string,
+  batchId: string | undefined,
   chainInId: number,
   chainOutId: number,
   analyticsContext: ITraceContext,
@@ -41,6 +42,7 @@ export function logSwapFinalized(
       ? undefined
       : timestampTracker.getElapsedTime(SwapEventType.FirstSwapSuccess, SwapEventType.FirstSwapAction),
     hash,
+    batch_id: batchId,
     chain_id: chainInId,
     chain_id_in: chainInId,
     chain_id_out: chainOutId,

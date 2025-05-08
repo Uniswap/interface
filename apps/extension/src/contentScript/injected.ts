@@ -18,7 +18,6 @@ import { ExtensionEthMethodHandler } from 'src/contentScript/methodHandlers/Exte
 import { ProviderDirectMethodHandler } from 'src/contentScript/methodHandlers/ProviderDirectMethodHandler'
 import { UniswapMethodHandler } from 'src/contentScript/methodHandlers/UniswapMethodHandler'
 import { emitAccountsChanged, emitChainChanged } from 'src/contentScript/methodHandlers/emitUtils'
-import { ExtensionEthMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import {
   isDeprecatedMethod,
   isExtensionEthMethod,
@@ -37,6 +36,7 @@ import {
   isValidWindowEthereumRequest,
 } from 'src/contentScript/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
@@ -229,10 +229,7 @@ async function rejectRequestNotOnboarded(
   request: WindowEthereumRequest,
   source: MessageEventSource | null,
 ): Promise<void> {
-  if (
-    request.method === ExtensionEthMethods.eth_requestAccounts ||
-    request.method === ExtensionEthMethods.wallet_requestPermissions
-  ) {
+  if (request.method === EthMethod.EthRequestAccounts || request.method === EthMethod.WalletRequestPermissions) {
     await contentScriptUtilityMessageChannel.sendMessage({
       type: ContentScriptUtilityMessageType.FocusOnboardingTab,
     })

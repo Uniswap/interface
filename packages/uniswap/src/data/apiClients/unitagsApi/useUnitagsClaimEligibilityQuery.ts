@@ -1,7 +1,8 @@
 import { UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
-import { UNITAGS_API_CACHE_KEY, fetchClaimEligibility } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { fetchClaimEligibility } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { UnitagClaimEligibilityRequest, UnitagClaimEligibilityResponse } from 'uniswap/src/features/unitags/types'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 export function useUnitagsClaimEligibilityQuery({
@@ -11,7 +12,7 @@ export function useUnitagsClaimEligibilityQuery({
   UnitagClaimEligibilityRequest,
   UnitagClaimEligibilityResponse
 >): UseQueryResult<UnitagClaimEligibilityResponse> {
-  const queryKey = [UNITAGS_API_CACHE_KEY, 'claim/eligibility', params]
+  const queryKey = [ReactQueryCacheKey.UnitagsApi, 'claim/eligibility', params]
 
   return useQuery<UnitagClaimEligibilityResponse>({
     queryKey,

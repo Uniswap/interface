@@ -9,7 +9,6 @@ import { closeAllModals } from 'src/features/modals/modalSlice'
 import { getEncryptedMnemonic } from 'src/features/scantastic/ScantasticEncryption'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled, Faceid, Laptop, LinkBrokenHorizontal, Wifi } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
@@ -223,7 +222,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
       <Modal backgroundColor={colors.surface1.val} name={ModalName.OtpInputExpired} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-            <Wifi color="$neutral2" size={iconSizes.icon24} />
+            <Wifi color="$neutral2" size="$icon.24" />
           </Flex>
           <Flex centered gap="$spacing12">
             <Text variant="subheading1">{t('scantastic.modal.ipMismatch.title')}</Text>
@@ -246,7 +245,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
       <Modal backgroundColor={colors.surface1.val} name={ModalName.OtpInputExpired} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-            <LinkBrokenHorizontal color="$neutral2" size={iconSizes.icon24} />
+            <LinkBrokenHorizontal color="$neutral2" size="$icon.24" />
           </Flex>
           <Text variant="subheading1">{t('scantastic.error.timeout.title')}</Text>
           <Text color="$neutral2" mb="$spacing12" textAlign="center" variant="body3">
@@ -267,7 +266,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
       <Modal backgroundColor={colors.surface1.val} name={ModalName.OtpScanInput} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
-            <Laptop color="$accent1" size={iconSizes.icon24} />
+            <Laptop color="$accent1" size="$icon.24" />
           </Flex>
           <Text variant="subheading1">{t('scantastic.code.title')}</Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
@@ -290,7 +289,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
       <Modal backgroundColor={colors.surface1.val} name={ModalName.OtpScanInput} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
-            <AlertTriangleFilled color="$statusCritical" size={iconSizes.icon24} />
+            <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
           </Flex>
           <Text variant="subheading1">{t('common.text.error')}</Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
@@ -312,7 +311,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
     <Modal backgroundColor={colors.surface1.val} name={ModalName.Scantastic} onClose={onClose}>
       <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
         <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
-          <Laptop color="$accent1" size={iconSizes.icon24} />
+          <Laptop color="$accent1" size="$icon.24" />
         </Flex>
         <Text variant="subheading1">{t('scantastic.confirmation.title')}</Text>
         <Text color="$neutral2" textAlign="center" variant="body3">
@@ -362,7 +361,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
         <Flex gap="$spacing4" width="100%">
           <Flex row>
             <Button
-              icon={requiresBiometricAuth ? <Faceid size={iconSizes.icon16} /> : undefined}
+              icon={requiresBiometricAuth ? <Faceid size="$icon.16" /> : undefined}
               mb="$spacing4"
               size="large"
               variant="branded"

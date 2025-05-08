@@ -26,7 +26,7 @@ import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { Anchor, Button, Flex, Text, useSporeColors } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
@@ -172,7 +172,6 @@ const statusFilterAtom = atom<PositionStatus[]>([PositionStatus.IN_RANGE, Positi
 export default function Pool() {
   const { t } = useTranslation()
   const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
-  const media = useMedia()
 
   const [chainFilter, setChainFilter] = useAtom(chainFilterAtom)
   const { chains: currentModeChains } = useEnabledChains()
@@ -274,8 +273,6 @@ export default function Pool() {
     }
   }
 
-  const showingEmptyPositions = !isLoadingPositions && combinedPositions.length === 0
-
   return (
     <Trace logImpression page={InterfacePageNameLocal.Positions}>
       <Flex
@@ -297,7 +294,7 @@ export default function Pool() {
                 openModal()
               }}
               setTokenRewards={setTokenRewards}
-              hasCollectedRewards={hasCollectedRewards}
+              initialHasCollectedRewards={hasCollectedRewards}
             />
           )}
           <Flex row justifyContent="space-between" alignItems="center" mt={isLPIncentivesEnabled ? '$spacing28' : 0}>
@@ -401,7 +398,7 @@ export default function Pool() {
           </Flex>
         </Flex>
         <Flex gap="$gap32">
-          {!media.xl && !showingEmptyPositions && !isLoading && <TopPools chainId={chainFilter} />}
+          <TopPools chainId={chainFilter} />
           <Flex gap="$gap20" mb="$spacing24">
             <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
             <Flex gap="$gap12">

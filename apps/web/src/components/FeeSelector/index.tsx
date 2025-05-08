@@ -1,7 +1,7 @@
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import Card from 'components/Card/cards'
+import { OutlineCard } from 'components/Card/cards'
 import { FeeOption } from 'components/FeeSelector/FeeOption'
 import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
@@ -9,8 +9,7 @@ import { AutoColumn } from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
-import usePrevious from 'hooks/usePrevious'
-import styled, { keyframes } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Button, Flex, RadioButtonGroup, Text } from 'ui/src'
@@ -18,25 +17,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useFormatter } from 'utils/formatNumbers'
-
-const pulse = (color: string) => keyframes`
-  0% {
-    box-shadow: 0 0 0 0 ${color};
-  }
-
-  70% {
-    box-shadow: 0 0 0 2px ${color};
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 ${color};
-  }
-`
-const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
-  border: 1px solid ${({ theme }) => theme.surface3};
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.accent1)} 0.6s linear;
-  align-self: center;
-`
 
 const Select = styled.div`
   align-items: flex-start;
@@ -109,9 +89,6 @@ export default function FeeSelector({
   )
 
   const [showOptions, setShowOptions] = useState(false)
-  const [pulsing, setPulsing] = useState(false)
-
-  const previousFeeAmount = usePrevious(feeAmount)
 
   const recommended = useRef(false)
 
@@ -153,16 +130,14 @@ export default function FeeSelector({
     setShowOptions(isError)
   }, [isError])
 
-  useEffect(() => {
-    if (feeAmount && previousFeeAmount !== feeAmount) {
-      setPulsing(true)
-    }
-  }, [previousFeeAmount, feeAmount])
-
   return (
     <Flex gap="$gap16">
       <DynamicSection gap="md" disabled={disabled}>
-        <FocusedOutlineCard pulsing={pulsing} onAnimationEnd={() => setPulsing(false)}>
+        <OutlineCard
+          $platform-web={{
+            alignSelf: 'center',
+          }}
+        >
           <Flex row justifyContent="space-between" alignItems="center">
             <Flex id="add-liquidity-selected-fee">
               {!feeAmount ? (
@@ -205,7 +180,7 @@ export default function FeeSelector({
               {showOptions ? <Trans i18nKey="common.hide.button" /> : <Trans i18nKey="common.edit.button" />}
             </Button>
           </Flex>
-        </FocusedOutlineCard>
+        </OutlineCard>
 
         {chainId && showOptions && (
           <RadioButtonGroup
