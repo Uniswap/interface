@@ -13,9 +13,10 @@ import { Trans } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { getAddress } from "ethers/lib/utils";
 import { PoolFeeDetails } from "./PoolFeeDetails";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useScreenSize } from "hooks/screenSize";
 import Loader from "components/Icons/LoadingSpinner";
+import { WRAPPED_NATIVE_CURRENCY } from "constants/tokens";
 
 const StyledPoolRow = styled(Row) <{ $isMobile?: boolean }>`
   align-items: center;
@@ -121,7 +122,12 @@ interface IncentiveTableProps {
   isLoading: boolean;
   onDeposit?: (incentive: ProcessedIncentive) => void;
 }
-
+const getTokenLogoURI = (address: string) => {
+  if (WRAPPED_NATIVE_CURRENCY[841]?.address === getAddress(address)) {
+    return `https://cdn.jsdelivr.net/gh/taraswap/assets@main/logos/${address.toLowerCase()}/logo.png`;
+  }
+  return `https://cdn.jsdelivr.net/gh/taraswap/assets@main/logos/${getAddress(address)}/logo.png`;
+}
 const PoolTokenImage = ({
   pool,
   isMobile,
@@ -130,6 +136,9 @@ const PoolTokenImage = ({
   isMobile?: boolean;
 }) => {
   const LOGO_DEFAULT_SIZE = isMobile ? 22 : 30;
+  const token0Logo = getTokenLogoURI(pool.token0Address);
+  const token1Logo = getTokenLogoURI(pool.token1Address);
+
   return (
     <TokenContainer>
       <TokenImageWrapper $hasImage={!!pool.token0LogoURI} $isMobile={isMobile}>
@@ -139,7 +148,7 @@ const PoolTokenImage = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            <TokenLogoImage size={LOGO_DEFAULT_SIZE} src={pool.token0LogoURI} />
+            <TokenLogoImage size={LOGO_DEFAULT_SIZE} src={token0Logo} />
           </a>
         )}
       </TokenImageWrapper>
@@ -150,7 +159,7 @@ const PoolTokenImage = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            <TokenLogoImage size={LOGO_DEFAULT_SIZE} src={pool.token1LogoURI} />
+            <TokenLogoImage size={LOGO_DEFAULT_SIZE} src={token1Logo} />
           </a>
         )}
       </TokenImageWrapper>
@@ -325,7 +334,7 @@ export const IncentiveTable = ({
                   <PoolFeeDetails
                     key={data.id}
                     incentiveId={data.id}
-                    rewardTokenImage={data.rewardToken.logoURI}
+                    rewardTokenImage={getTokenLogoURI(data.rewardToken.id)}
                     rewardTokenSymbol={data.rewardToken.symbol}
                     rewardTokenAddress={data.rewardToken.id}
                     tradeFeesPercentage={data.tradeFeesPercentage}

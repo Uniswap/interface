@@ -10,8 +10,10 @@ import { useTokenList } from "hooks/useTokenList";
 import { useV3StakerContract } from "hooks/useV3StakerContract";
 import { usePoolDatas } from "hooks/usePoolDatas";
 import { useTokenEthPrice } from "./useTokenUsdPrice";
-import { Token } from "@taraswap/sdk-core";
 import { useMultipleTokenBalances } from "./useMultipleTokenBalances";
+import { useBulkPosition } from "./useBulkPosition";
+import { BigNumber, ethers } from "ethers";
+import { RewardInfo } from "./usePosition";
 
 interface IncentiveData {
   id: string;
@@ -124,9 +126,20 @@ export interface ProcessedIncentive {
   poolPositionIds?: number[];
 }
 
-export interface PositionWithReward extends PositionsResponse {
-  reward: string;
-  incentiveId: string;
+export interface PositionWithIncentive extends PositionsResponse {
+  incentive: {
+    id: string;
+    rewardToken: {
+      id: string;
+      symbol: string;
+      decimals: number;
+    };
+    poolAddress: string;
+    startTime: number;
+    endTime: number;
+    vestingPeriod: string;
+    refundee: string;
+  };
 }
 
 const formatValue = (value: string | number) => {
@@ -152,10 +165,10 @@ export function useIncentivesData(poolAddress?: string) {
     UserPosition[]
   >([]);
   const [userPositionsInIncentives, setUserPositionsInIncentives] = useState<
-    PositionWithReward[]
+    PositionWithIncentive[]
   >([]);
   const [positionsToWithdraw, setPositionsToWithdraw] = useState<
-    PositionWithReward[]
+    PositionWithIncentive[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -171,7 +184,6 @@ export function useIncentivesData(poolAddress?: string) {
   }, [incentivesData]);
 
   const { balances } = useMultipleTokenBalances(tokenAddresses);
-
   const getStakersQuery = useCallback((incentiveId: string) => {
     return `
       query incentivePoistions{
@@ -357,8 +369,8 @@ export function useIncentivesData(poolAddress?: string) {
         Number(incentive.endTime) < Math.floor(Date.now() / 1000)
           ? "ended"
           : Number(incentive.startTime) > Math.floor(Date.now() / 1000)
-          ? "inactive"
-          : "active";
+            ? "inactive"
+            : "active";
 
       if (userPositions.length > 0 && v3StakerContract) {
         try {
@@ -368,10 +380,29 @@ export function useIncentivesData(poolAddress?: string) {
               incentive.id
             );
             const deposit = await v3StakerContract.deposits(position.id);
-            if (deposit.owner === account.address) {
+            let pendingRewards: RewardInfo | undefined;
+
+
+            if (deposit.owner === account.address && stakeInfo && stakeInfo.liquidity > 0) {
               canWithdraw = true;
+              try {
+                pendingRewards = await v3StakerContract.getRewardInfo(
+                  {
+                    rewardToken: incentive.rewardToken.id,
+                    pool: incentive.pool.id,
+                    startTime: parseInt(incentive.startTime),
+                    endTime: parseInt(incentive.endTime),
+                    vestingPeriod: parseInt(incentive.vestingPeriod),
+                    refundee: incentive.refundee,
+                  },
+                  position.id
+                );
+              } catch (error) {
+                console.warn("Error checking pending rewards:", error);
+              }
             }
-            if (canWithdraw) {
+
+            if (canWithdraw && pendingRewards && Number(ethers.utils.formatEther(pendingRewards?.reward)) > 0) {
               setPositionsToWithdraw((prev) => {
                 const positionExists = prev.some(
                   (p) => Number(p.id) === Number(position.id)
@@ -379,14 +410,21 @@ export function useIncentivesData(poolAddress?: string) {
                 if (positionExists) {
                   return prev;
                 }
-                const positionWithReward: PositionWithReward = {
+                const positionWithReward: PositionWithIncentive = {
                   ...position,
                   id: Number(position.id),
                   liquidity: Number(position.liquidity),
                   tickLower: { tickIdx: Number(position.tickLower.tickIdx) },
                   tickUpper: { tickIdx: Number(position.tickUpper.tickIdx) },
-                  reward: currentReward?.reward ?? "0",
-                  incentiveId: incentive.id,
+                  incentive: {
+                    id: incentive.id,
+                    rewardToken: incentive.rewardToken,
+                    poolAddress: incentive.pool.id,
+                    startTime: parseInt(incentive.startTime),
+                    endTime: parseInt(incentive.endTime),
+                    vestingPeriod: incentive.vestingPeriod,
+                    refundee: incentive.refundee,
+                  },
                 };
                 return [...prev, positionWithReward];
               });
@@ -411,18 +449,25 @@ export function useIncentivesData(poolAddress?: string) {
                 const positionExists = prevPositions.some((p) => {
                   return (
                     Number(p.id) === Number(position.id) &&
-                    p.incentiveId === incentive.id
+                    p.incentive.id === incentive.id
                   );
                 });
                 if (!positionExists) {
-                  const positionWithReward: PositionWithReward = {
+                  const positionWithReward: PositionWithIncentive = {
                     ...position,
                     id: Number(position.id),
                     liquidity: Number(position.liquidity),
                     tickLower: { tickIdx: Number(position.tickLower.tickIdx) },
                     tickUpper: { tickIdx: Number(position.tickUpper.tickIdx) },
-                    reward: currentReward?.reward ?? "0",
-                    incentiveId: incentive.id,
+                    incentive: {
+                      id: incentive.id,
+                      rewardToken: incentive.rewardToken,
+                      poolAddress: incentive.pool.id,
+                      startTime: parseInt(incentive.startTime),
+                      endTime: parseInt(incentive.endTime),
+                      vestingPeriod: incentive.vestingPeriod,
+                      refundee: incentive.refundee,
+                    },
                   };
                   return [...prevPositions, positionWithReward];
                 }
@@ -471,7 +516,6 @@ export function useIncentivesData(poolAddress?: string) {
         currentTime - parseInt(incentive.startTime),
         timeRange
       );
-      const remainingTime = timeRange - timeElapsed;
       const rewardPerSecond = parseFloat(incentive.reward) / timeRange;
 
       const rewardToken = incentive.rewardToken;

@@ -5,7 +5,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
-import { ProcessedIncentive, UserPosition } from 'hooks/useIncentivesData'
+import { PositionWithIncentive, ProcessedIncentive, UserPosition } from 'hooks/useIncentivesData'
 import { PositionsResponse } from 'hooks/useTotalPositions'
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -64,13 +64,13 @@ const ToggleLabel = styled.button`
 `
 
 type PositionListProps = React.PropsWithChildren<{
-  positions: PositionDetails[] | (PositionsResponse & { reward?: string })[]
+  positions: PositionDetails[] | PositionWithIncentive[]
   setUserHideClosedPositions?: (value: boolean) => void
   userHideClosedPositions?: boolean
   isStakingList?: boolean
 }>
 
-function isStakingPosition(position: PositionDetails | (PositionsResponse & { reward?: string })): position is PositionsResponse & { reward?: string } {
+function isStakingPosition(position: PositionDetails |  PositionWithIncentive): position is PositionWithIncentive {
   return 'id' in position && 'minter' in position && 'owner' in position && 'pool' in position
 }
 
