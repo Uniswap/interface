@@ -516,7 +516,6 @@ export function useIncentivesData(poolAddress?: string) {
         currentTime - parseInt(incentive.startTime),
         timeRange
       );
-      const remainingTime = timeRange - timeElapsed;
       const rewardPerSecond = parseFloat(incentive.reward) / timeRange;
 
       const rewardToken = incentive.rewardToken;

@@ -432,6 +432,10 @@ function IncentivesList({
             incentive.rewardToken.symbol
           );
 
+          const logoURI = `https://cdn.jsdelivr.net/gh/taraswap/assets@main/logos/${getAddress(
+            rewardToken.address
+          )}/logo.png`;
+
           const pendingRewards = pendingRewardsMap[incentive.id] || 0;
           return (
             <IncentiveCard
@@ -446,9 +450,7 @@ function IncentivesList({
                     currency={rewardToken}
                     size={24}
                     style={{ marginRight: "8px" }}
-                    logoURI={`https://raw.githubusercontent.com/taraswap/assets/main/logos/${getAddress(
-                      rewardToken.address
-                    )}/logo.png`}
+                    logoURI={logoURI}
                   />
                   <ThemedText.DeprecatedMain>
                     {incentive.reward} {rewardToken.symbol} Rewards
@@ -482,9 +484,7 @@ function IncentivesList({
                         currency={rewardToken}
                         size={20}
                         style={{ marginRight: "8px" }}
-                        logoURI={`https://raw.githubusercontent.com/taraswap/assets/main/logos/${getAddress(
-                          rewardToken.address
-                        )}/logo.png`}
+                        logoURI={logoURI}
                       />
                       <ThemedText.DeprecatedMain>
                         {pendingRewards.toFixed(6) || "0"} &nbsp;
@@ -501,9 +501,7 @@ function IncentivesList({
                         currency={rewardToken}
                         size={20}
                         style={{ marginRight: "8px" }}
-                        logoURI={`https://raw.githubusercontent.com/taraswap/assets/main/logos/${getAddress(
-                          rewardToken.address
-                        )}/logo.png`}
+                        logoURI={logoURI}
                       />
                       <ThemedText.DeprecatedMain>
                         {Number(incentive.currentReward?.reward || 0).toFixed(
