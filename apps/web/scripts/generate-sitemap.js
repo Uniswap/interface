@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-const fs = require('fs')
+const fs = require('fs').promises
 const { parseStringPromise, Builder } = require('xml2js')
 
 const weekMs = 7 * 24 * 60 * 60 * 1000
