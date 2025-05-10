@@ -86,11 +86,11 @@
     },
     {
       "chainId": 841,
-      "address": "0x4aFcFbF183C743362CeE976e5E94A3E5FB729935",
+      "address": "0x4AFCfbf183c743362cEE976e5e94a3E5FB729935",
       "name": "FOMOGOD",
       "symbol": "FOMOG",
       "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0x4aFcFbF183C743362CeE976e5E94A3E5FB729935/logo.png"
+      "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0x4AFCfbf183c743362cEE976e5e94a3E5FB729935/logo.png"
     }
   ],
   "version": {
