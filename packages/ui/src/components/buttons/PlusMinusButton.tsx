@@ -1,4 +1,4 @@
-import { Plus as PlusIcon } from 'ui/src/components/icons'
+import { Plus as PlusIcon, Minus as MinusIcon } from 'ui/src/components/icons'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { TouchableArea } from 'ui/src/components/touchable/TouchableArea'
 import { iconSizes } from 'ui/src/theme'
@@ -31,7 +31,7 @@ export function PlusMinusButton({
       {type === PlusMinusButtonType.Plus ? (
         <PlusIcon color="$surface1" size="$icon.12" strokeWidth={2.5} />
       ) : (
-        <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={10} />
+        <MinusIcon color="$surface1" size="$icon.12" strokeWidth={2.5} />
       )}
     </TouchableArea>
   )
