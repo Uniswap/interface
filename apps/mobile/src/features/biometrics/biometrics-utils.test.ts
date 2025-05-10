@@ -16,7 +16,7 @@ describe(tryLocalAuthenticate, () => {
     expect(status).toEqual(BiometricAuthenticationStatus.Unsupported)
   })
 
-  it('checks enrollement', async () => {
+  it('checks enrollment', async () => {
     mockedHasHardwareAsync.mockResolvedValue(true)
     mockedIsEnrolledAsync.mockResolvedValue(false)
     mockedAuthenticateAsync.mockResolvedValue({ success: false, error: '' })
