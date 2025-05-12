@@ -19,6 +19,7 @@ export const AUTHORITY_ADDRESSES: AddressMap = constructSameAddressMap('0xe35129
   UniverseChainId.Polygon,
   UniverseChainId.Bnb,
   UniverseChainId.Base,
+  UniverseChainId.Unichain,
 ])
 
 /* V1 Governance Addresses */
@@ -31,6 +32,7 @@ export const GOVERNANCE_PROXY_ADDRESSES: AddressMap = {
     UniverseChainId.Polygon,
     UniverseChainId.Bnb,
     UniverseChainId.Base,
+    UniverseChainId.Unichain,
   ]),
 }
 
@@ -43,6 +45,7 @@ export const STAKING_PROXY_ADDRESSES: AddressMap = {
   [UniverseChainId.Polygon]: '0xC87d1B952303ae3A9218727692BAda6723662dad',
   [UniverseChainId.Bnb]: '0xa4a94cCACa8ccCdbCD442CF8eECa0cd98f69e99e',
   [UniverseChainId.Base]: '0xc758Ea84d6D978fe86Ee29c1fbD47B4F302F1992',
+  [UniverseChainId.Unichain]: '0xD40edcc947fF35637233d765CB9efCFc10fC8c22',
 }
 
 /* GRG Transfer Proxy Addresses */
@@ -55,6 +58,7 @@ export const GRG_TRANSFER_PROXY_ADDRESSES: AddressMap = {
     UniverseChainId.Polygon,
     UniverseChainId.Bnb,
     UniverseChainId.Base,
+    UniverseChainId.Unichain,
   ]),
   [UniverseChainId.Mainnet]: '0x8C96182c1B2FE5c49b1bc9d9e039e369f131ED37',
 }
@@ -68,6 +72,7 @@ export const RB_FACTORY_ADDRESSES: AddressMap = {
     UniverseChainId.Polygon,
     UniverseChainId.Bnb,
     UniverseChainId.Base,
+    UniverseChainId.Unichain,
   ]),
 }
 
@@ -80,6 +85,7 @@ export const RB_REGISTRY_ADDRESSES: AddressMap = {
     UniverseChainId.Polygon,
     UniverseChainId.Bnb,
     UniverseChainId.Base,
+    UniverseChainId.Unichain,
   ]),
 }
 
@@ -91,4 +97,5 @@ export const POP_ADDRESSES: AddressMap = {
   [UniverseChainId.Polygon]: '0x4170B7d618F3E5B29b3DBdCDADd626fF3746be9A',
   [UniverseChainId.Bnb]: '0xAe1D80A6731c44eeF098D4C6Cf979f596c7cd6F7',
   [UniverseChainId.Base]: '0x979Af6DDC1562b4B6D8B2Ab60A1B7221a0d6C8DB',
+  [UniverseChainId.Unichain]: 'TBD', // TODO: update with correct block number once pop is deployed
 }

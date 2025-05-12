@@ -288,9 +288,11 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
     govStartBlock = 2570523 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else if (chainId === UniverseChainId.Bnb) {
     govStartBlock = 29095808 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
+  } else if (chainId === UniverseChainId.Unichain) {
+    govStartBlock = 16121684 // TODO: update with correct block number once governance is deployed
   }
 
-  // TODO: bsc endpoint is only proxied through infura and always returns and error for past logs
+  // Notice: bsc endpoint is proxied our rpc endpoint
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
 
   // TODO: we must use staked GRG instead

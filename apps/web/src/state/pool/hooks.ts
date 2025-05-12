@@ -86,6 +86,8 @@ function useStartBlock(chainId?: number): {fromBlock: number, toBlock?: number }
     registryStartBlock = 2565256 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else if (chainId === UniverseChainId.Bnb) {
     registryStartBlock = 25549625 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
+  } else if (chainId === UniverseChainId.Unichain) {
+    registryStartBlock = 16121684
   } else {
     registryStartBlock = 1000
   }

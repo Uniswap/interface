@@ -410,6 +410,13 @@ export const GRG: { [chainId: number]: Token } = {
     'GRG',
     'Rigo'
   ),
+  [UniverseChainId.Unichain]: new Token(
+    UniverseChainId.Unichain,
+    '0x03C2868c6D7fD27575426f395EE081498B1120dd',
+    18,
+    'GRG',
+    'Rigo'
+  ),
 }
 
 export const OP = new Token(

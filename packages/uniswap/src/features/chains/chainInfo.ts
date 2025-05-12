@@ -928,9 +928,9 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
-      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
+      [RPCType.Public]: { http: [`https://unichain-mainnet.infura.io/v3/${config.infuraKey}`] },
       [RPCType.Default]: { http: ['https://mainnet.unichain.org'] },
-      [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
+      [RPCType.Interface]: { http: [`https://unichain-mainnet.infura.io/v3/${config.infuraKey}`] },
     },
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN, 10_000e6),
     stablecoins: [USDC_UNICHAIN],

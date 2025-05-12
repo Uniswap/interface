@@ -45,7 +45,8 @@ export default function ProposalEmptyState() {
       chainId === UniverseChainId.Optimism ||
       chainId === UniverseChainId.Polygon ||
       chainId === UniverseChainId.Base ||
-      chainId === UniverseChainId.Bnb) &&
+      chainId === UniverseChainId.Bnb ||
+      chainId === UniverseChainId.Unichain) &&
     chainId
   ) {
     return (

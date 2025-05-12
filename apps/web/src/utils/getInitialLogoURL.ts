@@ -18,7 +18,8 @@ export function getInitialLogoUrl(
       address === GRG[UniverseChainId.Base].address ||
       address === GRG[UniverseChainId.Bnb].address ||
       address === GRG[UniverseChainId.Optimism].address ||
-      address === GRG[UniverseChainId.Polygon].address) &&
+      address === GRG[UniverseChainId.Polygon].address ||
+      address === GRG[UniverseChainId.Unichain].address) &&
     checksummedAddress
   ) {
     return RIGOBLOCK_LOGO
