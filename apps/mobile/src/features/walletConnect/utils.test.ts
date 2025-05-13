@@ -108,12 +108,12 @@ describe(parseGetCapabilitiesRequest, () => {
   }
 
   it('handles request with address only', () => {
-    const result = parseGetCapabilitiesRequest(EthMethod.GetCapabilities, mockTopic, mockInternalId, mockDapp, [
+    const result = parseGetCapabilitiesRequest(EthMethod.WalletGetCapabilities, mockTopic, mockInternalId, mockDapp, [
       TEST_ADDRESS,
     ])
 
     expect(result).toEqual({
-      type: EthMethod.GetCapabilities,
+      type: EthMethod.WalletGetCapabilities,
       sessionId: mockTopic,
       internalId: String(mockInternalId),
       account: TEST_ADDRESS,
@@ -129,13 +129,13 @@ describe(parseGetCapabilitiesRequest, () => {
 
   it('handles request with address and chain IDs', () => {
     const chainIds = [UniverseChainId.Mainnet, UniverseChainId.Polygon]
-    const result = parseGetCapabilitiesRequest(EthMethod.GetCapabilities, mockTopic, mockInternalId, mockDapp, [
+    const result = parseGetCapabilitiesRequest(EthMethod.WalletGetCapabilities, mockTopic, mockInternalId, mockDapp, [
       TEST_ADDRESS,
       chainIds.map((c) => c.toString()),
     ])
 
     expect(result).toEqual({
-      type: EthMethod.GetCapabilities,
+      type: EthMethod.WalletGetCapabilities,
       sessionId: mockTopic,
       internalId: String(mockInternalId),
       account: TEST_ADDRESS,
@@ -309,7 +309,7 @@ describe(parseSendCallsRequest, () => {
       ],
       chainId: '0x01',
       id: 'test-batch-id',
-      version: '1.0',
+      version: '2.0.0',
       capabilities: {
         eip155: {
           methods: ['eth_sendTransaction'],
@@ -327,7 +327,7 @@ describe(parseSendCallsRequest, () => {
     )
 
     expect(result).toEqual({
-      type: EthMethod.SendCalls,
+      type: EthMethod.WalletSendCalls,
       sessionId: mockTopic,
       internalId: String(mockInternalId),
       account: TEST_ADDRESS,
@@ -355,7 +355,7 @@ describe(parseSendCallsRequest, () => {
           value: '0x0',
         },
       ],
-      version: '1.0',
+      version: '2.0.0',
     }
 
     const fallbackAddress = '0xfallbackaddress'
@@ -391,7 +391,7 @@ describe(parseGetCallsStatusRequest, () => {
     const result = parseGetCallsStatusRequest(mockTopic, mockInternalId, mockChainId, mockDapp, [requestId], account)
 
     expect(result).toEqual({
-      type: EthMethod.GetCallsStatus,
+      type: EthMethod.WalletGetCallsStatus,
       sessionId: mockTopic,
       internalId: String(mockInternalId),
       account,

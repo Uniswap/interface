@@ -264,7 +264,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
   return (
     <Trace
       logImpression
-      properties={{ flow: ExtensionOnboardingFlow.Import }}
+      properties={{ flow: ExtensionOnboardingFlow.Passkey }}
       screen={ExtensionOnboardingScreens.InitiatePasskeyAuth}
     >
       <Flex row position="absolute" top="$spacing24" right="$spacing24">

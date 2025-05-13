@@ -1,8 +1,8 @@
 import { EffectCallback, MutableRefObject } from 'react'
-import { OnchainItemSection } from 'uniswap/src/components/TokenSelector/types'
+import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
 import { FocusedRowControl } from 'uniswap/src/components/lists/items/OptionItem'
-import { OnchainItemListType } from 'uniswap/src/components/lists/items/types'
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export interface OnchainItemListRef {
@@ -11,7 +11,7 @@ export interface OnchainItemListRef {
 
 export type SectionRowInfo = { section: SectionHeaderProps }
 
-export interface ItemRowInfo<T extends OnchainItemListType> {
+export interface ItemRowInfo<T extends OnchainItemListOption> {
   item: T
   section: OnchainItemSection<T>
   index: number
@@ -19,7 +19,7 @@ export interface ItemRowInfo<T extends OnchainItemListType> {
   expanded?: boolean
 }
 
-export interface OnchainItemListProps<T extends OnchainItemListType> {
+export interface OnchainItemListProps<T extends OnchainItemListOption> {
   sectionListRef?: MutableRefObject<OnchainItemListRef | undefined>
   ListEmptyComponent?: JSX.Element
   focusHook?: (callback: EffectCallback) => void
@@ -31,6 +31,6 @@ export interface OnchainItemListProps<T extends OnchainItemListType> {
   focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
 }
 
-export function OnchainItemList<T extends OnchainItemListType>(_props: OnchainItemListProps<T>): JSX.Element {
+export function OnchainItemList<T extends OnchainItemListOption>(_props: OnchainItemListProps<T>): JSX.Element {
   throw new PlatformSplitStubError('OnchainItemList')
 }

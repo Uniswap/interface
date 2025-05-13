@@ -3,22 +3,28 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
-import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
 import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
-import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
-import { useOnchainItemListSection } from 'uniswap/src/components/TokenSelector/utils'
-import { SearchModalItemTypes } from 'uniswap/src/components/lists/items/types'
+import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
+import { SearchModalOption } from 'uniswap/src/components/lists/items/types'
+import { useFavoriteWalletOptions } from 'uniswap/src/components/lists/items/wallets/useFavoriteWalletOptions'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
+import { useSearchPopularNftCollectionsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { SearchModalList } from 'uniswap/src/features/search/SearchModal/SearchModalList'
-import { NUMBER_OF_RESULTS_LONG, NUMBER_OF_RESULTS_SHORT } from 'uniswap/src/features/search/SearchModal/constants'
+import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import {
-  MOCK_POOL_OPTION_ITEM,
-  MOCK_RECENT_POOLS_SECTION,
-  getMockTrendingPoolsSection,
-} from 'uniswap/src/features/search/SearchModal/mocks'
+  NUMBER_OF_RESULTS_LONG,
+  NUMBER_OF_RESULTS_MEDIUM,
+  NUMBER_OF_RESULTS_SHORT,
+} from 'uniswap/src/features/search/SearchModal/constants'
+import { useRecentlySearchedOptions } from 'uniswap/src/features/search/SearchModal/hooks/useRecentlySearchedOptions'
+import { getMockTrendingPoolsSection } from 'uniswap/src/features/search/SearchModal/mocks'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
+
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
+import { isMobileApp } from 'utilities/src/platform'
+import noop from 'utilities/src/react/noop'
 
 function ClearButton({ onPress }: { onPress: () => void }): JSX.Element {
   const { t } = useTranslation()
@@ -39,85 +45,130 @@ function useSectionsForNoQuerySearch({
 }: {
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
-}): GqlResult<OnchainItemSection<SearchModalItemTypes>[]> {
+}): GqlResult<OnchainItemSection<SearchModalOption>[]> {
   const dispatch = useDispatch()
 
-  const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter, NUMBER_OF_RESULTS_SHORT)
-  // it's a dependency of useMemo => useCallback
+  const recentlySearchedOptions: SearchModalOption[] = useRecentlySearchedOptions({
+    chainFilter,
+    activeTab,
+    numberOfRecentSearchResults: NUMBER_OF_RESULTS_SHORT,
+  })
   const onPressClearSearchHistory = useCallback((): void => {
     dispatch(clearSearchHistory())
   }, [dispatch])
-  const recentTokensSection = useOnchainItemListSection({
+  const recentSearchSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.RecentSearches,
-    options: recentlySearchedTokenOptions,
+    options: recentlySearchedOptions,
     endElement: <ClearButton onPress={onPressClearSearchHistory} />,
   })
 
-  const MOCK_RECENT_ALL_SECTION: OnchainItemSection<SearchModalItemTypes>[] = useMemo(
-    () => [
-      {
-        sectionKey: OnchainItemSectionName.RecentSearches,
-        data: [...(recentlySearchedTokenOptions?.slice(0, 1) ?? []), MOCK_POOL_OPTION_ITEM], // want 2 options
-        endElement: <ClearButton onPress={onPressClearSearchHistory} />,
-      },
-    ],
-    [onPressClearSearchHistory, recentlySearchedTokenOptions],
-  )
-
-  const numberOfTrendingTokens = activeTab === SearchTab.All ? NUMBER_OF_RESULTS_SHORT : NUMBER_OF_RESULTS_LONG
+  const numberOfTrendingTokens =
+    activeTab === SearchTab.All
+      ? isMobileApp
+        ? NUMBER_OF_RESULTS_MEDIUM
+        : NUMBER_OF_RESULTS_SHORT
+      : NUMBER_OF_RESULTS_LONG
+  const skipTrendingTokensQuery = activeTab !== SearchTab.Tokens && activeTab !== SearchTab.All
   const {
     data: tokens,
     error: tokensError,
     refetch: refetchTokens,
     loading: loadingTokens,
-  } = useTrendingTokensCurrencyInfos(chainFilter)
+  } = useTrendingTokensCurrencyInfos(chainFilter, skipTrendingTokensQuery)
   const trendingTokenOptions = useCurrencyInfosToTokenOptions({ currencyInfos: tokens })
   const trendingTokenSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.TrendingTokens,
     options: trendingTokenOptions?.slice(0, numberOfTrendingTokens),
   })
 
-  const sections: OnchainItemSection<SearchModalItemTypes>[] = useMemo(() => {
-    if (isWeb) {
-      switch (activeTab) {
-        case SearchTab.Tokens:
-          return [...(recentTokensSection ?? []), ...(trendingTokenSection ?? [])]
-        case SearchTab.Pools:
-          return [...MOCK_RECENT_POOLS_SECTION, ...getMockTrendingPoolsSection(15)]
-        default:
-        case SearchTab.All:
-          return [
-            ...(MOCK_RECENT_ALL_SECTION ?? []),
+  // Load popular NFTs by top trading volume
+  const skipPopularNftsQuery = isWeb || (activeTab !== SearchTab.NFTCollections && activeTab !== SearchTab.All)
+  const {
+    data: popularNfts,
+    loading: loadingPopularNfts,
+    error: popularNftsError,
+  } = useSearchPopularNftCollectionsQuery({ skip: skipPopularNftsQuery })
+  const popularNftOptions = useNftSearchResultsToNftCollectionOptions(popularNfts, chainFilter)
+  const popularNftSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.PopularNFTCollections,
+    options: popularNftOptions,
+  })
+
+  const favoriteWalletsOptions = useFavoriteWalletOptions({ skip: activeTab !== SearchTab.Wallets })
+  const favoriteWalletsSection = useOnchainItemListSection({
+    sectionKey: OnchainItemSectionName.FavoriteWallets,
+    options: favoriteWalletsOptions,
+  })
+
+  return useMemo((): GqlResult<OnchainItemSection<SearchModalOption>[]> => {
+    let sections: OnchainItemSection<SearchModalOption>[] = []
+
+    switch (activeTab) {
+      case SearchTab.Tokens:
+        sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? [])]
+        return {
+          data: sections,
+          loading: loadingTokens,
+          error: tokensError,
+          refetch: refetchTokens,
+        }
+      case SearchTab.Pools:
+        sections = [...(recentSearchSection ?? []), ...getMockTrendingPoolsSection(15)]
+        return {
+          data: sections,
+          loading: loadingTokens,
+          error: tokensError,
+          refetch: refetchTokens,
+        }
+      case SearchTab.Wallets:
+        return {
+          data: [...(recentSearchSection ?? []), ...(favoriteWalletsSection ?? [])],
+          loading: false,
+          error: undefined,
+          refetch: noop,
+        }
+      case SearchTab.NFTCollections:
+        return {
+          data: [...(recentSearchSection ?? []), ...(popularNftSection ?? [])], // add recent nft searches
+          loading: loadingPopularNfts,
+          error: popularNftsError,
+          refetch: noop,
+        }
+      default:
+      case SearchTab.All:
+        if (isWeb) {
+          sections = [
+            ...(recentSearchSection ?? []),
             ...(trendingTokenSection ?? []),
             ...getMockTrendingPoolsSection(3),
           ]
-      }
+        }
+        sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? []), ...(popularNftSection ?? [])]
+        return {
+          data: sections,
+          loading: loadingTokens,
+          error: tokensError,
+          refetch: refetchTokens,
+        }
     }
-
-    switch (activeTab) {
-      // eventually add NFTs, wallets, etc
-      case SearchTab.Tokens:
-      default:
-      case SearchTab.All:
-        return [...(recentTokensSection ?? []), ...(trendingTokenSection ?? [])]
-    }
-  }, [activeTab, recentTokensSection, trendingTokenSection, MOCK_RECENT_ALL_SECTION])
-
-  return useMemo(
-    () => ({
-      data: sections,
-      loading: loadingTokens,
-      error: tokensError,
-      refetch: refetchTokens,
-    }),
-    [loadingTokens, refetchTokens, sections, tokensError],
-  )
+  }, [
+    activeTab,
+    favoriteWalletsSection,
+    loadingPopularNfts,
+    loadingTokens,
+    popularNftSection,
+    popularNftsError,
+    recentSearchSection,
+    refetchTokens,
+    tokensError,
+    trendingTokenSection,
+  ])
 }
 
 interface SearchModalNoQueryListProps {
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
-  onSelect: (item: SearchModalItemTypes) => void
+  onSelect?: SearchModalListProps['onSelect']
 }
 
 export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
@@ -136,6 +187,10 @@ export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
       loading={loading}
       refetch={refetch}
       sections={sections}
+      searchFilters={{
+        searchChainFilter: chainFilter,
+        searchTabFilter: activeTab,
+      }}
       onSelect={onSelect}
     />
   )

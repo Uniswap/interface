@@ -12,4 +12,6 @@ export enum ReactQueryCacheKey {
   TransactionToActivity = 'TransactionToActivity',
   UniswapApi = 'UniswapApi',
   UnitagsApi = 'UnitagsApi',
+  WalletCapabilities = 'WalletCapabilities',
+  IsSmartContractAddress = 'IsSmartContractAddress',
 }

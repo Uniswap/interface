@@ -187,7 +187,7 @@ export function ImportMnemonic(): JSX.Element {
               height={iconSizes.icon48}
               width={iconSizes.icon48}
             >
-              <FileListLock color="$neutral1" size={iconSizes.icon24} />
+              <FileListLock color="$neutral1" size="$icon.24" />
             </Square>
           }
           belowFrameContent={

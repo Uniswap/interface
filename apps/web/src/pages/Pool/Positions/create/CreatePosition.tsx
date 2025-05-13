@@ -25,6 +25,7 @@ import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelection
 import ResetCreatePositionFormModal from 'pages/Pool/Positions/create/ResetCreatePositionsFormModal'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { useInitialPoolInputs } from 'pages/Pool/Positions/create/hooks'
+import { useLPSlippageValue } from 'pages/Pool/Positions/create/hooks/useLPSlippageValues'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -40,10 +41,14 @@ import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import {
+  TransactionSettingsContextProvider,
+  useTransactionSettingsContext,
+} from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/SwapFormSettings'
 import { Deadline } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Deadline/Deadline'
+import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Slippage/Slippage'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 const WIDTH = {
@@ -185,6 +190,7 @@ const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => 
   const { positionState, setPositionState, setStep, reset: resetCreatePositionState } = useCreatePositionContext()
   const { protocolVersion } = positionState
   const { setPriceRangeState } = usePriceRangeContext()
+  const { customSlippageTolerance } = useTransactionSettingsContext()
   const [versionDropdownOpen, setVersionDropdownOpen] = useState(false)
 
   const [showResetModal, setShowResetModal] = useState(false)
@@ -288,10 +294,10 @@ const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => 
         </DropdownSelector>
         <Flex
           borderRadius="$rounded12"
-          borderWidth="$spacing1"
+          borderWidth={!customSlippageTolerance ? '$spacing1' : '$none'}
           borderColor="$surface3"
           height="38px"
-          px="$gap8"
+          px={!customSlippageTolerance ? '$gap8' : '$gap4'}
           alignItems="center"
           pt="$spacing2"
         >
@@ -299,7 +305,7 @@ const Toolbar = ({ defaultInitialToken }: { defaultInitialToken: Currency }) => 
             position="relative"
             adjustRightAlignment={false}
             adjustTopAlignment={false}
-            settings={[Deadline]}
+            settings={[Slippage, Deadline]}
             iconColor="$neutral1"
             iconSize="$icon.16"
           />
@@ -317,13 +323,18 @@ export default function CreatePosition() {
   const { protocolVersion } = useParams<{ protocolVersion: string }>()
   const paramsProtocolVersion = parseProtocolVersion(protocolVersion)
 
+  const autoSlippageTolerance = useLPSlippageValue(paramsProtocolVersion)
+
   const initialInputs = useInitialPoolInputs()
   const initialProtocolVersion = paramsProtocolVersion ?? ProtocolVersion.V4
 
   return (
     <Trace logImpression page={InterfacePageNameLocal.CreatePosition}>
       <MultichainContextProvider initialChainId={initialInputs[PositionField.TOKEN0].chainId}>
-        <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
+        <TransactionSettingsContextProvider
+          autoSlippageTolerance={autoSlippageTolerance}
+          settingKey={TransactionSettingKey.LP}
+        >
           <CreatePositionContextProvider
             initialState={{
               currencyInputs: initialInputs,

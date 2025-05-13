@@ -7,10 +7,10 @@ import {
   ProcessedRowType,
   processSectionsToRows,
 } from 'uniswap/src/components/lists/OnchainItemList/processSectionsToRows'
-import { OnchainItemListType } from 'uniswap/src/components/lists/items/types'
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
-const TOKEN_ITEM_SIZE = 68
+const TOKEN_ITEM_SIZE = 64
 const AMOUNT_TO_DRAW = 18
 
 export const OnchainItemList = memo(function _OnchainItemList({
@@ -20,7 +20,7 @@ export const OnchainItemList = memo(function _OnchainItemList({
   renderItem,
   renderSectionHeader,
   sections,
-}: OnchainItemListProps<OnchainItemListType>): JSX.Element {
+}: OnchainItemListProps<OnchainItemListOption>): JSX.Element {
   const insets = useAppInsets()
   const ref = useRef<FlashList<ProcessedRow>>(null)
 

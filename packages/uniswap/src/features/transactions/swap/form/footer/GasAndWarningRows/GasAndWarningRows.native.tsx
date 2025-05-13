@@ -117,7 +117,7 @@ const FormWarning = memo(function FormWarning({
   return (
     <TouchableArea onPress={onSwapWarningClick}>
       <AnimatedFlex centered row entering={FadeIn} exiting={FadeOut} gap="$spacing8" px="$spacing24">
-        {Icon && <Icon color={textColor} size={iconSizes.icon16} strokeWidth={1.5} />}
+        {Icon && <Icon color={textColor} size="$icon.16" strokeWidth={1.5} />}
         <Flex row>
           <Text color={textColor} textAlign="center" variant="body3">
             {warningTitle}

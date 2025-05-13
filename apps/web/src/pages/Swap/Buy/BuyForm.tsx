@@ -17,7 +17,6 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, styled } from 'ui/src'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
@@ -125,7 +124,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
     const supportedNativeToken = supportedTokens?.find((meldToken) => {
       return meldToken.currencyInfo?.currency.chainId === account.chainId && meldToken.currencyInfo?.currency.isNative
     })
-    if (account.chainId !== UniverseChainId.Mainnet && supportedNativeToken) {
+    if (supportedNativeToken) {
       setBuyFormState((state) => ({
         ...state,
         quoteCurrency: supportedNativeToken,

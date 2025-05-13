@@ -8,6 +8,8 @@ import { INDEXED_DB_REDUX_TABLE_NAME, PERSIST_VERSION, customCreateMigrate, migr
 import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
 import { rootWebSaga } from 'state/sagas/root'
+import { walletCapabilitiesListenerMiddleware } from 'state/walletCapabilities/reducer'
+import { walletsListenerMiddleware } from 'state/wallets/reducer'
 import { InterfaceState, interfacePersistedStateList, interfaceReducer } from 'state/webReducer'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
@@ -76,7 +78,9 @@ export function createDefaultStore() {
         .concat(routingApi.middleware)
         .concat(quickRouteApi.middleware)
         .concat(fiatOnRampAggregatorApi.middleware)
-        .concat(sagaMiddleware),
+        .concat(sagaMiddleware)
+        .concat(walletCapabilitiesListenerMiddleware.middleware)
+        .concat(walletsListenerMiddleware.middleware),
   })
   sagaMiddleware.run(rootWebSaga)
 

@@ -5,14 +5,11 @@ import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/h
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { useRecentlySearchedTokens } from 'uniswap/src/components/TokenSelector/hooks/useRecentlySearchedTokens'
 import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
-import {
-  OnSelectCurrency,
-  OnchainItemSection,
-  OnchainItemSectionName,
-  TokenSectionsHookProps,
-} from 'uniswap/src/components/TokenSelector/types'
-import { isSwapListLoading, useOnchainItemListSection } from 'uniswap/src/components/TokenSelector/utils'
-import { TokenSelectorItemTypes } from 'uniswap/src/components/lists/items/types'
+import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
+import { isSwapListLoading } from 'uniswap/src/components/TokenSelector/utils'
+import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -24,7 +21,7 @@ function useTokenSectionsForSwapOutput({
   activeAccountAddress,
   chainFilter,
   oppositeSelectedToken: input,
-}: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenSelectorItemTypes>[]> {
+}: TokenSectionsHookProps): GqlResult<OnchainItemSection<TokenSelectorOption>[]> {
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
 
   const {
@@ -118,11 +115,11 @@ function useTokenSectionsForSwapOutput({
     sectionKey: OnchainItemSectionName.TrendingTokens,
     options: trendingTokenOptions,
   })
-
-  const bridgingSectionTokenOptions: TokenSelectorItemTypes[] = useMemo(
+  const bridgingSectionTokenOptions: TokenSelectorOption[] = useMemo(
     () => (shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : bridgingTokenOptions ?? []),
     [bridgingTokenOptions, shouldNestBridgingTokens],
   )
+
   const bridgingSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.BridgingTokens,
     options: bridgingSectionTokenOptions,

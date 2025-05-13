@@ -24,6 +24,7 @@ export enum DynamicConfigs {
   AstroChain = 'astro_chain',
   BlockedNftCollections = 'blocked_nft_collections',
   ExternallyConnectableExtension = 'externally_connectable_extension',
+  LPConfig = 'lp_config',
 }
 
 // Config values go here for easy access
@@ -144,6 +145,11 @@ export enum AstroChainConfigKey {
   Url = 'url',
 }
 
+export enum LPConfigKey {
+  DefaultSlippage = 'defaultSlippage',
+  V4SlippageOverride = 'v4SlippageOverride',
+}
+
 export type DynamicConfigKeys = {
   // Shared
   [DynamicConfigs.Swap]: SwapConfigKey
@@ -163,6 +169,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
   [DynamicConfigs.BlockedNftCollections]: BlockedNftCollectionsConfigKey
   [DynamicConfigs.ExternallyConnectableExtension]: ExternallyConnectableExtensionConfigKey
+  [DynamicConfigs.LPConfig]: LPConfigKey
 }
 
 // This type must match the format in statsig dynamic config for uwulink

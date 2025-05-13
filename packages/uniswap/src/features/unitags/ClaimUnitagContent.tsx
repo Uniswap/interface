@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { AnimatePresence, Button, Flex, FlexProps, Input, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatePresence, Button, Flex, FlexProps, Input, Text, TouchableArea } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -65,7 +65,6 @@ export function ClaimUnitagContent({
   onComplete,
 }: ClaimUnitagContentProps): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const textInputRef = useRef<Input>(null)
 
   const inputPlaceholder = getYourNameString(t('unitags.claim.username.default'))
@@ -290,7 +289,13 @@ export function ClaimUnitagContent({
         >
           {!showTextInputView && (
             <Flex position="absolute">
-              <UnitagName animateIcon fontSize={fontSize} name={unitagInputValue} opacity={showTextInputView ? 0 : 1} />
+              <UnitagName
+                animateText
+                animateIcon
+                textProps={{ fontSize }}
+                name={unitagInputValue}
+                opacity={showTextInputView ? 0 : 1}
+              />
             </Flex>
           )}
           <AnimatePresence>
@@ -358,7 +363,7 @@ export function ClaimUnitagContent({
               {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
             </Text>
             <TouchableArea onPress={onPressAddressTooltip}>
-              <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
+              <InfoCircleFilled color="$neutral3" size="$icon.20" />
             </TouchableArea>
           </AnimatedFlex>
         )}

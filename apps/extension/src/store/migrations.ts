@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import { migratePendingDappRequestsToRecord, removeDappInfoToChromeLocalStorage } from 'src/store/extensionMigrations'
+import {
+  migratePendingDappRequestsToRecord,
+  migrateUnknownBackupAccountsToMaybeManualBackup,
+  removeDappInfoToChromeLocalStorage,
+} from 'src/store/extensionMigrations'
 import { unchecksumDismissedTokenWarningKeys } from 'uniswap/src/state/uniswapMigrations'
 import {
   activatePendingAccounts,
+  addBatchedTransactions,
   addCreatedOnboardingRedesignAccountBehaviorHistory,
   addExploreAndWelcomeBehaviorHistory,
   addHapticSetting,
@@ -48,6 +53,8 @@ export const migrations = {
   19: deleteWelcomeWalletCardBehaviorHistory,
   20: moveTokenAndNFTVisibility,
   21: migratePendingDappRequestsToRecord,
+  22: addBatchedTransactions,
+  23: migrateUnknownBackupAccountsToMaybeManualBackup,
 }
 
-export const EXTENSION_STATE_VERSION = 21
+export const EXTENSION_STATE_VERSION = 23

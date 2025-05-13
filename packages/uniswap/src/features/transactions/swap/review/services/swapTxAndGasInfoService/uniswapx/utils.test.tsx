@@ -11,10 +11,12 @@ describe('processUniswapXResponse', () => {
       isLoading: false,
       error: null,
     },
-    transactionRequest: {
-      to: '0x123',
-      data: '0x456',
-    },
+    txRequests: [
+      {
+        to: '0x123',
+        data: '0x456',
+      },
+    ],
     gasEstimate: {
       wrapEstimates: {
         activeEstimate: {

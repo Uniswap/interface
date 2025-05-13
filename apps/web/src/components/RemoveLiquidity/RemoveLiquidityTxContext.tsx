@@ -81,6 +81,8 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
       approveToken1Request: undefined,
       revokeToken0Request: undefined,
       revokeToken1Request: undefined,
+      token0PermitTransaction: undefined,
+      token1PermitTransaction: undefined,
       permit: undefined,
     }
   }, [

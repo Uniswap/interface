@@ -9,7 +9,7 @@ import { Chevron } from 'ui/src/components/icons/Chevron'
 import { Cloud } from 'ui/src/components/icons/Cloud'
 import { Mobile } from 'ui/src/components/icons/Mobile'
 import { Passkey } from 'ui/src/components/icons/Passkey'
-import { colors, iconSizes } from 'ui/src/theme'
+import { colors } from 'ui/src/theme'
 import { AuthenticatorAttachment, registerNewAuthenticator } from 'uniswap/src/features/passkey/embeddedWallet'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
@@ -57,7 +57,7 @@ export function AddPasskeyMenu({
         p="$padding12"
         width="min-content"
       >
-        <Passkey size={iconSizes.icon24} color="$neutral1" />
+        <Passkey size="$icon.24" color="$neutral1" />
       </Flex>
       <Flex gap="$gap8" pb="$padding8">
         <Text textAlign="center" variant="subheading1">
@@ -77,7 +77,7 @@ export function AddPasskeyMenu({
         ) : (
           <Flex row gap="$gap12" justifyContent="center" alignItems="center" width="100%" {...ClickableTamaguiStyle}>
             <Flex p="$padding6" background={colors.pinkLight} borderRadius="$rounded6" height="min-content">
-              <Cloud size={iconSizes.icon20} color="$accent1" />
+              <Cloud size="$icon.20" color="$accent1" />
             </Flex>
             <Flex>
               <Text variant="body2">{t('common.device')}</Text>
@@ -85,7 +85,7 @@ export function AddPasskeyMenu({
                 {t('account.passkey.type.platform')}
               </Text>
             </Flex>
-            <Chevron size={iconSizes.icon16} color="$neutral2" rotate="180deg" ml="auto" />
+            <Chevron size="$icon.16" color="$neutral2" rotate="180deg" ml="auto" />
           </Flex>
         )}
       </TouchableArea>
@@ -99,7 +99,7 @@ export function AddPasskeyMenu({
         ) : (
           <Flex row gap="$gap12" justifyContent="center" alignItems="center" width="100%" {...ClickableTamaguiStyle}>
             <Flex p="$padding6" background={colors.pinkLight} borderRadius="$rounded6" height="min-content">
-              <Mobile size={iconSizes.icon20} color="$accent1" />
+              <Mobile size="$icon.20" color="$accent1" />
             </Flex>
             <Flex>
               <Text variant="body2">{t('common.device.other')}</Text>
@@ -107,7 +107,7 @@ export function AddPasskeyMenu({
                 {t('account.passkey.type.crossplatform')}
               </Text>
             </Flex>
-            <Chevron size={iconSizes.icon16} color="$neutral2" rotate="180deg" ml="auto" />
+            <Chevron size="$icon.16" color="$neutral2" rotate="180deg" ml="auto" />
           </Flex>
         )}
       </TouchableArea>

@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/core'
 import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
 import { FooterSettings } from 'src/components/Settings/FooterSettings'
@@ -26,28 +25,28 @@ import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { useWalletRestore } from 'src/features/wallet/hooks'
+import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex, IconProps, Text, useSporeColors } from 'ui/src'
-import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
-import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
-import FaceIdIcon from 'ui/src/assets/icons/faceid.svg'
-import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
-import LockIcon from 'ui/src/assets/icons/lock.svg'
-import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
-import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import {
   Bell,
+  BookOpen,
   Chart,
   Cloud,
   Coins,
+  Contrast,
+  Faceid,
   FileListLock,
+  Fingerprint,
   Language,
   LikeSquare,
   LineChartDots,
+  Lock,
+  MessageQuestion,
   Passkey,
   Sliders,
   TouchId,
+  UniswapLogo,
   WavePulse,
   Wrench,
 } from 'ui/src/components/icons'
@@ -153,13 +152,12 @@ export function SettingsScreen(): JSX.Element {
   )
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
-    const svgProps: SvgProps = {
+    const svgProps: IconProps = {
       color: colors.neutral2.get(),
-      height: iconSizes.icon24,
+      size: iconSizes.icon24,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
-      strokeWidth: '2',
-      width: iconSizes.icon24,
+      strokeWidth: 2,
     }
     const iconProps: IconProps = {
       color: '$neutral2',
@@ -182,7 +180,7 @@ export function SettingsScreen(): JSX.Element {
                 : currentAppearanceSetting === 'dark'
                   ? t('settings.setting.appearance.option.dark.title')
                   : t('settings.setting.appearance.option.light.title'),
-            icon: <ContrastIcon {...svgProps} />,
+            icon: <Contrast {...svgProps} />,
           },
           {
             navigationModal: ModalName.FiatCurrencySelector,
@@ -254,9 +252,9 @@ export function SettingsScreen(): JSX.Element {
                   icon: isAndroid ? (
                     <TouchId size="$icon.20" />
                   ) : isTouchIdSupported ? (
-                    <FingerprintIcon {...svgProps} />
+                    <Fingerprint {...svgProps} />
                   ) : (
-                    <FaceIdIcon {...svgProps} />
+                    <Faceid {...svgProps} />
                   ),
                 },
               ]
@@ -336,7 +334,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('settings.action.privacy'),
             },
             text: t('settings.action.privacy'),
-            icon: <LockIcon {...svgProps} />,
+            icon: <Lock {...svgProps} />,
           },
           {
             screen: MobileScreens.WebView,
@@ -345,7 +343,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('settings.action.terms'),
             },
             text: t('settings.action.terms'),
-            icon: <BookOpenIcon {...svgProps} />,
+            icon: <BookOpen {...svgProps} />,
           },
         ],
       },
@@ -356,7 +354,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: MobileScreens.Dev,
             text: 'Dev options',
-            icon: <UniswapIcon {...svgProps} />,
+            icon: <UniswapLogo {...svgProps} />,
           },
           { component: <OnboardingRow iconProps={svgProps} /> },
           { component: <ResetBehaviorHistoryRow iconProps={svgProps} /> },

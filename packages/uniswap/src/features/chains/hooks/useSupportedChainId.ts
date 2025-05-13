@@ -1,19 +1,10 @@
 import { useCallback } from 'react'
 import { useEnabledChains, useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Connector } from 'wagmi'
 
-export function useSupportedChainId(
-  chainId?: number | UniverseChainId,
-  isConnected: boolean = true,
-): UniverseChainId | undefined {
+export function useSupportedChainId(chainId?: number | UniverseChainId): UniverseChainId | undefined {
   const { chains } = useEnabledChains()
-  const featureFlaggedChainIds = useFeatureFlaggedChainIds()
-
-  if (!isConnected) {
-    return featureFlaggedChainIds.includes(chainId as UniverseChainId) ? (chainId as UniverseChainId) : undefined
-  }
 
   return chains.includes(chainId as UniverseChainId) ? (chainId as UniverseChainId) : undefined
 }

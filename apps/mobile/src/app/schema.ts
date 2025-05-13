@@ -672,8 +672,13 @@ const v85SchemaIntermediate = {
 }
 delete v85SchemaIntermediate.favorites.tokensVisibility
 delete v85SchemaIntermediate.favorites.nftsVisibility
-const v85Schema = v85SchemaIntermediate
+export const v85Schema = v85SchemaIntermediate
+
+const v86Schema = {
+  ...v85Schema,
+  batchedTransactions: {},
+}
 
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v85Schema => v85Schema
+export const getSchema = (): typeof v86Schema => v86Schema

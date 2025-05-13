@@ -94,11 +94,19 @@ const TradingApiClient = createApiClient({
 })
 
 export type WithV4Flag<T> = T & { v4Enabled: boolean }
+function getV4SwapHeaders(v4Enabled: boolean): Record<string, string> {
+  return {
+    'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
+  }
+}
 
 export const getFeatureFlaggedHeaders = (): Record<string, string> => {
   const uniquoteEnabled = getFeatureFlag(FeatureFlags.UniquoteEnabled)
+  const viemProviderEnabled = getFeatureFlag(FeatureFlags.ViemProviderEnabled)
+
   return {
     'x-uniquote-enabled': uniquoteEnabled ? 'true' : 'false',
+    'x-viem-provider-enabled': viemProviderEnabled ? 'true' : 'false',
   }
 }
 
@@ -109,7 +117,7 @@ export async function fetchQuote({
   return await TradingApiClient.post<DiscriminatedQuoteResponse>(uniswapUrls.tradingApiPaths.quote, {
     body: JSON.stringify(params),
     headers: {
-      'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
+      ...getV4SwapHeaders(v4Enabled),
       ...getFeatureFlaggedHeaders(),
     },
     on404: () => {
@@ -136,7 +144,7 @@ export async function fetchSwap({ v4Enabled, ...params }: WithV4Flag<CreateSwapR
   return await TradingApiClient.post<CreateSwapResponse>(uniswapUrls.tradingApiPaths.swap, {
     body: JSON.stringify(params),
     headers: {
-      'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
+      ...getV4SwapHeaders(v4Enabled),
       ...getFeatureFlaggedHeaders(),
     },
   })
@@ -149,7 +157,20 @@ export async function fetchSwap5792({
   return await TradingApiClient.post<CreateSwap5792Response>(uniswapUrls.tradingApiPaths.swap5792, {
     body: JSON.stringify(params),
     headers: {
-      'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
+      ...getV4SwapHeaders(v4Enabled),
+      ...getFeatureFlaggedHeaders(),
+    },
+  })
+}
+
+export async function fetchSwap7702({
+  v4Enabled,
+  ...params
+}: WithV4Flag<CreateSwap7702Request>): Promise<CreateSwap7702Response> {
+  return await TradingApiClient.post<CreateSwap7702Response>(uniswapUrls.tradingApiPaths.swap7702, {
+    body: JSON.stringify(params),
+    headers: {
+      ...getV4SwapHeaders(v4Enabled),
       ...getFeatureFlaggedHeaders(),
     },
   })
@@ -300,27 +321,15 @@ export async function fetchWalletEncoding7702(params: WalletEncode7702RequestBod
 export async function checkWalletDelegation(
   params: WalletCheckDelegationRequestBody,
 ): Promise<WalletCheckDelegationResponseBody> {
-  return await TradingApiClient.get<WalletCheckDelegationResponseBody>(
+  return await TradingApiClient.post<WalletCheckDelegationResponseBody>(
     uniswapUrls.tradingApiPaths.wallet.checkDelegation,
     {
-      params: {
-        walletAddress: params.walletAddress,
-        chainIds: params.chainIds.join(','),
-      },
+      body: JSON.stringify({
+        ...params,
+      }),
       headers: {
         ...getFeatureFlaggedHeaders(),
       },
     },
   )
-}
-
-export async function fetchCreateSwap7702(params: CreateSwap7702Request): Promise<CreateSwap7702Response> {
-  return await TradingApiClient.post<CreateSwap7702Response>(uniswapUrls.tradingApiPaths.swap7702, {
-    body: JSON.stringify({
-      ...params,
-    }),
-    headers: {
-      ...getFeatureFlaggedHeaders(),
-    },
-  })
 }

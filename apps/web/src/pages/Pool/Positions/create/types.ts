@@ -6,7 +6,7 @@ import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 export type FeeData = {
   feeAmount: number
   tickSpacing: number

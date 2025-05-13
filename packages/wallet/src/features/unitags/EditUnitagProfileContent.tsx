@@ -18,6 +18,7 @@ import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { updateUnitagMetadata } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
@@ -44,7 +45,6 @@ import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hoo
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 const PADDING_WIDTH = isExtension ? '$none' : '$spacing16'
 
@@ -347,7 +347,7 @@ export function EditUnitagProfileContent({
                   right={-spacing.spacing2}
                 >
                   <Flex backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'} borderRadius="$roundedFull" p={6}>
-                    <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
+                    <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size="$icon.16" />
                   </Flex>
                 </Flex>
               </Flex>

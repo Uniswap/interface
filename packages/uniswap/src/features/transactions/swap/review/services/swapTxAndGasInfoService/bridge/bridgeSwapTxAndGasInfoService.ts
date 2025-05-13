@@ -1,13 +1,13 @@
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { EVMSwapRepository } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
+import { EVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
 import { createGetEVMSwapTransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/utils'
 import { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
 import { getBridgeSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 export function createBridgeSwapTxAndGasInfoService(ctx: {
-  swapRepository: EVMSwapRepository
+  instructionService: EVMSwapInstructionsService
   activeGasStrategy: GasStrategy
   shadowGasStrategies: GasStrategy[]
   transactionSettings: TransactionSettingsContextState

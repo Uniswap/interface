@@ -1,12 +1,7 @@
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useENSName } from 'uniswap/src/features/ens/api'
-import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { getValidAddress, sanitizeAddressText } from 'uniswap/src/utils/addresses'
-import { shortenAddress } from 'utilities/src/addresses'
-import { trimToLength } from 'utilities/src/primitives/string'
+import { AccountType, DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
+import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -21,10 +16,7 @@ import {
   selectWalletSwapProtectionSetting,
 } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 import { WalletState } from 'wallet/src/state/walletReducer'
-
-const ENS_TRIM_LENGTH = 8
 
 export function useAccounts(): Record<string, Account> {
   return useSelector(selectAccounts)
@@ -145,7 +137,9 @@ type DisplayNameOptions = {
 }
 
 /**
- * Displays the ENS name if one is available otherwise displays the local name and if neither are available it shows the address.
+ * If user has an onchain ENS/Unitag name, display that name.
+ * Otherwise if user is onboarding or has saved a local label, display the local name.
+ * Otherwise display the address.
  *
  * @param address - The address to display
  * @param options.showShortenedEns - Whether to shorten the ENS name to ENS_TRIM_LENGTH characters
@@ -153,55 +147,25 @@ type DisplayNameOptions = {
  * @param options.showLocalName - Whether to show the local wallet name
  */
 export function useDisplayName(address: Maybe<string>, options?: DisplayNameOptions): DisplayName | undefined {
-  const defaultOptions = {
-    showShortenedEns: false,
-    includeUnitagSuffix: false,
-    showLocalName: true,
-  }
-  const hookOptions = { ...defaultOptions, ...options }
-  const { showShortenedEns, includeUnitagSuffix, showLocalName, overrideDisplayName } = hookOptions
-
-  const validated = getValidAddress(address)
-  const ens = useENSName(validated ?? undefined)
-  const { unitag } = useUnitagByAddress(validated ?? undefined)
-  const { getOnboardingAccount } = useOnboardingContext()
-  const onboardingAccount = getOnboardingAccount()
+  const onchainDisplayName = useOnchainDisplayName(address, options)
 
   // Need to account for pending accounts for use within onboarding
-  const maybeLocalName = useAccounts()[address ?? '']?.name
-  const localName = maybeLocalName ?? onboardingAccount?.name
+  const { getOnboardingAccount } = useOnboardingContext()
+  const onboardingAccountName = getOnboardingAccount()?.name
 
-  if (!address) {
+  const { showLocalName = true } = options ?? {}
+  const localLabel = useAccounts()[address ?? '']?.name
+  const localName = localLabel ?? onboardingAccountName
+
+  if (!onchainDisplayName) {
     return undefined
   }
 
-  if (overrideDisplayName) {
-    return {
-      name: showShortenedEns ? trimToLength(overrideDisplayName, ENS_TRIM_LENGTH) : overrideDisplayName,
-      type: DisplayNameType.ENS,
-    }
-  }
-
-  if (unitag?.username) {
-    return {
-      name: includeUnitagSuffix ? unitag.username + UNITAG_SUFFIX : unitag.username,
-      type: DisplayNameType.Unitag,
-    }
-  }
-
-  if (ens.data) {
-    return {
-      name: showShortenedEns ? trimToLength(ens.data, ENS_TRIM_LENGTH) : ens.data,
-      type: DisplayNameType.ENS,
-    }
-  }
-
-  if (showLocalName && localName) {
+  const isDisplayNameENS =
+    onchainDisplayName.type === DisplayNameType.ENS || onchainDisplayName.type === DisplayNameType.Unitag
+  if (!isDisplayNameENS && showLocalName && localName) {
     return { name: localName, type: DisplayNameType.Local }
   }
 
-  return {
-    name: `${sanitizeAddressText(shortenAddress(address))}`,
-    type: DisplayNameType.Address,
-  }
+  return onchainDisplayName
 }

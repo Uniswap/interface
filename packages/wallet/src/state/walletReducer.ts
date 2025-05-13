@@ -3,6 +3,7 @@ import { PersistState } from 'redux-persist'
 import { timingReducer } from 'uniswap/src/features/timing/slice'
 import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/uniswapReducer'
 import { appearanceSettingsReducer } from 'wallet/src/features/appearance/slice'
+import { batchedTransactionsReducer } from 'wallet/src/features/batchedTransactions/slice'
 import { behaviorHistoryReducer } from 'wallet/src/features/behaviorHistory/slice'
 import { telemetryReducer } from 'wallet/src/features/telemetry/slice'
 import { walletReducer } from 'wallet/src/features/wallet/slice'
@@ -15,6 +16,7 @@ export const walletReducers = {
   telemetry: telemetryReducer,
   timing: timingReducer,
   wallet: walletReducer,
+  batchedTransactions: batchedTransactionsReducer,
 } as const
 
 // used to type RootState
@@ -27,6 +29,7 @@ export const walletPersistedStateList: Array<keyof typeof walletReducers> = [
   'notifications',
   'telemetry',
   'wallet',
+  'batchedTransactions',
 ]
 
 export type WalletStateReducersOnly = ReturnType<typeof walletRootReducer>

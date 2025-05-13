@@ -5,7 +5,7 @@ import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPosi
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionPriceRangeTile } from 'components/Liquidity/LiquidityPositionPriceRangeTile'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { usePositionDerivedInfo } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -106,7 +106,7 @@ export function LegacyPositionPage() {
     fiatValue0,
     fiatValue1,
     priceOrdering,
-  } = useV3OrV4PositionDerivedInfo(positionInfo)
+  } = usePositionDerivedInfo(positionInfo)
 
   if (positionLoading) {
     return (

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Flex, Separator, Text, Unicon, useSporeColors } from 'ui/src'
-import Check from 'ui/src/assets/icons/check.svg'
+import { Flex, Separator, Text, Unicon } from 'ui/src'
+import { Check } from 'ui/src/components/icons'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
@@ -15,7 +15,6 @@ type Props = {
 const ICON_SIZE = 24
 
 export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Element => {
-  const colors = useSporeColors()
   const displayName = useDisplayName(account.address)
 
   return (
@@ -33,9 +32,7 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
           </Text>
         </Flex>
         <Flex height={ICON_SIZE} width={ICON_SIZE}>
-          {areAddressesEqual(activeAccount?.address, account.address) && (
-            <Check color={colors.accent1.get()} height={ICON_SIZE} width={ICON_SIZE} />
-          )}
+          {areAddressesEqual(activeAccount?.address, account.address) && <Check color="$accent1" size={ICON_SIZE} />}
         </Flex>
       </Flex>
     </>

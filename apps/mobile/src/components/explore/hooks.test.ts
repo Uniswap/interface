@@ -148,7 +148,7 @@ describe(useExploreTokenContextMenu, () => {
       const dispatchedActions = store.getActions()
       expect(dispatchedActions).toContainEqual({
         type: 'favorites/addFavoriteToken',
-        payload: { currencyId: tokenMenuParams.currencyId },
+        payload: { currencyId: tokenMenuParams.currencyId.toLowerCase() },
       })
       cleanup()
     })
@@ -174,7 +174,7 @@ describe(useExploreTokenContextMenu, () => {
       const dispatchedActions = store.getActions()
       expect(dispatchedActions).toContainEqual({
         type: 'favorites/removeFavoriteToken',
-        payload: { currencyId: tokenMenuParams.currencyId },
+        payload: { currencyId: tokenMenuParams.currencyId.toLowerCase() },
       })
       cleanup()
     })

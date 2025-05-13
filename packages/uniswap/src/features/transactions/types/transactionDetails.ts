@@ -6,7 +6,7 @@ import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/_
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DappInfo } from 'uniswap/src/types/walletConnect'
+import { DappInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
 
 export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: string]: TransactionDetails }>>
 
@@ -195,6 +195,7 @@ export enum NFTTradeType {
 export enum TransactionType {
   // Token Specific
   Approve = 'approve',
+  Permit2Approve = 'permit2-approve',
   Bridge = 'bridge',
   Swap = 'swap',
   Wrap = 'wrap',
@@ -219,6 +220,9 @@ export enum TransactionType {
   // General
   WCConfirm = 'wc-confirm',
   Unknown = 'unknown',
+
+  // Send Calls
+  SendCalls = 'send-calls',
 }
 
 export interface BaseTransactionInfo {
@@ -237,6 +241,12 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
   // The id of the swap TransactionDetails object submitted after this approval on the current client, if applicable.
   swapTxId?: string
+}
+
+export interface Permit2ApproveTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Permit2Approve
+  spender: string
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
@@ -401,8 +411,16 @@ export interface UnknownTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
 }
 
+export interface SendCallsTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.SendCalls
+  encodedTransaction?: EthTransaction
+  encodedRequestId?: string
+  dappInfo?: DappInfoTransactionDetails
+}
+
 export type TransactionTypeInfo =
   | ApproveTransactionInfo
+  | Permit2ApproveTransactionInfo
   | BridgeTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
@@ -420,6 +438,7 @@ export type TransactionTypeInfo =
   | OffRampSaleInfo
   | LocalOnRampTransactionInfo
   | LocalOffRampTransactionInfo
+  | SendCallsTransactionInfo
 
   export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
   return Boolean(

@@ -146,6 +146,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  color: #131313;
   text-align: left;
   font-size: 70px;
   font-weight: 500;
@@ -886,6 +887,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  color: #131313;
   text-align: left;
   font-size: 70px;
   font-weight: 500;

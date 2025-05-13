@@ -172,6 +172,11 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: i18n.t('common.swapped'),
     [TransactionStatus.Failed]: i18n.t('common.swap.failed'),
   },
+  [TransactionType.PERMIT]: {
+    [TransactionStatus.Pending]: i18n.t('common.approving'),
+    [TransactionStatus.Confirmed]: i18n.t('common.permit.approved'),
+    [TransactionStatus.Failed]: i18n.t('common.permit.failed'),
+  },
 }
 
 export const CancelledTransactionTitleTable: { [key in TransactionType]: string } = {
@@ -208,6 +213,7 @@ export const CancelledTransactionTitleTable: { [key in TransactionType]: string 
   [TransactionType.CREATE_POSITION]: i18n.t('pool.createdPosition.cancelled'),
   [TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4]: i18n.t('common.migrate.liquidity.cancelled'),
   [TransactionType.BRIDGE]: i18n.t('common.swap.cancelled'),
+  [TransactionType.PERMIT]: i18n.t('common.permit.cancelled'),
 }
 
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {

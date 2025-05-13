@@ -8,7 +8,6 @@ import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassi
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { AnimatePresence, Flex } from 'ui/src'
 import { Edit, Ellipsis, Trash } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
@@ -66,7 +65,7 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
         endAdornment={
           <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
             <Flex>
-              <Ellipsis color="$neutral2" size={iconSizes.icon24} />
+              <Ellipsis color="$neutral2" size="$icon.24" />
             </Flex>
           </ContextMenu>
         }

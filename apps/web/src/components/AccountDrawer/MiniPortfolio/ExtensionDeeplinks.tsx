@@ -102,7 +102,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
       )}
       {openLimitOrders.length > 0 && (
         <DeepLinkButton
-          Icon={<ArrowRightToLine size={iconSizes.icon20} color="$neutral1" />}
+          Icon={<ArrowRightToLine size="$icon.20" color="$neutral1" />}
           Label={t('common.limits')}
           onPress={() => setMenu(MenuState.LIMITS)}
         />

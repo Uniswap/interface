@@ -1,7 +1,6 @@
 import { SCREEN_ITEM_HORIZONTAL_PAD } from 'src/app/constants'
 import { SettingsDropdown, SettingsDropdownProps } from 'src/app/features/settings/SettingsDropdown'
 import { Flex, GeneratedIcon, Text, TouchableArea } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 
 type SettingsItemWithDropdownProps = {
   Icon: GeneratedIcon
@@ -18,7 +17,7 @@ export function SettingsItemWithDropdown(props: SettingsItemWithDropdownProps): 
   return (
     <Flex row alignItems="center" px={SCREEN_ITEM_HORIZONTAL_PAD} py="$spacing4">
       <Flex fill row gap="$spacing12">
-        <Icon color="$neutral2" size={iconSizes.icon24} />
+        <Icon color="$neutral2" size="$icon.24" />
         <Text color="$neutral1" variant="subheading2">
           {title}
         </Text>

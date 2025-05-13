@@ -59,7 +59,6 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { assume0xAddress } from 'utils/wagmi'
 import { useReadContract, useReadContracts } from 'wagmi'
-import { MigrateHeader } from '.'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -911,9 +910,9 @@ export default function MigrateV2Pair() {
             >
               <Arrow direction="w" color="$neutral1" size={iconSizes.icon24} />
             </TouchableArea>
-            <MigrateHeader>
+            <Text variant="heading3" tag="h1" fontWeight="$medium">
               <Trans i18nKey="migrate.v2Title" />
-            </MigrateHeader>
+            </Text>
             <MigrateV2SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={account.chainId} />
           </Flex>
 

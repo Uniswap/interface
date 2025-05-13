@@ -13,7 +13,7 @@ interface SwapReviewCallbacksContextProviderProps {
   children: ReactNode
   setScreen: (screen: TransactionScreen) => void
   authTrigger?: AuthTrigger
-  onSubmitSwap?: () => Promise<void>
+  onSubmitSwap?: () => Promise<void> | void
   onClose: () => void
   onAcceptTrade: () => void
   getExecuteSwapService: GetExecuteSwapService
@@ -36,7 +36,7 @@ export const SwapReviewCallbacksContextProvider = ({
     setShowWarningModal,
     setWarningAcknowledged,
   } = useSwapWarningState()
-  const { resetCurrentStep, setSubmissionError } = useSwapReviewState()
+  const { resetCurrentStep, setSubmissionError, setRetrySwap } = useSwapReviewState()
   const { updateSwapForm } = useSwapFormContext()
   const { reviewScreenWarning } = useParsedSwapWarnings()
   const { setCurrentStep, setSteps } = useSwapReviewState()
@@ -45,6 +45,7 @@ export const SwapReviewCallbacksContextProvider = ({
     useCreateSwapReviewCallbacks({
       resetCurrentStep,
       setSubmissionError,
+      setRetrySwap,
       showWarningModal,
       warningAcknowledged,
       shouldSubmitTx,

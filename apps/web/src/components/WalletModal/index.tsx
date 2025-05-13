@@ -22,6 +22,7 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export default function WalletModal() {
@@ -30,7 +31,7 @@ export default function WalletModal() {
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const [expandMoreWallets, toggleExpandMoreWallets] = useReducer((s) => !s, !isEmbeddedWalletEnabled)
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
-  const connectors = useOrderedConnections()
+  const connectors = useOrderedConnections({ showSecondaryConnectors: isMobileWeb })
   const recentConnectorId = useRecentConnectorId()
 
   const showDownloadHeader =
@@ -43,7 +44,7 @@ export default function WalletModal() {
     openGetTheAppModal()
     setPage(Page.GetApp)
   })
-  const px = 16
+  const px = 12
 
   return (
     <Flex
@@ -60,7 +61,7 @@ export default function WalletModal() {
         <Flex display="flex" $md={{ display: 'none' }}>
           <DownloadWalletRow
             onPress={handleOpenGetTheAppModal}
-            mx={-12}
+            mx={-8}
             mt={-12}
             width={`calc(100% + ${px * 2 - 8}px)`}
             borderTopLeftRadius="$rounded16"
@@ -108,23 +109,28 @@ export default function WalletModal() {
       <Flex gap="$gap12">
         <Flex row alignItems="flex-start">
           <Flex
-            gap={2}
             borderRadius="$rounded16"
             overflow="hidden"
             width="100%"
-            maxHeight={expandMoreWallets ? 0 : '100vh'}
-            opacity={expandMoreWallets ? 0 : 1}
+            maxHeight={expandMoreWallets && !isEmbeddedWalletEnabled ? 0 : '100vh'}
+            opacity={expandMoreWallets && !isEmbeddedWalletEnabled ? 0 : 1}
             transition={`${transitions.duration.fast} ${transitions.timing.inOut}`}
             data-testid="option-grid"
           >
-            {recentConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID &&
+            {(recentConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID || isMobileWeb) &&
               isEmbeddedWalletEnabled && (
-                <Option connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
+                <>
+                  <Option connectorId={CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID} />
+                  <Separator />
+                </>
               )}
-            {connectors.map((c) => (
-              <Option connectorId={c.id} key={c.uid} detected={c.isInjected} />
+            {connectors.map((c, index) => (
+              <>
+                <Option connectorId={c.id} key={c.uid} detected={c.isInjected} />
+                {index < connectors.length - 1 || isEmbeddedWalletEnabled ? <Separator /> : null}
+              </>
             ))}
-            {isEmbeddedWalletEnabled && (
+            {isEmbeddedWalletEnabled && !isMobileWeb && (
               <Option connectorId={AlternativeOption.OTHER_WALLETS} onPress={() => setMenu(MenuState.OTHER_WALLETS)} />
             )}
           </Flex>
@@ -146,7 +152,7 @@ export default function WalletModal() {
         <Flex display="none" $md={{ display: 'flex' }}>
           <DownloadWalletRow
             onPress={handleOpenGetTheAppModal}
-            mx={-12}
+            mx={-8}
             mt={-12}
             width={`calc(100% + ${px * 2 - 8}px)`}
             borderTopLeftRadius="$rounded16"

@@ -1,6 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
-import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
+import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -37,44 +37,38 @@ export function PasskeyManagementModal({ isOpen, onClose, address }: PasskeyMana
     >
       <Flex
         centered
-        gap="$spacing12"
-        pb={isWeb ? '$none' : '$spacing12'}
-        pt="$spacing12"
+        gap="$spacing16"
+        pb={isWeb ? '$none' : '$spacing24'}
+        pt={isWeb ? '$spacing20' : '$spacing12'}
         px={isWeb ? '$none' : '$spacing24'}
       >
-        <Flex
-          centered
-          borderRadius="$rounded12"
-          mb="$spacing8"
-          p="$spacing12"
-          style={{
-            backgroundColor: colors.surface2.get(),
-          }}
-        >
+        <Flex centered borderRadius="$rounded12" p="$spacing12" backgroundColor="$surface3">
           <Passkey color="$neutral1" size="$icon.24" />
         </Flex>
 
-        <Text textAlign="center" variant="subheading1">
-          {t('passkeys.manage.modal.title')}
-        </Text>
+        <Flex gap="$spacing8">
+          <Text textAlign="center" variant="subheading1">
+            {t('passkeys.manage.modal.title')}
+          </Text>
 
-        <Text color="$neutral2" textAlign="center" variant="body3">
-          <Trans
-            components={{
-              highlightLink: <Text color="$accent1" variant="body3" onPress={launchPasskeyManagement} />,
-            }}
-            i18nKey="passkeys.manage.modal.subtitle"
-            values={{
-              passkeyManagementUrl: passkeyManagementUrl.hostname + passkeyManagementUrl.pathname,
-            }}
-          />
-        </Text>
+          <Text color="$neutral2" textAlign="center" variant="body3">
+            <Trans
+              components={{
+                highlightLink: <Text color="$accent1" variant="buttonLabel3" onPress={launchPasskeyManagement} />,
+              }}
+              i18nKey="passkeys.manage.modal.subtitle"
+              values={{
+                passkeyManagementUrl: passkeyManagementUrl.hostname + passkeyManagementUrl.pathname,
+              }}
+            />
+          </Text>
+        </Flex>
 
-        <Flex row pt="$spacing24">
+        <Flex row alignSelf="stretch" pt="$spacing8">
           <Trace logPress element={ElementName.Continue} modal={ModalName.PasskeyManagement}>
             <Button
               fill
-              icon={<ExternalLinkIcon color={colors.neutral1.get()} height="$icon.20" width="$icon.20" />}
+              icon={<ExternalLink color="$neutral1" size="$icon.20" />}
               iconPosition="after"
               testID={ElementName.Continue}
               emphasis="secondary"

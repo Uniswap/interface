@@ -18,4 +18,9 @@ export enum InterfaceEventNameLocal {
   DecreaseLiquidityFailed = 'Decrease Liquidity Failed',
   MigrateLiquidityFailed = 'Migrate Liquidity Failed',
   CollectLiquidityFailed = 'Collect Liquidity Failed',
+  LimitedWalletSupportToastShown = 'Limited Wallet Support Toast Shown',
+  LimitedWalletSupportToastDismissed = 'Limited Wallet Support Toast Dismissed',
+  LimitedWalletSupportToastLearnMoreButtonClicked = 'Limited Wallet Support Learn More Button Clicked',
+  DelegationDetected = 'Delegation Detected',
+  WalletCapabilitiesDetected = 'Wallet Capabilities Detected',
 }

@@ -22,6 +22,9 @@ export const walletTypeToAmplitudeWalletType = (connectionType?: string) => {
     case 'uniswapWalletConnect': {
       return 'Wallet Connect'
     }
+    case 'embeddedUniswapWallet': {
+      return 'Passkey'
+    }
     default: {
       return connectionType ?? 'Network'
     }

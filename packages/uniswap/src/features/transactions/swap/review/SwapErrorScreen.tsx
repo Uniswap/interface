@@ -11,25 +11,27 @@ import { TransactionModalInnerContainer } from 'uniswap/src/features/transaction
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { TransactionStepFailedError, getErrorContent } from 'uniswap/src/features/transactions/errors'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { openUri } from 'uniswap/src/utils/linking'
 
 export function SwapErrorScreen({
   submissionError,
   setSubmissionError,
+  onPressRetry,
   resubmitSwap,
   onClose,
 }: {
   submissionError: Error
   setSubmissionError: (e: Error | undefined) => void
   resubmitSwap: () => void
+  onPressRetry: (() => void) | undefined
   onClose: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const { bottomSheetViewStyles } = useTransactionModalContext()
   const { updateTransactionSettings, selectedProtocols } = useTransactionSettingsContext()
 
-  const { title, message, supportArticleURL } = getErrorContent(t, submissionError)
+  const { title, message, supportArticleURL, buttonText } = getErrorContent(t, submissionError)
 
   const isUniswapXBackendError =
     submissionError instanceof TransactionStepFailedError &&
@@ -37,7 +39,10 @@ export function SwapErrorScreen({
     submissionError.step.type === TransactionStepType.UniswapXSignature
 
   const handleTryAgain = (): void => {
-    if (isUniswapXBackendError) {
+    if (onPressRetry) {
+      onPressRetry()
+    } else if (isUniswapXBackendError) {
+      // TODO(WEB-7668): move this into onPressRetry logic.
       // Update swap preferences for this session to exclude UniswapX if Uniswap x failed
       const updatedProtocols = selectedProtocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
       updateTransactionSettings({ selectedProtocols: updatedProtocols })
@@ -68,7 +73,7 @@ export function SwapErrorScreen({
             title={title}
             caption={message}
             severity={WarningSeverity.Low}
-            rejectText={t('common.button.tryAgain')}
+            rejectText={buttonText ?? t('common.button.tryAgain')}
             onReject={handleTryAgain}
           />
         </Flex>

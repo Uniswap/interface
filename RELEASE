@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmY6iPUuY57eq3gtoFaqtJ885ysk1SQDbHi4nawcXmYM7s`
-- CIDv1: `bafybeierals42wkadswmgvlto7rbuywzpzfcmgqcywdlzqbvgylukagtoy`
+- CIDv0: `QmezmXSutzznthvc6pSCrb7JgxjGqXFNCWCZLjADjg6Tf8`
+- CIDv1: `bafybeihxp3cmskdb4nr76bocjhdgq32ykbfquxwakbdx33iehf44jxwuim`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,72 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeierals42wkadswmgvlto7rbuywzpzfcmgqcywdlzqbvgylukagtoy.ipfs.dweb.link/
-- [ipfs://QmY6iPUuY57eq3gtoFaqtJ885ysk1SQDbHi4nawcXmYM7s/](ipfs://QmY6iPUuY57eq3gtoFaqtJ885ysk1SQDbHi4nawcXmYM7s/)
+- https://bafybeihxp3cmskdb4nr76bocjhdgq32ykbfquxwakbdx33iehf44jxwuim.ipfs.dweb.link/
+- [ipfs://QmezmXSutzznthvc6pSCrb7JgxjGqXFNCWCZLjADjg6Tf8/](ipfs://QmezmXSutzznthvc6pSCrb7JgxjGqXFNCWCZLjADjg6Tf8/)
 
-## 5.82.0 (2025-04-30)
-
-
-### Features
-
-* **web:** add more CF cacheing for CSS resources (#18689) 3ddb1e3
-* **web:** add more CF caching headers for public assets (#18678) 4f9b98e
-* **web:** add more menu to hover state search modal (#18469) d4a85b5
-* **web:** add pools mock sections (#17257) 3a6bc2c
-* **web:** add tabs to search modal (#17180) 4e62ad9
-* **web:** Add verify to add/delete passkey (#18627) b872b40
-* **web:** bidirectional table scroll buttons (#18876) c647127
-* **web:** defer initializations of AssetActivityProvider and TokenBalancesProvider (#18057) b1e68cf
-* **web:** feature-gate pool search and tabs on web (#18273) 78ea6ec
-* **web:** implement keyboard focus hover state on OptionItem (#17179) ebfea5c
-* **web:** lazy load top level modals (#18056) 6a38462
-* **web:** minip updates (#18613) 248bdec
-* **web:** more CF caching for js chunks (#18679) 89611fe
-* **web:** pass uniquote enabled to trading api requests (#19018) 955bbac
-* **web:** show help modal on passkey error (#18682) 15039cf
-* **web:** top boosted pools (#18569) cbcb803
-* **web:** useMutate for refreshing authenticators (#18628) 3a24751
+### 5.83.7 (2025-05-13)
 
 
 ### Bug Fixes
 
-* **web:** [pdp] redirect if no pool found (#18412) 8e95934
-* **web:** [tdp] redirect if no token found (#18408) 997977e
-* **web:** [tdp] switch testnet/mainnet mode when wallet is disconnected (#18406) 571fced
-* **web:** add additional statsig api urls to our csp.json file (#19036) d7a9320
-* **web:** add more context to Datadog resource events (#18743) 00d6e11
-* **web:** add web3modal to csp to fix wallet connect error (#18771) d57bd82
-* **web:** bug bash polish (#18594) ba4f511
-* **web:** clean up modal util hooks (#18535) db8ff2b
-* **web:** dd- allow 100% sample rate on interface staging (#18267) abb113a
-* **web:** DevFlagsBox behavior (#18749) 4a93d4e
-* **web:** do not render top level modals when shouldOverridePageLayout=true (#18691) 7f63a56
-* **web:** fix button size in FeeTierSearchModal (#18911) 5936720
-* **web:** fix closeModal util hook (#18783) b76e2d8
-* **web:** fix invalid robots.txt (#18690) f910fd3
-* **web:** fix resetting of modal after closing (#18872) 317f04a
-* **web:** fix uniwalletmodal opening bug (#18871) c4de0d2
-* **web:** lp incentives bugfixes (#18830) 4e3b289
-* **web:** migrate Card components to tamagui (#18481) 1f43821
-* **web:** migrate containers in MigrateV2Pair to tamagui (#18482) 374dd77
-* **web:** optimize images for app store logos and lazy-load QR code (#18635) cb119ef
-* **web:** pass chainId to useReadContracts (#18663) c4aa5b5
-* **web:** remove applied percent buffer logic from useMaxAmountSpend (#18834) f88ac25
-* **web:** remove more dead feature flags (#18538) b9ef4a8
-* **web:** replace dotted bg gradient png with css (#18803) bf8cfea
-* **web:** search revamp web polish (#18416) 86f034e
-* **web:** settings spacing fix (#18874) b36aa67
-* **web:** show price for v2 create (#18917) e80273c
-* **web:** slideOutMenu adjustments (#18629) 3715c68
-* **web:** start migrating MigrateV2Pair to spore / tamagui (#18480) 5d8a2d0
-* **web:** temp skip snapshot test on LimitPriceInputPanel.test.tsx (#18630) 435fe3b
-* **web:** uninitialized v2 pools (#18807) 8f390da
-* **web:** v2 migrate page UI fixes (#18479) 858807d
-* **web:** v4 native pair liq chart fix (#18893) c008acc
-
-
-### Continuous Integration
-
-* **web:** update sitemaps a994dde
+* **web:** only support batch swaps on supported status (#19566) da9a5ec
 
 

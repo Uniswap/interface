@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
+import StaticRouteIcon from 'assets/svg/static_route.svg'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { getBridgeDescriptor } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -340,6 +341,12 @@ export async function transactionToActivity(
       additionalFields = await parseSend(info, chainId, formatNumber)
     } else if (info.type === TransactionType.LP_INCENTIVES_CLAIM_REWARDS) {
       additionalFields = await parseLpIncentivesClaim(info, chainId)
+    } else if (info.type === TransactionType.PERMIT) {
+      additionalFields = {
+        title: i18n.t('common.permit'),
+        descriptor: i18n.t('notification.transaction.unknown.success.short'),
+        logos: [StaticRouteIcon],
+      }
     }
 
     const activity = { ...defaultFields, ...additionalFields }

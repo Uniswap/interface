@@ -4,15 +4,11 @@ import { Flex } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
-import {
-  OnSelectCurrency,
-  OnchainItemSection,
-  OnchainItemSectionName,
-  TokenSectionsHookProps,
-} from 'uniswap/src/components/TokenSelector/types'
-import { useOnchainItemListSection } from 'uniswap/src/components/TokenSelector/utils'
+import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
+import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { SectionHeader } from 'uniswap/src/components/lists/SectionHeader'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 
 function useTokenSectionsForSend({

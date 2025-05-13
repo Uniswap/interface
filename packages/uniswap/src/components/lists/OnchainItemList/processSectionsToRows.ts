@@ -1,7 +1,7 @@
-import type { OnchainItemSection } from 'uniswap/src/components/TokenSelector/types'
 import type { ItemRowInfo, SectionRowInfo } from 'uniswap/src/components/lists/OnchainItemList/OnchainItemList'
+import { type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import type { SectionHeaderProps } from 'uniswap/src/components/lists/SectionHeader'
-import { OnchainItemListType } from 'uniswap/src/components/lists/items/types'
+import { OnchainItemListOption } from 'uniswap/src/components/lists/items/types'
 
 export enum ProcessedRowType {
   Header = 'header',
@@ -10,9 +10,9 @@ export enum ProcessedRowType {
 
 export type ProcessedRow =
   | { type: ProcessedRowType.Header; data: SectionRowInfo }
-  | { type: ProcessedRowType.Item; data: ItemRowInfo<OnchainItemListType> }
+  | { type: ProcessedRowType.Item; data: ItemRowInfo<OnchainItemListOption> }
 
-export function processSectionsToRows(sections: OnchainItemSection<OnchainItemListType>[]): ProcessedRow[] {
+export function processSectionsToRows(sections: OnchainItemSection<OnchainItemListOption>[]): ProcessedRow[] {
   const result: ProcessedRow[] = []
   let rowIndex = 0
 

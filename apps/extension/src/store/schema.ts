@@ -3,6 +3,9 @@ import { RankingType } from 'uniswap/src/data/types'
 // only add fields that are persisted
 export const initialSchema = {
   dapp: {},
+  dappRequests: {
+    pending: [],
+  },
   favorites: {
     tokens: [],
     watchedAddresses: [],
@@ -50,6 +53,7 @@ export const initialSchema = {
     hasCompletedUnitagsIntroModal: false,
     extensionOnboardingState: 0,
   },
+  batchedTransactions: {},
 }
 
 const v0SchemaIntermediate = {
@@ -232,6 +236,23 @@ const v20SchemaIntermediate = {
 }
 delete v20SchemaIntermediate.favorites.tokensVisibility
 delete v20SchemaIntermediate.favorites.nftsVisibility
-const v20Schema = v20SchemaIntermediate
+export const v20Schema = v20SchemaIntermediate
 
-export const getSchema = (): typeof v20Schema => v20Schema
+const v21SchemaIntermediate = {
+  ...v20Schema,
+  dappRequests: {
+    ...v20Schema.dappRequests,
+    pending: undefined,
+    requests: {},
+  },
+}
+delete v21SchemaIntermediate.dappRequests.pending
+export const v21Schema = v21SchemaIntermediate
+
+export const v22Schema = {
+  ...v21Schema,
+  batchedTransactions: {},
+}
+
+const v23Schema = v22Schema
+export const getSchema = (): typeof v23Schema => v23Schema

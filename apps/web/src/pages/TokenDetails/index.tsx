@@ -7,23 +7,21 @@ import { gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSrcColor } from 'hooks/useColor'
+import { ExploreTab } from 'pages/Explore/constants'
 import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from 'pages/TokenDetails/TDPContext'
 import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { useSporeColors } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isTestnetChain } from 'uniswap/src/features/chains/utils'
-import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
+import { ModalName } from 'uniswap/src/features/telemetry/constants/trace'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
@@ -158,10 +156,7 @@ export default function TokenDetailsPage() {
   const { t } = useTranslation()
   const contextValue = useCreateTDPContext()
   const { address, currency, currencyChain, currencyChainId, tokenQuery } = contextValue
-  const { isConnected } = useAccount()
-  const isSupportedChain = useIsSupportedChainId(currencyChainId)
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   const tokenQueryData = tokenQuery.data?.token
   const metatagProperties = useMemo(() => {
@@ -179,25 +174,12 @@ export default function TokenDetailsPage() {
   }, [address, currency, currencyChain, currencyChainId, tokenQueryData?.name, tokenQueryData?.symbol])
   const metatags = useDynamicMetatags(metatagProperties)
 
-  // set testnet mode based on chain type when wallet is disconnected
-  useEffect(() => {
-    if (isConnected) {
-      return
-    }
-
-    if (currencyChainId && isTestnetChain(currencyChainId)) {
-      dispatch(setIsTestnetModeEnabled(true))
-    } else {
-      dispatch(setIsTestnetModeEnabled(false))
-    }
-  }, [isConnected, currencyChainId, dispatch])
-
   // redirect to /explore if token is not found
   useEffect(() => {
-    if (!tokenQuery.loading && (!currency || !isSupportedChain)) {
-      navigate('/explore')
+    if (!tokenQuery.loading && !currency) {
+      navigate(`/explore?type=${ExploreTab.Tokens}&result=${ModalName.NotFound}`)
     }
-  }, [isSupportedChain, currency, tokenQuery.loading, navigate])
+  }, [currency, tokenQuery.loading, navigate])
 
   return (
     <>
@@ -212,15 +194,11 @@ export default function TokenDetailsPage() {
           return <TokenDetailsPageSkeleton />
         }
 
-        if (isSupportedChain) {
-          return (
-            <TDPProvider contextValue={contextValue}>
-              <TokenDetails />
-            </TDPProvider>
-          )
-        }
-
-        return null
+        return (
+          <TDPProvider contextValue={contextValue}>
+            <TokenDetails />
+          </TDPProvider>
+        )
       })()}
     </>
   )

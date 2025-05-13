@@ -244,7 +244,7 @@ export function SendTokenForm(): JSX.Element {
         <WarningModal
           caption={transferWarning.message}
           acknowledgeText={t('common.button.close')}
-          icon={<SendWarningIcon color={transferWarningColor.text} size={iconSizes.icon24} />}
+          icon={<SendWarningIcon color={transferWarningColor.text} size="$icon.24" />}
           isOpen={showWarningModal}
           modalName={ModalName.SendWarning}
           severity={transferWarning.severity}
@@ -350,7 +350,7 @@ export function SendTokenForm(): JSX.Element {
                   px="$spacing16"
                   py="$spacing12"
                 >
-                  <SendWarningIcon color={transferWarningColor.text} size={iconSizes.icon16} strokeWidth={1.5} />
+                  <SendWarningIcon color={transferWarningColor.text} size="$icon.16" strokeWidth={1.5} />
                   <Text adjustsFontSizeToFit color={transferWarningColor.text} variant="body3">
                     {transferWarning.title}
                   </Text>

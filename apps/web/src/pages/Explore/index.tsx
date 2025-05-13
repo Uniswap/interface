@@ -1,4 +1,6 @@
 import { InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import PoolNotFoundModal from 'components/NotFoundModal/PoolNotFoundModal'
+import TokenNotFoundModal from 'components/NotFoundModal/TokenNotFoundModal'
 import { ExploreTopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
 import TableNetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
@@ -11,11 +13,14 @@ import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
 import ExploreStatsSection from 'pages/Explore/ExploreStatsSection'
 import ProtocolFilter from 'pages/Explore/ProtocolFilter'
+import { ExploreTab } from 'pages/Explore/constants'
 import { useExploreParams } from 'pages/Explore/redirects'
 import RecentTransactions from 'pages/Explore/tables/RecentTransactions'
 import { NamedExoticComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { setOpenModal } from 'state/application/reducer'
 import { ExploreContextProvider } from 'state/explore'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
@@ -23,13 +28,8 @@ import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isBackendSupportedChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants/trace'
 import { getChainUrlParam, useChainIdFromUrlParam } from 'utils/chainParams'
-
-export enum ExploreTab {
-  Tokens = 'tokens',
-  Pools = 'pools',
-  Transactions = 'transactions',
-}
 
 interface Page {
   title: React.ReactNode
@@ -100,7 +100,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
   const Pages = usePages()
-
+  const [params] = useSearchParams()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
 
@@ -118,6 +121,25 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     // scroll to tab navbar on initial page mount only
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    const notFound = params.get('result') === ModalName.NotFound
+    const type = params.get('type')
+
+    if (notFound) {
+      switch (type) {
+        case ExploreTab.Tokens:
+          dispatch(setOpenModal({ name: ModalName.TokenNotFound }))
+          break
+        case ExploreTab.Pools:
+          dispatch(setOpenModal({ name: ModalName.PoolNotFound }))
+          break
+      }
+
+      // navigate without params
+      navigate(location.pathname, { replace: true })
+    }
+  }, [params, dispatch, navigate, location])
 
   const [currentTab, setCurrentTab] = useState(initialKey)
 
@@ -140,7 +162,6 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { component: Page, key: currentKey } = Pages[currentTab]
 
   // Automatically trigger a navigation when the app chain changes
-  const navigate = useNavigate()
   useOnGlobalChainSwitch(
     useCallback(
       (chain) => {
@@ -223,6 +244,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
           <Page />
         </Flex>
       </ExploreContextProvider>
+      <TokenNotFoundModal />
+      <PoolNotFoundModal />
     </Trace>
   )
 }

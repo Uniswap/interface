@@ -7,11 +7,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { PendingConnectionSwitchAccountModal } from 'src/components/Requests/ScanSheet/PendingConnectionSwitchAccountModal'
-import { LinkButton } from 'src/components/buttons/LinkButton'
 import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
-import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { getSessionNamespaces } from 'src/features/walletConnect/utils'
+import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
   WalletConnectPendingSession,
   addSession,
@@ -20,7 +19,6 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check, RotatableChevron, X } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -29,6 +27,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { LinkButton } from 'wallet/src/components/buttons/LinkButton'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import {
   useActiveAccountAddressWithThrow,
@@ -69,7 +68,7 @@ const SitePermissions = (): JSX.Element => {
       </Flex>
       <Flex gap="$spacing8" pt="$spacing12">
         <Flex centered row gap="$spacing4">
-          <Check color="$statusSuccess" size={iconSizes.icon16} />
+          <Check color="$statusSuccess" size="$icon.16" />
           <Text
             $short={{ variant: infoTextSize }}
             allowFontScaling={false}
@@ -81,7 +80,7 @@ const SitePermissions = (): JSX.Element => {
           </Text>
         </Flex>
         <Flex centered row gap="$spacing4">
-          <Check color="$statusSuccess" size={iconSizes.icon16} />
+          <Check color="$statusSuccess" size="$icon.16" />
           <Text
             $short={{ variant: infoTextSize }}
             allowFontScaling={false}
@@ -93,7 +92,7 @@ const SitePermissions = (): JSX.Element => {
           </Text>
         </Flex>
         <Flex centered row gap="$spacing4">
-          <X color="$statusCritical" size={iconSizes.icon16} />
+          <X color="$statusCritical" size="$icon.16" />
           <Text
             $short={{ variant: infoTextSize }}
             allowFontScaling={false}

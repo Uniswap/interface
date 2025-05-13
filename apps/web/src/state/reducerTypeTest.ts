@@ -18,9 +18,8 @@ import { LocalWebTransactionState } from 'state/transactions/reducer'
 import { TransactionDetails } from 'state/transactions/types'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
-import { WalletCapabilitiesState } from 'state/walletCapabilities/reducer'
-import { ConnectedWalletsState } from 'state/wallets/reducer'
-import { Wallet } from 'state/wallets/types'
+import { WalletCapabilitiesState } from 'state/walletCapabilities/types'
+import { ConnectedWalletsState, Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
 import { Equals, assert } from 'tsafe'
 import { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
@@ -143,6 +142,8 @@ assert<Equals<ApplicationState, ExpectedApplicationState>>()
 interface ExpectedWalletState {
   connectedWallets: Wallet[]
   switchingChain: UniverseChainId | false
+  delegatedState: Record<string, string>
+  activeChainId?: UniverseChainId
 }
 
 assert<Equals<ConnectedWalletsState, ExpectedWalletState>>()

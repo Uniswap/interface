@@ -30,7 +30,7 @@ import { logger } from 'utilities/src/logger/logger'
 
 interface SwapReviewScreenProps {
   hideContent: boolean
-  onSubmitSwap?: () => Promise<void>
+  onSubmitSwap?: () => Promise<void> | void
 }
 
 export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | null {
@@ -110,6 +110,7 @@ function SwapReviewContent(): JSX.Element | null {
         submissionError={error.submissionError}
         setSubmissionError={error.setSubmissionError}
         resubmitSwap={error.onSwapButtonClick}
+        onPressRetry={error.onPressRetry}
         onClose={onPrev}
       />
     )

@@ -1,11 +1,13 @@
 import { UseQueryOptions, UseQueryResult, queryOptions, useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
-import { useAccountMeta, useSigner } from 'uniswap/src/contexts/UniswapContext'
+import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import {
@@ -15,12 +17,13 @@ import {
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { createBridgeSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/bridge/bridgeSwapTxAndGasInfoService'
 import { createClassicSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/classic/classicSwapTxAndGasInfoService'
-import { getShouldPresignPermits } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/classic/utils'
 import {
   FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS,
   WRAP_FALLBACK_GAS_LIMIT_IN_GWEI,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
-import { createEVMSwapRepository } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
+import { createEVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
+import { usePresignPermit } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/hooks'
+import { createDecorateSwapTxInfoServiceWithEVMLogging } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/logging'
 import {
   RoutingServicesMap,
   SwapTxAndGasInfoParameters,
@@ -34,10 +37,11 @@ import { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/s
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const EMPTY_SWAP_TX_AND_GAS_INFO: SwapTxAndGasInfo = {
   routing: Routing.CLASSIC,
-  txRequest: undefined,
+  txRequests: undefined,
   approveTxRequest: undefined,
   revocationTxRequest: undefined,
   gasFee: { isLoading: false, error: null },
@@ -53,45 +57,72 @@ function useSwapConfig(): {
   v4SwapEnabled: boolean
   activeGasStrategy: GasStrategy
   shadowGasStrategies: GasStrategy[]
+  getCanBatchTransactions?: (chainId?: UniverseChainId) => boolean
 } {
   const { chainId } = useSwapFormContext().derivedSwapInfo
   const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
   const v4SwapEnabled = useV4SwapEnabled(chainId)
-
+  const { getCanBatchTransactions } = useUniswapContext()
   return useMemo(
     () => ({
       v4SwapEnabled,
       activeGasStrategy,
       shadowGasStrategies,
+      getCanBatchTransactions,
     }),
-    [v4SwapEnabled, activeGasStrategy, shadowGasStrategies],
+    [v4SwapEnabled, activeGasStrategy, shadowGasStrategies, getCanBatchTransactions],
   )
+}
+
+const MOCK_7702_DATA = { delegatedAddress: '0x227380efd3392EC33cf148Ade5e0a89D33121814', newUpgradeAddress: undefined }
+export function useSwapDelegationAddress(): string | undefined {
+  const smartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
+  const { delegatedAddress, newUpgradeAddress } = MOCK_7702_DATA // TODO(smart wallet): remove mock, replace with delegation flow hooks
+
+  if (!smartWalletEnabled) {
+    return undefined
+  }
+  return delegatedAddress ?? newUpgradeAddress
+}
+
+export function useIsSmartWalletFlow(): boolean {
+  return !!useSwapDelegationAddress()
 }
 
 export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService<Trade | undefined> {
   const swapConfig = useSwapConfig()
-  const signer = useSigner()
-
+  const presignPermit = usePresignPermit()
+  const trace = useTrace()
   const transactionSettings = useTransactionSettingsContext()
+  const swapDelegationAddress = useSwapDelegationAddress()
+  const instructionService = useMemo(() => {
+    return createEVMSwapInstructionsService({
+      ...swapConfig,
+      presignPermit,
+      swapDelegationAddress,
+    })
+  }, [swapConfig, presignPermit, swapDelegationAddress])
 
-  const swapRepository = useMemo(() => {
-    return createEVMSwapRepository()
-  }, [])
+  const decorateWithEVMLogging = useEvent(createDecorateSwapTxInfoServiceWithEVMLogging({ trace, transactionSettings }))
 
   const classicSwapTxInfoService = useMemo(() => {
-    return createClassicSwapTxAndGasInfoService({
-      swapRepository,
+    const classicService = createClassicSwapTxAndGasInfoService({
       ...swapConfig,
       transactionSettings,
-      signer,
-      shouldPresignPermits: getShouldPresignPermits(),
+      instructionService,
     })
-  }, [swapRepository, swapConfig, transactionSettings, signer])
+    return decorateWithEVMLogging(classicService)
+  }, [swapConfig, transactionSettings, instructionService, decorateWithEVMLogging])
 
   const bridgeSwapTxInfoService = useMemo(() => {
-    return createBridgeSwapTxAndGasInfoService({ swapRepository, ...swapConfig, transactionSettings })
-  }, [swapRepository, swapConfig, transactionSettings])
+    const bridgeService = createBridgeSwapTxAndGasInfoService({
+      ...swapConfig,
+      transactionSettings,
+      instructionService,
+    })
+    return decorateWithEVMLogging(bridgeService)
+  }, [swapConfig, transactionSettings, instructionService, decorateWithEVMLogging])
 
   const uniswapXSwapTxInfoService = useMemo(() => {
     return createUniswapXSwapTxAndGasInfoService()

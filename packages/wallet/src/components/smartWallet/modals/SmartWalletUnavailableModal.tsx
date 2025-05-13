@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { CloudSlash } from 'ui/src/components/icons'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { SmartWalletModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -30,8 +31,7 @@ export function SmartWalletUnavailableModal({ isOpen, onClose }: SmartWalletUnav
       title={t('smartWallets.unavailableModal.title')}
       subtext={t('smartWallets.unavailableModal.description')}
       modalName={ModalName.SmartWalletUnavailableModal}
-      // TODO: hook up actual learn more link when available
-      learnMoreUrl="#"
+      learnMoreUrl={uniswapUrls.helpArticleUrls.mismatchedImports}
       primaryButtonText={t('common.close')}
       primaryButtonVariant="default"
       primaryButtonEmphasis="secondary"

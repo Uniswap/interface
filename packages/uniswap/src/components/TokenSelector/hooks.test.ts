@@ -13,15 +13,16 @@ import {
 } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useFavoriteCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteCurrencies'
 import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
-import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/useFilterCallbacks'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
+import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { Chain, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
+import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import {
@@ -380,7 +381,7 @@ describe(useCurrencyInfosToTokenOptions, () => {
       input: { currencyInfos, sortAlphabetically: false, portfolioBalancesById: balancesById },
       output: [
         // ETH exists in the balancesById so we will get its balance
-        balancesById[ethInfo.currencyId],
+        { ...balancesById[ethInfo.currencyId], type: OnchainItemListOptionType.Token },
         // USDC and Arbitrum DAI do not exist in the balancesById so we will create empty balance options
         createEmptyBalanceOption(usdcBaseInfo),
         createEmptyBalanceOption(arbitrumDaiInfo),
@@ -395,7 +396,7 @@ describe(useCurrencyInfosToTokenOptions, () => {
         // USDC does not exist in the portfolioBalancesById so we will create empty balance options
         createEmptyBalanceOption(usdcBaseInfo), // Chain name: Base ETH
         // ETH exists in the portfolioBalancesById so we will get its balance
-        balancesById[ethInfo.currencyId], // Chain name: ETH
+        { ...balancesById[ethInfo.currencyId], type: OnchainItemListOptionType.Token }, // Chain name: ETH
       ],
     },
   ]
@@ -500,10 +501,16 @@ describe(usePortfolioTokenOptions, () => {
     const shownTokenBalances = [ethTokenBalance, usdcTokenBalance]
 
     // Portfolio balances
-    const ethPortfolioBalance = portfolioBalance({ fromBalance: ethTokenBalance })
-    const usdcPortfolioBalance = portfolioBalance({ fromBalance: usdcTokenBalance })
+    const ethPortfolioBalanceTokenOption: TokenOption = {
+      ...portfolioBalance({ fromBalance: ethTokenBalance }),
+      type: OnchainItemListOptionType.Token,
+    }
+    const usdcPortfolioBalanceTokenOption: TokenOption = {
+      ...portfolioBalance({ fromBalance: usdcTokenBalance }),
+      type: OnchainItemListOptionType.Token,
+    }
     const hiddenTokenBalances = createArray(2, () => tokenBalance({ isHidden: true }))
-    const shownPortfolioBalances = [ethPortfolioBalance, usdcPortfolioBalance]
+    const shownPortfolioBalanceTokenOptions = [ethPortfolioBalanceTokenOption, usdcPortfolioBalanceTokenOption]
 
     const Portfolio = portfolio({ tokenBalances: [...shownTokenBalances, ...hiddenTokenBalances] })
     const { resolvers } = queryResolvers({
@@ -519,7 +526,7 @@ describe(usePortfolioTokenOptions, () => {
         test: 'returns only shown tokens after data is fetched',
         input: [SAMPLE_SEED_ADDRESS_1, null],
         output: {
-          data: shownPortfolioBalances,
+          data: shownPortfolioBalanceTokenOptions,
           loading: false,
           refetch: expect.any(Function),
           error: undefined,
@@ -529,7 +536,7 @@ describe(usePortfolioTokenOptions, () => {
         test: 'returns shown tokens filtered by chain',
         input: [SAMPLE_SEED_ADDRESS_1, fromGraphQLChain(usdcTokenBalance.token.chain)],
         output: {
-          data: [usdcPortfolioBalance],
+          data: [usdcPortfolioBalanceTokenOption],
           loading: false,
           refetch: expect.any(Function),
           error: undefined,
@@ -539,7 +546,7 @@ describe(usePortfolioTokenOptions, () => {
         test: 'returns shown tokens starting with "et" (ETH) filtered by search filter',
         input: [SAMPLE_SEED_ADDRESS_1, null, 'et'],
         output: {
-          data: [ethPortfolioBalance],
+          data: [ethPortfolioBalanceTokenOption],
           loading: false,
           refetch: expect.any(Function),
           error: undefined,
@@ -549,7 +556,7 @@ describe(usePortfolioTokenOptions, () => {
         test: 'returns shown tokens starting with "us" (USDC) filtered by search filter',
         input: [SAMPLE_SEED_ADDRESS_1, null, 'us'],
         output: {
-          data: [usdcPortfolioBalance],
+          data: [usdcPortfolioBalanceTokenOption],
           loading: false,
           refetch: expect.any(Function),
           error: undefined,
@@ -736,7 +743,12 @@ describe(useTrendingTokensOptions, () => {
     await waitFor(() => {
       expect(result.current).toEqual({
         loading: false,
-        data: expect.toIncludeSameMembers(tokenBalances.map((t) => portfolioBalance({ fromBalance: t }))),
+        data: expect.toIncludeSameMembers(
+          tokenBalances.map((t) => ({
+            ...portfolioBalance({ fromBalance: t }),
+            type: OnchainItemListOptionType.Token,
+          })),
+        ),
         error: undefined,
         refetch: expect.any(Function),
       })
@@ -772,7 +784,12 @@ describe(useCommonTokensOptionsWithFallback, () => {
         tokenProjects: [tokenProject({ tokens })],
       },
       output: {
-        data: expect.toIncludeSameMembers(tokenBalances.map((t) => portfolioBalance({ fromBalance: t }))),
+        data: expect.toIncludeSameMembers(
+          tokenBalances.map((t) => ({
+            ...portfolioBalance({ fromBalance: t }),
+            type: OnchainItemListOptionType.Token,
+          })),
+        ),
         error: undefined,
       },
     },
@@ -786,8 +803,8 @@ describe(useCommonTokensOptionsWithFallback, () => {
       output: {
         data: expect.toIncludeSameMembers([
           // DAI and ETH have Mainnet chain
-          portfolioBalance({ fromBalance: ethBalance }),
-          portfolioBalance({ fromBalance: daiBalance }),
+          { ...portfolioBalance({ fromBalance: ethBalance }), type: OnchainItemListOptionType.Token },
+          { ...portfolioBalance({ fromBalance: daiBalance }), type: OnchainItemListOptionType.Token },
         ]),
         error: undefined,
       },
@@ -842,7 +859,9 @@ describe(useFavoriteTokensOptions, () => {
       },
       output: {
         data: expect.toIncludeSameMembers(
-          favoriteTokenBalances.map((balance) => portfolioBalance({ fromBalance: balance })),
+          favoriteTokenBalances.map((balance) => {
+            return { ...portfolioBalance({ fromBalance: balance }), type: OnchainItemListOptionType.Token }
+          }),
         ),
         error: undefined,
       },
@@ -857,8 +876,8 @@ describe(useFavoriteTokensOptions, () => {
       output: {
         data: expect.toIncludeSameMembers([
           // DAI and ETH have Mainnet chain
-          portfolioBalance({ fromBalance: ethBalance }),
-          portfolioBalance({ fromBalance: daiBalance }),
+          { ...portfolioBalance({ fromBalance: ethBalance }), type: OnchainItemListOptionType.Token },
+          { ...portfolioBalance({ fromBalance: daiBalance }), type: OnchainItemListOptionType.Token },
         ]),
         error: undefined,
       },

@@ -4,7 +4,7 @@ import { DepositInfo } from 'components/Liquidity/types'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { LiquidityModalInitialState } from 'state/application/reducer'
 import { PositionField } from 'types/position'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 
 export enum IncreaseLiquidityStep {
   Input = 0,
