@@ -117,9 +117,9 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
   };
 
   useEffect(() => {
+
     getUserPositionsGql();
   }, [getUserPositionsGql]);
-
 
   const hasPositions = relevantPositions.length > 0;
 
@@ -135,24 +135,30 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
           </Row>
         </Header>
         <PositionsContainer>
-          {hasPositions ? (
-            relevantPositions.map((position) => (
-              <PositionWrapper
-                key={position.id}
-                selected={selectedPosition === Number(position.id)}
-                onClick={() => handleSelectPosition(Number(position.id))}
-              >
-                <PositionListItem
-                  token0={token0Address}
-                  token1={token1Address}
-                  tokenId={BigNumber.from(position.id)}
-                  fee={parseInt(feeTier.replace('%', '')) * 10000}
-                  liquidity={BigNumber.from(position.liquidity)}
-                  tickLower={Number(position.tickLower.tickIdx)}
-                  tickUpper={Number(position.tickUpper.tickIdx)}
-                />
-              </PositionWrapper>
-            ))
+          {isLoadingDepositData ? (
+            <ThemedText.BodyPrimary>
+              Loading position data...
+            </ThemedText.BodyPrimary>
+          ) : hasPositions ? (
+            relevantPositions.map((position) => {
+              return (
+                <PositionWrapper
+                  key={position.id}
+                  selected={selectedPosition === Number(position.id)}
+                  onClick={() => handleSelectPosition(Number(position.id))}
+                >
+                  <PositionListItem
+                    token0={token0Address}
+                    token1={token1Address}
+                    tokenId={BigNumber.from(position.id)}
+                    fee={parseInt(feeTier.replace('%', '')) * 10000}
+                    liquidity={BigNumber.from(position.liquidity)}
+                    tickLower={Number(position.tickLower.tickIdx)}
+                    tickUpper={Number(position.tickUpper.tickIdx)}
+                  />
+                </PositionWrapper>
+              );
+            })
           ) : (
             <ThemedText.BodyPrimary>
               No positions available for this pool.
