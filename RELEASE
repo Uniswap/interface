@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmPrqLALpGaKqo51BdmEzdEk1gqMYoigWqcSrSRjB359us`
-- CIDv1: `bafybeiaws4pqenzmeqsuoufsgcyhgtxc5azas2dsnh6i25xpe75b3rybti`
+- CIDv0: `QmezmXSutzznthvc6pSCrb7JgxjGqXFNCWCZLjADjg6Tf8`
+- CIDv1: `bafybeihxp3cmskdb4nr76bocjhdgq32ykbfquxwakbdx33iehf44jxwuim`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,9 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiaws4pqenzmeqsuoufsgcyhgtxc5azas2dsnh6i25xpe75b3rybti.ipfs.dweb.link/
-- [ipfs://QmPrqLALpGaKqo51BdmEzdEk1gqMYoigWqcSrSRjB359us/](ipfs://QmPrqLALpGaKqo51BdmEzdEk1gqMYoigWqcSrSRjB359us/)
+- https://bafybeihxp3cmskdb4nr76bocjhdgq32ykbfquxwakbdx33iehf44jxwuim.ipfs.dweb.link/
+- [ipfs://QmezmXSutzznthvc6pSCrb7JgxjGqXFNCWCZLjADjg6Tf8/](ipfs://QmezmXSutzznthvc6pSCrb7JgxjGqXFNCWCZLjADjg6Tf8/)
 
-### 5.83.6 (2025-05-08)
+### 5.83.7 (2025-05-13)
+
+
+### Bug Fixes
+
+* **web:** only support batch swaps on supported status (#19566) da9a5ec
 
 

@@ -51,10 +51,7 @@ enum AtomicBatchingStatus {
 }
 
 export function isAtomicBatchingSupported(chainCapabilities: ChainCapabilities): boolean {
-  return (
-    chainCapabilities?.atomic?.status === AtomicBatchingStatus.Supported ||
-    chainCapabilities?.atomic?.status === AtomicBatchingStatus.Ready
-  )
+  return chainCapabilities?.atomic?.status === AtomicBatchingStatus.Supported
 }
 
 export function isAtomicBatchingSupportedByChainId(

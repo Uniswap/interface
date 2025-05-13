@@ -77,7 +77,7 @@ describe('walletCapabilities', () => {
       expect(isAtomicBatchingSupportedByChainId(mockCapabilities, 1)).toBe(true)
 
       const readyCapabilities: GetCapabilitiesResult = { '0x1': { atomic: { status: 'ready' } } }
-      expect(isAtomicBatchingSupportedByChainId(readyCapabilities, 1)).toBe(true)
+      expect(isAtomicBatchingSupportedByChainId(readyCapabilities, 1)).toBe(false)
 
       const unsupportedCapabilities: GetCapabilitiesResult = { '0x1': { atomic: { status: 'unsupported' } } }
       expect(isAtomicBatchingSupportedByChainId(unsupportedCapabilities, 1)).toBe(false)
