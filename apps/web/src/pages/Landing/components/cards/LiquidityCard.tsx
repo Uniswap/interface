@@ -1,11 +1,11 @@
-import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
-import { useScreenSize } from 'hooks/screenSize'
-import { t } from 'i18n'
-import styled from 'styled-components'
+import { Alignment, Fit, Layout, useRive } from "@rive-app/react-canvas";
+import { useScreenSize } from "hooks/screenSize";
+import { t } from "i18n";
+import styled from "styled-components";
 
-import { Bars } from '../Icons'
-import { PillButton } from './PillButton'
-import ValuePropCard from './ValuePropCard'
+import { Bars } from "../Icons";
+import { PillButton } from "./PillButton";
+import ValuePropCard from "./ValuePropCard";
 
 const Contents = styled.div`
   width: 100%;
@@ -25,42 +25,51 @@ const Contents = styled.div`
   @media (max-width: 768px) {
     opacity: 0;
   }
-`
+`;
 
 type LiquidityCardProps = {
-  isDarkMode?: boolean
-}
+  isDarkMode?: boolean;
+};
 
-const primary = '#9E62FF'
+const primary = "#9E62FF";
 
 export function LiquidityCard(props: LiquidityCardProps) {
   const { rive, RiveComponent } = useRive({
-    src: '/rive/landing-page.riv',
-    artboard: 'LP',
-    stateMachines: 'Animation',
+    src: "/rive/landing-page.riv",
+    artboard: "LP",
+    stateMachines: "Animation",
     layout: new Layout({ fit: Fit.Contain, alignment: Alignment.CenterRight }),
-  })
+  });
 
-  const isScreenSize = useScreenSize()
-  const screenIsLarge = isScreenSize['lg']
-  const screenIsXLarge = isScreenSize['xl']
+  const isScreenSize = useScreenSize();
+  const screenIsLarge = isScreenSize["lg"];
+  const screenIsXLarge = isScreenSize["xl"];
 
   return (
     <ValuePropCard
-      to="/pool"
-      tagText={t('landing.provideLiquidity')}
-      height={screenIsLarge ? '340px' : '240px'}
+      to="/farms"
+      tagText={t("landing.provideLiquidity")}
+      height={screenIsLarge ? "340px" : "240px"}
       isDarkMode={props.isDarkMode}
       textColor={primary}
-      backgroundColor={{ dark: 'rgba(136, 63, 255, 0.12)', light: 'rgba(136, 63, 255, 0.06)' }}
-      button={<PillButton color={primary} label={t('common.liquidity')} icon={<Bars size="24px" fill={primary} />} />}
-      titleText={t('landing.provideLiquidity.message')}
-      paddingRight={screenIsXLarge ? '16%' : '0%'}
+      backgroundColor={{
+        dark: "rgba(136, 63, 255, 0.12)",
+        light: "rgba(136, 63, 255, 0.06)",
+      }}
+      button={
+        <PillButton
+          color={primary}
+          label={t("common.liquidity")}
+          icon={<Bars size="24px" fill={primary} />}
+        />
+      }
+      titleText={t("landing.provideLiquidity.message")}
+      paddingRight={screenIsXLarge ? "16%" : "0%"}
       alignTextToBottom
     >
       <Contents>
         <RiveComponent onMouseEnter={() => rive && rive.play()} />
       </Contents>
     </ValuePropCard>
-  )
+  );
 }

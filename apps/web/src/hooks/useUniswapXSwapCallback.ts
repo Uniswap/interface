@@ -64,7 +64,7 @@ const isErrorResponse = (
 
 const UNISWAP_GATEWAY_DNS_URL =
   process.env.REACT_APP_UNISWAP_GATEWAY_DNS ||
-  "https://interface.gateway.taraswap.org";
+  "https://interface.gateway.taraswap.app";
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
   throw new Error(
     `UNISWAP_GATEWAY_DNS_URL must be defined environment variables`

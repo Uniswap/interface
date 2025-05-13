@@ -930,6 +930,7 @@
   "stats.24volume": "24H volume",
   "stats.allTimeFees": "All time LP fees",
   "stats.allTimeSwappers": "All time swappers",
+  "stats.activeIncentives": "Active incentives",
   "stats.allTimeVolume": "All time volume",
   "stats.fdv.description": "Fully diluted valuation (FDV) calculates the total market value assuming all tokens are in circulation.",
   "stats.fdv": "FDV",

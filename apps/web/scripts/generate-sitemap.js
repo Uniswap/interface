@@ -65,12 +65,12 @@ fs.readFile("./public/tokens-sitemap.xml", "utf8", async (err, data) => {
 
     for (const chainName of chains) {
       const tokensResponse = await fetch(
-        "https://api.taraswap.org/v1/graphql",
+        "https://api.taraswap.app/v1/graphql",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Origin: "https://app.taraswap.org",
+            Origin: "https://taraswap.app",
           },
           body: JSON.stringify({ query: getTopTokensQuery(chainName) }),
         }
@@ -81,7 +81,7 @@ fs.readFile("./public/tokens-sitemap.xml", "utf8", async (err, data) => {
       );
 
       tokenAddresses.forEach((address) => {
-        const tokenURL = `https://app.taraswap.org/explore/tokens/${chainName.toLowerCase()}/${address}`;
+        const tokenURL = `https://taraswap.app/explore/tokens/${chainName.toLowerCase()}/${address}`;
         if (!(tokenURL in tokenURLs)) {
           sitemap.urlset.url.push({
             loc: [tokenURL],
@@ -128,12 +128,12 @@ fs.readFile("./public/nfts-sitemap.xml", "utf8", async (err, data) => {
     }
 
     const nftResponse = await fetch(
-      "https://interface.gateway.taraswap.org/v1/graphql",
+      "https://interface.gateway.taraswap.app/v1/graphql",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Origin: "https://app.taraswap.org",
+          Origin: "https://taraswap.app",
         },
         body: JSON.stringify({ query: nftTopCollectionsQuery }),
       }
@@ -143,7 +143,7 @@ fs.readFile("./public/nfts-sitemap.xml", "utf8", async (err, data) => {
       (edge) => edge.node.nftContracts[0].address
     );
     collectionAddresses.forEach((address) => {
-      const collectionURL = `https://app.taraswap.org/nfts/collection/${address}`;
+      const collectionURL = `https://taraswap.app/nfts/collection/${address}`;
       if (!(collectionURL in collectionURLs)) {
         sitemap.urlset.url.push({
           loc: [collectionURL],
@@ -189,11 +189,11 @@ fs.readFile("./public/pools-sitemap.xml", "utf8", async (err, data) => {
     }
 
     for (const chainName of chains) {
-      const poolsResponse = await fetch("https://api.taraswap.org/v1/graphql", {
+      const poolsResponse = await fetch("https://api.taraswap.app/v1/graphql", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Origin: "https://app.taraswap.org",
+          Origin: "https://taraswap.app",
         },
         body: JSON.stringify({ query: getTopPoolsQuery(chainName) }),
       });
@@ -207,7 +207,7 @@ fs.readFile("./public/pools-sitemap.xml", "utf8", async (err, data) => {
       const poolAddresses = v3PoolAddresses.concat(v2PoolAddresses);
 
       poolAddresses.forEach((address) => {
-        const poolUrl = `https://app.taraswap.org/explore/pools/${chainName.toLowerCase()}/${address}`;
+        const poolUrl = `https://taraswap.app/explore/pools/${chainName.toLowerCase()}/${address}`;
         if (!(poolUrl in poolURLs)) {
           sitemap.urlset.url.push({
             loc: [poolUrl],

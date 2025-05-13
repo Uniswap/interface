@@ -30,7 +30,7 @@ export const useMenuContent = (): MenuSection[] => {
         internal: true,
         overflow: true,
       },
-      { label: t("common.vote"), href: "https://vote.taraswap.org/" },
+      { label: t("common.vote"), href: "https://vote.taraswap.app/" },
       {
         label: t("common.analytics"),
         href: `${process.env.REACT_APP_INFO_ROOT}/#/pools`,

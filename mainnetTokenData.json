@@ -22,6 +22,14 @@
     },
     {
       "chainId": 841,
+      "address": "0x8712796136Ac8e0EEeC123251ef93702f265aa80",
+      "name": "USDC.base",
+      "symbol": "USDC",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0x8712796136Ac8e0EEeC123251ef93702f265aa80/logo.png"
+    },
+    {
+      "chainId": 841,
       "address": "0x712037beab9a29216650B8d032b4D9A59AF8AD6C",
       "name": "Taraswap",
       "symbol": "TSWAP",

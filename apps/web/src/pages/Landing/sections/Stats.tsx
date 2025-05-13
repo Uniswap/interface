@@ -4,15 +4,13 @@ import { useMemo } from "react";
 import { ArrowRightCircle } from "react-feather";
 import styled from "styled-components";
 import { ClickableStyle, ExternalLink } from "theme/components";
-import {
-  ProtocolVersion,
-  useDailyProtocolVolumeQuery,
-} from "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks";
 import { NumberType, useFormatter } from "utils/formatNumbers";
 
 import { Body1, Box, H2 } from "../components/Generics";
 import { StatCard } from "../components/StatCard";
 import { useInView } from "./useInView";
+import { useProtocolVolume } from "hooks/useProtocolVolume";
+import { useActiveIncentives } from "hooks/useActiveIncentives";
 
 const Container = styled.div`
   width: 100%;
@@ -207,44 +205,15 @@ export function Stats() {
 
 function Cards({ inView }: { inView: boolean }) {
   const { formatNumber } = useFormatter();
-  const dailyV2VolumeQuery = useDailyProtocolVolumeQuery({
-    variables: {
-      version: ProtocolVersion.V2,
-    },
-  });
-  const dailyV3VolumeQuery = useDailyProtocolVolumeQuery({
-    variables: {
-      version: ProtocolVersion.V3,
-    },
-  });
-  const totalVolume = useMemo(() => {
-    // Second to last data point is most recent 24H period
-    // Last data point is today's volume, which is still accumulating
-    const v2DataPoints = dailyV2VolumeQuery?.data?.historicalProtocolVolume;
-    const v2Volume =
-      v2DataPoints && v2DataPoints.length >= 2
-        ? v2DataPoints[v2DataPoints.length - 2].value
-        : 0;
-
-    const v3DataPoints = dailyV3VolumeQuery?.data?.historicalProtocolVolume;
-    const v3Volume =
-      v3DataPoints && v3DataPoints.length >= 2
-        ? v3DataPoints[v3DataPoints.length - 2].value
-        : 0;
-
-    return v2Volume + v3Volume;
-  }, [
-    dailyV2VolumeQuery?.data?.historicalProtocolVolume,
-    dailyV3VolumeQuery?.data?.historicalProtocolVolume,
-  ]);
-
+  const { dailyVolume, lifetimeVolume, lifetimeFees } = useProtocolVolume();
+  const { count } = useActiveIncentives();
   return (
     <CardLayout>
       <LeftTop>
         <StatCard
           title={t("stats.allTimeVolume")}
           value={formatNumber({
-            input: 0,
+            input: lifetimeVolume,
             type: NumberType.FiatTokenStats,
           })}
           delay={0}
@@ -253,10 +222,10 @@ function Cards({ inView }: { inView: boolean }) {
       </LeftTop>
       <RightTop>
         <StatCard
-          title={t("stats.allTimeSwappers")}
+          title={t("stats.activeIncentives")}
           value={formatNumber({
-            input: 0,
-            type: NumberType.TokenQuantityStats,
+            input: count,
+            type: NumberType.WholeNumber,
           })}
           delay={0.2}
           inView={inView}
@@ -266,7 +235,7 @@ function Cards({ inView }: { inView: boolean }) {
         <StatCard
           title={t("stats.allTimeFees")}
           value={formatNumber({
-            input: 0,
+            input: lifetimeFees,
             type: NumberType.FiatTokenStats,
           })}
           delay={0.4}
@@ -277,7 +246,7 @@ function Cards({ inView }: { inView: boolean }) {
         <StatCard
           title={t("stats.24volume")}
           value={formatNumber({
-            input: 0,
+            input: dailyVolume,
             type: NumberType.FiatTokenStats,
           })}
           live

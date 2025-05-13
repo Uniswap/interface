@@ -67,6 +67,14 @@ export const USDT_TARAXA = new Token(
   "Tether USD"
 );
 
+export const USDC_TARAXA = new Token(
+  ChainId.TARAXA,
+  "0x8712796136ac8e0eeec123251ef93702f265aa80",
+  6,
+  "USDC.base",
+  "Bridged USDC"
+);
+
 export const CHDPU_TARAXA = new Token(
   ChainId.TARAXA,
   "0xaad94Afea296DCF8c97D05dbf3733A245c3Ea78F",

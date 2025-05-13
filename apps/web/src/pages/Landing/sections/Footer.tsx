@@ -125,7 +125,7 @@ export function Footer() {
                 <StyledInternalLink to="/swap">
                   <Trans i18nKey="common.swap" />
                 </StyledInternalLink>
-                <StyledExternalLink href="https://info.taraswap.org/#/tokens">
+                <StyledExternalLink href="https://taraswap.info/#/tokens">
                   <Trans i18nKey="common.tokens" />
                 </StyledExternalLink>
                 {/* <StyledInternalLink to="/nfts">
@@ -155,7 +155,7 @@ export function Footer() {
                 {/* <StyledExternalLink href="https://boards.greenhouse.io/uniswaplabs">
                   <Trans i18nKey="common.careers" />
                 </StyledExternalLink> */}
-                <StyledExternalLink href="https://blog.taraswap.org/">
+                <StyledExternalLink href="https://blog.taraswap.app/">
                   <Trans i18nKey="common.blog" />
                 </StyledExternalLink>
                 <DownloadLink href="https://github.com/taraswap/brand-assets/raw/main/swap.zip">

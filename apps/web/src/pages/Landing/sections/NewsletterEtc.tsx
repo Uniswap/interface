@@ -146,7 +146,7 @@ export function NewsletterEtc() {
             <BlogCard
               initial="initial"
               whileHover="hover"
-              href="https://blog.taraswap.org/"
+              href="https://blog.taraswap.app/"
               target="_blank"
               rel="noopener noreferrer"
               backgroundColor={

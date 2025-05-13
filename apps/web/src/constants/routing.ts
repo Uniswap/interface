@@ -32,6 +32,7 @@ import {
   USDC_OPTIMISM_GOERLI,
   USDC_POLYGON,
   USDC_POLYGON_MUMBAI,
+  USDC_TARAXA,
   USDM_TARAXA,
   USDT,
   USDT_ARBITRUM_ONE,
@@ -224,6 +225,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_STTARA_TARAXA,
     STTARA_TARAXA,
     ETH_TARAXA,
+    USDC_TARAXA,
   ].map(buildCurrencyInfo),
 };
 

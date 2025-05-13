@@ -6,6 +6,7 @@ import {
   LARA_TARAXA,
   NATIVE_CHAIN_ID,
   TSWAP_TARAXA,
+  USDC_TARAXA,
   USDT_TARAXA,
   WRAPPED_STTARA_TARAXA,
 } from "constants/tokens";
@@ -27,6 +28,7 @@ import { Box } from "../Generics";
 import { Computer } from "../Icons";
 import { PillButton } from "./PillButton";
 import ValuePropCard from "./ValuePropCard";
+import { calculatePriceChange, useTokenDayData } from "hooks/useTokenDayData";
 
 const Contents = styled.div`
   display: flex;
@@ -185,11 +187,11 @@ const primary = "#2ABDFF";
 const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
   {
     chainId: ChainId.TARAXA,
-    address: "TARA",
+    address: "ETH",
   },
   {
     chainId: ChainId.TARAXA,
-    address: LARA_TARAXA.address,
+    address: USDC_TARAXA.address,
   },
   {
     chainId: ChainId.TARAXA,
@@ -201,11 +203,7 @@ const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
   },
   {
     chainId: ChainId.TARAXA,
-    address: CHDPU_TARAXA.address,
-  },
-  {
-    chainId: ChainId.TARAXA,
-    address: WRAPPED_STTARA_TARAXA.address,
+    address: LARA_TARAXA.address,
   },
 ];
 
@@ -220,15 +218,10 @@ function Token({
   const navigate = useNavigate();
   const { formatFiatPrice, formatDelta } = useFormatter();
   const currency = useCurrency(address, chainId);
-  const tokenPromoQuery = useTokenPromoQuery({
-    variables: {
-      address: currency?.wrapped.address,
-      chain: chainIdToBackendChain({ chainId }),
-    },
-  });
-  const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0;
-  const pricePercentChange =
-    tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0;
+  const tokenPromoQuery = useTokenDayData(address);
+  const price = tokenPromoQuery.data?.[0]?.priceUSD ?? 0;
+  const pricePercentChange = calculatePriceChange(tokenPromoQuery.data) ?? 0;
+
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
@@ -257,7 +250,32 @@ function Token({
           <TokenPrice>
             {formatFiatPrice({
               price,
-              type: NumberType.FiatTokenPrice,
+              type: [
+                {
+                  exact: 0,
+                  formatterOptions: {
+                    notation: "standard",
+                    maximumFractionDigits: 0,
+                    minimumFractionDigits: 0,
+                  },
+                },
+                {
+                  upperBound: 1,
+                  formatterOptions: {
+                    notation: "standard",
+                    maximumFractionDigits: 5,
+                    minimumFractionDigits: 2,
+                  },
+                },
+                {
+                  upperBound: Infinity,
+                  formatterOptions: {
+                    notation: "standard",
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+                  },
+                },
+              ],
             })}
           </TokenPrice>
           <DeltaContainer gap="4px" align="center" justify="flex-end">

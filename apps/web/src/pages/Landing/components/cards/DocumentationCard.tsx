@@ -49,7 +49,7 @@ export function DocumentationCard(props: WebappCardProps) {
   return (
     <ValuePropCard
       height={screenIsLarge ? "340px" : "240px"}
-      href="https://docs.taraswap.org/"
+      href="https://docs.taraswap.info/"
       backgroundColor={{
         dark: "rgba(0, 195, 160, 0.08);",
         light: "rgba(0, 195, 160, 0.06);",

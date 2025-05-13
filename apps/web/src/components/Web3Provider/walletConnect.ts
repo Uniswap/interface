@@ -29,8 +29,8 @@ export const WC_PARAMS = {
   metadata: {
     name: "Taraswap",
     description: "Taraswap Interface",
-    url: "https://app.taraswap.org",
-    icons: ["https://app.taraswap.org/favicon.png"],
+    url: "https://taraswap.app",
+    icons: ["https://taraswap.app/favicon.png"],
   },
   qrModalOptions: {
     themeVariables: {
