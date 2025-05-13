@@ -5,6 +5,7 @@ import { CurrencyAmount, Token } from "@taraswap/sdk-core";
 import { useAccount } from "hooks/useAccount";
 import { isAddress } from "utilities/src/addresses";
 import JSBI from "jsbi";
+import { DEFAULT_ERC20_DECIMALS } from "utilities/src/tokens/constants";
 
 const ERC20Interface = new Interface([
   {
@@ -91,19 +92,23 @@ export function useSingleTokenBalance(
     const value = balance?.[0]?.result?.[0];
     const amount = value ? JSBI.BigInt(value.toString()) : undefined;
 
+    const tokenDecimals = decimals?.[0]?.result?.[0] ?? DEFAULT_ERC20_DECIMALS;
+    const tokenSymbol = symbol?.[0]?.result?.[0] ?? 'UNKNOWN';
+    const tokenName = name?.[0]?.result?.[0] ?? 'Unknown Token';
+
     if (amount) {
       return CurrencyAmount.fromRawAmount(
         new Token(
           chainId,
           validatedTokenAddress,
-          decimals?.[0]?.result?.[0],
-          symbol?.[0]?.result?.[0],
-          name?.[0]?.result?.[0]
+          tokenDecimals,
+          tokenSymbol,
+          tokenName
         ),
         amount
       );
     }
 
     return undefined;
-  }, [userAddress, validatedTokenAddress, chainId, balance]);
+  }, [userAddress, validatedTokenAddress, chainId, balance, decimals, symbol, name]);
 }
