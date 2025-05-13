@@ -1,14 +1,15 @@
+import { ONE_MILLION_USDT } from 'playwright/anvil/utils'
 import { expect, test } from 'playwright/fixtures'
-import { stubTradingApiCreatePosition } from 'playwright/fixtures/tradingApi'
+import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { USDT } from 'uniswap/src/constants/tokens'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { assume0xAddress } from 'utils/wagmi'
 
-const ONE_MILLION_USDT = 1_000_000_000_000n
-
 test.describe('Create position', () => {
-  test('Create position with full range', async ({ page, anvil }) => {
-    await stubTradingApiCreatePosition(page)
+  test('Create position with full range', async ({ page, anvil, graphql }) => {
+    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.createLp)
+    await graphql.intercept('SearchTokens', 'search_token_tether.json')
     await anvil.setErc20Balance(assume0xAddress(USDT.address), ONE_MILLION_USDT)
     await page.goto('/positions/create')
     await page.getByRole('button', { name: 'Choose token' }).click()
@@ -24,8 +25,9 @@ test.describe('Create position', () => {
     await expect(page).toHaveURL('/positions')
   })
 
-  test('Create position with custom range', async ({ page, anvil }) => {
-    await stubTradingApiCreatePosition(page)
+  test('Create position with custom range', async ({ page, anvil, graphql }) => {
+    await stubTradingApiEndpoint(page, uniswapUrls.tradingApiPaths.createLp)
+    await graphql.intercept('SearchTokens', 'search_token_tether.json')
     await anvil.setErc20Balance(assume0xAddress(USDT.address), ONE_MILLION_USDT)
     await page.goto('/positions/create')
     await page.getByRole('button', { name: 'Choose token' }).click()

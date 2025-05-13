@@ -1,6 +1,6 @@
 import { Flex, useIsDarkMode } from 'ui/src'
 import { SendAction } from 'ui/src/components/icons'
-import { colors, iconSizes, opacify, validColor } from 'ui/src/theme'
+import { colors, opacify, validColor } from 'ui/src/theme'
 
 export const SendElement = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
@@ -13,10 +13,7 @@ export const SendElement = (): JSX.Element => {
       p="$spacing8"
       transform={[{ rotateZ: '-4deg' }]}
     >
-      <SendAction
-        color={isDarkMode ? validColor(colors.greenVibrant) : validColor(colors.greenBase)}
-        size={iconSizes.icon28}
-      />
+      <SendAction color={isDarkMode ? validColor(colors.greenVibrant) : validColor(colors.greenBase)} size="$icon.28" />
     </Flex>
   )
 }

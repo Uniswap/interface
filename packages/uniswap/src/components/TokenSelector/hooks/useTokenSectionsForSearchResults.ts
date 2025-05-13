@@ -3,12 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
-import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/TokenSelector/types'
-import {
-  mergeSearchResultsWithBridgingTokens,
-  useOnchainItemListSection,
-} from 'uniswap/src/components/TokenSelector/utils'
+import { mergeSearchResultsWithBridgingTokens } from 'uniswap/src/components/TokenSelector/utils'
+import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
+import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'

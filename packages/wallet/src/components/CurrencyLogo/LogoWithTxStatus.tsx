@@ -3,13 +3,13 @@ import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
 import { Flex, UniversalImage, UniversalImageResizeMode, useSporeColors } from 'ui/src'
-import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import {
   AlertTriangleFilled,
   Approve,
   ArrowDownInCircle,
   ArrowUpInCircle,
   QuestionInCircle,
+  Walletconnect,
 } from 'ui/src/components/icons'
 import { borderRadii, zIndexes } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -284,7 +284,7 @@ export function DappLogoWithWCBadge({
           position="absolute"
           right={-2}
         >
-          <WalletConnectLogo height={statusSize} testID="wallet-connect-logo" width={statusSize} />
+          <Walletconnect size={statusSize} testID="wallet-connect-logo" />
         </Flex>
       ) : null}
     </Flex>

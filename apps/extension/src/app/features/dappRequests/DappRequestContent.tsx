@@ -1,10 +1,22 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Animated } from 'react-native'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { useIsDappRequestConfirming } from 'src/app/features/dappRequests/hooks'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
-import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
+import { DappRequest, isBatchedSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import {
+  Anchor,
+  AnimatePresence,
+  Button,
+  Flex,
+  GetThemeValueForKey,
+  Text,
+  UniversalImage,
+  UniversalImageResizeMode,
+  styled,
+} from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -18,7 +30,9 @@ import { formatDappURL } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useDebouncedCallback } from 'utilities/src/react/useDebouncedCallback'
+import { MAX_HIDDEN_CALLS_BY_DEFAULT } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
+import { WarningBox } from 'wallet/src/components/WarningBox/WarningBox'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -31,7 +45,7 @@ interface DappRequestHeaderProps {
 interface DappRequestFooterProps {
   chainId?: UniverseChainId
   connectedAccountAddress?: string
-  confirmText: string
+  confirmText?: string
   maybeCloseOnConfirm?: boolean
   onCancel?: (requestToConfirm?: DappRequestStoreItem, transactionTypeInfo?: TransactionTypeInfo) => void
   onConfirm?: (requestToCancel?: DappRequestStoreItem) => void
@@ -40,6 +54,7 @@ interface DappRequestFooterProps {
   transactionGasFeeResult?: GasFeeResult
   isUniswapX?: boolean
   disableConfirm?: boolean
+  contentHorizontalPadding?: number | Animated.AnimatedNode | GetThemeValueForKey<'paddingHorizontal'> | null
 }
 
 type DappRequestContentProps = DappRequestHeaderProps & DappRequestFooterProps
@@ -84,6 +99,7 @@ export function DappRequestContent({
   children,
   isUniswapX,
   disableConfirm,
+  contentHorizontalPadding = '$spacing12',
 }: PropsWithChildren<DappRequestContentProps>): JSX.Element {
   const { forwards, currentIndex } = useDappRequestQueueContext()
 
@@ -91,7 +107,7 @@ export function DappRequestContent({
     <>
       <DappRequestHeader headerIcon={headerIcon} title={title} />
       <AnimatePresence exitBeforeEnter custom={{ forwards }}>
-        <AnimatedPane key={currentIndex} animation="200ms">
+        <AnimatedPane key={currentIndex} animation="200ms" px={contentHorizontalPadding}>
           {children}
         </AnimatedPane>
       </AnimatePresence>
@@ -118,7 +134,7 @@ function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.E
   const fallbackIcon = <DappIconPlaceholder iconSize={iconSizes.icon40} name={hostname} />
 
   return (
-    <Flex mb="$spacing4" ml="$spacing8" mt="$spacing8">
+    <Flex mb="$spacing4" ml="$spacing8" mt="$spacing8" px="$spacing12">
       <Flex row>
         <Flex borderRadius="$roundedFull" borderWidth="$spacing1" borderColor="$surface3">
           {headerIcon || (
@@ -238,7 +254,7 @@ function DappRequestFooter({
 
   return (
     <>
-      <Flex gap="$spacing8" mt="$spacing8">
+      <Flex gap="$spacing8" mt="$spacing8" px="$spacing12">
         {!hasSufficientGas && (
           <Flex pb="$spacing8">
             <Text color="$statusWarning" variant="body3">
@@ -262,22 +278,37 @@ function DappRequestFooter({
           connectedAccountAddress={connectedAccountAddress || currentAccount.address}
           px="$spacing8"
         />
+        <WarningSection request={request.dappRequest} />
         <Flex row gap="$spacing12" pt="$spacing8">
           <Button flexBasis={1} size="medium" emphasis="secondary" onPress={handleOnCancel}>
             {t('common.button.cancel')}
           </Button>
-          <Button
-            isDisabled={isDisabled}
-            loading={isLoading}
-            flexBasis={1}
-            size="medium"
-            variant="branded"
-            onPress={debouncedHandleOnConfirm}
-          >
-            {confirmText}
-          </Button>
+          {confirmText && (
+            <Button
+              isDisabled={isDisabled}
+              loading={isLoading}
+              flexBasis={1}
+              size="medium"
+              variant="branded"
+              onPress={debouncedHandleOnConfirm}
+            >
+              {confirmText}
+            </Button>
+          )}
         </Flex>
       </Flex>
     </>
   )
+}
+
+function WarningSection({ request }: { request: DappRequest }) {
+  const { t } = useTranslation()
+
+  if (request.type === DappRequestType.SendCalls) {
+    if (request.calls.length <= 1 || isBatchedSwapRequest(request)) {
+      return null
+    }
+    const level = request.calls.length >= MAX_HIDDEN_CALLS_BY_DEFAULT ? 'critical' : 'warning'
+    return <WarningBox level={level} message={t('walletConnect.request.warning.batch.message')} />
+  }
 }

@@ -167,7 +167,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
               display: 'none',
             }}
           >
-            <DeltaArrow delta={pricePercentChange} />
+            <DeltaArrow delta={pricePercentChange} formattedDelta={formatDelta(pricePercentChange)} />
             <Text
               textAlign="right"
               fontSize={24}

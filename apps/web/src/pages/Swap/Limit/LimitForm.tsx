@@ -11,6 +11,7 @@ import {
   useCurrentPriceAdjustment,
 } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
 import Column from 'components/deprecated/Column'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { ZERO_PERCENT } from 'constants/misc'
@@ -21,6 +22,7 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useAtom } from 'jotai'
 import styled, { useTheme } from 'lib/styled-components'
 import { LimitExpirySection } from 'pages/Swap/Limit/LimitExpirySection'
+import LimitOrdersNotSupportedBanner from 'pages/Swap/Limit/LimitOrdersNotSupportedBanner'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
@@ -39,7 +41,10 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Locale } from 'uniswap/src/features/language/constants'
+import { useIsMismatchAccountQuery } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -98,6 +103,12 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const { formatCurrencyAmount } = useFormatter()
   const accountDrawer = useAccountDrawer()
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
+
+  const isPermitMismatchUxEnabled = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
+  const { data: isDelegationMismatch } = useIsMismatchAccountQuery({ chainId: LIMIT_SUPPORTED_CHAINS[0] })
+  const displayDelegationMismatchUI = isPermitMismatchUxEnabled && isDelegationMismatch?.hasMismatch
+
+  const [displayDelegationMismatchModal, setDisplayDelegationMismatchModal] = useState(false)
 
   const { currentPriceAdjustment, priceError } = useCurrentPriceAdjustment({
     parsedLimitPrice,
@@ -367,15 +378,19 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         </Trace>
       </SwapSection>
       {parsedLimitPrice && <LimitExpirySection />}
-      <SubmitOrderButton
-        inputCurrency={inputCurrency}
-        handleContinueToReview={() => {
-          setShowConfirm(true)
-        }}
-        trade={limitOrderTrade}
-        hasInsufficientFunds={hasInsufficientFunds}
-        limitPriceError={priceError}
-      />
+      {displayDelegationMismatchUI ? (
+        <LimitOrdersNotSupportedBanner onMoreDetails={() => setDisplayDelegationMismatchModal(true)} />
+      ) : (
+        <SubmitOrderButton
+          inputCurrency={inputCurrency}
+          handleContinueToReview={() => {
+            setShowConfirm(true)
+          }}
+          trade={limitOrderTrade}
+          hasInsufficientFunds={hasInsufficientFunds}
+          limitPriceError={priceError}
+        />
+      )}
       {isLimitSupportedChain && !!priceError && inputCurrency && outputCurrency && limitOrderTrade && (
         <LimitPriceError
           priceError={priceError}
@@ -385,47 +400,49 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           priceInverted={limitState.limitPriceInverted}
         />
       )}
-      <Flex row backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12" mt="$padding12">
-        <AlertTriangleFilled
-          size="$icon.20"
-          mr="$spacing12"
-          alignSelf="flex-start"
-          color={!isLimitSupportedChain ? '$critical' : '$neutral2'}
-        />
-        <Text variant="body3">
-          {!isLimitSupportedChain ? (
-            <Trans
-              i18nKey="limits.form.disclaimer.mainnet"
-              components={{
-                link: (
-                  <Anchor
-                    textDecorationLine="none"
-                    href={uniswapUrls.helpArticleUrls.limitsNetworkSupport}
-                    target="_blank"
-                  >
-                    <LearnMore>
-                      <Trans i18nKey="common.button.learn" />
-                    </LearnMore>
-                  </Anchor>
-                ),
-              }}
-            />
-          ) : (
-            <Trans
-              i18nKey="limits.form.disclaimer.uniswapx"
-              components={{
-                link: (
-                  <Anchor textDecorationLine="none" href={uniswapUrls.helpArticleUrls.limitsFailure} target="_blank">
-                    <LearnMore>
-                      <Trans i18nKey="common.button.learn" />
-                    </LearnMore>
-                  </Anchor>
-                ),
-              }}
-            />
-          )}
-        </Text>
-      </Flex>
+      {!displayDelegationMismatchUI && (
+        <Flex row backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12" mt="$padding12">
+          <AlertTriangleFilled
+            size="$icon.20"
+            mr="$spacing12"
+            alignSelf="flex-start"
+            color={!isLimitSupportedChain ? '$critical' : '$neutral2'}
+          />
+          <Text variant="body3">
+            {!isLimitSupportedChain ? (
+              <Trans
+                i18nKey="limits.form.disclaimer.mainnet"
+                components={{
+                  link: (
+                    <Anchor
+                      textDecorationLine="none"
+                      href={uniswapUrls.helpArticleUrls.limitsNetworkSupport}
+                      target="_blank"
+                    >
+                      <LearnMore>
+                        <Trans i18nKey="common.button.learn" />
+                      </LearnMore>
+                    </Anchor>
+                  ),
+                }}
+              />
+            ) : (
+              <Trans
+                i18nKey="limits.form.disclaimer.uniswapx"
+                components={{
+                  link: (
+                    <Anchor textDecorationLine="none" href={uniswapUrls.helpArticleUrls.limitsFailure} target="_blank">
+                      <LearnMore>
+                        <Trans i18nKey="common.button.learn" />
+                      </LearnMore>
+                    </Anchor>
+                  ),
+                }}
+              />
+            )}
+          </Text>
+        </Flex>
+      )}
       {account.address && (
         <OpenLimitOrdersButton
           account={account.address}
@@ -462,6 +479,9 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           swapResult={swapResult}
           swapError={swapError}
         />
+      )}
+      {displayDelegationMismatchModal && (
+        <DelegationMismatchModal onClose={() => setDisplayDelegationMismatchModal(false)} />
       )}
     </Column>
   )

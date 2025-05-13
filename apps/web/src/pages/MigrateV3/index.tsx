@@ -27,6 +27,7 @@ import {
 import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
+import { useLPSlippageValue } from 'pages/Pool/Positions/create/hooks/useLPSlippageValues'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
@@ -55,7 +56,7 @@ import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPri
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isSameAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -264,6 +265,7 @@ export default function MigrateV3() {
   const { tokenId } = useParams<{ tokenId: string }>()
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
+  const autoSlippageTolerance = useLPSlippageValue(ProtocolVersion.V3)
   const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
@@ -319,7 +321,10 @@ export default function MigrateV3() {
       }}
     >
       <MultichainContextProvider initialChainId={chainId}>
-        <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
+        <TransactionSettingsContextProvider
+          settingKey={TransactionSettingKey.LP}
+          autoSlippageTolerance={autoSlippageTolerance}
+        >
           <CreatePositionContextProvider
             initialState={{
               initialPosition,

@@ -1,9 +1,7 @@
-import { useAccount } from 'hooks/useAccount'
 import { ParsedQs } from 'qs'
 import { useParams } from 'react-router-dom'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { getChainInfo, UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -36,13 +34,11 @@ export function getChainUrlParam(chainId: UniverseChainId) {
 }
 
 export function useChainIdFromUrlParam(): UniverseChainId | undefined {
-  const { isConnected } = useAccount()
   const chainName = useParams<{ chainName?: string }>().chainName
   // In the case where /explore/:chainName is used, the chainName is passed as a tab param
   const tab = useParams<{ tab?: string }>().tab
   const chainId = getChainIdFromChainUrlParam(chainName ?? tab)
-  const supportedChainId = useSupportedChainId(chainId, isConnected)
-  return supportedChainId
+  return chainId
 }
 
 export function getParsedChainId(

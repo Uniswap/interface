@@ -1,10 +1,6 @@
-import { useMemo } from 'react'
-import {
-  OnchainItemSection,
-  OnchainItemSectionName,
-  TokenSelectorFlow,
-} from 'uniswap/src/components/TokenSelector/types'
-import { TokenOption, TokenSelectorItemTypes } from 'uniswap/src/components/lists/items/types'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { OnchainItemSectionName, type OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { OnchainItemListOption, OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { SafetyLevel as GqlSafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GetSwappableTokensResponse, SafetyLevel } from 'uniswap/src/data/tradingApi/__generated__'
@@ -22,6 +18,7 @@ export function createEmptyTokenOptionFromBridgingToken(
   }
 
   return {
+    type: OnchainItemListOptionType.Token,
     currencyInfo,
     balanceUSD: null,
     quantity: null,
@@ -111,45 +108,8 @@ export function mergeSearchResultsWithBridgingTokens(
   return [bridgingSection, ...extractedSearchResults].filter((section) => section.data.length > 0)
 }
 
-export function isTokenOptionArray(option: TokenSelectorItemTypes): option is TokenOption[] {
-  return Array.isArray(option)
-}
-
-export function useOnchainItemListSection<T extends TokenSelectorItemTypes>({
-  sectionKey,
-  options,
-  rightElement,
-  endElement,
-  name,
-}: {
-  sectionKey: OnchainItemSectionName
-  options?: T[]
-  rightElement?: JSX.Element
-  endElement?: JSX.Element
-  name?: string
-}): OnchainItemSection<T>[] | undefined {
-  return useMemo(() => {
-    if (!options) {
-      return undefined
-    }
-
-    // If it is a 2D array, check if any of the inner arrays are not empty
-    // Otherwise, check if the array is not empty
-    const is2DArray = options?.length > 0 && Array.isArray(options[0])
-    const hasData = is2DArray ? options.some((item) => isTokenOptionArray(item) && item.length > 0) : options.length > 0
-
-    return hasData
-      ? [
-          {
-            sectionKey,
-            data: options,
-            name,
-            rightElement,
-            endElement,
-          },
-        ]
-      : undefined
-  }, [name, rightElement, endElement, sectionKey, options])
+export function isTokenOptionArray(option: OnchainItemListOption): option is TokenOption[] {
+  return Array.isArray(option) && option.every((item) => item.type === OnchainItemListOptionType.Token)
 }
 
 export function isSwapListLoading({

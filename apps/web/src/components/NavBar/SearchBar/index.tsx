@@ -6,6 +6,7 @@ import { SearchModal } from 'components/NavBar/SearchBar/SearchModal'
 import Row from 'components/deprecated/Row'
 import { useSearchTokensGql } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
+import { useModalState } from 'hooks/useModalState'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Search } from 'react-feather'
@@ -18,6 +19,7 @@ import { breakpoints } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
@@ -175,29 +177,37 @@ export const SearchBar = ({
   const theme = useTheme()
   const { t } = useTranslation() // subscribe to locale changes
 
+  const {
+    isOpen: isModalOpen,
+    closeModal: closeSearchModal,
+    openModal: openSearchModal,
+  } = useModalState(ModalName.Search)
+
   const toggleOpen = useCallback(() => {
-    setOpen(!isOpen)
-    if (!searchRevampEnabled && fullScreen) {
-      // disable body scroll on fullScreen search (was triggering the animation to hide the nav and affecting the search modal. Alternative option would be to create a separate search modal that is not a child of the nav component)
-      document.body.style.overflow = !isOpen ? 'hidden' : 'scroll'
+    if (!searchRevampEnabled) {
+      setOpen((prev) => !prev)
+      if (fullScreen) {
+        // disable body scroll on fullScreen search (was triggering the animation to hide the nav and affecting the search modal. Alternative option would be to create a separate search modal that is not a child of the nav component)
+        document.body.style.overflow = !isOpen ? 'hidden' : 'scroll'
+      }
     }
-  }, [isOpen, searchRevampEnabled, fullScreen])
+  }, [searchRevampEnabled, isOpen, fullScreen])
 
   useOnClickOutside(searchRef, () => !searchRevampEnabled && isOpen && toggleOpen())
 
   useKeyDown({
-    callback: toggleOpen,
+    callback: searchRevampEnabled ? openSearchModal : toggleOpen,
     keys: ['/'],
-    disabled: isOpen,
-    preventDefault: !isOpen,
+    disabled: searchRevampEnabled ? isModalOpen : isOpen,
+    preventDefault: searchRevampEnabled ? !isModalOpen : !isOpen,
     keyAction: KeyAction.UP,
     shouldTriggerInInput: true,
   })
   useKeyDown({
-    callback: toggleOpen,
+    callback: searchRevampEnabled ? closeSearchModal : toggleOpen,
     keys: ['Escape'],
     keyAction: KeyAction.UP,
-    disabled: !isOpen,
+    disabled: searchRevampEnabled ? !isModalOpen : !isOpen,
     preventDefault: true,
     shouldTriggerInInput: true,
   })
@@ -219,32 +229,14 @@ export const SearchBar = ({
 
   const trace = useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH })
 
-  const navbarSearchEventProperties = {
-    navbar_search_input_text: debouncedSearchValue,
-    hasInput: debouncedSearchValue.length > 0,
-    ...trace,
-  }
-
   const placeholderText = poolSearchEnabled ? t('search.input.placeholder') : t('tokens.selector.search.placeholder')
 
   if (searchRevampEnabled) {
     return (
       <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
-        {isOpen && (
-          <SearchModal
-            isModalOpen={isOpen}
-            onClose={() => {
-              toggleOpen()
-              sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
-            }}
-          />
-        )}
+        <SearchModal />
         {isNavSearchInputVisible ? (
-          <TouchableArea
-            onPress={() => !isOpen && toggleOpen()}
-            data-testid="nav-search-input"
-            width={NAV_SEARCH_MIN_WIDTH}
-          >
+          <TouchableArea onPress={openSearchModal} data-testid="nav-search-input" width={NAV_SEARCH_MIN_WIDTH}>
             <Flex
               row
               backgroundColor="$surface2"
@@ -279,7 +271,7 @@ export const SearchBar = ({
             </Flex>
           </TouchableArea>
         ) : (
-          <NavIcon onClick={toggleOpen} label={placeholderText}>
+          <NavIcon onClick={openSearchModal} label={placeholderText}>
             <SearchIcon data-cy="nav-search-icon">
               <Search width="20px" height="20px" color={theme.neutral2} />
             </SearchIcon>
@@ -325,7 +317,11 @@ export const SearchBar = ({
                     setSearchValue(event.target.value)
                   }}
                   onBlur={() =>
-                    sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
+                    sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, {
+                      navbar_search_input_text: debouncedSearchValue,
+                      hasInput: Boolean(debouncedSearchValue),
+                      ...trace,
+                    })
                   }
                   value={searchValue}
                 />

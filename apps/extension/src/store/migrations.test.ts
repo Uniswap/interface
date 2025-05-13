@@ -1,6 +1,10 @@
 /* eslint-disable jest/expect-expect */
 import { BigNumber } from '@ethersproject/bignumber'
 import { toIncludeSameMembers } from 'jest-extended'
+import {
+  testMigratePendingDappRequestsToRecord,
+  testMigrateUnknownBackupAccountsToMaybeManualBackup,
+} from 'src/store/extensionMigrationsTests'
 import { EXTENSION_STATE_VERSION, migrations } from 'src/store/migrations'
 import {
   getSchema,
@@ -17,6 +21,9 @@ import {
   v18Schema,
   v19Schema,
   v1Schema,
+  v20Schema,
+  v21Schema,
+  v22Schema,
   v2Schema,
   v3Schema,
   v4Schema,
@@ -39,12 +46,14 @@ import { TransactionStatus, TransactionType } from 'uniswap/src/features/transac
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
+import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { HAYDEN_ETH_ADDRESS } from 'wallet/src/state/walletMigrations'
 import {
   testActivatePendingAccounts,
+  testAddBatchedTransactions,
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
   testDeleteWelcomeWalletCard,
@@ -86,6 +95,10 @@ describe('Redux state migrations', () => {
     // Add new slices here!
     const initialState = {
       appearanceSettings: initialAppearanceSettingsState,
+      dappRequests: {
+        requests: {},
+      },
+      batchedTransactions: initialBatchedTransactionsState,
       blocks: { byChainId: {} },
       chains: {
         byChainId: {
@@ -294,5 +307,17 @@ describe('Redux state migrations', () => {
 
   it('migrates from v19 to v20', () => {
     testMoveTokenAndNFTVisibility(migrations[20], v19Schema)
+  })
+
+  it('migrates from v20 to v21', () => {
+    testMigratePendingDappRequestsToRecord(migrations[21], v20Schema)
+  })
+
+  it('migrates from v21 to v22', () => {
+    testAddBatchedTransactions(migrations[22], v21Schema)
+  })
+
+  it('migrates from v22 to v23', () => {
+    testMigrateUnknownBackupAccountsToMaybeManualBackup(migrations[23], v22Schema)
   })
 })

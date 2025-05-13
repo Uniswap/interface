@@ -30,6 +30,10 @@ function getCalldataInfoFromTransaction(
   }
 
   if (functionSignature) {
+    if (['permit2Approve'].some((el) => functionSignature.includes(el))) {
+      result.contractInteractions = EthSendTransactionRPCActions.Permit2Approve
+      return result
+    }
     if (['approve', 'permit'].some((el) => functionSignature.includes(el))) {
       result.contractInteractions = EthSendTransactionRPCActions.Approve
       return result

@@ -2,10 +2,10 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { PaginatedModalRenderer } from 'uniswap/src/components/modals/PaginatedModals'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -14,7 +14,6 @@ import { NewAddressWarningModal } from 'wallet/src/components/RecipientSearch/mo
 import { ConditionalModalRenderer, SpeedBumps } from 'wallet/src/components/modals/SpeedBumps'
 import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
-import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
 import {
   useActiveAccountAddressWithThrow,
   useSignerAccounts,
@@ -60,7 +59,7 @@ export function RecipientSelectSpeedBumps({
         caption={t('send.recipient.warning.viewOnly.message')}
         rejectText={t('common.button.goBack')}
         acknowledgeText={t('common.button.understand')}
-        icon={<Eye color="$neutral1" size={iconSizes.icon24} />}
+        icon={<Eye color="$neutral1" size="$icon.24" />}
         modalName={ModalName.RecipientSelectViewOnlyWarning}
         severity={WarningSeverity.High}
         title={t('send.recipient.warning.viewOnly.title')}

@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { Check } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -46,7 +46,6 @@ interface FiatCurrencyOptionProps {
 
 function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionProps): JSX.Element {
   const dispatch = useDispatch()
-  const colors = useSporeColors()
   const { name, code } = useFiatCurrencyInfo(currency)
 
   const changeCurrency = useCallback(() => {
@@ -63,7 +62,7 @@ function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionPro
             {code}
           </Text>
         </Flex>
-        {active && <Check color={colors.accent1.val} size="$icon.24" />}
+        {active && <Check color="$accent1" size="$icon.24" />}
       </Flex>
     </TouchableArea>
   )

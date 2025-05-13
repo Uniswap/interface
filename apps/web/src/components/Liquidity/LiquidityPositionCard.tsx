@@ -12,7 +12,7 @@ import {
   MinMaxRange,
 } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
-import { useGetRangeDisplay, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { useGetRangeDisplay, usePositionDerivedInfo } from 'components/Liquidity/hooks'
 import { PositionInfo, PriceOrdering } from 'components/Liquidity/types'
 import { MouseoverTooltip } from 'components/Tooltip'
 import useHoverProps from 'hooks/useHoverProps'
@@ -35,7 +35,6 @@ import { Minus } from 'ui/src/components/icons/Minus'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
-import { iconSizes } from 'ui/src/theme'
 import { zIndexes } from 'ui/src/theme/zIndexes'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
@@ -46,7 +45,6 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { togglePositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
@@ -247,26 +245,19 @@ export function LiquidityPositionCard({
   const isSmallScreen = media.sm
 
   const { fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, apr } =
-    useV3OrV4PositionDerivedInfo(liquidityPosition)
-
-  const token0USDValue = useUSDCValue(liquidityPosition.currency0Amount)
-  const token1USDValue = useUSDCValue(liquidityPosition.currency1Amount)
+    usePositionDerivedInfo(liquidityPosition)
 
   const [baseCurrency, quoteCurrency] = getInvertedTuple(
     [liquidityPosition.currency0Amount.currency, liquidityPosition.currency1Amount.currency],
     pricesInverted,
   )
 
-  const v3OrV4FormattedUsdValue =
+  const formattedUsdValue =
     fiatValue0 && fiatValue1
       ? formatCurrencyAmount({
           value: fiatValue0.add(fiatValue1),
           type: NumberType.FiatStandard,
         })
-      : undefined
-  const v2FormattedUsdValue =
-    token0USDValue && token1USDValue
-      ? formatCurrencyAmount({ value: token0USDValue.add(token1USDValue), type: NumberType.FiatStandard })
       : undefined
 
   const { totalFormattedEarnings, hasRewards, formattedFeesValue } = useLpIncentivesFormattedEarnings({
@@ -325,7 +316,7 @@ export function LiquidityPositionCard({
           menuOptions={dropdownOptions}
           disabled={disabled}
           positionInfo={liquidityPosition}
-          formattedUsdValue={v3OrV4FormattedUsdValue ?? v2FormattedUsdValue}
+          formattedUsdValue={formattedUsdValue}
           formattedUsdFees={formattedFeesValue}
           priceOrdering={priceOrdering}
           tickSpacing={liquidityPosition.tickSpacing}
@@ -379,7 +370,7 @@ export function LiquidityPositionCard({
             </Flex>
           </Flex>
           <LiquidityPositionFeeStats
-            formattedUsdValue={v3OrV4FormattedUsdValue ?? v2FormattedUsdValue}
+            formattedUsdValue={formattedUsdValue}
             formattedUsdFees={formattedFeesValue}
             formattedLpIncentiveEarnings={totalFormattedEarnings}
             hasRewards={hasRewards}
@@ -530,7 +521,7 @@ function PositionDropdownMoreMenu({ menuOptions }: { menuOptions: MenuOptionItem
       }}
     >
       <PositionDetailsMenuButton $group-hover={activeStyle} open={isOpen} onPress={() => {}}>
-        <MoreHorizontal size={iconSizes.icon16} color="white" />
+        <MoreHorizontal size="$icon.16" color="white" />
       </PositionDetailsMenuButton>
     </TouchableArea>
   )

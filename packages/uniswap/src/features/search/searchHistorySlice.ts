@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { SearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { isPoolSearchResult, SearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
 
 const SEARCH_HISTORY_LENGTH = 5
 
 // eslint-disable-next-line consistent-return
 export function searchResultId(searchResult: SearchResult): string {
-  const { type, address } = searchResult
-
+  const { type } = searchResult
+  const address = isPoolSearchResult(searchResult) ? searchResult.poolId : searchResult.address
   const normalizedAddress = address?.toLowerCase() ?? null
 
   switch (type) {
@@ -22,6 +22,8 @@ export function searchResultId(searchResult: SearchResult): string {
       return `etherscan-${normalizedAddress}`
     case SearchResultType.NFTCollection:
       return `nftCollection-${searchResult.chainId}-${normalizedAddress}`
+    case SearchResultType.Pool:
+      return `pool-${searchResult.chainId}-${normalizedAddress}-${searchResult.feeTier}`
   }
 }
 

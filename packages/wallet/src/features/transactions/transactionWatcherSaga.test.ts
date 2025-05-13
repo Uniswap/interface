@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import { providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
@@ -25,6 +26,7 @@ import { sleep } from 'utilities/src/time/timing'
 import { fetchFORTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
+  checkIfTransactionInvalidated,
   deleteTransaction,
   logTransactionTimeout,
   transactionWatcher,
@@ -44,11 +46,11 @@ const {
   txDetailsPending: txDetailsPending,
 } = getTxFixtures(transactionDetails({ typeInfo: fiatPurchaseTransactionInfo() }))
 
-const { mockProvider, mockProviderManager } = getTxProvidersMocks(ethersTxReceipt)
-
 const ACTIVE_ACCOUNT_ADDRESS = '0x000000000000000000000000000000000000000001'
 
 describe(transactionWatcher, () => {
+  const { mockProvider, mockProviderManager } = getTxProvidersMocks(ethersTxReceipt)
+
   it('Triggers watchers successfully', () => {
     const approveTxDetailsPending = transactionDetails({
       typeInfo: approveTransactionInfo(),
@@ -208,6 +210,7 @@ describe(watchTransaction, () => {
     const transaction = {
       ...txDetailsPending,
       options: { ...txDetailsPending.options, timeoutTimestampMs: Date.now() },
+      hash: undefined, // use undefined so the call to checkIfTransactionInvalidated returns false
     }
 
     return expectSaga(watchTransaction, {
@@ -330,5 +333,92 @@ describe(watchFiatOnRampTransaction, () => {
       .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
       .not.call.fn(sleep)
       .run()
+  })
+})
+
+describe(checkIfTransactionInvalidated, () => {
+  const mockProvider = {
+    getTransaction: jest.fn(),
+    getTransactionCount: jest.fn(),
+  }
+  const provider = mockProvider as unknown as providers.Provider
+  const tx = {
+    ...txDetailsPending,
+    hash: '0x123',
+    options: { ...txDetailsPending.options, request: { ...txDetailsPending.options.request, nonce: 5 } },
+  }
+  const requestNonce = 5
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('returns false if transaction has no nonce', () => {
+    const txWithoutNonce = { ...tx, options: { ...tx.options, request: { ...tx.options.request, nonce: undefined } } }
+    return expectSaga(checkIfTransactionInvalidated, txWithoutNonce, provider).returns(false).silentRun()
+  })
+
+  it('returns false if transaction has no hash', () => {
+    const txWithoutHash = { ...tx, hash: undefined }
+    return expectSaga(checkIfTransactionInvalidated, txWithoutHash, provider).returns(false).silentRun()
+  })
+
+  it('returns false if provider finds the transaction', () => {
+    mockProvider.getTransaction.mockResolvedValueOnce({ hash: tx.hash }) // Mock a valid transaction object
+    return expectSaga(checkIfTransactionInvalidated, tx, provider)
+      .provide([[call([provider, provider.getTransaction], tx.hash), { hash: tx.hash }]])
+      .returns(false)
+      .silentRun()
+  })
+
+  it('returns true if provider does not find transaction and it was not submitted via private rpc', () => {
+    const txPublic = { ...tx, options: { ...tx.options, submitViaPrivateRpc: false } }
+    mockProvider.getTransaction.mockResolvedValueOnce(null)
+    return expectSaga(checkIfTransactionInvalidated, txPublic, provider)
+      .provide([[call([provider, provider.getTransaction], tx.hash), null]])
+      .returns(true)
+      .silentRun()
+  })
+
+  it('returns true if provider does not find transaction, submitted via private rpc, and nextNonce > requestNonce', () => {
+    const txPrivate = { ...tx, options: { ...tx.options, submitViaPrivateRpc: true } }
+    const nextNonce = requestNonce + 1
+    mockProvider.getTransaction.mockResolvedValueOnce(null)
+    mockProvider.getTransactionCount.mockResolvedValueOnce(nextNonce)
+    return expectSaga(checkIfTransactionInvalidated, txPrivate, provider)
+      .provide([
+        [call([provider, provider.getTransaction], txPrivate.hash), null],
+        [call([provider, provider.getTransactionCount], txPrivate.from), nextNonce],
+      ])
+      .returns(true)
+      .silentRun()
+  })
+
+  it('returns false if provider does not find transaction, submitted via private rpc, and nextNonce <= requestNonce', () => {
+    const txPrivate = { ...tx, options: { ...tx.options, submitViaPrivateRpc: true } }
+    const nextNonce = requestNonce // Test with equal nonce
+    mockProvider.getTransaction.mockResolvedValueOnce(null)
+    mockProvider.getTransactionCount.mockResolvedValueOnce(nextNonce)
+    return expectSaga(checkIfTransactionInvalidated, txPrivate, provider)
+      .provide([
+        [call([provider, provider.getTransaction], txPrivate.hash), null],
+        [call([provider, provider.getTransactionCount], txPrivate.from), nextNonce],
+      ])
+      .returns(false)
+      .silentRun()
+  })
+
+  it('returns false if provider does not find transaction, submitted via private rpc, and nextNonce < requestNonce', () => {
+    const txPrivate = { ...tx, options: { ...tx.options, submitViaPrivateRpc: true } }
+    const nextNonce = requestNonce - 1 // Test with lower nonce
+    mockProvider.getTransaction.mockResolvedValueOnce(null)
+    mockProvider.getTransactionCount.mockResolvedValueOnce(nextNonce)
+    return expectSaga(checkIfTransactionInvalidated, txPrivate, provider)
+      .provide([
+        [call([provider, provider.getTransaction], txPrivate.hash), null],
+        [call([provider, provider.getTransactionCount], txPrivate.from), nextNonce],
+      ])
+      .returns(false)
+      .silentRun()
   })
 })

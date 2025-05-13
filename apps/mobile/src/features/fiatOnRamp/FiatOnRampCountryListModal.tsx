@@ -6,11 +6,11 @@ import { SvgUri } from 'react-native-svg'
 import { Loader } from 'src/components/loading/loaders'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import Check from 'ui/src/assets/icons/check.svg'
 import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
+import { Check } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { fonts, spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
@@ -36,8 +36,6 @@ function key(item: FORCountry): string {
 function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelectorProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useAppInsets()
-  const colors = useSporeColors()
-
   const { isOffRamp } = useFiatOnRampContext()
 
   const { data, isLoading } = useFiatOnRampAggregatorCountryListQuery({
@@ -70,14 +68,14 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
             <Text>{item.displayName}</Text>
             {item.countryCode === countryCode && (
               <Flex grow alignItems="flex-end" justifyContent="center">
-                <Check color={colors.accent1.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
+                <Check color="$accent1" size="$icon.20" />
               </Flex>
             )}
           </Flex>
         </TouchableArea>
       )
     },
-    [colors.accent1, countryCode, onSelectCountry],
+    [countryCode, onSelectCountry],
   )
 
   return (

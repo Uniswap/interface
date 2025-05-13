@@ -1,6 +1,7 @@
 import {
   BatchSize,
   DatadogProvider,
+  DatadogProviderConfiguration,
   DdRum,
   SdkVerbosity,
   TrackingConsent,
@@ -35,11 +36,12 @@ const datadogAutoInstrumentation = {
   trackResources: datadogEnabledBuild,
 }
 
-async function initializeDatadog(sessionSamplingRate: number | undefined): Promise<void> {
-  const datadogConfig = {
+async function initializeDatadog(sessionSamplingRate: number): Promise<void> {
+  const datadogConfig: DatadogProviderConfiguration = {
     clientToken: config.datadogClientToken,
     env: getDatadogEnvironment(),
     applicationId: config.datadogProjectId,
+    // @ts-expect-error - Favored getting types from DatadogProviderConfiguration over fixing ths type
     trackingConsent: undefined,
     site: 'US1',
     longTaskThresholdMs: 100,

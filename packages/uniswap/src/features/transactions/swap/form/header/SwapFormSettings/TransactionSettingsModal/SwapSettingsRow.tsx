@@ -38,12 +38,12 @@ export function SwapSettingRow({ setting, setSelectedSetting, warning }: SwapSet
                 <Text color="$neutral1" variant="subheading2">
                   {renderTitle(t)}
                 </Text>
-                {InfoModal && <InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />}
+                {InfoModal && <InfoCircleFilled color="$neutral3" size="$icon.16" />}
                 {!!renderTooltip && (
                   <InfoTooltip
                     trigger={
                       <TouchableArea>
-                        <InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
+                        <InfoCircleFilled color="$neutral3" size="$icon.16" />
                       </TouchableArea>
                     }
                     text={renderTooltip(t)}

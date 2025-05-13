@@ -32,7 +32,7 @@ function _TokenSelectorSearchResultsList({
   input: TradeableAsset | undefined
 }): JSX.Element {
   const { t } = useTranslation()
-  const { registerSearch } = useAddToSearchHistory()
+  const { registerSearchTokenCurrencyInfo } = useAddToSearchHistory()
   const {
     data: sections,
     loading,
@@ -48,7 +48,7 @@ function _TokenSelectorSearchResultsList({
 
   const onSelectCurrency: OnSelectCurrency = (currencyInfo, section, index) => {
     parentOnSelectCurrency(currencyInfo, section, index)
-    registerSearch(currencyInfo)
+    registerSearchTokenCurrencyInfo(currencyInfo)
   }
 
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)

@@ -127,7 +127,7 @@ const FeeTier = ({
       <Flex gap="$spacing8">
         <Flex row gap={10} justifyContent="space-between">
           <Text variant="buttonLabel3">{formatPercent(new Percent(feeTier.value.feeAmount, 1000000))}</Text>
-          {selected && <CheckCircleFilled size={iconSizes.icon16} />}
+          {selected && <CheckCircleFilled size="$icon.16" />}
         </Flex>
         <Text variant="body4">{feeTier.title}</Text>
       </Flex>

@@ -16,6 +16,7 @@ import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/fl
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
 
 const CenteredRow = styled(Flex, {
@@ -173,9 +174,22 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Swap Features">
+            <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
             <FeatureFlagOption flag={FeatureFlags.IndicativeSwapQuotes} label="Enable Quick Routes" />
+            <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />
+            <FeatureFlagOption flag={FeatureFlags.ViemProviderEnabled} label="Enable Viem Provider" />
             <FeatureFlagOption flag={FeatureFlags.InstantTokenBalanceUpdate} label="Instant token balance update" />
             <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
+            <FeatureFlagOption flag={FeatureFlags.EnablePermitMismatchUX} label="Enable Permit2 mismatch detection" />
+            <FeatureFlagOption
+              flag={FeatureFlags.ForcePermitTransactions}
+              label="Force Permit2 transaction instead of signatures, always"
+            />
+            <FeatureFlagOption flag={FeatureFlags.SwapSettingsV4HooksToggle} label="Swap Settings V4 Hooks Toggle" />
+            <FeatureFlagOption
+              flag={FeatureFlags.ForceDisableWalletGetCapabilities}
+              label="Force disable wallet get capabilities result"
+            />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="UniswapX">
             <FeatureFlagOption flag={FeatureFlags.UniswapX} label="Enable UniswapX" />
@@ -230,6 +244,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="Debug">
             <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />
             <FeatureFlagOption flag={FeatureFlags.AATestWeb} label="A/A Test for Web" />
+            {isPlaywrightEnv() && <FeatureFlagOption flag={FeatureFlags.DummyFlagTest} label="Dummy Flag Test" />}
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Misc"></FeatureFlagGroup>
           <FeatureFlagGroup name="Experiments">

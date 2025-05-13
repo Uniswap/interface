@@ -1,5 +1,5 @@
 import { providers } from 'ethers'
-import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
+import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
   TransactionRequest,
   UwuLinkErc20Request,
@@ -8,14 +8,15 @@ import {
 import { call, put } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { DappInfo, EthSignMethod, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { DappInfo, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
+import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
 import { SendCallsResult } from 'wallet/src/features/dappRequests/types'
 import {
   ExecuteTransactionParams,
@@ -40,7 +41,7 @@ type SignTransactionParams = {
   requestInternalId: string
   transaction: providers.TransactionRequest
   account: Account
-  method: EthMethod.EthSendTransaction | EthMethod.SendCalls
+  method: EthMethod.EthSendTransaction | EthMethod.WalletSendCalls
   dapp: DappInfo
   chainId: UniverseChainId
   request: TransactionRequest | UwuLinkErc20Request | WalletSendCallsEncodedRequest
@@ -107,9 +108,9 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
           chainId: txParams.chainId,
         }),
       )
-    } else if (method === EthMethod.SendCalls) {
+    } else if (method === EthMethod.WalletSendCalls && params.request.type === EthMethod.WalletSendCalls) {
       const txParams: ExecuteTransactionParams = {
-        chainId: params.transaction.chainId || defaultChainId,
+        chainId: params.request.chainId,
         account,
         options: {
           request: params.transaction,
@@ -121,11 +122,18 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
         transactionOriginType: TransactionOriginType.External,
       }
 
-      // TODO: When delegation/batching SC is deployed - add the actual send transaction here, but for now we just mock the data
-      const { transactionResponse } = {
-        transactionResponse: { hash: '0xade180ed77cf8198273df1f7eae17c3c7e46de3c5d20dc384339c862efc02817' },
-      }
-      result = { id: transactionResponse.hash, capabilities: {} }
+      const { transactionResponse } = yield* call(executeTransaction, txParams)
+      result = { id: params.request.id, capabilities: {} }
+
+      // Store the batch transaction in Redux
+      yield* put(
+        addBatchedTransaction({
+          batchId: params.request.id,
+          txHashes: [transactionResponse.hash],
+          requestId: params.request.encodedRequestId,
+          chainId: params.request.chainId,
+        }),
+      )
 
       // Trigger a pending transaction notification after we send the transaction to chain
       yield* put(

@@ -43,7 +43,7 @@ export type SearchTextInputProps = InputProps & {
   showShadow?: boolean
   py?: SpaceTokens
   px?: SpaceTokens
-  mx?: number
+  mx?: SpaceTokens
   my?: SpaceTokens
   hideIcon?: boolean
   minHeight?: number
@@ -67,7 +67,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       placeholder,
       py = '$spacing12',
       px = '$spacing16',
-      mx = spacing.none,
+      mx,
       my,
       showShadow,
       value,
@@ -115,7 +115,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const animationDirection = cancelBehaviorType === CancelBehaviorType.BackChevron ? 'marginLeft' : 'marginRight'
 
     return (
-      <Flex row shrink alignItems="center">
+      <Flex row shrink alignItems="center" mx={mx}>
         {showBackChevron && (
           <Flex
             animation="200ms"
@@ -142,8 +142,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           borderRadius="$roundedFull"
           gap="$spacing8"
           minHeight={minHeight}
-          ml={showBackChevron && isFocus ? cancelChevronWidth + spacing.spacing8 + spacing.spacing2 + mx : mx}
-          mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 + mx : mx}
+          ml={showBackChevron && isFocus ? cancelChevronWidth + spacing.spacing8 + spacing.spacing2 : 0}
+          mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
           my={my}
           px={px}
           py={py}

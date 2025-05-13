@@ -4,7 +4,9 @@ import type { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
 import { DappRequestStatus } from 'src/app/features/dappRequests/shared'
 import {
   isConnectionRequest,
+  isSendCallsRequest,
   isSendTransactionRequest,
+  type SendCallsRequest,
   type SendTransactionRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 
@@ -30,6 +32,16 @@ export function isDappRequestStoreItemForEthSendTxn(
   request: DappRequestStoreItem,
 ): request is DappRequestStoreItemForEthSendTxn {
   return isSendTransactionRequest(request.dappRequest)
+}
+
+export interface DappRequestStoreItemForSendCallsTxn extends DappRequestStoreItem {
+  dappRequest: SendCallsRequest
+}
+
+export function isDappRequestStoreItemForSendCallsTxn(
+  request: DappRequestStoreItem,
+): request is DappRequestStoreItemForSendCallsTxn {
+  return isSendCallsRequest(request.dappRequest)
 }
 
 const selectDappRequestsArray = (state: DappRequestState) =>

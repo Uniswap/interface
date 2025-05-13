@@ -20,6 +20,7 @@ import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transac
 import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export type UniswapXTrade = UniswapXV2Trade | UniswapXV3Trade | PriorityOrderTrade
 export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
@@ -205,7 +206,7 @@ export class ClassicTrade<
     this.swapFee = getSwapFee(quote)
   }
 
-  
+
   private _cachedPriceImpact?: Percent
   // Overrides trade sdk price impact with backend price impact when available, as sdk price impact formula can be inaccurate.
   public get priceImpact(): Percent {
@@ -248,6 +249,8 @@ export interface UseTradeArgs {
   skip?: boolean
   selectedProtocols?: FrontendSupportedProtocol[]
   isDebouncing?: boolean
+  getGeneratePermitAsTransaction?: (chainId?: UniverseChainId) => boolean
+  isV4HookPoolsEnabled?: boolean
 }
 
 export type SwapFee = { recipient?: string; percent: Percent; amount: string }

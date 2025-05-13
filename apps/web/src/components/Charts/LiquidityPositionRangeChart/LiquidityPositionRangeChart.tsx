@@ -28,10 +28,10 @@ import {
   getSortedCurrenciesTupleWithWrap,
 } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
-import { opacify } from 'theme/utils'
 import { ColorTokens, Flex, FlexProps, Shine, useSporeColors } from 'ui/src'
 import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
 import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
+import { opacify } from 'ui/src/theme'
 import { zIndexes } from 'ui/src/theme/zIndexes'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'

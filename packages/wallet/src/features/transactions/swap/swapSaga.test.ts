@@ -121,7 +121,7 @@ const classicSwapParams = {
     routing: Routing.CLASSIC,
     approveTxRequest: mockApproveTxRequest,
     revocationTxRequest: mockRevocationTxRequest,
-    txRequest: mockSwapTxRequest,
+    txRequests: [mockSwapTxRequest],
     trade: mockTrade,
     gasFee: { value: '5', isLoading: false, error: null },
     gasFeeEstimation: {},
@@ -206,7 +206,7 @@ describe(approveAndSwap, () => {
     } satisfies SwapParams
 
     const expectedSendSwapParams: ExecuteTransactionParams = {
-      chainId: classicSwapParamsWithoutApprove.swapTxContext.txRequest.chainId,
+      chainId: classicSwapParamsWithoutApprove.swapTxContext.txRequests[0].chainId,
       account: classicSwapParamsWithoutApprove.account,
       options: {
         request: { ...mockSwapTxRequest, nonce },
@@ -238,7 +238,7 @@ describe(approveAndSwap, () => {
       .next()
       .call(classicSwapParams.onSuccess)
       .next()
-      .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
+      .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequests[0].chainId)
       .next(false)
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
@@ -251,7 +251,7 @@ describe(approveAndSwap, () => {
 
   it('sends a swap tx with incremented nonce if an approve tx is sent first', async () => {
     const expectedSendSwapParams: ExecuteTransactionParams = {
-      chainId: classicSwapParams.swapTxContext.txRequest.chainId,
+      chainId: classicSwapParams.swapTxContext.txRequests[0].chainId,
       account: classicSwapParams.account,
       options: {
         request: { ...mockSwapTxRequest, nonce: nonce + 1 },
@@ -281,7 +281,7 @@ describe(approveAndSwap, () => {
       .next()
       .call(classicSwapParams.onSuccess)
       .next()
-      .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
+      .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequests[0].chainId)
       .next(false)
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
@@ -303,7 +303,7 @@ describe(approveAndSwap, () => {
       approveTxHash: '0xMockApprovalTxHash',
       wrapTxHash: undefined,
       txId: uniswapXSwapParams.txId,
-      permit: mockPermit,
+      permit: mockPermit.typedData,
       routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,
       quote: uniswapXSwapParams.swapTxContext.trade.quote.quote,
       onSuccess: uniswapXSwapParams.onSuccess,
@@ -367,7 +367,7 @@ describe(approveAndSwap, () => {
       approveTxHash: '0xMockApprovalTxHash',
       wrapTxHash: '0xMockWrapTxHash',
       txId: uniswapXSwapParams.txId,
-      permit: mockPermit,
+      permit: mockPermit.typedData,
       onSuccess: uniswapXSwapParams.onSuccess,
       onFailure: uniswapXSwapParams.onFailure,
       routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,

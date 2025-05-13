@@ -1,6 +1,6 @@
+import { DisplayName, DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 import { ACCOUNT } from 'wallet/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 

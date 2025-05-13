@@ -6,6 +6,7 @@ import { fonts, imageSizes } from 'ui/src/theme'
 import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
+import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -13,7 +14,6 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { isMobileApp } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type NewAddressWarningModalProps = {
   address: string

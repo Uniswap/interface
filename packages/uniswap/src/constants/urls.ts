@@ -1,5 +1,5 @@
 import { config } from 'uniswap/src/config'
-import { isBetaEnv, isDevEnv, isTestEnv } from 'utilities/src/environment/env'
+import { isBetaEnv, isDevEnv, isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
 enum TrafficFlows {
@@ -14,10 +14,10 @@ enum TrafficFlows {
 
 const FLOWS_USING_BETA = [TrafficFlows.FOR]
 
-const isDevOrBeta = isDevEnv() || isBetaEnv()
+const isDevOrBeta = isPlaywrightEnv() ? false : isDevEnv() || isBetaEnv()
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
-const EMBEDDED_WALLET_HOSTNAME = isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
+const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
@@ -35,6 +35,9 @@ export const uniswapUrls = {
   helpArticleUrls: {
     acrossRoutingInfo: `${helpUrl}/articles/30677918339341`,
     approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
+    batchedSwaps: `${helpUrl}/articles/36393697148045`,
+    batchedSwapsFailure: `${helpUrl}/articles/36393697148045#error-messages-and-troubleshooting`,
+    batchedSwapsReview: `${helpUrl}/articles/36394497329933`,
     cexTransferKorea: `${helpUrl}/articles/29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea`,
     contractAddressExplainer: `${helpUrl}/articles/26757826138637-What-is-a-token-contract-address`,
     extensionHelp: `${helpUrl}/articles/24458735271181`,
@@ -51,8 +54,10 @@ export const uniswapUrls = {
     fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
     fiatOffRampHelp: `${helpUrl}/articles/34006552258957`,
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
+    mismatchedImports: `${helpUrl}/articles/36393527081997`,
     mobileWalletHelp: `${helpUrl}/articles/20317941356429`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
+    multichainDelegation: `${helpUrl}/articles/36392482755341`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
     poolOutOfSync: `${helpUrl}/articles/25845512413069`,
     positionsLearnMore: `${helpUrl}/articles/8829880740109`,
@@ -65,6 +70,7 @@ export const uniswapUrls = {
     supportedNetworks: `${helpUrl}/articles/14569415293325`,
     swapFeeInfo: `${helpUrl}/articles/20131678274957`,
     passkeysInfo: `${helpUrl}/articles/35522111260173`,
+    smartWalletDelegation: `${helpUrl}/articles/36391987158797`,
     swapProtection: `${helpUrl}/articles/18814993155853`,
     swapSlippage: `${helpUrl}/articles/8643879653261-What-is-Price-Slippage-`,
     tokenWarning: `${helpUrl}/articles/8723118437133-What-are-token-warnings-`,
@@ -177,7 +183,7 @@ function getCloudflarePrefix(flow?: TrafficFlows): string {
     return 'extension'
   }
 
-  if (isInterface) {
+  if (isPlaywrightEnv() || isInterface) {
     return 'interface'
   }
 
@@ -189,7 +195,7 @@ function getCloudflarePrefix(flow?: TrafficFlows): string {
 }
 
 function getServicePrefix(flow?: TrafficFlows): string {
-  if (flow && !(isDevOrBeta && FLOWS_USING_BETA.includes(flow))) {
+  if (flow && (isPlaywrightEnv() || !(isDevOrBeta && FLOWS_USING_BETA.includes(flow)))) {
     return flow + '.'
   } else {
     return ''

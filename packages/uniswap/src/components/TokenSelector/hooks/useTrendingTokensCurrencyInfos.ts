@@ -5,15 +5,21 @@ import { CustomRankingType } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
-export function useTrendingTokensCurrencyInfos(chainFilter: Maybe<UniverseChainId>): {
+export function useTrendingTokensCurrencyInfos(
+  chainFilter: Maybe<UniverseChainId>,
+  skip?: boolean,
+): {
   data: CurrencyInfo[] | undefined
   error: Error | undefined
   refetch: () => void
   loading: boolean
 } {
-  const { data, isLoading, error, refetch, isFetching } = useTokenRankingsQuery({
-    chainId: chainFilter?.toString() ?? ALL_NETWORKS_ARG,
-  })
+  const { data, isLoading, error, refetch, isFetching } = useTokenRankingsQuery(
+    {
+      chainId: chainFilter?.toString() ?? ALL_NETWORKS_ARG,
+    },
+    !skip,
+  )
 
   const trendingTokens = data?.tokenRankings?.[CustomRankingType.Trending]?.tokens
   const formattedTokens = useMemo(

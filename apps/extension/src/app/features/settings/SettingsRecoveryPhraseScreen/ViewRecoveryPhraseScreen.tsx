@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SeedPhraseDisplay } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/SeedPhraseDisplay'
@@ -8,9 +8,6 @@ import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/n
 import { navigate } from 'src/app/navigation/state'
 import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled, Eye, Key, Laptop } from 'ui/src/components/icons'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { logger } from 'utilities/src/logger/logger'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 const enum ViewStep {
@@ -48,19 +45,6 @@ export function ViewRecoveryPhraseScreen({
   const showPasswordModal = (): void => {
     setViewStep(ViewStep.Password)
   }
-
-  useEffect(() => {
-    sendAnalyticsEvent(WalletEventName.ViewRecoveryPhrase)
-
-    // Clear clipboard when the component unmounts
-    return () => {
-      navigator.clipboard.writeText('').catch((error) => {
-        logger.error(error, {
-          tags: { file: 'SettingsViewRecoveryPhraseScreen.tsx', function: 'maybeClearClipboard' },
-        })
-      })
-    }
-  }, [])
 
   return (
     <Flex grow backgroundColor="$surface1">

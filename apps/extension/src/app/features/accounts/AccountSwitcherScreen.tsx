@@ -19,7 +19,7 @@ import { Ellipsis, Globe, Person, TrashFilled, WalletFilled, X } from 'ui/src/co
 import { spacing } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { AccountType } from 'uniswap/src/features/accounts/types'
+import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -45,7 +45,6 @@ import {
 } from 'wallet/src/features/wallet/hooks'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 const MIN_MENU_WIDTH = 200
 
@@ -237,7 +236,26 @@ export function AccountSwitcherScreen(): JSX.Element {
         onConfirm={onConfirmCreateWallet}
       />
       <Flex backgroundColor="$surface1" px="$spacing12" py="$spacing8">
-        <ScreenHeader Icon={X} />
+        <ScreenHeader
+          Icon={X}
+          rightColumn={
+            <ContextMenu
+              closeOnClick
+              itemId="account-switcher-ellipsis-dropdown"
+              menuOptions={menuOptions}
+              placement="bottom"
+              onLeftClick
+            >
+              <TouchableArea
+                borderRadius="$roundedFull"
+                hoverStyle={{ backgroundColor: '$surface2Hovered' }}
+                p="$spacing8"
+              >
+                <Ellipsis color="$neutral2" size="$icon.20" />
+              </TouchableArea>
+            </ContextMenu>
+          }
+        />
         <Flex pb="$spacing4" pt="$spacing8" px="$spacing12">
           <Flex row alignSelf="stretch" width="100%" justifyContent="center">
             <Flex flex={1} justifyContent="center" alignItems="center">
@@ -253,25 +271,6 @@ export function AccountSwitcherScreen(): JSX.Element {
                 size={spacing.spacing60 - spacing.spacing4}
                 variant="subheading1"
               />
-            </Flex>
-
-            <Flex alignItems="flex-start" justifyContent="flex-start">
-              <ContextMenu
-                closeOnClick
-                itemId="account-switcher-ellipsis-dropdown"
-                menuOptions={menuOptions}
-                placement="bottom"
-                onLeftClick
-              >
-                <TouchableArea
-                  hoverable
-                  borderRadius="$roundedFull"
-                  p="$spacing8"
-                  style={{ position: 'absolute', right: 0 }}
-                >
-                  <Ellipsis color="$neutral2" size="$icon.20" />
-                </TouchableArea>
-              </ContextMenu>
             </Flex>
           </Flex>
 

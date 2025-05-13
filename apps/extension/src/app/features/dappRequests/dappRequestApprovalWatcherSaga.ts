@@ -17,6 +17,7 @@ import {
 import {
   changeChainSaga,
   handleGetCallsStatus,
+  handleGetCapabilities,
   handleSendCalls,
   handleSendTransaction,
   handleSignMessage,
@@ -39,6 +40,8 @@ import {
   GetAccountRequestSchema,
   GetCallsStatusRequest,
   GetCallsStatusRequestSchema,
+  GetCapabilitiesRequest,
+  GetCapabilitiesRequestSchema,
   GetChainIdRequest,
   GetChainIdRequestSchema,
   GetPermissionsRequest,
@@ -182,9 +185,22 @@ function* dappRequestApproval({
           yield* call(handleSignTypedData, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
           break
         }
+        case DappRequestType.GetCapabilities: {
+          const validatedRequest: GetCapabilitiesRequest = GetCapabilitiesRequestSchema.parse(
+            confirmedRequest.dappRequest,
+          )
+          yield* call(handleGetCapabilities, validatedRequest, confirmedRequest.senderTabInfo)
+          break
+        }
         case DappRequestType.SendCalls: {
           const validatedRequest: SendCallsRequest = SendCallsRequestSchema.parse(confirmedRequest.dappRequest)
-          yield* call(handleSendCalls, validatedRequest, confirmedRequest.senderTabInfo, confirmedRequest.dappInfo)
+          yield* call(
+            handleSendCalls,
+            validatedRequest,
+            confirmedRequest.senderTabInfo,
+            confirmedRequest.dappInfo,
+            confirmedRequest.transactionTypeInfo,
+          )
           break
         }
         case DappRequestType.GetCallsStatus: {

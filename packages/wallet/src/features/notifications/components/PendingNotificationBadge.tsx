@@ -1,6 +1,5 @@
-import { Flex, SpinningLoader, useSporeColors } from 'ui/src'
-import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
-import { CheckmarkCircle } from 'ui/src/components/icons'
+import { Flex, SpinningLoader } from 'ui/src'
+import { AlertCircle, CheckmarkCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import {
   useSelectAddressHasNotifications,
@@ -19,7 +18,6 @@ interface Props {
 }
 
 export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props): JSX.Element | null {
-  const colors = useSporeColors()
   const activeAccountAddress = useActiveAccountAddress()
   const sortedPendingTransactions = useSortedPendingTransactions(activeAccountAddress)
   const hasNotifications = useSelectAddressHasNotifications(activeAccountAddress)
@@ -34,7 +32,7 @@ export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props)
       return <CheckmarkCircle size={size} />
     }
 
-    return <AlertCircle color={colors.statusWarning.val} height={size} width={size} />
+    return <AlertCircle color="$statusWarning" size={size} />
   }
 
   /*************** Pending in-app txn  **************/

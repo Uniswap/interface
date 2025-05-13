@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { DappInfo, EthSignMethod, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
+import { DappInfo, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { Call, Capability } from 'wallet/src/features/dappRequests/types'
 
 export type WalletConnectPendingSession = {
@@ -42,8 +42,8 @@ export interface TransactionRequest extends BaseRequest {
   transaction: EthTransaction
 }
 
-export interface WalletCapabilitiesRequest extends Omit<BaseRequest, 'chainId'> {
-  type: EthMethod.GetCapabilities
+export interface WalletGetCapabilitiesRequest extends Omit<BaseRequest, 'chainId'> {
+  type: EthMethod.WalletGetCapabilities
   account: Address // Wallet address
   chainIds?: UniverseChainId[] // Optional array of chain IDs
 }
@@ -52,17 +52,18 @@ export interface WalletSendCallsRequest extends BaseRequest {
   calls: Call[]
   capabilities: Record<string, Capability>
   id: string
-  type: EthMethod.SendCalls
+  type: EthMethod.WalletSendCalls
   version: string
 }
 
 export interface WalletSendCallsEncodedRequest extends WalletSendCallsRequest {
   encodedTransaction: EthTransaction
+  encodedRequestId: string
 }
 
 export interface WalletGetCallsStatusRequest extends BaseRequest {
   id: string
-  type: EthMethod.GetCallsStatus
+  type: EthMethod.WalletGetCallsStatus
 }
 
 export interface UwuLinkErc20Request extends BaseRequest {
@@ -92,7 +93,7 @@ export const isTransactionRequest = (request: WalletConnectSigningRequest): requ
 
 export const isBatchedTransactionRequest = (
   request: WalletConnectSigningRequest,
-): request is WalletSendCallsEncodedRequest => request.type === EthMethod.SendCalls
+): request is WalletSendCallsEncodedRequest => request.type === EthMethod.WalletSendCalls
 
 export interface WalletConnectState {
   byAccount: {

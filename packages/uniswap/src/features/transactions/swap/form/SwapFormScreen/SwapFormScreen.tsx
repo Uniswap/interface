@@ -120,7 +120,7 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <Flex animation="quick" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} gap="$spacing2" grow={isExtension}>
+      <Flex animation="quick" exitStyle={{ opacity: 0 }} gap="$spacing2" grow={isExtension}>
         <Trace section={SectionName.CurrencyInputPanel}>
           <Flex
             animation="simple"

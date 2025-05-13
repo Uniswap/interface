@@ -53,7 +53,7 @@ export function MarketPriceImpactWarning({
       }
       modalProps={{
         hideIcon: isWeb,
-        icon: <ChartBar color={colors.neutral1.val} size={18} />,
+        icon: <ChartBar color="$neutral1" size="$icon.18" />,
         backgroundIconColor: colors.surface2.get(),
         captionComponent: (
           <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'body4' : 'body2'}>

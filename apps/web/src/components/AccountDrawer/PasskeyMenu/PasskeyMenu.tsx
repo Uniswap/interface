@@ -53,9 +53,9 @@ function getProviderIcon(provider: AuthenticatorProvider, colors: UseSporeColors
     case AuthenticatorProvider.Android:
       return <AndroidLogo height={iconSizes.icon20} width={iconSizes.icon20} />
     case AuthenticatorProvider.Microsoft:
-      return <Windows size={iconSizes.icon20} color="$neutral1" />
+      return <Windows size="$icon.20" color="$neutral1" />
     default:
-      return <Passkey size={iconSizes.icon20} color="$neutral1" />
+      return <Passkey size="$icon.20" color="$neutral1" />
   }
 }
 

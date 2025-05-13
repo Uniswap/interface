@@ -128,7 +128,7 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
           <LoadingBubble height="12px" width="30px" />
         ) : (
           <Fragment>
-            <DeltaArrow delta={data.change} size={12} />
+            <DeltaArrow delta={data.change} formattedDelta={formatDelta(data.change)} size={12} />
             <Text variant="body4" color="$neutral1">
               {formatDelta(data.change)}
             </Text>

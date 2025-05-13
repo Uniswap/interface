@@ -105,7 +105,7 @@ export function DeleteUnitagModal({
           {t('unitags.delete.confirm.subtitle')}
         </Text>
         <Flex py="$spacing24">
-          <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
+          <UnitagName animateText name={unitag} textProps={{ fontSize: fonts.heading3.fontSize }} />
         </Flex>
         <Flex row width="100%">
           <Button

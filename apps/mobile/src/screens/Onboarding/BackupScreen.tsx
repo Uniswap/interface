@@ -3,7 +3,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
 import {
   AppStackParamList,
   EducationContentType,
@@ -11,10 +10,9 @@ import {
   useOnboardingStackNavigation,
 } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
+import { checkCloudBackupOrShowAlert } from 'src/components/mnemonic/cloudImportUtils'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
-import { openSettings } from 'src/utils/linking'
 import { Flex, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
 import { Cloud, PenLine, QuestionInCircleFilled, ShieldCheck } from 'ui/src/components/icons'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -22,8 +20,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { isAndroid } from 'utilities/src/platform'
-import { useAsyncData } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup, hasExternalBackup } from 'wallet/src/features/wallet/accounts/utils'
@@ -38,8 +34,6 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const { t } = useTranslation()
   const { navigate } = useOnboardingStackNavigation()
   const shadowProps = useShadowPropsShort()
-
-  const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
 
   const { getOnboardingOrImportedAccount } = useOnboardingContext()
   const onboardingContextAccount = getOnboardingOrImportedAccount()
@@ -97,22 +91,9 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     })
   }
 
-  const onPressCloudBackup = (): void => {
-    if (!cloudStorageAvailable) {
-      Alert.alert(
-        isAndroid ? t('account.cloud.error.unavailable.title.android') : t('account.cloud.error.unavailable.title.ios'),
-        isAndroid
-          ? t('account.cloud.error.unavailable.message.android')
-          : t('account.cloud.error.unavailable.message.ios'),
-        [
-          {
-            text: t('account.cloud.error.unavailable.button.settings'),
-            onPress: openSettings,
-            style: 'default',
-          },
-          { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
-        ],
-      )
+  const onPressCloudBackup = async (): Promise<void> => {
+    const hasCloudBackup = await checkCloudBackupOrShowAlert(t)
+    if (!hasCloudBackup) {
       return
     }
 

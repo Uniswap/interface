@@ -9,7 +9,7 @@ import {
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export type WalletCheckDelegationParams = {
-  walletAddress: WalletCheckDelegationRequestBody['walletAddress']
+  walletAddresses: WalletCheckDelegationRequestBody['walletAddresses']
   chainIds: WalletCheckDelegationRequestBody['chainIds']
 }
 
@@ -17,7 +17,7 @@ export function useWalletCheckDelegationQuery({
   params,
   ...rest
 }: UseQueryApiHelperHookArgs<
-  WalletCheckDelegationRequestBody,
+  WalletCheckDelegationParams,
   WalletCheckDelegationResponseBody
 >): UseQueryResult<WalletCheckDelegationResponseBody> {
   const queryKey = walletCheckDelegationQueryKey(params)

@@ -40,6 +40,7 @@ export enum SettingsRoutes {
   ChangePassword = 'change-password',
   DevMenu = 'dev-menu',
   ViewRecoveryPhrase = 'view-recovery-phrase',
+  BackupRecoveryPhrase = 'backup-recovery-phrase',
   RemoveRecoveryPhrase = 'remove-recovery-phrase',
   ManageConnections = 'manage-connections',
 }

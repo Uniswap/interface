@@ -188,6 +188,8 @@ export function getBaseTradeAnalyticsProperties({
   presetPercentage,
   preselectAsset,
   trace,
+  isBatched,
+  includedPermitTransactionStep,
 }: {
   formatter: LocalizationContextState
   trade: Trade<Currency, Currency, TradeType>
@@ -197,6 +199,8 @@ export function getBaseTradeAnalyticsProperties({
   presetPercentage?: PresetPercentage
   preselectAsset?: boolean
   trace: ITraceContext
+  isBatched?: boolean
+  includedPermitTransactionStep?: boolean
 }): SwapTradeBaseProperties {
   const portionAmount = getClassicQuoteFromResponse(trade?.quote)?.portionAmount
 
@@ -262,18 +266,18 @@ export function getBaseTradeAnalyticsProperties({
     token_out_detected_tax: parseFloat(trade.outputTax.toFixed(2)),
     simulation_failure_reasons: isClassic(trade) ? trade.quote?.quote.txFailureReasons : undefined,
     ...getRouteAnalyticsData(trade),
+    is_batch: isBatched,
+    included_permit_transaction_step: includedPermitTransactionStep,
   }
 }
 
 export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
   transactionSettings,
   derivedSwapInfo,
-  formatter,
   trace,
 }: {
   transactionSettings: TransactionSettingsContextState
   derivedSwapInfo: DerivedSwapInfo
-  formatter: LocalizationContextState
   trace: ITraceContext
 }): SwapTradeBaseProperties {
   const { chainId, currencyAmounts, currencyAmountsUSDValue } = derivedSwapInfo
@@ -313,10 +317,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     estimated_network_fee_usd: undefined,
     chain_id: chainId,
     token_in_amount: inputCurrencyAmount?.toExact() ?? '',
-    token_out_amount: formatter.formatCurrencyAmount({
-      value: finalOutputAmount,
-      type: NumberType.SwapTradeAmount,
-    }),
+    token_out_amount: finalOutputAmount?.toExact() ?? '',
     token_in_amount_usd: currencyInAmountUSD,
     token_out_amount_usd: currencyOutAmountUSD,
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,

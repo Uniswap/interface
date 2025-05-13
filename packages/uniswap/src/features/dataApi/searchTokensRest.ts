@@ -13,10 +13,12 @@ export function useSearchTokensRest({
   searchQuery,
   chainFilter,
   skip,
+  size = NUMBER_OF_RESULTS_LONG,
 }: {
   searchQuery: string | null
   chainFilter: UniverseChainId | null
   skip: boolean
+  size?: number
 }): GqlResult<CurrencyInfo[]> {
   const variables = useMemo(
     () => ({
@@ -24,9 +26,9 @@ export function useSearchTokensRest({
       chainIds: chainFilter ? [chainFilter] : SUPPORTED_CHAIN_IDS,
       searchType: SearchType.TOKEN,
       page: 1,
-      size: NUMBER_OF_RESULTS_LONG,
+      size,
     }),
-    [searchQuery, chainFilter],
+    [searchQuery, chainFilter, size],
   )
 
   const { data, error, isPending, refetch } = useSearchTokensRestQuery({ input: variables, enabled: !skip })

@@ -1,6 +1,6 @@
 import { Flex } from 'ui/src'
 import { Heart } from 'ui/src/components/icons'
-import { DEP_accentColors, iconSizes, opacify, validColor } from 'ui/src/theme'
+import { DEP_accentColors, opacify, validColor } from 'ui/src/theme'
 
 export const HeartElement = (): JSX.Element => {
   return (
@@ -10,7 +10,7 @@ export const HeartElement = (): JSX.Element => {
       p="$spacing12"
       transform={[{ rotateZ: '-20deg' }]}
     >
-      <Heart color={validColor(DEP_accentColors.red300)} opacity={0.95} size={iconSizes.icon16} />
+      <Heart color={validColor(DEP_accentColors.red300)} opacity={0.95} size="$icon.16" />
     </Flex>
   )
 }

@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { Alert, I18nManager, ScrollView } from 'react-native'
+import { I18nManager, ScrollView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
 import { Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { CheckmarkCircle, CopyAlt } from 'ui/src/components/icons'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { spacing } from 'ui/src/theme'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { resetDismissedWarnings } from 'uniswap/src/features/tokens/slice/slice'
@@ -18,12 +18,16 @@ import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { UniconSampleSheet } from 'wallet/src/components/DevelopmentOnly/UniconSampleSheet'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { resetWallet } from 'wallet/src/features/wallet/slice'
 
+/**
+ * Dev screen accessible in the Settings screen.
+ *
+ * @deprecated Use the Experiments modal instead.
+ */
 export function DevScreen(): JSX.Element {
   const insets = useAppInsets()
   const dispatch = useDispatch()
@@ -88,14 +92,6 @@ export function DevScreen(): JSX.Element {
     dispatch(resetWallet())
   }
 
-  const onRemovePrivateKeys = async (): Promise<void> => {
-    const addresses = await Keyring.getAddressesForStoredPrivateKeys()
-    for (const address of addresses) {
-      await Keyring.removePrivateKey(address)
-    }
-    Alert.alert('Private keys have been removed. Restart the app now!')
-  }
-
   const [showUniconsModal, setShowUniconsModal] = useState(false)
 
   const onPressShowUniconsModal = (): void => {
@@ -127,7 +123,7 @@ export function DevScreen(): JSX.Element {
             p="$spacing8"
           >
             <Text>Device id copied!</Text>
-            <CheckmarkCircle size={iconSizes.icon16} />
+            <CheckmarkCircle size="$icon.16" />
           </Flex>
         </Flex>
       )}
@@ -170,9 +166,6 @@ export function DevScreen(): JSX.Element {
           </TouchableArea>
           <TouchableArea mt="$spacing12" onPress={onPressResetOnboarding}>
             <Text color="$neutral1">Reset onboarding</Text>
-          </TouchableArea>
-          <TouchableArea mt="$spacing12" onPress={onRemovePrivateKeys}>
-            <Text color="$neutral1">Remove private keys</Text>
           </TouchableArea>
           <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between" mt="$spacing12">
             <Text>Force RTL (requires restart to apply)</Text>

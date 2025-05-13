@@ -9,7 +9,7 @@ import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPosit
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionStackedBars } from 'components/Liquidity/LiquidityPositionStackedBars'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { usePositionDerivedInfo } from 'components/Liquidity/hooks'
 import type { PositionInfo } from 'components/Liquidity/types'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
@@ -140,7 +140,7 @@ function PositionPage() {
     fiatValue0,
     fiatValue1,
     priceOrdering,
-  } = useV3OrV4PositionDerivedInfo(positionInfo)
+  } = usePositionDerivedInfo(positionInfo)
 
   const [priceInverted, setPriceInverted] = useState(false)
 
