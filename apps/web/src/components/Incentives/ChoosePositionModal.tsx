@@ -141,7 +141,6 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
             </ThemedText.BodyPrimary>
           ) : hasPositions ? (
             relevantPositions.map((position) => {
-              console.log('Rendering position:', position);
               return (
                 <PositionWrapper
                   key={position.id}

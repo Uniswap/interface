@@ -219,9 +219,8 @@ export default function Pool() {
   );
 
   const { userPositionsInIncentives: stakingPositions = [], positionsToWithdraw = [], isLoading: isStakingPositionsLoading } = useIncentivesData();
-
   const uniquePositions = [...new Map([...stakingPositions, ...positionsToWithdraw].map(position => 
-    [position.incentive.id, position]
+    [position.id, position]
   )).values()];
 
   const [openPositions, closedPositions] = positions?.reduce<
