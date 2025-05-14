@@ -38,6 +38,7 @@ export type SwapFormState = {
   presetPercentage?: PresetPercentage
   preselectAsset?: boolean
   isSubmitting: boolean
+  showPendingUI: boolean
   hideFooter?: boolean
   hideSettings?: boolean
   prefilledCurrencies?: TradeableAsset[]
@@ -75,6 +76,7 @@ export const getDefaultState = (defaultChainId: UniverseChainId): Readonly<Omit<
   isFiatMode: false,
   isMax: false,
   isSubmitting: false,
+  showPendingUI: false,
 })
 
 export const SwapFormContext = createContext<SwapFormContextState | undefined>(undefined)
@@ -268,6 +270,7 @@ export function SwapFormContextProvider({
       output: swapForm.output,
       selectingCurrencyField: swapForm.selectingCurrencyField,
       txId: swapForm.txId,
+      showPendingUI: swapForm.showPendingUI,
       hideFooter,
       hideSettings,
       updateSwapForm,
@@ -289,6 +292,7 @@ export function SwapFormContextProvider({
       swapForm.presetPercentage,
       swapForm.preselectAsset,
       swapForm.isSubmitting,
+      swapForm.showPendingUI,
       swapForm.output,
       swapForm.selectingCurrencyField,
       swapForm.txId,

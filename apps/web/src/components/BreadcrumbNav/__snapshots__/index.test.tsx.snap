@@ -2,53 +2,18 @@
 
 exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
 <DocumentFragment>
-  .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  gap: 6px;
-}
-
-.c3 {
-  font-weight: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: #131313;
-  white-space: nowrap;
-  margin: 0;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <div
       aria-current="page"
-      class="c0 c1 c2"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-6px"
       data-testid="current-breadcrumb"
     >
       <h1
-        class="c3"
+        class="font_body _display-inline _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-inherit _lineHeight-inherit _fontWeight-inherit _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px"
+        data-disable-theme="true"
       >
         ETH
       </h1>
@@ -63,65 +28,24 @@ exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
 
 exports[`BreadcrumbNav renders hover components correctly 1`] = `
 <DocumentFragment>
-  .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  gap: 6px;
-}
-
-.c3 {
-  font-weight: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: #131313;
-  white-space: nowrap;
-  margin: 0;
-}
-
-.c4 {
-  cursor: pointer;
-  gap: 10px;
-  white-space: nowrap;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <div
       aria-current="page"
-      class="c0 c1 c2"
+      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-6px"
       data-testid="current-breadcrumb"
     >
       <h1
-        class="c3"
+        class="font_body _display-inline _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-inherit _lineHeight-inherit _fontWeight-inherit _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px"
+        data-disable-theme="true"
       >
         WBTC
       </h1>
        
       <div
-        class="c0 c1 c4"
+        class="_color-_platformweb_neutral2 _whiteSpace-_platformweb_nowrap _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-10px _cursor-pointer"
         data-testid="breadcrumb-token-address"
       >
         0x2260...C599

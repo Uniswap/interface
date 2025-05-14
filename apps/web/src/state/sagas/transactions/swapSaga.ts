@@ -29,6 +29,7 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import {
@@ -71,14 +72,14 @@ interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'i
   step: SwapTransactionStep | SwapTransactionStepAsync
   signature?: string
   trade: ClassicTrade | BridgeTrade
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics: SwapTradeBaseProperties
 }
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
   step: SwapTransactionStep | SwapTransactionStepAsync
   signature?: string
   trade: ClassicTrade | BridgeTrade
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics: SwapTradeBaseProperties
 }
 function* handleSwapTransactionStep(params: HandleSwapStepParams) {
   const { trade, step, signature, analytics } = params
@@ -116,7 +117,7 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
 interface HandleSwapBatchedStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
   step: SwapTransactionStepBatched
   trade: ClassicTrade | BridgeTrade
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics: SwapTradeBaseProperties
 }
 function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) {
   const { trade, step } = params
@@ -139,7 +140,7 @@ function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) 
 
 function handleSwapTransactionAnalytics(params: {
   trade: ClassicTrade | BridgeTrade
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics: SwapTradeBaseProperties
   hash?: string
   batchId?: string
 }) {
@@ -184,7 +185,7 @@ type SwapParams = {
   selectChain: (chainId: number) => Promise<boolean>
   startChainId?: number
   account: SignerMnemonicAccountMeta
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics: SwapTradeBaseProperties
   swapTxContext: ValidatedSwapTxContext
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
@@ -292,7 +293,7 @@ function* uniswapXSwap(
   params: SwapParams & {
     swapTxContext: ValidatedUniswapXSwapTxAndGasInfo
     steps: TransactionStep[]
-    analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+    analytics: SwapTradeBaseProperties
   },
 ) {
   const {
@@ -366,7 +367,8 @@ export function useSwapCallback(): SwapCallback {
   const formatter = useLocalizationContext()
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
   const selectChain = useSelectChain()
-  const startChainId = useAccount().chainId
+  const connectedAccount = useAccount()
+  const startChainId = connectedAccount.chainId
   const v4SwapEnabled = useV4SwapEnabled(startChainId)
   const trace = useTrace()
 
@@ -408,6 +410,7 @@ export function useSwapCallback(): SwapCallback {
         isBatched,
         includedPermitTransactionStep,
       })
+
       const swapParams = {
         swapTxContext,
         account,

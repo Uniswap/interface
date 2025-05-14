@@ -118,6 +118,7 @@ export const uniswapUrls = {
   evervaultDevUrl: 'https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com',
   evervaultStagingUrl: 'https://embedded-wallet-staging.app-907329d19a06.enclave.evervault.com',
   evervaultProductionUrl: 'https://embedded-wallet.app-907329d19a06.enclave.evervault.com',
+  embeddedWalletUrl: `https://${EMBEDDED_WALLET_HOSTNAME}`,
   passkeysManagementUrl: `https://${EMBEDDED_WALLET_HOSTNAME}/manage/passkey`,
 
   // API Paths

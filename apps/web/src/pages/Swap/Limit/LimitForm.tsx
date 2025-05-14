@@ -20,7 +20,7 @@ import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useAtom } from 'jotai'
-import styled, { useTheme } from 'lib/styled-components'
+import { useTheme } from 'lib/styled-components'
 import { LimitExpirySection } from 'pages/Swap/Limit/LimitExpirySection'
 import LimitOrdersNotSupportedBanner from 'pages/Swap/Limit/LimitOrdersNotSupportedBanner'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
@@ -57,9 +57,9 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 const LIMIT_SUPPORTED_CHAINS = [UniverseChainId.Mainnet]
 
-const CustomHeightSwapSection = styled(SwapSection)`
-  height: unset;
-`
+const CustomHeightSwapSection = TamaguiStyled(SwapSection, {
+  height: 'unset',
+})
 
 const ShortArrowWrapper = TamaguiStyled(ArrowWrapper, {
   mt: -22,
@@ -357,7 +357,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           eventOnTrigger={SwapEventName.SWAP_TOKENS_REVERSED}
           element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
         >
-          <ArrowContainer data-testid="swap-currency-button" onClick={switchTokens} color={theme.neutral1}>
+          <ArrowContainer data-testid="swap-currency-button" onPress={switchTokens}>
             <ArrowDown size="16" color={theme.neutral1} />
           </ArrowContainer>
         </Trace>

@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Popover } from 'ui/src'
 
-import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/TransactionSettingsModal/TransactionSettingsModal'
-import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/SlippageUpdate/SlippageUpdate'
+import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
+import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
 import { isInterface } from 'utilities/src/platform'
 
 export function SlippageEdit({

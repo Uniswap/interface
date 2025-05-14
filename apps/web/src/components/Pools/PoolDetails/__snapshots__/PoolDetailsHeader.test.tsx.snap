@@ -2,7 +2,12 @@
 
 exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c4 {
+  height: 40px;
+  width: 137px;
+}
+
+.c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -24,11 +29,6 @@ exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
-}
-
-.c4 {
-  height: 40px;
-  width: 137px;
 }
 
 .c0 {
@@ -119,156 +119,88 @@ exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
 
 exports[`PoolDetailsHeader renders breadcrumb text correctly 1`] = `
 <DocumentFragment>
-  .c2 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  color: rgba(19,19,19,0.63);
-  font-size: 16px;
-  line-height: 24px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 4px;
-  margin-bottom: 20px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-}
-
-.c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  color: rgba(19,19,19,0.63);
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c1:hover {
-  color: rgba(19,19,19,0.35);
-}
-
-.c4 {
-  gap: 6px;
-}
-
-.c5 {
-  font-weight: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: #131313;
-  white-space: nowrap;
-  margin: 0;
-}
-
-.c6 {
-  cursor: pointer;
-  gap: 10px;
-  white-space: nowrap;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
-    <nav
+    <div
       aria-label="breadcrumb-nav"
-      class="c0"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-gap52 _mb-20px _width-fit-content"
     >
       <a
-        class="c1"
         href="/explore/ethereum"
+        style="text-decoration: none;"
       >
-        Explore 
-        <svg
-          fill="none"
-          height="14"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="14"
-          xmlns="http://www.w3.org/2000/svg"
+        <span
+          class="font_unset  font_body "
+          data-disable-theme="true"
+          style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; display: flex; align-items: center; text-decoration: none; color: rgba(19, 19, 19, 0.63); font-size: 16px; line-height: 20.8px; font-weight: 485;"
         >
-          <polyline
-            points="9 18 15 12 9 6"
-          />
-        </svg>
+          Explore 
+          <svg
+            fill="none"
+            height="14"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <polyline
+              points="9 18 15 12 9 6"
+            />
+          </svg>
+        </span>
       </a>
       <a
-        class="c1"
         href="/explore/pools/ethereum"
+        style="text-decoration: none;"
       >
-        Pools 
-        <svg
-          fill="none"
-          height="14"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="14"
-          xmlns="http://www.w3.org/2000/svg"
+        <span
+          class="font_unset  font_body "
+          data-disable-theme="true"
+          style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; display: flex; align-items: center; text-decoration: none; color: rgba(19, 19, 19, 0.63); font-size: 16px; line-height: 20.8px; font-weight: 485;"
         >
-          <polyline
-            points="9 18 15 12 9 6"
-          />
-        </svg>
+          Pools 
+          <svg
+            fill="none"
+            height="14"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <polyline
+              points="9 18 15 12 9 6"
+            />
+          </svg>
+        </span>
       </a>
       <div
         aria-current="page"
-        class="c2 c3 c4"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-6px"
         data-testid="current-breadcrumb"
       >
         <h1
-          class="c5"
+          class="font_body _display-inline _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-inherit _lineHeight-inherit _fontWeight-inherit _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px"
+          data-disable-theme="true"
         >
           USDC / WETH
         </h1>
          
         <div
-          class="c2 c3 c6"
+          class="_color-_platformweb_neutral2 _whiteSpace-_platformweb_nowrap _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-10px _cursor-pointer"
           data-testid="breadcrumb-token-address"
         >
           0x88e6...5640
         </div>
       </div>
-    </nav>
+    </div>
     <div
       style="display: contents;"
     />
@@ -281,6 +213,45 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   .c14 {
   display: inline-block;
   height: inherit;
+}
+
+.c2 {
+  color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c13 {
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 485;
+  gap: 12px;
+  height: 40px;
+  color: #131313;
+  cursor: pointer;
+}
+
+.c15:hover {
+  background-color: #98A1C01a;
 }
 
 .c5 {
@@ -351,45 +322,6 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
-}
-
-.c2 {
-  color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  padding: 8px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 485;
-  gap: 12px;
-  height: 40px;
-  color: #131313;
-  cursor: pointer;
-}
-
-.c15:hover {
-  background-color: #98A1C01a;
 }
 
 .c7 {
@@ -610,9 +542,11 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 </span>
               </div>
               <div
-                class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0active-0--6 _transform-0active-scale11281 _backgroundColor-0hover-backgroundH3423444 _opacity-0hover-0--8 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+                class=" is_TouchableArea  t_group_true"
                 data-testid="toggle-tokens-reverse-arrows"
-                style="transition: 100ms;"
+                role="button"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; outline-color: rgba(0, 0, 0, 0); cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; transform: scale(1); transition: 100ms;"
+                tabindex="0"
               >
                 <div
                   data-testid="reversed-arrows-icon"

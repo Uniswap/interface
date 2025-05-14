@@ -7,12 +7,10 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
 import { finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
-import {
-  getBaseTradeAnalyticsProperties,
-  getRouteAnalyticsData,
-} from 'uniswap/src/features/transactions/swap/analytics'
+import { getRouteAnalyticsData } from 'uniswap/src/features/transactions/swap/analytics'
 import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   QueuedOrderStatus,
@@ -40,7 +38,7 @@ export interface SubmitUniswapXOrderParams {
   chainId: UniverseChainId
   account: AccountMeta
   typeInfo: TransactionTypeInfo
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics: SwapTradeBaseProperties
   approveTxHash?: string
   wrapTxHash?: string
   onSuccess: () => void

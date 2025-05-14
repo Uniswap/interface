@@ -2,6 +2,7 @@ import { PropsWithChildren, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, UniswapXText, isWeb } from 'ui/src'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
+import { zIndexes } from 'ui/src/theme'
 import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
 import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
@@ -13,6 +14,11 @@ import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import {
+  BestRouteTooltip,
+  BestRouteUniswapXTooltip,
+} from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import getRoutingDiagramEntries from 'uniswap/src/utils/getRoutingDiagramEntries'
@@ -27,6 +33,7 @@ export function RoutingInfo({
   chainId: UniverseChainId
   gasFee: GasFeeResult
 }>): JSX.Element | null {
+  const priceUxEnabled = usePriceUXEnabled()
   const { t } = useTranslation()
   const { trade } = useSwapTxContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -110,7 +117,7 @@ export function RoutingInfo({
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <WarningInfo
-        infoButton={InfoButton}
+        infoButton={priceUxEnabled ? null : InfoButton}
         modalProps={{
           modalName: ModalName.SwapReview,
           captionComponent: caption,
@@ -118,12 +125,19 @@ export function RoutingInfo({
           icon: <OrderRouting color="$neutral1" size="$icon.24" />,
           severity: WarningSeverity.None,
           title: t('swap.tradeRoutes'),
+          zIndex: zIndexes.popover,
         }}
-        tooltipProps={{ text: caption, placement: 'top', maxWidth: trade && isClassic(trade) ? 400 : undefined }}
+        tooltipProps={{
+          text:
+            priceUxEnabled && trade ? isUniswapX(trade) ? <BestRouteUniswapXTooltip /> : <BestRouteTooltip /> : caption,
+          placement: 'top',
+          maxWidth: priceUxEnabled ? 300 : trade && isClassic(trade) ? 400 : undefined,
+        }}
+        analyticsTitle="Order routing"
       >
         <Flex centered row gap="$spacing4">
           <Text color="$neutral2" variant="body3">
-            {t('swap.orderRouting')}
+            {priceUxEnabled ? t('common.bestRoute') : t('swap.orderRouting')}
           </Text>
         </Flex>
       </WarningInfo>

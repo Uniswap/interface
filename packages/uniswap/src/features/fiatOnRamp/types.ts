@@ -205,6 +205,7 @@ export type OffRampTransferDetailsResponse = {
     lightFullLogo: string
   }
   depositWalletAddressTag?: string
+  errorCode?: string
 }
 
 // /transactions

@@ -1,20 +1,18 @@
 import { getPublicClient } from '@wagmi/core'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { useMemo } from 'react'
-import { useUpdateDelegatedState } from 'state/wallets/hooks'
 import {
   DelegationRepository,
   DelegationService,
   createDelegationService,
 } from 'uniswap/src/features/smartWallet/delegation/delegation'
+import { useUpdateDelegatedState } from 'uniswap/src/features/smartWallet/delegation/hooks/useUpdateDelegateState'
 import { isAddress } from 'utilities/src/addresses'
-import { getLogger } from 'utilities/src/logger/logger'
 
 export function useDelegationService(): DelegationService {
   const updateDelegatedState = useUpdateDelegatedState()
   return useMemo(() => {
     return createDelegationService({
-      logger: getLogger(),
       delegationRepository: createDelegationRepository(),
       onDelegationDetected: (payload) => {
         // update redux state

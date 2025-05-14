@@ -46,6 +46,7 @@ const swapState: DerivedSwapInfo = {
     [CurrencyField.INPUT]: ethCurrencyInfo(),
     [CurrencyField.OUTPUT]: undefined,
   },
+  outputAmountUserWillReceive: undefined,
   exactCurrencyField: CurrencyField.INPUT,
   trade: {
     isLoading: false,
@@ -75,6 +76,7 @@ const insufficientBalanceState: DerivedSwapInfo = {
     [CurrencyField.INPUT]: ethCurrencyInfo(),
     [CurrencyField.OUTPUT]: daiCurrencyInfo(),
   },
+  outputAmountUserWillReceive: CurrencyAmount.fromRawAmount(DAI, '200000'),
   exactCurrencyField: CurrencyField.INPUT,
   trade: {
     isLoading: false,
@@ -115,6 +117,7 @@ const tradeErrorState: DerivedSwapInfo = {
     [CurrencyField.INPUT]: daiCurrencyInfo(),
     [CurrencyField.OUTPUT]: ethCurrencyInfo(),
   },
+  outputAmountUserWillReceive: null,
   exactCurrencyField: CurrencyField.INPUT,
   trade: {
     isLoading: false,

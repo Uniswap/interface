@@ -15,7 +15,6 @@ import { Settings } from 'components/Icons/Settings'
 import StatusIcon from 'components/Identicon/StatusIcon'
 import { ReceiveCryptoModal } from 'components/ReceiveCryptoModal'
 import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
-import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
@@ -69,8 +68,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const isUniExtensionConnected = useIsUniExtensionConnected()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const connectedAccount = useAccount()
   const connectedWithEmbeddedWallet =
-    useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+    connectedAccount.connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
   const { signOutWithPasskey } = useSignOutWithPasskey()
   const isRightToLeft = i18next.dir() === 'rtl'
 
@@ -143,7 +143,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               onClick={openSettings}
               Icon={Settings}
             />
-            <Trace logPress element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}>
+            <Trace
+              logPress
+              element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
+              properties={{ connector_id: connectedAccount.connector?.id }}
+            >
               <IconWithConfirmTextButton
                 data-testid="wallet-disconnect"
                 onConfirm={handleDisconnect}
@@ -208,15 +212,13 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                 />
               ) : (
                 <>
-                  <Row gap="8px">
+                  <Flex row gap="$gap8">
                     {shouldShowBuyFiatButton && (
                       <ActionTile
                         dataTestId={TestID.WalletBuyCrypto}
                         Icon={<Bank size={24} color="$accent1" />}
                         name={t('common.buy.label')}
                         onClick={handleBuyCryptoClick}
-                        errorMessage={t('common.restricted.region')}
-                        errorTooltip={t('moonpay.restricted.region')}
                       />
                     )}
                     <ActionTile
@@ -225,7 +227,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                       name={t('common.receive')}
                       onClick={openReceiveCryptoModal}
                     />
-                  </Row>
+                  </Flex>
                   <MiniPortfolio account={account} />
                 </>
               )}

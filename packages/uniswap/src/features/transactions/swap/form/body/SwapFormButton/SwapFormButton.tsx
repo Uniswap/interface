@@ -34,6 +34,7 @@ export function SwapFormButton({ tokenColor }: { tokenColor?: string }): JSX.Ele
             backgroundColor={buttonBackgroundColor}
             size={isShortMobileDevice ? 'small' : 'large'}
             testID={TestID.ReviewSwap}
+            animation="simple"
             onPress={handleOnReviewPress}
           >
             {buttonTextColor ? <Button.Text color={buttonTextColor}>{buttonText}</Button.Text> : buttonText}

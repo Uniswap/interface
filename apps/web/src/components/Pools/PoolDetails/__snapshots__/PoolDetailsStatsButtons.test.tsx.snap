@@ -76,12 +76,6 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   pointer-events: none;
 }
 
-.c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
 .c3 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -94,6 +88,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
 }
 
 .c1 {
@@ -210,7 +210,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
               />
             </svg>
             <span
-              class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+              class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
             >
               Swap
             </span>
@@ -246,7 +246,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
               />
             </svg>
             <span
-              class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _cursor-pointer _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+              class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
             >
               Add liquidity
             </span>

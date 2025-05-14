@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Sparkle } from 'ui/src/components/icons/Sparkle'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { SmartWalletModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
 
 interface SmartWalletEducationalModalProps {
   isOpen: boolean

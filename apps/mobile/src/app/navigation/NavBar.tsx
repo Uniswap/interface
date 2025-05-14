@@ -261,7 +261,11 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
   const Wrapper = isIOS ? BlurView : Flex
 
   return (
-    <TouchableArea activeOpacity={1} style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}>
+    <TouchableArea
+      activeOpacity={1}
+      style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}
+      dd-action-name={TestID.SearchTokensAndWallets}
+    >
       <TapGestureHandler testID={TestID.SearchTokensAndWallets} onGestureEvent={onGestureEvent}>
         <AnimatedFlex
           borderRadius="$roundedFull"

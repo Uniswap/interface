@@ -18,7 +18,7 @@ export enum DynamicConfigs {
   GasStrategies = 'gas_strategy',
   DatadogSessionSampleRate = 'datadog_session_sample_rate',
   DatadogIgnoredErrors = 'datadog_ignored_errors',
-  EmbeddedWallet = 'embedded_wallet',
+  EmbeddedWalletConfig = 'embedded_wallet_config',
 
   // Web
   AstroChain = 'astro_chain',
@@ -163,7 +163,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey
   [DynamicConfigs.DatadogIgnoredErrors]: DatadogIgnoredErrorsConfigKey
   [DynamicConfigs.DatadogSessionSampleRate]: DatadogSessionSampleRateKey
-  [DynamicConfigs.EmbeddedWallet]: EmbeddedWalletConfigKey
+  [DynamicConfigs.EmbeddedWalletConfig]: EmbeddedWalletConfigKey
 
   // Web
   [DynamicConfigs.AstroChain]: AstroChainConfigKey

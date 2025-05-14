@@ -83,7 +83,6 @@ export interface OnboardingContext {
   addOnboardingAccountMnemonic: (mnemonic: string[]) => void
   getOnboardingAccountMnemonic: () => string[] | undefined
   getOnboardingAccountMnemonicString: () => string | undefined
-  retrieveOnboardingAccountMnemonic: () => Promise<void>
   setPendingWalletName: (walletName: string) => void
   resetOnboardingContextData: () => void
 }
@@ -116,7 +115,6 @@ const initialOnboardingContext: OnboardingContext = {
   addOnboardingAccountMnemonic: () => undefined,
   getOnboardingAccountMnemonic: () => undefined,
   getOnboardingAccountMnemonicString: () => undefined,
-  retrieveOnboardingAccountMnemonic: async () => undefined,
   setPendingWalletName: () => undefined,
   resetOnboardingContextData: () => undefined,
 }
@@ -491,18 +489,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   }
 
   /**
-   * Retrieves pending account mnemonic from Keyring
-   * Should only be used on web/extension
-   */
-  const retrieveOnboardingAccountMnemonic = async (): Promise<void> => {
-    throwIfNotExtension()
-    if (onboardingAccount) {
-      const mnemonicString = await Keyring.retrieveMnemonicUnlocked(onboardingAccount?.address)
-      setOnboardingAccountMnemonic(mnemonicString?.split(' '))
-    }
-  }
-
-  /**
    * Returns previously retrieved mnemonics array
    * Should only be used on web/extension
    */
@@ -565,7 +551,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
         addOnboardingAccountMnemonic,
         getOnboardingAccountMnemonic,
         getOnboardingAccountMnemonicString,
-        retrieveOnboardingAccountMnemonic,
         setPendingWalletName,
         resetOnboardingContextData,
       }}
@@ -596,45 +581,6 @@ export function useCreateOnboardingAccountIfNone(): void {
       })
     }
   }, [generateOnboardingAccount, onboardingAccount])
-}
-
-function getImportType(
-  onboardingAccountAddress: string | undefined,
-  extensionOnboardingFlow: ExtensionOnboardingFlow | undefined,
-): ImportType {
-  if (extensionOnboardingFlow === ExtensionOnboardingFlow.Passkey) {
-    return ImportType.Passkey
-  }
-  if (onboardingAccountAddress) {
-    return ImportType.CreateNew
-  }
-  return ImportType.RestoreMnemonic
-}
-
-/**
- * Triggers onboarding finish on screen mount for extension only
- * Extracted into hook for reusability.
- */
-export function useFinishOnboarding(
-  callback?: () => void,
-  extensionOnboardingFlow?: ExtensionOnboardingFlow,
-  pendingClaim?: boolean,
-): void {
-  const { finishOnboarding, getOnboardingAccountAddress } = useOnboardingContext()
-  const importType = getImportType(getOnboardingAccountAddress(), extensionOnboardingFlow)
-
-  useEffect(() => {
-    if (pendingClaim) {
-      return
-    }
-    finishOnboarding({ importType, extensionOnboardingFlow })
-      .then(callback)
-      .catch((e) => {
-        logger.error(e, {
-          tags: { file: 'useFinishOnboarding', function: 'finishOnboarding' },
-        })
-      })
-  }, [finishOnboarding, importType, callback, extensionOnboardingFlow, pendingClaim])
 }
 
 // Checks if context function is used on the proper platform

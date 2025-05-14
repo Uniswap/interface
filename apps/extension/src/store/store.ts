@@ -12,6 +12,7 @@ import {
   readDeprecatedReduxedChromeStorage,
 } from 'src/store/reduxedChromeStorageToReduxPersistMigration'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
 import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
@@ -39,7 +40,7 @@ const setupStore = (preloadedState?: PreloadedState<ExtensionState>): ReturnType
     preloadedState,
     additionalSagas: [rootExtensionSaga],
     middlewareBefore: __DEV__ ? [loggerMiddleware] : [],
-    middlewareAfter: [fiatOnRampAggregatorApi.middleware],
+    middlewareAfter: [fiatOnRampAggregatorApi.middleware, delegationListenerMiddleware.middleware],
     enhancers: [dataDogReduxEnhancer],
   })
 }

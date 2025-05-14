@@ -36,7 +36,7 @@ const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
-const ExtensionPasskeySignInPopUp = lazy(() => import('pages/ExtensionPasskeyAuthPopUp'))
+const ExtensionPasskeyAuthPopUp = lazy(() => import('pages/ExtensionPasskeyAuthPopUp'))
 const PasskeyManagement = lazy(() => import('pages/PasskeyManagement'))
 
 interface RouterConfig {
@@ -333,8 +333,8 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: EXTENSION_PASSKEY_AUTH_PATH,
-    getElement: () => <ExtensionPasskeySignInPopUp />,
-    getTitle: () => i18n.t('title.extensionPasskeySignIn'),
+    getElement: () => <ExtensionPasskeyAuthPopUp />,
+    getTitle: () => i18n.t('title.extensionPasskeyLogIn'),
   }),
   createRouteDefinition({
     path: '/manage/passkey/:walletAddress',

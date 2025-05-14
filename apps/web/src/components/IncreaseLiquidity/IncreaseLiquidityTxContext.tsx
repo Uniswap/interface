@@ -22,12 +22,12 @@ import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import {
   IncreasePositionTxAndGasInfo,
   LiquidityTransactionType,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -237,9 +237,12 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       },
     })
 
-    sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
-      message,
-    })
+    if (increaseCalldataQueryParams) {
+      sendAnalyticsEvent(InterfaceEventNameLocal.IncreaseLiquidityFailed, {
+        message,
+        ...increaseCalldataQueryParams,
+      })
+    }
   }
 
   const fallbackDependentAmount = useIncreasePositionDependentAmountFallback(
@@ -293,6 +296,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       permit: permit ? { method: PermitMethod.TypedData, typedData: permit } : undefined, // TODO: make a PermitMethod.Transaction one if we get them from BE
       token0PermitTransaction: validatedToken0PermitTx,
       token1PermitTransaction: validatedToken1PermitTx,
+      positionTokenPermitTransaction: undefined,
       increasePositionRequestArgs: { ...increaseCalldataQueryParams, batchPermitData: permitData ?? undefined },
       txRequest,
       unsigned,

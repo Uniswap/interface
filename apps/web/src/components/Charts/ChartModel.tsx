@@ -16,7 +16,7 @@ import {
   TimeChartOptions,
   createChart,
 } from 'lightweight-charts'
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactElement, TouchEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { ColorTokens, Flex, TamaguiElement, assertWebElement, styled, useMedia } from 'ui/src'
@@ -226,6 +226,11 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
           labelVisible: false,
         },
       },
+      // Enable scrolling vertically when onTouchMove is enabled on mobile devices (when chart is not focused)
+      handleScroll: {
+        horzTouchDrag: true,
+        vertTouchDrag: false,
+      },
     }
 
     this.api.applyOptions({ ...defaultOptions, ...nonDefaultChartOptions })
@@ -252,6 +257,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   height,
   children,
   className,
+  disableChartTouchPanning,
 }: {
   Model: new (chartDiv: HTMLDivElement, params: TParamType & ChartUtilParams<TDataType>) => ChartModel<TDataType>
   TooltipBody?: ChartTooltipBodyComponent<TDataType>
@@ -259,6 +265,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   height?: number
   children?: (crosshair?: TDataType) => ReactElement
   className?: string
+  disableChartTouchPanning?: boolean // On touch devices, optionally disables chart touch panning on mobile devices to avoid interfering with vertical scrolling
 }) {
   const setRefitChartContent = useUpdateAtom(refitChartContentAtom)
   // Lightweight-charts injects a canvas into the page through the div referenced below
@@ -306,6 +313,8 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
 
   useOnClickOutside({ current: chartDivElement } as React.RefObject<HTMLDivElement>, () => setCrosshairData(undefined))
 
+  const touchMoveHandler = disableChartTouchPanning ? (e: TouchEvent<HTMLElement>) => e.stopPropagation() : undefined
+
   return (
     <Flex
       width="100%"
@@ -314,8 +323,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
       ref={setChartDivElement}
       height={height}
       className={className}
-      // Prevents manipulating the chart with touch so that it doesn't interfere with scrolling the page.
-      onTouchMove={(e) => e.stopPropagation()}
+      onTouchMove={touchMoveHandler as any} // any is used to avoid needing to import GestureResponderEvent from react-native
     >
       {children && children(crosshairData)}
       {TooltipBody && crosshairData && (

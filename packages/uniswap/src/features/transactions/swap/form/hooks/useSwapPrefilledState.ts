@@ -41,6 +41,7 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
       isFiatMode: false,
       isSubmitting: false,
       isMax: false,
+      showPendingUI: false,
     }
   }, [initialState])
 

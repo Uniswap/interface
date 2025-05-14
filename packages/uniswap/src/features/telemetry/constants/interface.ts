@@ -1,4 +1,5 @@
 export enum InterfaceEventNameLocal {
+  EmbeddedWalletCreated = 'Embedded Wallet Created',
   PortfolioMenuOpened = 'Portfolio Menu Opened',
   UniswapXOrderDetailsSheetOpened = 'UniswapX Order Details Sheet Opened',
   UniswapXOrderCancelInitiated = 'UniswapX Order Cancel Initiated',
@@ -21,6 +22,5 @@ export enum InterfaceEventNameLocal {
   LimitedWalletSupportToastShown = 'Limited Wallet Support Toast Shown',
   LimitedWalletSupportToastDismissed = 'Limited Wallet Support Toast Dismissed',
   LimitedWalletSupportToastLearnMoreButtonClicked = 'Limited Wallet Support Learn More Button Clicked',
-  DelegationDetected = 'Delegation Detected',
   WalletCapabilitiesDetected = 'Wallet Capabilities Detected',
 }

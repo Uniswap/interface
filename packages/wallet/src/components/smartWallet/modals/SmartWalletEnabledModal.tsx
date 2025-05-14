@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
-import { SmartWalletModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { SmartWalletModal } from 'wallet/src/features/smartWallet/modals/SmartWalletModal'
 
 interface SmartWalletEnabledModalProps {
   isOpen: boolean

@@ -81,7 +81,8 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const { txInfo, gasFeeEstimateUSD, error, refetch, dependentAmount } = useCreateTxContext()
   const account = useAccountMeta()
   const selectChain = useSelectChain()
-  const startChainId = useAccount().chainId
+  const connectedAccount = useAccount()
+  const startChainId = connectedAccount.chainId
   const navigate = useNavigate()
   const trace = useTrace()
 

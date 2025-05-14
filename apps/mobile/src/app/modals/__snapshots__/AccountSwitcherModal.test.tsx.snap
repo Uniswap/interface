@@ -150,18 +150,33 @@ exports[`AccountSwitcher renders correctly 1`] = `
           </View>
         </View>
         <View
+          collapsable={false}
+          focusVisibleStyle={{}}
+          forwardedRef={[Function]}
           hitSlop={16}
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
           onBlur={[Function]}
           onClick={[Function]}
           onFocus={[Function]}
+          onLayout={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+          role="button"
           style={
             {
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
               "flexDirection": "column",
               "opacity": 1,
               "transform": [
@@ -174,6 +189,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
           testID="copy"
         >
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "alignItems": "center",
@@ -187,6 +204,12 @@ exports[`AccountSwitcher renders correctly 1`] = `
                 "borderBottomRightRadius": 999999,
                 "borderTopLeftRadius": 999999,
                 "borderTopRightRadius": 999999,
+                "color": {
+                  "dynamic": {
+                    "dark": "#FFFFFF",
+                    "light": "#222222",
+                  },
+                },
                 "flexDirection": "row",
                 "gap": 4,
                 "justifyContent": "center",
@@ -201,6 +224,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
             <Text
               allowFontScaling={true}
               maxFontSizeMultiplier={1.4}
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 {
                   "color": {
@@ -439,25 +464,32 @@ exports[`AccountSwitcher renders correctly 1`] = `
     </View>
   </View>
   <View
-    hitSlop={
+    collapsable={false}
+    focusVisibleStyle={{}}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
       {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
+        "value": {},
       }
     }
     onBlur={[Function]}
     onClick={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onResponderGrant={[Function]}
     onResponderMove={[Function]}
     onResponderRelease={[Function]}
     onResponderTerminate={[Function]}
     onResponderTerminationRequest={[Function]}
     onStartShouldSetResponder={[Function]}
+    role="button"
     style={
       {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
         "flexDirection": "column",
         "marginTop": 16,
         "opacity": 1,
@@ -470,9 +502,17 @@ exports[`AccountSwitcher renders correctly 1`] = `
     }
   >
     <View
+      onBlur={[Function]}
+      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
+          "color": {
+            "dynamic": {
+              "dark": "#FFFFFF",
+              "light": "#222222",
+            },
+          },
           "flexDirection": "row",
           "gap": 8,
           "marginLeft": 24,
@@ -480,6 +520,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
       }
     >
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -601,6 +643,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
       <Text
         allowFontScaling={true}
         maxFontSizeMultiplier={1.2}
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "color": {

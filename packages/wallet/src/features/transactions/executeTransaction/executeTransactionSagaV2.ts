@@ -3,9 +3,9 @@ import { call } from 'typed-redux-saga'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import {
   TransactionOptions,
   TransactionOriginType,
@@ -37,7 +37,7 @@ export interface ExecuteTransactionParams {
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
   transactionOriginType: TransactionOriginType
-  analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics?: SwapTradeBaseProperties
 }
 
 const transactionConfigService = createTransactionConfigService({

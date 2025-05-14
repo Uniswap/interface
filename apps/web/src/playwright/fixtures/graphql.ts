@@ -16,6 +16,7 @@ type GraphqlFixture = {
      * If variables are provided, the request will only match if all variables match (case insensitive).
      */
     intercept: (operationName: string, mockPath: string, variables?: Record<string, unknown>) => Promise<void>
+    waitForResponse: (operationName: string) => Promise<void>
   }
   interceptLongRunning: void
 }
@@ -33,6 +34,22 @@ export const test = base.extend<GraphqlFixture>({
 
     const intercept = async (operationName: string, mockPath: string, variables?: Record<string, unknown>) => {
       interceptConfigs.set(operationName, { mockPath, variables })
+    }
+
+    const waitForResponse = async (operationName: string) => {
+      await page.waitForResponse((response) => {
+        if (!response.request().url().includes('graphql')) {
+          return false
+        }
+
+        const postDataBuffer = response.request().postDataBuffer?.()
+        if (!postDataBuffer) {
+          return false
+        }
+        const postData = postDataBuffer.toString('utf-8')
+        const data = JSON.parse(postData)
+        return data.operationName === operationName
+      })
     }
 
     await page.route(/(?:interface|beta).(gateway|api).uniswap.org\/v1\/graphql/, async (route) => {
@@ -65,7 +82,7 @@ export const test = base.extend<GraphqlFixture>({
       }
     })
 
-    await use({ intercept })
+    await use({ intercept, waitForResponse })
   },
   // Intercept long running graphql requests here:
   interceptLongRunning: [

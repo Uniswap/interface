@@ -18,16 +18,11 @@ const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS
 interface SubmitSwapButtonProps {
   disabled: boolean
   onSubmit: () => void
-  showUniswapXSubmittingUI: boolean
+  showPendingUI: boolean
   warning?: Warning
 }
 
-export function SubmitSwapButton({
-  disabled,
-  onSubmit,
-  showUniswapXSubmittingUI,
-  warning,
-}: SubmitSwapButtonProps): JSX.Element {
+export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }: SubmitSwapButtonProps): JSX.Element {
   const { t } = useTranslation()
   const { renderBiometricsIcon } = useTransactionModalContext()
 
@@ -52,10 +47,10 @@ export function SubmitSwapButton({
         </Button>
       )
     }
-    case showUniswapXSubmittingUI: {
+    case showPendingUI: {
       return (
         <Button loading variant="branded" emphasis="primary" size={size}>
-          <UniswapXSubmittingText />
+          <DelayedSubmissionText />
         </Button>
       )
     }
@@ -127,7 +122,7 @@ export const getActionName = (
   }
 }
 
-function UniswapXSubmittingText(): JSX.Element {
+function DelayedSubmissionText(): JSX.Element {
   const { t } = useTranslation()
   const [showKeepOpenMessage, setShowKeepOpenMessage] = useState(false)
 

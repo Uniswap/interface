@@ -485,6 +485,7 @@ function V2PairMigration({
     migrator,
     account.address,
     account.chainId,
+    account.connector?.id,
     tickLower,
     tickUpper,
     v3Amount0Min,

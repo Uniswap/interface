@@ -40,9 +40,15 @@ export function parseProtectionInfo(protectionInfo?: ProtectionInfoProtobuf): Pr
   }
 
   let protectionResult: ProtectionResult | undefined
-  const validProtectionResults: ProtectionResult[] = Object.values(ProtectionResult)
-  if (validProtectionResults.includes(protectionInfo.result as ProtectionResult)) {
-    protectionResult = protectionInfo.result as ProtectionResult
+  // protectionInfo.result and protectionInfo.attackTypes are a string instead of an enum
+  // message TokenProtectionInfo {
+  //   string result = 1;
+  //   ...
+  // }
+  // So result and attackTypes are a capitalized string instead of an uppercase enum value
+  const validProtectionResults: string[] = Object.values(ProtectionResult)
+  if (validProtectionResults.includes(protectionInfo.result.toUpperCase())) {
+    protectionResult = protectionInfo.result.toUpperCase() as ProtectionResult
   } else {
     logger.warn(
       'uniswap/data/rest/utils.ts',
@@ -52,10 +58,10 @@ export function parseProtectionInfo(protectionInfo?: ProtectionInfoProtobuf): Pr
     return undefined
   }
 
-  const validAttackTypes: ProtectionAttackType[] = Object.values(ProtectionAttackType)
+  const validAttackTypes: string[] = Object.values(ProtectionAttackType)
   const attackTypes = protectionInfo.attackTypes
-    .filter((at) => validAttackTypes.includes(at as ProtectionAttackType))
-    .map((at) => at as ProtectionAttackType)
+    .filter((at) => validAttackTypes.includes(at.toUpperCase()))
+    .map((at) => at.toUpperCase() as ProtectionAttackType)
   if (attackTypes.length !== protectionInfo.attackTypes.length) {
     logger.warn(
       'uniswap/data/rest/utils.ts',

@@ -42,15 +42,117 @@ export function loadLocaleData(langCode) {
     case 'es':
       require('@formatjs/intl-pluralrules/locale-data/es').default
       switch (langCode) {
+        // Spanish locales that use `,` as the decimal separator
+        case 'es-419':
+          require('@formatjs/intl-numberformat/locale-data/es-419').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-419').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-419').default
+          break
+        case 'es-BZ':
+          require('@formatjs/intl-numberformat/locale-data/es-BZ').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-BZ').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-BZ').default
+          break
+        case 'es-CU':
+          require('@formatjs/intl-numberformat/locale-data/es-CU').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-CU').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-CU').default
+          break
+        case 'es-DO':
+          require('@formatjs/intl-numberformat/locale-data/es-DO').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-DO').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-DO').default
+          break
+        case 'es-GT':
+          require('@formatjs/intl-numberformat/locale-data/es-GT').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-GT').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-GT').default
+          break
+        case 'es-HN':
+          require('@formatjs/intl-numberformat/locale-data/es-HN').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-HN').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-HN').default
+          break
+        case 'es-MX':
+          require('@formatjs/intl-numberformat/locale-data/es-MX').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-MX').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-MX').default
+          break
+        case 'es-NI':
+          require('@formatjs/intl-numberformat/locale-data/es-NI').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-NI').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-NI').default
+          break
+        case 'es-PA':
+          require('@formatjs/intl-numberformat/locale-data/es-PA').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-PA').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-PA').default
+          break
+        case 'es-PE':
+          require('@formatjs/intl-numberformat/locale-data/es-PE').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-PE').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-PE').default
+          break
+        case 'es-PR':
+          require('@formatjs/intl-numberformat/locale-data/es-PR').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-PR').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-PR').default
+          break
+        case 'es-SV':
+          require('@formatjs/intl-numberformat/locale-data/es-SV').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-SV').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-SV').default
+          break
         case 'es-US':
           require('@formatjs/intl-numberformat/locale-data/es-US').default
           require('@formatjs/intl-datetimeformat/locale-data/es-US').default
           require('@formatjs/intl-relativetimeformat/locale-data/es-US').default
           break
-        case 'es-419':
-          require('@formatjs/intl-numberformat/locale-data/es-419').default
-          require('@formatjs/intl-datetimeformat/locale-data/es-419').default
-          require('@formatjs/intl-relativetimeformat/locale-data/es-419').default
+        // Spanish locales that use `.` as the decimal separator
+        case 'es-AR':
+          require('@formatjs/intl-numberformat/locale-data/es-AR').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-AR').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-AR').default
+          break
+        case 'es-BO':
+          require('@formatjs/intl-numberformat/locale-data/es-BO').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-BO').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-BO').default
+          break
+        case 'es-CL':
+          require('@formatjs/intl-numberformat/locale-data/es-CL').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-CL').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-CL').default
+          break
+        case 'es-CO':
+          require('@formatjs/intl-numberformat/locale-data/es-CO').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-CO').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-CO').default
+          break
+        case 'es-CR':
+          require('@formatjs/intl-numberformat/locale-data/es-CR').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-CR').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-CR').default
+          break
+        case 'es-EC':
+          require('@formatjs/intl-numberformat/locale-data/es-EC').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-EC').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-EC').default
+          break
+        case 'es-PY':
+          require('@formatjs/intl-numberformat/locale-data/es-PY').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-PY').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-PY').default
+          break
+        case 'es-UY':
+          require('@formatjs/intl-numberformat/locale-data/es-UY').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-UY').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-UY').default
+          break
+        case 'es-VE':
+          require('@formatjs/intl-numberformat/locale-data/es-VE').default
+          require('@formatjs/intl-datetimeformat/locale-data/es-VE').default
+          require('@formatjs/intl-relativetimeformat/locale-data/es-VE').default
           break
         default:
           require('@formatjs/intl-numberformat/locale-data/es').default

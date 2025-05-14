@@ -25,6 +25,7 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { logger } from 'utilities/src/logger/logger'
 
 const options: ImportMethodOption[] = [seedPhraseImportOption, importFromCloudBackupOption, passKeySignInOption]
 
@@ -63,7 +64,12 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
 
     if (importType === ImportType.Passkey) {
       setIsLoadingPasskey(true)
-      const credential = await authenticateWithPasskeyForSeedPhraseExport()
+      let credential: string | undefined
+      try {
+        credential = await authenticateWithPasskeyForSeedPhraseExport()
+      } catch (error) {
+        logger.warn('ImportMethodScreen', 'handleOnPress', 'Error authenticating with passkey', { error })
+      }
 
       if (!credential) {
         navigate(ModalName.PasskeysHelp)

@@ -14,8 +14,8 @@ import { useTranslation } from 'react-i18next'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
 
 function RemoveLiquidityModalInner() {
   const { closeModal } = useModalState(ModalName.RemoveLiquidity)

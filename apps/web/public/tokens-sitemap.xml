@@ -10345,4 +10345,19 @@
     <lastmod>2025-05-03T01:25:23.563Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0x7eb4db4dddb16a329c5ade17a8a0178331267e28</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/worldchain/NATIVE</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/worldchain/0x79a02482a880bce3f13e09da970dc34db4cd24d1</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

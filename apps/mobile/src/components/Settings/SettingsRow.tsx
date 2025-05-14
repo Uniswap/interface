@@ -18,10 +18,10 @@ import { Flex, Skeleton, Switch, Text, TouchableArea, useSporeColors } from 'ui/
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { SmartWalletAdvancedSettingsModalState } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
+import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 
 export const SETTINGS_ROW_HEIGHT = 60
 

@@ -128,6 +128,7 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.ActiveWalletAddress, 'address', undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.ActiveWalletType, AccountType.SignerMnemonic, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.IsCloudBackedUp, true, undefined)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.BackupTypes, [BackupType.Cloud], undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.IsPushEnabled, true, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.IsHideSmallBalancesEnabled, false, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.IsHideSpamTokensEnabled, true, undefined)
@@ -148,7 +149,7 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Language, 'English', undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Currency, 'USD', undefined)
 
-    expect(mocked).toHaveBeenCalledTimes(20)
+    expect(mocked).toHaveBeenCalledTimes(21)
   })
 
   it('sets user properties without active account', async () => {

@@ -5,7 +5,7 @@ import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
 import { PortalProvider } from '@tamagui/portal'
-import { QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientPersistProvider } from 'components/PersistQueryClient'
 import Web3Provider, { Web3ProviderUpdater } from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
@@ -32,7 +32,6 @@ import { ThemeProvider, ThemedGlobalStyle } from 'theme'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
-import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -127,7 +126,7 @@ createRoot(container).render(
     <HelmetProvider>
       <ReactRouterUrlProvider>
         <Provider store={store}>
-          <QueryClientProvider client={SharedQueryClient}>
+          <QueryClientPersistProvider>
             <Router>
               <I18nextProvider i18n={i18n}>
                 <LanguageProvider>
@@ -155,7 +154,7 @@ createRoot(container).render(
                 </LanguageProvider>
               </I18nextProvider>
             </Router>
-          </QueryClientProvider>
+          </QueryClientPersistProvider>
         </Provider>
       </ReactRouterUrlProvider>
     </HelmetProvider>

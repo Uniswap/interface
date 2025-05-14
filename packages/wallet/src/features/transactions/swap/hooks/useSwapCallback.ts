@@ -38,6 +38,7 @@ export function useSwapCallback(): SwapCallback {
         txId,
         onSuccess,
         onFailure,
+        onPending,
         currencyInAmountUSD,
         currencyOutAmountUSD,
         presetPercentage,
@@ -62,7 +63,7 @@ export function useSwapCallback(): SwapCallback {
         portfolioBalanceUsd: portfolioData?.balanceUSD,
         trace,
       })
-      appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSuccess, onFailure }))
+      appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSuccess, onFailure, onPending }))
 
       const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()
 

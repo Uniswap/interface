@@ -12,8 +12,8 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   ExactInputSwapTransactionInfo,
@@ -30,8 +30,14 @@ import {
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
 import { tryGetNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
+import { getShouldWaitBetweenTransactions } from 'wallet/src/features/transactions/swap/delegatedAccountUtils'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
-import { SwapParams, approveAndSwap, shouldSubmitViaPrivateRpc } from 'wallet/src/features/transactions/swap/swapSaga'
+import {
+  SwapParams,
+  approveAndSwap,
+  handleTransactionSpacing,
+  shouldSubmitViaPrivateRpc,
+} from 'wallet/src/features/transactions/swap/swapSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -116,7 +122,7 @@ const classicSwapParams = {
   account,
   analytics: {
     transactionOriginType: TransactionOriginType.Internal,
-  } as ReturnType<typeof getBaseTradeAnalyticsProperties>,
+  } as SwapTradeBaseProperties,
   swapTxContext: {
     routing: Routing.CLASSIC,
     approveTxRequest: mockApproveTxRequest,
@@ -130,6 +136,7 @@ const classicSwapParams = {
     unsigned: false,
   },
   onSuccess: jest.fn(),
+  onPending: jest.fn(),
   onFailure: jest.fn(),
 } satisfies SwapParams
 
@@ -138,7 +145,7 @@ const uniswapXSwapParams = {
   account,
   analytics: {
     transactionOriginType: TransactionOriginType.Internal,
-  } as ReturnType<typeof getBaseTradeAnalyticsProperties>,
+  } as SwapTradeBaseProperties,
   swapTxContext: {
     routing: Routing.DUTCH_V2,
     approveTxRequest: mockApproveTxRequest,
@@ -151,6 +158,7 @@ const uniswapXSwapParams = {
     gasFeeBreakdown: { classicGasUseEstimateUSD: '5', approvalCost: '5', wrapCost: '0' },
   },
   onSuccess: jest.fn(),
+  onPending: jest.fn(),
   onFailure: jest.fn(),
 } satisfies SwapParams
 
@@ -181,6 +189,14 @@ describe(approveAndSwap, () => {
   let dateNowSpy: jest.SpyInstance
   const sharedProviders: (EffectProviders | StaticProvider)[] = [
     [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.Off],
+    [
+      call(getShouldWaitBetweenTransactions, {
+        swapper: account.address,
+        chainId: mockSwapTxRequest.chainId,
+        privateRpcAvailable: false,
+      }),
+      false,
+    ],
     [call(getProvider, mockSwapTxRequest.chainId), mockProvider],
     [call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId), { nonce }],
   ]
@@ -236,10 +252,16 @@ describe(approveAndSwap, () => {
     // Requires manually providing return values for each effect in `.next()`.
     testSaga(approveAndSwap, classicSwapParamsWithoutApprove)
       .next()
-      .call(classicSwapParams.onSuccess)
-      .next()
       .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequests[0].chainId)
       .next(false)
+      .call(getShouldWaitBetweenTransactions, {
+        swapper: account.address,
+        chainId: expectedSendSwapParams.chainId,
+        privateRpcAvailable: false,
+      })
+      .next(false)
+      .call(classicSwapParams.onSuccess)
+      .next()
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
       .call(executeTransaction, expectedSendSwapParams)
@@ -279,14 +301,26 @@ describe(approveAndSwap, () => {
       .silentRun()
     testSaga(approveAndSwap, classicSwapParams)
       .next()
-      .call(classicSwapParams.onSuccess)
-      .next()
       .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequests[0].chainId)
       .next(false)
+      .call(getShouldWaitBetweenTransactions, {
+        swapper: account.address,
+        chainId: expectedSendSwapParams.chainId,
+        privateRpcAvailable: false,
+      })
+      .next(false)
+      .call(classicSwapParams.onSuccess)
+      .next()
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
       .call(executeTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
+      .call(handleTransactionSpacing, {
+        shouldWait: false,
+        hash: '0xMockApprovalTxHash',
+        onFailure: classicSwapParams.onFailure,
+      })
+      .next()
       .call(executeTransaction, expectedSendSwapParams)
       .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
       .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
@@ -324,10 +358,24 @@ describe(approveAndSwap, () => {
 
     testSaga(approveAndSwap, uniswapXSwapParams)
       .next()
+      .call(getShouldWaitBetweenTransactions, {
+        swapper: account.address,
+        chainId: expectedSubmitOrderParams.chainId,
+        privateRpcAvailable: false,
+      })
+      .next(false)
+      .call(uniswapXSwapParams.onPending)
+      .next()
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
       .call(executeTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
+      .call(handleTransactionSpacing, {
+        shouldWait: false,
+        hash: '0xMockApprovalTxHash',
+        onFailure: uniswapXSwapParams.onFailure,
+      })
+      .next()
       .call(submitUniswapXOrder, expectedSubmitOrderParams)
       .next()
       .isDone()
@@ -392,10 +440,24 @@ describe(approveAndSwap, () => {
 
     testSaga(approveAndSwap, uniswapXSwapEthInputParams)
       .next()
+      .call(getShouldWaitBetweenTransactions, {
+        swapper: account.address,
+        chainId: expectedSubmitOrderParams.chainId,
+        privateRpcAvailable: false,
+      })
+      .next(false)
+      .call(uniswapXSwapEthInputParams.onPending)
+      .next()
       .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next({ nonce })
       .call(executeTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
+      .call(handleTransactionSpacing, {
+        shouldWait: false,
+        hash: '0xMockApprovalTxHash',
+        onFailure: uniswapXSwapEthInputParams.onFailure,
+      })
+      .next()
       .call(executeTransaction, expectedSendWrapParams)
       .next({ transactionResponse: { hash: '0xMockWrapTxHash' }, populatedRequest: {} })
       .call(submitUniswapXOrder, expectedSubmitOrderParams)

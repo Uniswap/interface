@@ -7,9 +7,8 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
+import { SwapTradeBaseProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import {
   OnChainTransactionDetails,
   TransactionOptions,
@@ -35,7 +34,7 @@ export interface ExecuteTransactionParams {
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
   transactionOriginType: TransactionOriginType
-  analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics?: SwapTradeBaseProperties
 }
 
 // A utility for sagas to send transactions
@@ -153,7 +152,7 @@ function* updateSubmittedTransaction(
   timestampBeforeSend: number,
   populatedRequest: providers.TransactionRequest,
   provider: providers.Provider,
-  analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>,
+  analytics?: SwapTradeBaseProperties,
 ): SagaIterator<void> {
   // Get the internal (cached) block number if not older than 1000ms.
   // The block number is fetched when submitting the transaction, so it should be recent.

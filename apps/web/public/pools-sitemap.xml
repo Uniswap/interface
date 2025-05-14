@@ -11170,4 +11170,54 @@
     <lastmod>2025-05-03T01:25:23.563Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/polygon/0x57a63adebf02680c996a89413c324901dc0df801</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/unichain/0xe5028e8e8fb3488c2003c09fffc00876bc974b1a</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/unichain/0x704ad8d95c12d7fea531738faa94402725acb035</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/avalanche/0xdfea50f83fd27967741f2220110449d8663a1b4f</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/avalanche/0x704ad8d95c12d7fea531738faa94402725acb035</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/blast/0x704ad8d95c12d7fea531738faa94402725acb035</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/soneium/0x704ad8d95c12d7fea531738faa94402725acb035</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/worldchain/0x704ad8d95c12d7fea531738faa94402725acb035</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/zksync/0x704ad8d95c12d7fea531738faa94402725acb035</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/zora/0x704ad8d95c12d7fea531738faa94402725acb035</loc>
+    <lastmod>2025-05-09T19:57:11.515Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

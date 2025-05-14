@@ -9,9 +9,9 @@ import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
 import { rootWebSaga } from 'state/sagas/root'
 import { walletCapabilitiesListenerMiddleware } from 'state/walletCapabilities/reducer'
-import { walletsListenerMiddleware } from 'state/wallets/reducer'
 import { InterfaceState, interfacePersistedStateList, interfaceReducer } from 'state/webReducer'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { ALLOW_ANALYTICS_ATOM_KEY } from 'utilities/src/telemetry/analytics/constants'
@@ -80,7 +80,7 @@ export function createDefaultStore() {
         .concat(fiatOnRampAggregatorApi.middleware)
         .concat(sagaMiddleware)
         .concat(walletCapabilitiesListenerMiddleware.middleware)
-        .concat(walletsListenerMiddleware.middleware),
+        .concat(delegationListenerMiddleware.middleware),
   })
   sagaMiddleware.run(rootWebSaga)
 

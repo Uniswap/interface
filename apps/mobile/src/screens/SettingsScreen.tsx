@@ -27,7 +27,7 @@ import {
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
-import { Flex, IconProps, Text, useSporeColors } from 'ui/src'
+import { Flex, IconProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import {
   Bell,
   BookOpen,
@@ -44,6 +44,7 @@ import {
   Lock,
   MessageQuestion,
   Passkey,
+  QuestionInCircleFilled,
   Sliders,
   TouchId,
   UniswapLogo,
@@ -151,6 +152,27 @@ export function SettingsScreen(): JSX.Element {
     [navigation],
   )
 
+  const SmartWalletWrapper = useCallback(
+    ({ children }: { children: React.ReactNode }): JSX.Element => (
+      <ScreenWithHeader
+        centerElement={<Text variant="subheading1">{t('settings.setting.smartWallet.action.smartWallet')}</Text>}
+        rightElement={
+          <TouchableArea
+            alignItems="center"
+            alignSelf="center"
+            py="$spacing12"
+            // TODO: add modal + event
+          >
+            <QuestionInCircleFilled color="$neutral2" size="$icon.20" />
+          </TouchableArea>
+        }
+      >
+        {children}
+      </ScreenWithHeader>
+    ),
+    [t],
+  )
+
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const svgProps: IconProps = {
       color: colors.neutral2.get(),
@@ -225,7 +247,12 @@ export function SettingsScreen(): JSX.Element {
                   icon: <Sliders {...iconProps} />,
                   navigationProps: {
                     isTestnetEnabled: isTestnetModeEnabled,
-                    onTestnetModeToggled: () => handleTestnetModeToggle(),
+                    onTestnetModeToggled: (): void => handleTestnetModeToggle(),
+                    onPressSmartWallet: (): void => {
+                      navigation.navigate(MobileScreens.SettingsSmartWallet, {
+                        Wrapper: SmartWalletWrapper,
+                      })
+                    },
                   },
                 },
               ]
@@ -380,6 +407,7 @@ export function SettingsScreen(): JSX.Element {
     hasPasskeyBackup,
     isTestnetModeEnabled,
     isSmartWalletEnabled,
+    SmartWalletWrapper,
     handleTestnetModeToggle,
     notificationOSPermission,
     navigation,

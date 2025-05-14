@@ -41,6 +41,7 @@ export function UniswapXInfo({
         icon: <UniswapX size="$icon.24" />,
       }}
       trigger={tooltipTrigger}
+      analyticsTitle="UniswapX info"
     >
       {children}
     </WarningInfo>

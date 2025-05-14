@@ -19,9 +19,11 @@ import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/TransactionSettingsModal/TransactionSettingsModal'
-import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/SlippageUpdate/SlippageUpdate'
+import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
+import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
+import { UserReceiveAmount } from 'uniswap/src/features/transactions/swap/review/UserReceiveAmount'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isInterface } from 'utilities/src/platform'
@@ -53,6 +55,7 @@ interface TransactionDetailsProps {
   RateInfo?: JSX.Element
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
   txSimulationErrors?: TransactionFailureReason[]
+  amountUserWillReceive?: CurrencyAmount<Currency>
 }
 
 // eslint-disable-next-line complexity
@@ -84,9 +87,11 @@ export function TransactionDetails({
   estimatedBridgingTime,
   RoutingInfo,
   RateInfo,
+  amountUserWillReceive,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(showExpandedChildren)
+  const priceUXEnabled = usePriceUXEnabled()
 
   const onPressToggleShowChildren = (): void => {
     if (!showChildren) {
@@ -122,6 +127,13 @@ export function TransactionDetails({
       ) : null}
       <Flex gap="$spacing16" pb="$spacing8">
         <Flex gap="$spacing8" px="$spacing8">
+          {showChildren && priceUXEnabled ? (
+            <AnimatePresence>
+              <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
+                {children}
+              </Flex>
+            </AnimatePresence>
+          ) : null}
           {RateInfo}
           {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
           {isSwap && isBridgeTrade && <EstimatedTime visibleIfLong={true} timeMs={estimatedBridgingTime} />}
@@ -137,13 +149,16 @@ export function TransactionDetails({
           />
           {isSwap && RoutingInfo}
           {AccountDetails}
-          {showChildren ? (
+          {showChildren && !priceUXEnabled ? (
             <AnimatePresence>
               <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
                 {children}
               </Flex>
             </AnimatePresence>
           ) : null}
+          {amountUserWillReceive && outputCurrency && priceUXEnabled && (
+            <UserReceiveAmount amountUserWillReceive={amountUserWillReceive} outputCurrency={outputCurrency} />
+          )}
         </Flex>
         {setTokenWarningChecked && tokenWarningProps && (
           <SwapReviewTokenWarningCard

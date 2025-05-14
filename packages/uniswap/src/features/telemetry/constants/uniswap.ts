@@ -11,4 +11,6 @@ export enum UniswapEventName {
   LpIncentiveCollectRewardsSuccess = 'LP Incentive Collect Rewards Success',
   LpIncentiveLearnMoreCtaClicked = 'LP Incentive Learn More CTA Clicked',
   SmartWalletMismatchDetected = 'Smart Wallet Mismatch Detected',
+  TooltipOpened = 'Tooltip Opened',
+  DelegationDetected = 'Delegation Detected',
 }

@@ -1,7 +1,7 @@
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { Switch } from 'ui/src'
-import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
+import { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const oneClickSwapAtom = atom(true)
@@ -39,7 +39,7 @@ export function useOneClickSwapSetting() {
   return { enabled, toggle }
 }
 
-export const OneClickSwap: SwapSettingConfig = {
+export const OneClickSwap: TransactionSettingConfig = {
   renderTitle: (t) => t('swap.settings.oneClickSwap.title'),
   renderTooltip: (t) => t('swap.settings.oneClickSwap.tooltip'),
   Control() {

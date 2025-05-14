@@ -65,6 +65,7 @@ export function AcrossRoutingInfo(): JSX.Element {
         modalProps={commonModalProps}
         tooltipProps={commonTooltipProps}
         triggerPlacement="end"
+        analyticsTitle="Across order routing"
       >
         <Text color="$neutral2" variant="body3">
           {t('swap.details.orderRouting')}
@@ -83,6 +84,7 @@ export function AcrossRoutingInfo(): JSX.Element {
             </Text>
           </Flex>
         }
+        analyticsTitle="Across order routing (API)"
       />
     </Flex>
   )

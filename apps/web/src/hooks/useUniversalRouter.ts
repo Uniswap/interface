@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
-import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import {
   FlatFeeOptions,
@@ -30,7 +30,6 @@ import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
-import { getWalletMeta } from 'utils/walletMeta'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
 class GasEstimationError extends Error {
@@ -156,10 +155,6 @@ export function useUniversalRouterSwapCallback(
               portfolioBalanceUsd,
               trace: analyticsContext,
             }),
-            // TODO (WEB-2993): remove these after debugging missing user properties.
-            [CustomUserProperties.WALLET_ADDRESS]: account.address,
-            [CustomUserProperties.WALLET_TYPE]: account.connector.name,
-            [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
           })
           if (tx.data !== response.data) {
             sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {

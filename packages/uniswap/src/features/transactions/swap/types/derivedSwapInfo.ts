@@ -24,6 +24,7 @@ export type DerivedSwapInfo<
   currencyBalances: BaseDerivedInfo<TInput>['currencyBalances'] & {
     [CurrencyField.OUTPUT]: Maybe<CurrencyAmount<Currency>>
   }
+  outputAmountUserWillReceive: Maybe<CurrencyAmount<Currency>>
   focusOnCurrencyField: CurrencyField | null
   trade: TradeWithStatus
   wrapType: WrapType

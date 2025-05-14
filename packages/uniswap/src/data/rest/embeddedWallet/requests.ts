@@ -20,11 +20,11 @@ import {
 } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getVersionHeader, REQUEST_SOURCE } from 'uniswap/src/data/constants'
-import { isProdEnv } from 'utilities/src/environment/env'
+import { isBetaEnv, isProdEnv } from 'utilities/src/environment/env'
 import { isMobileApp } from 'utilities/src/platform'
 
 const enclaveTransport = createConnectTransport({
-  baseUrl: isProdEnv() ? uniswapUrls.evervaultProductionUrl : uniswapUrls.evervaultStagingUrl,
+  baseUrl: isProdEnv() || isBetaEnv() ? uniswapUrls.evervaultProductionUrl : uniswapUrls.evervaultStagingUrl,
   credentials: 'include',
   interceptors: [
     (next) =>

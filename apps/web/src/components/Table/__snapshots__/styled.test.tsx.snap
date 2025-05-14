@@ -2,21 +2,7 @@
 
 exports[`TokenLinkCell renders known token on a different chain 1`] = `
 <DocumentFragment>
-  .c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c0 {
+  .c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
   -webkit-text-decoration: none;
@@ -53,7 +39,7 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
           USDC
         </span>
         <div
-          class="c1"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -115,21 +101,7 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
 
 exports[`TokenLinkCell renders known token on mainnet 1`] = `
 <DocumentFragment>
-  .c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c0 {
+  .c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
   -webkit-text-decoration: none;
@@ -166,7 +138,7 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
           USDC
         </span>
         <div
-          class="c1"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -203,21 +175,7 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
 
 exports[`TokenLinkCell renders unknown token 1`] = `
 <DocumentFragment>
-  .c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c0 {
+  .c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
   -webkit-text-decoration: none;
@@ -254,7 +212,7 @@ exports[`TokenLinkCell renders unknown token 1`] = `
           UNKNOWN
         </span>
         <div
-          class="c1"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"

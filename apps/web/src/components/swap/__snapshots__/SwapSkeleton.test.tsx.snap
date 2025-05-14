@@ -2,24 +2,7 @@
 
 exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
 <DocumentFragment>
-  .c9 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.c2 {
+  .c2 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -60,7 +43,7 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
   width: 100px;
 }
 
-.c10 {
+.c9 {
   background-color: #F9F9F9;
   border-radius: 16px;
   height: 56px;
@@ -153,7 +136,7 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
           class="_alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _display-flex _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-40px _width-40px _mt-0px _mb-0px _ml-0px _mr-0px _backgroundColor-surface2 _borderTopWidth-t-space-spa94665589 _borderRightWidth-t-space-spa94665589 _borderBottomWidth-t-space-spa94665589 _borderLeftWidth-t-space-spa94665589 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface1 _borderRightColor-surface1 _borderBottomColor-surface1 _borderLeftColor-surface1 _zIndex-2 _position-absolute _left-5037 _transform-translate-51285172859"
         >
           <div
-            class="c9"
+            class="_flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _display-inline-flex _alignItems-center _justifyContent-center _width-10037 _height-10037"
           >
             <svg
               fill="none"
@@ -197,7 +180,7 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
         </div>
       </div>
       <div
-        class="c10"
+        class="c9"
         radius="16"
       />
     </div>

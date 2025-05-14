@@ -2,13 +2,28 @@ import { NFT } from 'components/AccountDrawer/MiniPortfolio/NFTs/NFTItem'
 import { DEFAULT_NFT_QUERY_AMOUNT } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
-import styled from 'lib/styled-components'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { View } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+
+const AssetsContainer = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <View
+      $platform-web={{
+        display: 'grid',
+        gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+      }}
+      m="$spacing16"
+      gap="$gap12"
+    >
+      {children}
+    </View>
+  )
+}
 
 export default function NFTs({ account }: { account: string }) {
   const accountDrawer = useAccountDrawer()
@@ -69,12 +84,3 @@ export default function NFTs({ account }: { account: string }) {
     </>
   )
 }
-
-const AssetsContainer = styled.div`
-  display: grid;
-  gap: 12px;
-
-  // use minmax to not let grid items escape the parent container
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  margin: 16px;
-`

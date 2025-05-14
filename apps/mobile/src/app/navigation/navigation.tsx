@@ -108,6 +108,7 @@ import {
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
+import { SmartWalletSettings } from 'wallet/src/features/smartWallet/SmartWalletSettings'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
@@ -147,6 +148,7 @@ function SettingsStackGroup(): JSX.Element {
         name={MobileScreens.SettingsCloudBackupProcessing}
       />
       <SettingsStack.Screen component={SettingsCloudBackupStatus} name={MobileScreens.SettingsCloudBackupStatus} />
+      <SettingsStack.Screen component={SmartWalletSettings} name={MobileScreens.SettingsSmartWallet} />
       <SettingsStack.Screen component={SettingsPrivacyScreen} name={MobileScreens.SettingsPrivacy} />
       <SettingsStack.Screen component={SettingsNotificationsScreen} name={MobileScreens.SettingsNotifications} />
       <SettingsStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>

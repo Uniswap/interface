@@ -21,6 +21,7 @@ import {
   useMedia,
   useScrollbarStyles,
   useShadowPropsMedium,
+  useSporeColors,
 } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -164,6 +165,7 @@ function AccountDropdown({ isOpen, onClose, children }: AccountDrawerProps) {
 }
 
 function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
+  const colors = useSporeColors()
   const scrollbarStyles = useScrollbarStyles()
   const accountDrawer = useAccountDrawer()
   const shadowProps = useShadowPropsMedium()
@@ -182,7 +184,7 @@ function AccountSideDrawer({ isOpen, onClose, children }: AccountDrawerProps) {
         <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
           <TouchableArea group zIndex={zIndexes.background} width={60}>
             <CloseDrawer onPress={onClose} data-testid="close-account-drawer">
-              <ChevronsRight color="$neutral2" size="$icon.24" />
+              <ChevronsRight color={colors.neutral2.val} size={24} />
             </CloseDrawer>
           </TouchableArea>
         </Trace>

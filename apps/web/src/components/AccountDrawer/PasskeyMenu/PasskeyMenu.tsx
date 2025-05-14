@@ -28,6 +28,8 @@ import {
   authenticateWithPasskey,
   listAuthenticators,
 } from 'uniswap/src/features/passkey/embeddedWallet'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -150,14 +152,16 @@ const AuthenticatorRow = ({
         )}
       </Flex>
       {(showDeleteIcon || isMobileWeb) && (
-        <TouchableArea
-          ml="auto"
-          onPress={() => {
-            handleDeletePasskey(authenticator)
-          }}
-        >
-          <Trash color="$statusCritical" size={24} />
-        </TouchableArea>
+        <Trace logPress element={ElementName.DeletePasskey}>
+          <TouchableArea
+            ml="auto"
+            onPress={() => {
+              handleDeletePasskey(authenticator)
+            }}
+          >
+            <Trash color="$statusCritical" size={24} />
+          </TouchableArea>
+        </Trace>
       )}
     </Flex>
   )
@@ -257,7 +261,7 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
   }, [actionAfterVerify, verifyPasskey])
 
   return (
-    <>
+    <Trace logImpression modal={ModalName.PasskeyManagement}>
       <Flex
         display={passkeyMenuModalState !== undefined && !isMobileWeb ? 'flex' : 'none'}
         position="absolute"
@@ -278,14 +282,16 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
         title={t('common.passkeys')}
         onClose={handleCloseDrawer}
         rightIcon={
-          <Anchor
-            target="_blank"
-            rel="noreferrer"
-            href={uniswapUrls.helpArticleUrls.passkeysInfo}
-            {...ClickableTamaguiStyle}
-          >
-            <LifeBuoy size={20} color={colors.neutral2.val} />
-          </Anchor>
+          <Trace logPress element={ElementName.GetHelp}>
+            <Anchor
+              target="_blank"
+              rel="noreferrer"
+              href={uniswapUrls.helpArticleUrls.passkeysInfo}
+              {...ClickableTamaguiStyle}
+            >
+              <LifeBuoy size={20} color={colors.neutral2.val} />
+            </Anchor>
+          </Trace>
         }
       >
         <VerifyPasskeyMenu
@@ -326,11 +332,13 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
                   />
                 ))}
                 <Flex row alignSelf="stretch">
-                  <Button py="$padding16" variant="branded" emphasis="secondary" onPress={handleAddPasskey}>
-                    <Text variant="buttonLabel2" color="$accent1">
-                      {t('common.passkeys.add')}
-                    </Text>
-                  </Button>
+                  <Trace logPress element={ElementName.AddPasskey}>
+                    <Button py="$padding16" variant="branded" emphasis="secondary" onPress={handleAddPasskey}>
+                      <Text variant="buttonLabel2" color="$accent1">
+                        {t('common.passkeys.add')}
+                      </Text>
+                    </Button>
+                  </Trace>
                 </Flex>
               </>
             ) : (
@@ -339,6 +347,6 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
           </MenuColumn>
         ) : null}
       </SlideOutMenu>
-    </>
+    </Trace>
   )
 }

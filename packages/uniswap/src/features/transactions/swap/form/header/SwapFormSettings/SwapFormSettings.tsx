@@ -1,18 +1,19 @@
-import { createContext, useCallback, useContext } from 'react'
+import { createContext, useContext } from 'react'
 import { ColorTokens, Flex, FlexProps, Popover } from 'ui/src'
 import { IconSizeTokens } from 'ui/src/theme'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import SlippageWarningModal from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/SlippageWarningModal'
 import { SwapFormSettingsButton } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/SwapFormSettingsButton'
-import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/TransactionSettingsModal/TransactionSettingsModal'
 import { ViewOnlyButton } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/ViewOnlyButton'
-import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/hooks/useSlippageSettings'
-import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
+import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/useSlippageSettings'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export function SwapFormSettings(props: SwapFormSettingsProps): JSX.Element {
@@ -24,7 +25,7 @@ export function SwapFormSettings(props: SwapFormSettingsProps): JSX.Element {
 }
 
 interface SwapFormSettingsProps {
-  settings: SwapSettingConfig[]
+  settings: TransactionSettingConfig[]
   adjustTopAlignment?: boolean
   adjustRightAlignment?: boolean
   position?: FlexProps['position']
@@ -61,12 +62,7 @@ function SwapFormSettingsInner({
     handleHideSlippageWarningModal,
   } = useSwapFormSettingsContext()
 
-  const onPressSwapSettings = useCallback((): void => {
-    handleShowTransactionSettingsModal()
-    dismissNativeKeyboard()
-  }, [handleShowTransactionSettingsModal])
-
-  const onCloseSettingsModal = useCallback((): void => {
+  const onCloseSettingsModal = useEvent((): void => {
     const shouldShowSlippageWarning =
       !slippageWarningModalSeen && customSlippageTolerance && customSlippageTolerance >= 20
 
@@ -84,13 +80,17 @@ function SwapFormSettingsInner({
     } else {
       handleHideTransactionSettingsModal()
     }
-  }, [
-    slippageWarningModalSeen,
-    customSlippageTolerance,
-    updateTransactionSettings,
-    handleHideTransactionSettingsModal,
-    handleShowSlippageWarningModal,
-  ])
+  })
+
+  const onPressSwapSettings = useEvent((): void => {
+    if (isTransactionSettingsModalVisible) {
+      onCloseSettingsModal()
+    } else {
+      handleShowTransactionSettingsModal()
+    }
+
+    dismissNativeKeyboard()
+  })
 
   const isViewOnlyWallet = account?.type === AccountType.Readonly
 

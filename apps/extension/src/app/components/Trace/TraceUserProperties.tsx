@@ -60,6 +60,9 @@ export function TraceUserProperties(): null {
     if (!activeAccount) {
       return
     }
+    if (activeAccount.backups) {
+      setUserProperty(ExtensionUserPropertyName.BackupTypes, activeAccount.backups)
+    }
     setUserProperty(ExtensionUserPropertyName.ActiveWalletAddress, activeAccount.address)
     setUserProperty(ExtensionUserPropertyName.ActiveWalletType, activeAccount.type)
     setUserProperty(ExtensionUserPropertyName.IsHideSmallBalancesEnabled, hideSmallBalances)

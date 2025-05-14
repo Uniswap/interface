@@ -48,7 +48,7 @@ export default function ExtensionPasskeyAuthPopUp() {
     if (!chrome?.runtime) {
       // `chrome.runtime` should exist when the Extension is installed
       // and the URL matches the Extension's `externally_connectable` manifest field.
-      logger.debug('ExtensionPasskeySignIn.tsx', 'useEffect', 'No `chrome.runtime` found')
+      logger.debug('ExtensionPasskeyAuthPopUp/index.tsx', 'useEffect', 'No `chrome.runtime` found')
       setSignInAttemptStatus(ReferrerVerification.Denied)
       return
     }
@@ -56,7 +56,7 @@ export default function ExtensionPasskeyAuthPopUp() {
     const requestId = searchParams.get('request_id')
 
     if (!requestId) {
-      logger.debug('ExtensionPasskeySignIn.tsx', 'useEffect', 'No `request_id` found')
+      logger.debug('ExtensionPasskeyAuthPopUp/index.tsx', 'useEffect', 'No `request_id` found')
       setSignInAttemptStatus(ReferrerVerification.Denied)
       return
     }
@@ -70,7 +70,7 @@ export default function ExtensionPasskeyAuthPopUp() {
       }
 
       logger.debug(
-        'ExtensionPasskeySignIn.tsx',
+        'ExtensionPasskeyAuthPopUp/index.tsx',
         'handleMessageRequestPasskey',
         `Message received: ${parsedMessage.type}`,
       )
@@ -80,7 +80,7 @@ export default function ExtensionPasskeyAuthPopUp() {
     }
 
     logger.debug(
-      'ExtensionPasskeySignIn.tsx',
+      'ExtensionPasskeyAuthPopUp/index.tsx',
       'useEffect',
       `Sending PasskeySignInFlowOpened message to extension ID ${extensionId}`,
     )
@@ -98,7 +98,7 @@ export default function ExtensionPasskeyAuthPopUp() {
 
   const onPressSignIn = async () => {
     if (signInAttemptStatus !== ReferrerVerification.Allowed || !passkeyRequestData) {
-      logger.debug('ExtensionPasskeySignIn.tsx', 'onPressSignIn', 'Invalid state', {
+      logger.debug('ExtensionPasskeyAuthPopUp/index.tsx', 'onPressSignIn', 'Invalid state', {
         signInAttemptStatus,
         passkeyRequestData,
       })
@@ -110,7 +110,7 @@ export default function ExtensionPasskeyAuthPopUp() {
 
       if (!credential) {
         logger.debug(
-          'ExtensionPasskeySignIn.tsx',
+          'ExtensionPasskeyAuthPopUp/index.tsx',
           'onPressSignIn',
           `Sending PasskeyCredentialError message to extension ID ${extensionId}`,
         )
@@ -125,7 +125,7 @@ export default function ExtensionPasskeyAuthPopUp() {
       }
 
       logger.debug(
-        'ExtensionPasskeySignIn.tsx',
+        'ExtensionPasskeyAuthPopUp/index.tsx',
         'onPressSignIn',
         `Sending PasskeyCredentialRetrieved message to extension ID ${extensionId}`,
       )
@@ -138,7 +138,7 @@ export default function ExtensionPasskeyAuthPopUp() {
     } catch (error) {
       logger.error(error, {
         tags: {
-          file: 'ExtensionPasskeySignIn/index.tsx',
+          file: 'ExtensionPasskeyAuthPopUp/index.tsx',
           function: 'onPressSignIn',
         },
       })
@@ -158,7 +158,12 @@ export default function ExtensionPasskeyAuthPopUp() {
         <Flex width="400px" padding="$spacing16" flexDirection="column" gap="$spacing16">
           <Flex row justifyContent="flex-end">
             <Flex row width="fit-content">
-              <Anchor target="_blank" rel="noreferrer" href={uniswapUrls.helpArticleUrls.passkeysInfo}>
+              <Anchor
+                target="_blank"
+                rel="noreferrer"
+                href={uniswapUrls.helpArticleUrls.passkeysInfo}
+                textDecorationLine="none"
+              >
                 <Button icon={<EnvelopeHeartIcon />} size="xxsmall" emphasis="secondary">
                   {t('common.getHelp.button')}
                 </Button>
@@ -174,18 +179,18 @@ export default function ExtensionPasskeyAuthPopUp() {
             <Flex alignItems="center" px="$spacing60">
               <Text variant="body3" textAlign="center">
                 {/* TODO(6376): confirm what we want this to say */}
-                {t('extensionPasskeySignInPopUp.invalidReferrer')}
+                {t('extensionPasskeyLogInPopUp.invalidReferrer')}
               </Text>
             </Flex>
           ) : (
             <>
               <Flex alignItems="center">
-                <Text variant="subheading1">{t('nav.signIn.button')}</Text>
+                <Text variant="subheading1">{t('nav.logIn.button')}</Text>
               </Flex>
 
               <Flex alignItems="center" px="$spacing60">
                 <Text variant="body3" textAlign="center">
-                  {t('extensionPasskeySignInPopUp.description')}
+                  {t('extensionPasskeyLogInPopUp.description')}
                 </Text>
               </Flex>
 
@@ -197,7 +202,7 @@ export default function ExtensionPasskeyAuthPopUp() {
                   onPress={onPressSignIn}
                   isDisabled={signInAttemptStatus !== ReferrerVerification.Allowed}
                 >
-                  {signInAttemptStatus === ReferrerVerification.Allowed ? t('nav.signIn.button') : undefined}
+                  {signInAttemptStatus === ReferrerVerification.Allowed ? t('nav.logIn.button') : undefined}
                 </Button>
               </Flex>
             </>

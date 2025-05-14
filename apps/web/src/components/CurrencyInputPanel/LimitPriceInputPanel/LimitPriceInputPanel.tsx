@@ -44,6 +44,7 @@ const ReverseIconContainer = styled.div`
 const OutputCurrencyContainer = styled(PrefetchBalancesWrapper)`
   display: flex;
   align-items: center;
+  justify-content: center;
 `
 
 const OutputCurrencyButton = styled.button`

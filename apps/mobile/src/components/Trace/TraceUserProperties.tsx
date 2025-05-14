@@ -115,11 +115,13 @@ export function TraceUserProperties(): null {
     if (!activeAccount) {
       return
     }
+    if (activeAccount.backups) {
+      setUserProperty(MobileUserPropertyName.BackupTypes, activeAccount.backups)
+    }
     setUserProperty(MobileUserPropertyName.ActiveWalletAddress, activeAccount.address)
     setUserProperty(MobileUserPropertyName.ActiveWalletType, activeAccount.type)
     setUserProperty(MobileUserPropertyName.IsCloudBackedUp, hasBackup(BackupType.Cloud, activeAccount))
     setUserProperty(MobileUserPropertyName.IsPushEnabled, Boolean(activeAccount.pushNotificationsEnabled))
-
     setUserProperty(MobileUserPropertyName.IsHideSmallBalancesEnabled, hideSmallBalances)
     setUserProperty(MobileUserPropertyName.IsHideSpamTokensEnabled, hideSpamTokens)
   }, [allowAnalytics, activeAccount, hideSmallBalances, hideSpamTokens])

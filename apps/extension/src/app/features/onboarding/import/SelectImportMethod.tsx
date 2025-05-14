@@ -41,7 +41,7 @@ export function SelectImportMethod(): JSX.Element {
           title={t('onboarding.import.selectMethod.title')}
           onBack={(): void => navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })}
         >
-          <Flex gap="$spacing16" mt="$spacing24" width="100%">
+          <Flex gap="$spacing12" mt="$spacing24" width="100%">
             {showErrorMessage && (
               <Flex mb="$spacing8">
                 <Text color="$statusCritical" variant="body3" textAlign="center" width="100%">

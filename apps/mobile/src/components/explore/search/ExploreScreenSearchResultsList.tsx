@@ -38,7 +38,7 @@ function LegacyExploreSearchResultsList({
           ListHeaderComponent={<SearchEmptySection selectedChain={chainFilter} />}
           data={[]}
           keyExtractor={(): string => 'search-empty-section-container'}
-          keyboardShouldPersistTaps="always"
+          keyboardShouldPersistTaps="always" // TODO(WALL-6724): does not actually work; behaves as default/"never"
           renderItem={null}
           scrollEventThrottle={16}
           showsHorizontalScrollIndicator={false}

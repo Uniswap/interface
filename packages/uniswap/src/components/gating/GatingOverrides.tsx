@@ -136,7 +136,7 @@ export function GatingOverrides(): JSX.Element {
 
             <Flex gap="$spacing12" mt="$spacing12">
               <DynamicConfigDropdown
-                config={DynamicConfigs.EmbeddedWallet}
+                config={DynamicConfigs.EmbeddedWalletConfig}
                 configKey={EmbeddedWalletConfigKey.BaseUrl}
                 label="Embedded Wallet Base URL"
                 options={EMBEDDED_WALLET_BASE_URL_OPTIONS}
@@ -163,9 +163,11 @@ export function GatingOverrides(): JSX.Element {
         </Accordion.Item>
       </Flex>
 
-      <GatingButton mt="$spacing12" onPress={onClearAllGatingOverrides}>
-        Clear all gating overrides
-      </GatingButton>
+      <Flex row>
+        <GatingButton mt="$spacing12" onPress={onClearAllGatingOverrides}>
+          Clear all gating overrides
+        </GatingButton>
+      </Flex>
     </>
   )
 }

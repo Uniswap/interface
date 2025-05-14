@@ -19,6 +19,7 @@ export enum MobileScreens {
   SettingsLanguage = 'SettingsLanguage',
   SettingsNotifications = 'SettingsNotifications',
   SettingsPrivacy = 'SettingsPrivacy',
+  SettingsSmartWallet = 'SettingsSmartWallet',
   SettingsWallet = 'SettingsWallet',
   SettingsWalletEdit = 'SettingsWalletEdit',
   SettingsWalletManageConnection = 'SettingsWalletManageConnection',

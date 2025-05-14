@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query'
 import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallback'
 import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
 import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
@@ -102,8 +101,6 @@ const onFetchResponse = (response: Response, chain: Chain, url: string) => {
   }
 }
 
-export const queryClient = new QueryClient()
-
 // Automatically connect if running in Cypress environment
 if ((window as any).Cypress?.eagerlyConnect) {
   connect(wagmiConfig, { connector: injected() })
@@ -118,7 +115,7 @@ if (isPlaywrightEnv() && isEagerlyConnect) {
     connect(wagmiConfig, {
       connector: mock({
         features: {},
-        accounts: ['0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'],
+        accounts: ['0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'],
       }),
     })
   }, 1)

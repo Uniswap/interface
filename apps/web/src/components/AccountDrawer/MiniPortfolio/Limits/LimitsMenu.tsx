@@ -10,22 +10,11 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
-import Column from 'components/deprecated/Column'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
-import styled from 'lib/styled-components'
 import { useCallback, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import { Button, Flex } from 'ui/src'
-
-const Container = styled(Column)`
-  height: 100%;
-  position: relative;
-`
-
-const StyledLimitsDisclaimer = styled(LimitDisclaimer)`
-  margin-bottom: 24px;
-`
 
 export function LimitsMenu({ onClose, account }: { account: string; onClose: () => void }) {
   const { t } = useTranslation()
@@ -41,13 +30,15 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
   const cancelOrders = useCancelMultipleOrdersCallback(selectedOrders)
 
   const toggleOrderSelection = (order: Activity) => {
-    const newSelectedOrders = { ...selectedOrdersByHash }
-    if (order.hash in selectedOrdersByHash) {
-      delete newSelectedOrders[order.hash]
-    } else if (order.offchainOrderDetails) {
-      newSelectedOrders[order.hash] = order.offchainOrderDetails
-    }
-    setSelectedOrdersByHash(newSelectedOrders)
+    setSelectedOrdersByHash((prevSelectedOrders) => {
+      const newSelectedOrders = { ...prevSelectedOrders }
+      if (order.hash in prevSelectedOrders) {
+        delete newSelectedOrders[order.hash]
+      } else if (order.offchainOrderDetails) {
+        newSelectedOrders[order.hash] = order.offchainOrderDetails
+      }
+      return newSelectedOrders
+    })
   }
 
   const handleConfirm = useCallback(async () => {
@@ -65,8 +56,8 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
 
   return (
     <SlideOutMenu title={<Trans i18nKey="common.limits.open" />} onClose={onClose}>
-      <StyledLimitsDisclaimer />
-      <Container data-testid="LimitsMenuContainer">
+      <LimitDisclaimer mb={24} />
+      <Flex height="100%" data-testid="LimitsMenuContainer" gap="$gap16">
         {openLimitOrders.map((order) => (
           <LimitDetailActivityRow
             key={order.hash}
@@ -88,7 +79,7 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
             </Button>
           </Flex>
         )}
-      </Container>
+      </Flex>
       <CancelOrdersDialog
         isVisible={cancelState !== CancellationState.NOT_STARTED}
         orders={selectedOrders}

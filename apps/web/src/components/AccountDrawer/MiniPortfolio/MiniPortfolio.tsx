@@ -1,6 +1,5 @@
 import { InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { PortfolioRowWrapper } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import Column from 'components/deprecated/Column'
 import { AutoRow } from 'components/deprecated/Row'
@@ -36,7 +35,7 @@ const Wrapper = styled(Column)`
     margin-bottom: 48px;
   }
 
-  ${PortfolioRowWrapper} {
+  .portfolio-row-wrapper {
     &:hover {
       background: ${({ theme }) => theme.deprecated_hoverDefault};
     }

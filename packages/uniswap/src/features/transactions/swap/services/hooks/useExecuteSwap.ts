@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import {
@@ -41,6 +41,7 @@ export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetEx
     (input: {
       onSuccess: () => void
       onFailure: (error?: Error) => void
+      onPending: () => void
       setCurrentStep: SetCurrentStepFn
       setSteps: (steps: TransactionStep[]) => void
       // TODO: remove this once we have a better way to get the swap tx context
@@ -55,6 +56,7 @@ export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetEx
         getPresetInfo,
         onSuccess: input.onSuccess,
         onFailure: input.onFailure,
+        onPending: input.onPending,
         setCurrentStep: input.setCurrentStep,
         setSteps: input.setSteps,
         swapCallback,

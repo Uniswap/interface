@@ -101,8 +101,8 @@ export default function Navbar() {
           {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
           {isTestnetModeEnabled && <TestnetModeTooltip />}
-          <Web3Status />
           {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />}
+          <Web3Status />
         </Right>
       </UnpositionedFlex>
     </Nav>

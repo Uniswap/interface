@@ -18,7 +18,6 @@ import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { PasskeyManagementModalState } from 'uniswap/src/features/passkey/PasskeyManagementModal'
-import { SmartWalletAdvancedSettingsModalState } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModalState } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -30,6 +29,7 @@ import {
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
 import { NFTItem } from 'wallet/src/features/nfts/types'
+import { SmartWalletAdvancedSettingsModalState } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 
 type NFTItemScreenParams = {
   owner?: Address
@@ -90,6 +90,7 @@ export type SettingsStackParamList = {
   [MobileScreens.SettingsLanguage]: undefined
   [MobileScreens.SettingsNotifications]: undefined
   [MobileScreens.SettingsPrivacy]: undefined
+  [MobileScreens.SettingsSmartWallet]: { Wrapper: React.FC<{ children: React.ReactNode }> }
   [MobileScreens.SettingsViewSeedPhrase]: { address: Address; walletNeedsRestore?: boolean }
   [MobileScreens.SettingsWallet]: { address: Address }
   [MobileScreens.SettingsWalletEdit]: { address: Address }

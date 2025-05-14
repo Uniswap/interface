@@ -8,7 +8,7 @@ class WalletError extends Error {
   code?: number
 }
 
-export const TEST_WALLET_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+export const TEST_WALLET_ADDRESS = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
 const allowedErc20BalanceAddresses = [USDT.address, DAI.address]
 
@@ -19,11 +19,11 @@ const anvil = anvilClient
     async getWalletAddress() {
       return TEST_WALLET_ADDRESS
     },
-    async setErc20Balance(address: Address, balance: bigint) {
+    async setErc20Balance(address: Address, balance: bigint, walletAddress: Address = TEST_WALLET_ADDRESS) {
       if (!allowedErc20BalanceAddresses.includes(address)) {
         throw new Error(`Token ${address} is not allowed. Allowed tokens: ${allowedErc20BalanceAddresses.join(', ')}`)
       }
-      await setErc20BalanceWithMultipleSlots(client, address, TEST_WALLET_ADDRESS, balance)
+      await setErc20BalanceWithMultipleSlots(client, address, walletAddress, balance)
     },
     async getErc20Balance(address: Address, owner?: Address) {
       return await client.readContract({

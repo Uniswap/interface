@@ -1,5 +1,6 @@
 ignores: [
     # Dependencies that depcheck thinks are unused but are actually used
+    'wrangler',
     '@web3-react/eip1193',
     '@web3-react/empty',
     '@swc/core',

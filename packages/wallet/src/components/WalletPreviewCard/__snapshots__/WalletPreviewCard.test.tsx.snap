@@ -4,55 +4,39 @@ exports[`renders wallet preview card 1`] = `
 [
   <View
     cancelable={true}
+    collapsable={false}
     disabled={false}
+    focusVisibleStyle={{}}
     focusable={true}
-    hitSlop={[Function]}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
     minPressDuration={0}
     onBlur={[Function]}
     onFocus={[Function]}
+    onLayout={[Function]}
     onMouseEnter={[Function]}
     onMouseLeave={[Function]}
     onPress={[Function]}
     onPressIn={[Function]}
     onPressOut={[Function]}
+    role="button"
     style={
       {
-        "backgroundColor": {
-          "dynamic": {
-            "dark": "#131313",
-            "light": "#FFFFFF",
-          },
-        },
-        "borderBottomColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
-          },
-        },
+        "backgroundColor": "#FFFFFF",
+        "borderBottomColor": "rgba(34,34,34,0.05)",
         "borderBottomLeftRadius": 20,
         "borderBottomRightRadius": 20,
         "borderBottomWidth": 1,
-        "borderLeftColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
-          },
-        },
+        "borderLeftColor": "rgba(34,34,34,0.05)",
         "borderLeftWidth": 1,
-        "borderRightColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
-          },
-        },
+        "borderRightColor": "rgba(34,34,34,0.05)",
         "borderRightWidth": 1,
         "borderStyle": "solid",
-        "borderTopColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
-          },
-        },
+        "borderTopColor": "rgba(34,34,34,0.05)",
         "borderTopLeftRadius": 20,
         "borderTopRightRadius": 20,
         "borderTopWidth": 1,
@@ -79,10 +63,18 @@ exports[`renders wallet preview card 1`] = `
     }
   >
     <View
+      onBlur={[Function]}
+      onFocus={[Function]}
       style={
         {
           "alignContent": "center",
           "alignItems": "center",
+          "color": {
+            "dynamic": {
+              "dark": "#FFFFFF",
+              "light": "#222222",
+            },
+          },
           "flex": 1,
           "flexDirection": "row",
           "justifyContent": "space-between",
@@ -90,6 +82,8 @@ exports[`renders wallet preview card 1`] = `
       }
     >
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         onLayout={[Function]}
         style={
           {
@@ -101,6 +95,8 @@ exports[`renders wallet preview card 1`] = `
         }
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "backgroundColor": {
@@ -187,6 +183,8 @@ exports[`renders wallet preview card 1`] = `
           </svg>
         </View>
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "flexDirection": "column",
@@ -196,6 +194,8 @@ exports[`renders wallet preview card 1`] = `
           }
         >
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "flexDirection": "row",
@@ -204,6 +204,8 @@ exports[`renders wallet preview card 1`] = `
             }
           >
             <View
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 {
                   "alignItems": "center",
@@ -219,6 +221,8 @@ exports[`renders wallet preview card 1`] = `
                 ellipsizeMode="tail"
                 maxFontSizeMultiplier={1.4}
                 numberOfLines={1}
+                onBlur={[Function]}
+                onFocus={[Function]}
                 style={
                   {
                     "color": {
@@ -244,6 +248,8 @@ exports[`renders wallet preview card 1`] = `
         </View>
       </View>
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "flexDirection": "row",

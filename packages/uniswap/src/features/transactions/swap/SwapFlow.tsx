@@ -5,7 +5,8 @@ import { TransactionModalProps } from 'uniswap/src/features/transactions/compone
 import {
   TransactionSettingsContext,
   useTransactionSettingsContext,
-} from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+} from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { CurrentScreen } from 'uniswap/src/features/transactions/swap/CurrentScreen'
 import {
   SwapDependenciesContext,
@@ -17,11 +18,10 @@ import {
   useSwapFormContext,
 } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapTxContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
 
 export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' | 'modalName'> {
   prefilledState?: SwapFormState
-  settings: SwapSettingConfig[]
+  settings: TransactionSettingConfig[]
   hideHeader?: boolean
   hideFooter?: boolean
   onSubmitSwap?: () => Promise<void> | void

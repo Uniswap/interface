@@ -46,5 +46,9 @@ export function useLogMissingMnemonic(): void {
         tags: { file: 'useLogMissingMnemonic.ts', function: 'logMissingMnemonic' },
       })
     })
-  }, [mnemonicId, signerMnemonicAccounts])
+    // There's a lot of content in the signerMnemonicAccounts array,
+    // so we don't want to re-run this effect on every render, just when the
+    // count of accounts changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mnemonicId, signerMnemonicAccounts.length])
 }

@@ -16,6 +16,8 @@ export function InfoTooltip({
   maxWidth,
   placement,
   open,
+  enabled = true,
+  onOpenChange,
 }: PropsWithChildren<InfoTooltipProps>): JSX.Element {
   // On xsmall screens, if tooltip placement is right or left
   // Override b/c the tooltip will overflow off the screen
@@ -30,7 +32,8 @@ export function InfoTooltip({
     <Flex row shrink alignItems="center" gap="$spacing4">
       {triggerPlacement === 'end' && children}
       <Tooltip
-        {...(open !== undefined && { open })}
+        onOpenChange={onOpenChange}
+        {...(enabled && open !== undefined && { open })}
         delay={{ close: TOOLTIP_CLOSE_MS, open: 0 }}
         placement={placement}
         restMs={TOOLTIP_REST_MS}
@@ -39,7 +42,7 @@ export function InfoTooltip({
         {text && (
           <Tooltip.Content pointerEvents="auto" maxWidth={maxWidth ?? (isWeb ? 280 : '100%')} mx="$spacing24">
             <Flex row alignItems="center" gap="$spacing8">
-              <Flex grow>{icon}</Flex>
+              {icon && <Flex grow>{icon}</Flex>}
               <Flex shrink gap="$spacing4">
                 {title && (
                   <Text alignSelf="flex-start" variant="body4">

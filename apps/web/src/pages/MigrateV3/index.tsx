@@ -52,10 +52,10 @@ import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isSameAddress } from 'utilities/src/addresses'
@@ -88,7 +88,8 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const selectChain = useSelectChain()
-  const startChainId = useAccount().chainId
+  const connectedAccount = useAccount()
+  const startChainId = connectedAccount.chainId
   const account = useAccountMeta()
   const dispatch = useDispatch()
   const { txInfo, error, refetch } = useMigrateV3TxContext()

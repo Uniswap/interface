@@ -4,10 +4,10 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import type { GetProps } from 'ui/src'
 import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { PasskeysHelpModal } from 'uniswap/src/features/passkey/PasskeysHelpModal'
-import { SmartWalletAdvancedSettingsModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/HiddenTokenInfoModal'
+import { SmartWalletAdvancedSettingsModal } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 
 // Define names of shared modals we're explicitly supporting on mobile
 type ValidModalNames = keyof Pick<

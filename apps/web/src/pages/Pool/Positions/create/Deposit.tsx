@@ -1,3 +1,4 @@
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import ConfirmCreatePositionModal from 'pages/Pool/Positions/create/ConfirmCreatePositionModal'
@@ -84,23 +85,32 @@ export const DepositStep = () => {
   }
 
   const disabled = !!inputError || !txInfo?.txRequest
+  const invalidRange =
+    derivedPriceRangeInfo.protocolVersion !== ProtocolVersion.V2 && derivedPriceRangeInfo.invalidRange
 
   const requestLoading = Boolean(
-    !dataFetchingError && !inputError && !txInfo?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1,
+    !dataFetchingError &&
+      !inputError &&
+      !txInfo?.txRequest &&
+      currencyAmounts?.TOKEN0 &&
+      currencyAmounts.TOKEN1 &&
+      !invalidRange,
   )
 
   return (
     <>
-      <Flex gap={32}>
-        <Flex gap="$spacing4">
-          <Text variant="subheading1">
-            <Trans i18nKey="common.depositTokens" />
-          </Text>
-          <Text variant="body3" color="$neutral2">
-            <Trans i18nKey="position.deposit.description" />
-          </Text>
+      {invalidRange ? null : (
+        <Flex gap={32}>
+          <Flex gap="$spacing4">
+            <Text variant="subheading1">
+              <Trans i18nKey="common.depositTokens" />
+            </Text>
+            <Text variant="body3" color="$neutral2">
+              <Trans i18nKey="position.deposit.description" />
+            </Text>
+          </Flex>
         </Flex>
-      </Flex>
+      )}
       <DepositInputForm
         autofocus={false}
         token0={token0}

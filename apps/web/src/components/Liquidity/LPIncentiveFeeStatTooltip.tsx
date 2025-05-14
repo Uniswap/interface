@@ -39,6 +39,7 @@ function LPIncentiveFeeStatTooltip({
       paddingTop="$spacing8"
       paddingBottom={5}
       px="$spacing4"
+      maxWidth={256}
     >
       <TooltipRow>
         <TooltipLabel
@@ -46,28 +47,38 @@ function LPIncentiveFeeStatTooltip({
             <SplitLogo
               inputCurrencyInfo={currency0Info}
               outputCurrencyInfo={currency1Info}
-              size={16}
+              size={12}
               chainId={chainId}
             />
           }
           label={t('pool.aprText')}
         />
-        <Text variant="body4" color="$neutral1">
+        <Text variant="body4" color="$neutral1" flexShrink={0}>
           {displayPoolApr}
         </Text>
       </TooltipRow>
       <TooltipRow>
         <TooltipLabel
-          icon={<CurrencyLogo currency={LP_INCENTIVES_REWARD_TOKEN} size={16} />}
+          icon={<CurrencyLogo currency={LP_INCENTIVES_REWARD_TOKEN} size={12} />}
           label={t('pool.rewardAPR')}
         />
-        <Text variant="body4" color="$neutral1">
+        <Text variant="body4" color="$neutral1" flexShrink={0}>
           {displayRewardApr}
         </Text>
       </TooltipRow>
-      <TooltipRow backgroundColor="$accent2" borderBottomLeftRadius="$rounded6" borderBottomRightRadius="$rounded6">
-        <TooltipLabel icon={<Magic size="$icon.16" color="$accent1" />} label={t('pool.totalAPR')} color="$accent1" />
-        <Text variant="body4" color="$accent1">
+      <TooltipRow
+        backgroundColor="$accent2"
+        borderBottomLeftRadius="$rounded6"
+        borderBottomRightRadius="$rounded6"
+        alignItems="center"
+      >
+        <TooltipLabel
+          icon={<Magic size="$icon.12" color="$accent1" />}
+          label={t('pool.totalAPR')}
+          color="$accent1"
+          alignItems="center"
+        />
+        <Text variant="body4" color="$accent1" flexShrink={0}>
           {displayTotalApr}
         </Text>
       </TooltipRow>
@@ -82,6 +93,7 @@ type TooltipRowProps = {
   backgroundColor?: string
   borderBottomLeftRadius?: string
   borderBottomRightRadius?: string
+  alignItems?: 'flex-start' | 'center'
 }
 
 const TooltipRow = ({
@@ -89,14 +101,15 @@ const TooltipRow = ({
   backgroundColor,
   borderBottomLeftRadius,
   borderBottomRightRadius,
+  alignItems = 'flex-start',
 }: TooltipRowProps) => (
   <Flex
     row
     justifyContent="space-between"
-    alignItems="center"
+    alignItems={alignItems}
     px="$spacing8"
-    height="$spacing24"
-    gap="$spacing4"
+    minHeight="$spacing24"
+    gap="$spacing8"
     backgroundColor={backgroundColor}
     borderBottomLeftRadius={borderBottomLeftRadius}
     borderBottomRightRadius={borderBottomRightRadius}
@@ -109,12 +122,15 @@ type TooltipLabelProps = {
   label: string
   icon?: React.ReactNode
   color?: string
+  alignItems?: 'flex-start' | 'center'
 }
 
-const TooltipLabel = ({ icon, label, color = '$neutral2' }: TooltipLabelProps) => (
-  <Flex row alignItems="center" gap="$spacing6">
-    {icon}
-    <Text variant="body4" color={color}>
+const TooltipLabel = ({ icon, label, color = '$neutral2', alignItems = 'flex-start' }: TooltipLabelProps) => (
+  <Flex row alignItems={alignItems} gap="$spacing6" flex={1} maxWidth="80%">
+    <Flex pt="$spacing2" flexShrink={0}>
+      {icon}
+    </Flex>
+    <Text variant="body4" color={color} flex={1} numberOfLines={0}>
       {label}
     </Text>
   </Flex>

@@ -199,8 +199,11 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
 
       if (untypedIsDisabled) {
         return {
-          pointerEvents: 'none',
+          pointerEvents: 'box-none',
+          'aria-disabled': true,
           userSelect: 'none',
+          tabIndex: -1,
+          cursor: 'default',
         }
       }
 

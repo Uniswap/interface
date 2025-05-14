@@ -7,8 +7,9 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getWrapType, isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
@@ -114,6 +115,11 @@ export function useDerivedSwapInfo({
 
   const displayableTrade = trade.trade ?? trade.indicativeTrade
 
+  const priceUXEnabled = usePriceUXEnabled()
+  const displayableTradeOutputAmount = priceUXEnabled
+    ? displayableTrade?.quoteOutputAmount
+    : displayableTrade?.outputAmount
+
   const currencyAmounts = useMemo(
     () =>
       isWrap
@@ -125,7 +131,7 @@ export function useDerivedSwapInfo({
             [CurrencyField.INPUT]:
               exactCurrencyField === CurrencyField.INPUT ? amountSpecified : displayableTrade?.inputAmount,
             [CurrencyField.OUTPUT]:
-              exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : displayableTrade?.outputAmount,
+              exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : displayableTradeOutputAmount,
           },
     [
       isWrap,
@@ -133,7 +139,7 @@ export function useDerivedSwapInfo({
       amountSpecified,
       otherAmountForWrap,
       displayableTrade?.inputAmount,
-      displayableTrade?.outputAmount,
+      displayableTradeOutputAmount,
     ],
   )
 
@@ -169,6 +175,7 @@ export function useDerivedSwapInfo({
       wrapType,
       selectingCurrencyField,
       txId,
+      outputAmountUserWillReceive: displayableTrade?.quoteOutputAmountUserWillReceive,
     }
   }, [
     chainId,
@@ -184,5 +191,6 @@ export function useDerivedSwapInfo({
     trade,
     txId,
     wrapType,
+    displayableTrade,
   ])
 }

@@ -9,7 +9,7 @@ export const getIsMismatchAccountQueryOptions =
   (ctx: { hasMismatch: (input: { address: string; chainId: number }) => Promise<boolean>; isMainnet: boolean }) =>
   (input: { address?: string; chainId?: number }): MisMatchQueryOptions => {
     return queryOptions({
-      queryKey: [ReactQueryCacheKey.WalletCapabilities, input.address, input.chainId, ctx.isMainnet],
+      queryKey: [ReactQueryCacheKey.MismatchAccount, input.address, input.chainId, ctx.isMainnet],
       queryFn: async (): Promise<MismatchResult> => {
         if (!input.address || !input.chainId) {
           return {
@@ -41,7 +41,7 @@ export interface MismatchResult {
 
 type OptionalString = string | undefined
 type OptionalNumber = number | undefined
-type QueryKey = [ReactQueryCacheKey.WalletCapabilities, OptionalString, OptionalNumber, boolean]
+type QueryKey = [ReactQueryCacheKey.MismatchAccount, OptionalString, OptionalNumber, boolean]
 
 export type MisMatchQueryOptions = UseQueryOptions<MismatchResult, Error, MismatchResult, QueryKey>
 export type MisMatchQueryResult = UseQueryResult<MismatchResult, Error>

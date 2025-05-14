@@ -570,7 +570,12 @@ function LiquidityPositionRangeChart({
               borderColor="$surface3"
             />
           )}
-          <Chart Model={LPPriceChartModel} params={chartParams} height={height ?? CHART_HEIGHT} />
+          <Chart
+            Model={LPPriceChartModel}
+            params={chartParams}
+            height={height ?? CHART_HEIGHT}
+            disableChartTouchPanning={true}
+          />
         </Flex>
       )}
       <style>{pulseKeyframe}</style>

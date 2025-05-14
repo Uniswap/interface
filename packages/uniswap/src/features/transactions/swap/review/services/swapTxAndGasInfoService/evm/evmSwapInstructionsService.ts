@@ -6,7 +6,7 @@ import {
 import { CreateSwapRequest, Permit } from 'uniswap/src/data/tradingApi/__generated__'
 import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import {
   EVMSwapRepository,
   SwapData,

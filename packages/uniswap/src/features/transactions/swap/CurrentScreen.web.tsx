@@ -5,8 +5,8 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreen'
-import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
 import { isInterface } from 'utilities/src/platform'
 
@@ -15,7 +15,7 @@ export function CurrentScreen({
   onSubmitSwap,
   tokenColor,
 }: {
-  settings: SwapSettingConfig[]
+  settings: TransactionSettingConfig[]
   onSubmitSwap?: () => Promise<void> | void
   tokenColor?: string
 }): JSX.Element {

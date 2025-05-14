@@ -1,3 +1,4 @@
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DepositState } from 'components/Liquidity/types'
@@ -39,8 +40,8 @@ import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -180,6 +181,9 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const hasError = Boolean(derivedDepositInfo.error)
   const [hasCreateErrorResponse, setHasCreateErrorResponse] = useState(false)
 
+  const invalidRange =
+    derivedPriceRangeInfo.protocolVersion !== ProtocolVersion.V2 && derivedPriceRangeInfo.invalidRange
+
   const addLiquidityApprovalParams = useMemo(() => {
     return generateAddLiquidityApprovalParams({
       account,
@@ -198,7 +202,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     params: addLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
     retry: false,
-    enabled: !!addLiquidityApprovalParams && !hasError && !hasCreateErrorResponse,
+    enabled: !!addLiquidityApprovalParams && !hasError && !hasCreateErrorResponse && !invalidRange,
   })
 
   if (approvalError) {
@@ -262,8 +266,10 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     !hasError &&
     !approvalLoading &&
     !approvalError &&
+    !invalidRange &&
     Boolean(approvalCalldata) &&
     Boolean(createCalldataQueryParams)
+
   const {
     data: createCalldata,
     error: createError,
@@ -290,9 +296,12 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       },
     })
 
-    sendAnalyticsEvent(InterfaceEventNameLocal.CreatePositionFailed, {
-      message,
-    })
+    if (createCalldataQueryParams) {
+      sendAnalyticsEvent(InterfaceEventNameLocal.CreatePositionFailed, {
+        message,
+        ...createCalldataQueryParams,
+      })
+    }
   }
 
   const dependentAmountFallback = useCreatePositionDependentAmountFallback(

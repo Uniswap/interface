@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { MixedRouteSDK, Trade as RouterSDKTrade, ZERO_PERCENT } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
 import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade, PriorityOrderTrade as IPriorityOrderTrade, UnsignedPriorityOrderInfo, V3DutchOrderTrade, UnsignedV3DutchOrderInfo } from '@uniswap/uniswapx-sdk'
@@ -21,6 +22,51 @@ import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swa
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+
+type QuoteResponseWithAggregatedOutputs = ClassicQuoteResponse | DutchQuoteResponse | DutchV3QuoteResponse | PriorityQuoteResponse
+
+/**
+ * Calculates the total output amount from a quote by summing all aggregated outputs.
+ * 
+ * @param quote - The quote response containing aggregated outputs, or undefined
+ * @param outputCurrency - The currency type for the output amount
+ * @returns CurrencyAmount representing the total output amount, or zero if no quote/outputs
+ * 
+ * @example
+ * const quote = { quote: { aggregatedOutputs: [{ amount: '100' }, { amount: '200' }] } }
+ * const amount = getQuoteOutputAmount(quote, USDC) // Returns 300 USDC
+ */
+function getQuoteOutputAmount<T extends QuoteResponseWithAggregatedOutputs>(quote: T | undefined, outputCurrency: Currency): CurrencyAmount<Currency> {
+  if (!quote) {
+    return CurrencyAmount.fromRawAmount(outputCurrency, '0')
+  }
+
+  return quote.quote.aggregatedOutputs?.reduce((acc, output) => acc.add(CurrencyAmount.fromRawAmount(outputCurrency, output.amount ?? '0')), CurrencyAmount.fromRawAmount(outputCurrency, '0')) ?? CurrencyAmount.fromRawAmount(outputCurrency, '0')
+}
+
+/**
+ * Calculates the output amount that the recipient will receive from a quote.
+ * Used to calculate the amount the recipient will receive after the swap fee is applied.
+ * 
+ * @param quote - The quote response containing aggregated outputs, or undefined
+ * @param outputCurrency - The currency type for the output amount
+ * @param recipient - The address of the recipient to find the output for
+ * @returns CurrencyAmount representing the minimum amount the recipient will receive, or zero if not found
+ * 
+ * @example
+ * // With a quote containing a recipient's output
+ * const quote = { quote: { aggregatedOutputs: [{ recipient: '0x123', minAmount: '100' }, { recipient: '0x456', minAmount: '200' }] } }
+ * const amount = getQuoteOutputAmountUserWillReceive(quote, USDC, '0x123') // Returns 100 USDC
+ * 
+ */
+function getQuoteOutputAmountUserWillReceive<T extends QuoteResponseWithAggregatedOutputs>(quote: T | undefined, outputCurrency: Currency, recipient: string | undefined): CurrencyAmount<Currency> {
+  if (!quote || !recipient) {
+    return CurrencyAmount.fromRawAmount(outputCurrency, '0')
+  }
+
+  const output = quote.quote.aggregatedOutputs?.find((out) => out.recipient === recipient)
+  return output ? CurrencyAmount.fromRawAmount(outputCurrency, output.minAmount ?? '0') : CurrencyAmount.fromRawAmount(outputCurrency, '0')
+}
 
 export type UniswapXTrade = UniswapXV2Trade | UniswapXV3Trade | PriorityOrderTrade
 export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
@@ -62,6 +108,14 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
 
   public get outputTax(): Percent {
     return ZERO_PERCENT
+  }
+
+  public get quoteOutputAmount(): CurrencyAmount<Currency> {
+    return getQuoteOutputAmount(this.quote, this.outputAmount.currency)
+  }
+
+  public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
+    return getQuoteOutputAmountUserWillReceive(this.quote, this.outputAmount.currency, this.quote.quote.orderInfo.swapper)
   }
 }
 
@@ -109,6 +163,14 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
   public get outputTax(): Percent {
     return ZERO_PERCENT
   }
+
+  public get quoteOutputAmount(): CurrencyAmount<Currency> {
+    return getQuoteOutputAmount(this.quote, this.outputAmount.currency)
+  }
+
+  public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
+    return getQuoteOutputAmountUserWillReceive(this.quote, this.outputAmount.currency, this.quote.quote.orderInfo.swapper)
+  }
 }
 
 export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, TradeType> {
@@ -154,6 +216,14 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
 
   public get outputTax(): Percent {
     return ZERO_PERCENT
+  }
+
+  public get quoteOutputAmount(): CurrencyAmount<Currency> {
+    return getQuoteOutputAmount(this.quote, this.outputAmount.currency)
+  }
+
+  public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
+    return getQuoteOutputAmountUserWillReceive(this.quote, this.outputAmount.currency, this.quote.quote.orderInfo.swapper)
   }
 }
 
@@ -215,6 +285,14 @@ export class ClassicTrade<
       this._cachedPriceImpact = quotePriceImpact ? new Percent(Math.round(quotePriceImpact * 100), 10000) : super.priceImpact
     }
     return this._cachedPriceImpact
+  }
+
+  public get quoteOutputAmount(): CurrencyAmount<Currency> {
+    return getQuoteOutputAmount(this.quote, this.outputAmount.currency)
+  }
+
+  public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
+    return getQuoteOutputAmountUserWillReceive(this.quote, this.outputAmount.currency, this.quote?.quote.swapper)
   }
 }
 
@@ -408,6 +486,14 @@ export class IndicativeTrade {
     this.executionPrice = new Price(currencyIn, currencyOut, this.quote.input.amount, this.quote.output.amount)
     this.slippageTolerance = slippageTolerance
   }
+
+  public get quoteOutputAmount(): CurrencyAmount<Currency> {
+    return this.outputAmount
+  }
+
+  public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
+    return this.outputAmount
+  }
 }
 
 export class BridgeTrade {
@@ -460,6 +546,20 @@ export class BridgeTrade {
   }
 
   minimumAmountOut(_slippageTolerance: Percent, _amountOut?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
+    return this.outputAmount
+  }
+
+  public get quoteOutputAmount(): CurrencyAmount<Currency> {
+    return this.outputAmount
+  }
+
+  public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
+    const swapFeeAmount = this.swapFee ? getCurrencyAmount({ value: this.swapFee.amount, valueType: ValueType.Raw, currency: this.outputAmount.currency }) : undefined
+
+    if (swapFeeAmount) {
+      return this.outputAmount.add(swapFeeAmount)
+    }
+
     return this.outputAmount
   }
 }

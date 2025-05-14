@@ -2,7 +2,6 @@ import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
-import { ButtonGray } from 'components/Button/DeprecatedWebButtons'
 import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
 import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -65,7 +64,7 @@ interface CurrencySelectProps {
   animateShake?: boolean
 }
 
-export const CurrencySelect = styled(ButtonGray)<CurrencySelectProps>`
+const CurrencySelect = styled.button<CurrencySelectProps>`
   align-items: center;
   background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
@@ -76,7 +75,7 @@ export const CurrencySelect = styled(ButtonGray)<CurrencySelectProps>`
   outline: none;
   user-select: none;
   border: 1px solid ${({ selected, theme }) => (selected ? theme.surface3 : theme.accent1)};
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 485;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '6px 6px 6px 8px')};
@@ -103,13 +102,17 @@ export const CurrencySelect = styled(ButtonGray)<CurrencySelectProps>`
     content: '';
   }
 
-  &:hover:before {
-    background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
-  }
+  ${({ hideInput, theme }) =>
+    hideInput &&
+    `
+      &:hover:before {
+        background-color: ${theme.deprecated_stateOverlayHover};
+      }
 
-  &:active:before {
-    background-color: ${({ theme }) => theme.deprecated_stateOverlayPressed};
-  }
+      &:active:before {
+        background-color: ${theme.deprecated_stateOverlayPressed};
+      }
+    `}
 
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 
@@ -153,7 +156,7 @@ const LabelRow = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   color: ${({ theme }) => theme.neutral2};
-  font-size: 0.75rem;
+  font-size: 12px;
   line-height: 1rem;
 `
 
@@ -183,7 +186,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 535;
 `
 
@@ -331,14 +334,20 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                   <Aligner>
                     <RowFixed>
                       <AnimatePresence>
-                        <Flex row animation="300ms" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }}>
+                        <Flex
+                          row
+                          alignItems="center"
+                          animation="300ms"
+                          exitStyle={{ opacity: 0 }}
+                          enterStyle={{ opacity: 0 }}
+                        >
                           {pair ? (
-                            <span style={{ marginRight: '0.5rem' }}>
+                            <span style={{ marginRight: '6px' }}>
                               <DoubleCurrencyLogo currencies={[pair.token0, pair.token1]} size={24} />
                             </span>
                           ) : currency ? (
                             <CurrencyLogo
-                              style={{ marginRight: '2px' }}
+                              style={{ marginRight: '6px' }}
                               currency={currency}
                               size={24}
                               loading={showCurrencyLoadingSpinner}

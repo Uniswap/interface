@@ -3,6 +3,7 @@ import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ChartBar } from 'ui/src/components/icons/ChartBar'
+import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -64,8 +65,10 @@ export function MarketPriceImpactWarning({
         modalName: ModalName.NetworkFeeInfo,
         severity: WarningSeverity.None,
         title: t('swap.priceImpact'),
+        zIndex: zIndexes.popover,
       }}
       tooltipProps={{ text: caption, placement: 'top' }}
+      analyticsTitle="Price Impact"
     >
       {children}
     </WarningInfo>

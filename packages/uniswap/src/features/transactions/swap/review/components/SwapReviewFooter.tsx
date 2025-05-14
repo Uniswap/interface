@@ -12,13 +12,11 @@ import { useSwapReviewTransactionState } from 'uniswap/src/features/transactions
 import { useSwapWarningState } from 'uniswap/src/features/transactions/swap/review/contexts/SwapReviewWarningStateContext'
 import { useSwapOnPrevious } from 'uniswap/src/features/transactions/swap/review/hooks/useSwapOnPrevious'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { isInterface } from 'utilities/src/platform'
 
 export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | null {
   const { showInterfaceReviewSteps } = useSwapReviewState()
   const { onPrev } = useSwapOnPrevious()
-  const { disabled, showUniswapXSubmittingUI, warning, onSubmit } = useSwapSubmitButton()
+  const { disabled, showPendingUI, warning, onSubmit } = useSwapSubmitButton()
   const isShortMobileDevice = useIsShortMobileDevice()
 
   if (showInterfaceReviewSteps) {
@@ -28,7 +26,7 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
   return (
     <TransactionModalFooterContainer>
       <Flex row gap="$spacing8">
-        {!isWeb && !showUniswapXSubmittingUI && (
+        {!isWeb && !showPendingUI && (
           <IconButton
             icon={<BackArrow />}
             emphasis="secondary"
@@ -36,12 +34,7 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
             onPress={onPrev}
           />
         )}
-        <SubmitSwapButton
-          disabled={disabled}
-          showUniswapXSubmittingUI={showUniswapXSubmittingUI}
-          warning={warning}
-          onSubmit={onSubmit}
-        />
+        <SubmitSwapButton disabled={disabled} showPendingUI={showPendingUI} warning={warning} onSubmit={onSubmit} />
       </Flex>
     </TransactionModalFooterContainer>
   )
@@ -49,13 +42,13 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
 
 function useSwapSubmitButton(): {
   disabled: boolean
-  showUniswapXSubmittingUI: boolean
+  showPendingUI: boolean
   warning: Warning | undefined
   onSubmit: () => Promise<void>
 } {
   const context = useSwapReviewTransactionState()
   const { tokenWarningChecked } = useSwapWarningState()
-  const { isSubmitting } = useSwapFormContext()
+  const { isSubmitting, showPendingUI } = useSwapFormContext()
   const { onSwapButtonClick } = useSwapReviewCallbacks()
   const { shouldDisplayTokenWarningCard } = getShouldDisplayTokenWarningCard({
     tokenWarningProps: context.tokenWarningProps,
@@ -86,7 +79,7 @@ function useSwapSubmitButton(): {
 
   return {
     disabled: submitButtonDisabled,
-    showUniswapXSubmittingUI: isUniswapX(context.swapTxContext) && isSubmitting && !isInterface,
+    showPendingUI,
     onSubmit: onSwapButtonClick,
     warning: context.reviewScreenWarning?.warning,
   }

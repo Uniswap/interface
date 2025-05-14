@@ -17,15 +17,15 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 
 interface HandleUniswapXSignatureStepParams extends HandleSignatureStepParams<UniswapXSignatureStep> {
   trade: UniswapXTrade
-  analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics: SwapTradeBaseProperties
 }
 export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStepParams) {
   const { analytics, step, trade } = params

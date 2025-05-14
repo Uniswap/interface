@@ -13,6 +13,7 @@ import {
 } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/modals/NetworkFeeWarning'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isInterface } from 'utilities/src/platform'
 
@@ -78,8 +79,35 @@ export function NetworkFee({
   )
 }
 
-type UniswapXFeeProps = { gasFee: string; preSavingsGasFee?: string; smaller?: boolean }
-export function UniswapXFee({ gasFee, preSavingsGasFee, smaller = false }: UniswapXFeeProps): JSX.Element {
+type UniswapXFeeProps = { gasFee: string; preSavingsGasFee?: string; smaller?: boolean; loading?: boolean }
+export function UniswapXFee({
+  gasFee,
+  preSavingsGasFee,
+  smaller = false,
+  loading = false,
+}: UniswapXFeeProps): JSX.Element {
+  const priceUxEnabled = usePriceUXEnabled()
+
+  if (priceUxEnabled) {
+    return (
+      <Flex centered row gap="$spacing4">
+        <UniswapX marginEnd="$spacing2" size={smaller ? '$icon.12' : '$icon.16'} />
+        <UniswapXText mr="$spacing6" variant={smaller ? 'body4' : 'body3'}>
+          {gasFee}
+        </UniswapXText>
+        {preSavingsGasFee && (
+          <Text
+            color={loading ? '$neutral3' : '$neutral2'}
+            textDecorationLine="line-through"
+            variant={smaller ? 'body4' : 'body3'}
+          >
+            {preSavingsGasFee}
+          </Text>
+        )}
+      </Flex>
+    )
+  }
+
   return (
     <Flex centered row>
       <UniswapX marginEnd="$spacing2" size={smaller ? '$icon.12' : '$icon.16'} />

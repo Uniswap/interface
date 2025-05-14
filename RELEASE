@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmezmXSutzznthvc6pSCrb7JgxjGqXFNCWCZLjADjg6Tf8`
-- CIDv1: `bafybeihxp3cmskdb4nr76bocjhdgq32ykbfquxwakbdx33iehf44jxwuim`
+- CIDv0: `QmainvWX1paa5SAQXowSshKypn1tC5d59gLN8w2coWzJwx`
+- CIDv1: `bafybeifx7bho67bfj5b2bn7nw452bovpbv4iia5ndwi4kwvra5fcswhjr4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,95 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihxp3cmskdb4nr76bocjhdgq32ykbfquxwakbdx33iehf44jxwuim.ipfs.dweb.link/
-- [ipfs://QmezmXSutzznthvc6pSCrb7JgxjGqXFNCWCZLjADjg6Tf8/](ipfs://QmezmXSutzznthvc6pSCrb7JgxjGqXFNCWCZLjADjg6Tf8/)
+- https://bafybeifx7bho67bfj5b2bn7nw452bovpbv4iia5ndwi4kwvra5fcswhjr4.ipfs.dweb.link/
+- [ipfs://QmainvWX1paa5SAQXowSshKypn1tC5d59gLN8w2coWzJwx/](ipfs://QmainvWX1paa5SAQXowSshKypn1tC5d59gLN8w2coWzJwx/)
 
-### 5.83.7 (2025-05-13)
+## 5.84.0 (2025-05-14)
+
+
+### Features
+
+* **web:** add an e2e test for the sign up flow (#19146) c05749e
+* **web:** add connector_id to lp txs (#19207) 50b933e
+* **web:** add connector_id to send events (#19208) 7e4a30a
+* **web:** add connector_id to swap analytics (#19206) 9d734f0
+* **web:** add connector_id to wallet disconnect event (#19205) 6631d02
+* **web:** add passkey mgmt analytics (#19172) 9d12f00
+* **web:** detect delegations and log them (#19368) d22a9de
+* **web:** display min/max/market for custom range position (#19485) cc4437b
+* **web:** PUX add expandable swap details with tooltips (#18669) 21c0110
+* **web:** PUX adding token rate to currency input (#18736) d7abe9f
+* **web:** PUX adding user quote amount to trades (#18511) 10d6f6f
+* **web:** PUX FOT (#18804) ae89a01
+* **web:** PUX handle bridging (#19089) b7375af
+* **web:** PUX max slippage shield animation (#18972) 4d635a4
+* **web:** PUX max slippage tooltip (#18708) 23d955b
+* **web:** PUX network cost tooltip (#18685) dff4cc1
+* **web:** PUX price and route tooltips (#18681) f77ad8a
+* **web:** PUX price diff (#18738) 859bca1
+* **web:** PUX price impact warning (#18740) 9809ff3
+* **web:** PUX you receive panel (#18664) 326c5b1
+* **web:** retry with standard swap if batched fails (#19295) dbffc2b
+* **web:** swap tracking (#19328) 4185c10
+* **web:** track clicks of download app ctas (#19232) fbc651c
+* **web:** track user prop delegate status (#19286) f2f3e52
+* **web:** Update existing user cta text and remove experiment (#19349) f13e553
 
 
 ### Bug Fixes
 
-* **web:** only support batch swaps on supported status (#19566) da9a5ec
+* **web:** [lp] fix native buffer experiment (#18777) 7a03b16
+* **web:** add create/increase params to analytic events (#19388) b2a4177
+* **web:** add error handling for rewards calcs (#18988) 1923ffe
+* **web:** add google fonts url to CSP style-src (#19248) f64259e
+* **web:** add migration 24 for wallet capabilities (#19464) 3ffc371
+* **web:** add providers to web storybook to fix AnimatedNumber story (#18632) 12b4874
+* **web:** allow press on disabled web3-status-connected (#19535) b7c4ede
+* **web:** avoid fetching calldata for invalid range (#19384) 552a144
+* **web:** clicking swap setting icon should close settings modal if open (#19472) c248622
+* **web:** correct delegation logging (#19415) ed73ce2
+* **web:** correct some analytics (#19391) 26016ce
+* **web:** dedupe and cache wallet capabilities calls (#19739) (#19750) ad67756
+* **web:** delete DeprecatedWebButtons (#19213) 799b1c1
+* **web:** downgrade two errors to warnings (#19344) 726ba31
+* **web:** fix approval call for create + increase (#19223) f73b4dd
+* **web:** fix key open search modal (#19332) eb41c21
+* **web:** fix mweb chart panning (#19373) f3ab207
+* **web:** handle isTokenOptionArray check for bridging section (#19363) de14b83
+* **web:** icon bugs + lp incentive improvements (#19606) 4c7c09e
+* **web:** limits mobile bug (#19271) 9d49bf8
+* **web:** logging for mismatch and isDelegatedEOA (#19346) 53b3a5a
+* **web:** migrate BreadcrumbNav to tamagui (#19212) 734de02
+* **web:** migrate NFTTab to tamagui (#19216) d940820
+* **web:** migrate OpenLimitOrdersButton to tamagui (#19217) a74ae36
+* **web:** migrate TokensTab to tamagui (#19214) 622e711
+* **web:** migrate UniExtensionPoolsMenu to tamagui (#19215) 6250c24
+* **web:** missing permit tx (#19326) 915e983
+* **web:** only support batch swaps on supported status (#19580) ce53969
+* **web:** persist query client and remove extra provider (#19219) f2236dc
+* **web:** preload WalletConnect provider to avoid waterfall requests (#19195) ea3bc3f
+* **web:** price ux revert remove inline warning (#19439) a5574a3
+* **web:** PUX auto slippage (#18805) 598d9d3
+* **web:** pux design fixes (#19430) a1c6311
+* **web:** remove disconnect logic in useConnect hook (#19190) 7e2b0bc
+* **web:** tamagui LimitDetailActivityRow & PortfolioTabRow (#19220) 084eced
+* **web:** tamagui LimitsMenu / LimitDisclaimer (#19218) 28fbc8e
+* **web:** temp remove disabled prop from button (#19675) 17f177e
+* **web:** update icon props to be compatible w react-feather (#19209) 2dd772b
+* **web:** update url for EW sign in test (#19470) 2d1a87e
+* **web:** usd amount hover state currency panel (#18841) 38a3d0c
+* **web:** Use "Log In" in auth pop up (#19385) 9ea148b
+* **web:** Use sign up for New User button (#19478) a0b6690
+
+
+### Continuous Integration
+
+* **web:** update sitemaps c080e0b
+
+
+### Tests
+
+* **web:** handle v2, v3, v4 pool not found graphql (#19348) 4898d1c
+* **web:** use different test account (#19431) 014d910
 
 

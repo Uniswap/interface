@@ -31,6 +31,7 @@ export interface ExecuteSwapService {
 export type GetExecuteSwapService = (ctx: {
   onSuccess: () => void
   onFailure: () => void
+  onPending: () => void
   setCurrentStep: SwapCallbackParams['setCurrentStep']
   setSteps: SwapCallbackParams['setSteps']
   getSwapTxContext: () => SwapTxAndGasInfo
@@ -45,6 +46,7 @@ export function createExecuteSwapService(ctx: {
   getPresetInfo: () => { presetPercentage: PresetPercentage | undefined; preselectAsset: boolean | undefined }
   onSuccess: () => void
   onFailure: (error?: Error) => void
+  onPending: () => void
   setCurrentStep: SwapCallbackParams['setCurrentStep']
   setSteps: SwapCallbackParams['setSteps']
   swapCallback: SwapCallback
@@ -77,6 +79,7 @@ export function createExecuteSwapService(ctx: {
       preselectAsset,
       onSuccess: ctx.onSuccess,
       onFailure: ctx.onFailure,
+      onPending: ctx.onPending,
       setCurrentStep: ctx.setCurrentStep,
       setSteps: ctx.setSteps,
     })

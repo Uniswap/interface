@@ -1,7 +1,6 @@
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { Scrim } from 'components/AccountDrawer/Scrim'
-import { CurrencySelect } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { MobileBottomBar } from 'components/NavBar/MobileBottomBar'
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
@@ -60,11 +59,6 @@ const SwapModalWrapper = styled(Column)<{ open?: boolean }>`
   max-height: ${({ open }) => (open ? '100vh' : '0')};
   transition: ${({ theme }) => `max-height ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
   padding-bottom: ${({ open }) => (open ? '24px' : '0')};
-
-  // Need to override the default visibility to properly hide
-  ${CurrencySelect} {
-    visibility: ${({ open }) => (open ? 'visible' : 'hidden')};
-  }
 
   @media (max-width: ${breakpoints.xl}px) {
     position: fixed;

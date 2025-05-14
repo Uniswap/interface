@@ -105,6 +105,7 @@ export const createMockDerivedSwapInfo = (
     createMockCurrencyAmount(inputCurrency, inputAmount),
     createMockCurrencyAmount(outputCurrency, outputAmount),
   ),
+  outputAmountUserWillReceive: createMockCurrencyAmount(outputCurrency, outputAmount),
   wrapType: WrapType.NotApplicable,
   exactAmountToken: CurrencyField.INPUT,
   exactCurrencyField: CurrencyField.INPUT,

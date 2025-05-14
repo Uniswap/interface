@@ -10,8 +10,10 @@ import {
   signInWithPasskey as signInWithPasskeyAPI,
   signMessagesWithPasskey,
 } from 'uniswap/src/features/passkey/embeddedWallet'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
+import { logger } from 'utilities/src/logger/logger'
 import { isIFramed } from 'utils/isIFramed'
 
 interface SignInWithPasskeyOptions {
@@ -60,7 +62,7 @@ export function useSignInWithPasskey({
       }
 
       if (unitag) {
-        const unitagError = await claimUnitag(
+        const unitagResult = await claimUnitag(
           {
             address: walletAddress,
             username: unitag,
@@ -76,10 +78,9 @@ export function useSignInWithPasskey({
           },
         )
 
-        if (unitagError) {
+        if (unitagResult.claimError) {
           // TODO(WEB-7294): retry unitag flow
         }
-        // TODO(WEB-7566): add analytics event for unitag claim success and failure
       }
 
       return walletAddress
@@ -90,7 +91,7 @@ export function useSignInWithPasskey({
         setIsConnected(true)
         connection.connect({ connector })
         if (createNewWallet) {
-          // TODO(WEB-6180): add analytics event for wallet created
+          sendAnalyticsEvent(InterfaceEventNameLocal.EmbeddedWalletCreated)
         } else {
           sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
             result: WalletConnectionResult.SUCCEEDED,
@@ -103,13 +104,11 @@ export function useSignInWithPasskey({
       },
       onError: (error: Error) => {
         if (createNewWallet) {
-          // TODO(WEB-6180): add analytics event for wallet created
+          logger.error(error, { tags: { file: 'useSignInWithPasskey', function: 'onError' } })
         } else {
-          sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
-            result: WalletConnectionResult.FAILED,
-            wallet_name: connector.name,
-            wallet_type: walletTypeToAmplitudeWalletType(connector.type),
-            error: error.message,
+          logger.error(error, {
+            tags: { file: 'useSignInWithPasskey', function: 'onError' },
+            extra: { wallet_name: connector.name, wallet_type: walletTypeToAmplitudeWalletType(connector.type) },
           })
         }
         onError?.(error)

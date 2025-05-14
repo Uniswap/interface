@@ -208,7 +208,7 @@ export default function TokenDetails() {
         </LeftPanel>
         <RightPanel>
           {/* Uses display to preserve component state */}
-          <Flex display={showRightPanel ? 'flex' : 'none'}>
+          <Flex display={showRightPanel ? 'flex' : 'none'} gap="$gap24">
             <TDPSwapComponent />
             <BalanceSummary />
           </Flex>

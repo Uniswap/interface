@@ -1,20 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
-.c9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
 .c7 {
   -webkit-filter: none;
   filter: none;
@@ -161,7 +147,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c10 {
+.c9 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -261,7 +247,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569"
             >
               <div
-                class="c9"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -327,7 +313,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <div
-                    class="c10 css-n8z49y"
+                    class="c9 css-n8z49y"
                   >
                     DAI
                   </div>
@@ -368,7 +354,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:r2a:"
+        id="title-:r2e:"
         role="heading"
       />
     </span>
@@ -380,20 +366,6 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
-.c8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
 .c6 {
   -webkit-filter: none;
   filter: none;
@@ -528,7 +500,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c9 {
+.c8 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -623,7 +595,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569"
             >
               <div
-                class="c8"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -689,7 +661,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <div
-                    class="c9 css-n8z49y"
+                    class="c8 css-n8z49y"
                   >
                     DAI
                   </div>
@@ -730,7 +702,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:r3h:"
+        id="title-:r3n:"
         role="heading"
       />
     </span>
@@ -742,20 +714,6 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform should render placeholder values 1`] = `
-.c9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
 .c7 {
   -webkit-filter: none;
   filter: none;
@@ -903,7 +861,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c10 {
+.c9 {
   color: #131313;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -1001,7 +959,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
               class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-t-space-gap1569"
             >
               <div
-                class="c9"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
               >
                 <div
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -1067,7 +1025,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <div
-                    class="c10 css-n8z49y"
+                    class="c9 css-n8z49y"
                   >
                     DAI
                   </div>
@@ -1108,7 +1066,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:r13:"
+        id="title-:r15:"
         role="heading"
       />
     </span>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardKey } from 'src/app/features/onboarding/KeyboardKey'
 import { MainContentWrapper } from 'src/app/features/onboarding/intro/MainContentWrapper'
+import { useFinishExtensionOnboarding } from 'src/app/features/onboarding/useFinishExtensionOnboarding'
 import { useOpeningKeyboardShortCut } from 'src/app/hooks/useOpeningKeyboardShortCut'
 import { getCurrentTabAndWindowId } from 'src/app/navigation/utils'
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
@@ -15,7 +16,7 @@ import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
-import { useFinishOnboarding, useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export function Complete({
   flow,
@@ -43,7 +44,11 @@ export function Complete({
   }, [existingClaim, address, tryToClaimUnitag, unitagClaimAttempted, addUnitagClaim])
 
   // Activates onboarding accounts on component mount
-  useFinishOnboarding(terminateStoreSynchronization, flow, tryToClaimUnitag && !unitagClaimAttempted)
+  useFinishExtensionOnboarding({
+    callback: terminateStoreSynchronization,
+    extensionOnboardingFlow: flow,
+    skip: tryToClaimUnitag && !unitagClaimAttempted,
+  })
 
   useEffect(() => {
     const onSidebarOpenedListener = onboardingMessageChannel.addMessageListener(

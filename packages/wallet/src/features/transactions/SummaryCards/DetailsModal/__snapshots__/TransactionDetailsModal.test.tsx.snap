@@ -11,19 +11,33 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
   >
     <View
       cancelable={true}
+      collapsable={false}
       disabled={false}
+      focusVisibleStyle={{}}
       focusable={true}
-      hitSlop={[Function]}
+      forwardedRef={[Function]}
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
       minPressDuration={0}
       onBlur={[Function]}
       onFocus={[Function]}
+      onLayout={[Function]}
       onMouseEnter={[Function]}
       onMouseLeave={[Function]}
       onPress={[Function]}
       onPressIn={[Function]}
       onPressOut={[Function]}
+      role="button"
       style={
         {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
           "flexDirection": "column",
           "opacity": 1,
           "transform": [
@@ -35,9 +49,17 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
       }
     >
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
+            "color": {
+              "dynamic": {
+                "dark": "#FFFFFF",
+                "light": "#222222",
+              },
+            },
             "flexDirection": "column",
             "gap": 8,
             "justifyContent": "center",
@@ -51,6 +73,8 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
         <Text
           allowFontScaling={false}
           maxFontSizeMultiplier={1.2}
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "color": {
@@ -68,6 +92,8 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
           suppressHighlighting={true}
         />
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "alignItems": "center",
@@ -80,6 +106,8 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
           <Text
             allowFontScaling={false}
             maxFontSizeMultiplier={1.4}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {
@@ -273,19 +301,33 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
     </View>
     <View
       cancelable={true}
+      collapsable={false}
       disabled={false}
+      focusVisibleStyle={{}}
       focusable={true}
-      hitSlop={[Function]}
+      forwardedRef={[Function]}
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
       minPressDuration={0}
       onBlur={[Function]}
       onFocus={[Function]}
+      onLayout={[Function]}
       onMouseEnter={[Function]}
       onMouseLeave={[Function]}
       onPress={[Function]}
       onPressIn={[Function]}
       onPressOut={[Function]}
+      role="button"
       style={
         {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
           "flexDirection": "column",
           "flexGrow": 0,
           "marginLeft": 12,
@@ -571,20 +613,34 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       >
         <View
           cancelable={true}
+          collapsable={false}
           disabled={false}
+          focusVisibleStyle={{}}
           focusable={true}
-          hitSlop={[Function]}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
           minPressDuration={0}
           onBlur={[Function]}
           onFocus={[Function]}
+          onLayout={[Function]}
           onMouseEnter={[Function]}
           onMouseLeave={[Function]}
           onPress={[Function]}
           onPressIn={[Function]}
           onPressOut={[Function]}
+          role="button"
           style={
             {
               "alignItems": "center",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
               "flexDirection": "row",
               "gap": 6,
               "justifyContent": "center",
@@ -600,12 +656,14 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           <Text
             allowFontScaling={false}
             maxFontSizeMultiplier={1.4}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {
                   "dynamic": {
                     "dark": "#FFFFFF",
-                    "light": "#131313",
+                    "light": "#222222",
                   },
                 },
                 "fontFamily": "Basel Grotesk",
@@ -831,20 +889,34 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       >
         <View
           cancelable={true}
+          collapsable={false}
           disabled={false}
+          focusVisibleStyle={{}}
           focusable={true}
-          hitSlop={[Function]}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
           minPressDuration={0}
           onBlur={[Function]}
           onFocus={[Function]}
+          onLayout={[Function]}
           onMouseEnter={[Function]}
           onMouseLeave={[Function]}
           onPress={[Function]}
           onPressIn={[Function]}
           onPressOut={[Function]}
+          role="button"
           style={
             {
               "alignItems": "center",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
               "flexDirection": "row",
               "gap": 6,
               "justifyContent": "center",
@@ -860,12 +932,14 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           <Text
             allowFontScaling={false}
             maxFontSizeMultiplier={1.4}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {
                   "dynamic": {
                     "dark": "#FFFFFF",
-                    "light": "#131313",
+                    "light": "#222222",
                   },
                 },
                 "fontFamily": "Basel Grotesk",

@@ -21,10 +21,7 @@ import {
 } from 'src/app/features/onboarding/OnboardingSteps'
 import { OnboardingWrapper } from 'src/app/features/onboarding/OnboardingWrapper'
 import { PasswordImport } from 'src/app/features/onboarding/PasswordImport'
-import { NameWallet } from 'src/app/features/onboarding/create/NameWallet'
 import { PasswordCreate } from 'src/app/features/onboarding/create/PasswordCreate'
-import { TestMnemonic } from 'src/app/features/onboarding/create/TestMnemonic'
-import { ViewMnemonic } from 'src/app/features/onboarding/create/ViewMnemonic'
 import { ImportMnemonic } from 'src/app/features/onboarding/import/ImportMnemonic'
 import { InitiatePasskeyAuth } from 'src/app/features/onboarding/import/InitiatePasskeyAuth'
 import { PasskeyImport } from 'src/app/features/onboarding/import/PasskeyImport'
@@ -69,25 +66,8 @@ const allRoutes = [
       <OnboardingStepsProvider
         key={OnboardingRoutes.Create}
         steps={{
-          [CreateOnboardingSteps.Password]: <PasswordCreate />,
-          [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
-          [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
-          [CreateOnboardingSteps.Naming]: <NameWallet />,
-          [CreateOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.New} />,
-        }}
-      />
-    ),
-  },
-  {
-    path: OnboardingRoutes.Claim,
-    element: (
-      <OnboardingStepsProvider
-        key={OnboardingRoutes.Claim}
-        steps={{
           [CreateOnboardingSteps.ClaimUnitag]: <ClaimUnitagScreen />,
           [CreateOnboardingSteps.Password]: <PasswordCreate />,
-          [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
-          [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
           [CreateOnboardingSteps.Complete]: <Complete tryToClaimUnitag flow={ExtensionOnboardingFlow.New} />,
         }}
       />
@@ -113,7 +93,6 @@ const allRoutes = [
         steps={{
           [ImportPasskeySteps.InitiatePasskeyAuth]: <InitiatePasskeyAuth />,
           [ImportPasskeySteps.PasskeyImport]: <PasskeyImport />,
-          // TODO(WALL-6383): modify this flow to ask user to verify their seed phrase.
           [ImportOnboardingSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Passkey} />,
           [ImportOnboardingSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Passkey} />,
           [ImportOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.Passkey} />,

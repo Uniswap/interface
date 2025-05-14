@@ -8,7 +8,7 @@ import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/featur
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import {
   ApprovalTxInfo,
