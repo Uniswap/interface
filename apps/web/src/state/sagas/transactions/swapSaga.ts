@@ -6,6 +6,7 @@ import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBal
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
+import { useSetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { handleAtomicSendCalls } from 'state/sagas/transactions/5792'
@@ -118,9 +119,10 @@ interface HandleSwapBatchedStepParams extends Omit<HandleOnChainStepParams, 'ste
   step: SwapTransactionStepBatched
   trade: ClassicTrade | BridgeTrade
   analytics: SwapTradeBaseProperties
+  disableOneClickSwap: () => void
 }
 function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) {
-  const { trade, step } = params
+  const { trade, step, disableOneClickSwap } = params
 
   const info = getSwapTransactionInfo(trade)
 
@@ -130,6 +132,7 @@ function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) 
     step,
     ignoreInterrupt: true, // We avoid interruption during the swap step, since it is too late to give user a new trade once the swap is submitted.
     shouldWaitForConfirmation: false,
+    disableOneClickSwap,
   })
   handleSwapTransactionAnalytics({ ...params, batchId })
 
@@ -190,6 +193,8 @@ type SwapParams = {
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
   getOnPressRetry: (error: Error | undefined) => (() => void) | undefined
+  // TODO(WEB-7763): Upgrade jotai to v2 to avoid need for prop drilling `disableOneClickSwap`
+  disableOneClickSwap: () => void
   onSuccess: () => void
   onFailure: (error?: Error, onPressRetry?: () => void) => void
   v4Enabled: boolean
@@ -236,6 +241,7 @@ function* classicSwap(
 ) {
   const {
     account,
+    disableOneClickSwap,
     setCurrentStep,
     steps,
     swapTxContext: { trade },
@@ -268,7 +274,14 @@ function* classicSwap(
           break
         }
         case TransactionStepType.SwapTransactionBatched: {
-          yield* call(handleSwapTransactionBatchedStep, { account, step, setCurrentStep, trade, analytics })
+          yield* call(handleSwapTransactionBatchedStep, {
+            account,
+            step,
+            setCurrentStep,
+            trade,
+            analytics,
+            disableOneClickSwap,
+          })
           break
         }
         default: {
@@ -374,6 +387,7 @@ export function useSwapCallback(): SwapCallback {
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
+  const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
   const getOnPressRetry = useGetOnPressRetry()
 
   return useCallback(
@@ -416,6 +430,7 @@ export function useSwapCallback(): SwapCallback {
         account,
         analytics,
         getOnPressRetry,
+        disableOneClickSwap,
         onSuccess,
         onFailure,
         setCurrentStep,
@@ -452,6 +467,7 @@ export function useSwapCallback(): SwapCallback {
       appDispatch,
       swapStartTimestamp,
       getOnPressRetry,
+      disableOneClickSwap,
     ],
   )
 }

@@ -15,6 +15,8 @@ export function didUserReject(error: any): boolean {
   const reason = getReason(error)
   if (
     error?.code === 4001 ||
+    // eip-5792 upgrade rejected error https://eips.ethereum.org/EIPS/eip-5792#error-codes
+    error?.code === 5750 ||
     // ethers v5.7.0 wrapped error
     error?.code === 'ACTION_REJECTED' ||
     // For Rainbow :
