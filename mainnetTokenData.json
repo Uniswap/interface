@@ -99,6 +99,14 @@
       "symbol": "FOMOG",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0x4AFCfbf183c743362cEE976e5e94a3E5FB729935/logo.png"
+    },
+    {
+      "chainId": 841,
+      "address": "0x8B7FCf9934E58674D9bC6FC9aD8E684380DA1FD4",
+      "name": "MST",
+      "symbol": "MST",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0x8B7FCf9934E58674D9bC6FC9aD8E684380DA1FD4/logo.png"
     }
   ],
   "version": {
