@@ -66,7 +66,7 @@ export function* handleAtomicSendCalls(
     if (error.code === 5750 || isMetaMaskNonTypicalRejection(error)) {
       const updatedCapabilities = yield* call(handleGetCapabilities)
       if (updatedCapabilities) {
-        // A wallet may update its capabilities after a transaction is sent, so we refresh state here so that subsequent transactions use the updated capabilities
+        // A wallet may update its capabilities after a delegation is rejected, so we refresh state here such subsequent transactions use the updated capabilities
         yield* put(setCapabilitiesByChain(updatedCapabilities))
       }
       // If the user tries again,

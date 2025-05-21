@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmYgGWW41t5rZ973ouoVCPSVJ7xSk1ouQS8hXJaVrwBydQ`
-- CIDv1: `bafybeieztnrdyd2anpehiktteokw23mwgbjmnz42u4cpzosxjxignq2bf4`
+- CIDv0: `QmXS4vd18Mi4tKCVNuk1qnB1wyNPN7XRR1iSygxNvnRKiD`
+- CIDv1: `bafybeiehdr3z22tnf5jdnjnsj5kfb7ywjjefa2oyttljiuwjtu6mhocxjy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,73 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeieztnrdyd2anpehiktteokw23mwgbjmnz42u4cpzosxjxignq2bf4.ipfs.dweb.link/
-- [ipfs://QmYgGWW41t5rZ973ouoVCPSVJ7xSk1ouQS8hXJaVrwBydQ/](ipfs://QmYgGWW41t5rZ973ouoVCPSVJ7xSk1ouQS8hXJaVrwBydQ/)
+- https://bafybeiehdr3z22tnf5jdnjnsj5kfb7ywjjefa2oyttljiuwjtu6mhocxjy.ipfs.dweb.link/
+- [ipfs://QmXS4vd18Mi4tKCVNuk1qnB1wyNPN7XRR1iSygxNvnRKiD/](ipfs://QmXS4vd18Mi4tKCVNuk1qnB1wyNPN7XRR1iSygxNvnRKiD/)
 
-## 5.85.0 (2025-05-15)
+## 5.86.0 (2025-05-21)
 
 
 ### Features
 
-* **web:** gracefully handle upgrade prompt rejection [prod] (#19757) b76e682
+* **web:** [lp] prefill hook and fee tier (#19820) 09bd7d7
+* **web:** defer limit/buy/send form renders (#19445) e464d28
+* **web:** defer render of mini portfolio (#19442) 9ce97c7
+* **web:** defer top level Updaters (#19444) 4e57ea2
+* **web:** gracefully handle upgrade prompt rejection (#19753) cf8beed
+* **web:** lazy-import redux store in async code (#19441) 1ba4faa
+* **web:** re sign in to EW when session ends (#19670) 8d003c0
+* **web:** show backup EW card (#19317) 89f2297
+* **web:** skip quotes for hidden positions, stabilize refs (#19755) 165b56d
+* **web:** update animation direction for get started modal (#19717) 932f082
+* **web:** virtualize positions list (#19754) 2460066
+* **web:** vite support (#19713) 1cbf6ea
+
+
+### Bug Fixes
+
+* **web:** [lp] improve liquiditySaga error logging (#19546) f7857cf
+* **web:** add custom range icon color (#19564) 3b8b585
+* **web:** Add formAction None to CSP (#19333) d9ef80b
+* **web:** add retries to the getstarted e2e test (#19513) 6fa8bd6
+* **web:** add useInitialHeight prop to fix enter animation on liquidity modals (#19530) a3f0063
+* **web:** Adds color extraction to token detail page charts (#19300) b2b0289
+* **web:** allow press on disabled web3-status-connected (#19534) 87d8aac
+* **web:** dedupe and cache wallet capabilities calls (#19739) 729472d
+* **web:** delete unused GQL queries (#19506) 6eca1a3
+* **web:** do not double stringify list authenticator credential (#19715) 25d9d16
+* **web:** fix color of UniswapX gas fee tooltip (#19563) 5bb793e
+* **web:** fix mobile status overflow on positions (#19350) ea732a4
+* **web:** fix web pool index virtualized list dynamic heights (#20074) 9af7388
+* **web:** improve LP incentive tooltip responsiveness (#19550) 563b9d4
+* **web:** incorrect bridge card display for wrong network (#19541) 593c2bd
+* **web:** only support batch swaps on supported status (#19565) c81568c
+* **web:** REVERT "remove async imports in LanguageProvider and amplitude" (#19738) 081bfaa
+* **web:** settings tooltips (#20059) (#20073) 4ef1352
+* **web:** staging web update unwrap tx on smart wallet accounts (#20025) ac4f3a6
+* **web:** temp remove disabled prop from Button (#19676) 41c2e61
+* **web:** update EW endpoint for beta (#19519) b405d89
+* **web:** update MoreHorizontal icon size (#19558) 57c4372
+* **web:** use liquidity info badges on pool details page (#19809) 33ce214
+* **web): Revert "feat(web:** defer render of mini portfolio (#19442) - staging (#19987) 1e04adb
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 277df80
+
+
+### Code Refactoring
+
+* **web:** rename graphql folder (#19712) 06730e1
+* **web:** use useScrollbarStyles from ui and remove web ScrollBarStyles (#19516) 6f0b63f
+
+
+### Tests
+
+* **web:** [errors] add wait for timeout after swap settings click (#19511) 6412e2b
+* **web:** delete cypress fees test (#19537) 26a8096
+* **web:** handle smart wallet delegations (#19677) 9824dec
+* **web:** playwright amplitude extension and logging test (#19536) b234ac6
+* **web:** token selector sections should be visible (#19529) df98029
 
 

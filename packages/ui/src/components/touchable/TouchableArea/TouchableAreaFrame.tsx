@@ -60,6 +60,9 @@ export const TouchableAreaFrame = styled(YStack, {
         pointerEvents: 'box-none',
         tabIndex: -1,
         cursor: 'default',
+        '$platform-web': {
+          pointerEvents: 'none',
+        },
       },
     },
     hoverable: {

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useActiveGasStrategy, useShadowGasStrategies, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
@@ -27,6 +28,7 @@ import {
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { isInterface } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -46,7 +48,21 @@ export function useWrapTransactionRequestInfo({
     WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9,
   ) // Skip Gas Fee API call on transactions that don't need wrapping
 
-  const result = useMemo(() => processWrapResponse({ gasFeeResult, wrapTxRequest }), [gasFeeResult, wrapTxRequest])
+  const { isSmartContractAddress } = useIsSmartContractAddress(account?.address, derivedSwapInfo.chainId)
+
+  // When gas estimation fails for smart-contract accounts during an unwrap, fall back to a
+  // hard-coded gas limit.
+  const fallbackGasParams = useMemo(() => {
+    const shouldFallback =
+      !gasFeeResult.params && isInterface && derivedSwapInfo?.wrapType === WrapType.Unwrap && isSmartContractAddress
+
+    return shouldFallback ? { gasLimit: WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9 } : undefined
+  }, [gasFeeResult.params, derivedSwapInfo.wrapType, isSmartContractAddress])
+
+  const result = useMemo(
+    () => processWrapResponse({ gasFeeResult, wrapTxRequest, fallbackGasParams }),
+    [gasFeeResult, wrapTxRequest, fallbackGasParams],
+  )
 
   const cachedGasFeeResultRef = useRef(gasFeeResult)
   if (gasFeeResult.value) {
@@ -119,6 +135,9 @@ export function useSwapTransactionRequestInfo({
   const canBatchTransactions = useUniswapContextSelector((ctx) =>
     ctx.getCanBatchTransactions?.(derivedSwapInfo.chainId),
   )
+  const swapDelegationAddress = useUniswapContextSelector((ctx) =>
+    ctx.getSwapDelegationAddress?.(derivedSwapInfo.chainId),
+  )
 
   const permitsDontNeedSignature = !!canBatchTransactions
   const shouldSkipSwapRequest = getShouldSkipSwapRequest({
@@ -146,7 +165,7 @@ export function useSwapTransactionRequestInfo({
       // We add a small buffer in case connection is too slow
       immediateGcTime: tradingApiSwapRequestMs + ONE_SECOND_MS * 5,
     },
-    { canBatchTransactions },
+    { canBatchTransactions, swapDelegationAddress },
   )
 
   const processSwapResponse = useMemo(() => createProcessSwapResponse({ activeGasStrategy }), [activeGasStrategy])

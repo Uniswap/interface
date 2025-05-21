@@ -1,15 +1,15 @@
 import { createColumnHelper } from '@tanstack/react-table'
+import {
+  PoolTableTransaction,
+  PoolTableTransactionType,
+  usePoolTransactions,
+} from 'appGraphql/data/pools/usePoolTransactions'
+import { supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
 import { FilterHeaderRow, TableText, TimestampCell } from 'components/Table/styled'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import {
-  PoolTableTransaction,
-  PoolTableTransactionType,
-  usePoolTransactions,
-} from 'graphql/data/pools/usePoolTransactions'
-import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import styled from 'lib/styled-components'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'

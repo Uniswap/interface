@@ -22,7 +22,7 @@ import { AppModals } from 'src/app/modals/AppModals'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
-import { persistor, store } from 'src/app/store'
+import { store } from 'src/app/store'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
@@ -66,7 +66,6 @@ import { StatsigUser, Storage, getStatsigClient } from 'uniswap/src/features/gat
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice'
-import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -82,6 +81,7 @@ import { isIOS } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+import { getReduxPersistor } from 'wallet/src/state/persistor'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
@@ -259,7 +259,7 @@ function AppOuter(): JSX.Element | null {
 
   return (
     <ApolloProvider client={client}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={null} persistor={getReduxPersistor()}>
         <ErrorBoundary>
           <BlankUrlProvider>
             <LocalizationContextProvider>
@@ -315,7 +315,6 @@ function AppInner(): JSX.Element {
 
   useEffect(() => {
     dispatch(clearNotificationQueue()) // clear all in-app toasts on app start
-    dispatch(syncAppWithDeviceLanguage())
   }, [dispatch])
 
   useEffect(() => {

@@ -7,7 +7,7 @@ import { Wrench } from 'ui/src/components/icons/Wrench'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isExtension } from 'utilities/src/platform'
+import { isMobileApp } from 'utilities/src/platform'
 
 const iconProps: IconProps = {
   color: '$neutral2',
@@ -42,14 +42,7 @@ export function SmartWalletAdvancedSettingsModal({
 
   return (
     <Modal name={ModalName.SmartWalletAdvancedSettingsModal} isModalOpen={isOpen} onClose={onClose}>
-      <Flex
-        animation="fast"
-        gap="$spacing16"
-        pb={isExtension ? undefined : '$spacing60'}
-        py={isExtension ? '$spacing16' : undefined}
-        px="$spacing12"
-        width="100%"
-      >
+      <Flex animation="fast" gap="$gap8" p="$spacing4" mb={isMobileApp ? '$spacing36' : undefined} width="100%">
         <Text textAlign="center" color="$neutral1" variant="subheading1">
           {t('settings.setting.advancedSettings')}
         </Text>

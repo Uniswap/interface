@@ -3,7 +3,7 @@ import { Button, ButtonEmphasis, ButtonVariant, Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { isExtension } from 'utilities/src/platform'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
 
 export interface SmartWalletModalProps {
   isOpen: boolean
@@ -23,6 +23,7 @@ export interface SmartWalletModalProps {
   secondaryButtonEmphasis?: ButtonEmphasis
   children?: React.ReactNode
   alignment?: 'top' | 'center'
+  zIndex?: number
 }
 
 export function SmartWalletModal({
@@ -43,10 +44,17 @@ export function SmartWalletModal({
   secondaryButtonEmphasis = 'secondary',
   alignment = isExtension ? 'top' : undefined,
   children,
+  zIndex,
 }: SmartWalletModalProps): JSX.Element {
   return (
-    <Modal alignment={alignment} isModalOpen={isOpen} name={modalName} onClose={onClose}>
-      <Flex flexDirection="column" alignItems="center" p="$spacing12" gap="$spacing8">
+    <Modal alignment={alignment} isModalOpen={isOpen} name={modalName} zIndex={zIndex} onClose={onClose}>
+      <Flex
+        flexDirection="column"
+        alignItems="center"
+        p="$spacing12"
+        mb={isMobileApp ? '$spacing36' : undefined}
+        gap="$spacing8"
+      >
         {icon}
         <Text variant="subheading2" color="$neutral1">
           {title}

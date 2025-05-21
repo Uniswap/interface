@@ -204,6 +204,9 @@ const CustomButtonFrameWithoutCustomProps = styled(XStack, {
           userSelect: 'none',
           tabIndex: -1,
           cursor: 'default',
+          '$platform-web': {
+            pointerEvents: 'none',
+          },
         }
       }
 

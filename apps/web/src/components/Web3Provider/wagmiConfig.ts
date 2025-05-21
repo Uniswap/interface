@@ -115,7 +115,7 @@ if (isPlaywrightEnv() && isEagerlyConnect) {
     connect(wagmiConfig, {
       connector: mock({
         features: {},
-        accounts: ['0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'],
+        accounts: ['0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'],
       }),
     })
   }, 1)

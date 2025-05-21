@@ -7,10 +7,13 @@ import {
 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   CreateSwap5792Response,
+  CreateSwap7702Response,
   CreateSwapRequest,
   CreateSwapResponse,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
 export type SwapData = {
   requestId: string
@@ -20,13 +23,6 @@ export type SwapData = {
 }
 export interface EVMSwapRepository {
   fetchSwapData: (params: WithV4Flag<CreateSwapRequest>) => Promise<SwapData>
-}
-
-export function createEVMSwapRepository(ctx: { swapDelegationAddress: string | undefined }): EVMSwapRepository {
-  const { swapDelegationAddress } = ctx
-  return swapDelegationAddress
-    ? create7702EVMSwapRepository({ swapDelegationAddress })
-    : createLegacyEVMSwapRepository()
 }
 
 export function convertSwapResponseToSwapData(response: CreateSwapResponse): SwapData {
@@ -45,15 +41,24 @@ export function createLegacyEVMSwapRepository(): EVMSwapRepository {
   }
 }
 
-export function create7702EVMSwapRepository(ctx: { swapDelegationAddress: string }): EVMSwapRepository {
-  const { swapDelegationAddress } = ctx
+export function convertSwap7702ResponseToSwapData(response: CreateSwap7702Response): SwapData {
+  return {
+    requestId: response.requestId,
+    transactions: [response.swap],
+    gasFee: response.gasFee,
+  }
+}
+
+export function create7702EVMSwapRepository(ctx: {
+  getSwapDelegationAddress: (chainId?: UniverseChainId) => string | undefined
+}): EVMSwapRepository {
+  const { getSwapDelegationAddress } = ctx
   async function fetchSwapData(params: WithV4Flag<CreateSwapRequest>): Promise<SwapData> {
-    const response = await fetchSwap7702({ ...params, smartContractDelegationAddress: swapDelegationAddress })
-    return {
-      requestId: response.requestId,
-      transactions: [response.swap],
-      gasFee: response.gasFee,
-    }
+    const chainId = tradingApiToUniverseChainId(params.quote.chainId)
+    const smartContractDelegationAddress = getSwapDelegationAddress(chainId)
+    const response = await fetchSwap7702({ ...params, smartContractDelegationAddress })
+
+    return convertSwap7702ResponseToSwapData(response)
   }
 
   return { fetchSwapData }

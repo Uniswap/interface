@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react'
+import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Shine, Text, TouchableArea, isWeb, useIsDarkMode } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -45,8 +45,14 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   // Ensure items rerender when theme is switched
   useIsDarkMode()
 
-  const onPress = useCallback((): void => {
-    onPressToken?.(currencyInfo.currencyId)
+  // Only return a function if onPressToken is provided, otherwise onPress is always defined and this element will intercept all clicks.
+  const onPress = useMemo(() => {
+    if (!onPressToken) {
+      return undefined
+    }
+    return (): void => {
+      onPressToken(currencyInfo.currencyId)
+    }
   }, [currencyInfo.currencyId, onPressToken])
 
   const shortenedSymbol = getSymbolDisplayText(currency.symbol)

@@ -1,14 +1,18 @@
 import { getInternalError, getSdkError } from '@walletconnect/utils'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import { WalletSendCallsRequest, addRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { call, put } from 'typed-redux-saga'
+import { call, put, select } from 'typed-redux-saga'
 import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
 import { fetchWalletEncoding7702 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
 import { transformCallsToTransactionRequests } from 'wallet/src/features/batchedTransactions/utils'
+import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 
 /**
  * Checks if EIP-5792 methods are enabled via feature flag
@@ -115,6 +119,8 @@ export function* handleGetCapabilities(
   requestId: number,
   accountAddress: string,
   requestedAccount: string,
+  dappName?: string,
+  dappIconUrl?: string,
 ) {
   const eip5792MethodsEnabled = isEip5792MethodsEnabled()
 
@@ -128,13 +134,39 @@ export function* handleGetCapabilities(
     return
   }
 
+  const hasSmartWalletConsent = yield* select(selectHasSmartWalletConsent, accountAddress)
+
+  // TODO(WALL-6765): check if wallet is already delegated
+  if (!hasSmartWalletConsent) {
+    const onEnableSmartWallet = () => {
+      navigate(ModalName.SmartWalletEnabledModal, {
+        showReconnectDappPrompt: true,
+      })
+    }
+
+    yield* call(navigate, ModalName.PostSwapSmartWalletNudge, {
+      onEnableSmartWallet,
+      dappInfo: {
+        icon: dappIconUrl,
+        name: dappName,
+      },
+    })
+  }
+
   yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
     topic,
     response: {
       id: requestId,
       jsonrpc: '2.0',
       // TODO: This would be where we add any changes in capabilities object (when decided)
-      result: {},
+      result: {
+        [`0x${UniverseChainId.Sepolia.toString(16)}`]: { atomic: { status: 'supported' } },
+        [`0x${UniverseChainId.Mainnet.toString(16)}`]: { atomic: { status: 'supported' } },
+        [`0x${UniverseChainId.UnichainSepolia.toString(16)}`]: { atomic: { status: 'supported' } },
+        [`0x${UniverseChainId.Unichain.toString(16)}`]: { atomic: { status: 'supported' } },
+        [`0x${UniverseChainId.Optimism.toString(16)}`]: { atomic: { status: 'supported' } },
+        [`0x${UniverseChainId.Base.toString(16)}`]: { atomic: { status: 'supported' } },
+      },
     },
   })
 }

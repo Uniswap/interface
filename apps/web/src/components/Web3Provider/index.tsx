@@ -50,7 +50,7 @@ export function Web3ProviderUpdater() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
   const networkProvider = isSupportedChain && account.chainId ? RPC_PROVIDERS[account.chainId] : undefined
-  const { trackConversions } = useConversionTracking()
+  const { trackConversions } = useConversionTracking(account.address)
 
   const updateRecentConnectorId = useUpdateAtom(recentConnectorIdAtom)
   useEffect(() => {

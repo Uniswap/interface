@@ -500,7 +500,11 @@ export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTa
     // https://linear.app/uniswap/issue/WALL-6679/implement-getcapabilities-on-extensionwc-instead-of-hardcoded-values
     response: {
       [`0x${UniverseChainId.Sepolia.toString(16)}`]: { atomic: { status: 'supported' } },
+      [`0x${UniverseChainId.Mainnet.toString(16)}`]: { atomic: { status: 'supported' } },
       [`0x${UniverseChainId.UnichainSepolia.toString(16)}`]: { atomic: { status: 'supported' } },
+      [`0x${UniverseChainId.Unichain.toString(16)}`]: { atomic: { status: 'supported' } },
+      [`0x${UniverseChainId.Optimism.toString(16)}`]: { atomic: { status: 'supported' } },
+      [`0x${UniverseChainId.Base.toString(16)}`]: { atomic: { status: 'supported' } },
     },
   }
   yield* call(dappResponseMessageChannel.sendMessageToTab, senderTabInfo.id, response)

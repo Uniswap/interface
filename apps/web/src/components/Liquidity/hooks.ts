@@ -105,7 +105,9 @@ export function useAllFeeTierPoolData({
               feeAmount: pool.fee,
               tickSpacing: pool.tickSpacing,
             },
-            formattedFee: formatPercent(new Percent(pool.fee, 1000000), MAX_FEE_TIER_DECIMALS),
+            formattedFee: pool.isDynamicFee
+              ? t('fee.dynamic')
+              : formatPercent(new Percent(pool.fee, 1000000), MAX_FEE_TIER_DECIMALS),
             totalLiquidityUsd: totalLiquidityUsdTruncated,
             percentage,
             tvl: pool.totalLiquidityUsd,
@@ -145,8 +147,8 @@ export function usePositionDerivedInfo(positionInfo?: PositionInfo): PositionDer
     tickUpper,
     apr,
   } = positionInfo ?? {}
-  const { price: price0 } = useUSDCPrice(currency0Amount?.currency, PollingInterval.Normal)
-  const { price: price1 } = useUSDCPrice(currency1Amount?.currency, PollingInterval.Normal)
+  const { price: price0 } = useUSDCPrice(positionInfo?.currency0Amount?.currency, PollingInterval.Slow)
+  const { price: price1 } = useUSDCPrice(positionInfo?.currency1Amount?.currency, PollingInterval.Slow)
 
   const { feeValue0, feeValue1 } = useMemo(() => {
     if (!currency0Amount || !currency1Amount) {

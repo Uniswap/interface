@@ -7,11 +7,11 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 import { SettingsLanguageModalProps } from 'wallet/src/components/settings/language/SettingsLanguageModalProps'
 
-export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): JSX.Element {
+export function SettingsLanguageModal({ isOpen, onClose }: SettingsLanguageModalProps): JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <Modal name={ModalName.LanguageSelector} onClose={onClose}>
+    <Modal isModalOpen={isOpen} name={ModalName.LanguageSelector} onClose={onClose}>
       <Flex p="$spacing4" pt="$spacing8">
         <Flex centered>
           <Flex backgroundColor={opacify(10, DEP_accentColors.blue300)} borderRadius="$rounded12" p="$spacing12">

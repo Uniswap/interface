@@ -1,11 +1,11 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
-import { Wiggle } from 'pages/Landing/components/animations'
+import { Wiggle } from 'components/animations/Wiggle'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Flex, FlexProps, Image, Text, TextProps, TouchableArea } from 'ui/src'
-import { CHROME_LOGO } from 'ui/src/assets'
+import { Anchor, Flex, FlexProps, Text, TextProps, TouchableArea } from 'ui/src'
 import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
+import { GoogleChromeLogo } from 'ui/src/components/logos/GoogleChromeLogo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { isMobileWeb, isWebAndroid, isWebIOS } from 'utilities/src/platform'
@@ -46,7 +46,7 @@ export function DownloadWalletRow({
             onPress={(e) => e.stopPropagation()}
           >
             <Wiggle>
-              <Image height={iconSize} source={CHROME_LOGO} width={iconSize} />
+              <GoogleChromeLogo size={iconSize} />
             </Wiggle>
           </Anchor>
         </Trace>

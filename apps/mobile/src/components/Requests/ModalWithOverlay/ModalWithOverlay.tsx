@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import { AnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ScrollDownOverlay } from 'src/components/Requests/ModalWithOverlay/ScrollDownOverlay'
-import { Button, Flex } from 'ui/src'
+import { Button, ButtonProps, Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
@@ -24,14 +24,17 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const MEASURE_LAYOUT_TIMEOUT = 100
 
-type ModalWithOverlayProps = PropsWithChildren<
+export type ModalWithOverlayProps = PropsWithChildren<
   ModalProps & {
     confirmationButtonText?: string
+    cancelButtonText?: string
     scrollDownButtonText?: string
     onReject: () => void
     onConfirm?: () => void
     disableConfirm?: boolean
     contentContainerStyle?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
+    cancelButtonProps?: ButtonProps
+    confirmationButtonProps?: ButtonProps
   }
 >
 
@@ -42,11 +45,14 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: Nati
 export function ModalWithOverlay({
   children,
   confirmationButtonText,
+  cancelButtonText,
   scrollDownButtonText,
   onReject,
   onConfirm,
   disableConfirm,
   contentContainerStyle,
+  cancelButtonProps,
+  confirmationButtonProps,
   ...bottomSheetModalProps
 }: ModalWithOverlayProps): JSX.Element {
   const scrollViewRef = useRef<ScrollView>(null)
@@ -129,10 +135,13 @@ export function ModalWithOverlay({
       </BottomSheetScrollView>
 
       <ModalFooter
+        cancelButtonText={cancelButtonText}
         confirmationButtonText={confirmationButtonText}
         confirmationEnabled={!disableConfirm && confirmationEnabled}
         scrollDownButtonText={scrollDownButtonText}
         showScrollDownOverlay={showOverlay && !eip5792MethodsEnabled}
+        cancelButtonProps={cancelButtonProps}
+        confirmationButtonProps={confirmationButtonProps}
         onConfirm={onConfirm}
         onReject={onReject}
         onScrollDownPress={handleScrollDown}
@@ -144,8 +153,11 @@ export function ModalWithOverlay({
 type ModalFooterProps = {
   confirmationEnabled: boolean
   showScrollDownOverlay: boolean
+  cancelButtonText?: string
   confirmationButtonText?: string
   scrollDownButtonText?: string
+  cancelButtonProps?: ButtonProps
+  confirmationButtonProps?: ButtonProps
   onScrollDownPress: () => void
   onReject: () => void
   onConfirm?: () => void
@@ -155,7 +167,10 @@ function ModalFooter({
   confirmationEnabled,
   showScrollDownOverlay,
   scrollDownButtonText,
+  cancelButtonText,
   confirmationButtonText,
+  cancelButtonProps,
+  confirmationButtonProps,
   onScrollDownPress,
   onReject,
   onConfirm,
@@ -188,8 +203,8 @@ function ModalFooter({
         pt="$spacing12"
         px="$spacing24"
       >
-        <Button size="large" testID={TestID.Cancel} emphasis="tertiary" onPress={onReject}>
-          {t('common.button.cancel')}
+        <Button size="large" testID={TestID.Cancel} emphasis="tertiary" onPress={onReject} {...cancelButtonProps}>
+          {cancelButtonText ?? t('common.button.cancel')}
         </Button>
 
         {confirmationButtonText && (
@@ -199,6 +214,7 @@ function ModalFooter({
             size="large"
             testID={TestID.Confirm}
             onPress={onConfirm}
+            {...confirmationButtonProps}
           >
             {confirmationButtonText}
           </Button>

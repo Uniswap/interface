@@ -39,10 +39,10 @@ import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
-import { getReduxPersistor } from 'src/store/store'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
+import { getReduxPersistor } from 'wallet/src/state/persistor'
 
 const supportsSidePanel = checksIfSupportsSidePanel()
 

@@ -151,12 +151,18 @@ export function SettingsScreen(): JSX.Element {
 
   return (
     <Trace logImpression screen={ExtensionScreens.Settings}>
-      {isLanguageModalOpen ? <SettingsLanguageModal onClose={() => setIsLanguageModalOpen(false)} /> : undefined}
+      {isLanguageModalOpen ? (
+        <SettingsLanguageModal isOpen={isLanguageModalOpen} onClose={() => setIsLanguageModalOpen(false)} />
+      ) : undefined}
       {isPortfolioBalanceModalOpen ? (
-        <PortfolioBalanceModal onClose={() => setIsPortfolioBalanceModalOpen(false)} />
+        <PortfolioBalanceModal
+          isOpen={isPortfolioBalanceModalOpen}
+          onClose={() => setIsPortfolioBalanceModalOpen(false)}
+        />
       ) : undefined}
       {isPermissionsModalOpen ? (
         <PermissionsModal
+          isOpen={isPermissionsModalOpen}
           handleDefaultBrowserToggle={handleDefaultBrowserToggle}
           isDefaultBrowserProvider={isDefaultProvider}
           onClose={() => setIsPermissionsModalOpen(false)}

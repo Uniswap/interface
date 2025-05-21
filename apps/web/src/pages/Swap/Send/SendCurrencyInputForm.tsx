@@ -1,10 +1,10 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { isInputGreaterThanDecimals } from 'components/NumericalInput'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,

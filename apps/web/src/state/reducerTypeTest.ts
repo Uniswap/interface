@@ -107,6 +107,7 @@ interface ExpectedUserState {
   timestamp: number
   showSurveyPopup?: boolean
   originCountry?: string
+  isEmbeddedWalletBackedUp?: boolean
 }
 
 assert<Equals<UserState, ExpectedUserState>>()
@@ -137,6 +138,7 @@ interface ExpectedApplicationState {
   readonly chainId: number | null
   readonly openModal: OpenModalParams | null
   readonly suppressedPopups: PopupType[]
+  readonly downloadGraduatedWalletCardsDismissed: string[]
 }
 
 assert<Equals<ApplicationState, ExpectedApplicationState>>()

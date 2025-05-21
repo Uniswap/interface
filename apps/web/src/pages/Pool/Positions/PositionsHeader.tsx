@@ -191,6 +191,7 @@ export function PositionsHeader({
               menuLabel={<Text variant="buttonLabel3">{t('common.status')}</Text>}
               dropdownStyle={{ width: 240 }}
               buttonStyle={StyledDropdownButton}
+              alignRight={false}
             >
               {statusFilterOptions}
             </DropdownSelector>

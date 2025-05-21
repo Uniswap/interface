@@ -6,6 +6,7 @@ export enum WalletStatus {
 
 export interface WalletData {
   name: string
-  address: string
+  walletAddress: string
+  delegatorAddress: string
   status: WalletStatus
 }

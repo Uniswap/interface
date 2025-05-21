@@ -35,7 +35,7 @@
         "totalLiquidityUsd": "593894.940668435895000287501906924",
         "currentLiquidity": "20745140031091761",
         "apr": 11.534362134720784,
-        "owner": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+        "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
         "totalApr": 11.534362134720784
       },
       "hooks": [

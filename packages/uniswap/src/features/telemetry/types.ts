@@ -81,6 +81,7 @@ export type GasEstimateAccuracyProperties = {
   name?: string
   out_of_gas: boolean
   timed_out: boolean
+  app_backgrounded_while_pending?: boolean
   display_limit_inflation_factor?: number
 }
 

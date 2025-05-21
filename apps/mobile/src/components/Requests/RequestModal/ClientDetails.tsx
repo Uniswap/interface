@@ -20,26 +20,26 @@ export function ClientDetails({
   request: WalletConnectSigningRequest
   permitInfo?: PermitInfo
 }): JSX.Element {
-  const { dapp } = request
+  const { dappRequestInfo } = request
   const colors = useSporeColors()
 
   const permitCurrencyInfo = useCurrencyInfo(permitInfo?.currencyId)
 
   return (
     <Flex centered gap="$spacing12">
-      <DappHeaderIcon dapp={dapp} permitCurrencyInfo={permitCurrencyInfo} />
+      <DappHeaderIcon dappRequestInfo={dappRequestInfo} permitCurrencyInfo={permitCurrencyInfo} />
       <HeaderText permitAmount={permitInfo?.amount} permitCurrency={permitCurrencyInfo?.currency} request={request} />
       <LinkButton
         color={colors.accent1.val}
         iconColor="$accent1"
-        label={formatDappURL(dapp.url)}
+        label={formatDappURL(dappRequestInfo.url)}
         mb="$spacing12"
         px="$spacing8"
         py="$spacing4"
         showIcon={false}
         size={iconSizes.icon12}
         textVariant="buttonLabel2"
-        url={dapp.url}
+        url={dappRequestInfo.url}
       />
     </Flex>
   )

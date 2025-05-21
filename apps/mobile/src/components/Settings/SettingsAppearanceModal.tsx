@@ -1,8 +1,7 @@
-import { Action } from '@reduxjs/toolkit'
-import { default as React } from 'react'
+import { default as React, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { closeModal } from 'src/features/modals/modalSlice'
+import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { Flex, GeneratedIcon, Text, TouchableArea } from 'ui/src'
 import { Check, Contrast, Moon, Sun } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -13,13 +12,10 @@ import { AppearanceSettingType, setSelectedAppearanceSettings } from 'wallet/src
 export function SettingsAppearanceModal(): JSX.Element {
   const { t } = useTranslation()
   const currentTheme = useCurrentAppearanceSetting()
-  const dispatch = useDispatch()
+  const { onClose } = useReactNavigationModal()
 
   return (
-    <Modal
-      name={ModalName.SettingsAppearance}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.SettingsAppearance }))}
-    >
+    <Modal name={ModalName.SettingsAppearance} onClose={onClose}>
       <Flex animation="fast" gap="$spacing16" pb="$spacing24" px="$spacing24" width="100%">
         <Flex centered>
           <Text color="$neutral1" variant="subheading1">
@@ -33,6 +29,7 @@ export function SettingsAppearanceModal(): JSX.Element {
             option={AppearanceSettingType.System}
             subtitle={t('settings.setting.appearance.option.device.subtitle')}
             title={t('settings.setting.appearance.option.device.title')}
+            onClose={onClose}
           />
           <AppearanceOption
             Icon={Sun}
@@ -40,6 +37,7 @@ export function SettingsAppearanceModal(): JSX.Element {
             option={AppearanceSettingType.Light}
             subtitle={t('settings.setting.appearance.option.light.subtitle')}
             title={t('settings.setting.appearance.option.light.title')}
+            onClose={onClose}
           />
           <AppearanceOption
             Icon={Moon}
@@ -47,6 +45,7 @@ export function SettingsAppearanceModal(): JSX.Element {
             option={AppearanceSettingType.Dark}
             subtitle={t('settings.setting.appearance.option.dark.subtitle')}
             title={t('settings.setting.appearance.option.dark.title')}
+            onClose={onClose}
           />
         </Flex>
       </Flex>
@@ -60,12 +59,18 @@ interface AppearanceOptionProps {
   subtitle: string
   option: AppearanceSettingType
   Icon: GeneratedIcon
+  onClose: () => void
 }
 
-function AppearanceOption({ active, title, subtitle, Icon, option }: AppearanceOptionProps): JSX.Element {
+function AppearanceOption({ active, title, subtitle, Icon, option, onClose }: AppearanceOptionProps): JSX.Element {
   const dispatch = useDispatch()
 
   const showCheckMarkOpacity = active ? 1 : 0
+
+  const changeTheme = useCallback(async (): Promise<void> => {
+    dispatch(setSelectedAppearanceSettings(option))
+    onClose()
+  }, [dispatch, option, onClose])
 
   return (
     <TouchableArea
@@ -73,7 +78,7 @@ function AppearanceOption({ active, title, subtitle, Icon, option }: AppearanceO
       flexDirection="row"
       justifyContent="space-between"
       py="$spacing12"
-      onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}
+      onPress={changeTheme}
     >
       <Icon color="$neutral2" size="$icon.24" strokeWidth={1.5} />
       <Flex row shrink>

@@ -1,8 +1,8 @@
 import { SwapEventName } from '@uniswap/analytics-events'
+import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { ZERO_PERCENT } from 'constants/misc'
-import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
@@ -14,7 +14,7 @@ import { useGetOnPressRetry } from 'state/sagas/transactions/retry'
 import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
   HandleOnChainStepParams,
-  addTransactionBreadcrumb,
+  getDisplayableError,
   getSwapTransactionInfo,
   handleApprovalTransactionStep,
   handleOnChainStep,
@@ -25,7 +25,6 @@ import { handleWrapStep } from 'state/sagas/transactions/wrapSaga'
 import { VitalTxFields } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
-import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -33,12 +32,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
-import {
-  HandledTransactionInterrupt,
-  TransactionError,
-  TransactionStepFailedError,
-  UnexpectedTransactionStateError,
-} from 'uniswap/src/features/transactions/errors'
+import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
@@ -67,7 +61,6 @@ import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/s
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
   step: SwapTransactionStep | SwapTransactionStepAsync
@@ -350,26 +343,6 @@ function* uniswapXSwap(
   }
 
   yield* call(onSuccess)
-}
-
-function getDisplayableError(error: Error, step: TransactionStep): TransactionError | undefined {
-  const userRejected = didUserReject(error)
-  // If the user rejects a request, or it's a known interruption e.g. trade update, we handle gracefully / do not show error UI
-  if (userRejected || error instanceof HandledTransactionInterrupt) {
-    const loggableMessage = userRejected ? 'user rejected request' : error.message // for user rejections, avoid logging redundant/long message
-    addTransactionBreadcrumb({ step, status: 'interrupted', data: { message: loggableMessage } })
-    return undefined
-  } else if (error instanceof TransactionError) {
-    return error // If the error was already formatted as a TransactionError, we just propagate
-  } else {
-    const isBackendRejection = error instanceof FetchError
-    return new TransactionStepFailedError({
-      message: `${step.type} failed during swap`,
-      step,
-      isBackendRejection,
-      originalError: error,
-    })
-  }
 }
 
 export const swapSaga = createSaga(swap, 'swapSaga')

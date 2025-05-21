@@ -1,5 +1,4 @@
 import { ReactComponent as SearchIcon } from 'assets/svg/search.svg'
-import { ScrollBarStyles } from 'components/Common/styles'
 import { SearchInput } from 'components/SearchModal/styled'
 import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
@@ -7,7 +6,7 @@ import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import { Flex, ModalCloseIcon, styled, useMedia, useSporeColors } from 'ui/src'
+import { Flex, ModalCloseIcon, styled, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -42,6 +41,7 @@ export function CountryListModal({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const media = useMedia()
+  const scrollbarStyles = useScrollbarStyles()
 
   const filteredData: FORCountry[] = useMemo(() => {
     const sorted = bubbleToTop(countryList, (c) => c.countryCode === selectedCountry?.countryCode)
@@ -111,7 +111,7 @@ export function CountryListModal({
                   itemCount={filteredData.length}
                   itemSize={ROW_ITEM_SIZE}
                   itemKey={(index: number, data: typeof countryList) => data[index]?.countryCode}
-                  {...ScrollBarStyles}
+                  style={scrollbarStyles}
                 >
                   {({ style, data, index }) => (
                     <CountryListRow

@@ -127,7 +127,7 @@ export const nftApproveTransactionInfo = createFixture<NFTApproveTransactionInfo
 
 export const wcConfirmInfo = createFixture<WCConfirmInfo>()(() => ({
   type: TransactionType.WCConfirm,
-  dapp: dappInfoWC(),
+  dappRequestInfo: dappInfoWC(),
 }))
 
 export const unknownTransactionInfo = createFixture<UnknownTransactionInfo>()(() => ({

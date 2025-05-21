@@ -13,7 +13,7 @@ import {
   V2DutchOrderBuilder,
   V3DutchOrderBuilder,
 } from '@uniswap/uniswapx-sdk'
-import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
+import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'

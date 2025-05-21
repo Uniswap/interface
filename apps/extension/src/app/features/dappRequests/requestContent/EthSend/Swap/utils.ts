@@ -5,7 +5,6 @@ import { formatUnits as formatUnitsEthers } from 'ethers/lib/utils'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import {
   CONTRACT_BALANCE,
-  ETH_ADDRESS,
   MAX_UINT160,
   MAX_UINT256,
 } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/constants'
@@ -30,7 +29,7 @@ import {
   isUrCommandSweep,
   isUrCommandUnwrapWeth,
 } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/chainInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { assert } from 'utilities/src/errors'
 
@@ -70,8 +69,10 @@ export function useSwapDetails(
   if (v4Command) {
     // Extract details using the V4 helper
     const v4Details = getTokenDetailsFromV4SwapCommands(v4Command, parsedCalldata.commands)
-    inputAddress = v4Details.inputAddress === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : v4Details.inputAddress
-    outputAddress = v4Details.outputAddress === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : v4Details.outputAddress
+    inputAddress =
+      v4Details.inputAddress === DEFAULT_NATIVE_ADDRESS ? DEFAULT_NATIVE_ADDRESS_LEGACY : v4Details.inputAddress
+    outputAddress =
+      v4Details.outputAddress === DEFAULT_NATIVE_ADDRESS ? DEFAULT_NATIVE_ADDRESS_LEGACY : v4Details.outputAddress
     inputValue = v4Details.inputValue || '0'
     outputValue = v4Details.outputValue || '0'
   } else {

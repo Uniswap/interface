@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux'
 import { RouterProvider, createHashRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorElement } from 'src/app/components/ErrorElement'
-import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
@@ -23,6 +22,7 @@ import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsR
 import { ViewRecoveryPhraseScreen } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/ViewRecoveryPhraseScreen'
 import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
 import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenWrapper'
+import { SmartWalletSettingsScreen } from 'src/app/features/settings/SmartWalletSettingsScreen'
 import { SettingsChangePasswordScreen } from 'src/app/features/settings/password/SettingsChangePasswordScreen'
 import { SwapFlowScreen } from 'src/app/features/swap/SwapFlowScreen'
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
@@ -37,20 +37,15 @@ import {
 } from 'src/background/messagePassing/messageChannels'
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
-import { getReduxPersistor } from 'src/store/store'
-import { TouchableArea } from 'ui/src'
-import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
-import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import i18n from 'uniswap/src/i18n'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
-import { SmartWalletSettings } from 'wallet/src/features/smartWallet/SmartWalletSettings'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
+import { getReduxPersistor } from 'wallet/src/state/persistor'
 
 const router = createHashRouter([
   {
@@ -111,25 +106,7 @@ const router = createHashRouter([
           },
           {
             path: SettingsRoutes.SmartWallet,
-            element: (
-              <SmartWalletSettings
-                Header={
-                  <ScreenHeader
-                    title={i18n.t('settings.setting.smartWallet.action.smartWallet')}
-                    rightColumn={
-                      <TouchableArea
-                        alignItems="center"
-                        alignSelf="center"
-                        py="$spacing12"
-                        // TODO: add modal + event
-                      >
-                        <QuestionInCircleFilled color="$neutral2" size="$icon.20" />
-                      </TouchableArea>
-                    }
-                  />
-                }
-              />
-            ),
+            element: <SmartWalletSettingsScreen />,
           },
         ],
       },
@@ -211,15 +188,10 @@ function useDappRequestPortListener(): void {
 }
 
 function SidebarWrapper(): JSX.Element {
-  const dispatch = useDispatch()
   useDappRequestPortListener()
   useTestnetModeForLoggingAndAnalytics()
 
   const resetUnitagsQueries = useResetUnitagsQueries()
-
-  useEffect(() => {
-    dispatch(syncAppWithDeviceLanguage())
-  }, [dispatch])
 
   useEffect(() => {
     return backgroundToSidePanelMessageChannel.addMessageListener(

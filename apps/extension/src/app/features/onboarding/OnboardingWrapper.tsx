@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import { DevMenuModal } from 'src/app/core/DevMenuModal'
 import { StorageWarningModal } from 'src/app/features/warnings/StorageWarningModal'
@@ -7,7 +6,6 @@ import { ONBOARDING_BACKGROUND_DARK, ONBOARDING_BACKGROUND_LIGHT } from 'src/ass
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { Flex, Image, useIsDarkMode } from 'ui/src'
-import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import { isProdEnv } from 'utilities/src/environment/env'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks/useTestnetModeForLoggingAndAnalytics'
@@ -15,13 +13,8 @@ import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testne
 export function OnboardingWrapper(): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const [isHighlighted, setIsHighlighted] = useState(false)
-  const dispatch = useDispatch()
 
   useTestnetModeForLoggingAndAnalytics()
-
-  useEffect(() => {
-    dispatch(syncAppWithDeviceLanguage())
-  }, [dispatch])
 
   useEffect(() => {
     return onboardingMessageChannel.addMessageListener(OnboardingMessageType.HighlightOnboardingTab, (_message) => {

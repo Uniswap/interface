@@ -45,7 +45,15 @@ globalThis.matchMedia =
 
 require('react-native-reanimated').setUpTests()
 
-global.chrome = chrome
+const MOCK_LANGUAGE = 'en-US'
+
+global.chrome = {
+  ...chrome,
+  i18n: {
+    ...global.chrome.i18n,
+    getUILanguage: jest.fn().mockReturnValue(MOCK_LANGUAGE)
+  }
+}
 
 jest.mock('src/app/navigation/utils', () => ({
   useExtensionNavigation: () => ({
@@ -69,4 +77,3 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
     useSelectedColorScheme: () => 'light',
   }
 })
-

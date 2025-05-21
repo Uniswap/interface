@@ -1,6 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
+import { useAccount } from 'hooks/useAccount'
 import ConfirmCreatePositionModal from 'pages/Pool/Positions/create/ConfirmCreatePositionModal'
 import {
   useCreatePositionContext,
@@ -14,12 +15,15 @@ import { Trans, useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
 import { Button, Flex, Text } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 
 export const DepositStep = () => {
   const {
     derivedPositionInfo: { currencies },
   } = useCreatePositionContext()
   const { t } = useTranslation()
+  const { onConnectWallet } = useUniswapContext()
+  const { isConnected } = useAccount()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
   const {
     depositState: { exactField },
@@ -127,16 +131,22 @@ export const DepositStep = () => {
         amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
       />
       <Flex row>
-        <Button
-          size="large"
-          variant="branded"
-          onPress={handleReview}
-          isDisabled={disabled}
-          key="Position-Create-DepositButton"
-          loading={requestLoading}
-        >
-          {inputError ? inputError : t('swap.button.review')}
-        </Button>
+        {isConnected ? (
+          <Button
+            size="large"
+            variant="branded"
+            onPress={handleReview}
+            isDisabled={disabled}
+            key="Position-Create-DepositButton"
+            loading={requestLoading}
+          >
+            {inputError ? inputError : t('swap.button.review')}
+          </Button>
+        ) : (
+          <Button size="large" variant="branded" emphasis="secondary" onPress={onConnectWallet}>
+            {t('common.connectWallet.button')}
+          </Button>
+        )}
       </Flex>
       <CreatePositionModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
       {priceDifference?.warning === WarningSeverity.High && (

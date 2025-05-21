@@ -157,7 +157,7 @@ function createWalletConnectionHandler({
 }: {
   connection: ReturnType<typeof useConnect>
   setPersistHideMobileAppPromoBanner: (value: boolean) => void
-  signInWithPasskey: UseMutateFunction<string, Error, void, unknown>
+  signInWithPasskey: UseMutateFunction<{ walletAddress: string; exported?: boolean }, Error, void, unknown>
 }) {
   async function connectEmbeddedWallet() {
     await signInWithPasskey()

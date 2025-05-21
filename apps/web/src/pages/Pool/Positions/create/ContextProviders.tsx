@@ -174,7 +174,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
 
-  const generatePermitAsTransaction = useUniswapContext().getGeneratePermitAsTransaction?.(
+  const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(
     derivedPositionInfo.currencies[0]?.chainId,
   )
 

@@ -1,11 +1,10 @@
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { SwapDisplay } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapDisplay'
-import { ETH_ADDRESS } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/constants'
 import { formatUnits, useSwapDetails } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
 import { UniswapXSwapRequest } from 'src/app/features/dappRequests/types/Permit2Types'
 import { UniversalRouterCall } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -116,7 +115,7 @@ export function UniswapXSwapRequestContent({ typedData }: { typedData: UniswapXS
   const { token: outputToken, startAmount: lastAmountOutParam } = typedData.message.witness.baseOutputs[0]
 
   const inputCurrencyInfo = useCurrencyInfo(buildCurrencyId(activeChain, inputToken))
-  const nativeEthOrOutputToken = outputToken === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : outputToken
+  const nativeEthOrOutputToken = outputToken === DEFAULT_NATIVE_ADDRESS ? DEFAULT_NATIVE_ADDRESS_LEGACY : outputToken
   const outputCurrencyInfo = useCurrencyInfo(buildCurrencyId(activeChain, nativeEthOrOutputToken))
 
   assert(

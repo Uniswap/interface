@@ -49,7 +49,9 @@ function RemoveLiquidityModalInner() {
             closeModal={closeModal}
             goBack={step === DecreaseLiquidityStep.Review ? () => setStep(DecreaseLiquidityStep.Input) : undefined}
           />
-          <HeightAnimator animation="fast">{modalContent}</HeightAnimator>
+          <HeightAnimator animation="fast" useInitialHeight>
+            {modalContent}
+          </HeightAnimator>
         </Modal>
       </RemoveLiquidityTxContextProvider>
     </TransactionSettingsContextProvider>

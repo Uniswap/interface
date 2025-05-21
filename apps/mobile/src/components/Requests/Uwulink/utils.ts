@@ -10,7 +10,14 @@ import {
 } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { isUwULinkAllowlistType } from 'uniswap/src/features/gating/typeGuards'
-import { EthTransaction, UwULinkErc20SendRequest, UwULinkMethod, UwULinkRequest } from 'uniswap/src/types/walletConnect'
+import {
+  DappRequestType,
+  EthTransaction,
+  UwULinkErc20SendRequest,
+  UwULinkMethod,
+  UwULinkRequest,
+  UwULinkRequestInfo,
+} from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
@@ -115,15 +122,21 @@ export async function getFormattedUwuLinkTxnRequest({
   providerManager,
   contractManager,
 }: HandleUwuLinkRequestParams): Promise<{ request: WalletConnectSigningRequest; account: string }> {
-  const newRequest = {
+  const newRequest: {
+    sessionId: string
+    internalId: string
+    account: string
+    dappRequestInfo: UwULinkRequestInfo
+    chainId: number
+  } = {
     sessionId: UWULINK_PREFIX, // session/internalId is WalletConnect specific, but not needed here
     internalId: UWULINK_PREFIX,
     account: activeAccount?.address,
-    dapp: {
+    dappRequestInfo: {
       name: '',
       url: '',
       ...request.dapp,
-      source: UWULINK_PREFIX,
+      requestType: DappRequestType.UwULink,
       chain_id: request.chainId,
       webhook: request.webhook,
     },

@@ -6,6 +6,7 @@ import {
   TradeType,
   UNI_ADDRESSES,
 } from '@uniswap/sdk-core'
+import { gqlToCurrency, supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -16,7 +17,6 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'

@@ -69,11 +69,15 @@ export interface TransactionRequestInfo {
 export function processWrapResponse({
   gasFeeResult,
   wrapTxRequest,
+  fallbackGasParams,
 }: {
   gasFeeResult: GasFeeResult
   wrapTxRequest: providers.TransactionRequest | undefined
+  fallbackGasParams?: providers.TransactionRequest
 }): TransactionRequestInfo {
-  const wrapTxRequestWithGasFee = { ...wrapTxRequest, ...(gasFeeResult.params ?? {}) }
+  const gasParams = gasFeeResult.params ?? fallbackGasParams ?? {}
+
+  const wrapTxRequestWithGasFee = { ...wrapTxRequest, ...gasParams }
 
   const gasEstimate: SwapGasFeeEstimation = {
     wrapEstimates: gasFeeResult.gasEstimates,
