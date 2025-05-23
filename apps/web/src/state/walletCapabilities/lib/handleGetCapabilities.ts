@@ -53,7 +53,9 @@ enum AtomicBatchingStatus {
 export function isAtomicBatchingSupported(chainCapabilities: ChainCapabilities): boolean {
   return (
     chainCapabilities?.atomic?.status === AtomicBatchingStatus.Supported ||
-    chainCapabilities?.atomic?.status === AtomicBatchingStatus.Ready
+    chainCapabilities?.atomic?.status === AtomicBatchingStatus.Ready ||
+    // TODO(WEB-7872): Remove temporary support for v1 of atomic batching schema for coinbase wallet (remove line below)
+    chainCapabilities?.atomicBatch?.supported === true
   )
 }
 
