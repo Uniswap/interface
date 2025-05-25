@@ -11,4 +11,6 @@ export type InfoTooltipProps = {
   maxWidth?: number
   /** By default, tooltip will automatically open/close on hover. Set this prop to manually control open/close. */
   open?: boolean
+  enabled?: boolean
+  onOpenChange?: (isOpen: boolean) => void
 } & Pick<PopperProps, 'placement'>

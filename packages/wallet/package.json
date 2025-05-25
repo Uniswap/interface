@@ -61,6 +61,7 @@
     "ui": "workspace:^",
     "uniswap": "workspace:^",
     "utilities": "workspace:^",
+    "viem": "2.22.9",
     "zod": "3.22.4",
     "zxcvbn": "4.4.2"
   },

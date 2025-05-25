@@ -1,7 +1,7 @@
+import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { Computer } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'

@@ -1,30 +1,35 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
+import { useNetInfo } from '@react-native-community/netinfo'
 import { getSdkError } from '@walletconnect/utils'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
-import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
+import { ModalWithOverlay, ModalWithOverlayProps } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { PendingConnectionSwitchAccountModal } from 'src/components/Requests/ScanSheet/PendingConnectionSwitchAccountModal'
+import { SitePermissions } from 'src/components/Requests/ScanSheet/SitePermissions'
 import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { getSessionNamespaces } from 'src/features/walletConnect/utils'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
   WalletConnectPendingSession,
+  WalletConnectVerifyStatus,
   addSession,
   removePendingSession,
   setDidOpenFromDeepLink,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { Check, RotatableChevron, X } from 'ui/src/components/icons'
+import { AlertTriangleFilled, CheckCircleFilled, RotatableChevron } from 'ui/src/components/icons'
+import { iconSizes } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { DappRequestType, WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { LinkButton } from 'wallet/src/components/buttons/LinkButton'
@@ -47,90 +52,6 @@ enum PendingConnectionModalState {
   SwitchAccount = 2,
 }
 
-const SitePermissions = (): JSX.Element => {
-  const { t } = useTranslation()
-
-  const infoTextSize = 'body3'
-
-  return (
-    <Flex
-      backgroundColor="$surface2"
-      borderColor="$surface3"
-      borderRadius="$rounded16"
-      borderWidth="$spacing1"
-      minHeight={44}
-      p="$spacing12"
-    >
-      <Flex centered row justifyContent="space-between">
-        <Text $short={{ variant: 'body3' }} allowFontScaling={false} color="$neutral2" variant="body3">
-          {t('walletConnect.permissions.title')}
-        </Text>
-      </Flex>
-      <Flex gap="$spacing8" pt="$spacing12">
-        <Flex centered row gap="$spacing4">
-          <Check color="$statusSuccess" size="$icon.16" />
-          <Text
-            $short={{ variant: infoTextSize }}
-            allowFontScaling={false}
-            color="$neutral1"
-            flexGrow={1}
-            variant={infoTextSize}
-          >
-            {t('walletConnect.permissions.option.viewWalletAddress')}
-          </Text>
-        </Flex>
-        <Flex centered row gap="$spacing4">
-          <Check color="$statusSuccess" size="$icon.16" />
-          <Text
-            $short={{ variant: infoTextSize }}
-            allowFontScaling={false}
-            color="$neutral1"
-            flexGrow={1}
-            variant={infoTextSize}
-          >
-            {t('walletConnect.permissions.option.viewTokenBalances')}
-          </Text>
-        </Flex>
-        <Flex centered row gap="$spacing4">
-          <X color="$statusCritical" size="$icon.16" />
-          <Text
-            $short={{ variant: infoTextSize }}
-            allowFontScaling={false}
-            color="$neutral1"
-            flexGrow={1}
-            variant={infoTextSize}
-          >
-            {t('walletConnect.permissions.option.transferAssets')}
-          </Text>
-        </Flex>
-      </Flex>
-    </Flex>
-  )
-}
-
-type SwitchAccountProps = {
-  activeAddress: string
-  setModalState: (state: PendingConnectionModalState.SwitchAccount) => void
-}
-
-const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps): JSX.Element => {
-  const signerAccounts = useSignerAccounts()
-  const accountIsSwitchable = signerAccounts.length > 1
-
-  const onPress = useCallback(() => {
-    setModalState(PendingConnectionModalState.SwitchAccount)
-  }, [setModalState])
-
-  return (
-    <TouchableArea disabled={!accountIsSwitchable} m="$none" testID={TestID.WCDappSwitchAccount} onPress={onPress}>
-      <Flex row justifyContent="space-between">
-        <AddressFooter activeAccountAddress={activeAddress} px="$spacing8" />
-        {accountIsSwitchable && <RotatableChevron color="$neutral2" direction="down" height={16} width={16} />}
-      </Flex>
-    </TouchableArea>
-  )
-}
-
 export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.Element => {
   const { t } = useTranslation()
 
@@ -140,13 +61,20 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
 
   const [modalState, setModalState] = useState<PendingConnectionModalState>(PendingConnectionModalState.Hidden)
+  const [confirmedWarning, setConfirmedWarning] = useState(false)
+
+  const netInfo = useNetInfo()
+  const showConnectionError = !netInfo.isInternetReachable
+
+  const isThreat = pendingSession.verifyStatus === WalletConnectVerifyStatus.Threat
+  const confirmDisabled = (isThreat && !confirmedWarning) || showConnectionError
 
   const onPressSettleConnection = useCallback(
     async (approved: boolean) => {
       sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
         request_type: WCEventType.SessionPending,
-        dapp_url: pendingSession.dapp.url,
-        dapp_name: pendingSession.dapp.name,
+        dapp_url: pendingSession.dappRequestInfo.url,
+        dapp_name: pendingSession.dappRequestInfo.name,
         wc_version: '2',
         connection_chain_ids: pendingSession.chains,
         outcome: approved ? WCRequestOutcome.Confirm : WCRequestOutcome.Reject,
@@ -165,11 +93,11 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
           addSession({
             wcSession: {
               id: session.topic,
-              dapp: {
+              dappRequestInfo: {
                 name: session.peer.metadata.name,
                 url: session.peer.metadata.url,
                 icon: session.peer.metadata.icons[0] ?? null,
-                source: 'walletconnect',
+                requestType: DappRequestType.WalletConnectSessionRequest,
               },
               chains: pendingSession.chains,
               namespaces,
@@ -205,7 +133,22 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
     [activeAddress, dispatch, onClose, pendingSession, didOpenFromDeepLink],
   )
 
-  const dappName = pendingSession.dapp.name || pendingSession.dapp.url || ''
+  const dappName = pendingSession.dappRequestInfo.name || pendingSession.dappRequestInfo.url || ''
+
+  const isThreatProps: Partial<ModalWithOverlayProps> = isThreat
+    ? {
+        cancelButtonText: t('walletConnect.pending.button.reject'),
+        cancelButtonProps: {
+          backgroundColor: '$statusCritical',
+          emphasis: 'primary',
+        },
+        confirmationButtonProps: {
+          variant: 'default',
+          emphasis: 'tertiary',
+          backgroundColor: '$surface3',
+        },
+      }
+    : {}
 
   return (
     <>
@@ -213,15 +156,21 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         confirmationButtonText={t('walletConnect.pending.button.connect')}
         name={ModalName.WCPendingConnection}
         scrollDownButtonText={t('walletConnect.pending.button.scrollDown')}
+        disableConfirm={confirmDisabled}
         onClose={onClose}
         onConfirm={(): Promise<void> => onPressSettleConnection(true)}
         onReject={(): Promise<void> => onPressSettleConnection(false)}
+        {...isThreatProps}
       >
         <PendingConnectionModalContent
           activeAddress={activeAddress}
           dappName={dappName}
+          verifyStatus={pendingSession.verifyStatus}
           pendingSession={pendingSession}
           setModalState={setModalState}
+          confirmedWarning={confirmedWarning}
+          showConnectionError={showConnectionError}
+          onConfirmWarning={setConfirmedWarning}
         />
       </ModalWithOverlay>
 
@@ -243,14 +192,22 @@ type PendingConnectionModalContentProps = {
   activeAddress: string
   dappName: string
   pendingSession: WalletConnectPendingSession
+  verifyStatus: WalletConnectVerifyStatus
   setModalState: (state: PendingConnectionModalState.SwitchAccount) => void
+  onConfirmWarning: (confirmed: boolean) => void
+  confirmedWarning: boolean
+  showConnectionError?: boolean
 }
 
 function PendingConnectionModalContent({
   activeAddress,
   dappName,
   pendingSession,
+  verifyStatus,
   setModalState,
+  onConfirmWarning,
+  confirmedWarning,
+  showConnectionError,
 }: PendingConnectionModalContentProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -263,29 +220,75 @@ function PendingConnectionModalContent({
 
   return (
     <>
-      <Flex alignItems="center" gap="$spacing8" justifyContent="flex-end" pb="$spacing4">
-        <DappHeaderIcon dapp={pendingSession.dapp} />
-        <Text textAlign="center" variant="heading3">
+      <Flex gap="$spacing8" pb="$spacing24">
+        <DappHeaderIcon dappRequestInfo={pendingSession.dappRequestInfo} />
+        <Text variant="subheading1">
           {t('walletConnect.pending.title', {
             dappName,
           })}
         </Text>
-        <LinkButton
-          color={colors.accent1.val}
-          label={formatDappURL(pendingSession.dapp.url)}
-          mb="$spacing12"
-          px="$spacing8"
-          py="$spacing4"
-          showIcon={false}
-          textVariant="buttonLabel2"
-          url={pendingSession.dapp.url}
-        />
+        <Flex row gap="$spacing4" alignItems="center">
+          <LinkButton
+            justifyContent="flex-start"
+            color={
+              verifyStatus === WalletConnectVerifyStatus.Threat
+                ? colors.statusCritical.val
+                : verifyStatus === WalletConnectVerifyStatus.Unverified
+                  ? colors.neutral2.val
+                  : colors.accent1.val
+            }
+            label={formatDappURL(pendingSession.dappRequestInfo.url)}
+            showIcon={false}
+            textVariant="buttonLabel4"
+            url={pendingSession.dappRequestInfo.url}
+          />
+          {verifyStatus === WalletConnectVerifyStatus.Verified && (
+            <CheckCircleFilled color={colors.accent1.val} size="$icon.16" />
+          )}
+        </Flex>
       </Flex>
-      <SitePermissions />
+      <SitePermissions
+        verifyStatus={pendingSession.verifyStatus}
+        confirmedWarning={confirmedWarning}
+        onConfirmWarning={onConfirmWarning}
+      />
       <Flex pb="$spacing12" pt="$spacing16" px="$spacing8">
         <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
       </Flex>
+      {showConnectionError && (
+        <BaseCard.InlineErrorState
+          backgroundColor="$statusWarning2"
+          icon={<AlertTriangleFilled color="$statusWarning" size="$icon.16" />}
+          textColor="$statusWarning"
+          title={t('walletConnect.request.error.network')}
+        />
+      )}
       <Animated.View style={bottomSpacerStyle} />
     </>
+  )
+}
+
+type SwitchAccountProps = {
+  activeAddress: string
+  setModalState: (state: PendingConnectionModalState.SwitchAccount) => void
+}
+
+const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps): JSX.Element => {
+  const signerAccounts = useSignerAccounts()
+  const accountIsSwitchable = signerAccounts.length > 1
+
+  const onPress = useCallback(() => {
+    setModalState(PendingConnectionModalState.SwitchAccount)
+  }, [setModalState])
+
+  return (
+    <TouchableArea disabled={!accountIsSwitchable} m="$none" testID={TestID.WCDappSwitchAccount} onPress={onPress}>
+      <Flex row justifyContent="space-between">
+        <AddressFooter activeAccountAddress={activeAddress} px="$spacing8" />
+        {accountIsSwitchable && (
+          <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon16} width={iconSizes.icon16} />
+        )}
+      </Flex>
+    </TouchableArea>
   )
 }

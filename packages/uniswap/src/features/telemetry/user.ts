@@ -17,6 +17,7 @@ export enum MobileUserPropertyName {
   HasLoadedENS = 'has_loaded_ens',
   HasLoadedUnitag = 'has_loaded_unitag',
   IsCloudBackedUp = 'is_cloud_backed_up',
+  BackupTypes = 'backup_types',
   IsHideSmallBalancesEnabled = 'is_hide_small_balances_enabled',
   IsHideSpamTokensEnabled = 'is_hide_spam_tokens_enabled',
   IsPushEnabled = 'is_push_enabled',
@@ -42,6 +43,7 @@ export enum ExtensionUserPropertyName {
   AppVersion = 'app_version',
   Currency = 'currency',
   DarkMode = 'is_dark_mode',
+  BackupTypes = 'backup_types',
   IsHideSmallBalancesEnabled = 'is_hide_small_balances_enabled',
   IsHideSpamTokensEnabled = 'is_hide_spam_tokens_enabled',
   Language = 'language',
@@ -53,12 +55,20 @@ export enum ExtensionUserPropertyName {
 }
 
 export enum InterfaceUserPropertyName {
-  IsDelegatedEOA = 'is_delegated_eoa',
   SupportsAtomicBatching = 'supports_atomic_batching',
 }
 
+export enum UniswapUserPropertyName {
+  IsDelegatedEOA = 'is_delegated_eoa',
+}
+
 export function setUserProperty(
-  property: MobileUserPropertyName | ExtensionUserPropertyName | CustomUserProperties | InterfaceUserPropertyName,
+  property:
+    | MobileUserPropertyName
+    | ExtensionUserPropertyName
+    | CustomUserProperties
+    | InterfaceUserPropertyName
+    | UniswapUserPropertyName,
   value: UserPropertyValue,
   insert?: boolean,
 ): void {

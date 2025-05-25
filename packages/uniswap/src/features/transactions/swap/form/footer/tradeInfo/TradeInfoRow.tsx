@@ -12,6 +12,7 @@ import { CanonicalBridgeLinkBanner } from 'uniswap/src/features/transactions/swa
 import { GasInfoRow } from 'uniswap/src/features/transactions/swap/form/footer/tradeInfo/GasInfoRow'
 import { TradeWarning } from 'uniswap/src/features/transactions/swap/form/footer/tradeInfo/TradeWarning'
 import { GasInfo } from 'uniswap/src/features/transactions/swap/form/footer/types'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
 
@@ -22,6 +23,7 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
   const debouncedTrade = useDebouncedTrade()
   const { text: warningTextColor } = getAlertColor(warning?.severity)
   const { isTestnetModeEnabled } = useEnabledChains()
+  const priceUXEnabled = usePriceUXEnabled()
 
   const {
     derivedSwapInfo: { currencies },
@@ -31,7 +33,7 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
     return null
   }
 
-  if (isMobileApp) {
+  if (isMobileApp || priceUXEnabled) {
     return <GasInfoRow gasInfo={gasInfo} />
   }
 

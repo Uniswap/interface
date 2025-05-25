@@ -25,12 +25,14 @@ import { isHash } from 'viem'
 const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
   ${EllipsisStyle}
+  max-width: 100%;
 `
 
 const StyledTimestamp = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
   line-height: 24px;
   font-variant: small;
+  padding-right: 8px;
   font-feature-settings:
     'tnum' on,
     'lnum' on,

@@ -1,10 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Token } from '@uniswap/sdk-core'
+import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType } from 'components/Charts/utils'
 import { ChartQueryResult, checkDataQuality, withUTCTimestamp } from 'components/Tokens/TokenDetails/ChartSection/util'
-import { PoolData } from 'graphql/data/pools/usePoolData'
 import { PDPChartQueryVars, usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useMemo } from 'react'
 import {

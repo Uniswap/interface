@@ -66,7 +66,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
 
       // Create a new txId for the next transaction, as the existing one may be used in state to track the failed submission.
       const newTxId = createTransactionId()
-      updateSwapForm({ isSubmitting: false, txId: newTxId })
+      updateSwapForm({ isSubmitting: false, txId: newTxId, showPendingUI: false })
 
       setSubmissionError(error)
       setRetrySwap(() => onPressRetry)
@@ -77,11 +77,15 @@ export function useCreateSwapReviewCallbacks(ctx: {
   const onSuccess = useCallback(() => {
     // On interface, the swap component stays mounted; after swap we reset the form to avoid showing the previous values.
     if (isInterface) {
-      updateSwapForm({ exactAmountFiat: undefined, exactAmountToken: '', isSubmitting: false })
+      updateSwapForm({ exactAmountFiat: undefined, exactAmountToken: '', isSubmitting: false, showPendingUI: false })
       setScreen(TransactionScreen.Form)
     }
     onClose?.()
   }, [setScreen, updateSwapForm, onClose])
+
+  const onPending = useCallback(() => {
+    updateSwapForm({ showPendingUI: true })
+  }, [updateSwapForm])
 
   const swapTxContext = useSwapTxContext()
 
@@ -92,11 +96,12 @@ export function useCreateSwapReviewCallbacks(ctx: {
       getExecuteSwapService({
         onSuccess,
         onFailure,
+        onPending,
         setCurrentStep,
         setSteps,
         getSwapTxContext,
       }),
-    [getExecuteSwapService, onSuccess, onFailure, setCurrentStep, setSteps, getSwapTxContext],
+    [getExecuteSwapService, onSuccess, onFailure, onPending, setCurrentStep, setSteps, getSwapTxContext],
   )
 
   const submitTransaction = useCallback(() => {

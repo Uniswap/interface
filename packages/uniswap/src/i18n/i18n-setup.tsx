@@ -19,6 +19,7 @@ import viVN from 'uniswap/src/i18n/locales/translations/vi-VN.json'
 import zhCN from 'uniswap/src/i18n/locales/translations/zh-CN.json'
 import zhTW from 'uniswap/src/i18n/locales/translations/zh-TW.json'
 import { MissingI18nInterpolationError } from 'uniswap/src/i18n/shared'
+import { getWalletDeviceLocale } from 'uniswap/src/i18n/utils'
 import { logger } from 'utilities/src/logger/logger'
 
 const resources = {
@@ -33,9 +34,31 @@ const resources = {
   'ms-MY': { translation: msMY, statsigKey: 'ms-MY' },
   'pt-PT': { translation: ptPT, statsigKey: 'pt-PT' },
   'ru-RU': { translation: ruRU, statsigKey: 'ru-RU' },
-  'es-ES': { translation: esES, statsigKey: 'es-ES' },
-  'es-US': { translation: esES, statsigKey: 'es-ES' },
+  // Spanish locales that use `,` as the decimal separator
   'es-419': { translation: esES, statsigKey: 'es-ES' },
+  'es-BZ': { translation: esES, statsigKey: 'es-ES' },
+  'es-CU': { translation: esES, statsigKey: 'es-ES' },
+  'es-DO': { translation: esES, statsigKey: 'es-ES' },
+  'es-GT': { translation: esES, statsigKey: 'es-ES' },
+  'es-HN': { translation: esES, statsigKey: 'es-ES' },
+  'es-MX': { translation: esES, statsigKey: 'es-ES' },
+  'es-NI': { translation: esES, statsigKey: 'es-ES' },
+  'es-PA': { translation: esES, statsigKey: 'es-ES' },
+  'es-PE': { translation: esES, statsigKey: 'es-ES' },
+  'es-PR': { translation: esES, statsigKey: 'es-ES' },
+  'es-SV': { translation: esES, statsigKey: 'es-ES' },
+  'es-US': { translation: esES, statsigKey: 'es-ES' },
+  // Spanish locales that use `.` as the decimal separator
+  'es-AR': { translation: esES, statsigKey: 'es-ES' },
+  'es-BO': { translation: esES, statsigKey: 'es-ES' },
+  'es-CL': { translation: esES, statsigKey: 'es-ES' },
+  'es-CO': { translation: esES, statsigKey: 'es-ES' },
+  'es-CR': { translation: esES, statsigKey: 'es-ES' },
+  'es-EC': { translation: esES, statsigKey: 'es-ES' },
+  'es-ES': { translation: esES, statsigKey: 'es-ES' },
+  'es-PY': { translation: esES, statsigKey: 'es-ES' },
+  'es-UY': { translation: esES, statsigKey: 'es-ES' },
+  'es-VE': { translation: esES, statsigKey: 'es-ES' },
   'tr-TR': { translation: trTR, statsigKey: 'tr-TR' },
   'uk-UA': { translation: ukUA, statsigKey: 'uk-UA' },
   'ur-PK': { translation: urPK, statsigKey: 'ur-PK' },
@@ -48,7 +71,7 @@ i18n
   .use(initReactI18next)
   .init({
     defaultNS,
-    lng: 'en-US',
+    lng: getWalletDeviceLocale(),
     fallbackLng: 'en-US',
     resources,
     interpolation: {

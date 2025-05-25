@@ -16,19 +16,33 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
   >
     <View
       cancelable={true}
+      collapsable={false}
       disabled={false}
+      focusVisibleStyle={{}}
       focusable={true}
-      hitSlop={[Function]}
+      forwardedRef={[Function]}
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
       minPressDuration={0}
       onBlur={[Function]}
       onFocus={[Function]}
+      onLayout={[Function]}
       onMouseEnter={[Function]}
       onMouseLeave={[Function]}
       onPress={[Function]}
       onPressIn={[Function]}
       onPressOut={[Function]}
+      role="button"
       style={
         {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
           "flexDirection": "column",
           "opacity": 1,
           "transform": [
@@ -40,15 +54,25 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
       }
     >
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
+            "color": {
+              "dynamic": {
+                "dark": "#FFFFFF",
+                "light": "#222222",
+              },
+            },
             "flexDirection": "row",
             "justifyContent": "space-between",
           }
         }
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "flexDirection": "column",
@@ -58,6 +82,8 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
           <Text
             allowFontScaling={false}
             maxFontSizeMultiplier={1.2}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {
@@ -196,19 +222,33 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
     </View>
     <View
       cancelable={true}
+      collapsable={false}
       disabled={false}
+      focusVisibleStyle={{}}
       focusable={true}
-      hitSlop={[Function]}
+      forwardedRef={[Function]}
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
       minPressDuration={0}
       onBlur={[Function]}
       onFocus={[Function]}
+      onLayout={[Function]}
       onMouseEnter={[Function]}
       onMouseLeave={[Function]}
       onPress={[Function]}
       onPressIn={[Function]}
       onPressOut={[Function]}
+      role="button"
       style={
         {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
           "flexDirection": "column",
           "opacity": 1,
           "transform": [
@@ -220,15 +260,25 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
       }
     >
       <View
+        onBlur={[Function]}
+        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
+            "color": {
+              "dynamic": {
+                "dark": "#FFFFFF",
+                "light": "#222222",
+              },
+            },
             "flexDirection": "row",
             "justifyContent": "space-between",
           }
         }
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
               "flexDirection": "column",
@@ -238,6 +288,8 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
           <Text
             allowFontScaling={false}
             maxFontSizeMultiplier={1.2}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {

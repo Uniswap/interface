@@ -1,3 +1,3 @@
 import RNRestart from 'react-native-restart'
 
-export const restartApp = (): void => RNRestart.Restart()
+export const restart = (): void => RNRestart.Restart()

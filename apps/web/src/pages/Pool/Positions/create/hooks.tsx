@@ -1,7 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { Pool as V3Pool } from '@uniswap/v3-sdk'
+import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
 import { getPoolFromRest } from 'components/Liquidity/utils'
@@ -20,6 +20,8 @@ import {
   CreateV2PositionInfo,
   CreateV3PositionInfo,
   CreateV4PositionInfo,
+  DEFAULT_FEE_DATA,
+  FeeData,
   OptionalCurrency,
   PositionState,
   PriceRangeInfo,
@@ -56,6 +58,7 @@ import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { applyNativeTokenPercentageBuffer } from 'uniswap/src/features/gas/utils'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { getParsedChainId } from 'utils/chainParams'
 
@@ -363,7 +366,6 @@ export function useTokenBalanceWithBuffer(currencyBalance: Maybe<CurrencyAmount<
 }
 
 export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
-  const account = useAccount()
   const bufferPercentage = useNativeTokenPercentageBufferExperiment()
   const { protocolVersion, address, token0, token1, exactField, exactAmounts, deposit0Disabled, deposit1Disabled } =
     state
@@ -439,10 +441,6 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
 
   const { t } = useTranslation()
   const error = useMemo(() => {
-    if (!account.isConnected) {
-      return t('common.connectWallet.button')
-    }
-
     if (
       (!parsedAmounts[PositionField.TOKEN0] && !deposit0Disabled) ||
       (!parsedAmounts[PositionField.TOKEN1] && !deposit1Disabled)
@@ -481,7 +479,6 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
 
     return undefined
   }, [
-    account.isConnected,
     parsedAmounts,
     deposit0Disabled,
     deposit1Disabled,
@@ -526,17 +523,35 @@ function getParsedHookAddrParam(params: ParsedQs): string | undefined {
   return validAddress || undefined
 }
 
-// Prefill currency inputs from URL search params ?currencyA=ETH&currencyB=0x123...&chain=base
+function getParsedFeeTierParam(params: ParsedQs): FeeData | undefined {
+  const feeTier = params?.feeTier
+  if (!feeTier || typeof feeTier !== 'string') {
+    return DEFAULT_FEE_DATA
+  }
+  const feeTierNumber = parseInt(feeTier)
+  if (isNaN(feeTierNumber)) {
+    return DEFAULT_FEE_DATA
+  }
+
+  const tickSpacing = TICK_SPACINGS[feeTierNumber as FeeAmount]
+  if (!tickSpacing) {
+    return DEFAULT_FEE_DATA
+  }
+
+  return { feeAmount: feeTierNumber, tickSpacing }
+}
+
+// Prefill currency inputs from URL search params ?currencyA=ETH&currencyB=0x123...&chain=base&feeTier=10000&hook=0x123...
 export function useInitialPoolInputs() {
   const { defaultChainId } = useEnabledChains()
   const defaultInitialToken = nativeOnChain(defaultChainId)
 
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
-  const hookAddress = getParsedHookAddrParam(parsedQs)
-  const parsedChainId = getParsedChainId(parsedQs)
+  const hook = getParsedHookAddrParam(parsedQs)
+  const parsedChainId = getParsedChainId(parsedQs, CurrencyField.INPUT)
   const supportedChainId = useSupportedChainId(parsedChainId) ?? defaultChainId
-
+  const fee = getParsedFeeTierParam(parsedQs)
   const { currencyAddressA, currencyAddressB } = useMemo(() => {
     const currencyAddressA = parseCurrencyFromURLParameter(parsedQs.currencyA ?? parsedQs.currencya)
     const parsedCurrencyAddressB = parseCurrencyFromURLParameter(parsedQs.currencyB ?? parsedQs.currencyb)
@@ -561,7 +576,8 @@ export function useInitialPoolInputs() {
     return {
       [PositionField.TOKEN0]: currencyA ?? currencyB ?? defaultInitialToken,
       [PositionField.TOKEN1]: currencyA && currencyB ? currencyB : undefined,
-      hook: hookAddress,
+      fee,
+      hook,
     }
-  }, [currencyA, currencyB, hookAddress, defaultInitialToken])
+  }, [currencyA, currencyB, fee, hook, defaultInitialToken])
 }

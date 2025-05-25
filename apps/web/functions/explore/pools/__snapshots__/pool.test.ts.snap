@@ -2,7 +2,7 @@
 
 exports[`should inject metadata for valid pools 1`] = `
 "<!DOCTYPE html>
-<html translate="no" style="overflow-x: hidden;">
+<html translate="no">
   <head>
     <meta charset="utf-8" />
 
@@ -131,7 +131,7 @@ exports[`should inject metadata for valid pools 1`] = `
 
 exports[`should inject metadata for valid pools 2`] = `
 "<!DOCTYPE html>
-<html translate="no" style="overflow-x: hidden;">
+<html translate="no">
   <head>
     <meta charset="utf-8" />
 
@@ -260,7 +260,7 @@ exports[`should inject metadata for valid pools 2`] = `
 
 exports[`should inject metadata for valid pools 3`] = `
 "<!DOCTYPE html>
-<html translate="no" style="overflow-x: hidden;">
+<html translate="no">
   <head>
     <meta charset="utf-8" />
 

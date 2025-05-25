@@ -88,6 +88,7 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
       <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={[bottomSheetViewStyles]}>
         {showRecipientSelectBottomSheet && (
           <Modal
+            extendOnKeyboardVisible
             fullScreen
             backgroundColor={colors.surface1.val}
             name={ModalName.TokenSelector}

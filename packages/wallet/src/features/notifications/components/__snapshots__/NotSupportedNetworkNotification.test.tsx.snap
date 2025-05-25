@@ -93,25 +93,29 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
       >
         <View
           cancelable={true}
+          collapsable={false}
           disabled={false}
+          focusVisibleStyle={{}}
           focusable={true}
-          hitSlop={[Function]}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
           minPressDuration={0}
           onBlur={[Function]}
           onFocus={[Function]}
+          onLayout={[Function]}
           onMouseEnter={[Function]}
           onMouseLeave={[Function]}
           onPress={[Function]}
           onPressIn={[Function]}
           onPressOut={[Function]}
+          role="button"
           style={
             {
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "#131313",
-                  "light": "#FFFFFF",
-                },
-              },
+              "backgroundColor": "#FFFFFF",
               "borderBottomLeftRadius": 999999,
               "borderBottomRightRadius": 999999,
               "borderTopLeftRadius": 999999,
@@ -131,9 +135,17 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
           }
         >
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "alignItems": "center",
+                "color": {
+                  "dynamic": {
+                    "dark": "#FFFFFF",
+                    "light": "#222222",
+                  },
+                },
                 "flexDirection": "row",
                 "gap": 8,
                 "justifyContent": "flex-start",
@@ -142,6 +154,8 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
             }
           >
             <View
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 {
                   "flexDirection": "column",
@@ -215,6 +229,8 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
               allowFontScaling={false}
               maxFontSizeMultiplier={1.4}
               numberOfLines={1}
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
                 {
                   "color": {

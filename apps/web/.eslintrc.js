@@ -154,5 +154,13 @@ module.exports = {
       excludedFiles: ['src/analytics/*'],
       rules: {},
     },
+    {
+      files: ['*.mts'],
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        sourceType: 'module',
+        project: './tsconfig.eslint.json',
+      },
+    },
   ],
 }

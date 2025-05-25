@@ -134,7 +134,7 @@ describe('walletCapabilities reducer', () => {
 
         // Test various chain IDs
         expect(selector(1)).toBe(true) // Chain 1 has status 'supported'
-        expect(selector(2)).toBe(false) // Chain 2 has status 'ready'
+        expect(selector(2)).toBe(true) // Chain 2 has status 'ready'
         expect(selector(3)).toBe(false) // Chain 3 has status 'unsupported'
         expect(selector(4)).toBe(false) // Chain 4 has no atomic capability
         expect(selector(999)).toBe(false) // Chain 999 not in map
@@ -148,7 +148,7 @@ describe('walletCapabilities reducer', () => {
       // This tests that the internal helper correctly evaluates string values
       const testCases = [
         { chainId: '0x1', atomicStatus: 'supported', expected: true },
-        { chainId: '0x2', atomicStatus: 'ready', expected: false },
+        { chainId: '0x2', atomicStatus: 'ready', expected: true },
         { chainId: '0x3', atomicStatus: 'unsupported', expected: false },
         { chainId: '0x4', atomicStatus: 'something-else', expected: false },
         { chainId: '0x5', atomicStatus: undefined, expected: false },

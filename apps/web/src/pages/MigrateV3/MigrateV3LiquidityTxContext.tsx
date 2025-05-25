@@ -6,6 +6,7 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { getCurrencyAddressForTradingApi, getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useMigrateV3LpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useMigrateV3LpPositionCalldataQuery'
 import {
@@ -58,6 +59,7 @@ export function MigrateV3PositionTxContextProvider({
     derivedPriceRangeInfo,
     priceRangeState: { fullRange },
   } = usePriceRangeContext()
+  const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo?.chainId)
 
   const increaseLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!positionInfo || !account.address) {
@@ -69,8 +71,9 @@ export function MigrateV3PositionTxContextProvider({
       chainId: positionInfo.currency0Amount.currency.chainId,
       protocol: ProtocolItems.V3,
       positionToken: positionInfo.tokenId,
+      generatePermitAsTransaction,
     }
-  }, [positionInfo, account.address])
+  }, [positionInfo, account.address, generatePermitAsTransaction])
 
   const {
     data: migrateTokenApprovals,
@@ -96,7 +99,9 @@ export function MigrateV3PositionTxContextProvider({
     })
   }
 
-  const approvalsNeeded = !approvalLoading && Boolean(migrateTokenApprovals?.permitData)
+  const { permitData, positionTokenPermitTransaction } = migrateTokenApprovals ?? {}
+
+  const approvalsNeeded = !approvalLoading && Boolean(permitData || positionTokenPermitTransaction)
 
   const migratePositionRequestArgs: MigrateLPPositionRequest | undefined = useMemo(() => {
     if (
@@ -237,6 +242,13 @@ export function MigrateV3PositionTxContextProvider({
       return undefined
     }
 
+    const validatedPositionTokenPermitTransaction = validateTransactionRequest(
+      migrateTokenApprovals?.positionTokenPermitTransaction,
+    )
+    if (migrateTokenApprovals?.positionTokenPermitTransaction && !validatedPositionTokenPermitTransaction) {
+      return undefined
+    }
+
     const txRequest = validateTransactionRequest(migrateCalldata.migrate)
     if (!txRequest) {
       return undefined
@@ -266,6 +278,7 @@ export function MigrateV3PositionTxContextProvider({
       revokeToken1Request: undefined,
       token0PermitTransaction: undefined,
       token1PermitTransaction: undefined,
+      positionTokenPermitTransaction: validatedPositionTokenPermitTransaction,
       txRequest,
       action: {
         type: LiquidityTransactionType.Migrate,

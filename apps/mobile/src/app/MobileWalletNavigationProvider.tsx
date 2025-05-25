@@ -16,6 +16,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
@@ -120,7 +121,9 @@ function useNavigateToHomepageTab(tab: HomeScreenTabIndex): () => void {
   const { navigate } = useAppStackNavigation()
 
   return useCallback((): void => {
-    navigate(MobileScreens.Home, { tab })
+    closeKeyboardBeforeCallback(() => {
+      navigate(MobileScreens.Home, { tab })
+    })
   }, [navigate, tab])
 }
 
@@ -128,7 +131,9 @@ function useNavigateToReceive(): () => void {
   const dispatch = useDispatch()
 
   return useCallback((): void => {
-    dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
+    closeKeyboardBeforeCallback(() => {
+      dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
+    })
   }, [dispatch])
 }
 
@@ -137,8 +142,10 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 
   return useCallback(
     (args: NavigateToSendFlowArgs) => {
-      const initialSendState = getNavigateToSendFlowArgsInitialState(args)
-      dispatch(openModal({ name: ModalName.Send, initialState: initialSendState }))
+      closeKeyboardBeforeCallback(() => {
+        const initialSendState = getNavigateToSendFlowArgsInitialState(args)
+        dispatch(openModal({ name: ModalName.Send, initialState: initialSendState }))
+      })
     },
     [dispatch],
   )
@@ -151,25 +158,27 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
 
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
-      const initialState = getNavigateToSwapFlowArgsInitialState(args, defaultChainId)
+      closeKeyboardBeforeCallback(() => {
+        const initialState = getNavigateToSwapFlowArgsInitialState(args, defaultChainId)
 
-      // If no prefilled token, go directly to swap
-      if (!isNavigateToSwapFlowArgsPartialState(args)) {
-        dispatch(closeModal({ name: ModalName.Swap }))
-        dispatch(openModal({ name: ModalName.Swap, initialState }))
-        return
-      }
+        // If no prefilled token, go directly to swap
+        if (!isNavigateToSwapFlowArgsPartialState(args)) {
+          dispatch(closeModal({ name: ModalName.Swap }))
+          dispatch(openModal({ name: ModalName.Swap, initialState }))
+          return
+        }
 
-      // Show warning modal for prefilled tokens, which will handle token safety checks
-      const currencyId = buildCurrencyId(args.currencyChainId, args.currencyAddress)
-      navigate(ModalName.TokenWarning, {
-        initialState: {
-          currencyId,
-          onAcknowledge: () => {
-            dispatch(closeModal({ name: ModalName.Swap }))
-            dispatch(openModal({ name: ModalName.Swap, initialState }))
+        // Show warning modal for prefilled tokens, which will handle token safety checks
+        const currencyId = buildCurrencyId(args.currencyChainId, args.currencyAddress)
+        navigate(ModalName.TokenWarning, {
+          initialState: {
+            currencyId,
+            onAcknowledge: () => {
+              dispatch(closeModal({ name: ModalName.Swap }))
+              dispatch(openModal({ name: ModalName.Swap, initialState }))
+            },
           },
-        },
+        })
       })
     },
     [dispatch, defaultChainId, navigate],
@@ -182,13 +191,15 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
 
   return useCallback(
     (currencyId: string): void => {
-      dispatch(closeModal({ name: ModalName.Swap }))
-      dispatch(closeAllModals())
-      if (exploreNavigationRef.current && exploreNavigationRef.isFocused()) {
-        exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
-      } else {
-        appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
-      }
+      closeKeyboardBeforeCallback(() => {
+        dispatch(closeModal({ name: ModalName.Swap }))
+        dispatch(closeAllModals())
+        if (exploreNavigationRef.current && exploreNavigationRef.isFocused()) {
+          exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
+        } else {
+          appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
+        }
+      })
     },
     [appNavigation, dispatch],
   )
@@ -199,12 +210,14 @@ function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
 
   return useCallback(
     ({ owner, address, tokenId, isSpam, fallbackData }: NavigateToNftItemArgs): void => {
-      navigation.navigate(MobileScreens.NFTItem, {
-        owner,
-        address,
-        tokenId,
-        isSpam,
-        fallbackData,
+      closeKeyboardBeforeCallback(() => {
+        navigation.navigate(MobileScreens.NFTItem, {
+          owner,
+          address,
+          tokenId,
+          isSpam,
+          fallbackData,
+        })
       })
     },
     [navigation],
@@ -216,15 +229,17 @@ function useNavigateToNftCollection(): (args: NavigateToNftCollectionArgs) => vo
 
   return useCallback(
     ({ collectionAddress }: NavigateToNftCollectionArgs): void => {
-      if (exploreNavigationRef.current && exploreNavigationRef.isFocused()) {
-        exploreNavigationRef.navigate(MobileScreens.NFTCollection, {
-          collectionAddress,
-        })
-      } else {
-        appNavigation.navigate(MobileScreens.NFTCollection, {
-          collectionAddress,
-        })
-      }
+      closeKeyboardBeforeCallback(() => {
+        if (exploreNavigationRef.current && exploreNavigationRef.isFocused()) {
+          exploreNavigationRef.navigate(MobileScreens.NFTCollection, {
+            collectionAddress,
+          })
+        } else {
+          appNavigation.navigate(MobileScreens.NFTCollection, {
+            collectionAddress,
+          })
+        }
+      })
     },
     [appNavigation],
   )
@@ -242,18 +257,20 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
   )
 
   return useCallback((): void => {
-    dispatch(closeModal({ name: ModalName.Send }))
+    closeKeyboardBeforeCallback(() => {
+      dispatch(closeModal({ name: ModalName.Send }))
 
-    if (forAggregatorEnabled) {
-      dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
-    } else {
-      dispatch(
-        openModal({
-          name: ModalName.WalletConnectScan,
-          initialState: ScannerModalState.WalletQr,
-        }),
-      )
-    }
+      if (forAggregatorEnabled) {
+        dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
+      } else {
+        dispatch(
+          openModal({
+            name: ModalName.WalletConnectScan,
+            initialState: ScannerModalState.WalletQr,
+          }),
+        )
+      }
+    })
   }, [dispatch, forAggregatorEnabled])
 }
 
@@ -262,7 +279,9 @@ function useNavigateToFiatOnRamp(): (args: NavigateToFiatOnRampArgs) => void {
 
   return useCallback(
     ({ prefilledCurrency, isOfframp }: NavigateToFiatOnRampArgs): void => {
-      dispatch(openModal({ name: ModalName.FiatOnRampAggregator, initialState: { prefilledCurrency, isOfframp } }))
+      closeKeyboardBeforeCallback(() => {
+        dispatch(openModal({ name: ModalName.FiatOnRampAggregator, initialState: { prefilledCurrency, isOfframp } }))
+      })
     },
     [dispatch],
   )
@@ -273,11 +292,13 @@ function useNavigateToExternalProfile(): (args: NavigateToExternalProfileArgs) =
 
   return useCallback(
     ({ address }: NavigateToExternalProfileArgs): void => {
-      if (exploreNavigationRef.isFocused()) {
-        exploreNavigationRef.navigate(MobileScreens.ExternalProfile, { address })
-      } else {
-        appNavigation.navigate(MobileScreens.ExternalProfile, { address })
-      }
+      closeKeyboardBeforeCallback(() => {
+        if (exploreNavigationRef.isFocused()) {
+          exploreNavigationRef.navigate(MobileScreens.ExternalProfile, { address })
+        } else {
+          appNavigation.navigate(MobileScreens.ExternalProfile, { address })
+        }
+      })
     },
     [appNavigation],
   )

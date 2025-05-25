@@ -4,7 +4,7 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import {
   TransactionOptions,
   TransactionOriginType,
@@ -23,7 +23,7 @@ export interface ExecuteTransactionParams {
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
   transactionOriginType: TransactionOriginType
-  analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  analytics?: SwapTradeBaseProperties
 }
 
 // A utility for sagas to send transactions

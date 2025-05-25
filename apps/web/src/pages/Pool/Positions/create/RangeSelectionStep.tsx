@@ -414,7 +414,7 @@ function RangeInput({
             hoverable
             hoverStyle={{ backgroundColor: '$surface3Hovered' }}
           >
-            <Plus size={16} />
+            <Plus size={16} color={colors.neutral2.val} />
           </TouchableArea>
           <TouchableArea
             testID={`${TestID.RangeInputDecrement}-${input}`}
@@ -427,7 +427,7 @@ function RangeInput({
             hoverable
             hoverStyle={{ backgroundColor: '$surface3Hovered' }}
           >
-            <Minus size={16} />
+            <Minus size={16} color={colors.neutral2.val} />
           </TouchableArea>
         </Flex>
       )}

@@ -1,4 +1,5 @@
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { AuthTypes } from '@walletconnect/types'
 
 export enum WalletConnectEvent {
   Connected = 0,
@@ -73,15 +74,34 @@ export type UwULinkRequest =
   | UwULinkErc20SendRequest
   | UwULinkPersonalSignRequest
 
-export interface DappInfoWC {
-  source: 'walletconnect'
+  export enum DappRequestType  {
+    WalletConnectSessionRequest = 'walletconnect-session-request',
+    WalletConnectAuthenticationRequest = 'walletconnect-authentication-request',
+    UwULink = 'uwulink',
+  }
+
+  // Standard WC session request
+  export interface WalletConnectSessionRequestInfo {
+  requestType: DappRequestType.WalletConnectSessionRequest
   name: string
   url: string
   icon: string | null
 }
 
-export interface DappInfoUwULink {
-  source: 'uwulink'
+/**
+ * Authentication requests for WC 1-Click Auth type sessions.
+ * See https://docs.reown.com/advanced/api/sign/wallet-usage#approving-authentication-requests 
+ */
+export interface WalletConnectAuthenticationRequestInfo {
+  requestType: DappRequestType.WalletConnectAuthenticationRequest
+  name: string
+  url: string
+  icon: string | null
+  authPayload: AuthTypes.AuthRequestEventArgs['authPayload']
+}
+
+export interface UwULinkRequestInfo {
+  requestType: DappRequestType.UwULink
   name: string
   url: string
   icon?: string
@@ -89,7 +109,7 @@ export interface DappInfoUwULink {
   webhook?: string
 }
 
-export type DappInfo = DappInfoWC | DappInfoUwULink
+export type DappRequestInfo =  WalletConnectAuthenticationRequestInfo | WalletConnectSessionRequestInfo | UwULinkRequestInfo
 
 export interface EthTransaction {
   to?: string

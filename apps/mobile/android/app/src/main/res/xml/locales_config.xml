@@ -9,7 +9,29 @@
   <locale android:name="ja"/>
   <locale android:name="pt"/>
   <locale android:name="vi"/>
-  <locale android:name="es-ES"/>
-  <locale android:name="es-US"/>
+  <!-- Spanish locales that use `,` as the decimal separator -->
   <locale android:name="es-419"/>
+  <locale android:name="es-BZ"/>
+  <locale android:name="es-CU"/>
+  <locale android:name="es-DO"/>
+  <locale android:name="es-GT"/>
+  <locale android:name="es-HN"/>
+  <locale android:name="es-MX"/>
+  <locale android:name="es-NI"/>
+  <locale android:name="es-PA"/>
+  <locale android:name="es-PE"/>
+  <locale android:name="es-PR"/>
+  <locale android:name="es-SV"/>
+  <locale android:name="es-US"/>
+  <!-- Spanish locales that use `.` as the decimal separator -->
+  <locale android:name="es-AR"/>
+  <locale android:name="es-BO"/>
+  <locale android:name="es-CL"/>
+  <locale android:name="es-CO"/>
+  <locale android:name="es-CR"/>
+  <locale android:name="es-EC"/>
+  <locale android:name="es-ES"/>
+  <locale android:name="es-PY"/>
+  <locale android:name="es-UY"/>
+  <locale android:name="es-VE"/>
 </locale-config>

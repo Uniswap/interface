@@ -1,9 +1,6 @@
-import { AutoColumn } from 'components/deprecated/Column'
-import styled from 'lib/styled-components'
-import { transparentize } from 'polished'
 import { ReactNode } from 'react'
-import { AlertTriangle } from 'react-feather'
-import { Flex, styled as TamaguiStyled } from 'ui/src'
+import { Flex, styled as TamaguiStyled, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 
 export const PageWrapper = TamaguiStyled(Flex, {
   pt: '$spacing60',
@@ -84,88 +81,72 @@ export const Dots = ({ children }: { children: ReactNode }) => {
   )
 }
 
-const SwapCallbackErrorInner = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.critical)};
-  border-radius: 1rem;
-  display: flex;
-  align-items: center;
-  font-size: 0.825rem;
-  width: 100%;
-  padding: 3rem 1.25rem 1rem 1rem;
-  margin-top: -2rem;
-  color: ${({ theme }) => theme.critical};
-  z-index: -1;
-  p {
-    padding: 0;
-    margin: 0;
-    font-weight: 535;
-  }
-`
+const SwapCallbackErrorInner = TamaguiStyled(Flex, {
+  flexDirection: 'row',
+  backgroundColor: '$statusCritical2',
+  borderRadius: '$rounded12',
+  alignItems: 'center',
+  mt: -32,
+  width: '100%',
+  zIndex: -1,
+  pt: 48,
+  pr: 20,
+  pb: 16,
+  pl: 16,
+})
 
-const SwapCallbackErrorInnerAlertTriangle = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.critical)};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 12px;
-  border-radius: 12px;
-  min-width: 48px;
-  height: 48px;
-`
+const SwapCallbackErrorInnerAlertTriangle = TamaguiStyled(Flex, {
+  backgroundColor: '$statusCritical2',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginRight: 12,
+  borderRadius: '$rounded12',
+  minWidth: 48,
+  height: 48,
+})
 
 export function SwapCallbackError({ error }: { error: ReactNode }) {
   return (
     <SwapCallbackErrorInner>
       <SwapCallbackErrorInnerAlertTriangle>
-        <AlertTriangle size={24} />
+        <AlertTriangleFilled size={24} color="$statusCritical" />
       </SwapCallbackErrorInnerAlertTriangle>
-      <p style={{ wordBreak: 'break-word' }}>{error}</p>
+      <Text variant="body4" color="$statusCritical" $platform-web={{ wordBreak: 'break-word' }}>
+        {error}
+      </Text>
     </SwapCallbackErrorInner>
   )
 }
 
-export const SwapShowAcceptChanges = styled(AutoColumn)`
-  background-color: ${({ theme }) => transparentize(0.95, theme.accent1)};
-  color: ${({ theme }) => theme.accent1};
-  padding: 12px;
-  border-radius: 12px;
-`
+export const SwapShowAcceptChanges = TamaguiStyled(Flex, {
+  backgroundColor: '$accent2',
+  p: '$spacing12',
+  borderRadius: '$rounded12',
+})
 
-export const SwapSection = styled.div`
-  background-color: ${({ theme }) => theme.surface2};
-  border-radius: 16px;
-  color: ${({ theme }) => theme.neutral2};
-  font-size: 14px;
-  font-weight: 500;
-  height: 120px;
-  line-height: 20px;
-  padding: 16px;
-  position: relative;
-  &:before {
-    box-sizing: border-box;
-    background-size: 100%;
-    border-radius: inherit;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    content: '';
-    border: 1px solid ${({ theme }) => theme.surface2};
-  }
-  &:hover:before {
-    border-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
-  }
-  &:focus-within:before {
-    border-color: ${({ theme }) => theme.deprecated_stateOverlayPressed};
-  }
-`
+export const SwapSection = TamaguiStyled(Flex, {
+  backgroundColor: '$surface2',
+  borderRadius: '$rounded16',
+  height: '120px',
+  p: '$spacing16',
+  position: 'relative',
+  borderStyle: 'solid',
+  borderWidth: '$spacing1',
+  borderColor: '$surface2',
 
-export const ArrowContainer = styled.div`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-`
+  hoverStyle: {
+    borderColor: '$surface2Hovered',
+  },
+
+  focusWithinStyle: {
+    borderColor: '$surface3',
+  },
+})
+
+export const ArrowContainer = TamaguiStyled(Flex, {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  height: '100%',
+})

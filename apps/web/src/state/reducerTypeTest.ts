@@ -30,9 +30,10 @@ import { NotificationState } from 'uniswap/src/features/notifications/slice'
 import { PortfolioState } from 'uniswap/src/features/portfolio/slice/slice'
 import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { UserSettingsState } from 'uniswap/src/features/settings/slice'
+import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
 import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
-import { transactionSettingsReducer } from 'uniswap/src/features/transactions/settings/slice'
+import { transactionSettingsReducer } from 'uniswap/src/features/transactions/components/settings/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/contexts/slice'
 import { VisibilityState } from 'uniswap/src/features/visibility/slice'
@@ -86,6 +87,7 @@ type ExpectedAppState = CombinedState<{
   readonly visibility: VisibilityState
   readonly walletCapabilities: WalletCapabilitiesState
   readonly swapSettings: SwapSettingsState
+  readonly delegation: DelegatedState
 }>
 
 assert<Equals<InterfaceState, ExpectedAppState>>()
@@ -105,6 +107,7 @@ interface ExpectedUserState {
   timestamp: number
   showSurveyPopup?: boolean
   originCountry?: string
+  isEmbeddedWalletBackedUp?: boolean
 }
 
 assert<Equals<UserState, ExpectedUserState>>()
@@ -135,6 +138,7 @@ interface ExpectedApplicationState {
   readonly chainId: number | null
   readonly openModal: OpenModalParams | null
   readonly suppressedPopups: PopupType[]
+  readonly downloadGraduatedWalletCardsDismissed: string[]
 }
 
 assert<Equals<ApplicationState, ExpectedApplicationState>>()
@@ -142,8 +146,6 @@ assert<Equals<ApplicationState, ExpectedApplicationState>>()
 interface ExpectedWalletState {
   connectedWallets: Wallet[]
   switchingChain: UniverseChainId | false
-  delegatedState: Record<string, string>
-  activeChainId?: UniverseChainId
 }
 
 assert<Equals<ConnectedWalletsState, ExpectedWalletState>>()

@@ -44,7 +44,7 @@ export function IntroScreen(): JSX.Element {
             <Flex row backgroundColor="$surface1" borderRadius="$rounded16">
               <Button
                 variant="branded"
-                onPress={(): void => navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Claim}`)}
+                onPress={(): void => navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}`)}
               >
                 {isPasskeyImportEnabled
                   ? t('onboarding.landing.button.createAccount')
@@ -61,7 +61,7 @@ export function IntroScreen(): JSX.Element {
                 }
               >
                 {isPasskeyImportEnabled
-                  ? t('onboarding.intro.button.signInOrImport')
+                  ? t('onboarding.intro.button.logInOrImport')
                   : t('onboarding.intro.button.alreadyHave')}
               </Button>
             </Flex>

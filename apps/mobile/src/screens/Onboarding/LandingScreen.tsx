@@ -132,7 +132,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                     variant="buttonLabel1"
                   >
                     {isEmbeddedWalletEnabled
-                      ? t('onboarding.intro.button.signInOrImport')
+                      ? t('onboarding.intro.button.logInOrImport')
                       : t('onboarding.landing.button.add')}
                   </Text>
                 </TouchableArea>

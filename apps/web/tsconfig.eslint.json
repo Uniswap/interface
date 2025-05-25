@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/**/*", "src/**/*.json", ".storybook/preview.tsx", ".storybook/main.ts","functions/**/*","cypress/**/*", "*.ts"],
+  "include": ["src/**/*", "src/**/*.json", ".storybook/preview.tsx", ".storybook/main.ts","functions/**/*","cypress/**/*", "*.ts", "vite/**/*", "*.mts"],
   "references": []
 }

@@ -137,6 +137,7 @@ export function AccountHeader(): JSX.Element {
                 flexDirection="row"
                 hitSlop={20}
                 testID={TestID.AccountHeaderAvatar}
+                dd-action-name={TestID.AccountHeaderAvatar}
                 onLongPress={async (): Promise<void> => {
                   if (isDevEnv()) {
                     navigate(ModalName.Experiments)
@@ -180,7 +181,12 @@ export function AccountHeader(): JSX.Element {
               )}
             </Flex>
             <Flex row alignItems="flex-start" gap="$spacing16">
-              <TouchableArea scaleTo={SCAN_ICON_ACTIVE_SCALE} activeOpacity={1} onPress={onPressScan}>
+              <TouchableArea
+                scaleTo={SCAN_ICON_ACTIVE_SCALE}
+                activeOpacity={1}
+                dd-action-name="Scan"
+                onPress={onPressScan}
+              >
                 <ScanHome color="$neutral2" size="$icon.28" />
               </TouchableArea>
               <RotatingSettingsIcon onPressSettings={onPressSettings} />

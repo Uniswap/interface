@@ -12,12 +12,8 @@ export interface AppModalState<T> {
 export interface ModalsState {
   [ModalName.Experiments]: AppModalState<undefined>
   [ModalName.FiatOnRampAggregator]: AppModalState<FiatOnRampModalState>
-  [ModalName.LanguageSelector]: AppModalState<undefined>
-  [ModalName.PortfolioBalanceModal]: AppModalState<undefined>
-  [ModalName.PermissionsModal]: AppModalState<undefined>
   [ModalName.QueuedOrderModal]: AppModalState<undefined>
   [ModalName.Send]: AppModalState<TransactionState & { sendScreen: TransactionScreen }>
   [ModalName.Swap]: AppModalState<TransactionState>
-  [ModalName.SettingsAppearance]: AppModalState<undefined>
   [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
 }

@@ -7,7 +7,7 @@ if (process.env.CI !== 'true') {
 }
 
 export default defineConfig({
-  testDir: './src/pages',
+  testDir: './src',
   testMatch: '**/*.e2e.test.ts',
   // TODO: WEB-7311 - Increase number of workers
   workers: 1,

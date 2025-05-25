@@ -5,10 +5,12 @@ import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
 import { MobileState, mobilePersistedStateList, mobileReducer } from 'src/app/mobileReducer'
 import { rootMobileSaga } from 'src/app/saga'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { delegationListenerMiddleware } from 'uniswap/src/features/smartWallet/delegation/slice'
 import { isNonJestDev } from 'utilities/src/environment/constants'
 import { createDatadogReduxEnhancer } from 'utilities/src/logger/datadog/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
+import { setReduxPersistor } from 'wallet/src/state/persistor'
 
 const storage = new MMKV()
 
@@ -51,7 +53,7 @@ if (isNonJestDev) {
   enhancers.push(reactotron.createEnhancer())
 }
 
-const middlewares: Middleware[] = [fiatOnRampAggregatorApi.middleware]
+const middlewares: Middleware[] = [fiatOnRampAggregatorApi.middleware, delegationListenerMiddleware.middleware]
 
 const setupStore = (
   preloadedState?: PreloadedState<MobileState>,
@@ -65,6 +67,6 @@ const setupStore = (
     enhancers,
   })
 }
-export const store = setupStore()
 
-export const persistor = persistStore(store)
+export const store = setupStore()
+setReduxPersistor(persistStore(store))

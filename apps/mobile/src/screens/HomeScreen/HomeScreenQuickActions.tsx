@@ -93,7 +93,7 @@ export function HomeScreenQuickActions(): JSX.Element {
     <Flex centered row gap="$spacing8" px="$spacing12">
       {actions.map(({ eventName, name, label, Icon, onPress }) => (
         <Trace key={name} logPress element={name} eventOnTrigger={eventName}>
-          <TouchableArea flex={1} scaleTo={activeScale} onPress={onPress}>
+          <TouchableArea flex={1} dd-action-name={name} scaleTo={activeScale} onPress={onPress}>
             <Flex
               fill
               backgroundColor="$accent2"

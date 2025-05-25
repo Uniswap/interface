@@ -15,3 +15,5 @@ export const WEB_HOVER_SCALE = 1.1
 export const logoSize = isInterfaceDesktop ? iconSizes.icon20 : iconSizes.icon24
 
 export const extraMarginForHoverAnimation = isHoverable ? Math.ceil(logoSize * (WEB_HOVER_SCALE - 1)) : 0
+
+// number of times i've used this comment to restart a CI: 7

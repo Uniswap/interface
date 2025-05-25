@@ -10,6 +10,7 @@ describe('application reducer', () => {
       chainId: null,
       openModal: null,
       suppressedPopups: [],
+      downloadGraduatedWalletCardsDismissed: [],
     })
   })
 

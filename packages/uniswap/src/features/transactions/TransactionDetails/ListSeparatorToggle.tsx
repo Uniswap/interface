@@ -14,9 +14,10 @@ export function ListSeparatorToggle({
   closedText: string
 }): JSX.Element {
   return (
-    <Flex centered row gap="$spacing16" mb="$spacing16" px="$spacing12">
+    <Flex group centered row gap="$spacing16" mb="$spacing16" px="$spacing12">
       <Separator />
       <TouchableArea
+        flexGrow={1}
         alignItems="center"
         flexDirection="row"
         justifyContent="center"
@@ -24,13 +25,13 @@ export function ListSeparatorToggle({
         pt="$spacing8"
         onPress={onPress}
       >
-        <Text color="$neutral3" variant="body3">
+        <Text $group-hover={{ color: '$neutral2Hovered' }} color="$neutral2" variant="body3">
           {isOpen ? openText : closedText}
         </Text>
         {isOpen ? (
-          <AnglesMinimize color="$neutral3" size="$icon.20" />
+          <AnglesMinimize color="$neutral2" size="$icon.20" />
         ) : (
-          <AnglesMaximize color="$neutral3" size="$icon.20" />
+          <AnglesMaximize color="$neutral2" size="$icon.20" />
         )}
       </TouchableArea>
       <Separator />

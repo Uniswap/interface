@@ -340,6 +340,7 @@ export function LiquidityRangeInput({
               Model={LPPriceChartModel}
               params={priceChartParams}
               height={sizes.chartHeight + sizes.bottomAxisHeight}
+              disableChartTouchPanning={true}
             />
           )}
         </Flex>

@@ -13,8 +13,19 @@ function expectedOutput(l: Locale): string {
     case 'sw-TZ':
     case 'zh-Hans':
     case 'ur-PK':
-    case 'es-US':
     case 'es-419':
+    case 'es-BZ':
+    case 'es-CU':
+    case 'es-DO':
+    case 'es-GT':
+    case 'es-HN':
+    case 'es-MX':
+    case 'es-NI':
+    case 'es-PA':
+    case 'es-PE':
+    case 'es-PR':
+    case 'es-SV':
+    case 'es-US':
     case 'ms-MY':
     case 'ko-KR':
       return `4,000,000.123`
@@ -35,12 +46,21 @@ function expectedOutput(l: Locale): string {
     case 'ru-RU':
     case 'sv-SE':
     case 'uk-UA':
+    case 'es-CR':
       // eslint-disable-next-line no-irregular-whitespace
       return `4 000 000,123`
     case 'ca-ES':
     case 'da-DK':
     case 'el-GR':
     case 'es-ES':
+    case 'es-AR':
+    case 'es-BO':
+    case 'es-CL':
+    case 'es-CO':
+    case 'es-EC':
+    case 'es-PY':
+    case 'es-UY':
+    case 'es-VE':
     case 'id-ID':
     case 'it-IT':
     case 'nl-NL':

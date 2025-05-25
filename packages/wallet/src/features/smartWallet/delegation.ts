@@ -15,9 +15,12 @@ const delegationRepository: DelegationRepository = {
   },
 }
 
-export const getDelegationService = (): DelegationService => {
+export const getDelegationService = (ctx?: {
+  onDelegationDetected?: (input: { chainId: number; address: string }) => void
+}): DelegationService => {
   return createDelegationService({
     logger: getLogger(),
     delegationRepository,
+    onDelegationDetected: ctx?.onDelegationDetected,
   })
 }

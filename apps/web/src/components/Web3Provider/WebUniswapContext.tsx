@@ -11,11 +11,8 @@ import React, { PropsWithChildren, useCallback, useEffect, useMemo } from 'react
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { serializeSwapAddressesToURLParameters } from 'state/swap/hooks'
-import { useGetGeneratePermitAsTransaction } from 'state/walletCapabilities/hooks/useGetGeneratePermitAsTransaction'
 import { useIsAtomicBatchingSupportedByChainIdCallback } from 'state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
 import { useHasMismatchCallback, useShowMismatchToast } from 'state/walletCapabilities/hooks/useMismatchAccount'
-import { useSetActiveChainId } from 'state/wallets/hooks'
-import { ConnectedWalletsState } from 'state/wallets/types'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -23,14 +20,18 @@ import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useSetActiveChainId } from 'uniswap/src/features/smartWallet/delegation/hooks/useSetActiveChainId'
+import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
 import noop from 'utilities/src/react/noop'
 import { Connector } from 'wagmi'
+
 // Adapts useEthersProvider to fit uniswap context hook shape
 function useWebProvider(chainId: number) {
   return useEthersProvider({ chainId })
@@ -127,7 +128,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     }
     return true
   })
-  const getGeneratePermitAsTransaction = useGetGeneratePermitAsTransaction()
+  const getCanSignPermits = useGetCanSignPermits()
 
   // no-op until we have an external profile screen on web
   const navigateToExternalProfile = useCallback((_: { address: Address }) => noop(), [])
@@ -185,7 +186,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToNftCollection={navigateToNftCollection}
       handleShareToken={handleShareToken}
       onConnectWallet={accountDrawer.open}
-      getGeneratePermitAsTransaction={getGeneratePermitAsTransaction}
+      getCanSignPermits={getCanSignPermits}
       getIsUniswapXSupported={getIsUniswapXSupported}
       handleOnPressUniswapXUnsupported={handleOpenUniswapXUnsupportedModal}
       getCanBatchTransactions={getCanBatchTransactions}
@@ -221,7 +222,7 @@ MismatchContextWrapper.displayName = 'MismatchContextWrapper'
  * Sets the active chain id when the account chain id changes
  */
 function useAccountChainIdEffect() {
-  const currentChainId = useSelector((state: { wallets: ConnectedWalletsState }) => state.wallets.activeChainId)
+  const currentChainId = useSelector((state: { delegation: DelegatedState }) => state.delegation.activeChainId)
   const { chainId, connector } = useAccount()
   const { defaultChainId } = useEnabledChainsWithConnector(connector)
   const accountChainId = chainId ?? defaultChainId

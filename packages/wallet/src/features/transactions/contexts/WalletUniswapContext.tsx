@@ -5,9 +5,12 @@ import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useUpdateDelegatedState } from 'uniswap/src/features/smartWallet/delegation/hooks/useUpdateDelegateState'
 import { MismatchContextProvider } from 'uniswap/src/features/smartWallet/mismatch/MismatchContext'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { createHasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
+import { useGetCanSignPermits } from 'uniswap/src/features/transactions/hooks/useGetCanSignPermits'
+import { useGetSwapDelegationAddress } from 'uniswap/src/features/transactions/hooks/useGetSwapDelegationAddress'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { getLogger, logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -87,6 +90,8 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
     }
     return true
   })
+  const getCanSignPermits = useGetCanSignPermits()
+  const getSwapDelegationAddress = useGetSwapDelegationAddress()
 
   return (
     <UniswapProvider
@@ -103,6 +108,8 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
       signer={signer}
       useProviderHook={useWalletProvider}
       getIsUniswapXSupported={getIsUniswapXSupported}
+      getCanSignPermits={getCanSignPermits}
+      getSwapDelegationAddress={getSwapDelegationAddress}
       onSwapChainsChanged={showSwapNetworkNotification}
     >
       {children}
@@ -120,7 +127,7 @@ const MismatchContextWrapper = React.memo(function MismatchContextWrapper({
 }: PropsWithChildren): JSX.Element {
   const account = useActiveAccount() ?? undefined
   const { defaultChainId, chains, isTestnetModeEnabled } = useEnabledChainsWithConnector()
-
+  const mismatchCallback = useMismatchCallback()
   return (
     <MismatchContextProvider
       address={account?.address}
@@ -140,12 +147,22 @@ const MismatchContextWrapper = React.memo(function MismatchContextWrapper({
 
 MismatchContextWrapper.displayName = 'MismatchContextWrapper'
 
-const mismatchCallback = (input: { chainId: UniverseChainId; address: string }): Promise<boolean> =>
-  createHasMismatchUtil({
-    logger: getLogger(),
-    delegationService: getDelegationService(),
-    getIsAtomicBatchingSupported: async () => {
-      // hardcoded to false for now
-      return false
-    },
-  })(input)
+function useMismatchCallback(): (input: { chainId: UniverseChainId; address: string }) => Promise<boolean> {
+  const updateDelegatedState = useUpdateDelegatedState()
+  return useEvent(
+    async (input: { chainId: UniverseChainId; address: string }): Promise<boolean> =>
+      createHasMismatchUtil({
+        logger: getLogger(),
+        delegationService: getDelegationService({
+          onDelegationDetected: (payload) => {
+            // update redux state
+            updateDelegatedState({ chainId: String(payload.chainId), address: payload.address })
+          },
+        }),
+        getIsAtomicBatchingSupported: async () => {
+          // hardcoded to false for now
+          return false
+        },
+      })(input),
+  )
+}

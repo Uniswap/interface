@@ -10,15 +10,16 @@ import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
-import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
-import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow/MaxSlippageRow'
 import { AcceptNewQuoteRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/AcceptNewQuoteRow'
 import { HeightAnimatorWrapper } from 'uniswap/src/features/transactions/swap/review/SwapDetails/HeightAnimatorWrapper'
-import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/review/SwapDetails/PriceImpactRow'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
-import { RoutingInfo } from 'uniswap/src/features/transactions/swap/review/modals/RoutingInfo'
+import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/shared-components/AcrossRoutingInfo'
+import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/shared-components/MaxSlippageRow/MaxSlippageRow'
+import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/shared-components/PriceImpactRow/PriceImpactRow'
+import { RoutingInfo } from 'uniswap/src/features/transactions/swap/shared-components/RoutingInfo'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
@@ -62,6 +63,7 @@ export function SwapDetails({
   txSimulationErrors,
 }: SwapDetailsProps): JSX.Element {
   const v4SwapEnabled = useV4SwapEnabled(derivedSwapInfo.chainId)
+  const priceUxEnabled = usePriceUXEnabled()
   const { t } = useTranslation()
 
   const isBridgeTrade = derivedSwapInfo.trade.trade && isBridge(derivedSwapInfo.trade.trade)
@@ -120,15 +122,14 @@ export function SwapDetails({
         estimatedBridgingTime={estimatedBridgingTime}
         isBridgeTrade={isBridgeTrade ?? false}
         txSimulationErrors={txSimulationErrors}
+        amountUserWillReceive={derivedSwapInfo.outputAmountUserWillReceive ?? undefined}
         onShowWarning={onShowWarning}
       >
         <Flex row alignItems="center" justifyContent="space-between">
           <Text color="$neutral2" variant="body3">
             {t('swap.details.rate')}
           </Text>
-          <Flex row shrink justifyContent="flex-end">
-            <SwapRateRatio trade={trade} />
-          </Flex>
+          <SwapRateRatio trade={trade} justifyContent="flex-end" />
         </Flex>
         {isBridgeTrade && <EstimatedTime visibleIfLong={false} timeMs={estimatedBridgingTime} />}
         {isBridgeTrade && <AcrossRoutingInfo />}
@@ -142,7 +143,7 @@ export function SwapDetails({
         {!isBridgeTrade && v4SwapEnabled && (
           <RoutingInfo gasFee={gasFee} chainId={acceptedTrade.inputAmount.currency.chainId} />
         )}
-        <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} />
+        {!priceUxEnabled && <PriceImpactRow derivedSwapInfo={acceptedDerivedSwapInfo} />}
       </TransactionDetails>
     </HeightAnimatorWrapper>
   )

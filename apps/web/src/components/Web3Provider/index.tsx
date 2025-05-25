@@ -1,8 +1,7 @@
 import { Web3Provider as EthersWeb3Provider, ExternalProvider } from '@ethersproject/providers'
-import { QueryClientProvider } from '@tanstack/react-query'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { UNISWAP_EXTENSION_CONNECTOR_NAME, recentConnectorIdAtom } from 'components/Web3Provider/constants'
-import { queryClient, wagmiConfig } from 'components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useAccount } from 'hooks/useAccount'
@@ -32,12 +31,10 @@ import { WagmiProvider, useAccount as useAccountWagmi } from 'wagmi'
 export default function Web3Provider({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <ConnectionProvider>
-          <WalletCapabilitiesEffects />
-          {children}
-        </ConnectionProvider>
-      </QueryClientProvider>
+      <ConnectionProvider>
+        <WalletCapabilitiesEffects />
+        {children}
+      </ConnectionProvider>
     </WagmiProvider>
   )
 }
@@ -53,7 +50,7 @@ export function Web3ProviderUpdater() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
   const networkProvider = isSupportedChain && account.chainId ? RPC_PROVIDERS[account.chainId] : undefined
-  const { trackConversions } = useConversionTracking()
+  const { trackConversions } = useConversionTracking(account.address)
 
   const updateRecentConnectorId = useUpdateAtom(recentConnectorIdAtom)
   useEffect(() => {
@@ -91,13 +88,13 @@ export function Web3ProviderUpdater() {
       sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account.address,
-        wallet_type: connector?.name ?? 'Network',
+        wallet_type: walletTypeToAmplitudeWalletType(connector?.type),
         chain_id: accountWagmiChainId,
         previousConnectedChainId,
         page: currentPage,
       })
     }
-  }, [account.address, accountWagmiChainId, connector?.name, currentPage, previousConnectedChainId])
+  }, [account.address, accountWagmiChainId, connector?.type, currentPage, previousConnectedChainId])
 
   // Send analytics events when the active account changes.
   const previousAccount = usePrevious(account.address)

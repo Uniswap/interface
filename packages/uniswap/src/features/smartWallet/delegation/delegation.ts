@@ -10,11 +10,24 @@ export function createDelegationService(ctx: {
   return {
     getIsAddressDelegated: async (input: { address: Address; chainId: number }): Promise<DelegatedResult> => {
       const bytecode = ensure0xHex(await ctx.delegationRepository.getWalletBytecode(input))
+      ctx.logger?.info(
+        'delegation.ts',
+        'getIsAddressDelegated',
+        `Checking if address ${input.address} is delegated on chain ${input.chainId}`,
+        {
+          bytecode,
+        },
+      )
       const isDelegatedEOAOutput = isDelegatedEOA({
         bytecode,
       })
       if (isDelegatedEOAOutput.isDelegated && isDelegatedEOAOutput.delegateTo) {
         ctx.onDelegationDetected?.({ address: isDelegatedEOAOutput.delegateTo, chainId: input.chainId })
+        ctx.logger?.info(
+          'delegation.ts',
+          'getIsAddressDelegated',
+          `Address ${input.address} is delegated on chain ${input.chainId} to ${isDelegatedEOAOutput.delegateTo}`,
+        )
         return {
           isDelegated: true,
           delegatedAddress: isDelegatedEOAOutput.delegateTo,

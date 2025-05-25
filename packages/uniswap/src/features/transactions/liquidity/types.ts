@@ -56,6 +56,7 @@ interface BaseLiquidityTxAndGasInfo {
   permit: PermitTypedData | undefined
   token0PermitTransaction: ValidatedTransactionRequest | undefined
   token1PermitTransaction: ValidatedTransactionRequest | undefined
+  positionTokenPermitTransaction: ValidatedTransactionRequest | undefined
   revokeToken0Request: ValidatedTransactionRequest | undefined
   revokeToken1Request: ValidatedTransactionRequest | undefined
   txRequest: ValidatedTransactionRequest | undefined

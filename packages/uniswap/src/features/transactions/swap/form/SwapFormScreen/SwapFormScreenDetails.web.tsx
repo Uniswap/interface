@@ -1,12 +1,14 @@
 import { Accordion, Flex } from 'ui/src'
 import { ExpandableRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/ExpandableRows'
 import { SwapFormScreenFooter } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenFooter'
-import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals'
+import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
 import { SwapFormButton } from 'uniswap/src/features/transactions/swap/form/body/SwapFormButton/SwapFormButton'
 import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
 import { SwapFormWarningStateProvider } from 'uniswap/src/features/transactions/swap/form/context/SwapFormWarningStateContextProvider'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 
 export function SwapFormScreenDetails(): JSX.Element {
+  const isPriceUXEnabled = usePriceUXEnabled()
   const { tokenColor, isBridge, showFooter } = useSwapFormScreenState()
 
   return (
@@ -19,7 +21,7 @@ export function SwapFormScreenDetails(): JSX.Element {
               }
             `}</style>
         <Flex>
-          <Flex pt="$spacing4">
+          <Flex>
             <SwapFormWarningStateProvider>
               <SwapFormButton tokenColor={tokenColor} />
               <SwapFormWarningModals />
@@ -27,7 +29,7 @@ export function SwapFormScreenDetails(): JSX.Element {
           </Flex>
           <SwapFormScreenFooter />
         </Flex>
-        {showFooter ? <ExpandableRows isBridge={isBridge} /> : null}
+        {showFooter && !isPriceUXEnabled ? <ExpandableRows isBridge={isBridge} /> : null}
       </Accordion.Item>
     </Accordion>
   )

@@ -3,6 +3,7 @@ import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import {
+  getDisplayableError,
   handleApprovalTransactionStep,
   handleOnChainStep,
   HandleOnChainStepParams,
@@ -158,8 +159,8 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
 
   let signature: string | undefined
 
-  try {
-    for (const step of steps) {
+  for (const step of steps) {
+    try {
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
@@ -186,12 +187,15 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
           throw new Error('Unexpected step type')
         }
       }
+    } catch (e) {
+      const displayableError = getDisplayableError(e, step, 'liquidity')
+
+      if (displayableError) {
+        logger.error(displayableError, { tags: { file: 'liquiditySaga', function: 'modifyLiquidity' } })
+      }
+      onFailure()
+      return
     }
-  } catch (e: unknown) {
-    const cause = e instanceof Error && e.cause // this will contain the trading api error and requestID
-    logger.error(e, { tags: { file: 'liquiditySaga', function: 'modifyLiquidity' }, extra: { tradingApiError: cause } })
-    onFailure()
-    return
   }
 
   yield* call(onSuccess)

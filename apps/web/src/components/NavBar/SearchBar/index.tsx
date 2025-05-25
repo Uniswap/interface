@@ -1,10 +1,9 @@
 import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
-import { ScrollBarStyles } from 'components/Common/styles'
+import { useSearchTokensGql } from 'appGraphql/data/SearchTokens'
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
 import { SearchModal } from 'components/NavBar/SearchBar/SearchModal'
 import Row from 'components/deprecated/Row'
-import { useSearchTokensGql } from 'graphql/data/SearchTokens'
 import useDebounce from 'hooks/useDebounce'
 import { useModalState } from 'hooks/useModalState'
 import styled, { css, useTheme } from 'lib/styled-components'
@@ -13,7 +12,7 @@ import { Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
-import { Flex, Input, Text, TouchableArea, useMedia } from 'ui/src'
+import { Flex, Input, Text, TouchableArea, useMedia, useScrollbarStyles } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
 import { breakpoints } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -147,7 +146,6 @@ const SearchBarDropdownContainer = styled.div<{ $isOpen: boolean; $fullScreen: b
   @media screen and (max-width: ${breakpoints.sm}px) {
     border: none;
   }
-  ${ScrollBarStyles}
 `
 const SearchIcon = styled.div`
   width: 20px;
@@ -176,6 +174,7 @@ export const SearchBar = ({
   const isNavSearchInputVisible = !media.xl
   const theme = useTheme()
   const { t } = useTranslation() // subscribe to locale changes
+  const scrollbarStyles = useScrollbarStyles()
 
   const {
     isOpen: isModalOpen,
@@ -331,7 +330,7 @@ export const SearchBar = ({
             </SearchInput>
           )}
           {isOpen && (
-            <SearchBarDropdownContainer $isOpen={isOpen} $fullScreen={fullScreen}>
+            <SearchBarDropdownContainer $isOpen={isOpen} $fullScreen={fullScreen} style={scrollbarStyles}>
               <SearchBarDropdown
                 toggleOpen={toggleOpen}
                 tokens={reducedTokens}

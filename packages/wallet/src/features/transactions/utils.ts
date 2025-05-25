@@ -6,6 +6,7 @@ import { isBridge, isUniswapX } from 'uniswap/src/features/transactions/swap/uti
 import {
   FinalizedTransactionStatus,
   TransactionDetails,
+  TransactionOptions,
   TransactionReceipt,
   TransactionStatus,
   TransactionType,
@@ -128,6 +129,16 @@ export function getDiff(value1: number | string | undefined, value2: number | un
     value1 = Number(value1)
   }
   return value1 !== undefined && value2 !== undefined ? value1 - value2 : undefined
+}
+
+export function getOptionalTransactionProperty<T>(
+  transaction: TransactionDetails,
+  accessor: (options: TransactionOptions) => T,
+): T | undefined {
+  if ('options' in transaction && transaction.options) {
+    return accessor(transaction.options)
+  }
+  return undefined
 }
 
 export function getPercentageError(

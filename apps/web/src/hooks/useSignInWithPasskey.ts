@@ -3,15 +3,19 @@ import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { useConnect } from 'hooks/useConnect'
 import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
+import { useDispatch } from 'react-redux'
 import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
+import { updateIsEmbeddedWalletBackedUp } from 'state/user/reducer'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import {
   createNewEmbeddedWallet,
   signInWithPasskey as signInWithPasskeyAPI,
   signMessagesWithPasskey,
 } from 'uniswap/src/features/passkey/embeddedWallet'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
+import { logger } from 'utilities/src/logger/logger'
 import { isIFramed } from 'utils/isIFramed'
 
 interface SignInWithPasskeyOptions {
@@ -46,51 +50,65 @@ export function useSignInWithPasskey({
     shouldThrow: true,
   })
   const claimUnitag = useClaimUnitag()
+  const dispatch = useDispatch()
 
-  const { mutate: signInWithPasskey, ...rest } = usePasskeyAuthWithHelpModal<string>(
-    async (): Promise<string> => {
+  const { mutate: signInWithPasskey, ...rest } = usePasskeyAuthWithHelpModal<{
+    walletAddress: string
+    exported?: boolean
+  }>(
+    async (): Promise<{ walletAddress: string; exported?: boolean }> => {
       // We do not support EW passkeys in iframes to prevent clickjacking
       // If a user is embedded in an iframe, they will be frame busted and redirected to the web app
       if (isIFramed(true)) {
         throw new Error('Passkeys are not supported in iframes')
       }
-      const walletAddress = createNewWallet ? await createNewEmbeddedWallet(unitag ?? '') : await signInWithPasskeyAPI()
-      if (!walletAddress) {
-        throw new Error(`Failed to ${createNewWallet ? 'create wallet for' : 'sign in with'} passkey`)
-      }
 
-      if (unitag) {
-        const unitagError = await claimUnitag(
-          {
-            address: walletAddress,
-            username: unitag,
-          },
-          {
-            source: 'onboarding',
-            hasENSAddress: false,
-          },
-          walletAddress,
-          async (message) => {
-            const messages = await signMessagesWithPasskey([message])
-            return messages?.[0] || ''
-          },
-        )
-
-        if (unitagError) {
-          // TODO(WEB-7294): retry unitag flow
+      if (createNewWallet) {
+        const walletAddress = await createNewEmbeddedWallet(unitag ?? '')
+        if (!walletAddress) {
+          throw new Error(`Failed to create wallet for passkey`)
         }
-        // TODO(WEB-7566): add analytics event for unitag claim success and failure
-      }
 
-      return walletAddress
+        if (unitag) {
+          const unitagResult = await claimUnitag(
+            {
+              address: walletAddress,
+              username: unitag,
+            },
+            {
+              source: 'onboarding',
+              hasENSAddress: false,
+            },
+            walletAddress,
+            async (message) => {
+              const messages = await signMessagesWithPasskey([message])
+              return messages?.[0] || ''
+            },
+          )
+
+          if (unitagResult.claimError) {
+            // TODO(WEB-7294): retry unitag flow
+          }
+        }
+
+        return { walletAddress }
+      } else {
+        const signInResponse = await signInWithPasskeyAPI()
+        if (!signInResponse) {
+          throw new Error(`Failed to sign in with passkey`)
+        }
+
+        return signInResponse
+      }
     },
     {
-      onSuccess: (walletAddress) => {
+      onSuccess: ({ walletAddress, exported }) => {
+        dispatch(updateIsEmbeddedWalletBackedUp({ isEmbeddedWalletBackedUp: exported ?? false }))
         setWalletAddress(walletAddress)
         setIsConnected(true)
         connection.connect({ connector })
         if (createNewWallet) {
-          // TODO(WEB-6180): add analytics event for wallet created
+          sendAnalyticsEvent(InterfaceEventNameLocal.EmbeddedWalletCreated)
         } else {
           sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
             result: WalletConnectionResult.SUCCEEDED,
@@ -103,13 +121,11 @@ export function useSignInWithPasskey({
       },
       onError: (error: Error) => {
         if (createNewWallet) {
-          // TODO(WEB-6180): add analytics event for wallet created
+          logger.error(error, { tags: { file: 'useSignInWithPasskey', function: 'onError' } })
         } else {
-          sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
-            result: WalletConnectionResult.FAILED,
-            wallet_name: connector.name,
-            wallet_type: walletTypeToAmplitudeWalletType(connector.type),
-            error: error.message,
+          logger.error(error, {
+            tags: { file: 'useSignInWithPasskey', function: 'onError' },
+            extra: { wallet_name: connector.name, wallet_type: walletTypeToAmplitudeWalletType(connector.type) },
           })
         }
         onError?.(error)

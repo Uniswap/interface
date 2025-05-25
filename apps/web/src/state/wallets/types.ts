@@ -9,7 +9,4 @@ export interface ConnectedWalletsState {
   // Used to compute is_reconnect event property for analytics
   connectedWallets: Wallet[]
   switchingChain: UniverseChainId | false
-  // chainId -> address
-  delegatedState: Record<string, string>
-  activeChainId?: UniverseChainId
 }

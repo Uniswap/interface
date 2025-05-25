@@ -16,19 +16,33 @@ exports[`NftTransactionDetails Component renders NftTransactionDetails without e
   >
     <View
       cancelable={true}
+      collapsable={false}
       disabled={false}
+      focusVisibleStyle={{}}
       focusable={true}
-      hitSlop={[Function]}
+      forwardedRef={[Function]}
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
       minPressDuration={0}
       onBlur={[Function]}
       onFocus={[Function]}
+      onLayout={[Function]}
       onMouseEnter={[Function]}
       onMouseLeave={[Function]}
       onPress={[Function]}
       onPressIn={[Function]}
       onPressOut={[Function]}
+      role="button"
       style={
         {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
           "flexDirection": "column",
           "opacity": 1,
           "transform": [
@@ -103,19 +117,27 @@ exports[`NftTransactionDetails Component renders NftTransactionDetails without e
         voluptates repudiandae aliquid
       </Text>
       <View
-        disabled={true}
-        hitSlop={
+        aria-disabled={true}
+        collapsable={false}
+        focusVisibleStyle={{}}
+        forwardedRef={[Function]}
+        jestAnimatedStyle={
           {
-            "bottom": 5,
-            "left": 5,
-            "right": 5,
-            "top": 5,
+            "value": {},
           }
         }
+        onLayout={[Function]}
+        pointerEvents="box-none"
+        role="button"
         style={
           {
+            "backgroundColor": "transparent",
+            "borderBottomLeftRadius": 12,
+            "borderBottomRightRadius": 12,
+            "borderTopLeftRadius": 12,
+            "borderTopRightRadius": 12,
             "flexDirection": "column",
-            "opacity": 1,
+            "opacity": 0.6,
             "transform": [
               {
                 "scale": 1,
@@ -123,10 +145,20 @@ exports[`NftTransactionDetails Component renders NftTransactionDetails without e
             ],
           }
         }
+        tabIndex={-1}
+        userSelect="none"
       >
         <View
+          onBlur={[Function]}
+          onFocus={[Function]}
           style={
             {
+              "color": {
+                "dynamic": {
+                  "dark": "rgba(255, 255, 255, 0.65)",
+                  "light": "rgba(19, 19, 19, 0.63)",
+                },
+              },
               "flexDirection": "row",
               "paddingRight": 12,
             }
@@ -136,6 +168,8 @@ exports[`NftTransactionDetails Component renders NftTransactionDetails without e
             allowFontScaling={false}
             maxFontSizeMultiplier={1.4}
             numberOfLines={1}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
                 "color": {

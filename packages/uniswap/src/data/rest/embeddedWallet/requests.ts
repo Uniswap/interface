@@ -20,11 +20,13 @@ import {
 } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getVersionHeader, REQUEST_SOURCE } from 'uniswap/src/data/constants'
-import { isProdEnv } from 'utilities/src/environment/env'
-import { isMobileApp } from 'utilities/src/platform'
+import { isBetaEnv, isProdEnv } from 'utilities/src/environment/env'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
+
+const isWalletBeta = (isExtension || isMobileApp) && isBetaEnv()
 
 const enclaveTransport = createConnectTransport({
-  baseUrl: isProdEnv() ? uniswapUrls.evervaultProductionUrl : uniswapUrls.evervaultStagingUrl,
+  baseUrl: isProdEnv() || isWalletBeta ? uniswapUrls.evervaultProductionUrl : uniswapUrls.evervaultStagingUrl,
   credentials: 'include',
   interceptors: [
     (next) =>
@@ -120,7 +122,7 @@ export async function fetchDisconnectRequest(): Promise<DisconnectWalletResponse
 export async function fetchListAuthenticatorsRequest({
   credential,
 }: {
-  credential: string
+  credential?: string
 }): Promise<ListAuthenticatorsResponse> {
   return await EMBEDDED_WALLET_CLIENT.listAuthenticators({ credential })
 }

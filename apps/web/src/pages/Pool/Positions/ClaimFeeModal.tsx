@@ -115,7 +115,8 @@ export function ClaimFeeModal() {
   const dispatch = useAppDispatch()
 
   const selectChain = useSelectChain()
-  const startChainId = useAccount().chainId
+  const connectedAccount = useAccount()
+  const startChainId = connectedAccount.chainId
 
   const claimLpFeesParams = useMemo(() => {
     if (!positionInfo || !currency0 || !currency1) {

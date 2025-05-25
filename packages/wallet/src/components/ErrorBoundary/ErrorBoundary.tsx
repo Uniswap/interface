@@ -8,7 +8,7 @@ import { DEAD_LUNI } from 'ui/src/assets'
 import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { logger } from 'utilities/src/logger/logger'
-import { restartApp } from 'wallet/src/components/ErrorBoundary/restart'
+import { restartApp } from 'wallet/src/components/ErrorBoundary/restartApp'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 

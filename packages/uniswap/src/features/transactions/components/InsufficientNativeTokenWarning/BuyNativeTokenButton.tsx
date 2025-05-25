@@ -19,7 +19,7 @@ export function BuyNativeTokenButton({
   onPress?: () => void
   usesStaticText?: boolean
   usesStaticTheme?: boolean
-}): JSX.Element {
+}): JSX.Element | null {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const { foreground, background } = useNetworkColors(nativeCurrencyInfo.currency?.chainId ?? defaultChainId)
@@ -27,7 +27,7 @@ export function BuyNativeTokenButton({
   const backgroundColorFromChain = validColor(background)
 
   const { navigateToFiatOnRamp } = useUniswapContext()
-  const { currency: fiatOnRampCurrency } = useIsSupportedFiatOnRampCurrency(
+  const { currency: fiatOnRampCurrency, isLoading } = useIsSupportedFiatOnRampCurrency(
     nativeCurrencyInfo?.currencyId ?? '',
     !nativeCurrencyInfo,
   )
@@ -37,10 +37,16 @@ export function BuyNativeTokenButton({
     navigateToFiatOnRamp({ prefilledCurrency: fiatOnRampCurrency })
   }
 
+  // prevent users from attempting to buy an unsupported token
+  if (!fiatOnRampCurrency) {
+    return null
+  }
+
   return (
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
       <Flex row alignSelf="stretch">
         <Button
+          isDisabled={isLoading}
           backgroundColor={usesStaticTheme ? undefined : backgroundColorFromChain}
           borderColor="$transparent"
           size="medium"

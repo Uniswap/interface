@@ -1,16 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SelectWalletsSkeleton } from 'src/app/components/loading/SelectWalletSkeleton'
-import { saveDappConnection } from 'src/app/features/dapp/actions'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
 import { Flex, ScrollView, SpinningLoader, Square, Text } from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { useAsyncData, useEvent } from 'utilities/src/react/hooks'
@@ -22,7 +18,6 @@ import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.Element {
   const { t } = useTranslation()
-  const shouldAutoConnect = useFeatureFlag(FeatureFlags.ExtensionAutoConnect)
   const [buttonClicked, setButtonClicked] = useState(false)
 
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
@@ -42,16 +37,10 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
     }
 
     setButtonClicked(true)
-    const importedAccounts = await generateAccountsAndImportAddresses({
+    await generateAccountsAndImportAddresses({
       selectedAddresses,
       backupType: flow === ExtensionOnboardingFlow.Passkey ? BackupType.Passkey : BackupType.Manual,
     })
-
-    // TODO(EXT-1375): figure out how to better auto connect existing wallets that may have connected via WC or some other method.
-    // Once that's solved the feature flag can be turned on/removed.
-    if (shouldAutoConnect && importedAccounts?.[0]) {
-      await saveDappConnection(UNISWAP_WEB_URL, importedAccounts[0])
-    }
 
     goToNextStep()
     setButtonClicked(false)

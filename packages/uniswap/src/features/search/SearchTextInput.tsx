@@ -200,7 +200,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 {...(isAndroid && {
                   width: value ? undefined : 9999,
                 })}
-                width="100%"
                 onChangeText={onChangeTextInput}
                 onFocus={onTextInputFocus}
                 onSubmitEditing={dismissNativeKeyboard}

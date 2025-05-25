@@ -12,6 +12,7 @@ import {
 } from 'src/features/walletConnect/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
+import { DappRequestType } from 'uniswap/src/types/walletConnect'
 
 const EIP155_MAINNET = 'eip155:1'
 const EIP155_POLYGON = 'eip155:137'
@@ -118,11 +119,12 @@ describe(parseGetCapabilitiesRequest, () => {
       internalId: String(mockInternalId),
       account: TEST_ADDRESS,
       chainIds: undefined,
-      dapp: {
+      isLinkModeSupported: false,
+      dappRequestInfo: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        source: 'walletconnect',
+        requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
   })
@@ -140,11 +142,12 @@ describe(parseGetCapabilitiesRequest, () => {
       internalId: String(mockInternalId),
       account: TEST_ADDRESS,
       chainIds,
-      dapp: {
+      isLinkModeSupported: false,
+      dappRequestInfo: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        source: 'walletconnect',
+        requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
   })
@@ -175,11 +178,12 @@ describe(parseSignRequest, () => {
       chainId: mockChainId,
       rawMessage: message,
       message: 'Hello World',
-      dapp: {
+      isLinkModeSupported: false,
+      dappRequestInfo: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        source: 'walletconnect',
+        requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
   })
@@ -198,11 +202,12 @@ describe(parseSignRequest, () => {
       chainId: mockChainId,
       rawMessage: message,
       message: 'Hello World',
-      dapp: {
+      isLinkModeSupported: false,
+      dappRequestInfo: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        source: 'walletconnect',
+        requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
   })
@@ -221,11 +226,12 @@ describe(parseSignRequest, () => {
       chainId: mockChainId,
       rawMessage: typedData,
       message: null,
-      dapp: {
+      isLinkModeSupported: false,
+      dappRequestInfo: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        source: 'walletconnect',
+        requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
   })
@@ -268,6 +274,7 @@ describe(parseTransactionRequest, () => {
       internalId: String(mockInternalId),
       account: TEST_ADDRESS,
       chainId: mockChainId,
+      isLinkModeSupported: false,
       transaction: {
         from: TEST_ADDRESS,
         to: '0x1234567890123456789012345678901234567890',
@@ -276,11 +283,11 @@ describe(parseTransactionRequest, () => {
         value: '0x0',
         // gasPrice and nonce should be omitted
       },
-      dapp: {
+      dappRequestInfo: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        source: 'walletconnect',
+        requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
   })
@@ -336,11 +343,12 @@ describe(parseSendCallsRequest, () => {
       capabilities: sendCallsParams.capabilities,
       id: sendCallsParams.id,
       version: sendCallsParams.version,
-      dapp: {
+      isLinkModeSupported: false,
+      dappRequestInfo: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        source: 'walletconnect',
+        requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
   })
@@ -397,11 +405,12 @@ describe(parseGetCallsStatusRequest, () => {
       account,
       chainId: mockChainId,
       id: requestId,
-      dapp: {
+      isLinkModeSupported: false,
+      dappRequestInfo: {
         name: mockDapp.name,
         url: mockDapp.url,
         icon: mockDapp.icons[0],
-        source: 'walletconnect',
+        requestType: DappRequestType.WalletConnectSessionRequest,
       },
     })
   })

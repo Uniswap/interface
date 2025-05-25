@@ -16,7 +16,7 @@ export function HeaderText({
   permitAmount?: number
   permitCurrency?: Currency | null
 }): JSX.Element {
-  const { dapp, type: method } = request
+  const { dappRequestInfo, type: method } = request
 
   if (permitCurrency) {
     const readablePermitAmount = getCurrencyAmount({
@@ -32,7 +32,7 @@ export function HeaderText({
           components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
           i18nKey="qrScanner.request.withAmount"
           values={{
-            dappName: dapp.name,
+            dappName: dappRequestInfo.name,
             currencySymbol: permitCurrency?.symbol,
             amount: readablePermitAmount,
           }}
@@ -45,7 +45,7 @@ export function HeaderText({
           components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
           i18nKey="qrScanner.request.withoutAmount"
           values={{
-            dappName: dapp.name,
+            dappName: dappRequestInfo.name,
             currencySymbol: permitCurrency?.symbol,
           }}
         />
@@ -72,7 +72,7 @@ export function HeaderText({
 
   return (
     <Text textAlign="center" variant="subheading1">
-      {getReadableMethodName(method, dapp.name || dapp.url)}
+      {getReadableMethodName(method, dappRequestInfo.name || dappRequestInfo.url)}
     </Text>
   )
 }

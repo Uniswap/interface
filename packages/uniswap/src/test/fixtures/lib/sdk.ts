@@ -1,9 +1,9 @@
 import { Token } from '@uniswap/sdk-core'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import { DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-export const ETH = new Token(UniverseChainId.Mainnet, DEFAULT_NATIVE_ADDRESS, 18, 'ETH', 'Ethereum')
+export const ETH = new Token(UniverseChainId.Mainnet, DEFAULT_NATIVE_ADDRESS_LEGACY, 18, 'ETH', 'Ethereum')
 
 export const WETH = new Token(
   UniverseChainId.Mainnet,
@@ -34,7 +34,7 @@ export const USDC = new Token(
   '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDC_ARBITRUM = new Token(
@@ -42,7 +42,7 @@ export const USDC_ARBITRUM = new Token(
   '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDBC_BASE = new Token(
@@ -58,7 +58,7 @@ export const USDC_OPTIMISM = new Token(
   '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDC_POLYGON = new Token(
@@ -66,7 +66,7 @@ export const USDC_POLYGON = new Token(
   '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
   6,
   'USDC',
-  'USD//C',
+  'USD Coin',
 )
 
 export const USDT = new Token(

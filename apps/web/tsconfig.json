@@ -30,8 +30,21 @@
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build", // avoid clobbering the cypress tsbuildinfo
     "types": ["jest", "chrome"],
     "useUnknownInCatchVariables": false,
+    "paths": {
+      "ui/src/*": ["../../packages/ui/src/*"],
+      "utilities/src/*": ["../../packages/utilities/src/*"],
+      "uniswap/src/*": ["../../packages/uniswap/src/*"],
+    }
   },
-  "include": ["src/**/*", "src/**/*.json", ".storybook/preview.tsx", ".storybook/main.ts"],
+  "include": [
+    "src/**/*",
+    "src/**/*.json",
+    ".storybook/preview.tsx",
+    ".storybook/main.ts",
+    "vite.config.mts",
+    "scripts/*",
+    "vite/*",
+  ],
   "references": [
     {
       "path": "../../packages/ui"

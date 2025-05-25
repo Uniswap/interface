@@ -1,27 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`PortfolioLogo renders with L2 icon 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
 <div>
   <span
     class=""
     style="display: contents;"
   >
     <div
-      class="c0"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
     >
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -113,27 +99,13 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
 `;
 
 exports[`PortfolioLogo renders without L2 icon 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
 <div>
   <span
     class=""
     style="display: contents;"
   >
     <div
-      class="c0"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
     >
       <div
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"

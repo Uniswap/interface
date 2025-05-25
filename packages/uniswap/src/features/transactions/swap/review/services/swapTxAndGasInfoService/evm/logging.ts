@@ -1,5 +1,5 @@
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
 import { createLogSwapRequestErrors } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'

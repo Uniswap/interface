@@ -3,6 +3,7 @@ import { InterfaceElementName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import { ActionTile } from 'components/AccountDrawer/ActionTile'
+import { DownloadGraduatedWalletCard } from 'components/AccountDrawer/DownloadGraduatedWalletCard'
 import IconButton, { IconWithConfirmTextButton } from 'components/AccountDrawer/IconButton'
 import { EmptyWallet } from 'components/AccountDrawer/MiniPortfolio/EmptyWallet'
 import { ExtensionDeeplinks } from 'components/AccountDrawer/MiniPortfolio/ExtensionDeeplinks'
@@ -15,7 +16,6 @@ import { Settings } from 'components/Icons/Settings'
 import StatusIcon from 'components/Identicon/StatusIcon'
 import { ReceiveCryptoModal } from 'components/ReceiveCryptoModal'
 import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
-import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { useIsUniExtensionConnected } from 'hooks/useIsUniExtensionConnected'
@@ -69,8 +69,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const isUniExtensionConnected = useIsUniExtensionConnected()
   const { isTestnetModeEnabled } = useEnabledChains()
+  const connectedAccount = useAccount()
   const connectedWithEmbeddedWallet =
-    useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
+    connectedAccount.connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
   const { signOutWithPasskey } = useSignOutWithPasskey()
   const isRightToLeft = i18next.dir() === 'rtl'
 
@@ -125,7 +126,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { unitag } = useUnitagByAddress(account)
   const showAddress = ENSName || unitag?.username
 
-  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
+  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' }) ?? '-'
 
   const shouldFadePortfolioDecimals =
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
@@ -143,7 +144,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               onClick={openSettings}
               Icon={Settings}
             />
-            <Trace logPress element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}>
+            <Trace
+              logPress
+              element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
+              properties={{ connector_id: connectedAccount.connector?.id }}
+            >
               <IconWithConfirmTextButton
                 data-testid="wallet-disconnect"
                 onConfirm={handleDisconnect}
@@ -208,15 +213,13 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                 />
               ) : (
                 <>
-                  <Row gap="8px">
+                  <Flex row gap="$gap8">
                     {shouldShowBuyFiatButton && (
                       <ActionTile
                         dataTestId={TestID.WalletBuyCrypto}
                         Icon={<Bank size={24} color="$accent1" />}
                         name={t('common.buy.label')}
                         onClick={handleBuyCryptoClick}
-                        errorMessage={t('common.restricted.region')}
-                        errorTooltip={t('moonpay.restricted.region')}
                       />
                     )}
                     <ActionTile
@@ -225,7 +228,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                       name={t('common.receive')}
                       onClick={openReceiveCryptoModal}
                     />
-                  </Row>
+                  </Flex>
+                  <DownloadGraduatedWalletCard />
                   <MiniPortfolio account={account} />
                 </>
               )}

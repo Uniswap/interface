@@ -10,6 +10,7 @@ import {
 import { useMakeAccountMismatchQueryOptions } from 'uniswap/src/features/smartWallet/mismatch/useMakeAccountMismatchQueryOptions'
 import { getLogger } from 'utilities/src/logger/logger'
 import { useEvent, usePrevious } from 'utilities/src/react/hooks'
+
 /**
  * [public] useIsMismatchAccountQuery -- gets the mismatch account status for the current account, specific to a chain
  * @returns the mismatch account status for the current account (useQuery result)
@@ -187,7 +188,9 @@ const useAllAcountChainMismatchMutation = (ctx: {
 
 function isRetryableError(error: Error): 'retry' | 'noRetry' | 'unknown' {
   const errorMessage = error.message
-  const found = Object.keys(ERROR_MAP).find((key) => errorMessage.toLowerCase().includes(key.toLowerCase()))
+  const found = errorMessage
+    ? Object.keys(ERROR_MAP).find((key) => errorMessage.toLowerCase().includes(key.toLowerCase()))
+    : undefined
   const existing = found ? ERROR_MAP[found] : undefined
   if (existing) {
     return existing.retry ? 'retry' : 'noRetry'

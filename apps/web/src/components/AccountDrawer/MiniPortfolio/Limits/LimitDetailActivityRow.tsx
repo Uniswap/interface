@@ -6,25 +6,15 @@ import {
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { FormatType, formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { parseUnits } from 'ethers/lib/utils'
 import { useCurrencyInfo } from 'hooks/Tokens'
-import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { EllipsisStyle } from 'theme/components/styles'
+import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { Checkbox, useMedia } from 'ui/src'
+import { Checkbox, Flex, Image, Text, useMedia, useSporeColors } from 'ui/src'
 import { useFormatter } from 'utils/formatNumbers'
-
-const StyledPortfolioRow = styled(PortfolioRow)`
-  padding: 8px 0;
-  height: unset;
-  ${EllipsisStyle}
-`
 
 interface LimitDetailActivityRowProps {
   order: Activity
@@ -32,21 +22,8 @@ interface LimitDetailActivityRowProps {
   selected: boolean
 }
 
-const TradeSummaryContainer = styled(Row)`
-  * {
-    max-width: 40%;
-    ${EllipsisStyle}
-  }
-`
-
-const CircleLogoImage = styled.img<{ size: string }>`
-  width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  border-radius: 50%;
-`
-
 export function LimitDetailActivityRow({ order, onToggleSelect, selected }: LimitDetailActivityRowProps) {
-  const theme = useTheme()
+  const colors = useSporeColors()
   const media = useMedia()
   const { logos, currencies, offchainOrderDetails } = order
   const inputCurrencyInfo = useCurrencyInfo(currencies?.[0])
@@ -81,38 +58,42 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
   const cancelling = offchainOrderDetails.status === UniswapXOrderStatus.PENDING_CANCELLATION
 
   return (
-    <Row onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
-      <StyledPortfolioRow
+    <Flex row alignItems="center" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
+      <PortfolioRow
+        height="unset"
+        justifyContent="space-between"
+        {...EllipsisTamaguiStyle}
+        px={0}
         left={undefined}
         title={
           cancelling ? (
-            <ThemedText.LabelMicro fontWeight={500}>
+            <Text variant="body4" color="$neutral2">
               <Trans i18nKey="common.pending.cancellation" />
-            </ThemedText.LabelMicro>
+            </Text>
           ) : offchainOrderDetails?.expiry ? (
-            <ThemedText.LabelMicro fontWeight={500}>
+            <Text variant="body4" color="$neutral2">
               <Trans
                 i18nKey="common.limits.expires"
                 values={{ timestamp: formatTimestamp(offchainOrderDetails.expiry * 1000, true, FormatType.Short) }}
               />
-            </ThemedText.LabelMicro>
+            </Text>
           ) : undefined
         }
         descriptor={
-          <Column>
-            <TradeSummaryContainer gap="xs" align="center">
-              {inputLogo && <CircleLogoImage src={inputLogo} size="16px" />}
-              <ThemedText.SubHeader color="neutral1">
+          <Flex>
+            <Flex row gap="$gap4" alignItems="center">
+              {inputLogo && <Image src={inputLogo} height={16} width={16} borderRadius="$roundedFull" />}
+              <Text variant="subheading2" color="neutral1">
                 {formatReviewSwapCurrencyAmount(amounts.inputAmount)} {amounts.inputAmount.currency.symbol}
-              </ThemedText.SubHeader>
-              <ArrowRight color={theme.neutral1} size="12px" />
-              {outputLogo && <CircleLogoImage src={outputLogo} size="16px" />}
-              <ThemedText.SubHeader color="neutral1">
+              </Text>
+              <ArrowRight color={colors.neutral1.val} size="12px" />
+              {outputLogo && <Image src={outputLogo} height={16} width={16} borderRadius="$roundedFull" />}
+              <Text variant="subheading2" color="neutral1">
                 {formatReviewSwapCurrencyAmount(amounts.outputAmount)} {amounts.outputAmount.currency.symbol}
-              </ThemedText.SubHeader>
-            </TradeSummaryContainer>
+              </Text>
+            </Flex>
             {displayPrice && (
-              <ThemedText.SubHeaderSmall color={theme.neutral1}>
+              <Text variant="body3" color="$neutral1">
                 <Trans
                   i18nKey="common.limits.when"
                   values={{
@@ -121,9 +102,9 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
                     inSymbol: amounts.inputAmount.currency.symbol,
                   }}
                 />
-              </ThemedText.SubHeaderSmall>
+              </Text>
             )}
-          </Column>
+          </Flex>
         }
         right={undefined}
         onClick={() => {
@@ -142,6 +123,6 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
           onPress={() => onToggleSelect(order)}
         />
       )}
-    </Row>
+    </Flex>
   )
 }

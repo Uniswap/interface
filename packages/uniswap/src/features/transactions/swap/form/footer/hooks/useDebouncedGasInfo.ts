@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import {
   useFormattedUniswapXGasFeeInfo,
   useGasFeeFormattedDisplayAmounts,
@@ -42,28 +42,15 @@ export function useDebouncedGasInfo(): GasInfo {
 
   const isLoading = tradeLoadingOrRefetching || gasLoading || amountChanged || tradeChanged
 
-  const [info, setInfo] = useState<GasInfo>({
-    gasFee,
-    isHighRelativeToValue,
-    uniswapXGasFeeInfo,
-    isLoading,
-    chainId,
-  })
-
-  useEffect(() => {
-    if (isLoading) {
-      setInfo((prev) => ({ ...prev, isLoading }))
-    } else {
-      setInfo({
-        gasFee,
-        fiatPriceFormatted: gasFeeFormatted ?? undefined,
-        isHighRelativeToValue,
-        uniswapXGasFeeInfo,
-        isLoading,
-        chainId,
-      })
-    }
-  }, [gasFee, gasFeeFormatted, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo, chainId])
-
-  return info
+  return useMemo(
+    () => ({
+      gasFee,
+      fiatPriceFormatted: gasFeeFormatted ?? undefined,
+      isHighRelativeToValue,
+      uniswapXGasFeeInfo,
+      isLoading,
+      chainId,
+    }),
+    [gasFee, gasFeeFormatted, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo, chainId],
+  )
 }

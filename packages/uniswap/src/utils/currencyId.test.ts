@@ -1,5 +1,6 @@
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
@@ -75,7 +76,7 @@ describe('currencyId', () => {
   it.each([
     [UniverseChainId.Mainnet, `1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`],
     [UniverseChainId.Polygon, `137-0x0000000000000000000000000000000000001010`],
-    [UniverseChainId.Bnb, `56-0xb8c77482e45f1f44de1745f52c74426c631bdd52`],
+    [UniverseChainId.Bnb, `56-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`],
   ])('buildNativeCurrencyId builds correct ID for chainId=%s = %s', (chainId, expectedId) => {
     expect(buildNativeCurrencyId(chainId)).toEqual(expectedId)
   })
@@ -86,6 +87,8 @@ describe('currencyId', () => {
     [UniverseChainId.Mainnet, null, true],
     [UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Polygon), false],
     [UniverseChainId.Mainnet, DAI.address, false],
+    [UniverseChainId.Mainnet, 'ETH', true],
+    [UniverseChainId.Mainnet, DEFAULT_NATIVE_ADDRESS, true],
   ])(
     'isNativeCurrencyAddress returns correct result for chainId=%s + address=%s = %s',
     (chainId, address, expected) => {
@@ -104,7 +107,7 @@ describe('currencyId', () => {
     [`1-${DAI_ADDRESS}`, DAI_ADDRESS.toLowerCase()],
     [`1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`, null],
     ['137-0x0000000000000000000000000000000000001010', '0x0000000000000000000000000000000000001010'],
-    ['56-0xB8c77482e45F1F44dE1745F52C74426C631bDD52', null],
+    ['56-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', null],
   ])('currencyIdToGraphQLAddress returns correct address for currencyId=%s = %s', (_currencyId, expectedAddress) => {
     expect(currencyIdToGraphQLAddress(_currencyId)).toEqual(expectedAddress)
   })

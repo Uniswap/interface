@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
+import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'appGraphql/data/useAllTransactions'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
@@ -13,7 +14,6 @@ import {
   TokenLinkCell,
 } from 'components/Table/styled'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
-import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
 import { useFilteredTransactions } from 'pages/Explore/tables/useFilterTransaction'
 import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'

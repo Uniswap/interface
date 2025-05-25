@@ -1248,6 +1248,7 @@ export function generateCreatePositionTxRequest({
     permit: validatedPermitRequest ? { method: PermitMethod.TypedData, typedData: validatedPermitRequest } : undefined,
     token0PermitTransaction: validatedToken0PermitTransaction,
     token1PermitTransaction: validatedToken1PermitTransaction,
+    positionTokenPermitTransaction: undefined,
   } satisfies CreatePositionTxAndGasInfo
 }
 

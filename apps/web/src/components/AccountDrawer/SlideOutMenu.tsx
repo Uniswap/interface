@@ -40,7 +40,7 @@ export const SlideOutMenu = ({
       <Flex grow justifyContent="space-between">
         <Flex grow>
           <Flex row mb="$spacing20" justifyContent="space-between" width="100%" alignItems="center">
-            <ArrowLeft data-testid="wallet-back" onClick={onClose} size={24} />
+            <ArrowLeft data-testid="wallet-back" onClick={onClose} size={24} cursor="pointer" />
             <Text color="$neutral1"> {title}</Text>
             {rightIcon ? <>{rightIcon}</> : <Flex />}
           </Flex>

@@ -2,8 +2,8 @@ import 'test-utils/tokens/mocks'
 
 import { ApolloError } from '@apollo/client'
 import { Percent, Token } from '@uniswap/sdk-core'
+import { usePoolsFromTokenAddress } from 'appGraphql/data/pools/usePoolsFromTokenAddress'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
-import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'
 import Router from 'react-router-dom'
 import { mocked } from 'test-utils/mocked'
 import { validBEPoolToken0, validBEPoolToken1, validParams } from 'test-utils/pools/fixtures'
@@ -11,7 +11,7 @@ import { render, screen } from 'test-utils/render'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-jest.mock('graphql/data/pools/usePoolsFromTokenAddress')
+jest.mock('appGraphql/data/pools/usePoolsFromTokenAddress')
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(),

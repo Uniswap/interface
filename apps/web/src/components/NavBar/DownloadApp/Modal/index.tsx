@@ -1,17 +1,15 @@
-import { InterfaceModalName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ChooseUnitagModal } from 'components/NavBar/DownloadApp/Modal/ChooseUnitag'
+import { DownloadAppsModal } from 'components/NavBar/DownloadApp/Modal/DownloadApps'
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
-import { DownloadAppsModal } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
 import { PasskeyGenerationModal } from 'components/NavBar/DownloadApp/Modal/PasskeyGeneration'
 import { useModalState } from 'hooks/useModalState'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
-import { AnimateTransition, Flex } from 'ui/src'
+import { AnimatedPager, Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -42,35 +40,43 @@ export function GetTheAppModal() {
   }, [initialPage, setPage])
 
   return (
-    <Trace modal={InterfaceModalName.GETTING_STARTED_MODAL}>
-      <Modal name={ModalName.DownloadApp} isModalOpen={isOpen} maxWidth="fit-content" onClose={close} padding={0}>
-        <Flex data-testid={TestID.DownloadUniswapModal} position="relative" userSelect="none">
-          {/* The Page enum value corresponds to the modal page's index */}
-          <AnimateTransition currentIndex={page} animationType={page === Page.GetStarted ? 'forward' : 'backward'}>
-            <GetStarted
-              onClose={close}
-              setPage={setPage}
-              toConnectWalletDrawer={() => {
-                close()
-                accountDrawer.open()
-              }}
-            />
-            <DownloadAppsModal goBack={() => setPage(Page.GetStarted)} onClose={close} />
-            <ChooseUnitagModal
-              setUnitag={setUnitag}
-              goBack={() => setPage(Page.GetStarted)}
-              onClose={close}
-              setPage={setPage}
-            />
-            <PasskeyGenerationModal
-              unitag={unitag}
-              goBack={() => setPage(Page.ChooseUnitag)}
-              onClose={close}
-              setPage={setPage}
-            />
-          </AnimateTransition>
-        </Flex>
-      </Modal>
-    </Trace>
+    <Modal
+      skipLogImpression
+      name={ModalName.DownloadApp}
+      isModalOpen={isOpen}
+      maxWidth="fit-content"
+      onClose={close}
+      padding={0}
+    >
+      <Flex data-testid={TestID.DownloadUniswapModal} position="relative" userSelect="none">
+        {/* The Page enum value corresponds to the modal page's index */}
+        <AnimatedPager currentIndex={page}>
+          <GetStarted
+            onClose={close}
+            setPage={setPage}
+            toConnectWalletDrawer={() => {
+              close()
+              accountDrawer.open()
+            }}
+          />
+          <DownloadAppsModal
+            goBack={isEmbeddedWalletEnabled ? () => setPage(Page.GetStarted) : undefined}
+            onClose={close}
+          />
+          <ChooseUnitagModal
+            setUnitag={setUnitag}
+            goBack={() => setPage(Page.GetStarted)}
+            onClose={close}
+            setPage={setPage}
+          />
+          <PasskeyGenerationModal
+            unitag={unitag}
+            goBack={() => setPage(Page.ChooseUnitag)}
+            onClose={close}
+            setPage={setPage}
+          />
+        </AnimatedPager>
+      </Flex>
+    </Modal>
   )
 }

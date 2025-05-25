@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { MutableRefObject, useCallback, useRef } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 
 /**
@@ -8,22 +8,26 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
  */
 export function useReactNavigationModal(): {
   onClose: () => void
+  /**
+   * Needed to prevent the modal from being closed twice, which can
+   * happen if the modal is dismissed by pressing a close button in the
+   * modal and also when it gets called when the modal closes.
+   */
+  preventCloseRef: MutableRefObject<boolean>
 } {
   const navigation = useAppStackNavigation()
 
-  // Needed to prevent the modal from being closed twice, which can
-  // happen if the modal is dismissed by pressing a close button in the
-  // modal and also when it gets called when the modal closes.
-  const closeHasBeenCalledRef = useRef(false)
+  const preventCloseRef = useRef(false)
   const onClose = useCallback(() => {
-    if (closeHasBeenCalledRef.current) {
+    if (preventCloseRef.current) {
       return
     }
-    closeHasBeenCalledRef.current = true
+    preventCloseRef.current = true
     navigation.goBack()
   }, [navigation])
 
   return {
     onClose,
+    preventCloseRef,
   }
 }

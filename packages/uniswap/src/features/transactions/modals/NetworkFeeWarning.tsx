@@ -13,6 +13,11 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FormattedUniswapXGasFeeInfo } from 'uniswap/src/features/gas/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import {
+  NetworkCostTooltipClassic,
+  NetworkCostTooltipUniswapX,
+} from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
 
 export function NetworkFeeWarning({
@@ -31,13 +36,14 @@ export function NetworkFeeWarning({
 }>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
+  const priceUxEnabled = usePriceUXEnabled()
 
   const showHighGasFeeUI = gasFeeHighRelativeToValue && !uniswapXGasFeeInfo && !isInterface // Avoid high gas UI on interface
 
   return (
     <WarningInfo
       infoButton={
-        uniswapXGasFeeInfo ? (
+        priceUxEnabled ? null : uniswapXGasFeeInfo ? (
           <UniswapXFeeContent uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
         ) : (
           <LearnMoreLink textVariant={isWeb ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
@@ -64,7 +70,13 @@ export function NetworkFeeWarning({
         zIndex: zIndexes.popover,
       }}
       tooltipProps={{
-        text: (
+        text: priceUxEnabled ? (
+          uniswapXGasFeeInfo ? (
+            <NetworkCostTooltipUniswapX uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
+          ) : (
+            <NetworkCostTooltipClassic />
+          )
+        ) : (
           <NetworkFeeText
             showHighGasFeeUI={showHighGasFeeUI}
             uniswapXGasFeeInfo={uniswapXGasFeeInfo}
@@ -73,8 +85,10 @@ export function NetworkFeeWarning({
         ),
         placement,
         icon: null,
+        maxWidth: priceUxEnabled ? 300 : undefined,
       }}
       trigger={tooltipTrigger}
+      analyticsTitle="Network cost"
     >
       {children}
     </WarningInfo>

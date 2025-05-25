@@ -11,6 +11,7 @@ export enum FeatureFlags {
   ArbitrumDutchV3,
   BlockaidFotLogging,
   Datadog,
+  DisableSwap7702,
   EmbeddedWallet,
   IndicativeSwapQuotes,
   InstantTokenBalanceUpdate,
@@ -35,7 +36,7 @@ export enum FeatureFlags {
 
   // Wallet
   DisableFiatOnRampKorea,
-  ExtensionAutoConnect,
+  EnableTransactionSpacingForDelegatedAccounts,
   NotificationPriceAlertsAndroid,
   NotificationPriceAlertsIOS,
   NotificationOnboardingCard,
@@ -74,6 +75,7 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.ArbitrumDutchV3, 'uniswapx_dutchv3_orders_arbitrum'],
   [FeatureFlags.BlockaidFotLogging, 'blockaid_fot_logging'],
   [FeatureFlags.Datadog, 'datadog'],
+  [FeatureFlags.DisableSwap7702, 'disable-swap-7702'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.EnablePermitMismatchUX, 'enable_permit2_mismatch_ux'],
   [FeatureFlags.ExecuteTransactionV2, 'new_execute_transaction_arch'],
@@ -123,7 +125,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.BlurredLockScreen, 'blurred_lock_screen'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
   [FeatureFlags.Eip5792Methods, 'eip_5792_methods'],
-  [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
+  [FeatureFlags.EnableTransactionSpacingForDelegatedAccounts, 'enable_transaction_spacing_for_delegated_accounts'],
   [FeatureFlags.NotificationOnboardingCard, 'notification_onboarding_card'],
   [FeatureFlags.NotificationPriceAlertsAndroid, 'notification_price_alerts_android'],
   [FeatureFlags.NotificationPriceAlertsIOS, 'notification_price_alerts_ios'],

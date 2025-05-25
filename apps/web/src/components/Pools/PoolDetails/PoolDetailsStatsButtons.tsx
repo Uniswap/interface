@@ -1,13 +1,12 @@
+import { gqlToCurrency } from 'appGraphql/data/util'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { Scrim } from 'components/AccountDrawer/Scrim'
-import { CurrencySelect } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { MobileBottomBar } from 'components/NavBar/MobileBottomBar'
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { gqlToCurrency } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import styled from 'lib/styled-components'
@@ -26,6 +25,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { getChainUrlParam } from 'utils/chainParams'
 
@@ -61,11 +61,6 @@ const SwapModalWrapper = styled(Column)<{ open?: boolean }>`
   transition: ${({ theme }) => `max-height ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
   padding-bottom: ${({ open }) => (open ? '24px' : '0')};
 
-  // Need to override the default visibility to properly hide
-  ${CurrencySelect} {
-    visibility: ${({ open }) => (open ? 'visible' : 'hidden')};
-  }
-
   @media (max-width: ${breakpoints.xl}px) {
     position: fixed;
     width: calc(100% - 16px);
@@ -86,6 +81,7 @@ interface PoolDetailsStatsButtonsProps {
   token0?: Token
   token1?: Token
   feeTier?: number
+  hookAddress?: string
   protocolVersion?: ProtocolVersion
   loading?: boolean
 }
@@ -129,6 +125,7 @@ export function PoolDetailsStatsButtons({
   token0,
   token1,
   feeTier,
+  hookAddress,
   protocolVersion,
   loading,
 }: PoolDetailsStatsButtonsProps) {
@@ -156,7 +153,17 @@ export function PoolDetailsStatsButtons({
           state: { from: location.pathname },
         })
       } else {
-        const url = `/positions/create/${protocolVersion?.toLowerCase()}?currencyA=${currency0Address}&currencyB=${currency1Address}&chain=${chainUrlParam}`
+        const queryParams = new URLSearchParams()
+        queryParams.set('currencyA', currency0Address)
+        queryParams.set('currencyB', currency1Address)
+        queryParams.set('chain', chainUrlParam)
+        if (feeTier) {
+          queryParams.set('feeTier', feeTier.toString())
+        }
+        if (hookAddress) {
+          queryParams.set('hook', hookAddress)
+        }
+        const url = `/positions/create/${protocolVersion?.toLowerCase()}?${queryParams.toString()}`
         navigate(url, {
           state: { from: location.pathname },
         })
@@ -202,7 +209,7 @@ export function PoolDetailsStatsButtons({
           <PoolButton
             icon={<Plus size="$icon.20" />}
             onPress={handleAddLiquidity}
-            data-testid="pool-details-add-liquidity-button"
+            data-testid={TestID.PoolDetailsAddLiquidityButton}
           >
             {t('common.addLiquidity')}
           </PoolButton>

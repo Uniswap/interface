@@ -9,7 +9,13 @@
   ],
   "styleSrc": [
     "'self'",
-    "'unsafe-inline'"
+    "'unsafe-inline'",
+    "https://fonts.googleapis.com"
+  ],
+  "fontSrc": [
+    "'self'",
+    "https://fonts.googleapis.com",
+    "https://fonts.gstatic.com"
   ],
   "imgSrc": [
     "*",
@@ -25,6 +31,9 @@
   "mediaSrc": [
     "self",
     "*"
+  ],
+  "formAction": [
+    "'none'"
   ],
   "connectSrc": [
     "'self'",

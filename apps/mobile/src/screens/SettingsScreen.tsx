@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/core'
 import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
 import { FooterSettings } from 'src/components/Settings/FooterSettings'
 import { OnboardingRow } from 'src/components/Settings/OnboardingRow'
@@ -38,6 +38,7 @@ import {
   Faceid,
   FileListLock,
   Fingerprint,
+  Key,
   Language,
   LikeSquare,
   LineChartDots,
@@ -60,12 +61,14 @@ import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { isAndroid } from 'utilities/src/platform'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { selectHasCopiedPrivateKeys } from 'wallet/src/features/behaviorHistory/selectors'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -78,6 +81,7 @@ export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
   const dispatch = useDispatch()
   const colors = useSporeColors()
+  const hasCopiedPrivateKeys = useSelector(selectHasCopiedPrivateKeys)
   const { deviceSupportsBiometrics } = useBiometricsState()
   const { t } = useTranslation()
   const { onClose } = useReactNavigationModal()
@@ -145,7 +149,13 @@ export function SettingsScreen(): JSX.Element {
         return item.component
       }
       return (
-        <SettingsRow key={item.screen} navigation={navigation} page={item} checkIfCanProceed={item.checkIfCanProceed} />
+        <SettingsRow
+          key={item.screen}
+          navigation={navigation}
+          page={item}
+          checkIfCanProceed={item.checkIfCanProceed}
+          testID={item.testID}
+        />
       )
     },
     [navigation],
@@ -172,7 +182,7 @@ export function SettingsScreen(): JSX.Element {
         subTitle: t('settings.section.preferences'),
         data: [
           {
-            modal: ModalName.SettingsAppearance,
+            navigationModal: ModalName.SettingsAppearance,
             text: t('settings.setting.appearance.title'),
             currentSetting:
               currentAppearanceSetting === 'system'
@@ -189,7 +199,7 @@ export function SettingsScreen(): JSX.Element {
             icon: <Coins {...iconProps} />,
           },
           {
-            modal: ModalName.LanguageSelector,
+            navigationModal: ModalName.LanguageSelector,
             text: t('settings.setting.language.title'),
             currentSetting: currentLanguage,
             icon: <Language {...iconProps} />,
@@ -207,7 +217,7 @@ export function SettingsScreen(): JSX.Element {
             },
           },
           {
-            modal: ModalName.PortfolioBalanceModal,
+            navigationModal: ModalName.PortfolioBalanceModal,
             text: t('settings.setting.smallBalances.title'),
             icon: <Chart {...iconProps} />,
           },
@@ -225,7 +235,10 @@ export function SettingsScreen(): JSX.Element {
                   icon: <Sliders {...iconProps} />,
                   navigationProps: {
                     isTestnetEnabled: isTestnetModeEnabled,
-                    onTestnetModeToggled: () => handleTestnetModeToggle(),
+                    onTestnetModeToggled: (): void => handleTestnetModeToggle(),
+                    onPressSmartWallet: (): void => {
+                      navigation.navigate(MobileScreens.SettingsSmartWallet)
+                    },
                   },
                 },
               ]
@@ -267,6 +280,15 @@ export function SettingsScreen(): JSX.Element {
             isHidden: noSignerAccountImported,
           },
           {
+            screen: MobileScreens.ViewPrivateKeys,
+            screenProps: {
+              showHeader: true,
+            },
+            text: t('settings.setting.privateKeys.title'),
+            icon: <Key {...iconProps} />,
+            isHidden: !hasCopiedPrivateKeys,
+          },
+          {
             screen: walletNeedsRestore
               ? MobileScreens.OnboardingStack
               : hasCloudBackup
@@ -295,7 +317,7 @@ export function SettingsScreen(): JSX.Element {
             navigationProps: { address: signerAccount?.address },
           },
           {
-            modal: ModalName.PermissionsModal,
+            navigationModal: ModalName.PermissionsModal,
             text: t('settings.setting.permissions.title'),
             icon: <LineChartDots {...iconProps} />,
           },
@@ -352,6 +374,12 @@ export function SettingsScreen(): JSX.Element {
         isHidden: !isDevEnv(),
         data: [
           {
+            navigationModal: ModalName.Experiments,
+            text: 'Dev Modal',
+            icon: <UniswapLogo {...svgProps} />,
+            testID: TestID.AppSettingsDevModal,
+          },
+          {
             screen: MobileScreens.Dev,
             text: 'Dev options',
             icon: <UniswapLogo {...svgProps} />,
@@ -383,6 +411,7 @@ export function SettingsScreen(): JSX.Element {
     handleTestnetModeToggle,
     notificationOSPermission,
     navigation,
+    hasCopiedPrivateKeys,
   ])
 
   return (

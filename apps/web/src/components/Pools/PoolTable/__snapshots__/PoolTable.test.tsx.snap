@@ -2,21 +2,7 @@
 
 exports[`PoolTable renders data filled state 1`] = `
 <DocumentFragment>
-  .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c0 {
+  .c0 {
   display: inline-block;
   height: inherit;
 }
@@ -49,10 +35,13 @@ exports[`PoolTable renders data filled state 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-342px _left-240px _pl-t-space-spa1360334080 _zIndex-1"
           >
             <div
-              class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+              class=" is_TouchableArea  t_group_true"
+              role="button"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+              tabindex="0"
             >
               <div
-                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912"
+                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912 _color-accent3"
               >
                 <svg
                   fill="none"
@@ -72,10 +61,13 @@ exports[`PoolTable renders data filled state 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-342px _right-0px _pr-t-space-spa1360334080 _zIndex-1"
           >
             <div
-              class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+              class=" is_TouchableArea  t_group_true"
+              role="button"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+              tabindex="0"
             >
               <div
-                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912"
+                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912 _color-accent3"
               >
                 <svg
                   fill="none"
@@ -466,7 +458,7 @@ exports[`PoolTable renders data filled state 1`] = `
                       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _alignItems-center _maxWidth-10037"
                     >
                       <div
-                        class="c2"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _top-0px _left-0px"
                       >
                         <div
                           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
@@ -726,10 +718,13 @@ exports[`PoolTable renders error state 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-342px _left-240px _pl-t-space-spa1360334080 _zIndex-1"
           >
             <div
-              class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+              class=" is_TouchableArea  t_group_true"
+              role="button"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+              tabindex="0"
             >
               <div
-                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912"
+                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912 _color-accent3"
               >
                 <svg
                   fill="none"
@@ -749,10 +744,13 @@ exports[`PoolTable renders error state 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-342px _right-0px _pr-t-space-spa1360334080 _zIndex-1"
           >
             <div
-              class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+              class=" is_TouchableArea  t_group_true"
+              role="button"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+              tabindex="0"
             >
               <div
-                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912"
+                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912 _color-accent3"
               >
                 <svg
                   fill="none"
@@ -6495,10 +6493,13 @@ exports[`PoolTable renders loading state 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-342px _left-240px _pl-t-space-spa1360334080 _zIndex-1"
           >
             <div
-              class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+              class=" is_TouchableArea  t_group_true"
+              role="button"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+              tabindex="0"
             >
               <div
-                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912"
+                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912 _color-accent3"
               >
                 <svg
                   fill="none"
@@ -6518,10 +6519,13 @@ exports[`PoolTable renders loading state 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-342px _right-0px _pr-t-space-spa1360334080 _zIndex-1"
           >
             <div
-              class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+              class=" is_TouchableArea  t_group_true"
+              role="button"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+              tabindex="0"
             >
               <div
-                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912"
+                class="_backgroundColor-0hover-surface2Hov3121676 _backdropFilter-_platformweb_blur2px1281 _color-_grouptrue-hover_accent3Hove112785 _backgroundColor-_grouptrue-hover_surface2Hov3121676 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _boxShadow-0020px0rgba2059389038 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-translateY-38567079 _backgroundColor-surface2 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _opacity-0 _transition-opacity0--2se1090718912 _color-accent3"
               >
                 <svg
                   fill="none"

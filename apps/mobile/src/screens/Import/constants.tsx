@@ -44,6 +44,21 @@ export const seedPhraseImportOption: ImportMethodOption = {
 }
 
 /**
+ * Restore wallet with Seed Phrase.
+ *
+ * This will not allow a seed phrase that does not match the active wallet.
+ */
+export const restoreWalletWithSeedPhraseOption: ImportMethodOption = {
+  title: (t: AppTFunction) => t('onboarding.import.method.restoreSeedPhrase.wallet.title'),
+  blurb: (t: AppTFunction) => t('onboarding.import.method.restoreSeedPhrase.wallet.desc'),
+  icon: <PaperStack color="$accent1" size="$icon.18" strokeWidth={1.5} />,
+  nav: OnboardingScreens.SeedPhraseInput,
+  importType: ImportType.RestoreMnemonic,
+  name: ElementName.OnboardingImportSeedPhrase,
+  testID: TestID.OnboardingImportSeedPhrase,
+}
+
+/**
  * Import from Cloud (iCloud/GDrive) Backup
  */
 export const importFromCloudBackupOption: ImportMethodOption = {
@@ -55,6 +70,25 @@ export const importFromCloudBackupOption: ImportMethodOption = {
   icon: <OSDynamicCloudIcon color="$accent1" size="$icon.18" />,
   nav: OnboardingScreens.RestoreCloudBackup,
   importType: ImportType.Restore,
+  name: ElementName.RestoreFromCloud,
+  testID: TestID.RestoreFromCloud,
+}
+
+/**
+ * Restore from Cloud (iCloud/GDrive) Backup. Checks if the cloud backup matches the active wallet.
+ */
+export const restoreFromCloudBackupOption: ImportMethodOption = {
+  title: (t: AppTFunction) =>
+    isAndroid
+      ? t('onboarding.import.method.restoreSeedPhrase.cloud.title.android')
+      : t('onboarding.import.method.restoreSeedPhrase.cloud.title.ios'),
+  blurb: (t: AppTFunction) =>
+    isAndroid
+      ? t('onboarding.import.method.restoreSeedPhrase.cloud.desc.android')
+      : t('onboarding.import.method.restoreSeedPhrase.cloud.desc.ios'),
+  icon: <OSDynamicCloudIcon color="$accent1" size="$icon.18" />,
+  nav: OnboardingScreens.RestoreCloudBackupLoading,
+  importType: ImportType.RestoreMnemonic,
   name: ElementName.RestoreFromCloud,
   testID: TestID.RestoreFromCloud,
 }

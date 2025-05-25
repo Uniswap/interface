@@ -43,6 +43,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
       approvePositionTokenRequest,
       token0PermitTransaction,
       token1PermitTransaction,
+      positionTokenPermitTransaction,
     } = txContext
 
     const revokeToken0 = createRevocationTransactionStep(
@@ -71,6 +72,12 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
       action.currency1Amount.currency,
     ])
 
+    const positionTokenPermitTransactionStep = createPermit2TransactionStep(
+      positionTokenPermitTransaction,
+      action.currency1Amount,
+      [action.currency0Amount.currency, action.currency1Amount.currency],
+    )
+
     switch (txContext.type) {
       case 'decrease':
         return orderDecreaseLiquiditySteps({
@@ -88,10 +95,12 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
               txContext.migratePositionRequestArgs,
               txContext.permit.typedData.values.deadline as number,
             ),
+            positionTokenPermitTransaction: undefined,
           })
         } else {
           return orderMigrateLiquiditySteps({
             permit: undefined,
+            positionTokenPermitTransaction: positionTokenPermitTransactionStep,
             migrate: createMigratePositionStep(txContext.txRequest),
           })
         }

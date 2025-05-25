@@ -13,7 +13,7 @@ test.describe('Create position', () => {
     await anvil.setErc20Balance(assume0xAddress(USDT.address), ONE_MILLION_USDT)
     await page.goto('/positions/create')
     await page.getByRole('button', { name: 'Choose token' }).click()
-    await page.getByTestId(TestID.ExploreSearchInput).fill('Tether')
+    await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
     // eslint-disable-next-line
     await page.getByTestId('token-option-1-USDT').first().click()
     await page.getByRole('button', { name: 'Continue' }).click()
@@ -31,7 +31,7 @@ test.describe('Create position', () => {
     await anvil.setErc20Balance(assume0xAddress(USDT.address), ONE_MILLION_USDT)
     await page.goto('/positions/create')
     await page.getByRole('button', { name: 'Choose token' }).click()
-    await page.getByTestId(TestID.ExploreSearchInput).fill('Tether')
+    await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
     // eslint-disable-next-line
     await page.getByTestId('token-option-1-USDT').first().click()
     await page.getByRole('button', { name: 'Continue' }).click()

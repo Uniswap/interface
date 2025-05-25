@@ -3,8 +3,8 @@ import { DynamicConfigs, EmbeddedWalletConfigKey } from 'uniswap/src/features/ga
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 
 export function useEmbeddedWalletBaseUrl(): string {
-  const baseUrl = useDynamicConfigValue<DynamicConfigs.EmbeddedWallet, EmbeddedWalletConfigKey.BaseUrl, string>(
-    DynamicConfigs.EmbeddedWallet,
+  const baseUrl = useDynamicConfigValue<DynamicConfigs.EmbeddedWalletConfig, EmbeddedWalletConfigKey.BaseUrl, string>(
+    DynamicConfigs.EmbeddedWalletConfig,
     EmbeddedWalletConfigKey.BaseUrl,
     UNISWAP_WEB_URL,
   )

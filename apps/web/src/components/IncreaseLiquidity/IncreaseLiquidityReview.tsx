@@ -30,7 +30,8 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const selectChain = useSelectChain()
-  const startChainId = useAccount().chainId
+  const connectedAccount = useAccount()
+  const startChainId = connectedAccount.chainId
   const account = useAccountMeta()
   const trace = useTrace()
 

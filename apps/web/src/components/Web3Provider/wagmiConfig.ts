@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query'
 import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallback'
 import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
 import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
@@ -101,8 +100,6 @@ const onFetchResponse = (response: Response, chain: Chain, url: string) => {
     }
   }
 }
-
-export const queryClient = new QueryClient()
 
 // Automatically connect if running in Cypress environment
 if ((window as any).Cypress?.eagerlyConnect) {

@@ -37,6 +37,7 @@ export default function TopLevelModals() {
         <ModalRenderer modalName={ModalName.UniWalletConnect} />
         <ModalRenderer modalName={ModalName.BlockedAccount} />
         {shouldShowDevFlags && <ModalRenderer modalName={ModalName.DevFlags} />}
+        <ModalRenderer modalName={ModalName.OffchainActivity} />
       </>
     )
   }

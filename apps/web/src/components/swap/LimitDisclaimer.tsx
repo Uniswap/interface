@@ -1,23 +1,15 @@
-import Column from 'components/deprecated/Column'
-import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
+import { Flex, FlexProps, Text, styled } from 'ui/src'
 
-const Container = styled(Column)`
-  background-color: ${({ theme }) => theme.surface2};
-  border-radius: 12px;
-  padding: 12px;
-  margin-top: 12px;
-`
+const DisclaimerText = styled(Text, {
+  variant: 'body4',
+  color: '$neutral2',
+})
 
-const DisclaimerText = styled(ThemedText.LabelMicro)`
-  line-height: 16px;
-`
-
-export function LimitDisclaimer({ className }: { className?: string }) {
+export function LimitDisclaimer(props: FlexProps) {
   return (
-    <Container gap="sm" className={className}>
+    <Flex backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12" mt="$spacing12" gap="$gap4" {...props}>
       <DisclaimerText>
         <Trans i18nKey="pool.limitFluctuation.warning" />
       </DisclaimerText>
@@ -27,6 +19,6 @@ export function LimitDisclaimer({ className }: { className?: string }) {
           <Trans i18nKey="common.button.learn" />
         </ExternalLink>
       </DisclaimerText>
-    </Container>
+    </Flex>
   )
 }

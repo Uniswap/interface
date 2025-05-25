@@ -1,4 +1,4 @@
-import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
@@ -57,8 +57,5 @@ export const {
   setCurrentFiatCurrency,
   setIsTestnetModeEnabled,
 } = slice.actions
-
-export const updateLanguage = createAction<Language | null>('language/updateLanguage')
-export const syncAppWithDeviceLanguage = (): ReturnType<typeof updateLanguage> => updateLanguage(null)
 
 export const userSettingsReducer = slice.reducer

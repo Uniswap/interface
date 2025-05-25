@@ -10,6 +10,7 @@ import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { RoutingDiagramEntry } from 'uniswap/src/utils/getRoutingDiagramEntries'
 
@@ -54,6 +55,7 @@ function Pool({
   currency1: Currency
   feeAmount: FeeAmount
 }): JSX.Element {
+  const priceUXEnabled = usePriceUXEnabled()
   const currency0CurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currency0))
   const currency1CurrencyInfo = useCurrencyInfo(currencyToCurrencyId(currency1))
 
@@ -66,7 +68,7 @@ function Pool({
               chainId={currency0.chainId}
               inputCurrencyInfo={currency0CurrencyInfo}
               outputCurrencyInfo={currency1CurrencyInfo}
-              size={20}
+              size={priceUXEnabled ? 12 : 20}
             />
           </Flex>
           <BadgeText>{feeAmount / BIPS_BASE}%</BadgeText>
@@ -120,15 +122,16 @@ function RouteRow({
   currencyInCurrencyInfo: Maybe<CurrencyInfo>
   currencyOutCurrencyInfo: Maybe<CurrencyInfo>
 }): JSX.Element {
+  const priceUXEnabled = usePriceUXEnabled()
   const { path } = entry
 
   // If we only have 2 or fewer pools, show everything in one row
   if (path.length <= 2) {
     return (
       <Flex row alignItems="center" gap="$spacing4">
-        <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={20} />
+        <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={priceUXEnabled ? 12 : 20} />
         <Route entry={entry} />
-        <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={20} />
+        <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={priceUXEnabled ? 12 : 20} />
       </Flex>
     )
   }
@@ -139,7 +142,7 @@ function RouteRow({
       {/* First line: currencyIn icon, first 2 pools */}
       <Flex row alignItems="center" width="100%" gap="$spacing4">
         <Flex ml="$spacing4">
-          <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={20} />
+          <CurrencyLogo currencyInfo={currencyInCurrencyInfo} size={priceUXEnabled ? 12 : 20} />
         </Flex>
         <Flex flex={1}>
           <Route entry={{ ...entry, path: path.slice(0, 2) }} />
@@ -152,7 +155,7 @@ function RouteRow({
           <Route entry={{ ...entry, path: path.slice(2) }} showBadge={false} />
         </Flex>
         <Flex mr="$spacing4">
-          <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={20} />
+          <CurrencyLogo currencyInfo={currencyOutCurrencyInfo} size={priceUXEnabled ? 12 : 20} />
         </Flex>
       </Flex>
     </Flex>

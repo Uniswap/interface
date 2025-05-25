@@ -76,7 +76,7 @@ export const colors = {
   ...accentColors,
 
   uniswapXViolet: '#4673FA',
-  uniswapXPurple: '#9646FA',
+  uniswapXPurple: '#7D55FB',
 
   fiatOnRampBanner: '#FB36D0',
 }
@@ -185,7 +185,7 @@ const sporeLight = {
   surface3Hovered: 'rgba(19, 19, 19, 0.1)',
   surface4: 'rgba(19, 19, 19, 0.08)',
   surface5: 'rgba(0,0,0,0.04)',
-
+  surface5Hovered: 'rgba(0,0,0,0.06)',
   accent1: '#FF37C7',
   accent1Hovered: '#E500A5',
   accent2: 'rgba(255, 55, 199, 0.08)',
@@ -234,7 +234,7 @@ const sporeDark = {
   surface3Hovered: 'rgba(255,255,255,0.16)',
   surface4: 'rgba(255,255,255,0.20)',
   surface5: 'rgba(0,0,0,0.04)',
-
+  surface5Hovered: 'rgba(0,0,0,0.06)',
   accent1: '#FF37C7',
   accent1Hovered: '#E500A5',
 
@@ -284,7 +284,7 @@ export const colorsLight = {
   surface3Hovered: sporeLight.surface3Hovered,
   surface4: sporeLight.surface4,
   surface5: sporeLight.surface5,
-
+  surface5Hovered: sporeLight.surface5Hovered,
   accent1: sporeLight.accent1,
   accent1Hovered: sporeLight.accent1Hovered,
   accent2: sporeLight.accent2,
@@ -362,6 +362,7 @@ export const colorsDark = {
   surface3Hovered: sporeDark.surface3Hovered,
   surface4: sporeDark.surface4,
   surface5: sporeDark.surface5,
+  surface5Hovered: sporeDark.surface5Hovered,
 
   scrim: sporeDark.scrim,
 

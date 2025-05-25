@@ -28,7 +28,9 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { TokenRate } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/TokenRate'
 import { DefaultTokenOptions } from 'uniswap/src/features/transactions/swap/form/body/DefaultTokenOptions/DefaultTokenOptions'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -67,6 +69,7 @@ type CurrencyInputPanelProps = {
   onPressDisabled?: () => void
   resetSelection?: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
   tokenColor?: string
+  priceDifferencePercentage?: number
 } & FlexProps
 
 const MAX_INPUT_FONT_SIZE = 36
@@ -103,6 +106,7 @@ export const CurrencyInputPanel = memo(
         resetSelection,
         disabled = false,
         onPressDisabled,
+        priceDifferencePercentage,
         headerLabel,
         transactionType,
         tokenColor,
@@ -121,7 +125,7 @@ export const CurrencyInputPanel = memo(
       const colors = useSporeColors()
       const account = useAccountMeta()
       const isShortMobileDevice = useIsShortMobileDevice()
-      const { formatCurrencyAmount } = useLocalizationContext()
+      const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
       const { symbol: fiatCurrencySymbol, code: fiatCurrencyCode } = useAppFiatCurrencyInfo()
 
       const isInputPresetsEnabled = useExperimentValueFromLayer<Layers.SwapPage, Experiments.SwapPresets, boolean>(
@@ -246,7 +250,10 @@ export const CurrencyInputPanel = memo(
       const hideCurrencyBalance = (isOutput && currencyBalance?.equalTo(0)) || !account
 
       const showMaxButton = (!isInputPresetsEnabled || showMaxButtonOnly) && !isOutput && account
-      const showDefaultTokenOptions = isOutputPresetsEnabled && currencyField === CurrencyField.OUTPUT && !currencyInfo
+      const showDefaultTokenOptions = isOutputPresetsEnabled && isOutput && !currencyInfo
+      const priceUXEnabled = usePriceUXEnabled()
+      const showFlippableRate = priceUXEnabled && isOutput && !!currencyInfo
+      const showPriceDifference = isOutput && !!currencyInfo && !!currencyAmount
       const showPercentagePresetOptions =
         isInputPresetsEnabled && !showMaxButtonOnly && currencyField === CurrencyField.INPUT
 
@@ -309,6 +316,7 @@ export const CurrencyInputPanel = memo(
                     <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
                   </Flex>
                 )}
+                {showFlippableRate && isInterfaceDesktop && <TokenRate />}
               </Flex>
             ) : null}
             <AnimatedFlex
@@ -423,14 +431,25 @@ export const CurrencyInputPanel = memo(
                 </Flex>
               ) : (
                 <TouchableArea
+                  group="item"
                   flexShrink={1}
                   onPress={disabled || isTestnetModeEnabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}
                 >
                   {!isTestnetModeEnabled && (
-                    <Flex centered row shrink gap="$spacing4">
-                      <Text color="$neutral2" numberOfLines={1} variant="body3">
+                    <Flex centered row shrink gap="$spacing4" width="max-content">
+                      <Text
+                        color="$neutral2"
+                        $group-item-hover={{ color: '$neutral2Hovered' }}
+                        numberOfLines={1}
+                        variant="body3"
+                      >
                         {inputPanelFormattedValue}
                       </Text>
+                      {priceUXEnabled && showPriceDifference && (
+                        <Text color="$neutral3" variant="body3">
+                          ({formatPercent(priceDifferencePercentage)})
+                        </Text>
+                      )}
                     </Flex>
                   )}
                 </TouchableArea>
@@ -531,12 +550,14 @@ function useLegacyTextDisplay({ isLoading, value, usdValue }: CurrencyInputPanel
 }
 
 /** Returns an animated opacity based on current indicative and full quote state  */
-function useRefetchAnimationStyle({
+export function useRefetchAnimationStyle({
   currencyAmount,
   isLoading,
   isIndicativeLoading,
   valueIsIndicative,
-}: CurrencyInputPanelProps): { opacity: number } {
+}: Pick<CurrencyInputPanelProps, 'currencyAmount' | 'isLoading' | 'isIndicativeLoading' | 'valueIsIndicative'>): {
+  opacity: number
+} {
   const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
 
   const loadingFlexProgress = useSharedValue(1)

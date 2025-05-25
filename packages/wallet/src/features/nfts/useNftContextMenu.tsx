@@ -208,7 +208,7 @@ export function useNFTContextMenu({
                   },
                 ]
               : []),
-            ...(isSelfReportSpamNFTEnabled && !isViewOnlyWallet
+            ...(isSelfReportSpamNFTEnabled && !isViewOnlyWallet && !isSpam
               ? [
                   {
                     title: t('nft.reportSpam'),
@@ -254,6 +254,7 @@ export function useNFTContextMenu({
       onPressShare,
       isSelfReportSpamNFTEnabled,
       isViewOnlyWallet,
+      isSpam,
       onPressReport,
       isLocalAccount,
       isVisible,

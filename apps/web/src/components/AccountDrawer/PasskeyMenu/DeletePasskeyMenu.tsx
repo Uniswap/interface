@@ -11,6 +11,8 @@ import { Button, Checkbox, Flex, Text } from 'ui/src'
 import { Trash } from 'ui/src/components/icons/Trash'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { Authenticator, deleteAuthenticator, disconnectWallet } from 'uniswap/src/features/passkey/embeddedWallet'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useFormatter } from 'utils/formatNumbers'
 
 export function DeletePasskeyMenu({
@@ -58,77 +60,88 @@ export function DeletePasskeyMenu({
         setPasskeyMenuModalState(undefined)
         await refreshAuthenticators()
       },
+      onSettled: async () => {
+        setAcknowledged(false)
+      },
     },
   )
 
   return (
-    <GenericPasskeyMenuModal show={show} onClose={() => setPasskeyMenuModalState(undefined)}>
-      <Flex p="$gap12" borderRadius="$rounded12" backgroundColor="$statusCritical2">
-        <Trash color="$statusCritical" size={24} />
-      </Flex>
-      <Flex gap="$gap8" alignItems="center">
-        <Text variant="subheading2" textAlign="center">
-          {t('account.passkey.delete.title')}
-        </Text>
-        <Text variant="body3" color="$neutral2" textAlign="center">
-          {t('account.passkey.delete.description')}
-        </Text>
-        <Text variant="body3" color="$statusCritical" textAlign="center">
-          {t('account.passkey.delete.descriptionEmphasized')}
-        </Text>
-      </Flex>
-      {account.address && (
+    <Trace logImpression modal={ModalName.DeletePasskey}>
+      <GenericPasskeyMenuModal show={show} onClose={() => setPasskeyMenuModalState(undefined)}>
+        <Flex p="$gap12" borderRadius="$rounded12" backgroundColor="$statusCritical2">
+          <Trash color="$statusCritical" size={24} />
+        </Flex>
+        <Flex gap="$gap8" alignItems="center">
+          <Text variant="subheading2" textAlign="center">
+            {t('account.passkey.delete.title')}
+          </Text>
+          <Text variant="body3" color="$neutral2" textAlign="center">
+            {t('account.passkey.delete.description')}
+          </Text>
+          <Text variant="body3" color="$statusCritical" textAlign="center">
+            {t('account.passkey.delete.descriptionEmphasized')}
+          </Text>
+        </Flex>
+        {account.address && (
+          <Flex
+            row
+            gap="$gap12"
+            width="100%"
+            p="$gap12"
+            borderColor="$surface3"
+            borderWidth={1}
+            borderRadius="$rounded12"
+            borderStyle="solid"
+          >
+            <StatusIcon size={24} showMiniIcons={false} />
+            <AddressDisplay enableCopyAddress={false} address={account.address} />
+            <Text variant="body3" color="$statusCritical" ml="auto" mr="0">
+              {formatFiatPrice({ price: balanceUSD })}
+            </Text>
+          </Flex>
+        )}
         <Flex
           row
           gap="$gap12"
           width="100%"
-          p="$gap12"
-          borderColor="$surface3"
-          borderWidth={1}
-          borderRadius="$rounded12"
-          borderStyle="solid"
+          borderRadius="$rounded16"
+          backgroundColor="$surface2"
+          justifyContent="center"
+          alignItems="center"
+          p="$padding12"
         >
-          <StatusIcon size={24} showMiniIcons={false} />
-          <AddressDisplay enableCopyAddress={false} address={account.address} />
-          <Text variant="body3" color="$statusCritical" ml="auto" mr="0">
-            {formatFiatPrice({ price: balanceUSD })}
+          <Trace logPress element={ElementName.DeletePasskeyAcknowledge}>
+            <Checkbox size="$icon.16" checked={acknowledged} onPress={() => setAcknowledged((prev) => !prev)} />
+          </Trace>
+          <Text variant="body4" color="$neutral1">
+            {t('account.passkey.delete.acknowledge')}
           </Text>
         </Flex>
-      )}
-      <Flex
-        row
-        gap="$gap12"
-        width="100%"
-        borderRadius="$rounded16"
-        backgroundColor="$surface2"
-        justifyContent="center"
-        alignItems="center"
-        p="$padding12"
-      >
-        <Checkbox size="$icon.16" checked={acknowledged} onPress={() => setAcknowledged((prev) => !prev)} />
-        <Text variant="body4" color="$neutral1">
-          {t('account.passkey.delete.acknowledge')}
-        </Text>
-      </Flex>
-      <Flex row justifyContent="space-between" width="100%" gap="$gap8">
-        <Button
-          py="$padding12"
-          variant="default"
-          emphasis="secondary"
-          onPress={() => setPasskeyMenuModalState(undefined)}
-        >
-          {t('common.button.cancel')}
-        </Button>
-        <Button
-          py="$padding12"
-          variant="critical"
-          emphasis="primary"
-          onPress={() => handleDeleteAuthenticator()}
-          isDisabled={!acknowledged}
-        >
-          {t('common.button.delete')}
-        </Button>
-      </Flex>
-    </GenericPasskeyMenuModal>
+        <Flex row justifyContent="space-between" width="100%" gap="$gap8">
+          <Trace logPress element={ElementName.Cancel}>
+            <Button
+              py="$padding12"
+              variant="default"
+              emphasis="secondary"
+              onPress={() => setPasskeyMenuModalState(undefined)}
+            >
+              {t('common.button.cancel')}
+            </Button>
+          </Trace>
+          <Trace logPress element={ElementName.DeletePasskey}>
+            <Button
+              py="$padding12"
+              variant="critical"
+              emphasis="primary"
+              onPress={() => handleDeleteAuthenticator()}
+              isDisabled={!acknowledged}
+            >
+              {t('common.button.delete')}
+            </Button>
+          </Trace>
+        </Flex>
+      </GenericPasskeyMenuModal>
+    </Trace>
   )
 }

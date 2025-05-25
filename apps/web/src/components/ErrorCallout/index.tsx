@@ -51,7 +51,7 @@ export function ErrorCallout({
           </Text>
         )}
         {Boolean(onPress) && (
-          <TouchableArea {...ClickableTamaguiStyle} onPress={onPress} mt="$spacing2">
+          <TouchableArea row {...ClickableTamaguiStyle} onPress={onPress} mt="$spacing2">
             <Flex row gap="$gap4">
               {pressIcon}
               <Text variant="buttonLabel3">{action || t('common.button.tryAgain')}</Text>

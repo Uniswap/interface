@@ -15,17 +15,17 @@ export function WCSummaryItem({
     () => (
       <DappLogoWithWCBadge
         chainId={transaction.chainId}
-        dappImageUrl={transaction.typeInfo.dapp.icon}
-        dappName={transaction.typeInfo.dapp.name}
+        dappImageUrl={transaction.typeInfo.dappRequestInfo.icon}
+        dappName={transaction.typeInfo.dappRequestInfo.name}
         size={TXN_HISTORY_ICON_SIZE}
       />
     ),
-    [transaction.chainId, transaction.typeInfo.dapp.icon, transaction.typeInfo.dapp.name],
+    [transaction.chainId, transaction.typeInfo.dappRequestInfo.icon, transaction.typeInfo.dappRequestInfo.name],
   )
 
   return (
     <TransactionSummaryLayout
-      caption={transaction.typeInfo.dapp.name}
+      caption={transaction.typeInfo.dappRequestInfo.name}
       icon={icon}
       index={index}
       transaction={transaction}

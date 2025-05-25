@@ -21,6 +21,7 @@ import {
 import { isPendingTx } from 'state/transactions/utils'
 import { InterfaceState } from 'state/webReducer'
 import { SagaGenerator, call, cancel, delay, fork, put, race, select, take } from 'typed-redux-saga'
+import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
@@ -28,6 +29,7 @@ import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import {
   ApprovalEditedInWalletError,
   HandledTransactionInterrupt,
+  TransactionError,
   TransactionStepFailedError,
   UnexpectedTransactionStateError,
 } from 'uniswap/src/features/transactions/errors'
@@ -51,6 +53,7 @@ import { percentFromFloat } from 'utilities/src/format/percent'
 import noop from 'utilities/src/react/noop'
 import { currencyId } from 'utils/currencyId'
 import { signTypedData } from 'utils/signing'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { Transaction } from 'viem'
 import { getConnectorClient, getTransaction } from 'wagmi/actions'
 
@@ -430,4 +433,28 @@ export function addTransactionBreadcrumb({
     level: 'info',
     data,
   })
+}
+
+export function getDisplayableError(
+  error: Error,
+  step: TransactionStep,
+  flow: string = 'swap',
+): TransactionError | undefined {
+  const userRejected = didUserReject(error)
+  // If the user rejects a request, or it's a known interruption e.g. trade update, we handle gracefully / do not show error UI
+  if (userRejected || error instanceof HandledTransactionInterrupt) {
+    const loggableMessage = userRejected ? 'user rejected request' : error.message // for user rejections, avoid logging redundant/long message
+    addTransactionBreadcrumb({ step, status: 'interrupted', data: { message: loggableMessage } })
+    return undefined
+  } else if (error instanceof TransactionError) {
+    return error // If the error was already formatted as a TransactionError, we just propagate
+  } else {
+    const isBackendRejection = error instanceof FetchError
+    return new TransactionStepFailedError({
+      message: `${step.type} failed during ${flow}`,
+      step,
+      isBackendRejection,
+      originalError: error,
+    })
+  }
 }

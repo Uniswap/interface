@@ -27,7 +27,7 @@ import {
   V4PoolInRoute,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -536,4 +536,13 @@ export function useQuoteSlippageParams({
     // Otherwise, use an auto slippage tolerance calculated on the backend
     return { autoSlippage: AutoSlippage.DEFAULT }
   }, [customSlippageTolerance, isUSDQuote, minAutoSlippageToleranceL2, tokenInChainId, tokenOutChainId])
+}
+
+export function tradingApiToUniverseChainId(chainId?: TradingApiChainId): UniverseChainId | undefined {
+  if (!chainId) {
+    return undefined
+  }
+
+  const castedChainId = Number(chainId)
+  return isUniverseChainId(castedChainId) ? castedChainId : undefined
 }

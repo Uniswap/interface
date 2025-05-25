@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Flex, ModalCloseIcon, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/SwapFormSettings'
-import { Deadline } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Deadline/Deadline'
-import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Slippage/Slippage'
+import { Deadline } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/deadline/Deadline/Deadline'
+import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
 
 export function LiquidityModalHeader({
   title,

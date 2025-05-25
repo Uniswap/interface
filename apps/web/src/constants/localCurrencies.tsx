@@ -1,8 +1,10 @@
 import {
+  ARS_ICON,
   AUD_ICON,
   BRL_ICON,
   CAD_ICON,
   CNY_ICON,
+  COP_ICON,
   EUR_ICON,
   GBP_ICON,
   HKD_ICON,
@@ -10,6 +12,7 @@ import {
   INR_ICON,
   JPY_ICON,
   KRW_ICON,
+  MXN_ICON,
   NGN_ICON,
   PKR_ICON,
   RUB_ICON,
@@ -161,6 +164,24 @@ export function getLocalCurrencyIcon(localCurrency: FiatCurrency, size = 20): Re
       return (
         <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
           <CNY_ICON width={size} height={size} />
+        </Suspense>
+      )
+    case FiatCurrency.ArgentinePeso:
+      return (
+        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
+          <ARS_ICON width={size} height={size} />
+        </Suspense>
+      )
+    case FiatCurrency.ColombianPeso:
+      return (
+        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
+          <COP_ICON width={size} height={size} />
+        </Suspense>
+      )
+    case FiatCurrency.MexicanPeso:
+      return (
+        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
+          <MXN_ICON width={size} height={size} />
         </Suspense>
       )
     default:

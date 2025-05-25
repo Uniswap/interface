@@ -4,14 +4,14 @@ import { useDispatch } from 'react-redux'
 import { Switch, Text } from 'ui/src'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { SwapProtectionInfoModal } from 'wallet/src/features/transactions/swap/modals/SwapProtectionModal'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting, setSwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
-export const SwapProtection: SwapSettingConfig = {
+export const SwapProtection: TransactionSettingConfig = {
   renderTitle: (t) => t('swap.settings.protection.title'),
   Description() {
     const { t } = useTranslation()

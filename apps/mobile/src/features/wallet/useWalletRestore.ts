@@ -1,6 +1,7 @@
-import { useFocusEffect, useIsFocused } from '@react-navigation/core'
-import { useCallback, useEffect, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/core'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { WalletRestoreType } from 'src/components/RestoreWalletModal/RestoreWalletModalState'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -8,53 +9,39 @@ import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
-export enum WalletRestoreType {
-  None = 'none',
-  /**
-   * The wallet needs to be restored because it is a new device. This case is
-   * when the local app state has been restored but the native private keys and
-   * seed phrase are not present.
-   */
-  NewDevice = 'device',
-  /**
-   * The wallet needs to be restored because the seed phrase is not present. This case
-   * is when the local app state is using a wallet but it's seed phrase is missing.
-   */
-  SeedPhrase = 'seedPhrase',
-}
-
 type Props = {
   /**
-   * Whether the modal can be dismissed. Used when the restore modal is optional and managed by the parent component.
+   * If true, this hook will be responsible for opening the restore modal. Otherwise
+   * the caller is responsible for opening the restore modal.
    */
   openModalImmediately?: boolean
 }
 
 /**
- * Hook to determine if the wallet needs to be restored and what type of restoration is needed.
- * If a restoration is needed, the relevant modal will be opened.
+ * Hook to determine if the wallet needs to be restored and what type of restore is needed.
+ * If a restore is needed, the relevant modal will be opened.
  */
 export function useWalletRestore(params?: Props): {
   walletNeedsRestore: boolean
   openWalletRestoreModal: () => void
-  isModalOpen: boolean
+  walletRestoreType: WalletRestoreType
 } {
   const shouldRestoreSeedPhraseFF = useFeatureFlag(FeatureFlags.RestoreSeedPhrase)
+  const { openModalImmediately } = params ?? {}
+  const openedOnce = useRef(false)
 
-  const openModalImmediately = params?.openModalImmediately
   const [walletRestoreType, setWalletRestoreType] = useState<WalletRestoreType>(WalletRestoreType.None)
   const walletNeedsRestore = walletRestoreType !== WalletRestoreType.None
   const mnemonicIdFromLocalState = useSignerAccounts()[0]?.mnemonicId
 
-  const isModalOpen = useIsFocused()
-
   const openWalletRestoreModal = useCallback((): void => {
     switch (walletRestoreType) {
       case WalletRestoreType.NewDevice:
-        navigate(ModalName.RestoreWallet)
+        navigate(ModalName.RestoreWallet, { restoreType: WalletRestoreType.NewDevice })
         break
       case WalletRestoreType.SeedPhrase:
-        navigate(ModalName.RestoreWallet)
+        openedOnce.current = true
+        navigate(ModalName.RestoreWallet, { restoreType: WalletRestoreType.SeedPhrase })
         break
       case WalletRestoreType.None:
         break
@@ -71,13 +58,13 @@ export function useWalletRestore(params?: Props): {
 
   useFocusEffect(
     useCallback(() => {
-      if (openModalImmediately && walletNeedsRestore) {
+      if (openModalImmediately && walletNeedsRestore && !openedOnce.current) {
         openWalletRestoreModal()
       }
     }, [openModalImmediately, openWalletRestoreModal, walletNeedsRestore]),
   )
 
-  return { walletNeedsRestore, openWalletRestoreModal, isModalOpen }
+  return { walletNeedsRestore, openWalletRestoreModal, walletRestoreType }
 }
 
 /**

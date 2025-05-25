@@ -87,8 +87,10 @@ test.describe('Errors', () => {
       .filter({ hasText: /^5.50$/ })
       .getByRole('textbox')
       .fill('.01')
-    await page.waitForTimeout(300)
+
     await page.getByTestId(TestID.SwapSettings).click()
+
+    await page.waitForTimeout(1000)
 
     await page.getByTestId(TestID.AmountInputIn).fill('1')
     await expect(page.getByTestId(TestID.AmountInputOut)).toHaveValue(/.+/)

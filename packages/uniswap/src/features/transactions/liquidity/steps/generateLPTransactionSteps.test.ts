@@ -66,6 +66,7 @@ describe('Liquidity', () => {
     revokeToken1Request: undefined,
     token0PermitTransaction: undefined,
     token1PermitTransaction: undefined,
+    positionTokenPermitTransaction: undefined,
   }
 
   describe(LiquidityTransactionType.Increase, () => {

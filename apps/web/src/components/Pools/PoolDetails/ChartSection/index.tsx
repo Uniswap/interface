@@ -1,6 +1,8 @@
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { PoolData } from 'appGraphql/data/pools/usePoolData'
+import { TimePeriod, gqlToCurrency, toHistoryDuration } from 'appGraphql/data/util'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, refitChartContentAtom } from 'components/Charts/ChartModel'
 import { LiquidityBarChartModel, useLiquidityBarData } from 'components/Charts/LiquidityChart'
@@ -10,6 +12,7 @@ import { PriceChartData, PriceChartDelta, PriceChartModel } from 'components/Cha
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
+import ErrorBoundary from 'components/ErrorBoundary'
 import { parseProtocolVersion } from 'components/Liquidity/utils'
 import { usePDPPriceChartData, usePDPVolumeChartData } from 'components/Pools/PoolDetails/ChartSection/hooks'
 import { ChartActionsContainer, DEFAULT_PILL_TIME_SELECTOR_OPTIONS } from 'components/Tokens/TokenDetails/ChartSection'
@@ -21,8 +24,6 @@ import {
   TimePeriodDisplay,
   getTimePeriodFromDisplay,
 } from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
-import { PoolData } from 'graphql/data/pools/usePoolData'
-import { TimePeriod, gqlToCurrency, toHistoryDuration } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
@@ -434,19 +435,18 @@ function LiquidityChart({
       height={PDP_CHART_HEIGHT_PX}
       Model={LiquidityBarChartModel}
       params={params}
-      TooltipBody={
+      TooltipBody={({ data }: { data: LiquidityBarData }) => (
         // TODO(WEB-3628): investigate potential off-by-one or subgraph issues causing calculated TVL issues on 1 bip pools
-        feeTier !== FeeAmount.LOWEST
-          ? ({ data }: { data: LiquidityBarData }) => (
-              <LiquidityTooltipDisplay
-                data={data}
-                tokenADescriptor={tokenADescriptor}
-                tokenBDescriptor={tokenBDescriptor}
-                currentTick={tickData?.activeRangeData?.tick}
-              />
-            )
-          : undefined
-      }
+        // Also remove Error Boundary when its determined its not needed
+        <ErrorBoundary fallback={() => null}>
+          <LiquidityTooltipDisplay
+            data={data}
+            tokenADescriptor={tokenADescriptor}
+            tokenBDescriptor={tokenBDescriptor}
+            currentTick={tickData?.activeRangeData?.tick}
+          />
+        </ErrorBoundary>
+      )}
     >
       {(crosshair) => {
         const displayPoint = crosshair ?? tickData?.activeRangeData

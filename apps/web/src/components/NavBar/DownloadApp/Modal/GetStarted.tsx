@@ -9,6 +9,9 @@ import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 function Header() {
   return (
@@ -49,37 +52,44 @@ export function GetStarted({
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   return (
-    <ModalContent
-      title={t('downloadApp.modal.getStarted.title')}
-      subtext={t('downloadApp.modal.getStarted.description')}
-      onClose={onClose}
-      header={<Header />}
-      footer={
-        <DownloadWalletRow
-          onPress={() => setPage(Page.GetApp)}
-          px="$spacing16"
-          mx="$spacing4"
-          mb="$spacing4"
-          borderBottomLeftRadius="$rounded16"
-          borderBottomRightRadius="$rounded16"
-          $md={{ mb: '$spacing12', mx: '$spacing12' }}
-        />
-      }
-    >
-      <Flex gap="$spacing20" width="100%" px="$spacing32" pb="$spacing24">
-        <Flex row>
-          <Button
-            variant="branded"
-            onPress={() => setPage(Page.ChooseUnitag)}
-            display={isEmbeddedWalletEnabled ? 'flex' : 'none'}
-          >
-            {t('nav.createAccount.button')}
-          </Button>
+    <Trace logImpression modal={ModalName.SignUp}>
+      <ModalContent
+        title={t('downloadApp.modal.getStarted.title')}
+        subtext={t('downloadApp.modal.getStarted.description')}
+        onClose={onClose}
+        header={<Header />}
+        footer={
+          <DownloadWalletRow
+            onPress={() => setPage(Page.GetApp)}
+            px="$spacing16"
+            mx="$spacing4"
+            mb="$spacing4"
+            borderBottomLeftRadius="$rounded16"
+            borderBottomRightRadius="$rounded16"
+            $md={{ mb: '$spacing12', mx: '$spacing12' }}
+          />
+        }
+      >
+        <Flex gap="$spacing20" width="100%" px="$spacing32" pb="$spacing24">
+          <Flex row>
+            <Trace logPress element={ElementName.CreateAWallet}>
+              <Button
+                testID={TestID.CreateAccount}
+                variant="branded"
+                onPress={() => setPage(Page.ChooseUnitag)}
+                display={isEmbeddedWalletEnabled ? 'flex' : 'none'}
+              >
+                {t('nav.createAccount.button')}
+              </Button>
+            </Trace>
+          </Flex>
+          <Trace logPress element={ElementName.ConnectExistingWallet}>
+            <Button variant="branded" emphasis="text-only" onPress={toConnectWalletDrawer}>
+              {t('downloadApp.modal.connectExistingWallet')}
+            </Button>
+          </Trace>
         </Flex>
-        <Button variant="branded" emphasis="text-only" onPress={toConnectWalletDrawer}>
-          {t('downloadApp.modal.connectExistingWallet')}
-        </Button>
-      </Flex>
-    </ModalContent>
+      </ModalContent>
+    </Trace>
   )
 }

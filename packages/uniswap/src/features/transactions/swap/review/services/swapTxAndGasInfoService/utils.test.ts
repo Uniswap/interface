@@ -12,7 +12,7 @@ import {
 import { FeeType, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
 import { UNKNOWN_SIM_ERROR } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import {
@@ -68,6 +68,51 @@ describe('processWrapResponse', () => {
     })
     expect(result.gasEstimate.wrapEstimates).toBe(gasFeeResult.gasEstimates)
     expect(result.swapRequestArgs).toBeUndefined()
+  })
+})
+
+describe('processWrapResponse (smart contract unwrap fallback)', () => {
+  it('should fallback to hardcoded gas limit when gas params are missing for a smart contract unwrap', () => {
+    jest.isolateModules(() => {
+      jest.doMock('utilities/src/platform', () => ({
+        __esModule: true,
+        ...jest.requireActual('utilities/src/platform'),
+        isInterface: true,
+      }))
+
+      const {
+        processWrapResponse: mockedProcessWrapResponse,
+      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils')
+
+      const {
+        WRAP_FALLBACK_GAS_LIMIT_IN_GWEI,
+      } = require('uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants')
+
+      const gasFeeResult: GasFeeResult = {
+        value: '1000',
+        displayValue: '0.001',
+        isLoading: false,
+        error: null,
+        params: undefined,
+      }
+
+      const wrapTxRequest = {
+        to: '0x123',
+        value: '1000000',
+      } as providers.TransactionRequest
+
+      const expectedGasLimit = WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9
+
+      const fallbackGasParams = { gasLimit: expectedGasLimit }
+
+      const result = mockedProcessWrapResponse({
+        gasFeeResult,
+        wrapTxRequest,
+        fallbackGasParams,
+      })
+
+      expect(result.txRequests?.[0]).toEqual(expect.objectContaining({ gasLimit: expectedGasLimit }))
+    })
   })
 })
 

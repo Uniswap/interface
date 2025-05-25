@@ -1,23 +1,19 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import PortfolioRow, {
-  PortfolioSkeleton,
-  PortfolioTabWrapper,
-} from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
+import PortfolioRow, { PortfolioSkeleton } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useTokenContextMenu } from 'hooks/useTokenContextMenu'
-import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
-import { EllipsisStyle } from 'theme/components/styles'
-import { Text, Tooltip } from 'ui/src'
+import { EllipsisTamaguiStyle } from 'theme/components/styles'
+import { AnimatePresence, Text, Tooltip } from 'ui/src'
 import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
@@ -57,7 +53,7 @@ export default function Tokens() {
   const toggleHiddenTokens = () => setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)
 
   return (
-    <PortfolioTabWrapper>
+    <AnimatePresence>
       {visibleBalances.map((tokenBalance) => (
         <TokenRow key={tokenBalance.id} tokenBalance={tokenBalance} />
       ))}
@@ -66,16 +62,9 @@ export default function Tokens() {
           <TokenRow key={tokenBalance.id} tokenBalance={tokenBalance} />
         ))}
       </ExpandoRow>
-    </PortfolioTabWrapper>
+    </AnimatePresence>
   )
 }
-
-const TokenBalanceText = styled(ThemedText.BodySecondary)`
-  ${EllipsisStyle}
-`
-const TokenNameText = styled(ThemedText.SubHeader)`
-  ${EllipsisStyle}
-`
 
 function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
   const { t } = useTranslation()
@@ -113,15 +102,19 @@ function TokenRow({ tokenBalance }: { tokenBalance: PortfolioBalance }) {
   const portfolioRow = (
     <PortfolioRow
       left={<PortfolioLogo chainId={chainId} currencies={[currency]} size={40} />}
-      title={<TokenNameText>{name}</TokenNameText>}
+      title={
+        <Text variant="subheading2" {...EllipsisTamaguiStyle}>
+          {name}
+        </Text>
+      }
       descriptor={
-        <TokenBalanceText>
+        <Text variant="body2" color="$neutral2" {...EllipsisTamaguiStyle}>
           {formatNumber({
             input: tokenBalance.quantity,
             type: NumberType.TokenNonTx,
           })}{' '}
           {symbol}
-        </TokenBalanceText>
+        </Text>
       }
       onClick={navigateToTokenDetails}
       right={

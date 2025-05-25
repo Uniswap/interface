@@ -19,6 +19,7 @@ const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
  * @param openExternalBrowser whether to leave the app and open in system browser. default is false, opens in-app browser window
  * @param isSafeUri whether to bypass ALLOWED_EXTERNAL_URI_SCHEMES check
  * @param controlsColor When opening in an in-app browser, determines the controls color
+ * @param throwOnError whether to throw errors instead of just logging them
  **/
 export async function openUri(
   uri: string,
@@ -26,17 +27,21 @@ export async function openUri(
   isSafeUri = false,
   // NOTE: okay to use colors object directly as we want the same color for light/dark modes
   controlsColor = colorsLight.accent1,
+  throwOnError = false,
 ): Promise<void> {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
-    // TODO: [MOB-253] show a visual warning that the link cannot be opened.
-    logger.error(new Error('User attempted to open potentially unsafe url'), {
+    const error = new Error('User attempted to open potentially unsafe url')
+    logger.error(error, {
       tags: {
         file: 'linking',
         function: 'openUri',
       },
       extra: { uri },
     })
+    if (throwOnError) {
+      throw error
+    }
     return
   }
 
@@ -46,7 +51,11 @@ export async function openUri(
   const supported = isHttp ? true : await canOpenURL(uri)
 
   if (!supported) {
-    logger.warn('linking', 'openUri', `Cannot open URI: ${uri}`)
+    const error = new Error(`Cannot open URI: ${uri}`)
+    logger.warn('linking', 'openUri', error.message)
+    if (throwOnError) {
+      throw error
+    }
     return
   }
 
@@ -69,6 +78,9 @@ export async function openUri(
     }
   } catch (error) {
     logger.error(error, { tags: { file: 'linking', function: 'openUri' }, extra: { uri } })
+    if (throwOnError) {
+      throw error
+    }
   }
 }
 

@@ -11,6 +11,7 @@ import { Search } from 'ui/src/components/icons/Search'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { TrendUp } from 'ui/src/components/icons/TrendUp'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isAndroid } from 'utilities/src/platform'
 
 export type SectionHeaderProps = {
@@ -43,6 +44,7 @@ export const SectionHeader = memo(function _SectionHeader({
       pt="$spacing12"
       px="$spacing20"
       alignItems={isAndroid ? 'flex-end' : 'center'}
+      testID={`${TestID.SectionHeaderPrefix}${sectionKey}`}
     >
       <Flex row alignItems="center" gap="$spacing8" flex={1}>
         {icon}

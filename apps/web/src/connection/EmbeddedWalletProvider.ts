@@ -148,7 +148,7 @@ export class EmbeddedWalletProvider {
 
     const signMessage = async ({ message }: { message: SignableMessage }): Promise<`0x${string}`> => {
       try {
-        const signedMessages = await signMessagesWithPasskey([message.toString()])
+        const signedMessages = await signMessagesWithPasskey([message.toString()], address)
         return signedMessages?.[0] as `0x${string}`
       } catch (e: any) {
         logger.error(e, {
@@ -159,7 +159,7 @@ export class EmbeddedWalletProvider {
     }
     const signTransaction = async (transaction: any): Promise<`0x${string}`> => {
       try {
-        const signedTransaction = await signTransactionWithPasskey([safeJSONStringify(transaction)])
+        const signedTransaction = await signTransactionWithPasskey([safeJSONStringify(transaction)], address)
         return signedTransaction?.[0] as `0x${string}`
       } catch (e: any) {
         logger.error(e, {
@@ -170,7 +170,7 @@ export class EmbeddedWalletProvider {
     }
     const signTypedData = async (transaction: any): Promise<`0x${string}`> => {
       try {
-        const signedTypedData = await signTypedDataWithPasskey([safeJSONStringify(transaction)])
+        const signedTypedData = await signTypedDataWithPasskey([safeJSONStringify(transaction)], address)
         return signedTypedData?.[0] as `0x${string}`
       } catch (e: any) {
         logger.error(e, {

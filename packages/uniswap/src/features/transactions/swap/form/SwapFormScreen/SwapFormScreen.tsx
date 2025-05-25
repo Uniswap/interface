@@ -8,19 +8,22 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapFormDecimalPad } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormDecimalPad'
 import { SwapFormScreenDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails'
 import { SwitchCurrenciesButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwitchCurrenciesButton'
 import { WalletRestoreButton } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/WalletRestoreButton'
+import { YouReceiveDetails } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/YouReceiveDetails'
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/body/SwapTokenSelector/SwapTokenSelector'
 import { useSwapFormScreenState } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContext'
 import { SwapFormScreenContextProvider } from 'uniswap/src/features/transactions/swap/form/context/SwapFormScreenContextProvider'
 import { SwapFormHeader } from 'uniswap/src/features/transactions/swap/form/header/SwapFormHeader/SwapFormHeader'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/SwapFormSettings'
-import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/ProtocolPreference'
-import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Slippage/Slippage'
-import type { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/types'
+import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/TradeRoutingPreference/TradeRoutingPreference'
+import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
+import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isExtension, isInterface } from 'utilities/src/platform'
@@ -28,7 +31,7 @@ import { isExtension, isInterface } from 'utilities/src/platform'
 interface SwapFormScreenProps {
   hideContent: boolean
   hideFooter?: boolean
-  settings: SwapSettingConfig[]
+  settings: TransactionSettingConfig[]
   tokenColor?: string
   focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
 }
@@ -39,7 +42,7 @@ interface SwapFormScreenProps {
  */
 export function SwapFormScreen({
   hideContent,
-  settings = [Slippage, ProtocolPreference],
+  settings = [Slippage, TradeRoutingPreference],
   tokenColor,
   focusHook,
 }: SwapFormScreenProps): JSX.Element {
@@ -67,6 +70,10 @@ export function SwapFormScreen({
 
 function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
+  const priceUXEnabled = usePriceUXEnabled()
+
+  const { derivedSwapInfo } = useSwapFormContext()
+  const { priceDifferencePercentage } = usePriceDifference(derivedSwapInfo)
 
   const {
     // References
@@ -120,87 +127,101 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <Flex animation="quick" exitStyle={{ opacity: 0 }} gap="$spacing2" grow={isExtension}>
-        <Trace section={SectionName.CurrencyInputPanel}>
-          <Flex
-            animation="simple"
-            borderColor={focusOnCurrencyField === CurrencyField.INPUT ? '$surface3' : '$transparent'}
-            borderRadius="$rounded20"
-            backgroundColor={focusOnCurrencyField === CurrencyField.INPUT ? '$surface1' : '$surface2'}
-            borderWidth="$spacing1"
-            overflow="hidden"
-            pb={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}
-            hoverStyle={hoverStyles.input}
-          >
-            <CurrencyInputPanel
-              ref={inputRef}
-              headerLabel={isInterface ? t('common.button.sell') : undefined}
-              currencyAmount={currencyAmounts[CurrencyField.INPUT]}
-              currencyBalance={currencyBalances[CurrencyField.INPUT]}
-              currencyField={CurrencyField.INPUT}
-              currencyInfo={currencies[CurrencyField.INPUT]}
-              // We do not want to force-focus the input when the token selector is open.
-              focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.INPUT}
-              isFiatMode={isFiatMode && exactFieldIsInput}
-              isIndicativeLoading={trade.isIndicativeLoading}
-              isLoading={!exactFieldIsInput && isSwapDataLoading}
-              resetSelection={resetSelection}
-              showSoftInputOnFocus={false}
-              usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
-              value={exactFieldIsInput ? exactValue : formattedDerivedValue}
-              valueIsIndicative={!exactFieldIsInput && trade.indicativeTrade && !trade.trade}
-              tokenColor={tokenColor}
-              onPressIn={onFocusInput}
-              onSelectionChange={onInputSelectionChange}
-              onSetExactAmount={onSetExactAmountInput}
-              onSetPresetValue={onSetPresetValue}
-              onShowTokenSelector={onShowTokenSelectorInput}
-              onToggleIsFiatMode={onToggleIsFiatMode}
+      <Flex gap="$spacing4" animation="quick" exitStyle={{ opacity: 0 }} grow={isExtension}>
+        <Flex gap="$spacing2">
+          <Trace section={SectionName.CurrencyInputPanel}>
+            <Flex
+              animation="simple"
+              borderColor={focusOnCurrencyField === CurrencyField.INPUT ? '$surface3' : '$transparent'}
+              borderRadius="$rounded20"
+              backgroundColor={focusOnCurrencyField === CurrencyField.INPUT ? '$surface1' : '$surface2'}
+              borderWidth="$spacing1"
+              overflow="hidden"
+              pb={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}
+              hoverStyle={hoverStyles.input}
+            >
+              <CurrencyInputPanel
+                ref={inputRef}
+                headerLabel={isInterface ? t('common.button.sell') : undefined}
+                currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+                currencyBalance={currencyBalances[CurrencyField.INPUT]}
+                currencyField={CurrencyField.INPUT}
+                currencyInfo={currencies[CurrencyField.INPUT]}
+                // We do not want to force-focus the input when the token selector is open.
+                focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.INPUT}
+                isFiatMode={isFiatMode && exactFieldIsInput}
+                isIndicativeLoading={trade.isIndicativeLoading}
+                isLoading={!exactFieldIsInput && isSwapDataLoading}
+                priceDifferencePercentage={priceDifferencePercentage}
+                resetSelection={resetSelection}
+                showSoftInputOnFocus={false}
+                usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
+                value={exactFieldIsInput ? exactValue : formattedDerivedValue}
+                valueIsIndicative={!exactFieldIsInput && trade.indicativeTrade && !trade.trade}
+                tokenColor={tokenColor}
+                onPressIn={onFocusInput}
+                onSelectionChange={onInputSelectionChange}
+                onSetExactAmount={onSetExactAmountInput}
+                onSetPresetValue={onSetPresetValue}
+                onShowTokenSelector={onShowTokenSelectorInput}
+                onToggleIsFiatMode={onToggleIsFiatMode}
+              />
+            </Flex>
+          </Trace>
+
+          <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
+
+          <Trace section={SectionName.CurrencyOutputPanel}>
+            <Flex
+              borderRadius="$rounded20"
+              borderWidth="$spacing1"
+              borderColor={focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface3' : '$transparent'}
+              backgroundColor={focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'}
+              hoverStyle={hoverStyles.output}
+            >
+              <CurrencyInputPanel
+                ref={outputRef}
+                headerLabel={isInterface ? t('common.button.buy') : undefined}
+                currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
+                currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+                currencyField={CurrencyField.OUTPUT}
+                currencyInfo={currencies[CurrencyField.OUTPUT]}
+                disabled={exactOutputDisabled}
+                // We do not want to force-focus the input when the token selector is open.
+                focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.OUTPUT}
+                isFiatMode={isFiatMode && exactFieldIsOutput}
+                isLoading={!exactFieldIsOutput && isSwapDataLoading}
+                priceDifferencePercentage={priceDifferencePercentage}
+                resetSelection={resetSelection}
+                showSoftInputOnFocus={false}
+                usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
+                value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
+                valueIsIndicative={!exactFieldIsOutput && trade.indicativeTrade && !trade.trade}
+                tokenColor={tokenColor}
+                onPressDisabled={isBridge ? undefined : showTemporaryFoTWarning}
+                onPressIn={onFocusOutput}
+                onSelectionChange={onOutputSelectionChange}
+                onSetExactAmount={onSetExactAmountOutput}
+                onSetPresetValue={onSetPresetValue}
+                onShowTokenSelector={onShowTokenSelectorOutput}
+                onToggleIsFiatMode={onToggleIsFiatMode}
+              />
+              {walletNeedsRestore && <WalletRestoreButton />}
+            </Flex>
+          </Trace>
+        </Flex>
+
+        <Flex>
+          {priceUXEnabled && isWeb && (
+            <YouReceiveDetails
+              isIndicative={Boolean(trade.indicativeTrade && !trade.trade)}
+              isLoadingIndicative={trade.isIndicativeLoading}
+              isLoading={isSwapDataLoading}
+              isBridge={isBridge}
             />
-          </Flex>
-        </Trace>
-
-        <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
-
-        <Trace section={SectionName.CurrencyOutputPanel}>
-          <Flex
-            borderRadius="$rounded20"
-            borderWidth="$spacing1"
-            borderColor={focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface3' : '$transparent'}
-            backgroundColor={focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'}
-            hoverStyle={hoverStyles.output}
-          >
-            <CurrencyInputPanel
-              ref={outputRef}
-              headerLabel={isInterface ? t('common.button.buy') : undefined}
-              currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
-              currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
-              currencyField={CurrencyField.OUTPUT}
-              currencyInfo={currencies[CurrencyField.OUTPUT]}
-              disabled={exactOutputDisabled}
-              // We do not want to force-focus the input when the token selector is open.
-              focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.OUTPUT}
-              isFiatMode={isFiatMode && exactFieldIsOutput}
-              isLoading={!exactFieldIsOutput && isSwapDataLoading}
-              resetSelection={resetSelection}
-              showSoftInputOnFocus={false}
-              usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
-              value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
-              valueIsIndicative={!exactFieldIsOutput && trade.indicativeTrade && !trade.trade}
-              tokenColor={tokenColor}
-              onPressDisabled={isBridge ? undefined : showTemporaryFoTWarning}
-              onPressIn={onFocusOutput}
-              onSelectionChange={onOutputSelectionChange}
-              onSetExactAmount={onSetExactAmountOutput}
-              onSetPresetValue={onSetPresetValue}
-              onShowTokenSelector={onShowTokenSelectorOutput}
-              onToggleIsFiatMode={onToggleIsFiatMode}
-            />
-            {walletNeedsRestore && <WalletRestoreButton />}
-          </Flex>
-        </Trace>
-
-        <SwapFormScreenDetails />
+          )}
+          <SwapFormScreenDetails />
+        </Flex>
       </Flex>
 
       {!isWeb && (

@@ -330,9 +330,9 @@ export function OffchainActivityModal() {
   const syncedSelectedOrder = useSyncedSelectedOrder()
   const setSelectedOrder = useUpdateAtom(selectedOrderAtom)
 
-  const reset = useCallback(() => {
-    setSelectedOrder((order) => order && { ...order, modalOpen: false })
-  }, [setSelectedOrder])
+  const reset = () => {
+    setSelectedOrder(undefined)
+  }
 
   const cancelOrder = useCancelMultipleOrdersCallback(
     useMemo(() => [syncedSelectedOrder].filter(Boolean) as Array<UniswapXOrderDetails>, [syncedSelectedOrder]),

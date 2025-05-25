@@ -1,7 +1,7 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
-import { PortfolioSkeleton, PortfolioTabWrapper } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
+import { PortfolioSkeleton } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { PositionInfo } from 'components/Liquidity/types'
@@ -13,6 +13,7 @@ import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletConten
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
+import { AnimatePresence } from 'ui/src'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -103,7 +104,7 @@ export default function Pools({ account }: { account: string }) {
   }
 
   return (
-    <PortfolioTabWrapper>
+    <AnimatePresence>
       {visibleOpenPositions.map((positionInfo) => (
         <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
       ))}
@@ -131,7 +132,7 @@ export default function Pools({ account }: { account: string }) {
           ))}
         </ExpandoRow>
       )}
-    </PortfolioTabWrapper>
+    </AnimatePresence>
   )
 }
 

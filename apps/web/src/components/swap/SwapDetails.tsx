@@ -3,23 +3,23 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { ReactComponent as ExpandoIconClosed } from 'assets/svg/expando-icon-closed.svg'
 import { ReactComponent as ExpandoIconOpened } from 'assets/svg/expando-icon-opened.svg'
 import Column from 'components/deprecated/Column'
-import { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
+import { AutoRow, RowBetween } from 'components/deprecated/Row'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import SwapLineItem, { SwapLineItemType } from 'components/swap/SwapLineItem'
 import { SwapCallbackError, SwapShowAcceptChanges } from 'components/swap/styled'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
-import styled, { useTheme } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import ms from 'ms'
 import { ReactNode, useMemo, useState } from 'react'
-import { AlertTriangle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
 import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
-import { Button, Flex, HeightAnimator, Separator } from 'ui/src'
+import { Button, Flex, HeightAnimator, Separator, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
@@ -27,11 +27,6 @@ import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 
 const DetailsContainer = styled(Column)`
   padding: 0px 12px 8px;
-`
-
-const StyledAlertTriangle = styled(AlertTriangle)`
-  margin-right: 8px;
-  min-width: 24px;
 `
 
 const DropdownControllerWrapper = styled.div`
@@ -124,7 +119,6 @@ export function SwapDetails({
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
   const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
-  const theme = useTheme()
   const [showMore, setShowMore] = useState(false)
 
   const analyticsContext = useTrace()
@@ -165,12 +159,12 @@ export function SwapDetails({
       {showAcceptChanges ? (
         <SwapShowAcceptChanges data-testid="show-accept-changes">
           <RowBetween>
-            <RowFixed>
-              <StyledAlertTriangle size={20} />
-              <ThemedText.DeprecatedMain color={theme.accent1}>
+            <Flex row gap="$gap8">
+              <AlertTriangleFilled size={20} color="$accent1" />
+              <Text variant="body2" color="$accent1">
                 <Trans i18nKey="common.priceUpdated" />
-              </ThemedText.DeprecatedMain>
-            </RowFixed>
+              </Text>
+            </Flex>
             <Flex>
               <Button size="small" variant="branded" onPress={onAcceptChanges}>
                 <Trans i18nKey="common.accept" />

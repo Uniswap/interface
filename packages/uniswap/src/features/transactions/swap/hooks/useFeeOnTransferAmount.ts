@@ -5,6 +5,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/hooks/getTradeAmounts'
+import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { NumberType } from 'utilities/src/format/types'
@@ -12,9 +13,10 @@ import { NumberType } from 'utilities/src/format/types'
 export function useFeeOnTransferAmounts(
   acceptedDerivedSwapInfo?: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>,
 ): FeeOnTransferFeeGroupProps | undefined {
+  const priceUXEnabled = usePriceUXEnabled()
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
-  const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo)
+  const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo, priceUXEnabled)
 
   const usdAmountIn = useUSDCValue(inputCurrencyAmount)
   const usdAmountOut = useUSDCValue(outputCurrencyAmount)

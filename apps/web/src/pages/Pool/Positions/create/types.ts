@@ -43,9 +43,11 @@ export interface PositionState {
   }
 }
 
+export const DEFAULT_FEE_DATA = { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] }
+
 export const DEFAULT_POSITION_STATE: PositionState = {
   currencyInputs: {},
-  fee: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] },
+  fee: DEFAULT_FEE_DATA,
   hook: undefined,
   userApprovedHook: undefined,
   protocolVersion: ProtocolVersion.V4,

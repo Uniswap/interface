@@ -10,9 +10,5 @@
  */
 
 setTimeout(() => {
-  const script = document.createElement('script')
-  script.type = 'text/javascript'
-  script.async = true
-  script.src = './sidebar.js'
-  document.body.appendChild(script)
+  import('src/entry/sidebar')
 }, 10)

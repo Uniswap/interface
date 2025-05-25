@@ -44,11 +44,11 @@ import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/teleme
 import {
   TransactionSettingsContextProvider,
   useTransactionSettingsContext,
-} from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
+} from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/SwapFormSettings'
-import { Deadline } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Deadline/Deadline'
-import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/Slippage/Slippage'
+import { Deadline } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/deadline/Deadline/Deadline'
+import { Slippage } from 'uniswap/src/features/transactions/swap/form/header/SwapFormSettings/settingsConfigurations/slippage/Slippage/Slippage'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 const WIDTH = {
@@ -319,8 +319,10 @@ export default function CreatePosition() {
   const media = useMedia()
   const { t } = useTranslation()
 
-  // URL format is `/positions/create/:protocolVersion`, with possible searchParams `?currencyA=...&currencyB=...&chain=...`
-  const { protocolVersion } = useParams<{ protocolVersion: string }>()
+  // URL format is `/positions/create/:protocolVersion`, with possible searchParams `?currencyA=...&currencyB=...&chain=...&feeTier=...&hook=...`
+  const { protocolVersion } = useParams<{
+    protocolVersion: string
+  }>()
   const paramsProtocolVersion = parseProtocolVersion(protocolVersion)
 
   const autoSlippageTolerance = useLPSlippageValue(paramsProtocolVersion)
@@ -338,6 +340,8 @@ export default function CreatePosition() {
           <CreatePositionContextProvider
             initialState={{
               currencyInputs: initialInputs,
+              hook: initialInputs.hook,
+              fee: initialInputs.fee,
               protocolVersion: initialProtocolVersion,
             }}
           >

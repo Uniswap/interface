@@ -45,7 +45,7 @@ export function FeeOnTransferWarning({
             <FeeRow feePercent={feePercent} feeType={feeType} />
           </WarningModalInfoContainer>
         }
-        trigger={<InfoCircle color="$neutral3" size="$icon.16" />}
+        trigger={<InfoCircle color="$neutral3" size="$icon.12" />}
         triggerPlacement="end"
       >
         {children}

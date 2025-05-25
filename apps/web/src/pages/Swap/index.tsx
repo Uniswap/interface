@@ -1,14 +1,12 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
+import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapBottomCard } from 'components/SwapBottomCard'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { PageWrapper } from 'components/swap/styled'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { BuyForm } from 'pages/Swap/Buy/BuyForm'
-import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
-import { SendForm } from 'pages/Swap/Send/SendForm'
 import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -33,9 +31,9 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
-import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/components/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/components/settings/slice'
+import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
 import { SwapDependenciesContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapDependenciesContextProvider'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/contexts/selectors'
@@ -215,6 +213,22 @@ function UniversalSwapFlow({
   const swapCallback = useSwapCallback()
   const wrapCallback = useWrapCallback()
 
+  const LimitFormWrapper = useDeferredComponent(() =>
+    import('pages/Swap/Limit/LimitForm').then((module) => ({
+      default: module.LimitFormWrapper,
+    })),
+  )
+  const BuyForm = useDeferredComponent(() =>
+    import('pages/Swap/Buy/BuyForm').then((module) => ({
+      default: module.BuyForm,
+    })),
+  )
+  const SendForm = useDeferredComponent(() =>
+    import('pages/Swap/Send/SendForm').then((module) => ({
+      default: module.SendForm,
+    })),
+  )
+
   useEffect(() => {
     if (pathname === '/send' && isIFramed()) {
       // Redirect to swap if send tab is iFramed (we do not allow the send tab to be iFramed due to clickjacking protections)
@@ -288,11 +302,13 @@ function UniversalSwapFlow({
           <SwapBottomCard />
         </Flex>
       )}
-      {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-      {currentTab === SwapTab.Send && (
+      {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
+      {currentTab === SwapTab.Send && SendForm && (
         <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
       )}
-      {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} initialCurrency={prefilledState?.output} />}
+      {currentTab === SwapTab.Buy && BuyForm && (
+        <BuyForm disabled={disableTokenInputs} initialCurrency={prefilledState?.output} />
+      )}
     </Flex>
   )
 }

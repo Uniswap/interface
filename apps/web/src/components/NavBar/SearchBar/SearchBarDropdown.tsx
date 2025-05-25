@@ -1,4 +1,6 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
+import useSearchPopularTokensGql from 'appGraphql/data/SearchPopularTokens'
+import { GqlSearchToken } from 'appGraphql/data/SearchTokens'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import {
   InterfaceRemoteSearchHistoryItem,
@@ -9,8 +11,6 @@ import QuestionHelper from 'components/QuestionHelper'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import useSearchPopularTokensGql from 'graphql/data/SearchPopularTokens'
-import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEffect, useMemo, useState } from 'react'
 import { Clock, TrendingUp } from 'react-feather'
@@ -153,7 +153,9 @@ function SearchBarDropdownContents({ toggleOpen, tokens, queryText, hasInput }: 
     [popularTokenData],
   )
 
-  const totalSuggestions = hasInput ? tokens.length : Math.min(shortenedHistory.length, 2) + popularTokens?.length ?? 0
+  const totalSuggestions = hasInput
+    ? tokens.length
+    : Math.min(shortenedHistory.length, 2) + (popularTokens?.length ?? 0)
 
   // Navigate search results via arrow keys
   useEffect(() => {

@@ -1,6 +1,6 @@
+import { getProtocolColor, getProtocolName } from 'appGraphql/data/util'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { PROTOCOL_LEGEND_ELEMENT_ID } from 'components/Charts/types'
-import { getProtocolColor, getProtocolName } from 'graphql/data/util'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'

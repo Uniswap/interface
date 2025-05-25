@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SCREEN_ITEM_HORIZONTAL_PAD } from 'src/app/constants'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
+import ThemeToggle from 'src/app/features/settings/ThemeToggle'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { getIsDefaultProviderFromStorage, setIsDefaultProviderToStorage } from 'src/app/utils/provider'
@@ -47,7 +48,6 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { setCurrentFiatCurrency, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
-import { SmartWalletAdvancedSettingsModal } from 'uniswap/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -65,6 +65,7 @@ import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
 import { selectHasViewedConnectionMigration } from 'wallet/src/features/behaviorHistory/selectors'
 import { resetWalletBehaviorHistory, setHasViewedConnectionMigration } from 'wallet/src/features/behaviorHistory/slice'
+import { SmartWalletAdvancedSettingsModal } from 'wallet/src/features/smartWallet/modals/SmartWalletAdvancedSettingsModal'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -124,6 +125,11 @@ export function SettingsScreen(): JSX.Element {
 
   const handleAdvancedModalClose = useCallback(() => setIsAdvancedModalOpen(false), [])
 
+  const handleSmartWalletPress = useCallback(() => {
+    navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.SmartWallet}`)
+    setIsAdvancedModalOpen(false)
+  }, [navigateTo])
+
   useEffect(() => {
     getIsDefaultProviderFromStorage()
       .then((newIsDefaultProvider) => setIsDefaultProvider(newIsDefaultProvider))
@@ -145,12 +151,18 @@ export function SettingsScreen(): JSX.Element {
 
   return (
     <Trace logImpression screen={ExtensionScreens.Settings}>
-      {isLanguageModalOpen ? <SettingsLanguageModal onClose={() => setIsLanguageModalOpen(false)} /> : undefined}
+      {isLanguageModalOpen ? (
+        <SettingsLanguageModal isOpen={isLanguageModalOpen} onClose={() => setIsLanguageModalOpen(false)} />
+      ) : undefined}
       {isPortfolioBalanceModalOpen ? (
-        <PortfolioBalanceModal onClose={() => setIsPortfolioBalanceModalOpen(false)} />
+        <PortfolioBalanceModal
+          isOpen={isPortfolioBalanceModalOpen}
+          onClose={() => setIsPortfolioBalanceModalOpen(false)}
+        />
       ) : undefined}
       {isPermissionsModalOpen ? (
         <PermissionsModal
+          isOpen={isPermissionsModalOpen}
           handleDefaultBrowserToggle={handleDefaultBrowserToggle}
           isDefaultBrowserProvider={isDefaultProvider}
           onClose={() => setIsPermissionsModalOpen(false)}
@@ -162,6 +174,7 @@ export function SettingsScreen(): JSX.Element {
         onTestnetModeToggled={handleTestnetModeToggle}
         isOpen={isAdvancedModalOpen}
         onClose={handleAdvancedModalClose}
+        onPressSmartWallet={handleSmartWalletPress}
       />
       {hasPasskeyBackup && (
         <PasskeyManagementModal
@@ -196,6 +209,7 @@ export function SettingsScreen(): JSX.Element {
                 />
               )}
             </>
+            <ThemeToggle />
             <SettingsItemWithDropdown
               Icon={Coins}
               items={ORDERED_CURRENCIES.map((currency) => {
