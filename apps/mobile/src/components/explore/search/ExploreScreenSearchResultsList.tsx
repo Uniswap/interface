@@ -5,6 +5,7 @@ import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySec
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { Flex, Text, TouchableArea, flexStyles } from 'ui/src'
 
+import { useTranslation } from 'react-i18next'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -63,7 +64,25 @@ function NewExploreSearchResultsList({
   debouncedSearchQuery: string | null
   debouncedParsedSearchQuery: string | null
 }): JSX.Element {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<SearchTab>(SearchTab.All)
+
+  // So that the linter errors if someone adds a new tab without updating the switch statement
+  // eslint-disable-next-line consistent-return
+  const getTabLabel = (tab: SearchTab): string => {
+    switch (tab) {
+      case SearchTab.All:
+        return t('common.all')
+      case SearchTab.Tokens:
+        return t('common.tokens')
+      case SearchTab.Pools:
+        return t('common.pools')
+      case SearchTab.Wallets:
+        return t('explore.search.section.wallets')
+      case SearchTab.NFTCollections:
+        return t('common.nfts')
+    }
+  }
 
   return (
     <Trace section={SectionName.ExploreSearch}>
@@ -71,7 +90,7 @@ function NewExploreSearchResultsList({
         {MOBILE_SEARCH_TABS.map((tab) => (
           <TouchableArea key={tab} onPress={() => setActiveTab(tab)}>
             <Text color={activeTab === tab ? '$neutral1' : '$neutral2'} variant="buttonLabel2">
-              {tab}
+              {getTabLabel(tab)}
             </Text>
           </TouchableArea>
         ))}

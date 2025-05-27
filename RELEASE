@@ -4,7 +4,7 @@ Search Improvements: Enjoy an improved search algorithm, with more relevant info
 
 Other changes: 
 
-- Improved backup discovery
+- Added haptics when repositioning favorited tokens and wallets
 - Improved token selector behavior, with more relevant network filtering, as well as an improved experience when flipping input and output.
 - Improvements to NFT spam detection
 - Various bug fixes and performance improvements

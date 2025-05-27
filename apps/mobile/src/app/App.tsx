@@ -8,7 +8,7 @@ import { default as React, StrictMode, useCallback, useEffect, useLayoutEffect, 
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
-import DeviceInfo from 'react-native-device-info'
+import DeviceInfo, { getUniqueIdSync } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
 import { OneSignal } from 'react-native-onesignal'
@@ -79,7 +79,6 @@ import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utiliti
 import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
-import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
@@ -122,14 +121,9 @@ function App(): JSX.Element | null {
       attachUnhandledRejectionHandler()
       setAttributesToDatadog({ buildNumber: DeviceInfo.getBuildNumber() }).catch(() => undefined)
     }
-  }, [])
 
-  // We want to ensure deviceID is used as the identifier to link with analytics
-  const fetchAndSetDeviceId = useCallback(async (): Promise<string> => {
-    return setDatadogUserWithUniqueId(undefined)
+    setDatadogUserWithUniqueId(undefined)
   }, [])
-
-  const deviceId = useAsyncData(fetchAndSetDeviceId).data
 
   const [datadogSessionSampleRate, setDatadogSessionSampleRate] = React.useState<number | undefined>(undefined)
 
@@ -137,12 +131,12 @@ function App(): JSX.Element | null {
 
   const statsigUser: StatsigUser = useMemo(
     () => ({
-      ...(deviceId ? { userID: deviceId } : {}),
+      userID: getUniqueIdSync(),
       custom: {
         app: StatsigCustomAppValue.Mobile,
       },
     }),
-    [deviceId],
+    [],
   )
 
   const onStatsigInit = (): void => {

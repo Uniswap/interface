@@ -11,8 +11,6 @@ import { EIP712Message, isEIP712TypedData } from 'src/app/features/dappRequests/
 import { isPermit2, isUniswapXSwapRequest } from 'src/app/features/dappRequests/types/Permit2Types'
 import { Flex, Text } from 'ui/src'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
@@ -46,7 +44,6 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
 
 function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestProps): JSX.Element | null {
   const { t } = useTranslation()
-  const enablePermitMismatchUx = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const getHasMismatch = useHasAccountMismatchCallback()
 
   const parsedTypedData = JSON.parse(dappRequest.typedData)
@@ -59,7 +56,7 @@ function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestP
   const chainId = toSupportedChainId(domainChainId)
 
   const hasMismatch = chainId ? getHasMismatch(chainId) : false
-  if (enablePermitMismatchUx && hasMismatch) {
+  if (hasMismatch) {
     return <ActionCanNotBeCompletedContent />
   }
 

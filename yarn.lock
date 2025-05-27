@@ -16930,7 +16930,7 @@ __metadata:
     react-native-bootsplash: 6.3.1
     react-native-clean-project: 4.0.1
     react-native-context-menu-view: 1.15.0
-    react-native-device-info: 10.0.2
+    react-native-device-info: 10.11.0
     react-native-dotenv: 3.2.0
     react-native-fast-image: 8.6.3
     react-native-gesture-handler: 2.21.2
@@ -39692,12 +39692,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-device-info@npm:10.0.2":
-  version: 10.0.2
-  resolution: "react-native-device-info@npm:10.0.2"
+"react-native-device-info@npm:10.11.0":
+  version: 10.11.0
+  resolution: "react-native-device-info@npm:10.11.0"
   peerDependencies:
     react-native: "*"
-  checksum: 751274e5e2cec4f47f70a8b8ca7f3d7ce465a6dd022a5f935fd1a3fd81e4cb1a8b1072ee02d26047ba57da887b8dba0ea67888b238db4de6e0dbfa68fc079f13
+  checksum: 3f2de34df4e95e87291673fe69b09d3b96f9088177a8dadd92eccec86549cea63ca08ab82f120d4150eb0302ac721ad8a5e4b3a8136c9f54f0212e4c055762b0
   languageName: node
   linkType: hard
 
@@ -46066,7 +46066,7 @@ __metadata:
     react-i18next: 14.1.0
     react-native: 0.76.9
     react-native-appsflyer: 6.13.1
-    react-native-device-info: 10.0.2
+    react-native-device-info: 10.11.0
     react-native-dotenv: 3.2.0
     react-native-gesture-handler: 2.21.2
     react-native-localize: 2.2.6
@@ -46590,7 +46590,7 @@ __metadata:
     promise: 8.3.0
     react: 18.3.1
     react-native: 0.76.9
-    react-native-device-info: 10.0.2
+    react-native-device-info: 10.11.0
     react-test-renderer: 18.3.1
     redux: 4.2.1
     subscriptions-transport-ws: 0.11.0

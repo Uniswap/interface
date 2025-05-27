@@ -1,12 +1,10 @@
 import { DdSdkReactNative } from '@datadog/mobile-react-native'
+import { getUniqueIdSync } from 'react-native-device-info'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
 
-export async function setDatadogUserWithUniqueId(activeAddress: Maybe<Address>): Promise<string> {
-  const uniqueId = await getUniqueId()
+export function setDatadogUserWithUniqueId(activeAddress: Maybe<Address>): void {
   DdSdkReactNative.setUser({
-    id: uniqueId,
+    id: getUniqueIdSync(),
     ...(activeAddress ? { [MobileUserPropertyName.ActiveWalletAddress]: activeAddress } : {}),
   }).catch(() => undefined)
-  return uniqueId
 }
